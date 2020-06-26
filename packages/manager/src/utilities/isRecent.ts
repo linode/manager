@@ -1,12 +1,13 @@
-import * as moment from 'moment';
+import { parseAPIDate } from 'src/utilities/date';
 
-// Returns true if "a" is within the previous 24 hours of "b"
-export const isRecent = (a: string, b: string) => {
-  const timeToCompare = moment.utc(a);
-  const twentyFourHoursBeforeB = moment.utc(b).subtract(24, 'hours');
-
-  return (
-    timeToCompare.isBefore(moment.utc(b)) &&
-    timeToCompare.isAfter(twentyFourHoursBeforeB)
-  );
+/**
+ * @returns true if "time" is within in ]timeToCompare - 24H ; timeToCompare]
+ * @param time ISO formatted Date
+ * @param timeToCompareTo ISO formatted Date
+ */
+export const isRecent = (time: string, timeToCompareTo: string) => {
+  const time_obj = parseAPIDate(time);
+  const end = parseAPIDate(timeToCompareTo);
+  const beginning = end.minus({ hours: 24 });
+  return time_obj <= end && time_obj > beginning;
 };

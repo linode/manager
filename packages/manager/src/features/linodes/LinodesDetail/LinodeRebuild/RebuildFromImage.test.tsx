@@ -2,6 +2,7 @@ import {
   cleanup,
   fireEvent,
   render,
+  wait,
   waitForElement
 } from '@testing-library/react';
 import * as React from 'react';
@@ -54,7 +55,7 @@ describe('RebuildFromImage', () => {
     await waitForElement(
       () => [
         getByText('An image is required.'),
-        getByText('Password cannot be blank.')
+        getByText('Password is required.')
       ],
       {}
     );
@@ -70,9 +71,11 @@ describe('RebuildFromImage', () => {
 
     fireEvent.blur(getByTestId('select'));
 
-    fireEvent.change(getByPlaceholderText('Enter a password.'), {
-      target: { value: 'AAbbCC1234!!' }
-    });
+    await wait(() =>
+      fireEvent.change(getByPlaceholderText('Enter a password.'), {
+        target: { value: 'xE7%9hX#hJsM' }
+      })
+    );
     fireEvent.click(getByTestId('rebuild-button'));
 
     await waitForElement(() => getByText('Confirm Linode Rebuild'), {});

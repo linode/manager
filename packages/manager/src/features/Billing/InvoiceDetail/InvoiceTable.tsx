@@ -51,7 +51,7 @@ const renderDate = (v: null | string) =>
   v ? (
     <DateTimeDisplay
       value={v}
-      format={`Y-MM-DD HH:mm:ss`}
+      format={`y-LL-dd HH:mm:ss`}
       data-qa-invoice-date
     />
   ) : null;

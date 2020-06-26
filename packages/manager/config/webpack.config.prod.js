@@ -306,12 +306,6 @@ module.exports = {
       // Don't precache sourcemaps (they're large) and build asset manifest:
       staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/]
     }),
-    // Moment.js is an extremely popular library that bundles large locale files
-    // by default due to how Webpack interprets its code. This is a practical
-    // solution that requires the user to opt into importing specific locales.
-    // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
-    // You can remove this if you don't use Moment.js:
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     // Perform type checking and linting in a separate process to speed up compilation
     new ForkTsCheckerWebpackPlugin({
       async: false,
@@ -357,8 +351,8 @@ module.exports = {
   // See https://webpack.js.org/configuration/performance/
   performance: {
     hints: 'error',
-    maxEntrypointSize: 1180000, // ~1.12 MiB
-    maxAssetSize: 1180000, // ~1.12 MiB
+    maxEntrypointSize: 2000000, // ~1.9 MiB
+    maxAssetSize: 2000000, // ~1.9 MiB
     assetFilter(assetFilename) {
       return !(
         assetFilename.endsWith('.chunk.js') || assetFilename.endsWith('.map')

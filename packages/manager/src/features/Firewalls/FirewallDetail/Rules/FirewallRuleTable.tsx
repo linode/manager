@@ -251,7 +251,6 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
                   [classes.highlight]: status !== 'PENDING_DELETION'
                 })}
                 onClick={() => triggerUndo(id)}
-                role="button"
                 aria-label="Undo change to Firewall Rule"
               >
                 <Undo />

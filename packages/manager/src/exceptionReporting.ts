@@ -16,6 +16,7 @@ const errorsToIgnore: string[] = [
   'TouchRipple'
 ];
 
+// eslint-disable-next-line
 window.addEventListener('unhandledrejection', event => {
   const _stack = event?.reason?.stack;
   // Enforce that `stack` is a string.

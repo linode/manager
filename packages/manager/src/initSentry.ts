@@ -68,6 +68,7 @@ export const initSentry = () => {
         'conduitPage',
         // Don't report client network errors.
         'ChunkLoadError',
+        'Network Error',
         // This is apparently a benign error: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
         'ResizeObserver loop limit exceeded'
       ],

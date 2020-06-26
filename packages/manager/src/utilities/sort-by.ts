@@ -1,5 +1,4 @@
-import * as moment from 'moment';
-
+import { parseAPIDate } from 'src/utilities/date';
 type SortOrder = 'asc' | 'desc';
 
 export const sortByString = (a: string, b: string, order: SortOrder) => {
@@ -16,11 +15,9 @@ export const sortByString = (a: string, b: string, order: SortOrder) => {
 };
 
 export const sortByUTFDate = (a: string, b: string, order: SortOrder) => {
-  const formattedDateA = moment(a).format();
-  const formattedDateB = moment(b).format();
-  const result = moment
-    .utc(moment.utc(formattedDateA))
-    .diff(moment.utc(formattedDateB));
+  const result = parseAPIDate(a)
+    .diff(parseAPIDate(b))
+    .valueOf();
   if (order === 'asc') {
     return result; // ascending order
   }

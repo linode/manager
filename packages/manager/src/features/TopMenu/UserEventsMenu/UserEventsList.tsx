@@ -1,5 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
-import * as moment from 'moment';
+import { parseAPIDate } from 'src/utilities/date';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -27,7 +27,7 @@ export const UserEventsList: React.FC<CombinedProps> = props => {
       {(events as ExtendedEvent[])
         .reduce((result, event): UserEventsListItemProps[] => {
           const title = eventMessageGenerator(event);
-          let content = `${moment(`${event.created}Z`).fromNow()}`;
+          let content = parseAPIDate(event.created).toRelative() || '';
 
           if (event.username) {
             content += ` by ${event.username}`;
