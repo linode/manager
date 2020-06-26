@@ -11,12 +11,10 @@ import { convertForAria } from 'src/components/TabLink/TabLink';
 
 const useStyles = makeStyles(() => ({
   popover: {
-    position: 'relative',
     minWidth: 200,
     width: 200,
     border: '1px solid #a8c9f0',
     borderRadius: 3,
-    // overflow: 'scroll',
     overflowX: 'unset',
     overflowY: 'unset',
     '&:before': {
