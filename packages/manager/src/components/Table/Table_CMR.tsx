@@ -25,6 +25,9 @@ const styles = (theme: Theme) =>
       },
       '& tbody.sorting': {
         opacity: 0.5
+      },
+      '& thead': {
+        borderTop: `1px solid ${theme.palette.divider}`
       }
     },
     responsive: {
