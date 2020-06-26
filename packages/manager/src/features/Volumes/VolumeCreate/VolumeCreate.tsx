@@ -116,7 +116,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
   return {
     regions: state.__resources.regions.entities,
-    linodeId,
+    linode_id: linodeId,
     linodeLabel,
     linodeRegion,
     mode,
