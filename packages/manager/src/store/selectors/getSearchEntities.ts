@@ -151,7 +151,7 @@ const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
 const volumeSelector = ({ volumes }: State) => Object.values(volumes.itemsById);
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
-const imageSelector = (state: State) => state.images.data || {};
+const imageSelector = (state: State) => state.images.itemsById || {};
 const domainSelector = (state: State) =>
   Object.values(state.domains.itemsById) || [];
 const typesSelector = (state: State) => state.types.entities;
