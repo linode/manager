@@ -8,6 +8,7 @@ import {
   MenuPopover
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
+// import Popover, { positionDefault, positionRight } from '@reach/popover';
 import * as React from 'react';
 import HelpIcon from 'src/components/HelpIcon';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -50,12 +51,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: `0 0 0 ${theme.spacing()}px`
   },
   popover: {
-    '&[data-reach-menu-popover]': {
-      right: 0,
-      // Need this to merge the button and items wrapper due to the borderRadius on the wrapper
-      marginTop: -3,
-      zIndex: 1
-    }
+    top: 0,
+    zIndex: 1
   },
   itemsOuter: {
     '&[data-reach-menu-items]': {
@@ -118,6 +115,8 @@ const ActionMenu: React.FC<CombinedProps> = props => {
 
   const [actions, setActions] = React.useState<Action[]>([]);
 
+  const ref = React.useRef<HTMLButtonElement>(null);
+
   React.useEffect(() => {
     setActions(createActions());
   }, [createActions]);
@@ -148,11 +147,12 @@ const ActionMenu: React.FC<CombinedProps> = props => {
           aria-label={ariaLabel}
           onMouseDown={handleClick}
           onKeyDown={handleKeyPress}
+          ref={ref}
         >
           <MoreHoriz aria-hidden type="primary" />
           {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
         </MenuButton>
-        <MenuPopover className={classes.popover} portal={true}>
+        <MenuPopover className={classes.popover}>
           <MenuItems className={classes.itemsOuter}>
             {(actions as Action[]).map((a, idx) => (
               <MenuLink
