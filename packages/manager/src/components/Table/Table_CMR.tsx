@@ -131,7 +131,6 @@ class WrappedTable extends React.Component<CombinedProps> {
       spacingBottom,
       removeLabelonMobile,
       stickyHeader,
-      tableCaption,
       colCount,
       rowCount,
       ...rest
