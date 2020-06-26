@@ -6,8 +6,10 @@ import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import useFlags from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import TableWrapper from './TableWrapper';
+import TableWrapper_CMR from './TableWrapper_CMR';
 
 interface Props {
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
@@ -35,6 +37,8 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
     handleOrderChange,
     ...rest
   } = props;
+
+  const flags = useFlags();
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
@@ -68,13 +72,20 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
         };
         return (
           <React.Fragment>
-            {display === 'list' && (
-              <TableWrapper {...tableWrapperProps}>
-                <TableBody>
-                  <Component showHead {...componentProps} />
-                </TableBody>
-              </TableWrapper>
-            )}
+            {display === 'list' &&
+              (flags.cmr ? (
+                <TableWrapper_CMR {...tableWrapperProps}>
+                  <TableBody>
+                    <Component showHead {...componentProps} />
+                  </TableBody>
+                </TableWrapper_CMR>
+              ) : (
+                <TableWrapper {...tableWrapperProps}>
+                  <TableBody>
+                    <Component showHead {...componentProps} />
+                  </TableBody>
+                </TableWrapper>
+              ))}
             {display === 'grid' && <Component showHead {...componentProps} />}
             <Grid item xs={12}>
               {
