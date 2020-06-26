@@ -84,7 +84,7 @@ const primaryColors = {
 
 const primaryFonts = {
   normal: '"LatoWeb", sans-serif',
-  semiBold: '"LatoWebSemiBold", sans-serif',
+  semiBold: '"LatoWebSemibold", sans-serif',
   bold: '"LatoWebBold", sans-serif'
 };
 
