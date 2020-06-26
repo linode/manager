@@ -103,7 +103,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
     return state.__resources.linodeConfigs[linodeId] ?? { error: {} };
   });
 
-  const configErrorMessage = configsError?.read?.[0].reason
+  const configErrorMessage = configsError?.read
     ? 'Unable to load Configs for this Linode.' // More specific than the API error message
     : undefined;
 
