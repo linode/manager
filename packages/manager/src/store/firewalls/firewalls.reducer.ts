@@ -43,7 +43,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, createFirewallActions.started)) {
-    setError({ create: undefined }, state);
+    return setError({ create: undefined }, state);
   }
 
   if (isType(action, createFirewallActions.done)) {
@@ -61,7 +61,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     isType(action, updateFirewallActions.started) ||
     isType(action, updateFirewallRulesActions.started)
   ) {
-    setError({ update: undefined }, state);
+    return setError({ update: undefined }, state);
   }
 
   if (isType(action, updateFirewallActions.done)) {

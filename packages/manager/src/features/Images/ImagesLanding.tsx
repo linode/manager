@@ -510,9 +510,9 @@ const mapDispatchToProps: MapDispatchToProps<ImageDispatch, {}> = (
 
 const withPrivateImages = connect(
   (state: ApplicationState): WithPrivateImages => {
-    const { error, data, lastUpdated, loading } = state.__resources.images;
+    const { error, itemsById, lastUpdated, loading } = state.__resources.images;
     const events = imageEvents(state.events);
-    const privateImagesWithEvents = Object.values(data).reduce(
+    const privateImagesWithEvents = Object.values(itemsById).reduce(
       (accum, thisImage) =>
         produce(accum, draft => {
           if (!thisImage.is_public) {

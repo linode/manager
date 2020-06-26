@@ -43,7 +43,7 @@ export default <TInner extends {}, TOuter extends {}>(
 ) =>
   connect((state: ApplicationState, ownProps: TOuter) => {
     const {
-      data: imagesData,
+      itemsById: imagesData,
       error: imagesError,
       loading,
       lastUpdated
