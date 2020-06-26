@@ -56,6 +56,7 @@ const TagTableCellStory: React.FC<{ tags: string[] }> = props => {
         entityLabel="MyLinode"
         open={drawerOpen}
         tags={_tags}
+        addTag={addTag}
         deleteTag={deleteTag}
         onClose={() => setDrawerOpen(false)}
       />

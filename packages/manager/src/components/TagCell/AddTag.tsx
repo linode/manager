@@ -18,8 +18,9 @@ const useStyles = makeStyles((_: Theme) => ({
 }));
 
 interface Props {
+  label?: string;
   tags: string[];
-  onClose: () => void;
+  onClose?: () => void;
   addTag: (tag: string) => void;
   fixedMenu?: boolean;
 }
@@ -28,7 +29,7 @@ export type CombinedProps = Props;
 
 export const AddTag: React.FC<Props> = props => {
   const classes = useStyles();
-  const { addTag, onClose, tags, fixedMenu } = props;
+  const { addTag, label, onClose, tags, fixedMenu } = props;
   const [accountTags, setAccountTags] = React.useState<Item<string>[]>([]);
   React.useEffect(() => {
     getTags()
@@ -51,7 +52,9 @@ export const AddTag: React.FC<Props> = props => {
 
   const handleAddTag = (newTag: Item<string>) => {
     addTag(newTag.value);
-    onClose();
+    if (onClose) {
+      onClose();
+    }
   };
   return (
     <Select
@@ -63,10 +66,11 @@ export const AddTag: React.FC<Props> = props => {
       onChange={handleAddTag}
       options={tagOptions}
       variant="creatable"
+      value={null}
       onBlur={onClose}
       placeholder="Create or Select a Tag"
-      label="Create or Select a Tag"
-      hideLabel
+      label={label ?? 'Add a tag'}
+      hideLabel={!label}
       // eslint-disable-next-line
       autoFocus
       createOptionPosition="first"
