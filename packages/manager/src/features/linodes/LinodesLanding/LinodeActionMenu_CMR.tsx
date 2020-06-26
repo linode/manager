@@ -309,16 +309,10 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             ? 'Could not load configs for this Linode.'
             : undefined,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            if (
-              hasMadeConfigsRequest &&
-              !readOnly &&
-              !configsError?.[0]?.reason
-            ) {
-              sendLinodeActionMenuItemEvent('Reboot Linode');
-              e.preventDefault();
-              e.stopPropagation();
-              openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
-            }
+            sendLinodeActionMenuItemEvent('Reboot Linode');
+            e.preventDefault();
+            e.stopPropagation();
+            openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
           },
           ...readOnlyProps
         });

@@ -88,7 +88,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       cursor: 'auto'
     },
     '&[data-reach-menu-item][data-selected]': {
-      background: '#3683dc'
+      background: '#3683dc',
+      color: '#93bcec'
     }
   },
   tooltip: {
@@ -160,7 +161,12 @@ const ActionMenu: React.FC<CombinedProps> = props => {
                   [classes.item]: true,
                   [classes.disabled]: a.disabled
                 })}
-                onClick={a.onClick}
+                onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                  if (!a.disabled) {
+                    return a.onClick(e);
+                  }
+                  e.preventDefault();
+                }}
                 data-qa-action-menu-item={a.title}
                 disabled={a.disabled}
               >
