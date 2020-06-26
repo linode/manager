@@ -10,28 +10,27 @@ import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
-import LinodeActionMenu_CMR from '../LinodeActionMenu_CMR';
 import RegionIndicator from '../RegionIndicator';
 import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
-import styled, { StyleProps } from './LinodeRow.style';
-import LinodeRowBackupCell from './LinodeRowBackupCell';
-import LinodeRowHeadCell from './LinodeRowHeadCell';
-import LinodeRowLoading from './LinodeRowLoading';
+import styled, { StyleProps } from './LinodeRow_CMR.style';
+import LinodeRowBackupCell from './LinodeRowBackupCell_CMR';
+import LinodeRowHeadCell from './LinodeRowHeadCell_CMR';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { transitionText } from 'src/features/linodes/transitions';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseMaintenanceStartTime } from '../utils';
-import useFlags from 'src/hooks/useFlags';
 
 interface Props {
   backups: LinodeBackups;
@@ -94,8 +93,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     mutationAvailable
   } = props;
 
-  const flags = useFlags();
-
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
 
@@ -108,6 +105,17 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       </>
     );
   };
+
+  const StatusIcon = (
+    <div
+      className={classNames({
+        [classes.statusIcon]: true,
+        [classes.statusIconRunning]: status === 'running',
+        [classes.statusIconOffline]: status === 'offline',
+        [classes.statusIconOther]: status !== ('running' || 'offline')
+      })}
+    />
+  );
 
   const headCell = (
     <LinodeRowHeadCell
@@ -132,104 +140,103 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     />
   );
 
-  const ActionMenu = flags.cmr ? LinodeActionMenu_CMR : LinodeActionMenu;
-
   return (
-    <React.Fragment>
-      {loading && (
-        <LinodeRowLoading
-          linodeStatus={status}
-          linodeId={id}
-          linodeRecentEvent={recentEvent}
-        >
-          {headCell}
-        </LinodeRowLoading>
-      )}
-      <TableRow
-        key={id}
-        className={classes.bodyRow}
-        data-qa-loading
-        data-qa-linode={label}
-        rowLink={`/linodes/${id}`}
-        ariaLabel={label}
+    <TableRow
+      key={id}
+      className={classes.bodyRow}
+      data-qa-loading
+      data-qa-linode={label}
+      rowLink={`/linodes/${id}`}
+      ariaLabel={label}
+    >
+      {headCell}
+      <TableCell
+        parentColumn="Status"
+        className={classNames({
+          [classes.statusCell]: true,
+          [classes.statusCellMaintenance]: maintenanceStartTime
+        })}
+        data-qa-status
       >
-        {!loading && headCell}
-        <TableCell
-          parentColumn="Status"
-          className={classNames({
-            [classes.statusCell]: true,
-            [classes.statusCellMaintenance]: maintenanceStartTime
-          })}
-          data-qa-status
-        >
-          {!maintenanceStartTime ? (
-            loading ? (
-              'Busy'
-            ) : (
-              capitalize(displayStatus)
+        {!maintenanceStartTime ? (
+          loading ? (
+            recentEvent && (
+              <>
+                {StatusIcon}
+                <ProgressDisplay
+                  className={classes.progressDisplay}
+                  progress={recentEvent.percent_complete}
+                  text={transitionText(status, id, recentEvent)}
+                />
+              </>
             )
           ) : (
             <>
-              <div>
-                <div>
-                  <strong>Maintenance Scheduled</strong>
-                </div>
-                <div>
-                  {dateTime[0]} at {dateTime[1]}
-                </div>
-              </div>
-              <HelpIcon
-                text={<MaintenanceText />}
-                className={classes.statusHelpIcon}
-                tooltipPosition="top"
-                interactive
-              />
+              {StatusIcon}
+              {capitalize(displayStatus)}
             </>
-          )}
-        </TableCell>
-        <TableCell
-          parentColumn="IP Address"
-          className={classes.ipCell}
-          data-qa-ips
-        >
-          <div className={classes.ipCellWrapper}>
-            <IPAddress ips={ipv4} copyRight showCopyOnHover />
-          </div>
-        </TableCell>
-        <TableCell
-          parentColumn="Region"
-          className={classes.regionCell}
-          data-qa-region
-        >
-          <RegionIndicator region={region} />
-        </TableCell>
-        <LinodeRowBackupCell
-          linodeId={id}
-          backupsEnabled={backups.enabled || false}
-          mostRecentBackup={mostRecentBackup || ''}
-        />
-        <TableCell className={classes.actionCell} data-qa-notifications>
-          <div className={classes.actionInner}>
-            <RenderFlag
-              mutationAvailable={mutationAvailable}
-              linodeNotifications={linodeNotifications}
-              classes={classes}
+          )
+        ) : (
+          <>
+            <div>
+              <div>
+                <strong>Maintenance Scheduled</strong>
+              </div>
+              <div>
+                {dateTime[0]} at {dateTime[1]}
+              </div>
+            </div>
+            <HelpIcon
+              text={<MaintenanceText />}
+              className={classes.statusHelpIcon}
+              tooltipPosition="top"
+              interactive
             />
-            <ActionMenu
-              linodeId={id}
-              linodeLabel={label}
-              linodeRegion={region}
-              linodeType={type}
-              linodeStatus={status}
-              linodeBackups={backups}
-              openDeleteDialog={openDeleteDialog}
-              openPowerActionDialog={openPowerActionDialog}
-              noImage={!image}
-            />
-          </div>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
+          </>
+        )}
+      </TableCell>
+      <TableCell
+        parentColumn="IP Address"
+        className={classes.ipCell}
+        data-qa-ips
+      >
+        <div className={classes.ipCellWrapper}>
+          <IPAddress ips={ipv4} copyRight showCopyOnHover />
+        </div>
+      </TableCell>
+      <TableCell
+        parentColumn="Region"
+        className={classes.regionCell}
+        data-qa-region
+      >
+        <RegionIndicator region={region} />
+      </TableCell>
+      <LinodeRowBackupCell
+        linodeId={id}
+        backupsEnabled={backups.enabled || false}
+        mostRecentBackup={mostRecentBackup || ''}
+      />
+      <TableCell className={classes.actionCell} data-qa-notifications>
+        <div className={classes.actionInner}>
+          <RenderFlag
+            mutationAvailable={mutationAvailable}
+            linodeNotifications={linodeNotifications}
+            classes={classes}
+          />
+          <LinodeActionMenu
+            linodeId={id}
+            linodeLabel={label}
+            linodeRegion={region}
+            linodeType={type}
+            linodeStatus={status}
+            linodeBackups={backups}
+            openDeleteDialog={openDeleteDialog}
+            openPowerActionDialog={openPowerActionDialog}
+            noImage={!image}
+          />
+        </div>
+      </TableCell>
+    </TableRow>
   );
 };
 
@@ -263,6 +270,7 @@ export const RenderFlag: React.FC<{
   }
   if (linodeNotifications.length > 0) {
     return (
+      // eslint-disable-next-line
       <>
         {linodeNotifications.map((notification, idx) => (
           <Tooltip key={idx} title={notification.message}>
@@ -276,3 +284,19 @@ export const RenderFlag: React.FC<{
 };
 
 RenderFlag.displayName = `RenderFlag`;
+
+const ProgressDisplay: React.FC<{
+  className?: string;
+  progress: null | number;
+  text: string;
+}> = props => {
+  const { progress, text, className } = props;
+  const displayProgress = progress ? `${progress}%` : `scheduled`;
+
+  return (
+    <Typography variant="body2" className={className}>
+      {text}:{' '}
+      {displayProgress === 'scheduled' ? '(0%)' : `(${displayProgress})`}
+    </Typography>
+  );
+};

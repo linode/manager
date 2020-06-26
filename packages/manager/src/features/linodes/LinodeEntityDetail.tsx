@@ -52,7 +52,9 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
   const imageSlug = linode.image;
 
   const imageVendor =
-    imageSlug && images.data[imageSlug] ? images.data[imageSlug].vendor : null;
+    imageSlug && images.itemsById[imageSlug]
+      ? images.itemsById[imageSlug].vendor
+      : null;
 
   const linodeType = Boolean(linode.type)
     ? types.entities.find(thisType => thisType.id === linode.type) ?? null

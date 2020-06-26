@@ -13,7 +13,7 @@ export default <TInner extends {}, TOuter extends {}>(
       return { image: null };
     }
 
-    const image = state.__resources.images.data[imageId];
+    const image = state.__resources.images.itemsById[imageId];
 
     return mapImageToProps(ownProps, image);
   });

@@ -14,10 +14,15 @@ type ClassNames =
   | 'bodyRow'
   | 'statusCell'
   | 'statusCellMaintenance'
+  | 'statusIcon'
+  | 'statusIconRunning'
+  | 'statusIconOffline'
+  | 'statusIconOther'
   | 'statusHelpIcon'
   | 'ipCell'
   | 'ipCellWrapper'
   | 'planCell'
+  | 'progressDisplay'
   | 'regionCell'
   | 'iconTableCell'
   | 'icon'
@@ -26,14 +31,24 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     actionCell: {
+      paddingTop: 0,
+      paddingBottom: 0,
+      width: '22%',
       textAlign: 'right',
+      '& button': {
+        maxHeight: 20,
+        width: 30
+      },
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
     },
     actionInner: {
       display: 'flex',
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-end',
+      '& a': {
+        lineHeight: '1.25rem'
+      }
     },
     bodyRow: {
       height: 'auto',
@@ -64,8 +79,11 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       padding: 4
     },
+    progressDisplay: {
+      display: 'inline-block'
+    },
     statusCell: {
-      width: '14%',
+      width: '17%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
@@ -96,6 +114,24 @@ const styles = (theme: Theme) =>
         }
       }
     },
+    statusIcon: {
+      display: 'inline-block',
+      borderRadius: '50%',
+      height: '16px',
+      width: '16px',
+      marginRight: theme.spacing(),
+      position: 'relative',
+      top: 2
+    },
+    statusIconRunning: {
+      backgroundColor: theme.color.green
+    },
+    statusIconOther: {
+      backgroundColor: '#ffb31a'
+    },
+    statusIconOffline: {
+      backgroundColor: theme.color.grey6
+    },
     statusHelpIcon: {
       position: 'relative',
       top: -2
@@ -108,7 +144,12 @@ const styles = (theme: Theme) =>
     },
     ipCellWrapper: {
       display: 'inline-flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+
+      '& *': {
+        fontSize: '.875rem',
+        paddingBottom: 0
+      }
     },
     planCell: {
       width: '14%',

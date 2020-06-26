@@ -24,6 +24,7 @@ export interface ObjectStorageBucket {
   created: string;
   cluster: string;
   hostname: string;
+  size: number; // Size of bucket in bytes
 }
 
 export interface ObjectStorageObject {

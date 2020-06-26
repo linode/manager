@@ -34,9 +34,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(1) + 2,
       color: '#3683dc',
       cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: '#3683dc',
+        color: theme.color.white
+      },
       '&[aria-expanded="true"]': {
         backgroundColor: '#3683dc',
-        color: '#fff'
+        color: theme.color.white,
+        width: '100%'
       }
     }
   },
@@ -53,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   popover: {
     '&[data-reach-menu-popover]': {
       right: 0,
-      // Need this to 'merge the button and items wrapper due to the borderRadius on the wrapper
+      // Need this to merge the button and items wrapper due to the borderRadius on the wrapper
       marginTop: -3,
       zIndex: 1
     }
@@ -66,16 +71,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderRadius: 3,
       border: 'none',
       fontSize: 14,
-      color: '#fff',
+      color: theme.color.white,
       textAlign: 'left'
     }
   },
   item: {
     '&[data-reach-menu-item]': {
       padding: theme.spacing(1) + 2,
+      paddingLeft: '16px',
       borderBottom: '1px solid #5294e0',
       background: '#3683dc',
-      color: '#fff',
+      color: theme.color.white,
       borderRadius: 3
     },
     '&[data-reach-menu-item][data-selected]': {
@@ -88,11 +94,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       cursor: 'auto'
     },
     '&[data-reach-menu-item][data-selected]': {
-      background: '#3683dc'
+      background: '#3683dc',
+      color: '#93bcec'
     }
   },
   tooltip: {
-    color: '#fff',
+    color: theme.color.white,
     padding: '0 12px'
   }
 }));
@@ -113,7 +120,7 @@ type CombinedProps = Props;
 
 const ActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { createActions } = props;
+  const { createActions, toggleOpenCallback } = props;
 
   const [actions, setActions] = React.useState<Action[]>([]);
 
@@ -123,6 +130,18 @@ const ActionMenu: React.FC<CombinedProps> = props => {
 
   const { ariaLabel, inlineLabel } = props;
 
+  const handleClick = () => {
+    if (toggleOpenCallback) {
+      toggleOpenCallback();
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (toggleOpenCallback && e.keyCode === 13) {
+      toggleOpenCallback();
+    }
+  };
+
   if (typeof actions === 'undefined') {
     return null;
   }
@@ -130,11 +149,16 @@ const ActionMenu: React.FC<CombinedProps> = props => {
   return (
     <div className={classes.wrapper}>
       <Menu>
-        <MenuButton className={classes.button} aria-label={ariaLabel}>
+        <MenuButton
+          className={classes.button}
+          aria-label={ariaLabel}
+          onMouseDown={handleClick}
+          onKeyDown={handleKeyPress}
+        >
           <KebabIcon aria-hidden className={classes.icon} type="primary" />
           {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
         </MenuButton>
-        <MenuPopover className={classes.popover} portal={false}>
+        <MenuPopover className={classes.popover} portal={true}>
           <MenuItems className={classes.itemsOuter}>
             {(actions as Action[]).map((a, idx) => (
               <MenuLink
@@ -143,7 +167,12 @@ const ActionMenu: React.FC<CombinedProps> = props => {
                   [classes.item]: true,
                   [classes.disabled]: a.disabled
                 })}
-                onClick={a.onClick}
+                onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                  if (!a.disabled) {
+                    return a.onClick(e);
+                  }
+                  e.preventDefault();
+                }}
                 data-qa-action-menu-item={a.title}
                 disabled={a.disabled}
               >

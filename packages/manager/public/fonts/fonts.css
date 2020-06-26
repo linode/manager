@@ -13,7 +13,7 @@
 
 /* Webfont: Lato-SemiBold */
 @font-face {
-  font-family: 'LatoWebSemiBold';
+  font-family: 'LatoWebSemibold';
   src: url('fonts/Lato-Semibold.eot'); /* IE9 Compat Modes */
   src: url('fonts/Lato-Semibold.eot?#iefix') format('embedded-opentype'),
     /* IE6-IE8 */ url('fonts/Lato-Semibold.woff2') format('woff2'),
