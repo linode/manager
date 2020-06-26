@@ -351,7 +351,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               linodeStatus === 'running' ? configs : []
             );
           }}
-          disabled={!['running', 'offline', 'stopped'].includes(linodeStatus)}
+          disabled={!['running', 'offline'].includes(linodeStatus)}
         >
           {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
         </button>
