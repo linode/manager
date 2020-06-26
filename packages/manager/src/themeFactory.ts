@@ -48,6 +48,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     font?: any;
     animateCircleIcon?: any;
     addCircleHoverEffect?: any;
+    applyLinkStyles?: any;
 
     notificationList: any;
     status: any;
@@ -111,6 +112,19 @@ const iconCircleHoverEffect = {
   },
   '& .insidePath *': {
     stroke: 'white'
+  }
+};
+
+// Used for styling html buttons to look like our generic links
+const genericLinkStyle = {
+  background: 'none',
+  color: primaryColors.main,
+  border: 'none',
+  padding: 0,
+  font: 'inherit',
+  cursor: 'pointer',
+  '&:hover': {
+    textDecoration: 'underline'
   }
 };
 
@@ -313,6 +327,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     addCircleHoverEffect: {
       ...iconCircleHoverEffect
+    },
+    applyLinkStyles: {
+      ...genericLinkStyle
     },
     notificationList: {
       padding: '16px 32px 16px 23px',
