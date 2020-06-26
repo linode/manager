@@ -10,10 +10,10 @@ import SortUp from 'src/assets/icons/sort-up.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRight: `1px solid ${theme.color.divider}`,
+    borderRight: '1px solid #f4f4f4',
     padding: '10px 15px',
     '&:first-child': {
-      borderLeft: `1px solid ${theme.color.divider}`
+      borderLeft: '1px solid #f4f4f4'
     },
     '&:hover': {
       backgroundColor: '#3683dc',
