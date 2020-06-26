@@ -3,12 +3,13 @@ import {
   getEvents as _getEvents,
   markEventSeen
 } from '@linode/api-v4/lib/account';
-import * as moment from 'moment';
-import { dateFormat } from 'src/time';
+import { DateTime } from 'luxon';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 import { ThunkActionCreator } from '../types';
 import { addEvents, updateEventsAsSeen } from './event.actions';
 import { epoch, isInProgressEvent } from './event.helpers';
+import { parseAPIDate } from 'src/utilities/date';
 
 /**
  * Will send a filtered request for events which have been created on or after the most recent existing
@@ -34,7 +35,7 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   const neqIds: number[] = [];
   if (_events.length > 0) {
     _events.forEach(thisEvent => {
-      const thisEventCreated = moment.utc(thisEvent.created).valueOf();
+      const thisEventCreated = parseAPIDate(thisEvent.created).valueOf();
 
       if (
         thisEventCreated === mostRecentEventTime &&
@@ -46,7 +47,9 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   }
 
   const filters = generatePollingFilter(
-    moment.utc(mostRecentEventTime).format(dateFormat),
+    DateTime.fromMillis(mostRecentEventTime, { zone: 'utc' }).toFormat(
+      ISO_DATETIME_NO_TZ_FORMAT
+    ),
     inIds,
     neqIds
   );

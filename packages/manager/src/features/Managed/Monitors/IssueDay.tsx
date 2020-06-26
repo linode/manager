@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
+export interface Props {
   issues: ExtendedIssue[];
   day: string;
 }
@@ -51,7 +51,7 @@ const DayDisplay: React.FC<DisplayProps> = props => {
       <Grid item>
         <DateTimeDisplay
           value={day}
-          format={'D-MMM-YYYY'}
+          format={'d-LLL-yyyy'}
           className={`${ticketUrl ? classes.failureText : ''}`}
         />
       </Grid>

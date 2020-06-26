@@ -1,6 +1,6 @@
 import { getSSHKeys, SSHKey } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as moment from 'moment-timezone';
+import { parseAPIDate } from 'src/utilities/date';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
@@ -214,7 +214,7 @@ const updateResponseData = (keys: SSHKey[]) =>
   keys.map(key => ({
     ...key,
     fingerprint: fingerprint(key.ssh_key),
-    created: moment.utc(key.created).fromNow()
+    created: parseAPIDate(key.created).toRelative()
   }));
 
 const documented = setDocs(SSHKeys.docs);
@@ -227,9 +227,6 @@ const updatedRequest = (ownProps: any, params: any, filters: any) =>
 
 const paginated = paginate(updatedRequest);
 
-const enhanced = compose<CombinedProps, {}>(
-  paginated,
-  documented
-);
+const enhanced = compose<CombinedProps, {}>(paginated, documented);
 
 export default enhanced(SSHKeys);

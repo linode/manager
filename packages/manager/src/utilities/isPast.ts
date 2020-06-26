@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import { parseAPIDate } from './date';
 
 export default (a: string) => (b: string): boolean =>
-  moment.utc(b).isAfter(moment.utc(a));
+  parseAPIDate(b) >= parseAPIDate(a);

@@ -78,7 +78,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     lastUpdatedError,
     authed
   } = useClientLastUpdated(clientAPIKey, _lastUpdated =>
-    props.getClientStats(clientAPIKey, _lastUpdated)
+    props.getClientStats(clientAPIKey, _lastUpdated).catch(_ => null)
   );
 
   /**
