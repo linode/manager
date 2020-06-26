@@ -1,17 +1,17 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
-import zxcvbn from 'zxcvbn';
-import { MINIMUM_PASSWORD_STRENGTH } from 'src/constants';
+// import zxcvbn from 'zxcvbn';
+// import { MINIMUM_PASSWORD_STRENGTH } from 'src/constants';
 
 const stackscript_data = array()
   .of(object())
   .nullable(true);
 
-const rootPasswordValidation = string().test(
-  'is-strong-password',
-  'Password does not meet strength requirements.',
-  (value: string) =>
-    Boolean(value) && zxcvbn(value).score >= MINIMUM_PASSWORD_STRENGTH
-);
+// const rootPasswordValidation = string().test(
+//   'is-strong-password',
+//   'Password does not meet strength requirements.',
+//   (value: string) =>
+//     Boolean(value) && zxcvbn(value).score >= MINIMUM_PASSWORD_STRENGTH
+// );
 
 export const ResizeLinodeDiskSchema = object({
   size: number()
@@ -20,9 +20,8 @@ export const ResizeLinodeDiskSchema = object({
 });
 
 export const UpdateLinodePasswordSchema = object({
-  password: string()
-    .required('Password is required.')
-    .concat(rootPasswordValidation)
+  password: string().required('Password is required.')
+  // .concat(rootPasswordValidation)
 });
 
 export const CreateLinodeSchema = object({
@@ -56,11 +55,10 @@ export const CreateLinodeSchema = object({
     .notRequired(),
   root_pass: string().when('image', {
     is: value => Boolean(value),
-    then: string()
-      .required(
-        'You must provide a root password when deploying from an image.'
-      )
-      .concat(rootPasswordValidation),
+    then: string().required(
+      'You must provide a root password when deploying from an image.'
+    ),
+    // .concat(rootPasswordValidation),
     otherwise: string().notRequired()
   })
 });
@@ -138,9 +136,8 @@ const SSHKeySchema = object({
 // Include `shape()` here so that the schema can be extended without TS complaining.
 export const RebuildLinodeSchema = object().shape({
   image: string().required('An image is required.'),
-  root_pass: string()
-    .required('Password is required.')
-    .concat(rootPasswordValidation),
+  root_pass: string().required('Password is required.'),
+  // .concat(rootPasswordValidation),
   authorized_keys: array().of(SSHKeySchema),
   authorized_users: array().of(string()),
   stackscript_id: number().notRequired(),
@@ -232,11 +229,10 @@ export const CreateLinodeDiskSchema = object({
   authorized_users: array().of(string()),
   root_pass: string().when('image', {
     is: value => Boolean(value),
-    then: string()
-      .required(
-        'You must provide a root password when deploying from an image.'
-      )
-      .concat(rootPasswordValidation),
+    then: string().required(
+      'You must provide a root password when deploying from an image.'
+    ),
+    // .concat(rootPasswordValidation),
     otherwise: string().notRequired()
   }),
   stackscript_id: number(),
