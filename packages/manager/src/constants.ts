@@ -302,3 +302,6 @@ export const OBJECT_STORAGE_ROOT = 'linodeobjects.com';
  * to simulate folder traversal of a bucket.
  */
 export const OBJECT_STORAGE_DELIMITER = '/';
+
+// Value from  1-4 reflecting a minimum score from zxcvbn
+export const MINIMUM_PASSWORD_STRENGTH = 2;
