@@ -1,6 +1,9 @@
 import { rest } from 'msw';
 
-import { firewallDeviceFactory } from 'src/factories/firewalls';
+import {
+  firewallFactory,
+  firewallDeviceFactory
+} from 'src/factories/firewalls';
 
 export const makeResourcePage = (e: any[]) => ({
   page: 1,
@@ -18,11 +21,11 @@ export const handlers = [
   //   const clusters = kubernetesClusterFactory.buildList(10);
   //   return res(ctx.json(makeResourcePage(clusters)));
   // }),
-  // rest.get('/networking/firewalls', (req, res, ctx) => {
-  //   const firewalls = firewallFactory.buildList(10);
-  //   return res(ctx.json(makeResourcePage(firewalls)));
-  // }),
-  rest.get('*', (req, res, ctx) => {
+  rest.get('*/firewalls/', (req, res, ctx) => {
+    const firewalls = firewallFactory.buildList(10);
+    return res(ctx.json(makeResourcePage(firewalls)));
+  }),
+  rest.get('*/firewalls/*/devices', (req, res, ctx) => {
     const devices = firewallDeviceFactory.buildList(10);
     return res(ctx.json(makeResourcePage(devices)));
   })

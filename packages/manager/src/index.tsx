@@ -36,6 +36,14 @@ initAnalytics(isProductionBuild, GA_ID);
 
 initTagManager(GTM_ID);
 
+/**
+ * Uncomment to mock API responses using
+ * the handlers in mocks/serverHandlers
+ */
+
+import { worker } from './testBrowser';
+worker.start();
+
 const renderNullAuth = () => <span>null auth route</span>;
 
 const renderNull = () => <span>null route</span>;
