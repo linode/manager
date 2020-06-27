@@ -9,6 +9,9 @@ import {
   linodeConfigFactory,
   linodeDiskFactory,
   linodeFactory,
+  linodeIPFactory,
+  linodeStatsFactory,
+  linodeTransferFactory,
   nodeBalancerFactory,
   // profileFactory
   volumeFactory
@@ -48,6 +51,18 @@ export const handlers = [
   rest.get('*/instances/*/disks', async (req, res, ctx) => {
     const disks = linodeDiskFactory.buildList(3);
     return res(ctx.json(makeResourcePage(disks)));
+  }),
+  rest.get('*/instances/*/transfer', async (req, res, ctx) => {
+    const transfer = linodeTransferFactory.build();
+    return res(ctx.json(transfer));
+  }),
+  rest.get('*/instances/*/stats', async (req, res, ctx) => {
+    const stats = linodeStatsFactory.build();
+    return res(ctx.json(stats));
+  }),
+  rest.get('*/instances/*/ips', async (req, res, ctx) => {
+    const ips = linodeIPFactory.build();
+    return res(ctx.json(ips));
   }),
   rest.post('*/instances', async (req, res, ctx) => {
     const payload = req.body as any;
