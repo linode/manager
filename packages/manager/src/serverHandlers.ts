@@ -62,5 +62,8 @@ export const handlers = [
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(10);
     return res(ctx.json(makeResourcePage(volumes)));
+  }),
+  rest.get('*/profile/preferences', (req, res, ctx) => {
+    return res(ctx.json({}));
   })
 ];
