@@ -17,8 +17,6 @@ import {
 
 afterEach(cleanup);
 
-jest.mock('@linode/api-v4/lib/firewalls');
-
 describe('FirewallRow', () => {
   describe('Utility functions', () => {
     it('should return correct number of inbound and outbound rules', () => {
@@ -50,7 +48,7 @@ describe('FirewallRow', () => {
       triggerEnableFirewall: mockTriggerEnableFirewall
     };
 
-    it('renders a TableRow with label, status, rules, and Linodes', () => {
+    it.only('renders a TableRow with label, status, rules, and Linodes', done => {
       const { getByTestId, getByText } = render(
         wrapWithTableBody(<FirewallRow {...baseProps} />)
       );
@@ -58,6 +56,7 @@ describe('FirewallRow', () => {
       getByText(firewall.label);
       getByText(firewall.status);
       getByText(getRuleString(getCountOfRules(firewall.rules)));
+      setTimeout(done, 4000);
     });
   });
 

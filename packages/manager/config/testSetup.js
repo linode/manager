@@ -32,10 +32,10 @@ const localStorageMock = (function() {
 // If we ever forget to mock a request in our unit tests,
 // and hit the API, log an error to the console (and stop
 // the request)
-sdk.baseRequest.interceptors.request.use(request => {
-  console.error('Making a real API request', request.url);
-  return null;
-});
+// sdk.baseRequest.interceptors.request.use(request => {
+//   console.error('Making a real API request', request.url);
+//   return request;
+// });
 
 // Our renderWithTheme helper includes a call to /preferences, mock that out
 jest.mock('@linode/api-v4/lib/profile', () => ({
