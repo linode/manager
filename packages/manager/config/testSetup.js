@@ -1,5 +1,4 @@
 // Configure Enzyme Adapter
-const sdk = require('@linode/api-v4/lib/request');
 const preferences = require.requireMock('@linode/api-v4/lib/profile');
 const Enzyme = require('enzyme');
 const Adapter = require('enzyme-adapter-react-16');
@@ -48,7 +47,7 @@ preferences.updateUserPreferences = jest.fn().mockResolvedValue({});
 
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
-Object.defineProperty(window, 'URL', { value: { createObjectURL: jest.fn() } });
+// Object.defineProperty(window, 'URL', { value: { createObjectURL: jest.fn() } });
 
 HTMLCanvasElement.prototype.getContext = () => {
   return 0;

@@ -42,14 +42,8 @@ export const useFirewallDevices = (firewallID: number): UseDevicesProps => {
   );
   const requestDevices = () =>
     dispatch(getAllFirewallDevices({ firewallID }))
-      .then(response => {
-        console.log(response);
-        return response.data;
-      })
-      .catch(err => {
-        console.log(err);
-        return err;
-      }); // Handle errors through Redux
+      .then(response => response.data)
+      .catch(_ => null); // Handle errors through Redux
   const addDevice = (newDevice: FirewallDevicePayload) =>
     dispatch(addFirewallDevice({ firewallID, ...newDevice }));
   const removeDevice = (deviceID: number) =>

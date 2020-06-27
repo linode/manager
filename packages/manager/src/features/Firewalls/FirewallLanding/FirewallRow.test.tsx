@@ -48,7 +48,7 @@ describe('FirewallRow', () => {
       triggerEnableFirewall: mockTriggerEnableFirewall
     };
 
-    it.only('renders a TableRow with label, status, rules, and Linodes', done => {
+    it.only('renders a TableRow with label, status, rules, and Linodes', () => {
       const { getByTestId, getByText } = render(
         wrapWithTableBody(<FirewallRow {...baseProps} />)
       );
@@ -56,7 +56,6 @@ describe('FirewallRow', () => {
       getByText(firewall.label);
       getByText(firewall.status);
       getByText(getRuleString(getCountOfRules(firewall.rules)));
-      setTimeout(done, 4000);
     });
   });
 
