@@ -6,6 +6,8 @@ import {
   firewallFactory,
   firewallDeviceFactory,
   kubernetesClusterFactory,
+  linodeConfigFactory,
+  linodeDiskFactory,
   linodeFactory,
   nodeBalancerFactory,
   // profileFactory
@@ -38,6 +40,24 @@ export const handlers = [
   rest.get('*/instances', async (req, res, ctx) => {
     const linodes = linodeFactory.buildList(10);
     return res(ctx.json(makeResourcePage(linodes)));
+  }),
+  rest.get('*/instances/*/configs', async (req, res, ctx) => {
+    const configs = linodeConfigFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(configs)));
+  }),
+  rest.get('*/instances/*/disks', async (req, res, ctx) => {
+    const disks = linodeDiskFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(disks)));
+  }),
+  rest.post('*/instances', async (req, res, ctx) => {
+    const payload = req.body as any;
+    const linode = linodeFactory.build({
+      label: payload?.label ?? 'new-linode',
+      type: payload?.type ?? 'g6-standard-1',
+      image: payload?.image ?? 'linode/debian-10',
+      region: payload?.region ?? 'us-east'
+    });
+    return res(ctx.json(linode));
   }),
   rest.get('*/lke/clusters', async (req, res, ctx) => {
     const clusters = kubernetesClusterFactory.buildList(10);
