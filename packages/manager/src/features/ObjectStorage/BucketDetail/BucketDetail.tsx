@@ -38,6 +38,9 @@ import { getQueryParam } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
 import ObjectUploader from '../ObjectUploader';
 import { deleteObject } from '../requests';
+import bucketRequestsContainer, {
+  BucketsRequests
+} from 'src/containers/bucketRequests.container';
 import {
   displayName,
   ExtendedObject,
@@ -85,6 +88,7 @@ const styles = (theme: Theme) =>
       color: theme.color.headline
     },
     tryAgainText: {
+      ...theme.applyLinkStyles,
       color: theme.palette.primary.main,
       textDecoration: 'underline',
       cursor: 'pointer'
@@ -108,7 +112,8 @@ interface MatchProps {
 
 type CombinedProps = RouteComponentProps<MatchProps> &
   WithStyles<ClassNames> &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  BucketsRequests;
 
 interface State {
   data: ExtendedObject[];
@@ -287,6 +292,11 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       );
 
       await deleteObject(url);
+      // Request the Bucket again so the updated size is reflected on the Bucket Landing page.
+      this.props
+        .getBucket({ cluster: clusterId, label: bucketName })
+        // It's OK to swallow the error here, since this request is for a silent UI update.
+        .catch(_ => null);
 
       this.setState({
         deleteObjectLoading: false,
@@ -485,13 +495,12 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
               {nextPageError && (
                 <Typography variant="subtitle2" className={classes.footer}>
                   The next objects in the list failed to load.{' '}
-                  <span
+                  <button
                     className={classes.tryAgainText}
                     onClick={this.getNextPage}
-                    role="button"
                   >
                     Click here to try again.
-                  </span>
+                  </button>
                 </Typography>
               )}
 
@@ -542,6 +551,10 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(styled, withSnackbar);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  withSnackbar,
+  bucketRequestsContainer
+);
 
 export default enhanced(BucketDetail);

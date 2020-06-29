@@ -17,6 +17,17 @@ import {
 } from './types';
 
 /**
+ * getBucket
+ *
+ * Get one Object Storage Bucket.
+ */
+export const getBucket = (clusterId: string, bucketName: string) =>
+  Request<ObjectStorageBucket>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}`)
+  ).then(response => response.data);
+
+/**
  * getBuckets
  *
  * Gets a list of a user's Object Storage Buckets.

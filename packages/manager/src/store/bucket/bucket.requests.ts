@@ -1,20 +1,21 @@
 import {
   createBucket as _createBucket,
   deleteBucket as _deleteBucket,
+  getBucket as _getBucket,
   getBucketsInCluster,
   ObjectStorageBucket,
   ObjectStorageBucketRequestPayload,
   ObjectStorageClusterID,
   ObjectStorageDeleteBucketRequestPayload
 } from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData, getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
   createBucketActions,
   deleteBucketActions,
-  getAllBucketsForAllClustersActions
+  getAllBucketsForAllClustersActions,
+  getBucketActions
 } from './bucket.actions';
 import { BucketError } from './types';
 
@@ -23,11 +24,9 @@ import { BucketError } from './types';
  */
 
 export type CreateBucketRequest = ObjectStorageBucketRequestPayload;
-export const createBucket = createRequestThunk<
-  CreateBucketRequest,
-  ObjectStorageBucket,
-  APIError[]
->(createBucketActions, data => _createBucket(data));
+export const createBucket = createRequestThunk(createBucketActions, data =>
+  _createBucket(data)
+);
 
 /*
  * Get All Buckets from All Clusters
@@ -104,8 +103,14 @@ export const gatherDataAndErrors = (
  * Delete Bucket
  */
 export type DeleteBucketRequest = ObjectStorageDeleteBucketRequestPayload;
-export const deleteBucket = createRequestThunk<
-  ObjectStorageDeleteBucketRequestPayload,
-  {},
-  APIError[]
->(deleteBucketActions, data => _deleteBucket(data));
+export const deleteBucket = createRequestThunk(deleteBucketActions, data =>
+  _deleteBucket(data)
+);
+
+/*
+ * Get a Bucket
+ */
+export type GetBucketRequest = ObjectStorageBucketRequestPayload;
+export const getBucket = createRequestThunk(getBucketActions, data =>
+  _getBucket(data.cluster, data.label)
+);
