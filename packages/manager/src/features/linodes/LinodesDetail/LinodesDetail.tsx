@@ -9,6 +9,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import useFlags from 'src/hooks/useFlags';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { WithTypes } from 'src/store/linodeType/linodeType.containers';
 import { ThunkDispatch } from 'src/store/types';
@@ -25,6 +26,9 @@ const CloneLanding = React.lazy(() => import('../CloneLanding'));
 const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
 const LinodesDetailNavigation = React.lazy(() =>
   import('./LinodesDetailNavigation')
+);
+const LinodesDetailNavigation_CMR = React.lazy(() =>
+  import('./LinodesDetailNavigation_CMR')
 );
 const MigrateLanding = React.lazy(() => import('../MigrateLanding'));
 
@@ -61,6 +65,8 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
 
   const ctx: LinodeDetailContext = createLinodeDetailContext(linode, dispatch);
 
+  const flags = useFlags();
+
   /**
    * Other portions of loading state handled by maybeRenderLoading
    * (Linode info, configs, disks, etc.)
@@ -88,7 +94,11 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
             render={() => (
               <React.Fragment>
                 <LinodesDetailHeader />
-                <LinodesDetailNavigation />
+                {flags.cmr ? (
+                  <LinodesDetailNavigation_CMR />
+                ) : (
+                  <LinodesDetailNavigation />
+                )}
               </React.Fragment>
             )}
           />
