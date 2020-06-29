@@ -3,7 +3,7 @@ import {
   Linode,
   LinodeBackupsResponse
 } from '@linode/api-v4/lib/linodes';
-import { compose as ramdaCompose, pathOr } from 'ramda';
+import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 // import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
@@ -119,6 +119,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
         this.setState({ selectedLinodeWithBackups, isGettingBackups: false });
       })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .catch(err => {
         this.setState({
           isGettingBackups: false,
@@ -217,6 +218,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
 
+    // eslint-disable-next-line sonarjs/no-unused-collection
     const displaySections = [];
 
     if (regionDisplayInfo) {
@@ -244,11 +246,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           typeDisplayInfo.backupsMonthly
         )
       );
-    }
-
-    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
-      calculatedPrice += typeDisplayInfo.backupsMonthly;
     }
 
     return (

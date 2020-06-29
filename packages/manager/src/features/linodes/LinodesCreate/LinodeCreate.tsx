@@ -6,6 +6,7 @@ import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
+import DocsSidebar from 'src/components/DocsSidebar';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -50,6 +51,7 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
+import { AppsDocs } from 'src/documentation';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
@@ -519,6 +521,9 @@ export class LinodeCreate extends React.PureComponent<
           >
             <DisplaySectionList displaySections={displaySections} />
           </CheckoutBar>
+          {/* {this.props.documentation.length > 0 && (
+            <DocsSidebar docs={this.props.documentation} />
+          )} */}
         </Grid>
       </form>
     );

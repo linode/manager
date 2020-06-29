@@ -109,12 +109,7 @@ export const TabbedPanel: React.FC<CombinedProps> = props => {
     rootClass,
     innerClass,
     tabs,
-    index,
-    initTab,
-    bodyClass,
-    noPadding,
     handleTabChange,
-    value,
     ...rest
   } = props;
 

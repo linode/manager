@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Paper from 'src/components/core/Paper';
@@ -99,6 +98,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
 
     const hasBackups = backupsEnabled || accountBackupsEnabled;
 
+    // eslint-disable-next-line sonarjs/no-unused-collection
     const displaySections = [];
     if (regionInfo) {
       displaySections.push({
@@ -126,11 +126,6 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
         )
       );
     }
-
-    // let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-    // if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
-    //   calculatedPrice += typeInfo.backupsMonthly;
-    // }
 
     return (
       // eslint-disable-next-line
