@@ -49,6 +49,7 @@ import {
 } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
+import { truncateEnd } from 'src/utilities/truncate';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
@@ -492,7 +493,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       data: this.props.domainRecords.filter(typeEq('TXT')),
       columns: [
         { title: 'Hostname', render: (r: DomainRecord) => r.name },
-        { title: 'Value', render: (r: DomainRecord) => r.target },
+        {
+          title: 'Value',
+          render: (r: DomainRecord) => truncateEnd(r.target, 255)
+        },
         { title: 'TTL', render: getTTL },
         {
           title: '',
