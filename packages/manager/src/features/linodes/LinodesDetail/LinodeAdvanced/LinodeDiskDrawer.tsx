@@ -24,7 +24,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
-import { validatePassword } from 'src/utilities/validatePassword';
+import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { object, string } from 'yup';
 
 import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
@@ -127,27 +127,10 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
    */
   const CreateFromImageSchema = React.useMemo(
     () =>
-      // @todo upgrade Yup and @types/yup to better handle this
-      (CreateLinodeDiskFromImageSchema as any).clone().shape({
-        root_pass: string()
-          .required('Password is required.')
-          .test({
-            name: 'root-password-strength',
-            // eslint-disable-next-line object-shorthand
-            test: function(value) {
-              const passwordError = validatePassword(
-                passwordValidation ?? 'none',
-                value
-              );
-              return Boolean(validatePassword)
-                ? this.createError({
-                    message: passwordError,
-                    path: 'root_pass'
-                  })
-                : true;
-            }
-          })
-      }),
+      extendValidationSchema(
+        passwordValidation ?? 'none',
+        CreateLinodeDiskFromImageSchema
+      ),
     [passwordValidation]
   );
 
