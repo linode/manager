@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Table from 'src/components/Table';
 import SortableTableHead_CMR from './SortableTableHead_CMR';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   paperWrapper: {
     backgroundColor: 'transparent'
   }
@@ -26,7 +26,7 @@ const TableWrapper: React.FC<CombinedProps> = props => {
   return (
     <Paper className={classes.paperWrapper}>
       <Grid container className="my0">
-        <Grid item xs={12} className="py0">
+        <Grid item xs={12} className="p0">
           <Table
             aria-label="List of Linodes"
             rowCount={dataLength}
