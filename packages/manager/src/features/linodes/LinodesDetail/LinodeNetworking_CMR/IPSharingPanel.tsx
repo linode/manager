@@ -408,6 +408,7 @@ const enhanced = recompose<CombinedProps, Props & RenderGuardProps>(
         })
         .map((linode: Linode) => {
           // side-effect of this mapping is saving the labels
+          // eslint-disable-next-line array-callback-return
           linode.ipv4.map((ip: string) => {
             choiceLabels[ip] = linode.label;
           });

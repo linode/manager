@@ -223,6 +223,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           errorResponse,
           `Error booting ${label}`
         );
+        // eslint-disable-next-line array-callback-return
         errors.map((error: APIError) => {
           this.props.enqueueSnackbar(error.reason, {
             variant: 'error'

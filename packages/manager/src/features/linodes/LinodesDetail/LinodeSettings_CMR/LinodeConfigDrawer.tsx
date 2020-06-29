@@ -539,6 +539,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 onChange={this.handleRootDeviceChangeTextfield}
                 inputProps={{ name: 'root_device', id: 'root_device' }}
                 fullWidth
+                // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus={true}
                 errorText={errorFor('root_device')}
                 errorGroup="linode-config-drawer"

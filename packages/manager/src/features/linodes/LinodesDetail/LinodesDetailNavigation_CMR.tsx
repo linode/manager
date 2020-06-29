@@ -14,7 +14,7 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
-import VolumesLanding from 'src/features/Volumes/VolumesLanding';
+import VolumesLanding_CMR from 'src/features/Volumes/VolumesLanding_CMR';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
 const LinodeSummary_CMR = React.lazy(() => import('./LinodeSummary_CMR'));
@@ -151,7 +151,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
                 role="tabpanel"
                 aria-labelledby="tab-storage"
               >
-                <VolumesLanding
+                <VolumesLanding_CMR
                   linodeId={linodeId}
                   linodeLabel={linodeLabel}
                   linodeRegion={linodeRegion}

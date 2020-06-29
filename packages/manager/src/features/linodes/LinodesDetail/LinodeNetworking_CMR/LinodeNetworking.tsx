@@ -886,6 +886,7 @@ export const listIPv6InRange = (
       !['ipv6/range', 'ipv6/pool'].includes(thisIP.type) ||
       thisIP.rdns === null
     ) {
+      // eslint-disable-next-line array-callback-return
       return;
     }
 
