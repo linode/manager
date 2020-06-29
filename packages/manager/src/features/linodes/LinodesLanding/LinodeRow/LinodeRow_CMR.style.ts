@@ -35,10 +35,8 @@ const styles = (theme: Theme) =>
       paddingBottom: 0,
       width: '22%',
       textAlign: 'right',
-      '& button': {
-        maxHeight: 20,
-        width: 30
-      },
+      paddingRight: '0 !important',
+
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }

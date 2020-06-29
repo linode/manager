@@ -33,11 +33,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
     display: 'flex',
     alignItems: 'center',
-    justify: 'center'
+    justifyContent: 'center'
   },
   link: {
-    padding: '12.5px 15px',
-    width: '6.5em',
+    display: 'flex',
+    alignItems: 'center',
+    padding: 10,
+    height: 44,
     textAlign: 'center',
     '&:hover': {
       backgroundColor: '#3683dc',
@@ -58,7 +60,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: 'none',
     font: 'inherit',
     cursor: 'pointer',
-    width: '6.5em',
+    padding: 10,
+    height: 44,
     '&:hover': {
       backgroundColor: '#3683dc',
       color: theme.color.white
@@ -69,8 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&:hover': {
         backgroundColor: 'inherit'
       }
-    },
-    padding: '12.5px 0px'
+    }
   }
 }));
 
