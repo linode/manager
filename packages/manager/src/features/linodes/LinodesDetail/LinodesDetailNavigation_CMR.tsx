@@ -17,15 +17,27 @@ import TabLink from 'src/components/TabLink';
 import VolumesLanding_CMR from 'src/features/Volumes/VolumesLanding_CMR';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
-const LinodeSummary_CMR = React.lazy(() => import('./LinodeSummary_CMR'));
-const LinodeNetworking_CMR = React.lazy(() => import('./LinodeNetworking_CMR'));
-const LinodeAdvanced_CMR = React.lazy(() => import('./LinodeAdvanced_CMR'));
-const LinodeBackup_CMR = React.lazy(() => import('./LinodeBackup_CMR'));
+const LinodeSummary_CMR = React.lazy(() =>
+  import('./LinodeSummary/LinodeSummary_CMR')
+);
+const LinodeNetworking_CMR = React.lazy(() =>
+  import('./LinodeNetworking/LinodeNetworking_CMR')
+);
+const LinodeAdvanced_CMR = React.lazy(() =>
+  import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel_CMR')
+);
+const LinodeBackup_CMR = React.lazy(() =>
+  import('./LinodeBackup/LinodeBackup_CMR')
+);
 const LinodeResize = React.lazy(() => import('./LinodeResize'));
 const LinodeRescue = React.lazy(() => import('./LinodeRescue'));
 const LinodeRebuild = React.lazy(() => import('./LinodeRebuild'));
-const LinodeActivity_CMR = React.lazy(() => import('./LinodeActivity_CMR'));
-const LinodeSettings_CMR = React.lazy(() => import('./LinodeSettings_CMR'));
+const LinodeActivity_CMR = React.lazy(() =>
+  import('./LinodeActivity/LinodeActivity_CMR')
+);
+const LinodeSettings_CMR = React.lazy(() =>
+  import('./LinodeSettings/LinodeSettings_CMR')
+);
 
 type CombinedProps = ContextProps &
   RouteComponentProps<{
