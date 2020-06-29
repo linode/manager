@@ -8,7 +8,6 @@ import {
   MenuPopover
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
-// import Popover, { positionDefault, positionRight } from '@reach/popover';
 import * as React from 'react';
 import HelpIcon from 'src/components/HelpIcon';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -51,7 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: `0 0 0 ${theme.spacing()}px`
   },
   popover: {
-    top: 0,
     zIndex: 1
   },
   itemsOuter: {
@@ -59,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: 0,
       width: 200,
       background: '#3683dc',
-      borderRadius: 3,
+      borderRadius: '3px 0 3px 3px',
       border: 'none',
       fontSize: 14,
       color: theme.color.white,
@@ -115,8 +113,6 @@ const ActionMenu: React.FC<CombinedProps> = props => {
 
   const [actions, setActions] = React.useState<Action[]>([]);
 
-  const ref = React.useRef<HTMLButtonElement>(null);
-
   React.useEffect(() => {
     setActions(createActions());
   }, [createActions]);
@@ -147,7 +143,6 @@ const ActionMenu: React.FC<CombinedProps> = props => {
           aria-label={ariaLabel}
           onMouseDown={handleClick}
           onKeyDown={handleKeyPress}
-          ref={ref}
         >
           <MoreHoriz aria-hidden type="primary" />
           {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
