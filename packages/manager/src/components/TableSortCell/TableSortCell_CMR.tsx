@@ -10,10 +10,10 @@ import SortUp from 'src/assets/icons/sort-up.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRight: '1px solid #f4f4f4',
+    borderRight: `1px solid ${theme.palette.divider}`,
     padding: '10px 15px',
-    '&:first-child': {
-      borderLeft: '1px solid #f4f4f4'
+    '&:last-child': {
+      borderRight: 'none'
     },
     '&:hover': {
       backgroundColor: '#3683dc',
@@ -61,7 +61,6 @@ export const TableSortCell: React.FC<CombinedProps> = props => {
     direction,
     label,
     active,
-    handleClick,
     noWrap,
     isLoading,
     ...rest
