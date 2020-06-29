@@ -17,7 +17,6 @@ import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsP
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { filterUDFErrors } from './formUtilities';
-import { renderBackupsDisplaySection } from './utils';
 import {
   ReduxStatePropsAndSSHKeys,
   StackScriptFormStateHandlers,
@@ -81,21 +80,14 @@ export const FromStackScriptContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {
-    accountBackupsEnabled,
-    backupsEnabled,
-    backupsMonthlyPrice,
     errors,
     header,
     imagesData,
-    imageDisplayInfo,
-    label,
-    regionDisplayInfo,
     request,
     selectedImageID,
     selectedStackScriptID,
     selectedStackScriptUsername,
     selectedStackScriptLabel,
-    typeDisplayInfo,
     updateImageID,
     userCannotCreateLinode,
 
@@ -154,48 +146,10 @@ export const FromStackScriptContent: React.FC<CombinedProps> = props => {
 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
-  const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
-
   const determineIDName =
     props.category === 'community'
       ? 'community-stackscript-create'
       : 'account-stackscript-create';
-
-  const displaySections = [];
-
-  if (selectedStackScriptUsername && selectedStackScriptLabel) {
-    displaySections.push({
-      title: selectedStackScriptUsername + ' / ' + selectedStackScriptLabel
-    });
-  }
-
-  if (imageDisplayInfo) {
-    displaySections.push(imageDisplayInfo);
-  }
-
-  if (regionDisplayInfo) {
-    displaySections.push({
-      title: regionDisplayInfo.title,
-      details: regionDisplayInfo.details
-    });
-  }
-
-  if (typeDisplayInfo) {
-    displaySections.push(typeDisplayInfo);
-  }
-
-  if (label) {
-    displaySections.push({
-      title: 'Linode Label',
-      details: label
-    });
-  }
-
-  if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
-    displaySections.push(
-      renderBackupsDisplaySection(accountBackupsEnabled, backupsMonthlyPrice)
-    );
-  }
 
   return (
     <React.Fragment>

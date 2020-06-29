@@ -122,6 +122,7 @@ export class LinodeCreate extends React.PureComponent<
     const queryParams = getParamsFromUrl(location.search);
 
     /** will be -1 if the query param is not found */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const preSelectedTab = this.tabs.findIndex((eachTab, index) => {
       return eachTab.title === queryParams.type;
     });
@@ -148,7 +149,6 @@ export class LinodeCreate extends React.PureComponent<
     event: React.ChangeEvent<HTMLDivElement>,
     value: number
   ) => {
-    console.log(value);
     this.props.resetCreationState();
 
     /** set the tab in redux state */
@@ -254,15 +254,15 @@ export class LinodeCreate extends React.PureComponent<
       requestKeys,
       backupsMonthlyPrice,
       userCannotCreateLinode,
-      location,
+      // location,
       typeDisplayInfo,
       regionDisplayInfo,
       imageDisplayInfo,
       accountBackupsEnabled,
 
       // StackScripts
-      selectedStackScriptID,
-      selectedUDFs,
+      // selectedStackScriptID,
+      // selectedUDFs,
       ...rest
     } = this.props;
 
@@ -336,193 +336,191 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     return (
-      <React.Fragment>
-        <form className={classes.form}>
-          <Grid item className={`mlMain py0`}>
-            <Tabs defaultIndex={selectedTab}>
-              <TabLinkList tabs={this.tabs} />
-              <TabPanels>
-                <SafeTabPanel index={0}>
-                  <FromImageContent
-                    variant="public"
-                    imagePanelTitle="Choose a Distribution"
-                    showGeneralError={true}
-                    imagesData={imagesData!}
-                    regionsData={regionsData!}
-                    typesData={typesData!}
-                    {...rest}
-                  />
-                </SafeTabPanel>
-                <SafeTabPanel index={1}>
-                  <FromAppsContent
-                    imagesData={imagesData!}
-                    regionsData={regionsData!}
-                    typesData={typesData!}
-                    {...rest}
-                  />
-                </SafeTabPanel>
-                <SafeTabPanel index={2}>
-                  <Tabs defaultIndex={0}>
-                    <Paper className={classes.stackScriptWrapper}>
-                      <Typography variant="h2">Create From:</Typography>
-                      <TabLinkList tabs={this.stackScriptTabs} />
-                      <TabPanels className={classes.imageSelect}>
-                        <SafeTabPanel index={0}>
-                          <FromStackScriptContent
-                            category="community"
-                            accountBackupsEnabled={
-                              this.props.accountBackupsEnabled
-                            }
-                            userCannotCreateLinode={
-                              this.props.userCannotCreateLinode
-                            }
-                            request={getCommunityStackscripts}
-                            header={'Select a StackScript'}
-                            imagesData={imagesData!}
-                            regionsData={regionsData!}
-                            typesData={typesData!}
-                            {...rest}
-                          />
-                        </SafeTabPanel>
-                        <SafeTabPanel index={1}>
-                          <FromStackScriptContent
-                            category="account"
-                            accountBackupsEnabled={
-                              this.props.accountBackupsEnabled
-                            }
-                            userCannotCreateLinode={
-                              this.props.userCannotCreateLinode
-                            }
-                            request={getMineAndAccountStackScripts}
-                            header={'Select a StackScript'}
-                            imagesData={imagesData!}
-                            regionsData={regionsData!}
-                            typesData={typesData!}
-                            {...rest}
-                          />
-                        </SafeTabPanel>
-                      </TabPanels>
-                    </Paper>
-                  </Tabs>
-                </SafeTabPanel>
-                <SafeTabPanel index={3}>
-                  <FromImageContent
-                    variant={'private'}
-                    imagePanelTitle="Choose an Image"
-                    imagesData={imagesData}
-                    regionsData={regionsData!}
-                    typesData={typesData!}
-                  />
-                </SafeTabPanel>
-                <SafeTabPanel index={4}>
-                  <FromBackupsContent
-                    imagesData={imagesData!}
-                    regionsData={regionsData!}
-                    typesData={typesData!}
-                    linodesData={linodesData!}
-                  />
-                </SafeTabPanel>
-                <SafeTabPanel index={5}>
-                  <FromLinodeContent
-                    imagesData={imagesData!}
-                    regionsData={regionsData!}
-                    typesData={typesData!}
-                    linodesData={linodesData!}
-                    {...rest}
-                  />
-                </SafeTabPanel>
-              </TabPanels>
-            </Tabs>
+      <form className={classes.form}>
+        <Grid item className={`mlMain py0`}>
+          <Tabs defaultIndex={selectedTab}>
+            <TabLinkList tabs={this.tabs} />
+            <TabPanels>
+              <SafeTabPanel index={0}>
+                <FromImageContent
+                  variant="public"
+                  imagePanelTitle="Choose a Distribution"
+                  showGeneralError={true}
+                  imagesData={imagesData!}
+                  regionsData={regionsData!}
+                  typesData={typesData!}
+                  {...rest}
+                />
+              </SafeTabPanel>
+              <SafeTabPanel index={1}>
+                <FromAppsContent
+                  imagesData={imagesData!}
+                  regionsData={regionsData!}
+                  typesData={typesData!}
+                  {...rest}
+                />
+              </SafeTabPanel>
+              <SafeTabPanel index={2}>
+                <Tabs defaultIndex={0}>
+                  <Paper className={classes.stackScriptWrapper}>
+                    <Typography variant="h2">Create From:</Typography>
+                    <TabLinkList tabs={this.stackScriptTabs} />
+                    <TabPanels className={classes.imageSelect}>
+                      <SafeTabPanel index={0}>
+                        <FromStackScriptContent
+                          category="community"
+                          accountBackupsEnabled={
+                            this.props.accountBackupsEnabled
+                          }
+                          userCannotCreateLinode={
+                            this.props.userCannotCreateLinode
+                          }
+                          request={getCommunityStackscripts}
+                          header={'Select a StackScript'}
+                          imagesData={imagesData!}
+                          regionsData={regionsData!}
+                          typesData={typesData!}
+                          {...rest}
+                        />
+                      </SafeTabPanel>
+                      <SafeTabPanel index={1}>
+                        <FromStackScriptContent
+                          category="account"
+                          accountBackupsEnabled={
+                            this.props.accountBackupsEnabled
+                          }
+                          userCannotCreateLinode={
+                            this.props.userCannotCreateLinode
+                          }
+                          request={getMineAndAccountStackScripts}
+                          header={'Select a StackScript'}
+                          imagesData={imagesData!}
+                          regionsData={regionsData!}
+                          typesData={typesData!}
+                          {...rest}
+                        />
+                      </SafeTabPanel>
+                    </TabPanels>
+                  </Paper>
+                </Tabs>
+              </SafeTabPanel>
+              <SafeTabPanel index={3}>
+                <FromImageContent
+                  variant={'private'}
+                  imagePanelTitle="Choose an Image"
+                  imagesData={imagesData}
+                  regionsData={regionsData!}
+                  typesData={typesData!}
+                />
+              </SafeTabPanel>
+              <SafeTabPanel index={4}>
+                <FromBackupsContent
+                  imagesData={imagesData!}
+                  regionsData={regionsData!}
+                  typesData={typesData!}
+                  linodesData={linodesData!}
+                />
+              </SafeTabPanel>
+              <SafeTabPanel index={5}>
+                <FromLinodeContent
+                  imagesData={imagesData!}
+                  regionsData={regionsData!}
+                  typesData={typesData!}
+                  linodesData={linodesData!}
+                  {...rest}
+                />
+              </SafeTabPanel>
+            </TabPanels>
+          </Tabs>
 
-            <SelectRegionPanel
-              error={hasErrorFor.region}
-              regions={regionsData!}
-              handleSelection={this.props.updateRegionID}
-              selectedID={this.props.selectedRegionID}
-              copy="Determine the best location for your Linode."
-              updateFor={[this.props.selectedRegionID, regionsData, errors]}
-              disabled={userCannotCreateLinode}
-            />
-            <SelectPlanPanel
-              error={hasErrorFor.type}
-              types={typesData!}
-              onSelect={this.props.updateTypeID}
-              selectedID={this.props.selectedTypeID}
-              updateFor={[
-                this.props.selectedTypeID,
-                this.props.disabledClasses,
-                errors
-              ]}
-              disabled={userCannotCreateLinode}
-              disabledClasses={this.props.disabledClasses}
-            />
-            <LabelAndTagsPanel
-              labelFieldProps={{
-                label: 'Linode Label',
-                value: label || '',
-                onChange: updateLabel,
-                errorText: hasErrorFor.label,
-                disabled: userCannotCreateLinode
-              }}
-              tagsInputProps={
-                this.props.createType !== 'fromLinode'
-                  ? tagsInputProps
-                  : undefined
-              }
-              updateFor={[tags, label, errors]}
-            />
-            <AccessPanel
-              disabled={!this.props.selectedImageID}
-              disabledReason={
-                !this.props.selectedImageID
-                  ? 'You must select an image to set a root password'
-                  : ''
-              }
-              error={hasErrorFor.root_pass}
-              sshKeyError={sshError}
-              password={this.props.password}
-              handleChange={this.props.updatePassword}
-              updateFor={[
-                this.props.password,
-                errors,
-                sshError,
-                userSSHKeys,
-                this.props.selectedImageID
-              ]}
-              users={userSSHKeys}
-              requestKeys={requestKeys}
-            />
-            <AddonsPanel
-              data-qa-addons-panel
-              backups={this.props.backupsEnabled}
-              accountBackups={this.props.accountBackupsEnabled}
-              backupsMonthly={backupsMonthlyPrice}
-              privateIP={this.props.privateIPEnabled}
-              changeBackups={this.props.toggleBackupsEnabled}
-              changePrivateIP={this.props.togglePrivateIPEnabled}
-              updateFor={[
-                this.props.privateIPEnabled,
-                this.props.backupsEnabled,
-                this.props.selectedTypeID
-              ]}
-              disabled={userCannotCreateLinode}
-              hidePrivateIP={this.props.createType === 'fromLinode'}
-            />
-          </Grid>
-          <Grid item className="mlSidebar">
-            <CheckoutBar
-              data-qa-checkout-bar
-              heading="Linode Summary"
-              calculatedPrice={calculatedPrice}
-              isMakingRequest={this.props.formIsSubmitting}
-              disabled={this.props.formIsSubmitting || userCannotCreateLinode}
-              onDeploy={this.createLinode}
-            >
-              <DisplaySectionList displaySections={displaySections} />
-            </CheckoutBar>
-          </Grid>
-        </form>
-      </React.Fragment>
+          <SelectRegionPanel
+            error={hasErrorFor.region}
+            regions={regionsData!}
+            handleSelection={this.props.updateRegionID}
+            selectedID={this.props.selectedRegionID}
+            copy="Determine the best location for your Linode."
+            updateFor={[this.props.selectedRegionID, regionsData, errors]}
+            disabled={userCannotCreateLinode}
+          />
+          <SelectPlanPanel
+            error={hasErrorFor.type}
+            types={typesData!}
+            onSelect={this.props.updateTypeID}
+            selectedID={this.props.selectedTypeID}
+            updateFor={[
+              this.props.selectedTypeID,
+              this.props.disabledClasses,
+              errors
+            ]}
+            disabled={userCannotCreateLinode}
+            disabledClasses={this.props.disabledClasses}
+          />
+          <LabelAndTagsPanel
+            labelFieldProps={{
+              label: 'Linode Label',
+              value: label || '',
+              onChange: updateLabel,
+              errorText: hasErrorFor.label,
+              disabled: userCannotCreateLinode
+            }}
+            tagsInputProps={
+              this.props.createType !== 'fromLinode'
+                ? tagsInputProps
+                : undefined
+            }
+            updateFor={[tags, label, errors]}
+          />
+          <AccessPanel
+            disabled={!this.props.selectedImageID}
+            disabledReason={
+              !this.props.selectedImageID
+                ? 'You must select an image to set a root password'
+                : ''
+            }
+            error={hasErrorFor.root_pass}
+            sshKeyError={sshError}
+            password={this.props.password}
+            handleChange={this.props.updatePassword}
+            updateFor={[
+              this.props.password,
+              errors,
+              sshError,
+              userSSHKeys,
+              this.props.selectedImageID
+            ]}
+            users={userSSHKeys}
+            requestKeys={requestKeys}
+          />
+          <AddonsPanel
+            data-qa-addons-panel
+            backups={this.props.backupsEnabled}
+            accountBackups={this.props.accountBackupsEnabled}
+            backupsMonthly={backupsMonthlyPrice}
+            privateIP={this.props.privateIPEnabled}
+            changeBackups={this.props.toggleBackupsEnabled}
+            changePrivateIP={this.props.togglePrivateIPEnabled}
+            updateFor={[
+              this.props.privateIPEnabled,
+              this.props.backupsEnabled,
+              this.props.selectedTypeID
+            ]}
+            disabled={userCannotCreateLinode}
+            hidePrivateIP={this.props.createType === 'fromLinode'}
+          />
+        </Grid>
+        <Grid item className="mlSidebar">
+          <CheckoutBar
+            data-qa-checkout-bar
+            heading="Linode Summary"
+            calculatedPrice={calculatedPrice}
+            isMakingRequest={this.props.formIsSubmitting}
+            disabled={this.props.formIsSubmitting || userCannotCreateLinode}
+            onDeploy={this.createLinode}
+          >
+            <DisplaySectionList displaySections={displaySections} />
+          </CheckoutBar>
+        </Grid>
+      </form>
     );
   }
 }
