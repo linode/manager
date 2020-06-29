@@ -19,7 +19,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import regionsContainer, {
   DefaultProps as WithRegionsProps
 } from 'src/containers/regions.container';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { useTypes } from 'src/hooks/useTypes';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { MapState } from 'src/store/types';
@@ -90,11 +90,12 @@ export interface Props {
 export type CombinedProps = Props &
   RouteComponentProps<{}> &
   StateProps &
-  WithTypesProps &
   WithRegionsProps;
 
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+
+  const { types } = useTypes();
 
   const [configs, setConfigs] = React.useState<Config[]>([]);
   const [configsError, setConfigsError] = React.useState<
@@ -122,13 +123,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   // When we clone a Linode from the action menu, we pass in several query string
   // params so everything is selected for us when we get to the Create flow.
   const buildQueryStringForLinodeClone = () => {
-    const {
-      linodeId,
-      linodeRegion,
-      linodeType,
-      typesData,
-      regionsData
-    } = props;
+    const { linodeId, linodeRegion, linodeType, regionsData } = props;
 
     const params: Record<string, string> = {
       type: 'My Images',
@@ -137,7 +132,10 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     };
 
     // If the type of this Linode is a valid (current) type, use it in the QS
-    if (typesData && typesData.some(type => type.id === linodeType)) {
+    if (
+      types.entities &&
+      types.entities.some(typeEntity => typeEntity.id === linodeType)
+    ) {
       params.typeID = linodeType!;
     }
 
@@ -376,7 +374,6 @@ const withRegions = regionsContainer();
 
 const enhanced = compose<CombinedProps, Props>(
   connected,
-  withTypes,
   withRegions,
   withRouter
 );
