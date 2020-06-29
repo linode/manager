@@ -6,14 +6,19 @@ import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 export interface BreadCrumbProps {
-  title: string;
+  title: string | JSX.Element;
   iconType: Variant;
   parentLink?: string;
   parentText?: string;
+  displayIcon?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  iconContainer: {
+    padding: `5px !important`
+  },
   headerWithLink: {
+    flexWrap: 'nowrap',
     position: 'relative',
     backgroundColor: theme.bg.lightBlue,
     marginRight: theme.spacing(2),
@@ -38,50 +43,65 @@ const useStyles = makeStyles((theme: Theme) => ({
       zIndex: 1
     }
   },
-  border: {
-    borderTop: '1px solid #f4f5f6',
-    height: '50%',
-    width: theme.spacing(4),
-    position: 'absolute',
-    top: 6.5,
-    right: -theme.spacing() - 4,
-    transform: 'rotate(61.5deg)',
-    zIndex: 1,
-
+  gap: {
     '&:before': {
       content: '""',
-      borderTop: '1px solid #f4f5f6',
-      height: '50%',
-      width: theme.spacing(4),
-      bottom: theme.spacing(0.5),
-      right: -19.5,
       position: 'absolute',
-      transform: 'rotate(56.75deg)'
+      left: '100%',
+      top: 0,
+      width: 1,
+      height: '100%',
+      backgroundColor: theme.bg.lightBlue,
+      zIndex: 2
+    }
+  },
+  border: {
+    '&:before': {
+      content: '""',
+      position: 'absolute',
+      left: '101%',
+      top: 0,
+      width: 15,
+      height: '50%',
+      background: `linear-gradient(to right top, #f4f5f6 0%, #f4f5f6 50%, transparent 46.1%)`,
+      zIndex: 0
+    },
+    '&:after': {
+      content: '""',
+      position: 'absolute',
+      left: '101%',
+      bottom: 0,
+      width: 15,
+      height: '50%',
+      background: `linear-gradient(to right bottom, #f4f5f6 0%, #f4f5f6 50%, transparent 46.1%)`,
+      zIndex: 0
     }
   },
   parentLinkText: {
     color: theme.color.blue
   },
   parentTitleText: {
-    color: '#3683dc',
     paddingLeft: theme.spacing(),
     paddingRight: theme.spacing(2) - 2
   },
   titleText: {
-    paddingRight: theme.spacing(2) - 2
+    display: 'flex',
+    alignItems: 'center',
+    paddingRight: theme.spacing(2) - 2,
+    lineHeight: 1.2
   }
 }));
 
 export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
-  const { iconType, parentLink, parentText, title } = props;
+  const { iconType, parentLink, parentText, title, displayIcon } = props;
   const classes = useStyles();
 
   if (parentLink) {
     return (
       <>
         <Grid item className={classes.headerWithLink}>
-          <Grid container alignItems="center" justify="center">
-            <Grid item>
+          <Grid wrap="nowrap" container alignItems="center" justify="center">
+            <Grid item className={classes.iconContainer}>
               <EntityIcon variant={iconType} />
             </Grid>
             <Grid item>
@@ -92,7 +112,8 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
               </Link>
             </Grid>
           </Grid>
-          <div className={classes.border}></div>
+          <div className={classes.gap} />
+          <div className={classes.border} />
         </Grid>
         <Grid item>
           <Typography variant="h2" className={classes.parentTitleText}>
@@ -104,12 +125,15 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
   }
   return (
     <>
-      <Grid item>
-        <EntityIcon variant={iconType} />
-      </Grid>
+      {typeof displayIcon === 'undefined' ||
+        (Boolean(displayIcon) && (
+          <Grid item>
+            <EntityIcon variant={iconType} />
+          </Grid>
+        ))}
       <Grid item>
         <Typography variant="h2" className={classes.titleText}>
-          {title}s
+          {title}
         </Typography>
       </Grid>
     </>

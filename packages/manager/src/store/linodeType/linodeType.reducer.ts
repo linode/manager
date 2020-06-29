@@ -10,7 +10,7 @@ export const defaultState: State = {
   entities: [],
   results: [],
   error: undefined,
-  loading: true,
+  loading: false,
   lastUpdated: 0
 };
 

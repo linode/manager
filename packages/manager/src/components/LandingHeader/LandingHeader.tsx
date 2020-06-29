@@ -35,7 +35,7 @@ export const LandingHeader: React.FC<Props> = props => {
 
   const actions = React.useMemo(
     () => (
-      <Grid container direction="row" alignItems="center" justify="center">
+      <Grid container direction="row" alignItems="center" justify="flex-end">
         {onAddNew && (
           <Grid item>
             <Button

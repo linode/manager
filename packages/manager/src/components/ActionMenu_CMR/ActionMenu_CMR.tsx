@@ -1,5 +1,5 @@
 import * as classNames from 'classnames';
-import MoreHoriz from '@material-ui/icons/MoreHoriz';
+import KebabIcon from 'src/assets/icons/kebab.svg';
 import {
   Menu,
   MenuButton,
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignItems: 'center',
       background: 'none',
       fontSize: '1rem',
-      fontWeight: 'bold',
       border: 'none',
       padding: theme.spacing(1) + 2,
       color: '#3683dc',
@@ -47,7 +46,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   buttonLabel: {
-    margin: `0 0 0 ${theme.spacing()}px`
+    margin: `0 0 0 ${theme.spacing() + 2}px`,
+    fontFamily: theme.font.normal,
+    lineHeight: 1
+  },
+  icon: {
+    '& svg': {
+      fill: theme.color.blue
+    }
   },
   popover: {
     '&[data-reach-menu-popover]': {
@@ -149,7 +155,7 @@ const ActionMenu: React.FC<CombinedProps> = props => {
           onMouseDown={handleClick}
           onKeyDown={handleKeyPress}
         >
-          <MoreHoriz aria-hidden type="primary" />
+          <KebabIcon aria-hidden className={classes.icon} type="primary" />
           {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
         </MenuButton>
         <MenuPopover className={classes.popover} portal={true}>
