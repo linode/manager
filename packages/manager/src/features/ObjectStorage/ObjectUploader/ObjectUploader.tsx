@@ -210,8 +210,14 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
   }, [state.numQueued, state.numInProgress]);
 
-  const debouncedGetBucket = React.useRef(debounce(400, false, props.getBucket))
-    .current;
+  const debouncedGetBucket = React.useRef(
+    debounce(400, false, () =>
+      props
+        .getBucket({ cluster: props.clusterId, label: props.bucketName })
+        // It's OK to swallow the error here, since this request is for a silent UI update.
+        .catch(_ => null)
+    )
+  ).current;
 
   // When `nextBatch` changes, upload the files.
   React.useEffect(() => {
@@ -247,11 +253,9 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       const onUploadProgress = onUploadProgressFactory(dispatch, path);
 
       const handleSuccess = () => {
-        // Get the Bucket again so the updated size is reflected on the Landing page.
-        debouncedGetBucket({
-          cluster: props.clusterId,
-          label: props.bucketName
-        });
+        // Request the Bucket again so the updated size is reflected on the Bucket Landing page.
+        // This request is debounced since many Objects can be uploaded at once.
+        debouncedGetBucket();
 
         // We may want to add the object to the table, depending on the prefix
         // the user is currently viewing. Do this in the parent, which has the

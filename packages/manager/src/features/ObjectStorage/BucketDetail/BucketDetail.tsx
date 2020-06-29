@@ -88,6 +88,7 @@ const styles = (theme: Theme) =>
       color: theme.color.headline
     },
     tryAgainText: {
+      ...theme.applyLinkStyles,
       color: theme.palette.primary.main,
       textDecoration: 'underline',
       cursor: 'pointer'
@@ -291,8 +292,11 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       );
 
       await deleteObject(url);
-      // Get the Bucket again so the updated size is reflected on the Landing page.
-      this.props.getBucket({ cluster: clusterId, label: bucketName });
+      // Request the Bucket again so the updated size is reflected on the Bucket Landing page.
+      this.props
+        .getBucket({ cluster: clusterId, label: bucketName })
+        // It's OK to swallow the error here, since this request is for a silent UI update.
+        .catch(_ => null);
 
       this.setState({
         deleteObjectLoading: false,
@@ -491,13 +495,12 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
               {nextPageError && (
                 <Typography variant="subtitle2" className={classes.footer}>
                   The next objects in the list failed to load.{' '}
-                  <span
+                  <button
                     className={classes.tryAgainText}
                     onClick={this.getNextPage}
-                    role="button"
                   >
                     Click here to try again.
-                  </span>
+                  </button>
                 </Typography>
               )}
 
