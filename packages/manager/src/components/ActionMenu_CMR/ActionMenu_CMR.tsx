@@ -20,10 +20,7 @@ export interface Action {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  wrapper: {
-    display: 'inline-block',
-    position: 'relative'
-  },
+  wrapper: {},
   button: {
     '&[data-reach-menu-button]': {
       display: 'flex',
