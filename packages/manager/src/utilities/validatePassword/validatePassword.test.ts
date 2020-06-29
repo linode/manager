@@ -5,6 +5,10 @@ describe('Password validation', () => {
     expect(validatePassword('none', 'badpassword')).toBe(null);
   });
 
+  it('should return null if no password is provided', () => {
+    expect(validatePassword('complexity', null as any)).toBe(null);
+  });
+
   it('should return null for a valid root password', () => {
     expect(validatePassword('length', 'long!!secure!!pa$$word!')).toBe(null);
     expect(

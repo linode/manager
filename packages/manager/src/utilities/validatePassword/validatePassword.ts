@@ -16,6 +16,10 @@ export const validatePassword = (
   validationType: PasswordValidationType,
   password: string
 ) => {
+  // This method does not evaluate whether a password is required.
+  if (!password) {
+    return null;
+  }
   switch (validationType) {
     case 'none':
       return null;
