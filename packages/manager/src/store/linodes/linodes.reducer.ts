@@ -6,6 +6,7 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
+  onGetOneSuccess,
   onStart
 } from 'src/store/store.helpers.tmp';
 import { EntityError, MappedEntityState2 } from 'src/store/types';
@@ -15,6 +16,7 @@ import {
   deleteLinode,
   deleteLinodeActions,
   getLinodesActions,
+  getLinodeActions,
   updateLinodeActions,
   updateMultipleLinodes,
   upsertLinode
@@ -49,6 +51,28 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, getLinodesActions.failed)) {
+    const { error } = action.payload;
+
+    return onError(
+      {
+        read: error
+      },
+      state
+    );
+  }
+
+  if (isType(action, getLinodeActions.started)) {
+    // Getting a single Linode. Set loading to true
+    // (but we won't update lastUpdated since it's not a full request)
+    return onStart(state);
+  }
+
+  if (isType(action, getLinodeActions.done)) {
+    const { result } = action.payload;
+    return onGetOneSuccess(result, state);
+  }
+
+  if (isType(action, getLinodeActions.failed)) {
     const { error } = action.payload;
 
     return onError(

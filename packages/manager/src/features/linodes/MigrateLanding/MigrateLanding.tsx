@@ -280,9 +280,9 @@ const mapStateToProps: MapStateToProps<
   WithTypesAndImages,
   {},
   ApplicationState
-> = (state, ownProps) => ({
+> = state => ({
   types: state.__resources.types.entities,
-  images: state.__resources.images.data,
+  images: state.__resources.images.itemsById,
   notifications: state.__resources.notifications.data || []
 });
 
@@ -301,13 +301,11 @@ const getDisabledReason = (
   linodeID: number,
   notifications: Notification[]
 ) => {
-  if (events[0]) {
-    if (
-      events[0].action === 'linode_migrate_datacenter' &&
-      events[0].percent_complete !== 100
-    ) {
-      return `Your Linode is currently being migrated.`;
-    }
+  if (
+    events[0]?.action === 'linode_migrate_datacenter' &&
+    events[0]?.percent_complete !== 100
+  ) {
+    return `Your Linode is currently being migrated.`;
   }
 
   /**

@@ -7,7 +7,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -47,6 +47,7 @@ import NetworkGraph from './NetworkGraph';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import { ChartProps } from './types';
+import { parseAPIDate } from 'src/utilities/date';
 
 setUpCharts();
 
@@ -177,22 +178,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     }
 
     const options: [string, string][] = [['24', 'Last 24 Hours']];
-    const [createMonth, createYear] = [
-      // prepend "0" to the month if it's only 1 digit
-      // otherwise, console complains the date isn't in
-      // ISO or RFC2822 format
-      (moment.utc(linodeCreated).month() + 1).toString().length === 1
-        ? `0${moment.utc(linodeCreated).month() + 1}`
-        : moment.utc(linodeCreated).month() + 1,
-      moment.utc(linodeCreated).year()
-    ];
+    const createdDate = parseAPIDate(linodeCreated);
+    const currentTime = DateTime.local();
+    const currentMonth = currentTime.month;
+    const currentYear = currentTime.year;
 
-    const currentMonth = moment.utc().month() + 1; // Add 1 here because JS months are 0-indexed
-    const currentYear = moment.utc().year();
-
-    const creationFirstOfMonth = moment(`${createYear}-${createMonth}-01`);
+    const creationFirstOfMonth = createdDate.startOf('month');
     let [testMonth, testYear] = [currentMonth, currentYear];
-    let formattedTestDate;
+    let testDate;
     do {
       // When we request Linode stats for the CURRENT month/year, the data we get back is
       // from the last 30 days. We want the options to reflect this.
@@ -201,10 +194,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       const optionDisplay =
         testYear === currentYear && testMonth === currentMonth
           ? 'Last 30 Days'
-          : `${moment()
-              .month(testMonth - 1)
-              .format('MMM')} ${testYear}`;
-
+          : currentTime.set({ month: testMonth }).toFormat('LLL yyyy');
       options.push([
         `${testYear} ${testMonth.toString().padStart(2, '0')}`,
         optionDisplay
@@ -218,11 +208,12 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       }
       // same comment as above. Month needs to be prepended with a "0"
       // if it's only one digit to appease moment.js
-      formattedTestDate =
-        testMonth.toString().length === 1
-          ? `${testYear}-0${testMonth}-01`
-          : `${testYear}-${testMonth}-01`;
-    } while (moment(formattedTestDate).diff(creationFirstOfMonth) >= 0);
+      testDate = DateTime.fromObject({
+        month: testMonth,
+        year: testYear,
+        day: 1
+      });
+    } while (testDate >= creationFirstOfMonth);
     this.rangeSelectOptions = options.map(option => {
       return { label: option[1], value: option[0] };
     });
@@ -247,8 +238,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     // Stats will not be available for a Linode for at least 5 minutes after
     // it's been created, so no need to do an expensive `/stats` request until
     // 5 minutes have passed.
-    const fiveMinutesAgo = moment().subtract(5, 'minutes');
-    if (moment.utc(linodeCreated).isAfter(fiveMinutesAgo)) {
+    const fiveMinutesAgo = DateTime.local().minus({ minutes: 5 });
+    if (parseAPIDate(linodeCreated) > fiveMinutesAgo) {
       return this.setState({
         dataIsLoading: false,
         isTooEarlyForGraphData: true
@@ -289,7 +280,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         // If a Linode has just been created, we'll get an error from the API when
         // requesting stats (since there's no data available yet.) In this case,
         // it'd be jarring to display the error state – we'd rather show a friendlier message.
-        if (isRecent(linodeCreated, moment.utc().format())) {
+        if (isRecent(linodeCreated, DateTime.local().toISO())) {
           return this.setState({
             dataIsLoading: false,
             isTooEarlyForGraphData: true

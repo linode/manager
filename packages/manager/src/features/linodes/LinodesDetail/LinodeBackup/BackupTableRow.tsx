@@ -1,11 +1,12 @@
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
-import * as moment from 'moment-timezone';
+import { Duration } from 'luxon';
 import * as React from 'react';
 import TableRow from 'src/components/core/TableRow';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
-
+import { formatDuration } from 'src/utilities/formatDuration';
+import { parseAPIDate } from 'src/utilities/date';
 interface Props {
   backup: LinodeBackup;
   disabled: boolean;
@@ -36,9 +37,12 @@ const BackupTableRow: React.FC<Props> = props => {
         <DateTimeDisplay value={backup.created} />
       </TableCell>
       <TableCell parentColumn="Duration">
-        {moment
-          .duration(moment(backup.finished).diff(moment(backup.created)))
-          .humanize()}
+        {formatDuration(
+          Duration.fromMillis(
+            parseAPIDate(backup.finished).toMillis() -
+              parseAPIDate(backup.created).toMillis()
+          )
+        )}
       </TableCell>
       <TableCell parentColumn="Disks" data-qa-backup-disks>
         {backup.disks.map((disk, idx) => (

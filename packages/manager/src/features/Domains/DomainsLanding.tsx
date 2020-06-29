@@ -477,6 +477,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     groupByTag={domainsAreGrouped}
                     row={domainRow}
                     headers={headers}
+                    initialOrder={{ order: 'asc', orderBy: 'domain' }}
                   />
                 </Grid>
               </React.Fragment>

@@ -16,9 +16,9 @@ const addNodes = (plan: string, nb: number) => {
     multipleClick(cy.get('[data-testid="increment-button"]'), extraNb + nb);
     multipleClick(cy.get('[data-testid="decrement-button"]'), extraNb);
 
-    cy.findByRole('textbox')
+    cy.get('[data-testid="textfield-input"]')
       .invoke('val')
-      .should('be', `${nb}`);
+      .should('eq', `${nb}`);
     cy.findByText('Add').click();
   });
 };

@@ -10,7 +10,11 @@ type ClassNames =
   | 'tagGroup'
   | 'CSVlinkContainer'
   | 'CSVlink'
-  | 'addNewLink';
+  | 'addNewLink'
+  | 'chip'
+  | 'chipRunning'
+  | 'chipPending'
+  | 'chipOffline';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -33,6 +37,20 @@ const styles = (theme: Theme) =>
     addNewLink: {
       marginBottom: -3,
       marginLeft: 15
+    },
+    chip: {
+      color: '#fff',
+      fontSize: '1.1rem',
+      padding: 10
+    },
+    chipRunning: {
+      backgroundColor: '#00b159'
+    },
+    chipPending: {
+      backgroundColor: '#ffb31a'
+    },
+    chipOffline: {
+      backgroundColor: '#9ea4ae'
     }
   });
 

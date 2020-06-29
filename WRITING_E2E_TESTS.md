@@ -84,7 +84,7 @@ You can see more about aliases but in short, if i create an alias on a variable 
         xhrData.push(req);
       }
     });
-    // a lot of things i do with visiting a page running requests, tests
+    // do a lot of things visiting a page running requests, tests
     cy.get('@xhrData')
       .its('length')
       .should('be.lte', MAX_GET_REQ_TO_API);
@@ -114,7 +114,7 @@ tab2.should('be.visible');
 cy.findByText('tab 2').should('be.visible')
 ```
 
-Therefore in tems of style do:
+Therefore in terms of style do:
 ```js
 cy.findByText('tab 1').should('be.visible').click();
 cy.findByText('tab 2').should('be.visible');
@@ -159,11 +159,22 @@ cy.route({
 // Using the name `@alias` we wait for the request top complete
 cy.wait('@apiCreateRecord')
     .its('status')
-    .should('be', 200);
+    .should('eq', 200);
 ```
 
 ### making XHR requests directly
-Using `cy.request` is much faster and lightweight than request launched by the browser.
+Using `cy.request` is much faster and lightweight than requests launched by the browser.
+```js
+// creating a linode
+cy.request({
+    method: 'POST',
+    url: Cypress.env('REACT_APP_API_ROOT') + '/v4/nodebalancers',
+    body: nodeBalData,
+    auth: {
+      bearer: Cypress.env('MANAGER_OAUTH')
+    }
+  });
+```
 
 Although, They are not wrapped by the `cy.server` and cannot be mocked.
 
@@ -205,6 +216,10 @@ The configuration is set by a few files:
   - REACT_APP_API_ROOT = `http://localhost:3000`
   - REACT_APP_LOGIN_ROOT = `https://login.linode.com`
   - REACT_APP_API_ROOT = `https://api.linode.com/v4`
+
+**note, the variables of these files can be accessed using `Cypress.env`: `Cypress.env('MANAGER_OAUTH')`**
+
+
 
 
 ## Other

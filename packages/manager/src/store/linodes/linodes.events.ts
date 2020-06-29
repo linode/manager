@@ -1,5 +1,5 @@
 import { EventAction, EventStatus } from '@linode/api-v4/lib/account';
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
@@ -8,6 +8,7 @@ import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { EventHandler } from 'src/store/types';
 import { requestNotifications } from '../notification/notification.requests';
 import { deleteLinode } from './linodes.actions';
+import { parseAPIDate } from 'src/utilities/date';
 
 const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
   const { action, entity, percent_complete, status } = event;
@@ -252,7 +253,8 @@ export const shouldRequestNotifications = (
   return (
     eventsWithRelevantNotifications.includes(lastEventAction) &&
     // if the event was created after the last time notifications were updated
-    moment.utc(lastEventCreated).isAfter(moment.utc(notificationsLastUpdated))
+    parseAPIDate(lastEventCreated) >
+      DateTime.fromMillis(notificationsLastUpdated, { zone: 'utc' })
   );
 };
 

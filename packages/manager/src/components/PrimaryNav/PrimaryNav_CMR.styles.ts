@@ -19,9 +19,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       justifyContent: 'left'
     }
   },
-  // @todo: better name for this container
-  fadeContainer: {
-    marginLeft: 8,
+  menuGridInner: {
+    width: '100%',
+    [theme.breakpoints.up('lg')]: {
+      width: 1280
+    },
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  primaryLinksContainer: {
+    // marginLeft: 8,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  secondaryLinksContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'
@@ -44,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     height: 50,
     fontSize: '1rem',
+    lineHeight: 1,
     paddingRight: 15,
     paddingLeft: 15,
     '&:hover': {
@@ -67,6 +82,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     backgroundColor: 'rgba(0, 0, 0, 0.12)'
   },
+  verticalDivider: {
+    backgroundColor: '#5c6470',
+    height: 30,
+    width: 1,
+    marginRight: 15,
+    marginLeft: 15
+  },
   settings: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -78,7 +100,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&:hover': {
       color: theme.color.green
-    }
+    },
+    paddingRight: 18
   },
   settingsCollapsed: {
     margin: `auto 16px 16px ${theme.spacing(4) - 1}px`
@@ -89,7 +112,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       transform: 'rotate(90deg)'
     }
   },
-  menu: {},
   paper: {
     maxWidth: 350,
     padding: 8,
@@ -98,7 +120,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '1px solid #999',
     outline: 0,
     boxShadow: 'none',
-    minWidth: 185
+    minWidth: 185,
+    top: 25
   },
   settingsBackdrop: {
     backgroundColor: 'rgba(0,0,0,.3)'
@@ -107,6 +130,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     padding: 0,
+    lineHeight: 1,
     '&[data-reach-menu-button]': {
       textTransform: 'inherit',
       borderRadius: 0,
@@ -135,7 +159,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuItemLink: {
     '&[data-reach-menu-item]': {
       cursor: 'pointer',
-      height: 50,
       fontSize: '1rem',
       paddingTop: 12,
       paddingRight: 40,
@@ -161,9 +184,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       border: 'none',
       whiteSpace: 'normal',
       backgroundColor: theme.bg.primaryNavPaper
-    },
-    '& :last-child': {
-      height: 54
     }
   },
   menuPopover: {
@@ -172,7 +192,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       top: 50,
       // Hack solution to have something semi-working on mobile.
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('sm')]: {
         left: 0
       }
     }
@@ -192,6 +212,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       backgroundColor: theme.bg.primaryNavActiveBG
     }
+  },
+  primaryNavLinkIcon: {
+    marginRight: 10,
+    display: 'flex',
+    alignItems: 'center'
   }
 }));
 

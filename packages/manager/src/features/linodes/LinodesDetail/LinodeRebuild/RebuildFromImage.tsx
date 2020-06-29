@@ -27,11 +27,13 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
+import { PasswordValidationType } from 'src/featureFlags';
 import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
 
@@ -50,6 +52,7 @@ const styles = (theme: Theme) =>
 interface Props {
   disabled: boolean;
   passwordHelperText: string;
+  passwordValidation: PasswordValidationType;
 }
 
 interface ContextProps {
@@ -87,8 +90,20 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     linodeId,
     enqueueSnackbar,
     history,
-    passwordHelperText
+    passwordHelperText,
+    passwordValidation
   } = props;
+
+  /**
+   * Dynamic validation schema, with password validation
+   * dependent on a value from a feature flag. Remove this
+   * once API password validation is stable.
+   */
+  const RebuildSchema = React.useMemo(
+    () =>
+      extendValidationSchema(passwordValidation ?? 'none', RebuildLinodeSchema),
+    [passwordValidation]
+  );
 
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
@@ -137,7 +152,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={RebuildLinodeSchema}
+      validationSchema={RebuildSchema}
       validateOnChange={false}
       onSubmit={handleFormSubmit}
       render={formikProps => {

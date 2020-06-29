@@ -26,3 +26,9 @@ export const deleteBucketActions = actionCreator.async<
   {},
   APIError[]
 >('delete');
+
+export const getBucketActions = actionCreator.async<
+  ObjectStorageBucketRequestPayload,
+  ObjectStorageBucket,
+  APIError[]
+>('get');

@@ -4,7 +4,9 @@ import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
 import { makeStyles } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
-import EntityHeader, { HeaderProps } from 'src/components/EntityHeader';
+import EntityHeader, {
+  HeaderProps
+} from 'src/components/EntityHeader/EntityHeader';
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -18,7 +20,7 @@ const useStyles = makeStyles(() => ({
 interface Props extends Omit<HeaderProps, 'actions'> {
   body: JSX.Element;
   docsLink: string;
-  onAddNew?: () => any;
+  onAddNew?: () => void;
 }
 
 /**

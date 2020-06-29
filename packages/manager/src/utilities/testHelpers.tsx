@@ -155,3 +155,24 @@ export const withMarkup = (query: Query) => (text: string): HTMLElement =>
     );
     return hasText(node) && childrenDontHaveText;
   });
+
+/**
+ * Assert that HTML elements appear in a specific order. `selectorAttribute` must select the parent
+ * node of each piece of text content you are selecting.
+ *
+ * Example usage:
+ * const { container } = render(<MyComponent />);
+ * assertOrder(container, '[data-qa-label]', ['el1', 'el2', 'el3']);
+ *
+ * Thanks to https://spectrum.chat/testing-library/general/how-to-test-the-order-of-elements~23c8eaee-0fab-4bc6-8ca9-aa00a9582f8c?m=MTU3MjU0NTM0MTgyNw==
+ */
+export const assertOrder = (
+  container: HTMLElement,
+  selectorAttribute: string,
+  expectedOrder: string[]
+) => {
+  const elements = container.querySelectorAll(selectorAttribute);
+  expect(Array.from(elements).map(el => el.textContent)).toMatchObject(
+    expectedOrder
+  );
+};

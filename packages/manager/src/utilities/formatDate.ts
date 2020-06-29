@@ -1,23 +1,22 @@
-import * as moment from 'moment-timezone';
-import { pathOr } from 'ramda';
-
-import { ISO_FORMAT } from 'src/constants';
+import { DateTime, Duration } from 'luxon';
 import { reportException } from 'src/exceptionReporting';
 
 import store from 'src/store';
+import { DATETIME_DISPLAY_FORMAT } from 'src/constants';
+import { parseAPIDate } from 'src/utilities/date';
 
 export type TimeInterval = 'day' | 'week' | 'month' | 'year' | 'never';
 
 const durationMap = {
-  day: () => moment.duration(1, 'days'),
-  week: () => moment.duration(1, 'weeks'),
-  month: () => moment.duration(1, 'months'),
-  year: () => moment.duration(1, 'years'),
-  never: () => moment.duration(1000, 'years')
+  day: () => Duration.fromObject({ days: 1 }),
+  week: () => Duration.fromObject({ weeks: 1 }),
+  month: () => Duration.fromObject({ months: 1 }),
+  year: () => Duration.fromObject({ years: 1 }),
+  never: () => Duration.fromObject({ years: 1000 })
 };
 
 export const shouldHumanize = (
-  time: moment.Moment,
+  time: DateTime,
   cutoff?: TimeInterval
 ): boolean => {
   // If cutoff is not provided, use the default ISO output.
@@ -26,48 +25,52 @@ export const shouldHumanize = (
   }
   const duration = durationMap[cutoff]();
   /**
-   * difference between now and the time provided
-   * without Math.abs(), diff will return a negative number if passed a future date
-   */
-  const diff = Math.abs(+moment.duration(moment().diff(time)));
-  /**
    * Humanize the date if the difference between the current date and provided date
    * is lower than the cutoff
    */
-  return diff <= +duration;
+  return (
+    DateTime.local().plus(duration) > time &&
+    DateTime.local().minus(duration) < time
+  );
 };
 
 interface FormatDateOptions {
   humanizeCutoff?: TimeInterval;
   format?: string;
 }
-
+/**
+ *
+ * @param date SQL Date Format
+ * @param options
+ */
 export const formatDate = (
   date: string,
   options: FormatDateOptions = {}
 ): string => {
   let time;
-
-  /** get the timezone from redux and use it as the moment timezone */
+  /** get the timezone from redux and use it as the timezone */
   const state = store.getState();
-  const userTimezone = pathOr(
-    'GMT',
-    ['__resources', 'profile', 'data', 'timezone'],
-    state
-  );
+  const userTimezone = state.__resources?.profile?.data?.timezone ?? 'GMT';
 
   try {
     // Unknown error was causing this to crash in rare situations.
-    time = moment.utc(date).tz(userTimezone);
+    time = parseAPIDate(date).setZone(userTimezone);
   } catch (e) {
     // Better to return a blank date than an error or incorrect information.
     reportException(e);
     return 'Error getting date';
   }
+
+  const expectedFormat = options.format || DATETIME_DISPLAY_FORMAT;
+  const now = DateTime.local();
+  const isFewSecondsAgo = time.plus({ seconds: 30 }) > now && time <= now;
   const formattedTime = shouldHumanize(time, options.humanizeCutoff)
-    ? time.fromNow()
-    : time.format(options.format || ISO_FORMAT);
-  return formattedTime;
+    ? isFewSecondsAgo
+      ? 'a few seconds ago'
+      : time.toRelative()
+    : time.toFormat(expectedFormat);
+
+  return formattedTime ?? time.toFormat(expectedFormat);
 };
 
 export default formatDate;

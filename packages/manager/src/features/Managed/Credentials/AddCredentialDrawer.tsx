@@ -90,8 +90,8 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   // This credential could be anything so might be counterproductive to validate strength
-                  hideHelperText
                   hideValidation
+                  hideHelperText
                   required
                 />
               </React.Suspense>

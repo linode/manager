@@ -105,6 +105,7 @@ interface AdjustedTextFieldProps {
   max?: number;
   placeholder?: string;
   helperText?: string;
+  multiline?: boolean;
 }
 
 interface NumberFieldProps extends AdjustedTextFieldProps {
@@ -180,7 +181,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     label,
     field,
     helperText,
-    placeholder
+    placeholder,
+    multiline
   }: AdjustedTextFieldProps) => (
     <TextField
       label={label}
@@ -197,6 +199,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       }
       placeholder={placeholder}
       helperText={helperText}
+      multiline={multiline}
       data-qa-target={label}
     />
   );
@@ -222,10 +225,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   NameOrTargetField = ({
     label,
-    field
+    field,
+    multiline
   }: {
     label: string;
     field: 'name' | 'target';
+    multiline?: boolean;
   }) => {
     const { domain, type } = this.props;
     const value = this.state.fields[field];
@@ -235,6 +240,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       <this.TextField
         field={field}
         label={label}
+        multiline={multiline}
         placeholder={
           shouldResolve(type, field) ? 'hostname or @ for root' : undefined
         }
@@ -703,7 +709,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           <this.NameOrTargetField label="Hostname" field="name" key={idx} />
         ),
         (idx: number) => (
-          <this.NameOrTargetField label="Value" field="target" key={idx} />
+          <this.NameOrTargetField
+            label="Value"
+            field="target"
+            multiline
+            key={idx}
+          />
         ),
         (idx: number) => <this.TTLField key={idx} />
       ]
@@ -757,10 +768,17 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { submitting } = this.state;
-    const { open, mode, type } = this.props;
+    const { open, mode, type, records } = this.props;
     const { fields } = this.types[type];
     const isCreating = mode === 'create';
     const isDomain = type === 'master' || type === 'slave';
+
+    const hasARecords = records.find(thisRecord =>
+      ['A', 'AAAA'].includes(thisRecord.type)
+    ); // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
+
+    const noARecordsNoticeText =
+      'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
 
     const buttonProps: ButtonProps = {
       buttonType: 'primary',
@@ -789,7 +807,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           otherErrors.map((err, index) => {
             return <Notice error key={index} text={err} />;
           })}
+        {!hasARecords && type === 'NS' && (
+          <Notice warning spacingTop={8} text={noARecordsNoticeText} />
+        )}
         {fields.map((field: any, idx: number) => field(idx))}
+
         <ActionsPanel>
           <Button {...buttonProps} data-qa-record-save />
           <Button

@@ -148,7 +148,7 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: e.currentTarget });
   };
 
-  closeMenu = (e: React.MouseEvent<HTMLElement>) => {
+  closeMenu = (_: React.MouseEvent<HTMLElement>) => {
     const { markAllSeen } = this.props;
     markAllSeen();
     this.setState({ anchorEl: undefined });

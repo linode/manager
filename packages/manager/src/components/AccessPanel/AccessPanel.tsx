@@ -75,10 +75,10 @@ interface Props {
   disabled?: boolean;
   disabledReason?: string;
   hideStrengthLabel?: boolean;
+  hideHelperText?: boolean;
   className?: string;
   small?: boolean;
   isOptional?: boolean;
-  hideHelperText?: boolean;
   passwordHelperText?: string;
 }
 
@@ -109,10 +109,10 @@ class AccessPanel extends React.Component<CombinedProps> {
       disabled,
       disabledReason,
       hideStrengthLabel,
+      hideHelperText,
       className,
       small,
       isOptional,
-      hideHelperText,
       passwordHelperText,
       requestKeys
     } = this.props;
@@ -132,12 +132,13 @@ class AccessPanel extends React.Component<CombinedProps> {
           {error && <Notice text={error} error />}
           <React.Suspense fallback={<SuspenseLoader />}>
             <PasswordInput
+              name="password"
               data-qa-password-input
               className={classes.passwordInputOuter}
               required={required}
               disabled={disabled}
               disabledReason={disabledReason || ''}
-              autoComplete="new-password"
+              autoComplete="off"
               value={this.props.password || ''}
               label={label || 'Root Password'}
               placeholder={placeholder || 'Enter a password.'}

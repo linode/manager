@@ -24,15 +24,7 @@ const styles = (theme: Theme) =>
       cursor: 'pointer'
     },
     link: {
-      background: 'none',
-      color: theme.palette.primary.main,
-      border: 'none',
-      padding: 0,
-      font: 'inherit',
-      cursor: 'pointer',
-      '&:hover': {
-        textDecoration: 'underline'
-      }
+      ...theme.applyLinkStyles
     },
     icon: {
       display: 'inline-block',
@@ -127,7 +119,6 @@ const AutoBackups: React.FC<CombinedProps> = props => {
                   data-qa-backup-existing
                   className={classes.link}
                   onClick={openBackupsDrawer}
-                  role="button"
                   title="enable now"
                 >
                   enable now
