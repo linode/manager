@@ -9,17 +9,20 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import {
+  Link,
+  RouteComponentProps,
+  withRouter,
+  useHistory
+} from 'react-router-dom';
 
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import regionsContainer, {
-  DefaultProps as WithRegionsProps
-} from 'src/containers/regions.container';
 import { useTypes } from 'src/hooks/useTypes';
+import { useRegions } from 'src/hooks/useRegions';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { MapState } from 'src/store/types';
@@ -87,15 +90,14 @@ export interface Props {
   ) => void;
 }
 
-export type CombinedProps = Props &
-  RouteComponentProps<{}> &
-  StateProps &
-  WithRegionsProps;
+export type CombinedProps = Props & RouteComponentProps<{}> & StateProps;
 
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const { types } = useTypes();
+  const history = useHistory();
+  const regions = useRegions();
 
   const [configs, setConfigs] = React.useState<Config[]>([]);
   const [configsError, setConfigsError] = React.useState<
@@ -123,7 +125,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   // When we clone a Linode from the action menu, we pass in several query string
   // params so everything is selected for us when we get to the Create flow.
   const buildQueryStringForLinodeClone = () => {
-    const { linodeId, linodeRegion, linodeType, regionsData } = props;
+    const { linodeId, linodeRegion, linodeType } = props;
 
     const params: Record<string, string> = {
       type: 'My Images',
@@ -140,7 +142,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     }
 
     // If the region of this Linode is a valid region, use it in the QS
-    if (regionsData && regionsData.some(region => region.id === linodeRegion)) {
+    if (regions && regions.some(region => region.id === linodeRegion)) {
       params.regionID = linodeRegion;
     }
 
@@ -370,12 +372,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 });
 
 const connected = connect(mapStateToProps);
-const withRegions = regionsContainer();
 
-const enhanced = compose<CombinedProps, Props>(
-  connected,
-  withRegions,
-  withRouter
-);
+const enhanced = compose<CombinedProps, Props>(connected, withRouter);
 
 export default enhanced(LinodeActionMenu);
