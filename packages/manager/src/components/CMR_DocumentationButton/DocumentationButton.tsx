@@ -13,10 +13,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(2),
     paddingLeft: theme.spacing(2),
     minWidth: 'auto',
+    fontFamily: `${theme.font.normal} !important`,
     padding: 0,
     '& svg': {
       width: 24,
-      height: 150,
       marginRight: theme.spacing(1.5)
     },
     '&:hover svg': {
