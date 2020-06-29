@@ -73,9 +73,12 @@ export const readableBytes = (
     });
   }
 
-  // If the value is 0, go ahead and return, because the
-  // subsequent math won't work out
-  if (num === 0 || (options.handleNegatives === false && num < 0)) {
+  // If the value is 0 or invalid, go ahead and return because the subsequent math won't work out
+  if (
+    num === 0 ||
+    (options.handleNegatives === false && num < 0) ||
+    typeof num !== 'number'
+  ) {
     return {
       value: 0,
       unit: storageUnits[0],

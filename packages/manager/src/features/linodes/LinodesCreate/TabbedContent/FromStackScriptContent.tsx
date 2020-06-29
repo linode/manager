@@ -276,7 +276,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           id={`tabpanel-${determineIDName}`}
           aria-labelledby={`tab-${determineIDName}`}
         >
-          <form>
+          <form autoComplete="off">
             <CreateLinodeDisabled isDisabled={disabled} />
             <SelectStackScriptPanel
               data-qa-select-stackscript

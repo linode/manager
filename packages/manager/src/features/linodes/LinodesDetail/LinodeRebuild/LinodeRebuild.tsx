@@ -12,13 +12,14 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import useFlags from 'src/hooks/useFlags';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import RebuildFromImage from './RebuildFromImage';
 import RebuildFromStackScript from './RebuildFromStackScript';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'title' | 'helperText';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -27,6 +28,9 @@ const styles = (theme: Theme) =>
     },
     title: {
       marginBottom: theme.spacing(2)
+    },
+    helperText: {
+      paddingBottom: theme.spacing(2)
     }
   });
 
@@ -55,6 +59,10 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
   const unauthorized = permissions === 'read_only';
   const disabled = hostMaintenance || unauthorized;
 
+  const flags = useFlags();
+
+  const passwordValidation = flags.passwordValidation ?? 'none';
+
   const [mode, setMode] = React.useState<MODES>('fromImage');
 
   return (
@@ -72,7 +80,7 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
         >
           Rebuild
         </Typography>
-        <Typography data-qa-rebuild-desc>
+        <Typography data-qa-rebuild-desc className={classes.helperText}>
           If you can&#39;t rescue an existing disk, it&#39;s time to rebuild
           your Linode. There are a couple of different ways you can do restore
           from a backup or start over with a fresh Linux distribution.&nbsp;
@@ -94,6 +102,7 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
       {mode === 'fromImage' && (
         <RebuildFromImage
           passwordHelperText={passwordHelperText}
+          passwordValidation={passwordValidation}
           disabled={disabled}
         />
       )}
@@ -101,6 +110,7 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
         <RebuildFromStackScript
           type="community"
           passwordHelperText={passwordHelperText}
+          passwordValidation={passwordValidation}
           disabled={disabled}
         />
       )}
@@ -108,6 +118,7 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
         <RebuildFromStackScript
           type="account"
           passwordHelperText={passwordHelperText}
+          passwordValidation={passwordValidation}
           disabled={disabled}
         />
       )}

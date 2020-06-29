@@ -1,3 +1,13 @@
+## [2020-06-30] - v0.28.0
+
+### Added:
+
+- UpdateLinodeDiskSchema and CreateLinodeDiskFromImageSchema
+
+### Changed:
+
+- Remove password validation from Yup schemas
+
 ## [2020-06-16] - v.0.27.3
 
 ### Fixed:

@@ -198,7 +198,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           id={`tabpanel-${determineIDName}`}
           aria-labelledby={`tab-${determineIDName}`}
         >
-          <form>
+          <form autoComplete="off">
             {hasErrorFor.none && !!showGeneralError && (
               <Notice error spacingTop={8} text={hasErrorFor.none} />
             )}

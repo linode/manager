@@ -1,32 +1,46 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 import TableSortLabel from 'src/components/core/TableSortLabel';
 
-import Sort from 'src/assets/icons/sort.svg';
-import SortUp from 'src/assets/icons/sortUp.svg';
+import Sort from 'src/assets/icons/unsorted.svg';
+import SortUp from 'src/assets/icons/sort-up.svg';
 
-type ClassNames = 'root' | 'initialIcon' | 'noWrap';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      color: theme.palette.text.primary,
-      minHeight: 20
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    borderRight: `1px solid ${theme.palette.divider}`,
+    padding: '10px 15px',
+    '&:last-child': {
+      borderRight: 'none'
     },
-    initialIcon: {
-      margin: '2px 4px 0 5px'
-    },
-    noWrap: {
-      whiteSpace: 'nowrap'
+    '&:hover': {
+      backgroundColor: '#3683dc',
+      cursor: 'pointer',
+      '& span': {
+        color: theme.color.white
+      },
+      '& .MuiTableSortLabel-icon': {
+        color: `${theme.color.white} !important`
+      },
+      '& svg g': {
+        fill: theme.color.white
+      }
     }
-  });
+  },
+  label: {
+    color: theme.palette.text.primary,
+    minHeight: 20,
+    transition: 'none'
+  },
+  initialIcon: {
+    margin: '2px 4px 0 5px'
+  },
+  noWrap: {
+    whiteSpace: 'nowrap'
+  }
+}));
 
 export interface Props extends TableCellProps {
   active: boolean;
@@ -37,53 +51,52 @@ export interface Props extends TableCellProps {
   noWrap?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
-class TableSortCell extends React.PureComponent<CombinedProps, {}> {
-  handleClick = () => {
-    const { label, direction, handleClick } = this.props;
+export const TableSortCell: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
+  const {
+    children,
+    direction,
+    label,
+    active,
+    noWrap,
+    isLoading,
+    ...rest
+  } = props;
+
+  const onHandleClick = () => {
+    const { label, direction, handleClick } = props;
     const nextOrder = direction === 'asc' ? 'desc' : 'asc';
     return handleClick(label, nextOrder);
   };
 
-  render() {
-    const {
-      classes,
-      children,
-      direction,
-      label,
-      active,
-      handleClick,
-      noWrap,
-      isLoading,
-      ...rest
-    } = this.props;
-
-    return (
-      <TableCell
-        className={noWrap ? `${classes.noWrap}` : ''}
-        {...rest}
-        sortDirection={direction}
-        role="columnheader"
+  return (
+    <TableCell
+      className={classNames({
+        [classes.root]: true,
+        [classes.noWrap]: noWrap
+      })}
+      {...rest}
+      sortDirection={direction}
+      role="columnheader"
+      onClick={onHandleClick}
+    >
+      <TableSortLabel
+        active={active}
+        direction={direction}
+        className={classes.label}
+        IconComponent={SortUp}
+        hideSortIcon={true}
+        aria-label={`Sort by ${label}`}
       >
-        <TableSortLabel
-          active={active}
-          direction={direction}
-          onClick={this.handleClick}
-          className={classes.root}
-          IconComponent={SortUp}
-          hideSortIcon={true}
-          aria-label={`Sort by ${label}`}
-        >
-          {children}
-          {!active && <Sort className={classes.initialIcon} />}
-        </TableSortLabel>
-        {isLoading && <CircleProgress mini sort />}
-      </TableCell>
-    );
-  }
-}
+        {children}
+        {!active && <Sort className={classes.initialIcon} />}
+      </TableSortLabel>
+      {isLoading && <CircleProgress mini sort />}
+    </TableCell>
+  );
+};
 
-const styled = withStyles(styles);
-
-export default styled(TableSortCell);
+export default TableSortCell;
