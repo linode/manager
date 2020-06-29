@@ -9,12 +9,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import {
-  Link,
-  RouteComponentProps,
-  withRouter,
-  useHistory
-} from 'react-router-dom';
+import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import ActionMenu, {
@@ -157,7 +152,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       linodeStatus,
       openDeleteDialog,
       openPowerActionDialog,
-      history: { push },
       readOnly
     } = props;
 
@@ -192,7 +186,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Settings',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Settings Page');
-            push(`/linodes/${linodeId}/settings`);
+            history.push(`/linodes/${linodeId}/settings`);
             e.preventDefault();
             e.stopPropagation();
           }
@@ -202,7 +196,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               title: 'View Backups',
               onClick: (e: React.MouseEvent<HTMLElement>) => {
                 sendLinodeActionMenuItemEvent('Navigate to Backups Page');
-                push(`/linodes/${linodeId}/backup`);
+                history.push(`/linodes/${linodeId}/backup`);
                 e.preventDefault();
                 e.stopPropagation();
               }
@@ -211,7 +205,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               title: 'Enable Backups',
               onClick: (e: React.MouseEvent<HTMLElement>) => {
                 sendLinodeActionMenuItemEvent('Enable Backups');
-                push({
+                history.push({
                   pathname: `/linodes/${linodeId}/backup`,
                   state: { enableOnLoad: true }
                 });
@@ -224,7 +218,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Clone',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Clone');
-            push({
+            history.push({
               pathname: '/linodes/create',
               search: buildQueryStringForLinodeClone()
             });
@@ -238,7 +232,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Resize Page');
-            push(`/linodes/${linodeId}/resize`);
+            history.push(`/linodes/${linodeId}/resize`);
             e.preventDefault();
             e.stopPropagation();
           },
@@ -249,7 +243,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Rebuild',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
-            push(`/linodes/${linodeId}/rebuild`);
+            history.push(`/linodes/${linodeId}/rebuild`);
             e.preventDefault();
             e.stopPropagation();
           },
@@ -260,7 +254,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Rescue',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
-            push(`/linodes/${linodeId}/rescue`);
+            history.push(`/linodes/${linodeId}/rescue`);
             e.preventDefault();
             e.stopPropagation();
           },
@@ -272,7 +266,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendMigrationNavigationEvent('/linodes');
             sendLinodeActionMenuItemEvent('Migrate');
-            push({
+            history.push({
               pathname: `/linodes/${linodeId}/migrate`
             });
             e.preventDefault();
@@ -373,6 +367,6 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(connected, withRouter);
+const enhanced = compose<CombinedProps, Props>(connected);
 
 export default enhanced(LinodeActionMenu);
