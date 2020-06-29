@@ -19,10 +19,12 @@ import Grid from 'src/components/Grid';
 import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import useFlags from 'src/hooks/useFlags';
 import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
+import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { object, string } from 'yup';
 
 import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
@@ -103,19 +105,6 @@ const getTitle = (v: DrawerMode) => {
   }
 };
 
-const getSchema = (mode: DrawerMode, diskMode: diskMode) => {
-  switch (mode) {
-    case 'create':
-      return diskMode === 'from_image'
-        ? CreateLinodeDiskFromImageSchema
-        : CreateLinodeDiskSchema;
-    case 'rename':
-      return RenameDiskSchema;
-    case 'resize':
-      return ResizeLinodeDiskSchema;
-  }
-};
-
 export const DiskDrawer: React.FC<CombinedProps> = props => {
   const {
     disk,
@@ -127,6 +116,39 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
     userSSHKeys,
     requestKeys
   } = props;
+
+  const { passwordValidation } = useFlags();
+
+  /**
+   * CreateFromImageSchema is dynamic wrt the passwordValidation
+   * flag, so these have to live inside the component. When validation
+   * is constant and stable (on the API side), these can be
+   * moved back out.
+   */
+  const CreateFromImageSchema = React.useMemo(
+    () =>
+      extendValidationSchema(
+        passwordValidation ?? 'none',
+        CreateLinodeDiskFromImageSchema
+      ),
+    [passwordValidation]
+  );
+
+  const getSchema = React.useCallback(
+    (mode: DrawerMode, diskMode: diskMode) => {
+      switch (mode) {
+        case 'create':
+          return diskMode === 'from_image'
+            ? CreateFromImageSchema
+            : CreateLinodeDiskSchema;
+        case 'rename':
+          return RenameDiskSchema;
+        case 'resize':
+          return ResizeLinodeDiskSchema;
+      }
+    },
+    [CreateFromImageSchema]
+  );
 
   const classes = useStyles();
   const [selectedMode, setSelectedMode] = React.useState<diskMode>(modes.EMPTY);

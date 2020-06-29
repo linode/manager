@@ -137,7 +137,6 @@ const SSHKeySchema = object({
 export const RebuildLinodeSchema = object().shape({
   image: string().required('An image is required.'),
   root_pass: string().required('Password is required.'),
-  // .concat(rootPasswordValidation),
   authorized_keys: array().of(SSHKeySchema),
   authorized_users: array().of(string()),
   stackscript_id: number().notRequired(),
