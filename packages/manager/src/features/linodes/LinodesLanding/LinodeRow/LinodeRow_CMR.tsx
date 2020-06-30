@@ -50,6 +50,11 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
+  openTagDrawer: (
+    linodeID: number,
+    linodeLabel: string,
+    tags: string[]
+  ) => void;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
@@ -77,16 +82,17 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     region,
     status,
     displayStatus,
-    tags,
     mostRecentBackup,
     disk,
     vcpus,
     memory,
     type,
+    tags,
     image,
     // other props
     classes,
     linodeNotifications,
+    openTagDrawer,
     openDeleteDialog,
     openPowerActionDialog,
     // displayType, @todo use for M3-2059
@@ -219,10 +225,10 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       />
       <TagCell
         className={classes.regionCell}
-        tags={['tag1', 'tag2']}
+        tags={tags}
         addTag={() => null}
         deleteTag={() => null}
-        listAllTags={() => null}
+        listAllTags={() => openTagDrawer(id, label, tags)}
         width={500}
       />
       <TableCell className={classes.actionCell} data-qa-notifications>

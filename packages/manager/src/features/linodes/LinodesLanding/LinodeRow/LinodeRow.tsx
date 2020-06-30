@@ -49,6 +49,7 @@ interface Props {
   displayStatus: string;
   type: null | string;
   tags: string[];
+  openTagDrawer?: any; // Including for type matching with CMR; not used.
   mostRecentBackup: string | null;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (

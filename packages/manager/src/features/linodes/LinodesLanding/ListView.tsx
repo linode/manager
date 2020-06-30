@@ -2,6 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
+import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeRow from './LinodeRow/LinodeRow';
 import LinodeRow_CMR from './LinodeRow/LinodeRow_CMR';
 
@@ -22,16 +23,47 @@ interface Props {
   ) => void;
 }
 
+interface TagDrawerProps {
+  label: string;
+  tags: string[];
+  open: boolean;
+  linodeID: number;
+}
+
 type CombinedProps = Props & PaginationProps;
 
 export const ListView: React.FC<CombinedProps> = props => {
   const { data, openDeleteDialog, openPowerActionDialog } = props;
+  const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
+    open: false,
+    tags: [],
+    label: '',
+    linodeID: 0
+  });
+
+  const closeTagDrawer = () => {
+    setTagDrawer({ ...tagDrawer, open: false });
+  };
+
+  const openTagDrawer = (
+    linodeID: number,
+    linodeLabel: string,
+    tags: string[]
+  ) => {
+    setTagDrawer({
+      open: true,
+      label: linodeLabel,
+      tags,
+      linodeID
+    });
+  };
 
   const flags = useFlags();
 
   const Row = flags.cmr ? LinodeRow_CMR : LinodeRow;
 
   return (
+    // eslint-disable-next-line
     <>
       {data.map((linode, idx: number) => (
         <Row
@@ -54,10 +86,19 @@ export const ListView: React.FC<CombinedProps> = props => {
           type={linode.type}
           image={linode.image}
           key={`linode-row-${idx}`}
+          openTagDrawer={openTagDrawer}
           openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
         />
       ))}
+      <TagDrawer
+        entityLabel={tagDrawer.label}
+        open={tagDrawer.open}
+        tags={tagDrawer.tags}
+        addTag={() => null}
+        deleteTag={() => null}
+        onClose={closeTagDrawer}
+      />
     </>
   );
 };
