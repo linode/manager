@@ -5,8 +5,8 @@ describe('shouldRequestNotifications', () => {
   const d1 = '2019-05-23T12:00:00';
   const d2 = '2019-05-23T12:00:01';
 
-  const d1InMilliseconds = DateTime.fromISO(d1).valueOf();
-  const d2InMilliseconds = DateTime.fromISO(d2).valueOf();
+  const d1InMilliseconds = DateTime.fromISO(d1, { zone: 'UTC' }).valueOf();
+  const d2InMilliseconds = DateTime.fromISO(d2, { zone: 'UTC' }).valueOf();
 
   it('should return `true` if there is a linode_resize event created AFTER the last time notifications were updated', () => {
     expect(

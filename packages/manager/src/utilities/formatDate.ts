@@ -44,7 +44,7 @@ interface FormatDateOptions {
  * @param options
  */
 export const formatDate = (
-  date: string,
+  date: string | number,
   options: FormatDateOptions = {}
 ): string => {
   let time;

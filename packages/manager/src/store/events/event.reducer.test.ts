@@ -67,7 +67,7 @@ describe('events.reducer', () => {
         it('should update the mostRecentEventTime', () => {
           expect(state).toHaveProperty(
             'mostRecentEventTime',
-            DateTime.fromISO('2018-12-03T22:34:09').valueOf()
+            DateTime.fromISO('2018-12-03T22:34:09', { zone: 'utc' }).valueOf()
           );
         });
 
