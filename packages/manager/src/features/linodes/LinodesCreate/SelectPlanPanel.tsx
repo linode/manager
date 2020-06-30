@@ -397,18 +397,26 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
       error,
       header,
       types,
-      currentPlanHeading
+      currentPlanHeading,
+      selectedID
     } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
 
     // Determine initial plan category tab based on current plan selection
     // (if there is one).
-    const selectedTypeClass: LinodeTypeClass = pathOr(
+    let selectedTypeClass: LinodeTypeClass = pathOr(
       'standard', // Use `standard` by default
       ['class'],
-      types.find(type => type.heading === currentPlanHeading)
+      types.find(
+        type => type.id === selectedID || type.heading === currentPlanHeading
+      )
     );
+
+    // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
+    if (selectedTypeClass === 'nanode') {
+      selectedTypeClass = 'standard';
+    }
 
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
@@ -419,7 +427,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         header={header || 'Linode Plan'}
         copy={copy}
         tabs={tabs}
-        initTab={initialTab}
+        initTab={initialTab >= 0 ? initialTab : 0}
         data-qa-select-plan
       />
     );
