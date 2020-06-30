@@ -25,6 +25,9 @@ const styles = (theme: Theme) =>
       },
       '& tbody.sorting': {
         opacity: 0.5
+      },
+      '& thead': {
+        borderTop: `1px solid ${theme.palette.divider}`
       }
     },
     responsive: {
@@ -128,7 +131,6 @@ class WrappedTable extends React.Component<CombinedProps> {
       spacingBottom,
       removeLabelonMobile,
       stickyHeader,
-      tableCaption,
       colCount,
       rowCount,
       ...rest
