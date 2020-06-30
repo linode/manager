@@ -167,26 +167,32 @@ export class LinodeCreate extends React.PureComponent<
   tabs: Tab[] = [
     {
       title: 'Distributions',
+      type: 'fromImage',
       routeName: `${this.props.match.url}?type=Distributions`
     },
     {
       title: 'Marketplace',
+      type: 'fromApp',
       routeName: `${this.props.match.url}?type=Marketplace`
     },
     {
       title: 'StackScripts',
+      type: 'fromStackScript',
       routeName: `${this.props.match.url}?type=StackScripts`
     },
     {
       title: 'Images',
+      type: 'fromImage',
       routeName: `${this.props.match.url}?type=Images`
     },
     {
       title: 'Backups',
+      type: 'fromBackup',
       routeName: `${this.props.match.url}?type=Backups`
     },
     {
       title: 'Clone Linode',
+      type: 'fromLinode',
       routeName: `${this.props.match.url}?type=Clones`
     }
   ];
@@ -194,10 +200,12 @@ export class LinodeCreate extends React.PureComponent<
   stackScriptTabs: Tab[] = [
     {
       title: 'Community StackScripts',
+      type: 'fromStackScript',
       routeName: `${this.props.match.url}?type=StackScripts/Community`
     },
     {
       title: 'Account StackScripts',
+      type: 'fromStackScript',
       routeName: `${this.props.match.url}?type=StackScripts/Account`
     }
   ];
@@ -521,9 +529,9 @@ export class LinodeCreate extends React.PureComponent<
           >
             <DisplaySectionList displaySections={displaySections} />
           </CheckoutBar>
-          {/* {this.props.documentation.length > 0 && (
-            <DocsSidebar docs={this.props.documentation} />
-          )} */}
+          { && <div>test</div>
+          // <DocsSidebar docs={this.props.documentation} />
+          }
         </Grid>
       </form>
     );
