@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       left: -50,
       top: 0,
-      background: `linear-gradient(to right, transparent, ${theme.bg.main} 100%)`
+      background: `linear-gradient(to right, transparent, ${theme.bg.white} 100%)`
     }
   },
   button: {
