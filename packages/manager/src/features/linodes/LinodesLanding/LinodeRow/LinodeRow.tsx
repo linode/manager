@@ -49,7 +49,6 @@ interface Props {
   displayStatus: string;
   type: null | string;
   tags: string[];
-  openTagDrawer?: any; // Including for type matching with CMR; not used.
   mostRecentBackup: string | null;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
@@ -58,6 +57,8 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  // Including for type matching with CMR; not used.
+  openTagDrawer?: any;
 }
 
 export type CombinedProps = Props &

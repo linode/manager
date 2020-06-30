@@ -16,6 +16,7 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TagCell from 'src/components/TagCell';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import useLinodes from 'src/hooks/useLinodes';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
@@ -100,8 +101,20 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     mutationAvailable
   } = props;
 
+  const { updateLinode } = useLinodes();
+
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
+
+  const addTag = (tag: string) => {
+    const newTags = [...tags, tag];
+    updateLinode({ linodeId: id, tags: newTags });
+  };
+
+  const deleteTag = (tag: string) => {
+    const newTags = tags.filter(thisTag => thisTag !== tag);
+    updateLinode({ linodeId: id, tags: newTags });
+  };
 
   const MaintenanceText = () => {
     return (
@@ -226,8 +239,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       <TagCell
         className={classes.regionCell}
         tags={tags}
-        addTag={() => null}
-        deleteTag={() => null}
+        addTag={addTag}
+        deleteTag={deleteTag}
         listAllTags={() => openTagDrawer(id, label, tags)}
         width={500}
       />

@@ -3,6 +3,7 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
+import useLinodes from 'src/hooks/useLinodes';
 import LinodeRow from './LinodeRow/LinodeRow';
 import LinodeRow_CMR from './LinodeRow/LinodeRow_CMR';
 
@@ -41,6 +42,8 @@ export const ListView: React.FC<CombinedProps> = props => {
     linodeID: 0
   });
 
+  const { updateLinode } = useLinodes();
+
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
   };
@@ -56,6 +59,24 @@ export const ListView: React.FC<CombinedProps> = props => {
       tags,
       linodeID
     });
+  };
+
+  const addTag = (linodeID: number, newTag: string) => {
+    const _tags = [...tagDrawer.tags, newTag];
+    return updateLinode({ linodeId: linodeID, tags: _tags })
+      .then(_ => {
+        setTagDrawer({ ...tagDrawer, tags: _tags });
+      })
+      .catch(_ => null); // @todo handle this
+  };
+
+  const deleteTag = (linodeId: number, tagToDelete: string) => {
+    const _tags = tagDrawer.tags.filter(thisTag => thisTag !== tagToDelete);
+    return updateLinode({ linodeId, tags: _tags })
+      .then(_ => {
+        setTagDrawer({ ...tagDrawer, tags: _tags });
+      })
+      .catch(_ => null); // @todo handle this
   };
 
   const flags = useFlags();
@@ -95,8 +116,8 @@ export const ListView: React.FC<CombinedProps> = props => {
         entityLabel={tagDrawer.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        addTag={() => null}
-        deleteTag={() => null}
+        addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
+        deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
         onClose={closeTagDrawer}
       />
     </>
