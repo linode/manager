@@ -1,5 +1,7 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import * as classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import ConsoleIcon from 'src/assets/icons/console.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
@@ -8,7 +10,7 @@ import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import RebootIcon from 'src/assets/icons/reboot.svg';
 import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
-import ActionMenu from 'src/components/ActionMenu_CMR';
+import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
 import List from 'src/components/core/List';
@@ -31,6 +33,7 @@ import { useTypes } from 'src/hooks/useTypes';
 import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -40,10 +43,27 @@ interface LinodeEntityDetailProps {
   numVolumes: number;
   username: string;
   openLishConsole: () => void;
+  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openPowerActionDialog: (
+    bootAction: Action,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Config[]
+  ) => void;
+  backups: LinodeBackups;
 }
 
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
-  const { variant, linode, numVolumes, username, openLishConsole } = props;
+  const {
+    variant,
+    linode,
+    numVolumes,
+    username,
+    openLishConsole,
+    openDeleteDialog,
+    openPowerActionDialog,
+    backups
+  } = props;
 
   useReduxLoad(['images', 'types']);
   const { images } = useImages();
@@ -73,6 +93,12 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
+          openDeleteDialog={openDeleteDialog}
+          openPowerActionDialog={openPowerActionDialog}
+          linodeRegionDisplay={linodeRegionDisplay}
+          backups={backups}
+          type={'something'}
+          image={'somethging'}
         />
       }
       body={
@@ -108,12 +134,23 @@ export default React.memo(LinodeEntityDetail);
 // =============================================================================
 // Header
 // =============================================================================
-interface HeaderProps {
+export interface HeaderProps {
   variant: LinodeEntityDetailVariant;
   imageVendor: string | null;
   linodeLabel: string;
   linodeId: number;
   linodeStatus: Linode['status'];
+  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openPowerActionDialog: (
+    bootAction: Action,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Config[]
+  ) => void;
+  linodeRegionDisplay: string;
+  backups: LinodeBackups;
+  type: string;
+  image: string;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -156,11 +193,40 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   actionMenu: {
     marginLeft: 30
+  },
+  statusChip: {
+    marginLeft: 30,
+    color: 'white',
+    backgroundColor: '#ffb31a',
+    fontSize: '1.1 rem',
+    height: 30,
+    borderRadius: 15,
+    letterSpacing: '.5px',
+    minWidth: 120,
+    marginRight: 30
+  },
+  statusRunning: {
+    backgroundColor: '#17cf73'
+  },
+  statusOffline: {
+    backgroundColor: '#9ea4ae'
   }
 }));
 
 const Header: React.FC<HeaderProps> = props => {
-  const { variant, imageVendor, linodeLabel, linodeId, linodeStatus } = props;
+  const {
+    variant,
+    imageVendor,
+    linodeLabel,
+    linodeId,
+    linodeStatus,
+    linodeRegionDisplay,
+    openDeleteDialog,
+    openPowerActionDialog,
+    backups,
+    type,
+    image
+  } = props;
 
   const classes = useHeaderStyles();
 
@@ -168,6 +234,10 @@ const Header: React.FC<HeaderProps> = props => {
     imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
 
   const isDetails = variant === 'details';
+
+  const isRunning = linodeStatus === 'running';
+
+  const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
 
   return (
     <EntityHeader
@@ -192,17 +262,11 @@ const Header: React.FC<HeaderProps> = props => {
               {linodeLabel}
             </Link>
             <Chip
-              style={{
-                marginLeft: 30,
-                backgroundColor: '#17cf73',
-                color: 'white',
-                fontSize: '1.1 rem',
-                height: 30,
-                borderRadius: 15,
-                letterSpacing: '.5px',
-                minWidth: 120,
-                marginRight: 30
-              }}
+              className={classnames({
+                [classes.statusChip]: true,
+                [classes.statusRunning]: isRunning,
+                [classes.statusOffline]: isOffline
+              })}
               label={linodeStatus.toUpperCase()}
               component="span"
               clickable={false}
@@ -254,10 +318,17 @@ const Header: React.FC<HeaderProps> = props => {
               title="Launch Console"
             />
           )}
-          <ActionMenu
+          <LinodeActionMenu
+            linodeId={linodeId}
+            linodeLabel={linodeLabel}
+            linodeRegion={linodeRegionDisplay}
+            linodeType={type}
+            linodeStatus={linodeStatus}
+            linodeBackups={backups}
+            openDeleteDialog={openDeleteDialog}
+            openPowerActionDialog={openPowerActionDialog}
+            noImage={!image}
             inlineLabel="More Actions"
-            ariaLabel="linode-detail"
-            createActions={() => []}
           />
           {isDetails && <DocumentationButton href="https://www.linode.com/" />}
         </>
@@ -327,6 +398,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer'
   },
   accessTable: {
+    maxWidth: 600,
     '& tr': {
       height: 34
     },

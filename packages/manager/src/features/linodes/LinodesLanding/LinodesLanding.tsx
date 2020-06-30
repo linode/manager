@@ -63,6 +63,10 @@ import DeleteDialog from './DeleteDialog';
 import CSVLink from 'src/components/DownloadCSV';
 import Chip from 'src/components/core/Chip';
 import LandingHeader from 'src/components/LandingHeader';
+import IconButton from '@material-ui/core/IconButton';
+
+import GroupByTag from 'src/assets/icons/group-by-tag.svg';
+import TableView from 'src/assets/icons/table-view.svg';
 
 interface State {
   powerDialogOpen: boolean;
@@ -301,42 +305,83 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                         return (
                           <React.Fragment>
                             {this.props.flags.cmr ? (
-                              <LandingHeader
-                                title="Linode"
-                                onAddNew={() =>
-                                  this.props.history.push('/linodes/create')
-                                }
-                                iconType="linode"
-                                docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-                                body={
-                                  <Grid item>
-                                    <Chip
-                                      className={classNames({
-                                        [classes.chip]: true,
-                                        [classes.chipRunning]: true
-                                      })}
-                                      label={`${linodesRunningCount} RUNNING`}
-                                      {...chipProps}
-                                    />
-                                    <Chip
-                                      className={classNames({
-                                        [classes.chip]: true,
-                                        [classes.chipPending]: true
-                                      })}
-                                      label={`${linodesPendingCount} PENDING`}
-                                      {...chipProps}
-                                    />
-                                    <Chip
-                                      className={classNames({
-                                        [classes.chip]: true,
-                                        [classes.chipOffline]: true
-                                      })}
-                                      label={`${linodesOfflineCount} OFFLINE`}
-                                      {...chipProps}
-                                    />
+                              <>
+                                <LandingHeader
+                                  title="Linode"
+                                  onAddNew={() =>
+                                    this.props.history.push('/linodes/create')
+                                  }
+                                  iconType="linode"
+                                  docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                                  body={
+                                    <Grid item>
+                                      <Chip
+                                        className={classNames({
+                                          [classes.chip]: true,
+                                          [classes.chipRunning]: true
+                                        })}
+                                        label={`${linodesRunningCount} RUNNING`}
+                                        {...chipProps}
+                                      />
+                                      <Chip
+                                        className={classNames({
+                                          [classes.chip]: true,
+                                          [classes.chipPending]: true
+                                        })}
+                                        label={`${linodesPendingCount} PENDING`}
+                                        {...chipProps}
+                                      />
+                                      <Chip
+                                        className={classNames({
+                                          [classes.chip]: true,
+                                          [classes.chipOffline]: true
+                                        })}
+                                        label={`${linodesOfflineCount} OFFLINE`}
+                                        {...chipProps}
+                                      />
+                                    </Grid>
+                                  }
+                                />
+                                {params.view === 'grid' && (
+                                  <Grid
+                                    container
+                                    alignItems="center"
+                                    justify="flex-end"
+                                    className={classes.controlHeader}
+                                  >
+                                    <IconButton
+                                      aria-label={`Toggle display view ${linodeViewPreference}`}
+                                      onClick={toggleLinodeView}
+                                      disableRipple
+                                    >
+                                      <TableView />
+                                    </IconButton>
+
+                                    <IconButton
+                                      aria-label={`Toggle group by tag`}
+                                      onClick={toggleGroupLinodes}
+                                      disableRipple
+                                    >
+                                      <GroupByTag />
+                                    </IconButton>
+                                    {/* <FormControlLabel
+                                      className={classes.tagGroup}
+                                      control={
+                                        <Toggle
+                                          className={
+                                            linodesAreGrouped
+                                              ? ' checked'
+                                              : ' unchecked'
+                                          }
+                                          onChange={toggleGroupLinodes}
+                                          checked={linodesAreGrouped as boolean}
+                                        />
+                                      }
+                                      label="Group by Tag:"
+                                    /> */}
                                   </Grid>
-                                }
-                              />
+                                )}
+                              </>
                             ) : (
                               <Grid
                                 container

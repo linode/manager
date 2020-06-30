@@ -14,7 +14,8 @@ type ClassNames =
   | 'chip'
   | 'chipRunning'
   | 'chipPending'
-  | 'chipOffline';
+  | 'chipOffline'
+  | 'controlHeader';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -51,6 +52,10 @@ const styles = (theme: Theme) =>
     },
     chipOffline: {
       backgroundColor: '#9ea4ae'
+    },
+    controlHeader: {
+      backgroundColor: '#f9fafa',
+      marginBottom: 20
     }
   });
 

@@ -13,8 +13,7 @@ export interface HeaderProps extends BreadCrumbProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.bg.white,
-    height: 'inherit'
+    backgroundColor: theme.bg.white
   },
   contentOuter: {
     '& .MuiChip-root': {

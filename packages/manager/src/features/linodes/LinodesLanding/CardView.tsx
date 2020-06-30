@@ -10,6 +10,8 @@ import LinodeCard from './LinodeCard';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
+import useFlags from 'src/hooks/useFlags';
 
 interface Props {
   data: LinodeWithMaintenance[];
@@ -29,32 +31,50 @@ type CombinedProps = WithImagesProps & PaginationProps & Props;
 const CardView: React.FC<CombinedProps> = props => {
   const { data, imagesData, openDeleteDialog, openPowerActionDialog } = props;
 
+  const flags = useFlags();
+
   return (
     <Grid container>
-      {data.map((linode, idx: number) => (
-        <LinodeCard
-          key={`linode-card-${idx}`}
-          backups={linode.backups}
-          id={linode.id}
-          ipv4={linode.ipv4}
-          ipv6={linode.ipv6}
-          maintenanceStartTime={
-            linode.maintenance ? linode.maintenance.when : ''
-          }
-          label={linode.label}
-          region={linode.region}
-          status={linode.status}
-          tags={linode.tags}
-          disk={linode.specs.disk}
-          vcpus={linode.specs.vcpus}
-          memory={linode.specs.memory}
-          type={linode.type}
-          image={linode.image}
-          imageLabel={safeGetImageLabel(imagesData, linode.image)}
-          openDeleteDialog={openDeleteDialog}
-          openPowerActionDialog={openPowerActionDialog}
-        />
-      ))}
+      {flags.cmr
+        ? data.map((linode, idx: number) => (
+            <Grid item xs={12} style={{ marginBottom: 20 }}>
+              <LinodeEntityDetail
+                key={`linode-card-${idx}`}
+                variant="landing"
+                linode={linode}
+                numVolumes={2}
+                username="linode-user"
+                openLishConsole={() => null}
+                backups={linode.backups}
+                openDeleteDialog={openDeleteDialog}
+                openPowerActionDialog={openPowerActionDialog}
+              />
+            </Grid>
+          ))
+        : data.map((linode, idx: number) => (
+            <LinodeCard
+              key={`linode-card-${idx}`}
+              backups={linode.backups}
+              id={linode.id}
+              ipv4={linode.ipv4}
+              ipv6={linode.ipv6}
+              maintenanceStartTime={
+                linode.maintenance ? linode.maintenance.when : ''
+              }
+              label={linode.label}
+              region={linode.region}
+              status={linode.status}
+              tags={linode.tags}
+              disk={linode.specs.disk}
+              vcpus={linode.specs.vcpus}
+              memory={linode.specs.memory}
+              type={linode.type}
+              image={linode.image}
+              imageLabel={safeGetImageLabel(imagesData, linode.image)}
+              openDeleteDialog={openDeleteDialog}
+              openPowerActionDialog={openPowerActionDialog}
+            />
+          ))}
     </Grid>
   );
 };

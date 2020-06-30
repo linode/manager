@@ -89,6 +89,7 @@ export interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  inlineLabel?: string;
 }
 
 export type CombinedProps = Props &
@@ -322,7 +323,13 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     };
   };
 
-  const { linodeId, linodeLabel, linodeStatus, openPowerActionDialog } = props;
+  const {
+    linodeId,
+    linodeLabel,
+    linodeStatus,
+    openPowerActionDialog,
+    inlineLabel
+  } = props;
 
   return (
     <>
@@ -355,6 +362,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         toggleOpenCallback={toggleOpenActionMenu}
         createActions={createLinodeActions()}
         ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
+        inlineLabel={inlineLabel}
       />
     </>
   );
