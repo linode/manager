@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { components, OptionProps } from 'react-select';
-import MenuItem from 'src/components/core/MenuItem';
 
 interface Props extends OptionProps<any> {
   value: number | string;
@@ -9,21 +8,14 @@ interface Props extends OptionProps<any> {
 
 const Option: React.FC<Props> = props => {
   return (
-    <MenuItem
+    <div
       data-qa-option={String(props.value)}
-      key={props.value}
+      ref={props.innerRef}
       {...props.attrs}
-      role="option"
-      dense
-      component="div"
-      disableGutters
-      selected={props.isSelected}
-      disabled={props.isDisabled}
-      // Adding this causes console errors, but is the only way to get the menu to scroll and follow focused item.
-      {...props}
+      {...props.innerProps}
     >
       <components.Option {...props} />
-    </MenuItem>
+    </div>
   );
 };
 

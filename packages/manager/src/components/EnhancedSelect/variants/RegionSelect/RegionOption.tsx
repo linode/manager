@@ -41,7 +41,7 @@ export const RegionOption: React.FC<CombinedProps> = props => {
       aria-label={label}
     >
       <Grid container direction="row" alignItems="center" justify="flex-start">
-        <Grid item className="py0" aria-hidden>
+        <Grid aria-hidden item className="py0">
           {data.flag && data.flag()}
         </Grid>
         <Grid item>{label}</Grid>
