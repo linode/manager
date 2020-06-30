@@ -9,7 +9,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import ActionMenu, {
@@ -85,7 +85,7 @@ export interface Props {
   ) => void;
 }
 
-export type CombinedProps = Props & RouteComponentProps<{}> & StateProps;
+export type CombinedProps = Props & StateProps;
 
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
