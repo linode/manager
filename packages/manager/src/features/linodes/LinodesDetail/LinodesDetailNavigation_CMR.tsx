@@ -72,7 +72,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     },
     // Previously Disks/Configs
     {
-      routeName: `${url}/config`,
+      routeName: `${url}/configurations`,
       title: 'Configurations'
     },
     {
@@ -178,7 +178,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
           />
           <Route
             exact
-            path={`/linodes/:linodeId/config`}
+            path={`/linodes/:linodeId/configurations`}
             component={LinodeAdvanced_CMR}
           />
           <Route
