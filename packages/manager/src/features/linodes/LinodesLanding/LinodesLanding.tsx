@@ -349,6 +349,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                     justify="flex-end"
                                     className={classes.controlHeader}
                                   >
+                                    {/* TODO check a11y of these to make them more useful/informational */}
                                     <IconButton
                                       aria-label={`Toggle display view ${linodeViewPreference}`}
                                       onClick={toggleLinodeView}
