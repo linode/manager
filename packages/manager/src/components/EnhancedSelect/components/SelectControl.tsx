@@ -23,9 +23,8 @@ const SelectControl: React.FC<Props> = props => {
           : props.selectProps.placeholder
       }
       fullWidth
-      select
       role="combobox"
-      SelectProps={{
+      InputProps={{
         inputComponent,
         inputProps: {
           className: props.selectProps.classes.input,
