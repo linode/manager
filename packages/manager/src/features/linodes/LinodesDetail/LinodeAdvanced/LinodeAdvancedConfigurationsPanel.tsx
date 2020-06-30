@@ -13,7 +13,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import LinodeConfigs from './LinodeConfigs';
-import LinodeDisks from './LinodeDisks';
+import LinodeDisks from './LinodeDisks_CMR';
 import LinodeDiskSpace from './LinodeDiskSpace';
 
 import { sendMigrationNavigationEvent } from 'src/utilities/ga';
@@ -115,9 +115,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  linodeContext
-);
+const enhanced = compose<CombinedProps, {}>(styled, linodeContext);
 
 export default enhanced(LinodeAdvancedConfigurationsPanel);
