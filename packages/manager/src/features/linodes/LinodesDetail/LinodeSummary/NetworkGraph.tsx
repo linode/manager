@@ -139,7 +139,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
   return (
     <>
       <StatsPanel
-        title={`IPv4 Traffic (${v4Unit}/s)`}
+        title={`Network — IPv4 (${v4Unit}/s)`}
         renderBody={() => (
           <Graph
             data={v4Data}
@@ -152,7 +152,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
         {...rest}
       />
       <StatsPanel
-        title={`IPv6 Traffic (${v6Unit}/s)`}
+        title={`Network — IPv6 (${v6Unit}/s)`}
         renderBody={() => (
           <Graph
             data={v6Data}
