@@ -14,6 +14,7 @@ import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TagCell from 'src/components/TagCell';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import hasMutationAvailable, {
   HasMutationAvailable
@@ -215,6 +216,14 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         linodeId={id}
         backupsEnabled={backups.enabled || false}
         mostRecentBackup={mostRecentBackup || ''}
+      />
+      <TagCell
+        className={classes.regionCell}
+        tags={['tag1', 'tag2']}
+        addTag={() => null}
+        deleteTag={() => null}
+        listAllTags={() => null}
+        width={500}
       />
       <TableCell className={classes.actionCell} data-qa-notifications>
         <div className={classes.actionInner}>

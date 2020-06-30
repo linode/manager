@@ -5,7 +5,7 @@ import Plus from 'src/assets/icons/plusSign.svg';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
 import Tag from 'src/components/Tag/Tag_CMR';
 import AddTag from './AddTag';
 
@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   tags: string[];
   width: number; // Required so we can fade out after a certain point
+  className?: string;
   addTag: (newTag: string) => void;
   deleteTag: (tagToDelete: string) => void;
   listAllTags: (tags: string[]) => void;
@@ -88,7 +89,7 @@ const checkOverflow = (el: any) => {
 export type CombinedProps = Props;
 
 export const TagCell: React.FC<Props> = props => {
-  const { addTag, tags, width } = props;
+  const { addTag, className, tags, width } = props;
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const classes = useStyles();
@@ -107,7 +108,7 @@ export const TagCell: React.FC<Props> = props => {
 
   return (
     <TableCell
-      className={classes.root}
+      className={`${classes.root} ${className}`}
       style={{ overflow: addingTag ? 'visible' : 'hidden' }}
     >
       <Grid container direction="row" alignItems="center" wrap="nowrap">
