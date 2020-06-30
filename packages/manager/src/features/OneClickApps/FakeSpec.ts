@@ -372,7 +372,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Use a Block Storage Volume with Nextcloud',
         href:
-          'https://www.linode.com/docs/applications/cloud-storage/use-block-storage-volume-with-nextcloud/'
+          'https://www.linode.com/docs/platform/one-click/how-to-deploy-nextcloud-with-one-click-apps/'
       }
     ],
     logo_url: 'assets/nextcloud_color.svg'
@@ -404,7 +404,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Percona Monitoring and Management',
         href:
-          'https://www.percona.com/software/database-tools/percona-monitoring-and-management'
+          'https://www.linode.com/docs/platform/one-click/how-to-deploy-percona-monitoring-management-with-one-click-apps/'
       }
     ],
     logo_url: 'assets/percona_color.svg'
