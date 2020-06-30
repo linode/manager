@@ -38,6 +38,7 @@ interface Props {
   loading: boolean;
   error: string;
   estimatedTimeToUpgradeInMins: number;
+  isMovingFromSharedToDedicated: boolean;
 }
 
 interface State {
@@ -110,30 +111,34 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           This Linode has pending upgrades. The resources that are affected
           include:
         </Typography>
-        <ul className="nonMUI-list">
-          {Object.keys(extendedUpgradeInfo).map(newSpec => {
-            const {
-              label,
-              currentAmount,
-              newAmount,
-              unit
-            } = extendedUpgradeInfo[newSpec];
+        {this.props.isMovingFromSharedToDedicated ? (
+          <HighmemG6ToG7 />
+        ) : (
+          <ul className="nonMUI-list">
+            {Object.keys(extendedUpgradeInfo).map(newSpec => {
+              const {
+                label,
+                currentAmount,
+                newAmount,
+                unit
+              } = extendedUpgradeInfo[newSpec];
 
-            if (newAmount === null) {
-              return;
-            }
-            return (
-              <ListItem key={label}>
-                <Typography>
-                  {label} goes from {currentAmount} {unit} to{' '}
-                  <strong>
-                    {newAmount} {unit}
-                  </strong>
-                </Typography>
-              </ListItem>
-            );
-          })}
-        </ul>
+              if (newAmount === null) {
+                return null;
+              }
+              return (
+                <ListItem key={label}>
+                  <Typography>
+                    {label} goes from {currentAmount} {unit} to{' '}
+                    <strong>
+                      {newAmount} {unit}
+                    </strong>
+                  </Typography>
+                </ListItem>
+              );
+            })}
+          </ul>
+        )}
         <Typography variant="h2" style={{ marginTop: 32, marginBottom: 16 }}>
           How it Works
         </Typography>
@@ -193,3 +198,15 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
 }
 
 export default MutateDrawer;
+
+const HighmemG6ToG7: React.FC<{}> = () => {
+  return (
+    <ul className="nonMUI-list">
+      <ListItem>
+        <Typography>
+          Instance now contains <strong>dedicated CPU cores</strong>
+        </Typography>
+      </ListItem>
+    </ul>
+  );
+};

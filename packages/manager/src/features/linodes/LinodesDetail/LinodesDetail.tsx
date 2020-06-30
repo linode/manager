@@ -10,6 +10,7 @@ import { compose } from 'recompose';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
+import useFlags from 'src/hooks/useFlags';
 import NotFound from 'src/components/NotFound';
 import {
   LinodeDetailContext,
@@ -21,6 +22,9 @@ const CloneLanding = React.lazy(() => import('../CloneLanding'));
 const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
 const LinodesDetailNavigation = React.lazy(() =>
   import('./LinodesDetailNavigation')
+);
+const LinodesDetailNavigation_CMR = React.lazy(() =>
+  import('./LinodesDetailNavigation_CMR')
 );
 const MigrateLanding = React.lazy(() => import('../MigrateLanding'));
 
@@ -37,6 +41,7 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
   } = props;
   const dispatch = useDispatch();
   const linode = useExtendedLinode(+linodeId);
+  const flags = useFlags();
 
   if (!linode) {
     return <NotFound />;
@@ -60,7 +65,11 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
             render={() => (
               <React.Fragment>
                 <LinodesDetailHeader />
-                <LinodesDetailNavigation />
+                {flags.cmr ? (
+                  <LinodesDetailNavigation_CMR />
+                ) : (
+                  <LinodesDetailNavigation />
+                )}
               </React.Fragment>
             )}
           />
