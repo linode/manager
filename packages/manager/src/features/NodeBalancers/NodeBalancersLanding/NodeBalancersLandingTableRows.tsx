@@ -75,7 +75,7 @@ const NodeBalancersLandingTableRows: React.FC<CombinedProps> = props => {
             data-qa-nodebalancer-cell={nodeBalancer.label}
             rowLink={`/nodebalancers/${nodeBalancer.id}`}
             className="fade-in-table"
-            aria-label={nodeBalancer.label}
+            ariaLabel={nodeBalancer.label}
           >
             <TableCell parentColumn="Name" data-qa-nodebalancer-label>
               <Grid container wrap="nowrap" alignItems="center">

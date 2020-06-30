@@ -48,7 +48,7 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
       <React.Fragment>
         {data.map(eachDevice => {
           return (
-            <TableRow key={eachDevice.id}>
+            <TableRow ariaLabel={`Device ${eachDevice.id}`} key={eachDevice.id}>
               <TableCell parentColumn="Device">
                 {eachDevice.user_agent}
               </TableCell>

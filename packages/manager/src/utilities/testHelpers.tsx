@@ -1,4 +1,5 @@
 import { MatcherFunction, render, RenderResult } from '@testing-library/react';
+import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
 import { mergeDeepRight } from 'ramda';
 import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -11,6 +12,7 @@ import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import store, { ApplicationState, defaultState } from 'src/store';
 import { DeepPartial } from 'redux';
+import { FlagSet } from 'src/featureFlags';
 
 export const createPromiseLoaderResponse: <T>(
   r: T
@@ -27,6 +29,7 @@ export const createResourcePage: <T>(data: T[]) => ResourcePage<T> = data => ({
 interface Options {
   MemoryRouter?: MemoryRouterProps;
   customStore?: DeepPartial<ApplicationState>;
+  flags?: FlagSet;
 }
 
 /**
@@ -45,7 +48,9 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   return (
     <Provider store={storeToPass}>
       <LinodeThemeWrapper theme="dark" spacing="normal">
-        <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+        <LDProvider value={{ flags: options.flags ?? {} }}>
+          <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+        </LDProvider>
       </LinodeThemeWrapper>
     </Provider>
   );
@@ -150,3 +155,24 @@ export const withMarkup = (query: Query) => (text: string): HTMLElement =>
     );
     return hasText(node) && childrenDontHaveText;
   });
+
+/**
+ * Assert that HTML elements appear in a specific order. `selectorAttribute` must select the parent
+ * node of each piece of text content you are selecting.
+ *
+ * Example usage:
+ * const { container } = render(<MyComponent />);
+ * assertOrder(container, '[data-qa-label]', ['el1', 'el2', 'el3']);
+ *
+ * Thanks to https://spectrum.chat/testing-library/general/how-to-test-the-order-of-elements~23c8eaee-0fab-4bc6-8ca9-aa00a9582f8c?m=MTU3MjU0NTM0MTgyNw==
+ */
+export const assertOrder = (
+  container: HTMLElement,
+  selectorAttribute: string,
+  expectedOrder: string[]
+) => {
+  const elements = container.querySelectorAll(selectorAttribute);
+  expect(Array.from(elements).map(el => el.textContent)).toMatchObject(
+    expectedOrder
+  );
+};

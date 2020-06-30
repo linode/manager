@@ -36,6 +36,7 @@ import {
   getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import { PasswordValidationType } from 'src/featureFlags';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -43,6 +44,7 @@ import {
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
 
@@ -69,6 +71,9 @@ const styles = (theme: Theme) =>
 
 interface Props {
   type: 'community' | 'account';
+  disabled: boolean;
+  passwordHelperText: string;
+  passwordValidation: PasswordValidationType;
 }
 
 interface ContextProps {
@@ -104,8 +109,24 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     requestKeys,
     linodeId,
     enqueueSnackbar,
-    history
+    history,
+    passwordHelperText,
+    passwordValidation
   } = props;
+
+  /**
+   * Dynamic validation schema, with password validation
+   * dependent on a value from a feature flag. Remove this
+   * once API password validation is stable.
+   */
+  const RebuildSchema = React.useMemo(
+    () =>
+      extendValidationSchema(
+        passwordValidation ?? 'none',
+        RebuildLinodeFromStackScriptSchema
+      ),
+    [passwordValidation]
+  );
 
   const [
     ss,
@@ -216,7 +237,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={RebuildLinodeFromStackScriptSchema}
+      validationSchema={RebuildSchema}
       validateOnChange={false}
       onSubmit={handleFormSubmit}
       render={formikProps => {
@@ -346,6 +367,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
                 sshKeyError={sshError}
                 requestKeys={requestKeys}
                 data-qa-access-panel
+                passwordHelperText={passwordHelperText}
               />
             </form>
             <ActionsPanel>

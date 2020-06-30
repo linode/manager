@@ -20,6 +20,7 @@ export const SSHAccessRow: React.FunctionComponent<Props> = props => {
       key={linodeSetting.id}
       data-qa-monitor-cell={linodeSetting.id}
       data-testid={'linode-row'}
+      ariaLabel={linodeSetting.label}
     >
       <TableCell parentColumn="Linode" data-qa-managed-linode>
         {linodeSetting.label}

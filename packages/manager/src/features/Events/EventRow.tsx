@@ -6,7 +6,6 @@ import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -27,7 +26,7 @@ import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conve
 
 type ClassNames = 'root' | 'message' | 'occurredCell';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {},
     message: {
@@ -114,6 +113,7 @@ export const Row: React.FC<RowProps> = props => {
     <TableRow
       rowLink={entityId ? undefined : (linkTarget as any)}
       data-qa-event-row
+      ariaLabel={`Event ${displayedMessage}`}
     >
       {/** We don't use the event argument, so typing isn't critical here. */}
       {/* Only display entity icon on the Global EventsLanding page */}

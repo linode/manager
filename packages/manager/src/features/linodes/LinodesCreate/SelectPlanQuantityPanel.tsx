@@ -174,12 +174,12 @@ export class SelectPlanPanel extends React.Component<
             </TableCell>
             <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
             <TableCell data-qa-hourly>{`$` + type.price.hourly}</TableCell>
+            <TableCell data-qa-ram>
+              {convertMegabytesTo(type.memory, true)}
+            </TableCell>
             <TableCell data-qa-cpu>{type.vcpus}</TableCell>
             <TableCell data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
-            </TableCell>
-            <TableCell data-qa-ram>
-              {convertMegabytesTo(type.memory, true)}
             </TableCell>
             <TableCell>
               <div className={classes.enhancedInputOuter}>
@@ -241,9 +241,9 @@ export class SelectPlanPanel extends React.Component<
           <TableCell data-qa-plan-header>Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
+          <TableCell data-qa-ram-header>RAM</TableCell>
           <TableCell data-qa-cpu-header>CPUs</TableCell>
           <TableCell data-qa-storage-header>Storage</TableCell>
-          <TableCell data-qa-ram-header>Ram</TableCell>
           <TableCell>
             <p className="visually-hidden">Quantity</p>
           </TableCell>
@@ -311,15 +311,15 @@ export class SelectPlanPanel extends React.Component<
             <>
               {isOnCreate && (
                 <Typography data-qa-standard className={classes.copy}>
-                  Standard instances are good for medium-duty workloads and are
-                  a good mix of performance, resources, and price.
+                  Shared CPU instances are good for medium-duty workloads and
+                  are a good mix of performance, resources, and price.
                 </Typography>
               )}
               {this.renderPlanContainer(standards)}
             </>
           );
         },
-        title: 'Standard'
+        title: 'Shared CPU'
       });
       tabOrder.push('standard');
     }
@@ -353,7 +353,7 @@ export class SelectPlanPanel extends React.Component<
                 <Typography data-qa-highmem className={classes.copy}>
                   High Memory instances favor RAM over other resources, and can
                   be good for memory hungry use cases like caching and in-memory
-                  databases.
+                  databases. All High Memory plans contain dedicated CPU cores.
                 </Typography>
               )}
               {this.renderPlanContainer(highmem)}

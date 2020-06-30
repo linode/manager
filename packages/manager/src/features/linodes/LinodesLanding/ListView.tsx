@@ -3,8 +3,10 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
 import LinodeRow from './LinodeRow/LinodeRow';
+import LinodeRow_CMR from './LinodeRow/LinodeRow_CMR';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import useFlags from 'src/hooks/useFlags';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 
 interface Props {
@@ -24,10 +26,15 @@ type CombinedProps = Props & PaginationProps;
 
 export const ListView: React.FC<CombinedProps> = props => {
   const { data, openDeleteDialog, openPowerActionDialog } = props;
+
+  const flags = useFlags();
+
+  const Row = flags.cmr ? LinodeRow_CMR : LinodeRow;
+
   return (
     <>
       {data.map((linode, idx: number) => (
-        <LinodeRow
+        <Row
           backups={linode.backups}
           id={linode.id}
           ipv4={linode.ipv4}

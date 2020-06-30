@@ -1,4 +1,4 @@
-FROM selenium/standalone-chrome:3.141.59-zirconium
+FROM selenium/standalone-chrome:3.141.59-20200409
 # Run commands as "node" user. We don't want to run these commands as root
 #
 # See https://github.com/nodejs/docker-node/blob/d094c98a48659ff9f8d59db8dafb7020e181446a/docs/BestPractices.md
@@ -12,7 +12,7 @@ RUN chown -R seluser:seluser /home/seluser
 USER seluser
 
 # Copy the root level package.json and run yarn if anything changesz
-COPY --chown=seluser:seluser package.json tslint.json run_storybook_docker.sh yarn.lock scripts ./
+COPY --chown=seluser:seluser package.json run_storybook_docker.sh yarn.lock scripts ./
 
 # Copy the rest of the files that don't require installation
 COPY --chown=seluser:seluser packages/api-v4  ./packages/api-v4/

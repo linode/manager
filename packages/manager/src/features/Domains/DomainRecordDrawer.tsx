@@ -1,11 +1,13 @@
 import {
   createDomainRecord,
+  Domain,
   DomainRecord,
   DomainType,
   RecordType,
   updateDomainRecord
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
+import produce from 'immer';
 import {
   cond,
   defaultTo,
@@ -36,6 +38,7 @@ import {
   extendedIPToString,
   stringToExtendedIP
 } from 'src/utilities/ipUtils';
+import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   getInitialIPs,
@@ -44,7 +47,9 @@ import {
   transferHelperText as helperText
 } from './domainUtils';
 
-interface Props extends EditableRecordFields, EditableDomainFields {
+interface Props
+  extends Partial<Omit<DomainRecord, 'type'>>,
+    Partial<Omit<Domain, 'type'>> {
   open: boolean;
   onClose: () => void;
   domainId: number;
@@ -65,13 +70,13 @@ interface EditableSharedFields {
 }
 interface EditableRecordFields extends EditableSharedFields {
   name?: string;
-  port?: number;
-  priority?: number;
+  port?: string;
+  priority?: string;
   protocol?: null | string;
   service?: null | string;
   tag?: null | string;
   target?: string;
-  weight?: number;
+  weight?: string;
 }
 
 interface EditableDomainFields extends EditableSharedFields {
@@ -100,6 +105,7 @@ interface AdjustedTextFieldProps {
   max?: number;
   placeholder?: string;
   helperText?: string;
+  multiline?: boolean;
 }
 
 interface NumberFieldProps extends AdjustedTextFieldProps {
@@ -112,22 +118,22 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
    * editable data or defaults.
    */
   static defaultFieldsState = (props: Partial<CombinedProps>) => ({
-    id: pathOr(undefined, ['id'], props),
-    name: pathOr('', ['name'], props),
-    port: pathOr(80, ['port'], props),
-    priority: pathOr(10, ['priority'], props),
-    protocol: pathOr('tcp', ['protocol'], props),
-    service: pathOr('', ['service'], props),
-    tag: pathOr('issue', ['tag'], props),
-    target: pathOr('', ['target'], props),
-    ttl_sec: pathOr(0, ['ttl_sec'], props),
-    weight: pathOr(5, ['weight'], props),
-    domain: pathOr(undefined, ['domain'], props),
-    soa_email: pathOr('', ['soa_email'], props),
+    id: props.id,
+    name: props.name ?? '',
+    port: props.port ?? '80',
+    priority: props.priority ?? '10',
+    protocol: props.protocol ?? 'tcp',
+    service: props.service ?? '',
+    tag: props.tag ?? 'issue',
+    target: props.target ?? '',
+    ttl_sec: props.ttl_sec ?? 0,
+    weight: props.weight ?? '5',
+    domain: props.domain,
+    soa_email: props.soa_email ?? '',
     axfr_ips: getInitialIPs(props.axfr_ips),
-    refresh_sec: pathOr(0, ['refresh_sec'], props),
-    retry_sec: pathOr(0, ['retry_sec'], props),
-    expire_sec: pathOr(0, ['expire_sec'], props)
+    refresh_sec: props.refresh_sec ?? 0,
+    retry_sec: props.retry_sec ?? 0,
+    expire_sec: props.expire_sec ?? 0
   });
 
   state: State = {
@@ -175,7 +181,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     label,
     field,
     helperText,
-    placeholder
+    placeholder,
+    multiline
   }: AdjustedTextFieldProps) => (
     <TextField
       label={label}
@@ -192,6 +199,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       }
       placeholder={placeholder}
       helperText={helperText}
+      multiline={multiline}
       data-qa-target={label}
     />
   );
@@ -207,7 +215,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         )(field)}
         value={this.state.fields[field]}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          this.updateField(field)(+e.target.value)
+          this.updateField(field)(e.target.value)
         }
         data-qa-target={label}
         {...rest}
@@ -217,10 +225,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   NameOrTargetField = ({
     label,
-    field
+    field,
+    multiline
   }: {
     label: string;
     field: 'name' | 'target';
+    multiline?: boolean;
   }) => {
     const { domain, type } = this.props;
     const value = this.state.fields[field];
@@ -230,6 +240,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       <this.TextField
         field={field}
         label={label}
+        multiline={multiline}
         placeholder={
           shouldResolve(type, field) ? 'hostname or @ for root' : undefined
         }
@@ -492,7 +503,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     };
 
     // Expand @ to the Domain in appropriate fields
-    const data = resolveAlias(_data, domain, type);
+    let data = resolveAlias(_data, domain, type);
+    // Convert string values to numeric, replacing '' with undefined
+    data = castFormValuesToNumeric(data);
 
     /**
      * Validation
@@ -533,9 +546,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       ...this.filterDataByType(fields, type)
     };
 
-    // Replace a single @ with a reference to the Domain
-    const data = resolveAlias(_data, domain, type);
-
+    // Expand @ to the Domain in appropriate fields
+    let data = resolveAlias(_data, domain, type);
+    // Convert string values to numeric, replacing '' with undefined
+    data = castFormValuesToNumeric(data);
     updateDomainRecord(domainId, id, data)
       .then(this.handleRecordSubmissionSuccess)
       .catch(this.handleSubmissionErrors);
@@ -695,7 +709,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           <this.NameOrTargetField label="Hostname" field="name" key={idx} />
         ),
         (idx: number) => (
-          <this.NameOrTargetField label="Value" field="target" key={idx} />
+          <this.NameOrTargetField
+            label="Value"
+            field="target"
+            multiline
+            key={idx}
+          />
         ),
         (idx: number) => <this.TTLField key={idx} />
       ]
@@ -722,7 +741,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         ),
         (idx: number) => <this.TagField key={idx} />,
         (idx: number) => (
-          <this.NameOrTargetField label="Value" field="name" key={idx} />
+          <this.NameOrTargetField label="Value" field="target" key={idx} />
         ),
         (idx: number) => <this.TTLField key={idx} />
       ]
@@ -749,10 +768,17 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { submitting } = this.state;
-    const { open, mode, type } = this.props;
+    const { open, mode, type, records } = this.props;
     const { fields } = this.types[type];
     const isCreating = mode === 'create';
     const isDomain = type === 'master' || type === 'slave';
+
+    const hasARecords = records.find(thisRecord =>
+      ['A', 'AAAA'].includes(thisRecord.type)
+    ); // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
+
+    const noARecordsNoticeText =
+      'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
 
     const buttonProps: ButtonProps = {
       buttonType: 'primary',
@@ -781,7 +807,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           otherErrors.map((err, index) => {
             return <Notice error key={index} text={err} />;
           })}
+        {!hasARecords && type === 'NS' && (
+          <Notice warning spacingTop={8} text={noARecordsNoticeText} />
+        )}
         {fields.map((field: any, idx: number) => field(idx))}
+
         <ActionsPanel>
           <Button {...buttonProps} data-qa-record-save />
           <Button
@@ -846,6 +876,18 @@ export const resolveAlias = (
     }
   }
   return clone;
+};
+
+const numericFields = ['port', 'weight', 'priority'];
+export const castFormValuesToNumeric = (
+  data: Record<string, any>,
+  fieldNames: string[] = numericFields
+) => {
+  return produce(data, draft => {
+    fieldNames.forEach(thisField => {
+      draft[thisField] = maybeCastToNumber(draft[thisField]);
+    });
+  });
 };
 
 const enhanced = compose<CombinedProps, Props>(withDomainActions);

@@ -1,12 +1,12 @@
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 import { shouldRequestNotifications } from './linodes.events';
 
 describe('shouldRequestNotifications', () => {
   const d1 = '2019-05-23T12:00:00';
   const d2 = '2019-05-23T12:00:01';
 
-  const d1InMilliseconds = moment.utc(d1).valueOf();
-  const d2InMilliseconds = moment.utc(d2).valueOf();
+  const d1InMilliseconds = DateTime.fromISO(d1).valueOf();
+  const d2InMilliseconds = DateTime.fromISO(d2).valueOf();
 
   it('should return `true` if there is a linode_resize event created AFTER the last time notifications were updated', () => {
     expect(

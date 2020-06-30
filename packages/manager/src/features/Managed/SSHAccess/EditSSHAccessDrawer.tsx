@@ -1,4 +1,4 @@
-import { Formik, FormikActions } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import {
   ManagedLinodeSetting,
   updateLinodeSettings
@@ -58,7 +58,7 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
 
   const onSubmit = (
     values: Omit<ManagedLinodeSetting, 'id' | 'label' | 'group'>,
-    { setErrors, setSubmitting, setStatus }: FormikActions<ManagedLinodeSetting>
+    { setErrors, setSubmitting, setStatus }: FormikHelpers<ManagedLinodeSetting>
   ) => {
     // It probably isn't possible to end up here without linodeSetting,
     // but we'll include an early return to make TypeScript happy.

@@ -128,9 +128,9 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               renderAsSecondary
               copy={
                 <Typography variant="subtitle1">
-                  You don't have any private Images. Visit the{' '}
+                  You don&#39;t have any private Images. Visit the{' '}
                   <Link to="/images">Images section</Link> to create an Image
-                  from one of your Linode's disks.
+                  from one of your Linode&#39;s disks.
                 </Typography>
               }
             />
@@ -198,7 +198,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           id={`tabpanel-${determineIDName}`}
           aria-labelledby={`tab-${determineIDName}`}
         >
-          <form>
+          <form autoComplete="off">
             {hasErrorFor.none && !!showGeneralError && (
               <Notice error spacingTop={8} text={hasErrorFor.none} />
             )}
@@ -220,8 +220,9 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               handleSelection={this.props.updateRegionID}
               selectedID={this.props.selectedRegionID}
               copy="Determine the best location for your Linode."
-              updateFor={[this.props.selectedRegionID, errors]}
+              updateFor={[this.props.selectedRegionID, regions, errors]}
               disabled={userCannotCreateLinode}
+              helperText={this.props.regionHelperText}
             />
             <SelectPlanPanel
               error={hasErrorFor.type}
@@ -229,8 +230,13 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               data-qa-select-plan-panel
               onSelect={this.props.updateTypeID}
               selectedID={this.props.selectedTypeID}
-              updateFor={[this.props.selectedTypeID, errors]}
+              updateFor={[
+                this.props.selectedTypeID,
+                this.props.disabledClasses,
+                errors
+              ]}
               disabled={userCannotCreateLinode}
+              disabledClasses={this.props.disabledClasses}
             />
             <LabelAndTagsPanel
               data-qa-label-and-tags-panel

@@ -49,6 +49,7 @@ import {
 } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
+import { truncateEnd } from 'src/utilities/truncate';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
@@ -241,7 +242,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       .then(() => {
         this.props.updateRecords();
 
-        this.updateConfirmDialog(c => ({
+        this.updateConfirmDialog(_ => ({
           open: false,
           submitting: false,
           errors: undefined,
@@ -260,7 +261,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   };
 
   handleOpenSOADrawer = (d: Domain) => {
-    d.type === 'master'
+    return d.type === 'master'
       ? this.openForEditMasterDomain(d)
       : this.openForEditSlaveDomain(d);
   };
@@ -492,7 +493,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       data: this.props.domainRecords.filter(typeEq('TXT')),
       columns: [
         { title: 'Hostname', render: (r: DomainRecord) => r.name },
-        { title: 'Value', render: (r: DomainRecord) => r.target },
+        {
+          title: 'Value',
+          render: (r: DomainRecord) => truncateEnd(r.target, 255)
+        },
         { title: 'TTL', render: getTTL },
         {
           title: '',
@@ -698,7 +702,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 order={type.order}
                 orderBy={type.orderBy}
               >
-                {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+                {({ data: orderedData }) => {
                   return (
                     <Paginate
                       data={orderedData}

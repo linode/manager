@@ -1,6 +1,6 @@
 /**
  * Expiration is the beginning of the day of the first day of the month.
- * Expiration: YYYY-MM-01 00:00:00
+ * Expiration: yyyy-MM-01 00:00:00
  */
 const expirationDateFromString = (expDate: string /* MM/YYYY */) => {
   const pattern = /^((0[1-9])|(1[0-2]))\/(\d{4})$/i;

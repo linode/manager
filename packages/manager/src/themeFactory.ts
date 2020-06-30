@@ -48,6 +48,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     font?: any;
     animateCircleIcon?: any;
     addCircleHoverEffect?: any;
+    applyLinkStyles?: any;
 
     notificationList: any;
     status: any;
@@ -84,6 +85,7 @@ const primaryColors = {
 
 const primaryFonts = {
   normal: '"LatoWeb", sans-serif',
+  semiBold: '"LatoWebSemibold", sans-serif',
   bold: '"LatoWebBold", sans-serif'
 };
 
@@ -110,6 +112,19 @@ const iconCircleHoverEffect = {
   },
   '& .insidePath *': {
     stroke: 'white'
+  }
+};
+
+// Used for styling html buttons to look like our generic links
+const genericLinkStyle = {
+  background: 'none',
+  color: primaryColors.main,
+  border: 'none',
+  padding: 0,
+  font: 'inherit',
+  cursor: 'pointer',
+  '&:hover': {
+    textDecoration: 'underline'
   }
 };
 
@@ -196,9 +211,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       pureWhite: '#fff',
       tableHeader: '#fbfbfb',
       primaryNavActive: '#f4f4f4',
-      primaryNavActiveBG: '#272b31',
+      primaryNavActiveBG: '#515861',
       primaryNavBorder: '#f4f4f4',
-      primaryNavPaper: '#32363c',
+      primaryNavPaper: '#3a3f46',
       topMenu: '#fff',
       billingHeader: '#f5f9ff'
     },
@@ -217,6 +232,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey4: '#8C929D',
       grey5: '#f5f5f5',
       grey6: '#e3e5e8',
+      grey7: '#fafafa',
+      grey8: '#828a97',
       white: '#fff',
       black: '#222',
       blue: primaryColors.main,
@@ -235,7 +252,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       label: '#555',
       disabledText: '#c9cacb',
       kubeLabel: '#272b31',
-      primaryNavText: '#c9cacb',
+      primaryNavText: '#fff',
       borderBilling: '#cce2ff',
       billingText: '#313335'
     },
@@ -304,6 +321,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     font: {
       normal: primaryFonts.normal,
+      semiBold: primaryFonts.semiBold,
       bold: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold
     },
     animateCircleIcon: {
@@ -311,6 +329,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     addCircleHoverEffect: {
       ...iconCircleHoverEffect
+    },
+    applyLinkStyles: {
+      ...genericLinkStyle
     },
     notificationList: {
       padding: '16px 32px 16px 23px',

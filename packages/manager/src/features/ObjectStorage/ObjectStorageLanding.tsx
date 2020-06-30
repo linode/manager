@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   matchPath,
   Redirect,
@@ -7,7 +7,7 @@ import {
   RouteComponentProps,
   Switch
 } from 'react-router-dom';
-import { compose } from 'recompose';
+import { Dispatch } from 'redux';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
@@ -16,15 +16,18 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Link } from 'src/components/Link';
+import Notice from 'src/components/Notice';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
 import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
-import { MapState } from 'src/store/types';
-import BucketDrawer from './BucketLanding/BucketDrawer';
 import useReduxLoad from 'src/hooks/useReduxLoad';
+import { openBucketDrawer } from 'src/store/bucketDrawer/bucketDrawer.actions';
+import BucketDrawer from './BucketLanding/BucketDrawer';
 
 const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
 const AccessKeyLanding = React.lazy(() =>
@@ -37,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = StateProps & RouteComponentProps<{}>;
+type CombinedProps = RouteComponentProps<{}>;
 
 export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -70,7 +73,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     props.history.push(`${routeName}`);
   };
 
-  const { isRestrictedUser } = props;
+  const { _isRestrictedUser, accountSettings } = useAccountManagement();
 
   const clustersLoaded = objectStorageClusters.lastUpdated > 0;
 
@@ -81,7 +84,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     // Object Storage is not available for restricted users.
-    if (isRestrictedUser) {
+    if (_isRestrictedUser) {
       return;
     }
 
@@ -96,7 +99,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
       });
     }
   }, [
-    isRestrictedUser,
+    _isRestrictedUser,
     clustersLoaded,
     bucketsLoadingOrLoaded,
     objectStorageClusters,
@@ -117,14 +120,22 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   );
 
   const renderBucketLanding = React.useCallback(
-    () => <BucketLanding isRestrictedUser={props.isRestrictedUser} />,
-    [props.isRestrictedUser]
+    () => <BucketLanding isRestrictedUser={_isRestrictedUser} />,
+    [_isRestrictedUser]
   );
 
   const renderAccessKeyLanding = React.useCallback(
-    () => <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />,
-    [props.isRestrictedUser]
+    () => <AccessKeyLanding isRestrictedUser={_isRestrictedUser} />,
+    [_isRestrictedUser]
   );
+
+  // A user needs to explicitly cancel Object Storage in their Account Settings in order to stop
+  // being billed. If they have the service enabled but do not have any buckets, show a warning.
+  const shouldDisplayBillingNotice =
+    objectStorageBuckets.lastUpdated > 0 &&
+    !objectStorageBuckets.bucketErrors &&
+    objectStorageBuckets.data.length === 0 &&
+    accountSettings.data?.object_storage === 'active';
 
   return (
     <React.Fragment>
@@ -170,6 +181,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
           className={classes.promo}
         />
       ))}
+      {shouldDisplayBillingNotice && <BillingNotice />}
       <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route
@@ -187,21 +199,37 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
           <Redirect to={`${url}/buckets`} />
         </Switch>
       </React.Suspense>
-      <BucketDrawer isRestrictedUser={props.isRestrictedUser} />
+      <BucketDrawer isRestrictedUser={_isRestrictedUser} />
     </React.Fragment>
   );
 };
 
-interface StateProps {
-  isRestrictedUser: boolean;
-}
+export default React.memo(ObjectStorageLanding);
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
-  isRestrictedUser: state.__resources.profile.data?.restricted ?? true
+// =============================================================================
+// <BillingNotice/>
+// ============================================================================
+const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
+  button: {
+    ...theme.applyLinkStyles
+  }
+}));
+
+export const BillingNotice: React.FC<{}> = React.memo(() => {
+  const classes = useBillingNoticeStyles();
+
+  const dispatch: Dispatch = useDispatch();
+
+  const openDrawer = () => dispatch(openBucketDrawer());
+
+  return (
+    <Notice warning important>
+      You are being billed for Object Storage but do not have any Buckets. You
+      can cancel Object Storage in your{' '}
+      <Link to="/account/settings">Account Settings</Link>, or{' '}
+      <button className={classes.button} onClick={openDrawer}>
+        create a Bucket.
+      </button>
+    </Notice>
+  );
 });
-
-export const connected = connect(mapStateToProps);
-
-const enhanced = compose(connected, React.memo);
-
-export default enhanced(ObjectStorageLanding);

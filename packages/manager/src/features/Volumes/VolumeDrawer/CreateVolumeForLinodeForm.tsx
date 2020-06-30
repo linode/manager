@@ -1,12 +1,13 @@
 /**
  * @todo Display the volume configuration information on success.
  */
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CreateVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import Form from 'src/components/core/Form';
 import {
   createStyles,
   Theme,
@@ -56,7 +57,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   onClose: () => void;
-  linodeId: number;
+  linode_id: number;
   linodeLabel: string;
   linodeRegion: string;
   onSuccess: (
@@ -76,7 +77,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
   const {
     onClose,
     onSuccess,
-    linodeId,
+    linode_id,
     linodeLabel,
     linodeRegion,
     actions,
@@ -90,7 +91,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
       initialValues={initialValues}
       validationSchema={CreateVolumeSchema}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
-        const { label, size, configId, tags } = values;
+        const { label, size, config_id, tags } = values;
 
         setSubmitting(true);
 
@@ -100,8 +101,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
         createVolume({
           label,
           size: maybeCastToNumber(size),
-          linode_id: maybeCastToNumber(linodeId),
-          config_id: maybeCastToNumber(configId),
+          linode_id: maybeCastToNumber(linode_id),
+          config_id:
+            // If the config_id still set to default value of -1, set this to undefined, so volume gets created on back-end according to the API logic
+            config_id === -1 ? undefined : maybeCastToNumber(config_id),
           tags: tags.map(v => v.value)
         })
           .then(({ label: newLabel, filesystem_path }) => {
@@ -146,8 +149,16 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
          * This form doesn't have a region select (the region is auto-populated)
          * so if the API returns an error with field === 'region' the field mapping
          * logic will pass over it. Explicitly use general error Notice in this case.
+         * If configs are not available, set the general error Notice to the config_id error (so that the error still shows in the UI instead of creation failing silently).
          */
-        const generalError = status ? status.generalError : errors.region;
+
+        const { config_id } = values;
+
+        const generalError = status
+          ? status.generalError
+          : config_id === -1
+          ? errors.config_id
+          : errors.region;
 
         return (
           <Form>
@@ -206,12 +217,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             />
 
             <ConfigSelect
-              error={touched.configId ? errors.configId : undefined}
-              linodeId={linodeId}
+              error={touched.config_id ? errors.config_id : undefined}
+              linodeId={linode_id}
               name="configId"
               onBlur={handleBlur}
-              onChange={(id: number) => setFieldValue('configId', id)}
-              value={values.configId}
+              onChange={(id: number) => setFieldValue('config_id', id)}
+              value={values.config_id}
               disabled={disabled}
             />
 
@@ -254,8 +265,8 @@ interface FormState {
   label: string;
   size: number;
   region: string;
-  linodeId: number;
-  configId: number;
+  linode_id: number;
+  config_id: number;
   tags: Tag[];
 }
 
@@ -263,8 +274,8 @@ const initialValues: FormState = {
   label: '',
   size: 20,
   region: 'none',
-  linodeId: -1,
-  configId: -1,
+  linode_id: -1,
+  config_id: -1,
   tags: []
 };
 
@@ -284,7 +295,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
     switchToAttaching: () =>
       dispatch(
         openForAttaching(
-          ownProps.linodeId,
+          ownProps.linode_id,
           ownProps.linodeRegion,
           ownProps.linodeLabel
         )
@@ -303,10 +314,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
   origin: state.volumeDrawer.origin
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,

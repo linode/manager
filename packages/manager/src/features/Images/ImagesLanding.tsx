@@ -1,5 +1,4 @@
 import produce from 'immer';
-import { Event } from '@linode/api-v4/lib/account';
 import { deleteImage, Image } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -43,7 +42,7 @@ import { ApplicationState } from 'src/store';
 import { requestImages as _requestImages } from 'src/store/image/image.requests';
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import ImageRow from './ImageRow';
+import ImageRow, { ImageWithEvent } from './ImageRow';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 
 type ClassNames = 'root' | 'title';
@@ -492,10 +491,6 @@ const EmptyCopy = () => (
     </Typography>
   </>
 );
-
-interface ImageWithEvent extends Image {
-  event?: Event;
-}
 interface WithPrivateImages {
   imagesData: ImageWithEvent[];
   imagesLoading: boolean;
@@ -515,9 +510,9 @@ const mapDispatchToProps: MapDispatchToProps<ImageDispatch, {}> = (
 
 const withPrivateImages = connect(
   (state: ApplicationState): WithPrivateImages => {
-    const { error, data, lastUpdated, loading } = state.__resources.images;
+    const { error, itemsById, lastUpdated, loading } = state.__resources.images;
     const events = imageEvents(state.events);
-    const privateImagesWithEvents = Object.values(data).reduce(
+    const privateImagesWithEvents = Object.values(itemsById).reduce(
       (accum, thisImage) =>
         produce(accum, draft => {
           if (!thisImage.is_public) {

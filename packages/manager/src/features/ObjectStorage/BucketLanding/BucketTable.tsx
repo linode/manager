@@ -96,6 +96,15 @@ export const BucketTable: React.FC<CombinedProps> = props => {
                   >
                     Created
                   </TableSortCell>
+                  <TableSortCell
+                    active={orderBy === 'size'}
+                    label="size"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    data-qa-size
+                  >
+                    Size
+                  </TableSortCell>
                   {/* Empty TableCell for ActionMenu*/}
                   <TableCell />
                 </TableRow>

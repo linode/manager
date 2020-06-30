@@ -69,6 +69,7 @@ const Notifications: React.FC<CombinedProps> = props => {
   };
 
   return (
+    // eslint-disable-next-line
     <>
       {linodeNotifications.map((n, idx) => {
         return (

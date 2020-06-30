@@ -139,6 +139,7 @@ export const ResultRow: React.FC<CombinedProps> = props => {
       className={classes.root}
       rowLink={result.data.path}
       data-qa-result-row={result.label}
+      ariaLabel={result.label}
     >
       <Hidden smDown>
         <TableCell className={classes.iconTableCell}>

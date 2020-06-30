@@ -1,12 +1,13 @@
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CreateVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
+import Form from 'src/components/core/Form';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import {
@@ -40,11 +41,14 @@ import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
-import ConfigSelect from '../VolumeDrawer/ConfigSelect';
+import ConfigSelect, {
+  initialValueDefaultId
+} from '../VolumeDrawer/ConfigSelect';
 import LabelField from '../VolumeDrawer/LabelField';
 import LinodeSelect from '../VolumeDrawer/LinodeSelect';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
+import { ApplicationState } from 'src/store';
 
 type ClassNames = 'form' | 'container' | 'sidebar' | 'copy';
 
@@ -91,6 +95,18 @@ type CombinedProps = Props &
 
 const CreateVolumeForm: React.FC<CombinedProps> = props => {
   const { onSuccess, classes, createVolume, disabled, origin, history } = props;
+
+  const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
+
+  // This is to keep track of this linodeId's errors so we can select it from the Redux store for the error message.
+  const { error: configsError } = useSelector((state: ApplicationState) => {
+    return state.__resources.linodeConfigs[linodeId] ?? { error: {} };
+  });
+
+  const configErrorMessage = configsError?.read
+    ? 'Unable to load Configs for this Linode.' // More specific than the API error message
+    : undefined;
+
   return (
     <Formik
       initialValues={initialValues}
@@ -99,7 +115,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
         values,
         { resetForm, setSubmitting, setStatus, setErrors }
       ) => {
-        const { label, size, region, linodeId, configId, tags } = values;
+        const { label, size, region, linode_id, config_id, tags } = values;
 
         setSubmitting(true);
 
@@ -111,12 +127,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           size: maybeCastToNumber(size),
           region:
             isNilOrEmpty(region) || region === 'none' ? undefined : region,
-          linode_id: linodeId === -1 ? undefined : linodeId,
-          config_id: configId === -1 ? undefined : configId,
+          linode_id:
+            linode_id === initialValueDefaultId
+              ? undefined
+              : maybeCastToNumber(linode_id),
+          config_id:
+            config_id === initialValueDefaultId
+              ? undefined
+              : maybeCastToNumber(config_id),
           tags: tags.map(v => v.value)
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
-            resetForm(initialValues);
+            resetForm({ values: initialValues });
             setStatus({ success: `Volume scheduled for creation.` });
             setSubmitting(false);
             onSuccess(
@@ -155,14 +177,16 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           touched
         } = formikProps;
 
-        const linodeError =
-          values.configId === -9999
-            ? 'This Linode has no valid configurations.'
-            : touched.linodeId
-            ? errors.linodeId
-            : undefined;
+        const { region, linode_id, tags, config_id } = values;
 
-        const { region, linodeId, tags } = values;
+        const linodeError = touched.linode_id ? errors.linode_id : undefined;
+
+        const generalError = status
+          ? status.generalError
+          : config_id === initialValueDefaultId
+          ? errors.config_id
+          : undefined;
+
         const displaySections = [];
         if (region) {
           displaySections.push({
@@ -176,8 +200,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
               .join()
           });
         }
-        if (linodeId !== -1) {
-          const linodeObject: any = getEntityByIDFromStore('linode', linodeId);
+        if (linode_id !== initialValueDefaultId) {
+          const linodeObject: any = getEntityByIDFromStore('linode', linode_id);
           displaySections.push({
             title: 'Attach To',
             details: linodeObject ? linodeObject.label : null
@@ -192,12 +216,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
 
         return (
           <Form className={classes.form}>
-            {status && (
-              <NoticePanel
-                success={status.success}
-                error={status.generalError}
-              />
-            )}
+            {generalError && <NoticePanel error={generalError} />}
+            {status && <NoticePanel success={status.success} />}
             {disabled && (
               <Notice
                 text={
@@ -278,12 +298,25 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                   </FormHelperText>
 
                   <LinodeSelect
-                    error={linodeError}
+                    error={linodeError || configErrorMessage}
                     name="linodeId"
                     onBlur={handleBlur}
-                    onChange={(id: number) => setFieldValue('linodeId', id)}
+                    onChange={(id: number) => {
+                      setFieldValue('linode_id', id);
+                      setLinodeId(id);
+                    }}
                     region={values.region}
                     shouldOnlyDisplayRegionsWithBlockStorage={true}
+                    disabled={disabled}
+                  />
+
+                  <ConfigSelect
+                    error={touched.config_id ? errors.config_id : undefined}
+                    linodeId={linode_id}
+                    name="configId"
+                    onBlur={handleBlur}
+                    onChange={(id: number) => setFieldValue('config_id', id)}
+                    value={config_id}
                     disabled={disabled}
                   />
 
@@ -305,16 +338,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     value={values.tags}
                     menuPlacement="top"
                   />
-
-                  <ConfigSelect
-                    error={touched.configId ? errors.configId : undefined}
-                    linodeId={values.linodeId}
-                    name="configId"
-                    onBlur={handleBlur}
-                    onChange={(id: number) => setFieldValue('configId', id)}
-                    value={values.configId}
-                    disabled={disabled}
-                  />
                 </Paper>
               </Grid>
               <Grid item className={`${classes.sidebar} mlSidebar`}>
@@ -322,7 +345,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                   heading={`${values.label || 'Volume'} Summary`}
                   onDeploy={handleSubmit}
                   calculatedPrice={values.size / 10}
-                  disabled={values.configId === -9999 || disabled}
+                  disabled={disabled}
                   isMakingRequest={isSubmitting}
                 >
                   <DisplaySectionList displaySections={displaySections} />
@@ -340,8 +363,8 @@ interface FormState {
   label: string;
   size: number;
   region: string;
-  linodeId: number;
-  configId: number;
+  linode_id: number;
+  config_id: number;
   tags: _Tag[];
 }
 
@@ -349,8 +372,8 @@ const initialValues: FormState = {
   label: '',
   size: 20,
   region: 'none',
-  linodeId: -1,
-  configId: -1,
+  linode_id: initialValueDefaultId,
+  config_id: initialValueDefaultId,
   tags: []
 };
 

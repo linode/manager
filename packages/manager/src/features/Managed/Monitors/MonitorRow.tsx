@@ -85,6 +85,7 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
       data-qa-monitor-cell={monitor.id}
       data-testid={'monitor-row'}
       className={classes.monitorRow}
+      ariaLabel={`Monitor ${monitor.label}`}
     >
       <TableCell
         parentColumn="Monitor"

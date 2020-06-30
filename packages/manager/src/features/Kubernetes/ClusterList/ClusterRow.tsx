@@ -56,6 +56,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
       data-testid={'cluster-row'}
       rowLink={`/kubernetes/clusters/${cluster.id}/summary`}
       className={classes.clusterRow}
+      ariaLabel={`Cluster ${cluster.label}`}
     >
       <TableCell
         parentColumn="Cluster Label"

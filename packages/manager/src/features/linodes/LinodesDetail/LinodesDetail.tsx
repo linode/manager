@@ -1,25 +1,21 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
-import { compose, withProps } from 'recompose';
-import CircleProgress from 'src/components/CircleProgress';
+import { useDispatch } from 'react-redux';
 import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+  Route,
+  Switch,
+  RouteComponentProps,
+  withRouter
+} from 'react-router-dom';
+import { compose } from 'recompose';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import useReduxLoad from 'src/hooks/useReduxLoad';
-import { WithTypes } from 'src/store/linodeType/linodeType.containers';
-import { ThunkDispatch } from 'src/store/types';
+import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
+import useExtendedLinode from 'src/hooks/useExtendedLinode';
+import NotFound from 'src/components/NotFound';
 import {
   LinodeDetailContext,
   linodeDetailContextFactory as createLinodeDetailContext,
   LinodeDetailContextProvider
 } from './linodeDetailContext';
-import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
-import linodesDetailContainer, { InnerProps } from './LinodesDetail.container';
-import reloadableWithRouter from './reloadableWithRouter';
 
 const CloneLanding = React.lazy(() => import('../CloneLanding'));
 const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
@@ -28,52 +24,28 @@ const LinodesDetailNavigation = React.lazy(() =>
 );
 const MigrateLanding = React.lazy(() => import('../MigrateLanding'));
 
-interface MatchProps {
-  linodeId?: string;
+interface Props {
+  linodeId: string;
 }
 
-type RouteProps = RouteComponentProps<MatchProps>;
-
-type CombinedProps = { dispatch: ThunkDispatch } & WithTypes &
-  InnerProps &
-  RouteProps &
-  WithStyles<ClassNames> & { linodeId: number };
-
-type ClassNames = 'backButton';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    backButton: {
-      margin: `5px 0 0 -${theme.spacing(2)}px`,
-      '& svg': {
-        width: 34,
-        height: 34
-      }
-    }
-  });
+type CombinedProps = Props & RouteComponentProps<{ linodeId: string }>;
 
 const LinodeDetail: React.FC<CombinedProps> = props => {
   const {
-    dispatch,
-    linode,
+    linodeId,
     match: { path }
   } = props;
+  const dispatch = useDispatch();
+  const linode = useExtendedLinode(+linodeId);
+
+  if (!linode) {
+    return <NotFound />;
+  }
 
   const ctx: LinodeDetailContext = createLinodeDetailContext(linode, dispatch);
 
-  /**
-   * Other portions of loading state handled by maybeRenderLoading
-   * (Linode info, configs, disks, etc.)
-   */
-  const { _loading } = useReduxLoad(['volumes', 'images']);
-
-  if (props.loading || _loading) {
-    return <CircleProgress />;
-  }
-
   return (
     <LinodeDetailContextProvider value={ctx}>
-      {/* <pre>{JSON.stringify(linode, null, 2)}</pre> */}
       <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           {/*
@@ -98,24 +70,8 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
   );
 };
 
-const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
-  (routePropsOld, routePropsNew) => {
-    return (
-      routePropsOld.match.params.linodeId !==
-      routePropsNew.match.params.linodeId
-    );
-  }
-);
-
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, {}>(
-  reloadable,
-  withProps((ownProps: RouteProps) => ({
-    linodeId: Number(ownProps.match.params.linodeId)
-  })),
-  styled,
-  linodesDetailContainer,
+const enhanced = compose<CombinedProps, Props>(
+  withRouter,
   LinodeDetailErrorBoundary
 );
 

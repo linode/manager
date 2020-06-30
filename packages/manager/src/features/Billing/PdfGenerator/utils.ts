@@ -2,6 +2,7 @@ import JSPDF from 'jspdf';
 import { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
+import { ISO_DATE_FORMAT } from 'src/constants';
 
 const formatDateForTable = (date: string): [string, string] => {
   /** gives us a datetime separated by a space. e.g. 2019-09-30 08:25:00 */
@@ -29,7 +30,7 @@ export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
     body: [
       [
         { content: 'Payment: Thank You' },
-        { content: formatDate(payment.date, { format: 'YYYY-MM-DD' }) },
+        { content: formatDate(payment.date, { format: ISO_DATE_FORMAT }) },
         { content: `$${Number(payment.usd).toFixed(2)}` }
       ]
     ]

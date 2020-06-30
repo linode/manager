@@ -1,4 +1,5 @@
 import { GrantLevel } from '@linode/api-v4/lib/account';
+import { LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -11,12 +12,14 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import useFlags from 'src/hooks/useFlags';
 import { withLinodeDetailContext } from '../linodeDetailContext';
+import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import RebuildFromImage from './RebuildFromImage';
 import RebuildFromStackScript from './RebuildFromStackScript';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'title' | 'helperText';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -25,11 +28,15 @@ const styles = (theme: Theme) =>
     },
     title: {
       marginBottom: theme.spacing(2)
+    },
+    helperText: {
+      paddingBottom: theme.spacing(2)
     }
   });
 
 interface ContextProps {
   linodeLabel: string;
+  linodeStatus: LinodeStatus;
   permissions: GrantLevel;
 }
 type CombinedProps = WithStyles<ClassNames> & ContextProps;
@@ -44,9 +51,17 @@ const options = [
   { value: 'fromAccountStackScript', label: 'From Account StackScript' }
 ];
 
+const passwordHelperText = 'Set a password for your rebuilt Linode.';
+
 const LinodeRebuild: React.FC<CombinedProps> = props => {
-  const { classes, linodeLabel, permissions } = props;
-  const disabled = permissions === 'read_only';
+  const { classes, linodeLabel, linodeStatus, permissions } = props;
+  const hostMaintenance = linodeStatus === 'stopped';
+  const unauthorized = permissions === 'read_only';
+  const disabled = hostMaintenance || unauthorized;
+
+  const flags = useFlags();
+
+  const passwordValidation = flags.passwordValidation ?? 'none';
 
   const [mode, setMode] = React.useState<MODES>('fromImage');
 
@@ -54,7 +69,8 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
     <div id="tabpanel-rebuild" role="tabpanel" aria-labelledby="tab-rebuild">
       <DocumentTitleSegment segment={`${linodeLabel} - Rebuild`} />
       <Paper className={classes.root}>
-        {disabled && <LinodePermissionsError />}
+        {unauthorized && <LinodePermissionsError />}
+        {hostMaintenance && <HostMaintenanceError />}
         <Typography
           role="heading"
           aria-level={2}
@@ -64,11 +80,14 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
         >
           Rebuild
         </Typography>
-        <Typography data-qa-rebuild-desc>
-          If you can't rescue an existing disk, it's time to rebuild your
-          Linode. There are a couple of different ways you can do this: either
-          restore from a backup or start over with a fresh Linux distribution.
-          Rebuilding will destroy all data on all existing disks on this Linode.
+        <Typography data-qa-rebuild-desc className={classes.helperText}>
+          If you can&#39;t rescue an existing disk, it&#39;s time to rebuild
+          your Linode. There are a couple of different ways you can do restore
+          from a backup or start over with a fresh Linux distribution.&nbsp;
+          <strong>
+            Rebuilding will destroy all data on all existing disks on this
+            Linode.
+          </strong>
         </Typography>
         <EnhancedSelect
           options={options}
@@ -80,12 +99,28 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
           hideLabel
         />
       </Paper>
-      {mode === 'fromImage' && <RebuildFromImage />}
+      {mode === 'fromImage' && (
+        <RebuildFromImage
+          passwordHelperText={passwordHelperText}
+          passwordValidation={passwordValidation}
+          disabled={disabled}
+        />
+      )}
       {mode === 'fromCommunityStackScript' && (
-        <RebuildFromStackScript type="community" />
+        <RebuildFromStackScript
+          type="community"
+          passwordHelperText={passwordHelperText}
+          passwordValidation={passwordValidation}
+          disabled={disabled}
+        />
       )}
       {mode === 'fromAccountStackScript' && (
-        <RebuildFromStackScript type="account" />
+        <RebuildFromStackScript
+          type="account"
+          passwordHelperText={passwordHelperText}
+          passwordValidation={passwordValidation}
+          disabled={disabled}
+        />
       )}
     </div>
   );
@@ -93,6 +128,7 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeLabel: linode.label,
+  linodeStatus: linode.status,
   permissions: linode._permissions
 }));
 

@@ -24,6 +24,7 @@ export interface ObjectStorageBucket {
   created: string;
   cluster: string;
   hostname: string;
+  size: number; // Size of bucket in bytes
 }
 
 export interface ObjectStorageObject {
@@ -49,7 +50,10 @@ export interface ObjectStorageObjectURLOptions {
 }
 
 // Enum containing IDs for each Cluster
-export type ObjectStorageClusterID = 'us-east-1' | 'eu-central-1';
+export type ObjectStorageClusterID =
+  | 'us-east-1'
+  | 'eu-central-1'
+  | 'ap-south-1';
 
 export interface ObjectStorageCluster {
   region: string;

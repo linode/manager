@@ -27,11 +27,13 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
+import { PasswordValidationType } from 'src/featureFlags';
 import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
 
@@ -47,12 +49,19 @@ const styles = (theme: Theme) =>
     }
   });
 
+interface Props {
+  disabled: boolean;
+  passwordHelperText: string;
+  passwordValidation: PasswordValidationType;
+}
+
 interface ContextProps {
   linodeId: number;
   permissions: GrantLevel;
 }
 
-export type CombinedProps = WithImages &
+export type CombinedProps = Props &
+  WithImages &
   WithStyles<ClassNames> &
   ContextProps &
   UserSSHKeyProps &
@@ -72,6 +81,7 @@ const initialValues: RebuildFromImageForm = {
 export const RebuildFromImage: React.FC<CombinedProps> = props => {
   const {
     classes,
+    disabled,
     imagesData,
     imagesError,
     userSSHKeys,
@@ -80,10 +90,20 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     linodeId,
     enqueueSnackbar,
     history,
-    permissions
+    passwordHelperText,
+    passwordValidation
   } = props;
 
-  const disabled = permissions === 'read_only';
+  /**
+   * Dynamic validation schema, with password validation
+   * dependent on a value from a feature flag. Remove this
+   * once API password validation is stable.
+   */
+  const RebuildSchema = React.useMemo(
+    () =>
+      extendValidationSchema(passwordValidation ?? 'none', RebuildLinodeSchema),
+    [passwordValidation]
+  );
 
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
@@ -132,7 +152,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={RebuildLinodeSchema}
+      validationSchema={RebuildSchema}
       validateOnChange={false}
       onSubmit={handleFormSubmit}
       render={formikProps => {
@@ -181,6 +201,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
               handleChange={input => setFieldValue('root_pass', input)}
               updateFor={[
                 classes,
+                disabled,
                 values.root_pass,
                 errors,
                 sshError,
@@ -193,11 +214,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
               requestKeys={requestKeys}
               data-qa-access-panel
               disabled={disabled}
-              disabledReason={
-                disabled
-                  ? "You don't have permissions to modify this Linode"
-                  : undefined
-              }
+              passwordHelperText={passwordHelperText}
             />
             <ActionsPanel>
               <Button
@@ -230,7 +247,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   permissions: linode._permissions
 }));
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   linodeContext,
   withImages(),
   userSSHKeyHoc,

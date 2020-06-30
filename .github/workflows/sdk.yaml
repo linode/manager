@@ -1,7 +1,7 @@
 # This workflow run unit tests for the SDK as well as a build. It will then
 # run npm publish if the preceding steps succeeded.
 
-name: Linode JS SDK
+name: Linode JS Client
 
 on:
   push:
@@ -30,9 +30,13 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: lib
-        path: packages/@linode/api-v4/lib
-    # - name: Publish
-    #   run: yarn workspace @linode/api-v4 publish --dry-run
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        path: packages/api-v4
+    - name: Publish to npm
+      uses: JS-DevTools/npm-publish@v1
+      with:
+        token: ${{ secrets.NPM_AUTH_TOKEN }}
+        package: ./packages/api-v4/package.json
+
+    - if: steps.publish.type != 'none'
+      run: |
+        echo "Version changed: ${{ steps.publish.outputs.old-version }} => ${{ steps.publish.outputs.version }}"

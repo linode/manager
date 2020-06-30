@@ -7,13 +7,12 @@ import {
 } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import { ExtendedNodeBalancer } from '../../types';
 import NodeBalancerCreationErrors, {
   ConfigOrNodeErrorResponse
 } from './NodeBalancerCreationErrors';
 import SummaryPanel from './SummaryPanel';
 import TablesPanel from './TablesPanel';
-
-import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 
 type ClassNames = 'main' | 'sidebar';
 

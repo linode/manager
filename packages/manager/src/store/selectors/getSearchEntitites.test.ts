@@ -1,15 +1,11 @@
 import { assocPath } from 'ramda';
-import {
-  domains,
-  images,
-  linodes,
-  nodeBalancers,
-  types,
-  volumes
-} from 'src/__data__';
+import { domains, images, linodes, types, volumes } from 'src/__data__';
 import { kubernetesClusterFactory } from 'src/factories/kubernetesCluster';
+import { nodeBalancerFactory } from 'src/factories/nodebalancer';
 import { apiResponseToMappedState } from 'src/store/store.helpers.tmp';
 import getSearchEntities from './getSearchEntities';
+
+const nodeBalancers = nodeBalancerFactory.buildList(5);
 
 describe('getSearchEntities selector', () => {
   const mockState: any = {
@@ -17,7 +13,7 @@ describe('getSearchEntities selector', () => {
     linodes: {
       itemsById: apiResponseToMappedState(linodes)
     },
-    images: { entities: images },
+    images: { itemsById: apiResponseToMappedState(images) },
     types: { entities: types },
     volumes: {
       itemsById: volumes.reduce((result, c) => ({ ...result, [c.id]: c }), {})

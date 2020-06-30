@@ -55,7 +55,10 @@ const ObjectTableRow: React.FC<Props> = props => {
   const classes = useStyles();
 
   return (
-    <TableRow className={manuallyCreated ? classes.manuallyCreated : ''}>
+    <TableRow
+      ariaLabel={displayName}
+      className={manuallyCreated ? classes.manuallyCreated : ''}
+    >
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">

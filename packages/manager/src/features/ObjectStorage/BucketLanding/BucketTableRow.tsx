@@ -13,6 +13,7 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
+import { readableBytes } from 'src/utilities/unitConversions';
 import BucketActionMenu from './BucketActionMenu';
 
 type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link';
@@ -42,7 +43,7 @@ interface BucketTableRowProps extends ObjectStorageBucket {
 type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;
 
 export const BucketTableRow: React.FC<CombinedProps> = props => {
-  const { classes, label, cluster, hostname, created, onRemove } = props;
+  const { classes, label, cluster, hostname, created, size, onRemove } = props;
 
   return (
     <TableRow
@@ -50,6 +51,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
       rowLink={`/object-storage/buckets/${cluster}/${label}`}
       data-qa-bucket-cell={label}
       className={`${classes.bucketRow} ${'fade-in-table'}`}
+      ariaLabel={label}
     >
       <TableCell parentColumn="Name">
         <Grid container wrap="nowrap" alignItems="center">
@@ -86,6 +88,11 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
           humanizeCutoff="month"
           data-qa-created
         />
+      </TableCell>
+      <TableCell parentColumn="Size">
+        <Typography variant="body2" data-qa-size>
+          {readableBytes(size).formatted}
+        </Typography>
       </TableCell>
       <TableCell>
         <BucketActionMenu
