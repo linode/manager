@@ -57,6 +57,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
 }
 
 export type CombinedProps = Props &

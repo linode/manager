@@ -8,7 +8,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Action } from 'redux';
@@ -24,18 +24,20 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Dialog from 'src/components/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel, {
   ExtendedType
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { ApplicationState } from 'src/store';
+import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
+import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
+import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
@@ -49,19 +51,12 @@ type ClassNames =
   | 'currentPlanContainer'
   | 'resizeTitle'
   | 'checkbox'
-  | 'currentHeaderEmptyCell';
+  | 'currentHeaderEmptyCell'
+  | 'tabbedPanelInnerClass'
+  | 'selectPlanPanel';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      padding: theme.spacing(3),
-      paddingBottom: theme.spacing(2),
-      '& .tabbedPanel': {
-        '& > div': {
-          padding: 0
-        }
-      }
-    },
     checkbox: {
       marginTop: theme.spacing(3)
     },
@@ -87,16 +82,19 @@ const styles = (theme: Theme) =>
     },
     currentHeaderEmptyCell: {
       width: '13%'
+    },
+    tabbedPanelInnerClass: {
+      padding: 0
+    },
+    selectPlanPanel: {
+      marginTop: theme.spacing(5)
     }
   });
 
-interface LinodeContextProps {
-  linodeId: number;
-  linodeType: null | string;
-  linodeStatus?: LinodeStatus;
-  linodeLabel: string;
-  permissions: GrantLevel;
-  linodeDisks: Disk[];
+interface Props {
+  linodeId?: number;
+  open: boolean;
+  onClose: () => void;
 }
 
 interface ConfirmationDialog {
@@ -114,17 +112,18 @@ interface State {
   confirmationDialog: ConfirmationDialog;
 }
 
-type CombinedProps = WithTypesProps &
+type CombinedProps = Props &
+  WithTypesProps &
   RouteComponentProps &
-  LinodeContextProps &
   WithStyles<ClassNames> &
   DispatchProps &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  StateProps;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
     selectedId: '',
-    autoDiskResize: shouldEnableAutoResizeDiskOption(this.props.linodeDisks)[1],
+    autoDiskResize: false,
     confirmationDialog: {
       isOpen: false,
       submitting: false,
@@ -257,12 +256,34 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     this.setState({ autoDiskResize: !this.state.autoDiskResize });
   };
 
+  componentDidUpdate = (prevProps: CombinedProps) => {
+    if (
+      prevProps.linodeId !== this.props.linodeId &&
+      !!this.props.linodeId &&
+      this.props.linodeDisks?.length === 0
+    ) {
+      // @todo: Error?
+      this.props.getLinodeDisks(this.props.linodeId);
+    }
+
+    if (
+      prevProps.linodeDisks?.length == 0 &&
+      this.props.linodeDisks && // TS Compiler wasn't recognizing the optional chaining here.
+      this.props.linodeDisks.length > 0
+    ) {
+      this.setState({
+        autoDiskResize: shouldEnableAutoResizeDiskOption(
+          this.props.linodeDisks ?? []
+        )[1]
+      });
+    }
+  };
+
   render() {
     const {
       currentTypesData,
       deprecatedTypesData,
       linodeType,
-      linodeLabel,
       permissions,
       classes,
       linodeDisks,
@@ -286,7 +307,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const [
       diskToResize,
       _shouldEnableAutoResizeDiskOption
-    ] = shouldEnableAutoResizeDiskOption(linodeDisks);
+    ] = shouldEnableAutoResizeDiskOption(linodeDisks ?? []);
 
     const isSmaller = isSmallerThanCurrentPlan(
       this.state.selectedId,
@@ -295,41 +316,38 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <div id="tabpanel-resize" role="tabpanel" aria-labelledby="tab-resize">
-        <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
-        <Paper className={classes.root}>
-          {unauthorized && <LinodePermissionsError />}
-          {hostMaintenance && <HostMaintenanceError />}
-          <Typography
-            role="heading"
-            aria-level={2}
-            variant="h2"
-            className={classes.title}
-            data-qa-title
-          >
-            Resize
-          </Typography>
-          <Typography data-qa-description>
-            If you&apos;re expecting a temporary burst of traffic to your
-            website, or if you&apos;re not using your Linode as much as you
-            thought, you can temporarily or permanently resize your Linode to a
-            different plan.{' '}
-            <ExternalLink
-              fixedIcon
-              text="Learn more."
-              link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
-            />
-          </Typography>
+      <Dialog
+        title="Resize"
+        open={this.props.open}
+        onClose={this.props.onClose}
+        fullWidth
+        maxWidth="lg"
+      >
+        {unauthorized && <LinodePermissionsError />}
+        {hostMaintenance && <HostMaintenanceError />}
+        <Typography data-qa-description>
+          If you&apos;re expecting a temporary burst of traffic to your website,
+          or if you&apos;re not using your Linode as much as you thought, you
+          can temporarily or permanently resize your Linode to a different plan.{' '}
+          <ExternalLink
+            fixedIcon
+            text="Learn more."
+            link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
+          />
+        </Typography>
 
+        <div className={classes.selectPlanPanel}>
           <SelectPlanPanel
             currentPlanHeading={currentPlanHeading}
             types={this.props.currentTypesData}
             onSelect={this.handleSelectPlan}
             selectedID={this.state.selectedId}
             disabled={disabled}
+            updateFor={[this.state.selectedId]}
+            tabbedPanelInnerClass={classes.tabbedPanelInnerClass}
           />
-        </Paper>
-        <Paper className={`${classes.checkbox} ${classes.root}`}>
+        </div>
+        <Paper className={classes.checkbox}>
           <Typography variant="h2" className={classes.resizeTitle}>
             Auto Resize Disk
             {isSmaller ? (
@@ -389,7 +407,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           onClose={this.closeConfirmationModal}
           onResize={this.onSubmit}
         />
-      </div>
+      </Dialog>
     );
   }
 }
@@ -413,29 +431,53 @@ const withTypes = connect((state: ApplicationState) => ({
 
 interface DispatchProps {
   updateLinode: (id: number) => void;
+  getLinodeDisks: (linodeId: number) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   return {
-    updateLinode: (id: number) => dispatch(requestLinodeForStore(id))
+    updateLinode: (id: number) => dispatch(requestLinodeForStore(id)),
+    getLinodeDisks: (linodeId: number) =>
+      dispatch(getAllLinodeDisks({ linodeId }))
   };
 };
 
-const connected = connect(undefined, mapDispatchToProps);
+interface StateProps {
+  linodeId?: number;
+  linodeType?: null | string;
+  linodeStatus?: LinodeStatus;
+  linodeLabel?: string;
+  permissions?: GrantLevel;
+  linodeDisks?: Disk[];
+}
 
-const linodeContext = withLinodeDetailContext(state => {
-  const { linode } = state;
+const mapStateToProps: MapStateToProps<StateProps, Props> = (
+  state: ApplicationState,
+  ownProps
+) => {
+  const { linodeId } = ownProps;
+
+  if (!linodeId) {
+    return {};
+  }
+
+  const linode = state.__resources.linodes.itemsById[linodeId];
+  const linodeDisks = state.__resources.linodeDisks;
+  const profile = state.__resources.profile;
+
   return {
     linodeId: linode.id,
     linodeType: linode.type,
     linodeStatus: linode.status,
     linodeLabel: linode.label,
-    permissions: linode._permissions,
-    linodeDisks: linode._disks
+    permissions: getPermissionsForLinode(profile.data ?? null, linodeId),
+    linodeDisks: getLinodeDisksForLinode(linodeDisks, linodeId)
   };
-});
+};
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export const getLinodeType = (types: LinodeType[], selectedTypeID: string) => {
   return types.find(thisType => thisType.id === selectedTypeID);
@@ -491,8 +533,7 @@ export const isSmallerThanCurrentPlan = (
   return currentType.disk > nextType.disk;
 };
 
-export default compose<CombinedProps, {}>(
-  linodeContext,
+export default compose<CombinedProps, Props>(
   withTypes,
   styled,
   withSnackbar,

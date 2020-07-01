@@ -20,12 +20,18 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
 }
 
 type CombinedProps = Props & PaginationProps;
 
 export const ListView: React.FC<CombinedProps> = props => {
-  const { data, openDeleteDialog, openPowerActionDialog } = props;
+  const {
+    data,
+    openDeleteDialog,
+    openPowerActionDialog,
+    openLinodeResize
+  } = props;
 
   const flags = useFlags();
 
@@ -56,6 +62,7 @@ export const ListView: React.FC<CombinedProps> = props => {
           key={`linode-row-${idx}`}
           openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
+          openLinodeResize={openLinodeResize}
         />
       ))}
     </>

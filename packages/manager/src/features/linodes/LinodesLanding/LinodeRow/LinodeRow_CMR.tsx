@@ -56,6 +56,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
 }
 
 export type CombinedProps = Props &
@@ -88,6 +89,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     linodeNotifications,
     openDeleteDialog,
     openPowerActionDialog,
+    openLinodeResize,
     // displayType, @todo use for M3-2059
     recentEvent,
     mutationAvailable
@@ -232,6 +234,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             linodeBackups={backups}
             openDeleteDialog={openDeleteDialog}
             openPowerActionDialog={openPowerActionDialog}
+            openLinodeResize={openLinodeResize}
             noImage={!image}
           />
         </div>
