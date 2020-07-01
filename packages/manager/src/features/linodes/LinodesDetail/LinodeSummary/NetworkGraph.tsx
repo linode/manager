@@ -31,7 +31,7 @@ const formatTotalTraffic = (value: number) => readableBytes(value).formatted;
 const useStyles = makeStyles((theme: Theme) => ({
   chart: {
     position: 'relative',
-    paddingLeft: theme.spacing(1)
+    paddingLeft: theme.spacing(3)
   },
   totalTraffic: {
     margin: '12px'

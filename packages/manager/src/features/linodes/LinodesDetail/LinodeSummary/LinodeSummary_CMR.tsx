@@ -41,6 +41,7 @@ import NetworkGraph from './NetworkGraph';
 import StatsPanel from './StatsPanel';
 import { ChartProps } from './types';
 import { parseAPIDate } from 'src/utilities/date';
+import Paper from 'src/components/core/Paper';
 
 setUpCharts();
 
@@ -77,7 +78,7 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      paddingLeft: theme.spacing(1)
+      paddingLeft: theme.spacing(3)
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
@@ -100,7 +101,8 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
+      paddingLeft: '32px'
     },
     chartSelect: {
       maxWidth: 150
@@ -405,7 +407,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <React.Fragment>
+      <Paper>
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
 
         <Grid
@@ -449,7 +451,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             <NetworkGraph stats={this.state.stats} {...chartProps} />
           </Grid>
         </Grid>
-      </React.Fragment>
+      </Paper>
     );
   }
 }
