@@ -59,6 +59,7 @@ export const AddTag: React.FC<Props> = props => {
       onClose();
     }
   };
+
   return (
     <Select
       small

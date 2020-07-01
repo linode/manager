@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   displayAllOuter: {
     position: 'relative',
-    backgroundColor: theme.bg.lightBlue,
     '&:before': {
       content: '""',
       width: 50,
@@ -56,7 +55,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   button: {
-    padding: 0
+    padding: 0,
+    backgroundColor: theme.bg.lightBlue,
+    borderRadius: 0,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: '#ffff'
+    }
   },
   tagInput: {
     overflow: 'visible !important'
