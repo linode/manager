@@ -100,5 +100,8 @@ export const handlers = [
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.get('*/kubeconfig', (req, res, ctx) => {
+    return res(ctx.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
   })
 ];
