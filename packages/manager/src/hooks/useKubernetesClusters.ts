@@ -15,7 +15,8 @@ export const useKubernetesClusters = () => {
   const kubernetesClusters = useSelector(
     (state: ApplicationState) => state.__resources.kubernetes
   );
-  const requestKubernetesClusters = () => dispatch(_request());
+  const requestKubernetesClusters = () =>
+    dispatch(_request()).then(response => response.data);
 
   return { kubernetesClusters, requestKubernetesClusters };
 };

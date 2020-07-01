@@ -5,7 +5,8 @@ import { isType } from 'typescript-fsa';
 import {
   createBucketActions,
   deleteBucketActions,
-  getAllBucketsForAllClustersActions
+  getAllBucketsForAllClustersActions,
+  getBucketActions
 } from './bucket.actions';
 import { BucketError } from './types';
 
@@ -34,6 +35,32 @@ export const defaultState: State = {
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
+  /**
+   * Get Bucket
+   */
+  if (isType(action, getBucketActions.done)) {
+    const { result } = action.payload;
+    const idx = state.data.findIndex(
+      thisBucket =>
+        thisBucket.label === result.label &&
+        thisBucket.cluster === result.cluster
+    );
+
+    const updatedData = [...state.data];
+    if (idx !== -1) {
+      updatedData[idx] = result;
+      return {
+        ...state,
+        data: updatedData
+      };
+    }
+
+    return {
+      ...state,
+      data: [...state.data, result]
+    };
+  }
+
   /*
    * Create Bucket
    **/
