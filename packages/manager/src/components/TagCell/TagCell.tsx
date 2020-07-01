@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   displayAllOuter: {
     position: 'relative',
+    backgroundColor: theme.bg.lightBlue,
     '&:before': {
       content: '""',
       width: 50,

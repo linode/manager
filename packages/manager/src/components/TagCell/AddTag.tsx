@@ -51,7 +51,10 @@ export const AddTag: React.FC<Props> = props => {
   );
 
   const handleAddTag = (newTag: Item<string>) => {
-    addTag(newTag.value);
+    if (newTag?.value) {
+      addTag(newTag.value);
+    }
+
     if (onClose) {
       onClose();
     }
@@ -59,6 +62,7 @@ export const AddTag: React.FC<Props> = props => {
   return (
     <Select
       small
+      escapeClearsValue
       className={classNames({
         [classes.root]: true,
         [classes.hasFixedMenu]: fixedMenu
