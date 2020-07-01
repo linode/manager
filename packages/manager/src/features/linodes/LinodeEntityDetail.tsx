@@ -34,6 +34,7 @@ import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -51,6 +52,7 @@ interface LinodeEntityDetailProps {
     linodeConfigs: Config[]
   ) => void;
   backups: LinodeBackups;
+  linodeConfigs: Config[];
 }
 
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
@@ -62,7 +64,8 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     openLishConsole,
     openDeleteDialog,
     openPowerActionDialog,
-    backups
+    backups,
+    linodeConfigs
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -97,8 +100,9 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           openPowerActionDialog={openPowerActionDialog}
           linodeRegionDisplay={linodeRegionDisplay}
           backups={backups}
+          linodeConfigs={linodeConfigs}
           type={'something'}
-          image={'somethging'}
+          image={'something'}
         />
       }
       body={
@@ -151,6 +155,7 @@ export interface HeaderProps {
   backups: LinodeBackups;
   type: string;
   image: string;
+  linodeConfigs: Config[];
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -225,7 +230,8 @@ const Header: React.FC<HeaderProps> = props => {
     openPowerActionDialog,
     backups,
     type,
-    image
+    image,
+    linodeConfigs
   } = props;
 
   const classes = useHeaderStyles();
@@ -255,10 +261,7 @@ const Header: React.FC<HeaderProps> = props => {
           </div>
         ) : (
           <>
-            <Link
-              to={`linode/instances/${linodeId}`}
-              className={classes.linodeLabel}
-            >
+            <Link to={`linodes/${linodeId}`} className={classes.linodeLabel}>
               {linodeLabel}
             </Link>
             <Chip
@@ -301,6 +304,7 @@ const Header: React.FC<HeaderProps> = props => {
               SideIcon={ViewDetailsIcon}
               text="ViewDetails"
               title="ViewDetails"
+              to={`linodes/${linodeId}`}
             />
           )}
 
@@ -309,6 +313,15 @@ const Header: React.FC<HeaderProps> = props => {
             SideIcon={RebootIcon}
             text="Reboot"
             title="Reboot"
+            onClick={() => {
+              sendLinodeActionMenuItemEvent('Reboot Linode');
+              openPowerActionDialog(
+                'Reboot',
+                linodeId,
+                linodeLabel,
+                linodeConfigs
+              );
+            }}
           />
           {isDetails && (
             <IconTextLink

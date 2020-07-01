@@ -9,11 +9,15 @@ export interface HeaderProps extends BreadCrumbProps {
   body?: JSX.Element;
   title: string | JSX.Element;
   bodyClassName?: string;
+  isLanding?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.bg.white
+  },
+  isLanding: {
+    marginBottom: 0
   },
   contentOuter: {
     '& .MuiChip-root': {
@@ -36,7 +40,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     parentLink,
     parentText,
     title,
-    bodyClassName
+    bodyClassName,
+    isLanding
   } = props;
   const classes = useStyles();
 
@@ -45,7 +50,10 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
       container
       alignItems="center"
       justify="space-between"
-      className={classes.root}
+      className={classnames({
+        [classes.root]: true,
+        [classes.isLanding]: isLanding
+      })}
     >
       <Grid item xs={Boolean(actions) ? 6 : 12}>
         <Grid container direction="row" alignItems="center">

@@ -35,7 +35,13 @@ export const LandingHeader: React.FC<Props> = props => {
 
   const actions = React.useMemo(
     () => (
-      <Grid container direction="row" alignItems="center" justify="flex-end">
+      <Grid
+        item
+        container
+        direction="row"
+        alignItems="center"
+        justify="flex-end"
+      >
         {onAddNew && (
           <Grid item>
             <Button
@@ -53,7 +59,7 @@ export const LandingHeader: React.FC<Props> = props => {
     [docsLink, title, onAddNew, classes.button]
   );
 
-  return <EntityHeader actions={actions} {...props} />;
+  return <EntityHeader isLanding actions={actions} {...props} />;
 };
 
 export default LandingHeader;

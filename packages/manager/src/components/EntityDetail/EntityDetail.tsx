@@ -17,9 +17,7 @@ export interface EntityDetailProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  header: {
-    height: 50
-  },
+  header: {},
   body: {
     padding: `20px !important`,
     backgroundColor: theme.color.white,

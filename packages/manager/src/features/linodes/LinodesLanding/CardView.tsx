@@ -24,12 +24,19 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  linodeConfigs: Config[];
 }
 
 type CombinedProps = WithImagesProps & PaginationProps & Props;
 
 const CardView: React.FC<CombinedProps> = props => {
-  const { data, imagesData, openDeleteDialog, openPowerActionDialog } = props;
+  const {
+    data,
+    imagesData,
+    openDeleteDialog,
+    openPowerActionDialog,
+    linodeConfigs
+  } = props;
 
   const flags = useFlags();
 
@@ -45,6 +52,7 @@ const CardView: React.FC<CombinedProps> = props => {
                 numVolumes={2}
                 username="linode-user"
                 openLishConsole={() => null}
+                linodeConfigs={linodeConfigs}
                 backups={linode.backups}
                 openDeleteDialog={openDeleteDialog}
                 openPowerActionDialog={openPowerActionDialog}
