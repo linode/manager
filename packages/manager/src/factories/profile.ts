@@ -2,7 +2,7 @@ import * as Factory from 'factory.ts';
 import { Profile } from '@linode/api-v4/lib/profile/types';
 
 export const profileFactory = Factory.Sync.makeFactory<Profile>({
-  uid: Factory.each(id => id),
+  uid: 9999,
   username: 'mock-user',
   email: 'mock-user@linode.com',
   timezone: 'Asia/Shanghai',

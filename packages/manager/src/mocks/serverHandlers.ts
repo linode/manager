@@ -27,7 +27,7 @@ export const makeResourcePage = (e: any[]) => ({
 });
 
 export const handlers = [
-  rest.get('*/profile', async (req, res, ctx) => {
+  rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build();
     return res(ctx.json(profile));
   }),

@@ -305,3 +305,7 @@ export const OBJECT_STORAGE_DELIMITER = '/';
 
 // Value from  1-4 reflecting a minimum score from zxcvbn
 export const MINIMUM_PASSWORD_STRENGTH = 2;
+
+// When true, use the mock API defined in serverHandlers.ts instead of making network requests
+export const MOCK_SERVICE_WORKER =
+  process.env.REACT_APP_MOCK_SERVICE_WORKER || false;
