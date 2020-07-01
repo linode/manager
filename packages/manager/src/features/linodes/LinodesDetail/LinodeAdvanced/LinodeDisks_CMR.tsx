@@ -15,12 +15,13 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
+import OrderBy from 'src/components/OrderBy';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -38,7 +39,7 @@ import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import LinodeDiskActionMenu from './LinodeDiskActionMenu';
+import LinodeDiskActionMenu from './LinodeDiskActionMenu_CMR';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 
 import Paginate from 'src/components/Paginate';
@@ -47,14 +48,17 @@ type ClassNames =
   | 'root'
   | 'headline'
   | 'addNewWrapper'
+  | 'create'
   | 'loadingContainer'
   | 'tableContainer'
-  | 'diskSpaceWrapper';
+  | 'diskSpaceWrapper'
+  | 'actionMenu';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
     headline: {
+      marginLeft: theme.spacing(2),
       marginBottom: theme.spacing(2),
       [theme.breakpoints.down('xs')]: {
         marginBottom: 0,
@@ -84,6 +88,10 @@ const styles = (theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center'
+    },
+    actionMenu: {
+      paddingTop: 0,
+      paddingBottom: 0
     }
   });
 
@@ -179,74 +187,75 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        <Paginate data={disks} scrollToRef={this.disksHeader}>
-          {({
-            data: paginatedData,
-            handlePageChange,
-            handlePageSizeChange,
-            page,
-            pageSize,
-            count
-          }) => {
-            return (
-              <React.Fragment>
-                <Grid container className={classes.tableContainer}>
-                  <Grid item xs={12}>
-                    <Table
-                      isResponsive={false}
-                      aria-label="List of Disks"
-                      border
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableSortCell
-                            label="label"
-                            // direction={order}
-                            active={isActive('label')}
-                            // handleClick={handleOrderChange}
-                            // data-qa-sort-label={order}
-                          >
-                            Label
-                          </TableSortCell>
-                          <TableSortCell
-                            label="type"
-                            // direction={order}
-                            active={isActive('type')}
-                            // handleClick={handleOrderChange}
-                            // data-qa-sort-label={order}
-                          >
-                            Type
-                          </TableSortCell>
-                          <TableSortCell
-                            label="size"
-                            // direction={order}
-                            active={isActive('size')}
-                            // handleClick={handleOrderChange}
-                            // data-qa-sort-label={order}
-                          >
-                            Size
-                          </TableSortCell>
-                          <TableCell />
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {this.renderTableContent(paginatedData, linodeStatus)}
-                      </TableBody>
-                    </Table>
-                  </Grid>
-                </Grid>
-                <PaginationFooter
-                  page={page}
-                  pageSize={pageSize}
-                  count={count}
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  eventCategory="linode disks"
-                />
-              </React.Fragment>
-            );
-          }}
-        </Paginate>
+        <OrderBy data={disks} orderBy={'label'} order={'asc'}>
+          {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+            <Paginate data={orderedData} scrollToRef={this.disksHeader}>
+              {({
+                data: paginatedData,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize,
+                count
+              }) => {
+                return (
+                  <React.Fragment>
+                    <Grid container className={classes.tableContainer}>
+                      <Grid item xs={12}>
+                        <Table isResponsive={false} aria-label="List of Disks">
+                          <TableHead>
+                            <TableRow>
+                              <TableSortCell
+                                active={orderBy === 'label'}
+                                label="label"
+                                direction={order}
+                                handleClick={handleOrderChange}
+                              >
+                                Label
+                              </TableSortCell>
+                              {/* @todo does not sort by type */}
+                              <TableSortCell
+                                active={orderBy === 'type'}
+                                label="type"
+                                direction={order}
+                                handleClick={handleOrderChange}
+                              >
+                                Type
+                              </TableSortCell>
+                              <TableSortCell
+                                active={orderBy === 'size'}
+                                label="size"
+                                direction={order}
+                                handleClick={handleOrderChange}
+                              >
+                                Size
+                              </TableSortCell>
+                              <TableCell />
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {this.renderTableContent(
+                              paginatedData,
+                              linodeStatus
+                            )}
+                          </TableBody>
+                        </Table>
+                      </Grid>
+                    </Grid>
+                    <PaginationFooter
+                      page={page}
+                      pageSize={pageSize}
+                      count={count}
+                      handlePageChange={handlePageChange}
+                      handleSizeChange={handlePageSizeChange}
+                      eventCategory="linode disks"
+                    />
+                  </React.Fragment>
+                );
+              }}
+            </Paginate>
+          )}
+        </OrderBy>
         <this.confirmationDialog />
         <this.drawer />
         <this.imagizeDrawer />
@@ -255,14 +264,14 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   }
 
   renderTableContent = (data: Disk[], status?: string) => {
-    const { linodeId, readOnly } = this.props;
+    const { classes, linodeId, readOnly } = this.props;
 
     return data.map(disk => (
       <TableRow key={disk.id} data-qa-disk={disk.label}>
         <TableCell>{disk.label}</TableCell>
         <TableCell>{disk.filesystem}</TableCell>
         <TableCell>{disk.size} MB</TableCell>
-        <TableCell>
+        <TableCell className={classes.actionMenu}>
           <LinodeDiskActionMenu
             linodeStatus={status || 'offline'}
             linodeId={linodeId}
