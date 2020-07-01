@@ -5,6 +5,7 @@ import {
   LinodeBackups,
   LinodeStatus
 } from '@linode/api-v4/lib/linodes';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -17,6 +18,7 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TagCell from 'src/components/TagCell';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import useLinodes from 'src/hooks/useLinodes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
@@ -106,14 +108,24 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const addTag = (tag: string) => {
     const newTags = [...tags, tag];
-    updateLinode({ linodeId: id, tags: newTags });
+    updateLinode({ linodeId: id, tags: newTags }).catch(e =>
+      enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
+        variant: 'error'
+      })
+    );
   };
 
   const deleteTag = (tag: string) => {
     const newTags = tags.filter(thisTag => thisTag !== tag);
-    updateLinode({ linodeId: id, tags: newTags });
+    updateLinode({ linodeId: id, tags: newTags }).catch(e =>
+      enqueueSnackbar(getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason, {
+        variant: 'error'
+      })
+    );
   };
 
   const MaintenanceText = () => {
