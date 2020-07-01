@@ -340,6 +340,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment="Storage" />
         {readOnly && <LinodePermissionsError />}
+        <LinodeDisks />
         <PreferenceToggle<boolean>
           preferenceKey="volumes_group_by_tag"
           preferenceOptions={[false, true]}
@@ -358,7 +359,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
                   className={classes.root}
                 >
-                  <LinodeDisks />
                   <Grid item className={classes.titleWrapper}>
                     {removeBreadCrumb ? (
                       <Typography variant="h2">Volumes</Typography>
@@ -453,6 +453,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       return (
         <React.Fragment>
           <DocumentTitleSegment segment="Storage" />
+          <LinodeDisks />
           <Placeholder
             title="Volumes are not available in this region"
             copy=""
@@ -467,6 +468,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       return (
         <React.Fragment>
           <DocumentTitleSegment segment="Storage" />
+          <LinodeDisks />
           <Placeholder
             title="No configs available."
             copy="This Linode has no configurations. Click below to create a configuration."
@@ -486,6 +488,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Storage" />
+        <LinodeDisks />
         {readOnly && <LinodePermissionsError />}
         <Placeholder
           title="Add Block Storage!"

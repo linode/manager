@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -11,9 +13,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-end'
   },
   button: {
-    marginRight: 20,
+    height: '100%',
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingLeft: 15,
+    paddingRight: 15,
     minWidth: 'auto',
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.color.white
+    }
   }
 }));
 
@@ -34,7 +44,7 @@ type CombinedProps = Props & RouteComponentProps;
 export const DiskActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const createActions = () => (closeMenu: Function): Action[] => {
+  const createActions = () => (): Action[] => {
     const { linodeStatus, linodeId, readOnly, history, diskId } = props;
     let tooltip;
     tooltip =
@@ -52,29 +62,10 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
       : {};
     return [
       {
-        title: 'Rename',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-          props.onRename();
-          closeMenu();
-        },
-        ...(readOnly ? disabledProps : {})
-      },
-      {
-        title: 'Resize',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-          props.onResize();
-          closeMenu();
-        },
-        ...disabledProps
-      },
-      {
         title: 'Imagize',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
           props.onImagize();
-          closeMenu();
         },
         ...(readOnly ? disabledProps : {})
       },
@@ -82,7 +73,6 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
         title: 'Clone',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
-          closeMenu();
           history.push(
             `/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`
           );
@@ -94,7 +84,6 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
           props.onDelete();
-          closeMenu();
         },
         ...(readOnly ? disabledProps : {})
       }
@@ -118,6 +107,12 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
           e.preventDefault();
           props.onResize();
         }}
+        disabled={props.linodeStatus !== 'offline'}
+        tooltipText={
+          props.linodeStatus !== 'offline'
+            ? 'Your Linode must be fully powered down in order to perform this action'
+            : ''
+        }
       >
         Resize
       </Button>
