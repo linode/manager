@@ -35,36 +35,40 @@ export const ListView: React.FC<CombinedProps> = props => {
 
   const flags = useFlags();
 
-  const Row = flags.cmr ? LinodeRow_CMR : LinodeRow;
-
   return (
+    // eslint-disable-next-line
     <>
-      {data.map((linode, idx: number) => (
-        <Row
-          backups={linode.backups}
-          id={linode.id}
-          ipv4={linode.ipv4}
-          maintenanceStartTime={
-            linode.maintenance ? linode.maintenance.when : ''
-          }
-          ipv6={linode.ipv6 || ''}
-          label={linode.label}
-          region={linode.region}
-          status={linode.status}
-          displayStatus={linode.displayStatus || ''}
-          tags={linode.tags}
-          mostRecentBackup={linode.backups.last_successful}
-          disk={linode.specs.disk}
-          vcpus={linode.specs.vcpus}
-          memory={linode.specs.memory}
-          type={linode.type}
-          image={linode.image}
-          key={`linode-row-${idx}`}
-          openDeleteDialog={openDeleteDialog}
-          openPowerActionDialog={openPowerActionDialog}
-          openLinodeResize={openLinodeResize}
-        />
-      ))}
+      {data.map((linode, idx: number) => {
+        const props = {
+          backups: linode.backups,
+          id: linode.id,
+          ipv4: linode.ipv4,
+          maintenanceStartTime: linode.maintenance
+            ? linode.maintenance.when
+            : '',
+          ipv6: linode.ipv6 || '',
+          label: linode.label,
+          region: linode.region,
+          status: linode.status,
+          displayStatus: linode.displayStatus || '',
+          tags: linode.tags,
+          mostRecentBackup: linode.backups.last_successful,
+          disk: linode.specs.disk,
+          vcpus: linode.specs.vcpus,
+          memory: linode.specs.memory,
+          type: linode.type,
+          image: linode.image,
+
+          openDeleteDialog,
+          openPowerActionDialog,
+          openLinodeResize
+        };
+        if (flags.cmr) {
+          return <LinodeRow_CMR key={`linode-row-${idx}`} {...props} />;
+        }
+
+        return <LinodeRow key={`linode-row-${idx}`} {...props} />;
+      })}
     </>
   );
 };

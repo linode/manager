@@ -19,7 +19,7 @@ import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
-import LinodeActionMenu from '../LinodeActionMenu';
+import LinodeActionMenu_CMR from '../LinodeActionMenu_CMR';
 import RegionIndicator from '../RegionIndicator';
 import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
@@ -225,7 +225,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             linodeNotifications={linodeNotifications}
             classes={classes}
           />
-          <LinodeActionMenu
+          <LinodeActionMenu_CMR
             linodeId={id}
             linodeLabel={label}
             linodeRegion={region}

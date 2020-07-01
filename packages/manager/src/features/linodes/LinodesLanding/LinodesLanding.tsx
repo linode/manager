@@ -63,7 +63,7 @@ import DeleteDialog from './DeleteDialog';
 import CSVLink from 'src/components/DownloadCSV';
 import Chip from 'src/components/core/Chip';
 import LandingHeader from 'src/components/LandingHeader';
-import LinodeResize from '../LinodesDetail/LinodeResize';
+import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
 
 interface State {
   powerDialogOpen: boolean;
@@ -267,11 +267,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <LinodeResize
-          open={this.state.linodeResizeOpen}
-          onClose={this.closeLinodeResize}
-          linodeId={this.state.selectedLinodeID}
-        />
+        {this.props.flags.cmr && (
+          <LinodeResize_CMR
+            open={this.state.linodeResizeOpen}
+            onClose={this.closeLinodeResize}
+            linodeId={this.state.selectedLinodeID}
+            linodeLabel={
+              this.props.linodesData.find(
+                thisLinode => thisLinode.id === this.state.selectedLinodeID
+              )?.label ?? undefined
+            }
+          />
+        )}
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner
             userTimezone={this.props.userTimezone}

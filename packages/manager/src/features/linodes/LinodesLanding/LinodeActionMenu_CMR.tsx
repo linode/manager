@@ -89,6 +89,7 @@ export interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
 }
 
 export type CombinedProps = Props &
@@ -162,7 +163,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       openDeleteDialog,
       openPowerActionDialog,
       history: { push },
-      readOnly
+      readOnly,
+      openLinodeResize
     } = props;
 
     const readOnlyProps = readOnly
@@ -241,8 +243,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Navigate to Resize Page');
-            push(`/linodes/${linodeId}/resize`);
+            openLinodeResize(linodeId);
             e.preventDefault();
             e.stopPropagation();
           },
