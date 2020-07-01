@@ -13,7 +13,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   nodeBalancerFactory,
-  // profileFactory
+  profileFactory,
   volumeFactory
 } from 'src/factories';
 
@@ -27,10 +27,10 @@ export const makeResourcePage = (e: any[]) => ({
 });
 
 export const handlers = [
-  // rest.get('*/profile', async (req, res, ctx) => {
-  //   const profile = profileFactory.build();
-  //   return res(ctx.json(profile));
-  // }),
+  rest.get('*/profile', async (req, res, ctx) => {
+    const profile = profileFactory.build();
+    return res(ctx.json(profile));
+  }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(ctx.json(cachedRegions));
   }),
