@@ -1,23 +1,29 @@
-import * as classNames from 'classnames';
 import { Notification } from '@linode/api-v4/lib/account';
 import {
   Config,
   LinodeBackups,
   LinodeStatus
 } from '@linode/api-v4/lib/linodes';
+import * as classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
+import Hidden from 'src/components/core/Hidden';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TagCell from 'src/components/TagCell';
-import { linodeInTransition } from 'src/features/linodes/transitions';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import {
+  linodeInTransition,
+  transitionText
+} from 'src/features/linodes/transitions';
 import useLinodes from 'src/hooks/useLinodes';
+import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import hasMutationAvailable, {
   HasMutationAvailable
@@ -25,16 +31,12 @@ import hasMutationAvailable, {
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu_CMR';
 import RegionIndicator from '../RegionIndicator';
+import { parseMaintenanceStartTime } from '../utils';
 import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
-import styled, { StyleProps } from './LinodeRow_CMR.style';
 import LinodeRowBackupCell from './LinodeRowBackupCell_CMR';
 import LinodeRowHeadCell from './LinodeRowHeadCell_CMR';
-
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { transitionText } from 'src/features/linodes/transitions';
-import { capitalize } from 'src/utilities/capitalize';
-import { parseMaintenanceStartTime } from '../utils';
+import styled, { StyleProps } from './LinodeRow_CMR.style';
 
 interface Props {
   backups: LinodeBackups;
@@ -248,14 +250,16 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         backupsEnabled={backups.enabled || false}
         mostRecentBackup={mostRecentBackup || ''}
       />
-      <TagCell
-        className={classes.regionCell}
-        tags={tags}
-        addTag={addTag}
-        deleteTag={deleteTag}
-        listAllTags={() => openTagDrawer(id, label, tags)}
-        width={500}
-      />
+      <Hidden mdDown>
+        <TagCell
+          tags={tags}
+          addTag={addTag}
+          deleteTag={deleteTag}
+          listAllTags={() => openTagDrawer(id, label, tags)}
+          width={500}
+        />
+      </Hidden>
+
       <TableCell className={classes.actionCell} data-qa-notifications>
         <div className={classes.actionInner}>
           <RenderFlag

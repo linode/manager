@@ -8,7 +8,7 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  emptyCell: {
+  nonSortCell: {
     borderTop: `1px solid ${theme.palette.divider}`
   }
 }));
@@ -70,9 +70,9 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           Last Backup
         </TableSortCell>
         <Hidden mdDown>
-          <TableCell>Tags</TableCell>
+          <TableCell className={classes.nonSortCell}>Tags</TableCell>
         </Hidden>
-        <TableCell className={classes.emptyCell} />
+        <TableCell className={classes.nonSortCell} />
       </TableRow>
     </TableHead>
   );
