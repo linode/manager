@@ -1,4 +1,4 @@
-import {curry} from 'ramda';
+import { curry } from 'ramda';
 import * as React from 'react';
 import Chart from 'chart.js';
 import 'chartjs-adapter-luxon';
@@ -114,7 +114,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     _nativeLegend?: boolean,
     _tooltipUnit?: string
   ) => {
-    const finalChartOptions = {
+    return {
       maintainAspectRatio: false,
       responsive: true,
       animation: { duration: 0 },
@@ -183,24 +183,6 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         mode: 'index'
       }
     };
-
-    /**
-     * We've been given a max unit, which indicates that
-     * the data we're looking at is in bytes. We should
-     * adjust the tooltip display so that if the maxUnit is GB we
-     * display 8MB instead of 0.0000000000000000000000008 GB
-     *
-     * NOTE: formatTooltip is curried, so here we're creating a new
-     * function has the raw data from props bound to it. This is because
-     * we need to access the original data to determine what unit to display
-     * it in.
-     *
-     * NOTE2: _maxUnit is the unit that all series on the graph will be converted to.
-     * However, in the tooltip, each individual value will be formatted according to
-     * the most appropriate unit, if a unit is provided.
-     */
-
-    return finalChartOptions;
   };
 
   const _formatData = () => {
@@ -347,8 +329,8 @@ export const _formatTooltip = curry(
     data: DataSet[],
     formatter: ((v: number) => string) | undefined,
     unit: string | undefined,
-    t:any,
-    _d:any
+    t: any,
+    _d: any
   ) => {
     /**
      * t and d are the params passed by chart.js to this component.

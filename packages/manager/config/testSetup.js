@@ -72,13 +72,7 @@ jest.mock('chart.js', () => ({
       override: jest.fn()
     }
   },
-  defaults: {
-    global: {
-      defaultFontFamily: '',
-      defaultFontSize: '',
-      defaultFontStyle: ''
-    }
-  }
+  defaults: { fontFamily: '', fontSize: '', fontStyle: '' }
 }));
 
 jest.mock('highlight.js/lib/highlight', () => ({
