@@ -79,7 +79,8 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      paddingLeft: theme.spacing(3)
+      paddingLeft: theme.spacing(3),
+      width: '400px'
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
