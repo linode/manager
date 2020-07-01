@@ -51,7 +51,9 @@ type ClassNames =
   | 'create'
   | 'loadingContainer'
   | 'tableContainer'
-  | 'diskSpaceWrapper'
+  | 'diskLabel'
+  | 'diskType'
+  | 'diskSize'
   | 'actionMenu';
 
 const styles = (theme: Theme) =>
@@ -80,18 +82,21 @@ const styles = (theme: Theme) =>
     tableContainer: {
       marginTop: -theme.spacing(2)
     },
-    diskSpaceWrapper: {
-      backgroundColor: theme.bg.tableHeader,
-      border: `1px solid ${theme.color.diskSpaceBorder}`,
-      padding: theme.spacing(2),
-      minHeight: '250px',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center'
+    diskLabel: {
+      width: '23%'
+    },
+    diskType: {
+      width: '8%'
+    },
+    diskSize: {
+      width: '9%'
     },
     actionMenu: {
       paddingTop: 0,
-      paddingBottom: 0
+      paddingBottom: 0,
+      '&.MuiTableCell-root': {
+        paddingRight: 0
+      }
     }
   });
 
@@ -213,10 +218,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                               >
                                 Label
                               </TableSortCell>
-                              {/* @todo does not sort by type */}
                               <TableSortCell
-                                active={orderBy === 'type'}
-                                label="type"
+                                active={orderBy === 'filesystem'}
+                                label="filesystem"
                                 direction={order}
                                 handleClick={handleOrderChange}
                               >
@@ -268,9 +272,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     return data.map(disk => (
       <TableRow key={disk.id} data-qa-disk={disk.label}>
-        <TableCell>{disk.label}</TableCell>
-        <TableCell>{disk.filesystem}</TableCell>
-        <TableCell>{disk.size} MB</TableCell>
+        <TableCell className={classes.diskLabel}>{disk.label}</TableCell>
+        <TableCell className={classes.diskType}>{disk.filesystem}</TableCell>
+        <TableCell className={classes.diskSize}>{disk.size} MB</TableCell>
         <TableCell className={classes.actionMenu}>
           <LinodeDiskActionMenu
             linodeStatus={status || 'offline'}
