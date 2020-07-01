@@ -48,7 +48,7 @@ describe('FirewallRow', () => {
       triggerEnableFirewall: mockTriggerEnableFirewall
     };
 
-    it.only('renders a TableRow with label, status, rules, and Linodes', () => {
+    it('renders a TableRow with label, status, rules, and Linodes', () => {
       const { getByTestId, getByText } = render(
         wrapWithTableBody(<FirewallRow {...baseProps} />)
       );
