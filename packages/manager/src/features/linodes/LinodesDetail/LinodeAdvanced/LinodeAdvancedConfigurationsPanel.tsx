@@ -13,7 +13,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import LinodeConfigs from './LinodeConfigs';
-import LinodeDisks from './LinodeDisks_CMR';
+import LinodeDisks from './LinodeDisks';
 import LinodeDiskSpace from './LinodeDiskSpace';
 
 import { sendMigrationNavigationEvent } from 'src/utilities/ga';
