@@ -25,11 +25,13 @@ import HelpIcon from 'src/components/HelpIcon';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import Tags from 'src/components/Tags';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import {
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { parseAPIDate } from 'src/utilities/date';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { typeLabelDetails } from '../presentation';
 import hasMutationAvailable, {
@@ -39,12 +41,10 @@ import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import styled, { StyleProps } from './LinodeCard.style';
 import RegionIndicator from './RegionIndicator';
+import { parseMaintenanceStartTime } from './utils';
 import withDisplayType, { WithDisplayType } from './withDisplayType';
 import withNotifications, { WithNotifications } from './withNotifications';
 import withRecentEvent, { WithRecentEvent } from './withRecentEvent';
-
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { parseMaintenanceStartTime } from './utils';
 
 interface Props {
   backups: LinodeBackups;
@@ -250,24 +250,26 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
                   )}
                 </Typography>
               ) : (
-                <>
-                  <div className={classes.cardMaintenance}>
-                    <Notice
-                      warning
-                      spacingBottom={0}
-                      className={classes.maintenanceNotice}
-                    >
-                      Maintenance Scheduled <br />
-                      {dateTime[0]} at {dateTime[1]}
-                      <HelpIcon
-                        text={<MaintenanceText />}
-                        className={classes.statusHelpIcon}
-                        tooltipPosition="top"
-                        interactive
-                      />
-                    </Notice>
-                  </div>
-                </>
+                <div className={classes.cardMaintenance}>
+                  <Notice
+                    warning
+                    spacingBottom={0}
+                    className={classes.maintenanceNotice}
+                  >
+                    Maintenance Scheduled <br />
+                    {dateTime[0]} from {dateTime[1]} to{' '}
+                    {/* Warning: hardcoded code! Set all maintenance windows to 2 hours. */}
+                    {parseAPIDate(dateTime[1])
+                      .plus({ hours: 2 })
+                      .toFormat('HH:mm:ss')}
+                    <HelpIcon
+                      text={<MaintenanceText />}
+                      className={classes.statusHelpIcon}
+                      tooltipPosition="top"
+                      interactive
+                    />
+                  </Notice>
+                </div>
               )}
             </div>
             <div className={classes.cardSection}>

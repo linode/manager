@@ -32,6 +32,7 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseMaintenanceStartTime } from '../utils';
 import useFlags from 'src/hooks/useFlags';
+import { parseAPIDate } from 'src/utilities/date';
 
 interface Props {
   backups: LinodeBackups;
@@ -175,7 +176,11 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
                   <strong>Maintenance Scheduled</strong>
                 </div>
                 <div>
-                  {dateTime[0]} at {dateTime[1]}
+                  {dateTime[0]} from {dateTime[1]} to{' '}
+                  {/* Warning: hardcoded code! Set all maintenance windows to 2 hours. */}
+                  {parseAPIDate(dateTime[1])
+                    .plus({ hours: 2 })
+                    .toFormat('HH:mm:ss')}
                 </div>
               </div>
               <HelpIcon

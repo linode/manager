@@ -45,7 +45,8 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
   return (
     <Paginate
       data={data}
-      pageSize={infinitePageSize}
+      // If the user has Linodes with maintenance, default to "View All" so all Linodes are listed.
+      pageSize={props.someLinodesHaveMaintenance ? Infinity : infinitePageSize}
       pageSizeSetter={setInfinitePageSize}
     >
       {({

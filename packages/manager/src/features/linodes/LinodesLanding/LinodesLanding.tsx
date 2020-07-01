@@ -396,8 +396,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                       : linode.status
                                   };
                                 })}
-                                order={'asc'}
-                                orderBy={'label'}
+                                order={
+                                  this.props.someLinodesHaveScheduledMaintenance
+                                    ? 'desc'
+                                    : 'asc'
+                                }
+                                orderBy={
+                                  // If there are Linodes with scheduled maintenance, show those at
+                                  // the top of the list by default.
+                                  this.props.someLinodesHaveScheduledMaintenance
+                                    ? 'maintenance:when'
+                                    : 'label'
+                                }
                               >
                                 {({
                                   data,
