@@ -58,7 +58,8 @@ type ClassNames =
   | 'subHeaderOuter'
   | 'textWrap'
   | 'headerOuter'
-  | 'labelRangeSelect';
+  | 'labelRangeSelect'
+  | 'graphGrids';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -127,6 +128,9 @@ const styles = (theme: Theme) =>
     },
     labelRangeSelect: {
       paddingRight: '1em'
+    },
+    graphGrids: {
+      paddingLeft: '8px'
     }
   });
 
@@ -153,7 +157,7 @@ type CombinedProps = LinodeContextProps &
   WithImages &
   WithStyles<ClassNames>;
 
-const chartHeight = 300;
+const chartHeight = 150;
 
 const statsFetchInterval = 30000;
 
@@ -438,16 +442,19 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               </div>
             </Grid>
 
-            <StatsPanel
-              title="CPU (%)"
-              renderBody={this.renderCPUChart}
-              {...chartProps}
-            />
-            <StatsPanel
-              title="Disk IO (blocks/s)"
-              renderBody={this.renderDiskIOChart}
-              {...chartProps}
-            />
+            <Grid container direction="row" className={classes.graphGrids}>
+              <StatsPanel
+                title="CPU (%)"
+                renderBody={this.renderCPUChart}
+                {...chartProps}
+              />
+              <StatsPanel
+                title="Disk IO (blocks/s)"
+                renderBody={this.renderDiskIOChart}
+                {...chartProps}
+              />
+            </Grid>
+
             <NetworkGraph stats={this.state.stats} {...chartProps} />
           </Grid>
         </Grid>
