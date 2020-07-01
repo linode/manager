@@ -1,13 +1,6 @@
-import { curry } from 'ramda';
+import {curry} from 'ramda';
 import * as React from 'react';
-import {
-  ChartDataSets,
-  ChartOptions,
-  Chart,
-  ChartXAxe,
-  ChartTooltipItem,
-  ChartData
-} from 'chart.js';
+import Chart from 'chart.js';
 import 'chartjs-adapter-luxon';
 
 import LineChartIcon from 'src/assets/icons/line-chart.svg';
@@ -56,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   ...MetricDisplayStyles(theme)
 }));
 
-const lineOptions: ChartDataSets = {
+const lineOptions = {
   borderWidth: 1,
   borderJoinStyle: 'miter',
   lineTension: 0,
@@ -121,7 +114,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     _nativeLegend?: boolean,
     _tooltipUnit?: string
   ) => {
-    const finalChartOptions: ChartOptions = {
+    const finalChartOptions = {
       maintainAspectRatio: false,
       responsive: true,
       animation: { duration: 0 },
@@ -130,48 +123,46 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         position: _nativeLegend ? 'bottom' : undefined
       },
       scales: {
-        yAxes: [
-          {
-            gridLines: {
-              borderDash: [3, 6],
-              zeroLineWidth: 1,
-              zeroLineBorderDashOffset: 2
-            },
-            ticks: {
-              suggestedMax: _suggestedMax ?? undefined,
-              beginAtZero: true,
-              callback(value: number, _index: number) {
-                return humanizeLargeData(value);
-              }
+        y: {
+          gridLines: {
+            borderDash: [3, 6],
+            zeroLineWidth: 1,
+            zeroLineBorderDashOffset: 2
+          },
+          suggestedMax: _suggestedMax ?? undefined,
+
+          beginAtZero: true,
+          ticks: {
+            callback(value: number, _index: number) {
+              return humanizeLargeData(value);
             }
           }
-        ],
-        xAxes: [
-          {
-            type: 'time',
-            gridLines: {
-              display: false
-            },
-            time: {
-              stepSize: showToday ? 3 : 5,
-              displayFormats: showToday
-                ? {
-                    hour: 'HH:00',
-                    minute: 'HH:mm'
-                  }
-                : {
-                    hour: 'LLL dd',
-                    minute: 'LLL dd'
-                  }
-            },
-            adapters: {
-              date: {
-                zone: timezone
-              }
+        },
+
+        x: {
+          type: 'time',
+          gridLines: {
+            display: false
+          },
+          time: {
+            stepSize: showToday ? 3 : 5,
+            displayFormats: showToday
+              ? {
+                  hour: 'HH:00',
+                  minute: 'HH:mm'
+                }
+              : {
+                  hour: 'LLL dd',
+                  minute: 'LLL dd'
+                }
+          },
+          adapters: {
+            date: {
+              zone: timezone
             }
-            // This cast is because the type definition does not include adapters
-          } as ChartXAxe
-        ]
+          }
+          // This cast is because the type definition does not include adapters
+        }
       },
       tooltips: {
         cornerRadius: 0,
@@ -209,7 +200,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
      * the most appropriate unit, if a unit is provided.
      */
 
-    return finalChartOptions as ChartOptions;
+    return finalChartOptions;
   };
 
   const _formatData = () => {
@@ -356,8 +347,8 @@ export const _formatTooltip = curry(
     data: DataSet[],
     formatter: ((v: number) => string) | undefined,
     unit: string | undefined,
-    t: ChartTooltipItem,
-    _d: ChartData
+    t:any,
+    _d:any
   ) => {
     /**
      * t and d are the params passed by chart.js to this component.
