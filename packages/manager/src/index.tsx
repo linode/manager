@@ -41,8 +41,8 @@ initTagManager(GTM_ID);
  * the handlers in mocks/serverHandlers
  */
 
-import { worker } from './testBrowser';
-worker.start();
+// import { worker } from './testBrowser';
+// worker.start();
 
 const renderNullAuth = () => <span>null auth route</span>;
 
