@@ -1,4 +1,4 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
+// import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -12,11 +12,10 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import LinodeConfigs from './LinodeConfigs';
-import LinodeDisks from './LinodeDisks';
-import LinodeDiskSpace from './LinodeDiskSpace';
+import LinodeConfigs from './LinodeConfigs_CMR';
+// import LinodeDisks from './LinodeDisks';
 
-import { sendMigrationNavigationEvent } from 'src/utilities/ga';
+// import { sendMigrationNavigationEvent } from 'src/utilities/ga';
 
 type ClassNames =
   | 'root'
@@ -56,7 +55,7 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
   CombinedProps
 > {
   render() {
-    const { classes, disks, linodeTotalDisk, linodeID } = this.props;
+    const { classes, linodeID } = this.props;
 
     return (
       <Grid
@@ -66,34 +65,8 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
         aria-labelledby="tab-advanced"
       >
         <Grid item xs={12} md={7} lg={9}>
-          <Typography variant="h2" className={classes.title}>
-            Linode Disks and Configurations
-          </Typography>
           <Paper className={classes.paper}>
             <LinodeConfigs />
-          </Paper>
-          <Paper className={classes.paper}>
-            <LinodeDisks />
-          </Paper>
-          <Paper className={classes.paper}>
-            <Typography variant="h3" className={classes.migrationHeader}>
-              Configure a Migration
-            </Typography>
-            <Typography className={classes.migrationCopy}>
-              You can migrate your Linode across datacenters automatically.
-              <Link
-                to={`/linodes/${linodeID}/migrate`}
-                onClick={() => sendMigrationNavigationEvent(`/advanced`)}
-              >
-                {' '}
-                Click here to get started.
-              </Link>
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={5} lg={3} className={classes.sidebar}>
-          <Paper className={classes.paper}>
-            <LinodeDiskSpace disks={disks} totalDiskSpace={linodeTotalDisk} />
           </Paper>
         </Grid>
       </Grid>
@@ -102,14 +75,12 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
 }
 
 interface LinodeContextProps {
-  linodeTotalDisk: number;
-  disks: Disk[];
+  // linodeTotalDisk: number;
+  // disks: Disk[];
   linodeID: number;
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeTotalDisk: linode.specs.disk,
-  disks: linode._disks,
   linodeID: linode.id
 }));
 
