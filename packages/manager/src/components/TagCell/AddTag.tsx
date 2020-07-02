@@ -8,7 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 const useStyles = makeStyles((_: Theme) => ({
   root: {
     width: '100%',
-    padding: '1px 0px'
+    padding: '0px'
   },
   hasFixedMenu: {
     '& .react-select__menu': {

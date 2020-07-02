@@ -43,11 +43,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexWrap: 'nowrap',
     maskImage: `linear-gradient(to right, rgba(0, 0, 0, 1.0) 75%, transparent)`
   },
-  displayAllOuter: {
-    position: 'relative'
-  },
   button: {
     padding: 0,
+    marginLeft: theme.spacing(),
+    width: '40px',
     backgroundColor: theme.bg.lightBlue,
     borderRadius: 0,
     '&:hover': {
@@ -107,7 +106,9 @@ export const TagCell: React.FC<Props> = props => {
   return (
     <TableCell
       className={`${classes.root} ${className}`}
-      style={{ overflow: addingTag ? 'visible' : 'hidden', width }}
+      style={{
+        overflow: addingTag ? 'visible' : 'hidden'
+      }}
     >
       <Grid container direction="row" alignItems="center" wrap="nowrap">
         {addingTag ? (
@@ -147,17 +148,15 @@ export const TagCell: React.FC<Props> = props => {
             </div>
 
             {hasOverflow && (
-              <Grid item className={classes.displayAllOuter}>
-                <IconButton
-                  onKeyPress={() => props.listAllTags(tags)}
-                  onClick={() => props.listAllTags(tags)}
-                  className={classes.button}
-                  disableRipple
-                  aria-label="Display all tags"
-                >
-                  <MoreHoriz />
-                </IconButton>
-              </Grid>
+              <IconButton
+                onKeyPress={() => props.listAllTags(tags)}
+                onClick={() => props.listAllTags(tags)}
+                className={classes.button}
+                disableRipple
+                aria-label="Display all tags"
+              >
+                <MoreHoriz />
+              </IconButton>
             )}
           </>
         )}
