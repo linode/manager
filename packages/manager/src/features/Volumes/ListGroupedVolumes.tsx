@@ -8,8 +8,8 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
-import TableRow from 'src/components/core/TableRow';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter, {
@@ -113,43 +113,41 @@ const ListGroupedVolumes: React.FC<CombinedProps> = props => {
                 count
               }) => {
                 return (
-                  <React.Fragment>
-                    <TableBody
-                      className={classes.groupContainer}
-                      data-qa-tag-header={tag}
-                    >
-                      <TableRow className={classes.tagHeaderRow} role="cell">
-                        <TableCell colSpan={7}>
-                          <Typography
-                            variant="h2"
-                            component="h3"
-                            className={classes.tagHeader}
-                          >
-                            {tag}
-                          </Typography>
+                  <TableBody
+                    className={classes.groupContainer}
+                    data-qa-tag-header={tag}
+                  >
+                    <TableRow className={classes.tagHeaderRow}>
+                      <TableCell colSpan={7}>
+                        <Typography
+                          variant="h2"
+                          component="h3"
+                          className={classes.tagHeader}
+                        >
+                          {tag}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                    <RenderVolumeData data={paginatedData} {...renderProps} />
+                    {count > MIN_PAGE_SIZE && (
+                      <TableRow>
+                        <TableCell
+                          colSpan={7}
+                          className={classes.paginationCell}
+                        >
+                          <PaginationFooter
+                            count={count}
+                            handlePageChange={handlePageChange}
+                            handleSizeChange={handlePageSizeChange}
+                            pageSize={pageSize}
+                            page={page}
+                            eventCategory={'volumes landing'}
+                            showAll
+                          />
                         </TableCell>
                       </TableRow>
-                      <RenderVolumeData data={paginatedData} {...renderProps} />
-                      {count > MIN_PAGE_SIZE && (
-                        <TableRow>
-                          <TableCell
-                            colSpan={7}
-                            className={classes.paginationCell}
-                          >
-                            <PaginationFooter
-                              count={count}
-                              handlePageChange={handlePageChange}
-                              handleSizeChange={handlePageSizeChange}
-                              pageSize={pageSize}
-                              page={page}
-                              eventCategory={'volumes landing'}
-                              showAll
-                            />
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </React.Fragment>
+                    )}
+                  </TableBody>
                 );
               }}
             </Paginate>

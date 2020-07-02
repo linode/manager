@@ -52,7 +52,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import ListGroupedVolumes from './ListGroupedVolumes';
-import ListVolumes from './ListVolumes';
+import ListVolumes from './ListVolumes_CMR';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 
 import ErrorState from 'src/components/ErrorState';
@@ -93,52 +93,6 @@ const styles = (theme: Theme) =>
     },
     title: {
       marginBottom: theme.spacing(1)
-    },
-    // styles for /volumes table
-    volumesWrapper: {},
-    // styles for linodes/id/volumes table
-    linodeVolumesWrapper: {
-      '& $labelCol': {
-        width: '20%',
-        minWidth: 200
-      },
-      '& $sizeCol': {
-        width: '15%',
-        minWidth: 100
-      },
-      '& $pathCol': {
-        width: '55%',
-        minWidth: 350
-      }
-    },
-    labelCol: {
-      width: '25%',
-      minWidth: 150,
-      paddingLeft: 65
-    },
-    icon: {
-      position: 'relative',
-      top: 3,
-      width: 40,
-      height: 40,
-      '& .circle': {
-        fill: theme.bg.offWhiteDT
-      },
-      '& .outerCircle': {
-        stroke: theme.bg.main
-      }
-    },
-    attachmentCol: {
-      width: '15%',
-      minWidth: 150
-    },
-    sizeCol: {
-      width: '10%',
-      minWidth: 75
-    },
-    pathCol: {
-      width: '25%',
-      minWidth: 250
     }
   });
 
@@ -634,7 +588,7 @@ const EmptyCopy = () => (
         rel="noopener noreferrer"
         className="h-u"
       >
-        Here's how to use Block Storage with your Linode
+        Here&quot;s how to use Block Storage with your Linode
       </a>
       &nbsp;or&nbsp;
       <a
