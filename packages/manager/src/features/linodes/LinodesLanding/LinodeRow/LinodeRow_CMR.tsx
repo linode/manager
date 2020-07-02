@@ -31,6 +31,7 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { transitionText } from 'src/features/linodes/transitions';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseMaintenanceStartTime } from '../utils';
+import { linodeMaintenanceWindowString } from '../../utilities';
 
 interface Props {
   backups: LinodeBackups;
@@ -183,7 +184,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
                 <strong>Maintenance Scheduled</strong>
               </div>
               <div>
-                {dateTime[0]} at {dateTime[1]}
+                {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}
               </div>
             </div>
             <HelpIcon
