@@ -13,12 +13,7 @@ import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
 import SnackBar from 'src/components/SnackBar';
 import SplashScreen from 'src/components/SplashScreen';
-import {
-  GA_ID,
-  GTM_ID,
-  isProductionBuild,
-  MOCK_SERVICE_WORKER
-} from 'src/constants';
+import { GA_ID, GTM_ID, isProductionBuild } from 'src/constants';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import 'src/request';
@@ -40,12 +35,6 @@ const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
 initAnalytics(isProductionBuild, GA_ID);
 
 initTagManager(GTM_ID);
-
-if (MOCK_SERVICE_WORKER) {
-  // eslint-disable-next-line
-  const { worker } = require('./mocks/testBrowser');
-  worker.start();
-}
 
 const renderNullAuth = () => <span>null auth route</span>;
 
