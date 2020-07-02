@@ -65,15 +65,6 @@ HTMLCanvasElement.prototype.getContext = () => {
  * have Refs.
  */
 
-jest.mock('chart.js', () => ({
-  Chart: jest.fn(),
-  _adapters: {
-    _date: {
-      override: jest.fn()
-    }
-  },
-  defaults: { fontFamily: '', fontSize: '', fontStyle: '' }
-}));
 
 jest.mock('highlight.js/lib/highlight', () => ({
   default: {
