@@ -4,7 +4,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
+// import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import RootRef from 'src/components/core/RootRef';
@@ -48,7 +48,7 @@ type ClassNames =
   | 'root'
   | 'headline'
   | 'addNewWrapper'
-  | 'tableContainer'
+  | 'emptyCell'
   | 'diskLabel'
   | 'diskType'
   | 'diskSize'
@@ -56,10 +56,16 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      backgroundColor: theme.color.white,
+      margin: 0,
+      width: '100%'
+    },
     headline: {
-      marginLeft: theme.spacing(2),
-      marginBottom: theme.spacing(2),
+      marginTop: 6,
+      marginBottom: 10,
+      marginLeft: 15,
+      lineHeight: '1.5rem',
       [theme.breakpoints.down('xs')]: {
         marginBottom: 0,
         marginTop: theme.spacing(2)
@@ -72,8 +78,8 @@ const styles = (theme: Theme) =>
         marginTop: -theme.spacing(1)
       }
     },
-    tableContainer: {
-      marginTop: -theme.spacing(2)
+    emptyCell: {
+      borderTop: `1px solid ${theme.palette.divider}`
     },
     diskLabel: {
       width: '23%'
@@ -165,24 +171,30 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { classes, disks, linodeStatus, readOnly } = this.props;
+    // const { classes, disks, linodeStatus, readOnly } = this.props;
+    const { classes, disks, linodeStatus } = this.props;
 
     return (
       <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end">
+        <Grid
+          className={classes.root}
+          container
+          alignItems="flex-end"
+          justify="space-between"
+        >
           <RootRef rootRef={this.disksHeader}>
-            <Grid item>
+            <Grid item className="p0">
               <Typography variant="h3" className={classes.headline}>
                 Disks
               </Typography>
             </Grid>
           </RootRef>
           <Grid item className={classes.addNewWrapper}>
-            <AddNewLink
+            {/* <AddNewLink
               onClick={this.openDrawerForCreation}
               label="Add a Disk"
               disabled={readOnly}
-            />
+            /> */}
           </Grid>
         </Grid>
         <OrderBy data={disks} orderBy={'label'} order={'asc'}>
@@ -198,7 +210,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
               }) => {
                 return (
                   <React.Fragment>
-                    <Grid container className={classes.tableContainer}>
+                    <Grid container>
                       <Grid item xs={12}>
                         <Table isResponsive={false} aria-label="List of Disks">
                           <TableHead>
@@ -227,7 +239,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                               >
                                 Size
                               </TableSortCell>
-                              <TableCell />
+                              <TableCell className={classes.emptyCell} />
                             </TableRow>
                           </TableHead>
                           <TableBody>
