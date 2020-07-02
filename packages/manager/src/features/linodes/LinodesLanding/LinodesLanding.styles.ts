@@ -15,7 +15,8 @@ type ClassNames =
   | 'chipRunning'
   | 'chipPending'
   | 'chipOffline'
-  | 'controlHeader';
+  | 'controlHeader'
+  | 'toggleButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -55,7 +56,14 @@ const styles = (theme: Theme) =>
     },
     controlHeader: {
       backgroundColor: '#f9fafa',
-      marginBottom: 20
+      marginBottom: 28
+    },
+    toggleButton: {
+      padding: 10,
+      '&:focus': {
+        // Browser default until we get styling direction for focus states
+        outline: '1px dotted #999'
+      }
     }
   });
 

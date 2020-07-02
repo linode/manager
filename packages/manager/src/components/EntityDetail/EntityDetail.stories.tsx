@@ -1,9 +1,10 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
-import { linodeFactory } from 'src/factories/linodes';
+import { linodeFactory, linodeBackupsFactory } from 'src/factories/linodes';
 import { Provider } from 'react-redux';
 import store from 'src/store';
+import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 
 storiesOf('EntityDetail', module).add('Linode', () => (
   <Provider store={store}>
@@ -15,6 +16,10 @@ storiesOf('EntityDetail', module).add('Linode', () => (
         numVolumes={2}
         username="linode-user"
         openLishConsole={() => null}
+        openDeleteDialog={() => null}
+        openPowerActionDialog={() => null}
+        backups={linodeBackupsFactory.build()}
+        linodeConfigs={linodeConfigFactory.buildList(2)}
       />
     </div>
     <div style={{ width: 1280, margin: 20 }}>
@@ -25,6 +30,10 @@ storiesOf('EntityDetail', module).add('Linode', () => (
         numVolumes={2}
         username="linode-user"
         openLishConsole={() => null}
+        openDeleteDialog={() => null}
+        openPowerActionDialog={() => null}
+        backups={linodeBackupsFactory.build()}
+        linodeConfigs={linodeConfigFactory.buildList(2)}
       />
     </div>
   </Provider>

@@ -236,7 +236,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linode => linode.status === 'running'
     ).length;
 
-    const linodesPendingCount = linodesData.filter(
+    const linodesBusyCount = linodesData.filter(
       linode =>
         linode.status !== 'running' &&
         linode.status !== 'offline' &&
@@ -327,7 +327,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                         [classes.chip]: true,
                                         [classes.chipPending]: true
                                       })}
-                                      label={`${linodesPendingCount} PENDING`}
+                                      label={`${linodesBusyCount} BUSY`}
                                       {...chipProps}
                                     />
                                     <Chip
@@ -390,25 +390,45 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               </Grid>
                             )}
 
-                            <Grid item className={'px0'}>
+                            <Grid item xs={12} className={'px0'}>
                               {params.view === 'grid' && (
                                 <Grid
                                   container
                                   justify="flex-end"
                                   className={classes.controlHeader}
                                 >
+                                  <div
+                                    id="displayViewDescription"
+                                    className="visually-hidden"
+                                  >
+                                    Currently in {linodeViewPreference} view
+                                  </div>
                                   <IconButton
-                                    aria-label={`Toggle display view ${linodeViewPreference}`}
+                                    aria-label="Toggle display"
+                                    aria-describedby={'displayViewDescription'}
+                                    title={`Toggle display`}
                                     onClick={toggleLinodeView}
                                     disableRipple
+                                    className={classes.toggleButton}
                                   >
                                     <TableView />
                                   </IconButton>
 
+                                  <div
+                                    id="groupByDescription"
+                                    className="visually-hidden"
+                                  >
+                                    {linodesAreGrouped
+                                      ? 'group by tag is currently enabled'
+                                      : 'group by tag is currently disabled'}
+                                  </div>
                                   <IconButton
                                     aria-label={`Toggle group by tag`}
+                                    aria-describedby={'groupByDescription'}
+                                    title={`Toggle group by tag`}
                                     onClick={toggleGroupLinodes}
                                     disableRipple
+                                    className={classes.toggleButton}
                                   >
                                     <GroupByTag />
                                   </IconButton>

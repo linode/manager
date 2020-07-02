@@ -7,11 +7,19 @@ import { PaginationProps } from 'src/components/Paginate';
 import withImages from 'src/containers/withImages.container';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
+import { makeStyles } from 'src/components/core/styles';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import useFlags from 'src/hooks/useFlags';
+import useProfile from 'src/hooks/useProfile';
+
+const useStyles = makeStyles(() => ({
+  summaryOuter: {
+    marginBottom: 20
+  }
+}));
 
 interface Props {
   data: LinodeWithMaintenance[];
@@ -25,32 +33,44 @@ interface Props {
     linodeConfigs: Config[]
   ) => void;
   linodeConfigs: Config[];
+  numVolumes: number;
 }
 
 type CombinedProps = WithImagesProps & PaginationProps & Props;
 
 const CardView: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+  const flags = useFlags();
+  const { profile } = useProfile();
+
   const {
     data,
     imagesData,
     openDeleteDialog,
     openPowerActionDialog,
-    linodeConfigs
+    linodeConfigs,
+    numVolumes
   } = props;
 
-  const flags = useFlags();
+  if (!profile.data?.username) {
+    return null;
+  }
 
   return (
     <Grid container>
       {flags.cmr
         ? data.map((linode, idx: number) => (
-            <Grid item xs={12} style={{ marginBottom: 20 }}>
+            <Grid
+              item
+              xs={12}
+              className={classes.summaryOuter}
+              key={`linode-card-${idx}`}
+            >
               <LinodeEntityDetail
-                key={`linode-card-${idx}`}
                 variant="landing"
                 linode={linode}
-                numVolumes={2}
-                username="linode-user"
+                numVolumes={numVolumes}
+                username={profile.data?.username}
                 openLishConsole={() => null}
                 linodeConfigs={linodeConfigs}
                 backups={linode.backups}

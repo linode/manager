@@ -42,7 +42,7 @@ interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
   linode: Linode;
   numVolumes: number;
-  username: string;
+  username?: string;
   openLishConsole: () => void;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
@@ -116,7 +116,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           ipv4={linode.ipv4}
           ipv6={linode.ipv6}
           linodeId={linode.id}
-          username={username}
+          username={username ? username : 'none'}
           openLishConsole={openLishConsole}
         />
       }
@@ -621,7 +621,13 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
-  const { linodePlan, linodeRegionDisplay, linodeId, linodeCreated } = props;
+  const {
+    linodePlan,
+    linodeRegionDisplay,
+    linodeId,
+    linodeCreated,
+    linodeTags
+  } = props;
 
   const classes = useFooterStyles();
   return (
@@ -654,7 +660,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
         </div>
       </Grid>
       <Grid item className={classes.linodeTags}>
-        <div>Linode Tags</div>
+        {linodeTags}
       </Grid>
     </Grid>
   );
