@@ -40,19 +40,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     position: 'relative',
     display: 'flex',
-    flexWrap: 'nowrap'
+    flexWrap: 'nowrap',
+    maskImage: `linear-gradient(to right, rgba(0, 0, 0, 1.0) 75%, transparent)`
   },
   displayAllOuter: {
-    position: 'relative',
-    '&:before': {
-      content: '""',
-      width: 50,
-      height: '100%',
-      position: 'absolute',
-      left: -50,
-      top: 0,
-      background: `linear-gradient(to right, transparent, ${theme.bg.white} 100%)`
-    }
+    position: 'relative'
   },
   button: {
     padding: 0,

@@ -112,23 +112,32 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const addTag = (tag: string) => {
-    const newTags = [...tags, tag];
-    updateLinode({ linodeId: id, tags: newTags }).catch(e =>
-      enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-        variant: 'error'
-      })
-    );
-  };
+  const addTag = React.useCallback(
+    (tag: string) => {
+      const newTags = [...tags, tag];
+      updateLinode({ linodeId: id, tags: newTags }).catch(e =>
+        enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
+          variant: 'error'
+        })
+      );
+    },
+    [tags, id, updateLinode, enqueueSnackbar]
+  );
 
-  const deleteTag = (tag: string) => {
-    const newTags = tags.filter(thisTag => thisTag !== tag);
-    updateLinode({ linodeId: id, tags: newTags }).catch(e =>
-      enqueueSnackbar(getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason, {
-        variant: 'error'
-      })
-    );
-  };
+  const deleteTag = React.useCallback(
+    (tag: string) => {
+      const newTags = tags.filter(thisTag => thisTag !== tag);
+      updateLinode({ linodeId: id, tags: newTags }).catch(e =>
+        enqueueSnackbar(
+          getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
+          {
+            variant: 'error'
+          }
+        )
+      );
+    },
+    [tags, id, updateLinode, enqueueSnackbar]
+  );
 
   const MaintenanceText = () => {
     return (
@@ -288,7 +297,8 @@ const enhanced = compose<CombinedProps, Props>(
   withRecentEvent,
   hasMutationAvailable,
   withNotifications,
-  styled
+  styled,
+  React.memo
 );
 
 export default enhanced(LinodeRow);
