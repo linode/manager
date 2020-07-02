@@ -13,7 +13,7 @@ before_install:
   build-essential g++ google-chrome-stable curl
 install:
   - yarn install:all
-  - if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then audit-ci --moderate; fi
+  - if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then audit-ci --low; fi
 
 script:
   - yarn build
