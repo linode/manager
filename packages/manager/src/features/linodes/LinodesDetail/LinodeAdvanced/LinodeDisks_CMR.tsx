@@ -48,8 +48,6 @@ type ClassNames =
   | 'root'
   | 'headline'
   | 'addNewWrapper'
-  | 'create'
-  | 'loadingContainer'
   | 'tableContainer'
   | 'diskLabel'
   | 'diskType'
@@ -73,11 +71,6 @@ const styles = (theme: Theme) =>
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
       }
-    },
-    loadingContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
     },
     tableContainer: {
       marginTop: -theme.spacing(2)

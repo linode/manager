@@ -60,6 +60,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
           disabled: true
         }
       : {};
+
     return [
       {
         title: 'Imagize',
