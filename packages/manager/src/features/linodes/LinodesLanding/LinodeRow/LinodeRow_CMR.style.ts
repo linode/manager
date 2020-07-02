@@ -41,11 +41,14 @@ const styles = (theme: Theme) =>
       },
       [theme.breakpoints.down('sm')]: {
         width: '100%'
+      },
+      '&:last-child': {
+        paddingRight: 0
       }
     },
     actionInner: {
       display: 'flex',
-      justifyContent: 'flex-start',
+      justifyContent: 'flex-end',
       '& a': {
         lineHeight: '1.25rem'
       }
