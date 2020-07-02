@@ -23,7 +23,11 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
   return (
     <TableRow key={config.id} data-qa-config={config.label}>
       <TableCell>{config.label}</TableCell>
-      <TableCell>Paravirtualization</TableCell>
+      <TableCell>
+        {config.virt_mode === 'full_virt'
+          ? 'Full virtualization'
+          : 'Paravirtualization'}
+      </TableCell>
       <TableCell>GRUB 2</TableCell>
       <TableCell>4 GB</TableCell>
       <TableCell>/dev/sda</TableCell>

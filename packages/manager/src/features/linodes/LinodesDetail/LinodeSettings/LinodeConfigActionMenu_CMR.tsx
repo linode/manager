@@ -66,14 +66,6 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
     onEdit(config);
   };
 
-  const handleDelete = () => {
-    const {
-      config: { id, label },
-      onDelete
-    } = props;
-    onDelete(id, label);
-  };
-
   const handleBoot = () => {
     const {
       config: { id, label },
@@ -89,7 +81,38 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
       const tooltip = readOnly
         ? "You don't have permission to perform this action"
         : undefined;
+
+      const handleDelete = () => {
+        const {
+          config: { id, label },
+          onDelete
+        } = props;
+        onDelete(id, label);
+      };
+
       return [
+        {
+          title: 'Resize',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            e.preventDefault();
+            closeMenu();
+            // history.push(
+            //   `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
+            // );
+          },
+          disabled: readOnly
+        },
+        {
+          title: 'Imagize',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            e.preventDefault();
+            closeMenu();
+            // history.push(
+            //   `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
+            // );
+          },
+          disabled: readOnly
+        },
         {
           title: 'Clone',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -113,7 +136,7 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
         }
       ];
     },
-    [...props]
+    [props]
   );
 
   return (

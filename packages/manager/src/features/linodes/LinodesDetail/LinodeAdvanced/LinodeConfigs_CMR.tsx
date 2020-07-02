@@ -60,6 +60,10 @@ const styles = (theme: Theme) =>
     },
     labelCell: {
       width: '25%'
+    },
+    tableCell: {
+      borderRight: `1px solid ${theme.palette.divider}`,
+      fontWeight: '700'
     }
   });
 
@@ -314,7 +318,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                           handleClick={handleOrderChange}
                           data-qa-config-label-header
                         >
-                          Label
+                          <strong>Label</strong>
                         </TableSortCell>
                         <TableSortCell
                           active={orderBy === 'virt_mode'}
@@ -323,11 +327,17 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                           handleClick={handleOrderChange}
                           data-qa-virt-mode-header
                         >
-                          VM Mode
+                          <strong>VM Mode</strong>
                         </TableSortCell>
-                        <TableCell>Kernel</TableCell>
-                        <TableCell>Memory Limit</TableCell>
-                        <TableCell>Root Device</TableCell>
+                        <TableCell className={classes.tableCell}>
+                          Kernel
+                        </TableCell>
+                        <TableCell className={classes.tableCell}>
+                          Memory Limit
+                        </TableCell>
+                        <TableCell className={classes.tableCell}>
+                          Root Device
+                        </TableCell>
                         <TableCell />
                       </TableRow>
                     </TableHead>
