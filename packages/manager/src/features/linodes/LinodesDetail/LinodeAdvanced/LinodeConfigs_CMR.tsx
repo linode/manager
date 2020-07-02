@@ -16,7 +16,8 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
+import TableCell from 'src/components/TableCell/TableCell_CMR.tsx';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
@@ -34,10 +35,11 @@ import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';
 import ConfigRow from './ConfigRow_CMR';
+import OrderBy from 'src/components/OrderBy';
 
 import Paginate from 'src/components/Paginate';
 
-type ClassNames = 'root' | 'headline' | 'addNewWrapper';
+type ClassNames = 'root' | 'headline' | 'addNewWrapper' | 'labelCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -55,6 +57,9 @@ const styles = (theme: Theme) =>
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
       }
+    },
+    labelCell: {
+      width: '25%'
     }
   });
 
@@ -272,75 +277,97 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
   };
 
   linodeConfigsTable = () => {
+    const { classes } = this.props;
+
     return (
-      <Paginate data={this.props.configs} scrollToRef={this.configsPanel}>
-        {({
-          data: paginatedData,
-          handlePageChange,
-          handlePageSizeChange,
-          page,
-          pageSize,
-          count
-        }) => {
-          const {
-            configsLastUpdated,
-            configsLoading,
-            configsError,
-            linodeId,
-            readOnly
-          } = this.props;
-          return (
-            <React.Fragment>
-              <Table
-                isResponsive={false}
-                aria-label="List of Configurations"
-                border
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Label</TableCell>
-                    <TableCell>VM Mode</TableCell>
-                    <TableCell>Kernel</TableCell>
-                    <TableCell>Memory Limit</TableCell>
-                    <TableCell>Root Device</TableCell>
-                    <TableCell />
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableContentWrapper
-                    loading={configsLoading && configsLastUpdated === 0}
-                    lastUpdated={configsLastUpdated}
-                    length={paginatedData.length}
-                    error={configsError}
+      <OrderBy data={this.props.configs} orderBy={'label'} order={'asc'}>
+        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+          <Paginate data={orderedData} scrollToRef={this.configsPanel}>
+            {({
+              data: paginatedData,
+              handlePageChange,
+              handlePageSizeChange,
+              page,
+              pageSize,
+              count
+            }) => {
+              const {
+                configsLastUpdated,
+                configsLoading,
+                configsError,
+                linodeId,
+                readOnly
+              } = this.props;
+              return (
+                <React.Fragment>
+                  <Table
+                    isResponsive={false}
+                    aria-label="List of Configurations"
+                    border
                   >
-                    {paginatedData.map(thisConfig => {
-                      return (
-                        <ConfigRow
-                          key={`config-row-${thisConfig.id}`}
-                          config={thisConfig}
-                          linodeId={linodeId}
-                          onBoot={this.handleBoot}
-                          onEdit={this.openForEditing}
-                          onDelete={this.confirmDelete}
-                          readOnly={readOnly}
-                        />
-                      );
-                    })}
-                  </TableContentWrapper>
-                </TableBody>
-              </Table>
-              <PaginationFooter
-                count={count}
-                page={page}
-                pageSize={pageSize}
-                handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
-                eventCategory="linode configs"
-              />
-            </React.Fragment>
-          );
-        }}
-      </Paginate>
+                    <TableHead>
+                      <TableRow>
+                        <TableSortCell
+                          active={orderBy === 'label'}
+                          label={'label'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          data-qa-config-label-header
+                        >
+                          Label
+                        </TableSortCell>
+                        <TableSortCell
+                          active={orderBy === 'virt_mode'}
+                          label={'virt_mode'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          data-qa-virt-mode-header
+                        >
+                          VM Mode
+                        </TableSortCell>
+                        <TableCell>Kernel</TableCell>
+                        <TableCell>Memory Limit</TableCell>
+                        <TableCell>Root Device</TableCell>
+                        <TableCell />
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableContentWrapper
+                        loading={configsLoading && configsLastUpdated === 0}
+                        lastUpdated={configsLastUpdated}
+                        length={paginatedData.length}
+                        error={configsError}
+                      >
+                        {paginatedData.map(thisConfig => {
+                          return (
+                            <ConfigRow
+                              key={`config-row-${thisConfig.id}`}
+                              config={thisConfig}
+                              linodeId={linodeId}
+                              onBoot={this.handleBoot}
+                              onEdit={this.openForEditing}
+                              onDelete={this.confirmDelete}
+                              readOnly={readOnly}
+                            />
+                          );
+                        })}
+                      </TableContentWrapper>
+                    </TableBody>
+                  </Table>
+                  <PaginationFooter
+                    count={count}
+                    page={page}
+                    pageSize={pageSize}
+                    handlePageChange={handlePageChange}
+                    handleSizeChange={handlePageSizeChange}
+                    eventCategory="linode configs"
+                  />
+                </React.Fragment>
+              );
+            }}
+          </Paginate>
+        )}
+      </OrderBy>
     );
   };
 }
