@@ -48,7 +48,7 @@ import LinodeNetworkingActionMenu, {
   IPTypes
 } from './LinodeNetworkingActionMenu';
 import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
-import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
+import LinodeNetworkingSummaryPanel from './NetworkingSummaryPanel';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
