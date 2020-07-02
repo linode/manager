@@ -21,6 +21,8 @@ import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
+import TagCell from 'src/components/TagCell';
+import TagDrawer from 'src/components/TagCell/TagDrawer';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
@@ -126,6 +128,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeId={linode.id}
           linodeCreated={linode.created}
           linodeTags={linode.tags}
+          linodeLabel={linode.label}
         />
       }
     />
@@ -619,6 +622,7 @@ interface FooterProps {
   linodeId: number;
   linodeCreated: string;
   linodeTags: string[];
+  linodeLabel: string;
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
@@ -653,42 +657,72 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     linodeRegionDisplay,
     linodeId,
     linodeCreated,
-    linodeTags
+    linodeTags,
+    linodeLabel
   } = props;
 
   const classes = useFooterStyles();
+
+  const [_tags, setTags] = React.useState<string[]>(linodeTags);
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+
+  const deleteTag = (thisTag: string) => {
+    setTags((currentTags: string[]) => {
+      return currentTags.filter(currentTag => currentTag !== thisTag);
+    });
+  };
+
+  const addTag = (newTag: string) => {
+    setTags([..._tags, newTag]);
+  };
   return (
-    <Grid container direction="row" justify="space-between">
-      <Grid item>
-        <div className={classes.detailsSection}>
-          {linodePlan && (
-            <Link
-              to={`/linodes/${linodeId}/resize`}
-              className={classes.listItem}
-            >
-              {linodePlan}
-            </Link>
-          )}
-          {linodeRegionDisplay && (
-            <Link
-              to={`/linodes/${linodeId}/migrate`}
-              className={classes.listItem}
-            >
-              {linodeRegionDisplay}
-            </Link>
-          )}
-          <Typography className={classes.listItem}>
-            Linode ID {linodeId}
-          </Typography>
-          <Typography className={classes.linodeCreated}>
-            Created{' '}
-            {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
-          </Typography>
-        </div>
+    <>
+      <Grid container direction="row" justify="space-between">
+        <Grid item>
+          <div className={classes.detailsSection}>
+            {linodePlan && (
+              <Link
+                to={`/linodes/${linodeId}/resize`}
+                className={classes.listItem}
+              >
+                {linodePlan}
+              </Link>
+            )}
+            {linodeRegionDisplay && (
+              <Link
+                to={`/linodes/${linodeId}/migrate`}
+                className={classes.listItem}
+              >
+                {linodeRegionDisplay}
+              </Link>
+            )}
+            <Typography className={classes.listItem}>
+              Linode ID {linodeId}
+            </Typography>
+            <Typography className={classes.linodeCreated}>
+              Created{' '}
+              {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+            </Typography>
+          </div>
+        </Grid>
+        <Grid item className={classes.linodeTags}>
+          <TagCell
+            width={500}
+            tags={linodeTags}
+            addTag={addTag}
+            deleteTag={deleteTag}
+            listAllTags={() => setDrawerOpen(true)}
+          />
+        </Grid>
       </Grid>
-      <Grid item className={classes.linodeTags}>
-        {linodeTags}
-      </Grid>
-    </Grid>
+      <TagDrawer
+        entityLabel={linodeLabel}
+        open={drawerOpen}
+        tags={linodeTags}
+        addTag={addTag}
+        deleteTag={deleteTag}
+        onClose={() => setDrawerOpen(false)}
+      />
+    </>
   );
 });

@@ -59,6 +59,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tagInput: {
     overflow: 'visible !important'
+  },
+  addTagButton: {
+    padding: '6px 10px',
+    borderRadius: 3,
+    backgroundColor: '#f1f7fd',
+    border: 'none',
+    color: '#3683dc',
+    display: 'flex',
+    fontSize: 14,
+    fontWeight: 'bold',
+    alignItems: 'center',
+    cursor: 'pointer',
+    '& svg': {
+      marginLeft: 10,
+      width: 10,
+      height: 10,
+      color: '#7daee8'
+    }
   }
 }));
 
@@ -68,6 +86,7 @@ interface Props {
   addTag: (newTag: string) => void;
   deleteTag: (tagToDelete: string) => void;
   listAllTags: (tags: string[]) => void;
+  inTableContext?: boolean;
 }
 
 // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
@@ -88,7 +107,7 @@ const checkOverflow = (el: any) => {
 export type CombinedProps = Props;
 
 export const TagCell: React.FC<Props> = props => {
-  const { addTag, tags, width } = props;
+  const { addTag, tags, width, inTableContext } = props;
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const classes = useStyles();
@@ -105,7 +124,7 @@ export const TagCell: React.FC<Props> = props => {
     [tags]
   );
 
-  return (
+  return inTableContext ? (
     <TableCell
       className={classes.root}
       style={{ overflow: addingTag ? 'visible' : 'hidden' }}
@@ -164,6 +183,63 @@ export const TagCell: React.FC<Props> = props => {
         )}
       </Grid>
     </TableCell>
+  ) : (
+    <Grid
+      className={classes.root}
+      container
+      direction="row"
+      alignItems="center"
+      justify="flex-end"
+      wrap="nowrap"
+    >
+      {addingTag ? (
+        <AddTag
+          tags={tags}
+          onClose={() => setAddingTag(false)}
+          addTag={addTag}
+        />
+      ) : (
+        <>
+          <div
+            ref={overflowRef}
+            className={classNames({
+              [classes.tagList]: true
+            })}
+          >
+            {tags.map(thisTag => (
+              <Tag
+                key={`tag-item-${thisTag}`}
+                colorVariant="lightBlue"
+                label={thisTag}
+                onDelete={() => props.deleteTag(thisTag)}
+              />
+            ))}
+          </div>
+
+          {hasOverflow && (
+            <Grid item className={classes.displayAllOuter}>
+              <IconButton
+                onKeyPress={() => props.listAllTags(tags)}
+                onClick={() => props.listAllTags(tags)}
+                className={classes.button}
+                disableRipple
+                aria-label="Display all tags"
+              >
+                <MoreHoriz />
+              </IconButton>
+            </Grid>
+          )}
+          <button
+            className={classes.addTagButton}
+            title="Add a tag"
+            onClick={() => setAddingTag(true)}
+          >
+            Add a tag
+            <Plus />
+          </button>
+        </>
+      )}
+    </Grid>
   );
 };
 
