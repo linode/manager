@@ -396,7 +396,7 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
-    name: 'Percona',
+    name: 'Percona (PMM)',
     description: `Percona Monitoring and Management (PMM) is an open source GUI for managing and monitoring the performance of your MySQL, MariaDB, PostgreSQL, and MongoDB databases. This tool helps you optimize your database’s performance, manage your database instances, and keep track of and identify security issues.`,
     summary:
       'An open source analytics and performance monitoring solution for databases with a focus on user-friendly metrics visualizations.',
