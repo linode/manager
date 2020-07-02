@@ -38,6 +38,7 @@ import withLinodes, {
 } from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/eventsPolling';
+import LinodeDisks from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDisks_CMR';
 import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
 import {
   LinodeOptions,
@@ -332,6 +333,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <LinodeDisks />
         <DocumentTitleSegment segment="Volumes" />
         {readOnly && <LinodePermissionsError />}
         <PreferenceToggle<boolean>
@@ -445,6 +447,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     ) {
       return (
         <React.Fragment>
+          <LinodeDisks />
           <DocumentTitleSegment segment="Volumes" />
           <Placeholder
             title="Volumes are not available in this region"
@@ -459,6 +462,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     if (linodeConfigs && linodeConfigs.length === 0) {
       return (
         <React.Fragment>
+          <LinodeDisks />
           <DocumentTitleSegment segment="Volumes" />
           <Placeholder
             title="No configs available."
@@ -478,6 +482,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <LinodeDisks />
         <DocumentTitleSegment segment="Volumes" />
         {readOnly && <LinodePermissionsError />}
         <Placeholder
