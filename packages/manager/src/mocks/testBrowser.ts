@@ -3,8 +3,12 @@ import { setupWorker } from 'msw';
 import { MOCK_SERVICE_WORKER } from 'src/constants';
 import { handlers } from './serverHandlers';
 
-const finalHandlers = MOCK_SERVICE_WORKER ? handlers : [];
+export const worker = setupWorker(...handlers);
 
-export const worker = setupWorker(...finalHandlers);
-
-worker.start();
+/**
+ * If the .env tells us to mock the API, load
+ * the mocks.
+ */
+if (MOCK_SERVICE_WORKER) {
+  worker.start();
+}
