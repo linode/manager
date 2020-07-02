@@ -62,7 +62,6 @@ import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import withRegions, {
   DefaultProps as RegionProps
 } from 'src/containers/regions.container';
-import LinodeDisks from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDisks_CMR';
 import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 import { ExtendedVolume } from './types';
 
@@ -82,12 +81,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: theme.color.white,
-      marginTop: 4,
-      marginLeft: 0,
-      marginRight: 0,
-      paddingBottom: 0,
-      width: '100%'
+      paddingBottom: 0
     },
     tagGroup: {
       flexDirection: 'row-reverse',
@@ -338,9 +332,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Storage" />
+        <DocumentTitleSegment segment="Volumes" />
         {readOnly && <LinodePermissionsError />}
-        <LinodeDisks />
         <PreferenceToggle<boolean>
           preferenceKey="volumes_group_by_tag"
           preferenceOptions={[false, true]}
@@ -452,8 +445,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     ) {
       return (
         <React.Fragment>
-          <DocumentTitleSegment segment="Storage" />
-          <LinodeDisks />
+          <DocumentTitleSegment segment="Volumes" />
           <Placeholder
             title="Volumes are not available in this region"
             copy=""
@@ -467,8 +459,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     if (linodeConfigs && linodeConfigs.length === 0) {
       return (
         <React.Fragment>
-          <DocumentTitleSegment segment="Storage" />
-          <LinodeDisks />
+          <DocumentTitleSegment segment="Volumes" />
           <Placeholder
             title="No configs available."
             copy="This Linode has no configurations. Click below to create a configuration."
@@ -487,8 +478,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Storage" />
-        <LinodeDisks />
+        <DocumentTitleSegment segment="Volumes" />
         {readOnly && <LinodePermissionsError />}
         <Placeholder
           title="Add Block Storage!"
