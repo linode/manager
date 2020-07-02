@@ -67,7 +67,6 @@ const CardView: React.FC<CombinedProps> = props => {
               <LinodeEntityDetail
                 variant="landing"
                 linode={linode}
-                numVolumes={linode.volumes}
                 username={profile.data?.username}
                 linodeConfigs={linodeConfigs}
                 backups={linode.backups}

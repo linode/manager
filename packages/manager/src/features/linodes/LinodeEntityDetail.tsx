@@ -1,5 +1,9 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
-import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
+import {
+  Config,
+  LinodeBackups,
+  getLinodeVolumes
+} from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import * as classnames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -39,13 +43,14 @@ import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { ResourcePage } from '@linode/api-v4/lib/types';
+import { Volume } from '@linode/api-v4/lib/volumes';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
 interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
   linode: Linode;
-  numVolumes: number;
   username?: string;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
@@ -62,7 +67,6 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
   const {
     variant,
     linode,
-    numVolumes,
     username,
     openDeleteDialog,
     openPowerActionDialog,
@@ -113,7 +117,6 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           numCPUs={linode.specs.vcpus}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
-          numVolumes={numVolumes}
           region={linode.region}
           ipv4={linode.ipv4}
           ipv6={linode.ipv6}
@@ -388,7 +391,6 @@ export interface BodyProps {
   numCPUs: number;
   gbRAM: number;
   gbStorage: number;
-  numVolumes: number;
   region: string;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
@@ -479,11 +481,11 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Body: React.FC<BodyProps> = React.memo(props => {
+  const classes = useBodyStyles();
   const {
     numCPUs,
     gbRAM,
     gbStorage,
-    numVolumes,
     region,
     ipv4,
     ipv6,
@@ -492,7 +494,25 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
     linodeLabel
   } = props;
 
-  const classes = useBodyStyles();
+  const [volumesData, setVolumesData] = React.useState<Volume[] | undefined>(
+    undefined
+  );
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    setLoading(true);
+
+    getLinodeVolumes(linodeId).then((response: ResourcePage<Volume>) => {
+      setLoading(false);
+      setVolumesData(response.data);
+    });
+  }, []);
+
+  const numVolumes = loading
+    ? 'Loading'
+    : volumesData !== undefined
+    ? volumesData.length
+    : 0;
 
   return (
     <Grid

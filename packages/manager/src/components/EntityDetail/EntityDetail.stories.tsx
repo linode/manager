@@ -13,7 +13,6 @@ storiesOf('EntityDetail', module).add('Linode', () => (
       <LinodeEntityDetail
         variant="details"
         linode={linodeFactory.build()}
-        numVolumes={2}
         username="linode-user"
         openDeleteDialog={() => null}
         openPowerActionDialog={() => null}
@@ -26,7 +25,6 @@ storiesOf('EntityDetail', module).add('Linode', () => (
       <LinodeEntityDetail
         variant="landing"
         linode={linodeFactory.build()}
-        numVolumes={2}
         username="linode-user"
         openDeleteDialog={() => null}
         openPowerActionDialog={() => null}
