@@ -1,10 +1,10 @@
-import * as classNames from 'classnames';
 import { Notification } from '@linode/api-v4/lib/account';
 import {
   Config,
   LinodeBackups,
   LinodeStatus
 } from '@linode/api-v4/lib/linodes';
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -13,7 +13,11 @@ import Tooltip from 'src/components/core/Tooltip';
 import HelpIcon from 'src/components/HelpIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import useFlags from 'src/hooks/useFlags';
+import { capitalize } from 'src/utilities/capitalize';
+import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
@@ -21,18 +25,13 @@ import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
 import LinodeActionMenu_CMR from '../LinodeActionMenu_CMR';
 import RegionIndicator from '../RegionIndicator';
+import { parseMaintenanceStartTime } from '../utils';
 import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
 import styled, { StyleProps } from './LinodeRow.style';
 import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
 import LinodeRowLoading from './LinodeRowLoading';
-
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { capitalize } from 'src/utilities/capitalize';
-import { parseMaintenanceStartTime } from '../utils';
-import useFlags from 'src/hooks/useFlags';
-import { parseAPIDate } from 'src/utilities/date';
 
 interface Props {
   backups: LinodeBackups;
@@ -176,11 +175,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
                   <strong>Maintenance Scheduled</strong>
                 </div>
                 <div>
-                  {dateTime[0]} from {dateTime[1]} to{' '}
-                  {/* Warning: hardcoded code! Set all maintenance windows to 2 hours. */}
-                  {parseAPIDate(dateTime[1])
-                    .plus({ hours: 2 })
-                    .toFormat('HH:mm:ss')}
+                  {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}
                 </div>
               </div>
               <HelpIcon

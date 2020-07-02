@@ -31,9 +31,9 @@ import {
   transitionText
 } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { parseAPIDate } from 'src/utilities/date';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { typeLabelDetails } from '../presentation';
+import { linodeMaintenanceWindowString } from '../utilities';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from './hasMutationAvailable';
@@ -257,11 +257,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
                     className={classes.maintenanceNotice}
                   >
                     Maintenance Scheduled <br />
-                    {dateTime[0]} from {dateTime[1]} to{' '}
-                    {/* Warning: hardcoded code! Set all maintenance windows to 2 hours. */}
-                    {parseAPIDate(dateTime[1])
-                      .plus({ hours: 2 })
-                      .toFormat('HH:mm:ss')}
+                    {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}
                     <HelpIcon
                       text={<MaintenanceText />}
                       className={classes.statusHelpIcon}

@@ -1,16 +1,17 @@
-import { Config, Linode } from '@linode/api-v4/lib/linodes';
+import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
+import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import useFlags from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
+import { ExtendedLinode } from '../LinodesDetail/types';
 import TableWrapper from './TableWrapper';
 import TableWrapper_CMR from './TableWrapper_CMR';
-
 interface Props {
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
@@ -21,7 +22,7 @@ interface Props {
   ) => void;
   display: 'grid' | 'list';
   component: any;
-  data: Linode[];
+  data: ExtendedLinode[];
   someLinodesHaveMaintenance: boolean;
 }
 
@@ -42,11 +43,23 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
+  const numberOfLinodesWithMaintenance = data.reduce((acc, thisLinode) => {
+    if (thisLinode.maintenance) {
+      acc++;
+    }
+    return acc;
+  }, 0);
+
   return (
     <Paginate
       data={data}
-      // If the user has Linodes with maintenance, default to "View All" so all Linodes are listed.
-      pageSize={props.someLinodesHaveMaintenance ? Infinity : infinitePageSize}
+      // If there are more Linodes with maintenance than the current page size, show the minimum
+      // page size needed to show ALL Linodes with maintenance.
+      pageSize={
+        numberOfLinodesWithMaintenance > infinitePageSize
+          ? getMinimumPageSizeForNumberOfItems(numberOfLinodesWithMaintenance)
+          : infinitePageSize
+      }
       pageSizeSetter={setInfinitePageSize}
     >
       {({

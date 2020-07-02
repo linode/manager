@@ -20,10 +20,10 @@ import {
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
-import withDisplayType, { WithDisplayType } from '../withDisplayType';
-
 import { filterImagesByType } from 'src/store/image/image.helpers';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { linodeMaintenanceWindowString } from '../../utilities';
+import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
 type ClassNames =
   | 'root'
@@ -215,7 +215,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
                 className={classes.maintenanceNotice}
               >
                 Maintenance: <br />
-                {dateTime[0]} at {dateTime[1]}
+                {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}
                 <HelpIcon
                   text={<MaintenanceText />}
                   tooltipPosition="top"
