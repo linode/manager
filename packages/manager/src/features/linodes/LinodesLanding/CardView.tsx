@@ -69,7 +69,6 @@ const CardView: React.FC<CombinedProps> = props => {
                 linode={linode}
                 numVolumes={linode.volumes}
                 username={profile.data?.username}
-                openLishConsole={() => null}
                 linodeConfigs={linodeConfigs}
                 backups={linode.backups}
                 openDeleteDialog={openDeleteDialog}

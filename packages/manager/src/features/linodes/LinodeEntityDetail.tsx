@@ -36,6 +36,7 @@ import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -44,7 +45,6 @@ interface LinodeEntityDetailProps {
   linode: Linode;
   numVolumes: number;
   username?: string;
-  openLishConsole: () => void;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: BootAction,
@@ -62,7 +62,6 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     linode,
     numVolumes,
     username,
-    openLishConsole,
     openDeleteDialog,
     openPowerActionDialog,
     backups,
@@ -118,7 +117,6 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           ipv6={linode.ipv6}
           linodeId={linode.id}
           username={username ? username : 'none'}
-          openLishConsole={openLishConsole}
         />
       }
       footer={
@@ -246,6 +244,11 @@ const Header: React.FC<HeaderProps> = props => {
 
   const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
 
+  const handleConsoleButtonClick = (id: number) => {
+    sendLinodeActionMenuItemEvent('Launch Console');
+    lishLaunch(id);
+  };
+
   return (
     <EntityHeader
       parentLink={isDetails ? '/linodes' : undefined}
@@ -350,6 +353,10 @@ const Header: React.FC<HeaderProps> = props => {
             SideIcon={ConsoleIcon}
             text="Launch Console"
             title="Launch Console"
+            onClick={() => {
+              sendLinodeActionMenuItemEvent('Launch Console');
+              handleConsoleButtonClick(linodeId);
+            }}
           />
 
           <LinodeActionMenu
@@ -385,7 +392,6 @@ export interface BodyProps {
   linodeId: number;
   username: string;
   linodeLabel: string;
-  openLishConsole: () => void;
 }
 
 const useBodyStyles = makeStyles((theme: Theme) => ({
