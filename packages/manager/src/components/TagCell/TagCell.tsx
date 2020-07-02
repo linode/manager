@@ -107,7 +107,7 @@ export const TagCell: React.FC<Props> = props => {
   return (
     <TableCell
       className={`${classes.root} ${className}`}
-      style={{ overflow: addingTag ? 'visible' : 'hidden' }}
+      style={{ overflow: addingTag ? 'visible' : 'hidden', width }}
     >
       <Grid container direction="row" alignItems="center" wrap="nowrap">
         {addingTag ? (
