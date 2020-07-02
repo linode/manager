@@ -391,7 +391,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                             )}
 
                             <Grid item xs={12} className={'px0'}>
-                              {params.view === 'grid' && (
+                              {this.props.flags.cmr && params.view === 'grid' && (
                                 <Grid
                                   container
                                   justify="flex-end"

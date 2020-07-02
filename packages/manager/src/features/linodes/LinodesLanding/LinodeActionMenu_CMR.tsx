@@ -90,6 +90,7 @@ export interface Props {
     linodeConfigs: Config[]
   ) => void;
   inlineLabel?: string;
+  inTableContext?: boolean;
 }
 
 export type CombinedProps = Props &
@@ -328,35 +329,39 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     linodeLabel,
     linodeStatus,
     openPowerActionDialog,
-    inlineLabel
+    inlineLabel,
+    inTableContext
   } = props;
 
   return (
     <>
-      <div className={classes.inlineActions}>
-        <Link className={classes.link} to={`/linodes/${linodeId}`}>
-          <span>Details</span>
-        </Link>
-        <button
-          className={classes.powerOnOrOff}
-          onClick={e => {
-            const action =
-              linodeStatus === 'running' ? 'Power Off' : 'Power On';
-            sendLinodeActionMenuItemEvent(`${action} Linode`);
-            e.preventDefault();
-            e.stopPropagation();
-            openPowerActionDialog(
-              `${action}` as BootAction,
-              linodeId,
-              linodeLabel,
-              linodeStatus === 'running' ? configs : []
-            );
-          }}
-          disabled={!['running', 'offline'].includes(linodeStatus)}
-        >
-          {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-        </button>
-      </div>
+      {inTableContext && (
+        <div className={classes.inlineActions}>
+          <Link className={classes.link} to={`/linodes/${linodeId}`}>
+            <span>Details</span>
+          </Link>
+
+          <button
+            className={classes.powerOnOrOff}
+            onClick={e => {
+              const action =
+                linodeStatus === 'running' ? 'Power Off' : 'Power On';
+              sendLinodeActionMenuItemEvent(`${action} Linode`);
+              e.preventDefault();
+              e.stopPropagation();
+              openPowerActionDialog(
+                `${action}` as BootAction,
+                linodeId,
+                linodeLabel,
+                linodeStatus === 'running' ? configs : []
+              );
+            }}
+            disabled={!['running', 'offline'].includes(linodeStatus)}
+          >
+            {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+          </button>
+        </div>
+      )}
       <ActionMenu
         className={classes.action}
         toggleOpenCallback={toggleOpenActionMenu}

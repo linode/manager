@@ -9,6 +9,7 @@ import DiskIcon from 'src/assets/icons/disk.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import RebootIcon from 'src/assets/icons/reboot.svg';
 import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
+import PowerOnIcon from 'src/assets/icons/power-button.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
@@ -33,7 +34,7 @@ import { useTypes } from 'src/hooks/useTypes';
 import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
@@ -46,7 +47,7 @@ interface LinodeEntityDetailProps {
   openLishConsole: () => void;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
-    bootAction: Action,
+    bootAction: BootAction,
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
@@ -146,7 +147,7 @@ export interface HeaderProps {
   linodeStatus: Linode['status'];
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
-    bootAction: Action,
+    bootAction: BootAction,
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
@@ -310,6 +311,26 @@ const Header: React.FC<HeaderProps> = props => {
 
           <IconTextLink
             className={classes.actionItem}
+            SideIcon={PowerOnIcon}
+            text={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+            title={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+            onClick={() => {
+              const action =
+                linodeStatus === 'running' ? 'Power Off' : 'Power On';
+              sendLinodeActionMenuItemEvent(`${action} Linode`);
+
+              openPowerActionDialog(
+                `${action}` as BootAction,
+                linodeId,
+                linodeLabel,
+                linodeStatus === 'running' ? linodeConfigs : []
+              );
+            }}
+            disabled={!['running', 'offline'].includes(linodeStatus)}
+          />
+
+          <IconTextLink
+            className={classes.actionItem}
             SideIcon={RebootIcon}
             text="Reboot"
             title="Reboot"
@@ -323,14 +344,14 @@ const Header: React.FC<HeaderProps> = props => {
               );
             }}
           />
-          {isDetails && (
-            <IconTextLink
-              className={classes.actionItem}
-              SideIcon={ConsoleIcon}
-              text="Launch Console"
-              title="Launch Console"
-            />
-          )}
+
+          <IconTextLink
+            className={classes.actionItem}
+            SideIcon={ConsoleIcon}
+            text="Launch Console"
+            title="Launch Console"
+          />
+
           <LinodeActionMenu
             linodeId={linodeId}
             linodeLabel={linodeLabel}

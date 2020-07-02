@@ -33,7 +33,6 @@ interface Props {
     linodeConfigs: Config[]
   ) => void;
   linodeConfigs: Config[];
-  numVolumes: number;
 }
 
 type CombinedProps = WithImagesProps & PaginationProps & Props;
@@ -48,8 +47,7 @@ const CardView: React.FC<CombinedProps> = props => {
     imagesData,
     openDeleteDialog,
     openPowerActionDialog,
-    linodeConfigs,
-    numVolumes
+    linodeConfigs
   } = props;
 
   if (!profile.data?.username) {
@@ -69,7 +67,7 @@ const CardView: React.FC<CombinedProps> = props => {
               <LinodeEntityDetail
                 variant="landing"
                 linode={linode}
-                numVolumes={numVolumes}
+                numVolumes={linode.volumes}
                 username={profile.data?.username}
                 openLishConsole={() => null}
                 linodeConfigs={linodeConfigs}

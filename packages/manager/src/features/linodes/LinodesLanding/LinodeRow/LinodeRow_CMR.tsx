@@ -233,6 +233,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             openDeleteDialog={openDeleteDialog}
             openPowerActionDialog={openPowerActionDialog}
             noImage={!image}
+            // Uncomment when the action menu for CMR is implemented here
+            // inTableContext
           />
         </div>
       </TableCell>
