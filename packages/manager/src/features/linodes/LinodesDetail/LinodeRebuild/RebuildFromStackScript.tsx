@@ -222,17 +222,16 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
       validationSchema={RebuildLinodeFromStackScriptSchema}
       validateOnChange={false}
       onSubmit={handleFormSubmit}
-      render={formikProps => {
-        const {
-          errors,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-          status,
-          values,
-          validateForm
-        } = formikProps;
-
+    >
+      {({
+        errors,
+        handleSubmit,
+        isSubmitting,
+        setFieldValue,
+        status,
+        values,
+        validateForm
+      }) => {
         // The "Rebuild" button opens a confirmation modal.
         // We'd like to validate the form before this happens.
         const handleRebuildButtonClick = () => {
@@ -373,7 +372,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
           </Grid>
         );
       }}
-    />
+    </Formik>
   );
 };
 
