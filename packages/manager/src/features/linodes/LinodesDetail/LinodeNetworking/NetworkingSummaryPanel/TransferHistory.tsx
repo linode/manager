@@ -1,11 +1,12 @@
 import * as React from 'react';
+import Typography from 'src/components/core/Typography';
 
 export const TransferHistory: React.FC<{}> = _ => {
   return (
     <>
-      <div style={{ marginBottom: '8px' }}>
-        Network Transfer 30-Day History (Kb/s)
-      </div>
+      <Typography style={{ marginBottom: '8px' }}>
+        <strong>Network Transfer 30-Day History (Kb/s)</strong>
+      </Typography>
       <div
         style={{
           padding: '3em',

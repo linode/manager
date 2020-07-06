@@ -13,13 +13,14 @@ import { isRecent } from 'src/utilities/isRecent.ts';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  title: {},
+  header: {
+    paddingBottom: theme.spacing() / 2
+  },
   progressWrapper: {
     width: 290
   },
   poolUsageProgress: {
-    marginBottom: theme.spacing(1) / 2,
-    height: '28px'
+    marginBottom: theme.spacing(1) / 2
   },
   overLimit: {
     color: theme.palette.status.warningDark,
@@ -97,7 +98,7 @@ export const NetworkTransfer: React.FC<Props> = props => {
   if (error && isTooEarlyForStats) {
     return (
       <>
-        <Typography className={classes.title}>
+        <Typography className={classes.header}>
           Monthly Network Transfer
         </Typography>
         <Typography align="center">
@@ -121,39 +122,36 @@ export const NetworkTransfer: React.FC<Props> = props => {
   }
 
   return (
-    <Grid container>
-      <Grid item>
-        <Typography>Monthly Network Transfer</Typography>
-      </Grid>
-      <Grid item>
-        <BarPercent
-          max={100}
-          value={Math.ceil(usagePercent)}
-          className={classes.poolUsageProgress}
-          rounded
-          overLimit={totalInBytes < used}
-        />
-        <Grid container justify="space-between">
-          <Grid item style={{ marginRight: 10 }}>
-            <Typography>
-              {readableUsed.value} {readableUsed.unit} Used
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography>
-              {totalInBytes >= used ? (
-                <span>{readableFree.formatted} Available</span>
-              ) : (
-                <span className={classes.overLimit}>
-                  {readableFree.formatted.toString().replace(/\-/, '')} Over
-                  Quota
-                </span>
-              )}
-            </Typography>
-          </Grid>
+    <div>
+      <Typography className={classes.header}>
+        <strong>Monthly Network Transfer</strong>
+      </Typography>
+      <BarPercent
+        max={100}
+        value={Math.ceil(usagePercent)}
+        className={classes.poolUsageProgress}
+        rounded
+        overLimit={totalInBytes < used}
+      />
+      <Grid container justify="space-between">
+        <Grid item style={{ marginRight: 10 }}>
+          <Typography>
+            {readableUsed.value} {readableUsed.unit} Used
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography>
+            {totalInBytes >= used ? (
+              <span>{readableFree.formatted} Available</span>
+            ) : (
+              <span className={classes.overLimit}>
+                {readableFree.formatted.toString().replace(/\-/, '')} Over Quota
+              </span>
+            )}
+          </Typography>
         </Grid>
       </Grid>
-    </Grid>
+    </div>
   );
 };
 
