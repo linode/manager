@@ -10,7 +10,6 @@ import TransferHistory from './TransferHistory';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(2),
     padding: theme.spacing(3),
     paddingBottom: theme.spacing(2) + theme.spacing(1) / 2
   }
