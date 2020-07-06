@@ -37,7 +37,7 @@ import {
   formatPercentage,
   getMetrics
 } from 'src/utilities/statMetrics';
-import NetworkGraph from './NetworkGraph';
+import NetworkGraph from './NetworkGraph_CMR';
 import StatsPanel from './StatsPanel';
 import { ChartProps } from './types';
 import { parseAPIDate } from 'src/utilities/date';
@@ -79,8 +79,7 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      paddingLeft: theme.spacing(3),
-      width: '400px'
+      paddingLeft: theme.spacing(3)
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
@@ -131,7 +130,10 @@ const styles = (theme: Theme) =>
       paddingRight: '1em'
     },
     graphGrids: {
-      paddingLeft: '8px'
+      paddingLeft: '8px',
+      [theme.breakpoints.up('sm')]: {
+        flexWrap: 'nowrap'
+      }
     }
   });
 
@@ -158,7 +160,7 @@ type CombinedProps = LinodeContextProps &
   WithImages &
   WithStyles<ClassNames>;
 
-const chartHeight = 150;
+const chartHeight = 300;
 
 const statsFetchInterval = 30000;
 
@@ -421,7 +423,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           role="tabpanel"
           aria-labelledby="tab-summary"
         >
-          <Grid item xs={12} md={8} lg={9} className={classes.main}>
+          <Grid item className={classes.main}>
             <Grid item className="py0">
               <div className={classes.graphControls}>
                 <Typography variant="h2" className={classes.labelRangeSelect}>

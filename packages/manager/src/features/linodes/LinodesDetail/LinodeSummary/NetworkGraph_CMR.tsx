@@ -35,6 +35,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   totalTraffic: {
     margin: '12px'
+  },
+  graphGrids: {
+    paddingLeft: '8px',
+    [theme.breakpoints.up('sm')]: {
+      flexWrap: 'nowrap'
+    }
   }
 }));
 
@@ -71,6 +77,8 @@ const _getMetrics = (data: NetworkStats) => {
 
 export const NetworkGraph: React.FC<CombinedProps> = props => {
   const { rangeSelection, stats, theme, ...rest } = props;
+
+  const classes = useStyles();
 
   const v4Data: NetworkStats = {
     publicIn: pathOr([], ['data', 'netv4', 'in'], stats),
@@ -137,7 +145,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <>
+    <Grid container direction="row" className={classes.graphGrids}>
       <StatsPanel
         title={`Network — IPv4 (${v4Unit}/s)`}
         renderBody={() => (
@@ -164,7 +172,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
         )}
         {...rest}
       />
-    </>
+    </Grid>
   );
 };
 
