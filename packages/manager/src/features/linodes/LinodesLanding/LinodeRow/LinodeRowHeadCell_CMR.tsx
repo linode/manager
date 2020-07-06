@@ -52,7 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center'
+    alignItems: 'center',
+    whiteSpace: 'nowrap'
   },
   wrapHeader: {
     wordBreak: 'break-all'
