@@ -5,9 +5,10 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  emptyCell: {
+  nonSortCell: {
     borderTop: `1px solid ${theme.palette.divider}`
   }
 }));
@@ -68,7 +69,10 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
         >
           Last Backup
         </TableSortCell>
-        <TableCell className={classes.emptyCell} />
+        <Hidden mdDown>
+          <TableCell className={classes.nonSortCell}>Tags</TableCell>
+        </Hidden>
+        <TableCell className={classes.nonSortCell} />
       </TableRow>
     </TableHead>
   );
