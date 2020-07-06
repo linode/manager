@@ -547,9 +547,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           linodeRegion={zoneName}
         />
 
-        {this.renderIPv4()}
+        {this.renderIPTable()}
 
-        {this.renderIPv6()}
+        {/* {this.renderIPv6()} */}
 
         {this.renderNetworkActions()}
 
@@ -619,11 +619,17 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderIPv4 = () => {
+  renderIPTable = () => {
     const { classes, readOnly } = this.props;
-    const ipv4 = path<LinodeIPsResponseIPV4>(['linodeIPs', 'ipv4'], this.state);
+    const ipv4 = this.state.linodeIPs?.ipv4;
+    const ipv6 = this.state.linodeIPs?.ipv6;
 
     if (!ipv4) {
+      return null;
+    }
+
+    // @todo: this is temporary: handle ipv6 null states;
+    if (!ipv6) {
       return null;
     }
 
@@ -633,6 +639,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       shared: _sharedIPs,
       reserved: reservedIPs
     } = ipv4;
+
+    const { global, link_local, slaac } = ipv6;
 
     // `ipv4.reserved` contains both Public and Private IPs, so we use the `public` field to differentiate.
     // Splitting them into two arrays so we can order as desired (Public, then Private).
@@ -710,6 +718,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
                 this.renderIPRow(ip, 'Private Reserved')
               )}
               {sharedIPs.map((ip: IPAddress) => this.renderIPRow(ip, 'Shared'))}
+              {slaac && this.renderIPRow(slaac, 'SLAAC')}
+              {link_local && this.renderIPRow(link_local, 'Link Local')}
+              {global &&
+                global.map((range: IPRange) =>
+                  this.renderRangeRow(range, 'Range')
+                )}
             </TableBody>
           </Table>
         </Paper>
@@ -717,72 +731,72 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderIPv6 = () => {
-    const { classes, readOnly } = this.props;
-    const ipv6 = path<LinodeIPsResponseIPV6>(['linodeIPs', 'ipv6'], this.state);
+  // renderIPv6 = () => {
+  //   const { classes, readOnly } = this.props;
+  //   const ipv6 = path<LinodeIPsResponseIPV6>(['linodeIPs', 'ipv6'], this.state);
 
-    if (!ipv6) {
-      return null;
-    }
+  //   if (!ipv6) {
+  //     return null;
+  //   }
 
-    const { slaac, link_local, global: globalRange } = ipv6;
+  //   const { slaac, link_local, global: globalRange } = ipv6;
 
-    return (
-      <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
-            <Typography
-              variant="h2"
-              className={classes.ipv4Title}
-              data-qa-ipv6-subheading
-            >
-              IPv6
-            </Typography>
-          </Grid>
-          <Grid item>
-            <AddNewLink
-              onClick={this.openCreateIPv6Drawer}
-              label="Add IPv6"
-              disabled={readOnly}
-            />
-          </Grid>
-        </Grid>
-        <Paper style={{ padding: 0 }}>
-          <Table aria-label="List of IPv6 Addresses">
-            <TableHead>
-              <TableRow>
-                <TableCell className={classes.address}>Address</TableCell>
-                <TableCell className={classes.defaultGateway}>
-                  Default Gateway
-                </TableCell>
-                <TableCell className={classes.reverseDNS}>
-                  Reverse DNS
-                </TableCell>
-                <TableCell className={classes.type}>Type</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.ipv6Loading ? (
-                <TableRowLoading colSpan={4} firstColWidth={30} />
-              ) : this.state.ipv6Error ? (
-                <TableRowError colSpan={12} message={this.state.ipv6Error} />
-              ) : (
-                <>
-                  {slaac && this.renderIPRow(slaac, 'SLAAC')}
-                  {link_local && this.renderIPRow(link_local, 'Link Local')}
-                  {globalRange &&
-                    globalRange.map((range: IPRange) =>
-                      this.renderRangeRow(range, 'Range')
-                    )}
-                </>
-              )}
-            </TableBody>
-          </Table>
-        </Paper>
-      </React.Fragment>
-    );
-  };
+  //   return (
+  //     <React.Fragment>
+  //       <Grid container justify="space-between" alignItems="flex-end">
+  //         <Grid item>
+  //           <Typography
+  //             variant="h2"
+  //             className={classes.ipv4Title}
+  //             data-qa-ipv6-subheading
+  //           >
+  //             IPv6
+  //           </Typography>
+  //         </Grid>
+  //         <Grid item>
+  //           <AddNewLink
+  //             onClick={this.openCreateIPv6Drawer}
+  //             label="Add IPv6"
+  //             disabled={readOnly}
+  //           />
+  //         </Grid>
+  //       </Grid>
+  //       <Paper style={{ padding: 0 }}>
+  //         <Table aria-label="List of IPv6 Addresses">
+  //           <TableHead>
+  //             <TableRow>
+  //               <TableCell className={classes.address}>Address</TableCell>
+  //               <TableCell className={classes.defaultGateway}>
+  //                 Default Gateway
+  //               </TableCell>
+  //               <TableCell className={classes.reverseDNS}>
+  //                 Reverse DNS
+  //               </TableCell>
+  //               <TableCell className={classes.type}>Type</TableCell>
+  //               <TableCell />
+  //             </TableRow>
+  //           </TableHead>
+  //           <TableBody>
+  //             {this.state.ipv6Loading ? (
+  //               <TableRowLoading colSpan={4} firstColWidth={30} />
+  //             ) : this.state.ipv6Error ? (
+  //               <TableRowError colSpan={12} message={this.state.ipv6Error} />
+  //             ) : (
+  //               <>
+  //                 {slaac && this.renderIPRow(slaac, 'SLAAC')}
+  //                 {link_local && this.renderIPRow(link_local, 'Link Local')}
+  //                 {globalRange &&
+  //                   globalRange.map((range: IPRange) =>
+  //                     this.renderRangeRow(range, 'Range')
+  //                   )}
+  //               </>
+  //             )}
+  //           </TableBody>
+  //         </Table>
+  //       </Paper>
+  //     </React.Fragment>
+  //   );
+  // };
 
   renderNetworkActions = () => {
     const {
@@ -871,8 +885,11 @@ const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
 
 export default enhanced(LinodeNetworking);
 
-// Given a range, prefix, and a list of IPs, filter out the IPs that do not
-// fall within the IPv6 range.
+// =============================================================================
+// Utilities
+// =============================================================================
+
+// Given a range, prefix, and a list of IPs, filter out the IPs that do not fall within the IPv6 range.
 export const listIPv6InRange = (
   range: string,
   prefix: number,
@@ -893,8 +910,7 @@ export const listIPv6InRange = (
     // The ipaddr.js library throws an if it can't parse an IP address.
     // We'll wrap this in a try/catch block just in case something is malformed.
     try {
-      // We need to typecast here so that the overloaded `match()` is typed
-      // correctly.
+      // We need to typecast here so that the overloaded `match()` is typed correctly.
       const addr = parseIP(thisIP.address) as IPv6;
       const parsedRange = parseIP(range) as IPv6;
 
@@ -904,3 +920,19 @@ export const listIPv6InRange = (
     }
   });
 };
+
+// Higher-level IP address display for the IP Table.
+interface IPDisplay {
+  address: string;
+  type:
+    | 'IPv4 – Public'
+    | 'IPv4 – Private'
+    | 'IPv4 – Shared'
+    | 'IPv4 – Reserved'
+    | 'IPv6 – SLAAC'
+    | 'IPv6 – Link Local'
+    | 'IPv6 – Range';
+  gateway?: string;
+  subnetMask: string;
+  rdns: string[] | null;
+}
