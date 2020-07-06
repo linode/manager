@@ -39,6 +39,49 @@ export const NetworkTransfer: React.FC<Props> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const classes = useStyles();
 
+  React.useEffect(() => {
+    setLoading(true);
+    setError(false);
+    getLinodeTransfer(linodeID)
+      .then(({ used }) => {
+        setUsed(used);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+        setError(true);
+      });
+  }, [linodeID]);
+
+  return (
+    <div>
+      <Typography className={classes.header}>
+        <strong>Monthly Network Transfer</strong>
+      </Typography>
+      <TransferContent
+        used={used}
+        linodeID={linodeID}
+        error={error}
+        loading={loading}
+      />
+    </div>
+  );
+};
+
+// =============================================================================
+// TransferContent (With loading and error states)
+// =============================================================================
+interface ContentProps {
+  linodeID: number;
+  used: number;
+  loading: boolean;
+  error: boolean;
+}
+
+const TransferContent: React.FC<ContentProps> = props => {
+  const { error, linodeID, loading, used } = props;
+  const classes = useStyles();
+
   const { total, isTooEarlyForStats } = useSelector(
     (state: ApplicationState) => {
       const linode = state.__resources.linodes.itemsById[linodeID];
@@ -49,20 +92,6 @@ export const NetworkTransfer: React.FC<Props> = props => {
       };
     }
   );
-
-  React.useEffect(() => {
-    setLoading(true);
-    setError(false);
-    getLinodeTransfer(linodeID)
-      .then(({ used }) => {
-        setUsed(1000000000000);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-        setError(true);
-      });
-  }, [linodeID]);
 
   const usedInGb = used / 1024 / 1024 / 1024;
 
@@ -81,19 +110,6 @@ export const NetworkTransfer: React.FC<Props> = props => {
     round: { MB: 0, GB: 1 },
     handleNegatives: true
   });
-
-  if (loading) {
-    return (
-      <>
-        <Typography>Monthly Network Transfer</Typography>
-        <Grid container justify="center">
-          <Grid item>
-            <CircleProgress mini />
-          </Grid>
-        </Grid>
-      </>
-    );
-  }
 
   if (error && isTooEarlyForStats) {
     return (
@@ -121,11 +137,18 @@ export const NetworkTransfer: React.FC<Props> = props => {
     );
   }
 
+  if (loading) {
+    return (
+      <Grid container justify="center">
+        <Grid item>
+          <CircleProgress mini />
+        </Grid>
+      </Grid>
+    );
+  }
+
   return (
-    <div>
-      <Typography className={classes.header}>
-        <strong>Monthly Network Transfer</strong>
-      </Typography>
+    <>
       <BarPercent
         max={100}
         value={Math.ceil(usagePercent)}
@@ -151,7 +174,7 @@ export const NetworkTransfer: React.FC<Props> = props => {
           </Typography>
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 };
 
