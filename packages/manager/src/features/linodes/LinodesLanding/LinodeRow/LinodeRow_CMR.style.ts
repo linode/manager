@@ -35,10 +35,6 @@ const styles = (theme: Theme) =>
       paddingBottom: 0,
       width: '22%',
       textAlign: 'right',
-      '& button': {
-        maxHeight: 20,
-        width: 30
-      },
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
@@ -47,7 +43,7 @@ const styles = (theme: Theme) =>
       display: 'flex',
       justifyContent: 'flex-end',
       '& a': {
-        lineHeight: '1.25rem'
+        lineHeight: '1rem'
       }
     },
     bodyRow: {
