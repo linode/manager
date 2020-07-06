@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.primary.main,
     borderRadius: 3,
-    color: theme.color.white,
+    color: 'white',
     cursor: 'pointer',
     lineHeight: '1.25rem',
     margin: 'auto',
@@ -22,15 +22,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&:hover': {
       backgroundColor: theme.palette.primary.light,
-      color: theme.color.white
+      color: 'white'
     }
   },
   active: {
     backgroundColor: theme.palette.primary.main,
-    color: theme.color.white
+    color: 'white'
   },
   disabled: {
-    color: theme.color.white,
+    color: 'white',
     opacity: 0.5,
     pointerEvents: 'none'
   },
