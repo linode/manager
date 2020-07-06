@@ -225,6 +225,7 @@
     "inquirer": "^6.2.0",
     "jest": "^24.9.0",
     "jest-axe": "^3.3.0",
+    "jest-canvas-mock": "^2.2.0",
     "jest-junit": "^10.0.0",
     "jest-sonar-reporter": "^2.0.0",
     "jimp": "^0.10.3",
@@ -268,11 +269,10 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}"
     ],
-    "setupFiles": [
-      "<rootDir>/config/polyfills.js"
-    ],
     "setupFilesAfterEnv": [
-      "<rootDir>/config/testSetup.js"
+      "<rootDir>/config/polyfills.js",
+      "<rootDir>/config/testSetup.js",
+      "jest-canvas-mock"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.ts?(x)",

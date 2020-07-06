@@ -1,6 +1,6 @@
 import { curry } from 'ramda';
 import * as React from 'react';
-import Chart from 'chart.js';
+import * as Chart from 'chart.js';
 import 'chartjs-adapter-luxon';
 
 import LineChartIcon from 'src/assets/icons/line-chart.svg';
@@ -215,6 +215,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         chartInstance.current.destroy();
         chartInstance.current = null;
       }
+      // console.warn(inputEl.current, inputEl.current.getContext('2d'))
       chartInstance.current = new Chart(inputEl.current.getContext('2d'), {
         type: 'line',
         data: {

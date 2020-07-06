@@ -3,7 +3,6 @@ const sdk = require('@linode/api-v4/lib/request');
 const preferences = require.requireMock('@linode/api-v4/lib/profile');
 const Enzyme = require('enzyme');
 const Adapter = require('enzyme-adapter-react-16');
-const React = require('react');
 
 require('@testing-library/jest-dom/extend-expect');
 
@@ -65,6 +64,12 @@ HTMLCanvasElement.prototype.getContext = () => {
  * have Refs.
  */
 
+ // https://spectrum.chat/react-testing-library/general/jest-missing-mutationobserver-using-react-hook-form~98b7f07a-77a6-4094-8c83-b1acbc5b351f
+global.MutationObserver = class {
+  constructor(_callback) {}
+  disconnect() {}
+  observe(_element, _initObject) {}
+};
 
 jest.mock('highlight.js/lib/highlight', () => ({
   default: {
