@@ -140,17 +140,16 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
       validationSchema={RebuildLinodeSchema}
       validateOnChange={false}
       onSubmit={handleFormSubmit}
-      render={formikProps => {
-        const {
-          errors,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-          status,
-          values,
-          validateForm
-        } = formikProps;
-
+    >
+      {({
+        errors,
+        handleSubmit,
+        isSubmitting,
+        setFieldValue,
+        status,
+        values,
+        validateForm
+      }) => {
         // The "Rebuild" button opens a confirmation modal.
         // We'd like to validate the form before this happens.
         const handleRebuildButtonClick = () => {
@@ -181,26 +180,28 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
               variant="all"
               data-qa-select-image
             />
-            <AccessPanel
-              password={values.root_pass}
-              handleChange={input => setFieldValue('root_pass', input)}
-              updateFor={[
-                classes,
-                disabled,
-                values.root_pass,
-                errors,
-                sshError,
-                userSSHKeys,
-                values.image
-              ]}
-              error={errors.root_pass}
-              sshKeyError={sshError}
-              users={userSSHKeys}
-              requestKeys={requestKeys}
-              data-qa-access-panel
-              disabled={disabled}
-              passwordHelperText={passwordHelperText}
-            />
+            <form>
+              <AccessPanel
+                password={values.root_pass}
+                handleChange={input => setFieldValue('root_pass', input)}
+                updateFor={[
+                  classes,
+                  disabled,
+                  values.root_pass,
+                  errors,
+                  sshError,
+                  userSSHKeys,
+                  values.image
+                ]}
+                error={errors.root_pass}
+                sshKeyError={sshError}
+                users={userSSHKeys}
+                requestKeys={requestKeys}
+                data-qa-access-panel
+                disabled={disabled}
+                passwordHelperText={passwordHelperText}
+              />
+            </form>
             <ActionsPanel>
               <Button
                 buttonType="secondary"
@@ -221,7 +222,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
           </Grid>
         );
       }}
-    />
+    </Formik>
   );
 };
 
