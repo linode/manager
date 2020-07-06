@@ -53,24 +53,6 @@ HTMLCanvasElement.prototype.getContext = () => {
   return 0;
 };
 
-/**
- * When we mock chartjs below, we need
- * to use a class component for Line,
- * bc our abstraction passes a ref to it.
- *
- * The tests will pass without this hack,
- * but there will be a console warning
- * reminding us that function components can't
- * have Refs.
- */
-
- // https://spectrum.chat/react-testing-library/general/jest-missing-mutationobserver-using-react-hook-form~98b7f07a-77a6-4094-8c83-b1acbc5b351f
-global.MutationObserver = class {
-  constructor(_callback) {}
-  disconnect() {}
-  observe(_element, _initObject) {}
-};
-
 jest.mock('highlight.js/lib/highlight', () => ({
   default: {
     configure: jest.fn(),
