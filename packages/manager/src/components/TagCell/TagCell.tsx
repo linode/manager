@@ -40,7 +40,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     position: 'relative',
     display: 'flex',
-    flexWrap: 'nowrap',
+    flexWrap: 'nowrap'
+  },
+  tagListOverflow: {
     maskImage: `linear-gradient(to right, rgba(0, 0, 0, 1.0) 75%, transparent)`
   },
   button: {
@@ -135,7 +137,8 @@ export const TagCell: React.FC<Props> = props => {
               ref={overflowRef}
               style={{ width: `${width - 100}px` }}
               className={classNames({
-                [classes.tagList]: true
+                [classes.tagList]: true,
+                [classes.tagListOverflow]: hasOverflow
               })}
             >
               {tags.map(thisTag => (
