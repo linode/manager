@@ -10,16 +10,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    '& .MuiIconButton-root': {
+      padding: '15px 10px 15px 0',
+      marginLeft: -8,
+      '& svg': {
+        height: 20,
+        width: 20
+      }
+    }
   },
   button: {
-    height: '100%',
-    paddingTop: 12,
-    paddingBottom: 12,
-    paddingLeft: 15,
-    paddingRight: 15,
-    minWidth: 'auto',
     ...theme.applyLinkStyles,
+    height: '100%',
+    padding: '12px 15px',
+    minWidth: 'auto',
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: theme.color.white
@@ -43,23 +48,25 @@ type CombinedProps = Props & RouteComponentProps;
 
 export const DiskActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { linodeStatus, readOnly } = props;
+
+  let tooltip;
+  tooltip =
+    linodeStatus === 'offline'
+      ? undefined
+      : 'Your Linode must be fully powered down in order to perform this action';
+  tooltip = readOnly
+    ? "You don't have permissions to perform this action"
+    : tooltip;
+  const disabledProps = tooltip
+    ? {
+        tooltip,
+        disabled: true
+      }
+    : {};
 
   const createActions = () => (): Action[] => {
-    const { linodeStatus, linodeId, readOnly, history, diskId } = props;
-    let tooltip;
-    tooltip =
-      linodeStatus === 'offline'
-        ? undefined
-        : 'Your Linode must be fully powered down in order to perform this action';
-    tooltip = readOnly
-      ? "You don't have permissions to perform this action"
-      : tooltip;
-    const disabledProps = tooltip
-      ? {
-          tooltip,
-          disabled: true
-        }
-      : {};
+    const { linodeId, readOnly, history, diskId } = props;
 
     return [
       {
@@ -78,7 +85,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
             `/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`
           );
         },
-        disabled: readOnly
+        ...(readOnly ? disabledProps : {})
       },
       {
         title: 'Delete',
@@ -99,6 +106,8 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
           e.preventDefault();
           props.onRename();
         }}
+        disabled={props.readOnly}
+        tooltipText={props.readOnly ? tooltip : ''}
       >
         Rename
       </Button>
@@ -108,11 +117,9 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
           e.preventDefault();
           props.onResize();
         }}
-        disabled={props.linodeStatus !== 'offline'}
+        disabled={props.linodeStatus !== 'offline' || props.readOnly}
         tooltipText={
-          props.linodeStatus !== 'offline'
-            ? 'Your Linode must be fully powered down in order to perform this action'
-            : ''
+          props.linodeStatus !== 'offline' || props.readOnly ? tooltip : ''
         }
       >
         Resize

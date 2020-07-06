@@ -78,6 +78,7 @@ const styles = (theme: Theme) =>
         marginTop: -theme.spacing(1)
       }
     },
+    // @todo: remove after merge
     emptyCell: {
       borderTop: `1px solid ${theme.palette.divider}`
     },

@@ -19,7 +19,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
@@ -333,9 +332,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <LinodeDisks />
-        <DocumentTitleSegment segment="Volumes" />
         {readOnly && <LinodePermissionsError />}
+        <LinodeDisks />
         <PreferenceToggle<boolean>
           preferenceKey="volumes_group_by_tag"
           preferenceOptions={[false, true]}
@@ -448,7 +446,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       return (
         <React.Fragment>
           <LinodeDisks />
-          <DocumentTitleSegment segment="Volumes" />
           <Placeholder
             title="Volumes are not available in this region"
             copy=""
@@ -463,7 +460,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       return (
         <React.Fragment>
           <LinodeDisks />
-          <DocumentTitleSegment segment="Volumes" />
           <Placeholder
             title="No configs available."
             copy="This Linode has no configurations. Click below to create a configuration."
@@ -483,7 +479,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <LinodeDisks />
-        <DocumentTitleSegment segment="Volumes" />
         {readOnly && <LinodePermissionsError />}
         <Placeholder
           title="Add Block Storage!"

@@ -100,7 +100,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tooltip: {
     color: theme.color.white,
-    padding: '0 12px'
+    padding: '0 12px 0 8px',
+    paddingRight: 12,
+    '& svg': {
+      height: 20,
+      width: 20
+    }
   }
 }));
 
