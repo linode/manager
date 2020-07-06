@@ -43,9 +43,8 @@ import CreateIPv6Drawer from './CreateIPv6Drawer';
 import DeleteIPConfirm from './DeleteIPConfirm';
 import EditRDNSDrawer from './EditRDNSDrawer';
 import IPSharingPanel from './IPSharingPanel';
-import LinodeNetworkingActionMenu, {
-  IPTypes
-} from './LinodeNetworkingActionMenu';
+import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu_CMR';
+import { IPTypes } from './types';
 import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
 import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
 import ViewIPDrawer from './ViewIPDrawer';
@@ -126,13 +125,7 @@ const styles = (theme: Theme) =>
       }
     },
     multipleRDNSButton: {
-      cursor: 'pointer',
-      border: 0,
-      padding: 0,
-      [theme.breakpoints.down('sm')]: {
-        minWidth: 120,
-        textAlign: 'right'
-      }
+      ...theme.applyLinkStyles
     },
     multipleRDNSText: {
       color: theme.palette.primary.main,
@@ -298,44 +291,55 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
-  renderRangeRow(range: IPRange, type: IPTypes) {
+  // renderRangeRow(range: IPRange, type: IPTypes) {
+  //   const { classes } = this.props;
+
+  //   // The prefix is a prerequisite for finding IPs within the range, so we
+  //   // check for that here.
+  //   const ipsWithRDNS = range.prefix
+  //     ? listIPv6InRange(range.range, range.prefix, this.state.allIPs)
+  //     : [];
+
+  //   return (
+  //     <TableRow key={range.range}>
+  //       <TableCell parentColumn="Address">
+  //         <React.Fragment>
+  //           {range.range}
+  //           <span style={{ margin: '0 5px' }}>/</span>
+  //           {range.prefix}
+  //         </React.Fragment>
+  //         {range.route_target && <span> routed to {range.route_target}</span>}
+  //       </TableCell>
+  //       <TableCell />
+  //       <TableCell className={classes.rangeRDNSCell} parentColumn="Reverse DNS">
+  //         {this.renderRangeRDNSCell()}
+  //       </TableCell>
+  //       <TableCell parentColumn="Type">{type}</TableCell>
+  //       <TableCell className={classes.action}>
+  //         <LinodeNetworkingActionMenu
+  //           onView={this.displayRangeDrawer(range)}
+  //           ipType={type}
+  //           ipAddress={range}
+  //           onEdit={() => this.handleOpenEditRDNSForRange(range)}
+  //         />
+  //       </TableCell>
+  //     </TableRow>
+  //   );
+  // }
+
+  renderRangeRDNSCell = (ipRange: IPRange) => {
     const { classes } = this.props;
+    const { allIPs, ipv6Loading } = this.state;
 
-    // The prefix is a prerequisite for finding IPs within the range, so we
-    // check for that here.
-    const ipsWithRDNS = range.prefix
-      ? listIPv6InRange(range.range, range.prefix, this.state.allIPs)
-      : [];
+    const { range, prefix } = ipRange;
 
-    return (
-      <TableRow key={range.range}>
-        <TableCell parentColumn="Address">
-          <React.Fragment>
-            {range.range}
-            <span style={{ margin: '0 5px' }}>/</span>
-            {range.prefix}
-          </React.Fragment>
-          {range.route_target && <span> routed to {range.route_target}</span>}
-        </TableCell>
-        <TableCell />
-        <TableCell className={classes.rangeRDNSCell} parentColumn="Reverse DNS">
-          {this.renderRangeRDNSCell(range, ipsWithRDNS)}
-        </TableCell>
-        <TableCell parentColumn="Type">{type}</TableCell>
-        <TableCell className={classes.action}>
-          <LinodeNetworkingActionMenu
-            onView={this.displayRangeDrawer(range)}
-            ipType={type}
-            ipAddress={range}
-            onEdit={() => this.handleOpenEditRDNSForRange(range)}
-          />
-        </TableCell>
-      </TableRow>
-    );
-  }
+    // The prefix is a prerequisite for finding IPs within the range, so we check for that here.
+    const ipsWithRDNS =
+      prefix && range ? listIPv6InRange(range, prefix, allIPs) : [];
 
-  renderRangeRDNSCell = (range: IPRange, ipsWithRDNS: IPAddress[]) => {
-    const { classes } = this.props;
+    if (ipv6Loading) {
+      return <CircleProgress noPadding mini />;
+    }
 
     // We don't show anything if there are no addresses.
     if (ipsWithRDNS.length === 0) {
@@ -357,7 +361,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         onClick={() =>
           this.setState({
             viewRDNSDrawerOpen: true,
-            currentlySelectedIPRange: range
+            currentlySelectedIPRange: ipRange
           })
         }
         aria-label={`View the ${ipsWithRDNS.length} RDNS Addresses`}
@@ -371,7 +375,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   renderIPRow = (ipDisplay: IPDisplay) => {
     const { classes, readOnly } = this.props;
-    const { address, type, gateway, subnetMask, rdns } = ipDisplay;
+    const { address, type, gateway, subnetMask, rdns, _ip, _range } = ipDisplay;
 
     return (
       <TableRow key={address} data-qa-ip={address}>
@@ -385,17 +389,26 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell parentColumn="Subnet Mask">{subnetMask}</TableCell>
         <TableCell parentColumn="Reverse DNS" data-qa-rdns>
           {/* @todo: special handling for RDNS for ranges */}
-          {rdns}
+          {_range ? this.renderRangeRDNSCell(_range) : rdns}
         </TableCell>
         <TableCell className={classes.action} data-qa-action>
-          {/* <LinodeNetworkingActionMenu
-            onView={this.displayIPDrawer(ip)}
-            onEdit={this.handleOpenEditRDNS}
-            ipType={type}
-            ipAddress={ip}
-            onRemove={this.openRemoveIPDialog}
-            readOnly={readOnly}
-          /> */}
+          {_ip ? (
+            <LinodeNetworkingActionMenu
+              onView={this.displayIPDrawer(_ip)}
+              onEdit={this.handleOpenEditRDNS}
+              ipType={type}
+              ipAddress={_ip}
+              onRemove={this.openRemoveIPDialog}
+              readOnly={readOnly}
+            />
+          ) : _range ? (
+            <LinodeNetworkingActionMenu
+              onView={this.displayRangeDrawer(_range)}
+              ipType={type}
+              ipAddress={_range}
+              onEdit={() => this.handleOpenEditRDNSForRange(_range)}
+            />
+          ) : null}
         </TableCell>
       </TableRow>
     );
@@ -697,6 +710,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper style={{ padding: 0 }}>
+          {/* @todo: It'd be nice if we could always sort by public -> private. */}
           <OrderBy data={ipDisplay} orderBy="type" order="asc">
             {({ data: orderedData, handleOrderChange, order, orderBy }) => {
               return (
@@ -951,17 +965,13 @@ export const listIPv6InRange = (
 // Higher-level IP address display for the IP Table.
 interface IPDisplay {
   address: string;
-  type:
-    | 'IPv4 – Public'
-    | 'IPv4 – Private'
-    | 'IPv4 – Shared'
-    | 'IPv4 – Reserved'
-    | 'IPv6 – SLAAC'
-    | 'IPv6 – Link Local'
-    | 'IPv6 – Range';
+  type: IPTypes;
   gateway?: string | null;
   subnetMask?: string | null;
   rdns?: string[] | null;
+  // Not for display, but useful for lower-level components.
+  _ip?: IPAddress;
+  _range?: IPRange;
 }
 
 export const ipResponseToDisplayRows = (
@@ -998,7 +1008,8 @@ export const ipResponseToDisplayRows = (
 
         return {
           type: 'IPv6 – Range' as IPDisplay['type'],
-          address
+          address,
+          _range: thisIP
         };
       })
     );
@@ -1025,7 +1036,8 @@ const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {
     gateway: ip.gateway,
     subnetMask: ip.subnet_mask,
     rdns: ip.rdns ? [ip.rdns] : null,
-    type: createType(ip, key) as IPDisplay['type']
+    type: createType(ip, key) as IPDisplay['type'],
+    _ip: ip
   };
 };
 
