@@ -1,20 +1,14 @@
-import * as classNames from 'classnames';
 import * as React from 'react';
+import SortUp from 'src/assets/icons/sort-up.svg';
+import Sort from 'src/assets/icons/unsorted.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 import TableSortLabel from 'src/components/core/TableSortLabel';
 
-import Sort from 'src/assets/icons/unsorted.svg';
-import SortUp from 'src/assets/icons/sort-up.svg';
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-    padding: '10px 15px',
-    '&:last-child': {
-      borderRight: 'none'
-    },
+    borderTop: 'none',
     '&:hover': {
       backgroundColor: '#3683dc',
       cursor: 'pointer',
@@ -56,15 +50,7 @@ type CombinedProps = Props;
 export const TableSortCell: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const {
-    children,
-    direction,
-    label,
-    active,
-    noWrap,
-    isLoading,
-    ...rest
-  } = props;
+  const { children, direction, label, active, isLoading, ...rest } = props;
 
   const onHandleClick = () => {
     const { label, direction, handleClick } = props;
@@ -74,10 +60,7 @@ export const TableSortCell: React.FC<CombinedProps> = props => {
 
   return (
     <TableCell
-      className={classNames({
-        [classes.root]: true,
-        [classes.noWrap]: noWrap
-      })}
+      className={classes.root}
       {...rest}
       sortDirection={direction}
       role="columnheader"

@@ -27,7 +27,17 @@ const styles = (theme: Theme) =>
         opacity: 0.5
       },
       '& thead': {
-        borderTop: `1px solid ${theme.palette.divider}`
+        borderTop: `1px solid ${theme.palette.divider}`,
+        '& th': {
+          borderRight: `1px solid ${theme.palette.divider}`,
+          fontFamily: theme.font.bold,
+          fontSize: '0.875em !important',
+          color: theme.palette.text.primary,
+          padding: '10px 15px',
+          '&:last-child': {
+            borderRight: 'none'
+          }
+        }
       }
     },
     responsive: {

@@ -72,22 +72,9 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     title: {
       marginTop: `${theme.spacing(1)}px`,
       marginBottom: `${theme.spacing(2)}px`
-    },
-    address: {
-      width: '30%'
-    },
-    reverseDNS: {
-      width: '30%'
-    },
-    defaultGateway: {
-      width: '20%'
-    },
-    type: {
-      width: '20%'
     },
     action: {
       textAlign: 'right',
@@ -645,9 +632,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
                 <Table aria-label="IPv4 Addresses">
                   <TableHead>
                     <TableRow>
-                      <TableCell className={classes.address}>Address</TableCell>
+                      <TableCell style={{ width: '20%' }}>Address</TableCell>
                       <TableSortCell
-                        className={classes.address}
+                        style={{ width: '15%' }}
                         label="type"
                         direction={order}
                         active={orderBy === 'type'}
@@ -655,13 +642,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
                       >
                         Type
                       </TableSortCell>
-                      <TableCell className={classes.defaultGateway}>
+                      <TableCell style={{ width: '15%' }}>
                         Default Gateway
                       </TableCell>
-                      <TableCell className={classes.defaultGateway}>
+                      <TableCell style={{ width: '15%' }}>
                         Subnet Mask
                       </TableCell>
-                      <TableCell className={classes.reverseDNS}>
+                      <TableCell style={{ width: '25%' }}>
                         Reverse DNS
                       </TableCell>
                       <TableCell />

@@ -20,8 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     '& button, & button:focus': {
       color: theme.color.headline,
-      fontWeight: 'normal',
-      fontSize: '.9rem'
+      fontWeight: 'normal'
     },
     '& .sortIcon': {
       position: 'relative',
