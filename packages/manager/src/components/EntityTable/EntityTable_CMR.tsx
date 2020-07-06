@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import TableCell from 'src/components/core/TableCell';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
 import Typography from 'src/components/core/Typography';
 import OrderBy, { OrderByProps } from 'src/components/OrderBy';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';

@@ -2,7 +2,7 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';

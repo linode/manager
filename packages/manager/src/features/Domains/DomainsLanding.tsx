@@ -489,15 +489,13 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       text={this.props.location.state.recordError}
                     />
                   )}
-                <Grid item xs={12}>
-                  <Table
-                    entity="domain"
-                    groupByTag={domainsAreGrouped}
-                    row={domainRow}
-                    headers={headers}
-                    initialOrder={{ order: 'asc', orderBy: 'domain' }}
-                  />
-                </Grid>
+                <Table
+                  entity="domain"
+                  groupByTag={domainsAreGrouped}
+                  row={domainRow}
+                  headers={headers}
+                  initialOrder={{ order: 'asc', orderBy: 'domain' }}
+                />
               </React.Fragment>
             );
           }}
