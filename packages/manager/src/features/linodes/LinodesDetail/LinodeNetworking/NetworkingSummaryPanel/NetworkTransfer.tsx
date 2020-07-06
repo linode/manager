@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing() / 2
   },
   progressWrapper: {
-    width: 290
+    width: '290px'
   },
   poolUsageProgress: {
     marginBottom: theme.spacing(1) / 2
@@ -148,7 +148,7 @@ const TransferContent: React.FC<ContentProps> = props => {
   }
 
   return (
-    <>
+    <div className={classes.progressWrapper}>
       <BarPercent
         max={100}
         value={Math.ceil(usagePercent)}
@@ -174,7 +174,7 @@ const TransferContent: React.FC<ContentProps> = props => {
           </Typography>
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 };
 
