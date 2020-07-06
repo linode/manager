@@ -11,4 +11,6 @@ export const worker = setupWorker(...handlers);
  */
 if (MOCK_SERVICE_WORKER) {
   worker.start();
+} else {
+  worker.stop();
 }
