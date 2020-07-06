@@ -3,9 +3,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import OrderBy, { OrderByProps } from 'src/components/OrderBy';
-import TableSortCell from 'src/components/TableSortCell';
-import GroupedEntitiesByTag from './GroupedEntitiesByTag';
-import ListEntities from './ListEntities';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import GroupedEntitiesByTag from './GroupedEntitiesByTag_CMR';
+import ListEntities from './ListEntities_CMR';
 import { Handlers } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
