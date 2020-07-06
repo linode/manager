@@ -50,11 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 10
   },
   powerOnOrOff: {
-    // background: 'none',
-    // border: 'none',
-    // color: theme.palette.primary.main,
-    // cursor: 'pointer',
-    // font: 'inherit',
     ...theme.applyLinkStyles,
     height: '100%',
     minWidth: 'auto',
