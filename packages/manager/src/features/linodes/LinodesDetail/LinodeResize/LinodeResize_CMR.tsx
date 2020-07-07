@@ -45,6 +45,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { GetAllData } from 'src/utilities/getAll';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames =
   | 'root'
@@ -107,7 +108,7 @@ interface State {
   autoDiskResize: boolean;
   confirmationText: string;
   submitting: boolean;
-  error?: string;
+  submissionError?: string;
 }
 
 type CombinedProps = Props &
@@ -203,8 +204,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           'There was an issue resizing your Linode.'
         )[0].reason;
         this.setState({
-          error
+          submissionError: error
         });
+        // Set to "block: end" since the sticky header would otherwise interfere.
+        scrollErrorIntoView(undefined, { block: 'end' });
       });
   };
 
@@ -251,15 +254,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeDisksError,
       linodeLabel
     } = this.props;
-    const { selectedId, confirmationText } = this.state;
+    const { confirmationText, submissionError } = this.state;
     const type = [...currentTypesData, ...deprecatedTypesData].find(
       t => t.id === linodeType
     );
-
-    const _current = getLinodeType(currentTypesData, linodeType || 'none');
-    const _target = getLinodeType(currentTypesData, selectedId);
-    const currentPlan = _current ? _current.label : 'Unknown plan';
-    const targetPlan = _target ? _target.label : 'Unknown plan';
 
     const hostMaintenance = linodeStatus === 'stopped';
     const unauthorized = permissions === 'read_only';
@@ -305,6 +303,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             text="There was an error loading your Linode's Disks."
           />
         )}
+        {submissionError && <Notice error text={submissionError} />}
         <Typography data-qa-description>
           If you&apos;re expecting a temporary burst of traffic to your website,
           or if you&apos;re not using your Linode as much as you thought, you
@@ -376,21 +375,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
         <ActionsPanel>
           <Typography variant="h2">Confirm</Typography>
-          <Typography>
-            Your Linode will be resized from <strong>{currentPlan}</strong>
-            {_target !== undefined && (
-              <>
-                {' '}
-                to <strong>{targetPlan}</strong>
-              </>
-            )}
-            . Your Linode will be automatically shut down and migrated. You will
-            be billed at the hourly rate of your new Linode plan. To confirm,
-            type the label of the Linode <strong>({linodeLabel})</strong> in the
-            field below:
+          <Typography style={{ marginBottom: 8 }}>
+            To confirm these changes, type the label of the Linode{' '}
+            <strong>({linodeLabel})</strong> in the field below:
           </Typography>
           <TextField
             label="Linode Label"
+            hideLabel
             onChange={e => this.setState({ confirmationText: e.target.value })}
             style={{ marginBottom: 16 }}
           />
