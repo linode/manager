@@ -33,14 +33,17 @@ const styles = (theme: Theme) =>
     actionCell: {
       paddingTop: 0,
       paddingBottom: 0,
+      paddingLeft: 0,
       width: '22%',
       textAlign: 'right',
       '& button': {
-        maxHeight: 20,
-        width: 30
+        lineHeight: '1.25rem'
       },
       [theme.breakpoints.down('sm')]: {
         width: '100%'
+      },
+      '&:last-child': {
+        paddingRight: 0
       }
     },
     actionInner: {
@@ -51,13 +54,7 @@ const styles = (theme: Theme) =>
       }
     },
     bodyRow: {
-      height: 'auto',
-      '&:hover': {
-        backgroundColor: '#f9fafa'
-      },
-      '&:hover .backupIcon': {
-        fill: theme.palette.primary.main
-      }
+      height: 'auto'
     },
     iconTableCell: {
       [theme.breakpoints.up('md')]: {

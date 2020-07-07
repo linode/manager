@@ -26,10 +26,12 @@ const TagTableCellStory: React.FC<{ tags: string[] }> = props => {
     setTags((currentTags: string[]) => {
       return currentTags.filter(currentTag => currentTag !== thisTag);
     });
+    return Promise.resolve();
   };
 
   const addTag = (newTag: string) => {
     setTags([..._tags, newTag]);
+    return Promise.resolve();
   };
 
   return (

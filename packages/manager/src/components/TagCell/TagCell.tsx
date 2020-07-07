@@ -5,7 +5,7 @@ import Plus from 'src/assets/icons/plusSign.svg';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
 import Tag from 'src/components/Tag/Tag_CMR';
 import AddTag from './AddTag';
 
@@ -42,20 +42,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexWrap: 'nowrap'
   },
-  displayAllOuter: {
-    position: 'relative',
-    '&:before': {
-      content: '""',
-      width: 50,
-      height: '100%',
-      position: 'absolute',
-      left: -50,
-      top: 0,
-      background: `linear-gradient(to right, transparent, ${theme.bg.white} 100%)`
-    }
+  tagListOverflow: {
+    maskImage: `linear-gradient(to right, rgba(0, 0, 0, 1.0) 75%, transparent)`
   },
   button: {
-    padding: 0
+    padding: 0,
+    marginLeft: theme.spacing(),
+    width: '40px',
+    backgroundColor: theme.bg.lightBlue,
+    borderRadius: 0,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: '#ffff'
+    }
   },
   tagInput: {
     overflow: 'visible !important'
@@ -65,6 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   tags: string[];
   width: number; // Required so we can fade out after a certain point
+  className?: string;
   addTag: (newTag: string) => void;
   deleteTag: (tagToDelete: string) => void;
   listAllTags: (tags: string[]) => void;
@@ -88,7 +88,7 @@ const checkOverflow = (el: any) => {
 export type CombinedProps = Props;
 
 export const TagCell: React.FC<Props> = props => {
-  const { addTag, tags, width } = props;
+  const { addTag, className, tags, width } = props;
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const classes = useStyles();
@@ -107,8 +107,11 @@ export const TagCell: React.FC<Props> = props => {
 
   return (
     <TableCell
-      className={classes.root}
-      style={{ overflow: addingTag ? 'visible' : 'hidden' }}
+      className={`${classes.root} ${className}`}
+      style={{
+        overflow: addingTag ? 'visible' : 'hidden',
+        minWidth: width
+      }}
     >
       <Grid container direction="row" alignItems="center" wrap="nowrap">
         {addingTag ? (
@@ -134,7 +137,8 @@ export const TagCell: React.FC<Props> = props => {
               ref={overflowRef}
               style={{ width: `${width - 100}px` }}
               className={classNames({
-                [classes.tagList]: true
+                [classes.tagList]: true,
+                [classes.tagListOverflow]: hasOverflow
               })}
             >
               {tags.map(thisTag => (
@@ -148,17 +152,15 @@ export const TagCell: React.FC<Props> = props => {
             </div>
 
             {hasOverflow && (
-              <Grid item className={classes.displayAllOuter}>
-                <IconButton
-                  onKeyPress={() => props.listAllTags(tags)}
-                  onClick={() => props.listAllTags(tags)}
-                  className={classes.button}
-                  disableRipple
-                  aria-label="Display all tags"
-                >
-                  <MoreHoriz />
-                </IconButton>
-              </Grid>
+              <IconButton
+                onKeyPress={() => props.listAllTags(tags)}
+                onClick={() => props.listAllTags(tags)}
+                className={classes.button}
+                disableRipple
+                aria-label="Display all tags"
+              >
+                <MoreHoriz />
+              </IconButton>
             )}
           </>
         )}

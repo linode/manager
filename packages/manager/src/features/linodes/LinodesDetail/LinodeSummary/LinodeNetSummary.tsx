@@ -28,6 +28,7 @@ interface StateProps {
 }
 
 type CombinedProps = Props & StoreProps & StateProps & WithStyles<ClassNames>;
+// @todo CMR: Remove this component
 
 class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
   state = {

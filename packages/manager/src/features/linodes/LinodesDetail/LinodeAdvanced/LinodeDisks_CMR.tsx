@@ -4,7 +4,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-// import AddNewLink from 'src/components/AddNewLink';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import RootRef from 'src/components/core/RootRef';
@@ -20,12 +20,13 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
 import OrderBy from 'src/components/OrderBy';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
 import { resetEventsPolling } from 'src/eventsPolling';
 import ImagesDrawer, { DrawerMode } from 'src/features/Images/ImagesDrawer';
 import {
@@ -62,8 +63,8 @@ const styles = (theme: Theme) =>
       width: '100%'
     },
     headline: {
-      marginTop: 6,
-      marginBottom: 10,
+      marginTop: 8,
+      marginBottom: 8,
       marginLeft: 15,
       lineHeight: '1.5rem',
       [theme.breakpoints.down('xs')]: {
@@ -76,6 +77,9 @@ const styles = (theme: Theme) =>
         width: '100%',
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
+      },
+      '&.MuiGrid-item': {
+        padding: 5
       }
     },
     // @todo: remove after merge
@@ -128,7 +132,12 @@ interface State {
   confirmDelete: ConfirmDeleteState;
 }
 
-type CombinedProps = UserSSHKeyProps &
+interface Props {
+  errors?: APIError[];
+}
+
+type CombinedProps = Props &
+  UserSSHKeyProps &
   LinodeContextProps &
   WithStyles<ClassNames> &
   WithSnackbarProps;
@@ -167,13 +176,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     };
   }
 
-  errorState = (
-    <ErrorState errorText="There was an error loading disk images." />
-  );
-
   render() {
-    // const { classes, disks, linodeStatus, readOnly } = this.props;
-    const { classes, disks, linodeStatus } = this.props;
+    const { classes, disks, linodeStatus, readOnly } = this.props;
 
     return (
       <React.Fragment>
@@ -191,11 +195,11 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             </Grid>
           </RootRef>
           <Grid item className={classes.addNewWrapper}>
-            {/* <AddNewLink
+            <AddNewLink
               onClick={this.openDrawerForCreation}
               label="Add a Disk"
               disabled={readOnly}
-            /> */}
+            />
           </Grid>
         </Grid>
         <OrderBy data={disks} orderBy={'label'} order={'asc'}>
@@ -274,7 +278,20 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   }
 
   renderTableContent = (data: Disk[], status?: string) => {
-    const { classes, linodeId, readOnly } = this.props;
+    const { classes, errors, linodeId, readOnly } = this.props;
+
+    if (errors) {
+      return (
+        <TableRowError
+          colSpan={8}
+          message="There was an error loading disk images."
+        />
+      );
+    }
+
+    if (data.length === 0) {
+      return <TableRowEmptyState colSpan={4} />;
+    }
 
     return data.map(disk => (
       <TableRow key={disk.id} data-qa-disk={disk.label}>
