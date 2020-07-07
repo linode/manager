@@ -64,6 +64,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     main: {
+      paddingTop: theme.spacing(1),
       [theme.breakpoints.up('md')]: {
         order: 1
       }
