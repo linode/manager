@@ -28,6 +28,7 @@ import Dialog from 'src/components/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
+import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel, {
   ExtendedType
@@ -44,7 +45,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { GetAllData } from 'src/utilities/getAll';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
-import ResizeConfirmation from './ResizeConfirmationDialog';
 
 type ClassNames =
   | 'root'
@@ -101,19 +101,13 @@ interface Props {
   onClose: () => void;
 }
 
-interface ConfirmationDialog {
-  isOpen: boolean;
-  error?: string;
-  submitting: boolean;
-  currentPlan: string;
-  targetPlan: string;
-}
-
 interface State {
   selectedId: string;
   errors?: APIError[];
   autoDiskResize: boolean;
-  confirmationDialog: ConfirmationDialog;
+  confirmationText: string;
+  submitting: boolean;
+  error?: string;
 }
 
 type CombinedProps = Props &
@@ -128,12 +122,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
     selectedId: '',
     autoDiskResize: false,
-    confirmationDialog: {
-      isOpen: false,
-      submitting: false,
-      currentPlan: '',
-      targetPlan: ''
-    }
+    confirmationText: '',
+    submitting: false
   };
 
   static extendType = (type: LinodeType): ExtendedType => {
@@ -155,33 +145,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         typeLabelDetails(memory, disk, vcpus)
       ]
     };
-  };
-
-  openConfirmationModal = () => {
-    const { linodeType, currentTypesData } = this.props;
-    const { selectedId } = this.state;
-    const _current = getLinodeType(currentTypesData, linodeType || 'none');
-    const _target = getLinodeType(currentTypesData, selectedId);
-    const currentPlan = _current ? _current.label : 'Unknown plan';
-    const targetPlan = _target ? _target.label : 'Unknown plan';
-    this.setState({
-      confirmationDialog: {
-        ...this.state.confirmationDialog,
-        isOpen: true,
-        error: undefined,
-        currentPlan,
-        targetPlan
-      }
-    });
-  };
-
-  closeConfirmationModal = () => {
-    this.setState({
-      confirmationDialog: {
-        ...this.state.confirmationDialog,
-        isOpen: false
-      }
-    });
   };
 
   onSubmit = () => {
@@ -206,7 +169,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     );
 
     this.setState({
-      confirmationDialog: { ...this.state.confirmationDialog, submitting: true }
+      submitting: true
     });
 
     /**
@@ -219,10 +182,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       .then(_ => {
         this.setState({
           selectedId: '',
-          confirmationDialog: {
-            ...this.state.confirmationDialog,
-            submitting: false
-          }
+          submitting: false
         });
         resetEventsPolling();
         enqueueSnackbar('Linode queued for resize.', {
@@ -243,11 +203,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           'There was an issue resizing your Linode.'
         )[0].reason;
         this.setState({
-          confirmationDialog: {
-            ...this.state.confirmationDialog,
-            error,
-            submitting: false
-          }
+          error
         });
       });
   };
@@ -292,17 +248,27 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       classes,
       linodeDisks,
       linodeStatus,
-      linodeDisksError
+      linodeDisksError,
+      linodeLabel
     } = this.props;
+    const { selectedId, confirmationText } = this.state;
     const type = [...currentTypesData, ...deprecatedTypesData].find(
       t => t.id === linodeType
     );
+
+    const _current = getLinodeType(currentTypesData, linodeType || 'none');
+    const _target = getLinodeType(currentTypesData, selectedId);
+    const currentPlan = _current ? _current.label : 'Unknown plan';
+    const targetPlan = _target ? _target.label : 'Unknown plan';
 
     const hostMaintenance = linodeStatus === 'stopped';
     const unauthorized = permissions === 'read_only';
     const disksError = linodeDisksError?.read;
 
-    const disabled = hostMaintenance || unauthorized || Boolean(disksError);
+    const tableDisabled =
+      hostMaintenance || unauthorized || Boolean(disksError);
+
+    const submitButtonDisabled = confirmationText !== linodeLabel;
 
     const currentPlanHeading = linodeType
       ? type
@@ -356,7 +322,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             types={this.props.currentTypesData}
             onSelect={this.handleSelectPlan}
             selectedID={this.state.selectedId}
-            disabled={disabled}
+            disabled={tableDisabled}
             updateFor={[this.state.selectedId]}
             tabbedPanelInnerClass={classes.tabbedPanelInnerClass}
           />
@@ -407,25 +373,41 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             }
           />
         </Paper>
+
         <ActionsPanel>
+          <Typography variant="h2">Confirm</Typography>
+          <Typography>
+            Your Linode will be resized from <strong>{currentPlan}</strong>
+            {_target !== undefined && (
+              <>
+                {' '}
+                to <strong>{targetPlan}</strong>
+              </>
+            )}
+            . Your Linode will be automatically shut down and migrated. You will
+            be billed at the hourly rate of your new Linode plan. To confirm,
+            type the label of the Linode <strong>({linodeLabel})</strong> in the
+            field below:
+          </Typography>
+          <TextField
+            label="Linode Label"
+            onChange={e => this.setState({ confirmationText: e.target.value })}
+            style={{ marginBottom: 16 }}
+          />
           <Button
             disabled={
               !this.state.selectedId ||
               linodeInTransition(this.props.linodeStatus || '') ||
-              disabled
+              tableDisabled ||
+              submitButtonDisabled
             }
             buttonType="primary"
-            onClick={this.openConfirmationModal}
+            onClick={this.onSubmit}
             data-qa-resize
           >
             Resize
           </Button>
         </ActionsPanel>
-        <ResizeConfirmation
-          {...this.state.confirmationDialog}
-          onClose={this.closeConfirmationModal}
-          onResize={this.onSubmit}
-        />
       </Dialog>
     );
   }
