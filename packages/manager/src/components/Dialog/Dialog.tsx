@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       padding: theme.spacing(4),
+      paddingTop: 0,
       '& .actionPanel': {
         marginTop: theme.spacing(2)
       },
@@ -29,7 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2)
     },
     drawerContent: {
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
+      paddingTop: 0
     },
     button: {
       minWidth: 'auto',
@@ -45,6 +47,17 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     backDrop: {
       backgroundColor: theme.color.drawerBackdrop
+    },
+    sticky: {
+      position: 'sticky',
+      top: 0,
+      padding: theme.spacing(2),
+      margin: '8px -8px',
+      background: theme.color.white,
+      zIndex: 1,
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'space-between'
     }
   })
 );
@@ -73,22 +86,24 @@ const Dialog: React.FC<DialogProps> = props => {
         alignItems="center"
         updateFor={[title, props.children]}
       >
-        <Grid item>
-          <Typography variant="h2" id={titleID} data-qa-drawer-title={title}>
-            {title}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            buttonType="secondary"
-            onClick={props.onClose as (e: any) => void}
-            className={classes.button}
-            data-qa-close-drawer
-            aria-label="Close drawer"
-          >
-            <Close />
-          </Button>
-        </Grid>
+        <div className={classes.sticky}>
+          <Grid item>
+            <Typography variant="h2" id={titleID} data-qa-drawer-title={title}>
+              {title}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Button
+              buttonType="secondary"
+              onClick={props.onClose as (e: any) => void}
+              className={classes.button}
+              data-qa-close-drawer
+              aria-label="Close drawer"
+            >
+              <Close />
+            </Button>
+          </Grid>
+        </div>
         <Grid container>
           <div className={classes.drawerContent}>{children}</div>
         </Grid>
