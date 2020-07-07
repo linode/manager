@@ -33,7 +33,6 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { ZONES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
-import capitalize from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { withLinodeDetailContext } from '../linodeDetailContext';
@@ -44,9 +43,9 @@ import DeleteIPConfirm from './DeleteIPConfirm';
 import EditRDNSDrawer from './EditRDNSDrawer';
 import IPSharingPanel from './IPSharingPanel';
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu_CMR';
-import { IPTypes } from './types';
 import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
 import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
+import { IPTypes } from './types';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
@@ -513,7 +512,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           linodeRegion={zoneName}
         />
 
-        <Paper>{this.renderIPTable()}</Paper>
+        {this.renderIPTable()}
 
         {this.renderNetworkActions()}
 
@@ -866,7 +865,7 @@ const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {
     gateway: ip.gateway || '',
     subnetMask: ip.subnet_mask || '',
     rdns: ip.rdns ? [ip.rdns] : [],
-    type: createType(ip, key) as IPDisplay['type'],
+    type: createType(ip, key) as IPTypes,
     _ip: ip
   };
 };
@@ -880,7 +879,7 @@ export const createType = (ip: IPAddress, key: ipKey) => {
   if (key === 'Reserved') {
     type += ip.public ? 'Reserved (public)' : 'Reserved (private)';
   } else {
-    type += capitalize(key);
+    type += key;
   }
 
   return type;
