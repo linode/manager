@@ -45,7 +45,7 @@ const validateBasicVolume = (title: string) => {
 
 describe('volumes', () => {
   it('creates a volume without linode', () => {
-    const title = createBasicVolume(false, undefined);
+    const title = createBasicVolume(false);
     validateBasicVolume(title);
     clickVolumeActionMenu(title);
     cy.findByText('Delete').should('be.visible');
