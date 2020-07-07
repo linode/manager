@@ -3,7 +3,9 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 
 interface Props {
   onEdit: (config: Config) => void;
@@ -75,69 +77,62 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
     onBoot(linodeId, id, label);
   };
 
-  const createConfigActions = React.useCallback(
-    (closeMenu: Function): Action[] => {
-      const { readOnly, history, linodeId, config } = props;
-      const tooltip = readOnly
-        ? "You don't have permission to perform this action"
-        : undefined;
+  const createConfigActions = React.useCallback((): Action[] => {
+    const { readOnly, history, linodeId, config } = props;
+    const tooltip = readOnly
+      ? "You don't have permission to perform this action"
+      : undefined;
 
-      const handleDelete = () => {
-        const {
-          config: { id, label },
-          onDelete
-        } = props;
-        onDelete(id, label);
-      };
+    const handleDelete = () => {
+      const {
+        config: { id, label },
+        onDelete
+      } = props;
+      onDelete(id, label);
+    };
 
-      return [
-        {
-          title: 'Resize',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            closeMenu();
-            // history.push(
-            //   `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
-            // );
-          },
-          disabled: readOnly
+    return [
+      {
+        title: 'Resize',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          // history.push(
+          //   `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
+          // );
         },
-        {
-          title: 'Imagize',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            closeMenu();
-            // history.push(
-            //   `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
-            // );
-          },
-          disabled: readOnly
+        disabled: readOnly
+      },
+      {
+        title: 'Imagize',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          // history.push(
+          //   `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
+          // );
         },
-        {
-          title: 'Clone',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            closeMenu();
-            history.push(
-              `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
-            );
-          },
-          disabled: readOnly
+        disabled: readOnly
+      },
+      {
+        title: 'Clone',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          history.push(
+            `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
+          );
         },
-        {
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            handleDelete();
-            closeMenu();
-          },
-          disabled: readOnly,
-          tooltip
-        }
-      ];
-    },
-    [props]
-  );
+        disabled: readOnly
+      },
+      {
+        title: 'Delete',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          handleDelete();
+        },
+        disabled: readOnly,
+        tooltip
+      }
+    ];
+  }, [props]);
 
   return (
     <>

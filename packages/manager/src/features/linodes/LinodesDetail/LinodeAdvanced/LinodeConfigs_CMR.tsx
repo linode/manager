@@ -39,7 +39,12 @@ import OrderBy from 'src/components/OrderBy';
 
 import Paginate from 'src/components/Paginate';
 
-type ClassNames = 'root' | 'headline' | 'addNewWrapper' | 'labelCell';
+type ClassNames =
+  | 'root'
+  | 'headline'
+  | 'addNewWrapper'
+  | 'labelCell'
+  | 'tableCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -63,7 +68,7 @@ const styles = (theme: Theme) =>
     },
     tableCell: {
       borderRight: `1px solid ${theme.palette.divider}`,
-      fontWeight: '700'
+      fontWeight: 'bold'
     }
   });
 
