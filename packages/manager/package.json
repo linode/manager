@@ -234,6 +234,7 @@
     "mixin-deep": "^2.0.1",
     "mongodb": "^3.1.13",
     "mountebank": "^1.14.1",
+    "msw": "^0.19.3",
     "otplib": "^10.0.1",
     "postcss-flexbugs-fixes": "^4.1.0",
     "postcss-loader": "^3.0.0",
@@ -269,8 +270,8 @@
       "src/**/*.{js,jsx,ts,tsx}"
     ],
     "setupFilesAfterEnv": [
-      "<rootDir>/config/polyfills.js",
-      "<rootDir>/config/testSetup.js"
+      "<rootDir>/config/testSetup.js",
+      "<rootDir>/src/testSetup.ts"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.ts?(x)",
