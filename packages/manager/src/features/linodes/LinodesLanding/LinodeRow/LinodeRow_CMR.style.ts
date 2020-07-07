@@ -54,13 +54,7 @@ const styles = (theme: Theme) =>
       }
     },
     bodyRow: {
-      height: 'auto',
-      '&:hover': {
-        backgroundColor: '#f9fafa'
-      },
-      '&:hover .backupIcon': {
-        fill: theme.palette.primary.main
-      }
+      height: 'auto'
     },
     iconTableCell: {
       [theme.breakpoints.up('md')]: {
