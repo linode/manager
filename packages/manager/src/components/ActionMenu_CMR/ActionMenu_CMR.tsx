@@ -1,5 +1,5 @@
 import * as classNames from 'classnames';
-import MoreHoriz from '@material-ui/icons/MoreHoriz';
+import KebabIcon from 'src/assets/icons/kebab.svg';
 import {
   Menu,
   MenuButton,
@@ -8,6 +8,7 @@ import {
   MenuPopover
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
+import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import HelpIcon from 'src/components/HelpIcon';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -27,9 +28,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignItems: 'center',
       background: 'none',
       fontSize: '1rem',
-      fontWeight: 'bold',
       border: 'none',
-      padding: theme.spacing(1) + 2,
+      padding: '12.5px',
       color: '#3683dc',
       cursor: 'pointer',
       '&:hover': {
@@ -44,7 +44,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   buttonLabel: {
-    margin: `0 0 0 ${theme.spacing()}px`
+    margin: `0 0 0 ${theme.spacing() + 2}px`,
+    fontFamily: theme.font.normal,
+    lineHeight: 1
+  },
+  icon: {
+    '& svg': {
+      fill: theme.color.blue
+    }
   },
   popover: {
     zIndex: 1
@@ -141,10 +148,10 @@ const ActionMenu: React.FC<CombinedProps> = props => {
           onMouseDown={handleClick}
           onKeyDown={handleKeyPress}
         >
-          <MoreHoriz aria-hidden type="primary" />
+          <KebabIcon aria-hidden className={classes.icon} type="primary" />
           {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
         </MenuButton>
-        <MenuPopover className={classes.popover}>
+        <MenuPopover className={classes.popover} position={positionRight}>
           <MenuItems className={classes.itemsOuter}>
             {(actions as Action[]).map((a, idx) => (
               <MenuLink
