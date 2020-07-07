@@ -7,7 +7,7 @@ import {
   LinodeIPsResponseIPV6
 } from '@linode/api-v4/lib/linodes';
 import { getIPs, IPAddress, IPRange } from '@linode/api-v4/lib/networking';
-import { compose, head, isEmpty, path, pathOr, uniq, uniqBy } from 'ramda';
+import { isEmpty, path, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
@@ -48,7 +48,7 @@ import LinodeNetworkingActionMenu, {
   IPTypes
 } from './LinodeNetworkingActionMenu';
 import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
-import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
+import LinodeNetworkingSummaryPanel from './NetworkingSummaryPanel';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
@@ -498,7 +498,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       IPRequestError,
       currentlySelectedIPRange
     } = this.state;
-    const firstPublicIPAddress = getFirstPublicIPv4FromResponse(linodeIPs);
 
     /* Loading state */
     if (initialLoading) {
@@ -541,10 +540,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         {readOnly && <LinodePermissionsError />}
         <LinodeNetworkingSummaryPanel
-          linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
-          sshIPAddress={firstPublicIPAddress}
-          linodeLabel={linodeLabel}
           linodeRegion={zoneName}
+          linodeID={linodeID}
         />
 
         {this.renderIPv4()}
@@ -837,12 +834,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles);
-
-const getFirstPublicIPv4FromResponse = compose(
-  path<string>(['address']),
-  head,
-  pathOr([], ['ipv4', 'public'])
-);
 
 interface ContextProps {
   linode: Linode;
