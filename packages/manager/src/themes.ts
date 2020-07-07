@@ -94,6 +94,8 @@ const darkThemeOptions = {
     grey2: 'rgba(0, 0, 0, 0.2)',
     grey3: '#999',
     grey5: 'rgba(0, 0, 0, 0.2)',
+    grey7: 'rgba(0, 0, 0, 0.2)',
+    grey9: '#828a97',
     white: '#32363c',
     blue: primaryColors.main,
     black: '#fff',

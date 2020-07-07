@@ -21,8 +21,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   body: {
     padding: `20px !important`,
     backgroundColor: theme.color.white,
-    borderTop: `1px solid #F4F5F6`,
-    borderBottom: `1px solid #F4F5F6`
+    borderTop: `1px solid ${theme.color.grey9}`,
+    borderBottom: `1px solid ${theme.color.grey9}`
   },
   footer: {
     backgroundColor: theme.color.white,

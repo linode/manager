@@ -185,16 +185,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     return (): Action[] => {
       const actions: Action[] = [
         {
-          title: 'Launch Console',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Launch Console');
-            lishLaunch(linodeId);
-            e.preventDefault();
-            e.stopPropagation();
-          },
-          ...readOnlyProps
-        },
-        {
           title: 'Settings',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Settings Page');
@@ -315,6 +305,19 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             e.preventDefault();
             e.stopPropagation();
             openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
+          },
+          ...readOnlyProps
+        });
+      }
+
+      if (inTableContext === true) {
+        actions.unshift({
+          title: 'Launch Console',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            sendLinodeActionMenuItemEvent('Launch Console');
+            lishLaunch(linodeId);
+            e.preventDefault();
+            e.stopPropagation();
           },
           ...readOnlyProps
         });

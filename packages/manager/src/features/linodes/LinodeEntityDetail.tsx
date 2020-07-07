@@ -270,43 +270,24 @@ const Header: React.FC<HeaderProps> = props => {
             {linodeLabel}
           </div>
         ) : (
-          <>
-            <Link to={`linodes/${linodeId}`} className={classes.linodeLabel}>
-              {linodeLabel}
-            </Link>
-            <Chip
-              className={classnames({
-                [classes.statusChip]: true,
-                [classes.statusRunning]: isRunning,
-                [classes.statusOffline]: isOffline
-              })}
-              label={linodeStatus.toUpperCase()}
-              component="span"
-              clickable={false}
-            />
-          </>
+          <Link to={`linodes/${linodeId}`} className={classes.linodeLabel}>
+            {linodeLabel}
+          </Link>
         )
       }
       bodyClassName={classes.body}
       body={
         <>
-          {isDetails && (
-            <Chip
-              style={{
-                backgroundColor: '#17cf73',
-                color: 'white',
-                fontSize: '1.1 rem',
-                height: 30,
-                borderRadius: 15,
-                letterSpacing: '.5px',
-                minWidth: 120,
-                marginRight: 30
-              }}
-              label={linodeStatus.toUpperCase()}
-              component="span"
-              clickable={false}
-            />
-          )}
+          <Chip
+            className={classnames({
+              [classes.statusChip]: true,
+              [classes.statusRunning]: isRunning,
+              [classes.statusOffline]: isOffline
+            })}
+            label={linodeStatus.toUpperCase()}
+            component="span"
+            clickable={false}
+          />
 
           {!isDetails && (
             <IconTextLink
@@ -360,7 +341,6 @@ const Header: React.FC<HeaderProps> = props => {
             text="Launch Console"
             title="Launch Console"
             onClick={() => {
-              sendLinodeActionMenuItemEvent('Launch Console');
               handleConsoleButtonClick(linodeId);
             }}
           />
@@ -429,6 +409,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     marginTop: 4,
     '& li': {
       padding: 0,
+      fontSize: '0.875rem',
       lineHeight: 1.43
     }
   },
@@ -449,6 +430,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     },
     '& td': {
       lineHeight: 1.4,
+      fontSize: '0.875rem',
       fontStretch: 'normal',
       letterSpacing: 'normal',
       border: 'none',

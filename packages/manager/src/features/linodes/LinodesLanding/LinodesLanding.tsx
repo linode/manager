@@ -307,6 +307,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                             {this.props.flags.cmr ? (
                               <LandingHeader
                                 title="Linodes"
+                                entity="Linode"
                                 onAddNew={() =>
                                   this.props.history.push('/linodes/create')
                                 }

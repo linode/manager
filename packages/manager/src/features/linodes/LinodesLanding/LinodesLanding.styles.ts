@@ -55,7 +55,7 @@ const styles = (theme: Theme) =>
       backgroundColor: '#9ea4ae'
     },
     controlHeader: {
-      backgroundColor: '#f9fafa',
+      backgroundColor: theme.bg.white,
       marginBottom: 28
     },
     toggleButton: {
