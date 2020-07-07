@@ -339,7 +339,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell parentColumn="Default Gateway">{gateway}</TableCell>
         <TableCell parentColumn="Subnet Mask">{subnetMask}</TableCell>
         <TableCell parentColumn="Reverse DNS" data-qa-rdns>
-          {_range ? this.renderRangeRDNSCell(_range) : rdns}
+          {_range ? this.renderRangeRDNSCell(_range) : rdns?.[0] ?? ''}
         </TableCell>
         <TableCell className={classes.action} data-qa-action>
           {_ip ? (
@@ -791,14 +791,15 @@ export const listIPv6InRange = (
 interface IPDisplay {
   address: string;
   type: IPTypes;
-  gateway?: string | null;
-  subnetMask?: string | null;
-  rdns?: string[] | null;
+  gateway: string;
+  subnetMask: string;
+  rdns?: string[];
   // Not for display, but useful for lower-level components.
   _ip?: IPAddress;
   _range?: IPRange;
 }
 
+// Takes an IP Response object and returns high-level IP display rows.
 export const ipResponseToDisplayRows = (
   ipResponse?: LinodeIPsResponse
 ): IPDisplay[] => {
@@ -809,10 +810,10 @@ export const ipResponseToDisplayRows = (
   const { ipv4, ipv6 } = ipResponse;
 
   const ipDisplay = [
-    ...mapIPv4Display(ipv4.public, 'public'),
-    ...mapIPv4Display(ipv4.private, 'private'),
-    ...mapIPv4Display(ipv4.reserved, 'reserved'),
-    ...mapIPv4Display(ipv4.shared, 'shared')
+    ...mapIPv4Display(ipv4.public, 'Public'),
+    ...mapIPv4Display(ipv4.private, 'Private'),
+    ...mapIPv4Display(ipv4.reserved, 'Reserved'),
+    ...mapIPv4Display(ipv4.shared, 'Shared')
   ];
 
   if (ipv6?.slaac) {
@@ -820,9 +821,10 @@ export const ipResponseToDisplayRows = (
   }
 
   if (ipv6?.link_local) {
-    ipDisplay.push(ipToDisplay(ipv6?.link_local, 'link local'));
+    ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
   }
 
+  // Routed ranges are a special case.
   if (ipv6?.global) {
     ipDisplay.push(
       ...ipv6.global.map(thisIP => {
@@ -834,6 +836,8 @@ export const ipResponseToDisplayRows = (
         return {
           type: 'IPv6 – Range' as IPDisplay['type'],
           address,
+          gateway: '',
+          subnetMask: '',
           _range: thisIP
         };
       })
@@ -844,12 +848,12 @@ export const ipResponseToDisplayRows = (
 };
 
 type ipKey =
-  | 'public'
-  | 'private'
-  | 'reserved'
-  | 'shared'
+  | 'Public'
+  | 'Private'
+  | 'Reserved'
+  | 'Shared'
   | 'SLAAC'
-  | 'link local';
+  | 'Link Local';
 
 const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
   return ips.map(ip => ipToDisplay(ip, key));
@@ -858,9 +862,9 @@ const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
 const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {
   return {
     address: ip.address,
-    gateway: ip.gateway,
-    subnetMask: ip.subnet_mask,
-    rdns: ip.rdns ? [ip.rdns] : null,
+    gateway: ip.gateway || '',
+    subnetMask: ip.subnet_mask || '',
+    rdns: ip.rdns ? [ip.rdns] : [],
     type: createType(ip, key) as IPDisplay['type'],
     _ip: ip
   };
@@ -872,8 +876,8 @@ export const createType = (ip: IPAddress, key: ipKey) => {
 
   type += ' – ';
 
-  if (key === 'shared') {
-    type += ip.public ? 'Shared (public)' : 'Shared (private)';
+  if (key === 'Reserved') {
+    type += ip.public ? 'Reserved (public)' : 'Reserved (private)';
   } else {
     type += capitalize(key);
   }
