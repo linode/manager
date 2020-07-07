@@ -75,6 +75,7 @@ import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendCreateLinodeEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { validatePassword } from 'src/utilities/validatePassword';
 import { getRegionIDFromLinodeID } from './utilities';
 
 const DEFAULT_IMAGE = 'linode/debian10';
@@ -404,6 +405,36 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   submitForm: HandleSubmit = (payload, linodeID?: number) => {
     const { createType } = this.props;
+
+    /**
+     * Do manual password validation (someday we'll use Formik and
+     * not need this). Only run this check if a password is present
+     * on the payload --
+     * Yup schema in the JS client will determine if a password
+     * is required.
+     *
+     * The downside of this approach is that only the password error
+     * will be displayed, even if other required fields are missing.
+     */
+
+    if (payload.root_pass) {
+      const passwordError = validatePassword(
+        this.props.flags.passwordValidation ?? 'none',
+        payload.root_pass
+      );
+
+      if (passwordError) {
+        this.setState({
+          errors: [
+            {
+              field: 'root_pass',
+              reason: passwordError
+            }
+          ]
+        });
+        return;
+      }
+    }
 
     /**
      * run a certain linode action based on the type

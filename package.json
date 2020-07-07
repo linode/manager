@@ -48,7 +48,8 @@
   "resolutions": {
     "handlebars": "^4.4.3",
     "minimist": "^1.2.3",
-    "yargs-parser": "^18.1.3"
+    "yargs-parser": "^18.1.3",
+    "kind-of": "^6.0.3"
   },
   "workspaces": {
     "packages": [

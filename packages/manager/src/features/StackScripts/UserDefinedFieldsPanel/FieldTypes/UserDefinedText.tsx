@@ -60,6 +60,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         placeholder={placeholder}
         error={error}
         hideStrengthLabel
+        hideHelperText
         className={!isOptional ? classes.accessPanel : ''}
         isOptional={isOptional}
         password={this.props.value}

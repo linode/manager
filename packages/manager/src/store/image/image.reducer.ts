@@ -1,146 +1,134 @@
-import produce from 'immer';
 import { Image } from '@linode/api-v4/lib/images';
-import { clone } from 'ramda';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import {
   createImageActions,
+  deleteImageActions,
   removeImage,
   requestImageForStoreActions,
   requestImagesActions,
   updateImageActions,
   upsertImage
 } from './image.actions';
+import {
+  createDefaultState,
+  onCreateOrUpdate,
+  onDeleteSuccess,
+  onError,
+  onGetAllSuccess,
+  onStart,
+  removeMany,
+  setError
+} from '../store.helpers.tmp';
 
-import { EntitiesAsObjectState } from '../types';
+import { MappedEntityState2 as MappedEntityState } from '../types';
 
-export type State = EntitiesAsObjectState<Image>;
+export type State = MappedEntityState<Image>;
 
-export const defaultState: State = {
-  loading: false,
-  lastUpdated: 0,
-  results: 0,
-  data: {},
-  error: {}
-};
+export const defaultState: State = createDefaultState();
 
 /**
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
-    if (isType(action, requestImagesActions.started)) {
-      draft.loading = true;
-    }
+  if (isType(action, requestImagesActions.started)) {
+    return onStart(state);
+  }
 
-    if (isType(action, requestImagesActions.done)) {
-      const { result } = action.payload;
+  if (isType(action, requestImagesActions.done)) {
+    const { result } = action.payload;
+    const images = result.filter(thisImage => {
+      // NOTE: Temporarily hide public Kubernetes images until ImageSelect redesign.
+      return !thisImage.label.match(/kube/i);
+    });
+    return onGetAllSuccess(images, state, Object.keys(images).length);
+  }
 
-      draft.loading = false;
-      draft.lastUpdated = Date.now();
-      draft.data = result.reduce((acc, eachImage) => {
-        if (eachImage.label.match(/kube/i)) {
-          // NOTE: Temporarily hide public Kubernetes images until ImageSelect redesign.
-          return acc;
-        }
-        acc[eachImage.id] = eachImage;
-        return acc;
-      }, {});
-      draft.results = Object.keys(result).length;
-    }
+  if (isType(action, requestImagesActions.failed)) {
+    const { error } = action.payload;
 
-    if (isType(action, requestImagesActions.failed)) {
-      const { error } = action.payload;
+    return onError({ read: error }, state);
+  }
 
-      draft.loading = false;
-      draft.error.read = error;
-    }
+  if (isType(action, requestImageForStoreActions.started)) {
+    // Do nothing here, this isn't a full request
+    return state;
+  }
 
-    if (isType(action, requestImageForStoreActions.started)) {
-      draft.loading = true;
-      draft.error.read = undefined;
-    }
+  if (isType(action, requestImageForStoreActions.done)) {
+    const { result } = action.payload;
+    return onCreateOrUpdate(result, state);
+  }
 
-    if (isType(action, requestImageForStoreActions.done)) {
-      const { result } = action.payload;
-      draft.loading = false;
-      draft.data[result.id] = result;
-      draft.results = Object.keys(draft.data).length;
-    }
+  if (isType(action, requestImageForStoreActions.failed)) {
+    // Do nothing; don't want to set the global error state
+    // if a single request fails.
+    return state;
+  }
 
-    if (isType(action, requestImageForStoreActions.failed)) {
-      const { error } = action.payload;
-      draft.loading = false;
-      draft.error.read = error;
-    }
+  if (isType(action, updateImageActions.started)) {
+    return setError({ update: undefined }, state);
+  }
 
-    if (isType(action, updateImageActions.started)) {
-      draft.error.update = undefined;
-    }
+  if (isType(action, updateImageActions.done)) {
+    const { result } = action.payload;
+    return onCreateOrUpdate(result, state);
+  }
 
-    if (isType(action, updateImageActions.done)) {
-      const { result } = action.payload;
+  if (isType(action, updateImageActions.failed)) {
+    const { error } = action.payload;
 
-      draft.data[result.id] = result;
-      draft.results = Object.keys(draft.data).length;
-      draft.lastUpdated = Date.now();
-    }
+    return onError({ update: error }, state);
+  }
 
-    if (isType(action, updateImageActions.failed)) {
-      const { error } = action.payload;
-      draft.error.update = error;
-    }
+  if (isType(action, createImageActions.started)) {
+    return setError({ create: undefined }, state);
+  }
 
-    if (isType(action, createImageActions.started)) {
-      draft.error.create = undefined;
-    }
+  if (isType(action, createImageActions.done)) {
+    const newImage = action.payload.result;
+    return onCreateOrUpdate(newImage, state);
+  }
 
-    if (isType(action, createImageActions.done)) {
-      const { result } = action.payload;
+  if (isType(action, createImageActions.failed)) {
+    const { error } = action.payload;
 
-      draft.lastUpdated = Date.now();
-      draft.data[result.id] = result;
-      draft.results = Object.keys(draft.data).length;
-    }
+    return onError({ create: error }, state);
+  }
 
-    if (isType(action, createImageActions.failed)) {
-      const { error } = action.payload;
+  if (isType(action, removeImage)) {
+    const { payload } = action;
+    /**
+     * Events provide a numeric ID, but the actual ID is a string. So we have to respond
+     * to both potentials.
+     * ![Hard to work](https://media.giphy.com/media/juSraIEmIN5eg/giphy.gif)
+     */
+    const id = typeof payload === 'string' ? payload : `private/${payload}`;
 
-      draft.error.create = error;
-    }
+    return removeMany([id], state);
+  }
 
-    if (isType(action, removeImage)) {
-      const { payload } = action;
-      /**
-       * Events provide a numeric ID, but the actual ID is a string. So we have to respond
-       * to both potentials.
-       * ![Hard to work](https://media.giphy.com/media/juSraIEmIN5eg/giphy.gif)
-       */
-      const id = typeof payload === 'string' ? payload : `private/${payload}`;
+  if (isType(action, upsertImage)) {
+    const { payload } = action;
+    return onCreateOrUpdate(payload, state);
+  }
 
-      const dataClone = clone(state.data!);
-      delete dataClone[id];
+  if (isType(action, deleteImageActions.started)) {
+    return setError({ delete: undefined }, state);
+  }
 
-      draft.data = dataClone;
+  if (isType(action, deleteImageActions.done)) {
+    const { imageID } = action.payload.params;
+    return onDeleteSuccess(imageID, state);
+  }
 
-      draft.results = Object.keys(dataClone).length;
-      if (draft.results !== state.results) {
-        // something was actually updated
-        draft.lastUpdated = Date.now();
-      }
-    }
+  if (isType(action, deleteImageActions.failed)) {
+    const { error } = action.payload;
 
-    if (isType(action, upsertImage)) {
-      const image = action.payload;
+    return onError({ delete: error }, state);
+  }
 
-      const dataClone = clone(state.data!);
-      dataClone[image.id] = image;
-
-      draft.data = dataClone;
-      draft.results = Object.keys(dataClone).length;
-      draft.lastUpdated = Date.now();
-    }
-  });
+  return state;
 };
 
 export default reducer;

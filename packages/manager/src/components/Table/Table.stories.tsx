@@ -1,12 +1,82 @@
+import { Config } from '@linode/api-v4/lib/linodes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
+import { Provider } from 'react-redux';
+import OrderBy from 'src/components/OrderBy';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
+import { linodeFactory } from 'src/factories/linodes';
+import LinodeRow_CMR from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow_CMR';
+import SortableTableHead_CMR from 'src/features/linodes/LinodesLanding/SortableTableHead_CMR.tsx';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import store from 'src/store';
+import capitalize from 'src/utilities/capitalize';
 import TableWrapper from './Table';
+import TableWrapper_CMR from './Table';
 
-storiesOf('Table', module).add('default', () => (
+const linodes = linodeFactory.buildList(10);
+
+class StoryTable extends React.Component {
+  handleDeleteDialog = (id: number, label: string) => {
+    return;
+  };
+
+  handlePowerActionDialog = (
+    bootAction: Action,
+    id: number,
+    label: string,
+    configs: Config[]
+  ) => {
+    return;
+  };
+
+  render() {
+    return (
+      <Provider store={store}>
+        <OrderBy data={Object.values(linodes)} orderBy={'label'} order={'asc'}>
+          {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+            <TableWrapper_CMR>
+              <SortableTableHead_CMR
+                order={order}
+                orderBy={orderBy}
+                handleOrderChange={handleOrderChange}
+              />
+              <TableBody>
+                {orderedData.map(linode => (
+                  <LinodeRow_CMR
+                    key={linode.id}
+                    id={linode.id}
+                    image={linode.image}
+                    ipv4={linode.ipv4}
+                    ipv6={linode.ipv6}
+                    label={linode.label}
+                    backups={linode.backups}
+                    displayStatus={capitalize(linode.status)}
+                    region={linode.region}
+                    status={linode.status}
+                    disk={linode.specs.disk}
+                    memory={linode.specs.memory}
+                    mostRecentBackup={linode.backups.last_successful}
+                    tags={linode.tags}
+                    openTagDrawer={() => null}
+                    type={linode.type}
+                    vcpus={linode.specs.vcpus}
+                    openDeleteDialog={this.handleDeleteDialog}
+                    openPowerActionDialog={this.handlePowerActionDialog}
+                  ></LinodeRow_CMR>
+                ))}
+              </TableBody>
+            </TableWrapper_CMR>
+          )}
+        </OrderBy>
+      </Provider>
+    );
+  }
+}
+
+storiesOf('Table', module).add('Default', () => (
   <TableWrapper>
     <TableHead data-qa-table>
       <TableRow>
@@ -43,3 +113,5 @@ storiesOf('Table', module).add('default', () => (
     </TableBody>
   </TableWrapper>
 ));
+
+storiesOf('Table', module).add('CMR - Sorted', () => <StoryTable />);

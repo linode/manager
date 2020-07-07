@@ -65,13 +65,16 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const AppDetailDrawer: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = props => {
   const { classes, stackscriptID, open, onClose } = props;
-  const app = oneClickApps.find(eachApp =>
-    Boolean(stackscriptID.match(eachApp.name))
-  ); // This is horrible
+  const app = oneClickApps.find(eachApp => {
+    const cleanedAppName = eachApp.name.replace(
+      /[-\/\\^$*+?.()|[\]{}]/g,
+      '\\$&'
+    );
+    const regex = new RegExp(cleanedAppName);
+    return Boolean(stackscriptID.match(regex));
+  }); // This is horrible
   if (!app) {
     return null;
   }
@@ -107,17 +110,13 @@ export const AppDetailDrawer: React.FunctionComponent<
         </Grid>
         <Grid item>
           <Typography
-          variant="body1"
-          className={classes.description}
-          dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.description) }}
+            variant="body1"
+            className={classes.description}
+            dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.description) }}
           />
         </Grid>
         {app.related_info && (
-          <LinkSection
-            title="More info"
-            links={app.related_info}
-            icon={Link}
-          />
+          <LinkSection title="More info" links={app.related_info} icon={Link} />
         )}
         {app.related_guides && (
           <LinkSection
@@ -126,13 +125,7 @@ export const AppDetailDrawer: React.FunctionComponent<
             icon={LibraryBook}
           />
         )}
-        {app.tips && (
-          <TipSection
-          title="Tips"
-          tips={app.tips}
-          icon={Info}
-          />
-        )}
+        {app.tips && <TipSection title="Tips" tips={app.tips} icon={Info} />}
       </Grid>
     </Drawer>
   );

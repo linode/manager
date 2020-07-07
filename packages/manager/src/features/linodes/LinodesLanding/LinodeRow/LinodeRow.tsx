@@ -19,6 +19,7 @@ import hasMutationAvailable, {
 } from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
+import LinodeActionMenu_CMR from '../LinodeActionMenu_CMR';
 import RegionIndicator from '../RegionIndicator';
 import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
@@ -30,6 +31,7 @@ import LinodeRowLoading from './LinodeRowLoading';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseMaintenanceStartTime } from '../utils';
+import useFlags from 'src/hooks/useFlags';
 
 interface Props {
   backups: LinodeBackups;
@@ -55,6 +57,8 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  // Including for type matching with CMR; not used.
+  openTagDrawer?: any;
 }
 
 export type CombinedProps = Props &
@@ -92,6 +96,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     mutationAvailable
   } = props;
 
+  const flags = useFlags();
+
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
 
@@ -127,6 +133,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       maintenance={maintenanceStartTime}
     />
   );
+
+  const ActionMenu = flags.cmr ? LinodeActionMenu_CMR : LinodeActionMenu;
 
   return (
     <React.Fragment>
@@ -209,7 +217,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
               linodeNotifications={linodeNotifications}
               classes={classes}
             />
-            <LinodeActionMenu
+            <ActionMenu
               linodeId={id}
               linodeLabel={label}
               linodeRegion={region}
