@@ -20,7 +20,9 @@ import PaginationFooter, {
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
+import useFlags from 'src/hooks/useFlags';
 import TableWrapper from './TableWrapper';
+import TableWrapper_CMR from './TableWrapper_CMR';
 
 type ClassNames =
   | 'root'
@@ -92,6 +94,8 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
     classes,
     ...rest
   } = props;
+
+  const flags = useFlags();
 
   const dataLength = data.length;
 
@@ -179,79 +183,163 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
 
   if (display === 'list') {
     return (
-      <TableWrapper {...tableWrapperProps}>
-        {orderedGroupedLinodes.map(([tag, linodes]) => {
-          return (
-            <React.Fragment key={tag}>
-              <Paginate
-                data={linodes}
-                pageSize={infinitePageSize}
-                pageSizeSetter={setInfinitePageSize}
-              >
-                {({
-                  data: paginatedData,
-                  handlePageChange,
-                  handlePageSizeChange,
-                  page,
-                  pageSize,
-                  count
-                }) => {
-                  const finalProps = {
-                    ...rest,
-                    data: paginatedData,
-                    pageSize,
-                    page,
-                    handlePageSizeChange,
-                    handlePageChange,
-                    handleOrderChange,
-                    order,
-                    orderBy
-                  };
-                  return (
-                    <React.Fragment>
-                      <TableBody
-                        className={classes.groupContainer}
-                        data-qa-tag-header={tag}
-                      >
-                        <TableRow className={classes.tagHeaderRow} role="cell">
-                          <TableCell colSpan={7}>
-                            <Typography
-                              variant="h2"
-                              component="h3"
-                              className={classes.tagHeader}
+      <React.Fragment>
+        {flags.cmr ? (
+          <TableWrapper_CMR {...tableWrapperProps}>
+            {orderedGroupedLinodes.map(([tag, linodes]) => {
+              return (
+                <React.Fragment key={tag}>
+                  <Paginate
+                    data={linodes}
+                    pageSize={infinitePageSize}
+                    pageSizeSetter={setInfinitePageSize}
+                  >
+                    {({
+                      data: paginatedData,
+                      handlePageChange,
+                      handlePageSizeChange,
+                      page,
+                      pageSize,
+                      count
+                    }) => {
+                      const finalProps = {
+                        ...rest,
+                        data: paginatedData,
+                        pageSize,
+                        page,
+                        handlePageSizeChange,
+                        handlePageChange,
+                        handleOrderChange,
+                        order,
+                        orderBy
+                      };
+                      return (
+                        <React.Fragment>
+                          <TableBody
+                            className={classes.groupContainer}
+                            data-qa-tag-header={tag}
+                          >
+                            <TableRow
+                              className={classes.tagHeaderRow}
+                              role="cell"
                             >
-                              {tag}
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                        <Component {...finalProps} />
-                        {count > MIN_PAGE_SIZE && (
-                          <TableRow>
-                            <TableCell
-                              colSpan={7}
-                              className={classes.paginationCell}
+                              <TableCell colSpan={7}>
+                                <Typography
+                                  variant="h2"
+                                  component="h3"
+                                  className={classes.tagHeader}
+                                >
+                                  {tag}
+                                </Typography>
+                              </TableCell>
+                            </TableRow>
+                            <Component {...finalProps} />
+                            {count > MIN_PAGE_SIZE && (
+                              <TableRow>
+                                <TableCell
+                                  colSpan={7}
+                                  className={classes.paginationCell}
+                                >
+                                  <PaginationFooter
+                                    count={count}
+                                    handlePageChange={handlePageChange}
+                                    handleSizeChange={handlePageSizeChange}
+                                    pageSize={pageSize}
+                                    page={page}
+                                    eventCategory={'linodes landing'}
+                                    showAll
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </React.Fragment>
+                      );
+                    }}
+                  </Paginate>
+                </React.Fragment>
+              );
+            })}
+          </TableWrapper_CMR>
+        ) : (
+          <TableWrapper {...tableWrapperProps}>
+            {orderedGroupedLinodes.map(([tag, linodes]) => {
+              return (
+                <React.Fragment key={tag}>
+                  <Paginate
+                    data={linodes}
+                    pageSize={infinitePageSize}
+                    pageSizeSetter={setInfinitePageSize}
+                  >
+                    {({
+                      data: paginatedData,
+                      handlePageChange,
+                      handlePageSizeChange,
+                      page,
+                      pageSize,
+                      count
+                    }) => {
+                      const finalProps = {
+                        ...rest,
+                        data: paginatedData,
+                        pageSize,
+                        page,
+                        handlePageSizeChange,
+                        handlePageChange,
+                        handleOrderChange,
+                        order,
+                        orderBy
+                      };
+                      return (
+                        <React.Fragment>
+                          <TableBody
+                            className={classes.groupContainer}
+                            data-qa-tag-header={tag}
+                          >
+                            <TableRow
+                              className={classes.tagHeaderRow}
+                              role="cell"
                             >
-                              <PaginationFooter
-                                count={count}
-                                handlePageChange={handlePageChange}
-                                handleSizeChange={handlePageSizeChange}
-                                pageSize={pageSize}
-                                page={page}
-                                eventCategory={'linodes landing'}
-                                showAll
-                              />
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </React.Fragment>
-                  );
-                }}
-              </Paginate>
-            </React.Fragment>
-          );
-        })}
-      </TableWrapper>
+                              <TableCell colSpan={7}>
+                                <Typography
+                                  variant="h2"
+                                  component="h3"
+                                  className={classes.tagHeader}
+                                >
+                                  {tag}
+                                </Typography>
+                              </TableCell>
+                            </TableRow>
+                            <Component {...finalProps} />
+                            {count > MIN_PAGE_SIZE && (
+                              <TableRow>
+                                <TableCell
+                                  colSpan={7}
+                                  className={classes.paginationCell}
+                                >
+                                  <PaginationFooter
+                                    count={count}
+                                    handlePageChange={handlePageChange}
+                                    handleSizeChange={handlePageSizeChange}
+                                    pageSize={pageSize}
+                                    page={page}
+                                    eventCategory={'linodes landing'}
+                                    showAll
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </React.Fragment>
+                      );
+                    }}
+                  </Paginate>
+                </React.Fragment>
+              );
+            })}
+          </TableWrapper>
+        )}
+      </React.Fragment>
     );
   }
 
