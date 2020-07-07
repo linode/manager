@@ -53,6 +53,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: theme.spacing(2)
     }
   },
+  // Removed padding here so width is full 1280- will further refine this when the breakpoint work is handled
+  cmrWrapper: {
+    transition: theme.transitions.create('opacity'),
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: theme.spacing(2),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
+    }
+  },
   content: {
     flex: 1
   },
@@ -220,7 +229,7 @@ const MainContent: React.FC<CombinedProps> = props => {
           isLoggedInAsCustomer={props.isLoggedInAsCustomer}
           username={props.username}
         />
-        <main className={classes.wrapper} id="main-content" role="main">
+        <main className={classes.cmrWrapper} id="main-content" role="main">
           <Grid container spacing={0} className={classes.grid}>
             <Grid item className={classes.switchWrapper}>
               <RegionStatusBanner />
