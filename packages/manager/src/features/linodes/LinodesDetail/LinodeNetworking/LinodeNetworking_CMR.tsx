@@ -80,7 +80,8 @@ const styles = (theme: Theme) =>
       textAlign: 'right',
       '& a': {
         marginRight: theme.spacing(1)
-      }
+      },
+      paddingRight: `0px !important`
     },
     ipv4Container: {
       [theme.breakpoints.down('sm')]: {
@@ -512,7 +513,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           linodeRegion={zoneName}
         />
 
-        {this.renderIPTable()}
+        <Paper>{this.renderIPTable()}</Paper>
 
         {this.renderNetworkActions()}
 
@@ -648,10 +649,10 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
                       <TableCell style={{ width: '15%' }}>
                         Subnet Mask
                       </TableCell>
-                      <TableCell style={{ width: '25%' }}>
+                      <TableCell style={{ width: '25%', borderRight: 'none' }}>
                         Reverse DNS
                       </TableCell>
-                      <TableCell />
+                      <TableCell style={{ borderLeft: 'none' }} />
                     </TableRow>
                   </TableHead>
                   <TableBody>{orderedData.map(this.renderIPRow)}</TableBody>
@@ -829,8 +830,8 @@ export const ipResponseToDisplayRows = (
     ipDisplay.push(
       ...ipv6.global.map(thisIP => {
         let address = thisIP.range;
-        if (thisIP.prefix && thisIP.route_target) {
-          address += ` / ${thisIP.prefix} routed to ${thisIP.route_target}`;
+        if (thisIP.prefix) {
+          address += ` / ${thisIP.prefix}`;
         }
 
         return {

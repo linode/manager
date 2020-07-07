@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import SortUp from 'src/assets/icons/sort-up.svg';
 import Sort from 'src/assets/icons/unsorted.svg';
@@ -8,7 +9,6 @@ import TableSortLabel from 'src/components/core/TableSortLabel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderTop: 'none',
     '&:hover': {
       backgroundColor: '#3683dc',
       cursor: 'pointer',
@@ -50,7 +50,15 @@ type CombinedProps = Props;
 export const TableSortCell: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { children, direction, label, active, isLoading, ...rest } = props;
+  const {
+    children,
+    direction,
+    label,
+    active,
+    isLoading,
+    noWrap,
+    ...rest
+  } = props;
 
   const onHandleClick = () => {
     const { label, direction, handleClick } = props;
@@ -60,7 +68,10 @@ export const TableSortCell: React.FC<CombinedProps> = props => {
 
   return (
     <TableCell
-      className={classes.root}
+      className={classNames({
+        [classes.root]: true,
+        [classes.noWrap]: noWrap
+      })}
       {...rest}
       sortDirection={direction}
       role="columnheader"

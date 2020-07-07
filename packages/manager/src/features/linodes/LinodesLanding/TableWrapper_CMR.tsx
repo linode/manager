@@ -3,7 +3,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
-import Table from 'src/components/Table';
+import Table from 'src/components/Table/Table_CMR';
 import SortableTableHead_CMR from './SortableTableHead_CMR';
 
 const useStyles = makeStyles(() => ({

@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTop: 'none',
     fontSize: '.875rem',
     lineHeight: '1rem',
-    padding: '10px 15px'
+    padding: '0px 15px'
   },
   noWrap: {
     whiteSpace: 'nowrap'
