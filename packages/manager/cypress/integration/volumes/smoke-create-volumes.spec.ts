@@ -1,6 +1,8 @@
 import {
   makeVolumeLabel,
-  deleteAllTestVolumes
+  deleteAllTestVolumes,
+  createVolume,
+  clickVolumeActionMenu
 } from '../../support/api/volumes';
 import { createLinode, deleteLinodeById } from '../../support/api/linodes';
 import { assertToast } from '../../support/ui/events';
@@ -14,7 +16,7 @@ const createBasicVolume = (withLindode: boolean, linodeLabel?: string) => {
   cy.visitWithLogin(urlExtention);
   cy.url().should('endWith', urlExtention);
   cy.findByText('volumes');
-  cy.get('[data-qa-volume-label] [data-testid="textfield-input"]').type(title);
+  cy.findByLabelText('Label (required)').type(title);
   cy.findByText('Regions')
     .click()
     .type('new {enter}');
@@ -41,34 +43,54 @@ const validateBasicVolume = (title: string) => {
   cy.findByText(title);
 };
 
-describe('create volumes', () => {
+describe('volumes', () => {
   it('creates a volume without linode', () => {
     const title = createBasicVolume(false, undefined);
     validateBasicVolume(title);
-    cy.get('[data-qa-action-menu]').click();
-    assert.exists('Delete');
+    clickVolumeActionMenu(title);
+    cy.findByText('Delete').should('be.visible');
     deleteAllTestVolumes();
   });
 
-  it('creates volume with linode', () => {
-    cy.visitWithLogin(urlExtention);
+  it('creates volume with linode then detaches', () => {
+    cy.visitWithLogin('/volumes');
     createLinode().then(linode => {
+      const linodeId = linode.id;
       const linodeLabel = linode.label;
-      const title = createBasicVolume(true, linodeLabel);
-      validateBasicVolume(title);
-      assert.exists(linodeLabel);
-      cy.get('[data-qa-action-menu]').click();
-      assert.exists('Detach');
-      cy.findByText('Detach').click();
-      assert.exists(
-        `Are you sure you want to detach this Volume from ${linodeLabel}?`
-      );
-      assert.exists('Detach');
-      cy.findByText('Detach').click();
-      cy.get('[data-qa-action-menu]').click();
-      assert.exists('Delete');
-      deleteAllTestVolumes();
-      deleteLinodeById(linode.id);
+      createVolume(linodeId).then(volume => {
+        assertToast('Volume ' + volume.label + ' successfully created.');
+        assert.exists(linodeId);
+        cy.findByText(volume.label);
+        clickVolumeActionMenu(volume.label);
+        assert.exists('Detach');
+
+        cy.server();
+        cy.route({
+          method: 'POST',
+          url: '*/volumes/' + volume.id + '/detach'
+        }).as('volumeDetached');
+        cy.route({
+          method: 'POST',
+          url: '**/events/**'
+        }).as('event');
+
+        cy.findByText('Detach').click();
+        assert.exists(
+          `Are you sure you want to detach this Volume from ${linodeLabel}?`
+        );
+
+        cy.findByText('Detach').click();
+        cy.wait('@volumeDetached')
+          .its('status')
+          .should('eq', 200);
+        assertToast('Volume detachment started', 1);
+        cy.wait('@event');
+        assertToast('Volume ' + volume.label + ' successfully detached.', 2);
+        clickVolumeActionMenu(volume.label);
+        assert.exists('Delete');
+        deleteLinodeById(linode.id);
+        deleteAllTestVolumes();
+      });
     });
   });
 
@@ -79,9 +101,7 @@ describe('create volumes', () => {
     assert.exists('volumes');
     cy.get('[data-qa-deploy-linode]').click();
     assert.exists('Label is required.');
-    cy.get('[data-qa-volume-label] [data-testid="textfield-input"]').type(
-      title
-    );
+    cy.findByLabelText('Label (required)').type(title);
     cy.get('[data-qa-deploy-linode]').click();
     assert.exists('Must provide a region or a Linode ID.');
     cy.findByText('Regions')
@@ -114,8 +134,8 @@ describe('create volumes', () => {
       cy.findByText('My Debian 10 Disk Profile');
       cy.get('[data-qa-deploy-linode]').click();
       validateBasicVolume(title);
-      deleteAllTestVolumes();
       deleteLinodeById(linode.id);
+      deleteAllTestVolumes();
     });
   });
 });
