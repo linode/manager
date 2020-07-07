@@ -146,32 +146,36 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
 
   return (
     <Grid container direction="row" className={classes.graphGrids}>
-      <StatsPanel
-        title={`Network — IPv4 (${v4Unit}/s)`}
-        renderBody={() => (
-          <Graph
-            data={v4Data}
-            unit={v4Unit}
-            totalTraffic={v4totalTraffic}
-            metrics={v4Metrics}
-            {...commonGraphProps}
-          />
-        )}
-        {...rest}
-      />
-      <StatsPanel
-        title={`Network — IPv6 (${v6Unit}/s)`}
-        renderBody={() => (
-          <Graph
-            data={v6Data}
-            unit={v6Unit}
-            totalTraffic={v6totalTraffic}
-            metrics={v6Metrics}
-            {...commonGraphProps}
-          />
-        )}
-        {...rest}
-      />
+      <Grid item>
+        <StatsPanel
+          title={`Network — IPv4 (${v4Unit}/s)`}
+          renderBody={() => (
+            <Graph
+              data={v4Data}
+              unit={v4Unit}
+              totalTraffic={v4totalTraffic}
+              metrics={v4Metrics}
+              {...commonGraphProps}
+            />
+          )}
+          {...rest}
+        />
+      </Grid>
+      <Grid item>
+        <StatsPanel
+          title={`Network — IPv6 (${v6Unit}/s)`}
+          renderBody={() => (
+            <Graph
+              data={v6Data}
+              unit={v6Unit}
+              totalTraffic={v6totalTraffic}
+              metrics={v6Metrics}
+              {...commonGraphProps}
+            />
+          )}
+          {...rest}
+        />
+      </Grid>
     </Grid>
   );
 };

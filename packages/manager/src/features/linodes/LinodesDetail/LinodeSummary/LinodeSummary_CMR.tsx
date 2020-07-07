@@ -130,7 +130,6 @@ const styles = (theme: Theme) =>
       paddingRight: '1em'
     },
     graphGrids: {
-      paddingLeft: '8px',
       [theme.breakpoints.up('sm')]: {
         flexWrap: 'nowrap'
       }
@@ -417,49 +416,46 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       <Paper>
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
 
-        <Grid
-          container
-          id="tabpanel-summary"
-          role="tabpanel"
-          aria-labelledby="tab-summary"
-        >
-          <Grid item className={classes.main}>
-            <Grid item className="py0">
-              <div className={classes.graphControls}>
-                <Typography variant="h2" className={classes.labelRangeSelect}>
-                  Resource Allocation
-                </Typography>
-                <Select
-                  options={this.rangeSelectOptions}
-                  defaultValue={this.rangeSelectOptions[0]}
-                  onChange={this.handleChartRangeChange}
-                  name="chartRange"
-                  id="chartRange"
-                  small
-                  label="Select Time Range"
-                  hideLabel
-                  className={classes.chartSelect}
-                  isClearable={false}
-                  data-qa-item="chartRange"
-                />
-              </div>
-            </Grid>
+        <Grid item className={classes.main}>
+          <Grid item className="py0">
+            <div className={classes.graphControls}>
+              <Typography variant="h2" className={classes.labelRangeSelect}>
+                Resource Allocation
+              </Typography>
+              <Select
+                options={this.rangeSelectOptions}
+                defaultValue={this.rangeSelectOptions[0]}
+                onChange={this.handleChartRangeChange}
+                name="chartRange"
+                id="chartRange"
+                small
+                label="Select Time Range"
+                hideLabel
+                className={classes.chartSelect}
+                isClearable={false}
+                data-qa-item="chartRange"
+              />
+            </div>
+          </Grid>
 
-            <Grid container direction="row" className={classes.graphGrids}>
+          <Grid container direction="row" className={classes.graphGrids}>
+            <Grid item>
               <StatsPanel
                 title="CPU (%)"
                 renderBody={this.renderCPUChart}
                 {...chartProps}
               />
+            </Grid>
+            <Grid item>
               <StatsPanel
                 title="Disk IO (blocks/s)"
                 renderBody={this.renderDiskIOChart}
                 {...chartProps}
               />
             </Grid>
-
-            <NetworkGraph stats={this.state.stats} {...chartProps} />
           </Grid>
+
+          <NetworkGraph stats={this.state.stats} {...chartProps} />
         </Grid>
       </Paper>
     );
