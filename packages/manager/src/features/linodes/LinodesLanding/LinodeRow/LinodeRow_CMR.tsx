@@ -1,36 +1,42 @@
-import * as classNames from 'classnames';
 import { Notification } from '@linode/api-v4/lib/account';
 import {
   Config,
   LinodeBackups,
   LinodeStatus
 } from '@linode/api-v4/lib/linodes';
+import * as classNames from 'classnames';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
+import Hidden from 'src/components/core/Hidden';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
-import { linodeInTransition } from 'src/features/linodes/transitions';
+import TagCell from 'src/components/TagCell';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import {
+  linodeInTransition,
+  transitionText
+} from 'src/features/linodes/transitions';
+import useLinodes from 'src/hooks/useLinodes';
+import { capitalize } from 'src/utilities/capitalize';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
-import LinodeActionMenu_CMR from '../LinodeActionMenu_CMR';
+import LinodeActionMenu from '../LinodeActionMenu_CMR';
 import RegionIndicator from '../RegionIndicator';
+import { parseMaintenanceStartTime } from '../utils';
 import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
-import styled, { StyleProps } from './LinodeRow_CMR.style';
 import LinodeRowBackupCell from './LinodeRowBackupCell_CMR';
 import LinodeRowHeadCell from './LinodeRowHeadCell_CMR';
-
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { transitionText } from 'src/features/linodes/transitions';
-import { capitalize } from 'src/utilities/capitalize';
-import { parseMaintenanceStartTime } from '../utils';
+import styled, { StyleProps } from './LinodeRow_CMR.style';
 
 interface Props {
   backups: LinodeBackups;
@@ -49,6 +55,11 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
+  openTagDrawer: (
+    linodeID: number,
+    linodeLabel: string,
+    tags: string[]
+  ) => void;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
@@ -77,16 +88,17 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     region,
     status,
     displayStatus,
-    tags,
     mostRecentBackup,
     disk,
     vcpus,
     memory,
     type,
+    tags,
     image,
     // other props
     classes,
     linodeNotifications,
+    openTagDrawer,
     openDeleteDialog,
     openPowerActionDialog,
     openLinodeResize,
@@ -95,8 +107,39 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     mutationAvailable
   } = props;
 
+  const { updateLinode } = useLinodes();
+
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const addTag = React.useCallback(
+    (tag: string) => {
+      const newTags = [...tags, tag];
+      updateLinode({ linodeId: id, tags: newTags }).catch(e =>
+        enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
+          variant: 'error'
+        })
+      );
+    },
+    [tags, id, updateLinode, enqueueSnackbar]
+  );
+
+  const deleteTag = React.useCallback(
+    (tag: string) => {
+      const newTags = tags.filter(thisTag => thisTag !== tag);
+      updateLinode({ linodeId: id, tags: newTags }).catch(e =>
+        enqueueSnackbar(
+          getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
+          {
+            variant: 'error'
+          }
+        )
+      );
+    },
+    [tags, id, updateLinode, enqueueSnackbar]
+  );
 
   const MaintenanceText = () => {
     return (
@@ -218,6 +261,16 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         backupsEnabled={backups.enabled || false}
         mostRecentBackup={mostRecentBackup || ''}
       />
+      <Hidden mdDown>
+        <TagCell
+          tags={tags}
+          addTag={addTag}
+          deleteTag={deleteTag}
+          listAllTags={() => openTagDrawer(id, label, tags)}
+          width={415}
+        />
+      </Hidden>
+
       <TableCell className={classes.actionCell} data-qa-notifications>
         <div className={classes.actionInner}>
           <RenderFlag
@@ -225,7 +278,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             linodeNotifications={linodeNotifications}
             classes={classes}
           />
-          <LinodeActionMenu_CMR
+          <LinodeActionMenu
             linodeId={id}
             linodeLabel={label}
             linodeRegion={region}
@@ -247,7 +300,8 @@ const enhanced = compose<CombinedProps, Props>(
   withRecentEvent,
   hasMutationAvailable,
   withNotifications,
-  styled
+  styled,
+  React.memo
 );
 
 export default enhanced(LinodeRow);
