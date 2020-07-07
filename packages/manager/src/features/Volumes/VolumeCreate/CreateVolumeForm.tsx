@@ -143,19 +143,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             );
           });
       }}
-      render={formikProps => {
-        const {
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-          status,
-          values,
-          touched
-        } = formikProps;
-
+    >
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        setFieldValue,
+        status,
+        values,
+        touched
+      }) => {
         const linodeError =
           values.configId === -9999
             ? 'This Linode has no valid configurations.'
@@ -333,7 +332,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           </Form>
         );
       }}
-    />
+    </Formik>
   );
 };
 
