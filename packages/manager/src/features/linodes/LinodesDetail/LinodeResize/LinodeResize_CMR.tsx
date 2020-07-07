@@ -329,7 +329,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         open={this.props.open}
         onClose={this.props.onClose}
         fullWidth
-        maxWidth="lg"
+        maxWidth="md"
       >
         {unauthorized && <LinodePermissionsError />}
         {hostMaintenance && <HostMaintenanceError />}

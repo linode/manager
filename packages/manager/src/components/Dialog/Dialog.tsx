@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(4),
       paddingTop: 0,
+      maxHeight: '100%',
       '& .actionPanel': {
         marginTop: theme.spacing(2)
       },
@@ -25,6 +26,9 @@ const useStyles = makeStyles((theme: Theme) =>
         maxWidth: '100%',
         flexBasis: '100%'
       }
+    },
+    settingsBackdrop: {
+      backgroundColor: 'rgba(0,0,0,.3)'
     },
     drawerHeader: {
       padding: theme.spacing(2)
@@ -73,13 +77,16 @@ const Dialog: React.FC<DialogProps> = props => {
   return (
     <MUIDialog
       title={title}
-      maxWidth={props.maxWidth ?? 'lg'}
+      maxWidth={props.maxWidth ?? 'md'}
       {...rest}
       classes={{ paper: classes.paper }}
       data-qa-drawer
       data-testid="drawer"
       role="dialog"
       aria-labelledby={titleID}
+      BackdropProps={{
+        className: classes.settingsBackdrop
+      }}
     >
       <Grid
         container
