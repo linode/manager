@@ -19,9 +19,12 @@ import {
 
 import cachedRegions from 'src/cachedData/regions.json';
 
-export const makeResourcePage = (e: any[]) => ({
-  page: 1,
-  pages: 1,
+export const makeResourcePage = (
+  e: any[],
+  override: { page: number; pages: number } = { page: 1, pages: 1 }
+) => ({
+  page: override.page ?? 1,
+  pages: override.pages ?? 1,
   results: e.length,
   data: e
 });
@@ -91,8 +94,8 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(nodeBalancers)));
   }),
   rest.get('*/domains', (req, res, ctx) => {
-    const domains = domainFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(domains)));
+    const domains = domainFactory.buildList(500);
+    return res(ctx.json(makeResourcePage(domains, { page: 1, pages: 5 })));
   }),
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(10);
