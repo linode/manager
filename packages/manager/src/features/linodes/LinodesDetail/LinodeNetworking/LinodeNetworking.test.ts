@@ -108,6 +108,8 @@ describe('createType utility function', () => {
     expect(createType(privateIPv4, 'Reserved')).toBe(
       'IPv4 – Reserved (private)'
     );
+
+    expect(createType(publicIPv4, 'Shared')).toBe('IPv4 – Shared');
   });
 
   it('creates the correct type for ipv6', () => {
