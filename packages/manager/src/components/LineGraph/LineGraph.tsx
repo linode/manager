@@ -1,6 +1,6 @@
 import { curry } from 'ramda';
 import * as React from 'react';
-import * as Chart from 'chart.js';
+import Chart from 'chart.js';
 import 'chartjs-adapter-luxon';
 
 import LineChartIcon from 'src/assets/icons/line-chart.svg';
