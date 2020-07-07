@@ -147,6 +147,22 @@ const { getByTestId } = renderWithTheme(<MyComponent />, {
 });
 ```
 
+#### Mocking with Service Worker
+
+We now support mocking API requests both in test suites and the browser using the [msw](https://www.npmjs.com/package/msw) library.
+The handlers for this setup are stored in src/serverHandlers.ts. To add an API endpoint to this list, use the established format:
+
+```js
+rest.get("*/profile/preferences", (req, res, ctx) => {
+  return res(ctx.json({}));
+});
+```
+
+Any API call to /profile/preferences while the worker is active will return an empty object without actually making a network request.
+These mocks are automatically enabled for tests (using `beforeAll` and `afterAll` in src/setupTests.ts, which is run when setting up
+the Jest environment). To use these same handlers while working locally in the browser, run the app
+with `REACT_APP_MOCK_SERVICE_WORKER=true` in your `.env` file.
+
 ## End-to-End Tests
 
 E2E tests use [Cypress](https://cypress.io).
@@ -179,6 +195,7 @@ yarn cy:e2e
 ```
 
 To use the debugging mode and the interactive interface:
+
 ```bash
 yarn cy:debug
 ```
