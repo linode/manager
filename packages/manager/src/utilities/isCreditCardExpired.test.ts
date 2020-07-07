@@ -1,9 +1,9 @@
+import { DateTime } from 'luxon';
 import { hasExpirationPassedFor } from './isCreditCardExpired';
 
 describe('isCreditCardExpired', () => {
   describe('give today is 01/01/2019', () => {
-    const date = new Date();
-    date.setFullYear(2019, 0, 1);
+    const date = DateTime.fromObject({ year: 2019, month: 1, day: 1 });
 
     const isCreditCardExpired = hasExpirationPassedFor(date);
 
@@ -20,7 +20,7 @@ describe('isCreditCardExpired', () => {
       ['10/2018', true],
       ['11/2018', true],
       ['12/2018', true],
-      ['01/2019', true],
+      ['01/2019', false],
       ['02/2019', false],
       ['03/2019', false],
       ['04/2019', false],
