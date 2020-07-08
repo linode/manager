@@ -30,12 +30,10 @@ import {
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
     display: 'flex',
-    alignItems: 'center',
-    justify: 'center'
+    alignItems: 'center'
   },
   link: {
-    padding: '12.5px 15px',
-    width: '6.5em',
+    padding: '12px 10px',
     textAlign: 'center',
     '&:hover': {
       backgroundColor: '#3683dc',
@@ -52,7 +50,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   powerOnOrOff: {
     ...theme.applyLinkStyles,
-    width: '6.5em',
+    height: '100%',
+    minWidth: 'auto',
+    padding: '12px 10px',
+    whiteSpace: 'nowrap',
     '&:hover': {
       backgroundColor: '#3683dc',
       color: theme.color.white
@@ -63,8 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&:hover': {
         backgroundColor: 'inherit'
       }
-    },
-    padding: '12.5px 0px'
+    }
   }
 }));
 

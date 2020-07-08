@@ -265,7 +265,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           addTag={addTag}
           deleteTag={deleteTag}
           listAllTags={() => openTagDrawer(id, label, tags)}
-          width={415}
+          width={300}
           inTableContext
         />
       </Hidden>

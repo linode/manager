@@ -5,6 +5,10 @@ import formatDate from 'src/utilities/formatDate';
 import { ISO_DATE_FORMAT } from 'src/constants';
 
 const formatDateForTable = (date: string): [string, string] => {
+  if (!date) {
+    // Probably the to or from value is null (this is the case with credits/promos)
+    return ['', ''];
+  }
   /** gives us a datetime separated by a space. e.g. 2019-09-30 08:25:00 */
   const res = formatDate(date);
 
