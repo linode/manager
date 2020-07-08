@@ -38,10 +38,10 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
         <Grid item xs={3}>
           <NetworkTransfer linodeID={linodeID} />
         </Grid>
-        <Grid item>
-          <TransferHistory />
+        <Grid item xs={6}>
+          <TransferHistory linodeID={linodeID} />
         </Grid>
-        <Grid item>
+        <Grid item xs={3}>
           <DNSResolvers region={linodeRegion} />
         </Grid>
       </Grid>
