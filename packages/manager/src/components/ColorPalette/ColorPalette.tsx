@@ -91,9 +91,9 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
     { color: theme.bg.billingHeader, alias: 'theme.bg.billingHeader' }
   ];
 
-  const createSwatch = (color: string, alias: string) => {
+  const createSwatch = (idx: number, color: string, alias: string) => {
     return (
-      <>
+      <Grid item className={classes.swatchWrapper} key={idx}>
         <div
           className={classes.swatch}
           style={{ backgroundColor: color }}
@@ -103,7 +103,7 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
           <br />
           {alias}
         </Typography>
-      </>
+      </Grid>
     );
   };
 
@@ -113,20 +113,16 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
         <Grid item xs={12}>
           <Typography variant="h2">Primary Colors</Typography>
         </Grid>
-        {primaryColors.map((color, idx: number) => (
-          <Grid item className={classes.swatchWrapper} key={idx}>
-            {createSwatch(color.color, color.alias)}
-          </Grid>
-        ))}
+        {primaryColors.map((color, idx: number) =>
+          createSwatch(idx, color.color, color.alias)
+        )}
 
         <Grid item xs={12}>
           <Typography variant="h2">Etc.</Typography>
         </Grid>
-        {etc.map((color, idx: number) => (
-          <Grid item className={classes.swatchWrapper} key={idx}>
-            {createSwatch(color.color, color.alias)}
-          </Grid>
-        ))}
+        {etc.map((color, idx: number) =>
+          createSwatch(idx, color.color, color.alias)
+        )}
       </>
     );
   };
@@ -137,11 +133,9 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
         <Grid item xs={12}>
           <Typography variant="h2">Background Colors</Typography>
         </Grid>
-        {bgColors.map((color, idx: number) => (
-          <Grid item className={classes.swatchWrapper} key={idx}>
-            {createSwatch(color.color, color.alias)}
-          </Grid>
-        ))}
+        {bgColors.map((color, idx: number) =>
+          createSwatch(idx, color.color, color.alias)
+        )}
       </>
     );
   };
