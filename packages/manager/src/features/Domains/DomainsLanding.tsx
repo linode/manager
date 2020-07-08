@@ -54,6 +54,7 @@ import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DisableDomainDialog from './DisableDomainDialog';
 import DomainRow from './DomainTableRow';
+import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames =
@@ -340,7 +341,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     };
 
     const domainRow: EntityTableRow<Domain> = {
-      Component: DomainRow,
+      Component: flags.cmr ? DomainRow_CMR : DomainRow,
       data: domainsData ?? [],
       handlers
     };
