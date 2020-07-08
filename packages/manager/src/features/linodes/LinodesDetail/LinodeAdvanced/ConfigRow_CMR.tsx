@@ -24,7 +24,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     <TableRow key={config.id} data-qa-config={config.label}>
       <TableCell>{config.label}</TableCell>
       <TableCell>
-        {config.virt_mode === 'full_virt'
+        {config.virt_mode === 'fullvirt'
           ? 'Full virtualization'
           : 'Paravirtualization'}
       </TableCell>
