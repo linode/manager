@@ -6,11 +6,15 @@ import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
-    padding: theme.spacing(2),
     ...theme.applyLinkStyles,
+    height: '100%',
+    minWidth: 'auto',
+    padding: '12px 10px',
+    whiteSpace: 'nowrap',
     '&:hover': {
       textDecoration: 'none',
-      backgroundColor: theme.bg.lightBlue
+      backgroundColor: '#3683dc',
+      color: theme.color.white
     }
   }
 }));

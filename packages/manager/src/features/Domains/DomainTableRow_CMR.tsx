@@ -31,7 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   actionCell: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    padding: 0
   }
 }));
 
