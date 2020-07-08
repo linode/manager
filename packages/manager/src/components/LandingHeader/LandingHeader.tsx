@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props extends Omit<HeaderProps, 'actions'> {
-  body: JSX.Element;
+  body?: JSX.Element;
   docsLink: string;
   onAddNew?: () => void;
   entity: string;

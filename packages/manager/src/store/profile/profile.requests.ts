@@ -14,9 +14,11 @@ import { ApplicationState } from 'src/store';
 import { ThunkActionCreator } from 'src/store/types';
 import { getProfileActions, handleUpdateProfile } from './profile.actions';
 
-const maybeRequestGrants: (response: Profile) => Promise<Profile> = profile => {
+const maybeRequestGrants: (
+  response: Profile
+) => Promise<Profile> | Profile = profile => {
   if (profile.restricted === false) {
-    return Promise.resolve(profile);
+    return profile;
   }
 
   return getMyGrants().then(grants => ({ ...profile, grants }));

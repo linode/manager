@@ -6,6 +6,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import * as classnames from 'classnames';
+import { useSnackbar } from 'notistack';
 import { Link } from 'react-router-dom';
 import ConsoleIcon from 'src/assets/icons/console.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
@@ -26,7 +27,6 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import TagCell from 'src/components/TagCell';
-import TagDrawer from 'src/components/TagCell/TagDrawer';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
@@ -35,8 +35,10 @@ import IconTextLink from 'src/components/IconTextLink';
 import { distroIcons } from 'src/components/ImageSelect/icons';
 import { dcDisplayNames } from 'src/constants';
 import useImages from 'src/hooks/useImages';
+import useLinodes from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
@@ -659,24 +661,41 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     linodeRegionDisplay,
     linodeId,
     linodeCreated,
-    linodeTags,
-    linodeLabel
+    linodeTags
   } = props;
 
   const classes = useFooterStyles();
 
-  const [_tags, setTags] = React.useState<string[]>(linodeTags);
-  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const { updateLinode } = useLinodes();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const deleteTag = (thisTag: string) => {
-    setTags((currentTags: string[]) => {
-      return currentTags.filter(currentTag => currentTag !== thisTag);
-    });
-  };
+  const addTag = React.useCallback(
+    (tag: string) => {
+      const newTags = [...linodeTags, tag];
+      updateLinode({ linodeId, tags: newTags }).catch(e =>
+        enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
+          variant: 'error'
+        })
+      );
+    },
+    [linodeTags, linodeId, updateLinode, enqueueSnackbar]
+  );
 
-  const addTag = (newTag: string) => {
-    setTags([..._tags, newTag]);
-  };
+  const deleteTag = React.useCallback(
+    (tag: string) => {
+      const newTags = linodeTags.filter(thisTag => thisTag !== tag);
+      updateLinode({ linodeId, tags: newTags }).catch(e =>
+        enqueueSnackbar(
+          getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
+          {
+            variant: 'error'
+          }
+        )
+      );
+    },
+    [linodeTags, linodeId, updateLinode, enqueueSnackbar]
+  );
+
   return (
     <>
       <Grid container direction="row" justify="space-between">
@@ -713,18 +732,10 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
             tags={linodeTags}
             addTag={addTag}
             deleteTag={deleteTag}
-            listAllTags={() => setDrawerOpen(true)}
+            listAllTags={() => null}
           />
         </Grid>
       </Grid>
-      <TagDrawer
-        entityLabel={linodeLabel}
-        open={drawerOpen}
-        tags={linodeTags}
-        addTag={addTag}
-        deleteTag={deleteTag}
-        onClose={() => setDrawerOpen(false)}
-      />
     </>
   );
 });

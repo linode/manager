@@ -55,8 +55,10 @@ const styles = (theme: Theme) =>
       backgroundColor: '#9ea4ae'
     },
     controlHeader: {
-      backgroundColor: theme.bg.white,
-      marginBottom: 28
+      backgroundColor: '#f9fafa',
+      marginBottom: 20,
+      display: 'flex',
+      justifyContent: 'flex-end'
     },
     toggleButton: {
       padding: 10,

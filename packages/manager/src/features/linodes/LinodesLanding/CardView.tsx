@@ -61,7 +61,7 @@ const CardView: React.FC<CombinedProps> = props => {
             <Grid
               item
               xs={12}
-              className={classes.summaryOuter}
+              className={`${classes.summaryOuter} py0`}
               key={`linode-card-${idx}`}
             >
               <LinodeEntityDetail

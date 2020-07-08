@@ -38,17 +38,16 @@ export const EntityDetail: React.FC<EntityDetailProps> = props => {
   const classes = useStyles();
 
   return (
-    <Grid container direction="column">
-      <Grid item xs={12} className={classes.header}>
-        {header}
-      </Grid>
+    <div>
+      {header}
+
       <Grid item xs={12} className={classes.body}>
         {body}
       </Grid>
       <Grid item xs={12} className={classes.footer}>
         {footer}
       </Grid>
-    </Grid>
+    </div>
   );
 };
 
