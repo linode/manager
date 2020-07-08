@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { getIPs, IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
-import { compose, head, isEmpty, path, pathOr, uniq, uniqBy } from 'ramda';
+import { isEmpty, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
@@ -44,7 +44,7 @@ import EditRDNSDrawer from './EditRDNSDrawer';
 import IPSharingPanel from './IPSharingPanel';
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu_CMR';
 import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
-import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
+import LinodeNetworkingSummaryPanel from './NetworkingSummaryPanel';
 import { IPTypes } from './types';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
@@ -463,7 +463,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       IPRequestError,
       currentlySelectedIPRange
     } = this.state;
-    const firstPublicIPAddress = getFirstPublicIPv4FromResponse(linodeIPs);
 
     /* Loading state */
     if (initialLoading) {
@@ -506,10 +505,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         {readOnly && <LinodePermissionsError />}
         <LinodeNetworkingSummaryPanel
-          linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
-          sshIPAddress={firstPublicIPAddress}
-          linodeLabel={linodeLabel}
           linodeRegion={zoneName}
+          linodeID={linodeID}
         />
 
         {this.renderIPTable()}
@@ -717,12 +714,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles);
-
-const getFirstPublicIPv4FromResponse = compose(
-  path<string>(['address']),
-  head,
-  pathOr([], ['ipv4', 'public'])
-);
 
 interface ContextProps {
   linode: Linode;

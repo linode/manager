@@ -26,7 +26,7 @@ const TableWrapper: React.FC<CombinedProps> = props => {
   return (
     <Paper className={classes.paperWrapper}>
       <Grid container className="my0">
-        <Grid item xs={12} className="p0">
+        <Grid item xs={12} className="py0">
           <Table
             aria-label="List of Linodes"
             rowCount={dataLength}
