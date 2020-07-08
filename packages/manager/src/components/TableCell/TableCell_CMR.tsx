@@ -9,7 +9,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTop: 'none',
     fontSize: '.875rem',
     lineHeight: '1rem',
-    padding: '0px 15px'
+    padding: '0px 15px',
+    '&.emptyCell': {
+      borderTop: `1px solid ${theme.palette.divider}`,
+      height: 40
+    },
+    '&:last-child': {
+      paddingRight: 0
+    }
   },
   noWrap: {
     whiteSpace: 'nowrap'

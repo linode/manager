@@ -25,11 +25,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: theme.palette.text.primary,
+    fontSize: '.875rem',
     minHeight: 20,
     transition: 'none'
   },
   initialIcon: {
-    margin: '2px 4px 0 5px'
+    margin: '0 4px 0 5px'
   },
   noWrap: {
     whiteSpace: 'nowrap'
