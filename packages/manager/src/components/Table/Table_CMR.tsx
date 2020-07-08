@@ -27,7 +27,22 @@ const styles = (theme: Theme) =>
         opacity: 0.5
       },
       '& thead': {
-        borderTop: `1px solid ${theme.palette.divider}`
+        '& th': {
+          borderTop: `2px solid ${theme.color.grey9}`,
+          borderRight: `1px solid ${theme.color.grey9}`,
+          borderBottom: `2px solid ${theme.color.grey9}`,
+          borderLeft: `1px solid ${theme.color.grey9}`,
+          fontFamily: theme.font.bold,
+          fontSize: '0.875em !important',
+          color: theme.palette.text.primary,
+          padding: '10px 15px',
+          '&:first-child': {
+            borderLeft: 'none'
+          },
+          '&:last-child': {
+            borderRight: 'none'
+          }
+        }
       }
     },
     responsive: {
