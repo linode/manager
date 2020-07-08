@@ -2,7 +2,6 @@ import { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
@@ -11,6 +10,19 @@ import ActionMenu, { Handlers } from './DomainActionMenu_CMR';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  link: {
+    display: 'block',
+    fontFamily: theme.font.bold,
+    lineHeight: '1.125rem',
+    textDecoration: 'underline'
+  },
+  button: {
+    ...theme.applyLinkStyles,
+    display: 'block',
+    fontFamily: theme.font.bold,
+    lineHeight: '1.125rem',
+    textDecoration: 'underline'
+  },
   domain: {
     width: '60%'
   },
@@ -53,31 +65,12 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
-  const handleRowClick = (
-    e:
-      | React.ChangeEvent<HTMLTableRowElement>
-      | React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    id: number,
-    domain: string,
-    type: string
-  ) => {
-    if (type === 'slave') {
-      e.preventDefault();
-      props.onEdit(domain, id);
-    }
-  };
-
   return (
     <TableRow
       key={id}
       data-qa-domain-cell={domain}
       className={`${classes.domainRow} ${'fade-in-table'}`}
       ariaLabel={`Domain ${domain}`}
-      rowLink={
-        type === 'slave'
-          ? e => handleRowClick(e, id, domain, type)
-          : `/domains/${id}`
-      }
     >
       <TableCell parentColumn="Domain" data-qa-domain-label>
         <Grid container wrap="nowrap" alignItems="center">
@@ -92,15 +85,20 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
           <Grid item className={classes.domainCellContainer}>
             <div className={classes.labelStatusWrapper}>
               {type !== 'slave' ? (
-                <Link to={`/domains/${id}`} tabIndex={0}>
-                  <Typography variant="h3" data-qa-label>
-                    {domain}
-                  </Typography>
+                <Link
+                  to={`/domains/${id}`}
+                  tabIndex={0}
+                  className={classes.link}
+                >
+                  {domain}
                 </Link>
               ) : (
-                <Typography variant="h3" data-qa-label>
+                <button
+                  className={classes.button}
+                  onClick={() => props.onEdit(domain, id)}
+                >
                   {domain}
-                </Typography>
+                </button>
               )}
             </div>
           </Grid>
