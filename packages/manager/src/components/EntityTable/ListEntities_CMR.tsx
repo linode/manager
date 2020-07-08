@@ -53,7 +53,7 @@ export const ListEntities: React.FC<CombinedProps> = props => {
             handleSizeChange={handlePageSizeChange}
             page={page}
             pageSize={pageSize}
-            eventCategory="Firewall Devices Table"
+            eventCategory={`${entity} table`}
           />
         </>
       )}

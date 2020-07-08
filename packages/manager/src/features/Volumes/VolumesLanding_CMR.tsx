@@ -17,7 +17,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import { REFRESH_INTERVAL } from 'src/constants';
@@ -46,10 +45,14 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
-import ListGroupedVolumes from './ListGroupedVolumes';
-import ListVolumes from './ListVolumes';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import LandingHeader from 'src/components/LandingHeader';
+import EntityTable, {
+  EntityTableRow,
+  HeaderCell
+} from 'src/components/EntityTable/EntityTable_CMR';
+import VolumeRow from './VolumeTableRow_CMR';
+import { VolumeHandlers } from './VolumesActionMenu_CMR';
 
 import ErrorState from 'src/components/ErrorState';
 import Loading from 'src/components/LandingLoading';
@@ -295,6 +298,56 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     });
   };
 
+  handlers: VolumeHandlers = {
+    onAttach: this.handleAttach,
+    onDelete: this.handleDelete,
+    onDetach: this.handleDetach,
+    onEdit: this.props.openForEdit,
+    onClone: this.props.openForClone,
+    onShowConfig: this.props.openForConfig,
+    onResize: this.props.openForResize
+  };
+
+  headers: HeaderCell[] = [
+    {
+      label: 'Label',
+      dataColumn: 'label',
+      sortable: true,
+      widthPercent: 25
+    },
+    {
+      label: 'Region',
+      dataColumn: 'region',
+      sortable: true,
+      widthPercent: 15
+    },
+    {
+      label: 'Size',
+      dataColumn: 'size',
+      sortable: true,
+      widthPercent: 25
+    },
+    {
+      label: 'File System Path',
+      dataColumn: 'filesystem_path',
+      sortable: false,
+      widthPercent: 25
+    },
+    {
+      label: 'Attached To',
+      dataColumn: 'linodeLabel',
+      sortable: false,
+      widthPercent: 25
+    },
+    {
+      label: 'Action Menu',
+      visuallyHidden: true,
+      dataColumn: '',
+      sortable: false,
+      widthPercent: 5
+    }
+  ];
+
   render() {
     const {
       volumesError,
@@ -323,6 +376,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     if (data.length < 1) {
       return this.renderEmpty();
     }
+
+    const volumeRow: EntityTableRow<ExtendedVolume> = {
+      Component: VolumeRow,
+      data: data ?? [],
+      handlers: this.handlers
+    };
 
     return (
       <React.Fragment>
@@ -353,7 +412,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   iconType="domain"
                   docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
                 />
-                {this.renderData(data, volumesAreGrouped)}
+                <EntityTable
+                  entity="volume"
+                  groupByTag={volumesAreGrouped}
+                  row={volumeRow}
+                  headers={this.headers}
+                  initialOrder={{ order: 'asc', orderBy: 'label' }}
+                />
               </React.Fragment>
             );
           }}
@@ -457,42 +522,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           ]}
         />
       </React.Fragment>
-    );
-  };
-
-  renderData = (volumes: ExtendedVolume[], volumesAreGrouped: boolean) => {
-    const isVolumesLanding = this.props.match.params.linodeId === undefined;
-    const renderProps = {
-      isVolumesLanding,
-      handleAttach: this.handleAttach,
-      handleDelete: this.handleDelete,
-      handleDetach: this.handleDetach,
-      openForEdit: this.props.openForEdit,
-      openForClone: this.props.openForClone,
-      openForConfig: this.props.openForConfig,
-      openForResize: this.props.openForResize
-    };
-
-    return (
-      <OrderBy data={volumes} order={'asc'} orderBy={'label'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-          const orderProps = {
-            orderBy,
-            order,
-            handleOrderChange,
-            data: orderedData
-          };
-
-          return volumesAreGrouped ? (
-            <ListGroupedVolumes
-              {...orderProps}
-              renderProps={{ ...renderProps }}
-            />
-          ) : (
-            <ListVolumes {...orderProps} renderProps={{ ...renderProps }} />
-          );
-        }}
-      </OrderBy>
     );
   };
 
