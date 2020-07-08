@@ -51,6 +51,11 @@ module.exports = {
     // require.resolve('webpack-dev-server/client') + '?/',
     // require.resolve('webpack/hot/dev-server'),
     require.resolve('react-dev-utils/webpackHotDevClient'),
+    // If we're in development, load our browser mocks. These will
+    // only be active if REACT_APP_MOCK_SERVICE_WORKER is present
+    // in the .env file, but including this through Webpack prevents
+    // the production bundle from bloating.
+    paths.browserMocks,
     // Finally, this is your app's code:
     paths.appIndexJs
     // We include the app code last so that if there is a runtime error during
