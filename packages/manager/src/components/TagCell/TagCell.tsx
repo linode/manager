@@ -11,7 +11,8 @@ import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    position: 'relative'
+    position: 'relative',
+    width: '20%'
   },
   menuItem: {
     width: '30px',
