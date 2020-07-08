@@ -339,7 +339,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell parentColumn="Default Gateway">{gateway}</TableCell>
         <TableCell parentColumn="Subnet Mask">{subnetMask}</TableCell>
         <TableCell parentColumn="Reverse DNS" data-qa-rdns>
-          {_range ? this.renderRangeRDNSCell(_range) : rdns?.[0] ?? ''}
+          {/* Ranges have special handling for RDNS. */}
+          {_range ? this.renderRangeRDNSCell(_range) : rdns}
         </TableCell>
         <TableCell className={classes.action} data-qa-action>
           {_ip ? (
@@ -784,7 +785,7 @@ interface IPDisplay {
   type: IPTypes;
   gateway: string;
   subnetMask: string;
-  rdns?: string[];
+  rdns: string;
   // Not for display, but useful for lower-level components.
   _ip?: IPAddress;
   _range?: IPRange;
@@ -829,6 +830,7 @@ export const ipResponseToDisplayRows = (
           address,
           gateway: '',
           subnetMask: '',
+          rdns: '',
           _range: thisIP
         };
       })
@@ -853,9 +855,9 @@ const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
 const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {
   return {
     address: ip.address,
-    gateway: ip.gateway || '',
-    subnetMask: ip.subnet_mask || '',
-    rdns: ip.rdns ? [ip.rdns] : [],
+    gateway: ip.gateway ?? '',
+    subnetMask: ip.subnet_mask ?? '',
+    rdns: ip.rdns ?? '',
     type: createType(ip, key) as IPTypes,
     _ip: ip
   };
