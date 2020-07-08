@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       background: 'none',
       fontSize: '1rem',
       border: 'none',
-      padding: theme.spacing(1) + 2,
+      padding: '10px',
       color: '#3683dc',
       cursor: 'pointer',
       '&:hover': {

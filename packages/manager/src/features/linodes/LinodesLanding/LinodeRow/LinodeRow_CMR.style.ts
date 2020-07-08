@@ -33,31 +33,25 @@ const styles = (theme: Theme) =>
     actionCell: {
       paddingTop: 0,
       paddingBottom: 0,
+      paddingLeft: 0,
       width: '22%',
       textAlign: 'right',
-      '& button': {
-        maxHeight: 20,
-        width: 30
-      },
       [theme.breakpoints.down('sm')]: {
         width: '100%'
+      },
+      '&:last-child': {
+        paddingRight: 0
       }
     },
     actionInner: {
       display: 'flex',
       justifyContent: 'flex-end',
       '& a': {
-        lineHeight: '1.25rem'
+        lineHeight: '1rem'
       }
     },
     bodyRow: {
-      height: 'auto',
-      '&:hover': {
-        backgroundColor: '#f9fafa'
-      },
-      '&:hover .backupIcon': {
-        fill: theme.palette.primary.main
-      }
+      height: 'auto'
     },
     iconTableCell: {
       [theme.breakpoints.up('md')]: {
@@ -86,6 +80,7 @@ const styles = (theme: Theme) =>
       display: 'inline-block'
     },
     statusCell: {
+      whiteSpace: 'nowrap',
       width: '17%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'

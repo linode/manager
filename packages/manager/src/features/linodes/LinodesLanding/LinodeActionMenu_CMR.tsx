@@ -9,17 +9,16 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import regionsContainer, {
-  DefaultProps as WithRegionsProps
-} from 'src/containers/regions.container';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { useTypes } from 'src/hooks/useTypes';
+import { useRegions } from 'src/hooks/useRegions';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { MapState } from 'src/store/types';
@@ -32,12 +31,10 @@ import {
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
     display: 'flex',
-    alignItems: 'center',
-    justify: 'center'
+    alignItems: 'center'
   },
   link: {
-    padding: '12.5px 15px',
-    width: '6.5em',
+    padding: '12px 10px',
     textAlign: 'center',
     '&:hover': {
       backgroundColor: '#3683dc',
@@ -53,12 +50,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 10
   },
   powerOnOrOff: {
-    background: 'none',
-    color: theme.palette.primary.main,
-    border: 'none',
-    font: 'inherit',
-    cursor: 'pointer',
-    width: '6.5em',
+    ...theme.applyLinkStyles,
+    height: '100%',
+    minWidth: 'auto',
+    padding: '12px 10px',
+    whiteSpace: 'nowrap',
     '&:hover': {
       backgroundColor: '#3683dc',
       color: theme.color.white
@@ -69,8 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&:hover': {
         backgroundColor: 'inherit'
       }
-    },
-    padding: '12.5px 0px'
+    }
   }
 }));
 
@@ -91,14 +86,14 @@ export interface Props {
   ) => void;
 }
 
-export type CombinedProps = Props &
-  RouteComponentProps<{}> &
-  StateProps &
-  WithTypesProps &
-  WithRegionsProps;
+export type CombinedProps = Props & StateProps;
 
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+
+  const { types } = useTypes();
+  const history = useHistory();
+  const regions = useRegions();
 
   const [configs, setConfigs] = React.useState<Config[]>([]);
   const [configsError, setConfigsError] = React.useState<
@@ -126,13 +121,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   // When we clone a Linode from the action menu, we pass in several query string
   // params so everything is selected for us when we get to the Create flow.
   const buildQueryStringForLinodeClone = () => {
-    const {
-      linodeId,
-      linodeRegion,
-      linodeType,
-      typesData,
-      regionsData
-    } = props;
+    const { linodeId, linodeRegion, linodeType } = props;
 
     const params: Record<string, string> = {
       type: 'My Images',
@@ -141,12 +130,15 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     };
 
     // If the type of this Linode is a valid (current) type, use it in the QS
-    if (typesData && typesData.some(type => type.id === linodeType)) {
+    if (
+      types.entities &&
+      types.entities.some(typeEntity => typeEntity.id === linodeType)
+    ) {
       params.typeID = linodeType!;
     }
 
     // If the region of this Linode is a valid region, use it in the QS
-    if (regionsData && regionsData.some(region => region.id === linodeRegion)) {
+    if (regions && regions.some(region => region.id === linodeRegion)) {
       params.regionID = linodeRegion;
     }
 
@@ -161,7 +153,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       linodeStatus,
       openDeleteDialog,
       openPowerActionDialog,
-      history: { push },
       readOnly
     } = props;
 
@@ -196,7 +187,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Settings',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Settings Page');
-            push(`/linodes/${linodeId}/settings`);
+            history.push(`/linodes/${linodeId}/settings`);
             e.preventDefault();
             e.stopPropagation();
           }
@@ -206,7 +197,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               title: 'View Backups',
               onClick: (e: React.MouseEvent<HTMLElement>) => {
                 sendLinodeActionMenuItemEvent('Navigate to Backups Page');
-                push(`/linodes/${linodeId}/backup`);
+                history.push(`/linodes/${linodeId}/backup`);
                 e.preventDefault();
                 e.stopPropagation();
               }
@@ -215,7 +206,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               title: 'Enable Backups',
               onClick: (e: React.MouseEvent<HTMLElement>) => {
                 sendLinodeActionMenuItemEvent('Enable Backups');
-                push({
+                history.push({
                   pathname: `/linodes/${linodeId}/backup`,
                   state: { enableOnLoad: true }
                 });
@@ -228,7 +219,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Clone',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Clone');
-            push({
+            history.push({
               pathname: '/linodes/create',
               search: buildQueryStringForLinodeClone()
             });
@@ -242,7 +233,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Resize Page');
-            push(`/linodes/${linodeId}/resize`);
+            history.push(`/linodes/${linodeId}/resize`);
             e.preventDefault();
             e.stopPropagation();
           },
@@ -253,7 +244,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Rebuild',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
-            push(`/linodes/${linodeId}/rebuild`);
+            history.push(`/linodes/${linodeId}/rebuild`);
             e.preventDefault();
             e.stopPropagation();
           },
@@ -264,7 +255,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Rescue',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
-            push(`/linodes/${linodeId}/rescue`);
+            history.push(`/linodes/${linodeId}/rescue`);
             e.preventDefault();
             e.stopPropagation();
           },
@@ -276,7 +267,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendMigrationNavigationEvent('/linodes');
             sendLinodeActionMenuItemEvent('Migrate');
-            push({
+            history.push({
               pathname: `/linodes/${linodeId}/migrate`
             });
             e.preventDefault();
@@ -330,7 +321,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         <Link className={classes.link} to={`/linodes/${linodeId}`}>
           <span>Details</span>
         </Link>
-        <button
+        <Button
           className={classes.powerOnOrOff}
           onClick={e => {
             const action =
@@ -348,7 +339,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           disabled={!['running', 'offline'].includes(linodeStatus)}
         >
           {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-        </button>
+        </Button>
       </div>
       <ActionMenu
         className={classes.action}
@@ -376,13 +367,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 });
 
 const connected = connect(mapStateToProps);
-const withRegions = regionsContainer();
 
-const enhanced = compose<CombinedProps, Props>(
-  connected,
-  withTypes,
-  withRegions,
-  withRouter
-);
+const enhanced = compose<CombinedProps, Props>(connected);
 
 export default enhanced(LinodeActionMenu);
