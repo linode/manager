@@ -146,7 +146,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
 
   return (
     <Grid container direction="row" className={classes.graphGrids}>
-      <Grid item>
+      <Grid item xs={12}>
         <StatsPanel
           title={`Network — IPv4 (${v4Unit}/s)`}
           renderBody={() => (
@@ -161,7 +161,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
           {...rest}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <StatsPanel
           title={`Network — IPv6 (${v6Unit}/s)`}
           renderBody={() => (

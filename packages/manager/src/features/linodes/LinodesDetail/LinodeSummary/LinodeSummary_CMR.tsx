@@ -440,14 +440,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           </Grid>
 
           <Grid container direction="row" className={classes.graphGrids}>
-            <Grid item>
+            <Grid item xs={12}>
               <StatsPanel
                 title="CPU (%)"
                 renderBody={this.renderCPUChart}
                 {...chartProps}
               />
             </Grid>
-            <Grid item>
+            <Grid item xs={12}>
               <StatsPanel
                 title="Disk IO (blocks/s)"
                 renderBody={this.renderDiskIOChart}
