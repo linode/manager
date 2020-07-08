@@ -8,9 +8,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
-import AddNewLink from 'src/components/AddNewLink';
-import Breadcrumb from 'src/components/Breadcrumb';
-import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
   createStyles,
   Theme,
@@ -20,11 +17,9 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
-import Toggle from 'src/components/Toggle';
 import { REFRESH_INTERVAL } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withVolumes, {
@@ -54,6 +49,7 @@ import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import ListGroupedVolumes from './ListGroupedVolumes';
 import ListVolumes from './ListVolumes';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
+import LandingHeader from 'src/components/LandingHeader';
 
 import ErrorState from 'src/components/ErrorState';
 import Loading from 'src/components/LandingLoading';
@@ -301,12 +297,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      classes,
       volumesError,
       volumesLoading,
       mappedVolumesDataWithLinodes,
       readOnly,
-      removeBreadCrumb,
       fromLinodes
     } = this.props;
 
@@ -342,59 +336,23 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         >
           {({
             preference: volumesAreGrouped,
+            // eslint-disable-next-line
             togglePreference: toggleGroupVolumes
           }: ToggleProps<boolean>) => {
             return (
               <React.Fragment>
-                <Grid
-                  container
-                  justify="space-between"
-                  alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
-                  className={classes.root}
-                >
-                  <Grid item className={classes.titleWrapper}>
-                    {removeBreadCrumb ? (
-                      <Typography variant="h2">Volumes</Typography>
-                    ) : (
-                      <Breadcrumb
-                        pathname={this.props.location.pathname}
-                        labelTitle="Volumes"
-                        className={classes.title}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item className="p0">
-                    <FormControlLabel
-                      className={classes.tagGroup}
-                      control={
-                        <Toggle
-                          className={
-                            volumesAreGrouped ? ' checked' : ' unchecked'
-                          }
-                          onChange={toggleGroupVolumes}
-                          checked={volumesAreGrouped}
-                        />
-                      }
-                      label="Group by Tag:"
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Grid container alignItems="flex-end">
-                      <Grid item className="pt0">
-                        <AddNewLink
-                          onClick={
-                            fromLinodes
-                              ? this.openCreateVolumeDrawer
-                              : () => {
-                                  this.props.history.push('/volumes/create');
-                                }
-                          }
-                          label="Create a Volume"
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
+                <LandingHeader
+                  title="Volume"
+                  onAddNew={
+                    fromLinodes
+                      ? () => this.openCreateVolumeDrawer()
+                      : () => {
+                          this.props.history.push('/volumes/create');
+                        }
+                  }
+                  iconType="domain"
+                  docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
+                />
                 {this.renderData(data, volumesAreGrouped)}
               </React.Fragment>
             );
@@ -547,7 +505,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     });
   };
 
-  openCreateVolumeDrawer = (e: any) => {
+  openCreateVolumeDrawer = () => {
     const { linodeId, linodeLabel, linodeRegion } = this.props;
     if (linodeId && linodeLabel && linodeRegion) {
       return this.props.openForCreating('Created from Linode Details', {
@@ -558,8 +516,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     }
 
     this.props.openForCreating('Created from Volumes Landing');
-
-    e.preventDefault();
   };
 
   detachVolume = () => {
@@ -634,7 +590,7 @@ const EmptyCopy = () => (
         rel="noopener noreferrer"
         className="h-u"
       >
-        Here's how to use Block Storage with your Linode
+        Here&#39;s how to use Block Storage with your Linode
       </a>
       &nbsp;or&nbsp;
       <a
