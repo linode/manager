@@ -107,7 +107,7 @@ export const buildLinodeCloneTransitionText = (
   return text;
 };
 
-// Given a list of Events, returns set of all Linodes that are involved in an in-progress event.
+// Given a list of Events, returns a set of all Linode IDs that are involved in an in-progress event.
 export const linodesInTransition = (events: Event[]) => {
   const set = new Set<number>();
 

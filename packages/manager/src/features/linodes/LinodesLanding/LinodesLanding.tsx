@@ -274,7 +274,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 toggleCallbackFnDebounced={sendGroupByAnalytic}
                 value={
                   // If some Linodes need maintenance, default to NOT grouping by tag.
-                  // This is because the "Group by Tag" can reduce visibility of Linodes needing
+                  // This is because the "Group by Tag" view can reduce visibility of Linodes needing
                   // maintenance, since the ordering of groups is alphanumeric and can't be changed.
                   this.props.someLinodesHaveScheduledMaintenance
                     ? false
