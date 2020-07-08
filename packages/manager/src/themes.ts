@@ -79,7 +79,8 @@ const darkThemeOptions = {
     primaryNavBorder: '#303235',
     primaryNavPaper: '#3a3f46',
     topMenu: '#33383d',
-    billingHeader: '#222'
+    billingHeader: '#222',
+    controlHeader: 'rgba(0, 0, 0, 0.2)'
   },
   color: {
     headline: primaryColors.headline,
@@ -116,7 +117,8 @@ const darkThemeOptions = {
     kubeLabel: '#fff',
     primaryNavText: '#fff',
     borderBilling: primaryColors.light,
-    billingText: '#fff'
+    billingText: '#fff',
+    tagButton: '#222'
   },
   animateCircleIcon: {
     ...iconCircleAnimation

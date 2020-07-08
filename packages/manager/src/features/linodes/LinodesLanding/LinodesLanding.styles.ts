@@ -55,8 +55,8 @@ const styles = (theme: Theme) =>
       backgroundColor: '#9ea4ae'
     },
     controlHeader: {
-      backgroundColor: '#f9fafa',
-      marginBottom: 20,
+      backgroundColor: theme.bg.controlHeader,
+      marginBottom: 28,
       display: 'flex',
       justifyContent: 'flex-end'
     },

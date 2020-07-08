@@ -7,6 +7,7 @@ import { PaginationProps } from 'src/components/Paginate';
 import withImages from 'src/containers/withImages.container';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
+import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from 'src/components/core/styles';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
@@ -14,6 +15,9 @@ import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import useFlags from 'src/hooks/useFlags';
 import useProfile from 'src/hooks/useProfile';
+import useReduxLoad from 'src/hooks/useReduxLoad';
+import useVolumes from 'src/hooks/useVolumes';
+import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 
 const useStyles = makeStyles(() => ({
   summaryOuter: {
@@ -41,6 +45,8 @@ const CardView: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
   const { profile } = useProfile();
+  const { _loading } = useReduxLoad(['volumes']);
+  const { volumes } = useVolumes();
 
   const {
     data,
@@ -53,6 +59,13 @@ const CardView: React.FC<CombinedProps> = props => {
   if (!profile.data?.username) {
     return null;
   }
+
+  if (_loading) {
+    return <CircleProgress />;
+  }
+
+  const getVolumesByLinode = (linodeId: number) =>
+    getVolumesForLinode(volumes.itemsById, linodeId).length;
 
   return (
     <Grid container>
@@ -67,6 +80,7 @@ const CardView: React.FC<CombinedProps> = props => {
               <LinodeEntityDetail
                 variant="landing"
                 linode={linode}
+                numVolumes={getVolumesByLinode(linode.id)}
                 username={profile.data?.username}
                 linodeConfigs={linodeConfigs}
                 backups={linode.backups}

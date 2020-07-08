@@ -12,6 +12,7 @@ storiesOf('EntityDetail', module).add('Linode', () => (
       <h2>Linode Details:</h2>
       <LinodeEntityDetail
         variant="details"
+        numVolumes={2}
         linode={linodeFactory.build()}
         username="linode-user"
         openDeleteDialog={() => null}
@@ -24,6 +25,7 @@ storiesOf('EntityDetail', module).add('Linode', () => (
       <h2 style={{ marginTop: 60 }}>Dashboard/Linodes Landing</h2>
       <LinodeEntityDetail
         variant="landing"
+        numVolumes={2}
         linode={linodeFactory.build()}
         username="linode-user"
         openDeleteDialog={() => null}

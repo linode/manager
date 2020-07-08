@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   addTagButton: {
     padding: '6px 10px',
     borderRadius: 3,
-    backgroundColor: '#f1f7fd',
+    backgroundColor: theme.color.tagButton,
     border: 'none',
     color: '#3683dc',
     display: 'flex',

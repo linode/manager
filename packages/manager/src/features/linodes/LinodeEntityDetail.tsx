@@ -1,9 +1,5 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
-import {
-  Config,
-  LinodeBackups,
-  getLinodeVolumes
-} from '@linode/api-v4/lib/linodes';
+import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
@@ -45,8 +41,6 @@ import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { ResourcePage } from '@linode/api-v4/lib/types';
-import { Volume } from '@linode/api-v4/lib/volumes';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -63,6 +57,7 @@ interface LinodeEntityDetailProps {
   ) => void;
   backups: LinodeBackups;
   linodeConfigs: Config[];
+  numVolumes: number;
 }
 
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
@@ -73,7 +68,8 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     openDeleteDialog,
     openPowerActionDialog,
     backups,
-    linodeConfigs
+    linodeConfigs,
+    numVolumes
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -116,6 +112,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
       body={
         <Body
           linodeLabel={linode.label}
+          numVolumes={numVolumes}
           numCPUs={linode.specs.vcpus}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
@@ -379,6 +376,7 @@ export interface BodyProps {
   linodeId: number;
   username: string;
   linodeLabel: string;
+  numVolumes: number;
 }
 
 const useBodyStyles = makeStyles((theme: Theme) => ({
@@ -475,28 +473,9 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
     ipv6,
     linodeId,
     username,
-    linodeLabel
+    linodeLabel,
+    numVolumes
   } = props;
-
-  const [volumesData, setVolumesData] = React.useState<Volume[] | undefined>(
-    undefined
-  );
-  const [loading, setLoading] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    setLoading(true);
-
-    getLinodeVolumes(linodeId).then((response: ResourcePage<Volume>) => {
-      setLoading(false);
-      setVolumesData(response.data);
-    });
-  }, []);
-
-  const numVolumes = loading
-    ? 'Loading'
-    : volumesData !== undefined
-    ? volumesData.length
-    : 0;
 
   return (
     <Grid
