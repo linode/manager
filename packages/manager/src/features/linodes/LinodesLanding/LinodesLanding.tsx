@@ -60,7 +60,8 @@ import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import ToggleBox from './ToggleBox';
-import { statusToPriority } from './utils';
+import { ExtendedStatus, statusToPriority } from './utils';
+import { linodesInTransition as _linodesInTransition } from '../transitions';
 
 interface State {
   powerDialogOpen: boolean;
@@ -168,7 +169,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesData,
       classes,
       backupsCTA,
-      location
+      location,
+      linodesInTransition
     } = this.props;
 
     const params: Params = parse(this.props.location.search, {
@@ -395,20 +397,28 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                             <Grid item xs={12} className={'px0'}>
                               <OrderBy
                                 data={linodesData.map(linode => {
+                                  // Determine the priority of this Linode's status.
+                                  // We have to check for "Maintenance" and "Busy" since these are
+                                  // not actual Linode statuses (we derive them client-side).
+                                  let _status: ExtendedStatus = linode.status;
+                                  if (linode.maintenance) {
+                                    _status = 'maintenance';
+                                  } else if (
+                                    linodesInTransition.has(linode.id)
+                                  ) {
+                                    _status = 'busy';
+                                  }
+
                                   return {
                                     ...linode,
                                     displayStatus: linode.maintenance
                                       ? 'maintenance'
                                       : linode.status,
-                                    _statusPriority: statusToPriority(
-                                      linode.maintenance
-                                        ? 'maintenance'
-                                        : linode.status
-                                    )
+                                    _statusPriority: statusToPriority(_status)
                                   };
                                 })}
-                                // If there are Linodes with scheduled maintenance, show those at
-                                // the top of the list by default.
+                                // If there are Linodes with scheduled maintenance, default to
+                                // sorting by status priority so they are more visible.
                                 order="asc"
                                 orderBy={
                                   this.props.someLinodesHaveScheduledMaintenance
@@ -550,6 +560,7 @@ interface StateProps {
   userTimezoneLoading: boolean;
   userTimezoneError?: APIError[];
   someLinodesHaveScheduledMaintenance: boolean;
+  linodesInTransition: Set<number>;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => {
@@ -578,7 +589,8 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     userTimezoneError: path<APIError[]>(
       ['read'],
       state.__resources.profile.error
-    )
+    ),
+    linodesInTransition: _linodesInTransition(state.events.events)
   };
 };
 

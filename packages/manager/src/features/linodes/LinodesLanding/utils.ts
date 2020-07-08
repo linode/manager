@@ -1,5 +1,5 @@
-import { reportException } from 'src/exceptionReporting';
 import { LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { reportException } from 'src/exceptionReporting';
 
 export const parseMaintenanceStartTime = (startTime?: string | null) => {
   if (!startTime) {
@@ -20,17 +20,19 @@ export const parseMaintenanceStartTime = (startTime?: string | null) => {
   return startTime;
 };
 
+export type ExtendedStatus = LinodeStatus | 'maintenance' | 'busy';
+
 // Given a Linode's status, assign it a priority so the "Status" column can be sorted in this way.
-export const statusToPriority = (
-  status: LinodeStatus | 'maintenance'
-): number => {
+export const statusToPriority = (status: ExtendedStatus): number => {
   switch (status) {
     case 'maintenance':
       return 1;
     case 'stopped':
       return 2;
+    case 'busy':
+      return 3;
     case 'running':
-      return 4; // Intentionally skip "3" for now.
+      return 4;
     case 'offline':
       return 5;
     default:
