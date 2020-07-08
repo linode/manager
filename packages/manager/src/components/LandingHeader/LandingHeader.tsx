@@ -18,6 +18,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props extends Omit<HeaderProps, 'actions'> {
+  extraActions?: JSX.Element;
   body?: JSX.Element;
   docsLink: string;
   onAddNew?: () => void;
@@ -31,11 +32,12 @@ interface Props extends Omit<HeaderProps, 'actions'> {
 
 export const LandingHeader: React.FC<Props> = props => {
   const classes = useStyles();
-  const { docsLink, onAddNew, title } = props;
+  const { docsLink, extraActions, onAddNew, title } = props;
 
   const actions = React.useMemo(
     () => (
       <Grid container direction="row" alignItems="center" justify="flex-end">
+        {extraActions && <Grid item>{extraActions}</Grid>}
         {onAddNew && (
           <Grid item>
             <Button
