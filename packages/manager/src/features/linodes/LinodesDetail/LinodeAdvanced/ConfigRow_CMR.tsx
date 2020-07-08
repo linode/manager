@@ -7,6 +7,7 @@ import TableRow from 'src/components/core/TableRow';
 interface Props {
   config: Config;
   linodeId: number;
+  linodeMemory: number;
   readOnly: boolean;
 }
 
@@ -19,7 +20,18 @@ interface Handlers {
 export type CombinedProps = Props & Handlers;
 
 export const ConfigRow: React.FC<CombinedProps> = props => {
-  const { config, linodeId, onBoot, onEdit, onDelete, readOnly } = props;
+  const {
+    config,
+    linodeId,
+    linodeMemory,
+    onBoot,
+    onEdit,
+    onDelete,
+    readOnly
+  } = props;
+
+  // If config.memory_limit === 0, use linodeMemory; the API interprets a memory limit of 0 as the RAM of the Linode itself.
+
   return (
     <TableRow key={config.id} data-qa-config={config.label}>
       <TableCell>{config.label}</TableCell>
@@ -29,7 +41,11 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
           : 'Paravirtualization'}
       </TableCell>
       <TableCell>GRUB 2</TableCell>
-      <TableCell>4 GB</TableCell>
+      <TableCell>
+        {config.memory_limit === 0
+          ? `${linodeMemory} GB`
+          : `${config.memory_limit} MB`}
+      </TableCell>
       <TableCell>/dev/sda</TableCell>
       <TableCell>
         <LinodeConfigActionMenu

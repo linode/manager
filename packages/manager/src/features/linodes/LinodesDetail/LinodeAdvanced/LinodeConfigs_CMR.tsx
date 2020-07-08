@@ -359,6 +359,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               key={`config-row-${thisConfig.id}`}
                               config={thisConfig}
                               linodeId={linodeId}
+                              linodeMemory={this.props.linodeMemory}
                               onBoot={this.handleBoot}
                               onEdit={this.openForEditing}
                               onDelete={this.confirmDelete}
