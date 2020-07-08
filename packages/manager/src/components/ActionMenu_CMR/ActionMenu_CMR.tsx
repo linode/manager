@@ -34,11 +34,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       cursor: 'pointer',
       '&:hover': {
         backgroundColor: '#3683dc',
-        color: theme.color.white
+        color: '#fff'
       },
       '&[aria-expanded="true"]': {
         backgroundColor: '#3683dc',
-        color: theme.color.white,
+        color: '#fff',
         width: '100%'
       }
     }
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderRadius: '3px 0 3px 3px',
       border: 'none',
       fontSize: 14,
-      color: theme.color.white,
+      color: '#fff',
       textAlign: 'left'
     }
   },
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: '16px',
       borderBottom: '1px solid #5294e0',
       background: '#3683dc',
-      color: theme.color.white,
+      color: '#fff',
       borderRadius: 3
     },
     '&[data-reach-menu-item][data-selected]': {
