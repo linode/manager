@@ -10,6 +10,7 @@ import RenderVolumeData, {
   RenderVolumeDataProps
 } from './RenderVolumeData_CMR';
 import SortableVolumesTableHeader from './SortableVolumesTableHeader_CMR';
+import { ExtendedVolume } from './types';
 
 interface Props {
   data: Volume[];
@@ -25,6 +26,14 @@ const ListVolumes: React.FC<CombinedProps> = props => {
   const { orderBy, order, handleOrderChange, data, renderProps } = props;
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+
+  const renderData = (volumes: ExtendedVolume[]) => {
+    if (volumes.length < 1) {
+      return renderEmpty();
+    }
+  };
+
+  const renderEmpty = () => {};
 
   return (
     <Paginate
@@ -55,6 +64,7 @@ const ListVolumes: React.FC<CombinedProps> = props => {
                 isVolumesLanding={renderProps.isVolumesLanding}
               />
               <TableBody>
+                {renderData(paginatedData)}
                 <RenderVolumeData data={paginatedData} {...renderProps} />
               </TableBody>
             </Table>

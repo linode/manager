@@ -10,7 +10,6 @@ import { bindActionCreators, Dispatch } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Breadcrumb from 'src/components/Breadcrumb';
-import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
   createStyles,
   Theme,
@@ -24,7 +23,6 @@ import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
-import Toggle from 'src/components/Toggle';
 import { REFRESH_INTERVAL } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withVolumes, {
@@ -49,15 +47,12 @@ import {
   Origin as VolumeDrawerOrigin
 } from 'src/store/volumeForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
-import ListGroupedVolumes from './ListGroupedVolumes';
 import ListVolumes from './ListVolumes_CMR';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 
 import ErrorState from 'src/components/ErrorState';
 import Loading from 'src/components/LandingLoading';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 
 import withRegions, {
   DefaultProps as RegionProps
@@ -279,62 +274,45 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           )
         : mappedVolumesDataWithLinodes;
 
-    if (data.length < 1) {
-      return this.renderEmpty();
-    }
+    // if (data.length < 1) {
+    //   return this.renderEmpty();
+    // }
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Volumes" />
         {readOnly && <LinodePermissionsError />}
-        <PreferenceToggle<boolean>
-          preferenceKey="volumes_group_by_tag"
-          preferenceOptions={[false, true]}
-          localStorageKey="GROUP_VOLUMES"
-          toggleCallbackFnDebounced={toggleVolumesGroupBy}
+        <Grid
+          className={classes.root}
+          container
+          alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
+          justify="space-between"
         >
-          {({
-            preference: volumesAreGrouped
-          }: // togglePreference: toggleGroupVolumes
-          ToggleProps<boolean>) => {
-            return (
-              <React.Fragment>
-                <Grid
-                  className={classes.root}
-                  container
-                  alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
-                  justify="space-between"
-                >
-                  <Grid item className="p0">
-                    {removeBreadCrumb ? (
-                      <Typography variant="h3" className={classes.headline}>
-                        Volumes
-                      </Typography>
-                    ) : (
-                      <Breadcrumb
-                        labelTitle="Volumes"
-                        pathname={this.props.location.pathname}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item className={classes.addNewWrapper}>
-                    <AddNewLink
-                      onClick={
-                        fromLinodes
-                          ? this.openCreateVolumeDrawer
-                          : () => {
-                              this.props.history.push('/volumes/create');
-                            }
-                      }
-                      label="Add a Volume..."
-                    />
-                  </Grid>
-                </Grid>
-                {this.renderData(data, volumesAreGrouped)}
-              </React.Fragment>
-            );
-          }}
-        </PreferenceToggle>
+          <Grid item className="p0">
+            {removeBreadCrumb ? (
+              <Typography variant="h3" className={classes.headline}>
+                Volumes
+              </Typography>
+            ) : (
+              <Breadcrumb
+                labelTitle="Volumes"
+                pathname={this.props.location.pathname}
+              />
+            )}
+          </Grid>
+          <Grid item className={classes.addNewWrapper}>
+            <AddNewLink
+              onClick={
+                fromLinodes
+                  ? this.openCreateVolumeDrawer
+                  : () => {
+                      this.props.history.push('/volumes/create');
+                    }
+              }
+              label="Add a Volume..."
+            />
+          </Grid>
+        </Grid>
+        {this.renderData(data)}
 
         <VolumeAttachmentDrawer
           open={this.state.attachmentDrawer.open}
@@ -437,7 +415,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderData = (volumes: ExtendedVolume[], volumesAreGrouped: boolean) => {
+  renderData = (volumes: ExtendedVolume[]) => {
     const isVolumesLanding = this.props.match.params.linodeId === undefined;
     const renderProps = {
       isVolumesLanding,
@@ -460,12 +438,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             data: orderedData
           };
 
-          return volumesAreGrouped ? (
-            <ListGroupedVolumes
-              {...orderProps}
-              renderProps={{ ...renderProps }}
-            />
-          ) : (
+          return (
             <ListVolumes {...orderProps} renderProps={{ ...renderProps }} />
           );
         }}
@@ -552,11 +525,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       });
   };
 }
-
-const eventCategory = `volumes landing`;
-
-const toggleVolumesGroupBy = (checked: boolean) =>
-  sendGroupByTagEnabledEvent(eventCategory, checked);
 
 const EmptyCopy = () => (
   <>
