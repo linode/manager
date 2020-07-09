@@ -3,6 +3,22 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { IPTypes } from './types';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import { makeStyles, Theme } from 'src/components/core/styles';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    ...theme.applyLinkStyles,
+    height: '100%',
+    minWidth: 'auto',
+    padding: '12px 10px',
+    whiteSpace: 'nowrap',
+    '&:hover': {
+      textDecoration: 'none',
+      backgroundColor: '#3683dc',
+      color: theme.color.white
+    }
+  }
+}));
 
 interface Props {
   onView: () => void;
@@ -15,16 +31,11 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
-  createActions = () => {
-    const {
-      onView,
-      onEdit,
-      onRemove,
-      ipType,
-      ipAddress,
-      readOnly
-    } = this.props;
+export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
+  const createActions = () => {
+    const { onView, onEdit, onRemove, ipType, ipAddress, readOnly } = props;
 
     return () => {
       const actions: Action[] = [
@@ -79,15 +90,32 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
     };
   };
 
-  render() {
-    const { address } = this.props.ipAddress as any;
-    return (
+  const { address } = props.ipAddress as any;
+  return (
+    <>
+      <div className="flex-center">
+        <button className={classes.button} onClick={() => null}>
+          Edit RDNS
+        </button>
+        <button
+          className={classes.button}
+          onClick={() => {
+            // onDisableOrEnable(
+            //   status === 'active' ? 'disable' : 'enable',
+            //   domain,
+            //   id
+            // )
+          }}
+        >
+          {status === 'active' ? 'Disable' : 'Enable'}
+        </button>
+      </div>
       <ActionMenu
-        createActions={this.createActions()}
+        createActions={createActions()}
         ariaLabel={`Action menu for Address ${address}`}
       />
-    );
-  }
-}
+    </>
+  );
+};
 
 export default withRouter(LinodeNetworkingActionMenu);

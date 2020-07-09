@@ -76,7 +76,10 @@ const styles = (theme: Theme) =>
       marginBottom: `${theme.spacing(2)}px`
     },
     action: {
-      textAlign: 'right',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: 0,
       '& a': {
         marginRight: theme.spacing(1)
       },
@@ -640,16 +643,16 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
                       >
                         Type
                       </TableSortCell>
-                      <TableCell style={{ width: '15%' }}>
+                      <TableCell style={{ width: '10%' }}>
                         Default Gateway
                       </TableCell>
-                      <TableCell style={{ width: '15%' }}>
+                      <TableCell style={{ width: '10%' }}>
                         Subnet Mask
                       </TableCell>
-                      <TableCell style={{ width: '25%', borderRight: 'none' }}>
+                      <TableCell style={{ width: '10%', borderRight: 'none' }}>
                         Reverse DNS
                       </TableCell>
-                      <TableCell style={{ borderLeft: 'none' }} />
+                      <TableCell style={{ width: '20%', borderLeft: 'none' }} />
                     </TableRow>
                   </TableHead>
                   <TableBody>{orderedData.map(this.renderIPRow)}</TableBody>
