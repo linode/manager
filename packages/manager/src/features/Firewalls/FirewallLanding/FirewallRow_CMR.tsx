@@ -53,7 +53,12 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
         {getLinodesCellString(devices, loading, error.read)}
       </TableCell>
       <TableCell>
-        <ActionMenu id={id} label={label} status={status} {...actionHandlers} />
+        <ActionMenu
+          firewallID={id}
+          firewallLabel={label}
+          firewallStatus={status}
+          {...actionHandlers}
+        />
       </TableCell>
     </TableRow>
   );
