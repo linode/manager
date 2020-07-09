@@ -430,7 +430,6 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer'
   },
   accessTable: {
-    maxWidth: 600,
     '& tr': {
       height: 34
     },
@@ -443,7 +442,10 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       paddingTop: 8,
       paddingRight: 10,
       paddingBottom: 7,
-      paddingLeft: 10
+      paddingLeft: 10,
+      overflowX: 'auto',
+      maxWidth: '100%',
+      whiteSpace: 'nowrap'
     },
     '& tr:first-child > td': {
       borderBottom: '1px solid white'
@@ -460,7 +462,8 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     }
   },
   accessTableContainer: {
-    overFlowX: 'hidden'
+    overflowX: 'auto',
+    maxWidth: 600
   },
   code: {
     // @todo: use font from designs
@@ -484,12 +487,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
   } = props;
 
   return (
-    <Grid
-      container
-      direction="row"
-      justify="space-between"
-      className={classes.accessTableContainer}
-    >
+    <Grid container direction="row" justify="space-between">
       <Grid item>
         {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
         <Grid container>
@@ -583,20 +581,24 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
         </List>
       </Grid>
       <Grid item>
-        <Table className={classes.accessTable}>
-          <TableBody>
-            <TableRow>
-              <TableCell>SSH Access</TableCell>
-              <TableCell className={classes.code}>{sshLink(ipv4[0])}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>LISH via SSH</TableCell>
-              <TableCell className={classes.code}>
-                {lishLink(username, region, linodeLabel)}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <div className={classes.accessTableContainer}>
+          <Table className={classes.accessTable}>
+            <TableBody>
+              <TableRow>
+                <TableCell>SSH Access</TableCell>
+                <TableCell className={classes.code}>
+                  {sshLink(ipv4[0])}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>LISH via SSH</TableCell>
+                <TableCell className={classes.code}>
+                  {lishLink(username, region, linodeLabel)}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
       </Grid>
     </Grid>
   );
@@ -691,7 +693,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
                 to={`/linodes/${linodeId}/resize`}
                 className={classes.listItem}
               >
-                {linodePlan}
+                {linodePlan} Plan
               </Link>
             )}
             {linodeRegionDisplay && (
