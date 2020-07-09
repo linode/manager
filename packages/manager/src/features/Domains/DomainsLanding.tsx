@@ -414,7 +414,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     }
                     onAddNew={this.openCreateDomainDrawer}
                     iconType="domain"
-                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                    docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
                   />
                 ) : (
                   <Grid
