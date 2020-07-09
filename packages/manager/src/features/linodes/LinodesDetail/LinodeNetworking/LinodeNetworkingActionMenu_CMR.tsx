@@ -20,6 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+const permissionsError = "You don't have permissions to modify this Linode";
+
 interface Props {
   onView: () => void;
   onEdit?: (ip: IPAddress | IPRange) => void;
@@ -34,9 +36,22 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const createActions = () => {
-    const { onView, onEdit, onRemove, ipType, ipAddress, readOnly } = props;
+  const { onView, onEdit, onRemove, ipType, ipAddress, readOnly } = props;
 
+  const canEditRDNS =
+    !!onEdit &&
+    !!ipAddress &&
+    ipType !== 'IPv4 – Private' &&
+    ipType !== 'IPv6 – Link Local' &&
+    ipType !== 'IPv4 – Reserved (public)' &&
+    ipType !== 'IPv4 – Reserved (private)';
+
+  const canTransfer =
+    ipAddress && (ipType === 'IPv4 – Public' || ipType === 'IPv4 – Private');
+
+  const canDelete = !!onRemove && !!ipAddress && ipType === 'IPv4 – Public';
+
+  const createActions = () => {
     return () => {
       const actions: Action[] = [
         {
@@ -48,41 +63,41 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
         }
       ];
 
-      /**
-       * can only edit if we're not dealing with private IPs, link local, or reserved IPs
-       */
-      if (
-        onEdit &&
-        ipAddress &&
-        ipType !== 'IPv4 – Private' &&
-        ipType !== 'IPv6 – Link Local' &&
-        ipType !== 'IPv4 – Reserved (public)' &&
-        ipType !== 'IPv4 – Reserved (private)'
-      ) {
+      if (canTransfer) {
         actions.push({
-          title: 'Edit RDNS',
+          title: 'Move to...',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onEdit(ipAddress);
+            // onMove(ipAddress)
             e.preventDefault();
           },
           disabled: readOnly,
-          tooltip: readOnly
-            ? "You don't have permissions to modify this Linode"
-            : undefined
+          tooltip: readOnly ? permissionsError : undefined
+        });
+      }
+      if (canTransfer) {
+        actions.push({
+          title: 'Swap with...',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            // onSwap(ipAddress)
+            e.preventDefault();
+          },
+          disabled: readOnly,
+          tooltip: readOnly ? permissionsError : undefined
         });
       }
 
-      if (onRemove && ipAddress && ipType === 'IPv4 – Public') {
+      if (canDelete) {
         actions.push({
           title: 'Delete IP',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onRemove(ipAddress);
-            e.preventDefault();
+            // @todo: why is TS requiring this check?
+            if (!!onRemove && !!ipAddress) {
+              onRemove(ipAddress);
+              e.preventDefault();
+            }
           },
           disabled: readOnly,
-          tooltip: readOnly
-            ? "You don't have permissions to modify this Linode"
-            : undefined
+          tooltip: readOnly ? permissionsError : undefined
         });
       }
 
@@ -91,24 +106,16 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
   };
 
   const { address } = props.ipAddress as any;
+
   return (
     <>
       <div className="flex-center">
-        <button className={classes.button} onClick={() => null}>
-          Edit RDNS
-        </button>
-        <button
-          className={classes.button}
-          onClick={() => {
-            // onDisableOrEnable(
-            //   status === 'active' ? 'disable' : 'enable',
-            //   domain,
-            //   id
-            // )
-          }}
-        >
-          {status === 'active' ? 'Disable' : 'Enable'}
-        </button>
+        {/* @todo: disabled state for restricted users? */}
+        {canEditRDNS && (
+          <button className={classes.button} onClick={() => null}>
+            Edit RDNS
+          </button>
+        )}
       </div>
       <ActionMenu
         createActions={createActions()}
