@@ -83,8 +83,7 @@ export const sumCPUUsage = (CPUData: Record<string, CPU> = {}) => {
 
 export const normalizeValue = (value: number, numCores: number) => {
   const clamped = clamp(0, 100 * numCores)(value);
-  const rounded = Math.round(clamped);
-  return rounded;
+  return Math.round(clamped);
 };
 
 export const innerText = (value: number, loading: boolean, error: boolean) => {
