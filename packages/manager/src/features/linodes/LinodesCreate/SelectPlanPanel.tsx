@@ -93,6 +93,7 @@ interface Props {
   header?: string;
   copy?: string;
   disabledClasses?: LinodeTypeClass[];
+  tabbedPanelInnerClass?: string;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -423,6 +424,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     return (
       <TabbedPanel
         rootClass={`${classes.root} tabbedPanel`}
+        innerClass={this.props.tabbedPanelInnerClass}
         error={error}
         header={header || 'Linode Plan'}
         copy={copy}

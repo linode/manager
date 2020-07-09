@@ -74,10 +74,12 @@ describe('LinodeRow', () => {
     recentEvent: undefined,
     openDeleteDialog: jest.fn(),
     openPowerActionDialog: jest.fn(),
+    openLinodeResize: jest.fn(),
     mutationAvailable: false,
     enqueueSnackbar: jest.fn(),
     closeSnackbar: jest.fn(),
-
+    flags: {},
+    ldClient: {} as any,
     type: 'whatever',
     tags: [],
     status: 'running',

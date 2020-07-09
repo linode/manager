@@ -37,6 +37,7 @@ import hasMutationAvailable, {
 } from './hasMutationAvailable';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
+import LinodeActionMenu_CMR from './LinodeActionMenu_CMR';
 import styled, { StyleProps } from './LinodeCard.style';
 import RegionIndicator from './RegionIndicator';
 import withDisplayType, { WithDisplayType } from './withDisplayType';
@@ -45,6 +46,9 @@ import withRecentEvent, { WithRecentEvent } from './withRecentEvent';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { parseMaintenanceStartTime } from './utils';
+import withFeatureFlagConsumerContainer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 
 interface Props {
   backups: LinodeBackups;
@@ -69,6 +73,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
 }
 
 export type CombinedProps = Props &
@@ -77,7 +82,8 @@ export type CombinedProps = Props &
   WithNotifications &
   HasMutationAvailable &
   WithSnackbarProps &
-  StyleProps;
+  StyleProps &
+  FeatureFlagConsumerProps;
 
 interface State {
   loadingConfigs: boolean;
@@ -148,6 +154,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
       classes,
       openDeleteDialog,
       openPowerActionDialog,
+      openLinodeResize,
       displayType,
       mutationAvailable,
       linodeNotifications,
@@ -169,6 +176,18 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
           details.
         </>
       );
+    };
+
+    const actionMenuProps = {
+      linodeId: id,
+      linodeLabel: label,
+      linodeRegion: region,
+      linodeType: type,
+      linodeStatus: status,
+      linodeBackups: backups,
+      openDeleteDialog,
+      openPowerActionDialog,
+      noImage: !image
     };
 
     return (
@@ -196,17 +215,14 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
             }
             action={
               <div className={classes.actionMenu}>
-                <LinodeActionMenu
-                  linodeId={id}
-                  linodeLabel={label}
-                  linodeRegion={region}
-                  linodeType={type}
-                  linodeStatus={status}
-                  linodeBackups={backups}
-                  openDeleteDialog={openDeleteDialog}
-                  openPowerActionDialog={openPowerActionDialog}
-                  noImage={!image}
-                />
+                {this.props.flags.cmr ? (
+                  <LinodeActionMenu_CMR
+                    {...actionMenuProps}
+                    openLinodeResize={openLinodeResize}
+                  />
+                ) : (
+                  <LinodeActionMenu {...actionMenuProps} />
+                )}
               </div>
             }
             className={`${classes.customeMQ} ${'title'}`}
@@ -305,6 +321,7 @@ export default compose<CombinedProps, Props>(
   withRecentEvent,
   withNotifications,
   hasMutationAvailable,
+  withFeatureFlagConsumerContainer,
   withSnackbar
 )(LinodeCard) as React.ComponentType<Props>;
 

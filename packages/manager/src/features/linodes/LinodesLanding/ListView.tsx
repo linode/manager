@@ -22,6 +22,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
 }
 
 interface TagDrawerProps {
@@ -34,7 +35,12 @@ interface TagDrawerProps {
 type CombinedProps = Props & PaginationProps;
 
 export const ListView: React.FC<CombinedProps> = props => {
-  const { data, openDeleteDialog, openPowerActionDialog } = props;
+  const {
+    data,
+    openDeleteDialog,
+    openPowerActionDialog,
+    openLinodeResize
+  } = props;
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: [],
@@ -106,6 +112,7 @@ export const ListView: React.FC<CombinedProps> = props => {
           openTagDrawer={openTagDrawer}
           openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
+          openLinodeResize={openLinodeResize}
         />
       ))}
       <TagDrawer
