@@ -9,7 +9,8 @@ import { isEmpty, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
@@ -20,9 +21,9 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import EntityHeader from 'src/components/EntityHeader';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
@@ -37,8 +38,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
-import CreateIPv4Drawer from './CreateIPv4Drawer';
-import CreateIPv6Drawer from './CreateIPv6Drawer';
+import AddIPDrawer from './AddIPDrawer';
 import DeleteIPConfirm from './DeleteIPConfirm';
 import EditRDNSDrawer from './EditRDNSDrawer';
 import IPSharingPanel from './IPSharingPanel';
@@ -151,10 +151,8 @@ interface State {
   viewRangeDrawerOpen: boolean;
   editRDNSDrawerOpen: boolean;
   viewRDNSDrawerOpen: boolean;
-  createIPv4DrawerOpen: boolean;
-  createIPv4DrawerForPublic: boolean;
   IPRequestError?: string;
-  createIPv6DrawerOpen: boolean;
+  addIPDrawerOpen: boolean;
 }
 
 type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
@@ -168,9 +166,7 @@ const getAllIPs = getAll<IPAddress>(getIPs, 100);
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
     removeIPDialogOpen: false,
-    createIPv4DrawerOpen: false,
-    createIPv4DrawerForPublic: true,
-    createIPv6DrawerOpen: false,
+    addIPDrawerOpen: true,
     editRDNSDrawerOpen: false,
     viewRDNSDrawerOpen: false,
     viewIPDrawerOpen: false,
@@ -348,7 +344,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell className={classes.action} data-qa-action>
           {_ip ? (
             <LinodeNetworkingActionMenu
-              onView={this.displayIPDrawer(_ip)}
               onEdit={this.handleOpenEditRDNS}
               ipType={type}
               ipAddress={_ip}
@@ -357,7 +352,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             />
           ) : _range ? (
             <LinodeNetworkingActionMenu
-              onView={this.displayRangeDrawer(_range)}
               ipType={type}
               ipAddress={_range}
               onEdit={() => this.handleOpenEditRDNSForRange(_range)}
@@ -393,28 +387,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
-  closeCreateIPv4Drawer = () => {
-    this.setState({
-      createIPv4DrawerOpen: false
-    });
-    this.refreshIPs();
+  openAddIPDrawer = () => {
+    this.setState({ addIPDrawerOpen: true });
   };
 
-  closeCreateIPv6Drawer = () => this.setState({ createIPv6DrawerOpen: false });
-
-  openCreateIPv6Drawer = () => this.setState({ createIPv6DrawerOpen: true });
-
-  openCreatePublicIPv4Drawer = () =>
-    this.setState({
-      createIPv4DrawerForPublic: true,
-      createIPv4DrawerOpen: true
-    });
-
-  openCreatePrivateIPv4Drawer = () =>
-    this.setState({
-      createIPv4DrawerForPublic: false,
-      createIPv4DrawerOpen: true
-    });
+  closeAddIPDrawer = () => {
+    this.setState({ addIPDrawerOpen: false });
+  };
 
   hasPrivateIPAddress() {
     const { linodeIPs } = this.state;
@@ -559,17 +538,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           ips={ipsWithRDNS}
         />
 
-        <CreateIPv6Drawer
-          open={this.state.createIPv6DrawerOpen}
-          onClose={this.closeCreateIPv6Drawer}
+        <AddIPDrawer
+          open={this.state.addIPDrawerOpen}
+          onClose={this.closeAddIPDrawer}
+          linodeID={linodeID}
+          hasPrivateIPAddress={this.hasPrivateIPAddress()}
         />
 
-        <CreateIPv4Drawer
-          forPublic={this.state.createIPv4DrawerForPublic}
-          open={this.state.createIPv4DrawerOpen}
-          onClose={this.closeCreateIPv4Drawer}
-          linodeID={linodeID}
-        />
         {this.state.currentlySelectedIP && linodeID && (
           <DeleteIPConfirm
             handleClose={this.closeRemoveIPDialog}
@@ -584,13 +559,26 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   renderIPTable = () => {
-    const { classes, readOnly } = this.props;
+    // const { classes, readOnly } = this.props;
 
     const ipDisplay = ipResponseToDisplayRows(this.state.linodeIPs);
 
     return (
-      <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end">
+      <div style={{ marginTop: 20 }}>
+        <EntityHeader
+          title="IP Addresses"
+          actions={
+            <div>
+              <Button onClick={() => null}>IP Transfer</Button>
+              <Button onClick={() => null}>IP Sharing</Button>
+              <AddNewLink
+                label="Add an IP Address..."
+                onClick={this.openAddIPDrawer}
+              />
+            </div>
+          }
+        />
+        {/* <Grid container justify="space-between" alignItems="flex-end">
           <Grid item className={classes.ipv4TitleContainer}>
             <Typography
               variant="h2"
@@ -624,7 +612,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               label="Add Public IPv4"
             />
           </Grid>
-        </Grid>
+        </Grid> */}
         <Paper style={{ padding: 0 }}>
           {/* @todo: It'd be nice if we could always sort by public -> private. */}
           <OrderBy data={ipDisplay} orderBy="type" order="asc">
@@ -661,7 +649,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             }}
           </OrderBy>
         </Paper>
-      </React.Fragment>
+      </div>
     );
   };
 
