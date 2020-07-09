@@ -1,3 +1,4 @@
+import { allocateIPAddress } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -7,22 +8,26 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import Notice from 'src/components/Notice';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     marginTop: 16
+  },
+  ipv6: {
+    marginTop: 32
   }
 }));
 
-type IPType = 'v4Public' | 'v4Private' | 'v6';
+type IPType = 'v4Public' | 'v4Private';
 
 const ipOptions: Item<IPType>[] = [
   { value: 'v4Public', label: 'IPv4 – Public' },
-  { value: 'v4Private', label: 'IPv4 – Private' },
-  { value: 'v6', label: 'IPv6' }
+  { value: 'v4Private', label: 'IPv4 – Private' }
 ];
 
-// @todo: Pre-fill support tickets
+// @todo: Pre-fill support tickets.
 const explainerCopy: Record<IPType, JSX.Element> = {
   v4Public: (
     <>
@@ -40,28 +45,12 @@ const explainerCopy: Record<IPType, JSX.Element> = {
       usage. To ensure that the private IP is properly configured once added,
       it&apos;s best to reboot your Linode.
     </>
-  ),
-
-  v6: (
-    <>
-      IPv6 addresses are allocated as ranges, which you can choose to distribute
-      and further route yourself. These ranges can only be allocated by our
-      support team. Please open a{' '}
-      <Link to="support/tickets">Support Ticket</Link> and request an IPv6 range
-      for this Linode.
-    </>
   )
 };
 
 const tooltipCopy: Record<IPType, JSX.Element | null> = {
   v4Public: null,
-  v4Private: <>This Linode already has a private IP address.</>,
-  v6: (
-    <>
-      Please open a <Link to="support/tickets">Support Ticket</Link> and request
-      an IPv6 range for this Linode.
-    </>
-  )
+  v4Private: <>This Linode already has a private IP address.</>
 };
 
 interface Props {
@@ -69,6 +58,7 @@ interface Props {
   onClose: () => void;
   linodeID: number;
   hasPrivateIPAddress: boolean;
+  onSuccess: () => void;
 }
 
 type CombinedProps = Props;
@@ -76,14 +66,40 @@ type CombinedProps = Props;
 const AddIPDrawer: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const [selected, setSelected] = React.useState<IPType>('v4Public');
+  const [selected, setSelected] = React.useState<IPType | null>(null);
+  const [submitting, setSubmitting] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
 
-  const { open, onClose, linodeID, hasPrivateIPAddress } = props;
+  const { open, onClose, linodeID, hasPrivateIPAddress, onSuccess } = props;
 
-  const handleAllocate = () => null;
+  React.useEffect(() => {
+    if (open) {
+      setSelected(null);
+      setErrorMessage('');
+    }
+  }, [open]);
+
+  const handleAllocate = () => {
+    setSubmitting(true);
+
+    // Only IPv4 addresses can currently be allocated.
+    allocateIPAddress(linodeID, {
+      type: 'ipv4',
+      public: selected === 'v4Public'
+    })
+      .then(_ => {
+        setSubmitting(false);
+        onSuccess();
+        onClose();
+      })
+      .catch(errResponse => {
+        setSubmitting(false);
+        setErrorMessage(getErrorStringOrDefault(errResponse));
+      });
+  };
 
   const disabled =
-    (selected === 'v4Private' && hasPrivateIPAddress) || selected === 'v6';
+    (selected === 'v4Private' && hasPrivateIPAddress) || !selected;
 
   const AllocateButton = (
     <Button
@@ -91,6 +107,7 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
       onClick={handleAllocate}
       disabled={disabled}
       style={{ marginBottom: 8 }}
+      loading={submitting}
     >
       Allocate
     </Button>
@@ -99,25 +116,24 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
   return (
     <Drawer open={open} onClose={onClose} title="Add an IP Address">
       <React.Fragment>
+        <Typography variant="h2">IPv4</Typography>
+        {errorMessage && <Notice error text={errorMessage} spacingTop={8} />}
         <EnhancedSelect
-          // onBlur={onBlur}
-          name={'IP type'}
-          label="IP type"
-          // placeholder="Select a Volume"
+          name={'IPv4 type'}
+          label="IPv4 type"
+          placeholder="Select an IPv4 type"
           value={ipOptions.find(thisOption => thisOption.value === selected)}
-          // isLoading={loading}
-          // errorText={error}
           options={ipOptions}
           onChange={(_selected: Item<IPType>) => setSelected(_selected.value)}
           isClearable={false}
-          // onInputChange={this.onInputChange}
-          // disabled={disabled}
         />
-        <Typography variant="body1" className={classes.copy}>
-          {explainerCopy[selected]}
-        </Typography>
-        <ActionsPanel style={{ marginTop: 16 }}>
-          {disabled ? (
+        {selected && (
+          <Typography variant="body1" className={classes.copy}>
+            {explainerCopy[selected]}
+          </Typography>
+        )}
+        <ActionsPanel style={{ marginTop: 8 }}>
+          {disabled && selected ? (
             <Tooltip title={tooltipCopy[selected]}>
               <div style={{ display: 'inline' }}>{AllocateButton}</div>
             </Tooltip>
@@ -128,6 +144,16 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
             Close
           </Button>
         </ActionsPanel>
+        <Typography variant="h2" className={classes.ipv6}>
+          IPv6
+        </Typography>
+        <Typography>
+          IPv6 addresses are allocated as ranges, which you can choose to
+          distribute and further route yourself. These ranges can only be
+          allocated by our support team. Please open a{' '}
+          <Link to="support/tickets">Support Ticket</Link> and request an IPv6
+          range for this Linode.
+        </Typography>
       </React.Fragment>
     </Drawer>
   );
