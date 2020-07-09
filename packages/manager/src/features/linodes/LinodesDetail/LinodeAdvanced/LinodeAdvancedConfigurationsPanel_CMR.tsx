@@ -1,16 +1,10 @@
-// import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import LinodeConfigs from './LinodeConfigs_CMR';
-// import LinodeDisks from './LinodeDisks';
-
-// import { sendMigrationNavigationEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -37,9 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = LinodeContextProps;
 
-const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = props => {
-  const { linodeID } = props;
-
+const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = () => {
   const classes = useStyles();
 
   return (
@@ -59,8 +51,6 @@ const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = props => {
 };
 
 interface LinodeContextProps {
-  // linodeTotalDisk: number;
-  // disks: Disk[];
   linodeID: number;
 }
 

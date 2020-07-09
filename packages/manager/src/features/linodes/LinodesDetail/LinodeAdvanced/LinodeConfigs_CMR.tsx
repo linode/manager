@@ -1,4 +1,4 @@
-import { Config, linodeReboot } from '@linode/api-v4/lib/linodes';
+import { Config, linodeReboot, Disk } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -360,6 +360,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               config={thisConfig}
                               linodeId={linodeId}
                               linodeMemory={this.props.linodeMemory}
+                              linodeDisks={this.props.linodeDisks}
                               onBoot={this.handleBoot}
                               onEdit={this.openForEditing}
                               onDelete={this.confirmDelete}
@@ -406,6 +407,7 @@ interface LinodeContext {
   readOnly: boolean;
   configs: Config[];
   getLinodeConfigs: () => void;
+  linodeDisks: Disk[];
 }
 
 const linodeContext = withLinodeDetailContext<LinodeContext>(
@@ -420,7 +422,8 @@ const linodeContext = withLinodeDetailContext<LinodeContext>(
     readOnly: linode._permissions === 'read_only',
     deleteLinodeConfig,
     configs: linode._configs,
-    getLinodeConfigs
+    getLinodeConfigs,
+    linodeDisks: linode._disks
   })
 );
 

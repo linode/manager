@@ -1,4 +1,4 @@
-import { Config, Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
+import { Config, Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu_CMR';
 import TableCell from 'src/components/core/TableCell';
@@ -9,6 +9,7 @@ interface Props {
   linodeId: number;
   linodeMemory: number;
   readOnly: boolean;
+  linodeDisks: Disk[];
 }
 
 interface Handlers {
@@ -24,29 +25,25 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     config,
     linodeId,
     linodeMemory,
+    linodeDisks,
     onBoot,
     onEdit,
     onDelete,
     readOnly
   } = props;
 
-  const assembleRootDeviceInfo = (config: Config, linodeId: number) => {
+  const [rootDeviceLabel, setRootDeviceLabel] = React.useState<string>('');
+
+  React.useEffect(() => {
     const rootDevice = config.root_device;
     const device = rootDevice.slice(-3); // Isolate the 'sda', 'sdc', etc. piece
 
     const deviceId = config.devices[device].disk_id;
 
-    getLinodeDisks(linodeId)
-      .then(response => {
-        const label = response.data.filter(
-          (disk: Disk) => disk.id === deviceId
-        );
-        return `${rootDevice} – ${label}`;
-      })
-      .catch(() => {
-        return null;
-      });
-  };
+    const matchingDisk = linodeDisks.find(disk => disk.id === deviceId);
+    const label = matchingDisk ? ` – ${matchingDisk.label}` : '';
+    setRootDeviceLabel(`${rootDevice}${label}`);
+  }, [config, linodeDisks]);
 
   // If config.memory_limit === 0, use linodeMemory; the API interprets a memory limit of 0 as the RAM of the Linode itself.
   return (
@@ -63,7 +60,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
           ? `${linodeMemory} GB`
           : `${config.memory_limit} MB`}
       </TableCell>
-      <TableCell></TableCell>
+      <TableCell>{rootDeviceLabel}</TableCell>
       <TableCell>
         <LinodeConfigActionMenu
           config={config}
