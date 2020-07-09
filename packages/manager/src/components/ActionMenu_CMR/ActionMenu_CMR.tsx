@@ -77,6 +77,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   item: {
     '&[data-reach-menu-item]': {
+      display: 'flex',
+      justifyContent: 'space-between',
       padding: theme.spacing(1) + 2,
       paddingLeft: '16px',
       borderBottom: '1px solid #5294e0',
@@ -100,7 +102,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tooltip: {
     color: theme.color.white,
-    padding: '0 12px'
+    padding: '0 0 0 8px',
+    '& svg': {
+      height: 20,
+      width: 20
+    }
   }
 }));
 

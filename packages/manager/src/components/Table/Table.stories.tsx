@@ -65,6 +65,7 @@ class StoryTable extends React.Component {
                     vcpus={linode.specs.vcpus}
                     openDeleteDialog={this.handleDeleteDialog}
                     openPowerActionDialog={this.handlePowerActionDialog}
+                    openLinodeResize={() => null as any}
                   ></LinodeRow_CMR>
                 ))}
               </TableBody>

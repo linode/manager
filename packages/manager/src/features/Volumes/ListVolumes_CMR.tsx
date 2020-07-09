@@ -5,7 +5,10 @@ import TableBody from 'src/components/core/TableBody';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
+import { EntityError } from 'src/store/types';
 import RenderVolumeData, {
   RenderVolumeDataProps
 } from './RenderVolumeData_CMR';
@@ -14,26 +17,49 @@ import { ExtendedVolume } from './types';
 
 interface Props {
   data: Volume[];
-  orderBy: string;
-  order: 'asc' | 'desc';
-  renderProps: RenderVolumeDataProps;
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
+  order: 'asc' | 'desc';
+  orderBy: string;
+  renderProps: RenderVolumeDataProps;
+  error?: string;
+  volumesError?: EntityError;
 }
 
 type CombinedProps = Props;
 
 const ListVolumes: React.FC<CombinedProps> = props => {
-  const { orderBy, order, handleOrderChange, data, renderProps } = props;
+  const {
+    data,
+    handleOrderChange,
+    order,
+    orderBy,
+    renderProps,
+    error,
+    volumesError
+  } = props;
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
   const renderData = (volumes: ExtendedVolume[]) => {
-    if (volumes.length < 1) {
-      return renderEmpty();
+    if (error) {
+      return <TableRowError colSpan={4} message={error} />;
     }
-  };
 
-  const renderEmpty = () => {};
+    if (volumesError && volumesError.read) {
+      return (
+        <TableRowError
+          colSpan={4}
+          message="There was an error loading your volumes."
+        />
+      );
+    }
+
+    if (volumes.length < 1) {
+      return <TableRowEmptyState colSpan={4} />;
+    }
+
+    return <RenderVolumeData data={volumes} {...renderProps} />;
+  };
 
   return (
     <Paginate
@@ -63,10 +89,7 @@ const ListVolumes: React.FC<CombinedProps> = props => {
                 handleOrderChange={handleOrderChange}
                 isVolumesLanding={renderProps.isVolumesLanding}
               />
-              <TableBody>
-                {renderData(paginatedData)}
-                <RenderVolumeData data={paginatedData} {...renderProps} />
-              </TableBody>
+              <TableBody>{renderData(paginatedData)}</TableBody>
             </Table>
           </Paper>
           <PaginationFooter

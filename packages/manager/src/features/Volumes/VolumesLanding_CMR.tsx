@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
-import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Breadcrumb from 'src/components/Breadcrumb';
 import {
@@ -18,13 +17,15 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import Loading from 'src/components/LandingLoading';
 import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
-import Placeholder from 'src/components/Placeholder';
 import { REFRESH_INTERVAL } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
+import withRegions, {
+  DefaultProps as RegionProps
+} from 'src/containers/regions.container';
 import withVolumes, {
   StateProps as WithVolumesProps
 } from 'src/containers/volumes.container';
@@ -36,6 +37,7 @@ import withLinodes, {
 } from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/eventsPolling';
+import LinodeDisks from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDisks_CMR';
 import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
 import {
   LinodeOptions,
@@ -46,18 +48,11 @@ import {
   openForResize,
   Origin as VolumeDrawerOrigin
 } from 'src/store/volumeForm';
+import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import ListVolumes from './ListVolumes_CMR';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
-
-import ErrorState from 'src/components/ErrorState';
-import Loading from 'src/components/LandingLoading';
-
-import withRegions, {
-  DefaultProps as RegionProps
-} from 'src/containers/regions.container';
-import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 import { ExtendedVolume } from './types';
 
 type ClassNames = 'root' | 'headline' | 'addNewWrapper';
@@ -67,6 +62,7 @@ const styles = (theme: Theme) =>
     root: {
       backgroundColor: theme.color.white,
       margin: 0,
+      marginTop: 20,
       width: '100%'
     },
     headline: {
@@ -250,7 +246,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   render() {
     const {
       classes,
-      volumesError,
       volumesLoading,
       mappedVolumesDataWithLinodes,
       readOnly,
@@ -262,10 +257,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       return <Loading shouldDelay />;
     }
 
-    if (volumesError && volumesError.read) {
-      return <RenderError />;
-    }
-
     // If this is the Volumes tab on a Linode, we want ONLY the Volumes attached to this Linode.
     const data =
       mappedVolumesDataWithLinodes && this.props.linodeId
@@ -274,13 +265,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           )
         : mappedVolumesDataWithLinodes;
 
-    // if (data.length < 1) {
-    //   return this.renderEmpty();
-    // }
-
     return (
       <React.Fragment>
         {readOnly && <LinodePermissionsError />}
+        <LinodeDisks />
         <Grid
           className={classes.root}
           container
@@ -341,82 +329,18 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     history.push(`/linodes/${linodeId}/settings`);
   };
 
-  renderEmpty = () => {
+  renderData = (volumes: ExtendedVolume[]) => {
     const {
       linodeConfigs,
       linodeRegion,
-      readOnly,
       regionsData,
-      fromLinodes
+      volumesError
     } = this.props;
 
+    let error = '';
+
     const isVolumesLanding = this.props.match.params.linodeId === undefined;
 
-    if (
-      linodeRegion &&
-      !doesRegionSupportBlockStorage(linodeRegion, regionsData)
-    ) {
-      return (
-        <React.Fragment>
-          <DocumentTitleSegment segment="Volumes" />
-          <Placeholder
-            title="Volumes are not available in this region"
-            copy=""
-            icon={VolumesIcon}
-            renderAsSecondary={!isVolumesLanding}
-          />
-        </React.Fragment>
-      );
-    }
-
-    if (linodeConfigs && linodeConfigs.length === 0) {
-      return (
-        <React.Fragment>
-          <DocumentTitleSegment segment="Volumes" />
-          <Placeholder
-            title="No configs available."
-            copy="This Linode has no configurations. Click below to create a configuration."
-            icon={VolumesIcon}
-            buttonProps={[
-              {
-                onClick: this.goToSettings,
-                children: 'View Linode Configurations'
-              }
-            ]}
-            renderAsSecondary={!isVolumesLanding}
-          />
-        </React.Fragment>
-      );
-    }
-
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Volumes" />
-        {readOnly && <LinodePermissionsError />}
-        <Placeholder
-          title="Add Block Storage!"
-          copy={<EmptyCopy />}
-          icon={VolumesIcon}
-          renderAsSecondary={!isVolumesLanding}
-          buttonProps={[
-            {
-              onClick: fromLinodes
-                ? this.openCreateVolumeDrawer
-                : () => {
-                    this.props.history.push('/volumes/create');
-                  },
-
-              children: 'Add a Volume',
-              disabled: readOnly
-            }
-          ]}
-        />
-      </React.Fragment>
-    );
-  };
-
-  renderData = (volumes: ExtendedVolume[]) => {
-    const isVolumesLanding = this.props.match.params.linodeId === undefined;
     const renderProps = {
       isVolumesLanding,
       handleAttach: this.handleAttach,
@@ -428,18 +352,34 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       openForResize: this.props.openForResize
     };
 
+    if (
+      linodeRegion &&
+      !doesRegionSupportBlockStorage(linodeRegion, regionsData)
+    ) {
+      error = 'Volumes are not available in this region.';
+    }
+
+    if (linodeConfigs && linodeConfigs.length === 0) {
+      error = 'No configs available.';
+    }
+
     return (
       <OrderBy data={volumes} order={'asc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           const orderProps = {
-            orderBy,
-            order,
+            data: orderedData,
             handleOrderChange,
-            data: orderedData
+            order,
+            orderBy
           };
 
           return (
-            <ListVolumes {...orderProps} renderProps={{ ...renderProps }} />
+            <ListVolumes
+              {...orderProps}
+              renderProps={{ ...renderProps }}
+              error={error}
+              volumesError={volumesError}
+            />
           );
         }}
       </OrderBy>
@@ -525,33 +465,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       });
   };
 }
-
-const EmptyCopy = () => (
-  <>
-    <Typography variant="subtitle1">Need additional storage?</Typography>
-    <Typography variant="subtitle1">
-      <a
-        href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        Here&quot;s how to use Block Storage with your Linode
-      </a>
-      &nbsp;or&nbsp;
-      <a
-        href="https://www.linode.com/docs/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        visit our guides and tutorials.
-      </a>
-    </Typography>
-  </>
-);
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
@@ -649,9 +562,3 @@ export default compose<CombinedProps, Props>(
   withSnackbar,
   styled
 )(VolumesLanding);
-
-const RenderError = () => {
-  return (
-    <ErrorState errorText="There was an error loading your Volumes. Please try again later" />
-  );
-};

@@ -22,12 +22,19 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
 }
 
 type CombinedProps = WithImagesProps & PaginationProps & Props;
 
 const CardView: React.FC<CombinedProps> = props => {
-  const { data, imagesData, openDeleteDialog, openPowerActionDialog } = props;
+  const {
+    data,
+    imagesData,
+    openDeleteDialog,
+    openPowerActionDialog,
+    openLinodeResize
+  } = props;
 
   return (
     <Grid container>
@@ -53,6 +60,7 @@ const CardView: React.FC<CombinedProps> = props => {
           imageLabel={safeGetImageLabel(imagesData, linode.image)}
           openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
+          openLinodeResize={openLinodeResize}
         />
       ))}
     </Grid>
