@@ -46,7 +46,10 @@ const ViewRangeDrawer: React.FC<CombinedProps> = props => {
         <React.Fragment>
           <div className={classes.section}>
             <Typography variant="h3">IP Range</Typography>
-            <Typography variant="body1">{props.range.range}</Typography>
+            <Typography variant="body1">
+              {props.range.range} / {props.range.prefix} routed to{' '}
+              {props.range.route_target}
+            </Typography>
           </div>
 
           <div

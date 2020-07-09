@@ -36,6 +36,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
   linodeConfigs: Config[];
 }
 
@@ -53,6 +54,7 @@ const CardView: React.FC<CombinedProps> = props => {
     imagesData,
     openDeleteDialog,
     openPowerActionDialog,
+    openLinodeResize,
     linodeConfigs
   } = props;
 
@@ -86,6 +88,7 @@ const CardView: React.FC<CombinedProps> = props => {
                 backups={linode.backups}
                 openDeleteDialog={openDeleteDialog}
                 openPowerActionDialog={openPowerActionDialog}
+                openLinodeResize={openLinodeResize}
               />
             </Grid>
           ))
@@ -111,6 +114,7 @@ const CardView: React.FC<CombinedProps> = props => {
               imageLabel={safeGetImageLabel(imagesData, linode.image)}
               openDeleteDialog={openDeleteDialog}
               openPowerActionDialog={openPowerActionDialog}
+              openLinodeResize={openLinodeResize}
             />
           ))}
     </Grid>

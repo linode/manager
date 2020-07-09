@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTop: 'none',
     fontSize: '.875rem',
     lineHeight: '1rem',
-    padding: '10px 15px',
+    padding: '0px 15px',
     '&.emptyCell': {
       borderTop: `1px solid ${theme.palette.divider}`,
       height: 40
@@ -27,8 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     '& button, & button:focus': {
       color: theme.color.headline,
-      fontWeight: 'normal',
-      fontSize: '.9rem'
+      fontWeight: 'normal'
     },
     '& .sortIcon': {
       position: 'relative',

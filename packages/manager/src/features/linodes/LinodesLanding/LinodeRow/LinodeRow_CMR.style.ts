@@ -26,7 +26,8 @@ type ClassNames =
   | 'regionCell'
   | 'iconTableCell'
   | 'icon'
-  | 'iconGridCell';
+  | 'iconGridCell'
+  | 'tagCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -160,6 +161,9 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
+    },
+    tagCell: {
+      borderRight: 'none'
     }
   });
 

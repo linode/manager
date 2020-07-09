@@ -58,6 +58,7 @@ interface LinodeEntityDetailProps {
   backups: LinodeBackups;
   linodeConfigs: Config[];
   numVolumes: number;
+  openLinodeResize: (linodeID: number) => void;
 }
 
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
@@ -69,7 +70,8 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     openPowerActionDialog,
     backups,
     linodeConfigs,
-    numVolumes
+    numVolumes,
+    openLinodeResize
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -105,6 +107,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeRegionDisplay={linodeRegionDisplay}
           backups={backups}
           linodeConfigs={linodeConfigs}
+          openLinodeResize={openLinodeResize}
           type={'something'}
           image={'something'}
         />
@@ -160,6 +163,7 @@ export interface HeaderProps {
   type: string;
   image: string;
   linodeConfigs: Config[];
+  openLinodeResize: (linodeID: number) => void;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -235,7 +239,8 @@ const Header: React.FC<HeaderProps> = props => {
     backups,
     type,
     image,
-    linodeConfigs
+    linodeConfigs,
+    openLinodeResize
   } = props;
 
   const classes = useHeaderStyles();
@@ -353,6 +358,7 @@ const Header: React.FC<HeaderProps> = props => {
             linodeBackups={backups}
             openDeleteDialog={openDeleteDialog}
             openPowerActionDialog={openPowerActionDialog}
+            openLinodeResize={openLinodeResize}
             noImage={!image}
             inlineLabel="More Actions"
           />
