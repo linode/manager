@@ -52,7 +52,7 @@ export const LandingHeader: React.FC<Props> = props => {
         {docsLink && <DocumentationButton href={docsLink} />}
       </Grid>
     ),
-    [docsLink, title, onAddNew, classes.button]
+    [docsLink, title, onAddNew, classes.button, extraActions]
   );
 
   return <EntityHeader actions={actions} {...props} />;
