@@ -19,7 +19,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
@@ -38,6 +37,7 @@ import withLinodes, {
 } from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/eventsPolling';
+import LinodeDisks from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDisks_CMR';
 import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
 import {
   LinodeOptions,
@@ -332,8 +332,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Volumes" />
         {readOnly && <LinodePermissionsError />}
+        <LinodeDisks />
         <PreferenceToggle<boolean>
           preferenceKey="volumes_group_by_tag"
           preferenceOptions={[false, true]}
@@ -445,7 +445,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     ) {
       return (
         <React.Fragment>
-          <DocumentTitleSegment segment="Volumes" />
+          <LinodeDisks />
           <Placeholder
             title="Volumes are not available in this region"
             copy=""
@@ -459,7 +459,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     if (linodeConfigs && linodeConfigs.length === 0) {
       return (
         <React.Fragment>
-          <DocumentTitleSegment segment="Volumes" />
+          <LinodeDisks />
           <Placeholder
             title="No configs available."
             copy="This Linode has no configurations. Click below to create a configuration."
@@ -478,7 +478,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Volumes" />
+        <LinodeDisks />
         {readOnly && <LinodePermissionsError />}
         <Placeholder
           title="Add Block Storage!"
@@ -634,7 +634,7 @@ const EmptyCopy = () => (
         rel="noopener noreferrer"
         className="h-u"
       >
-        Here's how to use Block Storage with your Linode
+        Here&apos;s how to use Block Storage with your Linode
       </a>
       &nbsp;or&nbsp;
       <a
