@@ -109,20 +109,6 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
     return (): Action[] => {
       const actions = [
         {
-          title: 'Show Configuration',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            handleShowConfig();
-          }
-        },
-        {
-          title: 'Edit Volume',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            handleOpenEdit();
-          }
-        },
-        {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
@@ -176,19 +162,19 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
         className={classes.button}
         onClick={e => {
           e.preventDefault();
-          handleOpenEdit();
+          handleShowConfig();
         }}
       >
-        Rename
+        Details
       </Button>
       <Button
         className={classes.button}
         onClick={e => {
           e.preventDefault();
-          handleResize();
+          handleOpenEdit();
         }}
       >
-        Resize
+        Edit
       </Button>
       <ActionMenu
         createActions={createActions()}
