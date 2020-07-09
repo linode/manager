@@ -8,7 +8,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
-import AddNewLink from 'src/components/AddNewLink';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Breadcrumb from 'src/components/Breadcrumb';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
@@ -65,34 +65,34 @@ import withRegions, {
 import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 import { ExtendedVolume } from './types';
 
-type ClassNames =
-  | 'root'
-  | 'titleWrapper'
-  | 'title'
-  | 'tagGroup'
-  | 'labelCol'
-  | 'icon'
-  | 'attachmentCol'
-  | 'sizeCol'
-  | 'pathCol'
-  | 'volumesWrapper'
-  | 'linodeVolumesWrapper';
+type ClassNames = 'root' | 'headline' | 'addNewWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      paddingBottom: 0
+      backgroundColor: theme.color.white,
+      margin: 0,
+      width: '100%'
     },
-    tagGroup: {
-      flexDirection: 'row-reverse',
-      position: 'relative',
-      top: -(theme.spacing(1) + 1)
+    headline: {
+      marginTop: 8,
+      marginBottom: 8,
+      marginLeft: 15,
+      lineHeight: '1.5rem',
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: 0,
+        marginTop: theme.spacing(2)
+      }
     },
-    titleWrapper: {
-      flex: 1
-    },
-    title: {
-      marginBottom: theme.spacing(1)
+    addNewWrapper: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
+        marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
+        marginTop: -theme.spacing(1)
+      },
+      '&.MuiGrid-item': {
+        padding: 5
+      }
     }
   });
 
@@ -107,7 +107,6 @@ interface Props {
   fromLinodes?: boolean;
 }
 
-//
 interface WithMappedVolumesProps {
   mappedVolumesDataWithLinodes: ExtendedVolume[];
 }
@@ -295,58 +294,40 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           toggleCallbackFnDebounced={toggleVolumesGroupBy}
         >
           {({
-            preference: volumesAreGrouped,
-            togglePreference: toggleGroupVolumes
-          }: ToggleProps<boolean>) => {
+            preference: volumesAreGrouped
+          }: // togglePreference: toggleGroupVolumes
+          ToggleProps<boolean>) => {
             return (
               <React.Fragment>
                 <Grid
-                  container
-                  justify="space-between"
-                  alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
                   className={classes.root}
+                  container
+                  alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
+                  justify="space-between"
                 >
-                  <Grid item className={classes.titleWrapper}>
+                  <Grid item className="p0">
                     {removeBreadCrumb ? (
-                      <Typography variant="h2">Volumes</Typography>
+                      <Typography variant="h3" className={classes.headline}>
+                        Volumes
+                      </Typography>
                     ) : (
                       <Breadcrumb
-                        pathname={this.props.location.pathname}
                         labelTitle="Volumes"
-                        className={classes.title}
+                        pathname={this.props.location.pathname}
                       />
                     )}
                   </Grid>
-                  <Grid item className="p0">
-                    <FormControlLabel
-                      className={classes.tagGroup}
-                      control={
-                        <Toggle
-                          className={
-                            volumesAreGrouped ? ' checked' : ' unchecked'
-                          }
-                          onChange={toggleGroupVolumes}
-                          checked={volumesAreGrouped}
-                        />
+                  <Grid item className={classes.addNewWrapper}>
+                    <AddNewLink
+                      onClick={
+                        fromLinodes
+                          ? this.openCreateVolumeDrawer
+                          : () => {
+                              this.props.history.push('/volumes/create');
+                            }
                       }
-                      label="Group by Tag:"
+                      label="Add a Volume..."
                     />
-                  </Grid>
-                  <Grid item>
-                    <Grid container alignItems="flex-end">
-                      <Grid item className="pt0">
-                        <AddNewLink
-                          onClick={
-                            fromLinodes
-                              ? this.openCreateVolumeDrawer
-                              : () => {
-                                  this.props.history.push('/volumes/create');
-                                }
-                          }
-                          label="Create a Volume"
-                        />
-                      </Grid>
-                    </Grid>
                   </Grid>
                 </Grid>
                 {this.renderData(data, volumesAreGrouped)}

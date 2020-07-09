@@ -4,6 +4,34 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import Button from 'src/components/Button';
+import { makeStyles, Theme } from 'src/components/core/styles';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  inlineActions: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    '& .MuiIconButton-root': {
+      padding: '15px 10px 15px 0',
+      marginLeft: -8,
+      '& svg': {
+        height: 20,
+        width: 20
+      }
+    }
+  },
+  button: {
+    ...theme.applyLinkStyles,
+    height: '100%',
+    padding: '12px 15px',
+    minWidth: 'auto',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.color.white
+    }
+  }
+}));
 
 export interface Props {
   onShowConfig: (volumeLabel: string, volumePath: string) => void;
@@ -37,79 +65,75 @@ export interface Props {
 
 export type CombinedProps = Props & RouteComponentProps<{}>;
 
-export class VolumesActionMenu extends React.Component<CombinedProps> {
-  handleShowConfig = () => {
-    const { onShowConfig, label, filesystemPath } = this.props;
+export const VolumesActionMenu: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
+  const handleShowConfig = () => {
+    const { onShowConfig, label, filesystemPath } = props;
     onShowConfig(label, filesystemPath);
   };
 
-  handleOpenEdit = () => {
-    const { volumeId, label, volumeTags, onEdit } = this.props;
+  const handleOpenEdit = () => {
+    const { onEdit, volumeId, label, volumeTags } = props;
     onEdit(volumeId, label, volumeTags);
   };
 
-  handleResize = () => {
-    const { volumeId, size, label, onResize } = this.props;
+  const handleResize = () => {
+    const { onResize, volumeId, size, label } = props;
     onResize(volumeId, size, label);
   };
 
-  handleClone = () => {
-    const { volumeId, label, size, regionID, onClone } = this.props;
+  const handleClone = () => {
+    const { onClone, volumeId, label, size, regionID } = props;
     onClone(volumeId, label, size, regionID);
   };
 
-  handleAttach = () => {
-    const { volumeId, label, regionID, onAttach } = this.props;
+  const handleAttach = () => {
+    const { onAttach, volumeId, label, regionID } = props;
     onAttach(volumeId, label, regionID);
   };
 
-  handleDetach = () => {
-    const {
-      volumeId,
-      onDetach,
-      volumeLabel,
-      linodeLabel,
-      poweredOff
-    } = this.props;
+  const handleDetach = () => {
+    const { onDetach, volumeId, volumeLabel, linodeLabel, poweredOff } = props;
     onDetach(volumeId, volumeLabel, linodeLabel, poweredOff);
   };
 
-  handleDelete = () => {
-    const { volumeId, onDelete, volumeLabel } = this.props;
+  const handleDelete = () => {
+    const { onDelete, volumeId, volumeLabel } = props;
     onDelete(volumeId, volumeLabel);
   };
 
-  createActions = () => {
-    const { attached, poweredOff } = this.props;
+  const createActions = () => {
+    const { attached, poweredOff } = props;
 
     return (): Action[] => {
       const actions = [
         {
           title: 'Show Configuration',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleShowConfig();
             e.preventDefault();
+            handleShowConfig();
           }
         },
         {
           title: 'Edit Volume',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleOpenEdit();
             e.preventDefault();
+            handleOpenEdit();
           }
         },
         {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleResize();
             e.preventDefault();
+            handleResize();
           }
         },
         {
           title: 'Clone',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleClone();
             e.preventDefault();
+            handleClone();
           }
         }
       ];
@@ -118,16 +142,16 @@ export class VolumesActionMenu extends React.Component<CombinedProps> {
         actions.push({
           title: 'Attach',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleAttach();
             e.preventDefault();
+            handleAttach();
           }
         });
       } else {
         actions.push({
           title: 'Detach',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleDetach();
             e.preventDefault();
+            handleDetach();
           }
         });
       }
@@ -136,8 +160,8 @@ export class VolumesActionMenu extends React.Component<CombinedProps> {
         actions.push({
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleDelete();
             e.preventDefault();
+            handleDelete();
           }
         });
       }
@@ -146,14 +170,32 @@ export class VolumesActionMenu extends React.Component<CombinedProps> {
     };
   };
 
-  render() {
-    return (
+  return (
+    <div className={classes.inlineActions}>
+      <Button
+        className={classes.button}
+        onClick={e => {
+          e.preventDefault();
+          handleOpenEdit();
+        }}
+      >
+        Rename
+      </Button>
+      <Button
+        className={classes.button}
+        onClick={e => {
+          e.preventDefault();
+          handleResize();
+        }}
+      >
+        Resize
+      </Button>
       <ActionMenu
-        createActions={this.createActions()}
-        ariaLabel={`Action menu for Volume ${this.props.volumeLabel}`}
+        createActions={createActions()}
+        ariaLabel={`Action menu for Volume ${props.volumeLabel}`}
       />
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default withRouter(VolumesActionMenu);
