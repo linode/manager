@@ -197,7 +197,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openDrawerForCreation}
-              label="Add a Disk"
+              label="Add a Disk..."
               disabled={readOnly}
             />
           </Grid>
