@@ -41,9 +41,8 @@ export const EntityDetail: React.FC<EntityDetailProps> = props => {
 
   return (
     <Grid container direction="column">
-      <Grid item xs={12} className={classes.header}>
-        {header}
-      </Grid>
+      {header}
+
       <Grid item xs={12} className={classes.body}>
         {body}
       </Grid>

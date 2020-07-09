@@ -7,6 +7,7 @@ import {
   Payment
 } from '@linode/api-v4/lib/account';
 import { splitEvery } from 'ramda';
+import { ISO_DATE_FORMAT } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
@@ -18,7 +19,6 @@ import {
   createPaymentsTable,
   createPaymentsTotalsTable
 } from './utils';
-import {ISO_DATE_FORMAT}from 'src/constants'
 
 const leftMargin = 30; // space that needs to be applied to every parent element
 const baseFont = 'helvetica';
@@ -240,7 +240,7 @@ export const printPayment = (
   taxID?: string
 ): PdfResult => {
   try {
-    const date = formatDate(payment.date, { format:ISO_DATE_FORMAT});
+    const date = formatDate(payment.date, { format: ISO_DATE_FORMAT });
     const doc = new jsPDF({
       unit: 'px'
     });
