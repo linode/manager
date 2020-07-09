@@ -3,6 +3,9 @@ import { Stat, StatWithDummyPoint } from '../request.types';
 
 // This formatting is from Classic
 export const formatCPU = (n: number) => {
+  if (!n || typeof n !== 'number') {
+    return 'No data';
+  }
   const numDigits = n >= 1 || n <= 0.01 ? 0 : 2;
   return n.toFixed(numDigits) + '%';
 };
