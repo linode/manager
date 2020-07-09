@@ -143,7 +143,16 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
             );
           });
       }}
-      render={formikProps => {
+    >
+      {formikProps => {
+        const beforeSubmit = () => {
+          confirmObjectStorage<FormState>(
+            props.object_storage,
+            formikProps,
+            () => setDialogOpen(true)
+          );
+        };
+
         const {
           errors,
           handleBlur,
@@ -156,14 +165,6 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
           touched,
           values
         } = formikProps;
-
-        const beforeSubmit = () => {
-          confirmObjectStorage<FormState>(
-            props.object_storage,
-            formikProps,
-            () => setDialogOpen(true)
-          );
-        };
 
         return (
           <>
@@ -219,7 +220,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
           </>
         );
       }}
-    />
+    </Formik>
   );
 };
 interface FormState {

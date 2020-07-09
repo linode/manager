@@ -86,19 +86,18 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
           });
       }}
       initialValues={initialValues}
-      render={formikProps => {
-        const {
-          errors,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-          resetForm,
-          setFieldValue,
-          status,
-          touched,
-          values
-        } = formikProps;
-
+    >
+      {({
+        errors,
+        handleBlur,
+        handleSubmit,
+        isSubmitting,
+        resetForm,
+        setFieldValue,
+        status,
+        touched,
+        values
+      }) => {
         return (
           <Form>
             {status && !disabled && (
@@ -153,7 +152,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
           </Form>
         );
       }}
-    />
+    </Formik>
   );
 };
 

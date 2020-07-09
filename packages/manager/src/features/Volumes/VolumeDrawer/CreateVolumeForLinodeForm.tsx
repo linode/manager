@@ -131,20 +131,19 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             );
           });
       }}
-      render={formikProps => {
-        const {
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          resetForm,
-          setFieldValue,
-          status,
-          touched,
-          values
-        } = formikProps;
-
+    >
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        resetForm,
+        setFieldValue,
+        status,
+        touched,
+        values
+      }) => {
         /**
          * This form doesn't have a region select (the region is auto-populated)
          * so if the API returns an error with field === 'region' the field mapping
@@ -258,7 +257,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           </Form>
         );
       }}
-    />
+    </Formik>
   );
 };
 interface FormState {
