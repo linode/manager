@@ -137,10 +137,22 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       <div className={classes.inlineActions}>
-        <button className={classes.powerOnOrOff} onClick={() => null}>
+        <button
+          className={classes.powerOnOrOff}
+          onClick={(e: React.MouseEvent<HTMLElement>) => {
+            e.preventDefault();
+            handleBoot();
+          }}
+        >
           Boot
         </button>
-        <button className={classes.powerOnOrOff} onClick={() => null}>
+        <button
+          className={classes.powerOnOrOff}
+          onClick={(e: React.MouseEvent<HTMLElement>) => {
+            e.preventDefault();
+            handleEdit();
+          }}
+        >
           Edit
         </button>
       </div>
