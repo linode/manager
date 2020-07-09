@@ -69,7 +69,14 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      '& td': {
+        borderBottom: 0
+      },
+      '& .MuiTableCell-head': {
+        borderBottom: 0
+      }
+    },
     titleWrapper: {
       flex: 1
     },
@@ -495,13 +502,15 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       text={this.props.location.state.recordError}
                     />
                   )}
-                <Table
-                  entity="domain"
-                  groupByTag={domainsAreGrouped}
-                  row={domainRow}
-                  headers={headers}
-                  initialOrder={{ order: 'asc', orderBy: 'domain' }}
-                />
+                <div className={classes.root}>
+                  <Table
+                    entity="domain"
+                    groupByTag={domainsAreGrouped}
+                    row={domainRow}
+                    headers={headers}
+                    initialOrder={{ order: 'asc', orderBy: 'domain' }}
+                  />
+                </div>
               </React.Fragment>
             );
           }}

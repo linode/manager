@@ -20,6 +20,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
       '& svg g': {
         fill: theme.color.white
+      },
+      '&:nth-last-of-type(2)': {
+        borderRight: 'none',
+        borderLeft: 'none'
       }
     }
   },
