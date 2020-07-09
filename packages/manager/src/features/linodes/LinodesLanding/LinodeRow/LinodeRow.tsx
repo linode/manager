@@ -57,6 +57,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
   // Including for type matching with CMR; not used.
   openTagDrawer?: any;
 }

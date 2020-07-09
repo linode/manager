@@ -1,20 +1,14 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+import SortUp from 'src/assets/icons/sort-up.svg';
+import Sort from 'src/assets/icons/unsorted.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 import TableSortLabel from 'src/components/core/TableSortLabel';
 
-import Sort from 'src/assets/icons/unsorted.svg';
-import SortUp from 'src/assets/icons/sort-up.svg';
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-    padding: '10px 15px',
-    '&:last-child': {
-      borderRight: 'none'
-    },
     '&:hover': {
       backgroundColor: '#3683dc',
       cursor: 'pointer',
@@ -31,11 +25,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: theme.palette.text.primary,
+    fontSize: '.875rem',
     minHeight: 20,
     transition: 'none'
   },
   initialIcon: {
-    margin: '2px 4px 0 5px'
+    margin: '0 4px 0 5px'
   },
   noWrap: {
     whiteSpace: 'nowrap'
@@ -61,8 +56,8 @@ export const TableSortCell: React.FC<CombinedProps> = props => {
     direction,
     label,
     active,
-    noWrap,
     isLoading,
+    noWrap,
     ...rest
   } = props;
 
