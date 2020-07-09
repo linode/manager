@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-end',
     padding: 0,
     /*
-    Explictly stating this as the theme file is automatically adding padding to the last cell
+    Explicitly stating this as the theme file is automatically adding padding to the last cell
     We can remove once we make the full switch to CMR styling
     */
     paddingRight: '0 !important'

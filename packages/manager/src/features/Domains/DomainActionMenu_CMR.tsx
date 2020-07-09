@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
     height: '100%',
-    minWidth: 'auto',
+    minWidth: '70px',
     padding: '12px 10px',
     whiteSpace: 'nowrap',
     '&:hover': {
@@ -74,9 +74,9 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
   const createActions = () => (): Action[] => {
     const baseActions = [
       {
-        title: 'Edit',
+        title: 'Clone',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          handleEdit();
+          handleClone();
           e.preventDefault();
         }
       },
@@ -108,8 +108,8 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       <div className="flex-center">
-        <button className={classes.button} onClick={handleClone}>
-          Clone
+        <button className={classes.button} onClick={handleEdit}>
+          Edit
         </button>
         <button
           className={classes.button}
