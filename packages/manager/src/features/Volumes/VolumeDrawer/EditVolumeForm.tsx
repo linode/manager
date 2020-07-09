@@ -81,19 +81,19 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
           });
       }}
       initialValues={initialValues}
-      render={formikProps => {
-        const {
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          resetForm,
-          setFieldValue,
-          status,
-          touched,
-          values
-        } = formikProps;
+    >
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        resetForm,
+        setFieldValue,
+        status,
+        touched,
+        values
+      }) => {
         return (
           <Form>
             {status && (
@@ -146,7 +146,7 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
           </Form>
         );
       }}
-    />
+    </Formik>
   );
 };
 

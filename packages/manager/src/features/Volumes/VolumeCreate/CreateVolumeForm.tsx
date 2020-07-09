@@ -164,18 +164,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             );
           });
       }}
-      render={formikProps => {
-        const {
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-          status,
-          values,
-          touched
-        } = formikProps;
+    >
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        setFieldValue,
+        status,
+        values,
+        touched
+      }) => {
 
         const { region, linode_id, tags, config_id } = values;
 
@@ -355,7 +355,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           </Form>
         );
       }}
-    />
+    </Formik>
   );
 };
 
