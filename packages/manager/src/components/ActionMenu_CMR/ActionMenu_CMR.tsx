@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       background: 'none',
       fontSize: '1rem',
       border: 'none',
-      padding: '12.5px',
+      padding: '10px',
       color: '#3683dc',
       cursor: 'pointer',
       '&:hover': {

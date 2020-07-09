@@ -15,6 +15,7 @@ import { lishLaunch } from 'src/features/Lish/lishUtils';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { useTypes } from 'src/hooks/useTypes';
 import { useRegions } from 'src/hooks/useRegions';
@@ -30,14 +31,10 @@ import {
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: 'center'
   },
   link: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: 10,
-    height: 44,
+    padding: '12px 10px',
     textAlign: 'center',
     '&:hover': {
       backgroundColor: '#3683dc',
@@ -54,8 +51,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   powerOnOrOff: {
     ...theme.applyLinkStyles,
-    width: '6.5em',
-    padding: 10,
+    height: '100%',
+    minWidth: 'auto',
+    padding: '12px 10px',
+    whiteSpace: 'nowrap',
     '&:hover': {
       backgroundColor: '#3683dc',
       color: '#fff'
@@ -85,6 +84,7 @@ export interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
 }
 
 export type CombinedProps = Props & StateProps;
@@ -154,7 +154,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       linodeStatus,
       openDeleteDialog,
       openPowerActionDialog,
-      readOnly
+      readOnly,
+      openLinodeResize
     } = props;
 
     const readOnlyProps = readOnly
@@ -233,8 +234,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Navigate to Resize Page');
-            history.push(`/linodes/${linodeId}/resize`);
+            openLinodeResize(linodeId);
             e.preventDefault();
             e.stopPropagation();
           },
@@ -322,7 +322,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         <Link className={classes.link} to={`/linodes/${linodeId}`}>
           <span>Details</span>
         </Link>
-        <button
+        <Button
           className={classes.powerOnOrOff}
           onClick={e => {
             const action =
@@ -340,7 +340,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           disabled={!['running', 'offline'].includes(linodeStatus)}
         >
           {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-        </button>
+        </Button>
       </div>
       <ActionMenu
         className={classes.action}

@@ -26,7 +26,8 @@ type ClassNames =
   | 'regionCell'
   | 'iconTableCell'
   | 'icon'
-  | 'iconGridCell';
+  | 'iconGridCell'
+  | 'tagCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,9 +37,6 @@ const styles = (theme: Theme) =>
       paddingLeft: 0,
       width: '22%',
       textAlign: 'right',
-      '& button': {
-        lineHeight: '1.25rem'
-      },
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       },
@@ -51,7 +49,7 @@ const styles = (theme: Theme) =>
       justifyContent: 'flex-end',
       marginRight: 1,
       '& a': {
-        lineHeight: '1.25rem'
+        lineHeight: '1rem'
       }
     },
     bodyRow: {
@@ -84,6 +82,7 @@ const styles = (theme: Theme) =>
       display: 'inline-block'
     },
     statusCell: {
+      whiteSpace: 'nowrap',
       width: '17%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
@@ -163,6 +162,9 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
+    },
+    tagCell: {
+      borderRight: 'none'
     }
   });
 

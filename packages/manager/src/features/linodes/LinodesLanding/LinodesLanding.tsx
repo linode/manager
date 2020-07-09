@@ -63,6 +63,7 @@ import DeleteDialog from './DeleteDialog';
 import CSVLink from 'src/components/DownloadCSV';
 import Chip from 'src/components/core/Chip';
 import LandingHeader from 'src/components/LandingHeader';
+import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
 
 interface State {
   powerDialogOpen: boolean;
@@ -73,6 +74,7 @@ interface State {
   deleteDialogOpen: boolean;
   groupByTag: boolean;
   CtaDismissed: boolean;
+  linodeResizeOpen: boolean;
 }
 
 interface Params {
@@ -97,7 +99,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     powerDialogOpen: false,
     deleteDialogOpen: false,
     groupByTag: false,
-    CtaDismissed: BackupsCtaDismissed.get()
+    CtaDismissed: BackupsCtaDismissed.get(),
+    linodeResizeOpen: false
   };
 
   static docs = [LinodeGettingStarted, SecuringYourServer];
@@ -160,6 +163,19 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     BackupsCtaDismissed.set('true');
   };
 
+  openLinodeResize = (linodeID: number) => {
+    this.setState({
+      linodeResizeOpen: true,
+      selectedLinodeID: linodeID
+    });
+  };
+
+  closeLinodeResize = () => {
+    this.setState({
+      linodeResizeOpen: false
+    });
+  };
+
   render() {
     const {
       imagesError,
@@ -182,7 +198,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       someLinodesHaveMaintenance: this.props
         .someLinodesHaveScheduledMaintenance,
       openPowerActionDialog: this.openPowerDialog,
-      openDeleteDialog: this.openDeleteDialog
+      openDeleteDialog: this.openDeleteDialog,
+      openLinodeResize: this.openLinodeResize
     };
 
     if (imagesError.read || linodesRequestError) {
@@ -250,6 +267,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        {this.props.flags.cmr && (
+          <LinodeResize_CMR
+            open={this.state.linodeResizeOpen}
+            onClose={this.closeLinodeResize}
+            linodeId={this.state.selectedLinodeID}
+            linodeLabel={
+              this.props.linodesData.find(
+                thisLinode => thisLinode.id === this.state.selectedLinodeID
+              )?.label ?? undefined
+            }
+          />
+        )}
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner
             userTimezone={this.props.userTimezone}
