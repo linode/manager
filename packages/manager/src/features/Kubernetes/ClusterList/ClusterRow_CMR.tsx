@@ -25,12 +25,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    label: {
-      width: '30%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
-    },
+    label: {},
     link: {
       display: 'block',
       fontFamily: theme.font.bold,

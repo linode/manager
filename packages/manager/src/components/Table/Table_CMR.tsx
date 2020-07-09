@@ -39,11 +39,8 @@ const styles = (theme: Theme) =>
           '&:first-of-type': {
             borderLeft: 'none'
           },
-          '&:nth-last-of-type(2)': {
-            borderRight: 'none'
-          },
           '&:last-of-type': {
-            borderLeft: 'none'
+            borderRight: 'none'
           }
         }
       }
