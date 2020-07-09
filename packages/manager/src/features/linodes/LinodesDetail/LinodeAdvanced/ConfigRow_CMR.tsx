@@ -10,6 +10,7 @@ interface Props {
   linodeMemory: number;
   readOnly: boolean;
   linodeDisks: Disk[];
+  linodeKernel: string;
 }
 
 interface Handlers {
@@ -26,6 +27,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     linodeId,
     linodeMemory,
     linodeDisks,
+    linodeKernel,
     onBoot,
     onEdit,
     onDelete,
@@ -54,7 +56,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
           ? 'Full virtualization'
           : 'Paravirtualization'}
       </TableCell>
-      <TableCell>GRUB 2</TableCell>
+      <TableCell>{linodeKernel}</TableCell>
       <TableCell>
         {config.memory_limit === 0
           ? `${linodeMemory} GB`

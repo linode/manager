@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
@@ -10,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     marginBottom: theme.spacing(2)
   },
-  gridEnclosingPaper: {
+  enclosingGrid: {
     width: '100%'
   },
   paper: {
@@ -44,10 +43,8 @@ const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = () => {
       role="tabpanel"
       aria-labelledby="tab-advanced"
     >
-      <Grid item className={classes.gridEnclosingPaper}>
-        <Paper className={classes.paper}>
-          <LinodeConfigs />
-        </Paper>
+      <Grid item className={classes.enclosingGrid}>
+        <LinodeConfigs />
       </Grid>
     </Grid>
   );

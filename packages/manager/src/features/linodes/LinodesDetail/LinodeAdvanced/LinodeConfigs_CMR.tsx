@@ -1,4 +1,10 @@
-import { Config, linodeReboot, Disk } from '@linode/api-v4/lib/linodes';
+import {
+  Config,
+  linodeReboot,
+  Disk,
+  getLinodeKernels,
+  Kernel
+} from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -24,7 +30,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-import Table from 'src/components/Table';
+import Table from 'src/components/Table/Table_CMR';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
@@ -36,6 +42,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';
 import ConfigRow from './ConfigRow_CMR';
 import OrderBy from 'src/components/OrderBy';
+import { getAll } from 'src/utilities/getAll';
 
 import Paginate from 'src/components/Paginate';
 
@@ -49,15 +56,19 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    gridContainer: {
+    root: {
+      backgroundColor: theme.color.white,
+      margin: 0,
       width: '100%'
     },
     headline: {
-      marginBottom: theme.spacing(1),
+      marginTop: 8,
+      marginBottom: 8,
+      marginLeft: 15,
+      lineHeight: '1.5rem',
       [theme.breakpoints.down('xs')]: {
         marginBottom: 0,
-        marginTop: theme.spacing(1)
+        marginTop: theme.spacing(2)
       }
     },
     addNewWrapper: {
@@ -65,6 +76,9 @@ const styles = (theme: Theme) =>
         width: '100%',
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
+      },
+      '&.MuiGrid-item': {
+        padding: 5
       },
       marginBottom: theme.spacing(1) / 2
     },
@@ -87,6 +101,9 @@ interface State {
   confirmDelete: ConfirmDeleteState;
   submitting: boolean;
   success?: string;
+  kernels: Kernel[];
+  kernelError: APIError[] | null;
+  kernelsLoading: boolean;
 }
 
 interface ConfigDrawerState {
@@ -102,6 +119,8 @@ interface ConfirmDeleteState {
   error?: string;
 }
 
+const getAllKernels = getAll<Kernel>(getLinodeKernels);
+
 class LinodeConfigs extends React.Component<CombinedProps, State> {
   defaultConfigDrawerState: ConfigDrawerState = {
     open: false
@@ -113,8 +132,33 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       open: false,
       submitting: false
     },
-    configDrawer: this.defaultConfigDrawerState
+    configDrawer: this.defaultConfigDrawerState,
+    kernels: [],
+    kernelError: null,
+    kernelsLoading: false
   };
+
+  requestKernels = (linodeHypervisor: 'kvm' | 'xen') => {
+    this.setState({ kernelsLoading: true, kernelError: null });
+
+    return getAllKernels({}, { [linodeHypervisor]: true })
+      .then(({ data: kernels }) => {
+        this.setState({
+          kernels,
+          kernelsLoading: false
+        });
+      })
+      .catch(error => {
+        this.setState({
+          kernelError: getAPIErrorOrDefault(error, 'Unable to load kernels.'),
+          kernelsLoading: false
+        });
+      });
+  };
+
+  componentDidMount() {
+    this.requestKernels(this.props.linodeHypervisor);
+  }
 
   configsPanel = React.createRef();
 
@@ -127,7 +171,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           container
           justify="space-between"
           alignItems="flex-end"
-          className={classes.gridContainer}
+          className={classes.root}
         >
           <RootRef rootRef={this.configsPanel}>
             <Grid item>
@@ -152,6 +196,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           maxMemory={this.props.linodeMemory}
           onClose={this.resetConfigDrawer}
           open={this.state.configDrawer.open}
+          kernels={this.state.kernels}
+          kernelError={this.state.kernelError}
+          kernelsLoading={this.state.kernelsLoading}
         />
         <ConfirmationDialog
           title="Confirm Delete"
@@ -364,6 +411,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                         error={configsError}
                       >
                         {paginatedData.map(thisConfig => {
+                          const kernel = this.state.kernels.find(
+                            kernelName => kernelName.id === thisConfig.kernel
+                          );
                           return (
                             <ConfigRow
                               key={`config-row-${thisConfig.id}`}
@@ -371,6 +421,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               linodeId={linodeId}
                               linodeMemory={this.props.linodeMemory}
                               linodeDisks={this.props.linodeDisks}
+                              linodeKernel={kernel?.label ?? thisConfig.kernel}
                               onBoot={this.handleBoot}
                               onEdit={this.openForEditing}
                               onDelete={this.confirmDelete}

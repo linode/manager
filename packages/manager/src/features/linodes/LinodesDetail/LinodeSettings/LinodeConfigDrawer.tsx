@@ -101,13 +101,13 @@ interface Props {
   open: boolean;
   linodeConfigId?: number;
   onClose: () => void;
+  kernels: Kernel[];
+  kernelError: APIError[] | null;
+  kernelsLoading: boolean;
 }
 
 interface State {
-  loading: {
-    kernels: boolean;
-    config: boolean;
-  };
+  loading: boolean;
   kernels: Kernel[];
   errors?: Error | APIError[];
   fields: EditableFields;
@@ -123,10 +123,7 @@ const getAllKernels = getAll<Kernel>(getLinodeKernels);
 
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {
-    loading: {
-      kernels: false,
-      config: false
-    },
+    loading: false,
     kernels: [],
     fields: LinodeConfigDrawer.defaultFieldsValues(),
     submitting: false
@@ -169,9 +166,9 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
        * Get all the kernels for usage in the Kernel selection menu.
        * @todo We could (should?) put this back into Redux.
        */
-      if (prevState.kernels.length === 0) {
-        this.requestKernels(linodeHypervisor);
-      }
+      // if (prevState.kernels.length === 0) {
+      //   this.requestKernels(linodeHypervisor);
+      // }
 
       /**
        * If config is defined, we're editing. Set the state
@@ -200,7 +197,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   render() {
     const { open, onClose, linodeConfigId } = this.props;
     const { errors } = this.state;
-    const loading = Object.values(this.state.loading).some(v => v === true);
+    const loading = this.state.loading || this.props.kernelsLoading;
 
     return (
       <Drawer
@@ -224,7 +221,17 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       return this.renderLoading();
     }
 
-    return this.renderForm(errors);
+    const { kernelError } = this.props;
+
+    const combinedErrors = [];
+    if (Array.isArray(errors)) {
+      combinedErrors.push(...errors);
+    }
+    if (kernelError !== null) {
+      combinedErrors.push(...kernelError);
+    }
+
+    return this.renderForm(combinedErrors);
   };
 
   renderLoading = () => <CircleProgress />;
@@ -234,10 +241,9 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   );
 
   renderForm = (errors?: APIError[]) => {
-    const { onClose, maxMemory, classes, readOnly } = this.props;
+    const { onClose, maxMemory, classes, readOnly, kernels } = this.props;
 
     const {
-      kernels,
       fields: {
         useCustomRoot,
         label,
@@ -831,23 +837,23 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   handleChangeLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.updateField({ label: e.target.value || '' });
 
-  requestKernels = (linodeHypervisor: 'kvm' | 'xen') => {
-    this.setState({ loading: { ...this.state.loading, kernels: true } });
+  // requestKernels = (linodeHypervisor: 'kvm' | 'xen') => {
+  //   this.setState({ loading: { ...this.state.loading, kernels: true } });
 
-    return getAllKernels({}, { [linodeHypervisor]: true })
-      .then(({ data: kernels }) => {
-        this.setState({
-          kernels,
-          loading: { ...this.state.loading, kernels: false }
-        });
-      })
-      .catch(error => {
-        this.setState({
-          loading: { ...this.state.loading, kernels: false },
-          errors: getAPIErrorOrDefault(error, 'Unable to load kernels.')
-        });
-      });
-  };
+  //   return getAllKernels({}, { [linodeHypervisor]: true })
+  //     .then(({ data: kernels }) => {
+  //       this.setState({
+  //         kernels,
+  //         loading: { ...this.state.loading, kernels: false }
+  //       });
+  //     })
+  //     .catch(error => {
+  //       this.setState({
+  //         loading: { ...this.state.loading, kernels: false },
+  //         errors: getAPIErrorOrDefault(error, 'Unable to load kernels.')
+  //       });
+  //     });
+  // };
 }
 const isUsingCustomRoot = (value: string) =>
   [

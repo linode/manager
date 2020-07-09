@@ -99,26 +99,6 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
 
     return [
       {
-        title: 'Resize',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-          // history.push(
-          //   `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
-          // );
-        },
-        disabled: readOnly
-      },
-      {
-        title: 'Imagize',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-          // history.push(
-          //   `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
-          // );
-        },
-        disabled: readOnly
-      },
-      {
         title: 'Clone',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
