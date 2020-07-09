@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.white,
     height: 50,
     width: '100%',
-    padding: '8px 15px'
+    padding: '8px 8px 8px 15px'
   },
   rootHasBreadcrumb: {
     padding: 8
