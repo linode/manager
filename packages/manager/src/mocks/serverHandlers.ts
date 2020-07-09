@@ -6,6 +6,8 @@ import {
   firewallFactory,
   firewallDeviceFactory,
   kubernetesClusterFactory,
+  kubeEndpointFactory,
+  nodePoolFactory,
   linodeConfigFactory,
   linodeDiskFactory,
   linodeFactory,
@@ -80,6 +82,19 @@ export const handlers = [
   rest.get('*/lke/clusters', async (req, res, ctx) => {
     const clusters = kubernetesClusterFactory.buildList(10);
     return res(ctx.json(makeResourcePage(clusters)));
+  }),
+  rest.get('*/lke/clusters/:clusterId', async (req, res, ctx) => {
+    const id = req.params.clusterId;
+    const cluster = kubernetesClusterFactory.build({ id });
+    return res(ctx.json(cluster));
+  }),
+  rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {
+    const pools = nodePoolFactory.buildList(2);
+    return res(ctx.json(makeResourcePage(pools, { page: 1, pages: 2 })));
+  }),
+  rest.get('*/lke/clusters/*/api-endpoints', async (req, res, ctx) => {
+    const endpoints = kubeEndpointFactory.buildList(2);
+    return res(ctx.json(makeResourcePage(endpoints)));
   }),
   rest.get('*/firewalls/', (req, res, ctx) => {
     const firewalls = firewallFactory.buildList(10);
