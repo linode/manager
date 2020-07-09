@@ -39,7 +39,7 @@ import {
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';
+import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer_CMR';
 import ConfigRow from './ConfigRow_CMR';
 import OrderBy from 'src/components/OrderBy';
 import { getAll } from 'src/utilities/getAll';
@@ -99,6 +99,7 @@ type CombinedProps = LinodeContext &
 interface State {
   configDrawer: ConfigDrawerState;
   confirmDelete: ConfirmDeleteState;
+  confirmBoot: ConfirmBootState;
   submitting: boolean;
   success?: string;
   kernels: Kernel[];
@@ -119,6 +120,14 @@ interface ConfirmDeleteState {
   error?: string;
 }
 
+interface ConfirmBootState {
+  open: boolean;
+  submitting: boolean;
+  configId?: number;
+  label?: string;
+  error?: string;
+}
+
 const getAllKernels = getAll<Kernel>(getLinodeKernels);
 
 class LinodeConfigs extends React.Component<CombinedProps, State> {
@@ -129,6 +138,10 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
   state: State = {
     submitting: false,
     confirmDelete: {
+      open: false,
+      submitting: false
+    },
+    confirmBoot: {
       open: false,
       submitting: false
     },
@@ -211,6 +224,17 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
             Are you sure you want to delete "{this.state.confirmDelete.label}?"
           </Typography>
         </ConfirmationDialog>
+        <ConfirmationDialog
+          title="Confirm Boot"
+          error={this.state.confirmBoot.error}
+          open={this.state.confirmBoot.open}
+          onClose={this.resetConfirmConfigDelete}
+          actions={this.bootConfigConfirmationActions}
+        >
+          <Typography>
+            Are you sure you want to boot "{this.state.confirmBoot.label}?"
+          </Typography>
+        </ConfirmationDialog>
       </React.Fragment>
     );
   }
@@ -230,6 +254,27 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         data-qa-confirm-delete
       >
         Delete
+      </Button>
+    </ActionsPanel>
+  );
+
+  bootConfigConfirmationActions = () => (
+    <ActionsPanel style={{ padding: 0 }}>
+      <Button
+        onClick={this.cancelBoot}
+        buttonType="cancel"
+        data-qa-cancel-delete
+      >
+        Cancel
+      </Button>
+      <Button
+        buttonType="secondary"
+        destructive
+        loading={this.state.confirmBoot.submitting}
+        onClick={this.handleBoot}
+        data-qa-confirm-reboot
+      >
+        Boot
       </Button>
     </ActionsPanel>
   );
@@ -290,20 +335,51 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     this.setConfirmDelete({ open: true, id, label, error: undefined });
   };
 
-  handleBoot = (linodeId: number, configId: number, label: string) => {
-    linodeReboot(linodeId, configId)
+  confirmBoot = (configId: number, label: string) => {
+    this.setState({
+      confirmBoot: {
+        ...this.state.confirmBoot,
+        open: true,
+        error: undefined,
+        configId,
+        label
+      }
+    });
+  };
+
+  cancelBoot = () => {
+    this.setState({ confirmBoot: { ...this.state.confirmBoot, open: false } });
+  };
+
+  handleBoot = () => {
+    this.setState({
+      confirmBoot: {
+        ...this.state.confirmBoot,
+        error: undefined,
+        submitting: true
+      }
+    });
+
+    linodeReboot(this.props.linodeId, this.state.confirmBoot.configId)
       .then(() => {
+        this.setState({
+          confirmBoot: {
+            ...this.state.confirmBoot,
+            open: false,
+            submitting: false
+          }
+        });
+
         resetEventsPolling();
       })
       .catch(errorResponse => {
-        const errors = getAPIErrorOrDefault(
+        const error = getAPIErrorOrDefault(
           errorResponse,
-          `Error booting ${label}`
-        );
-        errors.forEach((error: APIError) => {
-          this.props.enqueueSnackbar(error.reason, {
-            variant: 'error'
-          });
+          `Error booting ${this.state.confirmBoot.label}`
+        )[0].reason;
+
+        this.setState({
+          confirmBoot: { ...this.state.confirmBoot, submitting: false, error }
         });
       });
   };
@@ -422,7 +498,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               linodeMemory={this.props.linodeMemory}
                               linodeDisks={this.props.linodeDisks}
                               linodeKernel={kernel?.label ?? thisConfig.kernel}
-                              onBoot={this.handleBoot}
+                              onBoot={this.confirmBoot}
                               onEdit={this.openForEditing}
                               onDelete={this.confirmDelete}
                               readOnly={readOnly}

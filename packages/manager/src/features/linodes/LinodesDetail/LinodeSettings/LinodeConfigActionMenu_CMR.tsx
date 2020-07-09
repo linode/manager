@@ -10,7 +10,7 @@ import ActionMenu, {
 interface Props {
   onEdit: (config: Config) => void;
   onDelete: (id: number, label: string) => void;
-  onBoot: (linodeId: number, configId: number, label: string) => void;
+  onBoot: (configId: number, label: string) => void;
   config: Config;
   linodeId: number;
   readOnly?: boolean;
@@ -77,10 +77,9 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
   const handleBoot = () => {
     const {
       config: { id, label },
-      linodeId,
       onBoot
     } = props;
-    onBoot(linodeId, id, label);
+    onBoot(id, label);
   };
 
   const createConfigActions = React.useCallback((): Action[] => {

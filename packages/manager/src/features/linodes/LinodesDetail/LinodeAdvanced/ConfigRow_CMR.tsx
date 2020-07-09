@@ -14,7 +14,7 @@ interface Props {
 }
 
 interface Handlers {
-  onBoot: (linodeId: number, configId: number, label: string) => void;
+  onBoot: (configId: number, label: string) => void;
   onEdit: (config: Config) => void;
   onDelete: (id: number, label: string) => void;
 }
