@@ -41,6 +41,7 @@ import Paginate from 'src/components/Paginate';
 
 type ClassNames =
   | 'root'
+  | 'gridContainer'
   | 'headline'
   | 'addNewWrapper'
   | 'labelCell'
@@ -49,11 +50,14 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
+    gridContainer: {
+      width: '100%'
+    },
     headline: {
-      marginBottom: theme.spacing(2),
+      marginBottom: theme.spacing(1),
       [theme.breakpoints.down('xs')]: {
         marginBottom: 0,
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(1)
       }
     },
     addNewWrapper: {
@@ -61,7 +65,8 @@ const styles = (theme: Theme) =>
         width: '100%',
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
-      }
+      },
+      marginBottom: theme.spacing(1) / 2
     },
     labelCell: {
       width: '25%'
@@ -118,7 +123,12 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end">
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          className={classes.gridContainer}
+        >
           <RootRef rootRef={this.configsPanel}>
             <Grid item>
               <Typography variant="h3" className={classes.headline}>

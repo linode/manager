@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     marginBottom: theme.spacing(2)
   },
+  gridEnclosingPaper: {
+    width: '100%'
+  },
   paper: {
     padding: theme.spacing(3),
     paddingTop: theme.spacing(1),
@@ -41,7 +44,7 @@ const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = () => {
       role="tabpanel"
       aria-labelledby="tab-advanced"
     >
-      <Grid item>
+      <Grid item className={classes.gridEnclosingPaper}>
         <Paper className={classes.paper}>
           <LinodeConfigs />
         </Paper>
