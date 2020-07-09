@@ -18,10 +18,16 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  actionInner: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    '& a': {
+      lineHeight: '1rem'
+    }
+  },
   inlineActions: {
     display: 'flex',
-    alignItems: 'center',
-    justify: 'center'
+    alignItems: 'center'
   },
   link: {
     padding: '12.5px 15px',
@@ -135,7 +141,7 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
   }, [props]);
 
   return (
-    <>
+    <div className={classes.actionInner}>
       <div className={classes.inlineActions}>
         <button
           className={classes.powerOnOrOff}
@@ -161,7 +167,7 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
         createActions={createConfigActions}
         ariaLabel={`Action menu for Linode Config ${props.label}`}
       />
-    </>
+    </div>
   );
 };
 
