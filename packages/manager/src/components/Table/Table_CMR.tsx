@@ -36,11 +36,14 @@ const styles = (theme: Theme) =>
           fontSize: '0.875em !important',
           color: theme.palette.text.primary,
           padding: '10px 15px',
-          '&:first-child': {
+          '&:first-of-type': {
             borderLeft: 'none'
           },
-          '&:last-child': {
+          '&:nth-last-of-type(2)': {
             borderRight: 'none'
+          },
+          '&:last-of-type': {
+            borderLeft: 'none'
           }
         }
       }

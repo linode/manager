@@ -22,7 +22,8 @@ export interface Action {
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     display: 'inline-block',
-    position: 'relative'
+    position: 'relative',
+    float: 'right'
   },
   button: {
     '&[data-reach-menu-button]': {
