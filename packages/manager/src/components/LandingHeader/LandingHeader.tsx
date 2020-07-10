@@ -33,7 +33,7 @@ interface Props extends Omit<HeaderProps, 'actions'> {
 
 export const LandingHeader: React.FC<Props> = props => {
   const classes = useStyles();
-  const { docsLink, onAddNew, title, entity, extraActions } = props;
+  const { docsLink, onAddNew, entity, extraActions } = props;
 
   const actions = React.useMemo(
     () => (
