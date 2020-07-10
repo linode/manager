@@ -62,9 +62,9 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           Last Backup
         </TableSortCell>
         <Hidden mdDown>
-          <TableCell style={{ borderRight: 'none' }}>Tags</TableCell>
+          <TableCell>Tags</TableCell>
         </Hidden>
-        <TableCell style={{ borderLeft: 'none' }} />
+        <TableCell />
       </TableRow>
     </TableHead>
   );
