@@ -173,7 +173,17 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, disks, linodeStatus, readOnly } = this.props;
+    const {
+      classes,
+      disks,
+      linodeStatus,
+      linodeTotalDisk,
+      readOnly
+    } = this.props;
+
+    const usedDiskSpace = addUsedDiskSpace(disks);
+
+    const freeDiskSpace = linodeTotalDisk !== usedDiskSpace;
 
     return (
       <React.Fragment>
@@ -194,7 +204,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             <AddNewLink
               onClick={this.openDrawerForCreation}
               label="Add a Disk..."
-              disabled={readOnly}
+              disabled={readOnly || !freeDiskSpace}
             />
           </Grid>
         </Grid>
@@ -591,6 +601,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles);
+
+export const addUsedDiskSpace = (disks: Disk[]) => {
+  return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);
+};
 
 interface LinodeContextProps {
   linodeId?: number;
