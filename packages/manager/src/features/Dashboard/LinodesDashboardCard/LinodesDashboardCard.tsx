@@ -47,7 +47,7 @@ const useStyles = makeStyles(() => ({
     width: '60%'
   },
   moreCol: {
-    width: '30%'
+    width: '20%'
   },
   actionsCol: {
     width: '10%'
