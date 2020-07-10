@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     }
   },
+  buttonWithLabel: {
+    padding: '15px 10px !important'
+  },
   buttonLabel: {
     margin: `0 0 0 ${theme.spacing() + 2}px`,
     fontFamily: theme.font.normal,
@@ -156,7 +159,10 @@ const ActionMenu: React.FC<CombinedProps> = props => {
     <div className={classes.wrapper}>
       <Menu>
         <MenuButton
-          className={classes.button}
+          className={classNames({
+            [classes.button]: true,
+            [classes.buttonWithLabel]: Boolean(inlineLabel)
+          })}
           aria-label={ariaLabel}
           onMouseDown={handleClick}
           onKeyDown={handleKeyPress}

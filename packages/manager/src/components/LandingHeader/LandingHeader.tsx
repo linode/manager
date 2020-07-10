@@ -22,6 +22,7 @@ interface Props extends Omit<HeaderProps, 'actions'> {
   body?: JSX.Element;
   docsLink: string;
   onAddNew?: () => void;
+  entity: string;
 }
 
 /**
@@ -32,11 +33,17 @@ interface Props extends Omit<HeaderProps, 'actions'> {
 
 export const LandingHeader: React.FC<Props> = props => {
   const classes = useStyles();
-  const { docsLink, extraActions, onAddNew, title } = props;
+  const { docsLink, onAddNew, title, entity, extraActions } = props;
 
   const actions = React.useMemo(
     () => (
-      <Grid container direction="row" alignItems="center" justify="flex-end">
+      <Grid
+        item
+        container
+        direction="row"
+        alignItems="center"
+        justify="flex-end"
+      >
         {extraActions && <Grid item>{extraActions}</Grid>}
         {onAddNew && (
           <Grid item>
@@ -45,17 +52,17 @@ export const LandingHeader: React.FC<Props> = props => {
               className={classes.button}
               onClick={onAddNew}
             >
-              Create a {title}
+              Create a {entity}
             </Button>
           </Grid>
         )}
         {docsLink && <DocumentationButton href={docsLink} />}
       </Grid>
     ),
-    [docsLink, title, onAddNew, classes.button, extraActions]
+    [docsLink, entity, onAddNew, classes.button, extraActions]
   );
 
-  return <EntityHeader actions={actions} {...props} />;
+  return <EntityHeader isLanding actions={actions} {...props} />;
 };
 
 export default LandingHeader;

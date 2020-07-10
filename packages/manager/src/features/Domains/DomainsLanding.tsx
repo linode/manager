@@ -421,6 +421,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         Import a Zone
                       </Button>
                     }
+                    entity="Domain"
                     onAddNew={this.openCreateDomainDrawer}
                     iconType="domain"
                     docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"

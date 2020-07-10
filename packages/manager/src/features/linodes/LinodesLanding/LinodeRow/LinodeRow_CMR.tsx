@@ -265,6 +265,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           deleteTag={deleteTag}
           listAllTags={() => openTagDrawer(id, label, tags)}
           width={300}
+          inTableContext
         />
       </Hidden>
 
@@ -286,6 +287,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             openPowerActionDialog={openPowerActionDialog}
             openLinodeResize={openLinodeResize}
             noImage={!image}
+            inTableContext
           />
         </div>
       </TableCell>
