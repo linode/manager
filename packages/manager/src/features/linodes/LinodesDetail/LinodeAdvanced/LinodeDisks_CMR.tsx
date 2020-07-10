@@ -15,18 +15,18 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import Typography from 'src/components/core/Typography';
 import OrderBy from 'src/components/OrderBy';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { resetEventsPolling } from 'src/eventsPolling';
 import ImagesDrawer, { DrawerMode } from 'src/features/Images/ImagesDrawer';
 import {
@@ -183,10 +183,16 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     const usedDiskSpace = addUsedDiskSpace(disks);
 
-    const freeDiskSpace = linodeTotalDisk !== usedDiskSpace;
+    const freeDiskSpace = linodeTotalDisk && linodeTotalDisk > usedDiskSpace;
 
     return (
       <React.Fragment>
+        {!freeDiskSpace && (
+          <Notice
+            error
+            text="You do not have enough unallocated storage to create a Disk."
+          />
+        )}
         <Grid
           className={classes.root}
           container
