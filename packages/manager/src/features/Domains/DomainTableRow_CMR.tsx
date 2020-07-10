@@ -2,8 +2,7 @@ import { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import EntityIcon from 'src/components/EntityIcon';
-import Grid from 'src/components/Grid';
+import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu, { Handlers } from './DomainActionMenu_CMR';
@@ -78,41 +77,26 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
       ariaLabel={`Domain ${domain}`}
     >
       <TableCell parentColumn="Domain" data-qa-domain-label>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <EntityIcon
-              variant="domain"
-              status={status}
-              marginTop={1}
-              loading={status === 'edit_mode'}
-            />
-          </Grid>
-          <Grid item className={classes.domainCellContainer}>
-            <div className={classes.labelStatusWrapper}>
-              {type !== 'slave' ? (
-                <Link
-                  to={`/domains/${id}`}
-                  tabIndex={0}
-                  className={classes.link}
-                >
-                  {domain}
-                </Link>
-              ) : (
-                <button
-                  className={classes.button}
-                  onClick={() => props.onEdit(domain, id)}
-                >
-                  {domain}
-                </button>
-              )}
-            </div>
-          </Grid>
-        </Grid>
+        <div className={classes.labelStatusWrapper}>
+          {type !== 'slave' ? (
+            <Link to={`/domains/${id}`} tabIndex={0} className={classes.link}>
+              {domain}
+            </Link>
+          ) : (
+            <button
+              className={classes.button}
+              onClick={() => props.onEdit(domain, id)}
+            >
+              {domain}
+            </button>
+          )}
+        </div>
       </TableCell>
       <TableCell parentColumn="Type" data-qa-domain-type>
         {type}
       </TableCell>
       <TableCell parentColumn="Status" data-qa-domain-status>
+        <StatusIcon status={domainStatusToIconStatus(status)} />
         {humanizeDomainStatus(status)}
       </TableCell>
       <TableCell parentColumn="Last Modified" data-qa-domain-lastmodified>
@@ -146,6 +130,21 @@ const humanizeDomainStatus = (status: DomainStatus) => {
       return 'Error';
     default:
       return 'Unknown';
+  }
+};
+
+const domainStatusToIconStatus = (status: DomainStatus) => {
+  switch (status) {
+    case 'active':
+      return 'active';
+    case 'disabled':
+      return 'inactive';
+    case 'edit_mode':
+      return 'inactive';
+    case 'has_errors':
+      return 'error';
+    default:
+      return 'inactive';
   }
 };
 
