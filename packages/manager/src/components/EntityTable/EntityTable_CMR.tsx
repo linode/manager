@@ -77,6 +77,7 @@ export const LandingTable: React.FC<Props> = props => {
 
         const tableProps = {
           data: orderedData,
+          error: row.error,
           loading: row.loading,
           lastUpdated: row.lastUpdated,
           RowComponent: row.Component,
