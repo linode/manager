@@ -26,6 +26,7 @@ import TableCell from 'src/components/TableCell/TableCell_CMR.tsx';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
+import TableRowLoading from 'src/components/TableRowLoading/TableRowLoading_CMR';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -223,7 +224,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           title="Confirm Boot"
           error={this.state.confirmBoot.error}
           open={this.state.confirmBoot.open}
-          onClose={this.resetConfirmConfigBoot}
+          onClose={this.cancelBoot}
           actions={this.bootConfigConfirmationActions}
         >
           <Typography>
@@ -338,18 +339,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         error: undefined,
         configId,
         label
-      }
-    });
-  };
-
-  resetConfirmConfigBoot = () => {
-    this.setState({
-      confirmBoot: {
-        open: false,
-        error: undefined,
-        configId: undefined,
-        label: undefined,
-        submitting: false
       }
     });
   };
@@ -497,7 +486,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                           const kernel = this.state.kernels.find(
                             kernelName => kernelName.id === thisConfig.kernel
                           );
-                          return (
+                          return this.state.kernelsLoading ? (
+                            <TableRowLoading colSpan={6} />
+                          ) : (
                             <ConfigRow
                               key={`config-row-${thisConfig.id}`}
                               config={thisConfig}
