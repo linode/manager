@@ -48,7 +48,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   powerOnOrOff: {
     ...theme.applyLinkStyles,
-    width: '6.5em',
+    padding: '12px 10px',
+
     '&:hover': {
       backgroundColor: '#3683dc',
       color: theme.color.white
@@ -59,8 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&:hover': {
         backgroundColor: 'inherit'
       }
-    },
-    padding: '12.5px 0px'
+    }
   }
 }));
 
