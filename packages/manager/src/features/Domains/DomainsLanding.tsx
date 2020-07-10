@@ -71,7 +71,9 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       '& td': {
-        borderBottom: 0
+        borderBottom: 0,
+        paddingLeft: '15px',
+        paddingRight: '15px'
       },
       '& .MuiTableCell-head': {
         borderBottom: 0
