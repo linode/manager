@@ -1,5 +1,8 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import * as classnames from 'classnames';
+import { useSnackbar } from 'notistack';
 import { Link } from 'react-router-dom';
 import ConsoleIcon from 'src/assets/icons/console.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
@@ -7,8 +10,9 @@ import DiskIcon from 'src/assets/icons/disk.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import RebootIcon from 'src/assets/icons/reboot.svg';
 import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
+import PowerOnIcon from 'src/assets/icons/power-button.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
-import ActionMenu from 'src/components/ActionMenu_CMR';
+import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
 import List from 'src/components/core/List';
@@ -18,6 +22,7 @@ import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
+import TagCell from 'src/components/TagCell';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
@@ -26,24 +31,48 @@ import IconTextLink from 'src/components/IconTextLink';
 import { distroIcons } from 'src/components/ImageSelect/icons';
 import { dcDisplayNames } from 'src/constants';
 import useImages from 'src/hooks/useImages';
+import useLinodes from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
 interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
   linode: Linode;
+  username?: string;
+  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openPowerActionDialog: (
+    bootAction: BootAction,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Config[]
+  ) => void;
+  backups: LinodeBackups;
+  linodeConfigs: Config[];
   numVolumes: number;
-  username: string;
-  openLishConsole: () => void;
+  openLinodeResize: (linodeID: number) => void;
 }
 
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
-  const { variant, linode, numVolumes, username, openLishConsole } = props;
+  const {
+    variant,
+    linode,
+    username,
+    openDeleteDialog,
+    openPowerActionDialog,
+    backups,
+    linodeConfigs,
+    numVolumes,
+    openLinodeResize
+  } = props;
 
   useReduxLoad(['images', 'types']);
   const { images } = useImages();
@@ -73,21 +102,28 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
+          openDeleteDialog={openDeleteDialog}
+          openPowerActionDialog={openPowerActionDialog}
+          linodeRegionDisplay={linodeRegionDisplay}
+          backups={backups}
+          linodeConfigs={linodeConfigs}
+          openLinodeResize={openLinodeResize}
+          type={'something'}
+          image={'something'}
         />
       }
       body={
         <Body
           linodeLabel={linode.label}
+          numVolumes={numVolumes}
           numCPUs={linode.specs.vcpus}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
-          numVolumes={numVolumes}
           region={linode.region}
           ipv4={linode.ipv4}
           ipv6={linode.ipv6}
           linodeId={linode.id}
-          username={username}
-          openLishConsole={openLishConsole}
+          username={username ? username : 'none'}
         />
       }
       footer={
@@ -97,6 +133,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeId={linode.id}
           linodeCreated={linode.created}
           linodeTags={linode.tags}
+          linodeLabel={linode.label}
         />
       }
     />
@@ -108,12 +145,25 @@ export default React.memo(LinodeEntityDetail);
 // =============================================================================
 // Header
 // =============================================================================
-interface HeaderProps {
+export interface HeaderProps {
   variant: LinodeEntityDetailVariant;
   imageVendor: string | null;
   linodeLabel: string;
   linodeId: number;
   linodeStatus: Linode['status'];
+  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openPowerActionDialog: (
+    bootAction: BootAction,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Config[]
+  ) => void;
+  linodeRegionDisplay: string;
+  backups: LinodeBackups;
+  type: string;
+  image: string;
+  linodeConfigs: Config[];
+  openLinodeResize: (linodeID: number) => void;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -156,11 +206,42 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   actionMenu: {
     marginLeft: 30
+  },
+  statusChip: {
+    marginLeft: 30,
+    color: 'white',
+    backgroundColor: '#ffb31a',
+    fontSize: '1.1 rem',
+    height: 30,
+    borderRadius: 15,
+    letterSpacing: '.5px',
+    minWidth: 120,
+    marginRight: 30
+  },
+  statusRunning: {
+    backgroundColor: '#17cf73'
+  },
+  statusOffline: {
+    backgroundColor: '#9ea4ae'
   }
 }));
 
 const Header: React.FC<HeaderProps> = props => {
-  const { variant, imageVendor, linodeLabel, linodeId, linodeStatus } = props;
+  const {
+    variant,
+    imageVendor,
+    linodeLabel,
+    linodeId,
+    linodeStatus,
+    linodeRegionDisplay,
+    openDeleteDialog,
+    openPowerActionDialog,
+    backups,
+    type,
+    image,
+    linodeConfigs,
+    openLinodeResize
+  } = props;
 
   const classes = useHeaderStyles();
 
@@ -168,6 +249,15 @@ const Header: React.FC<HeaderProps> = props => {
     imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
 
   const isDetails = variant === 'details';
+
+  const isRunning = linodeStatus === 'running';
+
+  const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
+
+  const handleConsoleButtonClick = (id: number) => {
+    sendLinodeActionMenuItemEvent('Launch Console');
+    lishLaunch(id);
+  };
 
   return (
     <EntityHeader
@@ -184,52 +274,24 @@ const Header: React.FC<HeaderProps> = props => {
             {linodeLabel}
           </div>
         ) : (
-          <>
-            <Link
-              to={`linode/instances/${linodeId}`}
-              className={classes.linodeLabel}
-            >
-              {linodeLabel}
-            </Link>
-            <Chip
-              style={{
-                marginLeft: 30,
-                backgroundColor: '#17cf73',
-                color: 'white',
-                fontSize: '1.1 rem',
-                height: 30,
-                borderRadius: 15,
-                letterSpacing: '.5px',
-                minWidth: 120,
-                marginRight: 30
-              }}
-              label={linodeStatus.toUpperCase()}
-              component="span"
-              clickable={false}
-            />
-          </>
+          <Link to={`linodes/${linodeId}`} className={classes.linodeLabel}>
+            {linodeLabel}
+          </Link>
         )
       }
       bodyClassName={classes.body}
       body={
         <>
-          {isDetails && (
-            <Chip
-              style={{
-                backgroundColor: '#17cf73',
-                color: 'white',
-                fontSize: '1.1 rem',
-                height: 30,
-                borderRadius: 15,
-                letterSpacing: '.5px',
-                minWidth: 120,
-                marginRight: 30
-              }}
-              label={linodeStatus.toUpperCase()}
-              component="span"
-              clickable={false}
-            />
-          )}
+          <Chip
+            className={classnames({
+              [classes.statusChip]: true,
+              [classes.statusRunning]: isRunning,
+              [classes.statusOffline]: isOffline
+            })}
+            label={linodeStatus.toUpperCase()}
+            component="span"
+            clickable={false}
+          />
 
           {!isDetails && (
             <IconTextLink
@@ -237,27 +299,68 @@ const Header: React.FC<HeaderProps> = props => {
               SideIcon={ViewDetailsIcon}
               text="ViewDetails"
               title="ViewDetails"
+              to={`linodes/${linodeId}`}
             />
           )}
+
+          <IconTextLink
+            className={classes.actionItem}
+            SideIcon={PowerOnIcon}
+            text={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+            title={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+            onClick={() => {
+              const action =
+                linodeStatus === 'running' ? 'Power Off' : 'Power On';
+              sendLinodeActionMenuItemEvent(`${action} Linode`);
+
+              openPowerActionDialog(
+                `${action}` as BootAction,
+                linodeId,
+                linodeLabel,
+                linodeStatus === 'running' ? linodeConfigs : []
+              );
+            }}
+            disabled={!['running', 'offline'].includes(linodeStatus)}
+          />
 
           <IconTextLink
             className={classes.actionItem}
             SideIcon={RebootIcon}
             text="Reboot"
             title="Reboot"
+            onClick={() => {
+              sendLinodeActionMenuItemEvent('Reboot Linode');
+              openPowerActionDialog(
+                'Reboot',
+                linodeId,
+                linodeLabel,
+                linodeConfigs
+              );
+            }}
           />
-          {isDetails && (
-            <IconTextLink
-              className={classes.actionItem}
-              SideIcon={ConsoleIcon}
-              text="Launch Console"
-              title="Launch Console"
-            />
-          )}
-          <ActionMenu
+
+          <IconTextLink
+            className={classes.actionItem}
+            SideIcon={ConsoleIcon}
+            text="Launch Console"
+            title="Launch Console"
+            onClick={() => {
+              handleConsoleButtonClick(linodeId);
+            }}
+          />
+
+          <LinodeActionMenu
+            linodeId={linodeId}
+            linodeLabel={linodeLabel}
+            linodeRegion={linodeRegionDisplay}
+            linodeType={type}
+            linodeStatus={linodeStatus}
+            linodeBackups={backups}
+            openDeleteDialog={openDeleteDialog}
+            openPowerActionDialog={openPowerActionDialog}
+            openLinodeResize={openLinodeResize}
+            noImage={!image}
             inlineLabel="More Actions"
-            ariaLabel="linode-detail"
-            createActions={() => []}
           />
           {isDetails && <DocumentationButton href="https://www.linode.com/" />}
         </>
@@ -273,14 +376,13 @@ export interface BodyProps {
   numCPUs: number;
   gbRAM: number;
   gbStorage: number;
-  numVolumes: number;
   region: string;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   linodeId: number;
   username: string;
   linodeLabel: string;
-  openLishConsole: () => void;
+  numVolumes: number;
 }
 
 const useBodyStyles = makeStyles((theme: Theme) => ({
@@ -313,6 +415,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     marginTop: 4,
     '& li': {
       padding: 0,
+      fontSize: '0.875rem',
       lineHeight: 1.43
     }
   },
@@ -332,13 +435,17 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     },
     '& td': {
       lineHeight: 1.4,
+      fontSize: '0.875rem',
       fontStretch: 'normal',
       letterSpacing: 'normal',
       border: 'none',
       paddingTop: 8,
       paddingRight: 10,
       paddingBottom: 7,
-      paddingLeft: 10
+      paddingLeft: 10,
+      overflowX: 'auto',
+      maxWidth: '100%',
+      whiteSpace: 'nowrap'
     },
     '& tr:first-child > td': {
       borderBottom: '1px solid white'
@@ -355,7 +462,8 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     }
   },
   accessTableContainer: {
-    overFlowX: 'hidden'
+    overflowX: 'auto',
+    maxWidth: 600
   },
   code: {
     // @todo: use font from designs
@@ -364,28 +472,22 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Body: React.FC<BodyProps> = React.memo(props => {
+  const classes = useBodyStyles();
   const {
     numCPUs,
     gbRAM,
     gbStorage,
-    numVolumes,
     region,
     ipv4,
     ipv6,
     linodeId,
     username,
-    linodeLabel
+    linodeLabel,
+    numVolumes
   } = props;
 
-  const classes = useBodyStyles();
-
   return (
-    <Grid
-      container
-      direction="row"
-      justify="space-between"
-      className={classes.accessTableContainer}
-    >
+    <Grid container direction="row" justify="space-between">
       <Grid item>
         {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
         <Grid container>
@@ -479,20 +581,24 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
         </List>
       </Grid>
       <Grid item>
-        <Table className={classes.accessTable}>
-          <TableBody>
-            <TableRow>
-              <TableCell>SSH Access</TableCell>
-              <TableCell className={classes.code}>{sshLink(ipv4[0])}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>LISH via SSH</TableCell>
-              <TableCell className={classes.code}>
-                {lishLink(username, region, linodeLabel)}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <div className={classes.accessTableContainer}>
+          <Table className={classes.accessTable}>
+            <TableBody>
+              <TableRow>
+                <TableCell>SSH Access</TableCell>
+                <TableCell className={classes.code}>
+                  {sshLink(ipv4[0])}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>LISH via SSH</TableCell>
+                <TableCell className={classes.code}>
+                  {lishLink(username, region, linodeLabel)}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
       </Grid>
     </Grid>
   );
@@ -507,6 +613,7 @@ interface FooterProps {
   linodeId: number;
   linodeCreated: string;
   linodeTags: string[];
+  linodeLabel: string;
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
@@ -536,41 +643,86 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
-  const { linodePlan, linodeRegionDisplay, linodeId, linodeCreated } = props;
+  const {
+    linodePlan,
+    linodeRegionDisplay,
+    linodeId,
+    linodeCreated,
+    linodeTags
+  } = props;
 
   const classes = useFooterStyles();
+
+  const { updateLinode } = useLinodes();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const addTag = React.useCallback(
+    (tag: string) => {
+      const newTags = [...linodeTags, tag];
+      updateLinode({ linodeId, tags: newTags }).catch(e =>
+        enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
+          variant: 'error'
+        })
+      );
+    },
+    [linodeTags, linodeId, updateLinode, enqueueSnackbar]
+  );
+
+  const deleteTag = React.useCallback(
+    (tag: string) => {
+      const newTags = linodeTags.filter(thisTag => thisTag !== tag);
+      updateLinode({ linodeId, tags: newTags }).catch(e =>
+        enqueueSnackbar(
+          getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
+          {
+            variant: 'error'
+          }
+        )
+      );
+    },
+    [linodeTags, linodeId, updateLinode, enqueueSnackbar]
+  );
+
   return (
-    <Grid container direction="row" justify="space-between">
-      <Grid item>
-        <div className={classes.detailsSection}>
-          {linodePlan && (
-            <Link
-              to={`/linodes/${linodeId}/resize`}
-              className={classes.listItem}
-            >
-              {linodePlan}
-            </Link>
-          )}
-          {linodeRegionDisplay && (
-            <Link
-              to={`/linodes/${linodeId}/migrate`}
-              className={classes.listItem}
-            >
-              {linodeRegionDisplay}
-            </Link>
-          )}
-          <Typography className={classes.listItem}>
-            Linode ID {linodeId}
-          </Typography>
-          <Typography className={classes.linodeCreated}>
-            Created{' '}
-            {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
-          </Typography>
-        </div>
+    <>
+      <Grid container direction="row" justify="space-between">
+        <Grid item>
+          <div className={classes.detailsSection}>
+            {linodePlan && (
+              <Link
+                to={`/linodes/${linodeId}/resize`}
+                className={classes.listItem}
+              >
+                {linodePlan} Plan
+              </Link>
+            )}
+            {linodeRegionDisplay && (
+              <Link
+                to={`/linodes/${linodeId}/migrate`}
+                className={classes.listItem}
+              >
+                {linodeRegionDisplay}
+              </Link>
+            )}
+            <Typography className={classes.listItem}>
+              Linode ID {linodeId}
+            </Typography>
+            <Typography className={classes.linodeCreated}>
+              Created{' '}
+              {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+            </Typography>
+          </div>
+        </Grid>
+        <Grid item className={classes.linodeTags}>
+          <TagCell
+            width={500}
+            tags={linodeTags}
+            addTag={addTag}
+            deleteTag={deleteTag}
+            listAllTags={() => null}
+          />
+        </Grid>
       </Grid>
-      <Grid item className={classes.linodeTags}>
-        <div>Linode Tags</div>
-      </Grid>
-    </Grid>
+    </>
   );
 });

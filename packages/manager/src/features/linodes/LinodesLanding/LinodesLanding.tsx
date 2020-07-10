@@ -63,6 +63,10 @@ import DeleteDialog from './DeleteDialog';
 import CSVLink from 'src/components/DownloadCSV';
 import Chip from 'src/components/core/Chip';
 import LandingHeader from 'src/components/LandingHeader';
+import IconButton from '@material-ui/core/IconButton';
+
+import GroupByTag from 'src/assets/icons/group-by-tag.svg';
+import TableView from 'src/assets/icons/table-view.svg';
 import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
 
 interface State {
@@ -249,7 +253,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linode => linode.status === 'running'
     ).length;
 
-    const linodesPendingCount = linodesData.filter(
+    const linodesBusyCount = linodesData.filter(
       linode =>
         linode.status !== 'running' &&
         linode.status !== 'offline' &&
@@ -329,44 +333,92 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                       return (
                         <React.Fragment>
                           {this.props.flags.cmr ? (
-                            <Grid item xs={12}>
-                              <LandingHeader
-                                title="Linode"
-                                onAddNew={() =>
-                                  this.props.history.push('/linodes/create')
-                                }
-                                iconType="linode"
-                                docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-                                body={
-                                  <Grid item>
-                                    <Chip
-                                      className={classNames({
-                                        [classes.chip]: true,
-                                        [classes.chipRunning]: true
-                                      })}
-                                      label={`${linodesRunningCount} RUNNING`}
-                                      {...chipProps}
-                                    />
-                                    <Chip
-                                      className={classNames({
-                                        [classes.chip]: true,
-                                        [classes.chipPending]: true
-                                      })}
-                                      label={`${linodesPendingCount} PENDING`}
-                                      {...chipProps}
-                                    />
-                                    <Chip
-                                      className={classNames({
-                                        [classes.chip]: true,
-                                        [classes.chipOffline]: true
-                                      })}
-                                      label={`${linodesOfflineCount} OFFLINE`}
-                                      {...chipProps}
-                                    />
+                            <React.Fragment>
+                              <Grid item xs={12}>
+                                <LandingHeader
+                                  title="Linodes"
+                                  entity="Linode"
+                                  onAddNew={() =>
+                                    this.props.history.push('/linodes/create')
+                                  }
+                                  iconType="linode"
+                                  docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                                  body={
+                                    <Grid item>
+                                      <Chip
+                                        className={classNames({
+                                          [classes.chip]: true,
+                                          [classes.chipRunning]: true
+                                        })}
+                                        label={`${linodesRunningCount} RUNNING`}
+                                        {...chipProps}
+                                      />
+                                      <Chip
+                                        className={classNames({
+                                          [classes.chip]: true,
+                                          [classes.chipPending]: true
+                                        })}
+                                        label={`${linodesBusyCount} BUSY`}
+                                        {...chipProps}
+                                      />
+                                      <Chip
+                                        className={classNames({
+                                          [classes.chip]: true,
+                                          [classes.chipOffline]: true
+                                        })}
+                                        label={`${linodesOfflineCount} OFFLINE`}
+                                        {...chipProps}
+                                      />
+                                    </Grid>
+                                  }
+                                />
+                              </Grid>
+                              <Hidden xsDown>
+                                {params.view === 'grid' && (
+                                  <Grid item xs={12} className={'px0'}>
+                                    <div className={classes.controlHeader}>
+                                      <div
+                                        id="displayViewDescription"
+                                        className="visually-hidden"
+                                      >
+                                        Currently in {linodeViewPreference} view
+                                      </div>
+                                      <IconButton
+                                        aria-label="Toggle display"
+                                        aria-describedby={
+                                          'displayViewDescription'
+                                        }
+                                        title={`Toggle display`}
+                                        onClick={toggleLinodeView}
+                                        disableRipple
+                                        className={classes.toggleButton}
+                                      >
+                                        <TableView />
+                                      </IconButton>
+
+                                      <div
+                                        id="groupByDescription"
+                                        className="visually-hidden"
+                                      >
+                                        {linodesAreGrouped
+                                          ? 'group by tag is currently enabled'
+                                          : 'group by tag is currently disabled'}
+                                      </div>
+                                      <IconButton
+                                        aria-label={`Toggle group by tag`}
+                                        aria-describedby={'groupByDescription'}
+                                        title={`Toggle group by tag`}
+                                        onClick={toggleGroupLinodes}
+                                        disableRipple
+                                        className={classes.toggleButton}
+                                      >
+                                        <GroupByTag />
+                                      </IconButton>
+                                    </div>
                                   </Grid>
-                                }
-                              />
-                            </Grid>
+                                )}
+                              </Hidden>
+                            </React.Fragment>
                           ) : (
                             <Grid
                               container
