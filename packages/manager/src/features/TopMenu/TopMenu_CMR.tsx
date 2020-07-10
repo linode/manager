@@ -14,7 +14,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.primary,
     backgroundColor: theme.bg.topMenu,
     position: 'relative',
-    paddingRight: '0 !important'
+    paddingRight: '0 !important',
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'row'
   },
   toolbar: {
     padding: 0,
@@ -26,7 +29,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('lg')]: {
       paddingLeft: theme.spacing(3),
       paddingRight: theme.spacing(3)
-    }
+    },
+    width: 1280,
+    paddingLeft: '0px !important',
+    paddingRight: '0px !important'
   }
 }));
 
