@@ -204,7 +204,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           loading ? (
             recentEvent && (
               <>
-                {StatusIcon}
+                <StatusIcon status={iconStatus} />
                 <ProgressDisplay
                   className={classes.progressDisplay}
                   progress={recentEvent.percent_complete}
