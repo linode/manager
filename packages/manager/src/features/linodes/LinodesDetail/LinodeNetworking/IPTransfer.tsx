@@ -425,10 +425,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
       .then(() => {
         // Refresh Linodes in the region in which the changes were made.
         this.props.getLinodes({}, { region: this.props.linodeRegion });
-
+        debugger;
         return this.props
           .refreshIPs()
           .then(() => {
+            debugger;
             this.setState({
               submitting: false,
               error: undefined,
@@ -482,31 +483,6 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
     this.mounted = false;
   }
 
-  transferActions = () => {
-    const { readOnly } = this.props;
-    return (
-      <ActionsPanel>
-        <Button
-          loading={this.state.submitting}
-          onClick={this.onSubmit}
-          buttonType="primary"
-          disabled={readOnly || this.props.linodes.length === 0}
-          data-qa-ip-transfer-save
-        >
-          Save
-        </Button>
-        <Button
-          disabled={this.state.submitting || this.props.linodes.length === 0}
-          onClick={this.onReset}
-          buttonType="secondary"
-          data-qa-ip-transfer-cancel
-        >
-          Cancel
-        </Button>
-      </ActionsPanel>
-    );
-  };
-
   render() {
     const { classes, readOnly } = this.props;
     const { ips, error, successMessage } = this.state;
@@ -523,6 +499,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             {error.map(({ reason }, idx) => (
               <Notice key={idx} error text={reason} />
             ))}
+          </Grid>
+        )}
+        {successMessage && (
+          <Grid item xs={12}>
+            <Notice success text={successMessage} />
           </Grid>
         )}
         <Grid item sm={12} lg={8} xl={6}>
@@ -556,7 +537,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             Object.values(ips).map(this.ipRow)
           )}
         </Grid>
-        <ActionsPanel>
+        <ActionsPanel style={{ paddingBottom: 0 }}>
           <Button
             loading={this.state.submitting}
             onClick={this.onSubmit}

@@ -55,7 +55,7 @@ export const LinodesDetailContainer: React.FC<{}> = _ => {
     }
   }, [dispatch, configs, disks, linodeId, linodes]);
 
-  if (linodes.loading || _loading) {
+  if ((linodes.lastUpdated === 0 && linodes.loading) || _loading) {
     return <CircleProgress />;
   }
 

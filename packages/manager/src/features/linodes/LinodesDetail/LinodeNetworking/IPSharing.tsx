@@ -25,6 +25,7 @@ import withLinodes, {
 } from 'src/containers/withLinodes.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import Notice from 'src/components/Notice';
 
 type ClassNames =
   | 'ipFieldLabel'
@@ -255,7 +256,8 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     }
     this.setState({
       errors: undefined,
-      submitting: true
+      submitting: true,
+      successMessage: undefined
     });
     shareAddresses({ linode_id: this.props.linodeID, ips: finalIPs })
       .then(_ => {
@@ -312,6 +314,16 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         open={this.props.open}
         onClose={this.props.onClose}
       >
+        {generalError && (
+          <Grid item xs={12}>
+            <Notice error text={generalError} />
+          </Grid>
+        )}
+        {successMessage && (
+          <Grid item xs={12}>
+            <Notice success text={successMessage} />
+          </Grid>
+        )}
         <Grid container>
           <Grid item sm={12} lg={8} xl={6}>
             <Typography className={classes.networkActionText}>

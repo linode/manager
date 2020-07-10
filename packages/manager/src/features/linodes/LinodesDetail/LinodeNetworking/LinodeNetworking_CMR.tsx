@@ -41,7 +41,7 @@ import AddIPDrawer from './AddIPDrawer';
 import DeleteIPConfirm from './DeleteIPConfirm';
 import EditRDNSDrawer from './EditRDNSDrawer';
 import IPSharing from './IPSharing';
-import IPTransferPanel from './IPTransferPanel';
+import IPTransferPanel from './IPTransfer';
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu_CMR';
 import LinodeNetworkingSummaryPanel from './NetworkingSummaryPanel';
 import { IPTypes } from './types';
@@ -628,8 +628,18 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           title="IP Addresses"
           actions={
             <div>
-              <Button onClick={this.openTransferDialog}>IP Transfer</Button>
-              <Button onClick={this.openSharingDialog}>IP Sharing</Button>
+              <Button
+                style={{ padding: '16px 14px' }}
+                onClick={this.openTransferDialog}
+              >
+                IP Transfer
+              </Button>
+              <Button
+                style={{ padding: '16px 28px 16px 14px' }}
+                onClick={this.openSharingDialog}
+              >
+                IP Sharing
+              </Button>
               <AddNewLink
                 label="Add an IP Address..."
                 onClick={this.openAddIPDrawer}
@@ -645,9 +655,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
                 <Table aria-label="IPv4 Addresses">
                   <TableHead>
                     <TableRow>
-                      <TableCell style={{ width: '20%' }}>Address</TableCell>
+                      <TableCell style={{ width: '15%' }}>Address</TableCell>
                       <TableSortCell
-                        style={{ width: '15%' }}
+                        style={{ width: '10%' }}
                         label="type"
                         direction={order}
                         active={orderBy === 'type'}
@@ -661,7 +671,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
                       <TableCell style={{ width: '10%' }}>
                         Subnet Mask
                       </TableCell>
-                      <TableCell style={{ width: '10%', borderRight: 'none' }}>
+                      <TableCell style={{ width: '20%', borderRight: 'none' }}>
                         Reverse DNS
                       </TableCell>
                       <TableCell style={{ width: '20%', borderLeft: 'none' }} />
