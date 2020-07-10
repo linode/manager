@@ -19,7 +19,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: 16,
+      padding: 14,
       backgroundColor: theme.color.grey2
     },
     primaryColor: {

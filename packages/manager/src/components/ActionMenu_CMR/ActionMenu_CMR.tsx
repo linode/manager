@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       background: 'none',
       fontSize: '1rem',
       border: 'none',
-      padding: theme.spacing(1) + 2,
+      padding: '10px',
       color: '#3683dc',
       cursor: 'pointer',
       '&:hover': {
@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: '100%'
       }
     }
+  },
+  buttonWithLabel: {
+    padding: '15px 10px !important'
   },
   buttonLabel: {
     margin: `0 0 0 ${theme.spacing() + 2}px`,
@@ -77,6 +80,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   item: {
     '&[data-reach-menu-item]': {
+      display: 'flex',
+      justifyContent: 'space-between',
       padding: theme.spacing(1) + 2,
       paddingLeft: '16px',
       borderBottom: '1px solid #5294e0',
@@ -100,7 +105,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tooltip: {
     color: theme.color.white,
-    padding: '0 12px'
+    padding: '0 0 0 8px',
+    '& svg': {
+      height: 20,
+      width: 20
+    }
   }
 }));
 
@@ -150,7 +159,10 @@ const ActionMenu: React.FC<CombinedProps> = props => {
     <div className={classes.wrapper}>
       <Menu>
         <MenuButton
-          className={classes.button}
+          className={classNames({
+            [classes.button]: true,
+            [classes.buttonWithLabel]: Boolean(inlineLabel)
+          })}
           aria-label={ariaLabel}
           onMouseDown={handleClick}
           onKeyDown={handleKeyPress}

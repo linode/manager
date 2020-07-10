@@ -17,14 +17,12 @@ export interface EntityDetailProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  header: {
-    height: 50
-  },
+  header: {},
   body: {
     padding: `20px !important`,
     backgroundColor: theme.color.white,
-    borderTop: `1px solid #F4F5F6`,
-    borderBottom: `1px solid #F4F5F6`
+    borderTop: `1px solid ${theme.color.grey9}`,
+    borderBottom: `1px solid ${theme.color.grey9}`
   },
   footer: {
     backgroundColor: theme.color.white,
@@ -40,17 +38,16 @@ export const EntityDetail: React.FC<EntityDetailProps> = props => {
   const classes = useStyles();
 
   return (
-    <Grid container direction="column">
-      <Grid item xs={12} className={classes.header}>
-        {header}
-      </Grid>
+    <div>
+      {header}
+
       <Grid item xs={12} className={classes.body}>
         {body}
       </Grid>
       <Grid item xs={12} className={classes.footer}>
         {footer}
       </Grid>
-    </Grid>
+    </div>
   );
 };
 

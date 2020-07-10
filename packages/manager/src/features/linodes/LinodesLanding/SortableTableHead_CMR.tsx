@@ -1,21 +1,14 @@
 import * as React from 'react';
 import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  emptyCell: {
-    borderTop: `1px solid ${theme.palette.divider}`
-  }
-}));
+import Hidden from 'src/components/core/Hidden';
 
 type CombinedProps = Omit<OrderByProps, 'data'>;
 
 const SortableTableHead: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
   const { handleOrderChange, order, orderBy } = props;
 
   const isActive = (label: string) =>
@@ -68,7 +61,10 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
         >
           Last Backup
         </TableSortCell>
-        <TableCell className={classes.emptyCell} />
+        <Hidden mdDown>
+          <TableCell>Tags</TableCell>
+        </Hidden>
+        <TableCell />
       </TableRow>
     </TableHead>
   );

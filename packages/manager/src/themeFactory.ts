@@ -215,7 +215,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#3a3f46',
       topMenu: '#fff',
-      billingHeader: '#f5f9ff'
+      billingHeader: '#f5f9ff',
+      controlHeader: '#f9fafa'
     },
     color: {
       headline: primaryColors.headline,
@@ -234,6 +235,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey6: '#e3e5e8',
       grey7: '#fafafa',
       grey8: '#828a97',
+      grey9: '#f4f5f6',
       white: '#fff',
       black: '#222',
       blue: primaryColors.main,
@@ -254,7 +256,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       kubeLabel: '#272b31',
       primaryNavText: '#fff',
       borderBilling: '#cce2ff',
-      billingText: '#313335'
+      billingText: '#313335',
+      tagButton: '#f1f7fd'
     },
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
