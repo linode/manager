@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface EntityTableRow<T> {
-  Component: React.ComponentType;
+  Component: React.ComponentType<any>;
   data: T[];
   handlers?: Handlers;
 }

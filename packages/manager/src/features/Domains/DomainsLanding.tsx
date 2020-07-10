@@ -54,6 +54,7 @@ import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DisableDomainDialog from './DisableDomainDialog';
 import DomainRow from './DomainTableRow';
+import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames =
@@ -68,7 +69,16 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      '& td': {
+        borderBottom: 0,
+        paddingLeft: '15px',
+        paddingRight: '15px'
+      },
+      '& .MuiTableCell-head': {
+        borderBottom: 0
+      }
+    },
     titleWrapper: {
       flex: 1
     },
@@ -139,16 +149,16 @@ const headers: HeaderCell[] = [
     widthPercent: 25
   },
   {
-    label: 'Type',
-    dataColumn: 'type',
-    sortable: true,
-    widthPercent: 15
-  },
-  {
     label: 'Status',
     dataColumn: 'status',
     sortable: true,
     widthPercent: 25
+  },
+  {
+    label: 'Type',
+    dataColumn: 'type',
+    sortable: true,
+    widthPercent: 15
   },
   {
     label: 'Last Modified',
@@ -340,7 +350,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     };
 
     const domainRow: EntityTableRow<Domain> = {
-      Component: DomainRow,
+      Component: flags.cmr ? DomainRow_CMR : DomainRow,
       data: domainsData ?? [],
       handlers
     };
@@ -406,10 +416,15 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                 {flags.cmr ? (
                   <LandingHeader
                     title="Domains"
+                    extraActions={
+                      <Button onClick={this.openImportZoneDrawer}>
+                        Import a Zone
+                      </Button>
+                    }
                     entity="Domain"
                     onAddNew={this.openCreateDomainDrawer}
                     iconType="domain"
-                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                    docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
                   />
                 ) : (
                   <Grid
@@ -490,13 +505,15 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       text={this.props.location.state.recordError}
                     />
                   )}
-                <Table
-                  entity="domain"
-                  groupByTag={domainsAreGrouped}
-                  row={domainRow}
-                  headers={headers}
-                  initialOrder={{ order: 'asc', orderBy: 'domain' }}
-                />
+                <div className={classes.root}>
+                  <Table
+                    entity="domain"
+                    groupByTag={domainsAreGrouped}
+                    row={domainRow}
+                    headers={headers}
+                    initialOrder={{ order: 'asc', orderBy: 'domain' }}
+                  />
+                </div>
               </React.Fragment>
             );
           }}
