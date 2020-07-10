@@ -24,7 +24,7 @@ import OrderBy from 'src/components/OrderBy';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
+import Table from 'src/components/Table/Table_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -81,10 +81,6 @@ const styles = (theme: Theme) =>
       '&.MuiGrid-item': {
         padding: 5
       }
-    },
-    // @todo: remove after merge
-    emptyCell: {
-      borderTop: `1px solid ${theme.palette.divider}`
     },
     diskLabel: {
       width: '23%'
@@ -244,7 +240,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                               >
                                 Size
                               </TableSortCell>
-                              <TableCell className={classes.emptyCell} />
+                              <TableCell />
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -283,7 +279,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     if (errors) {
       return (
         <TableRowError
-          colSpan={8}
+          colSpan={4}
           message="There was an error loading disk images."
         />
       );
