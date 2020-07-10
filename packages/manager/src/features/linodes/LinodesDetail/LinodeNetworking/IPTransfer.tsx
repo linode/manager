@@ -422,11 +422,9 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
       .then(() => {
         // Refresh Linodes in the region in which the changes were made.
         this.props.getLinodes({}, { region: this.props.linodeRegion });
-        debugger;
         return this.props
           .refreshIPs()
           .then(() => {
-            debugger;
             this.setState({
               submitting: false,
               error: undefined,

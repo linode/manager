@@ -45,13 +45,13 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <div className={`${classes.actionMenu} flex-center`}>
-      {!!onRemove && !!ipAddress && ipType === 'IPv4 – Public' && (
+      {onRemove && ipAddress && ipType === 'IPv4 – Public' && (
         <button className={classes.button} onClick={() => onRemove(ipAddress)}>
           Delete
         </button>
       )}
-      {!!onEdit &&
-        !!ipAddress &&
+      {onEdit &&
+        ipAddress &&
         ipType !== 'IPv4 – Private' &&
         ipType !== 'IPv6 – Link Local' &&
         ipType !== 'IPv4 – Reserved (public)' &&

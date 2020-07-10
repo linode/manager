@@ -41,7 +41,7 @@ import AddIPDrawer from './AddIPDrawer';
 import DeleteIPConfirm from './DeleteIPConfirm';
 import EditRDNSDrawer from './EditRDNSDrawer';
 import IPSharing from './IPSharing';
-import IPTransferPanel from './IPTransfer';
+import IPTransfer from './IPTransfer';
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu_CMR';
 import LinodeNetworkingSummaryPanel from './NetworkingSummaryPanel';
 import { IPTypes } from './types';
@@ -575,7 +575,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           onSuccess={this.refreshIPs}
         />
 
-        <IPTransferPanel
+        <IPTransfer
           open={this.state.transferDialogOpen}
           onClose={this.closeTransferDialog}
           linodeID={linodeID}

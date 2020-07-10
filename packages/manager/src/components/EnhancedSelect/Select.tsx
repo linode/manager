@@ -68,7 +68,9 @@ const _components = {
 };
 
 interface OwnProps {
-  overflowPortal: boolean;
+  // Set this prop to `true` when using a <Select /> on a modal. It attaches the <Select /> to the
+  // document body directly, so the overflow is visible over the edge of the modal.
+  overflowPortal?: boolean;
 }
 
 type CombinedProps = OwnProps &
@@ -203,6 +205,8 @@ class Select extends React.PureComponent<CombinedProps, {}> {
 
     if (overflowPortal) {
       restOfProps.menuPortalTarget = document.body;
+      // Since we're attaching the <Select /> to the document body directly, none of our CSS
+      // targeting will work, so we have to supply the styles as a prop.
       restOfProps.styles = reactSelectStyles(theme);
     }
 
