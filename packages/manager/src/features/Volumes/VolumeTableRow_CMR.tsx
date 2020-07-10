@@ -93,14 +93,10 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
     handleDetach,
     volume
   } = props;
-  const label = pathOr('', ['label'], volume);
-  const size = pathOr('', ['size'], volume);
-  const filesystemPath = pathOr(
-    /** @todo Remove path default when API releases filesystem_path. */
-    `/dev/disk/by-id/scsi-0Linode_Volume_${label}`,
-    ['filesystem_path'],
-    volume
-  );
+  const label = volume?.label ?? '';
+  const size = volume?.size ?? '';
+  const filesystemPath =
+    volume?.filesystem_path ?? `/dev/disk/by-id/scsi-0Linode_Volume_${label}`;
   const regionID = pathOr('', ['region'], volume);
   const region = formatRegion(regionID);
 
