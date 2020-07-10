@@ -14,6 +14,7 @@ import Hidden from 'src/components/core/Hidden';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
+import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TagCell from 'src/components/TagCell';
@@ -151,16 +152,12 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     );
   };
 
-  const StatusIcon = (
-    <div
-      className={classNames({
-        [classes.statusIcon]: true,
-        [classes.statusIconRunning]: status === 'running',
-        [classes.statusIconOffline]: status === 'offline',
-        [classes.statusIconOther]: status !== ('running' || 'offline')
-      })}
-    />
-  );
+  const iconStatus =
+    status === 'running'
+      ? 'active'
+      : ['offline', 'stopped'].includes(status)
+      ? 'inactive'
+      : 'other';
 
   const headCell = (
     <LinodeRowHeadCell
@@ -207,7 +204,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           loading ? (
             recentEvent && (
               <>
-                {StatusIcon}
+                <StatusIcon status={iconStatus} />
                 <ProgressDisplay
                   className={classes.progressDisplay}
                   progress={recentEvent.percent_complete}
@@ -217,7 +214,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             )
           ) : (
             <>
-              {StatusIcon}
+              <StatusIcon status={iconStatus} />
               {capitalize(displayStatus)}
             </>
           )

@@ -18,6 +18,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props extends Omit<HeaderProps, 'actions'> {
+  extraActions?: JSX.Element;
   body?: JSX.Element;
   docsLink: string;
   onAddNew?: () => void;
@@ -32,7 +33,7 @@ interface Props extends Omit<HeaderProps, 'actions'> {
 
 export const LandingHeader: React.FC<Props> = props => {
   const classes = useStyles();
-  const { docsLink, onAddNew, title, entity } = props;
+  const { docsLink, onAddNew, entity, extraActions } = props;
 
   const actions = React.useMemo(
     () => (
@@ -43,6 +44,7 @@ export const LandingHeader: React.FC<Props> = props => {
         alignItems="center"
         justify="flex-end"
       >
+        {extraActions && <Grid item>{extraActions}</Grid>}
         {onAddNew && (
           <Grid item>
             <Button
@@ -57,7 +59,7 @@ export const LandingHeader: React.FC<Props> = props => {
         {docsLink && <DocumentationButton href={docsLink} />}
       </Grid>
     ),
-    [docsLink, title, entity, onAddNew, classes.button]
+    [docsLink, entity, onAddNew, classes.button, extraActions]
   );
 
   return <EntityHeader isLanding actions={actions} {...props} />;
