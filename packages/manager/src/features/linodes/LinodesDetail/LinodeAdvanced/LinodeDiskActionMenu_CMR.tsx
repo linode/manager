@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     '& .MuiIconButton-root': {
-      padding: '15px 10px 15px 0',
+      padding: '10px 10px 10px 0',
       marginLeft: -8,
       '& svg': {
         height: 20,

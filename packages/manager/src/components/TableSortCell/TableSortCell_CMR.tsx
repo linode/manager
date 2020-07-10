@@ -9,7 +9,6 @@ import TableSortLabel from 'src/components/core/TableSortLabel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: '10px 15px',
     '&:hover': {
       backgroundColor: '#3683dc',
       cursor: 'pointer',

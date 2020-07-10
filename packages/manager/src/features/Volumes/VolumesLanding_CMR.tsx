@@ -250,7 +250,9 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       mappedVolumesDataWithLinodes,
       readOnly,
       removeBreadCrumb,
-      fromLinodes
+      fromLinodes,
+      linodeRegion,
+      regionsData
     } = this.props;
 
     if (volumesLoading) {
@@ -289,6 +291,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
+              label="Add a Volume..."
               onClick={
                 fromLinodes
                   ? this.openCreateVolumeDrawer
@@ -296,7 +299,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                       this.props.history.push('/volumes/create');
                     }
               }
-              label="Add a Volume..."
+              disabled={
+                readOnly ||
+                (linodeRegion &&
+                  !doesRegionSupportBlockStorage(linodeRegion, regionsData)) ||
+                data.length >= 10
+              }
             />
           </Grid>
         </Grid>

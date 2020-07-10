@@ -4,7 +4,7 @@ import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
+import Table from 'src/components/Table/Table_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
