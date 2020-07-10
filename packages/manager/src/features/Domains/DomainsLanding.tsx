@@ -405,7 +405,8 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
               <React.Fragment>
                 {flags.cmr ? (
                   <LandingHeader
-                    title="Domain"
+                    title="Domains"
+                    entity="Domain"
                     onAddNew={this.openCreateDomainDrawer}
                     iconType="domain"
                     docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
