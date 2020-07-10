@@ -176,7 +176,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
         values,
         touched
       }) => {
-
         const { region, linode_id, tags, config_id } = values;
 
         const linodeError = touched.linode_id ? errors.linode_id : undefined;
