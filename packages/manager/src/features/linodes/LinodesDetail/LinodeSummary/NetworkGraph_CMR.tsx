@@ -23,7 +23,7 @@ import {
 } from 'src/utilities/statMetrics';
 import { readableBytes } from 'src/utilities/unitConversions';
 import StatsPanel from './StatsPanel';
-import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
+import { TotalTrafficProps } from './TotalTraffic';
 import { ChartProps } from './types';
 
 const formatTotalTraffic = (value: number) => readableBytes(value).formatted;
@@ -200,8 +200,7 @@ const Graph: React.FC<GraphProps> = props => {
     rangeSelection,
     theme,
     timezone,
-    unit,
-    totalTraffic
+    unit
   } = props;
 
   const format = formatBitsPerSecond;
@@ -227,71 +226,60 @@ const Graph: React.FC<GraphProps> = props => {
   const convertedPrivateOut = data.privateOut;
 
   return (
-    <React.Fragment>
-      <div className={classes.chart}>
-        <LineGraph
-          timezone={timezone}
-          chartHeight={chartHeight}
-          unit={`/s`}
-          formatData={convertNetworkData}
-          formatTooltip={_formatTooltip}
-          showToday={rangeSelection === '24'}
-          data={[
-            {
-              borderColor: 'transparent',
-              backgroundColor: theme.graphs.network.inbound,
-              data: convertedPublicIn,
-              label: 'Public Inbound'
-            },
-            {
-              borderColor: 'transparent',
-              backgroundColor: theme.graphs.network.outbound,
-              data: convertedPublicOut,
-              label: 'Public Outbound'
-            },
-            {
-              borderColor: 'transparent',
-              backgroundColor: theme.graphs.purple,
-              data: convertedPrivateIn,
-              label: 'Private Inbound'
-            },
-            {
-              borderColor: 'transparent',
-              backgroundColor: theme.graphs.yellow,
-              data: convertedPrivateOut,
-              label: 'Private Outbound'
-            }
-          ]}
-          legendRows={[
-            {
-              data: metrics.publicIn,
-              format
-            },
-            {
-              data: metrics.publicOut,
-              format
-            },
-            {
-              data: metrics.privateIn,
-              format
-            },
-            {
-              data: metrics.privateOut,
-              format
-            }
-          ]}
-        />
-      </div>
-      {rangeSelection === '24' && (
-        <Grid item xs={12} lg={6} className={classes.totalTraffic}>
-          <TotalTraffic
-            inTraffic={totalTraffic.inTraffic}
-            outTraffic={totalTraffic.outTraffic}
-            combinedTraffic={totalTraffic.combinedTraffic}
-          />
-        </Grid>
-      )}
-    </React.Fragment>
+    <div className={classes.chart}>
+      <LineGraph
+        timezone={timezone}
+        chartHeight={chartHeight}
+        unit={`/s`}
+        formatData={convertNetworkData}
+        formatTooltip={_formatTooltip}
+        showToday={rangeSelection === '24'}
+        data={[
+          {
+            borderColor: 'transparent',
+            backgroundColor: theme.graphs.network.inbound,
+            data: convertedPublicIn,
+            label: 'Public Inbound'
+          },
+          {
+            borderColor: 'transparent',
+            backgroundColor: theme.graphs.network.outbound,
+            data: convertedPublicOut,
+            label: 'Public Outbound'
+          },
+          {
+            borderColor: 'transparent',
+            backgroundColor: theme.graphs.purple,
+            data: convertedPrivateIn,
+            label: 'Private Inbound'
+          },
+          {
+            borderColor: 'transparent',
+            backgroundColor: theme.graphs.yellow,
+            data: convertedPrivateOut,
+            label: 'Private Outbound'
+          }
+        ]}
+        legendRows={[
+          {
+            data: metrics.publicIn,
+            format
+          },
+          {
+            data: metrics.publicOut,
+            format
+          },
+          {
+            data: metrics.privateIn,
+            format
+          },
+          {
+            data: metrics.privateOut,
+            format
+          }
+        ]}
+      />
+    </div>
   );
 };
 
