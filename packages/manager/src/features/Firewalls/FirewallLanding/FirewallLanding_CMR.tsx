@@ -112,7 +112,8 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <LandingHeader
-        title="Firewall"
+        title="Firewalls"
+        entity="Firewall"
         onAddNew={() => toggleAddFirewallDrawer(true)}
         iconType="firewall"
         docsLink="https:"

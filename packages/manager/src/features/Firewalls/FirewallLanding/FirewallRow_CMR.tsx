@@ -4,11 +4,11 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';
-import EntityIcon from 'src/components/EntityIcon';
-import Grid from 'src/components/Grid';
+import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
+import { capitalize } from 'src/utilities/capitalize';
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
 export type CombinedProps = Firewall & ActionHandlers;
@@ -38,16 +38,12 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
       ariaLabel={`Firewall ${label}`}
     >
       <TableCell>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <EntityIcon variant="firewall" status={status} />
-          </Grid>
-          <Grid item>
-            <Typography variant="h3">{label}</Typography>
-          </Grid>
-        </Grid>
+        <Typography variant="h3">{label}</Typography>
       </TableCell>
-      <TableCell>{status}</TableCell>
+      <TableCell>
+        <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
+        {capitalize(status)}
+      </TableCell>
       <TableCell>{getRuleString(count)}</TableCell>
       <TableCell>
         {getLinodesCellString(devices, loading, error.read)}
