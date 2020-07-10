@@ -14,15 +14,13 @@ const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
 
 const makeVolumeCreateReq = (linodeID, volume) => {
-  const volumeData = volume
-    ? volume
-    : {
-        root_pass: strings.randomPass(12),
-        label: makeVolumeLabel(),
-        region: 'us-east',
-        tags: [testVolumeTag],
-        linode_id: linodeID
-      };
+  const volumeData = volume ?? {
+    root_pass: strings.randomPass(),
+    label: makeVolumeLabel(),
+    region: 'us-east',
+    tags: [testVolumeTag],
+    linode_id: linodeID
+  };
 
   return cy.request({
     method: 'POST',
@@ -72,7 +70,7 @@ export const detachAllTestVolumes = () => {
 export const deleteAllTestVolumes = () => {
   getVolumes().then(resp => {
     resp.body.data.forEach(vol => {
-      if (isTestEntity(vol) && vol.linode_id == undefined) {
+      if (isTestEntity(vol) && vol.linode_id === null) {
         deleteVolumeById(vol.id);
       }
     });
