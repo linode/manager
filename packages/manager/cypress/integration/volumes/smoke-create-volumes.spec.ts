@@ -8,13 +8,16 @@ import { createLinode, deleteLinodeById } from '../../support/api/linodes';
 import { assertToast } from '../../support/ui/events';
 import { loadAppNoLogin } from '../../support/ui/constants';
 
-const urlExtention = '/volumes/create';
+const urlExtension = '/volumes/create';
 const tag = 'cy-test';
+const clickCreate = () => {
+  cy.get('[data-qa-deploy-linode]').click();
+};
 
-const createBasicVolume = (withLindode: boolean, linodeLabel?: string) => {
+const createBasicVolume = (withLinode: boolean, linodeLabel?: string) => {
   const title = makeVolumeLabel();
-  cy.visitWithLogin(urlExtention);
-  cy.url().should('endWith', urlExtention);
+  cy.visitWithLogin(urlExtension);
+  cy.url().should('endWith', urlExtension);
   cy.findByText('volumes');
   cy.findByLabelText('Label (required)').type(title);
   cy.findByText('Regions')
@@ -29,7 +32,7 @@ const createBasicVolume = (withLindode: boolean, linodeLabel?: string) => {
   cy.findByText('Type to choose or create a tag.')
     .click()
     .type(`${tag} {enter}`);
-  cy.get('[data-qa-deploy-linode]').click();
+  clickCreate();
   return title;
 };
 
@@ -44,7 +47,7 @@ const validateBasicVolume = (title: string) => {
 };
 
 describe('volumes', () => {
-  it('creates a volume without linode', () => {
+  it.skip('creates a volume without linode', () => {
     const title = createBasicVolume(false);
     validateBasicVolume(title);
     clickVolumeActionMenu(title);
@@ -94,37 +97,36 @@ describe('volumes', () => {
     });
   });
 
-  it('volume not created without region or label', () => {
+  it.skip('volume not created without region or label', () => {
     const title = makeVolumeLabel();
-    cy.visitWithLogin(urlExtention);
-    cy.url().should('endWith', urlExtention);
+    cy.visitWithLogin(urlExtension);
     assert.exists('volumes');
-    cy.get('[data-qa-deploy-linode]').click();
+    clickCreate();
     assert.exists('Label is required.');
     cy.findByLabelText('Label (required)').type(title);
-    cy.get('[data-qa-deploy-linode]').click();
+    clickCreate();
     assert.exists('Must provide a region or a Linode ID.');
     cy.findByText('Regions')
       .click()
       .type('new {enter}');
-    cy.get('[data-qa-deploy-linode]').click();
+    clickCreate();
     validateBasicVolume(title);
     deleteAllTestVolumes();
   });
 
-  it('volume not created without either region or linode attached', () => {
-    cy.visitWithLogin(urlExtention);
+  it.skip('volume not created without either region or linode attached', () => {
+    cy.visitWithLogin(urlExtension);
     const title = makeVolumeLabel();
     createLinode().then(linode => {
       const linodeLabel = linode.label;
-      cy.url().should('endWith', urlExtention);
+      cy.url().should('endWith', urlExtension);
       assert.exists('volumes');
       cy.get('[data-qa-volume-label] [data-testid="textfield-input"]').type(
         title
       );
-      cy.get('[data-qa-deploy-linode]').click();
+      clickCreate();
       assert.exists('Must provide a region or a Linode ID.');
-      loadAppNoLogin(urlExtention);
+      loadAppNoLogin(urlExtension);
       cy.get('[data-qa-volume-label] [data-testid="textfield-input"]').type(
         title
       );
@@ -132,7 +134,7 @@ describe('volumes', () => {
         .click()
         .type(`${linodeLabel}{enter}`);
       cy.findByText('My Debian 10 Disk Profile');
-      cy.get('[data-qa-deploy-linode]').click();
+      clickCreate();
       validateBasicVolume(title);
       deleteLinodeById(linode.id);
       deleteAllTestVolumes();
