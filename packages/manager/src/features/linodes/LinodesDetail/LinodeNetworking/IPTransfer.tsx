@@ -21,14 +21,11 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles,
-  withTheme,
-  WithTheme
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { reactSelectStyles } from 'src/components/EnhancedSelect/Select.styles';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -50,9 +47,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    // root: {
-    //   maxHeight: 300
-    // },
     containerDivider: {
       marginTop: theme.spacing(1)
     },
@@ -138,8 +132,7 @@ interface Swap extends Move {
 type CombinedProps = Props &
   WithStyles<ClassNames> &
   WithLinodesProps &
-  DispatchProps &
-  WithTheme;
+  DispatchProps;
 
 class LinodeNetworkingIPTransferPanel extends React.Component<
   CombinedProps,
@@ -266,7 +259,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
     renderLinodeSelect?: (s: Move) => JSX.Element,
     renderIPSelect?: (s: Swap) => JSX.Element
   ) => {
-    const { classes, readOnly, theme } = this.props;
+    const { classes, readOnly } = this.props;
 
     const actionsList = [
       { label: 'Move To', value: 'move' },
@@ -309,8 +302,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             noMarginTop
             label={`Select Action for IP Address ${state.sourceIP}`}
             hideLabel
-            menuPortalTarget={document.body}
-            styles={reactSelectStyles(theme)}
+            overflowPortal
           />
         </Grid>
         {renderLinodeSelect && renderLinodeSelect(state as Move)}
@@ -320,7 +312,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   };
 
   linodeSelect = ({ sourceIP, selectedLinodeID }: Move) => {
-    const { classes, readOnly, theme } = this.props;
+    const { classes, readOnly } = this.props;
 
     const linodeList = this.props.linodes.map(l => {
       return { label: l.label, value: l.id };
@@ -353,7 +345,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   };
 
   ipSelect = ({ sourceIP, selectedIP, selectedLinodesIPs }: Swap) => {
-    const { classes, readOnly, theme } = this.props;
+    const { classes, readOnly } = this.props;
 
     const IPList = selectedLinodesIPs.map(ip => {
       return { label: ip, value: ip };
@@ -656,7 +648,6 @@ interface WithLinodesProps {
 
 const enhanced = recompose<CombinedProps, Props>(
   styled,
-  withTheme,
   withLinodes<WithLinodesProps, Props>((ownProps, linodesData) => {
     const { linodeID, linodeRegion } = ownProps;
     const linodes = linodesData

@@ -41,7 +41,7 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
   {
     /* @todo: disabled state for restricted users? */
   }
-  const { onEdit, onRemove, ipType, ipAddress, readOnly } = props;
+  const { onEdit, onRemove, ipType, ipAddress } = props;
 
   return (
     <div className={`${classes.actionMenu} flex-center`}>

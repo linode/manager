@@ -1,2 +1,5 @@
 export { default } from './EntityHeader';
-// export { HeaderProps } from './EntityHeader';
+import { HeaderProps as _HeaderProps } from './EntityHeader';
+
+// eslint-disable-next-line
+export interface HeaderProps extends _HeaderProps {}
