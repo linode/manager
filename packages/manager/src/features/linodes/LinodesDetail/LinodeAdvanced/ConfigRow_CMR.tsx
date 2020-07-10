@@ -1,8 +1,20 @@
 import { Config, Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import { makeStyles } from 'src/components/core/styles';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
+
+const useStyles = makeStyles(() => ({
+  actionInner: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: 0,
+    '&.MuiTableCell-root': {
+      paddingRight: 0
+    }
+  }
+}));
 
 interface Props {
   config: Config;
@@ -34,6 +46,8 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     readOnly
   } = props;
 
+  const classes = useStyles();
+
   const [rootDeviceLabel, setRootDeviceLabel] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -63,7 +77,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
           : `${config.memory_limit} MB`}
       </TableCell>
       <TableCell>{rootDeviceLabel}</TableCell>
-      <TableCell>
+      <TableCell className={classes.actionInner}>
         <LinodeConfigActionMenu
           config={config}
           linodeId={linodeId}
