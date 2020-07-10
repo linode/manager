@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
 import withFirewalls, {
@@ -12,17 +11,9 @@ import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu_CMR';
 import FirewallDialog, { Mode } from './FirewallDialog';
 import FirewallRow from './FirewallRow_CMR';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  line: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(3)
-  }
-}));
-
 type CombinedProps = RouteComponentProps<{}> & FireProps;
 
 const FirewallLanding: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
   const { deleteFirewall, disableFirewall, enableFirewall } = props;
 
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
@@ -106,7 +97,10 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   const firewallRow = {
     handlers,
     Component: FirewallRow,
-    data: Object.values(firewalls) ?? []
+    data: Object.values(firewalls) ?? [],
+    loading: firewallsLoading,
+    lastUpdated: firewallsLastUpdated,
+    error: firewallsError.read
   };
 
   return (

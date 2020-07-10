@@ -324,6 +324,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       domainsError,
       domainsData,
       domainsLoading,
+      domainsLastUpdated,
       flags,
       howManyLinodesOnAccount,
       isRestrictedUser,
@@ -342,7 +343,10 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     const domainRow: EntityTableRow<Domain> = {
       Component: flags.cmr ? DomainRow_CMR : DomainRow,
       data: domainsData ?? [],
-      handlers
+      handlers,
+      loading: domainsLoading,
+      error: domainsError.read,
+      lastUpdated: domainsLastUpdated
     };
 
     if (domainsLoading) {

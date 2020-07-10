@@ -6,7 +6,7 @@ import OrderBy, { OrderByProps } from 'src/components/OrderBy';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag_CMR';
 import ListEntities from './ListEntities_CMR';
-import { Handlers } from './types';
+import { EntityTableRow } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
@@ -21,12 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderBottom: 0
   }
 }));
-
-export interface EntityTableRow<T> {
-  Component: React.ComponentType;
-  data: T[];
-  handlers?: Handlers;
-}
 
 interface Props {
   entity: string;
@@ -83,6 +77,8 @@ export const LandingTable: React.FC<Props> = props => {
 
         const tableProps = {
           data: orderedData,
+          loading: row.loading,
+          lastUpdated: row.lastUpdated,
           RowComponent: row.Component,
           headerCells,
           entity,
@@ -115,3 +111,4 @@ export interface HeaderCell {
 }
 
 export default LandingTable;
+export { EntityTableRow }; // @todo remove after CMR; consolidate types and exports in index.tsx

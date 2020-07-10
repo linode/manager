@@ -3,18 +3,36 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import Typography from 'src/components/core/Typography';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Grid from 'src/components/Grid';
 import StatusIcon from 'src/components/StatusIcon';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
 import { capitalize } from 'src/utilities/capitalize';
-import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
+import ActionMenu, { ActionHandlers } from './FirewallActionMenu_CMR';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  link: {
+    display: 'block',
+    fontFamily: theme.font.bold,
+    fontSize: '.875rem',
+    lineHeight: '1.125rem',
+    textDecoration: 'underline'
+  },
+  labelWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    whiteSpace: 'nowrap'
+  }
+}));
 
 export type CombinedProps = Firewall & ActionHandlers;
 
 export const FirewallRow: React.FC<CombinedProps> = props => {
   const { id, label, status, rules, ...actionHandlers } = props;
+  const classes = useStyles();
 
   const {
     devices: { itemsById, error, loading, lastUpdated },
@@ -26,19 +44,30 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
     if (lastUpdated === 0 && !loading) {
       requestDevices();
     }
-  }, []);
+  }, [lastUpdated, loading, requestDevices]);
 
   const count = getCountOfRules(rules);
 
   return (
     <TableRow
       key={`firewall-row-${id}`}
-      rowLink={`/firewalls/${id}`}
       data-testid={`firewall-row-${id}`}
       ariaLabel={`Firewall ${label}`}
     >
       <TableCell>
-        <Typography variant="h3">{label}</Typography>
+        <Grid container wrap="nowrap" alignItems="center">
+          <Grid item className="py0">
+            <div className={classes.labelWrapper}>
+              <Link
+                className={classes.link}
+                to={`/kubernetes/clusters/${id}/summary`}
+                tabIndex={0}
+              >
+                {label}
+              </Link>
+            </div>
+          </Grid>
+        </Grid>{' '}
       </TableCell>
       <TableCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
