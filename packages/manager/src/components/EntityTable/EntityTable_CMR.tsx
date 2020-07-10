@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import Typography from 'src/components/core/Typography';
 import OrderBy, { OrderByProps } from 'src/components/OrderBy';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
@@ -9,7 +9,17 @@ import ListEntities from './ListEntities_CMR';
 import { Handlers } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  hiddenHeaderCell: theme.visually.hidden
+  hiddenHeaderCell: theme.visually.hidden,
+  root: {
+    '& td': {
+      borderTop: 0,
+      paddingLeft: '15px',
+      paddingRight: '15px'
+    }
+  },
+  '& .MuiTableCell-head': {
+    borderBottom: 0
+  }
 }));
 
 export interface EntityTableRow<T> {
@@ -80,9 +90,17 @@ export const LandingTable: React.FC<Props> = props => {
         };
 
         if (groupByTag) {
-          return <GroupedEntitiesByTag {...tableProps} />;
+          return (
+            <div className={classes.root}>
+              <GroupedEntitiesByTag {...tableProps} />
+            </div>
+          );
         }
-        return <ListEntities {...tableProps} />;
+        return (
+          <div className={classes.root}>
+            <ListEntities {...tableProps} />
+          </div>
+        );
       }}
     </OrderBy>
   );
