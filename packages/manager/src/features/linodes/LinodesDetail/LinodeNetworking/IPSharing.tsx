@@ -15,9 +15,10 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Dialog from 'src/components/Dialog';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import withLinodes, {
@@ -25,7 +26,6 @@ import withLinodes, {
 } from 'src/containers/withLinodes.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import Notice from 'src/components/Notice';
 
 type ClassNames =
   | 'ipFieldLabel'
@@ -221,6 +221,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             placeholder="Select an IP"
             label="Select an IP"
             hideLabel
+            overflowPortal
           />
         </Grid>
         <Grid item className={classes.removeCont}>

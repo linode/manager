@@ -331,7 +331,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     const { address, type, gateway, subnetMask, rdns, _ip, _range } = ipDisplay;
 
     return (
-      <TableRow key={address} data-qa-ip={address}>
+      <TableRow key={`${address}-${type}`} data-qa-ip={address}>
         <TableCell parentColumn="Address" data-qa-ip-address>
           {address}
         </TableCell>
