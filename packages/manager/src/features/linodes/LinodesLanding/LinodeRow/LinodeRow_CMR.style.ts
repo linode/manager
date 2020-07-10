@@ -14,10 +14,6 @@ type ClassNames =
   | 'bodyRow'
   | 'statusCell'
   | 'statusCellMaintenance'
-  | 'statusIcon'
-  | 'statusIconRunning'
-  | 'statusIconOffline'
-  | 'statusIconOther'
   | 'statusHelpIcon'
   | 'ipCell'
   | 'ipCellWrapper'
@@ -26,38 +22,33 @@ type ClassNames =
   | 'regionCell'
   | 'iconTableCell'
   | 'icon'
-  | 'iconGridCell';
+  | 'iconGridCell'
+  | 'tagCell';
 
 const styles = (theme: Theme) =>
   createStyles({
     actionCell: {
       paddingTop: 0,
       paddingBottom: 0,
+      paddingLeft: 0,
       width: '22%',
       textAlign: 'right',
-      '& button': {
-        maxHeight: 20,
-        width: 30
-      },
       [theme.breakpoints.down('sm')]: {
         width: '100%'
+      },
+      '&:last-child': {
+        paddingRight: 0
       }
     },
     actionInner: {
       display: 'flex',
       justifyContent: 'flex-end',
       '& a': {
-        lineHeight: '1.25rem'
+        lineHeight: '1rem'
       }
     },
     bodyRow: {
-      height: 'auto',
-      '&:hover': {
-        backgroundColor: '#f9fafa'
-      },
-      '&:hover .backupIcon': {
-        fill: theme.palette.primary.main
-      }
+      height: 'auto'
     },
     iconTableCell: {
       [theme.breakpoints.up('md')]: {
@@ -86,6 +77,7 @@ const styles = (theme: Theme) =>
       display: 'inline-block'
     },
     statusCell: {
+      whiteSpace: 'nowrap',
       width: '17%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
@@ -117,24 +109,6 @@ const styles = (theme: Theme) =>
         }
       }
     },
-    statusIcon: {
-      display: 'inline-block',
-      borderRadius: '50%',
-      height: '16px',
-      width: '16px',
-      marginRight: theme.spacing(),
-      position: 'relative',
-      top: 2
-    },
-    statusIconRunning: {
-      backgroundColor: theme.color.green
-    },
-    statusIconOther: {
-      backgroundColor: '#ffb31a'
-    },
-    statusIconOffline: {
-      backgroundColor: theme.color.grey6
-    },
     statusHelpIcon: {
       position: 'relative',
       top: -2
@@ -165,6 +139,9 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
+    },
+    tagCell: {
+      borderRight: 'none'
     }
   });
 

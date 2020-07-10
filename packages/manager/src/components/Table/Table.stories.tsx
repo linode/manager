@@ -60,10 +60,12 @@ class StoryTable extends React.Component {
                     memory={linode.specs.memory}
                     mostRecentBackup={linode.backups.last_successful}
                     tags={linode.tags}
+                    openTagDrawer={() => null}
                     type={linode.type}
                     vcpus={linode.specs.vcpus}
                     openDeleteDialog={this.handleDeleteDialog}
                     openPowerActionDialog={this.handlePowerActionDialog}
+                    openLinodeResize={() => null as any}
                   ></LinodeRow_CMR>
                 ))}
               </TableBody>

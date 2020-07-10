@@ -42,6 +42,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
   } = props;
   return (
     <Formik
+      initialValues={initialValues}
       validationSchema={validationScheme}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         cloneVolume({ volumeId, label: values.label })
@@ -63,8 +64,8 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
             );
           });
       }}
-      initialValues={initialValues}
-      render={({
+    >
+      {({
         errors,
         handleBlur,
         handleChange,
@@ -105,7 +106,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
           </Form>
         );
       }}
-    />
+    </Formik>
   );
 };
 
