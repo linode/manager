@@ -62,9 +62,8 @@ const styles = (theme: Theme) =>
       width: '100%'
     },
     headline: {
-      marginTop: 8,
-      marginBottom: 8,
-      marginLeft: 15,
+      marginBottom: 3,
+      marginLeft: 8,
       lineHeight: '1.5rem',
       [theme.breakpoints.down('xs')]: {
         marginBottom: 0,
@@ -76,11 +75,7 @@ const styles = (theme: Theme) =>
         width: '100%',
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
-      },
-      '&.MuiGrid-item': {
-        padding: 5
-      },
-      marginBottom: theme.spacing(1) / 2
+      }
     },
     labelCell: {
       width: '25%'
@@ -189,7 +184,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           <RootRef rootRef={this.configsPanel}>
             <Grid item>
               <Typography variant="h3" className={classes.headline}>
-                Configuration
+                Configurations
               </Typography>
             </Grid>
           </RootRef>

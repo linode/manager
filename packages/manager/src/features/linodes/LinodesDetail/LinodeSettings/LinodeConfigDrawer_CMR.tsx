@@ -1,9 +1,4 @@
-import {
-  Config,
-  Disk,
-  getLinodeKernels,
-  Kernel
-} from '@linode/api-v4/lib/linodes';
+import { Config, Disk, Kernel } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { pathOr } from 'ramda';
@@ -46,7 +41,6 @@ import createDevicesFromStrings, {
 } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getAll } from 'src/utilities/getAll';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import {
   CreateLinodeConfig,
@@ -119,8 +113,6 @@ type CombinedProps = LinodeContextProps &
   StateProps &
   WithStyles<ClassNames>;
 
-const getAllKernels = getAll<Kernel>(getLinodeKernels);
-
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     loading: false,
@@ -150,7 +142,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   });
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { config, linodeHypervisor } = this.props;
+    const { config } = this.props;
 
     if (this.isOpening(prevProps.open, this.props.open)) {
       /** Reset the form to the default create state. */
@@ -836,25 +828,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
   handleChangeLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.updateField({ label: e.target.value || '' });
-
-  // requestKernels = (linodeHypervisor: 'kvm' | 'xen') => {
-  //   this.setState({ loading: { ...this.state.loading, kernels: true } });
-
-  //   return getAllKernels({}, { [linodeHypervisor]: true })
-  //     .then(({ data: kernels }) => {
-  //       this.setState({
-  //         kernels,
-  //         loading: { ...this.state.loading, kernels: false }
-  //       });
-  //     })
-  //     .catch(error => {
-  //       this.setState({
-  //         loading: { ...this.state.loading, kernels: false },
-  //         errors: getAPIErrorOrDefault(error, 'Unable to load kernels.')
-  //       });
-  //     });
-  // };
 }
+
 const isUsingCustomRoot = (value: string) =>
   [
     '/dev/sda',
