@@ -92,12 +92,12 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
           )}
         </div>
       </TableCell>
-      <TableCell parentColumn="Type" data-qa-domain-type>
-        {type}
-      </TableCell>
       <TableCell parentColumn="Status" data-qa-domain-status>
         <StatusIcon status={domainStatusToIconStatus(status)} />
         {humanizeDomainStatus(status)}
+      </TableCell>
+      <TableCell parentColumn="Type" data-qa-domain-type>
+        {type}
       </TableCell>
       <TableCell parentColumn="Last Modified" data-qa-domain-lastmodified>
         <DateTimeDisplay value={updated} />

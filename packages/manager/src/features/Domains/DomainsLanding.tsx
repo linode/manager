@@ -149,16 +149,16 @@ const headers: HeaderCell[] = [
     widthPercent: 25
   },
   {
-    label: 'Type',
-    dataColumn: 'type',
-    sortable: true,
-    widthPercent: 15
-  },
-  {
     label: 'Status',
     dataColumn: 'status',
     sortable: true,
     widthPercent: 25
+  },
+  {
+    label: 'Type',
+    dataColumn: 'type',
+    sortable: true,
+    widthPercent: 15
   },
   {
     label: 'Last Modified',
