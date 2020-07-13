@@ -2,6 +2,7 @@ import { Event } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import LinearProgress from 'src/components/LinearProgress';
@@ -57,6 +58,7 @@ const ImageRow: React.FC<CombinedProps> = props => {
 
   const Menu = flags.cmr ? ActionMenu_CMR : ActionMenu;
 
+  // @todo CMR only show label and size for mobile
   return isImageUpdating(event) ? (
     <TableRow key={id} data-qa-image-cell={id}>
       <TableCell
@@ -84,9 +86,11 @@ const ImageRow: React.FC<CombinedProps> = props => {
       >
         {label}
       </TableCell>
-      <TableCell parentColumn="Created" data-qa-image-date>
-        {formatDate(created)}
-      </TableCell>
+      <Hidden mdDown>
+        <TableCell parentColumn="Created" data-qa-image-date>
+          {formatDate(created)}
+        </TableCell>
+      </Hidden>
       <TableCell parentColumn="Expires" data-qa-image-date>
         {expiry ? formatDate(expiry) : 'Never'}
       </TableCell>
