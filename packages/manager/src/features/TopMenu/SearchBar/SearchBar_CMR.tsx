@@ -15,6 +15,7 @@ import withStoreSearch, {
 } from 'src/features/Search/withStoreSearch';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar_CMR.styles';
@@ -70,6 +71,10 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
 
+  const [apiResults, setAPIResults] = React.useState<any[]>([]);
+  const [apiError, setAPIError] = React.useState<string | null>(null);
+  const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
+
   const { _loading } = useReduxLoad(
     ['linodes', 'nodeBalancers', 'images', 'domains', 'volumes', 'kubernetes'],
     REFRESH_INTERVAL,
@@ -78,10 +83,29 @@ export const SearchBar: React.FC<CombinedProps> = props => {
 
   const { searchAPI } = useAPISearch();
 
+  const _searchAPI = React.useRef(
+    debounce(500, false, (_searchText: string) => {
+      setAPILoading(true);
+      searchAPI(_searchText)
+        .then(searchResults => {
+          setAPIResults(searchResults.combinedResults);
+          setAPILoading(false);
+          setAPIError(null);
+        })
+        .catch(error => {
+          setAPIError(
+            getAPIErrorOrDefault(error, 'Error loading search results')[0]
+              .reason
+          );
+          setAPILoading(false);
+        });
+    })
+  ).current;
+
   React.useEffect(() => {
     search(searchText);
-    searchAPI(searchText);
-  }, [_loading, search, searchText, searchAPI]);
+    _searchAPI(searchText);
+  }, [_loading, search, searchText, _searchAPI]);
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
@@ -165,7 +189,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   };
 
   const finalOptions = createFinalOptions(
-    combinedResults,
+    apiResults, // combinedResults,
     searchText,
     _loading
   );
