@@ -6,7 +6,7 @@ import TableRow from 'src/components/core/TableRow';
 import RenderGuard from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import { formatDate } from 'src/utilities/format-date-iso8601';
-import ActionMenu from './ImagesActionMenu';
+import ActionMenu, { Handlers } from './ImagesActionMenu';
 import LinearProgress from 'src/components/LinearProgress';
 import Typography from 'src/components/core/Typography';
 
@@ -23,26 +23,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
-  onEdit: (label: string, description: string, imageID: string) => void;
-  onDelete: (image: string, imageID: string) => void;
-  onRestore: (imageID: string) => void;
-  onDeploy: (imageID: string) => void;
-  image: ImageWithEvent;
-}
 export interface ImageWithEvent extends Image {
   event?: Event;
 }
 
-type CombinedProps = Props;
+type CombinedProps = ImageWithEvent & Handlers;
 
 const ImageRow: React.FC<CombinedProps> = props => {
-  const { image, ...rest } = props;
+  const {
+    created,
+    expiry,
+    id,
+    description,
+    event,
+    label,
+    size,
+    ...rest
+  } = props;
 
   const classes = useStyles();
 
-  return isImageUpdating(image.event) ? (
-    <TableRow key={image.id} data-qa-image-cell={image.id}>
+  return isImageUpdating(event) ? (
+    <TableRow key={id} data-qa-image-cell={id}>
       <TableCell
         parentColumn="Label"
         className={classes.label}
@@ -51,34 +53,34 @@ const ImageRow: React.FC<CombinedProps> = props => {
         <ProgressDisplay
           className={classes.loadingStatus}
           text="Creating"
-          progress={progressFromEvent(image.event)}
+          progress={progressFromEvent(event)}
         />
-        {image.label}
+        {label}
       </TableCell>
       <TableCell colSpan={4}>
-        <LinearProgress value={progressFromEvent(image.event)} />
+        <LinearProgress value={progressFromEvent(event)} />
       </TableCell>
     </TableRow>
   ) : (
-    <TableRow key={image.id} data-qa-image-cell={image.id}>
+    <TableRow key={id} data-qa-image-cell={id}>
       <TableCell
         parentColumn="Label"
         className={classes.label}
         data-qa-image-label
       >
-        {image.label}
+        {label}
       </TableCell>
       <TableCell parentColumn="Created" data-qa-image-date>
-        {formatDate(image.created)}
+        {formatDate(created)}
       </TableCell>
       <TableCell parentColumn="Expires" data-qa-image-date>
-        {image.expiry ? formatDate(image.expiry) : 'Never'}
+        {expiry ? formatDate(expiry) : 'Never'}
       </TableCell>
       <TableCell parentColumn="Size" data-qa-image-size>
-        {image.size} MB
+        {size} MB
       </TableCell>
       <TableCell>
-        <ActionMenu image={image} {...rest} />
+        <ActionMenu id={id} label={label} description={description} {...rest} />
       </TableCell>
     </TableRow>
   );

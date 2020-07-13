@@ -23,26 +23,22 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import EntityTable, {
+  EntityTableRow,
+  HeaderCell
+} from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import OrderBy from 'src/components/OrderBy';
-import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableSortCell from 'src/components/TableSortCell';
 import { ApplicationState } from 'src/store';
 import { requestImages as _requestImages } from 'src/store/image/image.requests';
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
+import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 
 type ClassNames = 'root' | 'title';
@@ -79,6 +75,40 @@ type CombinedProps = WithPrivateImages &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
   WithSnackbarProps;
+
+const headers: HeaderCell[] = [
+  {
+    label: 'Image',
+    dataColumn: 'image',
+    sortable: true,
+    widthPercent: 25
+  },
+  {
+    label: 'Created',
+    dataColumn: 'created',
+    sortable: false,
+    widthPercent: 25
+  },
+  {
+    label: 'Expires',
+    dataColumn: 'expires',
+    sortable: false,
+    widthPercent: 15
+  },
+  {
+    label: 'Size',
+    dataColumn: 'size',
+    sortable: true,
+    widthPercent: 25
+  },
+  {
+    label: 'Action Menu',
+    visuallyHidden: true,
+    dataColumn: '',
+    sortable: false,
+    widthPercent: 5
+  }
+];
 
 class ImagesLanding extends React.Component<CombinedProps, State> {
   eventsSub: Subscription;
@@ -297,6 +327,19 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   render() {
     const { classes, imagesData, imagesLoading, imagesError } = this.props;
 
+    const handlers: ImageHandlers = {
+      onRestore: this.openForRestore,
+      onDeploy: this.deployNewLinode,
+      onEdit: this.openForEdit,
+      onDelete: this.openRemoveDialog
+    };
+
+    const imageRow: EntityTableRow<Image> = {
+      Component: ImageRow,
+      data: imagesData ?? [],
+      handlers
+    };
+
     if (imagesLoading) {
       return this.renderLoading();
     }
@@ -336,84 +379,14 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </Grid>
-        <OrderBy data={imagesData} orderBy={'label'} order={'asc'}>
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-            <Paginate data={orderedData}>
-              {({
-                data,
-                count,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize
-              }) => (
-                <>
-                  <Paper>
-                    <Table
-                      aria-label="List of Your Images"
-                      rowCount={data.length}
-                      colCount={4}
-                    >
-                      <TableHead>
-                        <TableRow role="rowgroup">
-                          <TableSortCell
-                            active={orderBy === 'label'}
-                            label={'label'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-image-name-header
-                          >
-                            Label
-                          </TableSortCell>
-                          <TableCell
-                            role="columnheader"
-                            data-qa-image-created-header
-                          >
-                            Created
-                          </TableCell>
-                          <TableCell role="columnheader" data-qa-expiry-header>
-                            Expires
-                          </TableCell>
-                          <TableSortCell
-                            active={orderBy === 'size'}
-                            label={'size'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-image-size-header
-                          >
-                            Size
-                          </TableSortCell>
-                          <TableCell />
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {data.map((image, idx) => (
-                          <ImageRow
-                            key={idx}
-                            image={image}
-                            onRestore={this.openForRestore}
-                            onDeploy={this.deployNewLinode}
-                            onEdit={this.openForEdit}
-                            onDelete={this.openRemoveDialog}
-                            updateFor={[image, classes]}
-                          />
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </Paper>
-                  <PaginationFooter
-                    count={count}
-                    handlePageChange={handlePageChange}
-                    handleSizeChange={handlePageSizeChange}
-                    page={page}
-                    pageSize={pageSize}
-                    eventCategory="images landing"
-                  />
-                </>
-              )}
-            </Paginate>
-          )}
-        </OrderBy>
+        <Paper>
+          <EntityTable
+            entity="image"
+            groupByTag={false}
+            row={imageRow}
+            headers={headers}
+          />
+        </Paper>
         {this.renderImageDrawer()}
         <ConfirmationDialog
           open={this.state.removeDialog.open}
