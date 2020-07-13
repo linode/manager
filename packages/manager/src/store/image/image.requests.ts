@@ -1,5 +1,6 @@
 import {
   createImage as _create,
+  deleteImage as _delete,
   getImage,
   getImages,
   Image,
@@ -9,6 +10,7 @@ import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {
   createImageActions,
+  deleteImageActions,
   requestImageForStoreActions,
   requestImagesActions,
   updateImageActions
@@ -38,4 +40,9 @@ export const updateImage = createRequestThunk(
   updateImageActions,
   ({ label, description, imageID }) =>
     _update(imageID, label, description).then(response => response.data)
+);
+
+export const deleteImage = createRequestThunk(
+  deleteImageActions,
+  ({ imageID }) => _delete(imageID)
 );
