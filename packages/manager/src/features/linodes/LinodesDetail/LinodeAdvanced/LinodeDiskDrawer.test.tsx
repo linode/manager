@@ -1,11 +1,11 @@
 import { cleanup, fireEvent, render, wait } from '@testing-library/react';
 import * as React from 'react';
-import { diskFactory } from 'src/factories/disk';
+import { linodeDiskFactory } from 'src/factories/disk';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import LinodeDiskDrawer, { Props } from './LinodeDiskDrawer';
 
-const disk = diskFactory.build();
+const disk = linodeDiskFactory.build();
 
 afterEach(() => {
   cleanup();

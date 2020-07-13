@@ -36,7 +36,7 @@ export const requestKubernetesClusters: ThunkActionCreator<Promise<
           result: response
         })
       );
-      return response.data;
+      return response;
     })
     .catch(error => {
       dispatch(requestClustersActions.failed({ error }));

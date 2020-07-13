@@ -211,13 +211,7 @@ export default React.memo(ObjectStorageLanding);
 // ============================================================================
 const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
   button: {
-    backgroundColor: 'inherit',
-    border: 'none',
-    fontFamily: 'inherit',
-    fontSize: 'inherit',
-    color: theme.color.blue,
-    padding: 0,
-    cursor: 'pointer'
+    ...theme.applyLinkStyles
   }
 }));
 

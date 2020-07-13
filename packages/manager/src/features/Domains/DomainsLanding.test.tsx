@@ -28,6 +28,8 @@ const props: CombinedProps = {
   openForEditing: jest.fn(),
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
+  ldClient: {} as any,
+  flags: {},
   classes: {
     domain: '',
     dnsWarning: '',

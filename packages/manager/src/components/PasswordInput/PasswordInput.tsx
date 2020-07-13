@@ -2,8 +2,10 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
+import useFlags from 'src/hooks/useFlags';
 import * as zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
@@ -13,6 +15,7 @@ type Props = TextFieldProps & {
   required?: boolean;
   disabledReason?: string;
   hideStrengthLabel?: boolean;
+  hideHelperText?: boolean;
   hideValidation?: boolean;
 };
 
@@ -60,6 +63,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 type CombinedProps = Props;
 
 const PasswordInput: React.FC<CombinedProps> = props => {
+  const flags = useFlags();
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (props.onChange) {
       props.onChange(e);
@@ -71,6 +76,7 @@ const PasswordInput: React.FC<CombinedProps> = props => {
     required,
     disabledReason,
     hideStrengthLabel,
+    hideHelperText,
     hideValidation,
     ...rest
   } = props;
@@ -106,6 +112,28 @@ const PasswordInput: React.FC<CombinedProps> = props => {
             strength={strength}
             hideStrengthLabel={hideStrengthLabel}
           />
+        </Grid>
+      )}
+      {!hideHelperText && flags.passwordValidation === 'length' && (
+        <Grid item xs={12}>
+          <div className={classes.requirementsListOuter}>
+            <Typography>Password must:</Typography>
+            <ul className={classes.requirementsList}>
+              <li>
+                <Typography component={'span'}>
+                  Be at least <strong>6 characters</strong>
+                </Typography>
+              </li>
+              <li>
+                <Typography component={'span'}>
+                  Contain at least{' '}
+                  <strong>two of the following character classes</strong>:
+                  uppercase letters, lowercase letters, numbers, and
+                  punctuation.
+                </Typography>
+              </li>
+            </ul>
+          </div>
         </Grid>
       )}
     </Grid>

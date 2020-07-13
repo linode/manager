@@ -25,6 +25,24 @@ const styles = (theme: Theme) =>
       },
       '& tbody.sorting': {
         opacity: 0.5
+      },
+      '& thead': {
+        '& th': {
+          borderTop: `2px solid ${theme.color.grey9}`,
+          borderRight: `1px solid ${theme.color.grey9}`,
+          borderBottom: `2px solid ${theme.color.grey9}`,
+          borderLeft: `1px solid ${theme.color.grey9}`,
+          fontFamily: theme.font.bold,
+          fontSize: '0.875em !important',
+          color: theme.palette.text.primary,
+          padding: '10px 15px',
+          '&:first-of-type': {
+            borderLeft: 'none'
+          },
+          '&:last-of-type': {
+            borderRight: 'none'
+          }
+        }
       }
     },
     responsive: {
@@ -128,7 +146,6 @@ class WrappedTable extends React.Component<CombinedProps> {
       spacingBottom,
       removeLabelonMobile,
       stickyHeader,
-      tableCaption,
       colCount,
       rowCount,
       ...rest

@@ -115,9 +115,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  linodeContext
-);
+const enhanced = compose<CombinedProps, {}>(styled, linodeContext);
 
 export default enhanced(LinodeAdvancedConfigurationsPanel);

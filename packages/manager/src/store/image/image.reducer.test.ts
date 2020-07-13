@@ -32,7 +32,7 @@ describe('Images reducer', () => {
         { ...defaultState, loading: true },
         requestImagesActions.done({ result: mockImages })
       );
-      expect(newState.data).toEqual(mockImagesNormalized);
+      expect(newState.itemsById).toEqual(mockImagesNormalized);
       expect(newState.results).toEqual(mockImages.length);
       expect(newState.loading).toBe(false);
       expect(newState.lastUpdated).toBeGreaterThan(0);
@@ -57,7 +57,7 @@ describe('Images reducer', () => {
       });
       const newState = reducer(withEntities, upsertImage(newImage));
       expect(newState.results).toEqual(mockImages.length + 1);
-      expect(newState.data['private/9999']).toEqual(newImage);
+      expect(newState.itemsById['private/9999']).toEqual(newImage);
     });
 
     it('should update an existing cluster', () => {
@@ -70,7 +70,7 @@ describe('Images reducer', () => {
       const newState = reducer(withEntities, upsertImage(updatedImage));
       // Length should be unchanged
       expect(newState.results).toEqual(mockImages.length);
-      expect(newState.data[mockImages[1].id]).toEqual(updatedImage);
+      expect(newState.itemsById[mockImages[1].id]).toEqual(updatedImage);
     });
   });
 
@@ -83,7 +83,7 @@ describe('Images reducer', () => {
       );
       const newState = reducer(withImages, removeImage(12345));
       expect(newState.results).toEqual(mockImages.length);
-      expect(newState.data['private/12345']).toBeUndefined();
+      expect(newState.itemsById['private/12345']).toBeUndefined();
     });
 
     it('should remove an image by full string id', () => {
@@ -94,7 +94,7 @@ describe('Images reducer', () => {
       );
       const newState = reducer(withImages, removeImage('private/12345'));
       expect(newState.results).toEqual(mockImages.length);
-      expect(newState.data['private/12345']).toBeUndefined();
+      expect(newState.itemsById['private/12345']).toBeUndefined();
     });
 
     it("should return the state unchanged if the id doesn't match", () => {
@@ -111,8 +111,7 @@ describe('Images reducer', () => {
         defaultState,
         createImageActions.done({ result: newImage, params: mockParams })
       );
-      expect(newState.data[newImage.id]).toEqual(newImage);
-      expect(newState.lastUpdated).toBeGreaterThan(0);
+      expect(newState.itemsById[newImage.id]).toEqual(newImage);
       expect(newState.results).toEqual(1);
       expect(newState.error.create).toBeUndefined();
     });
@@ -147,7 +146,7 @@ describe('Images reducer', () => {
           result: updatedImage
         })
       );
-      expect(newState.data[updatedImage.id]).toEqual(updatedImage);
+      expect(newState.itemsById[updatedImage.id]).toEqual(updatedImage);
     });
 
     it('should handle a failed update', () => {
@@ -163,14 +162,6 @@ describe('Images reducer', () => {
   });
 
   describe('Requesting a single Image', () => {
-    it('should initiate the request', () => {
-      const newState = reducer(
-        { ...defaultState, error: { read: mockError } },
-        requestImageForStoreActions.started('private/1234')
-      );
-      expect(newState.error.read).toBeUndefined();
-    });
-
     it('should handle a successful request', () => {
       const withEntities = addEntities();
       const updatedImage = { ...mockImages[3], label: 'my-label-is-updated' };
@@ -181,18 +172,7 @@ describe('Images reducer', () => {
           params: 'private/1234'
         })
       );
-      expect(newState.data[mockImages[3].id]).toEqual(updatedImage);
-    });
-
-    it('should handle a failed request', () => {
-      const newState = reducer(
-        defaultState,
-        requestImageForStoreActions.failed({
-          params: 'private/1234',
-          error: mockError
-        })
-      );
-      expect(newState.error.read).toEqual(mockError);
+      expect(newState.itemsById[mockImages[3].id]).toEqual(updatedImage);
     });
   });
 });

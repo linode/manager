@@ -1,10 +1,10 @@
-import * as classNames from 'classnames';
 import { Notification } from '@linode/api-v4/lib/account';
 import {
   Config,
   LinodeBackups,
   LinodeStatus
 } from '@linode/api-v4/lib/linodes';
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -13,23 +13,25 @@ import Tooltip from 'src/components/core/Tooltip';
 import HelpIcon from 'src/components/HelpIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import useFlags from 'src/hooks/useFlags';
+import { capitalize } from 'src/utilities/capitalize';
+import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
+import LinodeActionMenu_CMR from '../LinodeActionMenu_CMR';
 import RegionIndicator from '../RegionIndicator';
+import { parseMaintenanceStartTime } from '../utils';
 import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
 import styled, { StyleProps } from './LinodeRow.style';
 import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
 import LinodeRowLoading from './LinodeRowLoading';
-
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { capitalize } from 'src/utilities/capitalize';
-import { parseMaintenanceStartTime } from '../utils';
 
 interface Props {
   backups: LinodeBackups;
@@ -55,6 +57,9 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
+  // Including for type matching with CMR; not used.
+  openTagDrawer?: any;
 }
 
 export type CombinedProps = Props &
@@ -92,15 +97,16 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     mutationAvailable
   } = props;
 
+  const flags = useFlags();
+
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
 
   const MaintenanceText = () => {
     return (
       <>
-        Please consult your{' '}
-        <Link to="/support/tickets?type=open">support tickets</Link> for
-        details.
+        For more information, please see your{' '}
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
   };
@@ -127,6 +133,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       maintenance={maintenanceStartTime}
     />
   );
+
+  const ActionMenu = flags.cmr ? LinodeActionMenu_CMR : LinodeActionMenu;
 
   return (
     <React.Fragment>
@@ -169,7 +177,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
                   <strong>Maintenance Scheduled</strong>
                 </div>
                 <div>
-                  {dateTime[0]} at {dateTime[1]}
+                  {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}
                 </div>
               </div>
               <HelpIcon
@@ -209,7 +217,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
               linodeNotifications={linodeNotifications}
               classes={classes}
             />
-            <LinodeActionMenu
+            <ActionMenu
               linodeId={id}
               linodeLabel={label}
               linodeRegion={region}

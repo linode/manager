@@ -43,6 +43,7 @@ const ResizeVolumeForm: React.FC<CombinedProps> = props => {
 
   return (
     <Formik
+      initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(
         values,
@@ -71,19 +72,17 @@ const ResizeVolumeForm: React.FC<CombinedProps> = props => {
             );
           });
       }}
-      initialValues={initialValues}
-      render={formikProps => {
-        const {
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          resetForm,
-          status,
-          values
-        } = formikProps;
-
+    >
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        resetForm,
+        status,
+        values
+      }) => {
         return (
           <Form>
             {status && (
@@ -123,7 +122,7 @@ const ResizeVolumeForm: React.FC<CombinedProps> = props => {
           </Form>
         );
       }}
-    />
+    </Formik>
   );
 };
 

@@ -5,7 +5,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://travis-ci.org/linode/manager"><img src="https://travis-ci.org/linode/manager.svg?branch=master" alt="Build status" /></a>
+  <a href="https://travis-ci.com/linode/manager"><img src="https://travis-ci.com/linode/manager.svg?branch=master" alt="Build status" /></a>
   <a href="https://coveralls.io/github/linode/manager?branch=master"><img src="https://coveralls.io/repos/github/linode/manager/badge.svg?branch=master" alt="Code coverage" /></a>
 </p>
 
@@ -25,7 +25,7 @@ Along with the contributing guidelines, you can read our [code conventions](./CO
 
 ### I want to contribute to the JavaScript SDK :sunglasses:
 
-Amazing! Please check out the documentation in the [SDK directory](./packages/@linode/api-v4/README.md)
+Amazing! Please check out the documentation in the [SDK directory](./packages/api-v4/README.md)
 
 ## Reaching Out
 

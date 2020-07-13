@@ -279,16 +279,17 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                     className={classes.tableHeadInner}
                   >
                     <Typography variant="body2" className={classes.text}>
-                      {section}CPU
+                      {section}
                     </Typography>
                   </TableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {legendRows?.map((tick: any, idx: number) => {
+              {legendRows?.map((_tick: any, idx: number) => {
                 const bgColor = data[idx].backgroundColor;
                 const title = data[idx].label;
+                const hidden = hiddenDatasets.includes(idx);
                 const { data: metricsData, format } = legendRows[idx];
                 return (
                   <TableRow key={idx}>
@@ -300,14 +301,14 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                         className={classes.toggleButton}
                       >
                         <div
-                          className={`${classes.legendIcon} ${tick.hidden &&
+                          className={`${classes.legendIcon} ${hidden &&
                             classes.crossedOut}`}
                           style={{
                             background: bgColor,
                             borderColor: bgColor
                           }}
                         />
-                        <span className={tick.hidden ? classes.crossedOut : ''}>
+                        <span className={hidden ? classes.crossedOut : ''}>
                           {title}
                         </span>
                       </Button>

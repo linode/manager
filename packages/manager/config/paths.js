@@ -54,6 +54,7 @@ module.exports = {
   appIndexJs: resolveApp('src/index.tsx'),
   appPackageJson: packageJson,
   appSrc: resolveApp('src'),
+  browserMocks: resolveApp('src/mocks/testBrowser.ts'),
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('src/setupTests.ts'),
   appNodeModules: resolveApp('node_modules'),

@@ -1,18 +1,29 @@
 import * as React from 'react';
-
+import * as classnames from 'classnames';
 import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 
 export interface HeaderProps extends BreadCrumbProps {
-  actions: JSX.Element;
-  body: JSX.Element;
-  title: string;
+  actions?: JSX.Element;
+  body?: JSX.Element;
+  title: string | JSX.Element;
+  bodyClassName?: string;
+  isLanding?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.bg.white
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: theme.bg.white,
+    height: 50,
+    width: '100%',
+    padding: '8px 8px 8px 15px'
+  },
+  rootHasBreadcrumb: {
+    padding: 8
   },
   contentOuter: {
     '& .MuiChip-root': {
@@ -28,17 +39,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const EntityHeader: React.FC<HeaderProps> = props => {
-  const { actions, body, iconType, parentLink, parentText, title } = props;
+  const {
+    actions,
+    body,
+    iconType,
+    parentLink,
+    parentText,
+    title,
+    bodyClassName
+  } = props;
   const classes = useStyles();
 
   return (
-    <Grid
-      container
-      alignItems="center"
-      justify="space-between"
-      className={classes.root}
+    <div
+      className={classnames({
+        [classes.root]: true,
+        [classes.rootHasBreadcrumb]: Boolean(parentLink)
+      })}
     >
-      <Grid item>
+      <Grid item xs={Boolean(actions) ? 6 : 12}>
         <Grid container direction="row" alignItems="center">
           <HeaderBreadCrumb
             iconType={iconType}
@@ -47,14 +66,24 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             parentText={parentText}
           />
           {body && (
-            <Grid className={classes.contentOuter} item>
+            <Grid
+              className={classnames({
+                [classes.contentOuter]: true,
+                [bodyClassName ?? '']: Boolean(bodyClassName)
+              })}
+              item
+            >
               {body}
             </Grid>
           )}
         </Grid>
       </Grid>
-      <Grid item>{actions}</Grid>
-    </Grid>
+      {Boolean(actions) && (
+        <Grid container item xs={6} justify="flex-end" alignItems="center">
+          {actions}
+        </Grid>
+      )}
+    </div>
   );
 };
 

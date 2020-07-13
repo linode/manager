@@ -1,32 +1,41 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
+import SortUp from 'src/assets/icons/sort-up.svg';
+import Sort from 'src/assets/icons/unsorted.svg';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 import TableSortLabel from 'src/components/core/TableSortLabel';
 
-import Sort from 'src/assets/icons/sort.svg';
-import SortUp from 'src/assets/icons/sortUp.svg';
-
-type ClassNames = 'root' | 'initialIcon' | 'noWrap';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      color: theme.palette.text.primary,
-      minHeight: 20
-    },
-    initialIcon: {
-      margin: '2px 4px 0 5px'
-    },
-    noWrap: {
-      whiteSpace: 'nowrap'
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '&:hover': {
+      backgroundColor: '#3683dc',
+      cursor: 'pointer',
+      '& span': {
+        color: theme.color.white
+      },
+      '& .MuiTableSortLabel-icon': {
+        color: `${theme.color.white} !important`
+      },
+      '& svg g': {
+        fill: theme.color.white
+      }
     }
-  });
+  },
+  label: {
+    color: theme.palette.text.primary,
+    fontSize: '.875rem',
+    minHeight: 20,
+    transition: 'none'
+  },
+  initialIcon: {
+    margin: '0 4px 0 5px'
+  },
+  noWrap: {
+    whiteSpace: 'nowrap'
+  }
+}));
 
 export interface Props extends TableCellProps {
   active: boolean;
@@ -37,53 +46,52 @@ export interface Props extends TableCellProps {
   noWrap?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
-class TableSortCell extends React.PureComponent<CombinedProps, {}> {
-  handleClick = () => {
-    const { label, direction, handleClick } = this.props;
+export const TableSortCell: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
+  const {
+    children,
+    direction,
+    label,
+    active,
+    isLoading,
+    noWrap,
+    ...rest
+  } = props;
+
+  const onHandleClick = () => {
+    const { label, direction, handleClick } = props;
     const nextOrder = direction === 'asc' ? 'desc' : 'asc';
     return handleClick(label, nextOrder);
   };
 
-  render() {
-    const {
-      classes,
-      children,
-      direction,
-      label,
-      active,
-      handleClick,
-      noWrap,
-      isLoading,
-      ...rest
-    } = this.props;
-
-    return (
-      <TableCell
-        className={noWrap ? `${classes.noWrap}` : ''}
-        {...rest}
-        sortDirection={direction}
-        role="columnheader"
+  return (
+    <TableCell
+      className={classNames({
+        [classes.root]: true,
+        [classes.noWrap]: noWrap
+      })}
+      {...rest}
+      sortDirection={direction}
+      role="columnheader"
+      onClick={onHandleClick}
+    >
+      <TableSortLabel
+        active={active}
+        direction={direction}
+        className={classes.label}
+        IconComponent={SortUp}
+        hideSortIcon={true}
+        aria-label={`Sort by ${label}`}
       >
-        <TableSortLabel
-          active={active}
-          direction={direction}
-          onClick={this.handleClick}
-          className={classes.root}
-          IconComponent={SortUp}
-          hideSortIcon={true}
-          aria-label={`Sort by ${label}`}
-        >
-          {children}
-          {!active && <Sort className={classes.initialIcon} />}
-        </TableSortLabel>
-        {isLoading && <CircleProgress mini sort />}
-      </TableCell>
-    );
-  }
-}
+        {children}
+        {!active && <Sort className={classes.initialIcon} />}
+      </TableSortLabel>
+      {isLoading && <CircleProgress mini sort />}
+    </TableCell>
+  );
+};
 
-const styled = withStyles(styles);
-
-export default styled(TableSortCell);
+export default TableSortCell;

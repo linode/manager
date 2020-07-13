@@ -2,6 +2,7 @@ import { Config, linodeReboot } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -23,14 +24,16 @@ import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Table from 'src/components/Table';
+import TableContentWrapper from 'src/components/TableContentWrapper';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   DeleteLinodeConfig,
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';
+import ConfigRow from './ConfigRow';
 
 import Paginate from 'src/components/Paginate';
 
@@ -55,7 +58,10 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = LinodeContext & WithStyles<ClassNames> & WithSnackbarProps;
+type CombinedProps = LinodeContext &
+  WithStyles<ClassNames> &
+  WithSnackbarProps &
+  StateProps;
 
 interface State {
   configDrawer: ConfigDrawerState;
@@ -223,7 +229,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           errorResponse,
           `Error booting ${label}`
         );
-        errors.map((error: APIError) => {
+        errors.forEach((error: APIError) => {
           this.props.enqueueSnackbar(error.reason, {
             variant: 'error'
           });
@@ -276,6 +282,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           pageSize,
           count
         }) => {
+          const {
+            configsLastUpdated,
+            configsLoading,
+            configsError,
+            linodeId,
+            readOnly
+          } = this.props;
           return (
             <React.Fragment>
               <Table
@@ -290,7 +303,26 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {this.renderConfigTableContent(paginatedData)}
+                  <TableContentWrapper
+                    loading={configsLoading && configsLastUpdated === 0}
+                    lastUpdated={configsLastUpdated}
+                    length={paginatedData.length}
+                    error={configsError}
+                  >
+                    {paginatedData.map(thisConfig => {
+                      return (
+                        <ConfigRow
+                          key={`config-row-${thisConfig.id}`}
+                          config={thisConfig}
+                          linodeId={linodeId}
+                          onBoot={this.handleBoot}
+                          onEdit={this.openForEditing}
+                          onDelete={this.confirmDelete}
+                          readOnly={readOnly}
+                        />
+                      );
+                    })}
+                  </TableContentWrapper>
                 </TableBody>
               </Table>
               <PaginationFooter
@@ -306,25 +338,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         }}
       </Paginate>
     );
-  };
-
-  renderConfigTableContent = (data: Config[]) => {
-    return data.map(config => (
-      <TableRow key={config.id} data-qa-config={config.label}>
-        <TableCell>{config.label}</TableCell>
-        <TableCell>
-          <LinodeConfigActionMenu
-            config={config}
-            linodeId={this.props.linodeId}
-            onBoot={this.handleBoot}
-            onEdit={this.openForEditing}
-            onDelete={this.confirmDelete}
-            readOnly={this.props.readOnly}
-            label={config.label}
-          />
-        </TableCell>
-      </TableRow>
-    ));
   };
 }
 
@@ -364,8 +377,29 @@ const linodeContext = withLinodeDetailContext<LinodeContext>(
   })
 );
 
+interface StateProps {
+  configsError?: APIError[];
+  configsLoading: boolean;
+  configsLastUpdated: number;
+}
+
+const mapStateToProps: MapState<StateProps, LinodeContext> = (
+  state,
+  ownProps
+) => {
+  const configState = state.__resources.linodeConfigs[ownProps.linodeId];
+  return {
+    configsLastUpdated: configState?.lastUpdated ?? 0,
+    configsLoading: configState?.loading ?? false,
+    configsError: configState?.error.read ?? undefined
+  };
+};
+
+const connected = connect(mapStateToProps);
+
 const enhanced = compose<CombinedProps, {}>(
   linodeContext,
+  connected,
   styled,
   errorBoundary,
   withSnackbar

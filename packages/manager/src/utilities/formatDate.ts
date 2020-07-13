@@ -44,7 +44,7 @@ interface FormatDateOptions {
  * @param options
  */
 export const formatDate = (
-  date: string,
+  date: string | number,
   options: FormatDateOptions = {}
 ): string => {
   let time;
@@ -71,6 +71,21 @@ export const formatDate = (
     : time.toFormat(expectedFormat);
 
   return formattedTime ?? time.toFormat(expectedFormat);
+};
+
+export const formatDateISO = (date: string) => {
+  let time;
+
+  try {
+    // Unknown error was causing this to crash in rare situations.
+    time = parseAPIDate(date);
+  } catch (e) {
+    // Better to return a blank date than an error or incorrect information.
+    reportException(e);
+    return 'Error parsing date';
+  }
+
+  return time.toISO();
 };
 
 export default formatDate;

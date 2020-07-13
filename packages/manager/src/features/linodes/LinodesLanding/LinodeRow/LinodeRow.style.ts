@@ -26,11 +26,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     actionCell: {
-      width: '5%',
       textAlign: 'right',
-      '& button': {
-        width: 30
-      },
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }

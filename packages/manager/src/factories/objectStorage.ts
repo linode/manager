@@ -10,7 +10,8 @@ export const objectStorageBucketFactory = Factory.Sync.makeFactory<
   label: Factory.each(i => `obj-bucket-${i}`),
   hostname: Factory.each(i => `obj-bucket-${i}.us-east-1.linodeobjects.com`),
   cluster: 'us-east-1',
-  created: '2019-12-12T00:00:00'
+  created: '2019-12-12T00:00:00',
+  size: 999999
 });
 
 export const objectStorageClusterFactory = Factory.Sync.makeFactory<

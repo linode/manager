@@ -190,7 +190,7 @@ export interface Kernel {
   pvops: boolean;
 }
 
-interface NetStats {
+export interface NetStats {
   in: [number, number][];
   out: [number, number][];
   private_in: [number, number][];

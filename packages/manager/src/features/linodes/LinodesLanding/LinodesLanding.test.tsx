@@ -17,7 +17,9 @@ describe('ListLinodes', () => {
     chip: '',
     chipRunning: '',
     chipPending: '',
-    chipOffline: ''
+    chipOffline: '',
+    controlHeader: '',
+    toggleButton: ''
   };
 
   it('renders without error', () => {
@@ -46,6 +48,7 @@ describe('ListLinodes', () => {
           {...reactRouterProps}
           ldClient={{} as any}
           flags={{}}
+          linodesInTransition={new Set<number>()}
         />
       )
     );

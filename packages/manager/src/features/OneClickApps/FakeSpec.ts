@@ -370,9 +370,9 @@ export const oneClickApps: OCA[] = [
     summary: `A file sharing service that allows you to store your important documents and images in one centralized location.`,
     related_guides: [
       {
-        title: 'Use a Block Storage Volume with Nextcloud',
+        title: 'Deploying Nextcloud on Linode with One-Click Apps',
         href:
-          'https://www.linode.com/docs/applications/cloud-storage/use-block-storage-volume-with-nextcloud/'
+          'https://www.linode.com/docs/platform/one-click/how-to-deploy-nextcloud-with-one-click-apps/'
       }
     ],
     logo_url: 'assets/nextcloud_color.svg'
@@ -396,15 +396,16 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
-    name: 'Percona',
+    name: 'Percona (PMM)',
     description: `Percona Monitoring and Management (PMM) is an open source GUI for managing and monitoring the performance of your MySQL, MariaDB, PostgreSQL, and MongoDB databases. This tool helps you optimize your database’s performance, manage your database instances, and keep track of and identify security issues.`,
     summary:
       'An open source analytics and performance monitoring solution for databases with a focus on user-friendly metrics visualizations.',
     related_info: [
       {
-        title: 'Percona Monitoring and Management',
+        title:
+          'Deploying Percona Monitoring Management (PMM) with One-Click Apps',
         href:
-          'https://www.percona.com/software/database-tools/percona-monitoring-and-management'
+          'https://www.linode.com/docs/platform/one-click/how-to-deploy-percona-monitoring-management-with-one-click-apps/'
       }
     ],
     logo_url: 'assets/percona_color.svg'

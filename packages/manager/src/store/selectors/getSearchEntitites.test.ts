@@ -13,7 +13,7 @@ describe('getSearchEntities selector', () => {
     linodes: {
       itemsById: apiResponseToMappedState(linodes)
     },
-    images: { entities: images },
+    images: { itemsById: apiResponseToMappedState(images) },
     types: { entities: types },
     volumes: {
       itemsById: volumes.reduce((result, c) => ({ ...result, [c.id]: c }), {})

@@ -100,10 +100,11 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
         setItems(items);
       })
       .catch(errorResponse => {
+        setLoading(false);
         setErrors(
           getAPIErrorOrDefault(
             errorResponse,
-            'Unable to retrieve invoice details. '
+            'Unable to retrieve invoice details.'
           )
         );
       });

@@ -10,7 +10,8 @@ storiesOf('EntityHeader', module)
   .add('landing', () => (
     <div style={{ padding: '12px' }}>
       <LandingHeader
-        title="Linode"
+        title="Linodes"
+        entity="Linode"
         onAddNew={() => null}
         iconType="linode"
         docsLink="https://linode.com/docs"

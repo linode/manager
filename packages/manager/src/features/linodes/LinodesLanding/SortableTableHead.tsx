@@ -47,9 +47,9 @@ const SortableTableHead: React.FC<combinedProps> = props => {
         </TableSortCell>
         <TableSortCell
           noWrap
-          label="displayStatus"
+          label="_statusPriority"
           direction={order}
-          active={isActive('displayStatus')}
+          active={isActive('_statusPriority')}
           handleClick={handleOrderChange}
         >
           Status

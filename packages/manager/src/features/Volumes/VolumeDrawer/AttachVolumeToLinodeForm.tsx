@@ -21,6 +21,7 @@ import ConfigSelect from './ConfigSelect';
 import { modes } from './modes';
 import ModeSelection from './ModeSelection';
 import NoticePanel from './NoticePanel';
+import Notice from 'src/components/Notice';
 import VolumesActionsPanel from './VolumesActionsPanel';
 import VolumeSelect from './VolumeSelect';
 
@@ -86,19 +87,18 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
           });
       }}
       initialValues={initialValues}
-      render={formikProps => {
-        const {
-          errors,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-          resetForm,
-          setFieldValue,
-          status,
-          touched,
-          values
-        } = formikProps;
-
+    >
+      {({
+        errors,
+        handleBlur,
+        handleSubmit,
+        isSubmitting,
+        resetForm,
+        setFieldValue,
+        status,
+        touched,
+        values
+      }) => {
         return (
           <Form>
             {status && !disabled && (
@@ -109,10 +109,12 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
             )}
 
             {disabled && (
-              <NoticePanel
-                error={
+              <Notice
+                text={
                   "You don't have permissions to add a Volume for this Linode. Please contact an account administrator for details."
                 }
+                error={true}
+                important
               />
             )}
 
@@ -153,7 +155,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
           </Form>
         );
       }}
-    />
+    </Formik>
   );
 };
 
