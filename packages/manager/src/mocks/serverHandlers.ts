@@ -7,6 +7,7 @@ import {
   firewallDeviceFactory,
   kubernetesClusterFactory,
   kubeEndpointFactory,
+  invoiceItemFactory,
   nodePoolFactory,
   linodeConfigFactory,
   linodeDiskFactory,
@@ -90,7 +91,7 @@ export const handlers = [
   }),
   rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {
     const pools = nodePoolFactory.buildList(2);
-    return res(ctx.json(makeResourcePage(pools, { page: 1, pages: 2 })));
+    return res(ctx.json(makeResourcePage(pools)));
   }),
   rest.get('*/lke/clusters/*/api-endpoints', async (req, res, ctx) => {
     const endpoints = kubeEndpointFactory.buildList(2);
@@ -121,5 +122,9 @@ export const handlers = [
   }),
   rest.get('*/kubeconfig', (req, res, ctx) => {
     return res(ctx.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
+  }),
+  rest.get('*invoices/:invoiceId/items', (req, res, ctx) => {
+    const items = invoiceItemFactory.buildList(10);
+    return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
   })
 ];
