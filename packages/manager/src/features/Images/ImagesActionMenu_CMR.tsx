@@ -1,8 +1,9 @@
 import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 
 export interface Handlers {
   onRestore: (imageID: string) => void;
@@ -33,13 +34,12 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
       onDelete
     } = props;
 
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       return [
         {
           title: 'Restore to Existing Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onRestore(id);
-            closeMenu();
             e.preventDefault();
           }
         },
@@ -54,7 +54,6 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
           title: 'Edit',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onEdit(label, description ?? ' ', id);
-            closeMenu();
             e.preventDefault();
           }
         },
@@ -62,7 +61,6 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onDelete(label, id);
-            closeMenu();
             e.preventDefault();
           }
         }

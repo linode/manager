@@ -29,15 +29,21 @@ import EntityTable, {
   EntityTableRow,
   HeaderCell
 } from 'src/components/EntityTable';
+import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { ApplicationState } from 'src/store';
 import { requestImages as _requestImages } from 'src/store/image/image.requests';
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
+import ImageRow_CMR from './ImageRow_CMR';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 
@@ -70,16 +76,17 @@ interface State {
   };
 }
 
-type CombinedProps = WithPrivateImages &
+type CombinedProps = FeatureFlagConsumerProps &
   ImageDispatch &
-  WithStyles<ClassNames> &
   RouteComponentProps<{}> &
-  WithSnackbarProps;
+  WithPrivateImages &
+  WithSnackbarProps &
+  WithStyles<ClassNames>;
 
 const headers: HeaderCell[] = [
   {
     label: 'Image',
-    dataColumn: 'image',
+    dataColumn: 'label',
     sortable: true,
     widthPercent: 25
   },
@@ -325,7 +332,15 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, imagesData, imagesLoading, imagesError } = this.props;
+    const {
+      classes,
+      flags,
+      imagesData,
+      imagesLoading,
+      imagesError
+    } = this.props;
+
+    const Table = flags.cmr ? EntityTable_CMR : EntityTable;
 
     const handlers: ImageHandlers = {
       onRestore: this.openForRestore,
@@ -335,7 +350,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     };
 
     const imageRow: EntityTableRow<Image> = {
-      Component: ImageRow,
+      Component: flags.cmr ? ImageRow_CMR : ImageRow,
       data: imagesData ?? [],
       handlers
     };
@@ -356,31 +371,47 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Images" />
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          updateFor={[classes]}
-          style={{ paddingBottom: 0 }}
-        >
-          <Grid item>
-            <Breadcrumb
-              pathname={this.props.location.pathname}
-              labelTitle="Images"
-              className={classes.title}
-            />
-          </Grid>
-          <Grid item>
-            <Grid container alignItems="flex-end">
-              <Grid item className="pt0">
-                <AddNewLink onClick={this.openForCreate} label="Add an Image" />
+        {flags.cmr ? (
+          // @todo CMR needs an icon for Images
+          <LandingHeader
+            title="Images"
+            entity="Image"
+            onAddNew={this.openForCreate}
+            iconType="cmr"
+            docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
+          />
+        ) : (
+          <>
+            <DocumentTitleSegment segment="Images" />
+            <Grid
+              container
+              justify="space-between"
+              alignItems="flex-end"
+              updateFor={[classes]}
+              style={{ paddingBottom: 0 }}
+            >
+              <Grid item>
+                <Breadcrumb
+                  pathname={this.props.location.pathname}
+                  labelTitle="Images"
+                  className={classes.title}
+                />
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="flex-end">
+                  <Grid item className="pt0">
+                    <AddNewLink
+                      onClick={this.openForCreate}
+                      label="Add an Image"
+                    />
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
+          </>
+        )}
         <Paper>
-          <EntityTable
+          <Table
             entity="image"
             groupByTag={false}
             row={imageRow}
@@ -517,8 +548,9 @@ const withPrivateImages = connect(
 const styled = withStyles(styles);
 
 export default compose<CombinedProps, {}>(
-  withRouter,
-  withPrivateImages,
   styled,
+  withFeatureFlags,
+  withPrivateImages,
+  withRouter,
   withSnackbar
 )(ImagesLanding);

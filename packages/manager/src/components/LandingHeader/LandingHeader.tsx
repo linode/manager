@@ -52,7 +52,7 @@ export const LandingHeader: React.FC<Props> = props => {
               className={classes.button}
               onClick={onAddNew}
             >
-              Create a {entity}
+              Create a {entity}...
             </Button>
           </Grid>
         )}
