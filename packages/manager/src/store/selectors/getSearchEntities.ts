@@ -99,7 +99,7 @@ const imageToSearchableItem = (image: Image): SearchableItem => ({
   }
 });
 
-const domainToSearchableItem = (domain: Domain): SearchableItem => ({
+export const domainToSearchableItem = (domain: Domain): SearchableItem => ({
   label: domain.domain,
   value: domain.id,
   entityType: 'domain',

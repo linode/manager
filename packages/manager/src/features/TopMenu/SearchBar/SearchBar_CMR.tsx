@@ -13,6 +13,7 @@ import withImages, { WithImages } from 'src/containers/withImages.container';
 import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
+import useAPISearch from 'src/features/Search/useAPISearch';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
 import { debounce } from 'throttle-debounce';
@@ -75,9 +76,12 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     searchActive // Only request things if the search bar is open/active.
   );
 
+  const { searchAPI } = useAPISearch();
+
   React.useEffect(() => {
     search(searchText);
-  }, [_loading, search, searchText]);
+    searchAPI(searchText);
+  }, [_loading, search, searchText, searchAPI]);
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);

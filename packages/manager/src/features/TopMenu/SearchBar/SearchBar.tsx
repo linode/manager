@@ -13,6 +13,7 @@ import withImages, { WithImages } from 'src/containers/withImages.container';
 import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
+import useAPISearch from 'src/features/Search/useAPISearch';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
 import { debounce } from 'throttle-debounce';
@@ -69,6 +70,8 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
 
+  const { searchAPI } = useAPISearch();
+
   const { _loading } = useReduxLoad(
     ['linodes', 'nodeBalancers', 'images', 'domains', 'volumes', 'kubernetes'],
     REFRESH_INTERVAL,
@@ -77,7 +80,8 @@ export const SearchBar: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     search(searchText);
-  }, [_loading, search, searchText]);
+    searchAPI(searchText);
+  }, [_loading, search, searchAPI, searchText]);
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
