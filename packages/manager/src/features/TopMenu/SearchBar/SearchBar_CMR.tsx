@@ -33,7 +33,7 @@ const Control = (props: any) => <components.Control {...props} />;
  * This doesn't share the same shape as the rest of the results, so should use
  * the default styling. */
 const Option = (props: any) => {
-  return ['redirect', 'info'].includes(props.value) ? (
+  return ['redirect', 'info', 'error'].includes(props.value) ? (
     <components.Option {...props} />
   ) : (
     <SearchSuggestion {...props} />
@@ -191,7 +191,8 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const finalOptions = createFinalOptions(
     apiResults, // combinedResults,
     searchText,
-    _loading
+    _loading || apiSearchLoading,
+    Boolean(apiError)
   );
 
   return (
@@ -265,7 +266,8 @@ export default compose<CombinedProps, {}>(
 export const createFinalOptions = (
   results: Item[],
   searchText: string = '',
-  loading: boolean = false
+  loading: boolean = false,
+  error: boolean = false
 ) => {
   const redirectOption = {
     value: 'redirect',
@@ -280,10 +282,19 @@ export const createFinalOptions = (
     label: 'Loading results...'
   };
 
+  const searchError = {
+    value: 'error',
+    label: 'Error retrieving search results'
+  };
+
   // Results aren't final as we're loading data
 
   if (loading) {
     return [redirectOption, loadingResults];
+  }
+
+  if (error) {
+    return [searchError];
   }
 
   // NO RESULTS:
