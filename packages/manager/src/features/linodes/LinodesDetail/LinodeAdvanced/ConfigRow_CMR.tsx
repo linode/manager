@@ -37,7 +37,6 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
   const {
     config,
     linodeId,
-    linodeMemory,
     linodeDisks,
     linodeKernel,
     onBoot,
@@ -54,14 +53,13 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     const rootDevice = config.root_device;
     const device = rootDevice.slice(-3); // Isolate the 'sda', 'sdc', etc. piece
 
-    const deviceId = config.devices[device].disk_id;
+    const deviceId = config.devices[device]?.disk_id;
 
     const matchingDisk = linodeDisks.find(disk => disk.id === deviceId);
     const label = matchingDisk ? ` – ${matchingDisk.label}` : '';
     setRootDeviceLabel(`${rootDevice}${label}`);
   }, [config, linodeDisks]);
 
-  // If config.memory_limit === 0, use linodeMemory; the API interprets a memory limit of 0 as the RAM of the Linode itself.
   return (
     <TableRow key={config.id} data-qa-config={config.label}>
       <TableCell>{config.label}</TableCell>
@@ -72,9 +70,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
       </TableCell>
       <TableCell>{linodeKernel}</TableCell>
       <TableCell>
-        {config.memory_limit === 0
-          ? `${linodeMemory} GB`
-          : `${config.memory_limit} MB`}
+        {config.memory_limit === 0 ? 'No limit' : `${config.memory_limit} MB`}
       </TableCell>
       <TableCell>{rootDeviceLabel}</TableCell>
       <TableCell className={classes.actionInner}>
