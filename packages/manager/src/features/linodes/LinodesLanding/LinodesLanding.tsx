@@ -46,8 +46,7 @@ import {
   LinodeWithMaintenance
 } from 'src/store/linodes/linodes.helpers';
 import { MapState } from 'src/store/types';
-import formatDate from 'src/utilities/formatDate';
-import { formatNotifications } from 'src/utilities/formatNotifications';
+import formatDate, { formatDateISO } from 'src/utilities/formatDate';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent
@@ -546,11 +545,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               <Grid item className={classes.CSVlinkContainer}>
                                 <CSVLink
                                   data={linodesData.map(e => {
+                                    const maintenance = e.maintenance?.when
+                                      ? {
+                                          ...e.maintenance,
+                                          when: formatDateISO(
+                                            e.maintenance?.when
+                                          )
+                                        }
+                                      : { when: null };
+
                                     return {
                                       ...e,
-                                      maintenance: e.maintenance || {
-                                        when: null
-                                      },
+                                      maintenance,
                                       linodeDescription: getLinodeDescription(
                                         e.label,
                                         e.specs.memory,
@@ -646,7 +652,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
-    formatNotifications(notifications),
+    notifications,
     linodes
   );
 
