@@ -107,6 +107,28 @@ export const handleError = (error: AxiosError) => {
   return Promise.reject(interceptedErrors);
 };
 
+// Enforce read-only mode while logged in as a customer.
+baseRequest.interceptors.request.use(config => {
+  const token: string = config.headers?.Authorization ?? '';
+  const isLoggedInAsCustomer = token.startsWith('Admin');
+
+  if (isLoggedInAsCustomer && config.method !== 'get') {
+    return Promise.reject({
+      response: {
+        data: {
+          errors: [
+            {
+              reason:
+                'Only GET requests are available while logged in as a customer.'
+            }
+          ]
+        }
+      }
+    });
+  }
+  return config;
+});
+
 baseRequest.interceptors.request.use(config => {
   const state = store.getState();
   /** Will end up being "Admin: 1234" or "Bearer 1234" */
