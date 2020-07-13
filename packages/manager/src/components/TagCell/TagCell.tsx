@@ -70,6 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
     alignItems: 'center',
     cursor: 'pointer',
+    whiteSpace: 'nowrap',
     '& svg': {
       marginLeft: 10,
       width: 10,
@@ -205,7 +206,8 @@ export const TagCell: React.FC<Props> = props => {
           <div
             ref={overflowRef}
             className={classNames({
-              [classes.tagList]: true
+              [classes.tagList]: true,
+              [classes.tagListOverflow]: hasOverflow
             })}
           >
             {tags.map(thisTag => (

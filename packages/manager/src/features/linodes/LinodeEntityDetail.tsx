@@ -686,7 +686,12 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   return (
     <>
-      <Grid container direction="row" justify="space-between">
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+      >
         <Grid item>
           <div className={classes.detailsSection}>
             {linodePlan && (
@@ -714,7 +719,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
             </Typography>
           </div>
         </Grid>
-        <Grid item className={classes.linodeTags}>
+        <Grid item sm={6} className={classes.linodeTags}>
           <TagCell
             width={500}
             tags={linodeTags}
