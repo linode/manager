@@ -20,6 +20,9 @@ import {
 
 const CloneLanding = React.lazy(() => import('../CloneLanding'));
 const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
+const LinodesDetailHeader_CMR = React.lazy(() =>
+  import('./LinodesDetailHeader/LinodeDetailHeader_CMR')
+);
 const LinodesDetailNavigation = React.lazy(() =>
   import('./LinodesDetailNavigation')
 );
@@ -64,11 +67,16 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
           <Route
             render={() => (
               <React.Fragment>
-                <LinodesDetailHeader />
                 {flags.cmr ? (
-                  <LinodesDetailNavigation_CMR />
+                  <React.Fragment>
+                    <LinodesDetailHeader_CMR />
+                    <LinodesDetailNavigation_CMR />
+                  </React.Fragment>
                 ) : (
-                  <LinodesDetailNavigation />
+                  <React.Fragment>
+                    <LinodesDetailHeader />
+                    <LinodesDetailNavigation />
+                  </React.Fragment>
                 )}
               </React.Fragment>
             )}
