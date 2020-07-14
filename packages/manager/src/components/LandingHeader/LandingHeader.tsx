@@ -1,9 +1,8 @@
 import * as React from 'react';
-
+import Hidden from 'src/components/core/Hidden';
 import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
 import { makeStyles } from 'src/components/core/styles';
-2;
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import EntityHeader, {
   HeaderProps
@@ -12,7 +11,7 @@ import EntityHeader, {
 const useStyles = makeStyles(() => ({
   button: {
     borderRadius: 3,
-    height: 40,
+    height: 34,
     padding: 0,
     width: 152
   }
@@ -39,9 +38,9 @@ export const LandingHeader: React.FC<Props> = props => {
   const actions = React.useMemo(
     () => (
       <Grid
-        item
         container
         direction="row"
+        item
         alignItems="center"
         justify="flex-end"
       >
@@ -57,7 +56,16 @@ export const LandingHeader: React.FC<Props> = props => {
             </Button>
           </Grid>
         )}
-        {docsLink && <DocumentationButton href={docsLink} />}
+        {docsLink && (
+          <>
+            <Hidden smDown>
+              <DocumentationButton href={docsLink} />
+            </Hidden>
+            <Hidden mdUp>
+              <DocumentationButton href={docsLink} hideText />
+            </Hidden>
+          </>
+        )}
       </Grid>
     ),
     [docsLink, entity, onAddNew, classes.button, extraActions]

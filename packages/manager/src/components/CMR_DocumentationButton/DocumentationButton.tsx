@@ -22,23 +22,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover svg': {
       color: theme.palette.primary.main
     }
+  },
+  mr0: {
+    '& svg': {
+      marginRight: 0
+    }
   }
 }));
 
 interface Props {
   href: string;
+  hideText?: boolean;
 }
 
 type CombinedProps = Props;
 
 export const DocumentationButton: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { href } = props;
+  const { href, hideText } = props;
   return (
     <IconTextLink
-      className={classes.root}
+      className={`${classes.root} ${hideText ? classes.mr0 : ''}`}
       SideIcon={TicketIcon}
-      text="Docs"
+      text={hideText ? '' : 'Docs'}
       title="Docs"
       onClick={() => window.open(href, '_blank', 'noopener')}
       aria-describedby="external-site"

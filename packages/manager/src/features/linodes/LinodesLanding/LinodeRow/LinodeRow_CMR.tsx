@@ -237,27 +237,29 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           </>
         )}
       </TableCell>
-      <TableCell
-        parentColumn="IP Address"
-        className={classes.ipCell}
-        data-qa-ips
-      >
-        <div className={classes.ipCellWrapper}>
-          <IPAddress ips={ipv4} copyRight showCopyOnHover />
-        </div>
-      </TableCell>
-      <TableCell
-        parentColumn="Region"
-        className={classes.regionCell}
-        data-qa-region
-      >
-        <RegionIndicator region={region} />
-      </TableCell>
-      <LinodeRowBackupCell
-        linodeId={id}
-        backupsEnabled={backups.enabled || false}
-        mostRecentBackup={mostRecentBackup || ''}
-      />
+      <Hidden xsDown>
+        <TableCell
+          parentColumn="IP Address"
+          className={classes.ipCell}
+          data-qa-ips
+        >
+          <div className={classes.ipCellWrapper}>
+            <IPAddress ips={ipv4} copyRight showCopyOnHover />
+          </div>
+        </TableCell>
+        <TableCell
+          parentColumn="Region"
+          className={classes.regionCell}
+          data-qa-region
+        >
+          <RegionIndicator region={region} />
+        </TableCell>
+        <LinodeRowBackupCell
+          linodeId={id}
+          backupsEnabled={backups.enabled || false}
+          mostRecentBackup={mostRecentBackup || ''}
+        />
+      </Hidden>
       <Hidden mdDown>
         <TagCell
           tags={tags}

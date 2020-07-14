@@ -33,9 +33,6 @@ const styles = (theme: Theme) =>
       paddingLeft: 0,
       width: '22%',
       textAlign: 'right',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      },
       '&:last-child': {
         paddingRight: 0
       }
@@ -52,8 +49,7 @@ const styles = (theme: Theme) =>
     },
     iconTableCell: {
       [theme.breakpoints.up('md')]: {
-        width: '4%',
-        padding: 4
+        width: '4%'
       }
     },
     icon: {
@@ -78,10 +74,7 @@ const styles = (theme: Theme) =>
     },
     statusCell: {
       whiteSpace: 'nowrap',
-      width: '17%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+      width: '17%'
     },
     statusCellMaintenance: {
       [theme.breakpoints.up('md')]: {
@@ -92,10 +85,6 @@ const styles = (theme: Theme) =>
         alignItems: 'center',
         lineHeight: 1.2,
         marginRight: -12,
-        [theme.breakpoints.down('sm')]: {
-          minWidth: 200,
-          justifyContent: 'flex-end'
-        },
         [theme.breakpoints.up('md')]: {
           minWidth: 200
         }
@@ -103,10 +92,7 @@ const styles = (theme: Theme) =>
       '& button': {
         padding: '0 6px',
         position: 'relative',
-        top: 1,
-        [theme.breakpoints.up('md')]: {
-          padding: 6
-        }
+        top: 1
       }
     },
     statusHelpIcon: {
@@ -114,10 +100,7 @@ const styles = (theme: Theme) =>
       top: -2
     },
     ipCell: {
-      width: '14%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+      width: '14%'
     },
     ipCellWrapper: {
       display: 'inline-flex',
@@ -129,16 +112,10 @@ const styles = (theme: Theme) =>
       }
     },
     planCell: {
-      width: '14%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+      width: '14%'
     },
     regionCell: {
-      width: '14%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+      width: '14%'
     },
     tagCell: {
       borderRight: 'none'

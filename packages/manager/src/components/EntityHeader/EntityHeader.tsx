@@ -20,20 +20,60 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.white,
     height: 50,
     width: '100%',
-    padding: '8px 8px 8px 15px'
+    padding: '8px 8px 8px 15px',
+    [theme.breakpoints.down(695)]: {
+      alignItems: 'flex-start',
+      height: 100
+    },
+    [theme.breakpoints.down('sm')]: {
+      '&:before': {
+        display: 'block',
+        content: "''",
+        backgroundColor: theme.palette.divider,
+        height: 1,
+        width: 'calc(100% + 8px)',
+        position: 'absolute',
+        top: 58,
+        left: -15,
+        zIndex: 1
+      }
+    }
+  },
+  containerLeft: {
+    [theme.breakpoints.down('md')]: {
+      flexBasis: '85%',
+      maxWidth: '85%'
+    },
+    [theme.breakpoints.down(695)]: {
+      flexBasis: '50%',
+      maxWidth: '50%'
+    },
+    [theme.breakpoints.down('xs')]: {
+      flexBasis: '20%',
+      maxWidth: '20%'
+    }
+  },
+  containerRight: {
+    [theme.breakpoints.down('xs')]: {
+      flexBasis: '80%',
+      maxWidth: '80%'
+    }
   },
   rootHasBreadcrumb: {
     padding: 8
   },
   contentOuter: {
+    [theme.breakpoints.down(695)]: {
+      position: 'absolute',
+      top: 60
+    },
     '& .MuiChip-root': {
       height: 30,
       borderRadius: 15,
       marginTop: 1,
       marginRight: 10,
       fontSize: '.875rem',
-      letterSpacing: '.5px',
-      minWidth: 120
+      letterSpacing: '.5px'
     }
   }
 }));
@@ -57,7 +97,11 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
         [classes.rootHasBreadcrumb]: Boolean(parentLink)
       })}
     >
-      <Grid item xs={Boolean(actions) ? 6 : 12}>
+      <Grid
+        className={classes.containerLeft}
+        item
+        xs={Boolean(actions) ? 6 : 12}
+      >
         <Grid container direction="row" alignItems="center">
           <HeaderBreadCrumb
             iconType={iconType}
@@ -79,7 +123,14 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
         </Grid>
       </Grid>
       {Boolean(actions) && (
-        <Grid container item xs={6} justify="flex-end" alignItems="center">
+        <Grid
+          className={classes.containerRight}
+          container
+          item
+          xs={6}
+          justify="flex-end"
+          alignItems="center"
+        >
           {actions}
         </Grid>
       )}

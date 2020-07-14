@@ -4,6 +4,7 @@ import {
   LinodeBackups
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -15,6 +16,7 @@ import { lishLaunch } from 'src/features/Lish/lishUtils';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { useTypes } from 'src/hooks/useTypes';
 import { useRegions } from 'src/hooks/useRegions';
@@ -30,7 +32,10 @@ import {
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down(695)]: {
+      display: 'none'
+    }
   },
   link: {
     padding: '12px 10px',
@@ -92,6 +97,7 @@ export type CombinedProps = Props & StateProps;
 
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:695px)');
 
   const { types } = useTypes();
   const history = useHistory();
@@ -301,6 +307,26 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
+      if (matches) {
+        actions.unshift({
+          title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            const action =
+              linodeStatus === 'running' ? 'Power Off' : 'Power On';
+            sendLinodeActionMenuItemEvent(`${action} Linode`);
+            e.preventDefault();
+            e.stopPropagation();
+            openPowerActionDialog(
+              `${action}` as BootAction,
+              linodeId,
+              linodeLabel,
+              linodeStatus === 'running' ? configs : []
+            );
+          },
+          disabled: !['running', 'offline'].includes(linodeStatus)
+        });
+      }
+
       if (inTableContext === true) {
         actions.unshift({
           title: 'Launch Console',
@@ -334,8 +360,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           <Link className={classes.link} to={`/linodes/${linodeId}`}>
             <span>Details</span>
           </Link>
-
-          <button
+          <Button
             className={classes.powerOnOrOff}
             onClick={e => {
               const action =
@@ -353,7 +378,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             disabled={!['running', 'offline'].includes(linodeStatus)}
           >
             {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-          </button>
+          </Button>
         </div>
       )}
       <ActionMenu
