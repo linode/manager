@@ -41,18 +41,35 @@ const styles = (theme: Theme) =>
       marginLeft: 15
     },
     chip: {
-      color: '#fff',
+      backgroundColor: '#f7f7f8',
+      color: '#5d646f',
       fontSize: '1.1rem',
-      padding: 10
+      fontFamily: theme.font.bold,
+      padding: 10,
+      '&:before': {
+        display: 'inline-block',
+        borderRadius: '50%',
+        content: '""',
+        height: 16,
+        width: 16,
+        minWidth: 16,
+        marginRight: 8
+      }
     },
     chipRunning: {
-      backgroundColor: '#00b159'
+      '&:before': {
+        backgroundColor: '#00b159'
+      }
     },
     chipPending: {
-      backgroundColor: '#ffb31a'
+      '&:before': {
+        backgroundColor: '#ffb31a'
+      }
     },
     chipOffline: {
-      backgroundColor: '#9ea4ae'
+      '&:before': {
+        backgroundColor: '#dbdde1'
+      }
     },
     controlHeader: {
       backgroundColor: theme.bg.controlHeader,

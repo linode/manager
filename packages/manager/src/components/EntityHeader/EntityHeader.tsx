@@ -32,8 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: 1,
       marginRight: 10,
       fontSize: '.875rem',
-      letterSpacing: '.5px',
-      minWidth: 120
+      letterSpacing: '.5px'
     }
   }
 }));
