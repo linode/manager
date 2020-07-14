@@ -21,7 +21,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
-import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import TagCell from 'src/components/TagCell';
 import Typography from 'src/components/core/Typography';
@@ -438,7 +437,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       height: 34
     },
     '& td': {
-      lineHeight: 1.4,
+      lineHeight: 1.29,
       fontSize: '0.875rem',
       fontStretch: 'normal',
       letterSpacing: 'normal',
@@ -457,8 +456,16 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.color.grey5,
       borderBottom: '1px solid white',
       fontWeight: 'bold',
+      fontSize: '0.875rem',
+      color: '#606469',
+      lineHeight: 1.1,
       width: '102px',
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
+      paddingTop: 8,
+      paddingRight: 10,
+      paddingBottom: 7,
+      paddingLeft: 10,
+      textAlign: 'left'
     }
   },
   accessTableContainer: {
@@ -585,18 +592,16 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
           <Table className={classes.accessTable}>
             <TableBody>
               <TableRow>
-                <TableHead>
-                  <TableCell scope="row">SSH Access</TableCell>
-                </TableHead>
+                <th scope="row">SSH Access</th>
+
                 <TableCell className={classes.code}>
                   {sshLink(ipv4[0])}
                 </TableCell>
               </TableRow>
 
               <TableRow>
-                <TableHead>
-                  <TableCell scope="row">LISH via SSH</TableCell>
-                </TableHead>
+                <th scope="row">LISH via SSH</th>
+
                 <TableCell className={classes.code}>
                   {lishLink(username, region, linodeLabel)}
                 </TableCell>
