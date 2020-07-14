@@ -65,5 +65,5 @@ export const waitForAppLoad = (path = '/', withLogin = true) => {
   cy.wait('@getAccountSettings');
   cy.wait('@getProfilePreferences');
   cy.wait('@getProfile');
-  cy.wait('@getNotifications');
+  // cy.wait('@getNotifications');
 };
