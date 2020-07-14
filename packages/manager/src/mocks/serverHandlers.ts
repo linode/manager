@@ -44,6 +44,9 @@ export const handlers = [
     const linodes = linodeFactory.buildList(10);
     return res(ctx.json(makeResourcePage(linodes)));
   }),
+  rest.delete('*/instances/*', async (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   rest.get('*/instances/*/configs', async (req, res, ctx) => {
     const configs = linodeConfigFactory.buildList(3);
     return res(ctx.json(makeResourcePage(configs)));
