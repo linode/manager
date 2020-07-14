@@ -7,6 +7,8 @@ import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 
+import InlineMenuActions from 'src/components/InlineMenuActions/InlineMenuActions';
+
 interface Props {
   onEdit: (config: Config) => void;
   onDelete: (id: number, label: string) => void;
@@ -119,27 +121,41 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
     ];
   }, [props]);
 
+  const inlineActions = [
+    {
+      actionText: 'Boot',
+      className: classes.powerOnOrOff,
+      element: 'button',
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        handleBoot();
+      }
+    },
+    {
+      actionText: 'Edit',
+      className: classes.powerOnOrOff,
+      element: 'button',
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        handleEdit();
+      }
+    }
+  ];
+
   return (
     <div className={classes.actionInner}>
       <div className={classes.inlineActions}>
-        <button
-          className={classes.powerOnOrOff}
-          onClick={(e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            handleBoot();
-          }}
-        >
-          Boot
-        </button>
-        <button
-          className={classes.powerOnOrOff}
-          onClick={(e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            handleEdit();
-          }}
-        >
-          Edit
-        </button>
+        {inlineActions.map(action => {
+          return (
+            <InlineMenuActions
+              key={action.actionText}
+              actionText={action.actionText}
+              className={action.className}
+              element={action.element}
+              onClick={action.onClick}
+            />
+          );
+        })}
       </div>
       <ActionMenu
         className={classes.action}

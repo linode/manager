@@ -9,7 +9,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import ActionMenu, {
@@ -26,6 +26,7 @@ import {
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent
 } from 'src/utilities/ga';
+import InlineMenuActions from 'src/components/InlineMenuActions/InlineMenuActions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
@@ -327,35 +328,49 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     inTableContext
   } = props;
 
+  const inlineActions = [
+    {
+      actionText: 'Details',
+      className: classes.link,
+      element: 'link',
+      linodeId
+    },
+    {
+      actionText: linodeStatus === 'running' ? 'Power Off' : 'Power On',
+      disabled: !['running', 'offline'].includes(linodeStatus),
+      className: classes.powerOnOrOff,
+      element: 'button',
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        const action = linodeStatus === 'running' ? 'Power Off' : 'Power On';
+        sendLinodeActionMenuItemEvent(`${action} Linode`);
+        e.preventDefault();
+        e.stopPropagation();
+        openPowerActionDialog(
+          `${action}` as BootAction,
+          linodeId,
+          linodeLabel,
+          linodeStatus === 'running' ? configs : []
+        );
+      }
+    }
+  ];
+
   return (
     <>
-      {inTableContext && (
-        <div className={classes.inlineActions}>
-          <Link className={classes.link} to={`/linodes/${linodeId}`}>
-            <span>Details</span>
-          </Link>
-
-          <button
-            className={classes.powerOnOrOff}
-            onClick={e => {
-              const action =
-                linodeStatus === 'running' ? 'Power Off' : 'Power On';
-              sendLinodeActionMenuItemEvent(`${action} Linode`);
-              e.preventDefault();
-              e.stopPropagation();
-              openPowerActionDialog(
-                `${action}` as BootAction,
-                linodeId,
-                linodeLabel,
-                linodeStatus === 'running' ? configs : []
-              );
-            }}
-            disabled={!['running', 'offline'].includes(linodeStatus)}
-          >
-            {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-          </button>
-        </div>
-      )}
+      {inTableContext &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuActions
+              key={action.actionText}
+              actionText={action.actionText}
+              className={action.className}
+              element={action.element}
+              disabled={action.disabled}
+              linodeId={action.linodeId}
+              onClick={action.onClick}
+            />
+          );
+        })}
       <ActionMenu
         className={classes.action}
         toggleOpenCallback={toggleOpenActionMenu}
