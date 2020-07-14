@@ -29,7 +29,7 @@ describe('linode landing', () => {
         // Here we used to have a bug fixed in
         // https://github.com/linode/manager/pull/6627
         // the second delete would crash the UI
-        cy.findByText('Oh Snap!', { timeout: 0 }).should('not-be.visible');
+        cy.findByText('Oh Snap!', { timeout: 1000 }).should('not.be.visible');
         deleteLinodeFromActionMenu(linodeB.label);
       });
     });
