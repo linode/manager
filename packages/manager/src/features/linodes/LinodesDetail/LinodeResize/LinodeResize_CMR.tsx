@@ -460,6 +460,10 @@ const mapStateToProps: MapStateToProps<StateProps, Props> = (
   const linodeDisks = state.__resources.linodeDisks;
   const profile = state.__resources.profile;
 
+  if (!linode) {
+    return {};
+  }
+
   return {
     linodeId: linode.id,
     linodeType: linode.type,

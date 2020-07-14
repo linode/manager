@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-07-13] - v1.14.0
+
+### Added:
+
+- Color palette component in Storybook
+
+### Changed:
+
+- CMR: Linode Detail - Storage tab - Analytics tab - Network tab
+- CMR: Linodes Landing - Add tag cell to Linode row - Summary view (replaces Grid view)
+- CMR: Move Linode Resize action from tab to new modal component
+- CMR: Apply updated table styles and action menus to LKE and Domains
+- CMR: Secondary nav width
+- Linode maintenance improvements
+- Show maintenance time in UTC in downloaded CSV
+
+### Fixed:
+
+- Consistent Notices for restricted users when creating a Volume
+- Longview CPU formatting
+- Handle null dates in invoice details logic
+- Expiry date check
+
 ## [2020-07-02] - v1.13.1
 
 ### Changed:
