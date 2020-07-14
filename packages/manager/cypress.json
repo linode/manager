@@ -5,6 +5,5 @@
   "pageLoadTimeout": 40000,
   "trashAssetsBeforeRuns": false,
   "viewportWidth": 1440,
-  "viewportHeight": 900,
-  "ignoreTestFiles": "**/smoke-billing-activity.spec.ts"
+  "viewportHeight": 900
 }
