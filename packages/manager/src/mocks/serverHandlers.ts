@@ -108,6 +108,12 @@ export const handlers = [
     const devices = firewallDeviceFactory.buildList(10);
     return res(ctx.json(makeResourcePage(devices)));
   }),
+  rest.put('*/firewalls/:firewallId', (req, res, ctx) => {
+    const firewall = firewallFactory.build({
+      status: req.body?.['status'] ?? 'disabled'
+    });
+    return res(ctx.json(firewall));
+  }),
   rest.get('*/nodebalancers', (req, res, ctx) => {
     const nodeBalancers = nodeBalancerFactory.buildList(10);
     return res(ctx.json(makeResourcePage(nodeBalancers)));

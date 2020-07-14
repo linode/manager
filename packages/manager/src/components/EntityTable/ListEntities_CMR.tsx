@@ -12,7 +12,16 @@ import { ListProps } from './types';
 export type CombinedProps = ListProps;
 
 export const ListEntities: React.FC<CombinedProps> = props => {
-  const { data, entity, handlers, headerCells, RowComponent } = props;
+  const {
+    data,
+    entity,
+    error,
+    handlers,
+    headerCells,
+    loading,
+    lastUpdated,
+    RowComponent
+  } = props;
   return (
     <Paginate data={data}>
       {({
@@ -32,9 +41,9 @@ export const ListEntities: React.FC<CombinedProps> = props => {
               <TableBody>
                 <TableContentWrapper
                   length={paginatedAndOrderedData.length}
-                  loading={false}
-                  error={undefined}
-                  lastUpdated={100}
+                  loading={loading}
+                  error={error}
+                  lastUpdated={lastUpdated}
                 >
                   {paginatedAndOrderedData.map(thisEntity => (
                     <RowComponent
