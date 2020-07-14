@@ -6,7 +6,7 @@ describe('linode landing', () => {
     createLinode().then(linode => {
       cy.visitWithLogin('/linodes');
       getLinodeLandingRow(linode.label).within(_el => {
-        cy.get(`[data-qa-action-menu]`).should('exist');
+        cy.findByText('Details').should('exist');
       });
       deleteLinodeById(linode.id).then(resp => {
         expect(resp.status).to.eq(200);
