@@ -25,6 +25,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& h3': {
       transition: theme.transitions.create(['color'])
     },
+    [theme.breakpoints.between('xs', 'sm')]: {
+      backgroundColor: 'white',
+      position: 'sticky',
+      left: 0,
+      zIndex: 1
+    },
     [theme.breakpoints.up('lg')]: {
       width: '20%'
     },

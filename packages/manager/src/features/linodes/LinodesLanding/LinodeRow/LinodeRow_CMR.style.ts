@@ -35,6 +35,11 @@ const styles = (theme: Theme) =>
       textAlign: 'right',
       '&:last-child': {
         paddingRight: 0
+      },
+      [theme.breakpoints.down('sm')]: {
+        backgroundColor: 'white',
+        position: 'sticky',
+        right: 0
       }
     },
     actionInner: {

@@ -4,6 +4,8 @@ import {
   LinodeBackups
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+// eslint-disable-next-line no-restricted-imports
+import { useTheme } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
@@ -33,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
     display: 'flex',
     alignItems: 'center',
-    [theme.breakpoints.down(695)]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
   },
@@ -97,7 +99,8 @@ export type CombinedProps = Props & StateProps;
 
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const matches = useMediaQuery('(max-width:695px)');
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const { types } = useTypes();
   const history = useHistory();
