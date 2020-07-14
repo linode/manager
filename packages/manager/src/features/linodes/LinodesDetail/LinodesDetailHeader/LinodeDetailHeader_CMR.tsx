@@ -13,7 +13,9 @@ import {
   withLinodeDetailContext
 } from '../linodeDetailContext';
 import { Config } from '@linode/api-v4/lib/linodes';
-import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import PowerDialogOrDrawer, {
+  Action as BootAction
+} from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
@@ -21,24 +23,37 @@ import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import CircleProgress from 'src/components/CircleProgress';
 import useLinodes from 'src/hooks/useLinodes';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
+import DeleteDialog from '../../LinodesLanding/DeleteDialog';
+import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
 
 interface Props {
   numVolumes: number;
   username: string;
   linodeConfigs: Config[];
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
-  openPowerActionDialog: (
-    bootAction: BootAction,
-    linodeID: number,
-    linodeLabel: string,
-    linodeConfigs: Config[]
-  ) => void;
-  openLinodeResize: (linodeID: number) => void;
 }
 
 interface TagDrawerProps {
   tags: string[];
   open: boolean;
+}
+
+interface PowerDialogProps {
+  open: boolean;
+  linodeLabel: string;
+  linodeId: number;
+  bootAction?: BootAction;
+  linodeConfigs?: Config[];
+}
+
+interface DeleteDialogProps {
+  open: boolean;
+  linodeLabel: string;
+  linodeId: number;
+}
+
+interface ResizeDialogProps {
+  open: boolean;
+  linodeId: number;
 }
 
 type CombinedProps = Props & LinodeDetailContext & LinodeContext;
@@ -49,17 +64,71 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     linodeEvents,
     linodeStatus,
     linodeDisks,
-    linodeConfigs,
-    openPowerActionDialog,
-    openDeleteDialog,
-    openLinodeResize
+    linodeConfigs
   } = props;
+
+  const [powerDialog, setPowerDialog] = React.useState<PowerDialogProps>({
+    open: false,
+    linodeId: 0,
+    linodeLabel: ''
+  });
+
+  const [deleteDialog, setDeleteDialog] = React.useState<DeleteDialogProps>({
+    open: false,
+    linodeId: 0,
+    linodeLabel: ''
+  });
+
+  const [resizeDialog, setResizeDialog] = React.useState<ResizeDialogProps>({
+    open: false,
+    linodeId: 0
+  });
+
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: []
   });
 
   const { updateLinode } = useLinodes();
+
+  const openPowerActionDialog = (
+    bootAction: BootAction,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Config[]
+  ) => {
+    setPowerDialog({
+      ...powerDialog,
+      open: true,
+      bootAction: bootAction,
+      linodeConfigs: linodeConfigs,
+      linodeId: linodeID,
+      linodeLabel: linodeLabel
+    });
+  };
+
+  const openDeleteDialog = (linodeID: number, linodeLabel: string) => {
+    setDeleteDialog({
+      ...deleteDialog,
+      open: true,
+      linodeLabel: linodeLabel,
+      linodeId: linodeID
+    });
+  };
+
+  const openResizeDialog = (linodeID: number) => {
+    setResizeDialog({
+      ...resizeDialog,
+      open: true,
+      linodeId: linodeID
+    });
+  };
+
+  const closeDialogs = () => {
+    setPowerDialog({ ...powerDialog, open: false });
+    setDeleteDialog({ ...deleteDialog, open: false });
+    setResizeDialog({ ...resizeDialog, open: false });
+  };
 
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
@@ -103,6 +172,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const getVolumesByLinode = (linodeId: number) =>
     getVolumesForLinode(volumes.itemsById, linodeId).length;
 
+  const deleteLinode = () => {};
+
   return (
     <React.Fragment>
       <HostMaintenance linodeStatus={linodeStatus} />
@@ -118,11 +189,31 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         openTagDrawer={openTagDrawer}
         openDeleteDialog={openDeleteDialog}
         openPowerActionDialog={openPowerActionDialog}
-        openLinodeResize={openLinodeResize}
+        openLinodeResize={openResizeDialog}
       />
       {linodeInTransition(linodeStatus, firstEventWithProgress) && (
         <LinodeBusyStatus />
       )}
+      <PowerDialogOrDrawer
+        isOpen={powerDialog.open}
+        action={powerDialog.bootAction}
+        linodeID={powerDialog.linodeId}
+        linodeLabel={powerDialog.linodeLabel}
+        close={closeDialogs}
+        linodeConfigs={powerDialog.linodeConfigs}
+      />
+      <DeleteDialog
+        open={deleteDialog.open}
+        onClose={closeDialogs}
+        linodeID={deleteDialog.linodeId}
+        linodeLabel={deleteDialog.linodeLabel}
+        handleDelete={deleteLinode}
+      />
+      <LinodeResize_CMR
+        open={resizeDialog.open}
+        onClose={closeDialogs}
+        linodeId={resizeDialog.linodeId}
+      />
       <TagDrawer
         entityLabel={linode.label}
         open={tagDrawer.open}
