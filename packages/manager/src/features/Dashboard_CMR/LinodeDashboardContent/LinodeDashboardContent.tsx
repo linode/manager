@@ -13,9 +13,8 @@ export const LinodeDashboardContent: React.FC<{}> = props => {
     return <CircleProgress />;
   }
 
-  const numLinodes = Object.keys(linodes.itemsById).length;
-
-  return numLinodes < 2 ? <SingleLinode /> : <MultipleLinodes />;
+  // @todo change this logic once there's a no-Linodes view
+  return linodes.results < 2 ? <SingleLinode /> : <MultipleLinodes />;
 };
 
 export default React.memo(LinodeDashboardContent);
