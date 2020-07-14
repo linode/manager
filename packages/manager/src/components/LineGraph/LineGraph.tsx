@@ -279,7 +279,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                     className={classes.tableHeadInner}
                   >
                     <Typography variant="body2" className={classes.text}>
-                      {section}CPU
+                      {section}
                     </Typography>
                   </TableCell>
                 ))}
