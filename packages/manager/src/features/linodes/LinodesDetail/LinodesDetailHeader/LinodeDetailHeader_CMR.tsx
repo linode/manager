@@ -89,7 +89,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     tags: []
   });
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode, deleteLinode } = useLinodes();
 
   const openPowerActionDialog = (
     bootAction: BootAction,
@@ -172,7 +172,9 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const getVolumesByLinode = (linodeId: number) =>
     getVolumesForLinode(volumes.itemsById, linodeId).length;
 
-  const deleteLinode = () => {};
+  const handleDeleteLinode = (linodeId: number) => {
+    return deleteLinode(linodeId);
+  };
 
   return (
     <React.Fragment>
@@ -207,7 +209,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         onClose={closeDialogs}
         linodeID={deleteDialog.linodeId}
         linodeLabel={deleteDialog.linodeLabel}
-        handleDelete={deleteLinode}
+        handleDelete={handleDeleteLinode}
       />
       <LinodeResize_CMR
         open={resizeDialog.open}
