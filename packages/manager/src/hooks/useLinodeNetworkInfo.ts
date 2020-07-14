@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  // getLinodeStats,
   Stats,
   getLinodeStatsByDate,
   getLinodeTransferByDate
@@ -20,10 +19,6 @@ export const useLinodeNetworkInfo = (
   >();
   const [statsData, setStatsData] = React.useState<Stats | undefined>();
 
-  // @todo:
-  //   - handle request type (by month)
-  //   - add logic for refresh?
-
   React.useEffect(() => {
     setLoading(true);
     setErrorMessage(undefined);
@@ -38,7 +33,9 @@ export const useLinodeNetworkInfo = (
       })
       .catch(_ => {
         setLoading(false);
-        setErrorMessage('There was an error retrieving stats for this Linode.');
+        setErrorMessage(
+          'There was an error retrieving network information for this Linode.'
+        );
       });
   }, [linodeID, year, month]);
 
