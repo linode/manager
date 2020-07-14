@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
@@ -6,9 +7,29 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import Hidden from 'src/components/core/Hidden';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  labelWrapper: {
+    [theme.breakpoints.between('xs', 'sm')]: {
+      backgroundColor: theme.bg.tableHeader,
+      position: 'sticky',
+      left: 0,
+      zIndex: 1
+    }
+  },
+  actionWrapper: {
+    [theme.breakpoints.between('xs', 'sm')]: {
+      backgroundColor: theme.bg.tableHeader,
+      position: 'sticky',
+      right: 0,
+      zIndex: 1
+    }
+  }
+}));
+
 type CombinedProps = Omit<OrderByProps, 'data'>;
 
 const SortableTableHead: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
   const { handleOrderChange, order, orderBy } = props;
 
   const isActive = (label: string) =>
@@ -18,6 +39,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
     <TableHead role="rowgroup" data-qa-table-head>
       <TableRow>
         <TableSortCell
+          className={classes.labelWrapper}
           label="label"
           direction={order}
           active={isActive('label')}
@@ -66,7 +88,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
         <Hidden mdDown>
           <TableCell>Tags</TableCell>
         </Hidden>
-        <TableCell />
+        <TableCell className={classes.actionWrapper} />
       </TableRow>
     </TableHead>
   );
