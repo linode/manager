@@ -53,29 +53,45 @@ export const useAPISearch = (): Search => {
   return { searchAPI };
 };
 
+const generateFilter = (text: string, labelFieldName: string = 'label') => {
+  return {
+    '+or': [
+      {
+        [labelFieldName]: { '+contains': text }
+      },
+      {
+        tags: { '+contains': text }
+      }
+    ]
+  };
+};
+
 const requestEntities = (searchText: string, types: any, images: any) => {
   return Promise.all([
-    getDomains({}, { domain: { '+contains': searchText } }).then(results =>
+    getDomains({}, generateFilter(searchText, 'domain')).then(results =>
       results.data.map(domainToSearchableItem)
     ),
-    getLinodes({}, { label: { '+contains': searchText } }).then(results =>
+    getLinodes({}, generateFilter(searchText)).then(results =>
       results.data.map(thisResult => formatLinode(thisResult, types, images))
     ),
     getImages(
       {},
+      // Images can't be tagged and we have to filter only private Images
+      // Use custom filters for this
       {
         '+and': [{ label: { '+contains': searchText } }, { is_public: false }]
       }
     ).then(results => results.data.map(imageToSearchableItem)),
-    getVolumes({}, { label: { '+contains': searchText } }).then(results =>
+    getVolumes({}, generateFilter(searchText)).then(results =>
       results.data.map(volumeToSearchableItem)
     ),
-    getNodeBalancers({}, { label: { '+contains': searchText } }).then(results =>
+    getNodeBalancers({}, generateFilter(searchText)).then(results =>
       results.data.map(nodeBalToSearchableItem)
     ),
     getKubernetesClusters().then(results =>
       // Can't filter LKE by label (or anything maybe?)
       // But no one has more than 500, so this is fine for the short term.
+      // @todo replace with generateFilter() when LKE-1889 is complete
       results.data.map(kubernetesClusterToSearchableItem)
     )
   ]).then(results => (flatten(results) as unknown) as SearchableItem[]);
