@@ -13,22 +13,9 @@ export const MultipleLinodes: React.FC<{}> = _ => {
   const classes = useStyles();
 
   const tabs: Tab[] = [
-    /* NB: These must correspond to the routes, inside the Switch */
     {
       title: 'Linodes',
       render: () => <div>Linodes Table</div>
-    },
-    {
-      title: 'Domains',
-      render: () => <div>Domains Table</div>
-    },
-    {
-      title: 'Volumes',
-      render: () => <div>Volumes Table</div>
-    },
-    {
-      title: 'Object Storage',
-      render: () => <div>Buckets Table</div>
     }
   ];
 
