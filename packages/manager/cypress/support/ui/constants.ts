@@ -1,6 +1,6 @@
 import { waitForAppLoad } from './common';
 
-const loadAppNoLogin = path => waitForAppLoad(path, false);
+export const loadAppNoLogin = path => waitForAppLoad(path, false);
 
 /* eslint-disable sonarjs/no-duplicate-string */
 export const routes = {
@@ -67,7 +67,8 @@ export const pages = [
         name: 'Nav',
         go: () => {
           loadAppNoLogin(routes.support);
-          cy.get('[data-qa-one-click-nav-btn="true"]').click();
+          cy.findByText('Create...').click();
+          cy.get('[data-qa-one-click-add-new="true"]').click();
         }
       }
     ]
@@ -114,8 +115,10 @@ export const pages = [
         name: 'User Profile Button',
         go: () => {
           loadAppNoLogin(routes.support);
-          cy.get('[data-qa-user-menu="true"]').click();
-          cy.findByText('My Profile').click();
+          cy.findByTestId('nav-group-profile').click();
+          cy.findByTestId('menu-item-My Profile')
+            .should('have.text', 'My Profile')
+            .click({ force: true });
         }
       }
     ]
