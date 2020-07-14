@@ -19,6 +19,8 @@ import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import CircleProgress from 'src/components/CircleProgress';
+import useLinodes from 'src/hooks/useLinodes';
+import TagDrawer from 'src/components/TagCell/TagDrawer';
 
 interface Props {
   numVolumes: number;
@@ -34,6 +36,11 @@ interface Props {
   openLinodeResize: (linodeID: number) => void;
 }
 
+interface TagDrawerProps {
+  tags: string[];
+  open: boolean;
+}
+
 type CombinedProps = Props & LinodeDetailContext & LinodeContext;
 
 const LinodeDetailHeader: React.FC<CombinedProps> = props => {
@@ -47,6 +54,37 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     openDeleteDialog,
     openLinodeResize
   } = props;
+  const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
+    open: false,
+    tags: []
+  });
+
+  const { updateLinode } = useLinodes();
+
+  const closeTagDrawer = () => {
+    setTagDrawer({ ...tagDrawer, open: false });
+  };
+
+  const openTagDrawer = (tags: string[]) => {
+    setTagDrawer({
+      open: true,
+      tags
+    });
+  };
+
+  const addTag = (linodeID: number, newTag: string) => {
+    const _tags = [...tagDrawer.tags, newTag];
+    return updateLinode({ linodeId: linodeID, tags: _tags }).then(_ => {
+      setTagDrawer({ ...tagDrawer, tags: _tags });
+    });
+  };
+
+  const deleteTag = (linodeId: number, tagToDelete: string) => {
+    const _tags = tagDrawer.tags.filter(thisTag => thisTag !== tagToDelete);
+    return updateLinode({ linodeId, tags: _tags }).then(_ => {
+      setTagDrawer({ ...tagDrawer, tags: _tags });
+    });
+  };
   const firstEventWithProgress = (linodeEvents || []).find(
     eachEvent => typeof eachEvent.percent_complete === 'number'
   );
@@ -77,6 +115,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         username={profile.data?.username}
         linodeConfigs={linodeConfigs}
         backups={linode.backups}
+        openTagDrawer={openTagDrawer}
         openDeleteDialog={openDeleteDialog}
         openPowerActionDialog={openPowerActionDialog}
         openLinodeResize={openLinodeResize}
@@ -84,6 +123,14 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
       {linodeInTransition(linodeStatus, firstEventWithProgress) && (
         <LinodeBusyStatus />
       )}
+      <TagDrawer
+        entityLabel={linode.label}
+        open={tagDrawer.open}
+        tags={tagDrawer.tags}
+        addTag={(newTag: string) => addTag(linode.id, newTag)}
+        deleteTag={(tag: string) => deleteTag(linode.id, tag)}
+        onClose={closeTagDrawer}
+      />
     </React.Fragment>
   );
 };

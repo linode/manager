@@ -18,6 +18,8 @@ import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import formatDate from 'src/utilities/formatDate';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
+import useLinodes from 'src/hooks/useLinodes';
+import TagDrawer from 'src/components/TagCell/TagDrawer';
 
 const useStyles = makeStyles(() => ({
   summaryOuter: {
@@ -40,6 +42,11 @@ interface Props {
   linodeConfigs: Config[];
 }
 
+interface TagDrawerProps {
+  tags: string[];
+  open: boolean;
+}
+
 type CombinedProps = WithImagesProps & PaginationProps & Props;
 
 const CardView: React.FC<CombinedProps> = props => {
@@ -48,6 +55,37 @@ const CardView: React.FC<CombinedProps> = props => {
   const { profile } = useProfile();
   const { _loading } = useReduxLoad(['volumes']);
   const { volumes } = useVolumes();
+  const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
+    open: false,
+    tags: []
+  });
+
+  const { updateLinode } = useLinodes();
+
+  const closeTagDrawer = () => {
+    setTagDrawer({ ...tagDrawer, open: false });
+  };
+
+  const openTagDrawer = (tags: string[]) => {
+    setTagDrawer({
+      open: true,
+      tags
+    });
+  };
+
+  const addTag = (linodeID: number, newTag: string) => {
+    const _tags = [...tagDrawer.tags, newTag];
+    return updateLinode({ linodeId: linodeID, tags: _tags }).then(_ => {
+      setTagDrawer({ ...tagDrawer, tags: _tags });
+    });
+  };
+
+  const deleteTag = (linodeId: number, tagToDelete: string) => {
+    const _tags = tagDrawer.tags.filter(thisTag => thisTag !== tagToDelete);
+    return updateLinode({ linodeId, tags: _tags }).then(_ => {
+      setTagDrawer({ ...tagDrawer, tags: _tags });
+    });
+  };
 
   const {
     data,
@@ -73,24 +111,30 @@ const CardView: React.FC<CombinedProps> = props => {
     <Grid container>
       {flags.cmr
         ? data.map((linode, idx: number) => (
-            <Grid
-              item
-              xs={12}
-              className={`${classes.summaryOuter} py0`}
-              key={`linode-card-${idx}`}
-            >
-              <LinodeEntityDetail
-                variant="landing"
-                linode={linode}
-                numVolumes={getVolumesByLinode(linode.id)}
-                username={profile.data?.username}
-                linodeConfigs={linodeConfigs}
-                backups={linode.backups}
-                openDeleteDialog={openDeleteDialog}
-                openPowerActionDialog={openPowerActionDialog}
-                openLinodeResize={openLinodeResize}
+            <React.Fragment key={`linode-card-${idx}`}>
+              <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
+                <LinodeEntityDetail
+                  variant="landing"
+                  linode={linode}
+                  numVolumes={getVolumesByLinode(linode.id)}
+                  username={profile.data?.username}
+                  linodeConfigs={linodeConfigs}
+                  backups={linode.backups}
+                  openTagDrawer={openTagDrawer}
+                  openDeleteDialog={openDeleteDialog}
+                  openPowerActionDialog={openPowerActionDialog}
+                  openLinodeResize={openLinodeResize}
+                />
+              </Grid>
+              <TagDrawer
+                entityLabel={linode.label}
+                open={tagDrawer.open}
+                tags={tagDrawer.tags}
+                addTag={(newTag: string) => addTag(linode.id, newTag)}
+                deleteTag={(tag: string) => deleteTag(linode.id, tag)}
+                onClose={closeTagDrawer}
               />
-            </Grid>
+            </React.Fragment>
           ))
         : data.map((linode, idx: number) => (
             <LinodeCard

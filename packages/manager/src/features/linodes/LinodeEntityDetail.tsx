@@ -60,6 +60,7 @@ interface LinodeEntityDetailProps {
   linodeConfigs: Config[];
   numVolumes: number;
   openLinodeResize: (linodeID: number) => void;
+  openTagDrawer: (tags: string[]) => void;
 }
 
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
@@ -72,7 +73,8 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     backups,
     linodeConfigs,
     numVolumes,
-    openLinodeResize
+    openLinodeResize,
+    openTagDrawer
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -135,6 +137,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeCreated={linode.created}
           linodeTags={linode.tags}
           linodeLabel={linode.label}
+          openTagDrawer={openTagDrawer}
         />
       }
     />
@@ -454,7 +457,8 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.color.grey5,
       borderBottom: '1px solid white',
       fontWeight: 'bold',
-      width: '102px'
+      width: '102px',
+      whiteSpace: 'nowrap'
     }
   },
   accessTableContainer: {
@@ -615,6 +619,7 @@ interface FooterProps {
   linodeCreated: string;
   linodeTags: string[];
   linodeLabel: string;
+  openTagDrawer: (tags: string[]) => void;
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
@@ -649,7 +654,8 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     linodeRegionDisplay,
     linodeId,
     linodeCreated,
-    linodeTags
+    linodeTags,
+    openTagDrawer
   } = props;
 
   const classes = useFooterStyles();
@@ -725,7 +731,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
             tags={linodeTags}
             addTag={addTag}
             deleteTag={deleteTag}
-            listAllTags={() => null}
+            listAllTags={openTagDrawer}
           />
         </Grid>
       </Grid>
