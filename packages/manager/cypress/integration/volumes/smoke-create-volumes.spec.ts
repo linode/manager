@@ -47,7 +47,7 @@ const validateBasicVolume = (title: string) => {
 };
 
 describe('volumes', () => {
-  it.skip('creates a volume without linode', () => {
+  it('creates a volume without linode', () => {
     const title = createBasicVolume(false);
     validateBasicVolume(title);
     clickVolumeActionMenu(title);
@@ -97,7 +97,7 @@ describe('volumes', () => {
     });
   });
 
-  it.skip('volume not created without region or label', () => {
+  it('volume not created without region or label', () => {
     const title = makeVolumeLabel();
     cy.visitWithLogin(urlExtension);
     assert.exists('volumes');
@@ -114,7 +114,7 @@ describe('volumes', () => {
     deleteAllTestVolumes();
   });
 
-  it.skip('volume not created without either region or linode attached', () => {
+  it('volume not created without either region or linode attached', () => {
     cy.visitWithLogin(urlExtension);
     const title = makeVolumeLabel();
     createLinode().then(linode => {
