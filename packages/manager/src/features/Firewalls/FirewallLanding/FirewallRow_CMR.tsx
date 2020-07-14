@@ -60,7 +60,7 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
             <div className={classes.labelWrapper}>
               <Link
                 className={classes.link}
-                to={`/kubernetes/clusters/${id}/summary`}
+                to={`/firewalls/${id}`}
                 tabIndex={0}
               >
                 {label}
