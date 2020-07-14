@@ -1,9 +1,13 @@
 import * as Factory from 'factory.ts';
-import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes/types';
+import {
+  KubernetesEndpointResponse,
+  PoolNodeResponse
+} from '@linode/api-v4/lib/kubernetes/types';
 import {
   ExtendedCluster,
   PoolNodeWithPrice
 } from 'src/features/Kubernetes/types';
+import { v4 } from 'uuid';
 
 /**
  * These factories work with the "extended" types used in our logic.
@@ -49,8 +53,8 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<
   ExtendedCluster
 >({
   id: Factory.each(id => id),
-  created: '2020-01-01 8:00',
-  updated: '2020-01-01 8:00',
+  created: '2020-04-08T16:58:21',
+  updated: '2020-04-08T16:58:21',
   region: 'us-central',
   status: 'ready',
   label: Factory.each(i => `test-cluster-${i}`),
@@ -60,4 +64,10 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<
   totalCPU: 4,
   totalStorage: 1000,
   tags: []
+});
+
+export const kubeEndpointFactory = Factory.Sync.makeFactory<
+  KubernetesEndpointResponse
+>({
+  endpoint: `https://${v4()}`
 });
