@@ -6,6 +6,9 @@ import {
   firewallFactory,
   firewallDeviceFactory,
   kubernetesClusterFactory,
+  kubeEndpointFactory,
+  invoiceItemFactory,
+  nodePoolFactory,
   linodeConfigFactory,
   linodeDiskFactory,
   linodeFactory,
@@ -19,9 +22,12 @@ import {
 
 import cachedRegions from 'src/cachedData/regions.json';
 
-export const makeResourcePage = (e: any[]) => ({
-  page: 1,
-  pages: 1,
+export const makeResourcePage = (
+  e: any[],
+  override: { page: number; pages: number } = { page: 1, pages: 1 }
+) => ({
+  page: override.page ?? 1,
+  pages: override.pages ?? 1,
   results: e.length,
   data: e
 });
@@ -81,6 +87,19 @@ export const handlers = [
     const clusters = kubernetesClusterFactory.buildList(10);
     return res(ctx.json(makeResourcePage(clusters)));
   }),
+  rest.get('*/lke/clusters/:clusterId', async (req, res, ctx) => {
+    const id = req.params.clusterId;
+    const cluster = kubernetesClusterFactory.build({ id });
+    return res(ctx.json(cluster));
+  }),
+  rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {
+    const pools = nodePoolFactory.buildList(2);
+    return res(ctx.json(makeResourcePage(pools)));
+  }),
+  rest.get('*/lke/clusters/*/api-endpoints', async (req, res, ctx) => {
+    const endpoints = kubeEndpointFactory.buildList(2);
+    return res(ctx.json(makeResourcePage(endpoints)));
+  }),
   rest.get('*/firewalls/', (req, res, ctx) => {
     const firewalls = firewallFactory.buildList(10);
     return res(ctx.json(makeResourcePage(firewalls)));
@@ -94,8 +113,8 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(nodeBalancers)));
   }),
   rest.get('*/domains', (req, res, ctx) => {
-    const domains = domainFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(domains)));
+    const domains = domainFactory.buildList(500);
+    return res(ctx.json(makeResourcePage(domains, { page: 1, pages: 5 })));
   }),
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(10);
@@ -106,5 +125,9 @@ export const handlers = [
   }),
   rest.get('*/kubeconfig', (req, res, ctx) => {
     return res(ctx.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
+  }),
+  rest.get('*invoices/:invoiceId/items', (req, res, ctx) => {
+    const items = invoiceItemFactory.buildList(10);
+    return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
   })
 ];
