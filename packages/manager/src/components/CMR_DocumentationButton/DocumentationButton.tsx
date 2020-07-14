@@ -7,17 +7,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'center',
     borderLeft: `1px solid ${theme.palette.divider}`,
+    fontFamily: `${theme.font.normal} !important`,
     height: 50,
     lineHeight: 'normal',
     marginBottom: 0,
     marginRight: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
     minWidth: 'auto',
-    fontFamily: `${theme.font.normal} !important`,
+    paddingLeft: theme.spacing(2),
     padding: 0,
     '& svg': {
-      width: 24,
-      marginRight: theme.spacing(1.5)
+      marginRight: theme.spacing(1.5),
+      width: 24
     },
     '&:hover svg': {
       color: theme.palette.primary.main

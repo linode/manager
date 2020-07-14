@@ -16,6 +16,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       zIndex: 1
     }
   },
+  statusWrapper: {
+    [theme.breakpoints.between('xs', 'sm')]: {
+      backgroundColor: theme.bg.tableHeader,
+      position: 'sticky',
+      left: 218,
+      zIndex: 1
+    }
+  },
   actionWrapper: {
     [theme.breakpoints.between('xs', 'sm')]: {
       backgroundColor: theme.bg.tableHeader,
@@ -49,6 +57,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           Label
         </TableSortCell>
         <TableSortCell
+          className={classes.statusWrapper}
           noWrap
           label="_statusPriority"
           direction={order}

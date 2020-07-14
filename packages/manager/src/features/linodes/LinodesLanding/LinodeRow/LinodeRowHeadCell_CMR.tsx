@@ -38,31 +38,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '35%'
     }
   },
-  dashboard: {
-    width: '70%'
-  },
-  status: {
-    marginLeft: theme.spacing(1) / 2,
-    position: 'relative',
-    top: 0,
-    lineHeight: '0.8rem'
-  },
-  labelRow: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  },
-  loadingStatus: {
-    marginBottom: theme.spacing(1) / 2
-  },
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
     whiteSpace: 'nowrap'
-  },
-  wrapHeader: {
-    wordBreak: 'break-all'
   },
   maintenanceContainer: {},
   maintenanceNotice: {

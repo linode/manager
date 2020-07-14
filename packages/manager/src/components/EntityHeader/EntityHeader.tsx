@@ -21,11 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 50,
     width: '100%',
     padding: '8px 8px 8px 15px',
-    [theme.breakpoints.down(695)]: {
-      alignItems: 'flex-start',
-      height: 100
-    },
     [theme.breakpoints.down('sm')]: {
+      alignItems: 'flex-start',
+      height: 100,
       '&:before': {
         display: 'block',
         content: "''",
@@ -44,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexBasis: '85%',
       maxWidth: '85%'
     },
-    [theme.breakpoints.down(695)]: {
+    [theme.breakpoints.down('sm')]: {
       flexBasis: '50%',
       maxWidth: '50%'
     },
@@ -63,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 8
   },
   contentOuter: {
-    [theme.breakpoints.down(695)]: {
+    [theme.breakpoints.down('sm')]: {
       position: 'absolute',
       top: 60
     },

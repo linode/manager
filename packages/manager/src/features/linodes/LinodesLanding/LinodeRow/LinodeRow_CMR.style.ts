@@ -20,9 +20,6 @@ type ClassNames =
   | 'planCell'
   | 'progressDisplay'
   | 'regionCell'
-  | 'iconTableCell'
-  | 'icon'
-  | 'iconGridCell'
   | 'tagCell';
 
 const styles = (theme: Theme) =>
@@ -52,34 +49,18 @@ const styles = (theme: Theme) =>
     bodyRow: {
       height: 'auto'
     },
-    iconTableCell: {
-      [theme.breakpoints.up('md')]: {
-        width: '4%'
-      }
-    },
-    icon: {
-      position: 'relative',
-      top: 1,
-      width: 40,
-      height: 40,
-      '& .circle': {
-        fill: theme.bg.offWhiteDT
-      },
-      '& .outerCircle': {
-        stroke: theme.bg.main
-      }
-    },
-    iconGridCell: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: 4
-    },
     progressDisplay: {
       display: 'inline-block'
     },
     statusCell: {
       whiteSpace: 'nowrap',
-      width: '17%'
+      width: '17%',
+      [theme.breakpoints.between('xs', 'sm')]: {
+        backgroundColor: 'white',
+        position: 'sticky',
+        left: 218,
+        zIndex: 1
+      }
     },
     statusCellMaintenance: {
       [theme.breakpoints.up('md')]: {
@@ -115,9 +96,6 @@ const styles = (theme: Theme) =>
         fontSize: '.875rem',
         paddingBottom: 0
       }
-    },
-    planCell: {
-      width: '14%'
     },
     regionCell: {
       width: '14%'
