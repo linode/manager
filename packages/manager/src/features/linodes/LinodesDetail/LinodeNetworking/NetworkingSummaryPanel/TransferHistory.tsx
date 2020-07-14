@@ -1,26 +1,74 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import * as classnames from 'classnames';
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
+import Box from 'src/components/core/Box';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ErrorState from 'src/components/ErrorState';
 import LineGraph from 'src/components/LineGraph';
-import Notice from 'src/components/Notice';
 import {
   convertNetworkToUnit,
   formatNetworkTooltip,
   generateNetworkUnits
 } from 'src/features/Longview/shared/utilities';
-import { useLinodeStats } from 'src/hooks/useLinodeStats';
+import { useLinodeNetworkInfo } from 'src/hooks/useLinodeNetworkInfo';
 import useProfile from 'src/hooks/useProfile';
+import { readableBytes } from 'src/utilities/unitConversions';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  arrowIconOuter: {
+    ...theme.applyLinkStyles,
+    display: 'flex'
+  },
+  arrowIconInner: {
+    fontSize: '1rem'
+  },
+  arrowIconForward: {
+    transform: 'rotate(180deg)'
+  },
+  arrowIconDisabled: {
+    fill: theme.color.grey1,
+    cursor: 'not-allowed'
+  },
+  loading: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 100
+  }
+}));
 
 interface TransferHistoryProps {
   linodeID: number;
 }
 
 export const TransferHistory: React.FC<TransferHistoryProps> = props => {
-  const stats = useLinodeStats(props.linodeID);
+  const classes = useStyles();
+
+  // Needed to see the user's timezone.
   const { profile } = useProfile();
 
-  const combinedData = stats.data ? combineGraphData(stats.data) : [];
+  // Offset used by the date picker. The number `0` represents the current month,
+  // `-1` represents the previous month, etc. This value should not be greater than `0`.
+  const [monthOffset, setMonthOffset] = React.useState<number>(0);
+
+  const now = new Date();
+
+  const { year, month, humanizedDate } = parseMonthOffset(monthOffset, now);
+
+  const { loading, errorMessage, stats, transfer } = useLinodeNetworkInfo(
+    props.linodeID,
+    year,
+    month
+  );
+
+  const bytesIn = readableBytes(transfer?.bytes_in ?? 0);
+  const bytesOut = readableBytes(transfer?.bytes_out ?? 0);
+
+  const combinedData = stats ? sumPublicOutboundTraffic(stats) : [];
 
   const max = combinedData.reduce((acc, thisStat) => {
     if (thisStat[1] > acc) {
@@ -31,7 +79,10 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
 
   const unit = generateNetworkUnits(max);
 
-  // @todo: remove this duplication (it's from NetworkGraph.tsx).
+  // The following two functions copied from LinodeSummary/NetworkGraph.tsx:
+  //
+  // @todo: reduce duplication.
+
   const convertNetworkData = (value: number) => {
     return convertNetworkToUnit(value, unit as any);
   };
@@ -47,30 +98,80 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
   const _formatTooltip = (valueInBytes: number) =>
     formatNetworkTooltip(valueInBytes / 8);
 
+  const decrementOffset = () => setMonthOffset(prevOffset => (prevOffset -= 1));
+  const incrementOffset = () =>
+    setMonthOffset(prevOffset => {
+      return Math.min((prevOffset += 1), 0);
+    });
+
+  const displayLoading = loading && !stats && !transfer;
+
   return (
     <>
-      <Typography style={{ marginBottom: '8px' }}>
-        <strong>Network Transfer 30-Day History ({unit}/s)</strong>
-      </Typography>
-      {stats.loading && <CircleProgress mini />}
-      {stats.errorMessage && <Notice error text={stats.errorMessage} />}
-      <LineGraph
-        timezone={profile.data?.timezone ?? 'UTC'}
-        chartHeight={125}
-        unit={`/s`}
-        formatData={convertNetworkData}
-        formatTooltip={_formatTooltip}
-        // showToday={rangeSelection === '24'}
-        showToday={true}
-        data={[
-          {
-            borderColor: 'transparent',
-            backgroundColor: '#5ad865',
-            data: combinedData,
-            label: 'Public Outbound traffic'
-          }
-        ]}
-      />
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+        marginBottom="8px"
+      >
+        <Typography>
+          <strong>Network Transfer History ({unit}/s)</strong>
+        </Typography>
+        {!displayLoading && !errorMessage && (
+          <Typography>
+            {bytesIn.formatted} In/{bytesOut.formatted} Out
+          </Typography>
+        )}
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <button className={classes.arrowIconOuter} onClick={decrementOffset}>
+            <ArrowBackIosIcon className={classes.arrowIconInner} />
+          </button>
+          {/* Give this a min-width so it doesn't change widths between displaying
+          the month and "Last 30 Days" */}
+          <span style={{ minWidth: 80, textAlign: 'center' }}>
+            <Typography>{humanizedDate}</Typography>
+          </span>
+          <button className={classes.arrowIconOuter} onClick={incrementOffset}>
+            <ArrowBackIosIcon
+              className={classnames({
+                [classes.arrowIconInner]: true,
+                [classes.arrowIconForward]: true,
+                [classes.arrowIconDisabled]: monthOffset === 0
+              })}
+            />
+          </button>
+        </Box>
+      </Box>
+      {displayLoading ? (
+        <div className={classes.loading}>
+          <CircleProgress mini />
+        </div>
+      ) : errorMessage ? (
+        <ErrorState errorText={errorMessage} compact />
+      ) : (
+        <LineGraph
+          timezone={profile.data?.timezone ?? 'UTC'}
+          chartHeight={140}
+          unit={`/s`}
+          formatData={convertNetworkData}
+          formatTooltip={_formatTooltip}
+          showToday={true}
+          data={[
+            {
+              borderColor: 'transparent',
+              backgroundColor: '#5ad865',
+              data: combinedData,
+              label: 'Public Outbound Traffic'
+            }
+          ]}
+        />
+      )}
     </>
   );
 };
@@ -81,20 +182,46 @@ export default React.memo(TransferHistory);
 // Utilities
 // =============================================================================
 
-export const combineGraphData = (stats: Stats) => {
+export const sumPublicOutboundTraffic = (stats: Stats) => {
   const v4PublicOut = stats.data.netv4.out;
   const v6PublicOut = stats.data.netv6.out;
 
-  const combined: [number, number][] = [];
+  const summed: [number, number][] = [];
 
-  v4PublicOut.forEach((thisStat, i) => {
-    const timestamp = thisStat[0];
-    let value = thisStat[1];
+  v4PublicOut.forEach((thisV4Stat, i) => {
+    const [v4Timestamp, v4Value] = thisV4Stat;
 
-    if (v6PublicOut[i]?.[0] === timestamp) {
-      combined[i] = [timestamp, (value += v6PublicOut[i]?.[1] ?? 0)];
+    const v6Timestamp = v6PublicOut[i]?.[0] ?? 0;
+    const v6Value = v6PublicOut[i]?.[1] ?? 0;
+
+    // Make sure the timestamps match.
+    if (v4Timestamp === v6Timestamp) {
+      summed.push([v4Timestamp, v4Value + v6Value]);
     }
   });
 
-  return combined;
+  return summed;
+};
+
+// Get the year, month, and humanized month/year, assuming an offset of `0` refers to "now".
+// An offset of `-1` refers to the previous month, `-2` refers to two months ago, etc.
+export const parseMonthOffset = (offset: number, date: Date) => {
+  if (offset > 0) {
+    throw Error('Offset must be <= 0');
+  }
+
+  let datetime;
+  try {
+    datetime = DateTime.fromJSDate(date);
+  } catch {
+    throw Error('Unable to parse date.');
+  }
+
+  const resultingDate = datetime.minus({ months: Math.abs(offset) });
+
+  const year = String(resultingDate.year);
+  const month = String(resultingDate.month).padStart(2, '0');
+  const humanizedDate =
+    offset === 0 ? 'Last 30 Days' : resultingDate.toFormat('LLL y');
+  return { year, month, humanizedDate };
 };
