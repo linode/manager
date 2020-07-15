@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -11,7 +11,7 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   copy: {
     marginTop: 16
   },
@@ -151,7 +151,7 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
           IPv6 addresses are allocated as ranges, which you can choose to
           distribute and further route yourself. These ranges can only be
           allocated by our support team. Please open a{' '}
-          <Link to="support/tickets">Support Ticket</Link> and request an IPv6
+          <Link to="/support/tickets">Support Ticket</Link> and request an IPv6
           range for this Linode.
         </Typography>
       </React.Fragment>
