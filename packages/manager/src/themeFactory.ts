@@ -81,8 +81,7 @@ const primaryColors = {
   headline: '#32363c',
   divider: '#f4f4f4',
   offBlack: '#444',
-  white: '#fff',
-  lightGrey: '#f7f7f8'
+  white: '#fff'
 };
 
 const primaryFonts = {
@@ -132,7 +131,7 @@ const genericLinkStyle = {
 
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
-  backgroundColor: primaryColors.lightGrey,
+  backgroundColor: '#f7f7f8',
   color: '#5d646f',
   fontFamily: primaryFonts.bold,
   fontSize: '1.1rem',
@@ -236,8 +235,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavPaper: '#3a3f46',
       topMenu: '#fff',
       billingHeader: '#f5f9ff',
-      controlHeader: '#f9fafa',
-      statusPill: '#f7f7f8'
+      controlHeader: '#f9fafa'
     },
     color: {
       headline: primaryColors.headline,

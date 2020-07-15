@@ -21,12 +21,12 @@ const primaryColors = {
   headline: '#f4f4f4',
   divider: '#222222',
   offBlack: '#fff',
-  white: '#222',
-  lightGrey: 'rgba(0, 0, 0, 0.2)'
+  white: '#222'
 };
 
 const genericStatusPillStyle = {
-  backgroundColor: primaryColors.lightGrey
+  backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  color: '#fff'
 };
 
 const iconCircleAnimation = {
