@@ -1,15 +1,13 @@
-import * as React from 'react';
+import { getNetworkUtilization } from '@linode/api-v4/lib/account';
 import { getLinodeTransfer } from '@linode/api-v4/lib/linodes';
-import { DateTime } from 'luxon';
-import { useSelector } from 'react-redux';
-import BarPercent from 'src/components/BarPercent';
+import * as React from 'react';
+import BarPercent from 'src/components/BarPercent/BarPercent_CMR';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { ApplicationState } from 'src/store';
-import { isRecent } from 'src/utilities/isRecent.ts';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,42 +23,77 @@ const useStyles = makeStyles((theme: Theme) => ({
   overLimit: {
     color: theme.palette.status.warningDark,
     fontFamily: theme.font.bold
+  },
+  legendItem: {
+    marginTop: 14,
+    display: 'flex',
+    alignItems: 'center',
+    '&:before': {
+      content: '""',
+      borderRadius: 5,
+      width: 20,
+      height: 20,
+
+      marginRight: 10
+    }
+  },
+  darkGreen: {
+    '&:before': {
+      backgroundColor: '#5ad865'
+    }
+  },
+  lightGreen: {
+    '&:before': {
+      backgroundColor: '#99ec79'
+    }
+  },
+  grey: {
+    '&:before': {
+      backgroundColor: theme.color.grey2
+    }
   }
 }));
 
 interface Props {
   linodeID: number;
+  linodeLabel: string;
 }
 
 export const NetworkTransfer: React.FC<Props> = props => {
-  const { linodeID } = props;
-  const [used, setUsed] = React.useState<number>(0);
-  const [error, setError] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const { linodeID, linodeLabel } = props;
   const classes = useStyles();
 
-  React.useEffect(() => {
-    setLoading(true);
-    setError(false);
-    getLinodeTransfer(linodeID)
-      .then(({ used }) => {
-        setUsed(used);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-        setError(true);
-      });
-  }, [linodeID]);
+  const linodeTransfer = useAPIRequest(
+    () => getLinodeTransfer(linodeID),
+    { used: 0, quota: 0, billable: 0 },
+    [linodeID]
+  );
+
+  const accountTransfer = useAPIRequest(
+    getNetworkUtilization,
+    { used: 0, quota: 0, billable: 0 },
+    []
+  );
+
+  const linodeUsedInGB = readableBytes(linodeTransfer.data.used, {
+    unit: 'GB'
+  }).value;
+  const totalUsedInGB = accountTransfer.data.used;
+  const accountQuotaInGB = accountTransfer.data.quota;
+
+  const error = Boolean(linodeTransfer.error || accountTransfer.error);
+  const loading = linodeTransfer.loading || accountTransfer.loading;
 
   return (
     <div>
       <Typography className={classes.header}>
-        <strong>Monthly Network Transfer</strong>
+        <strong>Monthly Network Transfer</strong> ({accountQuotaInGB} GB limit)
       </Typography>
       <TransferContent
-        used={used}
-        linodeID={linodeID}
+        linodeUsedInGB={linodeUsedInGB}
+        totalUsedInGB={totalUsedInGB}
+        accountQuotaInGB={accountQuotaInGB}
+        linodeLabel={linodeLabel}
         error={error}
         loading={loading}
       />
@@ -72,57 +105,39 @@ export const NetworkTransfer: React.FC<Props> = props => {
 // TransferContent (With loading and error states)
 // =============================================================================
 interface ContentProps {
-  linodeID: number;
-  used: number;
+  linodeLabel: string;
+  linodeUsedInGB: number;
+  totalUsedInGB: number;
+  accountQuotaInGB: number;
   loading: boolean;
   error: boolean;
 }
 
 const TransferContent: React.FC<ContentProps> = props => {
-  const { error, linodeID, loading, used } = props;
+  const {
+    error,
+    linodeLabel,
+    loading,
+    linodeUsedInGB,
+    totalUsedInGB,
+    accountQuotaInGB
+  } = props;
   const classes = useStyles();
 
-  const { total, isTooEarlyForStats } = useSelector(
-    (state: ApplicationState) => {
-      const linode = state.__resources.linodes.itemsById[linodeID];
-      return {
-        total: linode ? linode.specs.transfer : 0,
-        isTooEarlyForStats:
-          linode && isRecent(linode.created, DateTime.local().toISO())
-      };
-    }
-  );
+  const linodeUsagePercent =
+    accountQuotaInGB > linodeUsedInGB
+      ? 100 - ((accountQuotaInGB - linodeUsedInGB) * 100) / accountQuotaInGB
+      : 100;
 
-  const usedInGb = used / 1024 / 1024 / 1024;
+  const otherEntitiesUsedInGB = totalUsedInGB - linodeUsedInGB;
 
-  const totalInBytes = total * 1024 * 1024 * 1024;
+  const otherEntitiesUsagePercent =
+    accountQuotaInGB > otherEntitiesUsedInGB
+      ? 100 -
+        ((accountQuotaInGB - otherEntitiesUsedInGB) * 100) / accountQuotaInGB
+      : 100;
 
-  const usagePercent =
-    totalInBytes > used ? 100 - ((total - usedInGb) * 100) / total : 100;
-
-  const readableUsed = readableBytes(used, {
-    maxUnit: 'GB',
-    round: { MB: 0, GB: 1 }
-  });
-
-  const readableFree = readableBytes(totalInBytes - used, {
-    maxUnit: 'GB',
-    round: { MB: 0, GB: 1 },
-    handleNegatives: true
-  });
-
-  if (error && isTooEarlyForStats) {
-    return (
-      <>
-        <Typography className={classes.header}>
-          Monthly Network Transfer
-        </Typography>
-        <Typography align="center">
-          Network Transfer data is not yet available – check back later.
-        </Typography>
-      </>
-    );
-  }
+  const remainingInGB = accountQuotaInGB - totalUsedInGB;
 
   if (error) {
     return (
@@ -151,20 +166,30 @@ const TransferContent: React.FC<ContentProps> = props => {
     <div className={classes.progressWrapper}>
       <BarPercent
         max={100}
-        value={Math.ceil(usagePercent)}
+        value={Math.ceil(linodeUsagePercent)}
+        valueBuffer={Math.ceil(otherEntitiesUsagePercent)}
         className={classes.poolUsageProgress}
         rounded
-        overLimit={totalInBytes < used}
+        overLimit={accountQuotaInGB < linodeUsedInGB}
       />
-      <Grid container justify="space-between">
+      <Typography className={`${classes.legendItem} ${classes.darkGreen}`}>
+        {linodeLabel} ({linodeUsedInGB} GB)
+      </Typography>
+      <Typography className={`${classes.legendItem} ${classes.lightGreen}`}>
+        Other entities ({otherEntitiesUsedInGB} GB)
+      </Typography>
+      <Typography className={`${classes.legendItem} ${classes.grey}`}>
+        Remaining ({remainingInGB} GB)
+      </Typography>
+      {/* <Grid container justify="space-between">
         <Grid item style={{ marginRight: 10 }}>
           <Typography>
-            {readableUsed.value} {readableUsed.unit} Used
+            {readableLinodeUsed.value} {readableLinodeUsed.unit} Used
           </Typography>
         </Grid>
         <Grid item>
           <Typography>
-            {totalInBytes >= used ? (
+            {quotaInBytes >= linodeUsedInBytes ? (
               <span>{readableFree.formatted} Available</span>
             ) : (
               <span className={classes.overLimit}>
@@ -173,7 +198,7 @@ const TransferContent: React.FC<ContentProps> = props => {
             )}
           </Typography>
         </Grid>
-      </Grid>
+      </Grid> */}
     </div>
   );
 };
