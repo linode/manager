@@ -58,6 +58,8 @@ export const TableSortCell: React.FC<CombinedProps> = props => {
     active,
     isLoading,
     noWrap,
+    // eslint-disable-next-line
+    handleClick,
     ...rest
   } = props;
 
