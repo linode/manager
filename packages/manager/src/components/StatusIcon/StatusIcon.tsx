@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.orange
   },
   statusIconOffline: {
-    backgroundColor: '#dbdde1'
+    backgroundColor: theme.color.grey10
   },
   statusIconError: {
     backgroundColor: theme.color.red

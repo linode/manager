@@ -217,7 +217,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusOffline: {
     '&:before': {
-      backgroundColor: '#dbdde1'
+      backgroundColor: theme.color.grey10
     }
   }
 }));

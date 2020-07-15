@@ -55,7 +55,7 @@ const styles = (theme: Theme) =>
     },
     chipOffline: {
       '&:before': {
-        backgroundColor: '#dbdde1'
+        backgroundColor: theme.color.grey10
       }
     },
     controlHeader: {
