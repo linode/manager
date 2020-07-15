@@ -53,13 +53,7 @@ const styles = (theme: Theme) =>
     },
     statusCell: {
       whiteSpace: 'nowrap',
-      width: '17%',
-      [theme.breakpoints.between('xs', 'sm')]: {
-        backgroundColor: theme.color.white,
-        position: 'sticky',
-        left: 218,
-        zIndex: 1
-      }
+      width: '17%'
     },
     statusCellMaintenance: {
       [theme.breakpoints.up('md')]: {

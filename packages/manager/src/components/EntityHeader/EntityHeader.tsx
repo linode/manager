@@ -20,42 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.white,
     height: 50,
     width: '100%',
-    padding: '8px 8px 8px 15px',
-    [theme.breakpoints.down('sm')]: {
-      alignItems: 'flex-start',
-      height: 100,
-      '&:before': {
-        display: 'block',
-        content: "''",
-        backgroundColor: theme.palette.divider,
-        height: 1,
-        width: 'calc(100% + 8px)',
-        position: 'absolute',
-        top: 58,
-        left: -15,
-        zIndex: 1
-      }
-    }
-  },
-  containerLeft: {
-    [theme.breakpoints.down('md')]: {
-      flexBasis: '85%',
-      maxWidth: '85%'
-    },
-    [theme.breakpoints.down('sm')]: {
-      flexBasis: '50%',
-      maxWidth: '50%'
-    },
-    [theme.breakpoints.down('xs')]: {
-      flexBasis: '20%',
-      maxWidth: '20%'
-    }
-  },
-  containerRight: {
-    [theme.breakpoints.down('xs')]: {
-      flexBasis: '80%',
-      maxWidth: '80%'
-    }
+    padding: '8px 8px 8px 15px'
   },
   rootHasBreadcrumb: {
     padding: 8

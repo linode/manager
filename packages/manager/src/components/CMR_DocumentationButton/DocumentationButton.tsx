@@ -22,11 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover svg': {
       color: theme.palette.primary.main
     }
-  },
-  mr0: {
-    '& svg': {
-      marginRight: 0
-    }
   }
 }));
 
@@ -42,7 +37,7 @@ export const DocumentationButton: React.FC<CombinedProps> = props => {
   const { href, hideText } = props;
   return (
     <IconTextLink
-      className={`${classes.root} ${hideText ? classes.mr0 : ''}`}
+      className={classes.root}
       SideIcon={TicketIcon}
       hideText={hideText}
       text="Docs"
