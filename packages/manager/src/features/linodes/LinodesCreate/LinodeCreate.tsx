@@ -529,9 +529,9 @@ export class LinodeCreate extends React.PureComponent<
           >
             <DisplaySectionList displaySections={displaySections} />
           </CheckoutBar>
-          { && <div>test</div>
+          {/* { && <div>test</div>
           // <DocsSidebar docs={this.props.documentation} />
-          }
+          } */}
         </Grid>
       </form>
     );
