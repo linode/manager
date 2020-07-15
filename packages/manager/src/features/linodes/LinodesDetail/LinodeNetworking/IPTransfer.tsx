@@ -28,7 +28,6 @@ import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import TextField from 'src/components/TextField';
 import withLinodes, {
   DispatchProps
 } from 'src/containers/withLinodes.container';
@@ -37,7 +36,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 type ClassNames =
   | 'root'
   | 'containerDivider'
-  | 'mobileFieldWrapper'
+  | 'sourceIPWrapper'
   | 'ipField'
   | 'ipFieldLabel'
   | 'actionsLabel'
@@ -50,7 +49,9 @@ const styles = (theme: Theme) =>
     containerDivider: {
       marginTop: theme.spacing(1)
     },
-    mobileFieldWrapper: {
+    sourceIPWrapper: {
+      display: 'flex',
+      alignItems: 'center',
       [theme.breakpoints.down('xs')]: {
         width: '100%'
       }
@@ -271,14 +272,10 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         <Grid item xs={12}>
           <Divider className={classes.containerDivider} />
         </Grid>
-        <Grid item className={classes.mobileFieldWrapper}>
-          <TextField
-            value={state.sourceIP}
-            className={classes.ipField}
-            label="IP Address"
-            hideLabel
-            aria-readonly={true}
-          />
+        <Grid item className={classes.sourceIPWrapper}>
+          <Typography variant="body1" className={classes.ipField}>
+            {state.sourceIP}
+          </Typography>
         </Grid>
         <Grid item xs={12} className={classes.autoGridsm}>
           <Select
