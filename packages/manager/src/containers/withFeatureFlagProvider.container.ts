@@ -21,11 +21,6 @@ const featureFlagProvider = LAUNCH_DARKLY_API_KEY
       user: {
         key: 'anonymous',
         anonymous: true
-      },
-      options: {
-        bootstrap: {
-          cmr: true
-        }
       }
     })
   : (component: React.ComponentType) => component;
