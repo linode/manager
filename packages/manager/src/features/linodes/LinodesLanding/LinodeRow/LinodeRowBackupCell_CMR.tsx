@@ -1,17 +1,14 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     borderTop: 'none',
     padding: '10px 15px',
-    width: '14%',
-    [theme.breakpoints.down('sm')]: {
-      borderRight: `1px solid ${theme.palette.divider}`
-    }
+    width: '14%'
   }
 }));
 
