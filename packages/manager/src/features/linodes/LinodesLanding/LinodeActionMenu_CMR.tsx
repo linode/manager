@@ -300,6 +300,15 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           }
         });
         actions.unshift({
+          title: 'Details',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push({
+              pathname: `/linodes/${linodeId}`
+            });
+            e.preventDefault();
+          }
+        });
+        actions.unshift({
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             const action =
