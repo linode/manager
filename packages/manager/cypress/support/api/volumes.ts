@@ -7,6 +7,7 @@ import {
   makeTestLabel
 } from './common';
 import strings from '../cypresshelpers';
+import { deleteLinodeById } from './linodes';
 
 const relativeApiPath = 'volumes';
 const testVolumeTag = testTag;
@@ -70,7 +71,11 @@ export const detachAllTestVolumes = () => {
 export const deleteAllTestVolumes = () => {
   getVolumes().then(resp => {
     resp.body.data.forEach(vol => {
-      if (isTestEntity(vol) && vol.linode_id === null) {
+      if (isTestEntity(vol) && vol.linode_id !== null) {
+        deleteLinodeById(vol.linode_id).then(() => {
+          deleteVolumeById(vol.id);
+        });
+      } else if (isTestEntity(vol)) {
         deleteVolumeById(vol.id);
       }
     });
