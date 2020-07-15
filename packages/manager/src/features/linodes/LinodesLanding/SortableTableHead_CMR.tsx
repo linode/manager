@@ -8,22 +8,6 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  labelWrapper: {
-    [theme.breakpoints.between('xs', 'sm')]: {
-      backgroundColor: theme.bg.tableHeader,
-      position: 'sticky',
-      left: 0,
-      zIndex: 1
-    }
-  },
-  statusWrapper: {
-    [theme.breakpoints.between('xs', 'sm')]: {
-      backgroundColor: theme.bg.tableHeader,
-      position: 'sticky',
-      left: 218,
-      zIndex: 1
-    }
-  },
   actionWrapper: {
     [theme.breakpoints.between('xs', 'sm')]: {
       backgroundColor: theme.bg.tableHeader,
@@ -47,7 +31,6 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
     <TableHead role="rowgroup" data-qa-table-head>
       <TableRow>
         <TableSortCell
-          className={classes.labelWrapper}
           label="label"
           direction={order}
           active={isActive('label')}
@@ -57,7 +40,6 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           Label
         </TableSortCell>
         <TableSortCell
-          className={classes.statusWrapper}
           noWrap
           label="_statusPriority"
           direction={order}

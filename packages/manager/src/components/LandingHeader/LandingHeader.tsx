@@ -1,5 +1,7 @@
+// eslint-disable-next-line no-restricted-imports
+import { useTheme } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
 import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
 import { makeStyles } from 'src/components/core/styles';
@@ -33,6 +35,9 @@ interface Props extends Omit<HeaderProps, 'actions'> {
 
 export const LandingHeader: React.FC<Props> = props => {
   const classes = useStyles();
+  const theme = useTheme();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
   const { docsLink, onAddNew, entity, extraActions } = props;
 
   const actions = React.useMemo(
@@ -57,18 +62,11 @@ export const LandingHeader: React.FC<Props> = props => {
           </Grid>
         )}
         {docsLink && (
-          <>
-            <Hidden smDown>
-              <DocumentationButton href={docsLink} />
-            </Hidden>
-            <Hidden mdUp>
-              <DocumentationButton href={docsLink} hideText />
-            </Hidden>
-          </>
+          <DocumentationButton href={docsLink} hideText={matchesSmDown} />
         )}
       </Grid>
     ),
-    [docsLink, entity, onAddNew, classes.button, extraActions]
+    [docsLink, entity, onAddNew, classes.button, extraActions, matchesSmDown]
   );
 
   return <EntityHeader isLanding actions={actions} {...props} />;

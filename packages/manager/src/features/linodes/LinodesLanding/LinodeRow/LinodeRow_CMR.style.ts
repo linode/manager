@@ -35,8 +35,10 @@ const styles = (theme: Theme) =>
       },
       [theme.breakpoints.down('sm')]: {
         backgroundColor: theme.color.white,
+        borderLeft: `1px solid ${theme.palette.divider}`,
         position: 'sticky',
-        right: 0
+        right: 0,
+        width: '5%'
       }
     },
     actionInner: {
@@ -54,13 +56,7 @@ const styles = (theme: Theme) =>
     },
     statusCell: {
       whiteSpace: 'nowrap',
-      width: '17%',
-      [theme.breakpoints.between('xs', 'sm')]: {
-        backgroundColor: theme.color.white,
-        position: 'sticky',
-        left: 218,
-        zIndex: 1
-      }
+      width: '17%'
     },
     statusCellMaintenance: {
       [theme.breakpoints.up('md')]: {
