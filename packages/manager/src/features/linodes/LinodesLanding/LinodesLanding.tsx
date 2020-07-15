@@ -1,5 +1,6 @@
-import { Config } from '@linode/api-v4/lib/linodes';
+import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
+import Close from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import * as classNames from 'classnames';
 import { DateTime } from 'luxon';
@@ -65,6 +66,9 @@ import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import ToggleBox from './ToggleBox';
 import { ExtendedStatus, statusToPriority } from './utils';
+import IconTextLink from 'src/components/IconTextLink';
+
+type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 
 interface State {
   powerDialogOpen: boolean;
@@ -76,6 +80,7 @@ interface State {
   groupByTag: boolean;
   CtaDismissed: boolean;
   linodeResizeOpen: boolean;
+  filterStatus: FilterStatus;
 }
 
 interface Params {
@@ -101,7 +106,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     deleteDialogOpen: false,
     groupByTag: false,
     CtaDismissed: BackupsCtaDismissed.get(),
-    linodeResizeOpen: false
+    linodeResizeOpen: false,
+    filterStatus: 'all'
   };
 
   static docs = [LinodeGettingStarted, SecuringYourServer];
@@ -177,6 +183,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   };
 
+  setFilterStatus = (status: FilterStatus) => {
+    this.setState({ filterStatus: status });
+  };
+
   render() {
     const {
       imagesError,
@@ -191,9 +201,13 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesInTransition
     } = this.props;
 
+    const { filterStatus } = this.state;
+
     const params: Params = parse(this.props.location.search, {
       ignoreQueryPrefix: true
     });
+
+    const filteredLinodes = filterLinodesByStatus(filterStatus, linodesData);
 
     const componentProps = {
       count: linodesCount,
@@ -247,20 +261,13 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Tags', key: 'tags' }
     ];
 
-    const linodesRunningCount = linodesData.filter(
-      linode => linode.status === 'running'
-    ).length;
+    const linodesRunningCount = filterLinodesByStatus('running', linodesData)
+      .length;
 
-    const linodesBusyCount = linodesData.filter(
-      linode =>
-        linode.status !== 'running' &&
-        linode.status !== 'offline' &&
-        linode.status !== 'stopped'
-    ).length;
+    const linodesBusyCount = filterLinodesByStatus('busy', linodesData).length;
 
-    const linodesOfflineCount = linodesData.filter(
-      linode => linode.status === 'offline' || linode.status === 'stopped'
-    ).length;
+    const linodesOfflineCount = filterLinodesByStatus('offline', linodesData)
+      .length;
 
     const chipProps = {
       component: 'span',
@@ -357,6 +364,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                           [classes.chipRunning]: true
                                         })}
                                         label={`${linodesRunningCount} RUNNING`}
+                                        onClick={() =>
+                                          this.setFilterStatus('running')
+                                        }
                                         {...chipProps}
                                       />
                                       <Chip
@@ -364,6 +374,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                           [classes.chip]: true,
                                           [classes.chipPending]: true
                                         })}
+                                        onClick={() =>
+                                          this.setFilterStatus('busy')
+                                        }
                                         label={`${linodesBusyCount} BUSY`}
                                         {...chipProps}
                                       />
@@ -372,9 +385,22 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                           [classes.chip]: true,
                                           [classes.chipOffline]: true
                                         })}
+                                        onClick={() =>
+                                          this.setFilterStatus('offline')
+                                        }
                                         label={`${linodesOfflineCount} OFFLINE`}
                                         {...chipProps}
                                       />
+                                      {filterStatus !== 'all' && (
+                                        <IconTextLink
+                                          SideIcon={Close}
+                                          text="CLEAR FILTERS"
+                                          title="CLEAR FILTERS"
+                                          onClick={() =>
+                                            this.setFilterStatus('all')
+                                          }
+                                        />
+                                      )}
                                     </Grid>
                                   }
                                 />
@@ -476,7 +502,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                           )}
                           <Grid item xs={12}>
                             <OrderBy
-                              data={linodesData.map(linode => {
+                              data={filteredLinodes.map(linode => {
                                 // Determine the priority of this Linode's status.
                                 // We have to check for "Maintenance" and "Busy" since these are
                                 // not actual Linode statuses (we derive them client-side).
@@ -627,6 +653,31 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     );
   }
 }
+
+const filterLinodesByStatus = (
+  status: FilterStatus,
+  linodes: LinodeWithMaintenance[]
+) => {
+  if (status === 'all') {
+    return linodes;
+  }
+  return linodes.filter(thisLinode => {
+    const displayStatus = mapLinodeStatus(thisLinode.status);
+    return displayStatus === status;
+  });
+};
+
+const mapLinodeStatus = (linodeStatus: LinodeStatus) => {
+  switch (linodeStatus) {
+    case 'offline':
+    case 'stopped':
+      return 'offline';
+    case 'running':
+      return 'running';
+    default:
+      return 'busy';
+  }
+};
 
 const eventCategory = 'linodes landing';
 

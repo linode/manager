@@ -16,7 +16,8 @@ type ClassNames =
   | 'chipPending'
   | 'chipOffline'
   | 'controlHeader'
-  | 'toggleButton';
+  | 'toggleButton'
+  | 'clearFilters';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -69,6 +70,12 @@ const styles = (theme: Theme) =>
       '&:focus': {
         // Browser default until we get styling direction for focus states
         outline: '1px dotted #999'
+      }
+    },
+    clearFilters: {
+      ...theme.applyLinkStyles,
+      '&:hover': {
+        textDecoration: 'none'
       }
     }
   });
