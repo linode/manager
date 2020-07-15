@@ -141,7 +141,7 @@ const SupportTicketDetail = React.lazy(() =>
 );
 const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed'));
-const Dashboard = React.lazy(() => import('src/features/Dashboard'));
+const Dashboard = React.lazy(() => import('src/features/Dashboard_CMR'));
 const Help = React.lazy(() => import('src/features/Help'));
 const SupportSearchLanding = React.lazy(() =>
   import('src/features/Help/SupportSearchLanding')
