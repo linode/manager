@@ -55,7 +55,7 @@ const styles = (theme: Theme) =>
       whiteSpace: 'nowrap',
       width: '17%',
       [theme.breakpoints.between('xs', 'sm')]: {
-        backgroundColor: 'white',
+        backgroundColor: theme.color.white,
         position: 'sticky',
         left: 218,
         zIndex: 1
