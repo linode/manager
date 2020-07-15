@@ -26,7 +26,7 @@ import {
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent
 } from 'src/utilities/ga';
-import InlineMenuActions from 'src/components/InlineMenuActions/InlineMenuActions';
+import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
@@ -34,38 +34,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   link: {
-    padding: '12px 10px',
-    textAlign: 'center',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      '& span': {
-        color: theme.color.white
-      }
-    },
-    '& span': {
-      color: '#3683dc'
-    }
+    padding: '12px 10px'
   },
   action: {
     marginLeft: 10
   },
   powerOnOrOff: {
-    ...theme.applyLinkStyles,
     height: '100%',
     minWidth: 'auto',
-    padding: '12px 10px',
-    whiteSpace: 'nowrap',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      color: theme.color.white
-    },
-    '&[disabled]': {
-      color: '#cdd0d5',
-      cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit'
-      }
-    }
+    whiteSpace: 'nowrap'
   }
 }));
 
@@ -332,14 +309,12 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     {
       actionText: 'Details',
       className: classes.link,
-      element: 'link',
-      linodeId
+      href: `/linodes/${linodeId}`
     },
     {
       actionText: linodeStatus === 'running' ? 'Power Off' : 'Power On',
       disabled: !['running', 'offline'].includes(linodeStatus),
       className: classes.powerOnOrOff,
-      element: 'button',
       onClick: (e: React.MouseEvent<HTMLElement>) => {
         const action = linodeStatus === 'running' ? 'Power Off' : 'Power On';
         sendLinodeActionMenuItemEvent(`${action} Linode`);
@@ -360,13 +335,12 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       {inTableContext &&
         inlineActions.map(action => {
           return (
-            <InlineMenuActions
+            <InlineMenuAction
               key={action.actionText}
               actionText={action.actionText}
               className={action.className}
-              element={action.element}
+              href={action.href}
               disabled={action.disabled}
-              linodeId={action.linodeId}
               onClick={action.onClick}
             />
           );
