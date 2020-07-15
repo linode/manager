@@ -24,7 +24,7 @@ describe('rescue linode', () => {
         .its('status')
         .should('eq', 200);
       assertToast('Linode rescue started.');
-      cy.url().should('endWith', `linodes/${linode.id}/summary`);
+      cy.url().should('endWith', `linodes/${linode.id}/analytics`);
       deleteLinodeById(linode.id);
     });
   });

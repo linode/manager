@@ -2,22 +2,22 @@ import { Image } from '@linode/api-v4/lib/images';
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
+import { makeStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
 import withImages from 'src/containers/withImages.container';
-import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
-import LinodeCard from './LinodeCard';
-import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'src/components/core/styles';
-
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import useFlags from 'src/hooks/useFlags';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
+import formatDate from 'src/utilities/formatDate';
+import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
+import LinodeCard from './LinodeCard';
 
 const useStyles = makeStyles(() => ({
   summaryOuter: {
@@ -100,7 +100,9 @@ const CardView: React.FC<CombinedProps> = props => {
               ipv4={linode.ipv4}
               ipv6={linode.ipv6}
               maintenanceStartTime={
-                linode.maintenance ? linode.maintenance.when : ''
+                linode.maintenance?.when
+                  ? formatDate(linode.maintenance.when)
+                  : ''
               }
               label={linode.label}
               region={linode.region}

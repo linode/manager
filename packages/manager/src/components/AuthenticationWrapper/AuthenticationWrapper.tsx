@@ -172,7 +172,7 @@ interface DispatchProps {
   initSession: () => void;
   requestAccount: () => Promise<Account>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
-  requestNotifications: () => Promise<Notification[]>;
+  requestNotifications: () => Promise<GetAllData<Notification>>;
   requestSettings: () => Promise<AccountSettings>;
   requestTypes: () => Promise<LinodeType[]>;
   requestRegions: () => Promise<Region[]>;

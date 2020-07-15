@@ -48,6 +48,7 @@ describe('ListLinodes', () => {
           {...reactRouterProps}
           ldClient={{} as any}
           flags={{}}
+          linodesInTransition={new Set<number>()}
         />
       )
     );

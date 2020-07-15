@@ -1,6 +1,7 @@
-import * as classNames from 'classnames';
 import { Config } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import IconButton from '@material-ui/core/IconButton';
+import * as classNames from 'classnames';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
@@ -11,63 +12,59 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import GroupByTag from 'src/assets/icons/group-by-tag.svg';
+import TableView from 'src/assets/icons/table-view.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
+import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import CSVLink from 'src/components/DownloadCSV';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import LandingHeader from 'src/components/LandingHeader';
+import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
 import withBackupCta, {
   BackupCTAProps
 } from 'src/containers/withBackupCTA.container';
-import withImages, { WithImages } from 'src/containers/withImages.container';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
+import {
+  addNotificationsToLinodes,
+  LinodeWithMaintenance
+} from 'src/store/linodes/linodes.helpers';
 import { MapState } from 'src/store/types';
-import formatDate from 'src/utilities/formatDate';
-import { formatNotifications } from 'src/utilities/formatNotifications';
+import formatDate, { formatDateISO } from 'src/utilities/formatDate';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent
 } from 'src/utilities/ga';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { BackupsCtaDismissed } from 'src/utilities/storage';
+import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
+import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
+import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
+import DeleteDialog from './DeleteDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import DisplayLinodes from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import ToggleBox from './ToggleBox';
-
-import MaintenanceBanner from 'src/components/MaintenanceBanner';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import {
-  addNotificationsToLinodes,
-  LinodeWithMaintenance
-} from 'src/store/linodes/linodes.helpers';
-
-import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
-import DeleteDialog from './DeleteDialog';
-
-import CSVLink from 'src/components/DownloadCSV';
-import Chip from 'src/components/core/Chip';
-import LandingHeader from 'src/components/LandingHeader';
-import IconButton from '@material-ui/core/IconButton';
-
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import TableView from 'src/assets/icons/table-view.svg';
-import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
+import { ExtendedStatus, statusToPriority } from './utils';
 
 interface State {
   powerDialogOpen: boolean;
@@ -190,7 +187,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesData,
       classes,
       backupsCTA,
-      location
+      location,
+      linodesInTransition
     } = this.props;
 
     const params: Params = parse(this.props.location.search, {
@@ -304,6 +302,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               preferenceOptions={[false, true]}
               preferenceKey="linodes_group_by_tag"
               toggleCallbackFnDebounced={sendGroupByAnalytic}
+              value={
+                // If some Linodes need maintenance, default to NOT grouping by tag.
+                // This is because the "Group by Tag" view can reduce visibility of Linodes needing
+                // maintenance, since the ordering of groups is alphanumeric and can't be changed.
+                this.props.someLinodesHaveScheduledMaintenance
+                  ? false
+                  : undefined
+              }
             >
               {({
                 preference: linodesAreGrouped,
@@ -436,6 +442,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   className={classes.title}
                                 />
                               </Grid>
+
                               <Hidden xsDown>
                                 <FormControlLabel
                                   className={classes.tagGroup}
@@ -467,19 +474,35 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               />
                             </Grid>
                           )}
-
                           <Grid item xs={12}>
                             <OrderBy
                               data={linodesData.map(linode => {
+                                // Determine the priority of this Linode's status.
+                                // We have to check for "Maintenance" and "Busy" since these are
+                                // not actual Linode statuses (we derive them client-side).
+                                let _status: ExtendedStatus = linode.status;
+                                if (linode.maintenance) {
+                                  _status = 'maintenance';
+                                } else if (linodesInTransition.has(linode.id)) {
+                                  _status = 'busy';
+                                }
+
                                 return {
                                   ...linode,
                                   displayStatus: linode.maintenance
                                     ? 'maintenance'
-                                    : linode.status
+                                    : linode.status,
+                                  _statusPriority: statusToPriority(_status)
                                 };
                               })}
-                              order={'asc'}
-                              orderBy={'label'}
+                              // If there are Linodes with scheduled maintenance, default to
+                              // sorting by status priority so they are more visible.
+                              order="asc"
+                              orderBy={
+                                this.props.someLinodesHaveScheduledMaintenance
+                                  ? '_statusPriority'
+                                  : 'label'
+                              }
                             >
                               {({
                                 data,
@@ -522,11 +545,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               <Grid item className={classes.CSVlinkContainer}>
                                 <CSVLink
                                   data={linodesData.map(e => {
+                                    const maintenance = e.maintenance?.when
+                                      ? {
+                                          ...e.maintenance,
+                                          when: formatDateISO(
+                                            e.maintenance?.when
+                                          )
+                                        }
+                                      : { when: null };
+
                                     return {
                                       ...e,
-                                      maintenance: e.maintenance || {
-                                        when: null
-                                      },
+                                      maintenance,
                                       linodeDescription: getLinodeDescription(
                                         e.label,
                                         e.specs.memory,
@@ -614,6 +644,7 @@ interface StateProps {
   userTimezoneLoading: boolean;
   userTimezoneError?: APIError[];
   someLinodesHaveScheduledMaintenance: boolean;
+  linodesInTransition: Set<number>;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => {
@@ -621,7 +652,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
-    formatNotifications(notifications),
+    notifications,
     linodes
   );
 
@@ -642,7 +673,8 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     userTimezoneError: path<APIError[]>(
       ['read'],
       state.__resources.profile.error
-    )
+    ),
+    linodesInTransition: _linodesInTransition(state.events.events)
   };
 };
 
