@@ -34,10 +34,6 @@ const styles = (theme: Theme) =>
         paddingRight: 0
       },
       [theme.breakpoints.down('sm')]: {
-        backgroundColor: theme.color.white,
-        borderLeft: `1px solid ${theme.palette.divider}`,
-        position: 'sticky',
-        right: 0,
         width: '5%'
       }
     },
