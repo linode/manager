@@ -193,7 +193,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     >
       {headCell}
       <TableCell
-        parentColumn="Status"
         className={classNames({
           [classes.statusCell]: true,
           [classes.statusCellMaintenance]: maintenanceStartTime
@@ -238,20 +237,12 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         )}
       </TableCell>
       <Hidden xsDown>
-        <TableCell
-          parentColumn="IP Address"
-          className={classes.ipCell}
-          data-qa-ips
-        >
+        <TableCell className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={ipv4} copyRight showCopyOnHover />
           </div>
         </TableCell>
-        <TableCell
-          parentColumn="Region"
-          className={classes.regionCell}
-          data-qa-region
-        >
+        <TableCell className={classes.regionCell} data-qa-region>
           <RegionIndicator region={region} />
         </TableCell>
         <LinodeRowBackupCell

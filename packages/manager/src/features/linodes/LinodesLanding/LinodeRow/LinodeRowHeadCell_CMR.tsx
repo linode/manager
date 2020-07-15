@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       transition: theme.transitions.create(['color'])
     },
     [theme.breakpoints.between('xs', 'sm')]: {
-      backgroundColor: 'white',
+      backgroundColor: theme.color.white,
       position: 'sticky',
       left: 0,
       zIndex: 1
