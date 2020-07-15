@@ -208,21 +208,17 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     marginLeft: 30
   },
   statusChip: {
-    marginLeft: 30,
-    color: 'white',
-    backgroundColor: '#ffb31a',
-    fontSize: '1.1 rem',
-    height: 30,
-    borderRadius: 15,
-    letterSpacing: '.5px',
-    minWidth: 120,
-    marginRight: 30
+    ...theme.applyStatusPillStyles
   },
   statusRunning: {
-    backgroundColor: '#17cf73'
+    '&:before': {
+      backgroundColor: theme.color.green
+    }
   },
   statusOffline: {
-    backgroundColor: '#9ea4ae'
+    '&:before': {
+      backgroundColor: '#dbdde1'
+    }
   }
 }));
 

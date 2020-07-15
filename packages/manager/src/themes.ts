@@ -86,6 +86,7 @@ const darkThemeOptions = {
     headline: primaryColors.headline,
     red: '#ca0813',
     green: '#00b159',
+    orange: '#dbdde1',
     yellow: '#fecf2f',
     border1: '#000',
     border2: '#111',

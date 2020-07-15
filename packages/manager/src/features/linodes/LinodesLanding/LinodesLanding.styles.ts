@@ -41,29 +41,16 @@ const styles = (theme: Theme) =>
       marginLeft: 15
     },
     chip: {
-      backgroundColor: '#f7f7f8',
-      color: '#5d646f',
-      fontSize: '1.1rem',
-      fontFamily: theme.font.bold,
-      padding: 10,
-      '&:before': {
-        display: 'inline-block',
-        borderRadius: '50%',
-        content: '""',
-        height: 16,
-        width: 16,
-        minWidth: 16,
-        marginRight: 8
-      }
+      ...theme.applyStatusPillStyles
     },
     chipRunning: {
       '&:before': {
-        backgroundColor: '#00b159'
+        backgroundColor: theme.color.green
       }
     },
     chipPending: {
       '&:before': {
-        backgroundColor: '#ffb31a'
+        backgroundColor: theme.color.orange
       }
     },
     chipOffline: {
