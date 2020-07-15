@@ -66,7 +66,6 @@ import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import ToggleBox from './ToggleBox';
 import { ExtendedStatus, statusToPriority } from './utils';
-import IconTextLink from 'src/components/IconTextLink';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 
@@ -392,14 +391,15 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                         {...chipProps}
                                       />
                                       {filterStatus !== 'all' && (
-                                        <IconTextLink
-                                          SideIcon={Close}
-                                          text="CLEAR FILTERS"
-                                          title="CLEAR FILTERS"
+                                        <button
+                                          className={classes.clearFilters}
                                           onClick={() =>
                                             this.setFilterStatus('all')
                                           }
-                                        />
+                                        >
+                                          <Close />
+                                          CLEAR FILTERS
+                                        </button>
                                       )}
                                     </Grid>
                                   }
