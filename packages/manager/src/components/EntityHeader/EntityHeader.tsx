@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 8
   },
   contentOuter: {
+    display: 'flex',
     '& .MuiChip-root': {
       height: 30,
       borderRadius: 15,

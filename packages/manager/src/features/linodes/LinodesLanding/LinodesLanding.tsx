@@ -356,7 +356,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   iconType="linode"
                                   docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                                   body={
-                                    <Grid item>
+                                    <>
                                       <Chip
                                         className={classNames({
                                           [classes.chip]: true,
@@ -392,7 +392,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                       />
                                       {filterStatus !== 'all' && (
                                         <button
-                                          className={classes.clearFilters}
+                                          className={`${classes.clearFilters} flexCenter`}
                                           onClick={() =>
                                             this.setFilterStatus('all')
                                           }
@@ -401,7 +401,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                           CLEAR FILTERS
                                         </button>
                                       )}
-                                    </Grid>
+                                    </>
                                   }
                                 />
                               </Grid>
