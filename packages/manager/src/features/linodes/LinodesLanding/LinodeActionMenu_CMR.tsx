@@ -100,7 +100,7 @@ export type CombinedProps = Props & StateProps;
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { types } = useTypes();
   const history = useHistory();
@@ -311,6 +311,15 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       }
 
       if (matches) {
+        actions.unshift({
+          title: 'Details',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push({
+              pathname: `/linodes/${linodeId}`
+            });
+            e.preventDefault();
+          }
+        });
         actions.unshift({
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
