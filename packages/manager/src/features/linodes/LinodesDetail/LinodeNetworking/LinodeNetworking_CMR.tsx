@@ -358,6 +358,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               ipType={type}
               ipAddress={_range}
               onEdit={() => this.handleOpenEditRDNSForRange(_range)}
+              readOnly={readOnly}
             />
           ) : null}
         </TableCell>
@@ -573,6 +574,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           linodeID={linodeID}
           hasPrivateIPAddress={this.hasPrivateIPAddress()}
           onSuccess={this.refreshIPs}
+          readOnly={readOnly}
         />
 
         <IPTransfer

@@ -59,6 +59,7 @@ interface Props {
   linodeID: number;
   hasPrivateIPAddress: boolean;
   onSuccess: () => void;
+  readOnly: boolean;
 }
 
 type CombinedProps = Props;
@@ -70,7 +71,14 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
   const [submitting, setSubmitting] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  const { open, onClose, linodeID, hasPrivateIPAddress, onSuccess } = props;
+  const {
+    open,
+    onClose,
+    linodeID,
+    hasPrivateIPAddress,
+    onSuccess,
+    readOnly
+  } = props;
 
   React.useEffect(() => {
     if (open) {
@@ -99,7 +107,7 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
   };
 
   const disabled =
-    (selected === 'v4Private' && hasPrivateIPAddress) || !selected;
+    (selected === 'v4Private' && hasPrivateIPAddress) || !selected || readOnly;
 
   const AllocateButton = (
     <Button
@@ -112,6 +120,12 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
       Allocate
     </Button>
   );
+
+  const _tooltipCopy = selected
+    ? readOnly
+      ? 'You do not have permission to modify this Linode.'
+      : tooltipCopy[selected]
+    : null;
 
   return (
     <Drawer open={open} onClose={onClose} title="Add an IP Address">
@@ -133,8 +147,8 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
           </Typography>
         )}
         <ActionsPanel style={{ marginTop: 8 }}>
-          {disabled && selected ? (
-            <Tooltip title={tooltipCopy[selected]}>
+          {_tooltipCopy ? (
+            <Tooltip title={_tooltipCopy}>
               <div style={{ display: 'inline' }}>{AllocateButton}</div>
             </Tooltip>
           ) : (

@@ -1,3 +1,4 @@
+import * as classnames from 'classnames';
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -20,6 +21,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: '#3683dc',
       color: theme.color.white
     }
+  },
+  disabled: {
+    cursor: 'not-allowed',
+    color: theme.color.grey1
   }
 }));
 
@@ -30,7 +35,7 @@ interface Props {
   onRemove?: (ip: IPAddress | IPRange) => void;
   ipType: IPTypes;
   ipAddress?: IPAddress | IPRange;
-  readOnly?: boolean;
+  readOnly: boolean;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -39,14 +44,20 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   {
-    /* @todo: disabled state for restricted users? */
   }
-  const { onEdit, onRemove, ipType, ipAddress } = props;
+  const { onEdit, onRemove, ipType, ipAddress, readOnly } = props;
 
   return (
     <div className={`${classes.actionMenu} flex-center`}>
       {onRemove && ipAddress && ipType === 'IPv4 – Public' && (
-        <button className={classes.button} onClick={() => onRemove(ipAddress)}>
+        <button
+          disabled={readOnly}
+          className={classnames({
+            [classes.button]: true,
+            [classes.disabled]: readOnly
+          })}
+          onClick={() => onRemove(ipAddress)}
+        >
           Delete
         </button>
       )}
@@ -56,7 +67,14 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
         ipType !== 'IPv6 – Link Local' &&
         ipType !== 'IPv4 – Reserved (public)' &&
         ipType !== 'IPv4 – Reserved (private)' && (
-          <button className={classes.button} onClick={() => onEdit(ipAddress)}>
+          <button
+            disabled={readOnly}
+            className={classnames({
+              [classes.button]: true,
+              [classes.disabled]: readOnly
+            })}
+            onClick={() => onEdit(ipAddress)}
+          >
             Edit RDNS
           </button>
         )}
