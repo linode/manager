@@ -543,9 +543,9 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             disabled={this.state.submitting || this.props.linodes.length === 0}
             onClick={this.onReset}
             buttonType="secondary"
-            data-qa-ip-transfer-cancel
+            data-qa-ip-transfer-reset
           >
-            Cancel
+            Reset Form
           </Button>
         </ActionsPanel>
       </Dialog>

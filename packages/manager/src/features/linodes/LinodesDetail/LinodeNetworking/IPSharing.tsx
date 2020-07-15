@@ -289,7 +289,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       });
   };
 
-  onCancel = () => {
+  onReset = () => {
     if (!this.mounted) {
       return;
     }
@@ -378,11 +378,11 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             </Button>
             <Button
               disabled={submitting || noChoices}
-              onClick={this.onCancel}
+              onClick={this.onReset}
               buttonType="secondary"
-              data-qa-cancel
+              data-qa-reset
             >
-              Cancel
+              Reset Form
             </Button>
           </ActionsPanel>
         </Grid>
