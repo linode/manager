@@ -61,7 +61,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: 0,
       width: 200,
       background: '#3683dc',
-      borderRadius: '3px 0 3px 3px',
       border: 'none',
       fontSize: 14,
       color: '#fff',
@@ -74,8 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: '16px',
       borderBottom: '1px solid #5294e0',
       background: '#3683dc',
-      color: '#fff',
-      borderRadius: 3
+      color: '#fff'
     },
     '&[data-reach-menu-item][data-selected]': {
       background: '#226dc3'
