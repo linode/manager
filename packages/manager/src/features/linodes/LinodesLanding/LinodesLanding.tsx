@@ -26,6 +26,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import CSVLink from 'src/components/DownloadCSV';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import IconTextLink from 'src/components/IconTextLink';
 import LandingHeader from 'src/components/LandingHeader';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
@@ -269,8 +270,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       .length;
 
     const chipProps = {
-      component: 'span',
-      clickable: false
+      component: 'button',
+      clickable: true
     };
 
     return (
@@ -360,7 +361,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                       <Chip
                                         className={classNames({
                                           [classes.chip]: true,
-                                          [classes.chipRunning]: true
+                                          [classes.chipRunning]: true,
+                                          [classes.chipActive]:
+                                            filterStatus === 'running'
                                         })}
                                         label={`${linodesRunningCount} RUNNING`}
                                         onClick={() =>
@@ -371,7 +374,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                       <Chip
                                         className={classNames({
                                           [classes.chip]: true,
-                                          [classes.chipPending]: true
+                                          [classes.chipPending]: true,
+                                          [classes.chipActive]:
+                                            filterStatus === 'busy'
                                         })}
                                         onClick={() =>
                                           this.setFilterStatus('busy')
@@ -382,7 +387,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                       <Chip
                                         className={classNames({
                                           [classes.chip]: true,
-                                          [classes.chipOffline]: true
+                                          [classes.chipOffline]: true,
+                                          [classes.chipActive]:
+                                            filterStatus === 'offline'
                                         })}
                                         onClick={() =>
                                           this.setFilterStatus('offline')
@@ -391,15 +398,15 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                         {...chipProps}
                                       />
                                       {filterStatus !== 'all' && (
-                                        <button
-                                          className={`${classes.clearFilters} flexCenter`}
+                                        <IconTextLink
+                                          SideIcon={Close}
+                                          text="CLEAR FILTERS"
+                                          title="CLEAR FILTERS"
+                                          className={`${classes.clearFilters}`}
                                           onClick={() =>
                                             this.setFilterStatus('all')
                                           }
-                                        >
-                                          <Close />
-                                          CLEAR FILTERS
-                                        </button>
+                                        />
                                       )}
                                     </>
                                   }

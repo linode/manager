@@ -15,6 +15,7 @@ describe('ListLinodes', () => {
     CSVlink: '',
     addNewLink: '',
     chip: '',
+    chipActive: '',
     chipRunning: '',
     chipPending: '',
     chipOffline: '',

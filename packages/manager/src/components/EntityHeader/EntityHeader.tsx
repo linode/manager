@@ -27,6 +27,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   contentOuter: {
     display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     '& .MuiChip-root': {
       height: 30,
       borderRadius: 15,

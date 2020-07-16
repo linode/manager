@@ -12,6 +12,7 @@ type ClassNames =
   | 'CSVlink'
   | 'addNewLink'
   | 'chip'
+  | 'chipActive'
   | 'chipRunning'
   | 'chipPending'
   | 'chipOffline'
@@ -44,6 +45,9 @@ const styles = (theme: Theme) =>
     chip: {
       ...theme.applyStatusPillStyles
     },
+    chipActive: {
+      backgroundColor: '#CECECE'
+    },
     chipRunning: {
       '&:before': {
         backgroundColor: theme.color.green
@@ -73,9 +77,12 @@ const styles = (theme: Theme) =>
       }
     },
     clearFilters: {
-      ...theme.applyLinkStyles,
+      margin: 0,
+      padding: 0,
       '&:hover': {
-        textDecoration: 'none'
+        '& svg': {
+          color: `${theme.palette.primary.main} !important`
+        }
       }
     }
   });
