@@ -26,6 +26,9 @@ const LinodesDetailNavigation = React.lazy(() =>
 const LinodesDetailNavigation_CMR = React.lazy(() =>
   import('./LinodesDetailNavigation_CMR')
 );
+const LinodesDashboardNavigation = React.lazy(() =>
+  import('./LinodesDashboardNavigation')
+);
 const MigrateLanding = React.lazy(() => import('../MigrateLanding'));
 
 interface Props {
@@ -66,7 +69,12 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
               <React.Fragment>
                 <LinodesDetailHeader />
                 {flags.cmr ? (
-                  <LinodesDetailNavigation_CMR />
+                  // fml
+                  path.match(/\/dashboard/) ? (
+                    <LinodesDashboardNavigation />
+                  ) : (
+                    <LinodesDetailNavigation_CMR />
+                  )
                 ) : (
                   <LinodesDetailNavigation />
                 )}
