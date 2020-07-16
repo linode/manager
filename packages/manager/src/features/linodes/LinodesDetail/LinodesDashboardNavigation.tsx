@@ -54,69 +54,72 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
-  const tabs: Tab[] = [
-    /* NB: These must correspond to the routes inside the Switch */
-    // Previously Summary
-    {
-      render: () => <LinodeSummary_CMR />,
-      title: 'Analytics'
-    },
-    {
-      render: () => <LinodeNetworking_CMR />,
-      title: 'Network'
-    },
-    // Previously Volumes
-    {
-      render: () => (
-        <div
-          id="tabpanel-storage"
-          role="tabpanel"
-          aria-labelledby="tab-storage"
-        >
-          <VolumesLanding_CMR
-            linodeId={linodeId}
-            linodeLabel={linodeLabel}
-            linodeRegion={linodeRegion}
-            linodeConfigs={linodeConfigs}
-            readOnly={readOnly}
-            fromLinodes
-            removeBreadCrumb
-            {...routeProps}
-          />
-        </div>
-      ),
-      title: 'Storage'
-    },
-    // Previously Disks/Configs
-    {
-      render: () => <LinodeAdvanced_CMR />,
-      title: 'Configurations'
-    },
-    {
-      render: () => <LinodeBackup_CMR />,
-      title: 'Backups'
-    },
-    {
-      render: () => <LinodeResize />,
-      title: 'Resize'
-    },
-    {
-      render: () => <LinodeRescue />,
-      title: 'Rescue'
-    },
-    {
-      render: () => <LinodeRebuild />,
-      title: 'Rebuild'
-    },
-    {
-      render: () => <LinodeActivity_CMR />,
-      title: 'Activity Logs'
-    },
-    {
-      render: () => <LinodeSettings_CMR />,
-      title: 'Settings'
-    }
-  ];
+  const tabs: Tab[] = React.useMemo(
+    () => [
+      /* NB: These must correspond to the routes inside the Switch */
+      // Previously Summary
+      {
+        render: () => <LinodeSummary_CMR />,
+        title: 'Analytics'
+      },
+      {
+        render: () => <LinodeNetworking_CMR />,
+        title: 'Network'
+      },
+      // Previously Volumes
+      {
+        render: () => (
+          <div
+            id="tabpanel-storage"
+            role="tabpanel"
+            aria-labelledby="tab-storage"
+          >
+            <VolumesLanding_CMR
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeRegion={linodeRegion}
+              linodeConfigs={linodeConfigs}
+              readOnly={readOnly}
+              fromLinodes
+              removeBreadCrumb
+              {...routeProps}
+            />
+          </div>
+        ),
+        title: 'Storage'
+      },
+      // Previously Disks/Configs
+      {
+        render: () => <LinodeAdvanced_CMR />,
+        title: 'Configurations'
+      },
+      {
+        render: () => <LinodeBackup_CMR />,
+        title: 'Backups'
+      },
+      {
+        render: () => <LinodeResize />,
+        title: 'Resize'
+      },
+      {
+        render: () => <LinodeRescue />,
+        title: 'Rescue'
+      },
+      {
+        render: () => <LinodeRebuild />,
+        title: 'Rebuild'
+      },
+      {
+        render: () => <LinodeActivity_CMR />,
+        title: 'Activity Logs'
+      },
+      {
+        render: () => <LinodeSettings_CMR />,
+        title: 'Settings'
+      }
+    ],
+    [linodeId, linodeConfigs, linodeRegion, linodeLabel, readOnly, routeProps]
+  );
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
