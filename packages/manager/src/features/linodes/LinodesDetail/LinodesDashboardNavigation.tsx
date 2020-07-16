@@ -42,6 +42,12 @@ type CombinedProps = ContextProps &
     linodeId: string;
   }>;
 
+const suspenseWrapper = (Component: React.ComponentType<any>) => (
+  <React.Suspense fallback={<SuspenseLoader />}>
+    <Component />
+  </React.Suspense>
+);
+
 const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
   const {
     linodeLabel,
@@ -59,11 +65,11 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
       /* NB: These must correspond to the routes inside the Switch */
       // Previously Summary
       {
-        render: () => <LinodeSummary_CMR />,
+        render: () => suspenseWrapper(LinodeSummary_CMR),
         title: 'Analytics'
       },
       {
-        render: () => <LinodeNetworking_CMR />,
+        render: () => suspenseWrapper(LinodeNetworking_CMR),
         title: 'Network'
       },
       // Previously Volumes
@@ -90,31 +96,31 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
       },
       // Previously Disks/Configs
       {
-        render: () => <LinodeAdvanced_CMR />,
+        render: () => suspenseWrapper(LinodeAdvanced_CMR),
         title: 'Configurations'
       },
       {
-        render: () => <LinodeBackup_CMR />,
+        render: () => suspenseWrapper(LinodeBackup_CMR),
         title: 'Backups'
       },
       {
-        render: () => <LinodeResize />,
+        render: () => suspenseWrapper(LinodeResize),
         title: 'Resize'
       },
       {
-        render: () => <LinodeRescue />,
+        render: () => suspenseWrapper(LinodeRescue),
         title: 'Rescue'
       },
       {
-        render: () => <LinodeRebuild />,
+        render: () => suspenseWrapper(LinodeRebuild),
         title: 'Rebuild'
       },
       {
-        render: () => <LinodeActivity_CMR />,
+        render: () => suspenseWrapper(LinodeActivity_CMR),
         title: 'Activity Logs'
       },
       {
-        render: () => <LinodeSettings_CMR />,
+        render: () => suspenseWrapper(LinodeSettings_CMR),
         title: 'Settings'
       }
     ],
@@ -122,14 +128,12 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
   );
 
   return (
-    <React.Suspense fallback={<SuspenseLoader />}>
-      <TabbedPanel
-        rootClass={`${classes.root} tabbedPanel`}
-        header={''}
-        tabs={tabs}
-        initTab={0}
-      />
-    </React.Suspense>
+    <TabbedPanel
+      rootClass={`${classes.root} tabbedPanel`}
+      header={''}
+      tabs={tabs}
+      initTab={0}
+    />
   );
 };
 
