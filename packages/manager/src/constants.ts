@@ -71,7 +71,12 @@ export const isKubernetesEnabledForEnvironment =
 export const DISABLE_EVENT_THROTTLE =
   Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
 
-export const ISO_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+// read about luxon formats https://moment.github.io/luxon/docs/manual/formatting.html
+// this format is not ISO
+export const DATETIME_DISPLAY_FORMAT = 'yyyy-MM-dd HH:mm:ss';
+// ISO 8601 formats
+export const ISO_DATE_FORMAT = 'yyyy-MM-dd';
+export const ISO_DATETIME_NO_TZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
 export const MAX_VOLUME_SIZE = 10240;
 
@@ -193,7 +198,8 @@ export const objectStorageClusterDisplay: Record<
   string
 > = {
   'us-east-1': 'Newark, NJ',
-  'eu-central-1': 'Frankfurt, DE'
+  'eu-central-1': 'Frankfurt, DE',
+  'ap-south-1': 'Singapore, SG'
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';
@@ -296,3 +302,10 @@ export const OBJECT_STORAGE_ROOT = 'linodeobjects.com';
  * to simulate folder traversal of a bucket.
  */
 export const OBJECT_STORAGE_DELIMITER = '/';
+
+// Value from  1-4 reflecting a minimum score from zxcvbn
+export const MINIMUM_PASSWORD_STRENGTH = 2;
+
+// When true, use the mock API defined in serverHandlers.ts instead of making network requests
+export const MOCK_SERVICE_WORKER =
+  process.env.REACT_APP_MOCK_SERVICE_WORKER === 'true';

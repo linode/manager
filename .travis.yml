@@ -6,17 +6,18 @@ node_js:
 
 cache: yarn
 # services:
-  # - docker
+# - docker
 
-before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev
+before_install:
+  sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev
   build-essential g++ google-chrome-stable curl
 install:
-- yarn install:all
-- if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then audit-ci --low; fi
+  - yarn install:all
+  - if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then audit-ci --moderate; fi
 
 script:
-- yarn build
-- yarn test
+  - yarn build
+  - yarn test
 #- 'pkill -f selenium-standalone || :'
 #- pkill -f storybook
 env:

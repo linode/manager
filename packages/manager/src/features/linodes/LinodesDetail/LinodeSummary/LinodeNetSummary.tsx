@@ -1,5 +1,5 @@
 import { getLinodeTransfer } from '@linode/api-v4/lib/linodes';
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -28,6 +28,7 @@ interface StateProps {
 }
 
 type CombinedProps = Props & StoreProps & StateProps & WithStyles<ClassNames>;
+// @todo CMR: Remove this component
 
 class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
   state = {
@@ -165,7 +166,7 @@ const mapStateToProps: MapState<StoreProps, CombinedProps> = (state, props) => {
   return {
     total: linode ? linode.specs.transfer : 0,
     isTooEarlyForStats:
-      linode && isRecent(linode.created, moment.utc().format())
+      linode && isRecent(linode.created, DateTime.local().toISO())
   };
 };
 

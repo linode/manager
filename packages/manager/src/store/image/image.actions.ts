@@ -36,3 +36,12 @@ export const requestImageForStoreActions = actionCreator.async<
   Image,
   APIError[]
 >('request-image');
+
+export interface DeleteImagePayload {
+  imageID: string;
+}
+export const deleteImageActions = actionCreator.async<
+  DeleteImagePayload,
+  {},
+  APIError[]
+>('delete');

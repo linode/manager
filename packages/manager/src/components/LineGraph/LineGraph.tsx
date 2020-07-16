@@ -1,7 +1,15 @@
-import * as moment from 'moment-timezone';
-import { clone, curry } from 'ramda';
+import { curry } from 'ramda';
 import * as React from 'react';
-import { ChartData, Line } from 'react-chartjs-2';
+import {
+  ChartDataSets,
+  ChartOptions,
+  Chart,
+  ChartXAxe,
+  ChartTooltipItem,
+  ChartData
+} from 'chart.js';
+import 'chartjs-adapter-luxon';
+
 import LineChartIcon from 'src/assets/icons/line-chart.svg';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -35,7 +43,7 @@ export interface Props {
   data: DataSet[];
   timezone: string;
   rowHeaders?: Array<string>;
-  legendRows?: Array<ChartData<any>>;
+  legendRows?: Array<any>;
   unit?: string;
   nativeLegend?: boolean; // Display chart.js native legend
   formatData?: (value: number) => number | null;
@@ -48,73 +56,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   ...MetricDisplayStyles(theme)
 }));
 
-const chartOptions: any = {
-  maintainAspectRatio: false,
-  responsive: true,
-  animation: false,
-  legend: {
-    display: false
-  },
-  scales: {
-    yAxes: [
-      {
-        gridLines: {
-          borderDash: [3, 6],
-          zeroLineWidth: 1,
-          zeroLineBorderDashOffset: 2
-        },
-        ticks: {
-          beginAtZero: true,
-          callback(value: number, index: number) {
-            return humanizeLargeData(value);
-          }
-        }
-      }
-    ],
-    xAxes: [
-      {
-        type: 'time',
-        gridLines: {
-          display: false
-        },
-        time: {
-          displayFormats: {
-            hour: 'HH:00',
-            minute: 'HH:00'
-          }
-        }
-      }
-    ]
-  },
-  tooltips: {
-    cornerRadius: 0,
-    backgroundColor: '#fbfbfb',
-    bodyFontColor: '#32363C',
-    displayColors: false,
-    titleFontColor: '#606469',
-    xPadding: 16,
-    yPadding: 10,
-    borderWidth: 0.5,
-    borderColor: '#999',
-    caretPadding: 10,
-    position: 'nearest',
-    callbacks: {},
-    intersect: false,
-    mode: 'index'
-  }
-};
-
-const lineOptions: ChartData<any> = {
+const lineOptions: ChartDataSets = {
   borderWidth: 1,
   borderJoinStyle: 'miter',
   lineTension: 0,
   pointRadius: 0,
   pointHitRadius: 10
 };
-
-const parseInTimeZone = curry((timezone: string, utcMoment: any) => {
-  return moment(utcMoment).tz(timezone);
-});
 
 const humanizeLargeData = (value: number) => {
   if (value >= 1000000) {
@@ -126,10 +74,12 @@ const humanizeLargeData = (value: number) => {
   return value;
 };
 
-const LineGraph: React.FC<CombinedProps> = props => {
+const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   const inputEl: React.RefObject<any> = React.useRef(null);
+  const chartInstance: React.MutableRefObject<any> = React.useRef(null);
   const [legendRendered, setLegendRendered] = React.useState(false);
-  const [, forceUpdate] = React.useState();
+  const [hiddenDatasets, setHiddenDatasets] = React.useState<number[]>([]);
+
   const classes = useStyles();
   const {
     chartHeight,
@@ -142,25 +92,15 @@ const LineGraph: React.FC<CombinedProps> = props => {
     rowHeaders,
     legendRows,
     nativeLegend,
-    unit,
-    ...rest
+    unit
   } = props;
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
-
-  const handleLegendClick = (datasetIndex: number) => {
-    const chart = inputEl.current.chartInstance;
-    chart.getDatasetMeta(datasetIndex).hidden =
-      chart.getDatasetMeta(datasetIndex).hidden === null
-        ? true
-        : !chart.getDatasetMeta(datasetIndex).hidden;
-    chart.update(); // re-draw chart to hide dataset
-    forceUpdate({}); // re-draw component to update legend styles
-  };
-
+  // is undefined on linode/summary
   const plugins = [
     {
-      afterDatasetsDraw() {
+      afterDatasetsDraw: () => {
         // hack to force re-render component in order to show legend
+        // tested this is called
         if (!legendRendered) {
           setLegendRendered(true);
         }
@@ -168,38 +108,90 @@ const LineGraph: React.FC<CombinedProps> = props => {
     }
   ];
 
+  const handleLegendClick = (datasetIndex: number) => {
+    if (hiddenDatasets.includes(datasetIndex)) {
+      setHiddenDatasets(hiddenDatasets.filter(e => e !== datasetIndex));
+    } else {
+      setHiddenDatasets([...hiddenDatasets, datasetIndex]);
+    }
+  };
+
   const getChartOptions = (
     _suggestedMax?: number,
     _nativeLegend?: boolean,
     _tooltipUnit?: string
   ) => {
-    const finalChartOptions = clone(chartOptions);
-    const parser = parseInTimeZone(timezone || '');
-    finalChartOptions.scales.xAxes[0].time.parser = parser;
-    finalChartOptions.scales.xAxes[0].time.offset = moment
-      .tz(timezone || '')
-      .utcOffset();
-
-    if (showToday) {
-      finalChartOptions.scales.xAxes[0].time.displayFormats = {
-        hour: 'HH:00',
-        minute: 'HH:mm'
-      };
-    } else {
-      finalChartOptions.scales.xAxes[0].time.displayFormats = {
-        hour: 'MMM DD',
-        minute: 'MMM DD'
-      };
-    }
-
-    if (_suggestedMax) {
-      finalChartOptions.scales.yAxes[0].ticks.suggestedMax = _suggestedMax;
-    }
-
-    if (_nativeLegend) {
-      finalChartOptions.legend.display = true;
-      finalChartOptions.legend.position = 'bottom';
-    }
+    const finalChartOptions: ChartOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      animation: { duration: 0 },
+      legend: {
+        display: _nativeLegend,
+        position: _nativeLegend ? 'bottom' : undefined
+      },
+      scales: {
+        yAxes: [
+          {
+            gridLines: {
+              borderDash: [3, 6],
+              zeroLineWidth: 1,
+              zeroLineBorderDashOffset: 2
+            },
+            ticks: {
+              suggestedMax: _suggestedMax ?? undefined,
+              beginAtZero: true,
+              callback(value: number, _index: number) {
+                return humanizeLargeData(value);
+              }
+            }
+          }
+        ],
+        xAxes: [
+          {
+            type: 'time',
+            gridLines: {
+              display: false
+            },
+            time: {
+              stepSize: showToday ? 3 : 5,
+              displayFormats: showToday
+                ? {
+                    hour: 'HH:00',
+                    minute: 'HH:mm'
+                  }
+                : {
+                    hour: 'LLL dd',
+                    minute: 'LLL dd'
+                  }
+            },
+            adapters: {
+              date: {
+                zone: timezone
+              }
+            }
+            // This cast is because the type definition does not include adapters
+          } as ChartXAxe
+        ]
+      },
+      tooltips: {
+        cornerRadius: 0,
+        backgroundColor: '#fbfbfb',
+        bodyFontColor: '#32363C',
+        displayColors: false,
+        titleFontColor: '#606469',
+        xPadding: 16,
+        yPadding: 10,
+        borderWidth: 0.5,
+        borderColor: '#999',
+        caretPadding: 10,
+        position: 'nearest',
+        callbacks: {
+          label: _formatTooltip(data, formatTooltip, _tooltipUnit)
+        },
+        intersect: false,
+        mode: 'index'
+      }
+    };
 
     /**
      * We've been given a max unit, which indicates that
@@ -216,17 +208,12 @@ const LineGraph: React.FC<CombinedProps> = props => {
      * However, in the tooltip, each individual value will be formatted according to
      * the most appropriate unit, if a unit is provided.
      */
-    finalChartOptions.tooltips.callbacks.label = _formatTooltip(
-      data,
-      formatTooltip,
-      _tooltipUnit
-    );
 
-    return finalChartOptions;
+    return finalChartOptions as ChartOptions;
   };
 
   const _formatData = () => {
-    return data.map(dataSet => {
+    return data.map((dataSet, idx) => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
         acc.push({
           t: point[0],
@@ -234,31 +221,41 @@ const LineGraph: React.FC<CombinedProps> = props => {
         });
         return acc;
       }, []);
-
       return {
         label: dataSet.label,
         borderColor: dataSet.borderColor,
         backgroundColor: dataSet.backgroundColor,
         data: timeData,
         fill: dataSet.fill,
+        hidden: hiddenDatasets.includes(idx),
         ...lineOptions
       };
     });
   };
 
+  React.useEffect(() => {
+    // Here we need to wait for the Canvas element to exist to attach a chart to it
+    // we use a reference to access it.
+    // https://dev.to/vcanales/using-chart-js-in-a-function-component-with-react-hooks-246l
+    if (inputEl.current) {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+        chartInstance.current = null;
+      }
+      chartInstance.current = new Chart(inputEl.current.getContext('2d'), {
+        type: 'line',
+        data: {
+          datasets: _formatData()
+        },
+        plugins,
+        options: getChartOptions(suggestedMax, nativeLegend, unit)
+      });
+    }
+  });
   return (
     <div className={classes.wrapper}>
       <div style={{ width: '100%' }}>
-        <Line
-          {...rest}
-          height={chartHeight || 300}
-          options={getChartOptions(suggestedMax, nativeLegend, unit)}
-          plugins={plugins}
-          ref={inputEl}
-          data={{
-            datasets: _formatData()
-          }}
-        />
+        <canvas height={chartHeight || 300} ref={inputEl} />
       </div>
       {legendRendered && legendRows && (
         <div className={classes.container}>
@@ -289,68 +286,55 @@ const LineGraph: React.FC<CombinedProps> = props => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <React.Fragment>
-                {legendRows &&
-                  inputEl.current.chartInstance.legend.legendItems.map(
-                    (tick: ChartData<any>, idx: number) => {
-                      const bgColor: string =
-                        typeof tick.fillStyle === 'string'
-                          ? tick.fillStyle
-                          : 'transparent';
-                      const { data: metricsData, format } = legendRows[idx];
-                      return (
-                        <TableRow key={idx}>
-                          <TableCell className={classes.legend}>
-                            <Button
-                              onClick={() =>
-                                handleLegendClick(tick.datasetIndex)
-                              }
-                              data-qa-legend-title
-                              aria-label={`Toggle ${tick.text} visibility`}
-                              className={classes.toggleButton}
+              {legendRows?.map((_tick: any, idx: number) => {
+                const bgColor = data[idx].backgroundColor;
+                const title = data[idx].label;
+                const hidden = hiddenDatasets.includes(idx);
+                const { data: metricsData, format } = legendRows[idx];
+                return (
+                  <TableRow key={idx}>
+                    <TableCell className={classes.legend}>
+                      <Button
+                        onClick={() => handleLegendClick(idx)}
+                        data-qa-legend-title
+                        aria-label={`Toggle ${title} visibility`}
+                        className={classes.toggleButton}
+                      >
+                        <div
+                          className={`${classes.legendIcon} ${hidden &&
+                            classes.crossedOut}`}
+                          style={{
+                            background: bgColor,
+                            borderColor: bgColor
+                          }}
+                        />
+                        <span className={hidden ? classes.crossedOut : ''}>
+                          {title}
+                        </span>
+                      </Button>
+                    </TableCell>
+                    {metricsData &&
+                      metricsBySection(metricsData).map((section, i) => {
+                        return (
+                          <TableCell
+                            key={i}
+                            parentColumn={
+                              rowHeaders ? rowHeaders[idx] : undefined
+                            }
+                            data-qa-body-cell
+                          >
+                            <Typography
+                              variant="body2"
+                              className={classes.text}
                             >
-                              <div
-                                className={`${
-                                  classes.legendIcon
-                                } ${tick.hidden && classes.crossedOut}`}
-                                style={{
-                                  background: bgColor,
-                                  borderColor: bgColor
-                                }}
-                              />
-                              <span
-                                className={
-                                  tick.hidden ? classes.crossedOut : ''
-                                }
-                              >
-                                {tick.text}
-                              </span>
-                            </Button>
+                              {format(section)}
+                            </Typography>
                           </TableCell>
-                          {metricsData &&
-                            metricsBySection(metricsData).map((section, i) => {
-                              return (
-                                <TableCell
-                                  key={i}
-                                  parentColumn={
-                                    rowHeaders ? rowHeaders[idx] : undefined
-                                  }
-                                  data-qa-body-cell
-                                >
-                                  <Typography
-                                    variant="body2"
-                                    className={classes.text}
-                                  >
-                                    {format(section)}
-                                  </Typography>
-                                </TableCell>
-                              );
-                            })}
-                        </TableRow>
-                      );
-                    }
-                  )}
-              </React.Fragment>
+                        );
+                      })}
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
@@ -369,20 +353,20 @@ export const metricsBySection = (data: Metrics): number[] => [
 
 export const _formatTooltip = curry(
   (
-    data: any,
+    data: DataSet[],
     formatter: ((v: number) => string) | undefined,
     unit: string | undefined,
-    t?: any,
-    d?: any
+    t: ChartTooltipItem,
+    _d: ChartData
   ) => {
     /**
      * t and d are the params passed by chart.js to this component.
      * data and formatter should be partially applied before this function
      * is called directly by chart.js
      */
-    const dataset = data[t.datasetIndex];
+    const dataset = t?.datasetIndex ? data[t?.datasetIndex] : data[0];
     const label = dataset.label;
-    const val = dataset.data[t.index][1] || 0;
+    const val = t?.index ? dataset.data[t?.index][1] || 0 : 0;
     const value = formatter ? formatter(val) : roundTo(val);
     return `${label}: ${value}${unit ? unit : ''}`;
   }

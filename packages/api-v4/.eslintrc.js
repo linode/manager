@@ -8,14 +8,13 @@ module.exports = {
     ecmaVersion: 2020,
     warnOnUnsupportedTypeScriptVersion: true
   },
-  plugins: ['@typescript-eslint', 'sonarjs', 'ramda', 'prettier'],
+  plugins: ['@typescript-eslint', 'sonarjs', 'prettier'],
   extends: [
     // disables a few of the recommended rules from the previous set that we know are already covered by TypeScript's typechecker
     'plugin:@typescript-eslint/eslint-recommended',
     // like eslint:recommended, except it only turns on rules from our TypeScript-specific plugin.
     'plugin:@typescript-eslint/recommended',
     'plugin:sonarjs/recommended',
-    'plugin:ramda/recommended',
     'plugin:prettier/recommended' // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
   ],
   rules: {
@@ -65,8 +64,6 @@ module.exports = {
     'sonarjs/no-identical-functions': 'warn',
     'sonarjs/no-redundant-jump': 'warn',
     'sonarjs/no-small-switch': 'warn',
-    // ramda
-    'ramda/prefer-ramda-boolean': 'off',
     // style errors
     'no-multiple-empty-lines': 'error',
     curly: 'warn',

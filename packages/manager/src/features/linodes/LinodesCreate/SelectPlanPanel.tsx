@@ -93,6 +93,7 @@ interface Props {
   header?: string;
   copy?: string;
   disabledClasses?: LinodeTypeClass[];
+  tabbedPanelInnerClass?: string;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -215,12 +216,12 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 `$` + type.price.hourly
               )}
             </TableCell>
+            <TableCell data-qa-ram>
+              {convertMegabytesTo(type.memory, true)}
+            </TableCell>
             <TableCell data-qa-cpu>{type.vcpus}</TableCell>
             <TableCell data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
-            </TableCell>
-            <TableCell data-qa-ram>
-              {convertMegabytesTo(type.memory, true)}
             </TableCell>
           </TableRow>
         </Hidden>
@@ -249,9 +250,9 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
           <TableCell data-qa-plan-header>Linode Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
+          <TableCell data-qa-ram-header>RAM</TableCell>
           <TableCell data-qa-cpu-header>CPUs</TableCell>
           <TableCell data-qa-storage-header>Storage</TableCell>
-          <TableCell data-qa-ram-header>Ram</TableCell>
         </TableRow>
       </TableHead>
     );
@@ -289,38 +290,22 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
 
     const tabOrder: LinodeTypeClass[] = [];
 
-    if (!isEmpty(nanodes)) {
-      tabs.push({
-        render: () => {
-          return (
-            <>
-              <Typography data-qa-nanode className={classes.copy}>
-                Nanode instances are good for low-duty workloads, where
-                performance isn&#39;t critical.
-              </Typography>
-              {this.renderPlanContainer(nanodes)}
-            </>
-          );
-        },
-        title: 'Nanode'
-      });
-      tabOrder.push('nanode');
-    }
+    const shared = [...nanodes, ...standards];
 
-    if (!isEmpty(standards)) {
+    if (!isEmpty(shared)) {
       tabs.push({
         render: () => {
           return (
             <>
               <Typography data-qa-standard className={classes.copy}>
-                Standard instances are good for medium-duty workloads and are a
-                good mix of performance, resources, and price.
+                Shared CPU instances are good for medium-duty workloads and are
+                a good mix of performance, resources, and price.
               </Typography>
-              {this.renderPlanContainer(standards)}
+              {this.renderPlanContainer(shared)}
             </>
           );
         },
-        title: 'Standard'
+        title: 'Shared CPU'
       });
       tabOrder.push('standard');
     }
@@ -351,7 +336,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
               <Typography data-qa-highmem className={classes.copy}>
                 High Memory instances favor RAM over other resources, and can be
                 good for memory hungry use cases like caching and in-memory
-                databases.
+                databases. All High Memory plans contain dedicated CPU cores.
               </Typography>
               {this.renderPlanContainer(highmem)}
             </>
@@ -413,29 +398,38 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
       error,
       header,
       types,
-      currentPlanHeading
+      currentPlanHeading,
+      selectedID
     } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
 
     // Determine initial plan category tab based on current plan selection
     // (if there is one).
-    const selectedTypeClass: LinodeTypeClass = pathOr(
+    let selectedTypeClass: LinodeTypeClass = pathOr(
       'standard', // Use `standard` by default
       ['class'],
-      types.find(type => type.heading === currentPlanHeading)
+      types.find(
+        type => type.id === selectedID || type.heading === currentPlanHeading
+      )
     );
+
+    // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
+    if (selectedTypeClass === 'nanode') {
+      selectedTypeClass = 'standard';
+    }
 
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
     return (
       <TabbedPanel
         rootClass={`${classes.root} tabbedPanel`}
+        innerClass={this.props.tabbedPanelInnerClass}
         error={error}
         header={header || 'Linode Plan'}
         copy={copy}
         tabs={tabs}
-        initTab={initialTab}
+        initTab={initialTab >= 0 ? initialTab : 0}
         data-qa-select-plan
       />
     );

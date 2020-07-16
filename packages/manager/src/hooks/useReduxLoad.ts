@@ -65,7 +65,7 @@ const requestMap: RequestMap = {
   managedIssues: requestManagedIssues,
   kubernetes: requestKubernetesClusters,
   longview: getAllLongviewClients,
-  firewalls: getAllFirewalls,
+  firewalls: () => getAllFirewalls({}),
   clusters: requestClusters
 };
 

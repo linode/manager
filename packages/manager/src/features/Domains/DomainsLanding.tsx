@@ -27,8 +27,13 @@ import EntityTable, {
   EntityTableRow,
   HeaderCell
 } from 'src/components/EntityTable';
+import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
+import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
@@ -49,6 +54,7 @@ import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DisableDomainDialog from './DisableDomainDialog';
 import DomainRow from './DomainTableRow';
+import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames =
@@ -63,7 +69,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     titleWrapper: {
       flex: 1
     },
@@ -123,7 +128,8 @@ export type CombinedProps = DomainProps &
   RouteComponentProps<{}> &
   StateProps &
   DispatchProps &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  FeatureFlagConsumerProps;
 
 const headers: HeaderCell[] = [
   {
@@ -133,16 +139,16 @@ const headers: HeaderCell[] = [
     widthPercent: 25
   },
   {
-    label: 'Type',
-    dataColumn: 'type',
-    sortable: true,
-    widthPercent: 15
-  },
-  {
     label: 'Status',
     dataColumn: 'status',
     sortable: true,
     widthPercent: 25
+  },
+  {
+    label: 'Type',
+    dataColumn: 'type',
+    sortable: true,
+    widthPercent: 15
   },
   {
     label: 'Last Modified',
@@ -318,10 +324,14 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       domainsError,
       domainsData,
       domainsLoading,
+      domainsLastUpdated,
+      flags,
       howManyLinodesOnAccount,
       isRestrictedUser,
       linodesLoading
     } = this.props;
+
+    const Table = flags.cmr ? EntityTable_CMR : EntityTable;
 
     const handlers: DomainHandlers = {
       onClone: this.props.openForCloning,
@@ -331,9 +341,12 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     };
 
     const domainRow: EntityTableRow<Domain> = {
-      Component: DomainRow,
+      Component: flags.cmr ? DomainRow_CMR : DomainRow,
       data: domainsData ?? [],
-      handlers
+      handlers,
+      loading: domainsLoading,
+      error: domainsError.read,
+      lastUpdated: domainsLastUpdated
     };
 
     if (domainsLoading) {
@@ -394,60 +407,75 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           }: ToggleProps<boolean>) => {
             return (
               <React.Fragment>
-                <Grid
-                  container
-                  justify="space-between"
-                  alignItems="flex-end"
-                  style={{ paddingBottom: 0 }}
-                >
-                  <Grid item className={classes.titleWrapper}>
-                    <Breadcrumb
-                      // This component can be rendered with the URL
-                      // /domains/:domainId, which would result in a double
-                      // breadcrumb. Thus we give the <Breadcrumb /> an explicit
-                      // pathname.
-                      pathname="Domains"
-                      labelTitle="Domains"
-                      className={classes.breadcrumbs}
-                    />
-                  </Grid>
-                  <Grid item className="p0">
-                    <FormControlLabel
-                      className={classes.tagGroup}
-                      control={
-                        <Toggle
-                          className={
-                            domainsAreGrouped ? ' checked' : ' unchecked'
-                          }
-                          onChange={toggleGroupDomains}
-                          checked={domainsAreGrouped}
-                        />
-                      }
-                      label="Group by Tag:"
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Grid
-                      container
-                      alignItems="flex-end"
-                      style={{ width: 'auto' }}
-                    >
-                      <Grid item className="pt0">
-                        <AddNewLink
-                          onClick={this.openImportZoneDrawer}
-                          label="Import a Zone"
-                        />
-                      </Grid>
-                      <Grid item className="pt0">
-                        <AddNewLink
-                          data-testid="create-domain"
-                          onClick={this.openCreateDomainDrawer}
-                          label="Add a Domain"
-                        />
+                {flags.cmr ? (
+                  <LandingHeader
+                    title="Domains"
+                    extraActions={
+                      <Button onClick={this.openImportZoneDrawer}>
+                        Import a Zone
+                      </Button>
+                    }
+                    entity="Domain"
+                    onAddNew={this.openCreateDomainDrawer}
+                    iconType="domain"
+                    docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
+                  />
+                ) : (
+                  <Grid
+                    container
+                    justify="space-between"
+                    alignItems="flex-end"
+                    style={{ paddingBottom: 0 }}
+                  >
+                    <Grid item className={classes.titleWrapper}>
+                      <Breadcrumb
+                        // This component can be rendered with the URL
+                        // /domains/:domainId, which would result in a double
+                        // breadcrumb. Thus we give the <Breadcrumb /> an explicit
+                        // pathname.
+                        pathname="Domains"
+                        labelTitle="Domains"
+                        className={classes.breadcrumbs}
+                      />
+                    </Grid>
+                    <Grid item className="p0">
+                      <FormControlLabel
+                        className={classes.tagGroup}
+                        control={
+                          <Toggle
+                            className={
+                              domainsAreGrouped ? ' checked' : ' unchecked'
+                            }
+                            onChange={toggleGroupDomains}
+                            checked={domainsAreGrouped}
+                          />
+                        }
+                        label="Group by Tag:"
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Grid
+                        container
+                        alignItems="flex-end"
+                        style={{ width: 'auto' }}
+                      >
+                        <Grid item className="pt0">
+                          <AddNewLink
+                            onClick={this.openImportZoneDrawer}
+                            label="Import a Zone"
+                          />
+                        </Grid>
+                        <Grid item className="pt0">
+                          <AddNewLink
+                            data-testid="create-domain"
+                            onClick={this.openCreateDomainDrawer}
+                            label="Add a Domain"
+                          />
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
+                )}
                 {shouldShowBanner && (
                   <Notice warning important className={classes.dnsWarning}>
                     <Typography variant="h3">
@@ -471,14 +499,13 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       text={this.props.location.state.recordError}
                     />
                   )}
-                <Grid item xs={12}>
-                  <EntityTable
-                    entity="domain"
-                    groupByTag={domainsAreGrouped}
-                    row={domainRow}
-                    headers={headers}
-                  />
-                </Grid>
+                <Table
+                  entity="domain"
+                  groupByTag={domainsAreGrouped}
+                  row={domainRow}
+                  headers={headers}
+                  initialOrder={{ order: 'asc', orderBy: 'domain' }}
+                />
               </React.Fragment>
             );
           }}
@@ -621,5 +648,6 @@ export default compose<CombinedProps, Props>(
   domainsContainer(),
   connected,
   withSnackbar,
+  withFeatureFlags,
   styled
 )(DomainsLanding);

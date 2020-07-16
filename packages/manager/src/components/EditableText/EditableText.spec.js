@@ -15,7 +15,6 @@ describe('Editable Text', () => {
 
   let originalLabel;
 
-
   function setUpEditField() {
     $(editableTextField).click();
     //Edit text button should be displayed after clicking editable text

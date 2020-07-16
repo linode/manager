@@ -164,7 +164,13 @@ const MutationNotification: React.FC<CombinedProps> = props => {
         <span
           className={classes.pendingMutationLink}
           onClick={openMutationDrawer}
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              openMutationDrawer();
+            }
+          }}
           role="button"
+          tabIndex={0}
         >
           click here.
         </span>
@@ -176,6 +182,10 @@ const MutationNotification: React.FC<CombinedProps> = props => {
         loading={mutationDrawerLoading}
         error={mutationDrawerError}
         handleClose={closeMutationDrawer}
+        isMovingFromSharedToDedicated={isMovingFromSharedToDedicated(
+          linodeType.id,
+          successorMetaData.id
+        )}
         mutateInfo={{
           vcpus:
             successorMetaData.vcpus !== vcpus ? successorMetaData.vcpus : null,
@@ -233,10 +243,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
@@ -252,3 +259,8 @@ const enhanced = compose<CombinedProps, Props>(
 );
 
 export default enhanced(MutationNotification);
+
+// Hack solution to determine if a type is moving from shared CPU cores to dedicated.
+const isMovingFromSharedToDedicated = (typeA: string, typeB: string) => {
+  return typeA.startsWith('g6-highmem') && typeB.startsWith('g7-highmem');
+};

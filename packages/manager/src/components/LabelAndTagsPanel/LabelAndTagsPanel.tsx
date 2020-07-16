@@ -45,21 +45,19 @@ export class InfoPanel extends React.Component<CombinedProps> {
     const { classes, error, labelFieldProps, tagsInputProps } = this.props;
 
     return (
-      <React.Fragment>
-        <Paper className={classes.root} data-qa-label-header>
-          <div className={classes.inner}>
-            {error && <Notice text={error} error />}
-            <TextField
-              {...labelFieldProps || {
-                label: 'Label',
-                placeholder: 'Enter a label'
-              }}
-              data-qa-label-input
-            />
-            {tagsInputProps && <TagsInput {...tagsInputProps} />}
-          </div>
-        </Paper>
-      </React.Fragment>
+      <Paper className={classes.root} data-qa-label-header>
+        <div className={classes.inner}>
+          {error && <Notice text={error} error />}
+          <TextField
+            {...(labelFieldProps || {
+              label: 'Label',
+              placeholder: 'Enter a label'
+            })}
+            data-qa-label-input
+          />
+          {tagsInputProps && <TagsInput {...tagsInputProps} />}
+        </div>
+      </Paper>
     );
   }
 }

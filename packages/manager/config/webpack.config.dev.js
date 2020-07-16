@@ -51,6 +51,11 @@ module.exports = {
     // require.resolve('webpack-dev-server/client') + '?/',
     // require.resolve('webpack/hot/dev-server'),
     require.resolve('react-dev-utils/webpackHotDevClient'),
+    // If we're in development, load our browser mocks. These will
+    // only be active if REACT_APP_MOCK_SERVICE_WORKER is present
+    // in the .env file, but including this through Webpack prevents
+    // the production bundle from bloating.
+    paths.browserMocks,
     // Finally, this is your app's code:
     paths.appIndexJs
     // We include the app code last so that if there is a runtime error during
@@ -259,12 +264,6 @@ module.exports = {
     // makes the discovery automatic so you don't have to restart.
     // See https://github.com/facebookincubator/create-react-app/issues/186
     new WatchMissingNodeModulesPlugin(paths.appNodeModules),
-    // Moment.js is an extremely popular library that bundles large locale files
-    // by default due to how Webpack interprets its code. This is a practical
-    // solution that requires the user to opt into importing specific locales.
-    // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
-    // You can remove this if you don't use Moment.js:
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     // Perform type checking and linting in a separate process to speed up compilation
     new ForkTsCheckerWebpackPlugin({
       async: true,
