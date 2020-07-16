@@ -83,6 +83,10 @@ export const LandingTable: React.FC<Props> = props => {
           lastUpdated: row.lastUpdated
         };
 
+        if (row.request) {
+          return <APIPaginatedTable {...tableProps} data={undefined} />;
+        }
+
         if (groupByTag) {
           return <GroupedEntitiesByTag {...tableProps} />;
         }
