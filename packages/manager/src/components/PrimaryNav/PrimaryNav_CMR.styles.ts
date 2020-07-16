@@ -66,6 +66,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&:focus': {
       backgroundColor: theme.bg.primaryNavActiveBG
+    },
+    '&:first-of-type': {
+      marginLeft: 15
     }
   },
   listItemCollapsed: {},
@@ -117,14 +120,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 8,
     position: 'absolute',
     backgroundColor: theme.bg.navy,
-    border: '1px solid #999',
     outline: 0,
     boxShadow: 'none',
+    marginTop: 3,
     minWidth: 185,
     top: 25
-  },
-  settingsBackdrop: {
-    backgroundColor: 'rgba(0,0,0,.3)'
   },
   menuButton: {
     display: 'flex',

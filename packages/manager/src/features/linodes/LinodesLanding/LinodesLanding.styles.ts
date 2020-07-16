@@ -41,18 +41,22 @@ const styles = (theme: Theme) =>
       marginLeft: 15
     },
     chip: {
-      color: '#fff',
-      fontSize: '1.1rem',
-      padding: 10
+      ...theme.applyStatusPillStyles
     },
     chipRunning: {
-      backgroundColor: '#00b159'
+      '&:before': {
+        backgroundColor: theme.color.green
+      }
     },
     chipPending: {
-      backgroundColor: '#ffb31a'
+      '&:before': {
+        backgroundColor: theme.color.orange
+      }
     },
     chipOffline: {
-      backgroundColor: '#9ea4ae'
+      '&:before': {
+        backgroundColor: theme.color.grey10
+      }
     },
     controlHeader: {
       backgroundColor: theme.bg.controlHeader,
