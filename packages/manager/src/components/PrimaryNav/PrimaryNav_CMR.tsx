@@ -341,9 +341,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
               getContentAnchorEl={undefined}
               PaperProps={{ square: true, className: classes.paper }}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-              BackdropProps={{
-                className: classes.settingsBackdrop
-              }}
             >
               <ThemeToggle toggleTheme={toggleTheme} />
               <SpacingToggle toggleSpacing={toggleSpacing} />
