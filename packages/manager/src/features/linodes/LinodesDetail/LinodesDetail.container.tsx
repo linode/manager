@@ -12,7 +12,7 @@ import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { shouldRequestEntity } from 'src/utilities/shouldRequestEntity';
 
 interface Props {
-  linodeId: number;
+  linodeId: string;
 }
 
 /**
@@ -24,7 +24,7 @@ export const LinodesDetailContainer: React.FC<Props> = props => {
   const { linodes } = useLinodes();
   const dispatch = useDispatch();
   const params = useParams<{ linodeId: string }>();
-  const linodeId = props.linodeId ? String(props.linodeId) : params.linodeId;
+  const linodeId = props.linodeId ? props.linodeId : params.linodeId;
 
   const { _loading } = useReduxLoad(['images', 'volumes']);
   const { configs, disks } = useSelector((state: ApplicationState) => {
