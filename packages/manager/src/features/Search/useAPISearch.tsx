@@ -1,13 +1,13 @@
 import { flatten } from 'ramda';
 import { useCallback } from 'react';
 import { getDomains } from '@linode/api-v4/lib/domains';
-import { getImages } from '@linode/api-v4/lib/images';
-import { getLinodes } from '@linode/api-v4/lib/linodes';
+import { getImages, Image } from '@linode/api-v4/lib/images';
+import { getLinodes, LinodeType } from '@linode/api-v4/lib/linodes';
 import { getKubernetesClusters } from '@linode/api-v4/lib/kubernetes';
 import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
 import { refinedSearch } from './refinedSearch';
-import { SearchableItem } from './search.interfaces';
+import { SearchableItem, SearchResults } from './search.interfaces';
 import { useTypes } from 'src/hooks/useTypes';
 import { useImages } from 'src/hooks/useImages';
 import {
@@ -22,7 +22,7 @@ import {
 import { emptyResults, separateResultsByEntity } from './utils';
 
 interface Search {
-  searchAPI: (query: string) => Promise<any>; // Promise<SearchResults>;
+  searchAPI: (query: string) => Promise<SearchResults>;
 }
 
 export const useAPISearch = (): Search => {
@@ -66,7 +66,11 @@ const generateFilter = (text: string, labelFieldName: string = 'label') => {
   };
 };
 
-const requestEntities = (searchText: string, types: any, images: any) => {
+const requestEntities = (
+  searchText: string,
+  types: LinodeType[],
+  images: Record<string, Image>
+) => {
   return Promise.all([
     getDomains({}, generateFilter(searchText, 'domain')).then(results =>
       results.data.map(domainToSearchableItem)
