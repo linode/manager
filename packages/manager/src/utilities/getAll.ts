@@ -1,15 +1,6 @@
-import * as Bluebird from 'bluebird';
-import { Domain, getDomains } from '@linode/api-v4/lib/domains';
-import { getLinodes, Linode } from '@linode/api-v4/lib/linodes';
-import {
-  getNodeBalancers,
-  NodeBalancer
-} from '@linode/api-v4/lib/nodebalancers';
-import { getVolumes, Volume } from '@linode/api-v4/lib/volumes';
 import { range } from 'ramda';
 
 import { API_MAX_PAGE_SIZE } from 'src/constants';
-import { sendFetchAllEvent } from 'src/utilities/ga';
 
 export interface APIResponsePage<T> {
   page: number;
@@ -71,13 +62,16 @@ export const getAll: <T>(
       // Create an iterable list of the remaining pages.
       const remainingPages = range(page + 1, pages + 1);
 
+      const promises: Promise<any>[] = [];
+      remainingPages.forEach(thisPage => {
+        const promise = getter({ ...pagination, page: thisPage }, filter).then(
+          response => response.data
+        );
+        promises.push(promise);
+      });
       //
       return (
-        Bluebird.map(remainingPages, nextPage =>
-          getter({ ...pagination, page: nextPage }, filter).then(
-            response => response.data
-          )
-        )
+        Promise.all(promises)
           /** We're given data[][], so we flatten that, and append the first page response. */
           .then(resultPages => {
             const combinedData = resultPages.reduce((result, nextPage) => {
@@ -114,15 +108,20 @@ export const getAllWithArguments: <T>(
 
       // Create an iterable list of the remaining pages.
       const remainingPages = range(page + 1, pages + 1);
+      const promises: Promise<any>[] = [];
+      remainingPages.forEach(thisPage => {
+        const promise = getter(
+          ...args,
+          { ...pagination, page: thisPage },
+          filter
+        ).then(response => response.data);
+        promises.push(promise);
+      });
 
       //
       return (
-        Bluebird.map(remainingPages, nextPage =>
-          getter(...args, { ...pagination, page: nextPage }, filter).then(
-            response => response.data
-          )
-        )
-          /** We're given NodeBalancer[][], so we flatten that, and append the first page response. */
+        Promise.all(promises)
+          // eslint-disable-next-line
           .then(resultPages => {
             const combinedData = resultPages.reduce((result, nextPage) => {
               return [...result, ...nextPage];
@@ -135,80 +134,4 @@ export const getAllWithArguments: <T>(
       );
     }
   );
-};
-
-export type GetAllHandler = (
-  linodes: Linode[],
-  nodebalancers: NodeBalancer[],
-  volumes: Volume[],
-  domains: Domain[]
-) => any;
-
-/**
- * getAllEntities
- *
- * Uses getAll to request all instances of each type of entity and return
- * a 2d array of the combined results.
- *
- * @param cb Function that will be called after all requests have completed
- * with a 2d array of all the returned entities.
- */
-export const getAllEntities = (cb: GetAllHandler) =>
-  Bluebird.join(
-    getAll<Linode>(getLinodes)(),
-    getAll<NodeBalancer>(getNodeBalancers)(),
-    getAll<Volume>(getVolumes)(),
-    getAll<Domain>(getDomains)(),
-    /** for some reason typescript thinks ...results is implicitly typed as 'any' */
-    // @ts-ignore
-    (...results) => {
-      const resultData = [
-        results[0].data,
-        results[1].data,
-        results[2].data,
-        results[3].data
-      ];
-
-      /** total number of entities returned, as determined by the results API property */
-      const numOfEntities =
-        results[0].results +
-        results[1].results +
-        results[2].results +
-        results[3].results;
-      sendGetAllRequestToAnalytics(numOfEntities);
-      /** for some reason typescript thinks ...results is implicitly typed as 'any' */
-      // @ts-ignore
-      cb(...resultData);
-    }
-  );
-
-/**
- * sends off an analytics event with how many entities came back from a search request
- * for the purposes of determining how many entities does an average user have.
- *
- * @param { number } howManyThingsRequested - how many entities came back in our
- * network request to get all the things
- */
-const sendGetAllRequestToAnalytics = (howManyThingsRequested: number) => {
-  /**
-   * We are splitting analytics tracking into a few different buckets
-   */
-  let bucketText = '';
-  if (howManyThingsRequested > 500) {
-    bucketText = '500+';
-  } else if (howManyThingsRequested > 100) {
-    bucketText = '100-499';
-  } else if (howManyThingsRequested > 25) {
-    bucketText = '26-100';
-  } else if (howManyThingsRequested > 10) {
-    bucketText = '11-26';
-  } else {
-    bucketText = '0-10';
-  }
-
-  /**
-   * send an event with the number of requested entities
-   * and the URL pathname and query string
-   */
-  sendFetchAllEvent(bucketText, howManyThingsRequested);
 };

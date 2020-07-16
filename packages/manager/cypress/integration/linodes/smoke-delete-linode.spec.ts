@@ -33,7 +33,7 @@ describe('delete linode', () => {
         .should('eq', 200);
       cy.url().should('contain', '/linodes');
       cy.go('back');
-      cy.findByText('Not found');
+      cy.findByText('Not Found');
     });
   });
 });
