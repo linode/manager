@@ -54,7 +54,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
 
   // Offset used by the date picker. The number `0` represents the current month,
   // `-1` represents the previous month, etc. This value should not be greater than `0`.
-  const [monthOffset, setMonthOffset] = React.useState<number>(0);
+  const [monthOffset, setMonthOffset] = React.useState(0);
 
   const now = new Date();
 
@@ -62,8 +62,11 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
 
   const { loading, errorMessage, stats, transfer } = useLinodeNetworkInfo(
     props.linodeID,
-    year,
-    month
+    {
+      year,
+      month,
+      requestTransfer: monthOffset < 0
+    }
   );
 
   const bytesIn = readableBytes(transfer?.bytes_in ?? 0);
@@ -110,6 +113,16 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
 
   const displayLoading = loading && !stats && !transfer;
 
+  // In/Out totals from the /transfer endpoint are per-month (to align with billing cycle).
+  // Graph data from the /stats endpoint works a bit differently: when you request data for the
+  // CURRENT month/year, the resulting data is from the last 30 days.
+  //
+  // Thus, when requesting data for the CURRENT month/year the data sets are out of alignment.
+  // Consequently, we only display In/Out totals when viewing previous months of data, which aligns
+  // with the behavior of Legacy Manager.
+
+  const displayInOutTotals = monthOffset < 0;
+
   return (
     <>
       <Box
@@ -122,7 +135,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
         <Typography>
           <strong>Network Transfer History ({unit}/s)</strong>
         </Typography>
-        {!displayLoading && !errorMessage && (
+        {displayInOutTotals && transfer && !errorMessage && (
           <Typography>
             {bytesIn.formatted} In/{bytesOut.formatted} Out
           </Typography>
