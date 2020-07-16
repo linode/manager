@@ -59,22 +59,24 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
     const { total, classes, isTooEarlyForStats } = this.props;
     const { used, loading, error } = this.state;
 
-    const usedInGb = used / 1024 / 1024 / 1024;
+    const usedInGb = used / 1000 / 1000 / 1000;
 
-    const totalInBytes = total * 1024 * 1024 * 1024;
+    const totalInBytes = total * 1000 * 1000 * 1000;
 
     const usagePercent =
       totalInBytes > used ? 100 - ((total - usedInGb) * 100) / total : 100;
 
     const readableUsed = readableBytes(used, {
       maxUnit: 'GB',
-      round: { MB: 0, GB: 1 }
+      round: { MB: 0, GB: 1 },
+      base10: true
     });
 
     const readableFree = readableBytes(totalInBytes - used, {
       maxUnit: 'GB',
       round: { MB: 0, GB: 1 },
-      handleNegatives: true
+      handleNegatives: true,
+      base10: true
     });
 
     if (loading) {
