@@ -25,6 +25,7 @@ import useLinodes from 'src/hooks/useLinodes';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   numVolumes: number;
@@ -90,6 +91,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   });
 
   const { updateLinode, deleteLinode } = useLinodes();
+  const history = useHistory();
 
   const openPowerActionDialog = (
     bootAction: BootAction,
@@ -173,6 +175,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     getVolumesForLinode(volumes.itemsById, linodeId).length;
 
   const handleDeleteLinode = (linodeId: number) => {
+    history.push('/linodes');
     return deleteLinode(linodeId);
   };
 
