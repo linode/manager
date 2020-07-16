@@ -8,6 +8,7 @@ import {
   MenuPopover
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
+import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import HelpIcon from 'src/components/HelpIcon';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -20,10 +21,7 @@ export interface Action {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  wrapper: {
-    display: 'inline-block',
-    position: 'relative'
-  },
+  wrapper: {},
   button: {
     '&[data-reach-menu-button]': {
       display: 'flex',
@@ -36,11 +34,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       cursor: 'pointer',
       '&:hover': {
         backgroundColor: '#3683dc',
-        color: theme.color.white
+        color: '#fff'
       },
       '&[aria-expanded="true"]': {
         backgroundColor: '#3683dc',
-        color: theme.color.white,
+        color: '#fff',
         width: '100%'
       }
     }
@@ -59,22 +57,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   popover: {
-    '&[data-reach-menu-popover]': {
-      right: 0,
-      // Need this to merge the button and items wrapper due to the borderRadius on the wrapper
-      marginTop: -3,
-      zIndex: 1
-    }
+    zIndex: 1
   },
   itemsOuter: {
     '&[data-reach-menu-items]': {
       padding: 0,
       width: 200,
       background: '#3683dc',
-      borderRadius: 3,
       border: 'none',
       fontSize: 14,
-      color: theme.color.white,
+      color: '#fff',
       textAlign: 'left'
     }
   },
@@ -86,8 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: '16px',
       borderBottom: '1px solid #5294e0',
       background: '#3683dc',
-      color: theme.color.white,
-      borderRadius: 3
+      color: '#fff'
     },
     '&[data-reach-menu-item][data-selected]': {
       background: '#226dc3'
@@ -170,7 +161,7 @@ const ActionMenu: React.FC<CombinedProps> = props => {
           <KebabIcon aria-hidden className={classes.icon} type="primary" />
           {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
         </MenuButton>
-        <MenuPopover className={classes.popover} portal={true}>
+        <MenuPopover className={classes.popover} position={positionRight}>
           <MenuItems className={classes.itemsOuter}>
             {(actions as Action[]).map((a, idx) => (
               <MenuLink
