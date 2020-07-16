@@ -127,6 +127,18 @@ const TransferContent: React.FC<ContentProps> = props => {
   } = props;
   const classes = useStyles();
 
+  /**
+   * In this component we display four pieces of information:
+   *
+   * 1. Account-level transfer quota for this month
+   * 2. The amount of transfer THIS Linode has used this month
+   * 3. The amount of transfer OTHER things on your account have used this month
+   * 4. The remaining transfer on your account this month
+   *
+   * The value for #3 comes from subtracting the transfer THIS Linode has used from the TOTAL
+   * transfer used on the account.
+   */
+
   const linodeUsagePercent = calculatePercentageWithCeiling(
     linodeUsedInGB,
     accountQuotaInGB
