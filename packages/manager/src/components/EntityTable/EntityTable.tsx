@@ -4,6 +4,7 @@ import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import OrderBy, { OrderByProps } from 'src/components/OrderBy';
 import TableSortCell from 'src/components/TableSortCell';
+import APIPaginatedTable from './APIPaginatedTable';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag';
 import ListEntities from './ListEntities';
 import { BaseProps } from './types';
@@ -15,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface EntityTableRow<T> extends BaseProps {
   Component: React.ComponentType<any>;
   data: T[];
+  request?: () => Promise<any>;
 }
 
 interface Props {
@@ -72,6 +74,7 @@ export const LandingTable: React.FC<Props> = props => {
 
         const tableProps = {
           data: orderedData,
+          request: row.request,
           RowComponent: row.Component,
           headerCells,
           entity,
@@ -82,6 +85,9 @@ export const LandingTable: React.FC<Props> = props => {
 
         if (groupByTag) {
           return <GroupedEntitiesByTag {...tableProps} />;
+        }
+        if (row.request) {
+          return <APIPaginatedTable {...tableProps} />;
         }
         return <ListEntities {...tableProps} />;
       }}

@@ -21,4 +21,5 @@ export interface ListProps extends BaseProps {
 export interface EntityTableRow<T> extends BaseProps {
   Component: React.ComponentType<any>;
   data: T[];
+  request?: () => Promise<T[]>;
 }

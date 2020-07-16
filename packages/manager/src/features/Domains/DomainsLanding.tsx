@@ -1,4 +1,4 @@
-import { Domain } from '@linode/api-v4/lib/domains';
+import { getDomains, Domain } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { equals, pathOr } from 'ramda';
@@ -343,6 +343,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     const domainRow: EntityTableRow<Domain> = {
       Component: flags.cmr ? DomainRow_CMR : DomainRow,
       data: domainsData ?? [],
+      request: getDomains,
       handlers,
       loading: domainsLoading,
       error: domainsError.read,
