@@ -87,7 +87,8 @@ export const NetworkTransfer: React.FC<Props> = props => {
   return (
     <div>
       <Typography className={classes.header}>
-        <strong>Monthly Network Transfer</strong> ({accountQuotaInGB} GB limit)
+        <strong>Monthly Network Transfer</strong>{' '}
+        {accountQuotaInGB > 0 && <>({accountQuotaInGB} GB limit)</>}
       </Typography>
       <TransferContent
         linodeUsedInGB={linodeUsedInGB}
