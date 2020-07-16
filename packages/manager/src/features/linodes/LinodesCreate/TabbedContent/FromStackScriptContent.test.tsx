@@ -10,39 +10,18 @@ import {
 const mockProps: CombinedProps = {
   category: 'community',
   typeDisplayInfo: undefined,
-  classes: {
-    main: '',
-    sidebar: '',
-    emptyImagePanel: '',
-    emptyImagePanelText: ''
-  },
   updateImageID: jest.fn(),
-  updateLabel: jest.fn(),
-  updatePassword: jest.fn(),
   updateRegionID: jest.fn(),
-  updateTags: jest.fn(),
   updateTypeID: jest.fn(),
-  requestKeys: jest.fn(),
-  formIsSubmitting: false,
-  label: '',
-  password: '',
-  backupsEnabled: false,
-  accountBackupsEnabled: false,
-  toggleBackupsEnabled: jest.fn(),
-  togglePrivateIPEnabled: jest.fn(),
-  handleSubmitForm: jest.fn(),
-  privateIPEnabled: false,
-  resetCreationState: jest.fn(),
-  resetSSHKeys: jest.fn(),
   imagesData: {},
   regionsData: [],
   typesData: [],
-  userCannotCreateLinode: false,
-  userSSHKeys: [],
   request: jest.fn(),
   header: '',
   updateStackScript: jest.fn(),
-  handleSelectUDFs: jest.fn()
+  handleSelectUDFs: jest.fn(),
+  accountBackupsEnabled: false,
+  userCannotCreateLinode: false
 };
 
 describe('FromImageContent', () => {

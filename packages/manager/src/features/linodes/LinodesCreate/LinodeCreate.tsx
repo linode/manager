@@ -6,7 +6,7 @@ import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import DocsSidebar from 'src/components/DocsSidebar';
+// import DocsSidebar from 'src/components/DocsSidebar';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -51,8 +51,9 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
-import { AppsDocs } from 'src/documentation';
+// import { AppsDocs } from 'src/documentation';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
+import { restoreBackup } from '@linode/api-v4/lib/linodes';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -359,6 +360,8 @@ export class LinodeCreate extends React.PureComponent<
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
+                  accountBackupsEnabled={this.props.accountBackupsEnabled}
+                  userCannotCreateLinode={this.props.userCannotCreateLinode}
                   {...rest}
                 />
               </SafeTabPanel>
@@ -367,6 +370,8 @@ export class LinodeCreate extends React.PureComponent<
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
+                  accountBackupsEnabled={this.props.accountBackupsEnabled}
+                  userCannotCreateLinode={this.props.userCannotCreateLinode}
                   {...rest}
                 />
               </SafeTabPanel>
@@ -421,6 +426,9 @@ export class LinodeCreate extends React.PureComponent<
                   imagesData={imagesData}
                   regionsData={regionsData!}
                   typesData={typesData!}
+                  accountBackupsEnabled={this.props.accountBackupsEnabled}
+                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  {...rest}
                 />
               </SafeTabPanel>
               <SafeTabPanel index={4}>
@@ -429,6 +437,10 @@ export class LinodeCreate extends React.PureComponent<
                   regionsData={regionsData!}
                   typesData={typesData!}
                   linodesData={linodesData!}
+                  accountBackupsEnabled={this.props.accountBackupsEnabled}
+                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  {...restoreBackup}
+                  {...rest}
                 />
               </SafeTabPanel>
               <SafeTabPanel index={5}>
@@ -437,6 +449,8 @@ export class LinodeCreate extends React.PureComponent<
                   regionsData={regionsData!}
                   typesData={typesData!}
                   linodesData={linodesData!}
+                  accountBackupsEnabled={this.props.accountBackupsEnabled}
+                  userCannotCreateLinode={this.props.userCannotCreateLinode}
                   {...rest}
                 />
               </SafeTabPanel>

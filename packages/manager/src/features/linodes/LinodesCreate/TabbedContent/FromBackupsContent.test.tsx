@@ -8,36 +8,20 @@ const mockProps: CombinedProps = {
   typeDisplayInfo: undefined,
   classes: {
     root: '',
-    main: '',
-    sidebar: ''
+    main: ''
   },
   updateDiskSize: jest.fn(),
   updateImageID: jest.fn(),
-  updateLabel: jest.fn(),
   updateLinodeID: jest.fn(),
-  updatePassword: jest.fn(),
   updateRegionID: jest.fn(),
-  updateTags: jest.fn(),
   updateTypeID: jest.fn(),
-  requestKeys: jest.fn(),
-  formIsSubmitting: false,
-  label: '',
-  password: '',
-  backupsEnabled: false,
   accountBackupsEnabled: false,
-  toggleBackupsEnabled: jest.fn(),
-  togglePrivateIPEnabled: jest.fn(),
-  handleSubmitForm: jest.fn(),
-  privateIPEnabled: false,
-  resetCreationState: jest.fn(),
-  resetSSHKeys: jest.fn(),
   imagesData: {},
   regionsData: [],
   typesData: [],
   userCannotCreateLinode: false,
   linodesData: [],
-  setBackupID: jest.fn(),
-  userSSHKeys: []
+  setBackupID: jest.fn()
 };
 
 describe('FromBackupsContent', () => {
