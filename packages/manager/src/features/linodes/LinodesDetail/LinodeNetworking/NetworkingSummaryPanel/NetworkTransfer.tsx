@@ -93,6 +93,7 @@ export const NetworkTransfer: React.FC<Props> = props => {
         linodeUsedInGB={linodeUsedInGB}
         totalUsedInGB={totalUsedInGB}
         accountQuotaInGB={accountQuotaInGB}
+        accountBillableInGB={accountTransfer.data.billable}
         linodeLabel={linodeLabel}
         error={error}
         loading={loading}
@@ -109,6 +110,7 @@ interface ContentProps {
   linodeUsedInGB: number;
   totalUsedInGB: number;
   accountQuotaInGB: number;
+  accountBillableInGB: number;
   loading: boolean;
   error: boolean;
 }
@@ -121,23 +123,22 @@ const TransferContent: React.FC<ContentProps> = props => {
     linodeUsedInGB,
     totalUsedInGB,
     accountQuotaInGB
+    // accountBillableInGB
   } = props;
   const classes = useStyles();
 
-  const linodeUsagePercent =
-    accountQuotaInGB > linodeUsedInGB
-      ? 100 - ((accountQuotaInGB - linodeUsedInGB) * 100) / accountQuotaInGB
-      : 100;
+  const linodeUsagePercent = calculatePercentageWithCeiling(
+    linodeUsedInGB,
+    accountQuotaInGB
+  );
 
-  const otherEntitiesUsedInGB = totalUsedInGB - linodeUsedInGB;
+  const totalUsagePercent = calculatePercentageWithCeiling(
+    totalUsedInGB,
+    accountQuotaInGB
+  );
 
-  const otherEntitiesUsagePercent =
-    accountQuotaInGB > otherEntitiesUsedInGB
-      ? 100 -
-        ((accountQuotaInGB - otherEntitiesUsedInGB) * 100) / accountQuotaInGB
-      : 100;
-
-  const remainingInGB = accountQuotaInGB - totalUsedInGB;
+  const otherEntitiesUsedInGB = Math.max(totalUsedInGB - linodeUsedInGB, 0);
+  const remainingInGB = Math.max(accountQuotaInGB - totalUsedInGB, 0);
 
   if (error) {
     return (
@@ -167,40 +168,37 @@ const TransferContent: React.FC<ContentProps> = props => {
       <BarPercent
         max={100}
         value={Math.ceil(linodeUsagePercent)}
-        valueBuffer={Math.ceil(otherEntitiesUsagePercent)}
+        valueBuffer={Math.ceil(totalUsagePercent)}
         className={classes.poolUsageProgress}
         rounded
-        overLimit={accountQuotaInGB < linodeUsedInGB}
       />
       <Typography className={`${classes.legendItem} ${classes.darkGreen}`}>
         {linodeLabel} ({linodeUsedInGB} GB)
       </Typography>
-      <Typography className={`${classes.legendItem} ${classes.lightGreen}`}>
-        Other entities ({otherEntitiesUsedInGB} GB)
-      </Typography>
+      {otherEntitiesUsedInGB > 0 && (
+        <Typography className={`${classes.legendItem} ${classes.lightGreen}`}>
+          {/* Theoretically "otherEntitiesUsed" should  */}
+          Other entities ({otherEntitiesUsedInGB} GB)
+        </Typography>
+      )}
       <Typography className={`${classes.legendItem} ${classes.grey}`}>
         Remaining ({remainingInGB} GB)
       </Typography>
-      {/* <Grid container justify="space-between">
-        <Grid item style={{ marginRight: 10 }}>
-          <Typography>
-            {readableLinodeUsed.value} {readableLinodeUsed.unit} Used
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography>
-            {quotaInBytes >= linodeUsedInBytes ? (
-              <span>{readableFree.formatted} Available</span>
-            ) : (
-              <span className={classes.overLimit}>
-                {readableFree.formatted.toString().replace(/\-/, '')} Over Quota
-              </span>
-            )}
-          </Typography>
-        </Grid>
-      </Grid> */}
+      {/* @todo: display overages  */}
     </div>
   );
 };
 
 export default React.memo(NetworkTransfer);
+
+// =============================================================================
+// Utilities
+// =============================================================================
+
+// Get the percentage of a value in relation to a given target. Caps return value at 100%.
+export const calculatePercentageWithCeiling = (
+  value: number,
+  target: number
+) => {
+  return target > value ? 100 - ((target - value) * 100) / target : 100;
+};
