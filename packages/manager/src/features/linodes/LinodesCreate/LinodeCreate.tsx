@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { pathOr } from 'ramda';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { matchPath } from 'react-router-dom';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
@@ -111,6 +112,7 @@ type CombinedProps = Props &
 
 interface State {
   selectedTab: number;
+  // currentTab?: number;
 }
 
 export class LinodeCreate extends React.PureComponent<
@@ -147,22 +149,12 @@ export class LinodeCreate extends React.PureComponent<
     this.props.setTab(getInitialType());
   }
 
-  handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    this.props.resetCreationState();
-
-    /** set the tab in redux state */
-    // this.props.setTab(this.tabs[value].type);
-
-    this.props.history.push({
-      search: `?type=${event.target.textContent}`
-    });
-    this.setState({
-      selectedTab: value
-    });
+  handleTabChange = (index: number) => {
+    console.log(this.tabs[index].type);
   };
+
+  matches = (p: string) =>
+    Boolean(matchPath(p, { path: this.props.location.pathname }));
 
   tabs: Tab[] = [
     {
@@ -348,7 +340,10 @@ export class LinodeCreate extends React.PureComponent<
     return (
       <form className={classes.form}>
         <Grid item className={`mlMain py0`}>
-          <Tabs defaultIndex={selectedTab}>
+          <Tabs
+            defaultIndex={selectedTab}
+            onChange={index => this.handleTabChange(index)}
+          >
             <TabLinkList tabs={this.tabs} />
             <TabPanels>
               <SafeTabPanel index={0}>

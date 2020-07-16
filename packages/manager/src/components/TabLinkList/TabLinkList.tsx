@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Tab {
   title: string;
   routeName: string;
+  type?: string;
 }
 
 interface Props {
@@ -77,6 +78,7 @@ export const TabLinkList: React.FC<CombinedProps> = props => {
           key={`tab-${_index}`}
           as={Link}
           to={tab.routeName}
+          type={tab.type}
         >
           {tab.title}
         </Tab>
