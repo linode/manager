@@ -4,6 +4,7 @@ import TableCell from 'src/components/TableCell';
 import Typography from 'src/components/core/Typography';
 import OrderBy, { OrderByProps } from 'src/components/OrderBy';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import APIPaginatedTable from './APIPaginatedTable';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag_CMR';
 import ListEntities from './ListEntities_CMR';
 import { EntityTableRow } from './types';
@@ -77,6 +78,7 @@ export const LandingTable: React.FC<Props> = props => {
 
         const tableProps = {
           data: orderedData,
+          request: row.request,
           error: row.error,
           loading: row.loading,
           lastUpdated: row.lastUpdated,
@@ -85,6 +87,10 @@ export const LandingTable: React.FC<Props> = props => {
           entity,
           handlers: row.handlers
         };
+
+        if (row.request) {
+          return <APIPaginatedTable {...tableProps} data={undefined} />;
+        }
 
         if (groupByTag) {
           return (
