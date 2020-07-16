@@ -190,7 +190,6 @@ const TransferContent: React.FC<ContentProps> = props => {
       </Typography>
       {otherEntitiesUsedInGB > 0 && (
         <Typography className={`${classes.legendItem} ${classes.lightGreen}`}>
-          {/* Theoretically "otherEntitiesUsed" should  */}
           Other entities ({otherEntitiesUsedInGB} GB)
         </Typography>
       )}
