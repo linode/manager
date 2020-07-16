@@ -60,7 +60,7 @@ export const getAll: <T>(
   return getter(pagination, filter).then(
     ({ data: firstPageData, page, pages, results }) => {
       // If we only have one page, return it.
-      if (page === pages) {
+      if (page === pages || results > 1000) {
         return {
           data: firstPageData,
           results

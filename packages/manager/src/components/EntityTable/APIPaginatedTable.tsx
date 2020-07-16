@@ -16,6 +16,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
   const {
     count,
     data,
+    loading,
     page,
     pageSize,
     request,
@@ -26,6 +27,8 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
     headerCells,
     RowComponent
   } = props;
+
+  const _data = data ?? [];
 
   React.useEffect(() => {
     request();
@@ -41,11 +44,11 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
           <TableBody>
             <TableContentWrapper
               length={count}
-              loading={false}
+              loading={loading}
               error={undefined}
               lastUpdated={100}
             >
-              {data.map(thisEntity => (
+              {_data.map(thisEntity => (
                 <RowComponent
                   key={thisEntity.id}
                   {...thisEntity}
