@@ -1,7 +1,7 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import * as classnames from 'classnames';
-import { DateTime } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface TransferHistoryProps {
   linodeID: number;
+  linodeCreated: string;
 }
 
 export const TransferHistory: React.FC<TransferHistoryProps> = props => {
@@ -98,11 +99,14 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
   const _formatTooltip = (valueInBytes: number) =>
     formatNetworkTooltip(valueInBytes / 8);
 
-  const decrementOffset = () => setMonthOffset(prevOffset => (prevOffset -= 1));
+  const maxMonthOffset = getOffsetFromDate(now, new Date(props.linodeCreated));
+  const minMonthOffset = 0;
+
+  const decrementOffset = () =>
+    setMonthOffset(prevOffset => Math.max(prevOffset - 1, maxMonthOffset));
+
   const incrementOffset = () =>
-    setMonthOffset(prevOffset => {
-      return Math.min((prevOffset += 1), 0);
-    });
+    setMonthOffset(prevOffset => Math.min(prevOffset + 1, minMonthOffset));
 
   const displayLoading = loading && !stats && !transfer;
 
@@ -130,7 +134,12 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
           alignItems="center"
         >
           <button className={classes.arrowIconOuter} onClick={decrementOffset}>
-            <ArrowBackIosIcon className={classes.arrowIconInner} />
+            <ArrowBackIosIcon
+              className={classnames({
+                [classes.arrowIconInner]: true,
+                [classes.arrowIconDisabled]: monthOffset === maxMonthOffset
+              })}
+            />
           </button>
           {/* Give this a min-width so it doesn't change widths between displaying
           the month and "Last 30 Days" */}
@@ -142,7 +151,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
               className={classnames({
                 [classes.arrowIconInner]: true,
                 [classes.arrowIconForward]: true,
-                [classes.arrowIconDisabled]: monthOffset === 0
+                [classes.arrowIconDisabled]: monthOffset === minMonthOffset
               })}
             />
           </button>
@@ -210,12 +219,7 @@ export const parseMonthOffset = (offset: number, date: Date) => {
     throw Error('Offset must be <= 0');
   }
 
-  let datetime;
-  try {
-    datetime = DateTime.fromJSDate(date);
-  } catch {
-    throw Error('Unable to parse date.');
-  }
+  const datetime = DateTime.fromJSDate(date);
 
   const resultingDate = datetime.minus({ months: Math.abs(offset) });
 
@@ -224,4 +228,13 @@ export const parseMonthOffset = (offset: number, date: Date) => {
   const humanizedDate =
     offset === 0 ? 'Last 30 Days' : resultingDate.toFormat('LLL y');
   return { year, month, humanizedDate };
+};
+
+// We don't want to allow the user to scroll back further than the Linode was created,
+// so we determine the max offset given "now" and a target date (i.e. Linode Created date).
+export const getOffsetFromDate = (now: Date, target: Date) => {
+  const interval = Interval.fromDateTimes(target, now);
+  // Need to subtract `1` here, because Luxon considers these intervals to be inclusive.
+  const count = interval.count('month') - 1;
+  return count === 0 ? 0 : -count; // To avoid returning `-0`.
 };
