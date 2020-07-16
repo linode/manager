@@ -6,7 +6,6 @@ import {
 import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-// import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -16,22 +15,19 @@ import {
 } from 'src/components/core/styles';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
-// import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Placeholder from 'src/components/Placeholder';
 import { reportException } from 'src/exceptionReporting';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel from '../SelectLinodePanel';
-// import SelectPlanPanel from '../SelectPlanPanel';
 import {
   BackupFormStateHandlers,
   Info,
-  ReduxStatePropsAndSSHKeys,
+  ReduxStateProps,
   WithDisplayData,
   WithLinodesTypesRegionsAndImages
 } from '../types';
 import { extendLinodes, getRegionIDFromLinodeID } from '../utilities';
-import { renderBackupsDisplaySection } from './utils';
 
 export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
@@ -63,7 +59,7 @@ interface State {
 export type CombinedProps = Props &
   BackupFormStateHandlers &
   WithLinodesTypesRegionsAndImages &
-  ReduxStatePropsAndSSHKeys &
+  ReduxStateProps &
   WithDisplayData &
   WithStyles<ClassNames>;
 
@@ -128,31 +124,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       });
   };
 
-  createLinode = () => {
-    const {
-      backupsEnabled,
-      privateIPEnabled,
-      selectedTypeID,
-      selectedRegionID,
-      selectedBackupID,
-      label,
-      tags
-    } = this.props;
-
-    const tagsToAdd = tags ? tags.map(item => item.value) : undefined;
-
-    this.props.handleSubmitForm({
-      region: selectedRegionID,
-      type: selectedTypeID,
-      private_ip: privateIPEnabled,
-      backup_id: Number(selectedBackupID),
-      label,
-      backups_enabled: backupsEnabled /* optional */,
-      booted: true,
-      tags: tagsToAdd
-    });
-  };
-
   // Find regionID from the selectedLinodeID, and update the parent state.
   updateRegion(selectedLinodeID: number) {
     /**
@@ -195,7 +166,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   render() {
     const { isGettingBackups, selectedLinodeWithBackups } = this.state;
     const {
-      accountBackupsEnabled,
       classes,
       errors,
       imagesData,
@@ -203,50 +173,15 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       selectedBackupID,
       selectedLinodeID,
       setBackupID,
-      regionDisplayInfo,
-      typeDisplayInfo,
       disabled,
-      label,
-      typesData,
-      backupsEnabled
+
+      typesData
     } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
     const userHasBackups = linodesData.some(
       thisLinode => thisLinode.backups.enabled
     );
-
-    const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
-
-    // eslint-disable-next-line sonarjs/no-unused-collection
-    const displaySections = [];
-
-    if (regionDisplayInfo) {
-      displaySections.push({
-        title: regionDisplayInfo.title,
-        details: regionDisplayInfo.details
-      });
-    }
-
-    if (typeDisplayInfo) {
-      displaySections.push(typeDisplayInfo);
-    }
-
-    if (label) {
-      displaySections.push({
-        title: 'Linode Label',
-        details: label
-      });
-    }
-
-    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
-      displaySections.push(
-        renderBackupsDisplaySection(
-          accountBackupsEnabled,
-          typeDisplayInfo.backupsMonthly
-        )
-      );
-    }
 
     return (
       <React.Fragment>
@@ -298,55 +233,9 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 ]}
                 loading={isGettingBackups}
               />
-              {/* <SelectPlanPanel
-                error={hasErrorFor('type')}
-                types={typesData}
-                onSelect={updateTypeID}
-                selectedID={selectedTypeID}
-                selectedDiskSize={selectedDiskSize}
-                updateFor={[
-                  selectedTypeID,
-                  selectedDiskSize,
-                  errors,
-                  this.props.disabledClasses
-                ]}
-                disabled={disabled}
-                disabledClasses={this.props.disabledClasses}
-              />
-              <LabelAndTagsPanel
-                labelFieldProps={{
-                  label: 'Linode Label',
-                  value: label || '',
-                  onChange: updateLabel,
-                  errorText: hasErrorFor('label'),
-                  disabled
-                }}
-                tagsInputProps={{
-                  value: tags || [],
-                  onChange: updateTags,
-                  tagError: hasErrorFor('tags'),
-                  disabled
-                }}
-                updateFor={[tags, label, errors]}
-              /> */}
             </React.Fragment>
           )}
         </Grid>
-        {/* {!userHasBackups ? (
-          <React.Fragment />
-        ) : (
-          <Grid item className={`${classes.sidebar} mlSidebar`}>
-            <CheckoutBar
-              heading="Linode Summary"
-              calculatedPrice={calculatedPrice}
-              isMakingRequest={this.props.formIsSubmitting}
-              disabled={this.props.formIsSubmitting || disabled}
-              onDeploy={this.createLinode}
-            >
-              <DisplaySectionList displaySections={displaySections} />
-            </CheckoutBar>
-          </Grid>
-        )} */}
       </React.Fragment>
     );
   }

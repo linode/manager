@@ -23,7 +23,7 @@ import SelectAppPanel from '../SelectAppPanel';
 
 import {
   AppsData,
-  ReduxStatePropsAndSSHKeys,
+  ReduxStateProps,
   StackScriptFormStateHandlers,
   WithDisplayData,
   WithTypesRegionsAndImages
@@ -62,15 +62,10 @@ const errorResources = {
 type InnerProps = WithDisplayData &
   AppsData &
   WithTypesRegionsAndImages &
-  ReduxStatePropsAndSSHKeys &
+  ReduxStateProps &
   StackScriptFormStateHandlers;
 
 type CombinedProps = InnerProps & StateProps & SetDocsProps;
-
-interface State {
-  detailDrawerOpen: boolean;
-  selectedScriptForDrawer: string;
-}
 
 export const FromAppsContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -158,13 +153,7 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Grid
-        item
-        className={`${classes.main} mlMain py0`}
-        role="tabpanel"
-        id="tabpanel-one-click-apps-create"
-        aria-labelledby="tab-one-click-apps-create"
-      >
+      <Grid item className={`${classes.main} mlMain py0`}>
         <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
         <SelectAppPanel
           appInstances={appInstances}

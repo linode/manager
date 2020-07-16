@@ -18,8 +18,8 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
 import {
-  BaseFormStateAndHandlers,
-  ReduxStatePropsAndSSHKeys,
+  BasicFromContentProps,
+  ReduxStateProps,
   WithDisplayData,
   WithTypesRegionsAndImages
 } from '../types';
@@ -46,7 +46,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props extends BaseFormStateAndHandlers {
+interface Props extends BasicFromContentProps {
   variant?: 'public' | 'private' | 'all';
   imagePanelTitle?: string;
   showGeneralError?: boolean;
@@ -67,30 +67,10 @@ export type CombinedProps = Props &
   WithStyles<ClassNames> &
   WithDisplayData &
   WithTypesRegionsAndImages &
-  ReduxStatePropsAndSSHKeys &
-  BaseFormStateAndHandlers;
+  ReduxStateProps &
+  BasicFromContentProps;
 
 export class FromImageContent extends React.PureComponent<CombinedProps> {
-  /** create the Linode */
-  // createLinode = () => {
-  //   this.props.handleSubmitForm({
-  //     type: this.props.selectedTypeID,
-  //     region: this.props.selectedRegionID,
-  //     image: this.props.selectedImageID,
-  //     root_pass: this.props.password,
-  //     tags: this.props.tags
-  //       ? this.props.tags.map(eachTag => eachTag.label)
-  //       : [],
-  //     backups_enabled: this.props.backupsEnabled,
-  //     booted: true,
-  //     label: this.props.label,
-  //     private_ip: this.props.privateIPEnabled,
-  //     authorized_users: this.props.userSSHKeys
-  //       .filter(u => u.selected)
-  //       .map(u => u.username)
-  //   });
-  // };
-
   render() {
     const {
       classes,
@@ -102,7 +82,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
       variant
     } = this.props;
 
-    // const hasBackups = this.props.backupsEnabled || accountBackupsEnabled;
     const privateImages = filterImagesByType(images, 'private');
 
     if (variant === 'private' && Object.keys(privateImages).length === 0) {
@@ -135,46 +114,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
      */
     const hasErrorFor = getErrorMap(errorMap, errors);
 
-    // const determineIDName =
-    //   variant === 'private' ? 'image-private-create' : 'distro-create';
-
-    // const displaySections = [];
-    // if (imageDisplayInfo) {
-    //   displaySections.push(imageDisplayInfo);
-    // }
-
-    // if (regionDisplayInfo) {
-    //   displaySections.push({
-    //     title: regionDisplayInfo.title,
-    //     details: regionDisplayInfo.details
-    //   });
-    // }
-
-    // if (typeDisplayInfo) {
-    //   displaySections.push(typeDisplayInfo);
-    // }
-
-    // if (this.props.label) {
-    //   displaySections.push({
-    //     title: 'Linode Label',
-    //     details: this.props.label
-    //   });
-    // }
-
-    // if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
-    //   displaySections.push(
-    //     renderBackupsDisplaySection(
-    //       accountBackupsEnabled,
-    //       typeDisplayInfo.backupsMonthly
-    //     )
-    //   );
-    // }
-
-    // let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-    // if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
-    //   calculatedPrice += typeDisplayInfo.backupsMonthly;
-    // }
-
     return (
       <React.Fragment>
         <Grid item className={`${classes.main} mlMain py0`}>
@@ -193,26 +132,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             data-qa-select-image-panel
           />
         </Grid>
-        {/* <Grid
-          item
-          className={
-            'mlSidebar ' +
-            (variant === 'private'
-              ? classes.sidebarPrivate
-              : classes.sidebarPublic)
-          }
-        >
-          <CheckoutBar
-            data-qa-checkout-bar
-            heading="Linode Summary"
-            calculatedPrice={calculatedPrice}
-            isMakingRequest={this.props.formIsSubmitting}
-            disabled={this.props.formIsSubmitting || userCannotCreateLinode}
-            onDeploy={this.createLinode}
-          >
-            <DisplaySectionList displaySections={displaySections} />
-          </CheckoutBar>
-        </Grid> */}
       </React.Fragment>
     );
   }

@@ -11,7 +11,6 @@ import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
-// import { Tag } from 'src/components/TagsInput';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
@@ -19,7 +18,7 @@ import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { filterUDFErrors } from './formUtilities';
 import {
-  ReduxStatePropsAndSSHKeys,
+  ReduxStateProps,
   StackScriptFormStateHandlers,
   WithDisplayData,
   WithTypesRegionsAndImages
@@ -73,7 +72,7 @@ const errorResources = {
 
 export type CombinedProps = Props &
   StackScriptFormStateHandlers &
-  ReduxStatePropsAndSSHKeys &
+  ReduxStateProps &
   WithTypesRegionsAndImages &
   WithDisplayData;
 
@@ -147,82 +146,72 @@ export const FromStackScriptContent: React.FC<CombinedProps> = props => {
 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
-  const determineIDName =
-    props.category === 'community'
-      ? 'community-stackscript-create'
-      : 'account-stackscript-create';
-
   return (
     <React.Fragment>
       <Grid
         data-qa-panel={header}
         item
         className={`${classes.main} mlMain py0`}
-        role="tabpanel"
-        id={`tabpanel-${determineIDName}`}
-        aria-labelledby={`tab-${determineIDName}`}
       >
-        <form>
-          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-          <SelectStackScriptPanel
-            data-qa-select-stackscript
-            error={hasErrorFor('stackscript_id')}
-            header={header}
-            selectedId={selectedStackScriptID}
-            selectedUsername={selectedStackScriptUsername}
-            updateFor={[selectedStackScriptID, errors]}
-            onSelect={handleSelectStackScript}
-            publicImages={filterImagesByType(imagesData, 'public')}
-            resetSelectedStackScript={() => null}
-            disabled={userCannotCreateLinode}
-            request={request}
-            category={props.category}
-          />
-          {!userCannotCreateLinode &&
-            userDefinedFields &&
-            userDefinedFields.length > 0 && (
-              <UserDefinedFieldsPanel
-                data-qa-udf-panel
-                errors={filterUDFErrors(errorResources, props.errors)}
-                selectedLabel={selectedStackScriptLabel || ''}
-                selectedUsername={selectedStackScriptUsername || ''}
-                handleChange={handleChangeUDF}
-                userDefinedFields={userDefinedFields}
-                updateFor={[userDefinedFields, udf_data, errors]}
-                udf_data={udf_data || {}}
-              />
-            )}
-          {!userCannotCreateLinode &&
-          compatibleImages &&
-          compatibleImages.length > 0 ? (
-            <ImageSelect
-              data-qa-select-image-panel
-              title="Select an Image"
-              images={compatibleImages}
-              handleSelectImage={updateImageID}
-              selectedImageID={selectedImageID}
-              error={hasErrorFor('image')}
-              variant="public"
+        <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
+        <SelectStackScriptPanel
+          data-qa-select-stackscript
+          error={hasErrorFor('stackscript_id')}
+          header={header}
+          selectedId={selectedStackScriptID}
+          selectedUsername={selectedStackScriptUsername}
+          updateFor={[selectedStackScriptID, errors]}
+          onSelect={handleSelectStackScript}
+          publicImages={filterImagesByType(imagesData, 'public')}
+          resetSelectedStackScript={() => null}
+          disabled={userCannotCreateLinode}
+          request={request}
+          category={props.category}
+        />
+        {!userCannotCreateLinode &&
+          userDefinedFields &&
+          userDefinedFields.length > 0 && (
+            <UserDefinedFieldsPanel
+              data-qa-udf-panel
+              errors={filterUDFErrors(errorResources, props.errors)}
+              selectedLabel={selectedStackScriptLabel || ''}
+              selectedUsername={selectedStackScriptUsername || ''}
+              handleChange={handleChangeUDF}
+              userDefinedFields={userDefinedFields}
+              updateFor={[userDefinedFields, udf_data, errors]}
+              udf_data={udf_data || {}}
             />
-          ) : (
-            <Paper className={classes.emptyImagePanel}>
-              {/* empty state for images */}
-              {hasErrorFor('image') && (
-                <Notice error={true} text={hasErrorFor('image')} />
-              )}
-              <Typography variant="h2" data-qa-tp="Select Image">
-                Select Image
-              </Typography>
-              <Typography
-                variant="body1"
-                className={classes.emptyImagePanelText}
-                data-qa-no-compatible-images
-              >
-                No Compatible Images Available
-              </Typography>
-            </Paper>
           )}
-        </form>
+        {!userCannotCreateLinode &&
+        compatibleImages &&
+        compatibleImages.length > 0 ? (
+          <ImageSelect
+            data-qa-select-image-panel
+            title="Select an Image"
+            images={compatibleImages}
+            handleSelectImage={updateImageID}
+            selectedImageID={selectedImageID}
+            error={hasErrorFor('image')}
+            variant="public"
+          />
+        ) : (
+          <Paper className={classes.emptyImagePanel}>
+            {/* empty state for images */}
+            {hasErrorFor('image') && (
+              <Notice error={true} text={hasErrorFor('image')} />
+            )}
+            <Typography variant="h2" data-qa-tp="Select Image">
+              Select Image
+            </Typography>
+            <Typography
+              variant="body1"
+              className={classes.emptyImagePanelText}
+              data-qa-no-compatible-images
+            >
+              No Compatible Images Available
+            </Typography>
+          </Paper>
+        )}
       </Grid>
       <StackScriptDrawer />
     </React.Fragment>

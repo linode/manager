@@ -11,28 +11,13 @@ const mockProps: CombinedProps = {
     sidebarPublic: ''
   },
   updateImageID: jest.fn(),
-  updateLabel: jest.fn(),
-  updatePassword: jest.fn(),
   updateRegionID: jest.fn(),
-  updateTags: jest.fn(),
   updateTypeID: jest.fn(),
-  requestKeys: jest.fn(),
-  formIsSubmitting: false,
-  label: '',
-  password: '',
-  backupsEnabled: false,
-  accountBackupsEnabled: false,
-  toggleBackupsEnabled: jest.fn(),
-  togglePrivateIPEnabled: jest.fn(),
-  handleSubmitForm: jest.fn(),
-  privateIPEnabled: false,
-  resetCreationState: jest.fn(),
-  resetSSHKeys: jest.fn(),
   imagesData: {},
   regionsData: [],
   typesData: [],
-  userCannotCreateLinode: false,
-  userSSHKeys: []
+  accountBackupsEnabled: false,
+  userCannotCreateLinode: false
 };
 
 describe('FromImageContent', () => {
