@@ -200,6 +200,7 @@ export const TagCell: React.FC<Props> = props => {
           tags={tags}
           onClose={() => setAddingTag(false)}
           addTag={addTag}
+          inDetailsContext
         />
       ) : (
         <>
