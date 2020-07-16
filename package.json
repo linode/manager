@@ -36,6 +36,7 @@
     "e2e": "yarn workspace linode-manager e2e --color",
     "e2e:all": "yarn workspace linode-manager e2e:all --color",
     "e2e:modified": "yarn workspace linode-manager e2e:modified --color",
+    "cy:run": "yarn workspace linode-manager cy:run",
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
     "cy:debug": "yarn workspace linode-manager cy:debug",
     "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap",
