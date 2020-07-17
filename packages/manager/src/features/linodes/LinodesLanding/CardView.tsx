@@ -19,7 +19,7 @@ import formatDate from 'src/utilities/formatDate';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 import useLinodes from 'src/hooks/useLinodes';
-import TagDrawer from 'src/components/TagCell/TagDrawer';
+import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 
 const useStyles = makeStyles(() => ({
   summaryOuter: {
@@ -42,11 +42,6 @@ interface Props {
   linodeConfigs: Config[];
 }
 
-interface TagDrawerProps {
-  tags: string[];
-  open: boolean;
-}
-
 type CombinedProps = WithImagesProps & PaginationProps & Props;
 
 const CardView: React.FC<CombinedProps> = props => {
@@ -57,7 +52,9 @@ const CardView: React.FC<CombinedProps> = props => {
   const { volumes } = useVolumes();
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
-    tags: []
+    tags: [],
+    label: '',
+    linodeID: 0
   });
 
   const { updateLinode } = useLinodes();
@@ -66,10 +63,16 @@ const CardView: React.FC<CombinedProps> = props => {
     setTagDrawer({ ...tagDrawer, open: false });
   };
 
-  const openTagDrawer = (tags: string[]) => {
+  const openTagDrawer = (
+    linodeID: number,
+    linodeLabel: string,
+    tags: string[]
+  ) => {
     setTagDrawer({
       open: true,
-      tags
+      label: linodeLabel,
+      tags,
+      linodeID
     });
   };
 
@@ -108,62 +111,64 @@ const CardView: React.FC<CombinedProps> = props => {
     getVolumesForLinode(volumes.itemsById, linodeId).length;
 
   return (
-    <Grid container>
-      {flags.cmr
-        ? data.map((linode, idx: number) => (
-            <React.Fragment key={`linode-card-${idx}`}>
-              <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
-                <LinodeEntityDetail
-                  variant="landing"
-                  linode={linode}
-                  numVolumes={getVolumesByLinode(linode.id)}
-                  username={profile.data?.username}
-                  linodeConfigs={linodeConfigs}
-                  backups={linode.backups}
-                  openTagDrawer={openTagDrawer}
-                  openDeleteDialog={openDeleteDialog}
-                  openPowerActionDialog={openPowerActionDialog}
-                  openLinodeResize={openLinodeResize}
-                />
-              </Grid>
-              <TagDrawer
-                entityLabel={linode.label}
-                open={tagDrawer.open}
-                tags={tagDrawer.tags}
-                addTag={(newTag: string) => addTag(linode.id, newTag)}
-                deleteTag={(tag: string) => deleteTag(linode.id, tag)}
-                onClose={closeTagDrawer}
+    <React.Fragment>
+      <Grid container>
+        {flags.cmr
+          ? data.map((linode, idx: number) => (
+              <React.Fragment key={`linode-card-${idx}`}>
+                <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
+                  <LinodeEntityDetail
+                    variant="landing"
+                    linode={linode}
+                    numVolumes={getVolumesByLinode(linode.id)}
+                    username={profile.data?.username}
+                    linodeConfigs={linodeConfigs}
+                    backups={linode.backups}
+                    openTagDrawer={openTagDrawer}
+                    openDeleteDialog={openDeleteDialog}
+                    openPowerActionDialog={openPowerActionDialog}
+                    openLinodeResize={openLinodeResize}
+                  />
+                </Grid>
+              </React.Fragment>
+            ))
+          : data.map((linode, idx: number) => (
+              <LinodeCard
+                key={`linode-card-${idx}`}
+                backups={linode.backups}
+                id={linode.id}
+                ipv4={linode.ipv4}
+                ipv6={linode.ipv6}
+                maintenanceStartTime={
+                  linode.maintenance?.when
+                    ? formatDate(linode.maintenance.when)
+                    : ''
+                }
+                label={linode.label}
+                region={linode.region}
+                status={linode.status}
+                tags={linode.tags}
+                disk={linode.specs.disk}
+                vcpus={linode.specs.vcpus}
+                memory={linode.specs.memory}
+                type={linode.type}
+                image={linode.image}
+                imageLabel={safeGetImageLabel(imagesData, linode.image)}
+                openDeleteDialog={openDeleteDialog}
+                openPowerActionDialog={openPowerActionDialog}
+                openLinodeResize={openLinodeResize}
               />
-            </React.Fragment>
-          ))
-        : data.map((linode, idx: number) => (
-            <LinodeCard
-              key={`linode-card-${idx}`}
-              backups={linode.backups}
-              id={linode.id}
-              ipv4={linode.ipv4}
-              ipv6={linode.ipv6}
-              maintenanceStartTime={
-                linode.maintenance?.when
-                  ? formatDate(linode.maintenance.when)
-                  : ''
-              }
-              label={linode.label}
-              region={linode.region}
-              status={linode.status}
-              tags={linode.tags}
-              disk={linode.specs.disk}
-              vcpus={linode.specs.vcpus}
-              memory={linode.specs.memory}
-              type={linode.type}
-              image={linode.image}
-              imageLabel={safeGetImageLabel(imagesData, linode.image)}
-              openDeleteDialog={openDeleteDialog}
-              openPowerActionDialog={openPowerActionDialog}
-              openLinodeResize={openLinodeResize}
-            />
-          ))}
-    </Grid>
+            ))}
+      </Grid>
+      <TagDrawer
+        entityLabel={tagDrawer.label}
+        open={tagDrawer.open}
+        tags={tagDrawer.tags}
+        addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
+        deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
+        onClose={closeTagDrawer}
+      />
+    </React.Fragment>
   );
 };
 
