@@ -17,22 +17,6 @@ export const MultipleLinodes: React.FC<{}> = _ => {
     {
       title: 'Linodes',
       render: () => <LinodesLanding />
-    },
-    {
-      title: 'Domains',
-      render: () => <div>Domains Landing</div>
-    },
-    {
-      title: 'Volumes',
-      render: () => <div>Volumes Landing</div>
-    },
-    {
-      title: 'Object Storage',
-      render: () => <div>Object Storage Landing</div>
-    },
-    {
-      title: 'Databases',
-      render: () => <div>Databases Landing</div>
     }
   ];
 
