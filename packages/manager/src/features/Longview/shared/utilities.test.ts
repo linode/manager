@@ -367,7 +367,7 @@ describe('Utility Functions', () => {
     it('adds unit', () => {
       expect(formatBitsPerSecond(12)).toBe('12 b/s');
       expect(formatBitsPerSecond(0)).toBe('0 b/s');
-      expect(formatBitsPerSecond(123456789)).toBe('120.56 Mb/s');
+      expect(formatBitsPerSecond(123456789)).toBe('123.46 Mb/s');
     });
   });
 });
