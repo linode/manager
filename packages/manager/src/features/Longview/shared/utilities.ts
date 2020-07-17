@@ -335,7 +335,7 @@ export const convertNetworkToUnit = (
   if (maxUnit === 'Mb') {
     // If the unit we're using for the graph is Mb, return the output in Mb.
     // eslint-disable-next-line
-    const valueInMegabits = valueInBits / 1000 / 1024;
+    const valueInMegabits = valueInBits / 1000 / 1000;
     return valueInMegabits;
   } else if (maxUnit === 'Kb') {
     // If the unit we're using for the graph is Kb, return the output in Kb.
