@@ -4,6 +4,9 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import LinodesLanding from 'src/features/linodes/LinodesLanding';
 import DomainsLanding from 'src/features/Domains/DomainsLanding';
+import VolumesLanding from 'src/features/Volumes/VolumesLanding_CMR';
+import ObjectStorageLanding from 'src/features/ObjectStorage/ObjectStorageLanding';
+import KubernetesLanding from 'src/features/Kubernetes/KubernetesLanding';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -25,15 +28,15 @@ export const MultipleLinodes: React.FC<{}> = _ => {
     },
     {
       title: 'Volumes',
-      render: () => <div>Volumes Table</div>
+      render: () => <VolumesLanding /> // fixing
     },
     {
       title: 'Object Storage',
-      render: () => <div>Object Storage Table</div>
+      render: () => <ObjectStorageLanding /> // fixing
     },
     {
       title: 'Databases',
-      render: () => <div>Databases Table</div>
+      render: () => <KubernetesLanding />
     }
   ];
 
