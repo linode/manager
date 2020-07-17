@@ -10,7 +10,7 @@ export const SingleLinode: React.FC<{}> = _ => {
   // on the user's account.
 
   const linodeId = Object.keys(linodes.itemsById)[0];
-  return <LinodeDetail linodeId={linodeId} />;
+  return <LinodeDetail linodeId={linodeId} isDashboard />;
 };
 
 export default React.memo(SingleLinode);

@@ -12,7 +12,8 @@ import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { shouldRequestEntity } from 'src/utilities/shouldRequestEntity';
 
 interface Props {
-  linodeId: string;
+  linodeId?: string;
+  isDashboard?: boolean;
 }
 
 /**
@@ -21,6 +22,7 @@ interface Props {
  * we show a loading spinner until the requests are complete.
  */
 export const LinodesDetailContainer: React.FC<Props> = props => {
+  const { isDashboard } = props;
   const { linodes } = useLinodes();
   const dispatch = useDispatch();
   const params = useParams<{ linodeId: string }>();
@@ -63,7 +65,9 @@ export const LinodesDetailContainer: React.FC<Props> = props => {
     return <CircleProgress />;
   }
 
-  return <LinodesDetail linodeId={linodeId} />;
+  return (
+    <LinodesDetail linodeId={linodeId} isDashboard={Boolean(isDashboard)} />
+  );
 };
 
 export default React.memo(LinodesDetailContainer);

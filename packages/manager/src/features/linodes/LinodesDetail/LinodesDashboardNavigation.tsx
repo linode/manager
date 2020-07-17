@@ -37,10 +37,7 @@ const LinodeSettings_CMR = React.lazy(() =>
   import('./LinodeSettings/LinodeSettings_CMR')
 );
 
-type CombinedProps = ContextProps &
-  RouteComponentProps<{
-    linodeId: string;
-  }>;
+type CombinedProps = ContextProps & RouteComponentProps<{}>;
 
 const suspenseWrapper = (Component: React.ComponentType<any>) => (
   <React.Suspense fallback={<SuspenseLoader />}>
