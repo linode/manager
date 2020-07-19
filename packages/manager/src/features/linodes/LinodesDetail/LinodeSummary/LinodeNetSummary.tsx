@@ -25,6 +25,7 @@ interface StateProps {
   used: number;
   loading: boolean;
   error: boolean;
+  total: number;
 }
 
 type CombinedProps = Props & StoreProps & StateProps & WithStyles<ClassNames>;
@@ -34,17 +35,19 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
   state = {
     used: 0,
     loading: true,
-    error: false
+    error: false,
+    total: 0
   };
 
   componentDidMount() {
     const { linodeId } = this.props;
     getLinodeTransfer(linodeId)
-      .then(({ used }) => {
+      .then(({ used, quota }) => {
         this.setState({
           used,
           loading: false,
-          error: false
+          error: false,
+          total: quota
         });
       })
       .catch(() => {
@@ -56,8 +59,8 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
   }
 
   render() {
-    const { total, classes, isTooEarlyForStats } = this.props;
-    const { used, loading, error } = this.state;
+    const { classes, isTooEarlyForStats } = this.props;
+    const { used, loading, error, total } = this.state;
 
     const usedInGb = used / 1024 / 1024 / 1024;
 
@@ -157,14 +160,12 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
 }
 
 interface StoreProps {
-  total: number;
   isTooEarlyForStats?: boolean;
 }
 
 const mapStateToProps: MapState<StoreProps, CombinedProps> = (state, props) => {
   const linode = state.__resources.linodes.itemsById[props.linodeId];
   return {
-    total: linode ? linode.specs.transfer : 0,
     isTooEarlyForStats:
       linode && isRecent(linode.created, DateTime.local().toISO())
   };
