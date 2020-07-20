@@ -6,6 +6,7 @@ import { formatDate } from 'src/utilities/formatDate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    marginBottom: theme.spacing(3),
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'flex-start',
@@ -15,16 +16,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%'
   },
   icon: {
-    height: '24px',
     marginRight: theme.spacing(),
     '& svg': {
-      color: theme.color.grey1
+      color: theme.color.grey1,
+      stroke: theme.color.grey1
     }
   },
   notificationItem: {
     paddingTop: '10px',
     width: '100%',
-    height: '20px',
+    lineHeight: 1.43,
+    fontSize: '14px',
     display: 'flex',
     justifyContent: 'space-between'
   }
@@ -40,12 +42,13 @@ interface Props {
   header: string;
   icon: JSX.Element;
   content: NotificationItem[];
+  showMore?: JSX.Element;
 }
 
 export type CombinedProps = Props;
 
 export const NotificationSection: React.FC<Props> = props => {
-  const { content, header, icon } = props;
+  const { content, header, icon, showMore } = props;
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -65,6 +68,7 @@ export const NotificationSection: React.FC<Props> = props => {
             You have no {header.toLocaleLowerCase()}.
           </Typography>
         )}
+        <Typography className={classes.notificationItem}>{showMore}</Typography>
       </div>
     </div>
   );
