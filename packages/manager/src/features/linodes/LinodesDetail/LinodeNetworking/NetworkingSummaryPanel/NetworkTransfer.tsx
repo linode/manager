@@ -12,7 +12,7 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
-    paddingBottom: theme.spacing() / 2
+    paddingBottom: 10
   },
   progressWrapper: {
     width: '290px'
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.bold
   },
   legendItem: {
-    marginTop: 14,
+    marginTop: 10,
     display: 'flex',
     alignItems: 'center',
     '&:before': {
