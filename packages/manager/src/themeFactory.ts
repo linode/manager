@@ -235,7 +235,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavPaper: '#3a3f46',
       topMenu: '#fff',
       billingHeader: '#f5f9ff',
-      controlHeader: '#f9fafa'
+      controlHeader: '#f9fafa',
+      chipActive: '#cecece'
     },
     color: {
       headline: primaryColors.headline,
