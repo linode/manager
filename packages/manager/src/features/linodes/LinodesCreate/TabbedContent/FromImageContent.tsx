@@ -115,24 +115,22 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
     const hasErrorFor = getErrorMap(errorMap, errors);
 
     return (
-      <React.Fragment>
-        <Grid item className={`${classes.main} mlMain py0`}>
-          {hasErrorFor.none && !!showGeneralError && (
-            <Notice error spacingTop={8} text={hasErrorFor.none} />
-          )}
-          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-          <ImageSelect
-            title={imagePanelTitle || 'Choose an Image'}
-            images={Object.keys(images).map(eachKey => images[eachKey])}
-            handleSelectImage={this.props.updateImageID}
-            selectedImageID={this.props.selectedImageID}
-            error={hasErrorFor.image}
-            variant={variant}
-            disabled={userCannotCreateLinode}
-            data-qa-select-image-panel
-          />
-        </Grid>
-      </React.Fragment>
+      <Grid item className={`${classes.main} mlMain py0`}>
+        {hasErrorFor.none && !!showGeneralError && (
+          <Notice error spacingTop={8} text={hasErrorFor.none} />
+        )}
+        <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
+        <ImageSelect
+          title={imagePanelTitle || 'Choose an Image'}
+          images={Object.keys(images).map(eachKey => images[eachKey])}
+          handleSelectImage={this.props.updateImageID}
+          selectedImageID={this.props.selectedImageID}
+          error={hasErrorFor.image}
+          variant={variant}
+          disabled={userCannotCreateLinode}
+          data-qa-select-image-panel
+        />
+      </Grid>
     );
   }
 }

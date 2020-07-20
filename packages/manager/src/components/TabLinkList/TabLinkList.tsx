@@ -3,6 +3,7 @@ import * as React from 'react';
 import Tab from 'src/components/core/ReachTab';
 import TabList from 'src/components/core/ReachTabList';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tab: {
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Tab {
   title: string;
   routeName: string;
-  type?: string;
+  type?: CreateTypes;
 }
 
 interface Props {

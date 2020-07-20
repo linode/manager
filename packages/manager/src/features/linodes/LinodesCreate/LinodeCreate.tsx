@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { pathOr } from 'ramda';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { matchPath } from 'react-router-dom';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
@@ -85,7 +84,6 @@ const styles = (theme: Theme) =>
   });
 interface Props {
   history: any;
-  createType: CreateTypes;
 }
 
 const errorMap = [
@@ -113,7 +111,7 @@ type CombinedProps = Props &
 
 interface State {
   selectedTab: number;
-  // currentTab?: number;
+  createType: CreateTypes;
 }
 
 export class LinodeCreate extends React.PureComponent<
@@ -139,7 +137,8 @@ export class LinodeCreate extends React.PureComponent<
     // }
 
     this.state = {
-      selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0
+      selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
+      createType: 'fromImage'
     };
   }
 
@@ -151,11 +150,17 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   handleTabChange = (index: number) => {
-    console.log(this.tabs[index].type);
+    this.props.setTab(this.tabs[index].type!);
+    this.setState(
+      {
+        selectedTab: index,
+        createType: this.tabs[index].type!
+      },
+      () => {
+        console.log(this.state.createType);
+      }
+    );
   };
-
-  matches = (p: string) =>
-    Boolean(matchPath(p, { path: this.props.location.pathname }));
 
   tabs: Tab[] = [
     {
@@ -231,7 +236,7 @@ export class LinodeCreate extends React.PureComponent<
   };
 
   render() {
-    const { selectedTab } = this.state;
+    const { selectedTab, createType } = this.state;
 
     const {
       classes,
@@ -483,9 +488,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled: userCannotCreateLinode
             }}
             tagsInputProps={
-              this.props.createType !== 'fromLinode'
-                ? tagsInputProps
-                : undefined
+              createType !== 'fromLinode' ? tagsInputProps : undefined
             }
             updateFor={[tags, label, errors]}
           />
@@ -524,7 +527,7 @@ export class LinodeCreate extends React.PureComponent<
               this.props.selectedTypeID
             ]}
             disabled={userCannotCreateLinode}
-            hidePrivateIP={this.props.createType === 'fromLinode'}
+            hidePrivateIP={createType === 'fromLinode'}
           />
         </Grid>
         <Grid item className="mlSidebar">

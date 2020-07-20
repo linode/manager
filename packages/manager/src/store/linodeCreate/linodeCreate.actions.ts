@@ -3,9 +3,9 @@ import actionCreatorFactory from 'typescript-fsa';
 const actionBase = actionCreatorFactory('@@manager/create-linode');
 
 export type CreateTypes =
+  | 'fromImage'
   | 'fromApp'
   | 'fromStackScript'
-  | 'fromImage'
   | 'fromBackup'
   | 'fromLinode';
 
