@@ -21,7 +21,14 @@ class Volumes extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route component={VolumesLanding} path={path} exact strict />
+        <Route
+          render={routeProps => (
+            <VolumesLanding isVolumesLanding {...routeProps} />
+          )}
+          path={path}
+          exact
+          strict
+        />
         <Route component={VolumeCreate} path={`${path}/create`} exact strict />
         <Redirect to={path} />
       </Switch>

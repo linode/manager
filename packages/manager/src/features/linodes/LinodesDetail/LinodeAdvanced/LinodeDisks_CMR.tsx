@@ -189,7 +189,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {!freeDiskSpace && (
           <Notice
-            error
+            warning
             text="You do not have enough unallocated storage to create a Disk."
           />
         )}
