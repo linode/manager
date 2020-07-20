@@ -3,7 +3,6 @@ import * as React from 'react';
 import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
 import { makeStyles } from 'src/components/core/styles';
-2;
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import EntityHeader, {
   HeaderProps

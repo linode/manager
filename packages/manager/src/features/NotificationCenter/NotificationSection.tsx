@@ -1,0 +1,81 @@
+import * as React from 'react';
+
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import { formatDate } from 'src/utilities/formatDate';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start'
+  },
+  content: {
+    width: '100%'
+  },
+  icon: {
+    height: '24px',
+    marginRight: theme.spacing(),
+    '& svg': {
+      color: theme.color.grey1
+    }
+  },
+  notificationItem: {
+    paddingTop: '10px',
+    width: '100%',
+    height: '20px',
+    display: 'flex',
+    justifyContent: 'space-between'
+  }
+}));
+
+export interface NotificationItem {
+  id: string;
+  body: string | JSX.Element;
+  timeStamp?: string;
+}
+
+interface Props {
+  header: string;
+  icon: JSX.Element;
+  content: NotificationItem[];
+}
+
+export type CombinedProps = Props;
+
+export const NotificationSection: React.FC<Props> = props => {
+  const { content, header, icon } = props;
+  const classes = useStyles();
+  return (
+    <div className={classes.root}>
+      <span className={classes.icon}>{icon}</span>
+      <div className={classes.content}>
+        <Typography variant="h2">{header}</Typography>
+
+        {content.map(thisItem => (
+          <ContentRow key={`notification-row-${thisItem.id}`} item={thisItem} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ContentRow: React.FC<{
+  item: NotificationItem;
+}> = React.memo(props => {
+  const { item } = props;
+  const classes = useStyles();
+  return (
+    <div className={classes.notificationItem}>
+      {item.body}
+      {item.timeStamp && (
+        <Typography>
+          {formatDate(item.timeStamp, { humanizeCutoff: 'day' })}
+        </Typography>
+      )}
+    </div>
+  );
+});
+
+export default React.memo(NotificationSection);
