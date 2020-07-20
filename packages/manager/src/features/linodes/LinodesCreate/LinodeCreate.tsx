@@ -214,26 +214,29 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   createLinode = () => {
-    this.props.handleSubmitForm({
-      image: this.props.selectedImageID,
-      region: this.props.selectedRegionID,
-      type: this.props.selectedTypeID,
-      label: this.props.label,
-      tags: this.props.tags
-        ? this.props.tags.map(eachTag => eachTag.label)
-        : [],
-      root_pass: this.props.password,
-      authorized_users: this.props.userSSHKeys
-        .filter(u => u.selected)
-        .map(u => u.username),
-      booted: true,
-      backups_enabled: this.props.backupsEnabled,
-      private_ip: this.props.privateIPEnabled,
+    this.props.handleSubmitForm(
+      {
+        image: this.props.selectedImageID,
+        region: this.props.selectedRegionID,
+        type: this.props.selectedTypeID,
+        label: this.props.label,
+        tags: this.props.tags
+          ? this.props.tags.map(eachTag => eachTag.label)
+          : [],
+        root_pass: this.props.password,
+        authorized_users: this.props.userSSHKeys
+          .filter(u => u.selected)
+          .map(u => u.username),
+        booted: true,
+        backups_enabled: this.props.backupsEnabled,
+        private_ip: this.props.privateIPEnabled,
 
-      // StackScripts
-      stackscript_id: this.props.selectedStackScriptID,
-      stackscript_data: this.props.selectedUDFs
-    });
+        // StackScripts
+        stackscript_id: this.props.selectedStackScriptID,
+        stackscript_data: this.props.selectedUDFs
+      },
+      this.props.selectedLinodeID
+    );
   };
 
   render() {
