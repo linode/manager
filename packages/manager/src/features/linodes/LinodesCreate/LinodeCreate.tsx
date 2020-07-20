@@ -114,6 +114,10 @@ interface State {
   selectedTab: number;
 }
 
+interface CreateTab extends Tab {
+  type: CreateTypes;
+}
+
 export class LinodeCreate extends React.PureComponent<
   CombinedProps & DispatchProps,
   State
@@ -132,9 +136,9 @@ export class LinodeCreate extends React.PureComponent<
 
     // If there is no specified "type" in the query params, update the Redux state
     // so that the correct request is made when the form is submitted.
-    // if (!queryParams.type) {
-    //   this.props.setTab(this.tabs[0].type);
-    // }
+    if (!queryParams.type) {
+      this.props.setTab(this.tabs[0].type);
+    }
 
     this.state = {
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0
@@ -148,24 +152,18 @@ export class LinodeCreate extends React.PureComponent<
     this.props.setTab(getInitialType());
   }
 
-  handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
+  handleTabChange = (value: number) => {
     this.props.resetCreationState();
 
     /** set the tab in redux state */
     this.props.setTab(this.tabs[value].type);
 
-    this.props.history.push({
-      search: `?type=${event.target.textContent}`
-    });
     this.setState({
       selectedTab: value
     });
   };
 
-  tabs: Tab[] = [
+  tabs: CreateTab[] = [
     {
       title: 'Distributions',
       type: 'fromImage',
@@ -198,7 +196,7 @@ export class LinodeCreate extends React.PureComponent<
     }
   ];
 
-  stackScriptTabs: Tab[] = [
+  stackScriptTabs: CreateTab[] = [
     {
       title: 'Community StackScripts',
       type: 'fromStackScript',
@@ -349,7 +347,7 @@ export class LinodeCreate extends React.PureComponent<
     return (
       <form className={classes.form}>
         <Grid item className={`mlMain py0`}>
-          <Tabs defaultIndex={selectedTab}>
+          <Tabs onChange={this.handleTabChange} defaultIndex={selectedTab}>
             <TabLinkList tabs={this.tabs} />
             <TabPanels>
               <SafeTabPanel index={0}>
@@ -457,15 +455,17 @@ export class LinodeCreate extends React.PureComponent<
             </TabPanels>
           </Tabs>
 
-          <SelectRegionPanel
-            error={hasErrorFor.region}
-            regions={regionsData!}
-            handleSelection={this.props.updateRegionID}
-            selectedID={this.props.selectedRegionID}
-            copy="Determine the best location for your Linode."
-            updateFor={[this.props.selectedRegionID, regionsData, errors]}
-            disabled={userCannotCreateLinode}
-          />
+          {this.props.createType !== 'fromBackup' && (
+            <SelectRegionPanel
+              error={hasErrorFor.region}
+              regions={regionsData!}
+              handleSelection={this.props.updateRegionID}
+              selectedID={this.props.selectedRegionID}
+              copy="Determine the best location for your Linode."
+              updateFor={[this.props.selectedRegionID, regionsData, errors]}
+              disabled={userCannotCreateLinode}
+            />
+          )}
           <SelectPlanPanel
             error={hasErrorFor.type}
             types={typesData!}
@@ -494,27 +494,31 @@ export class LinodeCreate extends React.PureComponent<
             }
             updateFor={[tags, label, errors]}
           />
-          <AccessPanel
-            disabled={!this.props.selectedImageID}
-            disabledReason={
-              !this.props.selectedImageID
-                ? 'You must select an image to set a root password'
-                : ''
-            }
-            error={hasErrorFor.root_pass}
-            sshKeyError={sshError}
-            password={this.props.password}
-            handleChange={this.props.updatePassword}
-            updateFor={[
-              this.props.password,
-              errors,
-              sshError,
-              userSSHKeys,
-              this.props.selectedImageID
-            ]}
-            users={userSSHKeys}
-            requestKeys={requestKeys}
-          />
+          {/* Hide for backups and clone */}
+          {this.props.createType !== 'fromBackup' &&
+            this.props.createType !== 'fromLinode' && (
+              <AccessPanel
+                disabled={!this.props.selectedImageID}
+                disabledReason={
+                  !this.props.selectedImageID
+                    ? 'You must select an image to set a root password'
+                    : ''
+                }
+                error={hasErrorFor.root_pass}
+                sshKeyError={sshError}
+                password={this.props.password}
+                handleChange={this.props.updatePassword}
+                updateFor={[
+                  this.props.password,
+                  errors,
+                  sshError,
+                  userSSHKeys,
+                  this.props.selectedImageID
+                ]}
+                users={userSSHKeys}
+                requestKeys={requestKeys}
+              />
+            )}
           <AddonsPanel
             data-qa-addons-panel
             backups={this.props.backupsEnabled}

@@ -55,7 +55,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Tab {
   title: string;
   routeName: string;
-  type?: string;
 }
 
 interface Props {
