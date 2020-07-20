@@ -12,11 +12,13 @@ type ClassNames =
   | 'CSVlink'
   | 'addNewLink'
   | 'chip'
+  | 'chipActive'
   | 'chipRunning'
   | 'chipPending'
   | 'chipOffline'
   | 'controlHeader'
-  | 'toggleButton';
+  | 'toggleButton'
+  | 'clearFilters';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -41,7 +43,13 @@ const styles = (theme: Theme) =>
       marginLeft: 15
     },
     chip: {
-      ...theme.applyStatusPillStyles
+      ...theme.applyStatusPillStyles,
+      '&:hover, &:focus, &:active': {
+        backgroundColor: theme.bg.chipActive
+      }
+    },
+    chipActive: {
+      backgroundColor: theme.bg.chipActive
     },
     chipRunning: {
       '&:before': {
@@ -69,6 +77,15 @@ const styles = (theme: Theme) =>
       '&:focus': {
         // Browser default until we get styling direction for focus states
         outline: '1px dotted #999'
+      }
+    },
+    clearFilters: {
+      margin: '1px 0 0 0',
+      padding: 0,
+      '&:hover': {
+        '& svg': {
+          color: `${theme.palette.primary.main} !important`
+        }
       }
     }
   });
