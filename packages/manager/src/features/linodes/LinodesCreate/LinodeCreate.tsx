@@ -155,7 +155,7 @@ export class LinodeCreate extends React.PureComponent<
     this.props.resetCreationState();
 
     /** set the tab in redux state */
-    // this.props.setTab(this.tabs[value].type);
+    this.props.setTab(this.tabs[value].type);
 
     this.props.history.push({
       search: `?type=${event.target.textContent}`
@@ -174,7 +174,7 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Marketplace',
       type: 'fromApp',
-      routeName: `${this.props.match.url}?type=Marketplace`
+      routeName: `${this.props.match.url}?type=One-Click`
     },
     {
       title: 'StackScripts',
