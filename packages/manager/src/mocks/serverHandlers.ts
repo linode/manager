@@ -125,9 +125,7 @@ export const handlers = [
   }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(25);
-    return res(
-      ctx.json(makeResourcePage(domains, { page: 1, pages: 41, results: 1001 }))
-    );
+    return res(ctx.json(makeResourcePage(domains)));
   }),
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(10);

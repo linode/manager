@@ -15,6 +15,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
   const {
     count,
     data,
+    error,
     loading,
     page,
     pageSize,
@@ -52,7 +53,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
             <TableContentWrapper
               length={count}
               loading={loading}
-              error={undefined}
+              error={error}
               lastUpdated={100}
             >
               {_data.map(thisEntity => (

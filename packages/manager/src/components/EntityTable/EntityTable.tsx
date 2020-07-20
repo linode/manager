@@ -26,6 +26,20 @@ export type CombinedProps = Props;
 
 export const LandingTable: React.FC<Props> = props => {
   const { entity, headers, groupByTag, row, initialOrder } = props;
+
+  if (row.request) {
+    const tableProps = {
+      request: row.request,
+      RowComponent: row.Component,
+      initialOrder,
+      headers,
+      entity,
+      handlers: row.handlers,
+      lastUpdated: row.lastUpdated
+    };
+    return <APIPaginatedTable {...tableProps} />;
+  }
+
   const tableProps = {
     data: row.data,
     request: row.request,
@@ -37,10 +51,6 @@ export const LandingTable: React.FC<Props> = props => {
     loading: row.loading,
     lastUpdated: row.lastUpdated
   };
-
-  if (row.request) {
-    return <APIPaginatedTable {...tableProps} data={undefined} />;
-  }
 
   if (groupByTag) {
     return <GroupedEntitiesByTag {...tableProps} />;
