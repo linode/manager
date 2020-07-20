@@ -43,10 +43,13 @@ const styles = (theme: Theme) =>
       marginLeft: 15
     },
     chip: {
-      ...theme.applyStatusPillStyles
+      ...theme.applyStatusPillStyles,
+      '&:hover, &:focus, &:active': {
+        backgroundColor: theme.bg.chipActive
+      }
     },
     chipActive: {
-      backgroundColor: '#CECECE'
+      backgroundColor: theme.bg.chipActive
     },
     chipRunning: {
       '&:before': {
