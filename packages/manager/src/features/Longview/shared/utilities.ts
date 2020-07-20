@@ -307,7 +307,7 @@ export const sumRelatedProcessesAcrossAllUsers = (
     return accum;
   }, {} as ProcessStats);
 
-export type NetworkUnit = 'b' | 'Kibit' | 'Mibit';
+export type NetworkUnit = 'b' | 'Kb' | 'Mb';
 /**
  * converts bytes to either Kb (Kilobits) or Mb (Megabits)
  * depending on if the Kilobit conversion exceeds 1000.
@@ -318,13 +318,13 @@ export const generateNetworkUnits = (
   networkUsedInBytes: number
 ): NetworkUnit => {
   /** Thanks to http://www.matisse.net/bitcalc/ */
-  const networkUsedToKilobits = (networkUsedInBytes * 8) / 1024;
+  const networkUsedToKilobits = (networkUsedInBytes * 8) / 1000;
   if (networkUsedToKilobits <= 1) {
     return 'b';
   } else if (networkUsedToKilobits <= 1000) {
-    return 'Kibit';
+    return 'Kb';
   } else {
-    return 'Mibit';
+    return 'Mb';
   }
 };
 
@@ -332,13 +332,15 @@ export const convertNetworkToUnit = (
   valueInBits: number,
   maxUnit: NetworkUnit
 ) => {
-  if (maxUnit === 'Mibit') {
+  if (maxUnit === 'Mb') {
     // If the unit we're using for the graph is Mb, return the output in Mb.
-    const valueInMegabits = valueInBits / 1024 / 1024;
+    // eslint-disable-next-line
+    const valueInMegabits = valueInBits / 1000 / 1000;
     return valueInMegabits;
-  } else if (maxUnit === 'Kibit') {
+  } else if (maxUnit === 'Kb') {
     // If the unit we're using for the graph is Kb, return the output in Kb.
-    const valueInKilobits = valueInBits / 1024;
+    // eslint-disable-next-line
+    const valueInKilobits = valueInBits / 1000;
     return valueInKilobits;
   } else {
     // Unit is 'b' so just return the unformatted value, rounded to the nearest bit.

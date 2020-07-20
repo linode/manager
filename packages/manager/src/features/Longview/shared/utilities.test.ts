@@ -76,8 +76,8 @@ describe('Utility Functions', () => {
     it('should generate the correct units and values', () => {
       const oneKilobit = 1000;
       const oneMegabit = 1000000;
-      expect(generateNetworkUnits(oneKilobit)).toEqual('Kibit');
-      expect(generateNetworkUnits(oneMegabit)).toEqual('Mibit');
+      expect(generateNetworkUnits(oneKilobit)).toEqual('Kb');
+      expect(generateNetworkUnits(oneMegabit)).toEqual('Mb');
       expect(generateNetworkUnits(100)).toEqual('b');
     });
   });
@@ -367,7 +367,7 @@ describe('Utility Functions', () => {
     it('adds unit', () => {
       expect(formatBitsPerSecond(12)).toBe('12 b/s');
       expect(formatBitsPerSecond(0)).toBe('0 b/s');
-      expect(formatBitsPerSecond(123456789)).toBe('117.74 Mibit/s');
+      expect(formatBitsPerSecond(123456789)).toBe('123.46 Mb/s');
     });
   });
 });
