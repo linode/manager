@@ -40,6 +40,8 @@ interface Props {
   ) => void;
   openLinodeResize: (linodeID: number) => void;
   linodeConfigs: Config[];
+  linodeLabel: string;
+  linodeID: number;
 }
 
 type CombinedProps = WithImagesProps & PaginationProps & Props;
@@ -63,11 +65,7 @@ const CardView: React.FC<CombinedProps> = props => {
     setTagDrawer({ ...tagDrawer, open: false });
   };
 
-  const openTagDrawer = (
-    linodeID: number,
-    linodeLabel: string,
-    tags: string[]
-  ) => {
+  const openTagDrawer = (tags: string[]) => {
     setTagDrawer({
       open: true,
       label: linodeLabel,
@@ -96,7 +94,9 @@ const CardView: React.FC<CombinedProps> = props => {
     openDeleteDialog,
     openPowerActionDialog,
     openLinodeResize,
-    linodeConfigs
+    linodeConfigs,
+    linodeLabel,
+    linodeID
   } = props;
 
   if (!profile.data?.username) {
