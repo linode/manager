@@ -18,12 +18,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   linodeRegion: ZoneName;
   linodeID: number;
+  linodeLabel: string;
 }
 
 type CombinedProps = Props;
 
 const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
-  const { linodeID, linodeRegion } = props;
+  const { linodeID, linodeRegion, linodeLabel } = props;
   const classes = useStyles();
 
   return (
@@ -36,7 +37,7 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
         alignItems="flex-start"
       >
         <Grid item xs={3}>
-          <NetworkTransfer linodeID={linodeID} />
+          <NetworkTransfer linodeID={linodeID} linodeLabel={linodeLabel} />
         </Grid>
         <Grid item>
           <TransferHistory />
