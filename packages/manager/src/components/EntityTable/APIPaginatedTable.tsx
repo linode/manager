@@ -2,12 +2,11 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
+import EntityTableHeader from './EntityTableHeader';
 import { Entity, ListProps } from './types';
 
 export type CombinedProps = ListProps & PaginationProps<Entity>;
@@ -20,11 +19,13 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
     page,
     pageSize,
     request,
+    handleOrderChange,
     handlePageChange,
     handlePageSizeChange,
     entity,
     handlers,
-    headerCells,
+    headers,
+    initialOrder,
     RowComponent
   } = props;
 
@@ -32,15 +33,21 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     request();
-  }, [request]);
+    if (initialOrder) {
+      handleOrderChange(initialOrder.orderBy, initialOrder.order);
+    }
+  }, [request, handleOrderChange, initialOrder]);
 
   return (
     <>
       <Paper>
         <Table aria-label={`List of ${entity}`}>
-          <TableHead>
-            <TableRow>{headerCells}</TableRow>
-          </TableHead>
+          <EntityTableHeader
+            headers={headers}
+            order={props.order}
+            orderBy={props.orderBy ?? 'asc'}
+            handleOrderChange={props.handleOrderChange}
+          />
           <TableBody>
             <TableContentWrapper
               length={count}
