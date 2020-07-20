@@ -620,8 +620,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   renderIPTable = () => {
-    // const { classes, readOnly } = this.props;
-
     const ipDisplay = ipResponseToDisplayRows(this.state.linodeIPs);
 
     return (

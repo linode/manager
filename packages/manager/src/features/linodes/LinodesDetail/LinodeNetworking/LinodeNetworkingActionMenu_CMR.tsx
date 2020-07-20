@@ -3,7 +3,6 @@ import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { IPTypes } from './types';
-// import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -27,8 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.grey1
   }
 }));
-
-// const permissionsError = "You don't have permissions to modify this Linode";
 
 interface Props {
   onEdit?: (ip: IPAddress | IPRange) => void;
