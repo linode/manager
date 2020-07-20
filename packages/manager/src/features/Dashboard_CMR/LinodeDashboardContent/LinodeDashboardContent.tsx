@@ -5,7 +5,7 @@ import useReduxLoad from 'src/hooks/useReduxLoad';
 import SingleLinode from './SingleLinode';
 import MultipleLinodes from './MultipleLinodes';
 
-export const LinodeDashboardContent: React.FC<{}> = props => {
+export const LinodeDashboardContent: React.FC<{}> = _ => {
   const { linodes } = useLinodes();
   const { _loading } = useReduxLoad(['linodes']);
 
@@ -14,7 +14,7 @@ export const LinodeDashboardContent: React.FC<{}> = props => {
   }
 
   // @todo change this logic once there's a no-Linodes view
-  return linodes.results < 2 ? <SingleLinode /> : <MultipleLinodes />;
+  return linodes.results === 1 ? <SingleLinode /> : <MultipleLinodes />;
 };
 
 export default React.memo(LinodeDashboardContent);
