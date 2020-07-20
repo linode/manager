@@ -52,7 +52,12 @@ type ClassNames =
   | 'headline'
   | 'addNewWrapper'
   | 'labelCell'
-  | 'tableCell';
+  | 'tableCell'
+  | 'labelColumn'
+  | 'vmColumn'
+  | 'kernelColumn'
+  | 'rootDeviceColumn'
+  | 'actionsColumn';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -83,6 +88,21 @@ const styles = (theme: Theme) =>
     tableCell: {
       borderRight: `1px solid ${theme.palette.divider}`,
       fontWeight: 'bold'
+    },
+    labelColumn: {
+      width: '20%'
+    },
+    vmColumn: {
+      width: '15%'
+    },
+    kernelColumn: {
+      width: '10%'
+    },
+    rootDeviceColumn: {
+      width: '20%'
+    },
+    actionsColumn: {
+      width: '20%'
     }
   });
 
@@ -450,6 +470,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                           direction={order}
                           handleClick={handleOrderChange}
                           data-qa-config-label-header
+                          className={classes.labelColumn}
                         >
                           <strong>Label</strong>
                         </TableSortCell>
@@ -459,19 +480,24 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                           direction={order}
                           handleClick={handleOrderChange}
                           data-qa-virt-mode-header
+                          className={classes.vmColumn}
                         >
                           <strong>VM Mode</strong>
                         </TableSortCell>
-                        <TableCell className={classes.tableCell}>
+                        <TableCell
+                          className={`${classes.tableCell} ${classes.kernelColumn}`}
+                        >
                           Kernel
                         </TableCell>
                         <TableCell className={classes.tableCell}>
                           Memory Limit
                         </TableCell>
-                        <TableCell className={classes.tableCell}>
+                        <TableCell
+                          className={`${classes.tableCell} ${classes.rootDeviceColumn}`}
+                        >
                           Root Device
                         </TableCell>
-                        <TableCell />
+                        <TableCell className={classes.actionsColumn} />
                       </TableRow>
                     </TableHead>
                     <TableBody>
