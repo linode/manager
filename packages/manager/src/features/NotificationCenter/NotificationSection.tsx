@@ -53,9 +53,18 @@ export const NotificationSection: React.FC<Props> = props => {
       <div className={classes.content}>
         <Typography variant="h2">{header}</Typography>
 
-        {content.map(thisItem => (
-          <ContentRow key={`notification-row-${thisItem.id}`} item={thisItem} />
-        ))}
+        {content.length > 0 ? (
+          content.map(thisItem => (
+            <ContentRow
+              key={`notification-row-${thisItem.id}`}
+              item={thisItem}
+            />
+          ))
+        ) : (
+          <Typography className={classes.notificationItem}>
+            You have no {header.toLocaleLowerCase()}.
+          </Typography>
+        )}
       </div>
     </div>
   );
