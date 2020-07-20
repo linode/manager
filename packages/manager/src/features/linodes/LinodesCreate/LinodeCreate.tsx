@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { pathOr } from 'ramda';
 import { connect, MapDispatchToProps } from 'react-redux';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
@@ -6,7 +7,7 @@ import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-// import DocsSidebar from 'src/components/DocsSidebar';
+import DocsSidebar from 'src/components/DocsSidebar';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -36,7 +37,6 @@ import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
-import { RouteComponentProps } from 'react-router-dom';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -51,7 +51,7 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
-// import { AppsDocs } from 'src/documentation';
+import { AppsDocs } from 'src/documentation';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import { restoreBackup } from '@linode/api-v4/lib/linodes';
 
@@ -60,7 +60,7 @@ type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: '#F4F4F4',
+      backgroundColor: '#f4f4f4',
 
       '& > :first-child': {
         padding: 0
@@ -132,13 +132,13 @@ export class LinodeCreate extends React.PureComponent<
 
     // If there is no specified "type" in the query params, update the Redux state
     // so that the correct request is made when the form is submitted.
-    // if (!queryParams.type) {
-    //   this.props.setTab(this.tabs[0].type);
-    // }
+    if (!queryParams.type) {
+      this.props.setTab(this.tabs[0].type!);
+    }
 
     this.state = {
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
-      createType: 'fromImage'
+      createType: this.tabs[preSelectedTab !== -1 ? preSelectedTab : 0].type!
     };
   }
 
@@ -150,16 +150,14 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   handleTabChange = (index: number) => {
+    this.props.resetCreationState();
     this.props.setTab(this.tabs[index].type!);
-    this.setState(
-      {
-        selectedTab: index,
-        createType: this.tabs[index].type!
-      },
-      () => {
-        console.log(this.state.createType);
-      }
-    );
+    this.props.history.push(`${this.tabs[index].routeName}`);
+
+    this.setState({
+      selectedTab: index,
+      createType: this.tabs[index].type!
+    });
   };
 
   tabs: Tab[] = [
@@ -171,7 +169,7 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Marketplace',
       type: 'fromApp',
-      routeName: `${this.props.match.url}?type=Marketplace`
+      routeName: `${this.props.match.url}?type=One-Click`
     },
     {
       title: 'StackScripts',
@@ -191,7 +189,7 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Clone Linode',
       type: 'fromLinode',
-      routeName: `${this.props.match.url}?type=Clones`
+      routeName: `${this.props.match.url}?type=Clone%20Linode`
     }
   ];
 
@@ -199,12 +197,12 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Community StackScripts',
       type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts/Community`
+      routeName: `${this.props.match.url}?type=StackScripts`
     },
     {
       title: 'Account StackScripts',
       type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts/Account`
+      routeName: `${this.props.match.url}?type=StackScripts`
     }
   ];
 
@@ -456,17 +454,21 @@ export class LinodeCreate extends React.PureComponent<
               </SafeTabPanel>
             </TabPanels>
           </Tabs>
-
-          <SelectRegionPanel
-            error={hasErrorFor.region}
-            regions={regionsData!}
-            handleSelection={this.props.updateRegionID}
-            selectedID={this.props.selectedRegionID}
-            copy="Determine the best location for your Linode."
-            updateFor={[this.props.selectedRegionID, regionsData, errors]}
-            disabled={userCannotCreateLinode}
-          />
+          {createType !== 'fromBackup' && (
+            <SelectRegionPanel
+              data-qa-select-region-panel
+              error={hasErrorFor.region}
+              regions={regionsData!}
+              handleSelection={this.props.updateRegionID}
+              selectedID={this.props.selectedRegionID}
+              copy="Determine the best location for your Linode."
+              updateFor={[this.props.selectedRegionID, regionsData, errors]}
+              disabled={userCannotCreateLinode}
+              helperText={this.props.regionHelperText}
+            />
+          )}
           <SelectPlanPanel
+            data-qa-select-plan
             error={hasErrorFor.type}
             types={typesData!}
             onSelect={this.props.updateTypeID}
@@ -480,6 +482,7 @@ export class LinodeCreate extends React.PureComponent<
             disabledClasses={this.props.disabledClasses}
           />
           <LabelAndTagsPanel
+            data-qa-label-and-tags-panel
             labelFieldProps={{
               label: 'Linode Label',
               value: label || '',
@@ -493,6 +496,8 @@ export class LinodeCreate extends React.PureComponent<
             updateFor={[tags, label, errors]}
           />
           <AccessPanel
+            data-qa-access-panel
+            /* Disable the password field if we haven't selected an image */
             disabled={!this.props.selectedImageID}
             disabledReason={
               !this.props.selectedImageID
@@ -524,7 +529,8 @@ export class LinodeCreate extends React.PureComponent<
             updateFor={[
               this.props.privateIPEnabled,
               this.props.backupsEnabled,
-              this.props.selectedTypeID
+              this.props.selectedTypeID,
+              createType
             ]}
             disabled={userCannotCreateLinode}
             hidePrivateIP={createType === 'fromLinode'}
@@ -541,9 +547,9 @@ export class LinodeCreate extends React.PureComponent<
           >
             <DisplaySectionList displaySections={displaySections} />
           </CheckoutBar>
-          {/* { && <div>test</div>
-          // <DocsSidebar docs={this.props.documentation} />
-          } */}
+          {/* {createType === 'fromApp' && this.props.documentation.length > 0  && (
+            <DocsSidebar docs={this.props.documentation} />
+          )} */}
         </Grid>
       </form>
     );
