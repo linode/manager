@@ -40,6 +40,7 @@ const styles = (theme: Theme) =>
     actionInner: {
       display: 'flex',
       justifyContent: 'flex-end',
+      marginRight: 1,
       '& a': {
         lineHeight: '1rem'
       }

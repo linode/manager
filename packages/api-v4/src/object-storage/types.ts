@@ -12,6 +12,8 @@ export interface ObjectStorageKeyRequest {
 export interface ObjectStorageBucketRequestPayload {
   label: string;
   cluster: string;
+  acl?: 'private' | 'public-read' | 'authenticated-read' | 'public-read-write';
+  cors_enabled?: boolean;
 }
 
 export interface ObjectStorageDeleteBucketRequestPayload {

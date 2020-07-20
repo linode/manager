@@ -47,7 +47,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/instances', async (req, res, ctx) => {
-    const linodes = linodeFactory.buildList(10);
+    const linodes = linodeFactory.buildList(1);
     return res(ctx.json(makeResourcePage(linodes)));
   }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
@@ -107,6 +107,12 @@ export const handlers = [
   rest.get('*/firewalls/*/devices', (req, res, ctx) => {
     const devices = firewallDeviceFactory.buildList(10);
     return res(ctx.json(makeResourcePage(devices)));
+  }),
+  rest.put('*/firewalls/:firewallId', (req, res, ctx) => {
+    const firewall = firewallFactory.build({
+      status: req.body?.['status'] ?? 'disabled'
+    });
+    return res(ctx.json(firewall));
   }),
   rest.get('*/nodebalancers', (req, res, ctx) => {
     const nodeBalancers = nodeBalancerFactory.buildList(10);

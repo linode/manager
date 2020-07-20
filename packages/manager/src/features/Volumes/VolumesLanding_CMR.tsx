@@ -88,6 +88,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
+  isVolumesLanding?: boolean;
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
@@ -339,6 +340,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   renderData = (volumes: ExtendedVolume[]) => {
     const {
+      isVolumesLanding,
       linodeConfigs,
       linodeRegion,
       regionsData,
@@ -347,10 +349,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     let error = '';
 
-    const isVolumesLanding = this.props.match.params.linodeId === undefined;
-
     const renderProps = {
-      isVolumesLanding,
+      isVolumesLanding: Boolean(isVolumesLanding),
       handleAttach: this.handleAttach,
       handleDelete: this.handleDelete,
       handleDetach: this.handleDetach,
