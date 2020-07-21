@@ -269,7 +269,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   };
 
   const handleRecycleAllNodes = (nodePoolID: number) => {
-    return recycleAllNodes(cluster.id, nodePoolID);
+    return recycleAllNodes(cluster.id, nodePoolID).then(() => {
+      // Recycling nodes is an asynchronous process, and it probably won't make a difference to
+      // request Node Pools here (it could be several seconds before statuses change). I thought
+      // it was a good idea anyway, though.
+      props.requestNodePools(cluster.id);
+    });
   };
 
   return (
