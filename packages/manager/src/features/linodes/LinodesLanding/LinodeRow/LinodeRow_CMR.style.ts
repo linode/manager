@@ -14,10 +14,6 @@ type ClassNames =
   | 'bodyRow'
   | 'statusCell'
   | 'statusCellMaintenance'
-  | 'statusIcon'
-  | 'statusIconRunning'
-  | 'statusIconOffline'
-  | 'statusIconOther'
   | 'statusHelpIcon'
   | 'ipCell'
   | 'ipCellWrapper'
@@ -47,6 +43,7 @@ const styles = (theme: Theme) =>
     actionInner: {
       display: 'flex',
       justifyContent: 'flex-end',
+      marginRight: 1,
       '& a': {
         lineHeight: '1rem'
       }
@@ -112,24 +109,6 @@ const styles = (theme: Theme) =>
           padding: 6
         }
       }
-    },
-    statusIcon: {
-      display: 'inline-block',
-      borderRadius: '50%',
-      height: '16px',
-      width: '16px',
-      marginRight: theme.spacing(),
-      position: 'relative',
-      top: 2
-    },
-    statusIconRunning: {
-      backgroundColor: theme.color.green
-    },
-    statusIconOther: {
-      backgroundColor: '#ffb31a'
-    },
-    statusIconOffline: {
-      backgroundColor: theme.color.grey6
     },
     statusHelpIcon: {
       position: 'relative',

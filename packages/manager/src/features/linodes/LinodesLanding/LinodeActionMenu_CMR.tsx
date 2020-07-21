@@ -9,13 +9,12 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { useTypes } from 'src/hooks/useTypes';
 import { useRegions } from 'src/hooks/useRegions';
@@ -27,6 +26,7 @@ import {
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent
 } from 'src/utilities/ga';
+import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
@@ -34,38 +34,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   link: {
-    padding: '12px 10px',
-    textAlign: 'center',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      '& span': {
-        color: theme.color.white
-      }
-    },
-    '& span': {
-      color: '#3683dc'
-    }
+    padding: '12px 10px'
   },
   action: {
     marginLeft: 10
   },
   powerOnOrOff: {
-    ...theme.applyLinkStyles,
     height: '100%',
     minWidth: 'auto',
-    padding: '12px 10px',
-    whiteSpace: 'nowrap',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      color: theme.color.white
-    },
-    '&[disabled]': {
-      color: '#cdd0d5',
-      cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit'
-      }
-    }
+    whiteSpace: 'nowrap'
   }
 }));
 
@@ -84,6 +61,8 @@ export interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  inlineLabel?: string;
+  inTableContext?: boolean;
   openLinodeResize: (linodeID: number) => void;
 }
 
@@ -175,16 +154,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
     return (): Action[] => {
       const actions: Action[] = [
-        {
-          title: 'Launch Console',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Launch Console');
-            lishLaunch(linodeId);
-            e.preventDefault();
-            e.stopPropagation();
-          },
-          ...readOnlyProps
-        },
         {
           title: 'Settings',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -310,43 +279,78 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
+      if (inTableContext === true) {
+        actions.unshift({
+          title: 'Launch Console',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            sendLinodeActionMenuItemEvent('Launch Console');
+            lishLaunch(linodeId);
+            e.preventDefault();
+            e.stopPropagation();
+          },
+          ...readOnlyProps
+        });
+      }
+
       return actions;
     };
   };
 
-  const { linodeId, linodeLabel, linodeStatus, openPowerActionDialog } = props;
+  const {
+    linodeId,
+    linodeLabel,
+    linodeStatus,
+    openPowerActionDialog,
+    inlineLabel,
+    inTableContext
+  } = props;
+
+  const inlineActions = [
+    {
+      actionText: 'Details',
+      className: classes.link,
+      href: `/linodes/${linodeId}`
+    },
+    {
+      actionText: linodeStatus === 'running' ? 'Power Off' : 'Power On',
+      disabled: !['running', 'offline'].includes(linodeStatus),
+      className: classes.powerOnOrOff,
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        const action = linodeStatus === 'running' ? 'Power Off' : 'Power On';
+        sendLinodeActionMenuItemEvent(`${action} Linode`);
+        e.preventDefault();
+        e.stopPropagation();
+        openPowerActionDialog(
+          `${action}` as BootAction,
+          linodeId,
+          linodeLabel,
+          linodeStatus === 'running' ? configs : []
+        );
+      }
+    }
+  ];
 
   return (
     <>
-      <div className={classes.inlineActions}>
-        <Link className={classes.link} to={`/linodes/${linodeId}`}>
-          <span>Details</span>
-        </Link>
-        <Button
-          className={classes.powerOnOrOff}
-          onClick={e => {
-            const action =
-              linodeStatus === 'running' ? 'Power Off' : 'Power On';
-            sendLinodeActionMenuItemEvent(`${action} Linode`);
-            e.preventDefault();
-            e.stopPropagation();
-            openPowerActionDialog(
-              `${action}` as BootAction,
-              linodeId,
-              linodeLabel,
-              linodeStatus === 'running' ? configs : []
-            );
-          }}
-          disabled={!['running', 'offline'].includes(linodeStatus)}
-        >
-          {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-        </Button>
-      </div>
+      {inTableContext &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              className={action.className}
+              href={action.href}
+              disabled={action.disabled}
+              onClick={action.onClick}
+            />
+          );
+        })}
       <ActionMenu
         className={classes.action}
         toggleOpenCallback={toggleOpenActionMenu}
         createActions={createLinodeActions()}
         ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
+        inlineLabel={inlineLabel}
       />
     </>
   );

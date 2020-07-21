@@ -14,6 +14,7 @@ import Hidden from 'src/components/core/Hidden';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
+import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TagCell from 'src/components/TagCell';
@@ -25,6 +26,7 @@ import {
 import useLinodes from 'src/hooks/useLinodes';
 import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
@@ -144,23 +146,18 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   const MaintenanceText = () => {
     return (
       <>
-        Please consult your{' '}
-        <Link to="/support/tickets?type=open">support tickets</Link> for
-        details.
+        For more information, please see your{' '}
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
   };
 
-  const StatusIcon = (
-    <div
-      className={classNames({
-        [classes.statusIcon]: true,
-        [classes.statusIconRunning]: status === 'running',
-        [classes.statusIconOffline]: status === 'offline',
-        [classes.statusIconOther]: status !== ('running' || 'offline')
-      })}
-    />
-  );
+  const iconStatus =
+    status === 'running'
+      ? 'active'
+      : ['offline', 'stopped'].includes(status)
+      ? 'inactive'
+      : 'other';
 
   const headCell = (
     <LinodeRowHeadCell
@@ -207,7 +204,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           loading ? (
             recentEvent && (
               <>
-                {StatusIcon}
+                <StatusIcon status={iconStatus} />
                 <ProgressDisplay
                   className={classes.progressDisplay}
                   progress={recentEvent.percent_complete}
@@ -217,7 +214,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             )
           ) : (
             <>
-              {StatusIcon}
+              <StatusIcon status={iconStatus} />
               {capitalize(displayStatus)}
             </>
           )
@@ -228,7 +225,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
                 <strong>Maintenance Scheduled</strong>
               </div>
               <div>
-                {dateTime[0]} at {dateTime[1]}
+                {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}
               </div>
             </div>
             <HelpIcon
@@ -268,6 +265,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           deleteTag={deleteTag}
           listAllTags={() => openTagDrawer(id, label, tags)}
           width={300}
+          inTableContext
         />
       </Hidden>
 
@@ -289,6 +287,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             openPowerActionDialog={openPowerActionDialog}
             openLinodeResize={openLinodeResize}
             noImage={!image}
+            inTableContext
           />
         </div>
       </TableCell>

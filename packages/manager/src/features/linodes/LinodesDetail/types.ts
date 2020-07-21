@@ -13,4 +13,7 @@ export interface ExtendedLinode extends LinodeWithMaintenance {
   _volumesError?: APIError[];
   _type?: null | LinodeType;
   _permissions: GrantLevel;
+  // In the Linodes table, the "Status" column can be sorted by priority.
+  // Example: "Needs Maintenance" has a higher priority than "Offline".
+  _statusPriority?: number;
 }

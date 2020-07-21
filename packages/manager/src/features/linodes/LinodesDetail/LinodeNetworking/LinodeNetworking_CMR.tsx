@@ -522,6 +522,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <LinodeNetworkingSummaryPanel
           linodeRegion={zoneName}
           linodeID={linodeID}
+          linodeLabel={linodeLabel}
         />
 
         {this.renderIPTable()}

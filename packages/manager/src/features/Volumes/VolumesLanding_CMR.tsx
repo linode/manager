@@ -7,10 +7,8 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
-import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
-import AddNewLink from 'src/components/AddNewLink';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Breadcrumb from 'src/components/Breadcrumb';
-import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
   createStyles,
   Theme,
@@ -20,12 +18,14 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
+import Loading from 'src/components/LandingLoading';
 import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
-import Placeholder from 'src/components/Placeholder';
-import Toggle from 'src/components/Toggle';
 import { REFRESH_INTERVAL } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
+import withRegions, {
+  DefaultProps as RegionProps
+} from 'src/containers/regions.container';
 import withVolumes, {
   StateProps as WithVolumesProps
 } from 'src/containers/volumes.container';
@@ -48,101 +48,47 @@ import {
   openForResize,
   Origin as VolumeDrawerOrigin
 } from 'src/store/volumeForm';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
-import DestructiveVolumeDialog from './DestructiveVolumeDialog';
-import ListGroupedVolumes from './ListGroupedVolumes';
-import ListVolumes from './ListVolumes';
-import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
-
-import ErrorState from 'src/components/ErrorState';
-import Loading from 'src/components/LandingLoading';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-
-import withRegions, {
-  DefaultProps as RegionProps
-} from 'src/containers/regions.container';
 import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import DestructiveVolumeDialog from './DestructiveVolumeDialog';
+import ListVolumes from './ListVolumes_CMR';
+import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import { ExtendedVolume } from './types';
 
-type ClassNames =
-  | 'root'
-  | 'titleWrapper'
-  | 'title'
-  | 'tagGroup'
-  | 'labelCol'
-  | 'icon'
-  | 'attachmentCol'
-  | 'sizeCol'
-  | 'pathCol'
-  | 'volumesWrapper'
-  | 'linodeVolumesWrapper';
+type ClassNames = 'root' | 'headline' | 'addNewWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      paddingBottom: 0
+      backgroundColor: theme.color.white,
+      margin: 0,
+      marginTop: 20,
+      width: '100%'
     },
-    tagGroup: {
-      flexDirection: 'row-reverse',
-      position: 'relative',
-      top: -(theme.spacing(1) + 1)
-    },
-    titleWrapper: {
-      flex: 1
-    },
-    title: {
-      marginBottom: theme.spacing(1)
-    },
-    // styles for /volumes table
-    volumesWrapper: {},
-    // styles for linodes/id/volumes table
-    linodeVolumesWrapper: {
-      '& $labelCol': {
-        width: '20%',
-        minWidth: 200
-      },
-      '& $sizeCol': {
-        width: '15%',
-        minWidth: 100
-      },
-      '& $pathCol': {
-        width: '55%',
-        minWidth: 350
+    headline: {
+      marginTop: 8,
+      marginBottom: 8,
+      marginLeft: 15,
+      lineHeight: '1.5rem',
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: 0,
+        marginTop: theme.spacing(2)
       }
     },
-    labelCol: {
-      width: '25%',
-      minWidth: 150,
-      paddingLeft: 65
-    },
-    icon: {
-      position: 'relative',
-      top: 3,
-      width: 40,
-      height: 40,
-      '& .circle': {
-        fill: theme.bg.offWhiteDT
+    addNewWrapper: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
+        marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
+        marginTop: -theme.spacing(1)
       },
-      '& .outerCircle': {
-        stroke: theme.bg.main
+      '&.MuiGrid-item': {
+        padding: 5
       }
-    },
-    attachmentCol: {
-      width: '15%',
-      minWidth: 150
-    },
-    sizeCol: {
-      width: '10%',
-      minWidth: 75
-    },
-    pathCol: {
-      width: '25%',
-      minWidth: 250
     }
   });
 
 interface Props {
+  isVolumesLanding?: boolean;
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
@@ -153,7 +99,6 @@ interface Props {
   fromLinodes?: boolean;
 }
 
-//
 interface WithMappedVolumesProps {
   mappedVolumesDataWithLinodes: ExtendedVolume[];
 }
@@ -302,20 +247,17 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   render() {
     const {
       classes,
-      volumesError,
       volumesLoading,
       mappedVolumesDataWithLinodes,
       readOnly,
       removeBreadCrumb,
-      fromLinodes
+      fromLinodes,
+      linodeRegion,
+      regionsData
     } = this.props;
 
     if (volumesLoading) {
       return <Loading shouldDelay />;
-    }
-
-    if (volumesError && volumesError.read) {
-      return <RenderError />;
     }
 
     // If this is the Volumes tab on a Linode, we want ONLY the Volumes attached to this Linode.
@@ -326,80 +268,48 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           )
         : mappedVolumesDataWithLinodes;
 
-    if (data.length < 1) {
-      return this.renderEmpty();
-    }
-
     return (
       <React.Fragment>
         {readOnly && <LinodePermissionsError />}
         <LinodeDisks />
-        <PreferenceToggle<boolean>
-          preferenceKey="volumes_group_by_tag"
-          preferenceOptions={[false, true]}
-          localStorageKey="GROUP_VOLUMES"
-          toggleCallbackFnDebounced={toggleVolumesGroupBy}
+        <Grid
+          className={classes.root}
+          container
+          alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
+          justify="space-between"
         >
-          {({
-            preference: volumesAreGrouped,
-            togglePreference: toggleGroupVolumes
-          }: ToggleProps<boolean>) => {
-            return (
-              <React.Fragment>
-                <Grid
-                  container
-                  justify="space-between"
-                  alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
-                  className={classes.root}
-                >
-                  <Grid item className={classes.titleWrapper}>
-                    {removeBreadCrumb ? (
-                      <Typography variant="h2">Volumes</Typography>
-                    ) : (
-                      <Breadcrumb
-                        pathname={this.props.location.pathname}
-                        labelTitle="Volumes"
-                        className={classes.title}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item className="p0">
-                    <FormControlLabel
-                      className={classes.tagGroup}
-                      control={
-                        <Toggle
-                          className={
-                            volumesAreGrouped ? ' checked' : ' unchecked'
-                          }
-                          onChange={toggleGroupVolumes}
-                          checked={volumesAreGrouped}
-                        />
-                      }
-                      label="Group by Tag:"
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Grid container alignItems="flex-end">
-                      <Grid item className="pt0">
-                        <AddNewLink
-                          onClick={
-                            fromLinodes
-                              ? this.openCreateVolumeDrawer
-                              : () => {
-                                  this.props.history.push('/volumes/create');
-                                }
-                          }
-                          label="Create a Volume"
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                {this.renderData(data, volumesAreGrouped)}
-              </React.Fragment>
-            );
-          }}
-        </PreferenceToggle>
+          <Grid item className="p0">
+            {removeBreadCrumb ? (
+              <Typography variant="h3" className={classes.headline}>
+                Volumes
+              </Typography>
+            ) : (
+              <Breadcrumb
+                labelTitle="Volumes"
+                pathname={this.props.location.pathname}
+              />
+            )}
+          </Grid>
+          <Grid item className={classes.addNewWrapper}>
+            <AddNewLink
+              label="Add a Volume..."
+              onClick={
+                fromLinodes
+                  ? this.openCreateVolumeDrawer
+                  : () => {
+                      this.props.history.push('/volumes/create');
+                    }
+              }
+              disabled={
+                readOnly ||
+                (linodeRegion &&
+                  !doesRegionSupportBlockStorage(linodeRegion, regionsData)) ||
+                data.length >= 10
+              }
+            />
+          </Grid>
+        </Grid>
+        {this.renderData(data)}
 
         <VolumeAttachmentDrawer
           open={this.state.attachmentDrawer.open}
@@ -428,84 +338,19 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     history.push(`/linodes/${linodeId}/settings`);
   };
 
-  renderEmpty = () => {
+  renderData = (volumes: ExtendedVolume[]) => {
     const {
+      isVolumesLanding,
       linodeConfigs,
       linodeRegion,
-      readOnly,
       regionsData,
-      fromLinodes
+      volumesError
     } = this.props;
 
-    const isVolumesLanding = this.props.match.params.linodeId === undefined;
+    let error = '';
 
-    if (
-      linodeRegion &&
-      !doesRegionSupportBlockStorage(linodeRegion, regionsData)
-    ) {
-      return (
-        <React.Fragment>
-          <LinodeDisks />
-          <Placeholder
-            title="Volumes are not available in this region"
-            copy=""
-            icon={VolumesIcon}
-            renderAsSecondary={!isVolumesLanding}
-          />
-        </React.Fragment>
-      );
-    }
-
-    if (linodeConfigs && linodeConfigs.length === 0) {
-      return (
-        <React.Fragment>
-          <LinodeDisks />
-          <Placeholder
-            title="No configs available."
-            copy="This Linode has no configurations. Click below to create a configuration."
-            icon={VolumesIcon}
-            buttonProps={[
-              {
-                onClick: this.goToSettings,
-                children: 'View Linode Configurations'
-              }
-            ]}
-            renderAsSecondary={!isVolumesLanding}
-          />
-        </React.Fragment>
-      );
-    }
-
-    return (
-      <React.Fragment>
-        <LinodeDisks />
-        {readOnly && <LinodePermissionsError />}
-        <Placeholder
-          title="Add Block Storage!"
-          copy={<EmptyCopy />}
-          icon={VolumesIcon}
-          renderAsSecondary={!isVolumesLanding}
-          buttonProps={[
-            {
-              onClick: fromLinodes
-                ? this.openCreateVolumeDrawer
-                : () => {
-                    this.props.history.push('/volumes/create');
-                  },
-
-              children: 'Add a Volume',
-              disabled: readOnly
-            }
-          ]}
-        />
-      </React.Fragment>
-    );
-  };
-
-  renderData = (volumes: ExtendedVolume[], volumesAreGrouped: boolean) => {
-    const isVolumesLanding = this.props.match.params.linodeId === undefined;
     const renderProps = {
-      isVolumesLanding,
+      isVolumesLanding: Boolean(isVolumesLanding),
       handleAttach: this.handleAttach,
       handleDelete: this.handleDelete,
       handleDetach: this.handleDetach,
@@ -515,23 +360,34 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       openForResize: this.props.openForResize
     };
 
+    if (
+      linodeRegion &&
+      !doesRegionSupportBlockStorage(linodeRegion, regionsData)
+    ) {
+      error = 'Volumes are not available in this region.';
+    }
+
+    if (linodeConfigs && linodeConfigs.length === 0) {
+      error = 'No configs available.';
+    }
+
     return (
       <OrderBy data={volumes} order={'asc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           const orderProps = {
-            orderBy,
-            order,
+            data: orderedData,
             handleOrderChange,
-            data: orderedData
+            order,
+            orderBy
           };
 
-          return volumesAreGrouped ? (
-            <ListGroupedVolumes
+          return (
+            <ListVolumes
               {...orderProps}
               renderProps={{ ...renderProps }}
+              error={error}
+              volumesError={volumesError}
             />
-          ) : (
-            <ListVolumes {...orderProps} renderProps={{ ...renderProps }} />
           );
         }}
       </OrderBy>
@@ -617,38 +473,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       });
   };
 }
-
-const eventCategory = `volumes landing`;
-
-const toggleVolumesGroupBy = (checked: boolean) =>
-  sendGroupByTagEnabledEvent(eventCategory, checked);
-
-const EmptyCopy = () => (
-  <>
-    <Typography variant="subtitle1">Need additional storage?</Typography>
-    <Typography variant="subtitle1">
-      <a
-        href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        Here&apos;s how to use Block Storage with your Linode
-      </a>
-      &nbsp;or&nbsp;
-      <a
-        href="https://www.linode.com/docs/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        visit our guides and tutorials.
-      </a>
-    </Typography>
-  </>
-);
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
@@ -746,9 +570,3 @@ export default compose<CombinedProps, Props>(
   withSnackbar,
   styled
 )(VolumesLanding);
-
-const RenderError = () => {
-  return (
-    <ErrorState errorText="There was an error loading your Volumes. Please try again later" />
-  );
-};
