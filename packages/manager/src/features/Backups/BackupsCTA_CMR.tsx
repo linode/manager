@@ -80,7 +80,7 @@ const BackupsCTA: React.FC<CombinedProps> = props => {
         <button className={classes.enableText} onClick={openBackupsDrawer}>
           Enable Linode Backups
         </button>{' '}
-        to protect your data and recover quickly in an emergency
+        to protect your data and recover quickly in an emergency.
       </Typography>
       <span style={{ display: 'flex' }}>
         <Hidden smDown>
