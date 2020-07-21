@@ -7,6 +7,9 @@ import LinodesLanding from 'src/features/linodes/LinodesLanding';
 const useStyles = makeStyles(() => ({
   root: {
     backgroundColor: 'transparent'
+  },
+  innerClass: {
+    padding: 0
   }
 }));
 
@@ -26,6 +29,7 @@ export const MultipleLinodes: React.FC<{}> = _ => {
       header={''}
       tabs={tabs}
       initTab={0}
+      innerClass={`${classes.innerClass}`}
     />
   );
 };
