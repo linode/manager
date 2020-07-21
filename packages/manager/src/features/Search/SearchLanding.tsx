@@ -9,9 +9,13 @@ import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import useAPISearch from 'src/features/Search/useAPISearch';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParam } from 'src/utilities/queryParams';
+import { debounce } from 'throttle-debounce';
 import ResultGroup from './ResultGroup';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
@@ -92,9 +96,14 @@ const splitWord = (word: any) => {
 };
 
 export const SearchLanding: React.FC<CombinedProps> = props => {
-  const { entities, errors, searchResultsByEntity } = props;
+  const { entities, errors, search, searchResultsByEntity } = props;
 
   const classes = useStyles();
+  const { _isLargeAccount } = useAccountManagement();
+
+  const [apiResults, setAPIResults] = React.useState<any>({});
+  const [apiError, setAPIError] = React.useState<string | null>(null);
+  const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
 
   let query = '';
   let queryError = false;
@@ -113,11 +122,39 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
     'kubernetes'
   ]);
 
-  React.useEffect(() => {
-    props.search(query);
-  }, [query, entities]);
+  const { searchAPI } = useAPISearch();
 
-  const resultsEmpty = equals(searchResultsByEntity, emptyResults);
+  const _searchAPI = React.useRef(
+    debounce(500, false, (_searchText: string) => {
+      setAPILoading(true);
+      searchAPI(_searchText)
+        .then(searchResults => {
+          setAPIResults(searchResults.searchResultsByEntity);
+          setAPILoading(false);
+          setAPIError(null);
+        })
+        .catch(error => {
+          setAPIError(
+            getAPIErrorOrDefault(error, 'Error loading search results')[0]
+              .reason
+          );
+          setAPILoading(false);
+        });
+    })
+  ).current;
+
+  React.useEffect(() => {
+    if (_isLargeAccount) {
+      _searchAPI(query);
+    } else {
+      search(query);
+    }
+    search(query);
+  }, [query, entities, search, _isLargeAccount, _searchAPI]);
+
+  const finalResults = _isLargeAccount ? apiResults : searchResultsByEntity;
+
+  const resultsEmpty = equals(finalResults, emptyResults);
 
   return (
     <Grid container direction="column">
@@ -134,12 +171,17 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
           <Notice error text={getErrorMessage(errors)} />
         </Grid>
       )}
+      {apiError && (
+        <Grid item>
+          <Notice error text={apiError} />
+        </Grid>
+      )}
       {queryError && (
         <Grid item>
           <Notice error text="Invalid query" />
         </Grid>
       )}
-      {_loading && (
+      {(_loading || apiSearchLoading) && (
         <Grid item data-qa-search-loading data-testid="loading">
           <CircleProgress />
         </Grid>
@@ -162,11 +204,11 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
       )}
       {!_loading && (
         <Grid item>
-          {Object.keys(searchResultsByEntity).map((entityType, idx: number) => (
+          {Object.keys(finalResults).map((entityType, idx: number) => (
             <ResultGroup
               key={idx}
               entity={displayMap[entityType]}
-              results={searchResultsByEntity[entityType]}
+              results={finalResults[entityType]}
               groupSize={100}
             />
           ))}

@@ -14,7 +14,7 @@ import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
 import useAPISearch from 'src/features/Search/useAPISearch';
-import useAccountSize from 'src/hooks/useAccountSize';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
@@ -76,12 +76,12 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const [apiError, setAPIError] = React.useState<string | null>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
 
-  const isLargeAccount = useAccountSize();
+  const { _isLargeAccount } = useAccountManagement();
 
   const { _loading } = useReduxLoad(
     ['linodes', 'nodeBalancers', 'images', 'domains', 'volumes', 'kubernetes'],
     REFRESH_INTERVAL,
-    searchActive && !isLargeAccount // Only request things if the search bar is open/active.
+    searchActive && !_isLargeAccount // Only request things if the search bar is open/active.
   );
 
   const { searchAPI } = useAPISearch();
@@ -108,12 +108,12 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     // We can't store all data for large accounts for client side search,
     // so use the API's filtering instead.
-    if (isLargeAccount) {
+    if (_isLargeAccount) {
       _searchAPI(searchText);
     } else {
       search(searchText);
     }
-  }, [_loading, search, searchText, _searchAPI, isLargeAccount]);
+  }, [_loading, search, searchText, _searchAPI, _isLargeAccount]);
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
@@ -197,7 +197,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   };
 
   const finalOptions = createFinalOptions(
-    isLargeAccount ? apiResults : combinedResults,
+    _isLargeAccount ? apiResults : combinedResults,
     searchText,
     _loading || apiSearchLoading,
     Boolean(apiError)
