@@ -10,6 +10,7 @@ import {
   LinodeNews,
   Maintenance,
   OpenSupportTickets,
+  PastDue,
   PendingActions
 } from 'src/features/NotificationCenter';
 
@@ -24,6 +25,7 @@ export const Notifications: React.FC<{}> = _ => {
   const classes = useStyles();
   return (
     <Paper className={classes.root}>
+      <PastDue />
       <Grid container direction="row">
         <Grid item xs={6}>
           <Grid container direction="column">

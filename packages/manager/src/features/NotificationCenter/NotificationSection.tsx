@@ -84,7 +84,7 @@ const ContentRow: React.FC<{
       {item.body}
       {item.timeStamp && (
         <Typography>
-          {formatDate(item.timeStamp, { humanizeCutoff: 'day' })}
+          {formatDate(item.timeStamp, { humanizeCutoff: 'week' })}
         </Typography>
       )}
     </div>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import LinodeIcon from 'src/assets/logo/logo.svg';
+import Reload from 'src/assets/icons/reload.svg';
 import BarPercent from 'src/components/BarPercent/BarPercent_CMR';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -44,7 +44,7 @@ export const PendingActions: React.FC<{}> = _ => {
     <NotificationSection
       content={actions}
       header="Pending Actions"
-      icon={<LinodeIcon width={29} height={29} />}
+      icon={<Reload width={24} height={24} />}
     />
   );
 };
