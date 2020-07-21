@@ -27,11 +27,13 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
+import { PasswordValidationType } from 'src/featureFlags';
 import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
 
@@ -50,6 +52,7 @@ const styles = (theme: Theme) =>
 interface Props {
   disabled: boolean;
   passwordHelperText: string;
+  passwordValidation: PasswordValidationType;
 }
 
 interface ContextProps {
@@ -87,8 +90,20 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     linodeId,
     enqueueSnackbar,
     history,
-    passwordHelperText
+    passwordHelperText,
+    passwordValidation
   } = props;
+
+  /**
+   * Dynamic validation schema, with password validation
+   * dependent on a value from a feature flag. Remove this
+   * once API password validation is stable.
+   */
+  const RebuildSchema = React.useMemo(
+    () =>
+      extendValidationSchema(passwordValidation ?? 'none', RebuildLinodeSchema),
+    [passwordValidation]
+  );
 
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
@@ -137,20 +152,19 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={RebuildLinodeSchema}
+      validationSchema={RebuildSchema}
       validateOnChange={false}
       onSubmit={handleFormSubmit}
-      render={formikProps => {
-        const {
-          errors,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-          status,
-          values,
-          validateForm
-        } = formikProps;
-
+    >
+      {({
+        errors,
+        handleSubmit,
+        isSubmitting,
+        setFieldValue,
+        status,
+        values,
+        validateForm
+      }) => {
         // The "Rebuild" button opens a confirmation modal.
         // We'd like to validate the form before this happens.
         const handleRebuildButtonClick = () => {
@@ -181,26 +195,28 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
               variant="all"
               data-qa-select-image
             />
-            <AccessPanel
-              password={values.root_pass}
-              handleChange={input => setFieldValue('root_pass', input)}
-              updateFor={[
-                classes,
-                disabled,
-                values.root_pass,
-                errors,
-                sshError,
-                userSSHKeys,
-                values.image
-              ]}
-              error={errors.root_pass}
-              sshKeyError={sshError}
-              users={userSSHKeys}
-              requestKeys={requestKeys}
-              data-qa-access-panel
-              disabled={disabled}
-              passwordHelperText={passwordHelperText}
-            />
+            <form>
+              <AccessPanel
+                password={values.root_pass}
+                handleChange={input => setFieldValue('root_pass', input)}
+                updateFor={[
+                  classes,
+                  disabled,
+                  values.root_pass,
+                  errors,
+                  sshError,
+                  userSSHKeys,
+                  values.image
+                ]}
+                error={errors.root_pass}
+                sshKeyError={sshError}
+                users={userSSHKeys}
+                requestKeys={requestKeys}
+                data-qa-access-panel
+                disabled={disabled}
+                passwordHelperText={passwordHelperText}
+              />
+            </form>
             <ActionsPanel>
               <Button
                 buttonType="secondary"
@@ -221,7 +237,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
           </Grid>
         );
       }}
-    />
+    </Formik>
   );
 };
 

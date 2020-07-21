@@ -17,7 +17,6 @@ import useFlags from 'src/hooks/useFlags';
 import { handleOpen } from 'src/store/backupDrawer';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
 import { MapState } from 'src/store/types';
-import { formatNotifications } from 'src/utilities/formatNotifications';
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
 import DashboardCard from './DashboardCard';
@@ -128,7 +127,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
-    formatNotifications(notifications),
+    notifications,
     linodes
   );
 

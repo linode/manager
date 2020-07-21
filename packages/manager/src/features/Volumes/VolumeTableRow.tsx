@@ -1,5 +1,4 @@
 import { Event } from '@linode/api-v4/lib/account';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -139,15 +138,11 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
     handleDetach,
     volume
   } = props;
-  const label = pathOr('', ['label'], volume);
-  const size = pathOr('', ['size'], volume);
-  const filesystemPath = pathOr(
-    /** @todo Remove path default when API releases filesystem_path. */
-    `/dev/disk/by-id/scsi-0Linode_Volume_${label}`,
-    ['filesystem_path'],
-    volume
-  );
-  const regionID = pathOr('', ['region'], volume);
+  const label = volume?.label ?? '';
+  const size = volume?.size ?? '';
+  const filesystemPath =
+    volume?.filesystem_path ?? `/dev/disk/by-id/scsi-0Linode_Volume_${label}`;
+  const regionID = volume?.region ?? '';
   const region = formatRegion(regionID);
 
   return isUpdating ? (
@@ -176,7 +171,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
       data-qa-volume-cell={volume.id}
       className="fade-in-table"
     >
-      <TableCell parentColumn="Label" data-qa-volume-cell-label={volume.label}>
+      <TableCell parentColumn="Label" data-qa-volume-cell-label={label}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
             <EntityIcon variant="volume" marginTop={1} />
@@ -184,7 +179,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
           <Grid item>
             <div className={classes.labelStatusWrapper}>
               <Typography variant="h3" data-qa-label>
-                {volume.label}
+                {label}
               </Typography>
             </div>
           </Grid>

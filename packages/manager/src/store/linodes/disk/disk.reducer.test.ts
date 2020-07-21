@@ -1,4 +1,4 @@
-import { diskFactory } from 'src/factories/disk';
+import { linodeDiskFactory } from 'src/factories/disk';
 import { deleteLinodeActions } from '../linodes.actions';
 import {
   createLinodeDiskActions,
@@ -13,7 +13,7 @@ import { Entity } from './disk.types';
 describe('Disk reducer', () => {
   const defaultState: State = {};
   const mockDisk1 = {
-    ...diskFactory.build({
+    ...linodeDiskFactory.build({
       id: 2,
       label: 'test-disk1',
       size: 1000
@@ -21,7 +21,7 @@ describe('Disk reducer', () => {
     linode_id: 1
   };
   const mockDisk2 = {
-    ...diskFactory.build({
+    ...linodeDiskFactory.build({
       id: 3,
       label: 'test-disk2',
       size: 2000

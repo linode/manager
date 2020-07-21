@@ -87,7 +87,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
   const { lastUpdated, lastUpdatedError, notifications } = useClientLastUpdated(
     clientAPIKey,
     clientAPIKey
-      ? _lastUpdated => props.getClientStats(clientAPIKey, _lastUpdated)
+      ? _lastUpdated =>
+          props.getClientStats(clientAPIKey, _lastUpdated).catch(_ => null)
       : undefined
   );
 

@@ -282,12 +282,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             left
           />
           <ActionsPanel>
-            <Button
-              onClick={this.onSubmit}
-              buttonType="primary"
-              data-qa-submit
-              disabled={disabled}
-            >
+            <Button onClick={this.onSubmit} buttonType="primary" data-qa-submit>
               Reboot into Rescue Mode
             </Button>
           </ActionsPanel>

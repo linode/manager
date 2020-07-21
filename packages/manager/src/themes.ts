@@ -79,7 +79,8 @@ const darkThemeOptions = {
     primaryNavBorder: '#303235',
     primaryNavPaper: '#3a3f46',
     topMenu: '#33383d',
-    billingHeader: '#222'
+    billingHeader: '#222',
+    controlHeader: 'rgba(0, 0, 0, 0.2)'
   },
   color: {
     headline: primaryColors.headline,
@@ -94,6 +95,9 @@ const darkThemeOptions = {
     grey2: 'rgba(0, 0, 0, 0.2)',
     grey3: '#999',
     grey5: 'rgba(0, 0, 0, 0.2)',
+    grey7: 'rgba(0, 0, 0, 0.2)',
+    grey9: primaryColors.divider,
+    grey10: '#828a97',
     white: '#32363c',
     blue: primaryColors.main,
     black: '#fff',
@@ -114,7 +118,8 @@ const darkThemeOptions = {
     kubeLabel: '#fff',
     primaryNavText: '#fff',
     borderBilling: primaryColors.light,
-    billingText: '#fff'
+    billingText: '#fff',
+    tagButton: '#222'
   },
   animateCircleIcon: {
     ...iconCircleAnimation

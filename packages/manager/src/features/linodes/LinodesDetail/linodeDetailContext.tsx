@@ -101,7 +101,7 @@ export interface LinodeDetailContext {
 }
 
 /**
- * Create the Linode Detail Context including handlers preconfigured with the
+ * Create the Linode Detail Context including handlers pre-configured with the
  * required Linode ID.
  */
 export const linodeDetailContextFactory = (
@@ -111,7 +111,6 @@ export const linodeDetailContextFactory = (
   const { id: linodeId } = linode;
 
   return {
-    /** @todo Add every Linode specific action here as a Thunk. */
     updateLinode: (data: Partial<Linode>) =>
       dispatch(_updateLinode({ linodeId, ...data })),
 

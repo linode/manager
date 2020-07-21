@@ -90,7 +90,7 @@ interface TextFieldHandler {
 
 interface Images {
   // available to select in the dropdown
-  available: Record<string, Image>;
+  available: Image[];
   // image ids that are already selected
   selected: string[];
 }
@@ -108,6 +108,8 @@ interface Props {
   onSelectChange: (image: Item<string>[]) => void;
   isSubmitting: boolean;
   disabled?: boolean;
+  mode: 'create' | 'edit';
+  disableSubmit: boolean;
 }
 
 type CombinedProps = Props;
@@ -133,7 +135,9 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
     onCancel,
     isSubmitting,
     images,
-    disabled
+    mode,
+    disabled,
+    disableSubmit
   } = props;
 
   const classes = useStyles();
@@ -174,9 +178,7 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
             data-qa-stackscript-description
           />
           <ImageSelect
-            images={Object.keys(images.available).map(
-              eachKey => images.available[eachKey]
-            )}
+            images={images.available}
             onSelect={onSelectChange}
             required
             value={selectedImages}
@@ -233,10 +235,10 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
           onClick={onSubmit}
           buttonType="primary"
           loading={isSubmitting}
-          disabled={disabled}
+          disabled={disabled || disableSubmit}
           data-qa-save
         >
-          Save
+          {mode === 'edit' ? 'Save Changes' : 'Save'}
         </Button>
         <Button
           onClick={onCancel}

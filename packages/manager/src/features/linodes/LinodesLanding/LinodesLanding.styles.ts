@@ -10,7 +10,13 @@ type ClassNames =
   | 'tagGroup'
   | 'CSVlinkContainer'
   | 'CSVlink'
-  | 'addNewLink';
+  | 'addNewLink'
+  | 'chip'
+  | 'chipRunning'
+  | 'chipPending'
+  | 'chipOffline'
+  | 'controlHeader'
+  | 'toggleButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -33,6 +39,33 @@ const styles = (theme: Theme) =>
     addNewLink: {
       marginBottom: -3,
       marginLeft: 15
+    },
+    chip: {
+      color: '#fff',
+      fontSize: '1.1rem',
+      padding: 10
+    },
+    chipRunning: {
+      backgroundColor: '#00b159'
+    },
+    chipPending: {
+      backgroundColor: '#ffb31a'
+    },
+    chipOffline: {
+      backgroundColor: '#9ea4ae'
+    },
+    controlHeader: {
+      backgroundColor: theme.bg.controlHeader,
+      marginBottom: 28,
+      display: 'flex',
+      justifyContent: 'flex-end'
+    },
+    toggleButton: {
+      padding: 10,
+      '&:focus': {
+        // Browser default until we get styling direction for focus states
+        outline: '1px dotted #999'
+      }
     }
   });
 

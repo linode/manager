@@ -30,10 +30,10 @@ describe('delete linode', () => {
       // Thanks to this we can use cy.server, cy.route and cy.wait
       cy.wait('@deleteLinode')
         .its('status')
-        .should('be', 200);
+        .should('eq', 200);
       cy.url().should('contain', '/linodes');
       cy.go('back');
-      cy.findByText('Not found');
+      cy.findByText('Not Found');
     });
   });
 });
