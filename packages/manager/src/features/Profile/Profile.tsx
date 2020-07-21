@@ -69,7 +69,7 @@ const Profile: React.FC<Props> = props => {
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="My Profile" />
+      <DocumentTitleSegment segment="My Profile " />
       <H1Header title="My Profile" data-qa-profile-header />
       <Tabs
         defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}

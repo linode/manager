@@ -365,6 +365,19 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/mysql_color.svg'
   },
   {
+    name: 'Nextcloud',
+    description: `Nextcloud is an open source solution to file hosting and sharing. With NextCloud, you can synchronize files from your local computer to your Linode server and share them with your collaborators. Nextcloud’s customizable security features and intuitive user interface help keep your files safe and easy to manage.`,
+    summary: `A file sharing service that allows you to store your important documents and images in one centralized location.`,
+    related_guides: [
+      {
+        title: 'Deploying Nextcloud on Linode with One-Click Apps',
+        href:
+          'https://www.linode.com/docs/platform/one-click/how-to-deploy-nextcloud-with-one-click-apps/'
+      }
+    ],
+    logo_url: 'assets/nextcloud_color.svg'
+  },
+  {
     name: 'Plesk',
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
     summary:
@@ -381,6 +394,21 @@ export const oneClickApps: OCA[] = [
       }
     ],
     logo_url: 'assets/plesk_color.svg'
+  },
+  {
+    name: 'Percona (PMM)',
+    description: `Percona Monitoring and Management (PMM) is an open source GUI for managing and monitoring the performance of your MySQL, MariaDB, PostgreSQL, and MongoDB databases. This tool helps you optimize your database’s performance, manage your database instances, and keep track of and identify security issues.`,
+    summary:
+      'An open source analytics and performance monitoring solution for databases with a focus on user-friendly metrics visualizations.',
+    related_info: [
+      {
+        title:
+          'Deploying Percona Monitoring Management (PMM) with One-Click Apps',
+        href:
+          'https://www.linode.com/docs/platform/one-click/how-to-deploy-percona-monitoring-management-with-one-click-apps/'
+      }
+    ],
+    logo_url: 'assets/percona_color.svg'
   },
   {
     name: 'Redis',

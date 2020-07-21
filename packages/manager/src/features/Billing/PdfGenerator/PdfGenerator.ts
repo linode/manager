@@ -7,6 +7,7 @@ import {
   Payment
 } from '@linode/api-v4/lib/account';
 import { splitEvery } from 'ramda';
+import { ISO_DATE_FORMAT } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
@@ -135,7 +136,7 @@ export const printInvoice = (
 ): PdfResult => {
   try {
     const itemsPerPage = 12;
-    const date = formatDate(invoice.date, { format: 'YYYY-MM-DD' });
+    const date = formatDate(invoice.date, { format: ISO_DATE_FORMAT });
     const invoiceId = invoice.id;
 
     /**
@@ -239,7 +240,7 @@ export const printPayment = (
   taxID?: string
 ): PdfResult => {
   try {
-    const date = formatDate(payment.date, { format: 'YYYY-MM-DD' });
+    const date = formatDate(payment.date, { format: ISO_DATE_FORMAT });
     const doc = new jsPDF({
       unit: 'px'
     });

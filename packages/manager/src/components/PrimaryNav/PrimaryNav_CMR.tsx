@@ -1,5 +1,4 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import Settings from '@material-ui/icons/Settings';
 import {
   Menu as ReachMenu,
   MenuButton,
@@ -10,10 +9,10 @@ import {
 } from '@reach/menu-button';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as ReactRouterLink } from 'react-router-dom';
 import Kubernetes from 'src/assets/addnewmenu/kubernetes.svg';
 import OCA from 'src/assets/addnewmenu/oneclick.svg';
-import Account from 'src/assets/icons/account.svg';
+import Community from 'src/assets/community.svg';
 import Dashboard from 'src/assets/icons/dashboard.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Domain from 'src/assets/icons/entityIcons/domain.svg';
@@ -23,20 +22,23 @@ import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
+import Gear from 'src/assets/icons/gear.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import Managed from 'src/assets/icons/managednav.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
+import Help from 'src/assets/primary-nav-help.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
-import Hidden from 'src/components/core/Hidden';
+import Hidden, { HiddenProps } from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
+import { Link } from 'src/components/Link';
+import UserMenu from 'src/features/TopMenu/UserMenu/UserMenu_CMR';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDomains from 'src/hooks/useDomains';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
-import AdditionalMenuItems from './AdditionalMenuItems';
 import usePrimaryNavStyles from './PrimaryNav_CMR.styles';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
@@ -55,7 +57,9 @@ type NavEntity =
   | 'Firewalls'
   | 'Account'
   | 'Dashboard'
-  | 'StackScripts';
+  | 'StackScripts'
+  | 'Help & Support'
+  | 'Community';
 
 type NavGroup =
   | 'Compute'
@@ -216,22 +220,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             icon: <OCA />
           }
         ]
-      },
-      {
-        group: 'None',
-        links: [
-          {
-            display: 'Account',
-            href: '/account/billing',
-            icon: <Account className="small" />,
-            activeLinks: [
-              '/account/billing',
-              '/account/users',
-              '/account/settings'
-            ],
-            hide: account.lastUpdated === 0 || !_hasAccountAccess
-          }
-        ]
       }
     ],
     [
@@ -257,141 +245,113 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       component="nav"
       role="navigation"
     >
-      <Grid item>
-        <div
-          className={classNames({
-            [classes.logoItem]: true,
-            [classes.logoCollapsed]: isCollapsed
-          })}
-        >
-          <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
-            <Logo width={101} height={29} />
-          </Link>
-        </div>
-      </Grid>
-      <div
-        className={classNames({
-          ['fade-in-table']: true,
-          [classes.fadeContainer]: true
-        })}
-      >
-        {primaryLinkGroups.map(thisGroup => {
-          // For each group, filter out hidden links.
-          const filteredLinks = thisGroup.links.filter(
-            thisLink => !thisLink.hide
-          );
+      <div className={classes.menuGridInner}>
+        <div className={classes.primaryLinksContainer}>
+          <Grid item>
+            <div
+              className={classNames({
+                [classes.logoItem]: true,
+                [classes.logoCollapsed]: isCollapsed
+              })}
+            >
+              <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
+                <Logo width={101} height={29} />
+              </Link>
+            </div>
+          </Grid>
+          {primaryLinkGroups.map(thisGroup => {
+            // For each group, filter out hidden links.
+            const filteredLinks = thisGroup.links.filter(
+              thisLink => !thisLink.hide
+            );
 
-          if (filteredLinks.length === 0) {
-            return null;
-          }
+            if (filteredLinks.length === 0) {
+              return null;
+            }
 
-          // Render a singular PrimaryNavLink for links without a group.
-          if (thisGroup.group === 'None' && filteredLinks.length === 1) {
-            const link = filteredLinks[0];
+            // Render a singular PrimaryNavLink for links without a group.
+            if (thisGroup.group === 'None' && filteredLinks.length === 1) {
+              const link = filteredLinks[0];
 
+              return (
+                <PrimaryNavLink
+                  key={link.display}
+                  href={link.href}
+                  display={link.display}
+                  closeMenu={closeMenu}
+                  prefetchRequestFn={link.prefetchRequestFn}
+                  prefetchRequestCondition={link.prefetchRequestCondition}
+                />
+              );
+            }
+
+            // Otherwise return a NavGroup (dropdown menu).
             return (
-              <PrimaryNavLink
-                key={link.display}
-                href={link.href}
-                display={link.display}
-                closeMenu={closeMenu}
-                isCollapsed={isCollapsed}
-                prefetchRequestFn={link.prefetchRequestFn}
-                prefetchRequestCondition={link.prefetchRequestCondition}
+              <NavGroup
+                key={thisGroup.group}
+                group={thisGroup.group}
+                links={filteredLinks}
               />
             );
-          }
-
-          // Otherwise return a NavGroup (dropdown menu).
-          return (
-            <NavGroup
-              key={thisGroup.group}
-              group={thisGroup.group}
-              links={filteredLinks}
-            />
-          );
-        })}
-
-        {/** menu items under the main navigation links */}
-        <AdditionalMenuItems
-          linkClasses={() =>
-            classNames({
-              [classes.listItem]: true
-            })
-          }
-          listItemClasses={classNames({
-            [classes.linkItem]: true
           })}
-          closeMenu={closeMenu}
-          dividerClasses={classes.divider}
-          isCollapsed={isCollapsed}
-        />
 
-        <Hidden mdUp>
-          <Divider className={classes.divider} />
-          <Link
-            to="/profile/display"
-            onClick={closeMenu}
-            data-qa-nav-item="/profile/display"
-            className={classes.listItem}
-          >
-            <ListItemText
-              primary="My Profile"
-              disableTypography={true}
+          <Divider orientation="vertical" className={classes.verticalDivider} />
+
+          <PrimaryNavLink
+            key="Help & Support"
+            href={'/support'}
+            icon={<Help />}
+            display="Help & Support"
+            closeMenu={closeMenu}
+            textHiddenProps={{ smDown: true }}
+          />
+
+          <PrimaryNavLink
+            key="Community"
+            href="https://www.linode.com/community"
+            display="Community"
+            icon={<Community />}
+            closeMenu={closeMenu}
+            textHiddenProps={{ smDown: true }}
+          />
+        </div>
+
+        <div className={classes.secondaryLinksContainer}>
+          <Hidden smDown>
+            <IconButton
+              onClick={(event: React.MouseEvent<HTMLElement>) => {
+                setAnchorEl(event.currentTarget);
+              }}
               className={classNames({
-                [classes.linkItem]: true
+                [classes.settings]: true,
+                [classes.settingsCollapsed]: isCollapsed,
+                [classes.activeSettings]: !!anchorEl
               })}
-            />
-          </Link>
-          <Link
-            to="/logout"
-            onClick={closeMenu}
-            data-qa-nav-item="/logout"
-            className={classNames({
-              [classes.listItem]: true
-            })}
-          >
-            <ListItemText
-              primary="Log Out"
-              disableTypography={true}
-              className={classNames({
-                [classes.linkItem]: true
-              })}
-            />
-          </Link>
-        </Hidden>
-        <IconButton
-          onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setAnchorEl(event.currentTarget);
-          }}
-          className={classNames({
-            [classes.settings]: true,
-            [classes.settingsCollapsed]: isCollapsed,
-            [classes.activeSettings]: !!anchorEl
-          })}
-          aria-label="User settings"
-        >
-          <Settings />
-        </IconButton>
-        <Menu
-          id="settings-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={() => {
-            setAnchorEl(undefined);
-          }}
-          getContentAnchorEl={undefined}
-          PaperProps={{ square: true, className: classes.paper }}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          className={classes.menu}
-          BackdropProps={{
-            className: classes.settingsBackdrop
-          }}
-        >
-          <ThemeToggle toggleTheme={toggleTheme} />
-          <SpacingToggle toggleSpacing={toggleSpacing} />
-        </Menu>
+              aria-label="User settings"
+            >
+              <Gear />
+            </IconButton>
+            <Menu
+              id="settings-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={() => {
+                setAnchorEl(undefined);
+              }}
+              getContentAnchorEl={undefined}
+              PaperProps={{ square: true, className: classes.paper }}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+              BackdropProps={{
+                className: classes.settingsBackdrop
+              }}
+            >
+              <ThemeToggle toggleTheme={toggleTheme} />
+              <SpacingToggle toggleSpacing={toggleSpacing} />
+            </Menu>
+          </Hidden>
+
+          <UserMenu />
+        </div>
       </div>
     </Grid>
   );
@@ -478,7 +438,7 @@ export const PrimaryNavMenuLink: React.FC<PrimaryNavMenuLinkProps> = React.memo(
 
     return (
       <MenuLink
-        as={Link}
+        as={ReactRouterLink}
         className={classes.menuItemLink}
         data-testid={`menu-item-${display}`}
         {...handlers}
@@ -495,9 +455,9 @@ export const PrimaryNavMenuLink: React.FC<PrimaryNavMenuLinkProps> = React.memo(
 // =============================================================================
 interface PrimaryNavLink extends PrimaryLink {
   closeMenu: () => void;
-  isCollapsed: boolean;
   prefetchRequestFn?: () => void;
   prefetchRequestCondition?: boolean;
+  textHiddenProps?: HiddenProps;
 }
 
 const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
@@ -508,23 +468,34 @@ const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
     props.prefetchRequestCondition
   );
 
-  const { isCollapsed, closeMenu, href, onClick, attr, icon, display } = props;
+  const {
+    closeMenu,
+    href,
+    onClick,
+    attr,
+    icon,
+    display,
+    textHiddenProps: hiddenProps
+  } = props;
 
+  // @todo: handle external link
   return (
-    <>
-      <Link
-        to={href}
-        onClick={(e: React.ChangeEvent<any>) => {
-          closeMenu();
-          if (onClick) {
-            onClick(e);
-          }
-        }}
-        {...handlers}
-        {...attr}
-        className={classes.listItem}
-      >
-        {icon && isCollapsed && <div className="icon">{icon}</div>}
+    <Link
+      to={href}
+      onClick={(e: React.ChangeEvent<any>) => {
+        closeMenu();
+        if (onClick) {
+          onClick(e);
+        }
+      }}
+      {...handlers}
+      {...attr}
+      className={classes.listItem}
+    >
+      {icon && (
+        <div className={`icon ${classes.primaryNavLinkIcon}`}>{icon}</div>
+      )}
+      <Hidden {...hiddenProps}>
         <ListItemText
           primary={display}
           disableTypography={true}
@@ -533,8 +504,7 @@ const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
             primaryNavLink: true
           })}
         />
-      </Link>
-      <Divider className={classes.divider} />
-    </>
+      </Hidden>
+    </Link>
   );
 });

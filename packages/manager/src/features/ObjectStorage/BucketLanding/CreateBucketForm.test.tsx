@@ -10,6 +10,7 @@ describe('CreateBucketForm', () => {
       onSuccess={jest.fn()}
       createBucket={jest.fn()}
       deleteBucket={jest.fn()}
+      getBucket={jest.fn()}
       bucketsData={[]}
       bucketsLoading={false}
       classes={{ root: '', textWrapper: '' }}
@@ -33,7 +34,7 @@ describe('CreateBucketForm', () => {
 
 describe('isDuplicateBucket helper function', () => {
   it('returns `true` if the label and cluster match a bucket in the data', () => {
-    const result = isDuplicateBucket(buckets, 'test-bucket-001', 'a-cluster');
+    const result = isDuplicateBucket(buckets, 'test-bucket-001', 'us-east-1');
     expect(result).toBe(true);
   });
   it('returns `false` if only the label matches', () => {

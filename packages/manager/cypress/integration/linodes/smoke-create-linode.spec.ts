@@ -18,7 +18,6 @@ describe('create linode', () => {
     cy.contains('Regions')
       .click()
       .type('new {enter}');
-    cy.contains('Nanode').click();
     cy.get('[data-qa-plan-row="Nanode 1GB"]').click();
     cy.get('#linode-label')
       .click()

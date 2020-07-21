@@ -9,6 +9,7 @@ const MockActionMenu: React.FC<Props> = props => {
   const { createActions } = props;
   const actions = createActions(() => null);
   return (
+    // eslint-disable-next-line
     <>
       {(actions as any).map((a: any, idx: number) => (
         <MenuItem

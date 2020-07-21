@@ -4,15 +4,95 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-07-13] - v1.14.0
+
+### Added:
+
+- Color palette component in Storybook
+
+### Changed:
+
+- CMR: Linode Detail - Storage tab - Analytics tab - Network tab
+- CMR: Linodes Landing - Add tag cell to Linode row - Summary view (replaces Grid view)
+- CMR: Move Linode Resize action from tab to new modal component
+- CMR: Apply updated table styles and action menus to LKE and Domains
+- CMR: Secondary nav width
+- Linode maintenance improvements
+- Show maintenance time in UTC in downloaded CSV
+
+### Fixed:
+
+- Consistent Notices for restricted users when creating a Volume
+- Longview CPU formatting
+- Handle null dates in invoice details logic
+- Expiry date check
+
+## [2020-07-02] - v1.13.1
+
+### Changed:
+
+- Changed Percona OCA to Percona (PMM)
+
+### Fixed:
+
+- Matching logic for OCAs was breaking on parentheses
+
+## [2020-06-30] - v1.13.0
+
+### Added:
+
+- Size column on the Object Storage Buckets table
+- OCA: Percona PPM and Nextcloud
+- Billing notice on Object Storage landing page when a user without Buckets has Object Storage enabled
+- Notice that powered down Linodes still accrue charges
+- Notice when user tries adding an NS record to a Domain without a A/AAAA record
+
+### Changed:
+
+- Adjustments to the Linode plan selection table
+- Update password validation to match API change
+- Update form validation for the Linode Disk drawer
+- Make target field for TXT records multiline
+
+### Fixed:
+
+- Set autocomplete to false in password inputs
+- Restricted users were able to view unavailable actions in Linode action menus
+- Sort order on Domains page
+- Prevent clickable events for deleted entities
+- Prevent multiple Not found displays for Linodes
+
+## [2020-06-16] - v1.12.1
+
+Fix:
+
+- 404 logic for Linodes Detail crashing for some Linodes
+
+## [2020-06-16] - v1.12.0
+
+### Added:
+
+- Support for OBJ Singapore
+
+### Changed:
+
+- Move Nanode to “Standard” tab, change label to “Shared CPU”
+- Handle host maintenance status
+- Improve handling of negative amount on invoice details
+- Upon rebooting Linode into Rescue Mode, prevent dropdown from reverting to "None"
+- Save StackScript progress when creating or editing a script
+
 ## [2020-06-09] - v1.11.0
 
 ### Changed:
+
 - Clarify Linode password fields in Reset Root Password vs. Rebuild
 - Hide SSH key remove button for LISH settings when no keys are present
 - Make main content banner dismissible
 - Show error when Volumes limit has been reached but attempt is made to add a new Volume
 
 ### Fixed:
+
 - CAA record input duplicating name/value
 
 ## [2020-06-03] - @linode/api-v4 v.0.27.1

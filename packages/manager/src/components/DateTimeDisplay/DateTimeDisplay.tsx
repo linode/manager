@@ -15,11 +15,9 @@ type CombinedProps = Props;
 export const DateTimeDisplay: React.FC<CombinedProps> = props => {
   const { format, humanizeCutoff, value, className } = props;
   return (
-    <React.Fragment>
-      <Typography style={props.styles} component="span" className={className}>
-        {formatDate(value, { format, humanizeCutoff })}
-      </Typography>
-    </React.Fragment>
+    <Typography style={props.styles} component="span" className={className}>
+      {formatDate(value, { format, humanizeCutoff })}
+    </Typography>
   );
 };
 
