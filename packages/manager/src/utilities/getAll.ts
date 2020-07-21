@@ -43,10 +43,12 @@ export interface GetAllData<T> {
  */
 export const getAll: <T>(
   getter: GetFunction,
-  pageSize?: number
+  pageSize?: number,
+  cb?: any
 ) => (params?: any, filter?: any) => Promise<GetAllData<T>> = (
   getter,
-  pageSize = API_MAX_PAGE_SIZE
+  pageSize = API_MAX_PAGE_SIZE,
+  cb
 ) => (params?: any, filter?: any) => {
   const pagination = { ...params, page_size: pageSize };
   return getter(pagination, filter).then(
@@ -57,6 +59,12 @@ export const getAll: <T>(
           data: firstPageData,
           results
         };
+      }
+
+      // If the number of results is over the threshold, use the callback
+      // to mark the account as large
+      if (cb) {
+        cb(results);
       }
 
       // Create an iterable list of the remaining pages.
