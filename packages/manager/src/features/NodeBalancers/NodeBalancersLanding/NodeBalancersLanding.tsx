@@ -24,11 +24,19 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import EntityTable, {
+  EntityTableRow,
+  HeaderCell
+} from 'src/components/EntityTable';
+import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import OrderBy from 'src/components/OrderBy';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Toggle from 'src/components/Toggle';
+import withFeatureFlagConsumerContainer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import {
   NodeBalancerGettingStarted,
   NodeBalancerReference
@@ -42,11 +50,8 @@ import { nodeBalancersWithConfigs } from 'src/store/nodeBalancer/nodeBalancer.se
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import ListGroupedNodeBalancers from './ListGroupedNodeBalancers';
-import ListNodeBalancers from './ListNodeBalancers';
 import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
-
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import NodeBalancerTableRow from './NodeBalancerTableRow';
 
 type ClassNames =
   | 'root'
@@ -111,7 +116,54 @@ type CombinedProps = WithNodeBalancerActions &
   WithNodeBalancers &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
-  SetDocsProps;
+  SetDocsProps &
+  FeatureFlagConsumerProps;
+
+const headers: HeaderCell[] = [
+  {
+    label: 'Name',
+    dataColumn: 'label',
+    sortable: true,
+    widthPercent: 25
+  },
+  {
+    label: 'Backend Status',
+    dataColumn: 'status',
+    sortable: true,
+    widthPercent: 25
+  },
+  {
+    label: 'Transferred',
+    dataColumn: 'transferred',
+    sortable: true,
+    widthPercent: 15
+  },
+  {
+    label: 'Ports',
+    dataColumn: 'updated',
+    sortable: true,
+    widthPercent: 25
+  },
+  {
+    label: 'IP Address',
+    dataColumn: 'updated',
+    sortable: false,
+    widthPercent: 5
+  },
+  {
+    label: 'Region',
+    dataColumn: 'updated',
+    sortable: false,
+    widthPercent: 5
+  },
+  {
+    label: 'Action Menu',
+    visuallyHidden: true,
+    dataColumn: '',
+    sortable: false,
+    widthPercent: 5
+  }
+];
 
 export class NodeBalancersLanding extends React.Component<
   CombinedProps,
@@ -219,7 +271,8 @@ export class NodeBalancersLanding extends React.Component<
       nodeBalancersLoading,
       nodeBalancersData,
       nodeBalancersError,
-      location
+      location,
+      flags
     } = this.props;
 
     const {
@@ -237,6 +290,18 @@ export class NodeBalancersLanding extends React.Component<
     if (nodeBalancersCount === 0) {
       return <NodeBalancersLandingEmptyState />;
     }
+
+    const Table = flags.cmr ? EntityTable_CMR : EntityTable;
+
+    const nodeBalancerRow: EntityTableRow<NodeBalancer> = {
+      Component: NodeBalancerTableRow,
+      data: Object.values(nodeBalancersData),
+      handlers: {},
+      loading: nodeBalancersLoading,
+      error: nodeBalancersError,
+      // lastUpdated: nodeBalancersLastUpdated
+      lastUpdated: 0
+    };
 
     return (
       <React.Fragment>
@@ -297,7 +362,14 @@ export class NodeBalancersLanding extends React.Component<
                     </Grid>
                   </Grid>
                 </Grid>
-                <OrderBy
+                <Table
+                  entity="nodebalancer"
+                  groupByTag={nodeBalancersAreGrouped}
+                  row={nodeBalancerRow}
+                  headers={headers}
+                  initialOrder={{ order: 'desc', orderBy: 'label' }}
+                />
+                {/* <OrderBy
                   data={Object.values(nodeBalancersData)}
                   order={'desc'}
                   orderBy={`label`}
@@ -321,7 +393,7 @@ export class NodeBalancersLanding extends React.Component<
                       <ListNodeBalancers {...props} />
                     );
                   }}
-                </OrderBy>
+                </OrderBy> */}
               </React.Fragment>
             );
           }}
@@ -409,6 +481,7 @@ export const enhanced = compose<CombinedProps, {}>(
       nodeBalancersLoading: nodeBalancersLoading && lastUpdated === 0
     };
   }),
+  withFeatureFlagConsumerContainer,
   withRouter,
   withNodeBalancerActions,
   SectionErrorBoundary,
