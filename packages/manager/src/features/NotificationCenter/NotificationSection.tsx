@@ -71,7 +71,11 @@ export const NotificationSection: React.FC<Props> = props => {
             You have no {header.toLocaleLowerCase()}.
           </Typography>
         )}
-        <Typography className={classes.notificationItem}>{showMore}</Typography>
+        {showMore && (
+          <Typography className={classes.notificationItem}>
+            {showMore}
+          </Typography>
+        )}
       </div>
     </div>
   );
