@@ -35,9 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       maxWidth: '100%'
     }
   },
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: '-130px !important'
+  inner: {
+    '& > div > div': {
+      padding: 0
     }
   },
   emptyImagePanel: {
@@ -154,20 +154,22 @@ export const FromStackScriptContent: React.FC<CombinedProps> = props => {
         className={`${classes.main} mlMain py0`}
       >
         <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-        <SelectStackScriptPanel
-          data-qa-select-stackscript
-          error={hasErrorFor('stackscript_id')}
-          header={header}
-          selectedId={selectedStackScriptID}
-          selectedUsername={selectedStackScriptUsername}
-          updateFor={[selectedStackScriptID, errors]}
-          onSelect={handleSelectStackScript}
-          publicImages={filterImagesByType(imagesData, 'public')}
-          resetSelectedStackScript={() => null}
-          disabled={userCannotCreateLinode}
-          request={request}
-          category={props.category}
-        />
+        <div className={classes.inner}>
+          <SelectStackScriptPanel
+            data-qa-select-stackscript
+            error={hasErrorFor('stackscript_id')}
+            header={header}
+            selectedId={selectedStackScriptID}
+            selectedUsername={selectedStackScriptUsername}
+            updateFor={[selectedStackScriptID, errors]}
+            onSelect={handleSelectStackScript}
+            publicImages={filterImagesByType(imagesData, 'public')}
+            resetSelectedStackScript={() => null}
+            disabled={userCannotCreateLinode}
+            request={request}
+            category={props.category}
+          />
+        </div>
         {!userCannotCreateLinode &&
           userDefinedFields &&
           userDefinedFields.length > 0 && (
