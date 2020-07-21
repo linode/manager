@@ -3,13 +3,6 @@ import * as React from 'react';
 import { CombinedProps, FromImageContent } from './FromImageContent';
 
 const mockProps: CombinedProps = {
-  typeDisplayInfo: undefined,
-  classes: {
-    root: '',
-    main: '',
-    sidebarPrivate: '',
-    sidebarPublic: ''
-  },
   updateImageID: jest.fn(),
   updateRegionID: jest.fn(),
   updateTypeID: jest.fn(),
@@ -21,9 +14,7 @@ const mockProps: CombinedProps = {
 };
 
 describe('FromImageContent', () => {
-  const component = shallow<FromImageContent>(
-    <FromImageContent {...mockProps} />
-  );
+  const component = shallow(<FromImageContent {...mockProps} />);
 
   it.skip('should render SelectImage panel', () => {
     expect(component.find('[data-qa-select-image-panel]')).toHaveLength(1);

@@ -24,7 +24,6 @@ import {
   BackupFormStateHandlers,
   Info,
   ReduxStateProps,
-  WithDisplayData,
   WithLinodesTypesRegionsAndImages
 } from '../types';
 import { extendLinodes, getRegionIDFromLinodeID } from '../utilities';
@@ -33,11 +32,10 @@ export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
 }
 
-type ClassNames = 'root' | 'main';
+type ClassNames = 'main';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     main: {
       [theme.breakpoints.up('md')]: {
         maxWidth: '100%'
@@ -58,9 +56,8 @@ interface State {
 
 export type CombinedProps = Props &
   BackupFormStateHandlers &
-  WithLinodesTypesRegionsAndImages &
   ReduxStateProps &
-  WithDisplayData &
+  WithLinodesTypesRegionsAndImages &
   WithStyles<ClassNames>;
 
 const errorResources = {
@@ -127,7 +124,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   // Find regionID from the selectedLinodeID, and update the parent state.
   updateRegion(selectedLinodeID: number) {
     /**
-     * this should never happen, but this is coming from a query string
+     * This should never happen, but this is coming from a query string
      * so this is just a sanity check
      */
     if (typeof selectedLinodeID !== 'number') {
@@ -167,16 +164,16 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const { isGettingBackups, selectedLinodeWithBackups } = this.state;
     const {
       classes,
+      disabled,
       errors,
       imagesData,
       linodesData,
       selectedBackupID,
       selectedLinodeID,
       setBackupID,
-      disabled,
-
       typesData
     } = this.props;
+
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
     const userHasBackups = linodesData.some(
@@ -184,59 +181,57 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <React.Fragment>
-        <Grid item className={`${classes.main} mlMain py0`}>
-          {!userHasBackups ? (
-            <Paper>
-              <Placeholder
-                icon={VolumeIcon}
-                copy="You do not have backups enabled for your Linodes. Please visit the Backups panel in the Linode Details view."
-                title="Create from Backup"
-                renderAsSecondary
-              />
-            </Paper>
-          ) : (
-            <React.Fragment>
-              <CreateLinodeDisabled isDisabled={disabled} />
-              <SelectLinodePanel
-                error={hasErrorFor('linode_id')}
-                linodes={ramdaCompose(
-                  (linodes: Linode[]) =>
-                    extendLinodes(linodes, imagesData, typesData),
-                  filterLinodesWithBackups
-                )(linodesData)}
-                selectedLinodeID={selectedLinodeID}
-                handleSelection={this.handleLinodeSelect}
-                updateFor={[selectedLinodeID, errors]}
-                disabled={disabled}
-                notice={{
-                  level: 'warning',
-                  text: `This newly created Linode will be created with
+      <Grid item className={`${classes.main} mlMain py0`}>
+        {!userHasBackups ? (
+          <Paper>
+            <Placeholder
+              icon={VolumeIcon}
+              copy="You do not have backups enabled for your Linodes. Please visit the Backups panel in the Linode Details view."
+              title="Create from Backup"
+              renderAsSecondary
+            />
+          </Paper>
+        ) : (
+          <React.Fragment>
+            <CreateLinodeDisabled isDisabled={disabled} />
+            <SelectLinodePanel
+              error={hasErrorFor('linode_id')}
+              linodes={ramdaCompose(
+                (linodes: Linode[]) =>
+                  extendLinodes(linodes, imagesData, typesData),
+                filterLinodesWithBackups
+              )(linodesData)}
+              selectedLinodeID={selectedLinodeID}
+              handleSelection={this.handleLinodeSelect}
+              updateFor={[selectedLinodeID, errors]}
+              disabled={disabled}
+              notice={{
+                level: 'warning',
+                text: `This newly created Linode will be created with
                           the same password and SSH Keys (if any) as the original Linode.
                           Also note that this Linode will need to be manually booted after it finishes
                           provisioning.`
-                }}
-              />
-              <SelectBackupPanel
-                error={hasErrorFor('backup_id') || this.state.backupsError}
-                selectedLinodeWithBackups={selectedLinodeWithBackups}
-                selectedLinodeID={selectedLinodeID}
-                selectedBackupID={selectedBackupID}
-                handleChangeBackup={setBackupID}
-                handleChangeBackupInfo={this.handleSelectBackupInfo}
-                updateFor={[
-                  selectedLinodeID,
-                  selectedBackupID,
-                  errors,
-                  selectedLinodeWithBackups,
-                  isGettingBackups
-                ]}
-                loading={isGettingBackups}
-              />
-            </React.Fragment>
-          )}
-        </Grid>
-      </React.Fragment>
+              }}
+            />
+            <SelectBackupPanel
+              error={hasErrorFor('backup_id') || this.state.backupsError}
+              selectedLinodeWithBackups={selectedLinodeWithBackups}
+              selectedLinodeID={selectedLinodeID}
+              selectedBackupID={selectedBackupID}
+              handleChangeBackup={setBackupID}
+              handleChangeBackupInfo={this.handleSelectBackupInfo}
+              updateFor={[
+                selectedLinodeID,
+                selectedBackupID,
+                errors,
+                selectedLinodeWithBackups,
+                isGettingBackups
+              ]}
+              loading={isGettingBackups}
+            />
+          </React.Fragment>
+        )}
+      </Grid>
     );
   }
 }

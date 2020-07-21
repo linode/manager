@@ -9,7 +9,6 @@ import {
 
 const mockProps: CombinedProps = {
   category: 'community',
-  typeDisplayInfo: undefined,
   updateImageID: jest.fn(),
   updateRegionID: jest.fn(),
   updateTypeID: jest.fn(),

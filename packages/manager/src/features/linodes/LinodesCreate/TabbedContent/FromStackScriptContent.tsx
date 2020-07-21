@@ -20,17 +20,11 @@ import { filterUDFErrors } from './formUtilities';
 import {
   ReduxStateProps,
   StackScriptFormStateHandlers,
-  WithDisplayData,
   WithTypesRegionsAndImages
 } from '../types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   main: {
-    // @todo: Hacky way to access the SelectStackScriptPanel component
-    '& form > div > div': {
-      padding: 0
-    },
     [theme.breakpoints.up('md')]: {
       maxWidth: '100%'
     }
@@ -71,10 +65,9 @@ const errorResources = {
 };
 
 export type CombinedProps = Props &
-  StackScriptFormStateHandlers &
   ReduxStateProps &
-  WithTypesRegionsAndImages &
-  WithDisplayData;
+  StackScriptFormStateHandlers &
+  WithTypesRegionsAndImages;
 
 export const FromStackScriptContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -103,9 +96,8 @@ export const FromStackScriptContent: React.FC<CombinedProps> = props => {
     stackScriptImages: string[],
     userDefinedFields: UserDefinedField[]
   ) => {
-    const { imagesData } = props;
     /**
-     * based on the list of images we get back from the API, compare those
+     * Based on the list of images we get back from the API, compare those
      * to our list of master images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
@@ -118,7 +110,7 @@ export const FromStackScriptContent: React.FC<CombinedProps> = props => {
     }, [] as Image[]);
 
     /**
-     * if a UDF field comes back from the API with a "default"
+     * If a UDF field comes back from the API with a "default"
      * value, it means we need to pre-populate the field and form state
      */
     const defaultUDFData = userDefinedFields.reduce((accum, eachField) => {

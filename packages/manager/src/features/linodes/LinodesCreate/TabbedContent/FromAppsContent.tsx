@@ -14,12 +14,10 @@ import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsP
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { filterUDFErrors } from './formUtilities';
 import SelectAppPanel from '../SelectAppPanel';
-
 import {
   AppsData,
   ReduxStateProps,
   StackScriptFormStateHandlers,
-  WithDisplayData,
   WithTypesRegionsAndImages
 } from '../types';
 
@@ -49,15 +47,18 @@ const errorResources = {
 };
 
 type CombinedProps = AppsData &
-  WithDisplayData &
-  WithTypesRegionsAndImages &
   ReduxStateProps &
-  StackScriptFormStateHandlers;
+  StackScriptFormStateHandlers &
+  WithTypesRegionsAndImages;
 
 export const FromAppsContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {
+    appInstances,
+    appInstancesError,
+    appInstancesLoading,
+    errors,
     imagesData,
     userCannotCreateLinode,
     selectedImageID,
@@ -66,11 +67,7 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
     selectedUDFs: udf_data,
     availableUserDefinedFields: userDefinedFields,
     availableStackScriptImages: compatibleImages,
-    updateImageID,
-    errors,
-    appInstances,
-    appInstancesError,
-    appInstancesLoading
+    updateImageID
   } = props;
 
   const [detailDrawerOpen, setDetailDrawerOpen] = React.useState<boolean>(
@@ -87,9 +84,8 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
     stackScriptImages: string[],
     userDefinedFields: UserDefinedField[]
   ) => {
-    // const { imagesData } = props;
     /**
-     * based on the list of images we get back from the API, compare those
+     * Based on the list of images we get back from the API, compare those
      * to our list of master images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
@@ -102,7 +98,7 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
     }, [] as Image[]);
 
     /**
-     * if a UDF field comes back from the API with a "default"
+     * If a UDF field comes back from the API with a "default"
      * value, it means we need to pre-populate the field and form state
      */
     const defaultUDFData = userDefinedFields.reduce((accum, eachField) => {
@@ -179,7 +175,7 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
           />
         ) : (
           <Paper className={classes.emptyImagePanel}>
-            {/* empty state for images */}
+            {/* Empty state for images */}
             {hasErrorFor('image') && (
               <Notice error={true} text={hasErrorFor('image')} />
             )}

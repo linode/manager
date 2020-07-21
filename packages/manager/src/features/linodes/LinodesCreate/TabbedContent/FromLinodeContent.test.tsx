@@ -6,12 +6,6 @@ import { linodes } from 'src/__data__/linodes';
 import { CombinedProps, FromLinodeContent } from './FromLinodeContent';
 
 const mockProps: CombinedProps = {
-  typeDisplayInfo: undefined,
-  classes: {
-    root: '',
-    main: '',
-    sidebar: ''
-  },
   updateDiskSize: jest.fn(),
   updateImageID: jest.fn(),
   updateLinodeID: jest.fn(),

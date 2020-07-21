@@ -94,13 +94,13 @@ interface Props {
 
 const errorMap = [
   'backup_id',
-  'linode_id',
-  'stackscript_id',
-  'region',
-  'type',
-  'root_pass',
+  'image',
   'label',
-  'image'
+  'linode_id',
+  'region',
+  'root_pass',
+  'stackscript_id',
+  'type'
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -333,10 +333,10 @@ export class LinodeCreate extends React.PureComponent<
       displaySections.push(typeDisplayInfo);
     }
 
-    if (this.props.label) {
+    if (label) {
       displaySections.push({
         title: 'Linode Label',
-        details: this.props.label
+        details: label
       });
     }
 
@@ -366,8 +366,8 @@ export class LinodeCreate extends React.PureComponent<
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
-                  accountBackupsEnabled={this.props.accountBackupsEnabled}
-                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
               </SafeTabPanel>
@@ -376,8 +376,8 @@ export class LinodeCreate extends React.PureComponent<
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
-                  accountBackupsEnabled={this.props.accountBackupsEnabled}
-                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
               </SafeTabPanel>
@@ -390,12 +390,8 @@ export class LinodeCreate extends React.PureComponent<
                       <SafeTabPanel index={0}>
                         <FromStackScriptContent
                           category="community"
-                          accountBackupsEnabled={
-                            this.props.accountBackupsEnabled
-                          }
-                          userCannotCreateLinode={
-                            this.props.userCannotCreateLinode
-                          }
+                          accountBackupsEnabled={accountBackupsEnabled}
+                          userCannotCreateLinode={userCannotCreateLinode}
                           request={getCommunityStackscripts}
                           header={'Select a StackScript'}
                           imagesData={imagesData!}
@@ -407,12 +403,8 @@ export class LinodeCreate extends React.PureComponent<
                       <SafeTabPanel index={1}>
                         <FromStackScriptContent
                           category="account"
-                          accountBackupsEnabled={
-                            this.props.accountBackupsEnabled
-                          }
-                          userCannotCreateLinode={
-                            this.props.userCannotCreateLinode
-                          }
+                          accountBackupsEnabled={accountBackupsEnabled}
+                          userCannotCreateLinode={userCannotCreateLinode}
                           request={getMineAndAccountStackScripts}
                           header={'Select a StackScript'}
                           imagesData={imagesData!}
@@ -432,8 +424,8 @@ export class LinodeCreate extends React.PureComponent<
                   imagesData={imagesData}
                   regionsData={regionsData!}
                   typesData={typesData!}
-                  accountBackupsEnabled={this.props.accountBackupsEnabled}
-                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
               </SafeTabPanel>
@@ -443,8 +435,8 @@ export class LinodeCreate extends React.PureComponent<
                   regionsData={regionsData!}
                   typesData={typesData!}
                   linodesData={linodesData!}
-                  accountBackupsEnabled={this.props.accountBackupsEnabled}
-                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
                   {...restoreBackup}
                   {...rest}
                 />
@@ -455,8 +447,8 @@ export class LinodeCreate extends React.PureComponent<
                   regionsData={regionsData!}
                   typesData={typesData!}
                   linodesData={linodesData!}
-                  accountBackupsEnabled={this.props.accountBackupsEnabled}
-                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
               </SafeTabPanel>
@@ -535,7 +527,7 @@ export class LinodeCreate extends React.PureComponent<
           <AddonsPanel
             data-qa-addons-panel
             backups={this.props.backupsEnabled}
-            accountBackups={this.props.accountBackupsEnabled}
+            accountBackups={accountBackupsEnabled}
             backupsMonthly={backupsMonthlyPrice}
             privateIP={this.props.privateIPEnabled}
             changeBackups={this.props.toggleBackupsEnabled}

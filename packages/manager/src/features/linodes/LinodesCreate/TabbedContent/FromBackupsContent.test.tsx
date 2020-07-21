@@ -5,9 +5,7 @@ import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
 import { CombinedProps, FromBackupsContent } from './FromBackupsContent';
 
 const mockProps: CombinedProps = {
-  typeDisplayInfo: undefined,
   classes: {
-    root: '',
     main: ''
   },
   updateDiskSize: jest.fn(),
