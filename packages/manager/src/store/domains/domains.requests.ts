@@ -63,7 +63,7 @@ export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
         if (!isMarkedAsLargeAccount) {
           getUserPreferences().then(response => {
             const updatedPreferences = {
-              ...response.data,
+              ...response,
               is_large_account: true
             };
             dispatch(updateUserPreferences(updatedPreferences));
