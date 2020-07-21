@@ -369,7 +369,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      {inTableContext &&
+      {!matchesSmDown &&
+        inTableContext &&
         inlineActions.map(action => {
           return (
             <InlineMenuAction
