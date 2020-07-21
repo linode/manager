@@ -16,8 +16,10 @@ import {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '1280px',
-    padding: theme.spacing(2)
+    padding: theme.spacing(3)
+  },
+  column: {
+    width: '45%'
   }
 }));
 
@@ -26,8 +28,8 @@ export const Notifications: React.FC<{}> = _ => {
   return (
     <Paper className={classes.root}>
       <PastDue />
-      <Grid container direction="row">
-        <Grid item xs={6}>
+      <Grid container direction="row" spacing={4} justify="space-between">
+        <Grid item className={classes.column}>
           <Grid container direction="column">
             <Grid item>
               <PendingActions />
@@ -43,7 +45,7 @@ export const Notifications: React.FC<{}> = _ => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item className={classes.column}>
           <Grid container direction="column">
             <Grid item>
               <Community />

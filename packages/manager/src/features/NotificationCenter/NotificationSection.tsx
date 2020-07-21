@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '14px',
     display: 'flex',
     justifyContent: 'space-between'
+  },
+  body: {
+    width: '70%'
   }
 }));
 
@@ -81,7 +84,7 @@ const ContentRow: React.FC<{
   const classes = useStyles();
   return (
     <div className={classes.notificationItem}>
-      {item.body}
+      <div className={classes.body}>{item.body}</div>
       {item.timeStamp && (
         <Typography>
           {formatDate(item.timeStamp, { humanizeCutoff: 'week' })}
