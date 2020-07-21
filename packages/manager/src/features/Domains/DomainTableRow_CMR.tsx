@@ -7,6 +7,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu, { Handlers } from './DomainActionMenu_CMR';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -36,8 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
-    wordBreak: 'break-all'
+    alignItems: 'center'
   },
   actionCell: {
     display: 'flex',
@@ -76,7 +76,7 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
       className={`${classes.domainRow} ${'fade-in-table'}`}
       ariaLabel={`Domain ${domain}`}
     >
-      <TableCell parentColumn="Domain" data-qa-domain-label>
+      <TableCell data-qa-domain-label>
         <div className={classes.labelStatusWrapper}>
           {type !== 'slave' ? (
             <Link to={`/domains/${id}`} tabIndex={0} className={classes.link}>
@@ -92,16 +92,16 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
           )}
         </div>
       </TableCell>
-      <TableCell parentColumn="Status" data-qa-domain-status>
+      <TableCell data-qa-domain-status>
         <StatusIcon status={domainStatusToIconStatus(status)} />
         {humanizeDomainStatus(status)}
       </TableCell>
-      <TableCell parentColumn="Type" data-qa-domain-type>
-        {type}
-      </TableCell>
-      <TableCell parentColumn="Last Modified" data-qa-domain-lastmodified>
-        <DateTimeDisplay value={updated} />
-      </TableCell>
+      <Hidden xsDown>
+        <TableCell data-qa-domain-type>{type}</TableCell>
+        <TableCell data-qa-domain-lastmodified>
+          <DateTimeDisplay value={updated} />
+        </TableCell>
+      </Hidden>
       <TableCell className={classes.actionCell}>
         <ActionMenu
           domain={domain}
