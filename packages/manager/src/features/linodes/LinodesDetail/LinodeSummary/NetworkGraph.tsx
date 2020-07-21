@@ -26,7 +26,8 @@ import StatsPanel from './StatsPanel';
 import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
 import { ChartProps } from './types';
 
-const formatTotalTraffic = (value: number) => readableBytes(value).formatted;
+const formatTotalTraffic = (value: number) =>
+  readableBytes(value, { base10: true }).formatted;
 
 const useStyles = makeStyles((theme: Theme) => ({
   chart: {

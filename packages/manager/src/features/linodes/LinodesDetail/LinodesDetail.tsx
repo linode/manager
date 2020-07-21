@@ -26,16 +26,21 @@ const LinodesDetailNavigation = React.lazy(() =>
 const LinodesDetailNavigation_CMR = React.lazy(() =>
   import('./LinodesDetailNavigation_CMR')
 );
+const LinodesDashboardNavigation = React.lazy(() =>
+  import('./LinodesDashboardNavigation')
+);
 const MigrateLanding = React.lazy(() => import('../MigrateLanding'));
 
 interface Props {
   linodeId: string;
+  isDashboard: boolean;
 }
 
 type CombinedProps = Props & RouteComponentProps<{ linodeId: string }>;
 
 const LinodeDetail: React.FC<CombinedProps> = props => {
   const {
+    isDashboard,
     linodeId,
     match: { path }
   } = props;
@@ -66,7 +71,14 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
               <React.Fragment>
                 <LinodesDetailHeader />
                 {flags.cmr ? (
-                  <LinodesDetailNavigation_CMR />
+                  // We have separate routing for the version
+                  // rendered on the dashboard, to prevent the url
+                  // from changing when the active tab is changed.
+                  isDashboard ? (
+                    <LinodesDashboardNavigation />
+                  ) : (
+                    <LinodesDetailNavigation_CMR />
+                  )
                 ) : (
                   <LinodesDetailNavigation />
                 )}

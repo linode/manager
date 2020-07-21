@@ -200,7 +200,9 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       const optionDisplay =
         testYear === currentYear && testMonth === currentMonth
           ? 'Last 30 Days'
-          : currentTime.set({ month: testMonth }).toFormat('LLL yyyy');
+          : currentTime
+              .set({ month: testMonth, year: testYear })
+              .toFormat('LLL yyyy');
       options.push([
         `${testYear} ${testMonth.toString().padStart(2, '0')}`,
         optionDisplay

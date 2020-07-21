@@ -75,7 +75,7 @@ describe('Longview Network Gauge UI', () => {
       {}
     );
 
-    expect(innerText).toHaveTextContent('4 Mibit/s');
+    expect(innerText).toHaveTextContent('4 Mb/s');
     expect(subtext).toHaveTextContent('Network');
   });
 });

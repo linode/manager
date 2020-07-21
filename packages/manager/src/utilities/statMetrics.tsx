@@ -49,6 +49,7 @@ export const formatPercentage = (value: number) => formatNumber(value) + '%';
 
 export const getTraffic = (averageInBits: number): number => {
   const averageInBytes = averageInBits / 8;
+  // eslint-disable-next-line
   const averageBytesOverDay = averageInBytes * (60 * 60 * 24); // 86400 seconds in 24 hours
   return averageBytesOverDay;
 };

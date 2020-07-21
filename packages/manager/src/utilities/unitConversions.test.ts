@@ -166,6 +166,16 @@ describe('conversion helper functions', () => {
       expect(readableBytes(2).unit).toBe('bytes');
       expect(readableBytes(2).formatted).toBe('2 bytes');
     });
+
+    it('handles base 10 when the option is given', () => {
+      expect(readableBytes(1000, { base10: true }).formatted).toBe('1 KB');
+      expect(readableBytes(1000 * 1000, { base10: true }).formatted).toBe(
+        '1 MB'
+      );
+      expect(
+        readableBytes(1000 * 1000 * 1000, { base10: true }).formatted
+      ).toBe('1 GB');
+    });
   });
 
   describe('convertBytesToTarget', () => {
