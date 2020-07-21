@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     height: 100
+  },
+  graphHeaderContainer: {
+    borderBottom: `1px solid ${theme.color.grey6}`
   }
 }));
 
@@ -131,6 +134,8 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
         justifyContent="space-between"
         alignItems="center"
         marginBottom="8px"
+        paddingBottom="6px"
+        className={classes.graphHeaderContainer}
       >
         <Typography>
           <strong>Network Transfer History ({unit}/s)</strong>
