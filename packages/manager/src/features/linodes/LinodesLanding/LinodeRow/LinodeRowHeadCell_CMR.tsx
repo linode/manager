@@ -52,7 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center'
+    alignItems: 'center',
+    whiteSpace: 'nowrap'
   },
   wrapHeader: {
     wordBreak: 'break-all'
@@ -119,9 +120,8 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   const MaintenanceText = () => {
     return (
       <>
-        Please consult your{' '}
-        <Link to="/support/tickets?type=open">support tickets</Link> for
-        details.
+        For more information, please see your{' '}
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
   };

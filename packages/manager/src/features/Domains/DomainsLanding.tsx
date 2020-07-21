@@ -54,6 +54,7 @@ import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DisableDomainDialog from './DisableDomainDialog';
 import DomainRow from './DomainTableRow';
+import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames =
@@ -68,7 +69,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     titleWrapper: {
       flex: 1
     },
@@ -139,16 +139,16 @@ const headers: HeaderCell[] = [
     widthPercent: 25
   },
   {
-    label: 'Type',
-    dataColumn: 'type',
-    sortable: true,
-    widthPercent: 15
-  },
-  {
     label: 'Status',
     dataColumn: 'status',
     sortable: true,
     widthPercent: 25
+  },
+  {
+    label: 'Type',
+    dataColumn: 'type',
+    sortable: true,
+    widthPercent: 15
   },
   {
     label: 'Last Modified',
@@ -324,6 +324,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       domainsError,
       domainsData,
       domainsLoading,
+      domainsLastUpdated,
       flags,
       howManyLinodesOnAccount,
       isRestrictedUser,
@@ -340,9 +341,12 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     };
 
     const domainRow: EntityTableRow<Domain> = {
-      Component: DomainRow,
+      Component: flags.cmr ? DomainRow_CMR : DomainRow,
       data: domainsData ?? [],
-      handlers
+      handlers,
+      loading: domainsLoading,
+      error: domainsError.read,
+      lastUpdated: domainsLastUpdated
     };
 
     if (domainsLoading) {
@@ -405,10 +409,16 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
               <React.Fragment>
                 {flags.cmr ? (
                   <LandingHeader
-                    title="Domain"
+                    title="Domains"
+                    extraActions={
+                      <Button onClick={this.openImportZoneDrawer}>
+                        Import a Zone
+                      </Button>
+                    }
+                    entity="Domain"
                     onAddNew={this.openCreateDomainDrawer}
                     iconType="domain"
-                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                    docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
                   />
                 ) : (
                   <Grid

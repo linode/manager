@@ -3,13 +3,13 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
-import useLinodes from 'src/hooks/useLinodes';
-import LinodeRow from './LinodeRow/LinodeRow';
-import LinodeRow_CMR from './LinodeRow/LinodeRow_CMR';
-
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import useFlags from 'src/hooks/useFlags';
+import useLinodes from 'src/hooks/useLinodes';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
+import formatDate from 'src/utilities/formatDate';
+import LinodeRow from './LinodeRow/LinodeRow';
+import LinodeRow_CMR from './LinodeRow/LinodeRow_CMR';
 
 interface Props {
   data: LinodeWithMaintenanceAndDisplayStatus[];
@@ -22,6 +22,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openLinodeResize: (linodeID: number) => void;
 }
 
 interface TagDrawerProps {
@@ -34,7 +35,12 @@ interface TagDrawerProps {
 type CombinedProps = Props & PaginationProps;
 
 export const ListView: React.FC<CombinedProps> = props => {
-  const { data, openDeleteDialog, openPowerActionDialog } = props;
+  const {
+    data,
+    openDeleteDialog,
+    openPowerActionDialog,
+    openLinodeResize
+  } = props;
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: [],
@@ -88,7 +94,7 @@ export const ListView: React.FC<CombinedProps> = props => {
           id={linode.id}
           ipv4={linode.ipv4}
           maintenanceStartTime={
-            linode.maintenance ? linode.maintenance.when : ''
+            linode.maintenance?.when ? formatDate(linode.maintenance.when) : ''
           }
           ipv6={linode.ipv6 || ''}
           label={linode.label}
@@ -106,6 +112,7 @@ export const ListView: React.FC<CombinedProps> = props => {
           openTagDrawer={openTagDrawer}
           openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
+          openLinodeResize={openLinodeResize}
         />
       ))}
       <TagDrawer

@@ -49,6 +49,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     animateCircleIcon?: any;
     addCircleHoverEffect?: any;
     applyLinkStyles?: any;
+    applyStatusPillStyles?: any;
 
     notificationList: any;
     status: any;
@@ -125,6 +126,24 @@ const genericLinkStyle = {
   cursor: 'pointer',
   '&:hover': {
     textDecoration: 'underline'
+  }
+};
+
+// Used for styling status pills as seen on Linodes
+const genericStatusPillStyle = {
+  backgroundColor: '#f7f7f8',
+  color: '#5d646f',
+  fontFamily: primaryFonts.bold,
+  fontSize: '1.1rem',
+  padding: 10,
+  '&:before': {
+    display: 'inline-block',
+    borderRadius: '50%',
+    content: '""',
+    height: 16,
+    width: 16,
+    minWidth: 16,
+    marginRight: 8
   }
 };
 
@@ -215,12 +234,15 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#3a3f46',
       topMenu: '#fff',
-      billingHeader: '#f5f9ff'
+      billingHeader: '#f5f9ff',
+      controlHeader: '#f9fafa',
+      chipActive: '#cecece'
     },
     color: {
       headline: primaryColors.headline,
       red: '#ca0813',
       green: '#00b159',
+      orange: '#ffb31a',
       yellow: '#fecf2f',
       border1: '#abadaf',
       border2: '#c5c6c8',
@@ -234,6 +256,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey6: '#e3e5e8',
       grey7: '#fafafa',
       grey8: '#828a97',
+      grey9: '#f4f5f6',
+      grey10: '#dbdde1',
       white: '#fff',
       black: '#222',
       blue: primaryColors.main,
@@ -254,7 +278,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       kubeLabel: '#272b31',
       primaryNavText: '#fff',
       borderBilling: '#cce2ff',
-      billingText: '#313335'
+      billingText: '#313335',
+      tagButton: '#f1f7fd'
     },
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
@@ -332,6 +357,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     applyLinkStyles: {
       ...genericLinkStyle
+    },
+    applyStatusPillStyles: {
+      ...genericStatusPillStyle
     },
     notificationList: {
       padding: '16px 32px 16px 23px',

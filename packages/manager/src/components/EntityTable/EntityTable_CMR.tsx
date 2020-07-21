@@ -1,22 +1,26 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import Typography from 'src/components/core/Typography';
 import OrderBy, { OrderByProps } from 'src/components/OrderBy';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag_CMR';
 import ListEntities from './ListEntities_CMR';
-import { Handlers } from './types';
+import { EntityTableRow } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  hiddenHeaderCell: theme.visually.hidden
+  hiddenHeaderCell: theme.visually.hidden,
+  root: {
+    '& td': {
+      borderTop: 0,
+      paddingLeft: '15px',
+      paddingRight: '15px'
+    }
+  },
+  '& .MuiTableCell-head': {
+    borderBottom: 0
+  }
 }));
-
-export interface EntityTableRow<T> {
-  Component: React.ComponentType;
-  data: T[];
-  handlers?: Handlers;
-}
 
 interface Props {
   entity: string;
@@ -73,6 +77,9 @@ export const LandingTable: React.FC<Props> = props => {
 
         const tableProps = {
           data: orderedData,
+          error: row.error,
+          loading: row.loading,
+          lastUpdated: row.lastUpdated,
           RowComponent: row.Component,
           headerCells,
           entity,
@@ -80,9 +87,17 @@ export const LandingTable: React.FC<Props> = props => {
         };
 
         if (groupByTag) {
-          return <GroupedEntitiesByTag {...tableProps} />;
+          return (
+            <div className={classes.root}>
+              <GroupedEntitiesByTag {...tableProps} />
+            </div>
+          );
         }
-        return <ListEntities {...tableProps} />;
+        return (
+          <div className={classes.root}>
+            <ListEntities {...tableProps} />
+          </div>
+        );
       }}
     </OrderBy>
   );
@@ -97,3 +112,4 @@ export interface HeaderCell {
 }
 
 export default LandingTable;
+export { EntityTableRow }; // @todo remove after CMR; consolidate types and exports in index.tsx

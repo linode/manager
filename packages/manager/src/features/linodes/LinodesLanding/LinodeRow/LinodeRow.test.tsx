@@ -28,6 +28,7 @@ describe('LinodeRow', () => {
     recentEvent: undefined,
     openDeleteDialog: jest.fn(),
     openPowerActionDialog: jest.fn(),
+    openLinodeResize: jest.fn(),
     mutationAvailable: false,
     linodeNotifications: [],
     type: 'whatever',
