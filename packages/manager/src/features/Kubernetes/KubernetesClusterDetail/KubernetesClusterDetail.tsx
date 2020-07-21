@@ -1,7 +1,8 @@
 import {
   getKubeConfig,
   getKubernetesClusterEndpoints,
-  KubernetesEndpointResponse
+  KubernetesEndpointResponse,
+  recycleAllNodes
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -267,6 +268,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
     return cluster.label;
   };
 
+  const handleRecycleAllNodes = (nodePoolID: number) => {
+    return recycleAllNodes(cluster.id, nodePoolID);
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
@@ -352,6 +357,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
                 nodePoolID: poolID
               })
             }
+            recycleAllNodes={(poolID: number) => handleRecycleAllNodes(poolID)}
           />
         </Grid>
       </Grid>
