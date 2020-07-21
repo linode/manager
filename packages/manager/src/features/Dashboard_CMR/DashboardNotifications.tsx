@@ -28,7 +28,7 @@ export const Notifications: React.FC<{}> = _ => {
   return (
     <Paper className={classes.root}>
       <PastDue />
-      <Grid container direction="row" spacing={4} justify="space-between">
+      <Grid container direction="row" justify="space-between">
         <Grid item className={classes.column}>
           <Grid container direction="column">
             <Grid item>

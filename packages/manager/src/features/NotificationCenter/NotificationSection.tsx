@@ -6,7 +6,7 @@ import { formatDate } from 'src/utilities/formatDate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(),
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'flex-start',
