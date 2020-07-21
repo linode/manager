@@ -13,7 +13,6 @@ const testLinodeTag = testTag;
 export const makeRandomId = () => Math.floor(Math.random() * 99999999);
 export const makeLinodeLabel = makeTestLabel;
 
-
 export const makeLinodeDataWithStatus = status => {
   return {
     id: makeRandomId(),
@@ -52,12 +51,11 @@ export const makeLinodeDataWithStatus = status => {
   };
 };
 
-
 const makeLinodeCreateReq = linode => {
   const linodeData = linode
     ? linode
     : {
-        root_pass: strings.randomPass(12),
+        root_pass: strings.randomPass(),
         label: makeLinodeLabel(),
         type: 'g6-standard-2',
         region: 'us-east',
