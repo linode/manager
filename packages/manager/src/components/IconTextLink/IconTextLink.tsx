@@ -132,7 +132,14 @@ const IconTextLink: React.FC<FinalProps> = props => {
         data-qa-icon-text-link={title}
       >
         <SideIcon className={`${classes.icon} ${hideText === true && 'm0'}`} />
-        {hideText === false && <span className={classes.label}>{text}</span>}
+        <span
+          className={classNames({
+            [classes.label]: true,
+            ['visually-hidden']: hideText
+          })}
+        >
+          {text}
+        </span>
       </Button>
     </ConditionalWrapper>
   );
