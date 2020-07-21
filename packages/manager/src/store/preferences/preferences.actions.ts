@@ -25,6 +25,7 @@ export interface UserPreferences {
   desktop_sidebar_open?: boolean;
   sortKeys?: Partial<Record<SortKey, OrderSet>>;
   main_content_banner_dismissal?: Record<string, boolean>;
+  is_large_account?: boolean;
 }
 
 export const handleGetPreferences = actionCreator.async<

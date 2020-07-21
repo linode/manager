@@ -7,8 +7,11 @@ import {
   getDomains,
   updateDomain as _updateDomain
 } from '@linode/api-v4/lib/domains';
+import { getUserPreferences } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Dispatch } from 'redux';
+import { LARGE_ACCOUNT_THRESHOLD } from 'src/constants';
+import { updateUserPreferences } from 'src/store/preferences/preferences.requests';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -44,12 +47,29 @@ export const updateDomain = createRequestThunk<
 );
 
 export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
-  dispatch: Dispatch<any>
+  dispatch: Dispatch<any>,
+  getState
 ) => {
   dispatch(getDomainsActions.started());
 
   return getAll<Domain>(getDomains)()
     .then(domains => {
+      if (domains.results > LARGE_ACCOUNT_THRESHOLD) {
+        const isMarkedAsLargeAccount =
+          getState().preferences?.data?.is_large_account ?? false;
+
+        // If we haven't already marked this account as large, do that here.
+        // @todo remove all this logic once ARB-2091 is merged.
+        if (!isMarkedAsLargeAccount) {
+          getUserPreferences().then(response => {
+            const updatedPreferences = {
+              ...response.data,
+              is_large_account: true
+            };
+            dispatch(updateUserPreferences(updatedPreferences));
+          });
+        }
+      }
       dispatch(getDomainsActions.done({ result: domains }));
       return domains.data;
     })

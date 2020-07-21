@@ -41,6 +41,11 @@ export const isProdAPI = RegExp(
 export const API_MAX_PAGE_SIZE =
   Number(process.env.REACT_APP_API_MAX_PAGE_SIZE) || 100;
 
+// Having more of a single entity than this number classifies you as having
+// a "large account". Keeping separate from the API max in case they need
+// to diverge, but for now they're the same number.
+export const LARGE_ACCOUNT_THRESHOLD = API_MAX_PAGE_SIZE;
+
 // Sets Paypal Environment, valid values: 'sandbox|production'
 export const PAYPAL_CLIENT_ENV =
   process.env.REACT_APP_PAYPAL_ENV || 'production';
