@@ -20,6 +20,7 @@ import {
   AppsData,
   ReduxStateProps,
   StackScriptFormStateHandlers,
+  WithDisplayData,
   WithTypesRegionsAndImages
 } from '../types';
 
@@ -48,10 +49,13 @@ const errorResources = {
   stackscript_id: 'The selected App'
 };
 
-type CombinedProps = AppsData &
+type InnerProps = WithDisplayData &
+  AppsData &
   WithTypesRegionsAndImages &
   ReduxStateProps &
   StackScriptFormStateHandlers;
+
+type CombinedProps = InnerProps;
 
 export const FromAppsContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -88,7 +92,7 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
     const { imagesData } = props;
 
     /**
-     * based on the list of images we get back from the API, compare those
+     * Based on the list of images we get back from the API, compare those
      * to our list of master images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
@@ -101,7 +105,7 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
     }, [] as Image[]);
 
     /**
-     * if a UDF field comes back from the API with a "default"
+     * If a UDF field comes back from the API with a "default"
      * value, it means we need to pre-populate the field and form state
      */
     const defaultUDFData = userDefinedFields.reduce((accum, eachField) => {
@@ -204,4 +208,4 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, {}>(FromAppsContent);
+export default compose<CombinedProps, InnerProps>()(FromAppsContent);

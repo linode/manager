@@ -1,29 +1,37 @@
-import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { restoreBackup } from '@linode/api-v4/lib/linodes';
 import { pathOr } from 'ramda';
+import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
-import Paper from 'src/components/core/Paper';
 import DocsSidebar from 'src/components/DocsSidebar';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import SelectRegionPanel from 'src/components/SelectRegionPanel';
-import { WithImages } from 'src/containers/withImages.container';
+import Paper from 'src/components/core/Paper';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import SelectRegionPanel from 'src/components/SelectRegionPanel';
+import TabLinkList, { Tab } from 'src/components/TabLinkList';
+import { WithImages } from 'src/containers/withImages.container';
+import { AppsDocs } from 'src/documentation';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
+import { ApplicationState } from 'src/store';
 import {
   CreateTypes,
   handleChangeCreateType
@@ -38,6 +46,7 @@ import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -50,15 +59,6 @@ import {
   WithTypesProps,
   WithTypesRegionsAndImages
 } from './types';
-import SafeTabPanel from 'src/components/SafeTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import Typography from 'src/components/core/Typography';
-import TabLinkList, { Tab } from 'src/components/TabLinkList';
-import { AppsDocs } from 'src/documentation';
-import { ApplicationState } from 'src/store';
-import { renderBackupsDisplaySection } from './TabbedContent/utils';
-import { restoreBackup } from '@linode/api-v4/lib/linodes';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -110,10 +110,8 @@ type CombinedProps = Props &
   InnerProps &
   AllFormStateAndHandlers &
   AppsData &
-  // ReduxStateProps &
   ReduxStatePropsAndSSHKeys &
   SetDocsProps &
-  // StackScriptFormStateHandlers &
   StateProps &
   WithDisplayData &
   WithImages &
@@ -121,12 +119,15 @@ type CombinedProps = Props &
   WithRegionsProps &
   WithStyles<ClassNames> &
   WithTypesProps &
-  // WithTypesRegionsAndImages &
   RouteComponentProps<{}>;
 
 interface State {
   selectedTab: number;
   createType: CreateTypes;
+}
+
+interface CreateTab extends Tab {
+  type: CreateTypes;
 }
 
 export class LinodeCreate extends React.PureComponent<
@@ -136,10 +137,10 @@ export class LinodeCreate extends React.PureComponent<
   constructor(props: CombinedProps & DispatchProps) {
     super(props);
 
-    /** get the query params as an object, excluding the "?" */
+    /** Get the query params as an object, excluding the "?" */
     const queryParams = getParamsFromUrl(location.search);
 
-    /** will be -1 if the query param is not found */
+    /** Will be -1 if the query param is not found */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const preSelectedTab = this.tabs.findIndex((eachTab, index) => {
       return eachTab.title === queryParams.type;
@@ -148,7 +149,7 @@ export class LinodeCreate extends React.PureComponent<
     // If there is no specified "type" in the query params, update the Redux state
     // so that the correct request is made when the form is submitted.
     if (!queryParams.type) {
-      this.props.setTab(this.tabs[0].type!);
+      this.props.setTab(this.tabs[0].type);
     }
 
     this.state = {
@@ -166,7 +167,7 @@ export class LinodeCreate extends React.PureComponent<
 
   handleTabChange = (index: number) => {
     this.props.resetCreationState();
-    this.props.setTab(this.tabs[index].type!);
+    this.props.setTab(this.tabs[index].type);
     this.props.history.push(`${this.tabs[index].routeName}`);
 
     this.setState({
@@ -175,7 +176,7 @@ export class LinodeCreate extends React.PureComponent<
     });
   };
 
-  tabs: Tab[] = [
+  tabs: CreateTab[] = [
     {
       title: 'Distributions',
       type: 'fromImage',
@@ -208,7 +209,7 @@ export class LinodeCreate extends React.PureComponent<
     }
   ];
 
-  stackScriptTabs: Tab[] = [
+  stackScriptTabs: CreateTab[] = [
     {
       title: 'Community StackScripts',
       type: 'fromStackScript',
@@ -226,26 +227,29 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   createLinode = () => {
-    this.props.handleSubmitForm({
-      image: this.props.selectedImageID,
-      region: this.props.selectedRegionID,
-      type: this.props.selectedTypeID,
-      label: this.props.label,
-      tags: this.props.tags
-        ? this.props.tags.map(eachTag => eachTag.label)
-        : [],
-      root_pass: this.props.password,
-      authorized_users: this.props.userSSHKeys
-        .filter(u => u.selected)
-        .map(u => u.username),
-      booted: true,
-      backups_enabled: this.props.backupsEnabled,
-      private_ip: this.props.privateIPEnabled,
+    this.props.handleSubmitForm(
+      {
+        image: this.props.selectedImageID,
+        region: this.props.selectedRegionID,
+        type: this.props.selectedTypeID,
+        label: this.props.label,
+        tags: this.props.tags
+          ? this.props.tags.map(eachTag => eachTag.label)
+          : [],
+        root_pass: this.props.password,
+        authorized_users: this.props.userSSHKeys
+          .filter(u => u.selected)
+          .map(u => u.username),
+        booted: true,
+        backups_enabled: this.props.backupsEnabled,
+        private_ip: this.props.privateIPEnabled,
 
-      // StackScripts
-      stackscript_id: this.props.selectedStackScriptID,
-      stackscript_data: this.props.selectedUDFs
-    });
+        // StackScripts
+        stackscript_id: this.props.selectedStackScriptID,
+        stackscript_data: this.props.selectedUDFs
+      },
+      this.props.selectedLinodeID
+    );
   };
 
   render() {
@@ -451,9 +455,9 @@ export class LinodeCreate extends React.PureComponent<
               </SafeTabPanel>
             </TabPanels>
           </Tabs>
+
           {createType !== 'fromBackup' && (
             <SelectRegionPanel
-              data-qa-select-region-panel
               error={hasErrorFor.region}
               regions={regionsData!}
               handleSelection={this.props.updateRegionID}
@@ -492,29 +496,30 @@ export class LinodeCreate extends React.PureComponent<
             }
             updateFor={[tags, label, errors]}
           />
-          <AccessPanel
-            data-qa-access-panel
-            /* Disable the password field if we haven't selected an image */
-            disabled={!this.props.selectedImageID}
-            disabledReason={
-              !this.props.selectedImageID
-                ? 'You must select an image to set a root password'
-                : ''
-            }
-            error={hasErrorFor.root_pass}
-            sshKeyError={sshError}
-            password={this.props.password}
-            handleChange={this.props.updatePassword}
-            updateFor={[
-              this.props.password,
-              errors,
-              sshError,
-              userSSHKeys,
-              this.props.selectedImageID
-            ]}
-            users={userSSHKeys}
-            requestKeys={requestKeys}
-          />
+          {/* Hide for backups and clone */}
+          {createType !== 'fromBackup' && createType !== 'fromLinode' && (
+            <AccessPanel
+              disabled={!this.props.selectedImageID}
+              disabledReason={
+                !this.props.selectedImageID
+                  ? 'You must select an image to set a root password'
+                  : ''
+              }
+              error={hasErrorFor.root_pass}
+              sshKeyError={sshError}
+              password={this.props.password}
+              handleChange={this.props.updatePassword}
+              updateFor={[
+                this.props.password,
+                errors,
+                sshError,
+                userSSHKeys,
+                this.props.selectedImageID
+              ]}
+              users={userSSHKeys}
+              requestKeys={requestKeys}
+            />
+          )}
           <AddonsPanel
             data-qa-addons-panel
             backups={this.props.backupsEnabled}
