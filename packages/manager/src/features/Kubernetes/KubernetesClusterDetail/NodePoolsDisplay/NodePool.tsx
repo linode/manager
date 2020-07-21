@@ -70,7 +70,6 @@ const NodePool: React.FC<Props> = props => {
             onClick={() => handleClickResize(poolId)}
             className={classes.icon}
           />
-          {/* Not yet supported by the API: */}
           <IconTextLink
             text="Recycle Nodes"
             SideIcon={Recycle}
