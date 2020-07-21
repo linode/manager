@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { pathOr } from 'ramda';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import DocsSidebar from 'src/components/DocsSidebar';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -40,11 +41,14 @@ import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import {
   AllFormStateAndHandlers,
   AppsData,
+  ReduxStateProps,
   ReduxStatePropsAndSSHKeys,
+  StackScriptFormStateHandlers,
   WithDisplayData,
   WithLinodesProps,
   WithRegionsProps,
-  WithTypesProps
+  WithTypesProps,
+  WithTypesRegionsAndImages
 } from './types';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
@@ -52,6 +56,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import Typography from 'src/components/core/Typography';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { AppsDocs } from 'src/documentation';
+import { ApplicationState } from 'src/store';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import { restoreBackup } from '@linode/api-v4/lib/linodes';
 
@@ -97,16 +102,26 @@ const errorMap = [
   'image'
 ];
 
+type InnerProps = WithTypesRegionsAndImages &
+  ReduxStateProps &
+  StackScriptFormStateHandlers;
+
 type CombinedProps = Props &
-  WithStyles<ClassNames> &
+  InnerProps &
+  AllFormStateAndHandlers &
+  AppsData &
+  // ReduxStateProps &
+  ReduxStatePropsAndSSHKeys &
+  SetDocsProps &
+  // StackScriptFormStateHandlers &
+  StateProps &
+  WithDisplayData &
   WithImages &
   WithLinodesProps &
   WithRegionsProps &
+  WithStyles<ClassNames> &
   WithTypesProps &
-  WithDisplayData &
-  AppsData &
-  ReduxStatePropsAndSSHKeys &
-  AllFormStateAndHandlers &
+  // WithTypesRegionsAndImages &
   RouteComponentProps<{}>;
 
 interface State {
@@ -238,19 +253,22 @@ export class LinodeCreate extends React.PureComponent<
 
     const {
       classes,
-      regionsLoading,
-      imagesLoading,
+      linodesData,
       linodesLoading,
-      imagesError,
-      regionsError,
       linodesError,
+      imagesData,
+      imageDisplayInfo,
+      imagesError,
+      imagesLoading,
+      regionsError,
+      regionsData,
+      regionDisplayInfo,
+      regionsLoading,
+      typesData,
+      typeDisplayInfo,
       typesError,
       typesLoading,
-      regionsData,
-      typesData,
-      imagesData,
       label,
-      linodesData,
       updateLabel,
       tags,
       updateTags,
@@ -260,15 +278,7 @@ export class LinodeCreate extends React.PureComponent<
       requestKeys,
       backupsMonthlyPrice,
       userCannotCreateLinode,
-      // location,
-      typeDisplayInfo,
-      regionDisplayInfo,
-      imageDisplayInfo,
       accountBackupsEnabled,
-
-      // StackScripts
-      // selectedStackScriptID,
-      // selectedUDFs,
       ...rest
     } = this.props;
 
@@ -284,12 +294,7 @@ export class LinodeCreate extends React.PureComponent<
       );
     }
 
-    if (
-      !this.props.regionsData ||
-      !this.props.imagesData ||
-      !this.props.linodesData ||
-      !this.props.typesData
-    ) {
+    if (!linodesData || !imagesData || !regionsData || !typesData) {
       return null;
     }
 
@@ -325,10 +330,10 @@ export class LinodeCreate extends React.PureComponent<
       displaySections.push(typeDisplayInfo);
     }
 
-    if (this.props.label) {
+    if (label) {
       displaySections.push({
         title: 'Linode Label',
-        details: this.props.label
+        details: label
       });
     }
 
@@ -358,8 +363,8 @@ export class LinodeCreate extends React.PureComponent<
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
-                  accountBackupsEnabled={this.props.accountBackupsEnabled}
-                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
               </SafeTabPanel>
@@ -368,8 +373,8 @@ export class LinodeCreate extends React.PureComponent<
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
-                  accountBackupsEnabled={this.props.accountBackupsEnabled}
-                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
               </SafeTabPanel>
@@ -382,12 +387,8 @@ export class LinodeCreate extends React.PureComponent<
                       <SafeTabPanel index={0}>
                         <FromStackScriptContent
                           category="community"
-                          accountBackupsEnabled={
-                            this.props.accountBackupsEnabled
-                          }
-                          userCannotCreateLinode={
-                            this.props.userCannotCreateLinode
-                          }
+                          accountBackupsEnabled={accountBackupsEnabled}
+                          userCannotCreateLinode={userCannotCreateLinode}
                           request={getCommunityStackscripts}
                           header={'Select a StackScript'}
                           imagesData={imagesData!}
@@ -399,12 +400,8 @@ export class LinodeCreate extends React.PureComponent<
                       <SafeTabPanel index={1}>
                         <FromStackScriptContent
                           category="account"
-                          accountBackupsEnabled={
-                            this.props.accountBackupsEnabled
-                          }
-                          userCannotCreateLinode={
-                            this.props.userCannotCreateLinode
-                          }
+                          accountBackupsEnabled={accountBackupsEnabled}
+                          userCannotCreateLinode={userCannotCreateLinode}
                           request={getMineAndAccountStackScripts}
                           header={'Select a StackScript'}
                           imagesData={imagesData!}
@@ -424,8 +421,8 @@ export class LinodeCreate extends React.PureComponent<
                   imagesData={imagesData}
                   regionsData={regionsData!}
                   typesData={typesData!}
-                  accountBackupsEnabled={this.props.accountBackupsEnabled}
-                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
               </SafeTabPanel>
@@ -435,8 +432,8 @@ export class LinodeCreate extends React.PureComponent<
                   regionsData={regionsData!}
                   typesData={typesData!}
                   linodesData={linodesData!}
-                  accountBackupsEnabled={this.props.accountBackupsEnabled}
-                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
                   {...restoreBackup}
                   {...rest}
                 />
@@ -447,8 +444,8 @@ export class LinodeCreate extends React.PureComponent<
                   regionsData={regionsData!}
                   typesData={typesData!}
                   linodesData={linodesData!}
-                  accountBackupsEnabled={this.props.accountBackupsEnabled}
-                  userCannotCreateLinode={this.props.userCannotCreateLinode}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
               </SafeTabPanel>
@@ -521,7 +518,7 @@ export class LinodeCreate extends React.PureComponent<
           <AddonsPanel
             data-qa-addons-panel
             backups={this.props.backupsEnabled}
-            accountBackups={this.props.accountBackupsEnabled}
+            accountBackups={accountBackupsEnabled}
             backupsMonthly={backupsMonthlyPrice}
             privateIP={this.props.privateIPEnabled}
             changeBackups={this.props.toggleBackupsEnabled}
@@ -547,9 +544,9 @@ export class LinodeCreate extends React.PureComponent<
           >
             <DisplaySectionList displaySections={displaySections} />
           </CheckoutBar>
-          {/* {createType === 'fromApp' && this.props.documentation.length > 0  && (
+          {createType === 'fromApp' && this.props.documentation.length > 0 && (
             <DocsSidebar docs={this.props.documentation} />
-          )} */}
+          )}
         </Grid>
       </form>
     );
@@ -567,10 +564,50 @@ const mapDispatchToProps: MapDispatchToProps<
   setTab: value => dispatch(handleChangeCreateType(value))
 });
 
+interface StateProps {
+  documentation: Linode.Doc[];
+}
+
+const mapStateToProps: MapStateToProps<
+  StateProps,
+  CombinedProps,
+  ApplicationState
+> = state => ({
+  documentation: state.documentation
+});
+
+const generateDocs = (ownProps: InnerProps & StateProps) => {
+  const { selectedStackScriptLabel } = ownProps;
+  if (!!selectedStackScriptLabel) {
+    const foundDocs = AppsDocs.filter(eachDoc => {
+      return eachDoc.title
+        .toLowerCase()
+        .includes(
+          selectedStackScriptLabel
+            .substr(0, selectedStackScriptLabel.indexOf(' '))
+            .toLowerCase()
+        );
+    });
+    return foundDocs.length ? foundDocs : [];
+  }
+  return [];
+};
+
+const updateCond = (
+  prevProps: InnerProps & StateProps,
+  nextProps: InnerProps & StateProps
+) => {
+  return prevProps.selectedStackScriptID !== nextProps.selectedStackScriptID;
+};
+
 const styled = withStyles(styles);
 
-const connected = connect(undefined, mapDispatchToProps);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = recompose<CombinedProps, {}>(connected, styled);
+const enhanced = recompose<CombinedProps, InnerProps>(
+  connected,
+  styled,
+  setDocs(generateDocs, updateCond)
+);
 
 export default enhanced(LinodeCreate);

@@ -2,21 +2,16 @@ import { Image } from '@linode/api-v4/lib/images';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-
-import { AppsDocs } from 'src/documentation';
-import { ApplicationState } from 'src/store';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { filterUDFErrors } from './formUtilities';
 import SelectAppPanel from '../SelectAppPanel';
@@ -25,7 +20,6 @@ import {
   AppsData,
   ReduxStateProps,
   StackScriptFormStateHandlers,
-  WithDisplayData,
   WithTypesRegionsAndImages
 } from '../types';
 
@@ -33,11 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   main: {
     [theme.breakpoints.up('md')]: {
       maxWidth: '100%'
-    }
-  },
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: '-130px !important'
     }
   },
   emptyImagePanel: {
@@ -59,13 +48,10 @@ const errorResources = {
   stackscript_id: 'The selected App'
 };
 
-type InnerProps = WithDisplayData &
-  AppsData &
+type CombinedProps = AppsData &
   WithTypesRegionsAndImages &
   ReduxStateProps &
   StackScriptFormStateHandlers;
-
-type CombinedProps = InnerProps & StateProps & SetDocsProps;
 
 export const FromAppsContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -100,6 +86,7 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
     userDefinedFields: UserDefinedField[]
   ) => {
     const { imagesData } = props;
+
     /**
      * based on the list of images we get back from the API, compare those
      * to our list of master images supported by Linode and filter out the ones
@@ -191,7 +178,7 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
           />
         ) : (
           <Paper className={classes.emptyImagePanel}>
-            {/* empty state for images */}
+            {/* Empty state for images */}
             {hasErrorFor('image') && (
               <Notice error={true} text={hasErrorFor('image')} />
             )}
@@ -208,11 +195,6 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
           </Paper>
         )}
       </Grid>
-      {/* <Grid item className={`${classes.sidebar} mlSidebar`}>
-          {this.props.documentation.length > 0 && (
-            <DocsSidebar docs={this.props.documentation} />
-          )}
-        </Grid> */}
       <AppDetailDrawer
         open={detailDrawerOpen}
         stackscriptID={selectedScriptForDrawer}
@@ -222,45 +204,4 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
   );
 };
 
-interface StateProps {
-  documentation: Linode.Doc[];
-}
-
-const mapStateToProps: MapStateToProps<
-  StateProps,
-  CombinedProps,
-  ApplicationState
-> = state => ({
-  documentation: state.documentation
-});
-
-const connected = connect(mapStateToProps);
-
-const generateDocs = (ownProps: InnerProps & StateProps) => {
-  const { selectedStackScriptLabel } = ownProps;
-  if (!!selectedStackScriptLabel) {
-    const foundDocs = AppsDocs.filter(eachDoc => {
-      return eachDoc.title
-        .toLowerCase()
-        .includes(
-          selectedStackScriptLabel
-            .substr(0, selectedStackScriptLabel.indexOf(' '))
-            .toLowerCase()
-        );
-    });
-    return foundDocs.length ? foundDocs : [];
-  }
-  return [];
-};
-
-const updateCond = (
-  prevProps: InnerProps & StateProps,
-  nextProps: InnerProps & StateProps
-) => {
-  return prevProps.selectedStackScriptID !== nextProps.selectedStackScriptID;
-};
-
-export default compose<CombinedProps, InnerProps>(
-  connected,
-  setDocs(generateDocs, updateCond)
-)(FromAppsContent);
+export default compose<CombinedProps, {}>(FromAppsContent);
