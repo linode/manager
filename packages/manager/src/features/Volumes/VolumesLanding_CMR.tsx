@@ -253,7 +253,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       removeBreadCrumb,
       fromLinodes,
       linodeRegion,
-      regionsData
+      regionsData,
+      isVolumesLanding
     } = this.props;
 
     if (volumesLoading) {
@@ -271,7 +272,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {readOnly && <LinodePermissionsError />}
-        <LinodeDisks />
+        {!isVolumesLanding && <LinodeDisks />}
         <Grid
           className={classes.root}
           container
@@ -304,7 +305,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 readOnly ||
                 (linodeRegion &&
                   !doesRegionSupportBlockStorage(linodeRegion, regionsData)) ||
-                data.length >= 10
+                (data.length >= 10 && !isVolumesLanding)
               }
             />
           </Grid>
