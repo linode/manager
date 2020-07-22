@@ -37,6 +37,12 @@ export interface GetAllData<T> {
  * @param getter { Function } one of the Get functions from the API services library. Accepts
  * pagination or filter parameters.
  *
+ * @param pageSize Will default to the API_MAX_PAGE_SIZE.
+ * @cb This is a weird one. Since getAll can in theory trigger a very long series of requests,
+ * we need a hatch after the first request (at which point we know what's required).
+ * The callback was originally added to allow us to mark an account as "large", since extremely large
+ * accounts were bombing before the getAll method completed execution.
+ *
  * @example const getAllLinodes = getAll(getLinodes)
  * @example getAllLinodes(params, filter)
  *

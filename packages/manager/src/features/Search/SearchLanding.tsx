@@ -149,7 +149,6 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
     } else {
       search(query);
     }
-    search(query);
   }, [query, entities, search, _isLargeAccount, _searchAPI]);
 
   const finalResults = _isLargeAccount ? apiResults : searchResultsByEntity;
