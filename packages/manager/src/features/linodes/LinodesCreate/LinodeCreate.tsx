@@ -364,10 +364,7 @@ export class LinodeCreate extends React.PureComponent<
     return (
       <form className={classes.form}>
         <Grid item className={`mlMain py0`}>
-          <Tabs
-            defaultIndex={selectedTab}
-            onChange={index => this.handleTabChange(index)}
-          >
+          <Tabs defaultIndex={selectedTab} onChange={this.handleTabChange}>
             <TabLinkList tabs={this.tabs} />
             <TabPanels>
               <SafeTabPanel index={0}>

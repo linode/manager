@@ -15,6 +15,7 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { filterUDFErrors } from './formUtilities';
 import SelectAppPanel from '../SelectAppPanel';
 import {
+  AppsData,
   ReduxStateProps,
   StackScriptFormStateHandlers,
   WithTypesRegionsAndImages
@@ -45,7 +46,8 @@ const errorResources = {
   stackscript_id: 'The selected App'
 };
 
-type CombinedProps = ReduxStateProps &
+type CombinedProps = AppsData &
+  ReduxStateProps &
   StackScriptFormStateHandlers &
   WithTypesRegionsAndImages;
 
