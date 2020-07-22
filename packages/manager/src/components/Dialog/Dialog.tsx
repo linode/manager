@@ -58,7 +58,6 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       paddingRight: theme.spacing(),
       margin: '8px -8px',
-      background: theme.color.white,
       zIndex: 1,
       width: '100%',
       display: 'flex',
