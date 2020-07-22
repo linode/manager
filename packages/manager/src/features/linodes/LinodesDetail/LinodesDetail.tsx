@@ -76,7 +76,11 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
                 // rendered on the dashboard, to prevent the url
                 // from changing when the active tab is changed.
                 isDashboard ? (
-                  <LinodesDashboardNavigation />
+                  // For single linode view
+                  <React.Fragment>
+                    <LinodesDetailHeader_CMR />
+                    <LinodesDashboardNavigation />
+                  </React.Fragment>
                 ) : (
                   <React.Fragment>
                     <LinodesDetailHeader_CMR />
