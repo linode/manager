@@ -4,9 +4,6 @@ import {
   LinodeBackups
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-// eslint-disable-next-line no-restricted-imports
-import { useTheme } from '@material-ui/core';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -18,7 +15,12 @@ import { lishLaunch } from 'src/features/Lish/lishUtils';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import { useTypes } from 'src/hooks/useTypes';
 import { useRegions } from 'src/hooks/useRegions';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
@@ -76,7 +78,7 @@ export type CombinedProps = Props & StateProps;
 
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const theme = useTheme();
+  const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { types } = useTypes();
@@ -369,7 +371,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      {inTableContext &&
+      {!matchesSmDown &&
+        inTableContext &&
         inlineActions.map(action => {
           return (
             <InlineMenuAction

@@ -1,10 +1,12 @@
-// eslint-disable-next-line no-restricted-imports
-import { useTheme } from '@material-ui/core';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
-import { makeStyles } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import EntityHeader, {
   HeaderProps
@@ -35,7 +37,7 @@ interface Props extends Omit<HeaderProps, 'actions'> {
 
 export const LandingHeader: React.FC<Props> = props => {
   const classes = useStyles();
-  const theme = useTheme();
+  const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { docsLink, onAddNew, entity, extraActions } = props;
