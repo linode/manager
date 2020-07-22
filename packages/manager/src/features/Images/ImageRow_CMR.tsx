@@ -90,10 +90,10 @@ const ImageRow: React.FC<CombinedProps> = props => {
         <TableCell parentColumn="Created" data-qa-image-date>
           {formatDate(created)}
         </TableCell>
+        <TableCell parentColumn="Expires" data-qa-image-date>
+          {expiry ? formatDate(expiry) : 'Never'}
+        </TableCell>
       </Hidden>
-      <TableCell parentColumn="Expires" data-qa-image-date>
-        {expiry ? formatDate(expiry) : 'Never'}
-      </TableCell>
       <TableCell parentColumn="Size" data-qa-image-size>
         {size} MB
       </TableCell>

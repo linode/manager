@@ -12,7 +12,6 @@ import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
 import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import WarningIcon from 'src/assets/icons/warning.svg';
 import {
   createStyles,
   Theme,
@@ -83,8 +82,7 @@ export type Variant =
   | 'bucket'
   | 'firewall'
   | 'object'
-  | 'folder'
-  | 'cmr';
+  | 'folder';
 
 interface Props {
   variant: Variant;
@@ -98,7 +96,6 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
 
-// @todo CMR needs an icon for Images
 const iconMap = {
   linode: LinodeIcon,
   nodebalancer: NodeBalancerIcon,
@@ -109,8 +106,7 @@ const iconMap = {
   bucket: BucketIcon,
   firewall: FirewallIcon,
   object: ObjectIcon,
-  folder: FolderIcon,
-  cmr: WarningIcon
+  folder: FolderIcon
 };
 
 const getIcon = (variant: Variant) => {
