@@ -8,12 +8,7 @@ import {
 } from 'src/components/core/styles';
 import Table, { TableProps } from 'src/components/core/Table';
 
-type ClassNames =
-  | 'root'
-  | 'border'
-  | 'responsive'
-  | 'noMobileLabel'
-  | 'stickyHeader';
+type ClassNames = 'root' | 'border' | 'stickyHeader';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -42,48 +37,6 @@ const styles = (theme: Theme) =>
           '&:last-of-type': {
             borderRight: 'none'
           }
-        }
-      }
-    },
-    responsive: {
-      [theme.breakpoints.down('sm')]: {
-        '& .emptyCell': {
-          display: 'none'
-        },
-        '& thead': {
-          display: 'none'
-        },
-        '& tbody > tr': {
-          marginBottom: 0,
-          '& > td:first-child': {
-            backgroundColor: theme.bg.tableHeader,
-            '& .data': {
-              textAlign: 'right'
-            }
-          }
-        },
-        '& tr': {
-          display: 'block',
-          marginBottom: 20,
-          height: 'auto'
-        },
-        '& td': {
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          minHeight: 32
-        }
-      }
-    },
-    noMobileLabel: {
-      [theme.breakpoints.down('sm')]: {
-        '& tbody > tr > td:first-child': {
-          '& > span:first-child': {
-            display: 'none'
-          }
-        },
-        '& .data': {
-          marginLeft: 0
         }
       }
     },
@@ -138,13 +91,11 @@ class WrappedTable extends React.Component<CombinedProps> {
     const {
       classes,
       className,
-      isResponsive,
       tableClass,
       border,
       noOverflow,
       spacingTop,
       spacingBottom,
-      removeLabelonMobile,
       stickyHeader,
       colCount,
       rowCount,
@@ -157,9 +108,7 @@ class WrappedTable extends React.Component<CombinedProps> {
           'tableWrapper',
           {
             [classes.root]: !noOverflow,
-            [classes.responsive]: isResponsive !== false, // must be explicity set to false
             [classes.border]: border,
-            [classes.noMobileLabel]: removeLabelonMobile,
             [classes.stickyHeader]: stickyHeader
           },
           className
