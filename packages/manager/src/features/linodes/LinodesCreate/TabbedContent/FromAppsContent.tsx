@@ -15,7 +15,6 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { filterUDFErrors } from './formUtilities';
 import SelectAppPanel from '../SelectAppPanel';
 import {
-  AppsData,
   ReduxStateProps,
   StackScriptFormStateHandlers,
   WithTypesRegionsAndImages
@@ -46,8 +45,7 @@ const errorResources = {
   stackscript_id: 'The selected App'
 };
 
-type CombinedProps = AppsData &
-  ReduxStateProps &
+type CombinedProps = ReduxStateProps &
   StackScriptFormStateHandlers &
   WithTypesRegionsAndImages;
 
@@ -183,9 +181,9 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
               Select Image
             </Typography>
             <Typography
+              data-qa-no-compatible-images
               variant="body1"
               className={classes.emptyImagePanelText}
-              data-qa-no-compatible-images
             >
               No Compatible Images Available
             </Typography>

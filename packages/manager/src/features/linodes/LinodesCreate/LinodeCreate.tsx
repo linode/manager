@@ -124,6 +124,7 @@ type CombinedProps = Props &
 
 interface State {
   selectedTab: number;
+  stackScriptSelectedTab: number;
 }
 
 interface CreateTab extends Tab {
@@ -137,13 +138,22 @@ export class LinodeCreate extends React.PureComponent<
   constructor(props: CombinedProps & DispatchProps) {
     super(props);
 
-    /** get the query params as an object, excluding the "?" */
+    /** Get the query params as an object, excluding the "?" */
     const queryParams = getParamsFromUrl(location.search);
 
-    /** will be -1 if the query param is not found */
+    const _tabs = [
+      'Distributions',
+      'One-Click',
+      'StackScripts',
+      'Images',
+      'Backups',
+      'Clone Linode'
+    ];
+
+    /** Will be -1 if the query param is not found */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const preSelectedTab = this.tabs.findIndex((eachTab, index) => {
-      return eachTab.title === queryParams.type;
+    const preSelectedTab = _tabs.findIndex((eachTab, index) => {
+      return eachTab === queryParams.type;
     });
 
     // If there is no specified "type" in the query params, update the Redux state
@@ -153,7 +163,9 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     this.state = {
-      selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0
+      selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
+      stackScriptSelectedTab:
+        preSelectedTab === 2 && location.search.search('Account') > -1 ? 1 : 0
     };
   }
 
@@ -164,14 +176,14 @@ export class LinodeCreate extends React.PureComponent<
     this.props.setTab(getInitialType());
   }
 
-  handleTabChange = (value: number) => {
+  handleTabChange = (index: number) => {
     this.props.resetCreationState();
 
     /** set the tab in redux state */
-    this.props.setTab(this.tabs[value].type);
+    this.props.setTab(this.tabs[index].type);
 
     this.setState({
-      selectedTab: value
+      selectedTab: index
     });
   };
 
@@ -212,12 +224,12 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Community StackScripts',
       type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts/Community`
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`
     },
     {
       title: 'Account StackScripts',
       type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts/Account`
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`
     }
   ];
 
@@ -252,7 +264,7 @@ export class LinodeCreate extends React.PureComponent<
   };
 
   render() {
-    const { selectedTab } = this.state;
+    const { selectedTab, stackScriptSelectedTab } = this.state;
 
     const {
       classes,
@@ -382,7 +394,7 @@ export class LinodeCreate extends React.PureComponent<
                 />
               </SafeTabPanel>
               <SafeTabPanel index={2}>
-                <Tabs defaultIndex={0}>
+                <Tabs defaultIndex={stackScriptSelectedTab}>
                   <Paper className={classes.stackScriptWrapper}>
                     <Typography variant="h2">Create From:</Typography>
                     <TabLinkList tabs={this.stackScriptTabs} />
