@@ -16,7 +16,7 @@ export interface DialogProps extends _DialogProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
-      padding: theme.spacing(4),
+      padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
       paddingTop: 0,
       maxHeight: '100%',
       '& .actionPanel': {
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerHeader: {
       padding: theme.spacing(2)
     },
-    drawerContent: {
+    dialogContent: {
       padding: theme.spacing(2),
       paddingTop: 0
     },
@@ -55,13 +55,15 @@ const useStyles = makeStyles((theme: Theme) =>
     sticky: {
       position: 'sticky',
       top: 0,
-      padding: theme.spacing(2),
-      paddingRight: theme.spacing(),
-      margin: '8px -8px',
+      padding: theme.spacing(),
+      paddingTop: theme.spacing(4),
+      marginBottom: 20,
+      background: theme.color.white,
       zIndex: 1,
       width: '100%',
       display: 'flex',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      alignItems: 'center'
     }
   })
 );
@@ -89,8 +91,8 @@ const Dialog: React.FC<DialogProps> = props => {
     >
       <Grid
         container
-        justify="space-between"
         alignItems="center"
+        justify="center"
         updateFor={[title, props.children]}
       >
         <div className={classes.sticky}>
@@ -112,7 +114,7 @@ const Dialog: React.FC<DialogProps> = props => {
           </Grid>
         </div>
         <Grid container>
-          <div className={classes.drawerContent}>{children}</div>
+          <div className={classes.dialogContent}>{children}</div>
         </Grid>
       </Grid>
     </MUIDialog>
