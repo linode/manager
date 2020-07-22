@@ -55,6 +55,7 @@ type ClassNames =
   | 'tableCell'
   | 'labelColumn'
   | 'vmColumn'
+  | 'memoryColumn'
   | 'kernelColumn'
   | 'rootDeviceColumn'
   | 'actionsColumn';
@@ -93,16 +94,19 @@ const styles = (theme: Theme) =>
       width: '20%'
     },
     vmColumn: {
-      width: '15%'
+      width: '9%'
     },
     kernelColumn: {
+      width: '25%'
+    },
+    memoryColumn: {
       width: '10%'
     },
     rootDeviceColumn: {
       width: '20%'
     },
     actionsColumn: {
-      width: '20%'
+      width: '10%'
     }
   });
 
@@ -489,7 +493,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                         >
                           Kernel
                         </TableCell>
-                        <TableCell className={classes.tableCell}>
+                        <TableCell
+                          className={`${classes.tableCell} ${classes.memoryColumn}`}
+                        >
                           Memory Limit
                         </TableCell>
                         <TableCell
