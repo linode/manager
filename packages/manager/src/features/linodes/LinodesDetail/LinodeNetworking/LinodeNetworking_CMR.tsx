@@ -456,7 +456,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   render() {
     const {
       readOnly,
-      linode: { id: linodeID, label: linodeLabel, region: linodeRegion }
+      linode: {
+        id: linodeID,
+        label: linodeLabel,
+        region: linodeRegion,
+        created: linodeCreated
+      }
     } = this.props;
     const {
       linodeIPs,
@@ -508,6 +513,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <LinodeNetworkingSummaryPanel
           linodeRegion={zoneName}
           linodeID={linodeID}
+          linodeCreated={linodeCreated}
           linodeLabel={linodeLabel}
         />
 

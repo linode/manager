@@ -14,9 +14,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   header: {
     paddingBottom: 10
   },
-  progressWrapper: {
-    width: '290px'
-  },
   poolUsageProgress: {
     marginBottom: theme.spacing(1) / 2
   },
@@ -177,7 +174,7 @@ const TransferContent: React.FC<ContentProps> = props => {
   }
 
   return (
-    <div className={classes.progressWrapper}>
+    <div>
       <BarPercent
         max={100}
         value={Math.ceil(linodeUsagePercent)}
