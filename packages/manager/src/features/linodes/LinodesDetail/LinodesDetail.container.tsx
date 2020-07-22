@@ -11,16 +11,22 @@ import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { shouldRequestEntity } from 'src/utilities/shouldRequestEntity';
 
+interface Props {
+  linodeId?: string;
+  isDashboard?: boolean;
+}
+
 /**
  * We want to hold off loading this screen until Linode data is available.
  * If we have recently requested all Linode data, we're good. If not,
  * we show a loading spinner until the requests are complete.
  */
-export const LinodesDetailContainer: React.FC<{}> = _ => {
+export const LinodesDetailContainer: React.FC<Props> = props => {
+  const { isDashboard } = props;
   const { linodes } = useLinodes();
   const dispatch = useDispatch();
   const params = useParams<{ linodeId: string }>();
-  const linodeId = params.linodeId;
+  const linodeId = props.linodeId ? props.linodeId : params.linodeId;
 
   const { _loading } = useReduxLoad(['images', 'volumes']);
   const { configs, disks } = useSelector((state: ApplicationState) => {
@@ -55,11 +61,13 @@ export const LinodesDetailContainer: React.FC<{}> = _ => {
     }
   }, [dispatch, configs, disks, linodeId, linodes]);
 
-  if (linodes.loading || _loading) {
+  if ((linodes.lastUpdated === 0 && linodes.loading) || _loading) {
     return <CircleProgress />;
   }
 
-  return <LinodesDetail linodeId={linodeId} />;
+  return (
+    <LinodesDetail linodeId={linodeId} isDashboard={Boolean(isDashboard)} />
+  );
 };
 
 export default React.memo(LinodesDetailContainer);

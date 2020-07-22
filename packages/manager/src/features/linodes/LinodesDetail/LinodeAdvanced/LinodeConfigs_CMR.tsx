@@ -223,7 +223,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           title="Confirm Boot"
           error={this.state.confirmBoot.error}
           open={this.state.confirmBoot.open}
-          onClose={this.resetConfirmConfigBoot}
+          onClose={this.cancelBoot}
           actions={this.bootConfigConfirmationActions}
         >
           <Typography>
@@ -338,18 +338,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         error: undefined,
         configId,
         label
-      }
-    });
-  };
-
-  resetConfirmConfigBoot = () => {
-    this.setState({
-      confirmBoot: {
-        open: false,
-        error: undefined,
-        configId: undefined,
-        label: undefined,
-        submitting: false
       }
     });
   };
@@ -488,7 +476,10 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                     </TableHead>
                     <TableBody>
                       <TableContentWrapper
-                        loading={configsLoading && configsLastUpdated === 0}
+                        loading={
+                          (configsLoading && configsLastUpdated === 0) ||
+                          this.state.kernelsLoading
+                        }
                         lastUpdated={configsLastUpdated}
                         length={paginatedData.length}
                         error={configsError}

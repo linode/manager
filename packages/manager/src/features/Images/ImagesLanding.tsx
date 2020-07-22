@@ -377,7 +377,6 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             title="Images"
             entity="Image"
             onAddNew={this.openForCreate}
-            iconType="cmr"
             docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
           />
         ) : (

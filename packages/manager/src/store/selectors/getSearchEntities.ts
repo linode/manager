@@ -37,7 +37,7 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
   return ips;
 };
 
-const formatLinode = (
+export const formatLinode = (
   linode: Linode,
   types: LinodeType[],
   images: Record<string, Image>
@@ -65,7 +65,7 @@ const formatLinode = (
   }
 });
 
-const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
+export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   label: volume.label,
   value: volume.id,
   entityType: 'volume',
@@ -84,7 +84,7 @@ const imageReducer = (accumulator: SearchableItem[], image: Image) =>
     ? accumulator
     : [...accumulator, imageToSearchableItem(image)];
 
-const imageToSearchableItem = (image: Image): SearchableItem => ({
+export const imageToSearchableItem = (image: Image): SearchableItem => ({
   label: image.label,
   value: image.id,
   entityType: 'image',
@@ -99,7 +99,7 @@ const imageToSearchableItem = (image: Image): SearchableItem => ({
   }
 });
 
-const domainToSearchableItem = (domain: Domain): SearchableItem => ({
+export const domainToSearchableItem = (domain: Domain): SearchableItem => ({
   label: domain.domain,
   value: domain.id,
   entityType: 'domain',
@@ -113,7 +113,9 @@ const domainToSearchableItem = (domain: Domain): SearchableItem => ({
   }
 });
 
-const nodeBalToSearchableItem = (nodebal: NodeBalancer): SearchableItem => ({
+export const nodeBalToSearchableItem = (
+  nodebal: NodeBalancer
+): SearchableItem => ({
   label: nodebal.label,
   value: nodebal.id,
   entityType: 'nodebalancer',
@@ -127,7 +129,7 @@ const nodeBalToSearchableItem = (nodebal: NodeBalancer): SearchableItem => ({
   }
 });
 
-const kubernetesClusterToSearchableItem = (
+export const kubernetesClusterToSearchableItem = (
   kubernetesCluster: ExtendedCluster
 ): SearchableItem => ({
   label: kubernetesCluster.label,

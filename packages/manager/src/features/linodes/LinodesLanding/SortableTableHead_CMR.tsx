@@ -28,39 +28,41 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
         </TableSortCell>
         <TableSortCell
           noWrap
-          label="displayStatus"
+          label="_statusPriority"
           direction={order}
-          active={isActive('displayStatus')}
+          active={isActive('_statusPriority')}
           handleClick={handleOrderChange}
         >
           Status
         </TableSortCell>
-        <TableSortCell
-          label="ipv4[0]" // we want to sort by the first ipv4
-          active={isActive('ipv4[0]')}
-          handleClick={handleOrderChange}
-          direction={order}
-        >
-          IP Address
-        </TableSortCell>
-        <TableSortCell
-          label="region"
-          direction={order}
-          active={isActive('region')}
-          handleClick={handleOrderChange}
-          data-qa-sort-region={order}
-        >
-          Region
-        </TableSortCell>
-        <TableSortCell
-          noWrap
-          label="backups:last_successful"
-          direction={order}
-          active={isActive('backups:last_successful')}
-          handleClick={handleOrderChange}
-        >
-          Last Backup
-        </TableSortCell>
+        <Hidden xsDown>
+          <TableSortCell
+            label="ipv4[0]" // we want to sort by the first ipv4
+            active={isActive('ipv4[0]')}
+            handleClick={handleOrderChange}
+            direction={order}
+          >
+            IP Address
+          </TableSortCell>
+          <TableSortCell
+            label="region"
+            direction={order}
+            active={isActive('region')}
+            handleClick={handleOrderChange}
+            data-qa-sort-region={order}
+          >
+            Region
+          </TableSortCell>
+          <TableSortCell
+            noWrap
+            label="backups:last_successful"
+            direction={order}
+            active={isActive('backups:last_successful')}
+            handleClick={handleOrderChange}
+          >
+            Last Backup
+          </TableSortCell>
+        </Hidden>
         <Hidden mdDown>
           <TableCell>Tags</TableCell>
         </Hidden>

@@ -26,14 +26,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 8
   },
   contentOuter: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     '& .MuiChip-root': {
       height: 30,
       borderRadius: 15,
       marginTop: 1,
       marginRight: 10,
       fontSize: '.875rem',
-      letterSpacing: '.5px',
-      minWidth: 120
+      letterSpacing: '.5px'
     }
   }
 }));

@@ -26,6 +26,7 @@ import {
 import useLinodes from 'src/hooks/useLinodes';
 import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
@@ -145,9 +146,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   const MaintenanceText = () => {
     return (
       <>
-        Please consult your{' '}
-        <Link to="/support/tickets?type=open">support tickets</Link> for
-        details.
+        For more information, please see your{' '}
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
   };
@@ -193,7 +193,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     >
       {headCell}
       <TableCell
-        parentColumn="Status"
         className={classNames({
           [classes.statusCell]: true,
           [classes.statusCellMaintenance]: maintenanceStartTime
@@ -225,7 +224,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
                 <strong>Maintenance Scheduled</strong>
               </div>
               <div>
-                {dateTime[0]} at {dateTime[1]}
+                {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}
               </div>
             </div>
             <HelpIcon
@@ -237,27 +236,21 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           </>
         )}
       </TableCell>
-      <TableCell
-        parentColumn="IP Address"
-        className={classes.ipCell}
-        data-qa-ips
-      >
-        <div className={classes.ipCellWrapper}>
-          <IPAddress ips={ipv4} copyRight showCopyOnHover />
-        </div>
-      </TableCell>
-      <TableCell
-        parentColumn="Region"
-        className={classes.regionCell}
-        data-qa-region
-      >
-        <RegionIndicator region={region} />
-      </TableCell>
-      <LinodeRowBackupCell
-        linodeId={id}
-        backupsEnabled={backups.enabled || false}
-        mostRecentBackup={mostRecentBackup || ''}
-      />
+      <Hidden xsDown>
+        <TableCell className={classes.ipCell} data-qa-ips>
+          <div className={classes.ipCellWrapper}>
+            <IPAddress ips={ipv4} copyRight />
+          </div>
+        </TableCell>
+        <TableCell className={classes.regionCell} data-qa-region>
+          <RegionIndicator region={region} />
+        </TableCell>
+        <LinodeRowBackupCell
+          linodeId={id}
+          backupsEnabled={backups.enabled || false}
+          mostRecentBackup={mostRecentBackup || ''}
+        />
+      </Hidden>
       <Hidden mdDown>
         <TagCell
           tags={tags}
