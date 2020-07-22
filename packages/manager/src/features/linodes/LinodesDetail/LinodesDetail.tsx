@@ -70,28 +70,26 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
           <Route path={`${path}/clone`} component={CloneLanding} />
           <Route path={`${path}/migrate`} component={MigrateLanding} />
           <Route
-            render={() => (
-              <React.Fragment>
-                {flags.cmr ? (
-                  // We have separate routing for the version
-                  // rendered on the dashboard, to prevent the url
-                  // from changing when the active tab is changed.
-                  isDashboard ? (
-                    <LinodesDashboardNavigation />
-                  ) : (
-                    <React.Fragment>
-                      <LinodesDetailHeader_CMR />
-                      <LinodesDetailNavigation_CMR />
-                    </React.Fragment>
-                  )
+            render={() =>
+              flags.cmr ? (
+                // We have separate routing for the version
+                // rendered on the dashboard, to prevent the url
+                // from changing when the active tab is changed.
+                isDashboard ? (
+                  <LinodesDashboardNavigation />
                 ) : (
                   <React.Fragment>
-                    <LinodesDetailHeader />
-                    <LinodesDetailNavigation />
+                    <LinodesDetailHeader_CMR />
+                    <LinodesDetailNavigation_CMR />
                   </React.Fragment>
-                )}
-              </React.Fragment>
-            )}
+                )
+              ) : (
+                <React.Fragment>
+                  <LinodesDetailHeader />
+                  <LinodesDetailNavigation />
+                </React.Fragment>
+              )
+            }
           />
         </Switch>
       </React.Suspense>
