@@ -7,7 +7,7 @@ function compareSnapshotsPlugin(args) {
     /* eslint-disable func-names */
     const expectedImage = path.resolve(args.expectedImage);
     const actualImage = path.resolve(args.actualImage);
-//     console.log(`Checking if file exists [${actualImage}, ${expectedImage}]`);
+    //  console.log(`Checking if file exists [${actualImage}, ${expectedImage}]`);
     if (!fs.existsSync(expectedImage)) {
       console.error(`did not find ${expectedImage}`);
       resolve({
