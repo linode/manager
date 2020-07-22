@@ -90,17 +90,29 @@ const markAccountAsLarge = (
   dispatch: ThunkDispatch,
   getState: () => any
 ) => {
-  if (results > LARGE_ACCOUNT_THRESHOLD) {
-    const isMarkedAsLargeAccount =
-      getState().preferences?.data?.is_large_account ?? false;
+  const isMarkedAsLargeAccount =
+    getState().preferences?.data?.is_large_account ?? false;
 
+  if (results >= LARGE_ACCOUNT_THRESHOLD) {
     // If we haven't already marked this account as large, do that here.
+    // Conversely, if it's a large account that has become small, update
+    // preferences to reflect that.
     // @todo remove all this logic once ARB-2091 is merged.
     if (!isMarkedAsLargeAccount) {
       getUserPreferences().then(response => {
         const updatedPreferences = {
           ...response,
           is_large_account: true
+        };
+        dispatch(updateUserPreferences(updatedPreferences));
+      });
+    }
+  } else {
+    if (isMarkedAsLargeAccount) {
+      getUserPreferences().then(response => {
+        const updatedPreferences = {
+          ...response,
+          is_large_account: false
         };
         dispatch(updateUserPreferences(updatedPreferences));
       });
