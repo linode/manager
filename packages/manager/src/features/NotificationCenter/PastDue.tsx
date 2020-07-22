@@ -7,9 +7,11 @@ import IconTextLink from 'src/components/IconTextLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.bg.lightBlue,
     marginBottom: theme.spacing(3),
-    padding: theme.spacing(2)
+    padding: theme.spacing(3) + 1,
+    border: `solid 1px ${theme.color.borderBilling}`,
+    borderRadius: 8,
+    backgroundColor: theme.bg.billingHeader
   },
   iconButton: {
     paddingLeft: 0,
