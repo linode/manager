@@ -22,7 +22,10 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       padding: 14,
-      backgroundColor: theme.color.grey2
+      backgroundColor: theme.color.grey2,
+      '&.narrow': {
+        padding: 8
+      }
     },
     primaryColor: {
       backgroundColor: '#5ad865'
@@ -56,6 +59,7 @@ interface Props {
   className?: string;
   rounded?: boolean;
   overLimit?: boolean;
+  narrow?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -67,6 +71,7 @@ export class BarPercent extends React.PureComponent<CombinedProps, {}> {
       className,
       value,
       valueBuffer,
+      narrow,
       max,
       isFetchingValue,
       loadingText,
@@ -98,7 +103,8 @@ export class BarPercent extends React.PureComponent<CombinedProps, {}> {
           }}
           className={classNames({
             [classes.rounded]: rounded,
-            [classes.overLimit]: overLimit
+            [classes.overLimit]: overLimit,
+            narrow
           })}
         />
       </div>
