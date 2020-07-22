@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Dialog, { DialogProps as _DialogProps } from 'src/components/Dialog';
 import Typography from 'src/components/core/Typography';
+import Link from 'src/components/Link';
 import withPreferences, {
   Props as PreferencesProps
 } from 'src/containers/preferences.container';
@@ -65,9 +66,9 @@ const PreferenceEditor: React.FC<CombinedProps> = props => {
       )}
       <Typography>
         Update user preferences tied to Cloud Manager. See the{' '}
-        <a href="https://developers.linode.com/api/v4/profile-preferences">
+        <Link to="https://developers.linode.com/api/v4/profile-preferences">
           Linode API documentation
-        </a>{' '}
+        </Link>{' '}
         for more information about user preferences.
       </Typography>
       {loading && <Typography>Loading...</Typography>}
