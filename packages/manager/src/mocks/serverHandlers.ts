@@ -128,7 +128,11 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
-    return res(ctx.json({}));
+    return res(ctx.json({ display: 'compact' }));
+  }),
+  rest.put('*/profile/preferences', (req, res, ctx) => {
+    const body = req.body as any;
+    return res(ctx.json({ ...body }));
   }),
   rest.get('*/kubeconfig', (req, res, ctx) => {
     return res(ctx.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
