@@ -36,7 +36,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   labelStatusWrapper: {
     display: 'flex',
-    alignItems: 'center'
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    whiteSpace: 'nowrap'
   },
   actionCell: {
     display: 'flex',
