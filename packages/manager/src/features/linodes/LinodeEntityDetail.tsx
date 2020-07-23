@@ -59,6 +59,7 @@ interface LinodeEntityDetailProps {
   linodeConfigs: Config[];
   numVolumes: number;
   openLinodeResize: (linodeID: number) => void;
+  openTagDrawer: (tags: string[]) => void;
 }
 
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
@@ -71,7 +72,8 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     backups,
     linodeConfigs,
     numVolumes,
-    openLinodeResize
+    openLinodeResize,
+    openTagDrawer
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -134,6 +136,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeCreated={linode.created}
           linodeTags={linode.tags}
           linodeLabel={linode.label}
+          openTagDrawer={openTagDrawer}
         />
       }
     />
@@ -430,7 +433,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       height: 34
     },
     '& td': {
-      lineHeight: 1.4,
+      lineHeight: 1.29,
       fontSize: '0.875rem',
       fontStretch: 'normal',
       letterSpacing: 'normal',
@@ -441,20 +444,24 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       paddingLeft: 10,
       overflowX: 'auto',
       maxWidth: '100%',
-      whiteSpace: 'nowrap'
-    },
-    '& tr:first-child > td': {
+      whiteSpace: 'nowrap',
+      backgroundColor: theme.color.grey7,
       borderBottom: '1px solid white'
     },
-    '& tr:last-child > td': {
-      borderTop: '1px solid white'
-    },
-    '& tr > td:first-child': {
+    '& th': {
       backgroundColor: theme.color.grey5,
-      fontWeight: 'bold'
-    },
-    '& tr > td:not(:first-child)': {
-      backgroundColor: theme.color.grey7
+      borderBottom: '1px solid white',
+      fontWeight: 'bold',
+      fontSize: '0.875rem',
+      color: '#606469',
+      lineHeight: 1.1,
+      width: '102px',
+      whiteSpace: 'nowrap',
+      paddingTop: 8,
+      paddingRight: 10,
+      paddingBottom: 7,
+      paddingLeft: 10,
+      textAlign: 'left'
     }
   },
   accessTableContainer: {
@@ -581,13 +588,16 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
           <Table className={classes.accessTable}>
             <TableBody>
               <TableRow>
-                <TableCell>SSH Access</TableCell>
+                <th scope="row">SSH Access</th>
+
                 <TableCell className={classes.code}>
                   {sshLink(ipv4[0])}
                 </TableCell>
               </TableRow>
+
               <TableRow>
-                <TableCell>LISH via SSH</TableCell>
+                <th scope="row">LISH via SSH</th>
+
                 <TableCell className={classes.code}>
                   {lishLink(username, region, linodeLabel)}
                 </TableCell>
@@ -610,6 +620,7 @@ interface FooterProps {
   linodeCreated: string;
   linodeTags: string[];
   linodeLabel: string;
+  openTagDrawer: (tags: string[]) => void;
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
@@ -644,7 +655,8 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     linodeRegionDisplay,
     linodeId,
     linodeCreated,
-    linodeTags
+    linodeTags,
+    openTagDrawer
   } = props;
 
   const classes = useFooterStyles();
@@ -681,8 +693,13 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   return (
     <>
-      <Grid container direction="row" justify="space-between">
-        <Grid item>
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+      >
+        <Grid item sm={7}>
           <div className={classes.detailsSection}>
             {linodePlan && (
               <Link
@@ -709,13 +726,13 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
             </Typography>
           </div>
         </Grid>
-        <Grid item className={classes.linodeTags}>
+        <Grid item sm={5} className={classes.linodeTags}>
           <TagCell
             width={500}
             tags={linodeTags}
             addTag={addTag}
             deleteTag={deleteTag}
-            listAllTags={() => null}
+            listAllTags={openTagDrawer}
           />
         </Grid>
       </Grid>
