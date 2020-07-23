@@ -7,6 +7,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import IconTextLink from 'src/components/IconTextLink';
+import PaymentDrawer from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer';
 import { formatDate } from 'src/utilities/formatDate';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -48,10 +49,26 @@ interface Props {
 
 export const PastDue: React.FC<Props> = props => {
   const { balance } = props;
+  const classes = useStyles();
+
+  /**
+   * Payment Drawer Handlers
+   */
+  const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState(false);
+  const openPaymentDrawer = React.useCallback(
+    () => setPaymentDrawerOpen(true),
+    []
+  );
+  const closePaymentDrawer = React.useCallback(
+    () => setPaymentDrawerOpen(false),
+    []
+  );
+
+  /**
+   * Request Invoices
+   */
   const [invoiceLoading, setInvoiceLoading] = React.useState(false);
   const [mostRecentInvoice, setMostRecentInvoice] = React.useState<Invoice>();
-  const openPaymentDrawer = () => null;
-  const classes = useStyles();
 
   React.useEffect(() => {
     setInvoiceLoading(true);
@@ -74,39 +91,42 @@ export const PastDue: React.FC<Props> = props => {
     );
   }
   return (
-    <div className={classes.root}>
-      <Typography className={classes.headline}>
-        <Currency quantity={balance} /> Past Due
-      </Typography>
-      <Typography>
-        {mostRecentInvoice && (
-          <>
-            Your payment was due on{' '}
-            {formatDate(mostRecentInvoice.date, { format: 'dd-LLL-yyyy' })}
-            {`. `}
-          </>
-        )}
-        Please make a payment immediately to avoid service disruption.
-      </Typography>
-      <div className={classes.actions}>
-        <IconTextLink
-          SideIcon={CreditCard}
-          text="Make a payment"
-          title="Make a payment"
-          onClick={openPaymentDrawer}
-          className={classes.iconButton}
-        />
+    <>
+      <div className={classes.root}>
+        <Typography className={classes.headline}>
+          <Currency quantity={balance} /> Past Due
+        </Typography>
+        <Typography>
+          {mostRecentInvoice && (
+            <>
+              Your payment was due on{' '}
+              {formatDate(mostRecentInvoice.date, { format: 'dd-LLL-yyyy' })}
+              {`. `}
+            </>
+          )}
+          Please make a payment immediately to avoid service disruption.
+        </Typography>
+        <div className={classes.actions}>
+          <IconTextLink
+            SideIcon={CreditCard}
+            text="Make a payment"
+            title="Make a payment"
+            onClick={openPaymentDrawer}
+            className={classes.iconButton}
+          />
 
-        <IconTextLink
-          SideIcon={InvoiceIcon}
-          text="View most recent invoice"
-          title="View most recent invoice"
-          to={`/account/billing/invoices/${mostRecentInvoice?.id}`}
-          className={classes.iconButton}
-          disabled={!mostRecentInvoice?.id}
-        />
+          <IconTextLink
+            SideIcon={InvoiceIcon}
+            text="View most recent invoice"
+            title="View most recent invoice"
+            to={`/account/billing/invoices/${mostRecentInvoice?.id}`}
+            className={classes.iconButton}
+            disabled={!mostRecentInvoice?.id}
+          />
+        </div>
       </div>
-    </div>
+      <PaymentDrawer open={paymentDrawerOpen} onClose={closePaymentDrawer} />
+    </>
   );
 };
 
