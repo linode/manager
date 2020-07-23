@@ -8,6 +8,7 @@ import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
 import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
+import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useTypes } from 'src/hooks/useTypes';
 import { useImages } from 'src/hooks/useImages';
 import {
@@ -66,30 +67,32 @@ const generateFilter = (text: string, labelFieldName: string = 'label') => {
   };
 };
 
+const params = { page_size: API_MAX_PAGE_SIZE };
+
 const requestEntities = (
   searchText: string,
   types: LinodeType[],
   images: Record<string, Image>
 ) => {
   return Promise.all([
-    getDomains({}, generateFilter(searchText, 'domain')).then(results =>
+    getDomains(params, generateFilter(searchText, 'domain')).then(results =>
       results.data.map(domainToSearchableItem)
     ),
-    getLinodes({}, generateFilter(searchText)).then(results =>
+    getLinodes(params, generateFilter(searchText)).then(results =>
       results.data.map(thisResult => formatLinode(thisResult, types, images))
     ),
     getImages(
-      {},
+      params,
       // Images can't be tagged and we have to filter only private Images
       // Use custom filters for this
       {
         '+and': [{ label: { '+contains': searchText } }, { is_public: false }]
       }
     ).then(results => results.data.map(imageToSearchableItem)),
-    getVolumes({}, generateFilter(searchText)).then(results =>
+    getVolumes(params, generateFilter(searchText)).then(results =>
       results.data.map(volumeToSearchableItem)
     ),
-    getNodeBalancers({}, generateFilter(searchText)).then(results =>
+    getNodeBalancers(params, generateFilter(searchText)).then(results =>
       results.data.map(nodeBalToSearchableItem)
     ),
     getKubernetesClusters().then(results =>

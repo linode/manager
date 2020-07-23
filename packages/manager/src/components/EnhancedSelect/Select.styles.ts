@@ -322,3 +322,177 @@ export const styles = (theme: Theme) =>
       paddingLeft: theme.spacing(1)
     }
   });
+
+// @todo @tdt: Replace the class name based styles above with these. They're (mostly) copied over,
+// as they're needed for one specific case: where a Select component appears on a Dialog. To reduce
+// duplication, we can use these styles only by providing the result of this function as the styles
+// prop on the Select component in ./Select.tsx.
+//
+// We'll need extensive regression testing on existing Selects before removing the classes.
+export const reactSelectStyles = (theme: Theme) => ({
+  valueContainer: (base: any) => ({
+    ...base,
+    width: '100%',
+    '& > div': {
+      width: '100%'
+    },
+    '&.react-select__value-container--is-multi': {
+      '& > div, & .react-select__input': {
+        width: 'auto'
+      }
+    }
+  }),
+  control: (base: any) => ({
+    ...base,
+    borderRadius: 0,
+    boxShadow: 'none',
+    border: `1px solid transparent`,
+    backgroundColor: theme.bg.white,
+    minHeight: theme.spacing(5) - 2,
+    '&:hover': {
+      border: `1px dotted #ccc`,
+      cursor: 'text'
+    },
+    '&--is-focused, &--is-focused:hover': {
+      border: `1px dotted #999`
+    }
+  }),
+  input: (base: any) => ({
+    ...base,
+    width: '100%',
+    color: theme.palette.text.primary
+  }),
+  groupHeading: (base: any) => ({
+    ...base,
+    textTransform: 'initial',
+    fontSize: '1rem',
+    color: theme.color.headline,
+    fontFamily: theme.font.bold,
+    paddingLeft: 10,
+    paddingRight: 10
+  }),
+  group: (base: any) => ({
+    ...base,
+    width: `calc(100% + ${theme.spacing(1) / 2}px)`,
+    '&:last-child': {
+      paddingBottom: 0
+    }
+  }),
+  menu: (base: any) => ({
+    ...base,
+    margin: 0,
+    borderRadius: 0,
+    boxShadow: 'none',
+    border: `1px solid ${theme.color.selectDropDowns}`,
+    maxWidth: 415,
+    zIndex: 100,
+    // The following three rules are different than the class above:
+    width: '101%',
+    left: -1,
+    top: 8
+  }),
+  menuList: (base: any) => ({
+    ...base,
+    padding: theme.spacing(1) / 2,
+    backgroundColor: theme.bg.white,
+    height: '101%',
+    overflow: 'auto',
+    maxHeight: 285,
+    '&::-webkit-scrollbar': {
+      appearance: 'none'
+    },
+    '&::-webkit-scrollbar:vertical': {
+      width: 8
+    },
+    '&::-webkit-scrollbar-thumb': {
+      borderRadius: 8,
+      backgroundColor: '#ccc'
+    }
+  }),
+  option: (base: any, state: any) => {
+    const optionStyles = {
+      ...base,
+      transition: theme.transitions.create(['background-color', 'color']),
+      color: theme.palette.text.primary,
+      backgroundColor: theme.bg.white,
+      cursor: 'pointer',
+      padding: '10px',
+      fontSize: '0.9rem'
+    };
+
+    if (state.isFocused) {
+      return {
+        ...optionStyles,
+        backgroundColor: theme.palette.primary.main,
+        color: 'white'
+      };
+    }
+    if (state.isSelected) {
+      return {
+        ...optionStyles,
+        color: theme.palette.primary.main,
+        backgroundColor: theme.bg.white
+      };
+    }
+    if (state.isDisabled) {
+      return {
+        ...optionStyles,
+        opacity: 0.5,
+        cursor: 'initial'
+      };
+    }
+    return optionStyles;
+  },
+  menuPortal: (base: any) => ({
+    ...base,
+    zIndex: 9999
+  }),
+  singleValue: (base: any) => ({
+    ...base,
+    color: theme.palette.text.primary,
+    overflow: 'hidden',
+    paddingBottom: 1
+  }),
+  indicatorSeparator: (base: any) => ({
+    ...base,
+    display: 'none'
+  }),
+  multiValue: (base: any) => ({
+    ...base,
+    borderRadius: 4,
+    backgroundColor: theme.bg.lightBlue,
+    alignItems: 'center'
+  }),
+  clearIndicator: (base: any) => ({
+    ...base,
+    padding: theme.spacing(1),
+    '& svg': {
+      color: theme.color.grey4,
+      '&:hover': {
+        color: theme.palette.primary.main
+      }
+    }
+  }),
+  multiValueRemove: (base: any) => ({
+    ...base,
+    backgroundColor: 'transparent',
+    borderRadius: '50%',
+    padding: 2,
+    marginLeft: 4,
+    marginRight: 4,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '& svg': {
+      color: theme.palette.text.primary,
+      width: 12,
+      height: 12
+    },
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      '& svg': {
+        color: 'white'
+      }
+    }
+  })
+});
