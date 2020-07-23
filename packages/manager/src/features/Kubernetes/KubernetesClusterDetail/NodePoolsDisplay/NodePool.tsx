@@ -1,8 +1,7 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
 import Collapse from 'src/assets/icons/collapse.svg';
-// Not yet supported by the API:
-// import Recycle from 'src/assets/icons/recycle.svg';
+import Recycle from 'src/assets/icons/recycle.svg';
 import Resize from 'src/assets/icons/resize.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -41,16 +40,16 @@ interface Props {
   typeLabel: string;
   nodes: PoolNodeResponse[];
   openDeletePoolDialog: (poolId: number) => void;
+  openRecycleAllNodesDialog: (poolId: number) => void;
   openRecycleNodeDialog: (linodeId: number, linodeLabel: string) => void;
   handleClickResize: (poolId: number) => void;
-  // Not yet supported by the API:
-  // recycleNodes: (poolId: number) => void;
 }
 
 const NodePool: React.FC<Props> = props => {
   const {
     handleClickResize,
     openDeletePoolDialog,
+    openRecycleAllNodesDialog,
     openRecycleNodeDialog,
     nodes,
     typeLabel,
@@ -71,13 +70,12 @@ const NodePool: React.FC<Props> = props => {
             onClick={() => handleClickResize(poolId)}
             className={classes.icon}
           />
-          {/* Not yet supported by the API: */}
-          {/* <IconTextLink
+          <IconTextLink
             text="Recycle Nodes"
             SideIcon={Recycle}
             title="Recycle Nodes"
-            onClick={() => recycleNodes(poolId)}
-          /> */}
+            onClick={() => openRecycleAllNodesDialog(poolId)}
+          />
           <IconTextLink
             text="Delete Pool"
             SideIcon={Collapse}

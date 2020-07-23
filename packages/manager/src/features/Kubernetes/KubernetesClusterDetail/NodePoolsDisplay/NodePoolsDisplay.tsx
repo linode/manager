@@ -21,6 +21,7 @@ import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
 import NodeDialog from './NodeDialog';
 import NodePool from './NodePool';
 import NodePoolDialog from './NodePoolDialog';
+import RecycleAllNodesDialog from './RecycleAllNodesDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -68,6 +69,7 @@ export interface Props {
   ) => Promise<PoolNodeWithPrice>;
   deletePool: (poolID: number) => Promise<any>;
   addNodePool: (newPool: PoolNodeRequest) => Promise<PoolNodeResponse>;
+  recycleAllNodes: (poolID: number) => Promise<any>;
 }
 
 export const NodePoolsDisplay: React.FC<Props> = props => {
@@ -77,7 +79,8 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     types,
     addNodePool,
     updatePool,
-    deletePool
+    deletePool,
+    recycleAllNodes
   } = props;
 
   const classes = useStyles();
@@ -85,6 +88,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   const { deleteLinode } = useLinodes();
 
   const deletePoolDialog = useDialog<number>(deletePool);
+  const recycleAllNodesDialog = useDialog<number>(recycleAllNodes);
   const recycleNodeDialog = useDialog<number>(deleteLinode);
 
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
@@ -170,6 +174,16 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     });
   };
 
+  const handleRecycleAllNodes = () => {
+    const { dialog, submitDialog, handleError } = recycleAllNodesDialog;
+    if (!dialog.entityID) {
+      return;
+    }
+    return submitDialog(dialog.entityID).catch(err => {
+      handleError(getAPIErrorOrDefault(err, 'Error recycling nodes')[0].reason);
+    });
+  };
+
   /**
    * If the API returns an error when fetching node pools,
    * we want to display this error to the user from the
@@ -237,6 +251,9 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                       nodes={nodes ?? []}
                       handleClickResize={handleOpenResizeDrawer}
                       openDeletePoolDialog={deletePoolDialog.openDialog}
+                      openRecycleAllNodesDialog={
+                        recycleAllNodesDialog.openDialog
+                      }
                       openRecycleNodeDialog={recycleNodeDialog.openDialog}
                     />
                   </div>
@@ -278,6 +295,13 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
               error={recycleNodeDialog.dialog.error}
               loading={recycleNodeDialog.dialog.isLoading}
               label={recycleNodeDialog.dialog.entityLabel}
+            />
+            <RecycleAllNodesDialog
+              open={recycleAllNodesDialog.dialog.isOpen}
+              loading={recycleAllNodesDialog.dialog.isLoading}
+              error={recycleAllNodesDialog.dialog.error}
+              onClose={recycleAllNodesDialog.closeDialog}
+              onSubmit={handleRecycleAllNodes}
             />
           </Grid>
         )}

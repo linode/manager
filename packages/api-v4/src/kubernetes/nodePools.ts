@@ -72,3 +72,14 @@ export const deleteNodePool = (clusterID: number, nodePoolID: number) =>
     setMethod('DELETE'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
   ).then(response => response.data);
+
+/**
+ * recycleAllNodes
+ *
+ * Recycles all nodes from the specified Cluster.
+ */
+export const recycleAllNodes = (clusterID: number, nodePoolID: number) =>
+  Request<{}>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}/recycle`)
+  ).then(response => response.data);
