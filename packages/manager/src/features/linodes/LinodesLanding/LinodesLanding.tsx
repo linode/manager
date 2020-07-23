@@ -41,6 +41,7 @@ import withFeatureFlagConsumer, {
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
+import BackupsCTA_CMR from 'src/features/Backups/BackupsCTA_CMR';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import {
@@ -274,6 +275,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       clickable: true
     };
 
+    const displayBackupsCTA = backupsCTA && !BackupsCtaDismissed.get();
+
     return (
       <React.Fragment>
         {this.props.flags.cmr && (
@@ -301,7 +304,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             className={`${
               backupsCTA && !BackupsCtaDismissed.get() ? 'mlMain' : ''
             }`}
-            xs={!backupsCTA || (backupsCTA && BackupsCtaDismissed.get() && 12)}
+            xs={this.props.flags.cmr || !displayBackupsCTA ? 12 : undefined}
           >
             <DocumentTitleSegment segment="Linodes" />
             <PreferenceToggle<boolean>
@@ -347,6 +350,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                         <React.Fragment>
                           {this.props.flags.cmr ? (
                             <React.Fragment>
+                              {displayBackupsCTA && (
+                                <BackupsCTA_CMR dismissed={this.dismissCTA} />
+                              )}
                               <Grid item xs={12}>
                                 <LandingHeader
                                   title="Linodes"
@@ -631,6 +637,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               }}
             </PreferenceToggle>
           </Grid>
+          {displayBackupsCTA && !this.props.flags.cmr && (
+            <Grid item className="mlSidebar py0">
+              <BackupsCTA dismissed={this.dismissCTA} />
+            </Grid>
+          )}
         </Grid>
         {!!this.state.selectedLinodeID && !!this.state.selectedLinodeLabel && (
           <React.Fragment>
@@ -650,11 +661,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               handleDelete={this.props.deleteLinode}
             />
           </React.Fragment>
-        )}
-        {backupsCTA && !BackupsCtaDismissed.get() && (
-          <Grid item className="mlSidebar py0">
-            <BackupsCTA dismissed={this.dismissCTA} />
-          </Grid>
         )}
       </React.Fragment>
     );
