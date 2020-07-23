@@ -2,6 +2,7 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import useAccount from 'src/hooks/useAccount';
 
 import {
   AccountActivity,
@@ -26,9 +27,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const Notifications: React.FC<{}> = _ => {
   const classes = useStyles();
+  const { account } = useAccount();
+  const balance = account.data?.balance ?? 0;
+
   return (
     <Paper className={classes.root}>
-      <PastDue />
+      {balance > 0 && <PastDue balance={balance} />}
       <Grid container direction="row" justify="space-between">
         <Grid item className={classes.column}>
           <Grid container direction="column">
