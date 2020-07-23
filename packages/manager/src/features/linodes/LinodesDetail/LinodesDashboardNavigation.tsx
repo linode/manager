@@ -11,7 +11,11 @@ import { withLinodeDetailContext } from './linodeDetailContext';
 
 const useStyles = makeStyles(() => ({
   root: {
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    marginTop: 10
+  },
+  innerClass: {
+    padding: 0
   }
 }));
 
@@ -130,6 +134,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
       header={''}
       tabs={tabs}
       initTab={0}
+      innerClass={`${classes.innerClass}`}
     />
   );
 };

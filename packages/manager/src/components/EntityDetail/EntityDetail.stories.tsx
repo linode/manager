@@ -15,6 +15,7 @@ storiesOf('EntityDetail', module).add('Linode', () => (
         numVolumes={2}
         linode={linodeFactory.build()}
         username="linode-user"
+        openTagDrawer={() => null}
         openDeleteDialog={() => null}
         openPowerActionDialog={() => null}
         backups={linodeBackupsFactory.build()}
@@ -29,6 +30,7 @@ storiesOf('EntityDetail', module).add('Linode', () => (
         numVolumes={2}
         linode={linodeFactory.build()}
         username="linode-user"
+        openTagDrawer={() => null}
         openDeleteDialog={() => null}
         openPowerActionDialog={() => null}
         backups={linodeBackupsFactory.build()}
