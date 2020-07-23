@@ -1,8 +1,14 @@
 import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -54,6 +60,8 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
 
   const history = useHistory();
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const goToDomain = () => {
     history.push(`/domains/${id}`);
@@ -89,6 +97,25 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
       }
     ];
 
+    if (matchesSmDown) {
+      baseActions.unshift({
+        title: 'Edit',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          handleEdit;
+        }
+      });
+      baseActions.unshift({
+        title: status === 'active' ? 'Disable' : 'Enable',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onDisableOrEnable(
+            status === 'active' ? 'disable' : 'enable',
+            domain,
+            id
+          );
+        }
+      });
+    }
+
     if (type === 'master') {
       return [
         {
@@ -107,23 +134,25 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <div className="flex-center">
-        <button className={classes.button} onClick={handleEdit}>
-          Edit
-        </button>
-        <button
-          className={classes.button}
-          onClick={() =>
-            onDisableOrEnable(
-              status === 'active' ? 'disable' : 'enable',
-              domain,
-              id
-            )
-          }
-        >
-          {status === 'active' ? 'Disable' : 'Enable'}
-        </button>
-      </div>
+      <Hidden smDown>
+        <div className="flex-center">
+          <button className={classes.button} onClick={handleEdit}>
+            Edit
+          </button>
+          <button
+            className={classes.button}
+            onClick={() =>
+              onDisableOrEnable(
+                status === 'active' ? 'disable' : 'enable',
+                domain,
+                id
+              )
+            }
+          >
+            {status === 'active' ? 'Disable' : 'Enable'}
+          </button>
+        </div>
+      </Hidden>
       <ActionMenu
         createActions={createActions()}
         ariaLabel={`Action menu for Domain ${domain}`}
