@@ -35,7 +35,7 @@ class DeleteIPActions extends React.PureComponent<CombinedProps> {
           onClick={this.handleDeleteIP}
           loading={loading}
         >
-          Yes - delete this sucker
+          Delete IP
         </Button>
       </ActionsPanel>
     );

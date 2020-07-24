@@ -33,6 +33,7 @@ const props: Props = {
   updatePool: jest.fn(),
   deletePool: jest.fn(),
   addNodePool: jest.fn(),
+  recycleAllNodes: jest.fn(),
   clusterLabel: 'a cluster'
 };
 

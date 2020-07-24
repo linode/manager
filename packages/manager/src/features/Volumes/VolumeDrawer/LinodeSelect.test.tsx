@@ -53,7 +53,9 @@ describe('Linode Select', () => {
   });
   it('renders all linodes by default', () => {
     wrapper.setState({ linodes });
-    const { options } = wrapper.find('WithStyles(Select)').props() as any;
+    const { options } = wrapper
+      .find('WithStyles(WithTheme(Select))')
+      .props() as any;
     const regionItems = options
       .filter((option: Item) => option.data)
       .map((option: Item) => option.data.region);
@@ -64,7 +66,9 @@ describe('Linode Select', () => {
   it('disables Linodes in regions that support block storage when prop specified', () => {
     wrapper.setState({ linodes });
     wrapper.setProps({ shouldOnlyDisplayRegionsWithBlockStorage: true });
-    const { options } = wrapper.find('WithStyles(Select)').props() as any;
+    const { options } = wrapper
+      .find('WithStyles(WithTheme(Select))')
+      .props() as any;
     expect(options.length).toBe(2);
   });
 });

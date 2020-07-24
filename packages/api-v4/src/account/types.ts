@@ -125,6 +125,12 @@ export interface NetworkUtilization {
   quota: number;
 }
 
+export interface NetworkTransfer {
+  bytes_in: number;
+  bytes_out: number;
+  bytes_total: number;
+}
+
 export interface CancelAccount {
   survey_link: string;
 }

@@ -1,5 +1,5 @@
 import { API_ROOT } from 'src/constants';
-import { NetworkUtilization } from '../account/types';
+import { NetworkUtilization, NetworkTransfer } from '../account/types';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 import { ResourcePage as Page } from '../types';
 import { Kernel, LinodeType as Type, Stats } from './types';
@@ -25,8 +25,8 @@ export const getLinodeStats = (linodeId: number) =>
  * If the current month, statistics will be retrieved for the past 30 days.
  *
  * @param linodeId { number } The id of the Linode to retrieve stats data for.
- * @param year { number }
- * @param month { number }
+ * @param year { string }
+ * @param month { string }
  */
 export const getLinodeStatsByDate = (
   linodeId: number,
@@ -48,6 +48,27 @@ export const getLinodeStatsByDate = (
 export const getLinodeTransfer = (linodeId: number) =>
   Request<NetworkUtilization>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/transfer`),
+    setMethod('GET')
+  ).then(response => response.data);
+
+/**
+ * getLinodeTransferByDate
+ *
+ * Returns network transfer information for your Linode by date
+ *
+ * @param linodeId { number } The id of the Linode to retrieve network transfer information for.
+ * @param year { string }
+ * @param month { string }
+ */
+export const getLinodeTransferByDate = (
+  linodeId: number,
+  year: string,
+  month: string
+) =>
+  Request<NetworkTransfer>(
+    setURL(
+      `${API_ROOT}/linode/instances/${linodeId}/transfer/${year}/${month}`
+    ),
     setMethod('GET')
   ).then(response => response.data);
 

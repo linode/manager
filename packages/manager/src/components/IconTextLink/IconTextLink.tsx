@@ -87,6 +87,7 @@ export interface Props {
   left?: boolean;
   className?: any;
   to?: string;
+  hideText?: boolean;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
@@ -102,7 +103,8 @@ const IconTextLink: React.FC<FinalProps> = props => {
     title,
     left,
     className,
-    to
+    to,
+    hideText
   } = props;
 
   return (
@@ -129,8 +131,15 @@ const IconTextLink: React.FC<FinalProps> = props => {
         onClick={onClick}
         data-qa-icon-text-link={title}
       >
-        <SideIcon className={classes.icon} />
-        <span className={classes.label}>{text}</span>
+        <SideIcon className={`${classes.icon} ${hideText === true && 'm0'}`} />
+        <span
+          className={classNames({
+            [classes.label]: true,
+            ['visually-hidden']: hideText
+          })}
+        >
+          {text}
+        </span>
       </Button>
     </ConditionalWrapper>
   );
