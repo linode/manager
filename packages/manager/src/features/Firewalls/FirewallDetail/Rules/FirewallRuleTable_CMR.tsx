@@ -2,7 +2,7 @@ import * as classnames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 import Undo from 'src/assets/icons/undo.svg';
-import AddNewLink from 'src/components/AddNewLink';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   error: {
     '& p': { color: theme.color.red }
+  },
+  link: {
+    margin: '8px 0px'
   },
   actionCell: {
     display: 'flex',
@@ -124,6 +127,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
         <AddNewLink
           onClick={openDrawerForCreating}
           label={`Add an ${capitalize(category)} Rule`}
+          className={classes.link}
         />
       </div>
       <OrderBy data={unmodifiedRows} orderBy={'type'} order={'asc'}>
