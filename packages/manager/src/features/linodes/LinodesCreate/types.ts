@@ -63,7 +63,7 @@ export interface WithTypesProps {
  */
 export interface WithTypesRegionsAndImages {
   regionsData: ExtendedRegion[];
-  typesData: ExtendedType[];
+  typesData?: ExtendedType[];
   imagesData: Record<string, Image>;
 }
 

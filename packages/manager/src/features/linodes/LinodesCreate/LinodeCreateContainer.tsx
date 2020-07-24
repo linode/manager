@@ -654,28 +654,28 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             />
           </Grid>
           <LinodeCreate
-            regionDisplayInfo={this.getRegionInfo()}
-            imageDisplayInfo={this.getImageInfo()}
-            typeDisplayInfo={this.getTypeInfo()}
-            backupsMonthlyPrice={this.getBackupsMonthlyPrice()}
+            //regionDisplayInfo={this.getRegionInfo()}
+            // imageDisplayInfo={this.getImageInfo()}
+            // typeDisplayInfo={this.getTypeInfo()}
+            // backupsMonthlyPrice={this.getBackupsMonthlyPrice()}
             updateRegionID={this.setRegionID}
             updateImageID={this.setImageID}
             updateTypeID={this.setTypeID}
-            updateLinodeID={this.setLinodeID}
-            updateDiskSize={this.setDiskSize}
-            selectedUDFs={selectedUDFs}
+            // updateLinodeID={this.setLinodeID}
+            // updateDiskSize={this.setDiskSize}
+            // selectedUDFs={selectedUDFs}
             handleSelectUDFs={this.setUDFs}
             updateStackScript={this.setStackScript}
-            label={this.generateLabel()}
-            updateLabel={this.props.updateCustomLabel}
-            updatePassword={this.setPassword}
-            toggleBackupsEnabled={this.toggleBackupsEnabled}
-            togglePrivateIPEnabled={this.togglePrivateIPEnabled}
-            updateTags={this.setTags}
-            handleSubmitForm={this.submitForm}
-            resetCreationState={this.clearCreationState}
-            setBackupID={this.setBackupID}
-            regionsData={filteredRegions}
+            // label={this.generateLabel()}
+            // updateLabel={this.props.updateCustomLabel}
+            // updatePassword={this.setPassword}
+            // toggleBackupsEnabled={this.toggleBackupsEnabled}
+            // togglePrivateIPEnabled={this.togglePrivateIPEnabled}
+            // updateTags={this.setTags}
+            // handleSubmitForm={this.submitForm}
+            // resetCreationState={this.clearCreationState}
+            // setBackupID={this.setBackupID}
+            regionsData={filteredRegions!}
             regionHelperText={regionHelperText}
             {...restOfProps}
             {...restOfState}
