@@ -48,7 +48,7 @@ const eventsToNotificationItems = (events: Event[]): NotificationItem[] => {
                 <Link to={`${userHref}${event.username}`}>
                   {event.username}
                 </Link>{' '}
-                replied to <Link to="/">{eventLabel}</Link>
+                replied to <Link to={`${entity.url}`}>{eventLabel}</Link>
               </Typography>
             ),
             timeStamp: event.created
@@ -69,13 +69,13 @@ const eventsToNotificationItems = (events: Event[]): NotificationItem[] => {
           };
 
         case 'community_like':
-          const [preamble, postTitle] = eventLabel.split(':');
+          const [likeSummary, postTitle] = eventLabel.split(':');
 
           return {
             id: `community-update-${entity.id}`,
             body: (
               <Typography>
-                {preamble}: <Link to={`${entity.url}`}>{postTitle}</Link>
+                {likeSummary}: <Link to={`${entity.url}`}>{postTitle}</Link>
               </Typography>
             ),
             timeStamp: event.created
