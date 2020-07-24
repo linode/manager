@@ -13,6 +13,18 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  labelWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    wordBreak: 'break-all'
+  },
+  link: {
+    display: 'block',
+    fontFamily: theme.font.bold,
+    lineHeight: '1.125rem',
+    textDecoration: 'underline'
+  },
   ipsWrapper: {
     display: 'inline-flex',
     flexDirection: 'column'
@@ -42,21 +54,19 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = props => {
     <TableRow
       key={id}
       data-qa-nodebalancer-cell={label}
-      rowLink={`/nodebalancers/${id}`}
       className="fade-in-table"
       ariaLabel={label}
     >
       <TableCell parentColumn="Name" data-qa-nodebalancer-label>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <EntityIcon variant="nodebalancer" marginTop={1} />
-          </Grid>
-          <Grid item>
-            <Link to={`/nodebalancers/${id}`} tabIndex={0}>
-              <Typography variant="h3">{label}</Typography>
-            </Link>
-          </Grid>
-        </Grid>
+        <div className={classes.labelWrapper}>
+          <Link
+            to={`/nodebalancers/${id}`}
+            tabIndex={0}
+            className={classes.link}
+          >
+            {label}
+          </Link>
+        </div>
       </TableCell>
       <TableCell parentColumn="Backend Status" data-qa-node-status>
         <span>{nodesUp} up</span> - <span>{nodesDown} down</span>

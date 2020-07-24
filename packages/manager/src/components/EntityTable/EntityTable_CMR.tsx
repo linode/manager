@@ -64,13 +64,13 @@ export const LandingTable: React.FC<Props> = props => {
               data-testid={`${thisCell.label}-header-cell`}
               style={{ width: thisCell.widthPercent }}
             >
-              <Typography
+              <span
                 className={
                   thisCell.visuallyHidden ? classes.hiddenHeaderCell : undefined
                 }
               >
                 {thisCell.label}
-              </Typography>
+              </span>
             </TableCell>
           );
         });

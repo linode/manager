@@ -129,12 +129,12 @@ const headers: HeaderCell[] = [
   {
     label: 'Backend Status',
     dataColumn: 'status',
-    sortable: true,
+    sortable: false,
     widthPercent: 25
   },
   {
     label: 'Transferred',
-    dataColumn: 'transferred',
+    dataColumn: 'transfer:total',
     sortable: true,
     widthPercent: 15
   },
@@ -146,14 +146,14 @@ const headers: HeaderCell[] = [
   },
   {
     label: 'IP Address',
-    dataColumn: 'updated',
+    dataColumn: 'ip',
     sortable: false,
     widthPercent: 5
   },
   {
     label: 'Region',
-    dataColumn: 'updated',
-    sortable: false,
+    dataColumn: 'region',
+    sortable: true,
     widthPercent: 5
   },
   {
@@ -369,31 +369,6 @@ export class NodeBalancersLanding extends React.Component<
                   headers={headers}
                   initialOrder={{ order: 'desc', orderBy: 'label' }}
                 />
-                {/* <OrderBy
-                  data={Object.values(nodeBalancersData)}
-                  order={'desc'}
-                  orderBy={`label`}
-                >
-                  {({
-                    data: orderedData,
-                    handleOrderChange,
-                    order,
-                    orderBy
-                  }) => {
-                    const props = {
-                      data: orderedData,
-                      handleOrderChange,
-                      order,
-                      orderBy,
-                      toggleDialog: this.toggleDialog
-                    };
-                    return nodeBalancersAreGrouped ? (
-                      <ListGroupedNodeBalancers {...props} />
-                    ) : (
-                      <ListNodeBalancers {...props} />
-                    );
-                  }}
-                </OrderBy> */}
               </React.Fragment>
             );
           }}
