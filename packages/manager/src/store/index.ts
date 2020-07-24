@@ -141,17 +141,21 @@ import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState
 } from 'src/store/volumeForm';
-import initialLoad, {
-  defaultState as initialLoadState,
-  State as InitialLoadState
-} from './initialLoad/initialLoad.reducer';
 import featureFlagsLoad, {
   defaultState as featureFlagsLoadState,
   State as FeatureFlagsLoadState
 } from './featureFlagsLoad/featureFlagsLoad.reducer';
+import initialLoad, {
+  defaultState as initialLoadState,
+  State as InitialLoadState
+} from './initialLoad/initialLoad.reducer';
 import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
+import mockFeatureFlags, {
+  defaultMockFeatureFlagState,
+  MockFeatureFlagState
+} from './mockFeatureFlags';
 import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
 import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
 import notifications, {
@@ -236,6 +240,7 @@ export interface ApplicationState {
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
+  mockFeatureFlags: MockFeatureFlagState;
 }
 
 export const defaultState: ApplicationState = {
@@ -257,7 +262,8 @@ export const defaultState: ApplicationState = {
   firewallDevices: defaultFirewallDevicesState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
-  longviewStats: defaultLongviewStatsState
+  longviewStats: defaultLongviewStatsState,
+  mockFeatureFlags: defaultMockFeatureFlagState
 };
 
 /**
@@ -305,7 +311,8 @@ const reducers = combineReducers<ApplicationState>({
   firewallDevices,
   globalErrors,
   longviewClients: longview,
-  longviewStats
+  longviewStats,
+  mockFeatureFlags
 });
 
 const enhancers = compose(

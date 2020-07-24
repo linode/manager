@@ -20,9 +20,6 @@ type ClassNames =
   | 'planCell'
   | 'progressDisplay'
   | 'regionCell'
-  | 'iconTableCell'
-  | 'icon'
-  | 'iconGridCell'
   | 'tagCell';
 
 const styles = (theme: Theme) =>
@@ -33,16 +30,17 @@ const styles = (theme: Theme) =>
       paddingLeft: 0,
       width: '22%',
       textAlign: 'right',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      },
       '&:last-child': {
         paddingRight: 0
+      },
+      [theme.breakpoints.down('sm')]: {
+        width: '5%'
       }
     },
     actionInner: {
       display: 'flex',
       justifyContent: 'flex-end',
+      marginRight: 1,
       '& a': {
         lineHeight: '1rem'
       }
@@ -50,38 +48,12 @@ const styles = (theme: Theme) =>
     bodyRow: {
       height: 'auto'
     },
-    iconTableCell: {
-      [theme.breakpoints.up('md')]: {
-        width: '4%',
-        padding: 4
-      }
-    },
-    icon: {
-      position: 'relative',
-      top: 1,
-      width: 40,
-      height: 40,
-      '& .circle': {
-        fill: theme.bg.offWhiteDT
-      },
-      '& .outerCircle': {
-        stroke: theme.bg.main
-      }
-    },
-    iconGridCell: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: 4
-    },
     progressDisplay: {
       display: 'inline-block'
     },
     statusCell: {
       whiteSpace: 'nowrap',
-      width: '17%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+      width: '17%'
     },
     statusCellMaintenance: {
       [theme.breakpoints.up('md')]: {
@@ -92,10 +64,6 @@ const styles = (theme: Theme) =>
         alignItems: 'center',
         lineHeight: 1.2,
         marginRight: -12,
-        [theme.breakpoints.down('sm')]: {
-          minWidth: 200,
-          justifyContent: 'flex-end'
-        },
         [theme.breakpoints.up('md')]: {
           minWidth: 200
         }
@@ -103,10 +71,7 @@ const styles = (theme: Theme) =>
       '& button': {
         padding: '0 6px',
         position: 'relative',
-        top: 1,
-        [theme.breakpoints.up('md')]: {
-          padding: 6
-        }
+        top: 1
       }
     },
     statusHelpIcon: {
@@ -114,10 +79,7 @@ const styles = (theme: Theme) =>
       top: -2
     },
     ipCell: {
-      width: '14%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+      width: '14%'
     },
     ipCellWrapper: {
       display: 'inline-flex',
@@ -128,17 +90,8 @@ const styles = (theme: Theme) =>
         paddingBottom: 0
       }
     },
-    planCell: {
-      width: '14%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
-    },
     regionCell: {
-      width: '14%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+      width: '14%'
     },
     tagCell: {
       borderRight: 'none'

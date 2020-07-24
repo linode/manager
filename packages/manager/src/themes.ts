@@ -24,6 +24,11 @@ const primaryColors = {
   white: '#222'
 };
 
+const genericStatusPillStyle = {
+  backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  color: '#fff'
+};
+
 const iconCircleAnimation = {
   '& .circle': {
     fill: primaryColors.main,
@@ -80,12 +85,14 @@ const darkThemeOptions = {
     primaryNavPaper: '#3a3f46',
     topMenu: '#33383d',
     billingHeader: '#222',
-    controlHeader: 'rgba(0, 0, 0, 0.2)'
+    controlHeader: 'rgba(0, 0, 0, 0.2)',
+    chipActive: 'rgba(0,0,0,0.9)'
   },
   color: {
     headline: primaryColors.headline,
     red: '#ca0813',
     green: '#00b159',
+    orange: '#ffb31a',
     yellow: '#fecf2f',
     border1: '#000',
     border2: '#111',
@@ -97,7 +104,7 @@ const darkThemeOptions = {
     grey5: 'rgba(0, 0, 0, 0.2)',
     grey7: 'rgba(0, 0, 0, 0.2)',
     grey9: primaryColors.divider,
-    grey10: '#828a97',
+    grey10: '#dbdde1',
     white: '#32363c',
     blue: primaryColors.main,
     black: '#fff',
@@ -123,6 +130,9 @@ const darkThemeOptions = {
   },
   animateCircleIcon: {
     ...iconCircleAnimation
+  },
+  applyStatusPillStyles: {
+    ...genericStatusPillStyle
   },
   notificationList: {
     borderBottom: '1px solid #f4f4f4',

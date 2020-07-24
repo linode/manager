@@ -2,7 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
-import TagDrawer from 'src/components/TagCell/TagDrawer';
+import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import useFlags from 'src/hooks/useFlags';
 import useLinodes from 'src/hooks/useLinodes';
@@ -23,13 +23,6 @@ interface Props {
     linodeConfigs: Config[]
   ) => void;
   openLinodeResize: (linodeID: number) => void;
-}
-
-interface TagDrawerProps {
-  label: string;
-  tags: string[];
-  open: boolean;
-  linodeID: number;
 }
 
 type CombinedProps = Props & PaginationProps;

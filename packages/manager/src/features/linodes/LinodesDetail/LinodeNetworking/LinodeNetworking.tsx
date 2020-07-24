@@ -882,7 +882,7 @@ export const listIPv6InRange = (
       !['ipv6/range', 'ipv6/pool'].includes(thisIP.type) ||
       thisIP.rdns === null
     ) {
-      return;
+      return false;
     }
 
     // The ipaddr.js library throws an if it can't parse an IP address.

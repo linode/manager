@@ -14,6 +14,12 @@ const useStyles = makeStyles((_: Theme) => ({
     '& .react-select__menu': {
       margin: '2px 0 0 0'
     }
+  },
+  inDetailsContext: {
+    width: '415px',
+    flexBasis: '100%',
+    display: 'flex',
+    justifyContent: 'flex-end'
   }
 }));
 
@@ -23,13 +29,14 @@ interface Props {
   onClose?: () => void;
   addTag: (tag: string) => void;
   fixedMenu?: boolean;
+  inDetailsContext?: boolean;
 }
 
 export type CombinedProps = Props;
 
 export const AddTag: React.FC<Props> = props => {
   const classes = useStyles();
-  const { addTag, label, onClose, tags, fixedMenu } = props;
+  const { addTag, label, onClose, tags, fixedMenu, inDetailsContext } = props;
   const [accountTags, setAccountTags] = React.useState<Item<string>[]>([]);
   React.useEffect(() => {
     getTags()
@@ -66,7 +73,8 @@ export const AddTag: React.FC<Props> = props => {
       escapeClearsValue
       className={classNames({
         [classes.root]: true,
-        [classes.hasFixedMenu]: fixedMenu
+        [classes.hasFixedMenu]: fixedMenu,
+        [classes.inDetailsContext]: inDetailsContext
       })}
       onChange={handleAddTag}
       options={tagOptions}
