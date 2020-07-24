@@ -20,6 +20,7 @@ import 'src/request';
 import store from 'src/store';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
+import loadDevTools from './dev-tools/load';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
 const App = React.lazy(() => import('./App'));
@@ -93,22 +94,27 @@ const renderAuthentication = () => (
   </React.Suspense>
 );
 
-ReactDOM.render(
-  navigator.cookieEnabled ? (
-    <Provider store={store}>
-      <Router>
-        <Switch>
-          {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-          <Route exact path="/null" render={renderNull} />
-          <Route render={renderAuthentication} />
-        </Switch>
-      </Router>
-    </Provider>
-  ) : (
-    <CookieWarning />
-  ),
-  document.getElementById('root') as HTMLElement
-);
+// Thanks to https://kentcdodds.com/blog/make-your-own-dev-tools
+//
+// Load dev tools if need be.
+loadDevTools(() => {
+  ReactDOM.render(
+    navigator.cookieEnabled ? (
+      <Provider store={store}>
+        <Router>
+          <Switch>
+            {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+            <Route exact path="/null" render={renderNull} />
+            <Route render={renderAuthentication} />
+          </Switch>
+        </Router>
+      </Provider>
+    ) : (
+      <CookieWarning />
+    ),
+    document.getElementById('root') as HTMLElement
+  );
+});
 
 if (module.hot && !isProductionBuild) {
   module.hot.accept();
