@@ -1,5 +1,7 @@
-import { useFlags } from 'launchdarkly-react-client-sdk';
+import { useFlags as ldUseFlags } from 'launchdarkly-react-client-sdk';
+import { useSelector } from 'react-redux';
 import { FlagSet } from 'src/featureFlags';
+import { ApplicationState } from 'src/store';
 export { useLDClient } from 'launchdarkly-react-client-sdk';
 
 /**
@@ -13,4 +15,20 @@ export { useLDClient } from 'launchdarkly-react-client-sdk';
  *
  * const flags = useFlags();
  */
-export default useFlags as () => FlagSet;
+// export default ldUseFlags as () => FlagSet;
+
+export const useFlags = () => {
+  const flags = ldUseFlags() as FlagSet;
+
+  // Mock flags are set by custom dev tools and saved in local storage, and override real flags.
+  const mockFlags = useSelector(
+    (state: ApplicationState) => state.mockFeatureFlags
+  );
+
+  return {
+    ...flags,
+    ...mockFlags
+  };
+};
+
+export default useFlags;
