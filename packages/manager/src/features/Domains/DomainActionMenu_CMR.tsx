@@ -101,7 +101,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
       baseActions.unshift({
         title: 'Edit',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          handleEdit;
+          handleEdit();
         }
       });
       baseActions.unshift({
