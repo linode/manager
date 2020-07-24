@@ -54,8 +54,9 @@ const RecycleAllNodesDialog: React.FC<Props> = props => {
     >
       {error && <Notice error text={error} />}
       <Typography>
-        Are you sure you want to recycle all nodes? All nodes belonging to the
-        pool will be removed and replaced with fresh nodes.
+        Are you sure you want to recycle the nodes in this pool? All nodes will
+        be deleted and new nodes will be created to replace them. This may take
+        several minutes.
       </Typography>
     </ConfirmationDialog>
   );
