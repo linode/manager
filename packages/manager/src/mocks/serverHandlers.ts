@@ -1,6 +1,7 @@
 import { rest } from 'msw';
 
 import {
+  accountFactory,
   domainFactory,
   imageFactory,
   firewallFactory,
@@ -17,7 +18,8 @@ import {
   linodeTransferFactory,
   nodeBalancerFactory,
   profileFactory,
-  volumeFactory
+  volumeFactory,
+  accountTransferFactory
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -47,7 +49,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/instances', async (req, res, ctx) => {
-    const linodes = linodeFactory.buildList(10);
+    const linodes = linodeFactory.buildList(1);
     return res(ctx.json(makeResourcePage(linodes)));
   }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
@@ -127,7 +129,11 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
-    return res(ctx.json({}));
+    return res(ctx.json({ display: 'compact' }));
+  }),
+  rest.put('*/profile/preferences', (req, res, ctx) => {
+    const body = req.body as any;
+    return res(ctx.json({ ...body }));
   }),
   rest.get('*/kubeconfig', (req, res, ctx) => {
     return res(ctx.json({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' }));
@@ -135,5 +141,13 @@ export const handlers = [
   rest.get('*invoices/:invoiceId/items', (req, res, ctx) => {
     const items = invoiceItemFactory.buildList(10);
     return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
+  }),
+  rest.get('*/account', (req, res, ctx) => {
+    const account = accountFactory.build({ balance: 50 });
+    return res(ctx.json(account));
+  }),
+  rest.get('*/account/transfer', (req, res, ctx) => {
+    const transfer = accountTransferFactory.build();
+    return res(ctx.json(transfer));
   })
 ];

@@ -85,7 +85,8 @@ const darkThemeOptions = {
     primaryNavPaper: '#3a3f46',
     topMenu: '#33383d',
     billingHeader: '#222',
-    controlHeader: 'rgba(0, 0, 0, 0.2)'
+    controlHeader: 'rgba(0, 0, 0, 0.2)',
+    chipActive: 'rgba(0,0,0,0.9)'
   },
   color: {
     headline: primaryColors.headline,
