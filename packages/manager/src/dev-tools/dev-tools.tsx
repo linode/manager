@@ -5,6 +5,8 @@ import ReactDOM from 'react-dom';
 import FeatureFlagTool from './FeatureFlagTool';
 import store from 'src/store';
 import { Provider } from 'react-redux';
+import MockDataTool from './MockDataTool';
+import { MOCK_SERVICE_WORKER } from 'src/constants';
 
 function install() {
   (window as any).devToolsEnabled = true;
@@ -24,6 +26,11 @@ function install() {
         <div className="tools">
           <LocalDevTools />
           <FeatureFlagTool />
+          {MOCK_SERVICE_WORKER && (
+            <div style={{ marginTop: 8 }}>
+              <MockDataTool />
+            </div>
+          )}
         </div>
       </div>
     );

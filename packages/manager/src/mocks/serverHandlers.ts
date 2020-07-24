@@ -1,4 +1,4 @@
-import { rest } from 'msw';
+import { rest, RequestHandler } from 'msw';
 
 import {
   accountFactory,
@@ -23,6 +23,7 @@ import {
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
+import { MockDataOption } from 'src/store/mockData';
 
 export const makeResourcePage = (
   e: any[],
@@ -151,3 +152,15 @@ export const handlers = [
     return res(ctx.json(transfer));
   })
 ];
+
+export const mockDataHandlers: Record<
+  MockDataOption,
+  (count: number) => RequestHandler
+> = {
+  linode: count =>
+    rest.get('*/instances', async (req, res, ctx) => {
+      console.log('COUNT: ', count);
+      const linodes = linodeFactory.buildList(count);
+      return res(ctx.json(makeResourcePage(linodes)));
+    })
+};

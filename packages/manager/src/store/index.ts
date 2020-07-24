@@ -156,6 +156,7 @@ import mockFeatureFlags, {
   defaultMockFeatureFlagState,
   MockFeatureFlagState
 } from './mockFeatureFlags';
+import mockData, { defaultMockDataState, MockDataState } from './mockData';
 import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
 import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
 import notifications, {
@@ -241,6 +242,7 @@ export interface ApplicationState {
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
   mockFeatureFlags: MockFeatureFlagState;
+  mockData: MockDataState;
 }
 
 export const defaultState: ApplicationState = {
@@ -263,7 +265,8 @@ export const defaultState: ApplicationState = {
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
-  mockFeatureFlags: defaultMockFeatureFlagState
+  mockFeatureFlags: defaultMockFeatureFlagState,
+  mockData: defaultMockDataState
 };
 
 /**
@@ -312,7 +315,8 @@ const reducers = combineReducers<ApplicationState>({
   globalErrors,
   longviewClients: longview,
   longviewStats,
-  mockFeatureFlags
+  mockFeatureFlags,
+  mockData
 });
 
 const enhancers = compose(
