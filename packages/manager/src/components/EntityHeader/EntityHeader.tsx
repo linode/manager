@@ -26,14 +26,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 8
   },
   contentOuter: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     '& .MuiChip-root': {
       height: 30,
       borderRadius: 15,
       marginTop: 1,
       marginRight: 10,
       fontSize: '.875rem',
-      letterSpacing: '.5px',
-      minWidth: 120
+      letterSpacing: '.5px'
     }
   }
 }));
@@ -57,7 +59,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
         [classes.rootHasBreadcrumb]: Boolean(parentLink)
       })}
     >
-      <Grid item xs={Boolean(actions) ? 6 : 12}>
+      <Grid item xs={Boolean(actions) ? 7 : 12}>
         <Grid container direction="row" alignItems="center">
           <HeaderBreadCrumb
             iconType={iconType}
@@ -79,7 +81,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
         </Grid>
       </Grid>
       {Boolean(actions) && (
-        <Grid container item xs={6} justify="flex-end" alignItems="center">
+        <Grid container item xs={5} justify="flex-end" alignItems="center">
           {actions}
         </Grid>
       )}

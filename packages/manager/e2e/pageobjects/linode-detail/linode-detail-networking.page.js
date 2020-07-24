@@ -42,7 +42,7 @@ class Networking extends Page {
     return $('[data-qa-ip-transfer-save]');
   }
   get ipTransferCancel() {
-    return $('[data-qa-ip-transfer-cancel]');
+    return $('[data-qa-ip-transfer-reset]');
   }
   get addPrivateIp() {
     return this.addIcon('Add Private IPv4');
@@ -160,24 +160,18 @@ class Networking extends Page {
     // IPv4 Elems display
     expect(this.ipv4Subheading.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.ipv4Subheading.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.ipv4Subheading.selector}" selector`
       )
       .toBe('IPv4');
     // IPv6 Elems display
     expect(this.ipv6Subheading.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.ipv6Subheading.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.ipv6Subheading.selector}" selector`
       )
       .toBe('IPv6');
     expect(this.networkingActionsSubheading.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.networkingActionsSubheading.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.networkingActionsSubheading.selector}" selector`
       )
       .toContain('IP Transfer');
     expect(this.ips.length)
@@ -233,30 +227,22 @@ class Networking extends Page {
       .toBe('Details for IP');
     expect(this.configIpHeading.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.configIpHeading.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.configIpHeading.selector}" selector`
       )
       .toContain('Address');
     expect(this.configGatewayHeading.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.configGatewayHeading.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.configGatewayHeading.selector}" selector`
       )
       .toContain('Gateway');
     expect(this.configSubnetHeading.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.configSubnetHeading.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.configSubnetHeading.selector}" selector`
       )
       .toContain('Subnet Mask');
     expect(this.configTypeHeading.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.configTypeHeading.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.configTypeHeading.selector}" selector`
       )
       .toContain('Type');
     expect(this.configType.getText())
@@ -266,9 +252,7 @@ class Networking extends Page {
       .toBe(ipType);
     expect(this.configPublicHeading.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.configPublicHeading.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.configPublicHeading.selector}" selector`
       )
       .toContain('Public');
     expect(this.configPublic.isDisplayed())
@@ -278,9 +262,7 @@ class Networking extends Page {
       .toBe(true);
     expect(this.configRegionHeading.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.configRegionHeading.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.configRegionHeading.selector}" selector`
       )
       .toContain('Region');
     expect(this.configRegion.isDisplayed())
@@ -297,9 +279,7 @@ class Networking extends Page {
         .toMatch(ipv4Regex);
       expect(this.configGateway.getText())
         .withContext(
-          `${assertLog.incorrectText} for "${
-            this.configGateway.selector
-          }" selector`
+          `${assertLog.incorrectText} for "${this.configGateway.selector}" selector`
         )
         .toMatch(ipv4Regex);
     }
@@ -311,9 +291,7 @@ class Networking extends Page {
         .toMatch(ipv6Regex);
       expect(this.configGateway.getText())
         .withContext(
-          `${assertLog.incorrectText} for "${
-            this.configGateway.selector
-          }" selector`
+          `${assertLog.incorrectText} for "${this.configGateway.selector}" selector`
         )
         .toMatch(ipv6Regex);
     }
@@ -335,9 +313,7 @@ class Networking extends Page {
     if (ipType === 'ipv4') {
       expect(this.drawerTitle.getText())
         .withContext(
-          `${assertLog.incorrectText} for "${
-            this.drawerTitle.selector
-          }" selector`
+          `${assertLog.incorrectText} for "${this.drawerTitle.selector}" selector`
         )
         .toBe('Allocate Public IPv4 Address');
       expect(this.serviceNotice.isDisplayed())
@@ -354,9 +330,7 @@ class Networking extends Page {
     if (ipType === 'ipv6') {
       expect(this.drawerTitle.getText())
         .withContext(
-          `${assertLog.incorrectText} for "${
-            this.drawerTitle.selector
-          }" selector`
+          `${assertLog.incorrectText} for "${this.drawerTitle.selector}" selector`
         )
         .toBe('Allocate IPv6 Ranges');
     }
@@ -367,9 +341,7 @@ class Networking extends Page {
       .toBe(true);
     expect(this.serviceNotice.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.serviceNotice.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.serviceNotice.selector}" selector`
       )
       .toMatch(/\w/gi);
   }
@@ -401,9 +373,7 @@ class Networking extends Page {
       .toBe(true);
     expect(this.domainName.$('input').getAttribute('placeholder'))
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.domainName.selector
-        } input" selector`
+        `${assertLog.incorrectText} for "${this.domainName.selector} input" selector`
       )
       .toBe('Enter a domain name');
     expect(this.submit.isDisplayed())

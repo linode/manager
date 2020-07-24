@@ -1,4 +1,5 @@
 import { Profile } from '@linode/api-v4/lib/profile';
+import { getQueryParam } from 'src/utilities/queryParams';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -17,6 +18,7 @@ import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
+import PreferenceEditor from './PreferenceEditor';
 
 type ClassNames = 'root' | 'title' | 'label';
 
@@ -36,17 +38,28 @@ const styles = (theme: Theme) =>
 
 interface State {
   submitting: boolean;
+  preferenceEditorOpen: boolean;
 }
 
 type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
 class ProfileSettings extends React.Component<CombinedProps, State> {
   state: State = {
-    submitting: false
+    submitting: false,
+    preferenceEditorOpen: false
   };
+
+  componentDidMount() {
+    if (getQueryParam(window.location.search, 'preferenceEditor') === 'true') {
+      this.setState({ preferenceEditorOpen: true });
+    }
+  }
 
   render() {
     const { classes, status } = this.props;
+
+    const preferenceEditorMode =
+      getQueryParam(window.location.search, 'preferenceEditor') === 'true';
 
     return (
       <Paper className={classes.root}>
@@ -68,6 +81,12 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
+        {preferenceEditorMode && (
+          <PreferenceEditor
+            open={this.state.preferenceEditorOpen}
+            onClose={() => this.setState({ preferenceEditorOpen: false })}
+          />
+        )}
       </Paper>
     );
   }

@@ -13,6 +13,7 @@ export interface AccountManagementProps {
   _hasGrant: (grant: GlobalGrantTypes) => boolean;
   _hasAccountAccess: boolean;
   _isManagedAccount: boolean;
+  _isLargeAccount: boolean;
 }
 
 export const useAccountManagement = () => {
@@ -28,6 +29,15 @@ export const useAccountManagement = () => {
     (state: ApplicationState) => state.__resources.accountSettings
   );
 
+  /**
+   * @todo After ARB-2091 is merged, update this to something like:
+   * Object.values(state.accountSummary)
+   *   .some(thisEntity => thisEntity > LARGE_ACCOUNT_THRESHOLD)
+   */
+  const _isLargeAccount = useSelector(
+    (state: ApplicationState) =>
+      state.preferences.data?.is_large_account ?? false
+  );
   const _isRestrictedUser = profile.data?.restricted ?? false;
 
   const _hasGrant = (grant: GlobalGrantTypes) =>
@@ -44,7 +54,8 @@ export const useAccountManagement = () => {
     _isRestrictedUser,
     _hasGrant,
     _hasAccountAccess,
-    _isManagedAccount
+    _isManagedAccount,
+    _isLargeAccount
   };
 };
 

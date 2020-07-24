@@ -26,7 +26,6 @@ import TableCell from 'src/components/TableCell/TableCell_CMR.tsx';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
-import TableRowLoading from 'src/components/TableRowLoading/TableRowLoading_CMR';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -53,7 +52,13 @@ type ClassNames =
   | 'headline'
   | 'addNewWrapper'
   | 'labelCell'
-  | 'tableCell';
+  | 'tableCell'
+  | 'labelColumn'
+  | 'vmColumn'
+  | 'memoryColumn'
+  | 'kernelColumn'
+  | 'rootDeviceColumn'
+  | 'actionsColumn';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -84,6 +89,24 @@ const styles = (theme: Theme) =>
     tableCell: {
       borderRight: `1px solid ${theme.palette.divider}`,
       fontWeight: 'bold'
+    },
+    labelColumn: {
+      width: '20%'
+    },
+    vmColumn: {
+      width: '9%'
+    },
+    kernelColumn: {
+      width: '25%'
+    },
+    memoryColumn: {
+      width: '10%'
+    },
+    rootDeviceColumn: {
+      width: '20%'
+    },
+    actionsColumn: {
+      width: '10%'
     }
   });
 
@@ -451,6 +474,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                           direction={order}
                           handleClick={handleOrderChange}
                           data-qa-config-label-header
+                          className={classes.labelColumn}
                         >
                           <strong>Label</strong>
                         </TableSortCell>
@@ -460,24 +484,34 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                           direction={order}
                           handleClick={handleOrderChange}
                           data-qa-virt-mode-header
+                          className={classes.vmColumn}
                         >
                           <strong>VM Mode</strong>
                         </TableSortCell>
-                        <TableCell className={classes.tableCell}>
+                        <TableCell
+                          className={`${classes.tableCell} ${classes.kernelColumn}`}
+                        >
                           Kernel
                         </TableCell>
-                        <TableCell className={classes.tableCell}>
+                        <TableCell
+                          className={`${classes.tableCell} ${classes.memoryColumn}`}
+                        >
                           Memory Limit
                         </TableCell>
-                        <TableCell className={classes.tableCell}>
+                        <TableCell
+                          className={`${classes.tableCell} ${classes.rootDeviceColumn}`}
+                        >
                           Root Device
                         </TableCell>
-                        <TableCell />
+                        <TableCell className={classes.actionsColumn} />
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       <TableContentWrapper
-                        loading={configsLoading && configsLastUpdated === 0}
+                        loading={
+                          (configsLoading && configsLastUpdated === 0) ||
+                          this.state.kernelsLoading
+                        }
                         lastUpdated={configsLastUpdated}
                         length={paginatedData.length}
                         error={configsError}
@@ -486,9 +520,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                           const kernel = this.state.kernels.find(
                             kernelName => kernelName.id === thisConfig.kernel
                           );
-                          return this.state.kernelsLoading ? (
-                            <TableRowLoading colSpan={6} />
-                          ) : (
+                          return (
                             <ConfigRow
                               key={`config-row-${thisConfig.id}`}
                               config={thisConfig}

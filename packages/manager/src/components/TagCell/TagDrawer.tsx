@@ -22,6 +22,13 @@ interface Props {
   onClose: () => void;
 }
 
+export interface TagDrawerProps {
+  label: string;
+  tags: string[];
+  open: boolean;
+  linodeID: number;
+}
+
 export type CombinedProps = Props;
 
 export const TagDrawer: React.FC<Props> = props => {
