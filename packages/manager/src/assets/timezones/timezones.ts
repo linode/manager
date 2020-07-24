@@ -708,7 +708,7 @@ export default [
   {
     label: 'Brasilia Time',
     name: 'America/Sao_Paulo',
-    offset: -2
+    offset: -3
   },
   {
     label: 'Fernando de Noronha Standard Time',
