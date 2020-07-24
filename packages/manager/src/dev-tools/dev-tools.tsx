@@ -9,11 +9,7 @@ import { Provider } from 'react-redux';
 function install() {
   (window as any).devToolsEnabled = true;
   // Load local dev tools, untracked by Git.
-  const requireDevToolsLocal = require.context(
-    './',
-    false,
-    /dev-tools\.local\.ts/
-  );
+  const requireDevToolsLocal = require.context('./', false, /\.local\.tsx/);
   const local = requireDevToolsLocal.keys()[0];
   let LocalDevTools: any;
   if (local) {
