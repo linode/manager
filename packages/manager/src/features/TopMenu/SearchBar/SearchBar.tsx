@@ -180,6 +180,11 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   };
 
   const guidanceText = () => {
+    if (_isLargeAccount) {
+      // This fancy stuff won't work if we're using API
+      // based search; don't confuse users by displaying this.
+      return undefined;
+    }
     return (
       <>
         <b>By field:</b> “tag:my-app” “label:my-linode” &nbsp;&nbsp;
