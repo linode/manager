@@ -19,6 +19,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   '& .MuiTableCell-head': {
     borderBottom: 0
+  },
+  thead: {
+    '& p': {
+      fontFamily: theme.font.bold,
+      fontWeight: 500
+    }
+  },
+  hidden: {
+    display: 'none'
   }
 }));
 
@@ -54,6 +63,7 @@ export const LandingTable: React.FC<Props> = props => {
               direction={order}
               handleClick={handleOrderChange}
               style={{ width: thisCell.widthPercent }}
+              className={thisCell.hidden ? classes.hidden : ''}
               data-testid={`${thisCell.label}-header-cell`}
             >
               {thisCell.label}
@@ -62,6 +72,9 @@ export const LandingTable: React.FC<Props> = props => {
             <TableCell
               key={thisCell.dataColumn}
               data-testid={`${thisCell.label}-header-cell`}
+              className={`${classes.thead} ${
+                thisCell.hidden ? classes.hidden : ''
+              }`}
               style={{ width: thisCell.widthPercent }}
             >
               <Typography
@@ -109,6 +122,7 @@ export interface HeaderCell {
   dataColumn: string;
   widthPercent: number;
   visuallyHidden?: boolean;
+  hidden?: boolean;
 }
 
 export default LandingTable;
