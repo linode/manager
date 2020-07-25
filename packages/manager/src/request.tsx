@@ -15,6 +15,7 @@ import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
 import { API_ROOT, LOGIN_ROOT } from 'src/constants';
+import { isDevToolEnabled } from './dev-tools/load';
 
 const handleSuccess: <T extends AxiosResponse<any>>(
   response: T
@@ -118,9 +119,22 @@ baseRequest.interceptors.request.use(config => {
    * override the base URL with the one we have defined in the .env file
    */
   if (config.url && config.baseURL) {
-    finalUrl = config.baseURL.includes('login')
+    // todo: clean this.
+
+    const isLogin = config.baseURL.includes('login');
+
+    finalUrl = isLogin
       ? config.url.replace(config.baseURL, LOGIN_ROOT)
       : config.url.replace(config.baseURL, API_ROOT);
+
+    const devToolsAPIRoot = window.localStorage['dev-tools-api-root'];
+    const devToolsLoginRoot = window.localStorage['dev-tools-login-root'];
+
+    if (isDevToolEnabled() && isLogin && devToolsLoginRoot) {
+      finalUrl = config.url.replace(config.baseURL, devToolsLoginRoot);
+    } else if (isDevToolEnabled() && devToolsAPIRoot) {
+      finalUrl = config.url.replace(config.baseURL, devToolsAPIRoot);
+    }
   }
 
   return {
