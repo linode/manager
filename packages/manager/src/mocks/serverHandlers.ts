@@ -23,7 +23,7 @@ import {
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
-import { MockDataOption } from 'src/store/mockData';
+import { MockData } from 'src/dev-tools/mockDataController';
 
 export const makeResourcePage = (
   e: any[],
@@ -153,13 +153,13 @@ export const handlers = [
   })
 ];
 
+// Generator functions for dynamic handlers, in use by mock data dev tools.
 export const mockDataHandlers: Record<
-  MockDataOption,
+  keyof MockData,
   (count: number) => RequestHandler
 > = {
   linode: count =>
     rest.get('*/instances', async (req, res, ctx) => {
-      console.log('COUNT: ', count);
       const linodes = linodeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(linodes)));
     })

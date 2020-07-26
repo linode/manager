@@ -1,67 +1,47 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
-import { Dispatch } from 'src/hooks/types';
-import { useSet } from 'src/hooks/useSet';
-import {
-  addMockData,
-  MockDataOption,
-  removeMockData
-} from 'src/store/mockData';
+import { MockData, mockDataController } from './mockDataController';
 
-const options: Item<MockDataOption>[] = [{ label: 'Linodes', value: 'linode' }];
+const options: { label: string; key: keyof MockData }[] = [
+  { label: 'Linodes', key: 'linode' }
+];
 
 const MockDataTool: React.FC<{}> = () => {
-  const dispatch: Dispatch = useDispatch();
-  const [values, setValues] = React.useState<Record<MockDataOption, number>>({
-    linode: 1
-  });
-  const checked = useSet();
+  // Keep track of mockData state locally to this component, so it can be referenced during render.
+  const [localMockData, setLocalMockData] = React.useState<MockData>(
+    mockDataController.mockData
+  );
 
-  const handleInputChange = (key: MockDataOption, value: number) => {
-    setValues(prevValues => ({
-      ...prevValues,
-      [key]: value
-    }));
-    dispatch(addMockData({ key, value }));
+  const handleInputChange = (key: keyof MockData, quantity: number) => {
+    const newMockData: MockData = { [key]: { mocked: true, quantity } };
+    mockDataController.updateMockData(newMockData);
   };
+
+  React.useEffect(() => {
+    // Subscribe to mockData changes so this components local copy can be updated.
+    const token = mockDataController.subscribe(newMockData => {
+      setLocalMockData(newMockData);
+    });
+    return () => mockDataController.unsubscribe(token);
+  }, []);
+
+  // @todo: The MockData interface has a `template` field, which could be used to allow entry of
+  // specific fields, like label, region, etc. (via <input /> or even JSON entry?)
 
   return (
     <div>
       {options.map(thisOption => {
         return (
-          <div key={thisOption.value} style={{ marginTop: 4 }}>
-            <label>
-              Mock {thisOption.label}
-              <input
-                type="checkbox"
-                checked={checked.has(thisOption.value)}
-                onChange={e => {
-                  if (e.target.checked) {
-                    checked.add(thisOption.value);
-                    dispatch(
-                      addMockData({
-                        key: thisOption.value,
-                        value: values[thisOption.value]
-                      })
-                    );
-                  } else {
-                    checked.delete(thisOption.value);
-                    dispatch(removeMockData(thisOption.value));
-                  }
-                }}
-              />
-            </label>
+          <div key={thisOption.key} style={{ marginTop: 4 }}>
+            <label>Mock {thisOption.label}</label>
             <input
               style={{ marginLeft: 4 }}
-              disabled={!checked.has(thisOption.value)}
               type="number"
               min="0"
               onChange={e =>
-                handleInputChange(thisOption.value, Number(e.target.value))
+                handleInputChange(thisOption.key, Number(e.target.value))
               }
-              value={values[thisOption.value]}
+              value={localMockData[thisOption.key]?.quantity ?? 0}
             />
           </div>
         );
