@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
 import withFirewalls, {
@@ -15,9 +14,6 @@ import FirewallRow from './FirewallRow_CMR';
 type CombinedProps = RouteComponentProps<{}> & FireProps;
 
 const FirewallLanding: React.FC<CombinedProps> = props => {
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-
   const { deleteFirewall, disableFirewall, enableFirewall } = props;
 
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
@@ -76,14 +72,14 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
       dataColumn: 'rules',
       sortable: false,
       widthPercent: 25,
-      hidden: matchesSmDown
+      hideOnMobile: true
     },
     {
       label: 'Linodes',
       dataColumn: 'devices',
       sortable: false,
       widthPercent: 25,
-      hidden: matchesSmDown
+      hideOnMobile: true
     },
     {
       label: 'Action Menu',

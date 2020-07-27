@@ -7,6 +7,7 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag_CMR';
 import ListEntities from './ListEntities_CMR';
 import { EntityTableRow } from './types';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
@@ -25,9 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontFamily: theme.font.bold,
       fontWeight: 500
     }
-  },
-  hidden: {
-    display: 'none'
   }
 }));
 
@@ -56,25 +54,56 @@ export const LandingTable: React.FC<Props> = props => {
       {({ data: orderedData, handleOrderChange, order, orderBy }) => {
         const headerCells = headers.map((thisCell: HeaderCell) => {
           return thisCell.sortable ? (
-            <TableSortCell
-              key={thisCell.dataColumn}
-              active={orderBy === thisCell.dataColumn}
-              label={thisCell.dataColumn}
-              direction={order}
-              handleClick={handleOrderChange}
-              style={{ width: thisCell.widthPercent }}
-              className={thisCell.hidden ? classes.hidden : ''}
-              data-testid={`${thisCell.label}-header-cell`}
-            >
-              {thisCell.label}
-            </TableSortCell>
+            thisCell.hideOnMobile ? (
+              <Hidden xsDown>
+                <TableSortCell
+                  key={thisCell.dataColumn}
+                  active={orderBy === thisCell.dataColumn}
+                  label={thisCell.dataColumn}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  style={{ width: thisCell.widthPercent }}
+                  data-testid={`${thisCell.label}-header-cell`}
+                >
+                  {thisCell.label}
+                </TableSortCell>
+              </Hidden>
+            ) : (
+              <TableSortCell
+                key={thisCell.dataColumn}
+                active={orderBy === thisCell.dataColumn}
+                label={thisCell.dataColumn}
+                direction={order}
+                handleClick={handleOrderChange}
+                style={{ width: thisCell.widthPercent }}
+                data-testid={`${thisCell.label}-header-cell`}
+              >
+                {thisCell.label}
+              </TableSortCell>
+            )
+          ) : thisCell.hideOnMobile ? (
+            <Hidden xsDown>
+              <TableCell
+                key={thisCell.dataColumn}
+                data-testid={`${thisCell.label}-header-cell`}
+                style={{ width: thisCell.widthPercent }}
+              >
+                <Typography
+                  className={
+                    thisCell.visuallyHidden
+                      ? classes.hiddenHeaderCell
+                      : undefined
+                  }
+                >
+                  {thisCell.label}
+                </Typography>
+              </TableCell>
+            </Hidden>
           ) : (
             <TableCell
               key={thisCell.dataColumn}
               data-testid={`${thisCell.label}-header-cell`}
-              className={`${classes.thead} ${
-                thisCell.hidden ? classes.hidden : ''
-              }`}
+              className={classes.thead}
               style={{ width: thisCell.widthPercent }}
             >
               <Typography
@@ -122,7 +151,7 @@ export interface HeaderCell {
   dataColumn: string;
   widthPercent: number;
   visuallyHidden?: boolean;
-  hidden?: boolean;
+  hideOnMobile?: boolean;
 }
 
 export default LandingTable;

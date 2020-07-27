@@ -74,7 +74,7 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
         {capitalize(status)}
       </TableCell>
-      <Hidden smDown>
+      <Hidden xsDown>
         <TableCell>{getRuleString(count)}</TableCell>
         <TableCell>
           {getLinodesCellString(devices, loading, error.read)}
