@@ -33,6 +33,7 @@ import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
 import useDomains from 'src/hooks/useDomains';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 type NavEntity =
   | 'Linodes'
@@ -87,6 +88,12 @@ export const PrimaryNav: React.FC<Props> = props => {
     account
   } = useAccountManagement();
 
+  const showFirewalls = isFeatureEnabled(
+    'Cloud Firewall',
+    Boolean(flags.firewalls),
+    account?.data?.capabilities ?? []
+  );
+
   const primaryLinks: PrimaryLink[] = React.useMemo(
     () => [
       {
@@ -125,7 +132,7 @@ export const PrimaryNav: React.FC<Props> = props => {
       },
 
       {
-        hide: !flags.firewalls,
+        hide: !showFirewalls,
         display: 'Firewalls',
         href: '/firewalls',
         icon: <Firewall />
@@ -174,7 +181,7 @@ export const PrimaryNav: React.FC<Props> = props => {
       }
     ],
     [
-      flags.firewalls,
+      showFirewalls,
       _isManagedAccount,
       account.lastUpdated,
       _hasAccountAccess,
