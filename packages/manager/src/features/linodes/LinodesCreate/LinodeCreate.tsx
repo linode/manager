@@ -532,31 +532,30 @@ export class LinodeCreate extends React.PureComponent<
             updateFor={[tags, label, errors]}
           />
           {/* Hide for backups and clone */}
-          {this.props.createType !== 'fromBackup' &&
-            this.props.createType !== 'fromLinode' && (
-              <AccessPanel
-                data-qa-access-panel
-                disabled={!this.props.selectedImageID}
-                disabledReason={
-                  !this.props.selectedImageID
-                    ? 'You must select an image to set a root password'
-                    : ''
-                }
-                error={hasErrorFor.root_pass}
-                sshKeyError={sshError}
-                password={this.props.password}
-                handleChange={this.props.updatePassword}
-                updateFor={[
-                  this.props.password,
-                  errors,
-                  sshError,
-                  userSSHKeys,
-                  this.props.selectedImageID
-                ]}
-                users={userSSHKeys}
-                requestKeys={requestKeys}
-              />
-            )}
+          {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (
+            <AccessPanel
+              data-qa-access-panel
+              disabled={!this.props.selectedImageID}
+              disabledReason={
+                !this.props.selectedImageID
+                  ? 'You must select an image to set a root password'
+                  : ''
+              }
+              error={hasErrorFor.root_pass}
+              sshKeyError={sshError}
+              password={this.props.password}
+              handleChange={this.props.updatePassword}
+              updateFor={[
+                this.props.password,
+                errors,
+                sshError,
+                userSSHKeys,
+                this.props.selectedImageID
+              ]}
+              users={userSSHKeys}
+              requestKeys={requestKeys}
+            />
+          )}
           <AddonsPanel
             data-qa-addons-panel
             backups={this.props.backupsEnabled}
