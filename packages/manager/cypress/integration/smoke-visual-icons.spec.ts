@@ -5,12 +5,10 @@ describe('Checking icons render correctly', () => {
     const linodeIconStatus = [
       {
         status: 'running',
-        ariaLabel: 'linode is running',
         name: 'linode-running'
       },
       {
         status: 'offline',
-        ariaLabel: 'linode is offline',
         name: 'linode-offline'
       }
     ];
@@ -28,10 +26,10 @@ describe('Checking icons render correctly', () => {
 
         cy.visitWithLogin('/linodes');
         // this test works because the icon is fully rendered on the screen
-        cy.get(`[aria-label="${s.ariaLabel}"]`)
+        cy.get('td[data-qa-status="true"]')
           .first()
           .should('be.visible')
-          .checkSnapshot(s.ariaLabel)
+          .checkSnapshot(s.name)
           .should('be.true');
       });
     });
@@ -39,12 +37,17 @@ describe('Checking icons render correctly', () => {
   describe('Linodes Landing List Icons', () => {
     const linodeLandingIcons = [
       {
-        name: 'button-list-view',
-        selector: 'button[data-qa-view="list"'
+        name: 'Running-Total',
+        selector() {
+          return cy.findByText('1 RUNNING');
+        }
       },
       {
-        name: 'button-grid-view',
-        selector: 'button[data-qa-view="grid"'
+        name: 'Docs-View',
+        text: 'Docs',
+        selector() {
+          return cy.get('[data-qa-icon-text-link="Docs"]');
+        }
       }
     ];
     linodeLandingIcons.forEach(i => {
@@ -59,9 +62,9 @@ describe('Checking icons render correctly', () => {
           }
         }).as('getLinodes');
         cy.visitWithLogin('/linodes');
-        cy.get(i.selector)
+        i.selector()
+          .first()
           .should('be.visible')
-          .click()
           .checkSnapshot(i.name)
           .should('be.true');
       });
