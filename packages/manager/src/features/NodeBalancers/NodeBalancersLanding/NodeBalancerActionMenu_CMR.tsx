@@ -82,10 +82,8 @@ export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
       })}
       <ActionMenu
         className={classes.action}
-        // toggleOpenCallback={toggleOpenActionMenu}
         createActions={createActions()}
         ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
-        // inlineLabel={inlineLabel}
       />
     </>
   );
