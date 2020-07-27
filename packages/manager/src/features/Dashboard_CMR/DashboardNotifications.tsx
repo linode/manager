@@ -47,7 +47,7 @@ export const Notifications: React.FC<{}> = _ => {
   React.useEffect(() => {
     getLogins({}, { '+order_by': 'datetime', '+order': 'desc' })
       .then(response => {
-        const mostRecentLogin = response[0]?.datetime;
+        const mostRecentLogin = response.data[0]?.datetime;
 
         getEvents(
           {},

@@ -119,7 +119,7 @@ export const updateUserPreferences = (payload: UserPreferences) => {
 };
 
 export const getLogins = (params: any, filter: any) => {
-  return Request<ProfileLogin>(
+  return Request<ResourcePage<ProfileLogin>>(
     setURL(`${API_ROOT}/profile/logins`),
     setMethod('GET'),
     setXFilter(filter),
