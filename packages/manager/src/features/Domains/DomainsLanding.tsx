@@ -364,7 +364,19 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return <RenderError />;
     }
 
-    if (!domainsData || domainsData.length === 0) {
+    if (!isLargeAccount && (!domainsData || domainsData.length === 0)) {
+      /**
+       * We don't know whether or not a large account is empty or not
+       * until Pagey has made its first request, and putting this
+       * empty state inside of Pagey would be weird/difficult.
+       *
+       * The other option is to make an initial request when this
+       * component mounts, which Pagey would ignore.
+       *
+       * I think a slightly different empty state for large accounts is
+       * the best trade-off until we have the thing-count endpoint,
+       * but open to persuasion on this.
+       */
       return (
         <React.Fragment>
           <RenderEmpty
@@ -395,6 +407,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       !isRestrictedUser &&
       !linodesLoading &&
       howManyLinodesOnAccount === 0 &&
+      domainsData &&
       domainsData.length > 0;
 
     return (
