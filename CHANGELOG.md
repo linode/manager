@@ -4,6 +4,52 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-07-27] - v1.15.0
+
+### Added:
+
+- Ability to recycle all LKE pool nodes
+- CMR: Dashboard
+- Notifications
+- View for single Linodes
+- View for multiple Linodes
+- CMR: Linode Details - Filter Linodes by status - Implement LinodeEntityDetail component
+- Networking tab:
+- Add Linode Monthly Transfer graph
+- Add Historic Network Data graph - Add IP actions
+- CMR: Responsiveness
+- Linodes Landing
+- Domains Landing
+- Add reusable InlineMenuActions component - Apply updated table styles and action menu to Firewalls
+- Custom dev tools
+- User preferences editor
+
+### Changed:
+
+- CMR: Update Linode status pill designs
+- Use API search and hide search tips for large accounts
+
+- Use base 10 for network graphs
+
+### Fixed:
+
+- CMR: Adjust grid sizes to prevent EntityHeader elements from wrapping
+- Brasilia timezone offset should be GMT-3
+- Correct years in Linode Summary graph options
+- Create Object Storage Bucket types
+- Per-Linode network transfer total
+
+## JS Client
+
+### Added
+
+- getLinodeTransferByDate endpoint
+- recycleAllNodes endpoint (LKE)
+
+### Changed
+
+- Add access control and CORS fields to ObjectStorageBucketRequestPayload interface
+
 ## [2020-07-13] - v1.14.0
 
 ### Added:
