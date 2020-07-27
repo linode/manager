@@ -68,6 +68,7 @@ export interface HeaderCell {
   dataColumn: string;
   widthPercent: number;
   visuallyHidden?: boolean;
+  hideOnMobile?: boolean;
 }
 
 export default LandingTable;
