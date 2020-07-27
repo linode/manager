@@ -329,6 +329,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       domainsLastUpdated,
       flags,
       howManyLinodesOnAccount,
+      isLargeAccount,
       isRestrictedUser,
       linodesLoading
     } = this.props;
@@ -345,7 +346,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     const domainRow: EntityTableRow<Domain> = {
       Component: flags.cmr ? DomainRow_CMR : DomainRow,
       data: domainsData ?? [],
-      request: getDomains,
+      request: isLargeAccount ? getDomains : undefined,
       handlers,
       loading: domainsLoading,
       error: domainsError.read,
@@ -620,6 +621,7 @@ interface StateProps {
   howManyLinodesOnAccount: number;
   linodesLoading: boolean;
   isRestrictedUser: boolean;
+  isLargeAccount: boolean;
 }
 
 const mapStateToProps: MapStateToProps<
@@ -637,7 +639,9 @@ const mapStateToProps: MapStateToProps<
     true,
     ['__resources', 'profile', 'data', 'restricted'],
     state
-  )
+  ),
+  // @todo remove this when ARB-2091 is merged
+  isLargeAccount: state.preferences.data?.is_large_account ?? false
 });
 
 export const connected = connect(mapStateToProps, {

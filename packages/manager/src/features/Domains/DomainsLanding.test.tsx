@@ -14,6 +14,7 @@ const props: CombinedProps = {
   domainsLastUpdated: 0,
   domainsResults: domains.length,
   isRestrictedUser: false,
+  isLargeAccount: false,
   howManyLinodesOnAccount: 0,
   shouldGroupDomains: false,
   createDomain: jest.fn(),
