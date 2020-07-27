@@ -4,7 +4,6 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import OrderBy from 'src/components/OrderBy';
@@ -57,11 +56,11 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                         label={'entity:label'}
                         direction={order}
                         handleClick={handleOrderChange}
+                        colSpan={2}
                         data-qa-firewall-device-linode-header
                       >
                         Linode
                       </TableSortCell>
-                      <TableCell />
                     </TableRow>
                   </TableHead>
                   <TableBody>

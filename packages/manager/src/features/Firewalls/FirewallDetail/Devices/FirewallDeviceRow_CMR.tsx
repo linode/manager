@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
@@ -28,11 +29,14 @@ export const FirewallDeviceRow: React.FC<CombinedProps> = props => {
 
   return (
     <TableRow
-      rowLink={`/linodes/${entityID}`}
       data-testid={`firewall-device-row-${deviceID}`}
       ariaLabel={`Device ${deviceLabel}`}
     >
-      <TableCell>{deviceLabel}</TableCell>
+      <TableCell>
+        <Link to={`/linodes/${entityID}`} tabIndex={0}>
+          {deviceLabel}
+        </Link>
+      </TableCell>
       <TableCell className={classes.actionCell}>
         <ActionMenu {...props} />
       </TableCell>
