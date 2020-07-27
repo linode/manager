@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     padding: '10px 0',
     [theme.breakpoints.up('sm')]: {
       padding: 10
@@ -52,7 +51,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   bodyDetailVariant: {
-    padding: '4px 15px'
+    padding: '4px 15px',
+    justifyContent: 'space-between'
   }
 }));
 
