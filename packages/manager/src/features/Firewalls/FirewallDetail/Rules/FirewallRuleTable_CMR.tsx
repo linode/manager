@@ -11,7 +11,7 @@ import Typography from 'src/components/core/Typography';
 import OrderBy from 'src/components/OrderBy';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import {
@@ -30,9 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row'
-  },
-  table: {
-    borderCollapse: 'collapse'
   },
   undoButtonContainer: {
     display: 'flex',
@@ -135,7 +132,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
           const allRows = [...sortedUnmodifiedRows, ...modifiedRows];
 
           return (
-            <Table isResponsive={false} tableClass={classes.table}>
+            <Table isResponsive={false}>
               <TableHead>
                 <TableRow>
                   <TableSortCell
@@ -176,7 +173,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                   >
                     {capitalize(addressColumnLabel)}
                   </TableSortCell>
-                  <TableCell style={{ borderBottom: 0 }} />
+                  <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
