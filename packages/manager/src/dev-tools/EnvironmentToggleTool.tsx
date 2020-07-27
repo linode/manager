@@ -8,21 +8,43 @@ interface EnvironmentOption {
   clientID: string;
 }
 
-// Set these environment variables in your .env file to toggle environments with dev tools.
-const options: EnvironmentOption[] = [
-  {
-    label: process.env.REACT_APP_DEV_TOOLS_ENV_LABEL_1 ?? 'Env 1',
-    apiRoot: process.env.REACT_APP_DEV_TOOLS_API_ROOT_1 ?? '',
-    loginRoot: process.env.REACT_APP_DEV_TOOLS_LOGIN_ROOT_1 ?? '',
-    clientID: process.env.REACT_APP_DEV_TOOLS_CLIENT_ID_1 ?? ''
-  },
-  {
-    label: process.env.REACT_APP_DEV_TOOLS_ENV_LABEL_2 ?? 'Env 2',
-    apiRoot: process.env.REACT_APP_DEV_TOOLS_API_ROOT_2 ?? '',
-    loginRoot: process.env.REACT_APP_DEV_TOOLS_LOGIN_ROOT_2 ?? '',
-    clientID: process.env.REACT_APP_DEV_TOOLS_CLIENT_ID_2 ?? ''
-  }
-];
+// Parse a node env to collect environment options. Set environment variables as follows:
+//
+// REACT_APP_DEV_TOOLS_ENV_1_LABEL="Prod"
+// REACT_APP_DEV_TOOLS_ENV_1_API_ROOT="https://api.linode.com/v4"
+// REACT_APP_DEV_TOOLS_ENV_1_LOGIN_ROOT="https://login.linode.com"
+// REACT_APP_DEV_TOOLS_ENV_1_CLIENT_ID=<YOUR_CLIENT_ID>
+//
+// Repeat for each desired environment, incrementing the "1" to "2", e.g.:
+//
+// REACT_APP_DEV_TOOLS_ENV_2_LABEL+"Another environment"
+//
+// @todo: unit test this function.
+const getOptions = (env: typeof process.env) => {
+  const envVariables = Object.keys(env);
+
+  return envVariables.reduce<EnvironmentOption[]>((acc, thisEnvVariable) => {
+    const parsed = /REACT_APP_DEV_TOOLS_ENV_(.)_LABEL/.exec(thisEnvVariable);
+    if (!parsed) {
+      return acc;
+    }
+
+    const num = parsed[1];
+    const base = `REACT_APP_DEV_TOOLS_ENV_${num}`;
+
+    return [
+      ...acc,
+      {
+        label: env[thisEnvVariable] ?? '',
+        apiRoot: env[`${base}_API_ROOT`] ?? '',
+        loginRoot: env[`${base}_LOGIN_ROOT`] ?? '',
+        clientID: env[`${base}_CLIENT_ID`] ?? ''
+      }
+    ];
+  }, []);
+};
+
+const options = getOptions(process.env);
 
 const EnvironmentToggleTool: React.FC<{}> = () => {
   return (
