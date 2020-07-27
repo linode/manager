@@ -14,20 +14,26 @@ export interface BreadCrumbProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexBasis: '100%'
+    }
+  },
   iconContainer: {
     padding: `5px !important`,
-    //mobile
     marginLeft: 16
   },
   headerWithLink: {
+    display: 'flex',
     flexWrap: 'nowrap',
+    height: 50,
     position: 'relative',
     alignItems: 'center',
     backgroundColor: theme.bg.lightBlue,
     marginRight: theme.spacing(2),
-    // needed for mobile
-    height: 50,
-    display: 'flex',
+
     '&:before': {
       content: '""',
       position: 'absolute',
@@ -107,7 +113,7 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
 
   if (parentLink) {
     return (
-      <>
+      <div className={classes.root}>
         <Grid item className={classes.headerWithLink}>
           <Grid wrap="nowrap" container alignItems="center" justify="center">
             {iconType && _displayIcon && (
@@ -131,7 +137,7 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
             {title}
           </Typography>
         </Grid>
-      </>
+      </div>
     );
   }
 

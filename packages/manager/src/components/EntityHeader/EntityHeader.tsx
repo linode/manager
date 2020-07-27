@@ -31,16 +31,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   contentOuter: {
     display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
-    [theme.breakpoints.only('xs')]: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: '10px 0'
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: '10px 0',
+    [theme.breakpoints.up('sm')]: {
+      padding: 10
     },
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'flex-start',
-      padding: '10px'
+    [theme.breakpoints.up('md')]: {
+      justifyContent: 'center',
+      padding: 0
     },
     '& .MuiChip-root': {
       height: 30,
@@ -84,6 +84,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
           parentLink={parentLink}
           parentText={parentText}
         />
+
         <Hidden smDown>
           {body && (
             <Grid

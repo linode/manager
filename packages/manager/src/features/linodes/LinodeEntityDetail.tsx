@@ -277,6 +277,11 @@ const Header: React.FC<HeaderProps> = props => {
       parentLink={isDetails ? '/linodes' : undefined}
       parentText={isDetails ? 'Linodes' : undefined}
       iconType="linode"
+      actions={
+        <Hidden mdUp>
+          <DocumentationButton hideText href="https://www.linode.com/" />
+        </Hidden>
+      }
       title={
         isDetails ? (
           <div className={classes.linodeLabelWithDistro}>
@@ -285,9 +290,6 @@ const Header: React.FC<HeaderProps> = props => {
               className={`${classes.distroIcon} ${distroIconClassName}`}
             />
             {linodeLabel}
-            {/* <Hidden lgUp>
-              <DocumentationButton hideText href="https://www.linode.com/" />
-            </Hidden> */}
           </div>
         ) : (
           <Link to={`linodes/${linodeId}`} className={classes.linodeLabel}>
