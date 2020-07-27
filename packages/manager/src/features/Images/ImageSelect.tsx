@@ -1,5 +1,5 @@
 import { Image } from '@linode/api-v4/lib/images';
-import { always, cond, groupBy, propOr } from 'ramda';
+import { propOr } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
@@ -8,6 +8,7 @@ import HelpIcon from 'src/components/HelpIcon';
 import { useImages } from 'src/hooks/useImages';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { groupImages } from 'src/utilities/images';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -71,40 +72,38 @@ export const ImageSelect: React.FC<CombinedProps> = props => {
   ]);
 
   return (
-    <React.Fragment>
-      <Grid
-        className={classes.root}
-        container
-        wrap="nowrap"
-        direction="row"
-        justify="flex-start"
-        alignItems="flex-start"
-      >
-        <Grid item className={classes.selectContainer}>
-          <Select
-            id={'image-select'}
-            isLoading={_loading}
-            value={value}
-            isMulti={Boolean(isMulti)}
-            errorText={imageError || imageFieldError || reduxError}
-            disabled={disabled || Boolean(imageError)}
-            onChange={onSelect}
-            options={renderedImages as any}
-            placeholder="Select an Image"
-            textFieldProps={{
-              required
-            }}
-            label={label || 'Image'}
-          />
-        </Grid>
-        <Grid item xs={1}>
-          <HelpIcon
-            className={classes.icon}
-            text={helperText || 'Choosing a 64-bit distro is recommended.'}
-          />
-        </Grid>
+    <Grid
+      className={classes.root}
+      container
+      wrap="nowrap"
+      direction="row"
+      justify="flex-start"
+      alignItems="flex-start"
+    >
+      <Grid item className={classes.selectContainer}>
+        <Select
+          id={'image-select'}
+          isLoading={_loading}
+          value={value}
+          isMulti={Boolean(isMulti)}
+          errorText={imageError || imageFieldError || reduxError}
+          disabled={disabled || Boolean(imageError)}
+          onChange={onSelect}
+          options={renderedImages as any}
+          placeholder="Select an Image"
+          textFieldProps={{
+            required
+          }}
+          label={label || 'Image'}
+        />
       </Grid>
-    </React.Fragment>
+      <Grid item xs={1}>
+        <HelpIcon
+          className={classes.icon}
+          text={helperText || 'Choosing a 64-bit distro is recommended.'}
+        />
+      </Grid>
+    </Grid>
   );
 };
 
@@ -129,31 +128,6 @@ export const getImagesOptions = (images: Image[]) => {
     []
   );
 };
-
-interface GroupedImages {
-  deleted?: Image[];
-  recommended?: Image[];
-  older?: Image[];
-  images?: Image[];
-}
-
-const isRecentlyDeleted = (i: Image) =>
-  i.created_by === null && i.type === 'automatic';
-const isByLinode = (i: Image) =>
-  i.created_by !== null && i.created_by === 'linode';
-const isDeprecated = (i: Image) => i.deprecated === true;
-const isRecommended = (i: Image) => isByLinode(i) && !isDeprecated(i);
-const isOlderImage = (i: Image) => isByLinode(i) && isDeprecated(i);
-
-export let groupImages: (i: Image[]) => GroupedImages;
-groupImages = groupBy(
-  cond([
-    [isRecentlyDeleted, always('deleted')],
-    [isRecommended, always('recommended')],
-    [isOlderImage, always('older')],
-    [(i: Image) => true, always('images')]
-  ])
-);
 
 export const groupNameMap = {
   _default: 'Other',

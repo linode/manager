@@ -8,12 +8,7 @@ jest.mock('src/hooks/useReduxLoad', () => ({
 }));
 jest.mock('src/components/EnhancedSelect/Select');
 
-import {
-  getImagesOptions,
-  groupImages,
-  groupNameMap,
-  ImageSelect
-} from './ImageSelect';
+import { getImagesOptions, groupNameMap, ImageSelect } from './ImageSelect';
 
 const props = {
   images,
@@ -25,51 +20,6 @@ const privateImage1 = {
   type: 'manual',
   id: 'private/0001',
   created_by: 'somefella',
-
-  description: '',
-  vendor: null,
-  size: 0,
-  label: '',
-  is_public: false,
-  created: '',
-  expiry: null
-};
-
-const privateImage2 = {
-  deprecated: false,
-  type: 'manual',
-  id: 'private/0002',
-  created_by: 'somefella',
-
-  description: '',
-  vendor: null,
-  size: 0,
-  label: '',
-  is_public: false,
-  created: '',
-  expiry: null
-};
-
-const deprecatedImage1 = {
-  deprecated: true,
-  type: 'manual',
-  id: 'linode/0001',
-  created_by: 'linode',
-
-  description: '',
-  vendor: null,
-  size: 0,
-  label: '',
-  is_public: false,
-  created: '',
-  expiry: null
-};
-
-const deprecatedImage2 = {
-  deprecated: true,
-  type: 'manual',
-  id: 'linode/0002',
-  created_by: 'linode',
 
   description: '',
   vendor: null,
@@ -125,64 +75,7 @@ const deletedImage1 = {
   expiry: '2019-04-09T04:13:37'
 };
 
-const deletedImage2 = {
-  deprecated: false,
-  type: 'automatic',
-  id: 'private/0002',
-  created_by: null,
-
-  description: '',
-  vendor: null,
-  size: 0,
-  label: '',
-  is_public: false,
-  created: '',
-  expiry: '2019-05-09T04:13:37'
-};
-
 describe('ImageSelect', () => {
-  describe('groupImages method', () => {
-    it("should return a group of the user's private images", () => {
-      const result = groupImages([privateImage1, privateImage2]);
-
-      const expected = {
-        images: [privateImage1, privateImage2]
-      };
-
-      expect(result).toEqual(expected);
-    });
-
-    it('should return group deprecated images', () => {
-      const result = groupImages([deprecatedImage1, deprecatedImage2]);
-
-      const expected = {
-        older: [deprecatedImage1, deprecatedImage2]
-      };
-
-      expect(result).toEqual(expected);
-    });
-
-    it('should return group recommended images', () => {
-      const _images = [recommendedImage1, recommendedImage2];
-      const result = groupImages(_images);
-
-      const expected = {
-        recommended: _images
-      };
-
-      expect(result).toEqual(expected);
-    });
-
-    it('should return group deleted images', () => {
-      const result = groupImages([deletedImage1, deletedImage2]);
-
-      const expected = {
-        deleted: [deletedImage1, deletedImage2]
-      };
-
-      expect(result).toEqual(expected);
-    });
-  });
   describe('getImagesOptions function', () => {
     it('should return a list of GroupType', () => {
       const items = getImagesOptions([recommendedImage1, recommendedImage2]);

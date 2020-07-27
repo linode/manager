@@ -14,7 +14,11 @@ export const LinodeDashboardContent: React.FC<{}> = _ => {
   }
 
   // @todo change this logic once there's a no-Linodes view
-  return linodes.results === 1 ? <SingleLinode /> : <MultipleLinodes />;
+  return (
+    <div style={{ minHeight: 1500 }}>
+      {linodes.results === 1 ? <SingleLinode /> : <MultipleLinodes />}
+    </div>
+  );
 };
 
 export default React.memo(LinodeDashboardContent);

@@ -33,7 +33,8 @@ export type AccountCapability =
   | 'NodeBalancers'
   | 'Block Storage'
   | 'Object Storage'
-  | 'Kubernetes';
+  | 'Kubernetes'
+  | 'Cloud Firewall';
 
 export interface AccountSettings {
   managed: boolean;

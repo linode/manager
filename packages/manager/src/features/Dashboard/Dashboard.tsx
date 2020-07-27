@@ -46,7 +46,9 @@ interface DispatchProps {
   };
 }
 
-type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
+export type CombinedProps = StateProps &
+  DispatchProps &
+  RouteComponentProps<{}>;
 
 export const Dashboard: React.FC<CombinedProps> = props => {
   const {
