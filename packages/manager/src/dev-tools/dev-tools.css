@@ -1,5 +1,5 @@
 #dev-tools {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   background: black;
   opacity: 0.4;
@@ -23,5 +23,5 @@
 }
 
 #dev-tools:hover .tools {
-  display: block;
+  display: flex;
 }
