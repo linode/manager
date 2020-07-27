@@ -30,6 +30,7 @@ import EntityTable, {
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import { Order } from 'src/components/Pagey';
 import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
@@ -121,6 +122,8 @@ interface Props {
     domainLabel: string;
   };
 }
+
+const initialOrder = { order: 'asc' as Order, orderBy: 'domain' };
 
 export type CombinedProps = DomainProps &
   WithStyles<ClassNames> &
@@ -508,7 +511,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                   groupByTag={domainsAreGrouped}
                   row={domainRow}
                   headers={headers}
-                  initialOrder={{ order: 'asc', orderBy: 'domain' }}
+                  initialOrder={initialOrder}
                 />
               </React.Fragment>
             );

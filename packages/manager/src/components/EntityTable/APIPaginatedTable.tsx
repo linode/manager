@@ -33,9 +33,10 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
   const _data = data ?? [];
 
   React.useEffect(() => {
-    request();
     if (initialOrder) {
       handleOrderChange(initialOrder.orderBy, initialOrder.order);
+    } else {
+      request();
     }
   }, [request, handleOrderChange, initialOrder]);
 
