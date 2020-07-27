@@ -311,7 +311,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       label,
       images,
       description,
-      is_public: false,
       rev_note: revisionNote
     };
   };
