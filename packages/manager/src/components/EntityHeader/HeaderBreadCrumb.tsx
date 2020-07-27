@@ -15,13 +15,19 @@ export interface BreadCrumbProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   iconContainer: {
-    padding: `5px !important`
+    padding: `5px !important`,
+    //mobile
+    marginLeft: 16
   },
   headerWithLink: {
     flexWrap: 'nowrap',
     position: 'relative',
+    alignItems: 'center',
     backgroundColor: theme.bg.lightBlue,
     marginRight: theme.spacing(2),
+    // needed for mobile
+    height: 50,
+    display: 'flex',
     '&:before': {
       content: '""',
       position: 'absolute',

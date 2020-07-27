@@ -17,7 +17,12 @@ import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -41,6 +46,7 @@ import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import Hidden from 'src/components/core/Hidden';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -114,31 +120,31 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           image={'something'}
         />
       }
-      body={
-        <Body
-          linodeLabel={linode.label}
-          numVolumes={numVolumes}
-          numCPUs={linode.specs.vcpus}
-          gbRAM={linode.specs.memory / 1024}
-          gbStorage={linode.specs.disk / 1024}
-          region={linode.region}
-          ipv4={linode.ipv4}
-          ipv6={linode.ipv6}
-          linodeId={linode.id}
-          username={username ? username : 'none'}
-        />
-      }
-      footer={
-        <Footer
-          linodePlan={linodePlan}
-          linodeRegionDisplay={linodeRegionDisplay}
-          linodeId={linode.id}
-          linodeCreated={linode.created}
-          linodeTags={linode.tags}
-          linodeLabel={linode.label}
-          openTagDrawer={openTagDrawer}
-        />
-      }
+      // body={
+      //   <Body
+      //     linodeLabel={linode.label}
+      //     numVolumes={numVolumes}
+      //     numCPUs={linode.specs.vcpus}
+      //     gbRAM={linode.specs.memory / 1024}
+      //     gbStorage={linode.specs.disk / 1024}
+      //     region={linode.region}
+      //     ipv4={linode.ipv4}
+      //     ipv6={linode.ipv6}
+      //     linodeId={linode.id}
+      //     username={username ? username : 'none'}
+      //   />
+      // }
+      // footer={
+      //   <Footer
+      //     linodePlan={linodePlan}
+      //     linodeRegionDisplay={linodeRegionDisplay}
+      //     linodeId={linode.id}
+      //     linodeCreated={linode.created}
+      //     linodeTags={linode.tags}
+      //     linodeLabel={linode.label}
+      //     openTagDrawer={openTagDrawer}
+      //   />
+      // }
     />
   );
 };
@@ -186,12 +192,14 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     marginRight: 10
   },
   body: {
-    marginLeft: 'auto',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: `0 !important`
+    [theme.breakpoints.up('md')]: {
+      marginLeft: 'auto',
+      padding: `0 !important`
+    }
   },
   actionItem: {
     marginRight: 10,
@@ -222,6 +230,9 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     '&:before': {
       backgroundColor: theme.color.grey10
     }
+  },
+  actionItemsOuter: {
+    display: 'flex'
   }
 }));
 
@@ -243,6 +254,8 @@ const Header: React.FC<HeaderProps> = props => {
   } = props;
 
   const classes = useHeaderStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const distroIconClassName =
     imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
@@ -271,6 +284,9 @@ const Header: React.FC<HeaderProps> = props => {
               className={`${classes.distroIcon} ${distroIconClassName}`}
             />
             {linodeLabel}
+            {/* TODO need to figure this out <Hidden lgUp>
+              <DocumentationButton hideText href="https://www.linode.com/" />
+            </Hidden> */}
           </div>
         ) : (
           <Link to={`linodes/${linodeId}`} className={classes.linodeLabel}>
@@ -292,76 +308,83 @@ const Header: React.FC<HeaderProps> = props => {
             clickable={false}
           />
 
-          {!isDetails && (
+          <div className={classes.actionItemsOuter}>
+            {!isDetails && (
+              <IconTextLink
+                className={classes.actionItem}
+                SideIcon={ViewDetailsIcon}
+                text="ViewDetails"
+                title="ViewDetails"
+                to={`linodes/${linodeId}`}
+              />
+            )}
+
             <IconTextLink
               className={classes.actionItem}
-              SideIcon={ViewDetailsIcon}
-              text="ViewDetails"
-              title="ViewDetails"
-              to={`linodes/${linodeId}`}
+              SideIcon={PowerOnIcon}
+              text={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+              title={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+              onClick={() => {
+                const action =
+                  linodeStatus === 'running' ? 'Power Off' : 'Power On';
+                sendLinodeActionMenuItemEvent(`${action} Linode`);
+
+                openPowerActionDialog(
+                  `${action}` as BootAction,
+                  linodeId,
+                  linodeLabel,
+                  linodeStatus === 'running' ? linodeConfigs : []
+                );
+              }}
+              disabled={!['running', 'offline'].includes(linodeStatus)}
             />
+
+            <Hidden xsDown>
+              <IconTextLink
+                className={classes.actionItem}
+                SideIcon={RebootIcon}
+                text="Reboot"
+                title="Reboot"
+                onClick={() => {
+                  sendLinodeActionMenuItemEvent('Reboot Linode');
+                  openPowerActionDialog(
+                    'Reboot',
+                    linodeId,
+                    linodeLabel,
+                    linodeConfigs
+                  );
+                }}
+              />
+              <IconTextLink
+                className={classes.actionItem}
+                SideIcon={ConsoleIcon}
+                text="Launch Console"
+                title="Launch Console"
+                onClick={() => {
+                  handleConsoleButtonClick(linodeId);
+                }}
+              />
+            </Hidden>
+
+            <LinodeActionMenu
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeRegion={linodeRegionDisplay}
+              linodeType={type}
+              linodeStatus={linodeStatus}
+              linodeBackups={backups}
+              openDeleteDialog={openDeleteDialog}
+              openPowerActionDialog={openPowerActionDialog}
+              openLinodeResize={openLinodeResize}
+              noImage={!image}
+              inlineLabel={matchesSmDown ? undefined : 'More Actions'}
+            />
+          </div>
+          {isDetails && (
+            <Hidden mdDown>
+              <DocumentationButton href="https://www.linode.com/" />
+            </Hidden>
           )}
-
-          <IconTextLink
-            className={classes.actionItem}
-            SideIcon={PowerOnIcon}
-            text={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-            title={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-            onClick={() => {
-              const action =
-                linodeStatus === 'running' ? 'Power Off' : 'Power On';
-              sendLinodeActionMenuItemEvent(`${action} Linode`);
-
-              openPowerActionDialog(
-                `${action}` as BootAction,
-                linodeId,
-                linodeLabel,
-                linodeStatus === 'running' ? linodeConfigs : []
-              );
-            }}
-            disabled={!['running', 'offline'].includes(linodeStatus)}
-          />
-
-          <IconTextLink
-            className={classes.actionItem}
-            SideIcon={RebootIcon}
-            text="Reboot"
-            title="Reboot"
-            onClick={() => {
-              sendLinodeActionMenuItemEvent('Reboot Linode');
-              openPowerActionDialog(
-                'Reboot',
-                linodeId,
-                linodeLabel,
-                linodeConfigs
-              );
-            }}
-          />
-
-          <IconTextLink
-            className={classes.actionItem}
-            SideIcon={ConsoleIcon}
-            text="Launch Console"
-            title="Launch Console"
-            onClick={() => {
-              handleConsoleButtonClick(linodeId);
-            }}
-          />
-
-          <LinodeActionMenu
-            linodeId={linodeId}
-            linodeLabel={linodeLabel}
-            linodeRegion={linodeRegionDisplay}
-            linodeType={type}
-            linodeStatus={linodeStatus}
-            linodeBackups={backups}
-            openDeleteDialog={openDeleteDialog}
-            openPowerActionDialog={openPowerActionDialog}
-            openLinodeResize={openLinodeResize}
-            noImage={!image}
-            inlineLabel="More Actions"
-          />
-          {isDetails && <DocumentationButton href="https://www.linode.com/" />}
         </>
       }
     />
