@@ -13,20 +13,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-/* tslint:disable-next-line:no-empty-interface */
+/* eslint-disable-next-line */
 export interface DividerProps extends _DividerProps {}
 
 interface Props extends _DividerProps {
   type?: 'landingHeader' | 'other';
 }
 
-const _Divider: React.FC<Props> = props => (
-  <Divider
-    classes={{
-      root: props.type === 'landingHeader' ? useStyles().line : undefined
-    }}
-    {...props}
-  />
-);
+const _Divider: React.FC<Props> = props => {
+  const classes = useStyles();
+  return (
+    <Divider
+      classes={{
+        root: props.type === 'landingHeader' ? classes.line : undefined
+      }}
+      {...props}
+    />
+  );
+};
 
 export default _Divider;
