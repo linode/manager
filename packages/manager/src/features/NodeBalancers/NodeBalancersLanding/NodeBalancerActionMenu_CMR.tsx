@@ -1,7 +1,23 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+const useStyles = makeStyles((theme: Theme) => ({
+  inlineActions: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  link: {
+    padding: '12px 10px'
+  },
+  action: {
+    marginLeft: 10
+  }
+}));
 
 interface Props {
   nodeBalancerId: number;
@@ -11,26 +27,19 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class NodeBalancerActionMenu extends React.Component<CombinedProps> {
-  createLinodeActions = () => {
-    const { nodeBalancerId, history, toggleDialog, label } = this.props;
+export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
 
-    return (closeMenu: Function): Action[] => {
-      const actions = [
-        {
-          title: 'Summary',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push(`/nodebalancers/${nodeBalancerId}/summary`);
-            e.preventDefault();
-            closeMenu();
-          }
-        },
+  const { nodeBalancerId, history, toggleDialog, label } = props;
+
+  const createActions = () => {
+    return (): Action[] => {
+      return [
         {
           title: 'Configurations',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
             e.preventDefault();
-            closeMenu();
           }
         },
         {
@@ -38,7 +47,6 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             history.push(`/nodebalancers/${nodeBalancerId}/settings`);
             e.preventDefault();
-            closeMenu();
           }
         },
         {
@@ -46,22 +54,41 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
             toggleDialog(nodeBalancerId, label);
-            closeMenu();
           }
         }
       ];
-      return actions;
     };
   };
 
-  render() {
-    return (
+  const inlineActions = [
+    {
+      actionText: 'Details',
+      href: `/nodebalancers/${nodeBalancerId}/summary`,
+      className: classes.link
+    }
+  ];
+
+  return (
+    <>
+      {inlineActions.map(action => {
+        return (
+          <InlineMenuAction
+            key={action.actionText}
+            actionText={action.actionText}
+            href={action.href}
+            className={action.className}
+          />
+        );
+      })}
       <ActionMenu
-        createActions={this.createLinodeActions()}
-        ariaLabel={`Action menu for NodeBalancer ${this.props.label}`}
+        className={classes.action}
+        // toggleOpenCallback={toggleOpenActionMenu}
+        createActions={createActions()}
+        ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
+        // inlineLabel={inlineLabel}
       />
-    );
-  }
-}
+    </>
+  );
+};
 
 export default withRouter(NodeBalancerActionMenu);

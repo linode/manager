@@ -51,6 +51,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
+import NodeBalancerTableRow_CMR from './NodeBalancerTableRow_CMR';
 import NodeBalancerTableRow from './NodeBalancerTableRow';
 
 type ClassNames =
@@ -270,6 +271,7 @@ export class NodeBalancersLanding extends React.Component<
       nodeBalancersCount,
       nodeBalancersLoading,
       nodeBalancersData,
+      nodeBalancersLastUpdated,
       nodeBalancersError,
       location,
       flags
@@ -294,13 +296,12 @@ export class NodeBalancersLanding extends React.Component<
     const Table = flags.cmr ? EntityTable_CMR : EntityTable;
 
     const nodeBalancerRow: EntityTableRow<NodeBalancer> = {
-      Component: NodeBalancerTableRow,
+      Component: flags.cmr ? NodeBalancerTableRow_CMR : NodeBalancerTableRow,
       data: Object.values(nodeBalancersData),
-      handlers: {},
+      handlers: { toggleDialog: this.toggleDialog },
       loading: nodeBalancersLoading,
       error: nodeBalancersError,
-      // lastUpdated: nodeBalancersLastUpdated
-      lastUpdated: 0
+      lastUpdated: nodeBalancersLastUpdated
     };
 
     return (
@@ -435,6 +436,7 @@ interface WithNodeBalancers {
   nodeBalancersData: NodeBalancerWithConfigs[];
   nodeBalancersError?: APIError[];
   nodeBalancersLoading: boolean;
+  nodeBalancersLastUpdated: number;
 }
 
 export const enhanced = compose<CombinedProps, {}>(
@@ -453,7 +455,8 @@ export const enhanced = compose<CombinedProps, {}>(
       nodeBalancersData: nodeBalancersWithConfigs(__resources),
       nodeBalancersError: path(['read'], error),
       // In this component we only want to show loading state on initial load
-      nodeBalancersLoading: nodeBalancersLoading && lastUpdated === 0
+      nodeBalancersLoading: nodeBalancersLoading && lastUpdated === 0,
+      nodeBalancersLastUpdated: lastUpdated
     };
   }),
   withFeatureFlagConsumerContainer,
