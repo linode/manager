@@ -59,8 +59,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create('opacity'),
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing(2),
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
+      paddingLeft: 0,
+      paddingRight: 0
     }
   },
   content: {

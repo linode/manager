@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 'auto',
     paddingLeft: theme.spacing(2),
     padding: 0,
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(1)
+    },
     '& svg': {
       marginRight: theme.spacing(1.5),
       width: 24

@@ -94,6 +94,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     paddingRight: theme.spacing(2) - 2,
+    paddingLeft: theme.spacing(2) - 2,
     lineHeight: 1.2
   }
 }));

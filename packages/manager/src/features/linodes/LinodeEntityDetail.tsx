@@ -120,31 +120,31 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           image={'something'}
         />
       }
-      // body={
-      //   <Body
-      //     linodeLabel={linode.label}
-      //     numVolumes={numVolumes}
-      //     numCPUs={linode.specs.vcpus}
-      //     gbRAM={linode.specs.memory / 1024}
-      //     gbStorage={linode.specs.disk / 1024}
-      //     region={linode.region}
-      //     ipv4={linode.ipv4}
-      //     ipv6={linode.ipv6}
-      //     linodeId={linode.id}
-      //     username={username ? username : 'none'}
-      //   />
-      // }
-      // footer={
-      //   <Footer
-      //     linodePlan={linodePlan}
-      //     linodeRegionDisplay={linodeRegionDisplay}
-      //     linodeId={linode.id}
-      //     linodeCreated={linode.created}
-      //     linodeTags={linode.tags}
-      //     linodeLabel={linode.label}
-      //     openTagDrawer={openTagDrawer}
-      //   />
-      // }
+      body={
+        <Body
+          linodeLabel={linode.label}
+          numVolumes={numVolumes}
+          numCPUs={linode.specs.vcpus}
+          gbRAM={linode.specs.memory / 1024}
+          gbStorage={linode.specs.disk / 1024}
+          region={linode.region}
+          ipv4={linode.ipv4}
+          ipv6={linode.ipv6}
+          linodeId={linode.id}
+          username={username ? username : 'none'}
+        />
+      }
+      footer={
+        <Footer
+          linodePlan={linodePlan}
+          linodeRegionDisplay={linodeRegionDisplay}
+          linodeId={linode.id}
+          linodeCreated={linode.created}
+          linodeTags={linode.tags}
+          linodeLabel={linode.label}
+          openTagDrawer={openTagDrawer}
+        />
+      }
     />
   );
 };
@@ -232,7 +232,8 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     }
   },
   actionItemsOuter: {
-    display: 'flex'
+    display: 'flex',
+    alignItems: 'center'
   }
 }));
 
@@ -255,7 +256,7 @@ const Header: React.FC<HeaderProps> = props => {
 
   const classes = useHeaderStyles();
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const distroIconClassName =
     imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
@@ -284,7 +285,7 @@ const Header: React.FC<HeaderProps> = props => {
               className={`${classes.distroIcon} ${distroIconClassName}`}
             />
             {linodeLabel}
-            {/* TODO need to figure this out <Hidden lgUp>
+            {/* <Hidden lgUp>
               <DocumentationButton hideText href="https://www.linode.com/" />
             </Hidden> */}
           </div>
@@ -377,11 +378,11 @@ const Header: React.FC<HeaderProps> = props => {
               openPowerActionDialog={openPowerActionDialog}
               openLinodeResize={openLinodeResize}
               noImage={!image}
-              inlineLabel={matchesSmDown ? undefined : 'More Actions'}
+              inlineLabel={matchesMdDown ? undefined : 'More Actions'}
             />
           </div>
           {isDetails && (
-            <Hidden mdDown>
+            <Hidden smDown>
               <DocumentationButton href="https://www.linode.com/" />
             </Hidden>
           )}
@@ -489,11 +490,22 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
   accessTableContainer: {
     overflowX: 'auto',
-    maxWidth: 600
+    maxWidth: 335,
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: 728
+    },
+    [theme.breakpoints.up('lg')]: {
+      maxWidth: 600
+    }
   },
   code: {
     // @todo: use font from designs
     fontFamily: '"Ubuntu Mono", monospace, sans-serif'
+  },
+  bodyWrapper: {
+    [theme.breakpoints.up('lg')]: {
+      justifyContent: 'space-between'
+    }
   }
 }));
 
@@ -513,7 +525,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
   } = props;
 
   return (
-    <Grid container direction="row" justify="space-between">
+    <Grid container direction="row" className={classes.bodyWrapper}>
       <Grid item>
         {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
         <Grid container>
@@ -661,14 +673,27 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     borderRight: `1px solid ${theme.color.grey6}`,
     color: theme.color.grey8
   },
+  listItemLast: {
+    [theme.breakpoints.only('xs')]: {
+      borderRight: 'none',
+      paddingRight: 0
+    }
+  },
   linodeCreated: {
     paddingLeft: 10,
-    color: theme.color.grey8
+    color: theme.color.grey8,
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'center'
+    }
   },
   linodeTags: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    [theme.breakpoints.only('xs')]: {
+      marginTop: 20,
+      marginBottom: 10
+    }
   }
 }));
 
@@ -722,7 +747,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
         justify="space-between"
         alignItems="center"
       >
-        <Grid item sm={7}>
+        <Grid item xs={12} sm={7}>
           <div className={classes.detailsSection}>
             {linodePlan && (
               <Link
@@ -740,16 +765,31 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
                 {linodeRegionDisplay}
               </Link>
             )}
-            <Typography className={classes.listItem}>
+            <Typography
+              className={classnames({
+                [classes.listItem]: true,
+                [classes.listItemLast]: true
+              })}
+            >
               Linode ID {linodeId}
             </Typography>
+            <Hidden xsDown>
+              <Typography className={classes.linodeCreated}>
+                Created{' '}
+                {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+              </Typography>
+            </Hidden>
+          </div>
+        </Grid>
+        <Hidden smUp>
+          <Grid item xs={12}>
             <Typography className={classes.linodeCreated}>
               Created{' '}
               {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
             </Typography>
-          </div>
-        </Grid>
-        <Grid item sm={5} className={classes.linodeTags}>
+          </Grid>
+        </Hidden>
+        <Grid item xs={12} sm={5} className={classes.linodeTags}>
           <TagCell
             width={500}
             tags={linodeTags}

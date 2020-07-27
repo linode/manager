@@ -3,6 +3,7 @@ import * as classnames from 'classnames';
 import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
+import Hidden from '../core/Hidden';
 
 export interface HeaderProps extends BreadCrumbProps {
   actions?: JSX.Element;
@@ -14,35 +15,33 @@ export interface HeaderProps extends BreadCrumbProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: theme.bg.white,
-    height: 50,
-    width: '100%',
-    padding: '8px 8px 8px 15px'
-  },
-  rootMobile: {
     backgroundColor: theme.bg.white
   },
   breadcrumbOuter: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottom: '1px solid #f4f5f6',
-    padding: '8px 15px'
+    padding: '4px 15px',
+    [theme.breakpoints.down('sm')]: {
+      borderBottom: '1px solid #f4f5f6'
+    }
   },
   breadCrumbDetail: {
     padding: 0
-  },
-
-  rootHasBreadcrumb: {
-    padding: 8
   },
   contentOuter: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    [theme.breakpoints.only('xs')]: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: '10px 0'
+    },
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-start',
+      padding: '10px'
+    },
     '& .MuiChip-root': {
       height: 30,
       borderRadius: 15,
@@ -52,12 +51,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       letterSpacing: '.5px'
     }
   },
-  bodyWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: '10px 0'
+  bodyDetailVariant: {
+    padding: '4px 15px'
   }
 }));
 
@@ -74,40 +69,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
   const classes = useStyles();
 
   return (
-    // <div
-    //   className={classnames({
-    //     [classes.root]: true,
-    //     [classes.rootHasBreadcrumb]: Boolean(parentLink)
-    //   })}
-    // >
-    //   <Grid item xs={Boolean(actions) ? 7 : 12}>
-    //     <Grid container direction="row" alignItems="center">
-    //       <HeaderBreadCrumb
-    //         iconType={iconType}
-    //         title={title}
-    //         parentLink={parentLink}
-    //         parentText={parentText}
-    //       />
-    //       {body && (
-    //         <Grid
-    //           className={classnames({
-    //             [classes.contentOuter]: true,
-    //             [bodyClassName ?? '']: Boolean(bodyClassName)
-    //           })}
-    //           item
-    //         >
-    //           {body}
-    //         </Grid>
-    //       )}
-    //     </Grid>
-    //   </Grid>
-    //   {Boolean(actions) && (
-    //     <Grid container item xs={5} justify="flex-end" alignItems="center">
-    //       {actions}
-    //     </Grid>
-    //   )}
-    // </div>
-    <Grid item className={classes.rootMobile}>
+    <Grid item className={classes.root}>
       <Grid
         item
         xs={12}
@@ -122,13 +84,35 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
           parentLink={parentLink}
           parentText={parentText}
         />
+        <Hidden smDown>
+          {body && (
+            <Grid
+              className={classnames({
+                [classes.contentOuter]: true,
+                [bodyClassName ?? '']: Boolean(bodyClassName)
+              })}
+              item
+            >
+              {body}
+            </Grid>
+          )}
+        </Hidden>
 
         {/* I think only Landing variant uses this? */}
-        {actions && actions}
+        {actions}
       </Grid>
-      <Grid item xs={12} className={classes.bodyWrapper}>
-        {body && body}
-      </Grid>
+      <Hidden mdUp>
+        <Grid
+          item
+          xs={12}
+          className={classnames({
+            [classes.contentOuter]: true,
+            [classes.bodyDetailVariant]: Boolean(parentLink)
+          })}
+        >
+          {body}
+        </Grid>
+      </Hidden>
     </Grid>
   );
 };
