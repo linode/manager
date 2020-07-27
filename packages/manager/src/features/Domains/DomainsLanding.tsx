@@ -148,13 +148,15 @@ const headers: HeaderCell[] = [
     label: 'Type',
     dataColumn: 'type',
     sortable: true,
-    widthPercent: 15
+    widthPercent: 15,
+    hideOnMobile: true
   },
   {
     label: 'Last Modified',
     dataColumn: 'updated',
     sortable: true,
-    widthPercent: 25
+    widthPercent: 25,
+    hideOnMobile: true
   },
   {
     label: 'Action Menu',

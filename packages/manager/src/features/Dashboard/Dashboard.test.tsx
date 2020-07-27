@@ -1,43 +1,48 @@
-import { shallow } from 'enzyme';
+import { cleanup } from '@testing-library/react';
 import * as React from 'react';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { withLinodesLoaded, withManaged } from 'src/utilities/testHelpersStore';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { light } from 'src/themes';
-import { Dashboard } from './Dashboard';
+import Dashboard, { CombinedProps } from './Dashboard';
 
-const props = {
+afterEach(cleanup);
+
+const props: CombinedProps = {
   accountBackups: false,
   notifications: [],
   userTimezone: 'GMT',
   userTimezoneLoading: false,
   someLinodesHaveScheduledMaintenance: true,
   actions: {
-    openBackupDrawer: jest.fn(),
-    openImportDrawer: jest.fn()
+    openBackupDrawer: jest.fn()
   },
   linodesWithoutBackups: [],
-  managed: false,
   backupError: undefined,
-  entitiesWithGroupsToImport: { linodes: [], domains: [] },
-  classes: { root: '' },
-  theme: light(8)
+  managed: false,
+  ...reactRouterProps
 };
-
-jest.mock('src/store');
-
-const component = shallow(<Dashboard {...props} {...reactRouterProps} />);
 
 describe('Dashboard view', () => {
   describe('Backups CTA card', () => {
     it('display for non-managed users', () => {
-      expect(component.find('withRouter(BackupsDashboardCard)')).toHaveLength(
-        1
-      );
+      const { getByText } = renderWithTheme(<Dashboard {...props} />, {
+        customStore: {
+          ...withLinodesLoaded
+        }
+      });
+      getByText('Linode Backup Auto-Enrollment');
     });
     it('should never display for managed users', () => {
-      component.setProps({ managed: true });
-      expect(component.find('withRouter(BackupsDashboardCard)')).toHaveLength(
-        0
-      );
+      const _props = { ...props, managed: true };
+      const { queryByText } = renderWithTheme(<Dashboard {..._props} />, {
+        customStore: {
+          ...withLinodesLoaded,
+          ...withManaged
+        }
+      });
+      expect(
+        queryByText('Linode Backup Auto-Enrollment')
+      ).not.toBeInTheDocument();
     });
   });
 });
