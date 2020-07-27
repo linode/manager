@@ -57,8 +57,11 @@ import {
   WithLinodesProps,
   WithRegionsProps,
   WithTypesProps,
-  WithTypesRegionsAndImages
+  WithTypesRegionsAndImages,
+  Info,
+  HandleSubmit
 } from './types';
+import { Tag } from '@linode/api-v4/lib/tags/types';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -90,6 +93,25 @@ const styles = (theme: Theme) =>
 interface Props {
   history: any;
   createType: CreateTypes;
+  updatePassword: (password: string) => void;
+  regionDisplayInfo: Info;
+  imageDisplayInfo: Info;
+  typeDisplayInfo: Info;
+  backupsMonthlyPrice?: number | null;
+  updateLinodeID: (id: number, diskSize?: number | undefined) => void;
+  updateDiskSize: (size: number) => void;
+  label: string;
+  updateLabel: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => void;
+  toggleBackupsEnabled: () => void;
+  togglePrivateIPEnabled: () => void;
+  updateTags: (tags: Tag[]) => void;
+  handleSubmitForm: HandleSubmit;
+  resetCreationState: () => void;
+  setBackupID: (id: number) => void;
 }
 
 const errorMap = [
@@ -105,7 +127,8 @@ const errorMap = [
 
 type InnerProps = WithTypesRegionsAndImages &
   ReduxStateProps &
-  StackScriptFormStateHandlers;
+  StackScriptFormStateHandlers &
+  Props;
 
 type CombinedProps = Props &
   InnerProps &
@@ -287,6 +310,7 @@ export class LinodeCreate extends React.PureComponent<
       updateLabel,
       tags,
       updateTags,
+      updatePassword,
       errors,
       sshError,
       userSSHKeys,
