@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -53,7 +51,6 @@ export const FromImageContent: React.FC<CombinedProps> = props => {
     errors,
     imagePanelTitle,
     imagesData,
-    showGeneralError,
     userCannotCreateLinode,
     variant
   } = props;
@@ -92,10 +89,6 @@ export const FromImageContent: React.FC<CombinedProps> = props => {
 
   return (
     <Grid item className={`${classes.main} mlMain py0`}>
-      {hasErrorFor.none && !!showGeneralError && (
-        <Notice error spacingTop={8} text={hasErrorFor.none} />
-      )}
-      <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
       <ImageSelect
         title={imagePanelTitle || 'Choose an Image'}
         images={Object.keys(imagesData).map(eachKey => imagesData[eachKey])}

@@ -13,7 +13,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
 import { reportException } from 'src/exceptionReporting';
@@ -193,7 +192,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           </Paper>
         ) : (
           <React.Fragment>
-            <CreateLinodeDisabled isDisabled={disabled} />
             <SelectLinodePanel
               error={hasErrorFor('linode_id')}
               linodes={ramdaCompose(

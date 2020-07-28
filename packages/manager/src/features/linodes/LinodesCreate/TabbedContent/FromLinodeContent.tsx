@@ -2,7 +2,6 @@ import * as React from 'react';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -75,7 +74,6 @@ export const FromLinodeContent: React.FC<CombinedProps> = props => {
         </Grid>
       ) : (
         <Grid item className={`${classes.main} mlMain py0`}>
-          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           <SelectLinodePanel
             data-qa-linode-panel
             error={hasErrorFor('linode_id')}

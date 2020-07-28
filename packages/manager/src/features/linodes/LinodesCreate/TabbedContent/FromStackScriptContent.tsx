@@ -7,7 +7,6 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
@@ -145,7 +144,6 @@ export const FromStackScriptContent: React.FC<CombinedProps> = props => {
         item
         className={`${classes.main} mlMain py0`}
       >
-        <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
         <div className={classes.inner}>
           <SelectStackScriptPanel
             data-qa-select-stackscript
