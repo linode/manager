@@ -37,16 +37,24 @@ export interface GetAllData<T> {
  * @param getter { Function } one of the Get functions from the API services library. Accepts
  * pagination or filter parameters.
  *
+ * @param pageSize Will default to the API_MAX_PAGE_SIZE.
+ * @cb This is a weird one. Since getAll can in theory trigger a very long series of requests,
+ * we need a hatch after the first request (at which point we know what's required).
+ * The callback was originally added to allow us to mark an account as "large", since extremely large
+ * accounts were bombing before the getAll method completed execution.
+ *
  * @example const getAllLinodes = getAll(getLinodes)
  * @example getAllLinodes(params, filter)
  *
  */
 export const getAll: <T>(
   getter: GetFunction,
-  pageSize?: number
+  pageSize?: number,
+  cb?: any
 ) => (params?: any, filter?: any) => Promise<GetAllData<T>> = (
   getter,
-  pageSize = API_MAX_PAGE_SIZE
+  pageSize = API_MAX_PAGE_SIZE,
+  cb
 ) => (params?: any, filter?: any) => {
   const pagination = { ...params, page_size: pageSize };
   return getter(pagination, filter).then(
@@ -57,6 +65,12 @@ export const getAll: <T>(
           data: firstPageData,
           results
         };
+      }
+
+      // If the number of results is over the threshold, use the callback
+      // to mark the account as large
+      if (cb) {
+        cb(results);
       }
 
       // Create an iterable list of the remaining pages.

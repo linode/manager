@@ -14,6 +14,7 @@ import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
 import useAPISearch from 'src/features/Search/useAPISearch';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
@@ -72,11 +73,12 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
 
   const { searchAPI } = useAPISearch();
+  const { _isLargeAccount } = useAccountManagement();
 
   const { _loading } = useReduxLoad(
     ['linodes', 'nodeBalancers', 'images', 'domains', 'volumes', 'kubernetes'],
     REFRESH_INTERVAL,
-    searchActive // Only request things if the search bar is open/active.
+    searchActive && !_isLargeAccount // Only request things if the search bar is open/active.
   );
 
   const [apiResults, setAPIResults] = React.useState<any[]>([]);
@@ -103,9 +105,14 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   ).current;
 
   React.useEffect(() => {
-    search(searchText);
-    _searchAPI(searchText);
-  }, [_loading, search, _searchAPI, searchText]);
+    // We can't store all data for large accounts for client side search,
+    // so use the API's filtering instead.
+    if (_isLargeAccount) {
+      _searchAPI(searchText);
+    } else {
+      search(searchText);
+    }
+  }, [_loading, search, searchText, _searchAPI, _isLargeAccount]);
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
@@ -173,6 +180,11 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   };
 
   const guidanceText = () => {
+    if (_isLargeAccount) {
+      // This fancy stuff won't work if we're using API
+      // based search; don't confuse users by displaying this.
+      return undefined;
+    }
     return (
       <>
         <b>By field:</b> “tag:my-app” “label:my-linode” &nbsp;&nbsp;
@@ -189,7 +201,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   };
 
   const finalOptions = createFinalOptions(
-    apiResults, // combinedResults,
+    _isLargeAccount ? apiResults : combinedResults,
     searchText,
     _loading || apiSearchLoading,
     Boolean(apiError)

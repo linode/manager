@@ -33,7 +33,8 @@ export type AccountCapability =
   | 'NodeBalancers'
   | 'Block Storage'
   | 'Object Storage'
-  | 'Kubernetes';
+  | 'Kubernetes'
+  | 'Cloud Firewall';
 
 export interface AccountSettings {
   managed: boolean;
@@ -123,6 +124,12 @@ export interface NetworkUtilization {
   billable: number;
   used: number;
   quota: number;
+}
+
+export interface NetworkTransfer {
+  bytes_in: number;
+  bytes_out: number;
+  bytes_total: number;
 }
 
 export interface CancelAccount {

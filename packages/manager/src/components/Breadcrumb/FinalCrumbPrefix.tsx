@@ -29,7 +29,7 @@ const FinalCrumbPrefix: React.FC<CombinedProps> = props => {
     <div
       className={classes.prefixComponentWrapper}
       data-qa-prefixwrapper
-      style={prefixStyle && prefixStyle}
+      style={prefixStyle}
     >
       {prefixComponent}
     </div>

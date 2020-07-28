@@ -35,6 +35,8 @@ import withGlobalErrors, {
 import withPreferences, {
   Props as PreferencesProps
 } from 'src/containers/preferences.container';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 
 import Logo from 'src/assets/logo/logo-text.svg';
 import { FlagSet } from './featureFlags';
@@ -157,6 +159,14 @@ const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
+
+  const { account } = useAccountManagement();
+
+  const showFirewalls = isFeatureEnabled(
+    'Cloud Firewall',
+    Boolean(flags.firewalls),
+    account.data?.capabilities ?? []
+  );
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
 
@@ -318,7 +328,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                           component={SupportSearchLanding}
                         />
                         <Route path="/events" component={EventsLanding} />
-                        {flags.firewalls && (
+                        {showFirewalls && (
                           <Route path="/firewalls" component={Firewalls} />
                         )}
                         <Redirect exact from="/" to="/dashboard" />
