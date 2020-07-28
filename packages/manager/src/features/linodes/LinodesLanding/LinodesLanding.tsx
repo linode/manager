@@ -42,6 +42,7 @@ import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import BackupsCTA_CMR from 'src/features/Backups/BackupsCTA_CMR';
+import { DialogType } from 'src/features/linodes/types';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import {
@@ -152,18 +153,36 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   };
 
+  openDialog = (type: DialogType, linodeID: number, linodeLabel?: string) => {
+    switch (type) {
+      case 'delete':
+        this.setState({
+          deleteDialogOpen: true,
+          selectedLinodeID: linodeID,
+          selectedLinodeLabel: linodeLabel
+        });
+        break;
+      case 'resize':
+        this.setState({
+          linodeResizeOpen: true,
+          selectedLinodeID: linodeID
+        });
+        break;
+      case 'migrate':
+        this.setState({
+          linodeMigrateOpen: true,
+          selectedLinodeID: linodeID
+        });
+        break;
+    }
+  };
+
   closeDialogs = () => {
     this.setState({
       powerDialogOpen: false,
-      deleteDialogOpen: false
-    });
-  };
-
-  openDeleteDialog = (linodeID: number, linodeLabel: string) => {
-    this.setState({
-      deleteDialogOpen: true,
-      selectedLinodeID: linodeID,
-      selectedLinodeLabel: linodeLabel
+      deleteDialogOpen: false,
+      linodeResizeOpen: false,
+      linodeMigrateOpen: false
     });
   };
 
@@ -172,30 +191,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       CtaDismissed: true
     });
     BackupsCtaDismissed.set('true');
-  };
-
-  openLinodeResize = (linodeID: number) => {
-    this.setState({
-      linodeResizeOpen: true,
-      selectedLinodeID: linodeID
-    });
-  };
-
-  closeLinodeResize = () => {
-    this.setState({
-      linodeResizeOpen: false
-    });
-  };
-
-  openLinodeMigrate = (linodeID: number) => {
-    this.setState({
-      linodeMigrateOpen: true,
-      selectedLinodeID: linodeID
-    });
-  };
-
-  closeLinodeMigrate = () => {
-    this.setState({ linodeMigrateOpen: false });
   };
 
   setFilterStatus = (status: FilterStatus) => {
@@ -229,9 +224,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       someLinodesHaveMaintenance: this.props
         .someLinodesHaveScheduledMaintenance,
       openPowerActionDialog: this.openPowerDialog,
-      openDeleteDialog: this.openDeleteDialog,
-      openLinodeResize: this.openLinodeResize,
-      openMigrateDialog: this.openLinodeMigrate
+      openDialog: this.openDialog
     };
 
     if (imagesError.read || linodesRequestError) {
@@ -298,7 +291,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           <>
             <LinodeResize_CMR
               open={this.state.linodeResizeOpen}
-              onClose={this.closeLinodeResize}
+              onClose={this.closeDialogs}
               linodeId={this.state.selectedLinodeID}
               linodeLabel={
                 this.props.linodesData.find(
@@ -308,7 +301,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             />
             <MigrateLinode
               open={this.state.linodeMigrateOpen}
-              onClose={this.closeLinodeMigrate}
+              onClose={this.closeDialogs}
               linodeID={this.state.selectedLinodeID ?? -1}
             />
           </>

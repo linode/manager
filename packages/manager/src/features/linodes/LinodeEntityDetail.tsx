@@ -30,6 +30,7 @@ import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 import { distroIcons } from 'src/components/ImageSelect/icons';
 import { dcDisplayNames } from 'src/constants';
+import { DialogType } from 'src/features/linodes/types';
 import useImages from 'src/hooks/useImages';
 import useLinodes from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
@@ -48,8 +49,7 @@ interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
   linode: Linode;
   username?: string;
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
-  openMigrateDialog: (linodeID: number) => void;
+  openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: BootAction,
     linodeID: number,
@@ -59,7 +59,6 @@ interface LinodeEntityDetailProps {
   backups: LinodeBackups;
   linodeConfigs: Config[];
   numVolumes: number;
-  openLinodeResize: (linodeID: number) => void;
   openTagDrawer: (tags: string[]) => void;
 }
 
@@ -68,13 +67,11 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     variant,
     linode,
     username,
-    openDeleteDialog,
-    openMigrateDialog,
+    openDialog,
     openPowerActionDialog,
     backups,
     linodeConfigs,
     numVolumes,
-    openLinodeResize,
     openTagDrawer
   } = props;
 
@@ -106,13 +103,11 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
-          openDeleteDialog={openDeleteDialog}
-          openMigrateDialog={openMigrateDialog}
+          openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
           linodeRegionDisplay={linodeRegionDisplay}
           backups={backups}
           linodeConfigs={linodeConfigs}
-          openLinodeResize={openLinodeResize}
           type={'something'}
           image={'something'}
         />
@@ -157,8 +152,7 @@ export interface HeaderProps {
   linodeLabel: string;
   linodeId: number;
   linodeStatus: Linode['status'];
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
-  openMigrateDialog: (linodeID: number) => void;
+  openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: BootAction,
     linodeID: number,
@@ -170,7 +164,6 @@ export interface HeaderProps {
   type: string;
   image: string;
   linodeConfigs: Config[];
-  openLinodeResize: (linodeID: number) => void;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -234,14 +227,12 @@ const Header: React.FC<HeaderProps> = props => {
     linodeId,
     linodeStatus,
     linodeRegionDisplay,
-    openDeleteDialog,
-    openMigrateDialog,
+    openDialog,
     openPowerActionDialog,
     backups,
     type,
     image,
-    linodeConfigs,
-    openLinodeResize
+    linodeConfigs
   } = props;
 
   const classes = useHeaderStyles();
@@ -357,10 +348,8 @@ const Header: React.FC<HeaderProps> = props => {
             linodeType={type}
             linodeStatus={linodeStatus}
             linodeBackups={backups}
-            openDeleteDialog={openDeleteDialog}
+            openDialog={openDialog}
             openPowerActionDialog={openPowerActionDialog}
-            openLinodeResize={openLinodeResize}
-            openMigrateDialog={openMigrateDialog}
             noImage={!image}
             inlineLabel="More Actions"
           />

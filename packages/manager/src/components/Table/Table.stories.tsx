@@ -19,7 +19,7 @@ import TableWrapper_CMR from './Table';
 const linodes = linodeFactory.buildList(10);
 
 class StoryTable extends React.Component {
-  handleDeleteDialog = (id: number, label: string) => {
+  handleDialog = (type: string, id: number, label: string) => {
     return;
   };
 
@@ -63,10 +63,8 @@ class StoryTable extends React.Component {
                     openTagDrawer={() => null}
                     type={linode.type}
                     vcpus={linode.specs.vcpus}
-                    openMigrateDialog={() => null}
-                    openDeleteDialog={this.handleDeleteDialog}
+                    openDialog={this.handleDialog}
                     openPowerActionDialog={this.handlePowerActionDialog}
-                    openLinodeResize={() => null as any}
                   ></LinodeRow_CMR>
                 ))}
               </TableBody>

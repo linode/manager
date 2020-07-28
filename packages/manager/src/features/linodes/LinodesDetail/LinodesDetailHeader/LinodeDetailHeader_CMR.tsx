@@ -16,6 +16,7 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import PowerDialogOrDrawer, {
   Action as BootAction
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { DialogType } from 'src/features/linodes/types';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
@@ -109,29 +110,34 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     });
   };
 
-  const openDeleteDialog = (linodeID: number, linodeLabel: string) => {
-    setDeleteDialog(deleteDialog => ({
-      ...deleteDialog,
-      open: true,
-      linodeLabel,
-      linodeID
-    }));
-  };
-
-  const openResizeDialog = (linodeID: number) => {
-    setResizeDialog(resizeDialog => ({
-      ...resizeDialog,
-      open: true,
-      linodeID
-    }));
-  };
-
-  const openMigrateDialog = (linodeID: number) => {
-    setMigrateDialog(migrateDialog => ({
-      ...migrateDialog,
-      open: true,
-      linodeID
-    }));
+  const openDialog = (
+    dialogType: DialogType,
+    linodeID: number,
+    linodeLabel?: string
+  ) => {
+    switch (dialogType) {
+      case 'delete':
+        setDeleteDialog(deleteDialog => ({
+          ...deleteDialog,
+          open: true,
+          linodeLabel,
+          linodeID
+        }));
+        break;
+      case 'migrate':
+        setMigrateDialog(migrateDialog => ({
+          ...migrateDialog,
+          open: true,
+          linodeID
+        }));
+        break;
+      case 'resize':
+        setResizeDialog(resizeDialog => ({
+          ...resizeDialog,
+          open: true,
+          linodeID
+        }));
+    }
   };
 
   const closeDialogs = () => {
@@ -201,10 +207,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         linodeConfigs={linodeConfigs}
         backups={linode.backups}
         openTagDrawer={openTagDrawer}
-        openDeleteDialog={openDeleteDialog}
-        openMigrateDialog={openMigrateDialog}
+        openDialog={openDialog}
         openPowerActionDialog={openPowerActionDialog}
-        openLinodeResize={openResizeDialog}
       />
       {linodeInTransition(linodeStatus, firstEventWithProgress) && (
         <LinodeBusyStatus />
