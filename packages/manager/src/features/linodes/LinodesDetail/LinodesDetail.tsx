@@ -20,6 +20,9 @@ import {
 
 const CloneLanding = React.lazy(() => import('../CloneLanding'));
 const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
+const LinodesDetailHeader_CMR = React.lazy(() =>
+  import('./LinodesDetailHeader/LinodeDetailHeader_CMR')
+);
 const LinodesDetailNavigation = React.lazy(() =>
   import('./LinodesDetailNavigation')
 );
@@ -67,23 +70,30 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
           <Route path={`${path}/clone`} component={CloneLanding} />
           <Route path={`${path}/migrate`} component={MigrateLanding} />
           <Route
-            render={() => (
-              <React.Fragment>
-                <LinodesDetailHeader />
-                {flags.cmr ? (
-                  // We have separate routing for the version
-                  // rendered on the dashboard, to prevent the url
-                  // from changing when the active tab is changed.
-                  isDashboard ? (
+            render={() =>
+              flags.cmr ? (
+                // We have separate routing for the version
+                // rendered on the dashboard, to prevent the url
+                // from changing when the active tab is changed.
+                isDashboard ? (
+                  // For single linode view
+                  <React.Fragment>
+                    <LinodesDetailHeader_CMR />
                     <LinodesDashboardNavigation />
-                  ) : (
-                    <LinodesDetailNavigation_CMR />
-                  )
+                  </React.Fragment>
                 ) : (
+                  <React.Fragment>
+                    <LinodesDetailHeader_CMR />
+                    <LinodesDetailNavigation_CMR />
+                  </React.Fragment>
+                )
+              ) : (
+                <React.Fragment>
+                  <LinodesDetailHeader />
                   <LinodesDetailNavigation />
-                )}
-              </React.Fragment>
-            )}
+                </React.Fragment>
+              )
+            }
           />
         </Switch>
       </React.Suspense>

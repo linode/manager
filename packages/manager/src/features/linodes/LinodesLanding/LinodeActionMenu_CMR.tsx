@@ -15,7 +15,12 @@ import { lishLaunch } from 'src/features/Lish/lishUtils';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import { useTypes } from 'src/hooks/useTypes';
 import { useRegions } from 'src/hooks/useRegions';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
@@ -31,7 +36,10 @@ import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   },
   link: {
     padding: '12px 10px'
@@ -70,6 +78,8 @@ export type CombinedProps = Props & StateProps;
 
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { types } = useTypes();
   const history = useHistory();
@@ -279,6 +289,35 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
+      if (matchesSmDown) {
+        actions.unshift({
+          title: 'Details',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push({
+              pathname: `/linodes/${linodeId}`
+            });
+            e.preventDefault();
+          }
+        });
+        actions.unshift({
+          title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            const action =
+              linodeStatus === 'running' ? 'Power Off' : 'Power On';
+            sendLinodeActionMenuItemEvent(`${action} Linode`);
+            e.preventDefault();
+            e.stopPropagation();
+            openPowerActionDialog(
+              `${action}` as BootAction,
+              linodeId,
+              linodeLabel,
+              linodeStatus === 'running' ? configs : []
+            );
+          },
+          disabled: !['running', 'offline'].includes(linodeStatus)
+        });
+      }
+
       if (inTableContext === true) {
         actions.unshift({
           title: 'Launch Console',
@@ -332,7 +371,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      {inTableContext &&
+      {!matchesSmDown &&
+        inTableContext &&
         inlineActions.map(action => {
           return (
             <InlineMenuAction
