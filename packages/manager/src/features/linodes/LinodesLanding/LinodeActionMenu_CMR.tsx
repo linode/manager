@@ -63,6 +63,7 @@ export interface Props {
   linodeStatus: string;
   noImage: boolean;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openMigrateDialog: (linodeID: number) => void;
   openPowerActionDialog: (
     bootAction: BootAction,
     linodeID: number,
@@ -83,7 +84,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
   const { types } = useTypes();
   const history = useHistory();
-  const regions = useRegions();
+  const regions = useRegions().entities;
 
   const [configs, setConfigs] = React.useState<Config[]>([]);
   const [configsError, setConfigsError] = React.useState<
@@ -143,6 +144,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       linodeStatus,
       openDeleteDialog,
       openPowerActionDialog,
+      openMigrateDialog,
       readOnly,
       openLinodeResize
     } = props;
@@ -247,9 +249,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendMigrationNavigationEvent('/linodes');
             sendLinodeActionMenuItemEvent('Migrate');
-            history.push({
-              pathname: `/linodes/${linodeId}/migrate`
-            });
+            openMigrateDialog(linodeId);
             e.preventDefault();
             e.stopPropagation();
           },

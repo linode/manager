@@ -67,6 +67,7 @@ interface Props {
   tags: string[];
   imageLabel: string;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openMigrateDialog: (linodeID: number) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
@@ -153,6 +154,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
       image,
       classes,
       openDeleteDialog,
+      openMigrateDialog,
       openPowerActionDialog,
       openLinodeResize,
       displayType,
@@ -218,6 +220,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
                   <LinodeActionMenu_CMR
                     {...actionMenuProps}
                     openLinodeResize={openLinodeResize}
+                    openMigrateDialog={openMigrateDialog}
                   />
                 ) : (
                   <LinodeActionMenu {...actionMenuProps} />
@@ -435,6 +438,7 @@ export const RenderFlag: React.FC<{
 
   if (linodeNotifications.length > 0) {
     return (
+      // eslint-disable-next-line
       <>
         {linodeNotifications.map((notification, idx) => (
           <Grid

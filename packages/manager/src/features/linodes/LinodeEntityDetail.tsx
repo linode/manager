@@ -49,6 +49,7 @@ interface LinodeEntityDetailProps {
   linode: Linode;
   username?: string;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openMigrateDialog: (linodeID: number) => void;
   openPowerActionDialog: (
     bootAction: BootAction,
     linodeID: number,
@@ -68,6 +69,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     linode,
     username,
     openDeleteDialog,
+    openMigrateDialog,
     openPowerActionDialog,
     backups,
     linodeConfigs,
@@ -105,6 +107,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeId={linode.id}
           linodeStatus={linode.status}
           openDeleteDialog={openDeleteDialog}
+          openMigrateDialog={openMigrateDialog}
           openPowerActionDialog={openPowerActionDialog}
           linodeRegionDisplay={linodeRegionDisplay}
           backups={backups}
@@ -155,6 +158,7 @@ export interface HeaderProps {
   linodeId: number;
   linodeStatus: Linode['status'];
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openMigrateDialog: (linodeID: number) => void;
   openPowerActionDialog: (
     bootAction: BootAction,
     linodeID: number,
@@ -207,9 +211,6 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       fontFamily: `${theme.font.normal} !important`
     }
   },
-  actionMenu: {
-    marginLeft: 30
-  },
   statusChip: {
     ...theme.applyStatusPillStyles
   },
@@ -234,6 +235,7 @@ const Header: React.FC<HeaderProps> = props => {
     linodeStatus,
     linodeRegionDisplay,
     openDeleteDialog,
+    openMigrateDialog,
     openPowerActionDialog,
     backups,
     type,
@@ -358,6 +360,7 @@ const Header: React.FC<HeaderProps> = props => {
             openDeleteDialog={openDeleteDialog}
             openPowerActionDialog={openPowerActionDialog}
             openLinodeResize={openLinodeResize}
+            openMigrateDialog={openMigrateDialog}
             noImage={!image}
             inlineLabel="More Actions"
           />
@@ -692,50 +695,43 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
   );
 
   return (
-    <>
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      >
-        <Grid item sm={7}>
-          <div className={classes.detailsSection}>
-            {linodePlan && (
-              <Link
-                to={`/linodes/${linodeId}/resize`}
-                className={classes.listItem}
-              >
-                {linodePlan} Plan
-              </Link>
-            )}
-            {linodeRegionDisplay && (
-              <Link
-                to={`/linodes/${linodeId}/migrate`}
-                className={classes.listItem}
-              >
-                {linodeRegionDisplay}
-              </Link>
-            )}
-            <Typography className={classes.listItem}>
-              Linode ID {linodeId}
-            </Typography>
-            <Typography className={classes.linodeCreated}>
-              Created{' '}
-              {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
-            </Typography>
-          </div>
-        </Grid>
-        <Grid item sm={5} className={classes.linodeTags}>
-          <TagCell
-            width={500}
-            tags={linodeTags}
-            addTag={addTag}
-            deleteTag={deleteTag}
-            listAllTags={openTagDrawer}
-          />
-        </Grid>
+    <Grid container direction="row" justify="space-between" alignItems="center">
+      <Grid item sm={7}>
+        <div className={classes.detailsSection}>
+          {linodePlan && (
+            <Link
+              to={`/linodes/${linodeId}/resize`}
+              className={classes.listItem}
+            >
+              {linodePlan} Plan
+            </Link>
+          )}
+          {linodeRegionDisplay && (
+            <Link
+              to={`/linodes/${linodeId}/migrate`}
+              className={classes.listItem}
+            >
+              {linodeRegionDisplay}
+            </Link>
+          )}
+          <Typography className={classes.listItem}>
+            Linode ID {linodeId}
+          </Typography>
+          <Typography className={classes.linodeCreated}>
+            Created{' '}
+            {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+          </Typography>
+        </div>
       </Grid>
-    </>
+      <Grid item sm={5} className={classes.linodeTags}>
+        <TagCell
+          width={500}
+          tags={linodeTags}
+          addTag={addTag}
+          deleteTag={deleteTag}
+          listAllTags={openTagDrawer}
+        />
+      </Grid>
+    </Grid>
   );
 });

@@ -63,6 +63,7 @@ interface Props {
     tags: string[]
   ) => void;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openMigrateDialog: (linodeID: number) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
@@ -102,6 +103,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     linodeNotifications,
     openTagDrawer,
     openDeleteDialog,
+    openMigrateDialog,
     openPowerActionDialog,
     openLinodeResize,
     // displayType, @todo use for M3-2059
@@ -277,6 +279,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             linodeStatus={status}
             linodeBackups={backups}
             openDeleteDialog={openDeleteDialog}
+            openMigrateDialog={openMigrateDialog}
             openPowerActionDialog={openPowerActionDialog}
             openLinodeResize={openLinodeResize}
             noImage={!image}

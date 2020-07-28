@@ -32,6 +32,7 @@ interface Props {
   images: Image[];
   showHead?: boolean;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openMigrateDialog: (linodeID: number) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
@@ -92,6 +93,7 @@ const CardView: React.FC<CombinedProps> = props => {
     data,
     imagesData,
     openDeleteDialog,
+    openMigrateDialog,
     openPowerActionDialog,
     openLinodeResize,
     linodeConfigs,
@@ -126,6 +128,7 @@ const CardView: React.FC<CombinedProps> = props => {
                     backups={linode.backups}
                     openTagDrawer={openTagDrawer}
                     openDeleteDialog={openDeleteDialog}
+                    openMigrateDialog={openMigrateDialog}
                     openPowerActionDialog={openPowerActionDialog}
                     openLinodeResize={openLinodeResize}
                   />
@@ -157,6 +160,7 @@ const CardView: React.FC<CombinedProps> = props => {
                 openDeleteDialog={openDeleteDialog}
                 openPowerActionDialog={openPowerActionDialog}
                 openLinodeResize={openLinodeResize}
+                openMigrateDialog={openMigrateDialog}
               />
             ))}
       </Grid>

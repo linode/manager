@@ -63,6 +63,7 @@ class StoryTable extends React.Component {
                     openTagDrawer={() => null}
                     type={linode.type}
                     vcpus={linode.specs.vcpus}
+                    openMigrateDialog={() => null}
                     openDeleteDialog={this.handleDeleteDialog}
                     openPowerActionDialog={this.handlePowerActionDialog}
                     openLinodeResize={() => null as any}

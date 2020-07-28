@@ -18,6 +18,7 @@ storiesOf('EntityDetail', module).add('Linode', () => (
         openTagDrawer={() => null}
         openDeleteDialog={() => null}
         openPowerActionDialog={() => null}
+        openMigrateDialog={() => null}
         backups={linodeBackupsFactory.build()}
         linodeConfigs={linodeConfigFactory.buildList(2)}
         openLinodeResize={() => null}
@@ -32,6 +33,7 @@ storiesOf('EntityDetail', module).add('Linode', () => (
         username="linode-user"
         openTagDrawer={() => null}
         openDeleteDialog={() => null}
+        openMigrateDialog={() => null}
         openPowerActionDialog={() => null}
         backups={linodeBackupsFactory.build()}
         linodeConfigs={linodeConfigFactory.buildList(2)}

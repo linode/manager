@@ -25,6 +25,7 @@ import useLinodes from 'src/hooks/useLinodes';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
+import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import { useHistory } from 'react-router-dom';
 
 interface Props {
@@ -46,14 +47,9 @@ interface PowerDialogProps {
   linodeConfigs?: Config[];
 }
 
-interface DeleteDialogProps {
+interface DialogProps {
   open: boolean;
-  linodeLabel: string;
-  linodeID: number;
-}
-
-interface ResizeDialogProps {
-  open: boolean;
+  linodeLabel?: string;
   linodeID: number;
 }
 
@@ -74,13 +70,18 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     linodeLabel: ''
   });
 
-  const [deleteDialog, setDeleteDialog] = React.useState<DeleteDialogProps>({
+  const [deleteDialog, setDeleteDialog] = React.useState<DialogProps>({
     open: false,
     linodeID: 0,
     linodeLabel: ''
   });
 
-  const [resizeDialog, setResizeDialog] = React.useState<ResizeDialogProps>({
+  const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
+    open: false,
+    linodeID: 0
+  });
+
+  const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
     open: false,
     linodeID: 0
   });
@@ -125,10 +126,19 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     }));
   };
 
+  const openMigrateDialog = (linodeID: number) => {
+    setMigrateDialog(migrateDialog => ({
+      ...migrateDialog,
+      open: true,
+      linodeID
+    }));
+  };
+
   const closeDialogs = () => {
     setPowerDialog(powerDialog => ({ ...powerDialog, open: false }));
     setDeleteDialog(deleteDialog => ({ ...deleteDialog, open: false }));
     setResizeDialog(resizeDialog => ({ ...resizeDialog, open: false }));
+    setMigrateDialog(migrateDialog => ({ ...migrateDialog, open: false }));
   };
 
   const closeTagDrawer = () => {
@@ -192,6 +202,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         backups={linode.backups}
         openTagDrawer={openTagDrawer}
         openDeleteDialog={openDeleteDialog}
+        openMigrateDialog={openMigrateDialog}
         openPowerActionDialog={openPowerActionDialog}
         openLinodeResize={openResizeDialog}
       />
@@ -217,6 +228,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         open={resizeDialog.open}
         onClose={closeDialogs}
         linodeId={resizeDialog.linodeID}
+      />
+      <MigrateLinode
+        open={migrateDialog.open}
+        onClose={closeDialogs}
+        linodeID={migrateDialog.linodeID}
       />
       <TagDrawer
         entityLabel={linode.label}
