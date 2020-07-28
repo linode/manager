@@ -468,6 +468,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                             }
                             onChange={toggleGroupDomains}
                             checked={domainsAreGrouped}
+                            disabled={isLargeAccount}
                           />
                         }
                         label="Group by Tag:"
