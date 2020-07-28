@@ -39,10 +39,12 @@ const eventsToNotificationItems = (events: Event[]): NotificationItem[] => {
       }
       const eventLabel = entity.label;
 
+      const id = `community-update-${entity.id}`;
+
       switch (event.action) {
         case 'community_question_reply':
           return {
-            id: `community-update-${entity.id}`,
+            id,
             body: (
               <Typography>
                 <Link to={`${userHref}${event.username}`}>
@@ -56,7 +58,7 @@ const eventsToNotificationItems = (events: Event[]): NotificationItem[] => {
 
         case 'community_mention':
           return {
-            id: `community-update-${entity.id ?? 0}`,
+            id,
             body: (
               <Typography>
                 <Link to={`${userHref}${event.username}`}>
@@ -72,7 +74,7 @@ const eventsToNotificationItems = (events: Event[]): NotificationItem[] => {
           const [likeSummary, postTitle] = eventLabel.split(':');
 
           return {
-            id: `community-update-${entity.id}`,
+            id,
             body: (
               <Typography>
                 {likeSummary}: <Link to={`${entity.url}`}>{postTitle}</Link>

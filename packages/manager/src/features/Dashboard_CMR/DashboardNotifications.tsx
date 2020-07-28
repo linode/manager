@@ -35,7 +35,7 @@ export const Notifications: React.FC<{}> = _ => {
   const balance = account.data?.balance ?? 0;
 
   const [events, setEvents] = React.useState<Event[]>([]);
-  const [error, setError] = React.useState<string | null>(null);
+  const [eventsError, setEventsError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
 
   /**
@@ -62,15 +62,15 @@ export const Notifications: React.FC<{}> = _ => {
             setLoading(false);
           })
           .catch(error => {
-            setError(error[0].reason);
+            setEventsError(error[0].reason);
             setLoading(false);
           });
       })
       .catch(error => {
-        setError(error[0].reason);
+        setEventsError(error[0].reason);
         setLoading(false);
       });
-  }, [error]);
+  });
 
   const communityEvents = events.filter(event =>
     [
@@ -82,8 +82,8 @@ export const Notifications: React.FC<{}> = _ => {
 
   return loading ? (
     <CircleProgress />
-  ) : error ? (
-    <ErrorState errorText={error} />
+  ) : eventsError ? (
+    <ErrorState errorText={eventsError} />
   ) : (
     <Paper className={classes.root}>
       {balance > 0 && <PastDue balance={balance} />}
