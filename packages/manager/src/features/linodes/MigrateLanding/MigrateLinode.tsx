@@ -3,7 +3,6 @@ import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Dialog from 'src/components/Dialog';
 import Button from 'src/components/Button';
@@ -24,9 +23,6 @@ import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
-import withRegions, {
-  DefaultProps as RegionProps
-} from 'src/containers/regions.container';
 import { MBpsInterDC } from 'src/constants';
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { formatDate } from 'src/utilities/formatDate';
@@ -48,10 +44,7 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props &
-  WithTypesAndImages &
-  RegionProps &
-  RouteComponentProps<{}>;
+type CombinedProps = Props & WithTypesAndImages;
 
 const MigrateLanding: React.FC<CombinedProps> = props => {
   const { linodeID, notifications, onClose, open } = props;
@@ -117,7 +110,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
             format: 'H'
           })
         );
-        props.history.push(`/linodes/${linodeID}`);
+        onClose();
       })
       .catch((e: APIErrorType[]) => {
         setLoading(false);
@@ -226,7 +219,6 @@ const withReduxState = connect(mapStateToProps);
 
 export default compose<CombinedProps, Props>(
   withReduxState,
-  withRegions(),
   React.memo
 )(MigrateLanding);
 
