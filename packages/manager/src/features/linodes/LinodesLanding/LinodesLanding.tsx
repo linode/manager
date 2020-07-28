@@ -157,24 +157,24 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     switch (type) {
       case 'delete':
         this.setState({
-          deleteDialogOpen: true,
-          selectedLinodeID: linodeID,
-          selectedLinodeLabel: linodeLabel
+          deleteDialogOpen: true
         });
         break;
       case 'resize':
         this.setState({
-          linodeResizeOpen: true,
-          selectedLinodeID: linodeID
+          linodeResizeOpen: true
         });
         break;
       case 'migrate':
         this.setState({
-          linodeMigrateOpen: true,
-          selectedLinodeID: linodeID
+          linodeMigrateOpen: true
         });
         break;
     }
+    this.setState({
+      selectedLinodeID: linodeID,
+      selectedLinodeLabel: linodeLabel
+    });
   };
 
   closeDialogs = () => {
