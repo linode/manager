@@ -52,6 +52,8 @@ type CombinedProps = Props;
 const ConfigureForm: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
+  // if linode has CF and destination does not support, prevent user from selection
+
   return (
     <Paper className={classes.root}>
       <Typography variant="h3">Configure Migration</Typography>
@@ -62,6 +64,7 @@ const ConfigureForm: React.FC<CombinedProps> = props => {
           props.currentRegion.region
         )}: ${formatRegion(props.currentRegion.region)}`}</Typography>
       </div>
+      {/* This region does not support Cloud Firewalls. */}
       <RegionSelect
         className={classes.select}
         regions={props.allRegions

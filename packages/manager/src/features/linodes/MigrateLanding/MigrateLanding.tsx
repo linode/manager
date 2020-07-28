@@ -73,6 +73,8 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
   const [isLoading, setLoading] = React.useState<boolean>(false);
 
+  const [hasFirewall, setHasFirewall] = React.useState<boolean>(false);
+
   const {
     label,
     linodeId,
@@ -107,6 +109,10 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
 
     if (!hasConfirmed) {
       setAcceptError('Please accept the conditions of this migration.');
+    }
+
+    if (hasFirewall) {
+      setHasFirewall(true);
     }
 
     if (!selectedRegion || !hasConfirmed) {
@@ -162,6 +168,10 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
   if (regionsData.length === 0 && regionsLastUpdated !== 0) {
     return null;
   }
+
+  const firewallRegions = regionsData.filter(thisRegion =>
+    thisRegion.capabilities.includes('Cloud Firewall')
+  );
 
   const disabledText = getDisabledReason(
     props.recentEvents,
@@ -219,7 +229,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       />
       <ConfigureForm
         currentRegion={region}
-        allRegions={regionsData}
+        allRegions={hasFirewall ? firewallRegions : regionsData}
         handleSelectRegion={handleSelectRegion}
         selectedRegion={selectedRegion}
         errorText={regionError}
