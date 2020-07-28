@@ -1,6 +1,7 @@
 import { Event, Notification } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -49,6 +50,7 @@ type CombinedProps = Props & WithTypesAndImages;
 const MigrateLanding: React.FC<CombinedProps> = props => {
   const { linodeID, notifications, onClose, open } = props;
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const regions = useRegions();
   const { types } = useTypes();
@@ -109,6 +111,10 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
           +formatDate(new Date().toISOString(), {
             format: 'H'
           })
+        );
+        enqueueSnackbar(
+          'Your Linode has entered the migration queue and will begin migration shortly.',
+          { variant: 'success' }
         );
         onClose();
       })
