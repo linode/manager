@@ -1,6 +1,6 @@
 #dev-tools {
-  position: absolute;
-  bottom: 0;
+  position: fixed;
+  bottom: 0px;
   background: black;
   opacity: 0.4;
   color: white;
