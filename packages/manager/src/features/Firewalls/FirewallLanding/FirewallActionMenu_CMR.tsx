@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   link: {
-    // minWidth: 70,
     padding: '12px 10px',
     textAlign: 'center',
     '&:hover': {
@@ -116,19 +115,28 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
     request();
   };
 
-  const createActions = () => {
-    return (): Action[] => {
-      const actions: Action[] = [
-        {
-          title: 'Delete',
-          onClick: () => {
-            triggerDeleteFirewall(firewallID, firewallLabel);
-          }
+  const createActions = () => (): Action[] => {
+    const actions: Action[] = [
+      {
+        title: 'Delete',
+        onClick: () => {
+          triggerDeleteFirewall(firewallID, firewallLabel);
         }
-      ];
+      }
+    ];
 
-      if (matchesSmDown) {
-        actions.unshift({
+    if (matchesSmDown) {
+      actions.unshift(
+        {
+          title: 'Edit',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push({
+              pathname: `/firewalls/${firewallID}`
+            });
+            e.preventDefault();
+          }
+        },
+        {
           title:
             firewallStatus === ('enabled' as FirewallStatus)
               ? 'Disable'
@@ -137,20 +145,11 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
             e.preventDefault();
             handleEnableDisable();
           }
-        });
-        actions.unshift({
-          title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push({
-              pathname: `/firewalls/${firewallID}`
-            });
-            e.preventDefault();
-          }
-        });
-      }
+        }
+      );
+    }
 
-      return actions;
-    };
+    return actions;
   };
 
   return (
