@@ -31,6 +31,7 @@ import EntityTable, {
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import LandingHeader from 'src/components/LandingHeader';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Toggle from 'src/components/Toggle';
@@ -51,8 +52,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
-import NodeBalancerTableRow_CMR from './NodeBalancerTableRow_CMR';
 import NodeBalancerTableRow from './NodeBalancerTableRow';
+import NodeBalancerTableRow_CMR from './NodeBalancerTableRow_CMR';
 
 type ClassNames =
   | 'root'
@@ -319,50 +320,67 @@ export class NodeBalancersLanding extends React.Component<
           }: ToggleProps<boolean>) => {
             return (
               <React.Fragment>
-                <Grid
-                  container
-                  justify="space-between"
-                  alignItems="flex-end"
-                  style={{ paddingBottom: 0 }}
-                >
-                  <Grid item className={classes.titleWrapper}>
-                    <Breadcrumb
-                      pathname={location.pathname}
-                      data-qa-title
-                      labelTitle="NodeBalancers"
-                      className={classes.title}
-                    />
-                  </Grid>
-                  <Grid item className="p0">
-                    <FormControlLabel
-                      className={classes.tagGroup}
-                      label="Group by Tag:"
-                      control={
-                        <Toggle
-                          className={
-                            nodeBalancersAreGrouped ? ' checked' : ' unchecked'
-                          }
-                          onChange={toggleNodeBalancerGroupByTag}
-                          checked={nodeBalancersAreGrouped}
-                        />
-                      }
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Grid
-                      container
-                      alignItems="flex-end"
-                      style={{ width: 'auto' }}
-                    >
-                      <Grid item className="pt0">
-                        <AddNewLink
-                          onClick={() => history.push('/nodebalancers/create')}
-                          label="Add a NodeBalancer"
-                        />
+                {this.props.flags.cmr ? (
+                  <LandingHeader
+                    title="NodeBalancers"
+                    entity="NodeBalancer"
+                    onAddNew={() =>
+                      this.props.history.push('/nodebalancers/create')
+                    }
+                    createButtonWidth={190}
+                    iconType="nodebalancer"
+                    docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
+                  />
+                ) : (
+                  <Grid
+                    container
+                    justify="space-between"
+                    alignItems="flex-end"
+                    style={{ paddingBottom: 0 }}
+                  >
+                    <Grid item className={classes.titleWrapper}>
+                      <Breadcrumb
+                        pathname={location.pathname}
+                        data-qa-title
+                        labelTitle="NodeBalancers"
+                        className={classes.title}
+                      />
+                    </Grid>
+                    <Grid item className="p0">
+                      <FormControlLabel
+                        className={classes.tagGroup}
+                        label="Group by Tag:"
+                        control={
+                          <Toggle
+                            className={
+                              nodeBalancersAreGrouped
+                                ? ' checked'
+                                : ' unchecked'
+                            }
+                            onChange={toggleNodeBalancerGroupByTag}
+                            checked={nodeBalancersAreGrouped}
+                          />
+                        }
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Grid
+                        container
+                        alignItems="flex-end"
+                        style={{ width: 'auto' }}
+                      >
+                        <Grid item className="pt0">
+                          <AddNewLink
+                            onClick={() =>
+                              history.push('/nodebalancers/create')
+                            }
+                            label="Add a NodeBalancer"
+                          />
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
+                )}
                 <Table
                   entity="nodebalancer"
                   groupByTag={nodeBalancersAreGrouped}

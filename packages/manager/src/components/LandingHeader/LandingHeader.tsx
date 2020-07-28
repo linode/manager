@@ -16,8 +16,7 @@ const useStyles = makeStyles(() => ({
   button: {
     borderRadius: 3,
     height: 34,
-    padding: 0,
-    width: 152
+    padding: 0
   }
 }));
 
@@ -27,6 +26,7 @@ interface Props extends Omit<HeaderProps, 'actions'> {
   docsLink: string;
   onAddNew?: () => void;
   entity: string;
+  createButtonWidth?: number;
 }
 
 /**
@@ -40,7 +40,9 @@ export const LandingHeader: React.FC<Props> = props => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { docsLink, onAddNew, entity, extraActions } = props;
+  const { docsLink, onAddNew, entity, extraActions, createButtonWidth } = props;
+
+  const defaultCreateButtonWidth = 152;
 
   const actions = React.useMemo(
     () => (
@@ -58,6 +60,7 @@ export const LandingHeader: React.FC<Props> = props => {
               buttonType="primary"
               className={classes.button}
               onClick={onAddNew}
+              style={{ width: createButtonWidth ?? defaultCreateButtonWidth }}
             >
               Create a {entity}
             </Button>
@@ -68,7 +71,15 @@ export const LandingHeader: React.FC<Props> = props => {
         )}
       </Grid>
     ),
-    [docsLink, entity, onAddNew, classes.button, extraActions, matchesSmDown]
+    [
+      docsLink,
+      entity,
+      onAddNew,
+      classes.button,
+      extraActions,
+      matchesSmDown,
+      createButtonWidth
+    ]
   );
 
   return <EntityHeader isLanding actions={actions} {...props} />;
