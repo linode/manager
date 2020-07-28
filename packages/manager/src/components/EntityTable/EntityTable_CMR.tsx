@@ -1,12 +1,13 @@
 import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import TableCell from 'src/components/TableCell';
+import Typography from 'src/components/core/Typography';
 import OrderBy, { OrderByProps } from 'src/components/OrderBy';
+import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag_CMR';
 import ListEntities from './ListEntities_CMR';
 import { EntityTableRow } from './types';
-import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
