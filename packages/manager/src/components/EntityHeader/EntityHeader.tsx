@@ -11,6 +11,7 @@ export interface HeaderProps extends BreadCrumbProps {
   title: string | JSX.Element;
   bodyClassName?: string;
   isLanding?: boolean;
+  isSecondary?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -23,11 +24,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     padding: '4px 15px',
     [theme.breakpoints.down('sm')]: {
-      borderBottom: '1px solid #f4f5f6'
+      borderBottom: `1px solid ${theme.palette.divider}`
     }
   },
   breadCrumbDetail: {
     padding: 0
+  },
+  breadCrumbSecondary: {
+    justifyContent: 'space-between'
   },
   contentOuter: {
     display: 'flex',
@@ -68,7 +72,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     parentLink,
     parentText,
     title,
-    bodyClassName
+    bodyClassName,
+    isSecondary
   } = props;
   const classes = useStyles();
 
@@ -79,7 +84,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
         xs={12}
         className={classnames({
           [classes.breadcrumbOuter]: true,
-          [classes.breadCrumbDetail]: Boolean(parentLink)
+          [classes.breadCrumbDetail]: Boolean(parentLink),
+          [classes.breadCrumbSecondary]: Boolean(isSecondary)
         })}
       >
         <HeaderBreadCrumb
@@ -107,16 +113,18 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
         {actions}
       </Grid>
       <Hidden mdUp>
-        <Grid
-          item
-          xs={12}
-          className={classnames({
-            [classes.contentOuter]: true,
-            [classes.bodyDetailVariant]: Boolean(parentLink)
-          })}
-        >
-          {body}
-        </Grid>
+        {body ? (
+          <Grid
+            item
+            xs={12}
+            className={classnames({
+              [classes.contentOuter]: true,
+              [classes.bodyDetailVariant]: Boolean(parentLink)
+            })}
+          >
+            {body}
+          </Grid>
+        ) : null}
       </Hidden>
     </Grid>
   );

@@ -82,9 +82,6 @@ const styles = (theme: Theme) =>
     clearFilters: {
       margin: '1px 0 0 0',
       padding: 0,
-      [theme.breakpoints.only('xs')]: {
-        margin: '10px 0 0 0'
-      },
       '&:hover': {
         '& svg': {
           color: `${theme.palette.primary.main} !important`
