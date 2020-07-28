@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between'
   },
   primaryLinksContainer: {
-    // marginLeft: 8,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'
@@ -38,8 +37,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   secondaryLinksContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-end'
+    }
   },
+  secondaryLinksContainerLeft: { display: 'flex' },
+  secondaryLinksContainerRight: { display: 'flex' },
   logoItem: {
     '& > a': {
       display: 'flex',
@@ -47,6 +53,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   logoCollapsed: {
+    marginLeft: 10,
+    marginRight: 10,
     '& .logoLetters': {
       opacity: 0
     }
@@ -66,9 +74,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&:focus': {
       backgroundColor: theme.bg.primaryNavActiveBG
-    },
-    '&:first-of-type': {
-      marginLeft: 15
+    }
+  },
+  listItemIcon: {
+    padding: 0,
+    '& .icon': {
+      [theme.breakpoints.down('md')]: {
+        marginLeft: 7.5,
+        marginRight: 7.5
+      }
     }
   },
   listItemCollapsed: {},
@@ -104,7 +118,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       color: theme.color.green
     },
-    paddingRight: 18
+    paddingRight: 20,
+    [theme.breakpoints.down('md')]: {
+      paddingLeft: 7.5,
+      paddingRight: 7.5
+    }
   },
   settingsCollapsed: {
     margin: `auto 16px 16px ${theme.spacing(4) - 1}px`
@@ -214,7 +232,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   primaryNavLinkIcon: {
-    marginRight: 10,
+    marginRight: 15,
     display: 'flex',
     alignItems: 'center'
   }

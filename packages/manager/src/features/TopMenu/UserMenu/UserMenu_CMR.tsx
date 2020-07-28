@@ -1,4 +1,3 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {
   Menu as ReachMenu,
   MenuButton,
@@ -6,6 +5,7 @@ import {
   MenuLink,
   MenuPopover
 } from '@reach/menu-button';
+import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
@@ -43,14 +43,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   userWrapper: {
     borderRadius: '50%',
-    width: '40px',
-    height: '40px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.down('md')]: {
-      margin: 0,
+      marginLeft: 7.5,
+      marginRight: 7.5,
       width: '28px',
       height: '28px'
     }
@@ -209,9 +208,8 @@ export const UserMenu: React.FC<{}> = () => {
               />
             </div>
           )}
-          <KeyboardArrowDown className={classes.caret} />
         </MenuButton>
-        <MenuPopover className={classes.menuPopover} portal={false}>
+        <MenuPopover className={classes.menuPopover} position={positionRight}>
           <MenuItems className={classes.menuItemList}>
             {menuLinks.map(menuLink =>
               menuLink.hide ? null : (

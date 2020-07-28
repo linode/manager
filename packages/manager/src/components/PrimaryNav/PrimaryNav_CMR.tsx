@@ -26,6 +26,7 @@ import Gear from 'src/assets/icons/gear.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import Managed from 'src/assets/icons/managednav.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
+import LogoIcon from 'src/assets/logo/logo.svg';
 import Help from 'src/assets/primary-nav-help.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -33,6 +34,7 @@ import Hidden, { HiddenProps } from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import { Link } from 'src/components/Link';
 import UserMenu from 'src/features/TopMenu/UserMenu/UserMenu_CMR';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -96,6 +98,8 @@ export interface PrimaryNavProps {
 export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const { closeMenu, isCollapsed, toggleTheme, toggleSpacing } = props;
   const classes = usePrimaryNavStyles();
+  const theme = useTheme<Theme>();
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const [anchorEl, setAnchorEl] = React.useState<
     (EventTarget & HTMLElement) | undefined
@@ -115,16 +119,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
     links: PrimaryLink[];
   }[] = React.useMemo(
     () => [
-      {
-        group: 'None',
-        links: [
-          {
-            display: 'Dashboard',
-            href: '/dashboard',
-            icon: <Dashboard className="small" />
-          }
-        ]
-      },
       {
         group: 'Compute',
         links: [
@@ -251,11 +245,40 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             <div
               className={classNames({
                 [classes.logoItem]: true,
-                [classes.logoCollapsed]: isCollapsed
+                [classes.logoCollapsed]: matchesMdDown
               })}
             >
               <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
-                <Logo width={101} height={29} />
+                {matchesMdDown ? (
+                  <LogoIcon width={25} height={29} />
+                ) : (
+                  <Logo width={101} height={29} style={{ marginRight: 15 }} />
+                )}
+              </Link>
+            </div>
+          </Grid>
+          <Grid item>
+            <div
+              className={classNames({
+                [classes.logoItem]: true,
+                [classes.logoCollapsed]: matchesMdDown
+              })}
+            >
+              <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
+                {/* @todo CMR: replace with new icon */}
+                {matchesMdDown ? (
+                  <Dashboard
+                    width={25}
+                    height={29}
+                    style={{ marginRight: 6 }}
+                  />
+                ) : (
+                  <PrimaryNavLink
+                    display="Dashboard"
+                    href="/dashboard"
+                    closeMenu={closeMenu}
+                  />
+                )}
               </Link>
             </div>
           </Grid>
@@ -296,28 +319,28 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
           })}
 
           <Divider orientation="vertical" className={classes.verticalDivider} />
-
-          <PrimaryNavLink
-            key="Help & Support"
-            href={'/support'}
-            icon={<Help />}
-            display="Help & Support"
-            closeMenu={closeMenu}
-            textHiddenProps={{ smDown: true }}
-          />
-
-          <PrimaryNavLink
-            key="Community"
-            href="https://www.linode.com/community"
-            display="Community"
-            icon={<Community />}
-            closeMenu={closeMenu}
-            textHiddenProps={{ smDown: true }}
-          />
         </div>
 
         <div className={classes.secondaryLinksContainer}>
-          <Hidden smDown>
+          <div className={classes.secondaryLinksContainerLeft}>
+            <PrimaryNavLink
+              key="Help & Support"
+              href={'/support'}
+              icon={<Help />}
+              display="Help & Support"
+              closeMenu={closeMenu}
+              textHiddenProps={{ mdDown: true }}
+            />
+            <PrimaryNavLink
+              key="Community"
+              href="https://www.linode.com/community"
+              display="Community"
+              icon={<Community />}
+              closeMenu={closeMenu}
+              textHiddenProps={{ mdDown: true }}
+            />
+          </div>
+          <div className={classes.secondaryLinksContainerRight}>
             <IconButton
               onClick={(event: React.MouseEvent<HTMLElement>) => {
                 setAnchorEl(event.currentTarget);
@@ -345,9 +368,9 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
               <ThemeToggle toggleTheme={toggleTheme} />
               <SpacingToggle toggleSpacing={toggleSpacing} />
             </Menu>
-          </Hidden>
 
-          <UserMenu />
+            <UserMenu />
+          </div>
         </div>
       </div>
     </Grid>
@@ -459,6 +482,8 @@ interface PrimaryNavLink extends PrimaryLink {
 
 const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
   const classes = usePrimaryNavStyles();
+  const theme = useTheme<Theme>();
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { handlers } = usePrefetch(
     props.prefetchRequestFn,
@@ -487,7 +512,10 @@ const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
       }}
       {...handlers}
       {...attr}
-      className={classes.listItem}
+      className={classNames({
+        [classes.listItem]: true,
+        [classes.listItemIcon]: matchesMdDown
+      })}
     >
       {icon && (
         <div className={`icon ${classes.primaryNavLinkIcon}`}>{icon}</div>
