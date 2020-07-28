@@ -646,11 +646,7 @@ const mapStateToProps: MapStateToProps<
   {},
   ApplicationState
 > = state => ({
-  howManyLinodesOnAccount: pathOr(
-    [],
-    ['__resources', 'linodes', 'results'],
-    state
-  ).length,
+  howManyLinodesOnAccount: state.__resources.linodes.results,
   linodesLoading: pathOr(false, ['linodes', 'loading'], state.__resources),
   isRestrictedUser: pathOr(
     true,
