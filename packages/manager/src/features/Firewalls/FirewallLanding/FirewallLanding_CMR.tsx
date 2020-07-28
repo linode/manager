@@ -71,13 +71,15 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
       label: 'Rules',
       dataColumn: 'rules',
       sortable: false,
-      widthPercent: 25
+      widthPercent: 25,
+      hideOnMobile: true
     },
     {
       label: 'Linodes',
       dataColumn: 'devices',
       sortable: false,
-      widthPercent: 25
+      widthPercent: 25,
+      hideOnMobile: true
     },
     {
       label: 'Action Menu',
