@@ -55,7 +55,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   bodyDetailVariant: {
     padding: '4px 15px',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    flexWrap: 'nowrap'
   }
 }));
 

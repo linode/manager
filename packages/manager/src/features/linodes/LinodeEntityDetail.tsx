@@ -493,7 +493,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   accessTableContainer: {
     overflowX: 'auto',
     maxWidth: 335,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       maxWidth: 728
     },
     [theme.breakpoints.up('lg')]: {
