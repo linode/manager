@@ -62,6 +62,7 @@ import {
   HandleSubmit
 } from './types';
 import { Tag } from '@linode/api-v4/lib/tags/types';
+import Notice from 'src/components/Notice';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -112,6 +113,7 @@ interface Props {
   handleSubmitForm: HandleSubmit;
   resetCreationState: () => void;
   setBackupID: (id: number) => void;
+  showGeneralError?: boolean;
 }
 
 const errorMap = [
@@ -318,6 +320,7 @@ export class LinodeCreate extends React.PureComponent<
       backupsMonthlyPrice,
       userCannotCreateLinode,
       accountBackupsEnabled,
+      showGeneralError,
       ...rest
     } = this.props;
 
@@ -388,6 +391,9 @@ export class LinodeCreate extends React.PureComponent<
     return (
       <form className={classes.form}>
         <Grid item className={`mlMain py0`}>
+          {hasErrorFor.none && !!showGeneralError && (
+            <Notice error spacingTop={8} text={hasErrorFor.none} />
+          )}
           <Tabs defaultIndex={selectedTab} onChange={this.handleTabChange}>
             <TabLinkList tabs={this.tabs} />
             <TabPanels>
