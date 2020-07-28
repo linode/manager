@@ -20,6 +20,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   '& .MuiTableCell-head': {
     borderBottom: 0
+  },
+  thead: {
+    '& p': {
+      fontFamily: theme.font.bold,
+      fontWeight: 500
+    }
   }
 }));
 
@@ -97,6 +103,7 @@ export const LandingTable: React.FC<Props> = props => {
             <TableCell
               key={thisCell.dataColumn}
               data-testid={`${thisCell.label}-header-cell`}
+              className={classes.thead}
               style={{ width: thisCell.widthPercent }}
             >
               <Typography
