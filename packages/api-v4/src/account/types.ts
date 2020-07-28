@@ -179,6 +179,7 @@ export type EventAction =
   | 'backups_enable'
   | 'backups_restore'
   | 'community_like'
+  | 'community_mention'
   | 'community_question_reply'
   | 'credit_card_updated'
   | 'disk_create'
