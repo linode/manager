@@ -16,6 +16,7 @@ interface Props {
   images: Image[];
   showHead?: boolean;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openMigrateDialog: (linodeID: number) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
@@ -31,6 +32,7 @@ export const ListView: React.FC<CombinedProps> = props => {
   const {
     data,
     openDeleteDialog,
+    openMigrateDialog,
     openPowerActionDialog,
     openLinodeResize
   } = props;
@@ -106,6 +108,7 @@ export const ListView: React.FC<CombinedProps> = props => {
           openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
           openLinodeResize={openLinodeResize}
+          openMigrateDialog={openMigrateDialog}
         />
       ))}
       <TagDrawer
