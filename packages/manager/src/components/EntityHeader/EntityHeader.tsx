@@ -34,12 +34,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'row',
     padding: '10px 0',
+    // Needed for the 'clear filters' button on smaller screens, removed for medium+
+    flexWrap: 'wrap',
     [theme.breakpoints.up('sm')]: {
       padding: 10
     },
     [theme.breakpoints.up('md')]: {
       justifyContent: 'center',
-      padding: 0
+      padding: 0,
+      flexWrap: 'nowrap'
     },
     '& .MuiChip-root': {
       height: 30,
@@ -86,7 +89,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
         />
 
         <Hidden smDown>
-          {body && (
+          {body ? (
             <Grid
               className={classnames({
                 [classes.contentOuter]: true,
@@ -96,7 +99,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             >
               {body}
             </Grid>
-          )}
+          ) : null}
         </Hidden>
 
         {/* I think only Landing variant uses this? */}
