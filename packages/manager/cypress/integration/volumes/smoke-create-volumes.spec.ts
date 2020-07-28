@@ -11,7 +11,6 @@ import { createLinode } from '../../support/api/linodes';
 const urlExtension = '/volumes/create';
 const tag = 'cy-test';
 const region = 'Newark, NJ';
-const vol: string[] = [];
 const clickCreate = () => {
   cy.get('[data-qa-deploy-linode]').click();
 };
@@ -26,7 +25,6 @@ const clickDetach = () => {
 
 const createBasicVolume = (linodeLabel?: string) => {
   const volLabel = makeVolumeLabel();
-  vol.push(volLabel);
   cy.server();
   cy.route({
     method: 'POST',
@@ -57,7 +55,7 @@ const createBasicVolume = (linodeLabel?: string) => {
   clickCreate();
   return cy.wait('@volumeCreated').then(xhr => {
     expect(xhr.status).to.equal(200);
-    vol.push(xhr.response.body.id);
+    return { label: volLabel, id: xhr.responseBody['id'] };
   });
 };
 
@@ -79,11 +77,9 @@ const validateBasicVolume = (volLabel: string, volId: string) => {
 
 describe('volumes', () => {
   it('creates a volume without linode', () => {
-    createBasicVolume().then(() => {
-      const volumeLabel = vol[0];
-      const volumeId = vol[1];
-      validateBasicVolume(volumeLabel, volumeId);
-      clickVolumeActionMenu(volumeLabel);
+    createBasicVolume().then(({ label, id }) => {
+      validateBasicVolume(label, id);
+      clickVolumeActionMenu(label);
       cy.findByText('Delete').should('be.visible');
       deleteAllTestVolumes();
     });
