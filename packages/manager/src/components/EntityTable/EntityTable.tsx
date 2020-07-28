@@ -29,8 +29,8 @@ export const LandingTable: React.FC<Props> = props => {
 
   if (row.request) {
     const tableProps = {
-      request: row.request,
       RowComponent: row.Component,
+      request: row.request,
       initialOrder,
       headers,
       entity,
@@ -42,7 +42,6 @@ export const LandingTable: React.FC<Props> = props => {
 
   const tableProps = {
     data: row.data,
-    request: row.request,
     RowComponent: row.Component,
     initialOrder,
     headers,
@@ -56,9 +55,6 @@ export const LandingTable: React.FC<Props> = props => {
     return <GroupedEntitiesByTag {...tableProps} />;
   }
 
-  if (row.request) {
-    return <APIPaginatedTable {...tableProps} data={undefined} />;
-  }
   return <ListEntities {...tableProps} />;
 };
 
