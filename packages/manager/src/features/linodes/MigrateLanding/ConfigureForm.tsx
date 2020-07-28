@@ -18,7 +18,6 @@ import {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(4),
     '& > p:first-of-type': {
       marginTop: theme.spacing(4),
       marginBottom: theme.spacing(1.5),

@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2)
   },
   actionWrapper: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   }
 }));
 
@@ -161,7 +162,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
 
   return (
     <Dialog
-      title={'Migrate'}
+      title={`Migrate ${linode.label ?? ''}`}
       open={open}
       onClose={onClose}
       fullWidth
