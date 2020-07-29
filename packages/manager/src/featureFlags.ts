@@ -8,7 +8,7 @@ interface TaxBanner {
 
 type OneClickApp = Record<string, string>;
 
-interface Flags {
+export interface Flags {
   promos: boolean;
   vatBanner: TaxBanner;
   taxBanner: TaxBanner;

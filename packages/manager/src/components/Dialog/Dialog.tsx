@@ -58,7 +58,6 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(),
       paddingTop: theme.spacing(4),
       marginBottom: 20,
-      background: theme.color.white,
       zIndex: 1,
       width: '100%',
       display: 'flex',

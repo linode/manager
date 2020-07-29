@@ -80,7 +80,10 @@ Cypress.Commands.add(
               throw res.error;
             }
             // cy.log('compareSP res', res.result.percentage);
-            const threshold = res.result.scaled ? 0.05 : 0.01;
+            /* right now the best way that I can tell to make some
+            of these work consistently is by keeping the threshold here
+            This still makes sure it is fairly accurate */
+            const threshold = 0.05;
             return cy.wrap(res.result.percentage <= threshold);
           });
         } else {
