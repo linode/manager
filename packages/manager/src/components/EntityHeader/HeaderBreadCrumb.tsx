@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexBasis: '100%'
     }
   },
+  rootWithoutParent: {
+    display: 'flex',
+    alignItems: 'center'
+  },
   iconContainer: {
     padding: `5px !important`,
     marginLeft: 16
@@ -142,7 +146,7 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
   }
 
   return (
-    <>
+    <div className={classes.rootWithoutParent}>
       {iconType && _displayIcon && (
         <Grid item>
           <EntityIcon variant={iconType} />
@@ -153,7 +157,7 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
           {title}
         </Typography>
       </Grid>
-    </>
+    </div>
   );
 };
 

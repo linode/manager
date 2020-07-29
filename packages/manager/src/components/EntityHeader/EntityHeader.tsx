@@ -12,6 +12,7 @@ export interface HeaderProps extends BreadCrumbProps {
   bodyClassName?: string;
   isLanding?: boolean;
   isSecondary?: boolean;
+  isDetailLanding?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,6 +33,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   breadCrumbSecondary: {
     justifyContent: 'space-between'
+  },
+  breadCrumbDetailLanding: {
+    padding: '0 15px',
+    justifyContent: 'space-between',
+    borderTop: `1px solid ${theme.palette.divider}`
   },
   contentOuter: {
     display: 'flex',
@@ -73,7 +79,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     parentText,
     title,
     bodyClassName,
-    isSecondary
+    isSecondary,
+    isDetailLanding
   } = props;
   const classes = useStyles();
 
@@ -85,7 +92,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
         className={classnames({
           [classes.breadcrumbOuter]: true,
           [classes.breadCrumbDetail]: Boolean(parentLink),
-          [classes.breadCrumbSecondary]: Boolean(isSecondary)
+          [classes.breadCrumbSecondary]: Boolean(isSecondary),
+          [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
         })}
       >
         <HeaderBreadCrumb
@@ -119,7 +127,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             xs={12}
             className={classnames({
               [classes.contentOuter]: true,
-              [classes.bodyDetailVariant]: Boolean(parentLink)
+              [classes.bodyDetailVariant]:
+                Boolean(parentLink) || Boolean(isDetailLanding)
             })}
           >
             {body}

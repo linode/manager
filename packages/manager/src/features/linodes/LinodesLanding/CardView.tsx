@@ -120,6 +120,7 @@ const CardView: React.FC<CombinedProps> = props => {
                   <LinodeEntityDetail
                     variant="landing"
                     linode={linode}
+                    isDetailLanding
                     numVolumes={getVolumesByLinode(linode.id)}
                     username={profile.data?.username}
                     linodeConfigs={linodeConfigs}

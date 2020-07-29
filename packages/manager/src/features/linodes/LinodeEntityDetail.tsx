@@ -66,6 +66,7 @@ interface LinodeEntityDetailProps {
   numVolumes: number;
   openLinodeResize: (linodeID: number) => void;
   openTagDrawer: (tags: string[]) => void;
+  isDetailLanding?: boolean;
 }
 
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
@@ -79,7 +80,8 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     linodeConfigs,
     numVolumes,
     openLinodeResize,
-    openTagDrawer
+    openTagDrawer,
+    isDetailLanding
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -116,6 +118,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           backups={backups}
           linodeConfigs={linodeConfigs}
           openLinodeResize={openLinodeResize}
+          isDetailLanding={isDetailLanding}
           type={'something'}
           image={'something'}
         />
@@ -173,6 +176,7 @@ export interface HeaderProps {
   image: string;
   linodeConfigs: Config[];
   openLinodeResize: (linodeID: number) => void;
+  isDetailLanding?: boolean;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -251,7 +255,8 @@ const Header: React.FC<HeaderProps> = props => {
     type,
     image,
     linodeConfigs,
-    openLinodeResize
+    openLinodeResize,
+    isDetailLanding
   } = props;
 
   const classes = useHeaderStyles();
@@ -276,6 +281,7 @@ const Header: React.FC<HeaderProps> = props => {
     <EntityHeader
       parentLink={isDetails ? '/linodes' : undefined}
       parentText={isDetails ? 'Linodes' : undefined}
+      isDetailLanding={isDetailLanding}
       iconType="linode"
       actions={
         <Hidden mdUp>
@@ -313,13 +319,15 @@ const Header: React.FC<HeaderProps> = props => {
 
           <div className={classes.actionItemsOuter}>
             {!isDetails && (
-              <IconTextLink
-                className={classes.actionItem}
-                SideIcon={ViewDetailsIcon}
-                text="ViewDetails"
-                title="ViewDetails"
-                to={`linodes/${linodeId}`}
-              />
+              <Hidden smDown>
+                <IconTextLink
+                  className={classes.actionItem}
+                  SideIcon={ViewDetailsIcon}
+                  text="ViewDetails"
+                  title="ViewDetails"
+                  to={`linodes/${linodeId}`}
+                />
+              </Hidden>
             )}
 
             <IconTextLink
