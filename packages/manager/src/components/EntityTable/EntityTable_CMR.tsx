@@ -17,6 +17,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   '& .MuiTableCell-head': {
     borderBottom: 0
+  },
+  thead: {
+    '& p': {
+      fontFamily: theme.font.bold,
+      fontWeight: 500
+    }
   }
 }));
 

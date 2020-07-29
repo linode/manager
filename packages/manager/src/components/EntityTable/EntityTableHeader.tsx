@@ -20,6 +20,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: '15px'
     }
   },
+  thead: {
+    '& p': {
+      fontFamily: theme.font.bold,
+      fontWeight: 500
+    }
+  },
   '& .MuiTableCell-head': {
     borderBottom: 0
   }
@@ -71,6 +77,7 @@ export const EntityTableHeader: React.FC<Props> = props => {
             <TableCell
               key={thisCell.dataColumn}
               data-testid={`${thisCell.label}-header-cell`}
+              className={classes.thead}
               style={{ width: thisCell.widthPercent }}
             >
               <Typography
