@@ -6,24 +6,27 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import RegionSelect, {
-  flags
-} from 'src/components/EnhancedSelect/variants/RegionSelect';
+import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 
 import { dcDisplayNames } from 'src/constants';
 import {
   formatRegion,
   getHumanReadableCountry
 } from 'src/utilities/formatRegion';
+import { useFlags } from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    padding: theme.spacing(4),
     '& > p:first-of-type': {
       marginTop: theme.spacing(4),
       marginBottom: theme.spacing(1.5),
       fontSize: theme.spacing(2),
       fontFamily: theme.font.bold
     }
+  },
+  rootCMR: {
+    padding: 0
   },
   currentRegion: {
     display: 'flex',
@@ -50,9 +53,10 @@ type CombinedProps = Props;
 
 const ConfigureForm: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
 
   return (
-    <Paper className={classes.root}>
+    <Paper className={flags.cmr ? classes.rootCMR : classes.root}>
       <Typography variant="h3">Configure Migration</Typography>
       <Typography>Current Region:</Typography>
       <div className={classes.currentRegion}>
