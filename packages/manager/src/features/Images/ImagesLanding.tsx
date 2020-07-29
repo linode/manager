@@ -28,10 +28,7 @@ import Grid from 'src/components/Grid';
 import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
-import { useDialog } from 'src/hooks/useDialog';
+import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import { requestImages as _requestImages } from 'src/store/image/image.requests';
 import imageEvents from 'src/store/selectors/imageEvents';
@@ -57,9 +54,17 @@ interface ImageDrawerState {
   selectedLinode?: number;
 }
 
-type CombinedProps = FeatureFlagConsumerProps &
-  ImageDispatch &
+interface ImageDialogState {
+  open: boolean;
+  submitting: boolean;
+  image?: string;
+  imageID?: string;
+  error?: string;
+}
+
+type CombinedProps = ImageDispatch &
   ImageDrawerState &
+  ImageDialogState &
   RouteComponentProps<{}> &
   WithPrivateImages &
   WithSnackbarProps;
@@ -72,45 +77,19 @@ const defaultDrawerState = {
   selectedDisk: null
 };
 
-const headers: HeaderCell[] = [
-  {
-    label: 'Image',
-    dataColumn: 'label',
-    sortable: true,
-    widthPercent: 25
-  },
-  {
-    label: 'Created',
-    dataColumn: 'created',
-    sortable: false,
-    widthPercent: 25
-  },
-  {
-    label: 'Expires',
-    dataColumn: 'expires',
-    sortable: false,
-    widthPercent: 15
-  },
-  {
-    label: 'Size',
-    dataColumn: 'size',
-    sortable: true,
-    widthPercent: 25
-  },
-  {
-    label: 'Action Menu',
-    visuallyHidden: true,
-    dataColumn: '',
-    sortable: false,
-    widthPercent: 5
-  }
-];
+const defaultDialogState = {
+  open: false,
+  submitting: false,
+  image: '',
+  imageID: '',
+  error: undefined
+};
 
 export const ImagesLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const {
-    flags,
     imagesData,
     imagesLoading,
     imagesError,
@@ -118,13 +97,84 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
     requestImages
   } = props;
 
+  const headers: HeaderCell[] = [
+    {
+      label: 'Image',
+      dataColumn: 'label',
+      sortable: true,
+      widthPercent: 25
+    },
+    {
+      label: 'Created',
+      dataColumn: 'created',
+      sortable: false,
+      widthPercent: 25,
+      hideOnMobile: flags.cmr
+    },
+    {
+      label: 'Expires',
+      dataColumn: 'expires',
+      sortable: false,
+      widthPercent: 15,
+      hideOnMobile: flags.cmr
+    },
+    {
+      label: 'Size',
+      dataColumn: 'size',
+      sortable: true,
+      widthPercent: 25
+    },
+    {
+      label: 'Action Menu',
+      visuallyHidden: true,
+      dataColumn: '',
+      sortable: false,
+      widthPercent: 5
+    }
+  ];
+
   const [drawer, setDrawer] = React.useState<ImageDrawerState>(
     defaultDrawerState
   );
 
-  const { dialog, openDialog, closeDialog, submitDialog } = useDialog<string>(
-    deleteImage
+  const [dialog, setDialogState] = React.useState<ImageDialogState>(
+    defaultDialogState
   );
+
+  const openDialog = (image: string, imageID: string) => {
+    setDialogState({
+      open: true,
+      submitting: false,
+      image,
+      imageID,
+      error: undefined
+    });
+  };
+
+  const closeDialog = () => {
+    setDialogState({ ...dialog, open: false });
+  };
+
+  const handleRemoveImage = () => {
+    setDialogState(dialog => ({
+      ...dialog,
+      submitting: true
+    }));
+    deleteImage(dialog.imageID!)
+      .then(() => {
+        setDialogState({
+          ...dialog,
+          submitting: false,
+          open: false
+        });
+        props.enqueueSnackbar('Image has been scheduled for deletion.', {
+          variant: 'info'
+        });
+      })
+      .catch(() => {
+        setDialogState({ ...dialog, submitting: false }); // Handle errors in Redux
+      });
+  };
 
   React.useEffect(() => {
     if (imagesLastUpdated === 0 && !imagesLoading) {
@@ -171,14 +221,6 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
     });
   };
 
-  const removeImage = () => {
-    submitDialog(dialog.entityID).then(_ =>
-      props.enqueueSnackbar('Image has been scheduled for deletion.', {
-        variant: 'info'
-      })
-    );
-  };
-
   const changeSelectedLinode = (linodeId: number | null) => {
     setDrawer(prevDrawerState => ({
       ...prevDrawerState,
@@ -217,8 +259,8 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
         <Button
           buttonType="secondary"
           destructive
-          loading={dialog.isLoading}
-          onClick={removeImage}
+          loading={dialog.submitting}
+          onClick={handleRemoveImage}
           data-qa-submit
         >
           Confirm
@@ -362,8 +404,8 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       </Paper>
       {renderImageDrawer()}
       <ConfirmationDialog
-        open={dialog.isOpen}
-        title={`Remove ${dialog.entityLabel}`}
+        open={dialog.open}
+        title={`Remove ${dialog.image}`}
         onClose={closeDialog}
         actions={getActions}
       >
@@ -453,7 +495,6 @@ const withPrivateImages = connect(
 );
 
 export default compose<CombinedProps, {}>(
-  withFeatureFlags,
   withPrivateImages,
   withRouter,
   withSnackbar

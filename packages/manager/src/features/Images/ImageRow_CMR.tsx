@@ -9,9 +9,7 @@ import LinearProgress from 'src/components/LinearProgress';
 import RenderGuard from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
+import useFlags from 'src/hooks/useFlags';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import ActionMenu, { Handlers } from './ImagesActionMenu';
 import ActionMenu_CMR from './ImagesActionMenu_CMR';
@@ -20,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {
     width: '30%',
     [theme.breakpoints.down('sm')]: {
-      width: '100%'
+      width: '65%'
     }
   },
   loadingStatus: {
@@ -40,16 +38,17 @@ export interface ImageWithEvent extends Image {
   event?: Event;
 }
 
-type CombinedProps = FeatureFlagConsumerProps & Handlers & ImageWithEvent;
+type CombinedProps = Handlers & ImageWithEvent;
 
 const ImageRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
+
   const {
     created,
     description,
     event,
     expiry,
-    flags,
     id,
     label,
     size,
@@ -86,7 +85,7 @@ const ImageRow: React.FC<CombinedProps> = props => {
       >
         {label}
       </TableCell>
-      <Hidden mdDown>
+      <Hidden xsDown>
         <TableCell parentColumn="Created" data-qa-image-date>
           {formatDate(created)}
         </TableCell>
@@ -135,7 +134,4 @@ const ProgressDisplay: React.FC<{
   );
 };
 
-export default compose<CombinedProps, {}>(
-  RenderGuard,
-  withFeatureFlags
-)(ImageRow);
+export default compose<CombinedProps, {}>(RenderGuard)(ImageRow);
