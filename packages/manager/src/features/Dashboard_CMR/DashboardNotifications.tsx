@@ -12,7 +12,6 @@ import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
 import {
   Alerts,
   Community,
-  LinodeNews,
   Maintenance,
   OpenSupportTickets,
   PendingActions
@@ -95,9 +94,6 @@ export const Notifications: React.FC<{}> = _ => {
                 <PendingActions />
               </Grid>
               <Grid item>
-                <OpenSupportTickets />
-              </Grid>
-              <Grid item>
                 <Alerts />
               </Grid>
               <Grid item>
@@ -108,10 +104,10 @@ export const Notifications: React.FC<{}> = _ => {
           <Grid item className={classes.column}>
             <Grid container direction="column">
               <Grid item>
-                <Community communityEvents={communityEvents} />
+                <OpenSupportTickets />
               </Grid>
               <Grid item>
-                <LinodeNews />
+                <Community communityEvents={communityEvents} />
               </Grid>
             </Grid>
           </Grid>

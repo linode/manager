@@ -17,7 +17,12 @@ export const Maintenance: React.FC<{}> = _ => {
     }
   ];
   return (
-    <NotificationSection content={maintenanceItems} header="Maintenance" />
+    <NotificationSection
+      content={maintenanceItems}
+      header="System Status"
+      showMoreText="View fleet status"
+      showMoreTarget="https://status.linode.com"
+    />
   );
 };
 

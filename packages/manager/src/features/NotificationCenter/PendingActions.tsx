@@ -8,8 +8,7 @@ import NotificationSection from './NotificationSection';
 const useStyles = makeStyles((theme: Theme) => ({
   action: {
     display: 'flex',
-    flexFlow: 'column nowrap',
-    marginBottom: theme.spacing(2)
+    flexFlow: 'column nowrap'
   },
   bar: {
     marginTop: theme.spacing()
