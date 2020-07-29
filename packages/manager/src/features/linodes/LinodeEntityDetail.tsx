@@ -30,7 +30,7 @@ import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 import { distroIcons } from 'src/components/ImageSelect/icons';
 import { dcDisplayNames } from 'src/constants';
-import { DialogType } from 'src/features/linodes/types';
+import { OpenDialog } from 'src/features/linodes/types';
 import useImages from 'src/hooks/useImages';
 import useLinodes from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
@@ -49,7 +49,7 @@ interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
   linode: Linode;
   username?: string;
-  openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
+  openDialog: OpenDialog;
   openPowerActionDialog: (
     bootAction: BootAction,
     linodeID: number,
@@ -135,6 +135,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeTags={linode.tags}
           linodeLabel={linode.label}
           openTagDrawer={openTagDrawer}
+          openDialog={openDialog}
         />
       }
     />
@@ -152,7 +153,7 @@ export interface HeaderProps {
   linodeLabel: string;
   linodeId: number;
   linodeStatus: Linode['status'];
-  openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
+  openDialog: OpenDialog;
   openPowerActionDialog: (
     bootAction: BootAction,
     linodeID: number,
@@ -613,6 +614,7 @@ interface FooterProps {
   linodeTags: string[];
   linodeLabel: string;
   openTagDrawer: (tags: string[]) => void;
+  openDialog: OpenDialog;
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
@@ -629,6 +631,15 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     padding: `0px 10px`,
     borderRight: `1px solid ${theme.color.grey6}`,
     color: theme.color.grey8
+  },
+  button: {
+    ...theme.applyLinkStyles,
+    padding: `0px 10px`,
+    borderRight: `1px solid ${theme.color.grey6}`,
+    fontWeight: 'bold',
+    '&:hover': {
+      textDecoration: 'none'
+    }
   },
   linodeCreated: {
     paddingLeft: 10,
@@ -648,8 +659,13 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     linodeId,
     linodeCreated,
     linodeTags,
-    openTagDrawer
+    openTagDrawer,
+    openDialog
   } = props;
+
+  const _openDialog = React.useCallback(() => {
+    openDialog('migrate', linodeId);
+  }, [linodeId, openDialog]);
 
   const classes = useFooterStyles();
 
@@ -696,12 +712,9 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
             </Link>
           )}
           {linodeRegionDisplay && (
-            <Link
-              to={`/linodes/${linodeId}/migrate`}
-              className={classes.listItem}
-            >
+            <button onClick={_openDialog} className={classes.button}>
               {linodeRegionDisplay}
-            </Link>
+            </button>
           )}
           <Typography className={classes.listItem}>
             Linode ID {linodeId}

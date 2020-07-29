@@ -6,7 +6,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import RegionSelect, {
+  flags
+} from 'src/components/EnhancedSelect/variants/RegionSelect';
 
 import { dcDisplayNames } from 'src/constants';
 import {
@@ -53,10 +55,10 @@ type CombinedProps = Props;
 
 const ConfigureForm: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const flags = useFlags();
+  const { cmr } = useFlags();
 
   return (
-    <Paper className={flags.cmr ? classes.rootCMR : classes.root}>
+    <Paper className={cmr ? classes.rootCMR : classes.root}>
       <Typography variant="h3">Configure Migration</Typography>
       <Typography>Current Region:</Typography>
       <div className={classes.currentRegion}>
