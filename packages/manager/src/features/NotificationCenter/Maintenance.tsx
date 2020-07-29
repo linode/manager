@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import AlertIcon from 'src/assets/icons/flag.svg';
 import Typography from 'src/components/core/Typography';
 import NotificationSection, { NotificationItem } from './NotificationSection';
 
@@ -18,11 +17,7 @@ export const Maintenance: React.FC<{}> = _ => {
     }
   ];
   return (
-    <NotificationSection
-      content={maintenanceItems}
-      header="Maintenance"
-      icon={<AlertIcon />}
-    />
+    <NotificationSection content={maintenanceItems} header="Maintenance" />
   );
 };
 
