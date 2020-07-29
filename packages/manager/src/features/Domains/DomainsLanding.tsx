@@ -364,7 +364,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return <RenderError />;
     }
 
-    if (!isLargeAccount && (!domainsData || domainsData.length === 0)) {
+    if (!isLargeAccount && domainsData?.length === 0) {
       /**
        * We don't know whether or not a large account is empty or not
        * until Pagey has made its first request, and putting this
