@@ -28,7 +28,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   rootCMR: {
-    padding: 0
+    padding: 0,
+    '& > p:first-of-type': {
+      marginTop: theme.spacing(4),
+      marginBottom: theme.spacing(1.5),
+      fontSize: theme.spacing(2),
+      fontFamily: theme.font.bold
+    }
   },
   currentRegion: {
     display: 'flex',
