@@ -26,7 +26,11 @@ describe('Select Plan Panel', () => {
       regionsLastUpdated={0}
     />
   );
+  it('should render without crashing', () => {
+    expect(component).toHaveLength(1);
+  });
+
   it('should render TabbedPanel', () => {
-    expect(component.find('WithStyles(TabbedPanel)')).toHaveLength(1);
+    expect(component.find('[data-qa-select-plan]')).toHaveLength(1);
   });
 });
