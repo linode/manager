@@ -71,7 +71,7 @@ export const Notifications: React.FC<{}> = _ => {
         setEventsError(error[0].reason);
         setLoading(false);
       });
-  });
+  }, []);
 
   const communityEvents = events.filter(event =>
     [
