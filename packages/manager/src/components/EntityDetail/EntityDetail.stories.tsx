@@ -16,11 +16,10 @@ storiesOf('EntityDetail', module).add('Linode', () => (
         linode={linodeFactory.build()}
         username="linode-user"
         openTagDrawer={() => null}
-        openDeleteDialog={() => null}
+        openDialog={() => null}
         openPowerActionDialog={() => null}
         backups={linodeBackupsFactory.build()}
         linodeConfigs={linodeConfigFactory.buildList(2)}
-        openLinodeResize={() => null}
       />
     </div>
     <div style={{ width: 1280, margin: 20 }}>
@@ -31,11 +30,10 @@ storiesOf('EntityDetail', module).add('Linode', () => (
         linode={linodeFactory.build()}
         username="linode-user"
         openTagDrawer={() => null}
-        openDeleteDialog={() => null}
+        openDialog={() => null}
         openPowerActionDialog={() => null}
         backups={linodeBackupsFactory.build()}
         linodeConfigs={linodeConfigFactory.buildList(2)}
-        openLinodeResize={() => null}
       />
     </div>
   </Provider>

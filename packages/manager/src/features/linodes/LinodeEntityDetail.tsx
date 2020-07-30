@@ -35,6 +35,7 @@ import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 import { distroIcons } from 'src/components/ImageSelect/icons';
 import { dcDisplayNames } from 'src/constants';
+import { OpenDialog } from 'src/features/linodes/types';
 import useImages from 'src/hooks/useImages';
 import useLinodes from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
@@ -54,7 +55,7 @@ interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
   linode: Linode;
   username?: string;
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: OpenDialog;
   openPowerActionDialog: (
     bootAction: BootAction,
     linodeID: number,
@@ -64,7 +65,6 @@ interface LinodeEntityDetailProps {
   backups: LinodeBackups;
   linodeConfigs: Config[];
   numVolumes: number;
-  openLinodeResize: (linodeID: number) => void;
   openTagDrawer: (tags: string[]) => void;
   isDetailLanding?: boolean;
 }
@@ -74,14 +74,13 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     variant,
     linode,
     username,
-    openDeleteDialog,
+    openDialog,
     openPowerActionDialog,
     backups,
     linodeConfigs,
     numVolumes,
-    openLinodeResize,
-    openTagDrawer,
-    isDetailLanding
+    isDetailLanding,
+    openTagDrawer
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -112,12 +111,11 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
-          openDeleteDialog={openDeleteDialog}
+          openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
           linodeRegionDisplay={linodeRegionDisplay}
           backups={backups}
           linodeConfigs={linodeConfigs}
-          openLinodeResize={openLinodeResize}
           isDetailLanding={isDetailLanding}
           type={'something'}
           image={'something'}
@@ -146,6 +144,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeTags={linode.tags}
           linodeLabel={linode.label}
           openTagDrawer={openTagDrawer}
+          openDialog={openDialog}
         />
       }
     />
@@ -163,7 +162,7 @@ export interface HeaderProps {
   linodeLabel: string;
   linodeId: number;
   linodeStatus: Linode['status'];
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: OpenDialog;
   openPowerActionDialog: (
     bootAction: BootAction,
     linodeID: number,
@@ -175,7 +174,6 @@ export interface HeaderProps {
   type: string;
   image: string;
   linodeConfigs: Config[];
-  openLinodeResize: (linodeID: number) => void;
   isDetailLanding?: boolean;
 }
 
@@ -219,9 +217,6 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       fontFamily: `${theme.font.normal} !important`
     }
   },
-  actionMenu: {
-    marginLeft: 30
-  },
   statusChip: {
     ...theme.applyStatusPillStyles
   },
@@ -249,13 +244,12 @@ const Header: React.FC<HeaderProps> = props => {
     linodeId,
     linodeStatus,
     linodeRegionDisplay,
-    openDeleteDialog,
+    openDialog,
     openPowerActionDialog,
     backups,
     type,
     image,
     linodeConfigs,
-    openLinodeResize,
     isDetailLanding
   } = props;
 
@@ -384,9 +378,8 @@ const Header: React.FC<HeaderProps> = props => {
               linodeType={type}
               linodeStatus={linodeStatus}
               linodeBackups={backups}
-              openDeleteDialog={openDeleteDialog}
+              openDialog={openDialog}
               openPowerActionDialog={openPowerActionDialog}
-              openLinodeResize={openLinodeResize}
               noImage={!image}
               inlineLabel={matchesMdDown ? undefined : 'More Actions'}
             />
@@ -666,6 +659,7 @@ interface FooterProps {
   linodeTags: string[];
   linodeLabel: string;
   openTagDrawer: (tags: string[]) => void;
+  openDialog: OpenDialog;
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
@@ -687,6 +681,15 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.only('xs')]: {
       borderRight: 'none',
       paddingRight: 0
+    }
+  },
+  button: {
+    ...theme.applyLinkStyles,
+    padding: `0px 10px`,
+    borderRight: `1px solid ${theme.color.grey6}`,
+    fontWeight: 'bold',
+    '&:hover': {
+      textDecoration: 'none'
     }
   },
   linodeCreated: {
@@ -714,8 +717,13 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     linodeId,
     linodeCreated,
     linodeTags,
-    openTagDrawer
+    openTagDrawer,
+    openDialog
   } = props;
+
+  const _openDialog = React.useCallback(() => {
+    openDialog('migrate', linodeId);
+  }, [linodeId, openDialog]);
 
   const classes = useFooterStyles();
 
@@ -750,65 +758,55 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
   );
 
   return (
-    <>
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      >
-        <Grid item xs={12} sm={7}>
-          <div className={classes.detailsSection}>
-            {linodePlan && (
-              <Link
-                to={`/linodes/${linodeId}/resize`}
-                className={classes.listItem}
-              >
-                {linodePlan} Plan
-              </Link>
-            )}
-            {linodeRegionDisplay && (
-              <Link
-                to={`/linodes/${linodeId}/migrate`}
-                className={classes.listItem}
-              >
-                {linodeRegionDisplay}
-              </Link>
-            )}
-            <Typography
-              className={classnames({
-                [classes.listItem]: true,
-                [classes.listItemLast]: true
-              })}
+    <Grid container direction="row" justify="space-between" alignItems="center">
+      <Grid item xs={12} sm={7}>
+        <div className={classes.detailsSection}>
+          {linodePlan && (
+            <Link
+              to={`/linodes/${linodeId}/resize`}
+              className={classes.listItem}
             >
-              Linode ID {linodeId}
-            </Typography>
-            <Hidden xsDown>
-              <Typography className={classes.linodeCreated}>
-                Created{' '}
-                {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
-              </Typography>
-            </Hidden>
-          </div>
-        </Grid>
-        <Hidden smUp>
-          <Grid item xs={12}>
+              {linodePlan} Plan
+            </Link>
+          )}
+          {linodeRegionDisplay && (
+            <button onClick={_openDialog} className={classes.button}>
+              {linodeRegionDisplay}
+            </button>
+          )}
+          <Typography
+            className={classnames({
+              [classes.listItem]: true,
+              [classes.listItemLast]: true
+            })}
+          >
+            Linode ID {linodeId}
+          </Typography>
+          <Hidden xsDown>
             <Typography className={classes.linodeCreated}>
               Created{' '}
               {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
             </Typography>
-          </Grid>
-        </Hidden>
-        <Grid item xs={12} sm={5} className={classes.linodeTags}>
-          <TagCell
-            width={500}
-            tags={linodeTags}
-            addTag={addTag}
-            deleteTag={deleteTag}
-            listAllTags={openTagDrawer}
-          />
-        </Grid>
+          </Hidden>
+        </div>
       </Grid>
-    </>
+      <Hidden smUp>
+        <Grid item xs={12}>
+          <Typography className={classes.linodeCreated}>
+            Created{' '}
+            {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+          </Typography>
+        </Grid>
+      </Hidden>
+      <Grid item xs={12} sm={5} className={classes.linodeTags}>
+        <TagCell
+          width={500}
+          tags={linodeTags}
+          addTag={addTag}
+          deleteTag={deleteTag}
+          listAllTags={openTagDrawer}
+        />
+      </Grid>
+    </Grid>
   );
 });
