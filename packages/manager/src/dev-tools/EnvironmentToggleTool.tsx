@@ -48,6 +48,8 @@ const options = getOptions(process.env);
 // This component works by setting local storage values that override the API_ROOT, LOGIN_ROOT,
 // and CLIENT_ID environment variables, giving client-side control over the environment.
 const EnvironmentToggleTool: React.FC<{}> = () => {
+  const [selectedOption, setSelectedOption] = React.useState(0);
+
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -56,13 +58,15 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
       <Grid item xs={12}>
         <select
           onBlur={e => {
-            const selected = options.find(o => o.label === e.target.value);
-            if (selected) {
-              const { apiRoot, loginRoot, clientID } = selected;
-              storage.devToolsEnv.set({ apiRoot, loginRoot, clientID });
-            }
+            const selectedIndex = options.findIndex(
+              o => o.label === e.target.value
+            );
+            setSelectedOption(Math.max(selectedIndex, 0));
           }}
         >
+          <option value="" disabled selected>
+            Select an environment
+          </option>
           {options.map(thisOption => {
             return (
               <option key={thisOption.label} value={thisOption.label}>
@@ -71,7 +75,14 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
             );
           })}
         </select>
-        <button style={{ marginLeft: 8 }} onClick={() => location.reload()}>
+        <button
+          style={{ marginLeft: 8 }}
+          onClick={() => {
+            const selected = options[selectedOption];
+            storage.devToolsEnv.set(selected);
+            window.location.reload();
+          }}
+        >
           Refresh
         </button>
       </Grid>
