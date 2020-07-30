@@ -16,7 +16,6 @@ import {
   linodeIPFactory,
   linodeStatsFactory,
   linodeTransferFactory,
-  longviewSubscriptionFactory,
   nodeBalancerFactory,
   profileFactory,
   volumeFactory,
@@ -205,13 +204,5 @@ export const handlers = [
       communityMention
     ];
     return res(ctx.json(makeResourcePage(_events)));
-  }),
-
-  rest.get('*/longview/plan', (req, res, ctx) => {
-    const longviewSubscriptionData = longviewSubscriptionFactory.build({
-      id: 'longview-100'
-    });
-    // console.warn(longviewSubscriptionData)
-    return res(ctx.json(longviewSubscriptionData));
   })
 ];
