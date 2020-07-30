@@ -16,15 +16,20 @@ import {
   OpenSupportTickets,
   PendingActions
 } from 'src/features/NotificationCenter';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3),
-    borderRadius: 3,
-    marginBottom: 8
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(3),
+      borderRadius: 3,
+      marginBottom: 8
+    }
   },
   column: {
-    width: '45%'
+    [theme.breakpoints.up('md')]: {
+      width: '45%'
+    }
   }
 }));
 
@@ -88,29 +93,40 @@ export const Notifications: React.FC<{}> = _ => {
       <BillingSummary balance={balance} balanceUninvoiced={0} />
       <Paper className={classes.root}>
         <Grid container direction="row" justify="space-between">
-          <Grid item className={classes.column}>
-            <Grid container direction="column">
-              <Grid item>
-                <PendingActions />
-              </Grid>
-              <Grid item>
-                <Alerts />
-              </Grid>
-              <Grid item>
-                <Maintenance />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item className={classes.column}>
-            <Grid container direction="column">
-              <Grid item>
-                <OpenSupportTickets />
-              </Grid>
-              <Grid item>
-                <Community communityEvents={communityEvents} />
+          <Hidden smDown>
+            <Grid item className={classes.column}>
+              <Grid container direction="column">
+                <Grid item>
+                  <PendingActions />
+                </Grid>
+                <Grid item>
+                  <Alerts />
+                </Grid>
+                <Grid item>
+                  <Maintenance />
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+            <Grid item className={classes.column}>
+              <Grid container direction="column">
+                <Grid item>
+                  <OpenSupportTickets />
+                </Grid>
+                <Grid item>
+                  <Community communityEvents={communityEvents} />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Hidden>
+
+          {/* Small screen version */}
+          <Hidden mdUp>
+            <PendingActions />
+            <Alerts />
+            <Maintenance />
+            <OpenSupportTickets />
+            <Community communityEvents={communityEvents} />
+          </Hidden>
         </Grid>
       </Paper>
     </>

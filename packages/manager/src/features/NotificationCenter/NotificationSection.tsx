@@ -3,6 +3,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { formatDate } from 'src/utilities/formatDate';
+import Hidden from 'src/components/core/Hidden';
+import ExtendedExpansionPanel from 'src/components/ExtendedExpansionPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -59,21 +61,10 @@ export type CombinedProps = Props;
 export const NotificationSection: React.FC<Props> = props => {
   const { content, header, showMore, showMoreText, showMoreTarget } = props;
   const classes = useStyles();
-  return (
-    <div className={classes.root}>
-      <div className={classes.content}>
-        <div className={classes.header}>
-          <Typography variant="h3">{header}</Typography>
-          {showMoreTarget && (
-            <Typography variant="body1">
-              <strong>
-                <Link to={showMoreTarget}>
-                  {showMoreText ?? 'View history'}
-                </Link>
-              </strong>
-            </Typography>
-          )}
-        </div>
+
+  const innerContent = () => {
+    return (
+      <div>
         {content.length > 0 ? (
           content.map(thisItem => (
             <ContentRow
@@ -92,7 +83,54 @@ export const NotificationSection: React.FC<Props> = props => {
           </Typography>
         )}
       </div>
-    </div>
+    );
+  };
+
+  return (
+    <>
+      <Hidden smDown>
+        <div className={classes.root}>
+          <div className={classes.content}>
+            <div className={classes.header}>
+              <Typography variant="h3">{header}</Typography>
+              {showMoreTarget && (
+                <Typography variant="body1">
+                  <strong>
+                    <Link to={showMoreTarget}>
+                      {showMoreText ?? 'View history'}
+                    </Link>
+                  </strong>
+                </Typography>
+              )}
+            </div>
+            {content.length > 0 ? (
+              content.map(thisItem => (
+                <ContentRow
+                  key={`notification-row-${thisItem.id}`}
+                  item={thisItem}
+                />
+              ))
+            ) : (
+              <Typography className={classes.notificationItem}>
+                You have no {header.toLocaleLowerCase()}.
+              </Typography>
+            )}
+            {showMore && (
+              <Typography className={classes.notificationItem}>
+                {showMore}
+              </Typography>
+            )}
+          </div>
+        </div>
+      </Hidden>
+
+      <Hidden mdUp>
+        <ExtendedExpansionPanel
+          heading={header}
+          renderMainContent={innerContent}
+        />
+      </Hidden>
+    </>
   );
 };
 
