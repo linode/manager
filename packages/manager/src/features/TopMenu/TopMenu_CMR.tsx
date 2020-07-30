@@ -3,11 +3,9 @@ import AppBar from 'src/components/core/AppBar';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
-import { NotificationDrawer } from 'src/features/NotificationCenter';
 import AddNewMenu from './AddNewMenu/AddNewMenu_CMR';
 import SearchBar from './SearchBar/SearchBar_CMR';
-import UserEventsMenu from './UserEventsMenu';
-import UserNotificationsMenu from './UserNotificationsMenu';
+import NotificationButton from './NotificationButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -49,11 +47,6 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
 
   const classes = useStyles();
 
-  const [drawerOpen, setDrawerOpen] = React.useState(true);
-
-  const openDrawer = () => setDrawerOpen(true);
-  const closeDrawer = () => setDrawerOpen(false);
-
   return (
     <React.Fragment>
       {isLoggedInAsCustomer && (
@@ -73,11 +66,9 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
         <Toolbar className={classes.toolbar} variant="dense">
           <AddNewMenu />
           <SearchBar />
-          <UserNotificationsMenu />
-          <UserEventsMenu />
+          <NotificationButton />
         </Toolbar>
       </AppBar>
-      <NotificationDrawer open={drawerOpen} onClose={closeDrawer} />
     </React.Fragment>
   );
 };
