@@ -15,6 +15,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import { DialogType } from 'src/features/linodes/types';
 import useFlags from 'src/hooks/useFlags';
 import { capitalize } from 'src/utilities/capitalize';
 import { linodeMaintenanceWindowString } from '../../utilities';
@@ -57,7 +58,11 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  openLinodeResize: (linodeID: number) => void;
+  openDialog: (
+    type: DialogType,
+    linodeID: number,
+    linodeLabel?: string
+  ) => void;
   // Including for type matching with CMR; not used.
   openTagDrawer?: any;
 }
@@ -90,6 +95,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     // other props
     classes,
     linodeNotifications,
+    openDialog,
     openDeleteDialog,
     openPowerActionDialog,
     // displayType, @todo use for M3-2059
@@ -226,6 +232,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
               linodeBackups={backups}
               openDeleteDialog={openDeleteDialog}
               openPowerActionDialog={openPowerActionDialog}
+              openDialog={openDialog}
               noImage={!image}
             />
           </div>

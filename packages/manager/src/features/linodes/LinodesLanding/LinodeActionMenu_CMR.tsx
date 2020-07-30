@@ -21,6 +21,7 @@ import {
   useTheme,
   useMediaQuery
 } from 'src/components/core/styles';
+import { DialogType } from 'src/features/linodes/types';
 import { useTypes } from 'src/hooks/useTypes';
 import { useRegions } from 'src/hooks/useRegions';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
@@ -62,7 +63,11 @@ export interface Props {
   linodeBackups: LinodeBackups;
   linodeStatus: string;
   noImage: boolean;
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: (
+    type: DialogType,
+    linodeID: number,
+    linodeLabel?: string
+  ) => void;
   openPowerActionDialog: (
     bootAction: BootAction,
     linodeID: number,
@@ -71,7 +76,6 @@ export interface Props {
   ) => void;
   inlineLabel?: string;
   inTableContext?: boolean;
-  openLinodeResize: (linodeID: number) => void;
 }
 
 export type CombinedProps = Props & StateProps;
@@ -83,7 +87,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
   const { types } = useTypes();
   const history = useHistory();
-  const regions = useRegions();
+  const regions = useRegions().entities;
 
   const [configs, setConfigs] = React.useState<Config[]>([]);
   const [configsError, setConfigsError] = React.useState<
@@ -141,10 +145,9 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       linodeLabel,
       linodeBackups,
       linodeStatus,
-      openDeleteDialog,
+      openDialog,
       openPowerActionDialog,
-      readOnly,
-      openLinodeResize
+      readOnly
     } = props;
 
     const readOnlyProps = readOnly
@@ -213,7 +216,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            openLinodeResize(linodeId);
+            openDialog('resize', linodeId);
             e.preventDefault();
             e.stopPropagation();
           },
@@ -247,9 +250,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendMigrationNavigationEvent('/linodes');
             sendLinodeActionMenuItemEvent('Migrate');
-            history.push({
-              pathname: `/linodes/${linodeId}/migrate`
-            });
+            openDialog('migrate', linodeId);
             e.preventDefault();
             e.stopPropagation();
           },
@@ -261,7 +262,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             sendLinodeActionMenuItemEvent('Delete Linode');
             e.preventDefault();
             e.stopPropagation();
-            openDeleteDialog(linodeId, linodeLabel);
+            openDialog('delete', linodeId, linodeLabel);
           },
           ...readOnlyProps
         }
