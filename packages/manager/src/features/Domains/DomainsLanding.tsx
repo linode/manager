@@ -57,6 +57,7 @@ import DisableDomainDialog from './DisableDomainDialog';
 import DomainRow from './DomainTableRow';
 import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
+import Hidden from 'src/components/core/Hidden';
 
 type ClassNames =
   | 'root'
@@ -66,7 +67,8 @@ type ClassNames =
   | 'domain'
   | 'dnsWarning'
   | 'tagWrapper'
-  | 'tagGroup';
+  | 'tagGroup'
+  | 'importButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -96,6 +98,10 @@ const styles = (theme: Theme) =>
     tagGroup: {
       flexDirection: 'row-reverse',
       marginBottom: theme.spacing(2) - 8
+    },
+    importButton: {
+      paddingTop: 5,
+      paddingBottom: 5
     }
   });
 
@@ -430,6 +436,16 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                 {flags.cmr ? (
                   <LandingHeader
                     title="Domains"
+                    body={
+                      <Hidden mdUp>
+                        <Button
+                          className={classes.importButton}
+                          onClick={this.openImportZoneDrawer}
+                        >
+                          Import a Zone
+                        </Button>
+                      </Hidden>
+                    }
                     extraActions={
                       <Button onClick={this.openImportZoneDrawer}>
                         Import a Zone

@@ -144,6 +144,11 @@ const genericStatusPillStyle = {
     width: 16,
     minWidth: 16,
     marginRight: 8
+  },
+  [breakpoints.down('sm')]: {
+    fontSize: 14,
+    padding: '15px 12px',
+    borderRadius: 15
   }
 };
 

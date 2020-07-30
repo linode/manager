@@ -39,7 +39,8 @@ const props: CombinedProps = {
     tagWrapper: '',
     tagGroup: '',
     title: '',
-    breadcrumbs: ''
+    breadcrumbs: '',
+    importButton: ''
   },
   ...reactRouterProps
 };

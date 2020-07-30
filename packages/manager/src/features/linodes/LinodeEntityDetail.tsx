@@ -17,7 +17,12 @@ import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -42,6 +47,7 @@ import { lishLink, sshLink } from './LinodesDetail/utilities';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import Hidden from 'src/components/core/Hidden';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -60,6 +66,7 @@ interface LinodeEntityDetailProps {
   linodeConfigs: Config[];
   numVolumes: number;
   openTagDrawer: (tags: string[]) => void;
+  isDetailLanding?: boolean;
 }
 
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
@@ -72,6 +79,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     backups,
     linodeConfigs,
     numVolumes,
+    isDetailLanding,
     openTagDrawer
   } = props;
 
@@ -108,6 +116,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeRegionDisplay={linodeRegionDisplay}
           backups={backups}
           linodeConfigs={linodeConfigs}
+          isDetailLanding={isDetailLanding}
           type={'something'}
           image={'something'}
         />
@@ -165,6 +174,7 @@ export interface HeaderProps {
   type: string;
   image: string;
   linodeConfigs: Config[];
+  isDetailLanding?: boolean;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -184,12 +194,14 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     marginRight: 10
   },
   body: {
-    marginLeft: 'auto',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: `0 !important`
+    [theme.breakpoints.up('md')]: {
+      marginLeft: 'auto',
+      padding: `0 !important`
+    }
   },
   actionItem: {
     marginRight: 10,
@@ -217,6 +229,10 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     '&:before': {
       backgroundColor: theme.color.grey10
     }
+  },
+  actionItemsOuter: {
+    display: 'flex',
+    alignItems: 'center'
   }
 }));
 
@@ -233,10 +249,13 @@ const Header: React.FC<HeaderProps> = props => {
     backups,
     type,
     image,
-    linodeConfigs
+    linodeConfigs,
+    isDetailLanding
   } = props;
 
   const classes = useHeaderStyles();
+  const theme = useTheme<Theme>();
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const distroIconClassName =
     imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
@@ -256,7 +275,13 @@ const Header: React.FC<HeaderProps> = props => {
     <EntityHeader
       parentLink={isDetails ? '/linodes' : undefined}
       parentText={isDetails ? 'Linodes' : undefined}
+      isDetailLanding={isDetailLanding}
       iconType="linode"
+      actions={
+        <Hidden mdUp>
+          <DocumentationButton hideText href="https://www.linode.com/" />
+        </Hidden>
+      }
       title={
         isDetails ? (
           <div className={classes.linodeLabelWithDistro}>
@@ -286,75 +311,84 @@ const Header: React.FC<HeaderProps> = props => {
             clickable={false}
           />
 
-          {!isDetails && (
+          <div className={classes.actionItemsOuter}>
+            {!isDetails && (
+              <Hidden smDown>
+                <IconTextLink
+                  className={classes.actionItem}
+                  SideIcon={ViewDetailsIcon}
+                  text="ViewDetails"
+                  title="ViewDetails"
+                  to={`linodes/${linodeId}`}
+                />
+              </Hidden>
+            )}
+
             <IconTextLink
               className={classes.actionItem}
-              SideIcon={ViewDetailsIcon}
-              text="ViewDetails"
-              title="ViewDetails"
-              to={`linodes/${linodeId}`}
+              SideIcon={PowerOnIcon}
+              text={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+              title={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+              onClick={() => {
+                const action =
+                  linodeStatus === 'running' ? 'Power Off' : 'Power On';
+                sendLinodeActionMenuItemEvent(`${action} Linode`);
+
+                openPowerActionDialog(
+                  `${action}` as BootAction,
+                  linodeId,
+                  linodeLabel,
+                  linodeStatus === 'running' ? linodeConfigs : []
+                );
+              }}
+              disabled={!['running', 'offline'].includes(linodeStatus)}
             />
+
+            <Hidden xsDown>
+              <IconTextLink
+                className={classes.actionItem}
+                SideIcon={RebootIcon}
+                text="Reboot"
+                title="Reboot"
+                onClick={() => {
+                  sendLinodeActionMenuItemEvent('Reboot Linode');
+                  openPowerActionDialog(
+                    'Reboot',
+                    linodeId,
+                    linodeLabel,
+                    linodeConfigs
+                  );
+                }}
+              />
+              <IconTextLink
+                className={classes.actionItem}
+                SideIcon={ConsoleIcon}
+                text="Launch Console"
+                title="Launch Console"
+                onClick={() => {
+                  handleConsoleButtonClick(linodeId);
+                }}
+              />
+            </Hidden>
+
+            <LinodeActionMenu
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeRegion={linodeRegionDisplay}
+              linodeType={type}
+              linodeStatus={linodeStatus}
+              linodeBackups={backups}
+              openDialog={openDialog}
+              openPowerActionDialog={openPowerActionDialog}
+              noImage={!image}
+              inlineLabel={matchesMdDown ? undefined : 'More Actions'}
+            />
+          </div>
+          {isDetails && (
+            <Hidden smDown>
+              <DocumentationButton href="https://www.linode.com/" />
+            </Hidden>
           )}
-
-          <IconTextLink
-            className={classes.actionItem}
-            SideIcon={PowerOnIcon}
-            text={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-            title={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-            onClick={() => {
-              const action =
-                linodeStatus === 'running' ? 'Power Off' : 'Power On';
-              sendLinodeActionMenuItemEvent(`${action} Linode`);
-
-              openPowerActionDialog(
-                `${action}` as BootAction,
-                linodeId,
-                linodeLabel,
-                linodeStatus === 'running' ? linodeConfigs : []
-              );
-            }}
-            disabled={!['running', 'offline'].includes(linodeStatus)}
-          />
-
-          <IconTextLink
-            className={classes.actionItem}
-            SideIcon={RebootIcon}
-            text="Reboot"
-            title="Reboot"
-            onClick={() => {
-              sendLinodeActionMenuItemEvent('Reboot Linode');
-              openPowerActionDialog(
-                'Reboot',
-                linodeId,
-                linodeLabel,
-                linodeConfigs
-              );
-            }}
-          />
-
-          <IconTextLink
-            className={classes.actionItem}
-            SideIcon={ConsoleIcon}
-            text="Launch Console"
-            title="Launch Console"
-            onClick={() => {
-              handleConsoleButtonClick(linodeId);
-            }}
-          />
-
-          <LinodeActionMenu
-            linodeId={linodeId}
-            linodeLabel={linodeLabel}
-            linodeRegion={linodeRegionDisplay}
-            linodeType={type}
-            linodeStatus={linodeStatus}
-            linodeBackups={backups}
-            openDialog={openDialog}
-            openPowerActionDialog={openPowerActionDialog}
-            noImage={!image}
-            inlineLabel="More Actions"
-          />
-          {isDetails && <DocumentationButton href="https://www.linode.com/" />}
         </>
       }
     />
@@ -459,11 +493,22 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
   accessTableContainer: {
     overflowX: 'auto',
-    maxWidth: 600
+    maxWidth: 335,
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 728
+    },
+    [theme.breakpoints.up('lg')]: {
+      maxWidth: 600
+    }
   },
   code: {
     // @todo: use font from designs
     fontFamily: '"Ubuntu Mono", monospace, sans-serif'
+  },
+  bodyWrapper: {
+    [theme.breakpoints.up('lg')]: {
+      justifyContent: 'space-between'
+    }
   }
 }));
 
@@ -483,7 +528,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
   } = props;
 
   return (
-    <Grid container direction="row" justify="space-between">
+    <Grid container direction="row" className={classes.bodyWrapper}>
       <Grid item>
         {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
         <Grid container>
@@ -632,6 +677,12 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     borderRight: `1px solid ${theme.color.grey6}`,
     color: theme.color.grey8
   },
+  listItemLast: {
+    [theme.breakpoints.only('xs')]: {
+      borderRight: 'none',
+      paddingRight: 0
+    }
+  },
   button: {
     ...theme.applyLinkStyles,
     padding: `0px 10px`,
@@ -643,12 +694,19 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
   linodeCreated: {
     paddingLeft: 10,
-    color: theme.color.grey8
+    color: theme.color.grey8,
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'center'
+    }
   },
   linodeTags: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    [theme.breakpoints.only('xs')]: {
+      marginTop: 20,
+      marginBottom: 10
+    }
   }
 }));
 
@@ -701,7 +759,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   return (
     <Grid container direction="row" justify="space-between" alignItems="center">
-      <Grid item sm={7}>
+      <Grid item xs={12} sm={7}>
         <div className={classes.detailsSection}>
           {linodePlan && (
             <Link
@@ -716,16 +774,31 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
               {linodeRegionDisplay}
             </button>
           )}
-          <Typography className={classes.listItem}>
+          <Typography
+            className={classnames({
+              [classes.listItem]: true,
+              [classes.listItemLast]: true
+            })}
+          >
             Linode ID {linodeId}
           </Typography>
+          <Hidden xsDown>
+            <Typography className={classes.linodeCreated}>
+              Created{' '}
+              {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+            </Typography>
+          </Hidden>
+        </div>
+      </Grid>
+      <Hidden smUp>
+        <Grid item xs={12}>
           <Typography className={classes.linodeCreated}>
             Created{' '}
             {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
           </Typography>
-        </div>
-      </Grid>
-      <Grid item sm={5} className={classes.linodeTags}>
+        </Grid>
+      </Hidden>
+      <Grid item xs={12} sm={5} className={classes.linodeTags}>
         <TagCell
           width={500}
           tags={linodeTags}
