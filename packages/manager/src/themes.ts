@@ -296,8 +296,7 @@ const darkThemeOptions = {
     },
     MuiDialog: {
       paper: {
-        boxShadow: '0 0 5px #222',
-        background: '#000'
+        boxShadow: '0 0 5px #222'
       }
     },
     MuiDialogTitle: {

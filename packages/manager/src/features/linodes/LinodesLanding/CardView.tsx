@@ -9,6 +9,7 @@ import { PaginationProps } from 'src/components/Paginate';
 import withImages from 'src/containers/withImages.container';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { DialogType } from 'src/features/linodes/types';
 import useFlags from 'src/hooks/useFlags';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
@@ -31,14 +32,13 @@ interface Props {
   data: LinodeWithMaintenance[];
   images: Image[];
   showHead?: boolean;
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  openLinodeResize: (linodeID: number) => void;
   linodeConfigs: Config[];
   linodeLabel: string;
   linodeID: number;
@@ -91,9 +91,8 @@ const CardView: React.FC<CombinedProps> = props => {
   const {
     data,
     imagesData,
-    openDeleteDialog,
+    openDialog,
     openPowerActionDialog,
-    openLinodeResize,
     linodeConfigs,
     linodeLabel,
     linodeID
@@ -125,9 +124,8 @@ const CardView: React.FC<CombinedProps> = props => {
                     linodeConfigs={linodeConfigs}
                     backups={linode.backups}
                     openTagDrawer={openTagDrawer}
-                    openDeleteDialog={openDeleteDialog}
+                    openDialog={openDialog}
                     openPowerActionDialog={openPowerActionDialog}
-                    openLinodeResize={openLinodeResize}
                   />
                 </Grid>
               </React.Fragment>
@@ -154,9 +152,8 @@ const CardView: React.FC<CombinedProps> = props => {
                 type={linode.type}
                 image={linode.image}
                 imageLabel={safeGetImageLabel(imagesData, linode.image)}
-                openDeleteDialog={openDeleteDialog}
+                openDialog={openDialog}
                 openPowerActionDialog={openPowerActionDialog}
-                openLinodeResize={openLinodeResize}
               />
             ))}
       </Grid>
