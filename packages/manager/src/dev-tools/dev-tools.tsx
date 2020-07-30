@@ -7,7 +7,6 @@ import EnvironmentToggleTool from './EnvironmentToggleTool';
 import store from 'src/store';
 import { Provider } from 'react-redux';
 import Grid from 'src/components/core/Grid';
-import { isProductionBuild } from 'src/constants';
 
 function install() {
   (window as any).devToolsEnabled = true;
