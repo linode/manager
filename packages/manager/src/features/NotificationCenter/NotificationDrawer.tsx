@@ -44,10 +44,10 @@ export const NotificationDrawer: React.FC<Props> = props => {
   const { open, onClose } = props;
   const { account } = useAccount();
   const classes = useStyles();
-  const balance = account.data?.balance ?? 0;
+  const balance = (account.data?.balance ?? 0) + 50;
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
-      {balance < 50 ? <PastDue balance={balance} /> : null}
+      {balance > 0 ? <PastDue balance={balance} /> : null}
       <div className={classes.actionHeader}>
         <Clock />
       </div>
