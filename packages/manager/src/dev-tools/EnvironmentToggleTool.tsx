@@ -18,9 +18,7 @@ interface EnvironmentOption {
 // Repeat for each desired environment, incrementing the "1" to "2", e.g.:
 //
 // REACT_APP_DEV_TOOLS_ENV_2_LABEL+"Another environment"
-//
-// @todo: unit test this function.
-const getOptions = (env: typeof process.env) => {
+export const getOptions = (env: typeof process.env) => {
   const envVariables = Object.keys(env);
 
   return envVariables.reduce<EnvironmentOption[]>((acc, thisEnvVariable) => {
