@@ -44,7 +44,15 @@ export const getOptions = (env: typeof process.env) => {
 
 const options = getOptions(process.env);
 
+// This component works by setting local storage values that override the API_ROOT, LOGIN_ROOT,
+// and CLIENT_ID environment variables, giving client-side control over the environment.
 const EnvironmentToggleTool: React.FC<{}> = () => {
+  const updateLocalStorage = (option: EnvironmentOption) => {
+    window.localStorage['dev-tools-api-root'] = option.apiRoot;
+    window.localStorage['dev-tools-login-root'] = option.loginRoot;
+    window.localStorage['dev-tools-client-id'] = option.clientID;
+  };
+
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -76,9 +84,3 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
 };
 
 export default React.memo(EnvironmentToggleTool);
-
-const updateLocalStorage = (option: EnvironmentOption) => {
-  window.localStorage['dev-tools-api-root'] = option.apiRoot;
-  window.localStorage['dev-tools-login-root'] = option.loginRoot;
-  window.localStorage['dev-tools-client-id'] = option.clientID;
-};

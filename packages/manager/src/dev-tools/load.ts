@@ -17,8 +17,12 @@ function loadDevTools(callback: () => any) {
 }
 export default loadDevTools;
 
+// Defaults to FALSE in production builds, but can be explicity enabled with
+// query param or local storage.
+//
+// Defaults to TRUE in development mode, but can be explicity disabled with
+// query param or local storage.
 export const isDevToolEnabled = () => {
-  // this allows you to explicitly disable it in development for example
   const explicitlyDisabled =
     window.location.search.includes('dev-tools=false') ||
     window.localStorage.getItem('dev-tools') === 'false';
