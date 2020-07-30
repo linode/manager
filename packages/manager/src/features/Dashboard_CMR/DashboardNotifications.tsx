@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(3),
     borderRadius: 3,
-    marginBottom: 30
+    marginBottom: 8
   },
   column: {
     width: '45%'
