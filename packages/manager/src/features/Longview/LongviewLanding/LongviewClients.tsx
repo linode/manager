@@ -2,8 +2,6 @@ import {
   LongviewClient,
   LongviewSubscription
 } from '@linode/api-v4/lib/longview/types';
-import { getLongviewSubscription } from '@linode/api-v4/lib/longview';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
 
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
@@ -73,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  subscriptionsData: LongviewSubscription[];
+  activeSubscription: LongviewSubscription;
 }
 
 export type CombinedProps = Props &
@@ -81,6 +79,7 @@ export type CombinedProps = Props &
   LongviewProps &
   WithSnackbarProps &
   StateProps &
+  // we need this to know if the account is managed
   SettingsProps &
   GrantsProps;
 
@@ -222,7 +221,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     longviewClientsResults,
     lvClientData,
     accountSettings,
-    subscriptionsData,
+    activeSubscription,
     createLongviewClient,
     deleteLongviewClient,
     userCanCreateClient
@@ -236,21 +235,12 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     setSortKey(selected.value as SortKey);
   };
 
-  const _subscription = pathOr('', ['longview_subscription'], accountSettings);
-  const activeSubscription = subscriptionsData.find(
-    thisSubscription => thisSubscription.id === _subscription
-  );
-
   const isManaged = pathOr(false, ['managed'], accountSettings);
 
   // If this value is defined they're not on the free plan
   // and don't need to be CTA'd to upgrade.
-  const subscriptionRequestHook = useAPIRequest<LongviewSubscription>(
-    () => getLongviewSubscription().then(response => response),
-    {} as LongviewSubscription
-  );
 
-  const isLongviewPro = subscriptionRequestHook.data.id === 'longview-100';
+  const isLongviewPro = activeSubscription.id === 'longview-100';
 
   /**
    * Do the actual sorting & filtering
