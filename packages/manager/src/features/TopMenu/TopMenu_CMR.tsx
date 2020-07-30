@@ -49,6 +49,11 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
 
   const classes = useStyles();
 
+  const [drawerOpen, setDrawerOpen] = React.useState(true);
+
+  const openDrawer = () => setDrawerOpen(true);
+  const closeDrawer = () => setDrawerOpen(false);
+
   return (
     <React.Fragment>
       {isLoggedInAsCustomer && (
@@ -72,7 +77,7 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
           <UserEventsMenu />
         </Toolbar>
       </AppBar>
-      <NotificationDrawer />
+      <NotificationDrawer open={drawerOpen} onClose={closeDrawer} />
     </React.Fragment>
   );
 };

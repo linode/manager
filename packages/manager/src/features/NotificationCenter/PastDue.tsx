@@ -12,17 +12,20 @@ import { formatDate } from 'src/utilities/formatDate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(3),
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    alignItems: 'space-around',
+    marginBottom: theme.spacing(4),
     padding: theme.spacing(3) + 1,
     border: `solid 1px ${theme.color.borderBilling}`,
     borderRadius: 8,
     backgroundColor: theme.bg.billingHeader,
-    height: 160
+    height: 160,
+    width: 580
   },
   iconButton: {
     paddingLeft: 0,
     paddingRight: theme.spacing(5),
-    paddingBottom: 0,
     '&:hover': {
       '& svg': {
         color: `${theme.palette.primary.main} !important`
@@ -36,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing()
   },
   actions: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(),
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'flex-start'
