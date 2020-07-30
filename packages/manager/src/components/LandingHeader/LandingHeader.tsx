@@ -11,6 +11,7 @@ import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import EntityHeader, {
   HeaderProps
 } from 'src/components/EntityHeader/EntityHeader';
+import Hidden from '../core/Hidden';
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -51,7 +52,12 @@ export const LandingHeader: React.FC<Props> = props => {
         alignItems="center"
         justify="flex-end"
       >
-        {extraActions && <Grid item>{extraActions}</Grid>}
+        {extraActions && (
+          <Hidden smDown>
+            <Grid item>{extraActions}</Grid>
+          </Hidden>
+        )}
+
         {onAddNew && (
           <Grid item>
             <Button

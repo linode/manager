@@ -19,6 +19,7 @@ import PaginationFooter, {
 } from 'src/components/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { DialogType } from 'src/features/linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import { ExtendedLinode } from '../LinodesDetail/types';
@@ -70,7 +71,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
@@ -201,6 +202,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
 
   if (display === 'list') {
     return (
+      // eslint-disable-next-line
       <React.Fragment>
         {flags.cmr ? (
           <TableWrapper_CMR {...tableWrapperProps}>
@@ -232,46 +234,44 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                         orderBy
                       };
                       return (
-                        <React.Fragment>
-                          <TableBody
-                            className={classes.groupContainer}
-                            data-qa-tag-header={tag}
+                        <TableBody
+                          className={classes.groupContainer}
+                          data-qa-tag-header={tag}
+                        >
+                          <TableRow
+                            className={classes.tagHeaderRow}
+                            role="cell"
                           >
-                            <TableRow
-                              className={classes.tagHeaderRow}
-                              role="cell"
-                            >
-                              <TableCell colSpan={7}>
-                                <Typography
-                                  variant="h2"
-                                  component="h3"
-                                  className={classes.tagHeader}
-                                >
-                                  {tag}
-                                </Typography>
+                            <TableCell colSpan={7}>
+                              <Typography
+                                variant="h2"
+                                component="h3"
+                                className={classes.tagHeader}
+                              >
+                                {tag}
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                          <Component {...finalProps} />
+                          {count > MIN_PAGE_SIZE && (
+                            <TableRow>
+                              <TableCell
+                                colSpan={7}
+                                className={classes.paginationCell}
+                              >
+                                <PaginationFooter
+                                  count={count}
+                                  handlePageChange={handlePageChange}
+                                  handleSizeChange={handlePageSizeChange}
+                                  pageSize={pageSize}
+                                  page={page}
+                                  eventCategory={'linodes landing'}
+                                  showAll
+                                />
                               </TableCell>
                             </TableRow>
-                            <Component {...finalProps} />
-                            {count > MIN_PAGE_SIZE && (
-                              <TableRow>
-                                <TableCell
-                                  colSpan={7}
-                                  className={classes.paginationCell}
-                                >
-                                  <PaginationFooter
-                                    count={count}
-                                    handlePageChange={handlePageChange}
-                                    handleSizeChange={handlePageSizeChange}
-                                    pageSize={pageSize}
-                                    page={page}
-                                    eventCategory={'linodes landing'}
-                                    showAll
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            )}
-                          </TableBody>
-                        </React.Fragment>
+                          )}
+                        </TableBody>
                       );
                     }}
                   </Paginate>
@@ -309,46 +309,44 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                         orderBy
                       };
                       return (
-                        <React.Fragment>
-                          <TableBody
-                            className={classes.groupContainer}
-                            data-qa-tag-header={tag}
+                        <TableBody
+                          className={classes.groupContainer}
+                          data-qa-tag-header={tag}
+                        >
+                          <TableRow
+                            className={classes.tagHeaderRow}
+                            role="cell"
                           >
-                            <TableRow
-                              className={classes.tagHeaderRow}
-                              role="cell"
-                            >
-                              <TableCell colSpan={7}>
-                                <Typography
-                                  variant="h2"
-                                  component="h3"
-                                  className={classes.tagHeader}
-                                >
-                                  {tag}
-                                </Typography>
+                            <TableCell colSpan={7}>
+                              <Typography
+                                variant="h2"
+                                component="h3"
+                                className={classes.tagHeader}
+                              >
+                                {tag}
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                          <Component {...finalProps} />
+                          {count > MIN_PAGE_SIZE && (
+                            <TableRow>
+                              <TableCell
+                                colSpan={7}
+                                className={classes.paginationCell}
+                              >
+                                <PaginationFooter
+                                  count={count}
+                                  handlePageChange={handlePageChange}
+                                  handleSizeChange={handlePageSizeChange}
+                                  pageSize={pageSize}
+                                  page={page}
+                                  eventCategory={'linodes landing'}
+                                  showAll
+                                />
                               </TableCell>
                             </TableRow>
-                            <Component {...finalProps} />
-                            {count > MIN_PAGE_SIZE && (
-                              <TableRow>
-                                <TableCell
-                                  colSpan={7}
-                                  className={classes.paginationCell}
-                                >
-                                  <PaginationFooter
-                                    count={count}
-                                    handlePageChange={handlePageChange}
-                                    handleSizeChange={handlePageSizeChange}
-                                    pageSize={pageSize}
-                                    page={page}
-                                    eventCategory={'linodes landing'}
-                                    showAll
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            )}
-                          </TableBody>
-                        </React.Fragment>
+                          )}
+                        </TableBody>
                       );
                     }}
                   </Paginate>

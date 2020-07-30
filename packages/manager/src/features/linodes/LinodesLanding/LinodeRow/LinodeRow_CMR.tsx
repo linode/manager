@@ -23,6 +23,7 @@ import {
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
+import { DialogType } from 'src/features/linodes/types';
 import useLinodes from 'src/hooks/useLinodes';
 import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -62,14 +63,17 @@ interface Props {
     linodeLabel: string,
     tags: string[]
   ) => void;
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: (
+    type: DialogType,
+    linodeID: number,
+    linodeLabel?: string
+  ) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  openLinodeResize: (linodeID: number) => void;
 }
 
 export type CombinedProps = Props &
@@ -101,9 +105,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     classes,
     linodeNotifications,
     openTagDrawer,
-    openDeleteDialog,
+    openDialog,
     openPowerActionDialog,
-    openLinodeResize,
     // displayType, @todo use for M3-2059
     recentEvent,
     mutationAvailable
@@ -276,9 +279,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             linodeType={type}
             linodeStatus={status}
             linodeBackups={backups}
-            openDeleteDialog={openDeleteDialog}
+            openDialog={openDialog}
             openPowerActionDialog={openPowerActionDialog}
-            openLinodeResize={openLinodeResize}
             noImage={!image}
             inTableContext
           />
