@@ -33,6 +33,7 @@ import {
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
+import { DialogType } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { typeLabelDetails } from '../presentation';
@@ -66,14 +67,13 @@ interface Props {
   type: null | string;
   tags: string[];
   imageLabel: string;
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  openLinodeResize: (linodeID: number) => void;
 }
 
 export type CombinedProps = Props &
@@ -152,9 +152,8 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
       tags,
       image,
       classes,
-      openDeleteDialog,
+      openDialog,
       openPowerActionDialog,
-      openLinodeResize,
       displayType,
       mutationAvailable,
       linodeNotifications,
@@ -184,9 +183,14 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
       linodeType: type,
       linodeStatus: status,
       linodeBackups: backups,
-      openDeleteDialog,
+      openDialog,
       openPowerActionDialog,
       noImage: !image
+    };
+
+    // @todo delete after CMR
+    const openDeleteDialog = (linodeID: number, linodeLabel: string) => {
+      openDialog('delete', linodeID, linodeLabel);
     };
 
     return (
@@ -217,10 +221,14 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
                 {this.props.flags.cmr ? (
                   <LinodeActionMenu_CMR
                     {...actionMenuProps}
-                    openLinodeResize={openLinodeResize}
+                    openDialog={openDialog}
                   />
                 ) : (
-                  <LinodeActionMenu {...actionMenuProps} />
+                  <LinodeActionMenu
+                    {...actionMenuProps}
+                    // @todo delete after CMR
+                    openDeleteDialog={openDeleteDialog}
+                  />
                 )}
               </div>
             }
@@ -435,6 +443,7 @@ export const RenderFlag: React.FC<{
 
   if (linodeNotifications.length > 0) {
     return (
+      // eslint-disable-next-line
       <>
         {linodeNotifications.map((notification, idx) => (
           <Grid
