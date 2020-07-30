@@ -2,6 +2,9 @@ import {
   LongviewClient,
   LongviewSubscription
 } from '@linode/api-v4/lib/longview/types';
+import { getLongviewSubscription } from '@linode/api-v4/lib/longview';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
+
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -239,10 +242,16 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   );
 
   const isManaged = pathOr(false, ['managed'], accountSettings);
+
   // If this value is defined they're not on the free plan
   // and don't need to be CTA'd to upgrade.
+  const subscriptionRequestHook = useAPIRequest<LongviewSubscription>(
+    () => getLongviewSubscription().then(response => response),
+    {} as LongviewSubscription
+  );
+
   const isLongviewPro = Boolean(
-    pathOr(false, ['longview_subscription'], accountSettings)
+    subscriptionRequestHook.data.id === 'longview-100'
   );
 
   /**

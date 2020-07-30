@@ -55,3 +55,9 @@ export const getLongviewSubscriptions = () =>
     setURL(`${API_ROOT}/longview/subscriptions`),
     setMethod('GET')
   ).then(response => response.data);
+
+export const getLongviewSubscription = () =>
+  Request<LongviewSubscription>(
+    setURL(`${API_ROOT}/longview/plan`),
+    setMethod('GET')
+  ).then(response => response.data);
