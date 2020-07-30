@@ -19,18 +19,22 @@ import {
   nodeBalancerFactory,
   profileFactory,
   volumeFactory,
-  accountTransferFactory
+  accountTransferFactory,
+  eventFactory
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
 
 export const makeResourcePage = (
   e: any[],
-  override: { page: number; pages: number } = { page: 1, pages: 1 }
+  override: { page: number; pages: number; results?: number } = {
+    page: 1,
+    pages: 1
+  }
 ) => ({
   page: override.page ?? 1,
   pages: override.pages ?? 1,
-  results: e.length,
+  results: override.results ?? e.length,
   data: e
 });
 
@@ -121,8 +125,8 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(nodeBalancers)));
   }),
   rest.get('*/domains', (req, res, ctx) => {
-    const domains = domainFactory.buildList(500);
-    return res(ctx.json(makeResourcePage(domains, { page: 1, pages: 5 })));
+    const domains = domainFactory.buildList(25);
+    return res(ctx.json(makeResourcePage(domains)));
   }),
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(10);
@@ -149,5 +153,56 @@ export const handlers = [
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();
     return res(ctx.json(transfer));
+  }),
+  rest.get('*/events', (req, res, ctx) => {
+    const events = eventFactory.buildList(10);
+    const communityLike = eventFactory.build({
+      seen: false,
+      read: false,
+      action: 'community_like',
+      username: 'demo-user',
+      entity: {
+        id: 17566,
+        type: 'community_like',
+        label:
+          '1 user liked your answer to: How do I deploy an image to an existing Linode?',
+        url: 'https://linode.com/community/questions/1#answer-1'
+      },
+      status: 'notification'
+    });
+    const communityReply = eventFactory.build({
+      seen: false,
+      read: false,
+      percent_complete: null,
+      action: 'community_question_reply',
+      username: 'demo-user-2',
+      entity: {
+        id: 17567,
+        type: 'community_reply',
+        label: 'How do I deploy an image to an existing Linode?',
+        url: 'https://linode.com/community/questions/2#answer-1'
+      },
+      status: 'notification'
+    });
+    const communityMention = eventFactory.build({
+      seen: true,
+      read: false,
+      action: 'community_mention',
+      username: 'prod-test-001',
+      entity: {
+        id: 17568,
+        type: 'community_question',
+        label: 'How do I deploy an image to an existing Linode?',
+        url: 'https://linode.com/community/questions/17566#answer-73511'
+      },
+      status: 'notification'
+    });
+    const _events = [
+      ...events,
+      communityLike,
+      communityReply,
+      communityMention
+    ];
+    return res(ctx.json(makeResourcePage(_events)));
   })
 ];

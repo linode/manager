@@ -19,6 +19,7 @@ import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu/TopMenu_CMR';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
@@ -32,6 +33,7 @@ import withGlobalErrors, {
 import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import Logo from 'src/assets/logo/logo-text.svg';
 
@@ -59,8 +61,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create('opacity'),
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing(2),
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
+      paddingLeft: 0,
+      paddingRight: 0
     }
   },
   content: {
@@ -159,6 +161,13 @@ const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [, toggleMenu] = React.useState<boolean>(false);
+  const { account } = useAccountManagement();
+
+  const showFirewalls = isFeatureEnabled(
+    'Cloud Firewall',
+    Boolean(props.flags.firewalls),
+    account.data?.capabilities ?? []
+  );
 
   /**
    * this is the case where the user has successfully completed signup
@@ -272,7 +281,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                     component={SupportSearchLanding}
                   />
                   <Route path="/events" component={EventsLanding} />
-                  {props.flags.firewalls && (
+                  {showFirewalls && (
                     <Route path="/firewalls" component={Firewalls} />
                   )}
                   <Redirect exact from="/" to="/dashboard" />

@@ -39,6 +39,7 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDomains from 'src/hooks/useDomains';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import usePrimaryNavStyles from './PrimaryNav_CMR.styles';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
@@ -110,6 +111,12 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
     account
   } = useAccountManagement();
 
+  const showFirewalls = isFeatureEnabled(
+    'Cloud Firewall',
+    Boolean(flags.firewalls),
+    account?.data?.capabilities ?? []
+  );
+
   const primaryLinkGroups: {
     group: NavGroup;
     links: PrimaryLink[];
@@ -171,7 +178,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             display: 'Firewalls',
             href: '/firewalls',
             icon: <Firewall />,
-            hide: !flags.firewalls
+            hide: !showFirewalls
           }
         ]
       },
@@ -223,7 +230,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       }
     ],
     [
-      flags.firewalls,
+      showFirewalls,
       _isManagedAccount,
       account.lastUpdated,
       _hasAccountAccess,
