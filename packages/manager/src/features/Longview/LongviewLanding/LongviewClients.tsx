@@ -250,9 +250,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     {} as LongviewSubscription
   );
 
-  const isLongviewPro = Boolean(
-    subscriptionRequestHook.data.id === 'longview-100'
-  );
+  const isLongviewPro = subscriptionRequestHook.data.id === 'longview-100';
 
   /**
    * Do the actual sorting & filtering
