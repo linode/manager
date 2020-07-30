@@ -7,7 +7,6 @@ import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Placeholder from 'src/components/Placeholder';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   BasicFromContentProps,
   ReduxStateProps,
@@ -25,19 +24,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props extends BasicFromContentProps {
   variant?: 'public' | 'private' | 'all';
   imagePanelTitle?: string;
-  showGeneralError?: boolean;
+  error?: string;
 }
-
-const errorMap = [
-  'backup_id',
-  'linode_id',
-  'stackscript_id',
-  'region',
-  'type',
-  'root_pass',
-  'label',
-  'image'
-];
 
 export type CombinedProps = Props &
   BasicFromContentProps &
@@ -48,7 +36,7 @@ export const FromImageContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {
-    errors,
+    error,
     imagePanelTitle,
     imagesData,
     userCannotCreateLinode,
@@ -77,16 +65,6 @@ export const FromImageContent: React.FC<CombinedProps> = props => {
     );
   }
 
-  /**
-   * Subtab component handles displaying general errors internally, but the
-   * issue here is that the FromImageContent isn't nested under
-   * sub-tabs, so we need to display general errors here
-   *
-   * NOTE: This only applies to from Distro; "My Images" must be handled
-   * separately.
-   */
-  const hasErrorFor = getErrorMap(errorMap, errors);
-
   return (
     <Grid item className={`${classes.main} mlMain py0`}>
       <ImageSelect
@@ -94,7 +72,7 @@ export const FromImageContent: React.FC<CombinedProps> = props => {
         images={Object.keys(imagesData).map(eachKey => imagesData[eachKey])}
         handleSelectImage={props.updateImageID}
         selectedImageID={props.selectedImageID}
-        error={hasErrorFor.image}
+        error={error}
         variant={variant}
         disabled={userCannotCreateLinode}
         data-qa-select-image-panel

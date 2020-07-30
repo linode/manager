@@ -327,6 +327,8 @@ export class LinodeCreate extends React.PureComponent<
 
     const hasErrorFor = getErrorMap(errorMap, errors);
 
+    const generalError = getErrorMap(errorMap, errors).none;
+
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
       return <CircleProgress />;
     }
@@ -395,6 +397,7 @@ export class LinodeCreate extends React.PureComponent<
           {hasErrorFor.none && !!showGeneralError && (
             <Notice error spacingTop={8} text={hasErrorFor.none} />
           )}
+          {generalError && <Notice error spacingTop={8} text={generalError} />}
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           <Tabs defaultIndex={selectedTab} onChange={this.handleTabChange}>
             <TabLinkList tabs={this.tabs} />
@@ -403,10 +406,10 @@ export class LinodeCreate extends React.PureComponent<
                 <FromImageContent
                   variant="public"
                   imagePanelTitle="Choose a Distribution"
-                  showGeneralError={true}
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
+                  error={hasErrorFor.image}
                   accountBackupsEnabled={accountBackupsEnabled}
                   userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
@@ -417,6 +420,7 @@ export class LinodeCreate extends React.PureComponent<
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
+                  //error={hasErrorFor.image}
                   accountBackupsEnabled={accountBackupsEnabled}
                   userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
