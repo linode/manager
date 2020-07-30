@@ -7,15 +7,13 @@ import { getLogins } from '@linode/api-v4/lib/profile';
 import { getEvents, Event } from '@linode/api-v4/lib/account';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
+import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
 
 import {
-  AccountActivity,
   Alerts,
   Community,
-  LinodeNews,
   Maintenance,
   OpenSupportTickets,
-  PastDue,
   PendingActions
 } from 'src/features/NotificationCenter';
 
@@ -23,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(3),
     borderRadius: 3,
-    marginBottom: 30
+    marginBottom: 8
   },
   column: {
     width: '45%'
@@ -86,40 +84,36 @@ export const Notifications: React.FC<{}> = _ => {
   ) : eventsError ? (
     <ErrorState errorText={eventsError} />
   ) : (
-    <Paper className={classes.root}>
-      {balance > 0 && <PastDue balance={balance} />}
-      <Grid container direction="row" justify="space-between">
-        <Grid item className={classes.column}>
-          <Grid container direction="column">
-            <Grid item>
-              <PendingActions />
+    <>
+      <BillingSummary balance={balance} balanceUninvoiced={0} />
+      <Paper className={classes.root}>
+        <Grid container direction="row" justify="space-between">
+          <Grid item className={classes.column}>
+            <Grid container direction="column">
+              <Grid item>
+                <PendingActions />
+              </Grid>
+              <Grid item>
+                <Alerts />
+              </Grid>
+              <Grid item>
+                <Maintenance />
+              </Grid>
             </Grid>
-            <Grid item>
-              <OpenSupportTickets />
-            </Grid>
-            <Grid item>
-              <Alerts />
-            </Grid>
-            <Grid item>
-              <Maintenance />
+          </Grid>
+          <Grid item className={classes.column}>
+            <Grid container direction="column">
+              <Grid item>
+                <OpenSupportTickets />
+              </Grid>
+              <Grid item>
+                <Community communityEvents={communityEvents} />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item className={classes.column}>
-          <Grid container direction="column">
-            <Grid item>
-              <Community communityEvents={communityEvents} />
-            </Grid>
-            <Grid item>
-              <AccountActivity />
-            </Grid>
-            <Grid item>
-              <LinodeNews />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Paper>
+      </Paper>
+    </>
   );
 };
 

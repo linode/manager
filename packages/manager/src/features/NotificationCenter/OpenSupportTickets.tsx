@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import TicketIcon from 'src/assets/icons/ticket.svg';
 import Typography from 'src/components/core/Typography';
 import NotificationSection, { NotificationItem } from './NotificationSection';
 
@@ -21,7 +20,8 @@ export const OpenSupportTickets: React.FC<{}> = _ => {
     <NotificationSection
       content={openTickets}
       header="Open Support Tickets"
-      icon={<TicketIcon />}
+      showMoreText="View all tickets"
+      showMoreTarget="/support/tickets"
     />
   );
 };
