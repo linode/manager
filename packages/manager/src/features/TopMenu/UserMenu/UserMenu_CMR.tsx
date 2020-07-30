@@ -1,3 +1,4 @@
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {
   Menu as ReachMenu,
   MenuButton,
@@ -48,8 +49,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.down('md')]: {
-      marginLeft: 7.5,
-      marginRight: 7.5,
       width: '28px',
       height: '28px'
     }
@@ -60,8 +59,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '50%'
   },
   username: {
+    paddingLeft: 15,
+    paddingRight: 15,
     transition: theme.transitions.create(['color']),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down(1345)]: {
       display: 'none'
     }
   },
@@ -80,6 +81,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     lineHeight: 1,
+    paddingLeft: 15,
     '&[data-reach-menu-button]': {
       textTransform: 'inherit',
       borderRadius: 0,
@@ -94,14 +96,16 @@ const useStyles = makeStyles((theme: Theme) => ({
           transform: 'rotate(180deg)'
         }
       },
-      height: 50,
-      padding: `0px 3px 0px 3px`
+      height: 50
     },
     '&:hover': {
       backgroundColor: theme.bg.primaryNavActiveBG
     },
     '&:focus': {
       backgroundColor: theme.bg.primaryNavActiveBG
+    },
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 7.5
     }
   },
   menuItemLink: {
@@ -146,10 +150,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   caret: {
+    color: '#9ea4ae',
     fontSize: 26,
     marginTop: 4,
-    color: '#9ea4ae',
-    marginLeft: 2
+    marginLeft: 2,
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   }
 }));
 
@@ -162,6 +169,7 @@ export const UserMenu: React.FC<{}> = () => {
   const { _hasAccountAccess, profile, account } = useAccountManagement();
 
   const userEmail = profile.data?.email;
+  const username = profile.data?.username;
 
   React.useEffect(() => {
     if (userEmail) {
@@ -194,9 +202,12 @@ export const UserMenu: React.FC<{}> = () => {
           data-testid="nav-group-profile"
         >
           {gravatarLoading ? (
-            <div className={classes.userWrapper} />
+            <div className={classes.userWrapper}>
+              <div className={classes.username}>{username}</div>
+            </div>
           ) : gravatarURL === 'not found' ? (
             <div className={classes.userWrapper}>
+              <div className={classes.username}>{username}</div>
               <UserIcon className={classes.leftIcon} />
             </div>
           ) : (
@@ -208,6 +219,7 @@ export const UserMenu: React.FC<{}> = () => {
               />
             </div>
           )}
+          <KeyboardArrowDown className={classes.caret} />
         </MenuButton>
         <MenuPopover className={classes.menuPopover} position={positionRight}>
           <MenuItems className={classes.menuItemList}>

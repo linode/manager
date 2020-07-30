@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuGridInner: {
     width: '100%',
     [theme.breakpoints.up('lg')]: {
-      width: 1280
+      width: 1345
     },
     display: 'flex',
     flexDirection: 'row',
@@ -38,14 +38,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     width: '100%',
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'flex-end'
+    '&  > a': {
+      [theme.breakpoints.down('sm')]: {
+        paddingLeft: 7.5,
+        paddingRight: 7.5
+      },
+      [theme.breakpoints.down('xs')]: {
+        paddingLeft: 12.5,
+        paddingRight: 12.5
+      }
     }
   },
-  secondaryLinksContainerLeft: { display: 'flex' },
-  secondaryLinksContainerRight: { display: 'flex' },
   logoItem: {
     '& > a': {
       display: 'flex',
@@ -53,8 +58,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   logoCollapsed: {
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 7.5,
+    marginRight: 7.5,
     '& .logoLetters': {
       opacity: 0
     }
@@ -74,15 +79,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&:focus': {
       backgroundColor: theme.bg.primaryNavActiveBG
-    }
-  },
-  listItemIcon: {
-    padding: 0,
+    },
     '& .icon': {
       [theme.breakpoints.down('md')]: {
-        marginLeft: 7.5,
-        marginRight: 7.5
+        margin: 0
       }
+    },
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 7.5,
+      paddingRight: 7.5
     }
   },
   listItemCollapsed: {},
@@ -118,10 +123,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       color: theme.color.green
     },
-    paddingRight: 20,
-    [theme.breakpoints.down('md')]: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    [theme.breakpoints.down('sm')]: {
       paddingLeft: 7.5,
       paddingRight: 7.5
+    },
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: 12.5,
+      paddingRight: 12.5
     }
   },
   settingsCollapsed: {
@@ -140,7 +150,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.navy,
     outline: 0,
     boxShadow: 'none',
-    marginTop: 3,
     minWidth: 185,
     top: 25
   },
@@ -164,8 +173,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
       },
       height: 50,
-      paddingRight: 8,
-      paddingLeft: 15
+      paddingLeft: 15,
+      paddingRight: 6,
+      [theme.breakpoints.down('sm')]: {
+        paddingLeft: 7.5,
+        paddingRight: 7.5
+      }
     },
     '&:hover': {
       backgroundColor: theme.bg.primaryNavActiveBG
@@ -179,6 +192,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       cursor: 'pointer',
       fontSize: '1rem',
       paddingTop: 12,
+      paddingLeft: 15,
       paddingRight: 40,
       paddingBottom: 12,
       '&:hover': {
@@ -186,6 +200,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
       '&:focus': {
         backgroundColor: theme.bg.primaryNavActiveBG
+      },
+      [theme.breakpoints.down('sm')]: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 7.5
       },
       display: 'flex',
       alignItems: 'center',
@@ -208,11 +227,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu], &[data-reach-menu-popover]': {
       zIndex: 3000,
       position: 'absolute',
-      top: 50,
-      // Hack solution to have something semi-working on mobile.
-      [theme.breakpoints.down('sm')]: {
-        left: 0
-      }
+      top: 50
     }
   },
   caret: {
@@ -232,7 +247,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   primaryNavLinkIcon: {
-    marginRight: 15,
+    marginRight: 10,
     display: 'flex',
     alignItems: 'center'
   }
