@@ -42,6 +42,7 @@ import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import BackupsCTA_CMR from 'src/features/Backups/BackupsCTA_CMR';
+import { DialogType } from 'src/features/linodes/types';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import {
@@ -57,6 +58,7 @@ import {
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { BackupsCtaDismissed } from 'src/utilities/storage';
 import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
+import MigrateLinode from '../MigrateLanding/MigrateLinode';
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
@@ -81,6 +83,7 @@ interface State {
   groupByTag: boolean;
   CtaDismissed: boolean;
   linodeResizeOpen: boolean;
+  linodeMigrateOpen: boolean;
   filterStatus: FilterStatus;
 }
 
@@ -108,6 +111,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     groupByTag: false,
     CtaDismissed: BackupsCtaDismissed.get(),
     linodeResizeOpen: false,
+    linodeMigrateOpen: false,
     filterStatus: 'all'
   };
 
@@ -149,18 +153,36 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   };
 
-  closeDialogs = () => {
+  openDialog = (type: DialogType, linodeID: number, linodeLabel?: string) => {
+    switch (type) {
+      case 'delete':
+        this.setState({
+          deleteDialogOpen: true
+        });
+        break;
+      case 'resize':
+        this.setState({
+          linodeResizeOpen: true
+        });
+        break;
+      case 'migrate':
+        this.setState({
+          linodeMigrateOpen: true
+        });
+        break;
+    }
     this.setState({
-      powerDialogOpen: false,
-      deleteDialogOpen: false
+      selectedLinodeID: linodeID,
+      selectedLinodeLabel: linodeLabel
     });
   };
 
-  openDeleteDialog = (linodeID: number, linodeLabel: string) => {
+  closeDialogs = () => {
     this.setState({
-      deleteDialogOpen: true,
-      selectedLinodeID: linodeID,
-      selectedLinodeLabel: linodeLabel
+      powerDialogOpen: false,
+      deleteDialogOpen: false,
+      linodeResizeOpen: false,
+      linodeMigrateOpen: false
     });
   };
 
@@ -169,19 +191,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       CtaDismissed: true
     });
     BackupsCtaDismissed.set('true');
-  };
-
-  openLinodeResize = (linodeID: number) => {
-    this.setState({
-      linodeResizeOpen: true,
-      selectedLinodeID: linodeID
-    });
-  };
-
-  closeLinodeResize = () => {
-    this.setState({
-      linodeResizeOpen: false
-    });
   };
 
   setFilterStatus = (status: FilterStatus) => {
@@ -215,8 +224,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       someLinodesHaveMaintenance: this.props
         .someLinodesHaveScheduledMaintenance,
       openPowerActionDialog: this.openPowerDialog,
-      openDeleteDialog: this.openDeleteDialog,
-      openLinodeResize: this.openLinodeResize
+      openDialog: this.openDialog
     };
 
     if (imagesError.read || linodesRequestError) {
@@ -280,16 +288,23 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {this.props.flags.cmr && (
-          <LinodeResize_CMR
-            open={this.state.linodeResizeOpen}
-            onClose={this.closeLinodeResize}
-            linodeId={this.state.selectedLinodeID}
-            linodeLabel={
-              this.props.linodesData.find(
-                thisLinode => thisLinode.id === this.state.selectedLinodeID
-              )?.label ?? undefined
-            }
-          />
+          <>
+            <LinodeResize_CMR
+              open={this.state.linodeResizeOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID}
+              linodeLabel={
+                this.props.linodesData.find(
+                  thisLinode => thisLinode.id === this.state.selectedLinodeID
+                )?.label ?? undefined
+              }
+            />
+            <MigrateLinode
+              open={this.state.linodeMigrateOpen}
+              onClose={this.closeDialogs}
+              linodeID={this.state.selectedLinodeID ?? -1}
+            />
+          </>
         )}
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner
