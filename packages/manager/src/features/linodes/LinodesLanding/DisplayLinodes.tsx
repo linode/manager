@@ -25,6 +25,8 @@ interface Props {
   component: any;
   data: ExtendedLinode[];
   someLinodesHaveMaintenance: boolean;
+  toggleLinodeView: () => 'grid' | 'list';
+  toggleGroupLinodes: () => boolean;
 }
 
 type CombinedProps = Props & OrderByProps;
@@ -37,6 +39,8 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
     order,
     orderBy,
     handleOrderChange,
+    toggleLinodeView,
+    toggleGroupLinodes,
     ...rest
   } = props;
 
@@ -89,7 +93,13 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
           <React.Fragment>
             {display === 'list' &&
               (flags.cmr ? (
-                <TableWrapper_CMR {...tableWrapperProps}>
+                <TableWrapper_CMR
+                  {...tableWrapperProps}
+                  linodeViewPreference="list"
+                  linodesAreGrouped={false}
+                  toggleLinodeView={toggleLinodeView}
+                  toggleGroupLinodes={toggleGroupLinodes}
+                >
                   <TableBody>
                     <Component showHead {...componentProps} />
                   </TableBody>

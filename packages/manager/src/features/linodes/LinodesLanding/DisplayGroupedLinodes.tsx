@@ -82,6 +82,8 @@ interface Props {
   component: any;
   data: ExtendedLinode[];
   someLinodesHaveMaintenance: boolean;
+  toggleLinodeView: () => 'grid' | 'list';
+  toggleGroupLinodes: () => boolean;
 }
 
 type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
@@ -95,6 +97,8 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
     orderBy,
     handleOrderChange,
     classes,
+    toggleLinodeView,
+    toggleGroupLinodes,
     ...rest
   } = props;
 
@@ -205,7 +209,13 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
       // eslint-disable-next-line
       <React.Fragment>
         {flags.cmr ? (
-          <TableWrapper_CMR {...tableWrapperProps}>
+          <TableWrapper_CMR
+            {...tableWrapperProps}
+            linodeViewPreference="list"
+            linodesAreGrouped={true}
+            toggleLinodeView={toggleLinodeView}
+            toggleGroupLinodes={toggleGroupLinodes}
+          >
             {orderedGroupedLinodes.map(([tag, linodes]) => {
               return (
                 <React.Fragment key={tag}>

@@ -576,6 +576,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   <DisplayGroupedLinodes
                                     {...finalProps}
                                     display={linodeViewPreference}
+                                    toggleLinodeView={toggleLinodeView}
+                                    toggleGroupLinodes={toggleGroupLinodes}
                                     component={
                                       linodeViewPreference === 'grid'
                                         ? CardView
@@ -586,6 +588,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   <DisplayLinodes
                                     {...finalProps}
                                     display={linodeViewPreference}
+                                    toggleLinodeView={toggleLinodeView}
+                                    toggleGroupLinodes={toggleGroupLinodes}
                                     component={
                                       linodeViewPreference === 'grid'
                                         ? CardView
