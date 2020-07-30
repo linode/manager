@@ -3,6 +3,7 @@ import AppBar from 'src/components/core/AppBar';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
+import { NotificationDrawer } from 'src/features/NotificationCenter';
 import AddNewMenu from './AddNewMenu/AddNewMenu_CMR';
 import SearchBar from './SearchBar/SearchBar_CMR';
 import UserEventsMenu from './UserEventsMenu';
@@ -71,6 +72,7 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
           <UserEventsMenu />
         </Toolbar>
       </AppBar>
+      <NotificationDrawer />
     </React.Fragment>
   );
 };
