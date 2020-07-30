@@ -7,6 +7,7 @@ import EnvironmentToggleTool from './EnvironmentToggleTool';
 import store from 'src/store';
 import { Provider } from 'react-redux';
 import Grid from 'src/components/core/Grid';
+import { isProductionBuild } from 'src/constants';
 
 function install() {
   (window as any).devToolsEnabled = true;
@@ -27,9 +28,11 @@ function install() {
           <Grid item xs={2}>
             <FeatureFlagTool />
           </Grid>
-          <Grid item xs={2}>
-            <EnvironmentToggleTool />
-          </Grid>
+          {process.env.NODE_ENV === 'development' && (
+            <Grid item xs={2}>
+              <EnvironmentToggleTool />
+            </Grid>
+          )}
         </Grid>
       </div>
     );

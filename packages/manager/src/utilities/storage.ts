@@ -174,11 +174,11 @@ export const {
   supportText
 } = storage;
 
-// Only return these if the dev tools are enabled.
+// Only return these if the dev tools are enabled and we're in development mode.
 export const getEnvLocalStorageOverrides = () => {
   // This is broken into two logical branches so that local storage is accessed
-  // ONLY if the dev tools are enabled.
-  if (devToolsEnabled()) {
+  // ONLY if the dev tools are enabled and it's a development build.
+  if (devToolsEnabled() && process.env.NODE_ENV === 'development') {
     const localStorageOverrides = storage.devToolsEnv.get();
     if (localStorageOverrides) {
       return localStorageOverrides;
