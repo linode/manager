@@ -25,9 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     transform: `translateY(${theme.spacing(1)}px)`
   },
   button: {
-    padding: theme.spacing(1),
     borderRadius: 30,
     order: 4,
+    padding: theme.spacing(1),
     '&:hover, &.active': {
       '& $username': {
         color: theme.palette.primary.main
@@ -43,10 +43,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   userWrapper: {
-    borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: '50%',
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.down('md')]: {
       width: '28px',
@@ -54,12 +54,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   leftIcon: {
-    width: 30,
+    borderRadius: '50%',
     height: 30,
-    borderRadius: '50%'
+    width: 30
   },
   username: {
-    paddingLeft: 15,
     paddingRight: 15,
     transition: theme.transitions.create(['color']),
     [theme.breakpoints.down(1345)]: {
@@ -67,8 +66,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   menuItem: {
-    fontSize: '.9rem',
     fontFamily: 'LatoWeb',
+    fontSize: '.9rem',
     '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
       color: 'white'
@@ -83,20 +82,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: 1,
     paddingLeft: 15,
     '&[data-reach-menu-button]': {
-      textTransform: 'inherit',
-      borderRadius: 0,
-      fontSize: '1rem',
       backgroundColor: theme.bg.primaryNavPaper,
+      border: 'none',
+      borderRadius: 0,
       color: theme.color.primaryNavText,
       cursor: 'pointer',
-      border: 'none',
+      fontSize: '1rem',
+      height: 50,
+      textTransform: 'inherit',
       '&[aria-expanded="true"]': {
         backgroundColor: theme.bg.primaryNavActiveBG,
         '& $caret': {
           transform: 'rotate(180deg)'
         }
-      },
-      height: 50
+      }
     },
     '&:hover': {
       backgroundColor: theme.bg.primaryNavActiveBG
@@ -109,40 +108,46 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   menuItemLink: {
+    lineHeight: 1,
     '&[data-reach-menu-item]': {
+      display: 'flex',
+      alignItems: 'center',
+      color: theme.color.primaryNavText,
       cursor: 'pointer',
       fontSize: '1rem',
       paddingTop: 12,
-      paddingRight: 40,
       paddingBottom: 12,
+      paddingLeft: 15,
+      paddingRight: 40,
       '&:hover': {
         backgroundColor: theme.bg.primaryNavActiveBG
       },
       '&:focus': {
         backgroundColor: theme.bg.primaryNavActiveBG
-      },
-      display: 'flex',
-      alignItems: 'center',
-      color: theme.color.primaryNavText
+      }
     },
     '&[data-reach-menu-item][data-selected]': {
       backgroundColor: theme.bg.primaryNavActiveBG
     },
-    lineHeight: 1
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: 10,
+      paddingBottom: 10,
+      paddingLeft: 7.5
+    }
   },
   menuItemList: {
     '&[data-reach-menu-items]': {
-      padding: 0,
+      backgroundColor: theme.bg.primaryNavPaper,
       border: 'none',
-      whiteSpace: 'normal',
-      backgroundColor: theme.bg.primaryNavPaper
+      padding: 0
     }
   },
   menuPopover: {
     '&[data-reach-menu], &[data-reach-menu-popover]': {
-      zIndex: 3000,
+      marginTop: -1,
       position: 'absolute',
       top: 50,
+      zIndex: 3000,
       // Hack solution to have something semi-working on mobile.
       [theme.breakpoints.down('md')]: {
         left: 0

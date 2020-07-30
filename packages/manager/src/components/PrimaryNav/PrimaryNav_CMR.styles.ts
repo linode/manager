@@ -2,54 +2,35 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   menuGrid: {
-    minHeight: 50,
-    width: '100%',
-    height: '100%',
-    margin: 0,
-    padding: 0,
-    backgroundColor: theme.bg.primaryNavPaper,
-    borderColor: theme.bg.primaryNavBorder,
-    left: 'inherit',
-    boxShadow: 'none',
-    transition: 'width linear .1s',
-    overflowX: 'auto',
     alignItems: 'center',
     justifyContent: 'center',
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'left'
-    }
+    backgroundColor: theme.bg.primaryNavPaper,
+    borderColor: theme.bg.primaryNavBorder,
+    boxShadow: 'none',
+    height: '100%',
+    width: '100%',
+    left: 'inherit',
+    margin: 0,
+    padding: 0,
+    minHeight: 50,
+    overflowX: 'auto',
+    transition: 'width linear .1s'
   },
   menuGridInner: {
-    width: '100%',
-    [theme.breakpoints.up('lg')]: {
-      width: 1345
-    },
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    width: '100%',
+
+    [theme.breakpoints.up('lg')]: {
+      width: 1345
+    }
   },
   primaryLinksContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'
-  },
-  secondaryLinksContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    width: '100%',
-    '&  > a': {
-      [theme.breakpoints.down('sm')]: {
-        paddingLeft: 7.5,
-        paddingRight: 7.5
-      },
-      [theme.breakpoints.down('xs')]: {
-        paddingLeft: 12.5,
-        paddingRight: 12.5
-      }
-    }
   },
   logoItem: {
     '& > a': {
@@ -59,21 +40,69 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   logoCollapsed: {
     marginLeft: 7.5,
-    marginRight: 7.5,
-    '& .logoLetters': {
-      opacity: 0
+    marginRight: 7.5
+  },
+  navIcon: {
+    color: theme.color.white,
+    fontSize: '1.125rem',
+    lineHeight: '20px',
+    '& svg': {
+      marginTop: -2,
+      marginRight: 10
+    },
+    [theme.breakpoints.up(750)]: {
+      display: 'none'
     }
+  },
+  hideOnMobile: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    [theme.breakpoints.down(750)]: {
+      display: 'none'
+    }
+  },
+  secondaryLinksContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    width: '100%',
+
+    '&  > a': {
+      [theme.breakpoints.down('sm')]: {
+        paddingLeft: 7.5,
+        paddingRight: 7.5
+      },
+      [theme.breakpoints.down(750)]: {
+        paddingLeft: 12.5,
+        paddingRight: 12.5
+      }
+    }
+  },
+  primaryNavLinkIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: 10
+  },
+  linkItem: {
+    color: theme.color.primaryNavText,
+    fontFamily: theme.font.normal,
+    opacity: 1,
+    transition: theme.transitions.create(['color']),
+    whiteSpace: 'nowrap'
   },
   listItem: {
     display: 'flex',
     alignItems: 'center',
-    position: 'relative',
     cursor: 'pointer',
-    height: 50,
     fontSize: '1rem',
+    height: 50,
     lineHeight: 1,
-    paddingRight: 15,
     paddingLeft: 15,
+    paddingRight: 15,
+    position: 'relative',
     '&:hover': {
       backgroundColor: theme.bg.primaryNavActiveBG
     },
@@ -91,19 +120,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   listItemCollapsed: {},
-  collapsible: {
-    fontSize: '0.9rem'
-  },
-  linkItem: {
-    transition: theme.transitions.create(['color']),
-    color: theme.color.primaryNavText,
-    opacity: 1,
-    whiteSpace: 'nowrap',
-    fontFamily: theme.font.normal
-  },
-  divider: {
-    backgroundColor: 'rgba(0, 0, 0, 0.12)'
-  },
   verticalDivider: {
     backgroundColor: '#5c6470',
     height: 30,
@@ -112,24 +128,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 15
   },
   settings: {
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    display: 'flex',
     color: '#e7e7e7',
+    paddingLeft: 15,
+    paddingRight: 15,
     transition: theme.transitions.create(['color']),
-    '& svg': {
-      transition: theme.transitions.create(['transform'])
-    },
     '&:hover': {
       color: theme.color.green
     },
-    paddingLeft: 15,
-    paddingRight: 15,
+    '& svg': {
+      transition: theme.transitions.create(['transform'])
+    },
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 7.5,
       paddingRight: 7.5
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down(750)]: {
       paddingLeft: 12.5,
       paddingRight: 12.5
     }
@@ -144,37 +160,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   paper: {
+    backgroundColor: theme.bg.navy,
+    boxShadow: 'none',
     maxWidth: 350,
+    minWidth: 185,
+    outline: 0,
     padding: 8,
     position: 'absolute',
-    backgroundColor: theme.bg.navy,
-    outline: 0,
-    boxShadow: 'none',
-    minWidth: 185,
     top: 25
   },
   menuButton: {
     display: 'flex',
     alignItems: 'center',
-    padding: 0,
     lineHeight: 1,
+    padding: 0,
     '&[data-reach-menu-button]': {
-      textTransform: 'inherit',
-      borderRadius: 0,
-      fontSize: '1rem',
       backgroundColor: theme.bg.primaryNavPaper,
+      border: 'none',
+      borderRadius: 0,
       color: theme.color.primaryNavText,
       cursor: 'pointer',
-      border: 'none',
+      fontSize: '1rem',
+      height: 50,
+      paddingLeft: 15,
+      paddingRight: 6,
+      textTransform: 'inherit',
       '&[aria-expanded="true"]': {
         backgroundColor: theme.bg.primaryNavActiveBG,
         '& $caret': {
           transform: 'rotate(180deg)'
         }
       },
-      height: 50,
-      paddingLeft: 15,
-      paddingRight: 6,
       [theme.breakpoints.down('sm')]: {
         paddingLeft: 7.5,
         paddingRight: 7.5
@@ -188,13 +204,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   menuItemLink: {
+    lineHeight: 1,
     '&[data-reach-menu-item]': {
+      display: 'flex',
+      alignItems: 'center',
+      color: theme.color.primaryNavText,
       cursor: 'pointer',
       fontSize: '1rem',
       paddingTop: 12,
+      paddingBottom: 12,
       paddingLeft: 15,
       paddingRight: 40,
-      paddingBottom: 12,
       '&:hover': {
         backgroundColor: theme.bg.primaryNavActiveBG
       },
@@ -205,35 +225,31 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingTop: 10,
         paddingBottom: 10,
         paddingLeft: 7.5
-      },
-      display: 'flex',
-      alignItems: 'center',
-      color: theme.color.primaryNavText
+      }
     },
     '&[data-reach-menu-item][data-selected]': {
       backgroundColor: theme.bg.primaryNavActiveBG
-    },
-    lineHeight: 1
+    }
   },
   menuItemList: {
     '&[data-reach-menu-items]': {
-      padding: 0,
+      backgroundColor: theme.bg.primaryNavPaper,
       border: 'none',
-      whiteSpace: 'normal',
-      backgroundColor: theme.bg.primaryNavPaper
+      padding: 0,
+      whiteSpace: 'normal'
     }
   },
   menuPopover: {
     '&[data-reach-menu], &[data-reach-menu-popover]': {
-      zIndex: 3000,
       position: 'absolute',
-      top: 50
+      top: 50,
+      zIndex: 3000
     }
   },
   caret: {
+    color: '#9ea4ae',
     fontSize: 26,
     marginTop: 4,
-    color: '#9ea4ae',
     marginLeft: 2
   },
   menuWrapper: {
@@ -245,11 +261,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       backgroundColor: theme.bg.primaryNavActiveBG
     }
-  },
-  primaryNavLinkIcon: {
-    marginRight: 10,
-    display: 'flex',
-    alignItems: 'center'
   }
 }));
 

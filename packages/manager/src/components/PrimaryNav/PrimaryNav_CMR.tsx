@@ -1,4 +1,5 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import MenuIcon from '@material-ui/icons/Menu';
 import {
   Menu as ReachMenu,
   MenuButton,
@@ -77,26 +78,33 @@ interface PrimaryLink {
 // =============================================================================
 export interface PrimaryNavProps {
   closeMenu: () => void;
+  isCollapsed: boolean;
+  openSideMenu: () => void;
   toggleTheme: () => void;
   toggleSpacing: () => void;
-  isCollapsed: boolean;
 }
 
 export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
-  const { closeMenu, isCollapsed, toggleTheme, toggleSpacing } = props;
   const classes = usePrimaryNavStyles();
-  const tablet = useMediaQuery('(max-width:1190px)');
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesTablet = useMediaQuery('(max-width:1190px)');
+
+  const { _isManagedAccount } = useAccountManagement();
+  const { domains, requestDomains } = useDomains();
+  const flags = useFlags();
+
+  const {
+    closeMenu,
+    isCollapsed,
+    openSideMenu,
+    toggleTheme,
+    toggleSpacing
+  } = props;
 
   const [anchorEl, setAnchorEl] = React.useState<
     (EventTarget & HTMLElement) | undefined
   >();
-
-  const flags = useFlags();
-  const { domains, requestDomains } = useDomains();
-
-  const { _isManagedAccount } = useAccountManagement();
 
   const primaryLinkGroups: {
     group: NavGroup;
@@ -201,13 +209,13 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
     <Grid
       className={classes.menuGrid}
       container
+      direction="row"
       alignItems="flex-start"
       justify="flex-start"
-      direction="row"
       wrap="nowrap"
-      spacing={0}
       component="nav"
       role="navigation"
+      spacing={0}
     >
       <div className={classes.menuGridInner}>
         <div className={classes.primaryLinksContainer}>
@@ -215,11 +223,11 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             <div
               className={classNames({
                 [classes.logoItem]: true,
-                [classes.logoCollapsed]: tablet
+                [classes.logoCollapsed]: matchesTablet
               })}
             >
               <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
-                {tablet ? (
+                {matchesTablet ? (
                   <LogoIcon width={25} height={29} />
                 ) : (
                   <Logo width={101} height={29} style={{ marginRight: 15 }} />
@@ -228,94 +236,103 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             </div>
           </Grid>
           <Grid item>
-            <div
-              className={classNames({
-                [classes.logoItem]: true,
-                [classes.logoCollapsed]: matchesSmDown
-              })}
+            <IconButton
+              aria-label="open menu"
+              className={classes.navIcon}
+              onClick={openSideMenu}
             >
-              <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
-                {/* @todo CMR: replace with new icon */}
-                {matchesSmDown ? (
-                  <Dashboard
-                    width={25}
-                    height={29}
-                    style={{ marginRight: 6 }}
-                  />
-                ) : (
-                  <PrimaryNavLink
-                    display="Dashboard"
-                    href="/dashboard"
-                    closeMenu={closeMenu}
-                  />
-                )}
-              </Link>
-            </div>
+              <MenuIcon />
+              Menu
+            </IconButton>
           </Grid>
-          {primaryLinkGroups.map(thisGroup => {
-            // For each group, filter out hidden links.
-            const filteredLinks = thisGroup.links.filter(
-              thisLink => !thisLink.hide
-            );
+          <div className={classes.hideOnMobile}>
+            <Grid item>
+              <div
+                className={classNames({
+                  [classes.logoItem]: true,
+                  [classes.logoCollapsed]: matchesSmDown
+                })}
+              >
+                <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
+                  {/* @todo CMR: replace with new icon */}
+                  {matchesSmDown ? (
+                    <Dashboard
+                      width={25}
+                      height={29}
+                      style={{ marginRight: 6 }}
+                    />
+                  ) : (
+                    <PrimaryNavLink
+                      display="Dashboard"
+                      href="/dashboard"
+                      closeMenu={closeMenu}
+                    />
+                  )}
+                </Link>
+              </div>
+            </Grid>
+            {primaryLinkGroups.map(thisGroup => {
+              // For each group, filter out hidden links.
+              const filteredLinks = thisGroup.links.filter(
+                thisLink => !thisLink.hide
+              );
+              if (filteredLinks.length === 0) {
+                return null;
+              }
+              // Render a singular PrimaryNavLink for links without a group.
+              if (thisGroup.group === 'None' && filteredLinks.length === 1) {
+                const link = filteredLinks[0];
 
-            if (filteredLinks.length === 0) {
-              return null;
-            }
-
-            // Render a singular PrimaryNavLink for links without a group.
-            if (thisGroup.group === 'None' && filteredLinks.length === 1) {
-              const link = filteredLinks[0];
-
+                return (
+                  <PrimaryNavLink
+                    key={link.display}
+                    display={link.display}
+                    closeMenu={closeMenu}
+                    href={link.href}
+                    prefetchRequestFn={link.prefetchRequestFn}
+                    prefetchRequestCondition={link.prefetchRequestCondition}
+                  />
+                );
+              }
+              // Otherwise return a NavGroup (dropdown menu).
               return (
-                <PrimaryNavLink
-                  key={link.display}
-                  href={link.href}
-                  display={link.display}
-                  closeMenu={closeMenu}
-                  prefetchRequestFn={link.prefetchRequestFn}
-                  prefetchRequestCondition={link.prefetchRequestCondition}
+                <NavGroup
+                  key={thisGroup.group}
+                  group={thisGroup.group}
+                  links={filteredLinks}
                 />
               );
-            }
-
-            // Otherwise return a NavGroup (dropdown menu).
-            return (
-              <NavGroup
-                key={thisGroup.group}
-                group={thisGroup.group}
-                links={filteredLinks}
-              />
-            );
-          })}
+            })}
+          </div>
         </div>
 
         <div className={classes.secondaryLinksContainer}>
           <PrimaryNavLink
             key="Help & Support"
-            href={'/support'}
-            icon={<Help />}
             display="Help & Support"
             closeMenu={closeMenu}
+            href={'/support'}
+            icon={<Help />}
             textHiddenProps={{ mdDown: true }}
           />
           <PrimaryNavLink
             key="Community"
-            href="https://www.linode.com/community"
             display="Community"
-            icon={<Community />}
             closeMenu={closeMenu}
+            href="https://www.linode.com/community"
+            icon={<Community />}
             textHiddenProps={{ mdDown: true }}
           />
           <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setAnchorEl(event.currentTarget);
-            }}
+            aria-label="User settings"
             className={classNames({
               [classes.settings]: true,
               [classes.settingsCollapsed]: isCollapsed,
               [classes.activeSettings]: !!anchorEl
             })}
-            aria-label="User settings"
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              setAnchorEl(event.currentTarget);
+            }}
           >
             <Gear />
           </IconButton>
@@ -333,7 +350,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             <ThemeToggle toggleTheme={toggleTheme} />
             <SpacingToggle toggleSpacing={toggleSpacing} />
           </Menu>
-
           <UserMenu />
         </div>
       </div>
@@ -352,9 +368,9 @@ interface NavGroupProps {
 }
 
 export const NavGroup: React.FC<NavGroupProps> = props => {
-  const { group, links } = props;
-
   const classes = usePrimaryNavStyles();
+
+  const { group, links } = props;
 
   return (
     <div className={classes.menuWrapper}>
@@ -370,8 +386,8 @@ export const NavGroup: React.FC<NavGroupProps> = props => {
           <MenuItems className={classes.menuItemList}>
             {links.map(thisLink => {
               const {
-                href,
                 display,
+                href,
                 prefetchRequestCondition,
                 prefetchRequestFn
               } = thisLink;
@@ -466,6 +482,7 @@ const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
   return (
     <Link
       to={href}
+      className={classes.listItem}
       onClick={(e: React.ChangeEvent<any>) => {
         closeMenu();
         if (onClick) {
@@ -474,7 +491,6 @@ const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
       }}
       {...handlers}
       {...attr}
-      className={classes.listItem}
     >
       {icon && (
         <div className={`icon ${classes.primaryNavLinkIcon}`}>{icon}</div>
@@ -482,11 +498,11 @@ const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
       <Hidden {...hiddenProps}>
         <ListItemText
           primary={display}
-          disableTypography={true}
           className={classNames({
             [classes.linkItem]: true,
             primaryNavLink: true
           })}
+          disableTypography={true}
         />
       </Hidden>
     </Link>

@@ -8,6 +8,7 @@ afterEach(cleanup);
 
 const props: PrimaryNavProps = {
   closeMenu: jest.fn(),
+  openSideMenu: jest.fn(),
   toggleSpacing: jest.fn(),
   toggleTheme: jest.fn(),
   isCollapsed: false
