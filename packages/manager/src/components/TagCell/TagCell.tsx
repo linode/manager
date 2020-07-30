@@ -13,6 +13,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     position: 'relative'
   },
+  rootDetails: {
+    justifyContent: 'center',
+    [theme.breakpoints.up('sm')]: {
+      justifyContent: 'flex-end'
+    }
+  },
   menuItem: {
     width: '30px',
     height: '30px',
@@ -188,11 +194,13 @@ export const TagCell: React.FC<Props> = props => {
     </TableCell>
   ) : (
     <Grid
-      className={classes.root}
+      className={classNames({
+        [classes.root]: true,
+        [classes.rootDetails]: true
+      })}
       container
       direction="row"
       alignItems="center"
-      justify="flex-end"
       wrap="nowrap"
     >
       {addingTag ? (

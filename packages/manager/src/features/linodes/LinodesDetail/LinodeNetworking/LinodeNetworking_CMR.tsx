@@ -48,6 +48,7 @@ import { IPTypes } from './types';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
+import Hidden from 'src/components/core/Hidden';
 
 type ClassNames =
   | 'root'
@@ -633,20 +634,39 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       <div style={{ marginTop: 20 }}>
         <EntityHeader
           title="IP Addresses"
-          actions={
-            <div>
+          isSecondary
+          body={
+            <Hidden mdUp>
               <Button
-                style={{ padding: '16px 14px' }}
+                style={{ paddingTop: 5, paddingBottom: 5 }}
                 onClick={this.openTransferDialog}
               >
                 IP Transfer
               </Button>
               <Button
-                style={{ padding: '16px 28px 16px 14px' }}
+                style={{ paddingTop: 5, paddingBottom: 5 }}
                 onClick={this.openSharingDialog}
               >
                 IP Sharing
               </Button>
+            </Hidden>
+          }
+          actions={
+            <div>
+              <Hidden smDown>
+                <Button
+                  style={{ padding: '16px 14px' }}
+                  onClick={this.openTransferDialog}
+                >
+                  IP Transfer
+                </Button>
+                <Button
+                  style={{ padding: '16px 28px 16px 14px' }}
+                  onClick={this.openSharingDialog}
+                >
+                  IP Sharing
+                </Button>
+              </Hidden>
               <AddNewLink
                 label="Add an IP Address..."
                 onClick={this.openAddIPDrawer}
