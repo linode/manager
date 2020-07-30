@@ -1,5 +1,4 @@
 import * as React from 'react';
-import CommunityIcon from 'src/assets/community.svg';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import NotificationSection, { NotificationItem } from './NotificationSection';
@@ -22,7 +21,8 @@ export const Community: React.FC<CombinedProps> = props => {
     <NotificationSection
       content={communityUpdates}
       header="Community Updates"
-      icon={<CommunityIcon />}
+      showMoreText="Visit the Community"
+      showMoreTarget="https://linode.com/community"
     />
   );
 };
