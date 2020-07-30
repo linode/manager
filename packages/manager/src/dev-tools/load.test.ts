@@ -1,6 +1,6 @@
 import { devToolsEnabled } from './load';
 
-describe('isDevToolsEnabled', () => {
+describe('devToolsEnabled', () => {
   const OLD_ENV = process.env;
 
   beforeEach(() => {
