@@ -1,21 +1,21 @@
-import { AxiosError, AxiosResponse } from 'axios';
 import { baseRequest } from '@linode/api-v4/lib/request';
 import { APIError } from '@linode/api-v4/lib/types';
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as React from 'react';
-
-import { ACCESS_TOKEN, DEFAULT_ERROR_MESSAGE } from 'src/constants';
-import { interceptErrors } from 'src/utilities/interceptAPIError';
-
 import { AccountActivationError } from 'src/components/AccountActivation';
 import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
-
+import {
+  ACCESS_TOKEN,
+  API_ROOT,
+  DEFAULT_ERROR_MESSAGE,
+  LOGIN_ROOT
+} from 'src/constants';
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
-
-import { API_ROOT, LOGIN_ROOT } from 'src/constants';
-import { isDevToolEnabled } from './dev-tools/load';
+import { interceptErrors } from 'src/utilities/interceptAPIError';
+import { getEnvLocalStorageOverrides } from './utilities/storage';
 
 const handleSuccess: <T extends AxiosResponse<any>>(
   response: T
@@ -113,33 +113,11 @@ baseRequest.interceptors.request.use(config => {
   /** Will end up being "Admin: 1234" or "Bearer 1234" */
   const token = ACCESS_TOKEN || (state.authentication?.token ?? '');
 
-  let finalUrl = '';
-
-  /**
-   * override the base URL with the one we have defined in the .env file
-   */
-  if (config.url && config.baseURL) {
-    // todo: clean this.
-
-    const isLogin = config.baseURL.includes('login');
-
-    finalUrl = isLogin
-      ? config.url.replace(config.baseURL, LOGIN_ROOT)
-      : config.url.replace(config.baseURL, API_ROOT);
-
-    const devToolsAPIRoot = window.localStorage['dev-tools-api-root'];
-    const devToolsLoginRoot = window.localStorage['dev-tools-login-root'];
-
-    if (isDevToolEnabled() && isLogin && devToolsLoginRoot) {
-      finalUrl = config.url.replace(config.baseURL, devToolsLoginRoot);
-    } else if (isDevToolEnabled() && devToolsAPIRoot) {
-      finalUrl = config.url.replace(config.baseURL, devToolsAPIRoot);
-    }
-  }
+  const url = getURL(config);
 
   return {
     ...config,
-    url: finalUrl || config.url,
+    url,
     headers: {
       ...config.headers,
       ...(token && { Authorization: `${token}` })
@@ -154,3 +132,26 @@ Interceptor that initiates re-authentication if:
 Also rejects non-error responses if the API is in Maintenance mode
 */
 baseRequest.interceptors.response.use(handleSuccess, handleError);
+
+export const getURL = ({ url, baseURL }: AxiosRequestConfig) => {
+  if (!url || !baseURL) {
+    return;
+  }
+
+  const isLogin = baseURL.includes('login');
+
+  const localStorageOverrides = getEnvLocalStorageOverrides();
+
+  // If we have environment overrides in local storage, use those.
+  if (localStorageOverrides) {
+    return isLogin
+      ? url.replace(baseURL, localStorageOverrides.loginRoot)
+      : url.replace(baseURL, localStorageOverrides.apiRoot);
+  }
+
+  // Override the baseURL (from @linode/api-v4) with the one we have defined
+  // in the environment (via .env file).
+  return isLogin
+    ? url.replace(baseURL, LOGIN_ROOT)
+    : url.replace(baseURL, API_ROOT);
+};

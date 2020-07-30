@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Grid from 'src/components/core/Grid';
+import { storage } from 'src/utilities/storage';
 
 interface EnvironmentOption {
   label: string;
@@ -47,12 +48,6 @@ const options = getOptions(process.env);
 // This component works by setting local storage values that override the API_ROOT, LOGIN_ROOT,
 // and CLIENT_ID environment variables, giving client-side control over the environment.
 const EnvironmentToggleTool: React.FC<{}> = () => {
-  const updateLocalStorage = (option: EnvironmentOption) => {
-    window.localStorage['dev-tools-api-root'] = option.apiRoot;
-    window.localStorage['dev-tools-login-root'] = option.loginRoot;
-    window.localStorage['dev-tools-client-id'] = option.clientID;
-  };
-
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -63,7 +58,8 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
           onBlur={e => {
             const selected = options.find(o => o.label === e.target.value);
             if (selected) {
-              updateLocalStorage(selected);
+              const { apiRoot, loginRoot, clientID } = selected;
+              storage.devToolsEnv.set({ apiRoot, loginRoot, clientID });
             }
           }}
         >

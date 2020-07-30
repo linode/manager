@@ -1,8 +1,10 @@
 import { stringify } from 'querystring';
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
-import { authentication } from 'src/utilities/storage';
+import {
+  authentication,
+  getEnvLocalStorageOverrides
+} from 'src/utilities/storage';
 import { v4 } from 'uuid';
-import { isDevToolEnabled } from './dev-tools/load';
 
 /**
  * Creates a URL with the supplied props as a stringified query. The shape of the query is required
@@ -17,22 +19,13 @@ export const genOAuthEndpoint = (
   scope = '*',
   nonce: string
 ) => {
-  // @todo: clean this.
-
-  let finalClientID;
-  if (isDevToolEnabled() && window.localStorage['dev-tools-client-id']) {
-    finalClientID = window.localStorage['dev-tools-client-id'];
-  } else {
-    finalClientID = CLIENT_ID;
-  }
-
-  const loginRoot =
-    isDevToolEnabled() && window.localStorage['dev-tools-login-root']
-      ? window.localStorage['dev-tools-login-root']
-      : LOGIN_ROOT;
+  // If there are local storage overrides, use those. Otherwise use variables set in the ENV.
+  const localStorageOverrides = getEnvLocalStorageOverrides();
+  const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
+  const loginRoot = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
 
   const query = {
-    client_id: finalClientID,
+    client_id: clientID,
     scope,
     response_type: 'token',
     redirect_uri: `${APP_ROOT}/oauth/callback?returnTo=${redirectUri}`,
