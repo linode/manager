@@ -1,10 +1,10 @@
 import {
   LongviewClient,
+  ActiveLongviewPlan,
   LongviewSubscription
 } from '@linode/api-v4/lib/longview/types';
-
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
+import { pathOr, isEmpty } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  activeSubscription: LongviewSubscription;
+  activeSubscription: ActiveLongviewPlan;
 }
 
 export type CombinedProps = Props &
@@ -240,7 +240,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   // If this value is defined they're not on the free plan
   // and don't need to be CTA'd to upgrade.
 
-  const isLongviewPro = activeSubscription.id === 'longview-100';
+  const isLongviewPro = !isEmpty(activeSubscription);
 
   /**
    * Do the actual sorting & filtering
@@ -339,7 +339,9 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         onClose={() => setSubscriptionDialogOpen(false)}
         onSubmit={handleSubmit}
         clientLimit={
-          activeSubscription ? activeSubscription.clients_included : 10
+          isEmpty(activeSubscription)
+            ? 10
+            : (activeSubscription as LongviewSubscription).clients_included
         }
       />
       <LongviewPackageDrawer
@@ -361,7 +363,7 @@ interface StateProps {
  * container because this is a unique case; we need
  * access to data from all clients.
  */
-const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
+const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
   const lvClientData = state.longviewStats ?? {};
   return {
     lvClientData

@@ -1,8 +1,8 @@
 import {
-  getLongviewSubscription,
+  getActiveLongviewPlan,
   getLongviewSubscriptions
 } from '@linode/api-v4/lib/longview';
-import { LongviewSubscription } from '@linode/api-v4/lib/longview/types';
+import { LongviewSubscription, ActiveLongviewPlan } from '@linode/api-v4/lib/longview/types';
 import * as React from 'react';
 import {
   matchPath,
@@ -27,9 +27,9 @@ const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 type CombinedProps = RouteComponentProps<{}>;
 
 export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => {
-  const activeSubscriptionRequestHook = useAPIRequest<LongviewSubscription>(
-    () => getLongviewSubscription().then(response => response),
-    {} as LongviewSubscription
+  const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(
+    () => getActiveLongviewPlan().then(response => response),
+    {}
   );
   const subscriptionsRequestHook = useAPIRequest<LongviewSubscription[]>(
     () => getLongviewSubscriptions().then(response => response.data),
@@ -106,7 +106,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
             path={`${url}/clients`}
             render={() => (
               <LongviewClients
-                activeSubscription={activeSubscriptionRequestHook.data || {}}
+                activeSubscription={activeSubscriptionRequestHook.data}
                 {...props}
               />
             )}
