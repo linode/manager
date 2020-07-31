@@ -4,8 +4,7 @@ import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
   longviewSubscriptionFactory,
-  longviewClientFactory,
-  accountSettingsFactory
+  longviewClientFactory
 } from 'src/factories';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -133,9 +132,8 @@ describe('Longview clients list view', () => {
   });
 
   it('should render a CTA for non-Pro subscribers', () => {
-    const settings = accountSettingsFactory.build();
     const { getByText } = renderWithTheme(
-      <LongviewClients {...props} accountSettings={settings} />
+      <LongviewClients {...props} activeSubscription={{}} />
     );
 
     getByText(/upgrade to longview pro/i);
