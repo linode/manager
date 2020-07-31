@@ -9,6 +9,7 @@ import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import Loading from 'src/components/LandingLoading';
 import { PaginationProps } from 'src/components/Pagey';
+import { REFRESH_INTERVAL } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withRegions, {
   DefaultProps as RegionProps
@@ -171,6 +172,14 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
     error: '',
     poweredOff: false
   });
+
+  React.useEffect(() => {
+    const { getAllVolumes, volumesLastUpdated } = props;
+
+    if (Date.now() - volumesLastUpdated > REFRESH_INTERVAL) {
+      getAllVolumes().catch(_ => null); // Errors through Redux
+    }
+  }, [props]);
 
   const handleCloseAttachDrawer = () => {
     setAttachmentDrawer(attachmentDrawer => ({
