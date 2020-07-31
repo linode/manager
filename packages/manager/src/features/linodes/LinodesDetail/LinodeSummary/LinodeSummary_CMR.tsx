@@ -485,11 +485,11 @@ interface WithTypesProps {
 
 const withTypes = connect((state: ApplicationState, _ownProps) => ({
   typesData: state.__resources.types.entities,
-  timezone: pathOr(
-    'UTC',
-    ['__resources', 'profile', 'data', 'timezone'],
-    state
-  ),
+  timezone:
+    state.__resources?.profile?.data?.timezone !== '' &&
+    state.__resources?.profile?.data?.timezone !== null
+      ? state.__resources?.profile?.data?.timezone.toString()
+      : DateTime.local().zoneName,
   inProgressEvents: state.events.inProgressEvents,
   events: state.events.events,
   mostRecentEventTime: state.events.mostRecentEventTime
