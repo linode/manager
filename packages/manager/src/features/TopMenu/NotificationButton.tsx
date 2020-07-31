@@ -15,7 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    cursor: 'pointer'
   },
   text: {
     color: '#3683dc',
@@ -36,8 +37,12 @@ export const NotificationButton: React.FC<{}> = _ => {
 
   return (
     <>
-      <button onClick={openDrawer} className={classes.root}>
-        <Bell />
+      <button
+        onClick={openDrawer}
+        className={classes.root}
+        aria-label="Click to view notifications drawer"
+      >
+        <Bell aria-hidden />
         <strong className={classes.text}>{numEvents}</strong>
       </button>
       <NotificationDrawer open={drawerOpen} onClose={closeDrawer} />

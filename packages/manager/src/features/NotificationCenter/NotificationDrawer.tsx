@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       [theme.breakpoints.up('md')]: {
         width: 620
       },
-      padding: theme.spacing(2) + 4,
       overflowX: 'hidden'
     }
   },

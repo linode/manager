@@ -14,18 +14,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     flexFlow: 'column nowrap',
-    alignItems: 'space-around',
+    justifyContent: 'space-around',
     marginBottom: theme.spacing(4),
-    padding: theme.spacing(3) + 1,
+    padding: theme.spacing(3) - 4,
     border: `solid 1px ${theme.color.borderBilling}`,
     borderRadius: 8,
-    backgroundColor: theme.bg.billingHeader,
-    height: 160,
-    width: 580
+    backgroundColor: theme.bg.billingHeader
   },
   iconButton: {
     paddingLeft: 0,
     paddingRight: theme.spacing(5),
+    paddingBottom: 0,
     '&:hover': {
       '& svg': {
         color: `${theme.palette.primary.main} !important`
