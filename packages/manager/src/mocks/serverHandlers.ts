@@ -1,4 +1,5 @@
 import { rest } from 'msw';
+
 import {
   accountFactory,
   domainFactory,
