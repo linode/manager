@@ -24,6 +24,7 @@ type ClassNames = 'root' | 'success' | 'warning' | 'error' | 'itemCount';
 
 const styles = (theme: Theme) => {
   return createStyles({
+    // @todo: Post-CMR these overrides should live in the theme file.
     root: {
       flexBasis: '100%',
       width: '100%',
