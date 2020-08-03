@@ -1,5 +1,7 @@
+import * as React from 'react';
 import { Event } from '@linode/api-v4/lib/account';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import Link from 'src/components/Link';
 import { dcDisplayNames } from 'src/constants';
 
 export const eventMessageGenerator = (
@@ -35,6 +37,15 @@ export const eventMessageGenerator = (
       return `reboot with ${e.secondary_entity?.label}`;
     case 'linode_shutdown':
       return 'is shutting down';
+    case 'linode_clone':
+      return (
+        <>
+          clone to{` `}
+          <Link to={`/linodes/${e.secondary_entity?.id}`}>
+            {e.secondary_entity?.label}
+          </Link>
+        </>
+      );
 
     default:
       // If we haven't handled it explicitly here, it doesn't count as
