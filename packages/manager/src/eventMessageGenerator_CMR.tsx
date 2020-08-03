@@ -24,15 +24,21 @@ export const eventMessageGenerator = (
         eventLinode ? `to ${dcDisplayNames[eventLinode.region]}` : ''
       }`;
     case 'disk_imagize':
-      return `is being created`;
+      return `creating from ${e.entity?.label}`;
     case 'linode_boot':
       return `boot with ${e.secondary_entity?.label}`;
+    case 'host_reboot':
+      return 'reboot (Host initiated restart)';
+    case 'lassie_reboot':
+      return 'reboot (Lassie watchdog service)';
     case 'linode_reboot':
       return `reboot with ${e.secondary_entity?.label}`;
     case 'linode_shutdown':
       return 'is shutting down';
 
     default:
+      // If we haven't handled it explicitly here, it doesn't count as
+      // a "Pending Action" for our purposes.
       return null;
   }
 };
