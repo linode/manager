@@ -1,7 +1,6 @@
 import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import Close from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
 import * as classNames from 'classnames';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -13,8 +12,6 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import TableView from 'src/assets/icons/table-view.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
@@ -433,51 +430,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   }
                                 />
                               </Grid>
-                              <Hidden xsDown>
-                                {params.view === 'grid' && (
-                                  <Grid item xs={12} className={'px0'}>
-                                    <div className={classes.controlHeader}>
-                                      <div
-                                        id="displayViewDescription"
-                                        className="visually-hidden"
-                                      >
-                                        Currently in {linodeViewPreference} view
-                                      </div>
-                                      <IconButton
-                                        aria-label="Toggle display"
-                                        aria-describedby={
-                                          'displayViewDescription'
-                                        }
-                                        title={`Toggle display`}
-                                        onClick={toggleLinodeView}
-                                        disableRipple
-                                        className={classes.toggleButton}
-                                      >
-                                        <TableView />
-                                      </IconButton>
-
-                                      <div
-                                        id="groupByDescription"
-                                        className="visually-hidden"
-                                      >
-                                        {linodesAreGrouped
-                                          ? 'group by tag is currently enabled'
-                                          : 'group by tag is currently disabled'}
-                                      </div>
-                                      <IconButton
-                                        aria-label={`Toggle group by tag`}
-                                        aria-describedby={'groupByDescription'}
-                                        title={`Toggle group by tag`}
-                                        onClick={toggleGroupLinodes}
-                                        disableRipple
-                                        className={classes.toggleButton}
-                                      >
-                                        <GroupByTag />
-                                      </IconButton>
-                                    </div>
-                                  </Grid>
-                                )}
-                              </Hidden>
                             </React.Fragment>
                           ) : (
                             <Grid
@@ -578,6 +530,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                     display={linodeViewPreference}
                                     toggleLinodeView={toggleLinodeView}
                                     toggleGroupLinodes={toggleGroupLinodes}
+                                    linodesAreGrouped={true}
+                                    linodeViewPreference={linodeViewPreference}
                                     component={
                                       linodeViewPreference === 'grid'
                                         ? CardView
@@ -590,6 +544,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                     display={linodeViewPreference}
                                     toggleLinodeView={toggleLinodeView}
                                     toggleGroupLinodes={toggleGroupLinodes}
+                                    linodesAreGrouped={false}
+                                    linodeViewPreference={linodeViewPreference}
                                     component={
                                       linodeViewPreference === 'grid'
                                         ? CardView
