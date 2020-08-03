@@ -12,12 +12,14 @@ import { formatDate } from 'src/utilities/formatDate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(3) + 1,
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    justifyContent: 'space-around',
+    marginBottom: theme.spacing(4),
+    padding: theme.spacing(3) - 4,
     border: `solid 1px ${theme.color.borderBilling}`,
     borderRadius: 8,
-    backgroundColor: theme.bg.billingHeader,
-    height: 160
+    backgroundColor: theme.bg.billingHeader
   },
   iconButton: {
     paddingLeft: 0,
@@ -36,10 +38,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing()
   },
   actions: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(),
     display: 'flex',
     alignItems: 'flex-start',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
   }
 }));
 
