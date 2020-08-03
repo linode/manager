@@ -1,13 +1,18 @@
 import * as React from 'react';
-// import { Link } from 'react-router-dom';
 import BarPercent from 'src/components/BarPercent/BarPercent_CMR';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import useEvents from 'src/hooks/useEvents';
+import useLinodes from 'src/hooks/useLinodes';
+import { useTypes } from 'src/hooks/useTypes';
 import { ExtendedEvent } from 'src/store/events/event.types';
-import eventMessageGenerator from 'src/eventMessageGenerator';
-// import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
+import {
+  eventMessageGenerator,
+  eventLabelGenerator
+} from 'src/eventMessageGenerator_CMR';
 import NotificationSection, { NotificationItem } from './NotificationSection';
+import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
+import { Link } from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   action: {
@@ -22,18 +27,39 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const PendingActions: React.FC<{}> = _ => {
   const classes = useStyles();
   const { inProgressEvents } = useEvents();
+  const { linodes } = useLinodes();
+  const { types } = useTypes();
+  const _linodes = Object.values(linodes.itemsById);
+  const _types = types.entities;
 
   const formatEventForDisplay = React.useCallback(
-    (event: ExtendedEvent): NotificationItem => {
+    (event: ExtendedEvent): NotificationItem | null => {
+      const message = eventMessageGenerator(event, _linodes, _types);
+      if (message === null) {
+        return null;
+      }
+      const timeRemaining = event.time_remaining
+        ? ` (~${event.time_remaining} remaining)`
+        : null;
+      const linkTarget = createLinkHandlerForNotification(
+        event.action,
+        event.entity,
+        false
+      );
+      const label = linkTarget ? (
+        <Link to={linkTarget}>{eventLabelGenerator(event)}</Link>
+      ) : (
+        event.entity?.label
+      );
       return {
         id: `pending-action-${event.id}`,
         body: (
           <div className={classes.action}>
             <Typography>
-              {eventMessageGenerator(event)}
-              {event.time_remaining
-                ? ` (~${event.time_remaining} remaining)`
-                : null}
+              {label}
+              {` `}
+              {message}
+              {timeRemaining}
             </Typography>
             {event.percent_complete ? (
               <BarPercent
@@ -48,10 +74,13 @@ export const PendingActions: React.FC<{}> = _ => {
         )
       };
     },
-    [classes]
+    [classes, _linodes, _types]
   );
 
-  const actions = inProgressEvents.map(formatEventForDisplay);
+  const actions = inProgressEvents
+    .map(formatEventForDisplay)
+    .filter(Boolean) as NotificationItem[];
+
   return (
     <NotificationSection
       content={actions}
