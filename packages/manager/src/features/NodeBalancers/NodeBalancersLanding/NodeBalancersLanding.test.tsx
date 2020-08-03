@@ -18,6 +18,7 @@ describe.skip('NodeBalancers', () => {
             nodeBalancersLoading={false}
             nodeBalancersError={undefined}
             nodeBalancersData={[]}
+            nodeBalancersLastUpdated={0}
             nodeBalancersCount={0}
             nodeBalancerActions={{
               updateNodeBalancer: jest.fn(),
@@ -41,6 +42,8 @@ describe.skip('NodeBalancers', () => {
               tagGroup: '',
               titleWrapper: ''
             }}
+            ldClient={{} as any}
+            flags={{}}
           />
         </LinodeThemeWrapper>
       </Provider>
