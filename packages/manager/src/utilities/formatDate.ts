@@ -49,8 +49,9 @@ export const formatDate = (
 ): string => {
   let time;
   /** get the timezone from redux and use it as the timezone */
-  const state = store.getState();
-  const userTimezone = state.__resources?.profile?.data?.timezone ?? 'utc';
+  const stateTz = store.getState().__resources?.profile?.data?.timezone;
+  const userTimezone =
+    stateTz && stateTz != '' && IANAZone.isValidZone(stateTz) ? stateTz : 'utc';
   if (
     IANAZone.isValidSpecifier(userTimezone) &&
     IANAZone.isValidZone(userTimezone)
