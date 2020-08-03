@@ -1,3 +1,4 @@
+import { Duration } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent/BarPercent_CMR';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -39,7 +40,7 @@ export const PendingActions: React.FC<{}> = _ => {
         return null;
       }
       const timeRemaining = event.time_remaining
-        ? ` (~${event.time_remaining} remaining)`
+        ? ` (~${formatTimeRemaining(event.time_remaining)})`
         : null;
       const linkTarget = createLinkHandlerForNotification(
         event.action,
@@ -88,6 +89,28 @@ export const PendingActions: React.FC<{}> = _ => {
       showMoreTarget={'/events'}
     />
   );
+};
+
+export const formatTimeRemaining = (time: string) => {
+  try {
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    if (
+      [hours, minutes, seconds].some(
+        thisNumber => typeof thisNumber === 'undefined'
+      ) ||
+      [hours, minutes, seconds].some(isNaN)
+    ) {
+      // Bad input, don't display a duration
+      return null;
+    }
+    const duration = Duration.fromObject({ hours, minutes, seconds });
+    return hours > 0
+      ? `${Math.round(duration.as('hours'))} hours remaining`
+      : `${Math.round(duration.as('minutes'))} minutes remaining`;
+  } catch {
+    // Broken/unexpected input
+    return null;
+  }
 };
 
 export default React.memo(PendingActions);

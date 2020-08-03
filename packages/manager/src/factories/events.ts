@@ -21,6 +21,6 @@ export const eventFactory = Factory.Sync.makeFactory<Event>({
   read: false,
   action: 'linode_boot',
   percent_complete: 10,
-  time_remaining: 0,
+  time_remaining: null,
   duration: 0
 });
