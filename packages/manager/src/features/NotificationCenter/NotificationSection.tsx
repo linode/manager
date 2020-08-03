@@ -127,6 +127,7 @@ export const NotificationSection: React.FC<Props> = props => {
       <Hidden mdUp>
         <ExtendedExpansionPanel
           heading={header}
+          headingNumberCount={content.length}
           renderMainContent={innerContent}
         />
       </Hidden>

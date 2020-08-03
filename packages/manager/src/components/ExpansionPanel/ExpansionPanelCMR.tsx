@@ -20,49 +20,66 @@ import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import Notice from '../Notice';
 
-type ClassNames = 'root' | 'success' | 'warning' | 'error';
+type ClassNames = 'root' | 'success' | 'warning' | 'error' | 'itemCount';
 
 const styles = (theme: Theme) => {
-  const {
-    palette: { status }
-  } = theme;
   return createStyles({
-    root: {},
-    success: {
-      backgroundColor: status.success,
-      '&:hover, &:focus': {
-        backgroundColor: status.successDark,
-        '& h3, & svg': {
-          color: theme.color.white
-        }
+    root: {
+      flexBasis: '100%',
+      width: '100%',
+      '&:before': {
+        backgroundColor: 'transparent'
       },
-      '& svg': {
-        color: theme.palette.text.primary
-      }
-    },
-    warning: {
-      backgroundColor: status.warning,
-      '&:hover, &:focus': {
-        backgroundColor: status.warningDark,
+      '&.Mui-expanded': {
+        margin: 0
+      },
+      '& .MuiExpansionPanelDetails-root': {
+        padding: '0 18px 15px'
+      },
+      '& .MuiExpansionPanelSummary-root': {
+        justifyContent: 'space-between',
+        backgroundColor: 'transparent',
+        padding: '0 48px 0 18px',
+        borderTop: '1px solid #f4f5f6',
         '& h3': {
-          color: theme.color.headline
+          color: theme.palette.text
+        },
+        '&:hover': {
+          '& h3': {
+            color: theme.palette.text
+          },
+          '& svg': {
+            fill: '#2575d0',
+            stroke: '#2575d0'
+          }
         }
       },
-      '& svg': {
-        color: theme.palette.text.primary
+      '& .MuiExpansionPanelSummary-content': {
+        order: 1,
+        alignItems: 'center'
+      },
+      '& .MuiExpansionPanelSummary-expandIcon': {
+        order: 2,
+        '& svg': {
+          fill: '#2575d0',
+          stroke: '#2575d0'
+        }
       }
     },
-    error: {
-      backgroundColor: status.error,
-      '&:hover, &:focus': {
-        backgroundColor: status.errorDark,
-        '& h3, & svg': {
-          color: 'white'
-        }
-      },
-      '& svg': {
-        color: theme.palette.text.primary
-      }
+    itemCount: {
+      position: 'absolute',
+      right: 20,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 30,
+      height: 30,
+      borderRadius: '50%',
+      fontSize: 14,
+      fontWeight: 'bold',
+      lineHeight: 0,
+      color: 'white',
+      backgroundColor: '#2575d0'
     }
   });
 };
@@ -77,6 +94,7 @@ export interface Props extends ExpansionPanelProps {
   summaryProps?: ExpansionPanelSummaryProps;
   headingProps?: TypographyProps;
   detailProps?: ExpansionPanelDetailsProps;
+  headingNumberCount?: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -99,6 +117,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       warning,
       error,
       loading,
+      headingNumberCount,
       ...expansionPanelProps
     } = this.props;
 
@@ -119,6 +138,9 @@ class EExpansionPanel extends React.Component<CombinedProps> {
           <Typography {...headingProps} variant="h3" data-qa-panel-subheading>
             {this.props.heading}
           </Typography>
+          <span className={classes.itemCount}>
+            {this.props.headingNumberCount}
+          </span>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails {...detailProps} data-qa-panel-details>
           <Grid container>

@@ -11,6 +11,7 @@ import ExpansionPanelCMR from '../ExpansionPanel/ExpansionPanelCMR';
 interface Props extends ExpansionPanelProps {
   height?: number;
   renderMainContent: () => JSX.Element;
+  headingNumberCount?: number;
 }
 
 /*
@@ -58,14 +59,19 @@ const ExtendedExpansionPanel: React.FC<Props> = props => {
     height,
     loading,
     onChange,
-    renderMainContent
+    renderMainContent,
+    headingNumberCount
   } = props;
   const flags = useFlags();
 
   return (
     <React.Fragment>
       {flags.cmr ? (
-        <ExpansionPanelCMR heading={heading} onChange={onChange}>
+        <ExpansionPanelCMR
+          heading={heading}
+          onChange={onChange}
+          headingNumberCount={headingNumberCount}
+        >
           {renderContent(
             error,
             Boolean(loading),
