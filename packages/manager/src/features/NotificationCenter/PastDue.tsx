@@ -41,7 +41,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
     display: 'flex',
     alignItems: 'flex-start',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
   }
 }));
 
