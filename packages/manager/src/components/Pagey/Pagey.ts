@@ -46,6 +46,11 @@ interface State<T = {}> {
   searching: boolean;
 }
 
+interface Options {
+  orderBy?: OrderBy;
+  order?: Order;
+}
+
 export interface PaginationProps<T> extends State<T> {
   handlePageChange: (v: number, showSpinner?: boolean) => void;
   handlePageSizeChange: (v: number) => void;
@@ -57,7 +62,7 @@ export interface PaginationProps<T> extends State<T> {
 
 const asc: 'asc' = 'asc';
 
-export default (requestFn: PaginatedRequest) => (
+export default (requestFn: PaginatedRequest, options: Options = {}) => (
   Component: React.ComponentType<any>
 ) => {
   return class WrappedComponent extends React.PureComponent<any, State> {
@@ -68,8 +73,8 @@ export default (requestFn: PaginatedRequest) => (
       page: 1,
       pageSize: storage.pageSize.get() || 25,
       error: undefined,
-      orderBy: undefined,
-      order: asc,
+      orderBy: options.orderBy,
+      order: options.order ?? asc,
       filter: {},
       searching: false
     };

@@ -35,7 +35,7 @@ export interface Token {
   label: string;
   created: string;
   token?: string;
-  expiry: string;
+  expiry: string | null;
   website?: string;
   thumbnail_url?: null | string;
 }
@@ -62,3 +62,11 @@ export interface Secret {
 }
 
 export type UserPreferences = Record<string, any>;
+
+export interface ProfileLogin {
+  id: number;
+  datetime: string;
+  ip: string;
+  username: string;
+  restricted: boolean;
+}
