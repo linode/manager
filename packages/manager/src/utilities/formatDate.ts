@@ -50,8 +50,7 @@ export const formatDate = (
   let time;
   /** get the timezone from redux and use it as the timezone */
   const state = store.getState();
-  const userTimezone =
-    state.__resources?.profile?.data?.timezone ?? DateTime.local().zoneName;
+  const userTimezone = state.__resources?.profile?.data?.timezone ?? 'utc';
   if (
     IANAZone.isValidSpecifier(userTimezone) &&
     IANAZone.isValidZone(userTimezone)
