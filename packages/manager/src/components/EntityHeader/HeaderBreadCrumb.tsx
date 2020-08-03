@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rootWithoutParent: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexBasis: '100%'
   },
   iconContainer: {
     padding: `5px !important`,
