@@ -46,6 +46,12 @@ export const eventMessageGenerator = (
           </Link>
         </>
       );
+    case 'disk_resize':
+      return 'disk resize';
+    case 'backups_restore':
+      return 'backup restore';
+    case 'linode_snapshot':
+      return 'snapshot backup in progress';
 
     default:
       // If we haven't handled it explicitly here, it doesn't count as
