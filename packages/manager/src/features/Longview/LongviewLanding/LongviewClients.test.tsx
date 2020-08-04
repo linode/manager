@@ -2,8 +2,11 @@ import { cleanup, fireEvent, wait } from '@testing-library/react';
 import { LongviewClient } from '@linode/api-v4/lib/longview';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { accountSettingsFactory } from 'src/factories/accountSettings';
-import { longviewClientFactory } from 'src/factories/longviewClient';
+import {
+  longviewSubscriptionFactory,
+  longviewClientFactory
+} from 'src/factories';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
   CombinedProps,
@@ -39,7 +42,7 @@ const props: CombinedProps = {
   updateLongviewClient: jest.fn(),
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
-  subscriptionsData: [],
+  activeSubscription: longviewSubscriptionFactory.build(),
   accountSettingsLoading: false,
   accountSettingsError: {},
   accountSettingsLastUpdated: 0,
@@ -129,20 +132,21 @@ describe('Longview clients list view', () => {
   });
 
   it('should render a CTA for non-Pro subscribers', () => {
-    const settings = accountSettingsFactory.build();
     const { getByText } = renderWithTheme(
-      <LongviewClients {...props} accountSettings={settings} />
+      <LongviewClients {...props} activeSubscription={{}} />
     );
 
     getByText(/upgrade to longview pro/i);
   });
 
   it('should not render a CTA for LV Pro subscribers', () => {
-    const settings = accountSettingsFactory.build({
-      longview_subscription: 'longview-100'
-    });
     const { queryAllByText } = renderWithTheme(
-      <LongviewClients {...props} accountSettings={settings} />
+      <LongviewClients
+        {...props}
+        activeSubscription={longviewSubscriptionFactory.build({
+          id: 'longview-100'
+        })}
+      />
     );
 
     expect(queryAllByText(/upgrade to longview pro/i)).toHaveLength(0);
