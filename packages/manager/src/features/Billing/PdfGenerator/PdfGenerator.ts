@@ -188,22 +188,21 @@ export const printInvoice = (
       const rightHeaderYPosition = addRightHeader(doc, account);
 
       /** only show tax ID if there is one provided */
-      const strings =
-        account.tax_id && hasTax
-          ? [
-              {
-                text: `Invoice: #${invoiceId}`
-              },
-              {
-                /*
+      const strings = account.tax_id
+        ? [
+            {
+              text: `Invoice: #${invoiceId}`
+            },
+            {
+              /*
           300px left margin is a hacky way of aligning the text to the right
           because this library stinks
          */
-                text: `Tax ID: ${account.tax_id}`,
-                leftMargin: 300
-              }
-            ]
-          : [{ text: `Invoice: #${invoiceId}` }];
+              text: `Tax ID: ${account.tax_id}`,
+              leftMargin: 300
+            }
+          ]
+        : [{ text: `Invoice: #${invoiceId}` }];
 
       addTitle(
         doc,
