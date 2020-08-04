@@ -5,8 +5,7 @@ import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
 import AddNewMenu from './AddNewMenu/AddNewMenu_CMR';
 import SearchBar from './SearchBar/SearchBar_CMR';
-import UserEventsMenu from './UserEventsMenu';
-import UserNotificationsMenu from './UserNotificationsMenu';
+import NotificationButton from './NotificationButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -67,8 +66,7 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
         <Toolbar className={classes.toolbar} variant="dense">
           <AddNewMenu />
           <SearchBar />
-          <UserNotificationsMenu />
-          <UserEventsMenu />
+          <NotificationButton />
         </Toolbar>
       </AppBar>
     </React.Fragment>

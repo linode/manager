@@ -3,7 +3,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
 import Hidden from 'src/components/core/Hidden';
-import Typography from 'src/components/core/Typography';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
@@ -80,13 +79,13 @@ export const EntityTableHeader: React.FC<Props> = props => {
               className={classes.thead}
               style={{ width: thisCell.widthPercent }}
             >
-              <Typography
+              <span
                 className={
                   thisCell.visuallyHidden ? classes.hiddenHeaderCell : undefined
                 }
               >
                 {thisCell.label}
-              </Typography>
+              </span>
             </TableCell>
           )
         )}
