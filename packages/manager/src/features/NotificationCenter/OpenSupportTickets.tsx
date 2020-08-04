@@ -1,12 +1,46 @@
 import { SupportTicket } from '@linode/api-v4/lib/support';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useNotifications from 'src/hooks/useNotifications';
 import { getTicketsPage } from 'src/features/Support/SupportTickets/ticketUtils';
 import NotificationSection, { NotificationItem } from './NotificationSection';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  abuseTicket: {
+    position: 'relative',
+    color: '#cf1e1e',
+    fontWeight: 'bold',
+    paddingLeft: '18px',
+    '&:before': {
+      content: "'!'",
+      width: '15px',
+      height: '15px',
+      textAlign: 'center',
+      borderRadius: '50%',
+      backgroundColor: '#cf1e1e',
+      color: 'white',
+      position: 'absolute',
+      left: 0,
+      top: 0
+    }
+  },
+  icon: {},
+  abuseIcon: {
+    backgroundColor: '#cf1e1e',
+    color: 'white'
+  }
+}));
+
 export const OpenSupportTickets: React.FC<{}> = _ => {
+  const notifications = useNotifications();
+  const abuseTickets = notifications.filter(
+    thisNotification => thisNotification.type === 'ticket_abuse'
+  );
+  const classes = useStyles();
+
   /**
    * Unlike some other sections of the notifications center,
    * we want to show all open support tickets, not just ones
@@ -16,10 +50,19 @@ export const OpenSupportTickets: React.FC<{}> = _ => {
    * we just have to request a user's open tickets here,
    * since these are never cached in Redux.
    */
-  const ticketsRequest = useAPIRequest(
+  const ticketsRequest = useAPIRequest<NotificationItem[]>(
     () =>
       getTicketsPage({}, {}, 'open').then(response =>
-        response.data.map(ticketToNotification)
+        response.data.map(thisTicket => {
+          // If we have a ticket with a type of ticket_abuse
+          // and its entity.id matches the current ticket, we've
+          // found an abuse ticket and should mark it as such.
+          const idx = abuseTickets.findIndex(
+            thisNotification => thisNotification.entity?.id === thisTicket.id
+          );
+          const type = idx > -1 ? 'abuse' : 'normal';
+          return ticketToNotification(thisTicket, classes, type);
+        })
       ),
     []
   );
@@ -42,12 +85,21 @@ export const OpenSupportTickets: React.FC<{}> = _ => {
   );
 };
 
-const ticketToNotification = (ticket: SupportTicket): NotificationItem => {
+type TicketType = 'normal' | 'important' | 'abuse';
+const ticketToNotification = (
+  ticket: SupportTicket,
+  classes: Record<string, string>,
+  type: TicketType = 'normal'
+): NotificationItem => {
+  const isAbuse = type === 'abuse';
   return {
     id: `ticket-notification-item-${ticket.id}`,
     body: (
       <Typography>
-        <Link to={`/support/tickets/${ticket.id}`}>
+        <Link
+          to={`/support/tickets/${ticket.id}`}
+          className={isAbuse ? classes.abuseTicket : undefined}
+        >
           #{ticket.id} {ticket.summary}
         </Link>{' '}
         {/** updated_by is nullable, but opened_by is guaranteed to be defined */}
