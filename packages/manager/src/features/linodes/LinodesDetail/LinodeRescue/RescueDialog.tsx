@@ -1,5 +1,4 @@
-import { GrantLevel } from '@linode/api-v4/lib/account';
-import { Config, LinodeStatus, rescueLinode } from '@linode/api-v4/lib/linodes';
+import { rescueLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
@@ -112,12 +111,26 @@ export const getDefaultDeviceMapAndCounter = (
 };
 
 const LinodeRescue: React.FC<CombinedProps> = props => {
-  const { diskError, volumesError, open, onClose, linodeId } = props;
+  const {
+    diskError,
+    volumesData,
+    volumesError,
+    open,
+    onClose,
+    linodeId
+  } = props;
 
   const classes = useStyles();
 
-  const getFilteredVolumes = () => {
-    const { volumesData } = props;
+  const linode = useExtendedLinode(linodeId);
+  const linodeRegion = linode?.region;
+  const linodeLabel = linode?.label;
+  const linodeStatus = linode?.status;
+  const linodeDisks = linode?._disks.map(disk =>
+    assoc('_id', `disk-${disk.id}`, disk)
+  );
+
+  const filteredVolumes = React.useMemo(() => {
     return volumesData
       ? volumesData.filter(volume => {
           // whether volume is not attached to any Linode
@@ -132,35 +145,21 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
           );
         })
       : [];
-  };
-
-  const filteredVolumes = getFilteredVolumes();
-  const linode = useExtendedLinode(linodeId);
-
-  const linodeRegion = linode?.region;
-  const linodeLabel = linode?.label;
-  const linodeStatus = linode?.status;
-  const linodeDisks = linode?._disks.map(disk =>
-    assoc('_id', `disk-${disk.id}`, disk)
-  );
+  }, [volumesData, linodeId, linodeRegion]);
 
   const [deviceMap, initialCounter] = getDefaultDeviceMapAndCounter(
-    linodeDisks || []
+    linodeDisks ?? []
   );
 
-  /*
-    Should be typed as:
-      disks: ExtendedDisk[];
-      volumes: ExtendedVolume[];
-  */
-  const [devices, setDevices] = React.useState<any>({
-    disks: linodeDisks || [],
-    volumes: filteredVolumes || []
-  });
   const [counter, setCounter] = React.useState<number>(initialCounter);
   const [rescueDevices, setRescueDevices] = React.useState<DevicesAsStrings>(
     deviceMap
   );
+
+  const devices = {
+    disks: linodeDisks ?? [],
+    volumes: filteredVolumes ?? []
+  };
 
   const permissions = linode?._permissions;
 
@@ -305,6 +304,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 const connected = connect(mapStateToProps);
 
 export default compose<CombinedProps, Props>(
+  React.memo,
   SectionErrorBoundary,
   withSnackbar,
   withVolumes(
