@@ -197,7 +197,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                           >
                             Cluster Label
                           </TableSortCell_CMR>
-                          <Hidden mdDown>
+                          <Hidden smDown>
                             <TableSortCell_CMR
                               active={orderBy === 'k8s_version'}
                               label={'k8s_version'}
@@ -208,7 +208,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                               Version
                             </TableSortCell_CMR>
                           </Hidden>
-                          <Hidden mdDown>
+                          <Hidden smDown>
                             <TableSortCell_CMR
                               active={orderBy === 'created'}
                               label={'created'}

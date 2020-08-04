@@ -140,7 +140,7 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
 
   return (
     <div className={classes.inlineActions}>
-      <Hidden mdDown>
+      <Hidden smDown>
         <Link className={classes.link} to={`/kubernetes/clusters/${clusterId}`}>
           <span>Edit</span>
         </Link>
