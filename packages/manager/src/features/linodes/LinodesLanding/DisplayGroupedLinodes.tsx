@@ -147,7 +147,6 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
 
   if (display === 'grid') {
     return (
-      // eslint-disable-next-line
       <>
         <Grid item xs={12} className={'px0'}>
           <div className={classes.controlHeader}>
