@@ -3,7 +3,6 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import Button from 'src/components/core/Button';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import {
   createStyles,
@@ -32,9 +31,20 @@ const styles = (theme: Theme) =>
       height: 30,
       paddingLeft: 0,
       paddingRight: 0,
+      // Overrides MUI chip default styles so these appear as separate elements.
       '&:hover': {
-        backgroundColor: theme.bg.lightBlue
+        backgroundColor: theme.bg.lightBlue,
+        '& $deleteButton': {
+          color: '#7daee8'
+        }
       },
+      '&:focus': {
+        backgroundColor: theme.bg.lightBlue,
+        '& $deleteButton': {
+          color: '#7daee8'
+        }
+      },
+      // Targets first span (tag label)
       '& > span': {
         padding: '7px 10px',
         fontSize: 14,
@@ -53,17 +63,22 @@ const styles = (theme: Theme) =>
       margin: 0,
       width: 30,
       height: 30,
+      padding: 8,
       borderRadius: 0,
       borderTopRightRadius: 3,
       borderBottomRightRadius: 3,
       '& svg': {
         borderRadius: 0,
-        width: 20,
-        height: 20
+        width: 15,
+        height: 15,
+        color: '#7daee8'
       },
       '&:hover': {
         backgroundColor: `${theme.palette.primary.main} !important`,
-        color: 'white !important'
+        color: 'white !important',
+        '& svg': {
+          color: 'white'
+        }
       },
       '&:focus': {
         backgroundColor: theme.bg.lightBlue,
@@ -98,14 +113,14 @@ const styles = (theme: Theme) =>
       }
     },
     lightBlue: {
-      backgroundColor: theme.bg.lightBlue,
+      backgroundColor: '#f1f7fd',
       '& > span': {
         '&:hover': {
           backgroundColor: theme.palette.primary.main,
           color: 'white'
         },
         '&:focus': {
-          backgroundColor: theme.bg.lightBlue,
+          backgroundColor: '#f1f7fd',
           color: theme.color.black
         }
       }
@@ -189,8 +204,10 @@ class Tag extends React.Component<CombinedProps, {}> {
             <button
               data-qa-delete-tag
               className={classes.deleteButton}
+              title="Delete tag"
               aria-label={`Delete Tag "${this.props.label}"`}
             >
+              {/* @todo CMR: update icon */}
               <Close />
             </button>
           ) : (
