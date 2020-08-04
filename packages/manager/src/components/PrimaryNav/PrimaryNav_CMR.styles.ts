@@ -169,6 +169,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     top: 25
   },
+  menuWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    '&:hover': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    },
+    '&:focus': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    }
+  },
   menuButton: {
     display: 'flex',
     alignItems: 'center',
@@ -203,6 +213,27 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.bg.primaryNavActiveBG
     }
   },
+  caret: {
+    color: '#9ea4ae',
+    fontSize: 26,
+    marginTop: 4,
+    marginLeft: 2
+  },
+  menuPopover: {
+    '&[data-reach-menu], &[data-reach-menu-popover]': {
+      position: 'absolute',
+      top: 50,
+      zIndex: 3000
+    }
+  },
+  menuItemList: {
+    '&[data-reach-menu-items]': {
+      backgroundColor: theme.bg.primaryNavPaper,
+      border: 'none',
+      padding: 0,
+      whiteSpace: 'normal'
+    }
+  },
   menuItemLink: {
     lineHeight: 1,
     '&[data-reach-menu-item]': {
@@ -228,37 +259,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     '&[data-reach-menu-item][data-selected]': {
-      backgroundColor: theme.bg.primaryNavActiveBG
-    }
-  },
-  menuItemList: {
-    '&[data-reach-menu-items]': {
-      backgroundColor: theme.bg.primaryNavPaper,
-      border: 'none',
-      padding: 0,
-      whiteSpace: 'normal'
-    }
-  },
-  menuPopover: {
-    '&[data-reach-menu], &[data-reach-menu-popover]': {
-      position: 'absolute',
-      top: 50,
-      zIndex: 3000
-    }
-  },
-  caret: {
-    color: '#9ea4ae',
-    fontSize: 26,
-    marginTop: 4,
-    marginLeft: 2
-  },
-  menuWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    '&:hover': {
-      backgroundColor: theme.bg.primaryNavActiveBG
-    },
-    '&:focus': {
       backgroundColor: theme.bg.primaryNavActiveBG
     }
   }
