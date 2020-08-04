@@ -33,7 +33,7 @@ import useExtendedLinode from 'src/hooks/useExtendedLinode';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3),
+    padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
     paddingBottom: theme.spacing(1),
     '& .iconTextLink': {
       display: 'inline-flex',
@@ -41,9 +41,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   title: {
-    marginBottom: theme.spacing(2)
-  },
-  intro: {
     marginBottom: theme.spacing(2)
   }
 }));
@@ -211,11 +208,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
         fullWidth
         maxWidth="md"
       >
-        <div
-          id="tabpanel-linode-detail-rescue"
-          role="tabpanel"
-          aria-labelledby="tab-linode-detail-rescue"
-        >
+        <div>
           <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
           <ErrorState errorText="There was an error retrieving Disks information." />
         </div>
@@ -232,11 +225,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
         fullWidth
         maxWidth="md"
       >
-        <div
-          id="tabpanel-linode-detail-rescue"
-          role="tabpanel"
-          aria-labelledby="tab-linode-detail-rescue"
-        >
+        <div>
           <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
           <ErrorState errorText="There was an error retrieving Volumes information." />
         </div>
@@ -252,12 +241,12 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
       fullWidth
       maxWidth="md"
     >
-      <div id="tabpanel-rescue" role="tabpanel" aria-labelledby="tab-rescue">
+      <div>
         <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
         <Paper className={classes.root}>
           {unauthorized && <LinodePermissionsError />}
           {hostMaintenance && <HostMaintenanceError />}
-          <Typography className={classes.intro}>
+          <Typography>
             If you suspect that your primary filesystem is corrupt, use the
             Linode Manager to boot your Linode into Rescue Mode. This is a safe
             environment for performing many system recovery and disk management
