@@ -117,7 +117,7 @@ interface RadioButton extends HTMLInputElement {
 interface Props {
   label?: string;
   scopes?: string;
-  expiry?: string;
+  expiry?: string | null;
   submitting?: boolean;
   perms: string[];
   permNameMap: Record<string, string>;

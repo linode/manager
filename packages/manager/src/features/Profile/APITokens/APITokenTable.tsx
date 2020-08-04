@@ -176,7 +176,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         id: token.id,
         values: {
           scopes: token.scopes,
-          expiry: token.expiry,
+          expiry: token.expiry ?? '',
           label: token.label
         }
       }
@@ -192,7 +192,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         id: token.id,
         values: {
           scopes: token.scopes,
-          expiry: token.expiry,
+          expiry: token.expiry ?? '',
           label: token.label
         }
       }
@@ -496,7 +496,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
              The expiry time of apps that don't expire until revoked come back as 'null'.
              In this case, we display an expiry time of "never" as well.
              */
-            isWayInTheFuture(token.expiry) || token.expiry === null ? (
+            token.expiry === null || isWayInTheFuture(token.expiry) ? (
               'never'
             ) : (
               <DateTimeDisplay value={token.expiry} humanizeCutoff="month" />

@@ -14,6 +14,10 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   dataLength: number;
+  toggleLinodeView: () => 'list' | 'grid';
+  linodeViewPreference: 'list' | 'grid';
+  toggleGroupLinodes: () => boolean;
+  linodesAreGrouped: boolean;
 }
 
 type CombinedProps = Omit<OrderByProps, 'data'> & Props;
@@ -21,7 +25,16 @@ type CombinedProps = Omit<OrderByProps, 'data'> & Props;
 const TableWrapper: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { dataLength, order, orderBy, handleOrderChange } = props;
+  const {
+    dataLength,
+    order,
+    orderBy,
+    handleOrderChange,
+    toggleLinodeView,
+    linodeViewPreference,
+    toggleGroupLinodes,
+    linodesAreGrouped
+  } = props;
 
   return (
     <Paper className={classes.paperWrapper}>
@@ -36,6 +49,10 @@ const TableWrapper: React.FC<CombinedProps> = props => {
               order={order}
               orderBy={orderBy}
               handleOrderChange={handleOrderChange}
+              toggleGroupLinodes={toggleGroupLinodes}
+              linodeViewPreference={linodeViewPreference}
+              toggleLinodeView={toggleLinodeView}
+              linodesAreGrouped={linodesAreGrouped}
             />
             {props.children}
           </Table>
