@@ -29,14 +29,46 @@ const styles = (theme: Theme) =>
   createStyles({
     label: {},
     root: {
-      height: '30px',
+      height: 30,
+      paddingLeft: 0,
+      paddingRight: 0,
+      '&:hover': {
+        backgroundColor: theme.bg.lightBlue
+      },
+      '& > span': {
+        padding: '7px 10px',
+        fontSize: 14,
+        color: '#3a3f46',
+        borderRadius: 3,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
+        borderRight: '1px solid white'
+      },
       '&:last-child': {
         marginRight: 8
       }
     },
     deleteButton: {
-      minWidth: 'auto',
-      marginLeft: theme.spacing()
+      ...theme.applyLinkStyles,
+      margin: 0,
+      width: 30,
+      height: 30,
+      borderRadius: 0,
+      borderTopRightRadius: 3,
+      borderBottomRightRadius: 3,
+      '& svg': {
+        borderRadius: 0,
+        width: 20,
+        height: 20
+      },
+      '&:hover': {
+        backgroundColor: `${theme.palette.primary.main} !important`,
+        color: 'white !important'
+      },
+      '&:focus': {
+        backgroundColor: theme.bg.lightBlue,
+        color: theme.color.black
+      }
     },
     white: {
       backgroundColor: theme.color.white,
@@ -67,13 +99,15 @@ const styles = (theme: Theme) =>
     },
     lightBlue: {
       backgroundColor: theme.bg.lightBlue,
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white'
-      },
-      '&:focus': {
-        backgroundColor: theme.bg.lightBlue,
-        color: theme.color.black
+      '& > span': {
+        '&:hover': {
+          backgroundColor: theme.palette.primary.main,
+          color: 'white'
+        },
+        '&:focus': {
+          backgroundColor: theme.bg.lightBlue,
+          color: theme.color.black
+        }
       }
     },
     green: {
@@ -152,13 +186,13 @@ class Tag extends React.Component<CombinedProps, {}> {
         })}
         deleteIcon={
           chipProps.onDelete ? (
-            <Button
+            <button
               data-qa-delete-tag
               className={classes.deleteButton}
               aria-label={`Delete Tag "${this.props.label}"`}
             >
               <Close />
-            </Button>
+            </button>
           ) : (
             undefined
           )
