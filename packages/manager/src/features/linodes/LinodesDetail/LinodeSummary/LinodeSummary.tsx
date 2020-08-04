@@ -151,7 +151,7 @@ interface State {
 
 type CombinedProps = LinodeContextProps &
   WithTheme &
-  WithTypesProps &
+  StateProps &
   WithImages &
   WithStyles<ClassNames>;
 
@@ -527,7 +527,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeVolumesError: linode._volumesError
 }));
 
-interface WithTypesProps {
+interface StateProps {
   typesData: LinodeType[];
   timezone: string;
   inProgressEvents: Record<number, number>;
@@ -535,7 +535,7 @@ interface WithTypesProps {
   mostRecentEventTime: string;
 }
 
-const withTypes = connect((state: ApplicationState, _ownProps) => ({
+const connected = connect((state: ApplicationState, _ownProps) => ({
   typesData: state.__resources.types.entities,
   timezone: getUserTimezone(),
   inProgressEvents: state.events.inProgressEvents,
@@ -544,7 +544,7 @@ const withTypes = connect((state: ApplicationState, _ownProps) => ({
 }));
 
 const enhanced = compose<CombinedProps, {}>(
-  withTypes,
+  connected,
   linodeContext,
   withImages(),
   withTheme,
