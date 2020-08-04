@@ -48,10 +48,18 @@ export const eventMessageGenerator = (
       );
     case 'disk_resize':
       return 'disk resize';
+    case 'disk_duplicate':
+      return 'disk duplicate';
     case 'backups_restore':
       return 'backup restore';
     case 'linode_snapshot':
       return 'snapshot backup in progress';
+    case 'linode_mutate':
+      return 'upgrade in progress';
+    case 'linode_rebuild':
+      return 'rebuild';
+    case 'linode_create':
+      return 'provisioning';
 
     default:
       // If we haven't handled it explicitly here, it doesn't count as
