@@ -27,6 +27,7 @@ interface Props extends Omit<HeaderProps, 'actions'> {
   docsLink: string;
   onAddNew?: () => void;
   entity: string;
+  startsWithVowel?: boolean;
 }
 
 /**
@@ -40,7 +41,7 @@ export const LandingHeader: React.FC<Props> = props => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { docsLink, onAddNew, entity, extraActions } = props;
+  const { docsLink, onAddNew, entity, extraActions, startsWithVowel } = props;
 
   const actions = React.useMemo(
     () => (
@@ -59,7 +60,7 @@ export const LandingHeader: React.FC<Props> = props => {
               className={classes.button}
               onClick={onAddNew}
             >
-              Create a {entity}...
+              Create {startsWithVowel ? `an` : `a`} {entity}...
             </Button>
           </Grid>
         )}

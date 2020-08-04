@@ -1,12 +1,10 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import LinearProgress from 'src/components/LinearProgress';
-import RenderGuard from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import useFlags from 'src/hooks/useFlags';
@@ -60,11 +58,7 @@ const ImageRow: React.FC<CombinedProps> = props => {
   // @todo CMR only show label and size for mobile
   return isImageUpdating(event) ? (
     <TableRow key={id} data-qa-image-cell={id}>
-      <TableCell
-        parentColumn="Label"
-        className={classes.label}
-        data-qa-image-label
-      >
+      <TableCell className={classes.label} data-qa-image-label>
         <ProgressDisplay
           className={classes.loadingStatus}
           text="Creating"
@@ -78,24 +72,16 @@ const ImageRow: React.FC<CombinedProps> = props => {
     </TableRow>
   ) : (
     <TableRow key={id} data-qa-image-cell={id}>
-      <TableCell
-        parentColumn="Label"
-        className={classes.label}
-        data-qa-image-label
-      >
+      <TableCell className={classes.label} data-qa-image-label>
         {label}
       </TableCell>
       <Hidden xsDown>
-        <TableCell parentColumn="Created" data-qa-image-date>
-          {formatDate(created)}
-        </TableCell>
-        <TableCell parentColumn="Expires" data-qa-image-date>
+        <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
+        <TableCell data-qa-image-date>
           {expiry ? formatDate(expiry) : 'Never'}
         </TableCell>
       </Hidden>
-      <TableCell parentColumn="Size" data-qa-image-size>
-        {size} MB
-      </TableCell>
+      <TableCell data-qa-image-size>{size} MB</TableCell>
       <TableCell className={classes.actionMenu}>
         <Menu id={id} label={label} description={description} {...rest} />
       </TableCell>
@@ -134,4 +120,4 @@ const ProgressDisplay: React.FC<{
   );
 };
 
-export default compose<CombinedProps, {}>(RenderGuard)(ImageRow);
+export default React.memo(ImageRow);
