@@ -11,6 +11,7 @@ export interface BreadCrumbProps {
   parentLink?: string;
   parentText?: string;
   displayIcon?: boolean;
+  headerOnly?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -24,6 +25,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   rootWithoutParent: {
     display: 'flex',
     alignItems: 'center'
+  },
+  rootHeaderOnly: {
+    display: 'flex',
+    alignItems: 'center',
+    flexBasis: '100%'
   },
   iconContainer: {
     padding: `5px !important`,
@@ -110,7 +116,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
-  const { iconType, parentLink, parentText, title, displayIcon } = props;
+  const {
+    iconType,
+    parentLink,
+    parentText,
+    title,
+    displayIcon,
+    headerOnly
+  } = props;
   const classes = useStyles();
 
   const _displayIcon = displayIcon ?? true;
@@ -146,7 +159,11 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
   }
 
   return (
-    <div className={classes.rootWithoutParent}>
+    <div
+      className={
+        headerOnly ? classes.rootHeaderOnly : classes.rootWithoutParent
+      }
+    >
       {iconType && _displayIcon && (
         <Grid item>
           <EntityIcon variant={iconType} />

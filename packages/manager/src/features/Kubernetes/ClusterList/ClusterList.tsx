@@ -139,6 +139,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
           docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
           onAddNew={() => history.push('/kubernetes/create')}
           entity="Cluster"
+          headerOnly
         />
       ) : (
         <Grid
