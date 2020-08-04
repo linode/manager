@@ -177,6 +177,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         this.setState({
           rescueDialogOpen: true
         });
+        break;
     }
     this.setState({
       selectedLinodeID: linodeID,

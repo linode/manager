@@ -11,19 +11,13 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import withVolumes from 'src/containers/volumes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { MapState } from 'src/store/types';
 import createDevicesFromStrings, {
   DevicesAsStrings
@@ -36,35 +30,24 @@ import DeviceSelection, {
   ExtendedVolume
 } from './DeviceSelection';
 import Dialog from 'src/components/Dialog';
+import useExtendedLinode from 'src/hooks/useExtendedLinode';
 
-type ClassNames = 'root' | 'title' | 'intro';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(3),
-      paddingBottom: theme.spacing(1),
-      '& .iconTextLink': {
-        display: 'inline-flex',
-        margin: `${theme.spacing(3)}px 0 0 0`
-      }
-    },
-    title: {
-      marginBottom: theme.spacing(2)
-    },
-    intro: {
-      marginBottom: theme.spacing(2)
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: theme.spacing(3),
+    paddingBottom: theme.spacing(1),
+    '& .iconTextLink': {
+      display: 'inline-flex',
+      margin: `${theme.spacing(3)}px 0 0 0`
     }
-  });
-
-interface ContextProps {
-  linodeId: number;
-  linodeRegion?: string;
-  linodeLabel: string;
-  linodeDisks?: ExtendedDisk[];
-  linodeStatus: LinodeStatus;
-  permissions: GrantLevel;
-}
+  },
+  title: {
+    marginBottom: theme.spacing(2)
+  },
+  intro: {
+    marginBottom: theme.spacing(2)
+  }
+}));
 
 interface StateProps {
   diskError?: APIError[];
@@ -76,22 +59,16 @@ interface VolumesProps {
   volumesLastUpdated: number;
 }
 
-interface State {
-  rescueDevices: DevicesAsStrings;
-  errors?: APIError[];
-  devices: {
-    disks: ExtendedDisk[];
-    volumes: ExtendedVolume[];
-  };
-  config?: Config;
-  counter: number;
+interface Props {
+  linodeId: number;
+  open: boolean;
+  onClose: () => void;
 }
 
-type CombinedProps = VolumesProps &
+type CombinedProps = Props &
+  VolumesProps &
   StateProps &
-  ContextProps &
   RouteComponentProps &
-  WithStyles<ClassNames> &
   WithSnackbarProps;
 
 interface DeviceMap {
@@ -134,25 +111,13 @@ export const getDefaultDeviceMapAndCounter = (
   return [deviceMap, counter];
 };
 
-export class LinodeRescue extends React.Component<CombinedProps, State> {
-  constructor(props: CombinedProps) {
-    super(props);
-    const [deviceMap, initialCounter] = getDefaultDeviceMapAndCounter(
-      props.linodeDisks || []
-    );
-    const filteredVolumes = this.getFilteredVolumes();
-    this.state = {
-      devices: {
-        disks: props.linodeDisks || [],
-        volumes: filteredVolumes || []
-      },
-      counter: initialCounter,
-      rescueDevices: deviceMap
-    };
-  }
+const LinodeRescue: React.FC<CombinedProps> = props => {
+  const { diskError, volumesError, open, onClose, linodeId } = props;
 
-  getFilteredVolumes = () => {
-    const { linodeId, linodeRegion, volumesData } = this.props;
+  const classes = useStyles();
+
+  const getFilteredVolumes = () => {
+    const { volumesData } = props;
     return volumesData
       ? volumesData.filter(volume => {
           // whether volume is not attached to any Linode
@@ -169,9 +134,43 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
       : [];
   };
 
-  onSubmit = () => {
-    const { linodeId, enqueueSnackbar, history } = this.props;
-    const { rescueDevices } = this.state;
+  const filteredVolumes = getFilteredVolumes();
+  const linode = useExtendedLinode(linodeId);
+
+  const linodeRegion = linode?.region;
+  const linodeLabel = linode?.label;
+  const linodeStatus = linode?.status;
+  const linodeDisks = linode?._disks.map(disk =>
+    assoc('_id', `disk-${disk.id}`, disk)
+  );
+
+  const [deviceMap, initialCounter] = getDefaultDeviceMapAndCounter(
+    linodeDisks || []
+  );
+
+  /*
+    Should be typed as:
+      disks: ExtendedDisk[];
+      volumes: ExtendedVolume[];
+  */
+  const [devices, setDevices] = React.useState<any>({
+    disks: linodeDisks || [],
+    volumes: filteredVolumes || []
+  });
+  const [counter, setCounter] = React.useState<number>(initialCounter);
+  const [rescueDevices, setRescueDevices] = React.useState<DevicesAsStrings>(
+    deviceMap
+  );
+
+  const permissions = linode?._permissions;
+
+  const unauthorized = permissions === 'read_only';
+  const hostMaintenance = linodeStatus === 'stopped';
+
+  const disabled = unauthorized || hostMaintenance;
+
+  const onSubmit = () => {
+    const { linodeId, enqueueSnackbar, history } = props;
 
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
       .then(_ => {
@@ -193,149 +192,108 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
       });
   };
 
-  incrementCounter = () => {
-    this.setState({ counter: clamp(1, 6, this.state.counter + 1) });
+  const incrementCounter = () => {
+    setCounter(clamp(1, 6, counter + 1));
   };
 
   /** string format is type-id */
-  onChange = (slot: string, _id: string) =>
-    this.setState({
-      rescueDevices: {
-        ...this.state.rescueDevices,
-        [slot]: _id
-      }
-    });
+  const onChange = (slot: string, _id: string) =>
+    setRescueDevices(rescueDevices => ({
+      ...rescueDevices,
+      [slot]: _id
+    }));
 
-  render() {
-    const { devices } = this.state;
-    const {
-      diskError,
-      volumesError,
-      classes,
-      linodeLabel,
-      linodeStatus,
-      permissions
-    } = this.props;
-
-    const unauthorized = permissions === 'read_only';
-    const hostMaintenance = linodeStatus === 'stopped';
-
-    const disabled = unauthorized || hostMaintenance;
-
-    if (diskError) {
-      return (
-        <Dialog
-          title={`Rescue ${linodeLabel ?? ''}`}
-          open={this.props.open}
-          onClose={this.props.onClose}
-          fullWidth
-          maxWidth="md"
-        >
-          <div
-            id="tabpanel-linode-detail-rescue"
-            role="tabpanel"
-            aria-labelledby="tab-linode-detail-rescue"
-          >
-            <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving Disks information." />
-          </div>
-        </Dialog>
-      );
-    }
-
-    if (volumesError) {
-      return (
-        <Dialog
-          title={`Rescue ${linodeLabel ?? ''}`}
-          open={this.props.open}
-          onClose={this.props.onClose}
-          fullWidth
-          maxWidth="md"
-        >
-          <div
-            id="tabpanel-linode-detail-rescue"
-            role="tabpanel"
-            aria-labelledby="tab-linode-detail-rescue"
-          >
-            <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving Volumes information." />
-          </div>
-        </Dialog>
-      );
-    }
-
+  if (diskError) {
     return (
       <Dialog
         title={`Rescue ${linodeLabel ?? ''}`}
-        open={this.props.open}
-        onClose={this.props.onClose}
+        open={open}
+        onClose={onClose}
         fullWidth
         maxWidth="md"
       >
-        <div id="tabpanel-rescue" role="tabpanel" aria-labelledby="tab-rescue">
+        <div
+          id="tabpanel-linode-detail-rescue"
+          role="tabpanel"
+          aria-labelledby="tab-linode-detail-rescue"
+        >
           <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-          <Paper className={classes.root}>
-            {unauthorized && <LinodePermissionsError />}
-            {hostMaintenance && <HostMaintenanceError />}
-            <Typography
-              role="heading"
-              aria-level={2}
-              variant="h2"
-              className={classes.title}
-              data-qa-title
-            >
-              Rescue
-            </Typography>
-            <Typography className={classes.intro}>
-              If you suspect that your primary filesystem is corrupt, use the
-              Linode Manager to boot your Linode into Rescue Mode. This is a
-              safe environment for performing many system recovery and disk
-              management tasks.
-            </Typography>
-            <DeviceSelection
-              slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
-              devices={devices}
-              onChange={this.onChange}
-              getSelected={slot =>
-                pathOr('', ['rescueDevices', slot], this.state)
-              }
-              counter={this.state.counter}
-              rescue
-              disabled={disabled}
-            />
-            <AddNewLink
-              onClick={this.incrementCounter}
-              label="Add Disk"
-              disabled={disabled || this.state.counter >= 6}
-              left
-            />
-            <ActionsPanel>
-              <Button
-                onClick={this.onSubmit}
-                buttonType="primary"
-                data-qa-submit
-                disabled={disabled}
-              >
-                Reboot into Rescue Mode
-              </Button>
-            </ActionsPanel>
-          </Paper>
+          <ErrorState errorText="There was an error retrieving Disks information." />
         </div>
       </Dialog>
     );
   }
-}
 
-const styled = withStyles(styles);
+  if (volumesError) {
+    return (
+      <Dialog
+        title={`Rescue ${linodeLabel ?? ''}`}
+        open={open}
+        onClose={onClose}
+        fullWidth
+        maxWidth="md"
+      >
+        <div
+          id="tabpanel-linode-detail-rescue"
+          role="tabpanel"
+          aria-labelledby="tab-linode-detail-rescue"
+        >
+          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+          <ErrorState errorText="There was an error retrieving Volumes information." />
+        </div>
+      </Dialog>
+    );
+  }
 
-// const linodeContext = withLinodeDetailContext(({ linode }) => ({
-//   linodeId: linode.id,
-//   linodeRegion: linode.region,
-//   linodeLabel: linode.label,
-//   linodeStatus: linode.status,
-//   linodeDisks: linode._disks.map(disk => assoc('_id', `disk-${disk.id}`, disk)),
-//   permissions: linode._permissions
-// }));
+  return (
+    <Dialog
+      title={`Rescue ${linodeLabel ?? ''}`}
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="md"
+    >
+      <div id="tabpanel-rescue" role="tabpanel" aria-labelledby="tab-rescue">
+        <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+        <Paper className={classes.root}>
+          {unauthorized && <LinodePermissionsError />}
+          {hostMaintenance && <HostMaintenanceError />}
+          <Typography className={classes.intro}>
+            If you suspect that your primary filesystem is corrupt, use the
+            Linode Manager to boot your Linode into Rescue Mode. This is a safe
+            environment for performing many system recovery and disk management
+            tasks.
+          </Typography>
+          <DeviceSelection
+            slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
+            devices={devices}
+            onChange={onChange}
+            getSelected={slot => pathOr('', [slot], rescueDevices)}
+            counter={counter}
+            rescue
+            disabled={disabled}
+          />
+          <AddNewLink
+            onClick={incrementCounter}
+            label="Add Disk"
+            disabled={disabled || counter >= 6}
+            left
+          />
+          <ActionsPanel>
+            <Button
+              onClick={onSubmit}
+              buttonType="primary"
+              data-qa-submit
+              disabled={disabled}
+            >
+              Reboot into Rescue Mode
+            </Button>
+          </ActionsPanel>
+        </Paper>
+      </div>
+    </Dialog>
+  );
+};
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = (
   state,
@@ -346,10 +304,8 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 
 const connected = connect(mapStateToProps);
 
-export default compose<CombinedProps, {}>(
-  // linodeContext,
+export default compose<CombinedProps, Props>(
   SectionErrorBoundary,
-  styled,
   withSnackbar,
   withVolumes(
     (
