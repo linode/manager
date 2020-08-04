@@ -62,15 +62,13 @@ export const PendingActions: React.FC<{}> = _ => {
               {message}
               {timeRemaining}
             </Typography>
-            {event.percent_complete ? (
-              <BarPercent
-                className={classes.bar}
-                max={100}
-                value={event.percent_complete}
-                rounded
-                narrow
-              />
-            ) : null}
+            <BarPercent
+              className={classes.bar}
+              max={100}
+              value={event.percent_complete ?? 0}
+              rounded
+              narrow
+            />
           </div>
         )
       };
