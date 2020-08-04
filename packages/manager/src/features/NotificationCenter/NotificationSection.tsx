@@ -101,6 +101,9 @@ export const NotificationSection: React.FC<Props> = props => {
   );
 };
 
+// =============================================================================
+// Body
+// =============================================================================
 interface BodyProps {
   header: string;
   loading: boolean;
@@ -134,6 +137,9 @@ const ContentBody: React.FC<BodyProps> = React.memo(props => {
   );
 });
 
+// =============================================================================
+// Row
+// =============================================================================
 const ContentRow: React.FC<{
   item: NotificationItem;
 }> = React.memo(props => {
