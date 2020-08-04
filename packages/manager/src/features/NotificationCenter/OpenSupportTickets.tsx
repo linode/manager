@@ -1,14 +1,14 @@
 import { SupportTicket } from '@linode/api-v4/lib/support';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useNotifications from 'src/hooks/useNotifications';
 import { getTicketsPage } from 'src/features/Support/SupportTickets/ticketUtils';
 import NotificationSection, { NotificationItem } from './NotificationSection';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   abuseTicket: {
     position: 'relative',
     color: '#cf1e1e',
