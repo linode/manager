@@ -64,13 +64,14 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
     tags,
     size,
     recentEvent,
+    region,
     filesystem_path: filesystemPath,
     linodeLabel,
     linode_id: linodeId,
     linodeStatus
   } = props;
 
-  const region = formatRegion(props.region);
+  const formattedRegion = formatRegion(region);
 
   return isUpdating ? (
     <TableRow
@@ -108,7 +109,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
       </TableCell>
       {region && (
         <TableCell parentColumn="Region" data-qa-volume-region>
-          {region}
+          {formattedRegion}
         </TableCell>
       )}
       <TableCell

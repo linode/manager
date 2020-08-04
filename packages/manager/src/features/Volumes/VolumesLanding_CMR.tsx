@@ -139,6 +139,7 @@ const volumeHeaders = [
 export const VolumesLanding: React.FC<CombinedProps> = props => {
   const {
     volumesLoading,
+    getAllVolumes,
     mappedVolumesDataWithLinodes,
     volumesLastUpdated,
     volumesError,
@@ -174,12 +175,10 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
   });
 
   React.useEffect(() => {
-    const { getAllVolumes, volumesLastUpdated } = props;
-
     if (Date.now() - volumesLastUpdated > REFRESH_INTERVAL) {
       getAllVolumes().catch(_ => null); // Errors through Redux
     }
-  }, [props]);
+  }, [getAllVolumes, volumesLastUpdated]);
 
   const handleCloseAttachDrawer = () => {
     setAttachmentDrawer(attachmentDrawer => ({
