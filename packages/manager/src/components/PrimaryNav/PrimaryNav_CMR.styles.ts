@@ -43,6 +43,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 7.5
   },
   navIcon: {
+    display: 'flex',
+    backgroundColor: 'transparent',
+    border: 'none',
     color: theme.color.white,
     fontSize: '1.125rem',
     lineHeight: '20px',

@@ -61,8 +61,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   username: {
     paddingRight: 15,
     transition: theme.transitions.create(['color']),
+    // This is where things start to scroll
+    // @todo: Check for different username lengths
     [theme.breakpoints.down(1345)]: {
-      display: 'none'
+      ...theme.visually.hidden
     }
   },
   menuItem: {

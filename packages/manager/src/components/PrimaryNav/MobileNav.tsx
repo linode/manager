@@ -1,4 +1,5 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import MenuIcon from '@material-ui/icons/Menu';
 import {
   Menu as ReachMenu,
   MenuButton,
@@ -9,18 +10,42 @@ import {
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { PrimaryLink } from './NavItem';
-import { NavGroup } from './PrimaryNav_CMR';
 
 interface Props {
   groups: any;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  navIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: theme.color.white,
+    fontSize: '1.125rem',
+    height: 50,
+    lineHeight: '20px',
+    '& svg': {
+      marginTop: -2,
+      marginRight: 10
+    },
+    [theme.breakpoints.up(750)]: {
+      display: 'none'
+    }
+  },
+  navDropdown: {
+    backgroundColor: '#434951',
+    left: '0 !important',
+    width: '100%',
+    zIndex: 3000
+  },
   menuWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    '& > *': {
+      borderBottom: '1px solid #59626d !important'
+    }
   },
   menuButton: {
     display: 'flex',
@@ -47,9 +72,6 @@ const useStyles = makeStyles((theme: Theme) => ({
           transform: 'rotate(180deg)'
         }
       }
-    },
-    '&[data-reach-menu-button]:not(:first-of-type)': {
-      borderTop: '1px solid rgba(50, 54, 60, 0.5)'
     }
   },
   caret: {
@@ -108,6 +130,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item][data-selected]': {
       backgroundColor: '#434951'
     }
+  },
+  menuItemLinkNoGroup: {
+    '&[data-reach-menu-item]': {
+      paddingLeft: 20,
+      paddingRight: 14
+    }
+  },
+  settingsBackdrop: {
+    backgroundColor: 'rgba(0,0,0,.3)'
   }
 }));
 
@@ -118,27 +149,82 @@ export const MobileNav: React.FC<Props> = props => {
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {groups.map(thisGroup => (
-        // eslint-disable-next-line react/jsx-key
-        <div className={classes.menuWrapper}>
-          <ReachMenu>
-            <MenuButton className={`${classes.menuButton} ${classes.linkItem}`}>
-              {thisGroup.group}
-              <KeyboardArrowDown className={classes.caret} />
+      <ReachMenu>
+        {({ isOpen }) => (
+          <>
+            {/* <Backdrop className={classes.settingsBackdrop} open={isOpen} /> */}
+            <MenuButton
+              aria-label={isOpen ? 'Open menu' : 'Close menu'}
+              className={classes.navIcon}
+            >
+              <MenuIcon />
+              Menu
             </MenuButton>
-            <MenuPopover className={classes.menuPopover} portal={false}>
-              <MenuItems className={classes.menuItemList}>
-                {thisGroup.links.map(thisLink => (
-                  // eslint-disable-next-line react/jsx-key
-                  <MenuLink as={Link} className={classes.menuItemLink}>
-                    test
-                  </MenuLink>
-                ))}
-              </MenuItems>
+            <MenuPopover className={classes.navDropdown}>
+              <div className={classes.menuWrapper}>
+                {groups.map((thisGroup: any) => {
+                  // For each group, filter out hidden links.
+                  const filteredLinks = thisGroup.links.filter(
+                    (thisLink: any) => !thisLink.hide
+                  );
+                  if (filteredLinks.length === 0) {
+                    return null;
+                  }
+
+                  // Render a singular PrimaryNavLink for links without a group.
+                  if (
+                    thisGroup.group === 'None' &&
+                    filteredLinks.length === 1
+                  ) {
+                    const link = filteredLinks[0];
+
+                    return (
+                      <MenuItems className={classes.menuItemList}>
+                        <MenuLink
+                          key={link.display}
+                          as={Link}
+                          to={link.href}
+                          className={`${classes.menuItemLink} ${classes.menuItemLinkNoGroup}`}
+                        >
+                          {link.display}
+                        </MenuLink>
+                      </MenuItems>
+                    );
+                  }
+
+                  return (
+                    <ReachMenu key={thisGroup.group}>
+                      <MenuButton
+                        className={`${classes.menuButton} ${classes.linkItem}`}
+                      >
+                        {thisGroup.group}
+                        <KeyboardArrowDown className={classes.caret} />
+                      </MenuButton>
+                      <MenuPopover
+                        className={classes.menuPopover}
+                        portal={false}
+                      >
+                        <MenuItems className={classes.menuItemList}>
+                          {thisGroup.links.map((thisLink: any) => (
+                            <MenuLink
+                              key={thisLink.display}
+                              as={Link}
+                              to={thisLink.href}
+                              className={classes.menuItemLink}
+                            >
+                              {thisLink.display}
+                            </MenuLink>
+                          ))}
+                        </MenuItems>
+                      </MenuPopover>
+                    </ReachMenu>
+                  );
+                })}
+              </div>
             </MenuPopover>
-          </ReachMenu>
-        </div>
-      ))}
+          </>
+        )}
+      </ReachMenu>
     </>
   );
 };

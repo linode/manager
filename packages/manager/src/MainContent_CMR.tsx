@@ -222,7 +222,6 @@ const MainContent: React.FC<CombinedProps> = props => {
       <PrimaryNav_CMR
         isCollapsed={false}
         closeMenu={() => toggleMenu(false)}
-        openSideMenu={() => toggleMenu(true)}
         toggleTheme={props.toggleTheme}
         toggleSpacing={props.toggleSpacing}
       />
