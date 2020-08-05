@@ -7,6 +7,7 @@ import PrimaryNav_CMR, { PrimaryNavProps } from './PrimaryNav_CMR';
 afterEach(cleanup);
 
 const props: PrimaryNavProps = {
+  closeMenu: jest.fn(),
   toggleSpacing: jest.fn(),
   toggleTheme: jest.fn(),
   isCollapsed: false

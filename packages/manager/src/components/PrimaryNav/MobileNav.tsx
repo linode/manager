@@ -89,7 +89,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'flex',
       position: 'relative',
       width: '100%'
-      // zIndex: 3000
     }
   },
   menuItemList: {
@@ -140,6 +139,17 @@ export const MobileNav: React.FC<Props> = props => {
   const classes = useStyles();
   const { groups } = props;
 
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [, toggleMenu] = React.useState<boolean>(false);
+
+  React.useMemo(() => {
+    if (open) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+  }, [open]);
+
   return (
     <ReachMenu>
       {({ isOpen }) => (
@@ -147,6 +157,9 @@ export const MobileNav: React.FC<Props> = props => {
           <MenuButton
             aria-label={isOpen ? 'Open menu' : 'Close menu'}
             className={classes.navIcon}
+            onClick={() => {
+              setOpen(!open);
+            }}
           >
             <MenuIcon />
             Menu
@@ -161,6 +174,7 @@ export const MobileNav: React.FC<Props> = props => {
                 if (filteredLinks.length === 0) {
                   return null;
                 }
+
                 // Render a singular PrimaryNavLink for links without a group.
                 if (thisGroup.group === 'None' && filteredLinks.length === 1) {
                   const link = filteredLinks[0];
@@ -171,6 +185,7 @@ export const MobileNav: React.FC<Props> = props => {
                         key={link.display}
                         as={Link}
                         to={link.href}
+                        onClick={() => toggleMenu(false)}
                         className={`${classes.menuItemLink} ${classes.menuItemLinkNoGroup}`}
                       >
                         {link.display}
@@ -194,6 +209,7 @@ export const MobileNav: React.FC<Props> = props => {
                             key={thisLink.display}
                             as={Link}
                             to={thisLink.href}
+                            onClick={() => toggleMenu(false)}
                             className={classes.menuItemLink}
                           >
                             {thisLink.display}

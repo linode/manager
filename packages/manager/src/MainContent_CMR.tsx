@@ -158,6 +158,8 @@ const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
+  const [, toggleMenu] = React.useState<boolean>(false);
+
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -217,6 +219,7 @@ const MainContent: React.FC<CombinedProps> = props => {
     >
       {/* @cmr */}
       <PrimaryNav_CMR
+        closeMenu={() => toggleMenu(false)}
         isCollapsed={false}
         toggleTheme={props.toggleTheme}
         toggleSpacing={props.toggleSpacing}

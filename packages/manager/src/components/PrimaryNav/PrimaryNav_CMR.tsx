@@ -77,6 +77,7 @@ interface PrimaryLink {
 // PrimaryNav
 // =============================================================================
 export interface PrimaryNavProps {
+  closeMenu: () => void;
   isCollapsed: boolean;
   toggleTheme: () => void;
   toggleSpacing: () => void;
@@ -93,7 +94,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const { domains, requestDomains } = useDomains();
   const flags = useFlags();
 
-  const { isCollapsed, toggleTheme, toggleSpacing } = props;
+  const { closeMenu, isCollapsed, toggleTheme, toggleSpacing } = props;
 
   const [anchorEl, setAnchorEl] = React.useState<
     (EventTarget & HTMLElement) | undefined
@@ -250,7 +251,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
                   [classes.logoCollapsed]: matchesSmDown
                 })}
               >
-                <Link to={`/dashboard`} title="Dashboard">
+                <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
                   {/* @todo: replace with new icon */}
                   {matchesSmDown ? (
                     <Dashboard
@@ -259,7 +260,11 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
                       style={{ marginRight: 6 }}
                     />
                   ) : (
-                    <PrimaryNavLink display="Dashboard" href="/dashboard" />
+                    <PrimaryNavLink
+                      display="Dashboard"
+                      href="/dashboard"
+                      closeMenu={closeMenu}
+                    />
                   )}
                 </Link>
               </div>
@@ -281,6 +286,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
                     key={link.display}
                     display={link.display}
                     href={link.href}
+                    closeMenu={closeMenu}
                     prefetchRequestFn={link.prefetchRequestFn}
                     prefetchRequestCondition={link.prefetchRequestCondition}
                   />
@@ -304,6 +310,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             display="Help & Support"
             href={'/support'}
             icon={<Help />}
+            closeMenu={closeMenu}
             textHiddenProps={{ mdDown: true }}
           />
           <PrimaryNavLink
@@ -311,6 +318,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             display="Community"
             href="https://www.linode.com/community"
             icon={<Community />}
+            closeMenu={closeMenu}
             textHiddenProps={{ mdDown: true }}
           />
           <IconButton
@@ -444,6 +452,7 @@ export const PrimaryNavMenuLink: React.FC<PrimaryNavMenuLinkProps> = React.memo(
 // PrimaryNavLink
 // =============================================================================
 interface PrimaryNavLink extends PrimaryLink {
+  closeMenu: () => void;
   prefetchRequestFn?: () => void;
   prefetchRequestCondition?: boolean;
   textHiddenProps?: HiddenProps;
@@ -458,6 +467,7 @@ export const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
   );
 
   const {
+    closeMenu,
     href,
     onClick,
     attr,
@@ -472,6 +482,7 @@ export const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
       to={href}
       className={classes.listItem}
       onClick={(e: React.ChangeEvent<any>) => {
+        closeMenu();
         if (onClick) {
           onClick(e);
         }

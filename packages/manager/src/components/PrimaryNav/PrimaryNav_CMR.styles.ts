@@ -122,13 +122,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   listItemCollapsed: {},
-  verticalDivider: {
-    backgroundColor: '#5c6470',
-    height: 30,
-    width: 1,
-    marginRight: 15,
-    marginLeft: 15
-  },
   settings: {
     display: 'flex',
     alignItems: 'center',
