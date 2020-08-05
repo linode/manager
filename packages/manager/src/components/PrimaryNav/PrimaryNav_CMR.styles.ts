@@ -99,7 +99,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   listItem: {
     display: 'flex',
     alignItems: 'center',
-    cursor: 'pointer',
     fontSize: '1rem',
     height: 50,
     lineHeight: 1,
@@ -218,7 +217,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   caret: {
     color: '#9ea4ae',
-    fontSize: 26,
     marginTop: 4,
     marginLeft: 2
   },
@@ -238,12 +236,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   menuItemLink: {
-    lineHeight: 1,
     '&[data-reach-menu-item]': {
       display: 'flex',
       alignItems: 'center',
       color: theme.color.primaryNavText,
-      cursor: 'pointer',
       fontSize: '1rem',
       paddingTop: 12,
       paddingBottom: 12,

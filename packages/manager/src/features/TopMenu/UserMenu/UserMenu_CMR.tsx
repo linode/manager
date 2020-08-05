@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: 15,
     transition: theme.transitions.create(['color']),
     // This is where things start to scroll
-    // @todo: Check for different username lengths
+    // @todo: Figure how to handle long usernames
     [theme.breakpoints.down(1345)]: {
       ...theme.visually.hidden
     }
@@ -150,7 +150,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       top: 50,
       zIndex: 3000,
-      // Hack solution to have something semi-working on mobile.
       [theme.breakpoints.down('md')]: {
         left: 0
       }

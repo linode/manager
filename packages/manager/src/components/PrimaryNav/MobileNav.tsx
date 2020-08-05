@@ -1,3 +1,4 @@
+import Backdrop from '@material-ui/core/Backdrop';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import MenuIcon from '@material-ui/icons/Menu';
 import {
@@ -52,7 +53,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     lineHeight: 1,
-    padding: 0,
     '&[data-reach-menu-button]': {
       backgroundColor: '#434951',
       border: 'none',
@@ -76,11 +76,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   caret: {
     color: '#9ea4ae',
-    fontSize: 26,
     marginTop: 2
   },
   linkItem: {
-    color: theme.color.primaryNavText,
     fontFamily: theme.font.normal,
     opacity: 1,
     transition: theme.transitions.create(['color']),
@@ -90,8 +88,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu], &[data-reach-menu-popover]': {
       display: 'flex',
       position: 'relative',
-      width: '100%',
-      zIndex: 3000
+      width: '100%'
+      // zIndex: 3000
     }
   },
   menuItemList: {
@@ -103,18 +101,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       border: 'none',
       padding: 0,
       whiteSpace: 'normal',
-      width: '100%',
-      '& > div': {
-        width: '100%'
-      }
+      width: '100%'
     }
   },
   menuItemLink: {
-    lineHeight: 1,
     '&[data-reach-menu-item]': {
       display: 'flex',
       color: theme.color.primaryNavText,
-      cursor: 'pointer',
       fontSize: '1rem',
       paddingTop: 15,
       paddingBottom: 15,
@@ -138,7 +131,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   settingsBackdrop: {
-    backgroundColor: 'rgba(0,0,0,.3)'
+    backgroundColor: 'rgba(50, 54, 60, 0.5)',
+    top: 50
   }
 }));
 
@@ -147,85 +141,75 @@ export const MobileNav: React.FC<Props> = props => {
   const { groups } = props;
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
-      <ReachMenu>
-        {({ isOpen }) => (
-          <>
-            {/* <Backdrop className={classes.settingsBackdrop} open={isOpen} /> */}
-            <MenuButton
-              aria-label={isOpen ? 'Open menu' : 'Close menu'}
-              className={classes.navIcon}
-            >
-              <MenuIcon />
-              Menu
-            </MenuButton>
-            <MenuPopover className={classes.navDropdown}>
-              <div className={classes.menuWrapper}>
-                {groups.map((thisGroup: any) => {
-                  // For each group, filter out hidden links.
-                  const filteredLinks = thisGroup.links.filter(
-                    (thisLink: any) => !thisLink.hide
-                  );
-                  if (filteredLinks.length === 0) {
-                    return null;
-                  }
-
-                  // Render a singular PrimaryNavLink for links without a group.
-                  if (
-                    thisGroup.group === 'None' &&
-                    filteredLinks.length === 1
-                  ) {
-                    const link = filteredLinks[0];
-
-                    return (
-                      <MenuItems className={classes.menuItemList}>
-                        <MenuLink
-                          key={link.display}
-                          as={Link}
-                          to={link.href}
-                          className={`${classes.menuItemLink} ${classes.menuItemLinkNoGroup}`}
-                        >
-                          {link.display}
-                        </MenuLink>
-                      </MenuItems>
-                    );
-                  }
+    <ReachMenu>
+      {({ isOpen }) => (
+        <>
+          <MenuButton
+            aria-label={isOpen ? 'Open menu' : 'Close menu'}
+            className={classes.navIcon}
+          >
+            <MenuIcon />
+            Menu
+          </MenuButton>
+          <MenuPopover className={classes.navDropdown}>
+            <div className={classes.menuWrapper}>
+              {groups.map((thisGroup: any) => {
+                // For each group, filter out hidden links.
+                const filteredLinks = thisGroup.links.filter(
+                  (thisLink: any) => !thisLink.hide
+                );
+                if (filteredLinks.length === 0) {
+                  return null;
+                }
+                // Render a singular PrimaryNavLink for links without a group.
+                if (thisGroup.group === 'None' && filteredLinks.length === 1) {
+                  const link = filteredLinks[0];
 
                   return (
-                    <ReachMenu key={thisGroup.group}>
-                      <MenuButton
-                        className={`${classes.menuButton} ${classes.linkItem}`}
+                    <MenuItems className={classes.menuItemList}>
+                      <MenuLink
+                        key={link.display}
+                        as={Link}
+                        to={link.href}
+                        className={`${classes.menuItemLink} ${classes.menuItemLinkNoGroup}`}
                       >
-                        {thisGroup.group}
-                        <KeyboardArrowDown className={classes.caret} />
-                      </MenuButton>
-                      <MenuPopover
-                        className={classes.menuPopover}
-                        portal={false}
-                      >
-                        <MenuItems className={classes.menuItemList}>
-                          {thisGroup.links.map((thisLink: any) => (
-                            <MenuLink
-                              key={thisLink.display}
-                              as={Link}
-                              to={thisLink.href}
-                              className={classes.menuItemLink}
-                            >
-                              {thisLink.display}
-                            </MenuLink>
-                          ))}
-                        </MenuItems>
-                      </MenuPopover>
-                    </ReachMenu>
+                        {link.display}
+                      </MenuLink>
+                    </MenuItems>
                   );
-                })}
-              </div>
-            </MenuPopover>
-          </>
-        )}
-      </ReachMenu>
-    </>
+                }
+
+                return (
+                  <ReachMenu key={thisGroup.group}>
+                    <MenuButton
+                      className={`${classes.menuButton} ${classes.linkItem}`}
+                    >
+                      {thisGroup.group}
+                      <KeyboardArrowDown className={classes.caret} />
+                    </MenuButton>
+                    <MenuPopover className={classes.menuPopover} portal={false}>
+                      <MenuItems className={classes.menuItemList}>
+                        {thisGroup.links.map((thisLink: any) => (
+                          <MenuLink
+                            key={thisLink.display}
+                            as={Link}
+                            to={thisLink.href}
+                            className={classes.menuItemLink}
+                          >
+                            {thisLink.display}
+                          </MenuLink>
+                        ))}
+                      </MenuItems>
+                    </MenuPopover>
+                  </ReachMenu>
+                );
+              })}
+            </div>
+            <Backdrop className={classes.settingsBackdrop} open={true} />
+          </MenuPopover>
+        </>
+      )}
+    </ReachMenu>
   );
 };
 
