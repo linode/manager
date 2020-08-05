@@ -33,26 +33,26 @@ const styles = (theme: Theme) =>
       paddingRight: 0,
       // Overrides MUI chip default styles so these appear as separate elements.
       '&:hover': {
-        backgroundColor: theme.bg.lightBlue,
+        backgroundColor: theme.color.tagButton,
         '& $deleteButton': {
-          color: '#7daee8'
+          color: theme.color.tagIcon
         }
       },
       '&:focus': {
-        backgroundColor: theme.bg.lightBlue,
+        backgroundColor: theme.color.tagButton,
         '& $deleteButton': {
-          color: '#7daee8'
+          color: theme.color.tagIcon
         }
       },
       // Targets first span (tag label)
       '& > span': {
         padding: '7px 10px',
         fontSize: 14,
-        color: '#3a3f46',
+        color: theme.color.tagText,
         borderRadius: 3,
         borderTopRightRadius: 0,
         borderBottomRightRadius: 0,
-        borderRight: '1px solid white'
+        borderRight: `1px solid ${theme.color.tagBorder}`
       },
       '&:last-child': {
         marginRight: 8
@@ -71,7 +71,7 @@ const styles = (theme: Theme) =>
         borderRadius: 0,
         width: 15,
         height: 15,
-        color: '#7daee8'
+        color: theme.color.tagIcon
       },
       '&:hover': {
         backgroundColor: `${theme.palette.primary.main} !important`,
@@ -113,14 +113,14 @@ const styles = (theme: Theme) =>
       }
     },
     lightBlue: {
-      backgroundColor: '#f1f7fd',
+      backgroundColor: theme.color.tagButton,
       '& > span': {
         '&:hover': {
           backgroundColor: theme.palette.primary.main,
           color: 'white'
         },
         '&:focus': {
-          backgroundColor: '#f1f7fd',
+          backgroundColor: theme.color.tagButton,
           color: theme.color.black
         }
       }
