@@ -8,7 +8,7 @@ import Link from 'src/components/Link';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(2),
-    margin: `${theme.spacing(3)}px 0px`,
+    marginTop: theme.spacing(5),
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
