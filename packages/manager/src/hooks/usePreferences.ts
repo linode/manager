@@ -20,13 +20,12 @@ export const usePreferences = () => {
     (state: ApplicationState) => state.preferences.data
   );
 
-  const updatePreferences = (newPreferences: UserPreferences) => {
+  const updatePreferences = (newPreferences: UserPreferences) =>
     dispatch(getUserPreferences()).then(currentPreferences => {
       dispatch(
         updateUserPreferences({ ...currentPreferences, ...newPreferences })
       );
     });
-  };
 
   return {
     preferences,
