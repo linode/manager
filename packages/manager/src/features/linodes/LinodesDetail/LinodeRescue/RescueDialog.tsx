@@ -12,7 +12,7 @@ import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Notice from 'src/components/Notice';
 import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import withVolumes from 'src/containers/volumes.container';
@@ -21,8 +21,6 @@ import { MapState } from 'src/store/types';
 import createDevicesFromStrings, {
   DevicesAsStrings
 } from 'src/utilities/createDevicesFromStrings';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import DeviceSelection, {
   ExtendedDisk,
@@ -118,7 +116,6 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
   const linode = useExtendedLinode(linodeId);
   const linodeRegion = linode?.region;
   const linodeLabel = linode?.label;
-  const linodeStatus = linode?.status;
   const linodeDisks = linode?._disks.map(disk =>
     assoc('_id', `disk-${disk.id}`, disk)
   );
@@ -149,20 +146,18 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
     deviceMap
   );
 
+  const [APIError, setAPIError] = React.useState<string>('');
+
   const devices = {
     disks: linodeDisks ?? [],
     volumes: filteredVolumes ?? []
   };
 
-  const permissions = linode?._permissions;
-
-  const unauthorized = permissions === 'read_only';
-  const hostMaintenance = linodeStatus === 'stopped';
-
-  const disabled = unauthorized || hostMaintenance;
+  const unauthorized = linode?._permissions === 'read_only';
+  const disabled = unauthorized;
 
   const onSubmit = () => {
-    const { linodeId, enqueueSnackbar, history } = props;
+    const { enqueueSnackbar } = props;
 
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
       .then(_ => {
@@ -170,17 +165,10 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
           variant: 'info'
         });
         resetEventsPolling();
-        history.push(`/linodes/${linodeId}/summary`);
+        onClose();
       })
-      .catch(errorResponse => {
-        getAPIErrorOrDefault(
-          errorResponse,
-          'There was an issue rescuing your Linode.'
-        ).forEach((err: APIError) =>
-          enqueueSnackbar(err.reason, {
-            variant: 'error'
-          })
-        );
+      .catch((errorResponse: APIError[]) => {
+        setAPIError(errorResponse[0].reason);
       });
   };
 
@@ -195,86 +183,64 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
       [slot]: _id
     }));
 
-  if (diskError) {
-    return (
-      <Dialog
-        title={`Rescue ${linodeLabel ?? ''}`}
-        open={open}
-        onClose={onClose}
-        fullWidth
-        maxWidth="md"
-      >
-        <div>
-          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-          <ErrorState errorText="There was an error retrieving Disks information." />
-        </div>
-      </Dialog>
-    );
-  }
-
-  if (volumesError) {
-    return (
-      <Dialog
-        title={`Rescue ${linodeLabel ?? ''}`}
-        open={open}
-        onClose={onClose}
-        fullWidth
-        maxWidth="md"
-      >
-        <div>
-          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-          <ErrorState errorText="There was an error retrieving Volumes information." />
-        </div>
-      </Dialog>
-    );
-  }
-
   return (
     <Dialog
       title={`Rescue ${linodeLabel ?? ''}`}
       open={open}
-      onClose={onClose}
+      onClose={() => {
+        setAPIError('');
+        onClose();
+      }}
       fullWidth
       maxWidth="md"
     >
-      <div>
-        <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-        <Paper className={classes.root}>
-          {unauthorized && <LinodePermissionsError />}
-          {hostMaintenance && <HostMaintenanceError />}
-          <Typography>
-            If you suspect that your primary filesystem is corrupt, use the
-            Linode Manager to boot your Linode into Rescue Mode. This is a safe
-            environment for performing many system recovery and disk management
-            tasks.
-          </Typography>
-          <DeviceSelection
-            slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
-            devices={devices}
-            onChange={onChange}
-            getSelected={slot => pathOr('', [slot], rescueDevices)}
-            counter={counter}
-            rescue
-            disabled={disabled}
-          />
-          <AddNewLink
-            onClick={incrementCounter}
-            label="Add Disk"
-            disabled={disabled || counter >= 6}
-            left
-          />
-          <ActionsPanel>
-            <Button
-              onClick={onSubmit}
-              buttonType="primary"
-              data-qa-submit
+      {APIError && <Notice error text={APIError} />}
+      {diskError ? (
+        <div>
+          <ErrorState errorText="There was an error retrieving Disks information." />
+        </div>
+      ) : volumesError ? (
+        <div>
+          <ErrorState errorText="There was an error retrieving Volumes information." />
+        </div>
+      ) : (
+        <div>
+          <Paper className={classes.root}>
+            {unauthorized && <LinodePermissionsError />}
+            <Typography>
+              If you suspect that your primary filesystem is corrupt, use the
+              Linode Manager to boot your Linode into Rescue Mode. This is a
+              safe environment for performing many system recovery and disk
+              management tasks.
+            </Typography>
+            <DeviceSelection
+              slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
+              devices={devices}
+              onChange={onChange}
+              getSelected={slot => pathOr('', [slot], rescueDevices)}
+              counter={counter}
+              rescue
               disabled={disabled}
-            >
-              Reboot into Rescue Mode
-            </Button>
-          </ActionsPanel>
-        </Paper>
-      </div>
+            />
+            <AddNewLink
+              onClick={incrementCounter}
+              label="Add Disk"
+              disabled={disabled || counter >= 6}
+              left
+            />
+            <ActionsPanel>
+              <Button
+                onClick={onSubmit}
+                buttonType="primary"
+                data-qa-submit
+                disabled={disabled}
+              >
+                Reboot into Rescue Mode
+              </Button>
+            </ActionsPanel>
+          </Paper>
+        </div>
+      )}
     </Dialog>
   );
 };
