@@ -259,7 +259,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
                 })}
               >
                 <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
-                  {/* @todo: replace with new icon */}
                   {matchesSmDown ? (
                     <Dashboard
                       width={20}
