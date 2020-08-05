@@ -36,7 +36,7 @@ export const Notifications: React.FC<{}> = _ => {
   const balanceUninvoiced = account.data?.balance_uninvoiced ?? 0;
 
   const context = React.useContext(notificationContext);
-  const invoiceRequest = useAPIRequest<number | undefined>(
+  const mostRecentInvoiceRequest = useAPIRequest<number | undefined>(
     () =>
       getInvoices({}, { '+order': 'desc', '+order_by': 'date' }).then(
         response => response.data[0].id
@@ -61,7 +61,7 @@ export const Notifications: React.FC<{}> = _ => {
       <BillingSummary
         balance={balance}
         balanceUninvoiced={balanceUninvoiced}
-        mostRecentInvoiceId={invoiceRequest.data}
+        mostRecentInvoiceId={mostRecentInvoiceRequest.data}
       />
       <Paper className={classes.root}>
         <Grid container direction="row" justify="space-between">

@@ -68,7 +68,7 @@ export const PastDue: React.FC<Props> = props => {
     []
   );
 
-  const invoiceRequest = useAPIRequest<Invoice | undefined>(
+  const mostRecentInvoiceRequest = useAPIRequest<Invoice | undefined>(
     () =>
       getInvoices({}, { '+order': 'desc', '+order_by': 'date' }).then(
         response => response.data[0]
@@ -76,7 +76,7 @@ export const PastDue: React.FC<Props> = props => {
     undefined
   );
 
-  if (invoiceRequest.loading) {
+  if (mostRecentInvoiceRequest.loading) {
     return (
       <div
         className={classes.root}
@@ -93,10 +93,12 @@ export const PastDue: React.FC<Props> = props => {
           <Currency quantity={balance} /> Past Due
         </Typography>
         <Typography>
-          {invoiceRequest.data && (
+          {mostRecentInvoiceRequest.data && (
             <>
               Your payment was due on{' '}
-              {formatDate(invoiceRequest.data.date, { format: 'dd-LLL-yyyy' })}
+              {formatDate(mostRecentInvoiceRequest.data.date, {
+                format: 'dd-LLL-yyyy'
+              })}
               {`. `}
             </>
           )}
@@ -115,9 +117,9 @@ export const PastDue: React.FC<Props> = props => {
             SideIcon={InvoiceIcon}
             text="View most recent invoice"
             title="View most recent invoice"
-            to={`/account/billing/invoices/${invoiceRequest?.data?.id}`}
+            to={`/account/billing/invoices/${mostRecentInvoiceRequest?.data?.id}`}
             className={classes.iconButton}
-            disabled={!invoiceRequest?.data?.id}
+            disabled={!mostRecentInvoiceRequest?.data?.id}
           />
         </div>
       </div>
