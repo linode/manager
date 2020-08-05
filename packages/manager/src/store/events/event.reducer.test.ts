@@ -18,7 +18,7 @@ describe('events.reducer', () => {
         const events: Event[] = [
           {
             id: 18029572,
-            time_remaining: 0,
+            time_remaining: null,
             secondary_entity: null,
             seen: true,
             created: '2018-12-03T22:34:09',
@@ -38,7 +38,7 @@ describe('events.reducer', () => {
           },
           {
             id: 18022171,
-            time_remaining: 0,
+            time_remaining: null,
             secondary_entity: null,
             seen: false,
             created: '2018-12-03T19:59:53',

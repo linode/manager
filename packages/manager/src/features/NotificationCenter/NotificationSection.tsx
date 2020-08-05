@@ -103,7 +103,9 @@ const ContentRow: React.FC<{
   const classes = useStyles();
   return (
     <div className={classes.notificationItem}>
-      <div className={classes.body}>{item.body}</div>
+      <div className={item.timeStamp ? classes.body : undefined}>
+        {item.body}
+      </div>
       {item.timeStamp && (
         <Typography>
           {formatDate(item.timeStamp, { humanizeCutoff: 'week' })}

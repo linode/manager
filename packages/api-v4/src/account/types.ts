@@ -277,7 +277,7 @@ export interface Event {
   read: boolean;
   seen: boolean;
   status: EventStatus;
-  time_remaining: null | number;
+  time_remaining: null | string;
   username: string;
   secondary_entity: Entity | null;
   _initial?: boolean;
