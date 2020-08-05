@@ -1,3 +1,4 @@
+import { Event } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
 import Clock from 'src/assets/icons/clock.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   open: boolean;
+  events: Event[];
   onClose: () => void;
 }
 
