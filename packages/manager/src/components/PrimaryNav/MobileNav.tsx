@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     backgroundColor: 'transparent',
     border: 'none',
-    color: theme.color.white,
+    color: '#fff',
     fontSize: '1.125rem',
     height: 50,
     lineHeight: '20px',

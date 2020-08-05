@@ -11,7 +11,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import Community from 'src/assets/community.svg';
-import Dashboard from 'src/assets/icons/dashboard.svg';
+import Dashboard from 'src/assets/icons/dashboard_cmr.svg';
 import Gear from 'src/assets/icons/gear.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
 import LogoIcon from 'src/assets/logo/logo.svg';
@@ -262,8 +262,8 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
                   {/* @todo: replace with new icon */}
                   {matchesSmDown ? (
                     <Dashboard
-                      width={25}
-                      height={29}
+                      width={20}
+                      height={16}
                       style={{ marginRight: 6 }}
                     />
                   ) : (
