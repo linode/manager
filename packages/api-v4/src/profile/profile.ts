@@ -9,7 +9,7 @@ import Request, {
 } from '../request';
 import { ResourcePage } from '../types';
 import { updateProfileSchema } from './profile.schema';
-import { Profile, TrustedDevice, UserPreferences } from './types';
+import { Profile, TrustedDevice, UserPreferences, ProfileLogin } from './types';
 
 /**
  * getProfile
@@ -115,5 +115,14 @@ export const updateUserPreferences = (payload: UserPreferences) => {
     setURL(`${API_ROOT}/profile/preferences`),
     setData(payload),
     setMethod('PUT')
+  ).then(response => response.data);
+};
+
+export const getLogins = (params: any, filter: any) => {
+  return Request<ResourcePage<ProfileLogin>>(
+    setURL(`${API_ROOT}/profile/logins`),
+    setMethod('GET'),
+    setXFilter(filter),
+    setParams(params)
   ).then(response => response.data);
 };

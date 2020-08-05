@@ -28,6 +28,7 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDomains from 'src/hooks/useDomains';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import usePrimaryNavStyles from './PrimaryNav_CMR.styles';
 import MobileNav from './MobileNav';
 import SpacingToggle from './SpacingToggle';
@@ -90,7 +91,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const matchesMobile = useMediaQuery('(min-width:750px)');
   const matchesTablet = useMediaQuery('(max-width:1190px)');
 
-  const { _isManagedAccount } = useAccountManagement();
+  const { _isManagedAccount, account } = useAccountManagement();
   const { domains, requestDomains } = useDomains();
   const flags = useFlags();
 
@@ -99,6 +100,12 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const [anchorEl, setAnchorEl] = React.useState<
     (EventTarget & HTMLElement) | undefined
   >();
+
+  const showFirewalls = isFeatureEnabled(
+    'Cloud Firewall',
+    Boolean(flags.firewalls),
+    account?.data?.capabilities ?? []
+  );
 
   const primaryLinkGroups: {
     group: NavGroup;
@@ -154,7 +161,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
           {
             display: 'Firewalls',
             href: '/firewalls',
-            hide: !flags.firewalls
+            hide: !showFirewalls
           }
         ]
       },
@@ -205,7 +212,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       requestDomains,
       domains.loading,
       domains.lastUpdated,
-      flags.firewalls,
+      showFirewalls,
       _isManagedAccount
     ]
   );

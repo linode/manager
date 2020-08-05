@@ -1,4 +1,4 @@
-import { Domain } from '@linode/api-v4/lib/domains';
+import { getDomains, Domain } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { equals, pathOr } from 'ramda';
@@ -30,6 +30,7 @@ import EntityTable, {
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import { Order } from 'src/components/Pagey';
 import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
@@ -56,6 +57,7 @@ import DisableDomainDialog from './DisableDomainDialog';
 import DomainRow from './DomainTableRow';
 import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
+import Hidden from 'src/components/core/Hidden';
 
 type ClassNames =
   | 'root'
@@ -65,7 +67,8 @@ type ClassNames =
   | 'domain'
   | 'dnsWarning'
   | 'tagWrapper'
-  | 'tagGroup';
+  | 'tagGroup'
+  | 'importButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -95,6 +98,10 @@ const styles = (theme: Theme) =>
     tagGroup: {
       flexDirection: 'row-reverse',
       marginBottom: theme.spacing(2) - 8
+    },
+    importButton: {
+      paddingTop: 5,
+      paddingBottom: 5
     }
   });
 
@@ -121,6 +128,8 @@ interface Props {
     domainLabel: string;
   };
 }
+
+const initialOrder = { order: 'asc' as Order, orderBy: 'domain' };
 
 export type CombinedProps = DomainProps &
   WithStyles<ClassNames> &
@@ -329,6 +338,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       domainsLastUpdated,
       flags,
       howManyLinodesOnAccount,
+      isLargeAccount,
       isRestrictedUser,
       linodesLoading
     } = this.props;
@@ -345,6 +355,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     const domainRow: EntityTableRow<Domain> = {
       Component: flags.cmr ? DomainRow_CMR : DomainRow,
       data: domainsData ?? [],
+      request: isLargeAccount ? getDomains : undefined,
       handlers,
       loading: domainsLoading,
       error: domainsError.read,
@@ -359,7 +370,19 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return <RenderError />;
     }
 
-    if (!domainsData || domainsData.length === 0) {
+    if (!isLargeAccount && domainsData?.length === 0) {
+      /**
+       * We don't know whether or not a large account is empty or not
+       * until Pagey has made its first request, and putting this
+       * empty state inside of Pagey would be weird/difficult.
+       *
+       * The other option is to make an initial request when this
+       * component mounts, which Pagey would ignore.
+       *
+       * I think a slightly different empty state for large accounts is
+       * the best trade-off until we have the thing-count endpoint,
+       * but open to persuasion on this.
+       */
       return (
         <React.Fragment>
           <RenderEmpty
@@ -390,6 +413,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       !isRestrictedUser &&
       !linodesLoading &&
       howManyLinodesOnAccount === 0 &&
+      domainsData &&
       domainsData.length > 0;
 
     return (
@@ -412,6 +436,16 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                 {flags.cmr ? (
                   <LandingHeader
                     title="Domains"
+                    body={
+                      <Hidden mdUp>
+                        <Button
+                          className={classes.importButton}
+                          onClick={this.openImportZoneDrawer}
+                        >
+                          Import a Zone
+                        </Button>
+                      </Hidden>
+                    }
                     extraActions={
                       <Button onClick={this.openImportZoneDrawer}>
                         Import a Zone
@@ -450,6 +484,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                             }
                             onChange={toggleGroupDomains}
                             checked={domainsAreGrouped}
+                            disabled={isLargeAccount}
                           />
                         }
                         label="Group by Tag:"
@@ -506,7 +541,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                   groupByTag={domainsAreGrouped}
                   row={domainRow}
                   headers={headers}
-                  initialOrder={{ order: 'asc', orderBy: 'domain' }}
+                  initialOrder={initialOrder}
                 />
               </React.Fragment>
             );
@@ -619,6 +654,7 @@ interface StateProps {
   howManyLinodesOnAccount: number;
   linodesLoading: boolean;
   isRestrictedUser: boolean;
+  isLargeAccount: boolean;
 }
 
 const mapStateToProps: MapStateToProps<
@@ -626,17 +662,15 @@ const mapStateToProps: MapStateToProps<
   {},
   ApplicationState
 > = state => ({
-  howManyLinodesOnAccount: pathOr(
-    [],
-    ['__resources', 'linodes', 'results'],
-    state
-  ).length,
+  howManyLinodesOnAccount: state.__resources.linodes.results,
   linodesLoading: pathOr(false, ['linodes', 'loading'], state.__resources),
   isRestrictedUser: pathOr(
     true,
     ['__resources', 'profile', 'data', 'restricted'],
     state
-  )
+  ),
+  // @todo remove this when ARB-2091 is merged
+  isLargeAccount: state.preferences.data?.is_large_account ?? false
 });
 
 export const connected = connect(mapStateToProps, {

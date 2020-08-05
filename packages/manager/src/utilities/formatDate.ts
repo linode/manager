@@ -1,4 +1,4 @@
-import { DateTime, Duration } from 'luxon';
+import { DateTime, Duration, IANAZone } from 'luxon';
 import { reportException } from 'src/exceptionReporting';
 
 import store from 'src/store';
@@ -50,15 +50,15 @@ export const formatDate = (
   let time;
   /** get the timezone from redux and use it as the timezone */
   const state = store.getState();
-  const userTimezone = state.__resources?.profile?.data?.timezone ?? 'GMT';
-
-  try {
-    // Unknown error was causing this to crash in rare situations.
+  const userTimezone =
+    state.__resources?.profile?.data?.timezone ?? DateTime.local().zoneName;
+  if (
+    IANAZone.isValidSpecifier(userTimezone) &&
+    IANAZone.isValidZone(userTimezone)
+  ) {
     time = parseAPIDate(date).setZone(userTimezone);
-  } catch (e) {
-    // Better to return a blank date than an error or incorrect information.
-    reportException(e);
-    return 'Error getting date';
+  } else {
+    time = parseAPIDate(date).toLocal();
   }
 
   const expectedFormat = options.format || DATETIME_DISPLAY_FORMAT;
