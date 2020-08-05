@@ -34,14 +34,10 @@ import useExtendedLinode from 'src/hooks/useExtendedLinode';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
-    paddingBottom: theme.spacing(1),
     '& .iconTextLink': {
       display: 'inline-flex',
       margin: `${theme.spacing(3)}px 0 0 0`
     }
-  },
-  title: {
-    marginBottom: theme.spacing(2)
   }
 }));
 
