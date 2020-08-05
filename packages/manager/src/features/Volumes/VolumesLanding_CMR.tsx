@@ -99,7 +99,7 @@ type CombinedProps = Props &
 const volumeHeaders = [
   {
     label: 'Label',
-    dataColumn: 'Label',
+    dataColumn: 'label',
     sortable: true,
     widthPercent: 25
   },
