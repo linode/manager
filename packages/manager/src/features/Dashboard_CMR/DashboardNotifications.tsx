@@ -1,9 +1,11 @@
+import { getInvoices } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useAccount from 'src/hooks/useAccount';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
@@ -31,8 +33,16 @@ export const Notifications: React.FC<{}> = _ => {
   const classes = useStyles();
   const { account } = useAccount();
   const balance = account.data?.balance ?? 0;
+  const balanceUninvoiced = account.data?.balance_uninvoiced ?? 0;
 
   const context = React.useContext(notificationContext);
+  const invoiceRequest = useAPIRequest<number | undefined>(
+    () =>
+      getInvoices({}, { '+order': 'desc', '+order_by': 'date' }).then(
+        response => response.data[0].id
+      ),
+    undefined
+  );
 
   const communityEvents = context.events.filter(event =>
     [
@@ -48,7 +58,11 @@ export const Notifications: React.FC<{}> = _ => {
     <ErrorState errorText={context.error} />
   ) : (
     <>
-      <BillingSummary balance={balance} balanceUninvoiced={0} />
+      <BillingSummary
+        balance={balance}
+        balanceUninvoiced={balanceUninvoiced}
+        mostRecentInvoiceId={invoiceRequest.data}
+      />
       <Paper className={classes.root}>
         <Grid container direction="row" justify="space-between">
           <Grid item className={classes.column}>

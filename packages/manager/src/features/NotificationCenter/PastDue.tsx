@@ -8,6 +8,7 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import IconTextLink from 'src/components/IconTextLink';
 import PaymentDrawer from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { formatDate } from 'src/utilities/formatDate';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -67,23 +68,15 @@ export const PastDue: React.FC<Props> = props => {
     []
   );
 
-  /**
-   * Request Invoices
-   */
-  const [invoiceLoading, setInvoiceLoading] = React.useState(false);
-  const [mostRecentInvoice, setMostRecentInvoice] = React.useState<Invoice>();
+  const invoiceRequest = useAPIRequest<Invoice | undefined>(
+    () =>
+      getInvoices({}, { '+order': 'desc', '+order_by': 'date' }).then(
+        response => response.data[0]
+      ),
+    undefined
+  );
 
-  React.useEffect(() => {
-    setInvoiceLoading(true);
-    getInvoices({}, { '+order': 'desc', '+order_by': 'date' })
-      .then(response => {
-        setMostRecentInvoice(response.data?.[0]);
-        setInvoiceLoading(false);
-      })
-      .catch(_ => setInvoiceLoading(false)); // Just leave the invoice as undefined
-  }, []);
-
-  if (invoiceLoading) {
+  if (invoiceRequest.loading) {
     return (
       <div
         className={classes.root}
@@ -100,10 +93,10 @@ export const PastDue: React.FC<Props> = props => {
           <Currency quantity={balance} /> Past Due
         </Typography>
         <Typography>
-          {mostRecentInvoice && (
+          {invoiceRequest.data && (
             <>
               Your payment was due on{' '}
-              {formatDate(mostRecentInvoice.date, { format: 'dd-LLL-yyyy' })}
+              {formatDate(invoiceRequest.data.date, { format: 'dd-LLL-yyyy' })}
               {`. `}
             </>
           )}
@@ -122,9 +115,9 @@ export const PastDue: React.FC<Props> = props => {
             SideIcon={InvoiceIcon}
             text="View most recent invoice"
             title="View most recent invoice"
-            to={`/account/billing/invoices/${mostRecentInvoice?.id}`}
+            to={`/account/billing/invoices/${invoiceRequest?.data?.id}`}
             className={classes.iconButton}
-            disabled={!mostRecentInvoice?.id}
+            disabled={!invoiceRequest?.data?.id}
           />
         </div>
       </div>
