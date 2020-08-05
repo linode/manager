@@ -43,11 +43,11 @@ const styles = (theme: Theme) => {
         padding: '0 48px 0 18px',
         borderTop: '1px solid #f4f5f6',
         '& h3': {
-          color: theme.palette.text
+          color: theme.palette.text.primary
         },
         '&:hover': {
           '& h3': {
-            color: theme.palette.text
+            color: theme.palette.text.primary
           },
           '& svg': {
             fill: '#2575d0',
