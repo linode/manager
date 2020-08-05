@@ -26,11 +26,6 @@ const useStyles = makeStyles(() => ({
       left: 0,
       top: 0
     }
-  },
-  icon: {},
-  abuseIcon: {
-    backgroundColor: '#cf1e1e',
-    color: 'white'
   }
 }));
 
