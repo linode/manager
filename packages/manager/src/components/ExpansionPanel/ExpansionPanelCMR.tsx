@@ -32,7 +32,10 @@ const styles = (theme: Theme) => {
         backgroundColor: 'transparent'
       },
       '&.Mui-expanded': {
-        margin: 0
+        margin: 0,
+        '& .caret': {
+          transform: 'rotate(180deg)'
+        }
       },
       '& .MuiExpansionPanelDetails-root': {
         padding: '0 18px 15px'
