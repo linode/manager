@@ -93,13 +93,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
 
   useReduxLoad(['images']);
 
-  const {
-    imagesData,
-    imagesLoading,
-    imagesError,
-    imagesLastUpdated,
-    requestImages
-  } = props;
+  const { imagesData, imagesLoading, imagesError } = props;
 
   const headers: HeaderCell[] = [
     {
@@ -196,16 +190,11 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
         );
         setDialogState(dialog => ({
           ...dialog,
+          submitting: false,
           error: _error
         }));
       });
   };
-
-  React.useEffect(() => {
-    if (imagesLastUpdated === 0 && !imagesLoading) {
-      requestImages();
-    }
-  }, [imagesLastUpdated, imagesLoading, requestImages]);
 
   const openForCreate = () => {
     setDrawer({
@@ -391,7 +380,6 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
           entity="Image"
           onAddNew={openForCreate}
           docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
-          startsWithVowel={true}
         />
       ) : (
         <>
