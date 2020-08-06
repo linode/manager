@@ -1,15 +1,21 @@
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter, useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Link } from 'react-router-dom';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import { reportException } from 'src/exceptionReporting';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import Button from 'src/components/Button';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
@@ -63,6 +69,9 @@ type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 
 export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props => {
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const history = useHistory();
 
   const { clusterId, clusterLabel, enqueueSnackbar, openDialog } = props;
 
@@ -78,6 +87,26 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
           }
         }
       ];
+
+      if (matchesSmDown) {
+        actions.unshift({
+          title: 'Edit',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push({
+              pathname: `/kubernetes/clusters/${clusterId}`
+            });
+            e.preventDefault();
+          }
+        });
+        actions.unshift({
+          title: 'Download kubeconfig',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            e.preventDefault();
+            e.stopPropagation();
+            downloadKubeConfig();
+          }
+        });
+      }
 
       return actions;
     };
@@ -111,19 +140,21 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
 
   return (
     <div className={classes.inlineActions}>
-      <Link className={classes.link} to={`/kubernetes/clusters/${clusterId}`}>
-        <span>Edit</span>
-      </Link>
-      <Button
-        className={classes.button}
-        onClick={(e: React.MouseEvent<HTMLElement>) => {
-          downloadKubeConfig();
+      <Hidden smDown>
+        <Link className={classes.link} to={`/kubernetes/clusters/${clusterId}`}>
+          <span>Edit</span>
+        </Link>
+        <Button
+          className={classes.button}
+          onClick={(e: React.MouseEvent<HTMLElement>) => {
+            downloadKubeConfig();
 
-          e.preventDefault();
-        }}
-      >
-        Download kubeconfig
-      </Button>
+            e.preventDefault();
+          }}
+        >
+          Download kubeconfig
+        </Button>
+      </Hidden>
 
       <ActionMenu
         createActions={createActions()}
