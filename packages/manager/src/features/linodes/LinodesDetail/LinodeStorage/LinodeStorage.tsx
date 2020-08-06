@@ -3,7 +3,7 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import Loading from 'src/components/LandingLoading';
@@ -171,6 +171,7 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
   } = props;
 
   const classes = useStyles();
+  const history = useHistory();
 
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
     open: false,
@@ -340,7 +341,7 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
           </Grid>
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
-              onClick={() => props.history.push('/volumes/create')}
+              onClick={() => history.push('/volumes/create')}
               label="Add a Volume"
               disabled={false}
             />
