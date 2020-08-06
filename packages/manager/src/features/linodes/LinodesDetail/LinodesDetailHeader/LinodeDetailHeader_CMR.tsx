@@ -143,6 +143,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        break;
       case 'rescue':
         setRescueDialog(rescueDialog => ({
           ...rescueDialog,
