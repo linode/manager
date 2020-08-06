@@ -1,4 +1,6 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -42,6 +44,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   body: {
     width: '70%'
+  },
+  showMore: {
+    ...theme.applyLinkStyles,
+    paddingTop: theme.spacing(),
+    display: 'flex',
+    alignItems: 'center',
+    '&:hover': {
+      textDecoration: 'none'
+    }
+  },
+  caret: {
+    color: theme.palette.primary.main
+  },
+  inverted: {
+    transform: 'rotate(180deg)'
   }
 }));
 
@@ -56,7 +73,6 @@ interface Props {
   showMoreText?: string;
   showMoreTarget?: string;
   content: NotificationItem[];
-  showMore?: JSX.Element;
   loading?: boolean;
   emptyMessage?: string;
 }
@@ -72,6 +88,7 @@ export const NotificationSection: React.FC<Props> = props => {
     showMoreText,
     showMoreTarget
   } = props;
+
   const _loading = Boolean(loading); // false if not provided
   const classes = useStyles();
 
@@ -114,6 +131,8 @@ interface BodyProps {
 const ContentBody: React.FC<BodyProps> = React.memo(props => {
   const { content, emptyMessage, header, loading } = props;
   const classes = useStyles();
+  const [showAll, setShowAll] = React.useState(false);
+
   if (loading) {
     return (
       <div className={classes.loading}>
@@ -121,12 +140,30 @@ const ContentBody: React.FC<BodyProps> = React.memo(props => {
       </div>
     );
   }
-  return content.length > 0 ? (
+
+  const _content = showAll ? content : content.slice(0, 5);
+
+  return _content.length > 0 ? (
     // eslint-disable-next-line
     <>
-      {content.map(thisItem => (
+      {_content.map(thisItem => (
         <ContentRow key={`notification-row-${thisItem.id}`} item={thisItem} />
       ))}
+      {content.length > 5 ? (
+        <button
+          className={classes.showMore}
+          onClick={() => setShowAll(!showAll)}
+          aria-label={`Display all ${content.length} items`}
+        >
+          {showAll ? 'Close' : `${content.length - 5} more`}
+          <KeyboardArrowDown
+            className={classNames({
+              [classes.caret]: true,
+              [classes.inverted]: showAll
+            })}
+          />
+        </button>
+      ) : null}
     </>
   ) : (
     <Typography className={classes.notificationItem}>
