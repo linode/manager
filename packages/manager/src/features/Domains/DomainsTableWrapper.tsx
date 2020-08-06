@@ -7,7 +7,7 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import SortableTableHead from './SortableTableHead';
 
 type ClassNames = 'root' | 'paperWrapper';
