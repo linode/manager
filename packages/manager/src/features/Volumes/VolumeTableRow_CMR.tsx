@@ -14,12 +14,6 @@ import { compose } from 'recompose';
 
 const useStyles = makeStyles(() => ({
   root: {},
-  volumeLabel: {
-    width: '25%'
-  },
-  volumeSize: {
-    width: '10%'
-  },
   volumePath: {
     width: '35%',
     wordBreak: 'break-all'
@@ -96,11 +90,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
       data-qa-volume-cell={id}
       // className="fade-in-table"
     >
-      <TableCell
-        className={classes.volumeLabel}
-        parentColumn="Label"
-        data-qa-volume-cell-label={label}
-      >
+      <TableCell parentColumn="Label" data-qa-volume-cell-label={label}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
             <div>{label}</div>
@@ -112,11 +102,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
           {formattedRegion}
         </TableCell>
       )}
-      <TableCell
-        className={classes.volumeSize}
-        parentColumn="Size"
-        data-qa-volume-size
-      >
+      <TableCell parentColumn="Size" data-qa-volume-size>
         {size} GiB
       </TableCell>
       <TableCell
