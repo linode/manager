@@ -156,53 +156,6 @@ export const handlers = [
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(10);
-    const communityLike = eventFactory.build({
-      seen: false,
-      read: false,
-      action: 'community_like',
-      username: 'demo-user',
-      entity: {
-        id: 17566,
-        type: 'community_like',
-        label:
-          '1 user liked your answer to: How do I deploy an image to an existing Linode?',
-        url: 'https://linode.com/community/questions/1#answer-1'
-      },
-      status: 'notification'
-    });
-    const communityReply = eventFactory.build({
-      seen: false,
-      read: false,
-      percent_complete: null,
-      action: 'community_question_reply',
-      username: 'demo-user-2',
-      entity: {
-        id: 17567,
-        type: 'community_reply',
-        label: 'How do I deploy an image to an existing Linode?',
-        url: 'https://linode.com/community/questions/2#answer-1'
-      },
-      status: 'notification'
-    });
-    const communityMention = eventFactory.build({
-      seen: true,
-      read: false,
-      action: 'community_mention',
-      username: 'prod-test-001',
-      entity: {
-        id: 17568,
-        type: 'community_question',
-        label: 'How do I deploy an image to an existing Linode?',
-        url: 'https://linode.com/community/questions/17566#answer-73511'
-      },
-      status: 'notification'
-    });
-    const _events = [
-      ...events,
-      communityLike,
-      communityReply,
-      communityMention
-    ];
-    return res(ctx.json(makeResourcePage(_events)));
+    return res(ctx.json(makeResourcePage(events)));
   })
 ];
