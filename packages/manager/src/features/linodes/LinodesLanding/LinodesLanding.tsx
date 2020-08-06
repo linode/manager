@@ -67,6 +67,7 @@ import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import ToggleBox from './ToggleBox';
 import { ExtendedStatus, statusToPriority } from './utils';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 
@@ -707,7 +708,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
       : false,
     linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
-    userTimezone: state.__resources.profile.data?.timezone ?? '',
+    userTimezone: getUserTimezone(),
     userTimezoneLoading: state.__resources.profile.loading,
     userTimezoneError: path<APIError[]>(
       ['read'],
