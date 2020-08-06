@@ -1,24 +1,34 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import LinearProgress from 'src/components/LinearProgress';
-import RenderGuard from 'src/components/RenderGuard';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/core/TableRow';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
+import useFlags from 'src/hooks/useFlags';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import ActionMenu, { Handlers } from './ImagesActionMenu';
+import ActionMenu_CMR from './ImagesActionMenu_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   label: {
     width: '30%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
+    [theme.breakpoints.down('xs')]: {
+      width: '50%'
     }
   },
   loadingStatus: {
     marginBottom: theme.spacing(1) / 2
+  },
+  actionMenu: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: 0,
+    '&.MuiTableCell-root': {
+      paddingRight: 0
+    }
   }
 }));
 
@@ -30,6 +40,8 @@ type CombinedProps = Handlers & ImageWithEvent;
 
 const ImageRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
+
   const {
     created,
     description,
@@ -41,13 +53,11 @@ const ImageRow: React.FC<CombinedProps> = props => {
     ...rest
   } = props;
 
+  const Menu = flags.cmr ? ActionMenu_CMR : ActionMenu;
+
   return isImageUpdating(event) ? (
     <TableRow key={id} data-qa-image-cell={id}>
-      <TableCell
-        parentColumn="Label"
-        className={classes.label}
-        data-qa-image-label
-      >
+      <TableCell className={classes.label} data-qa-image-label>
         <ProgressDisplay
           className={classes.loadingStatus}
           text="Creating"
@@ -61,24 +71,18 @@ const ImageRow: React.FC<CombinedProps> = props => {
     </TableRow>
   ) : (
     <TableRow key={id} data-qa-image-cell={id}>
-      <TableCell
-        parentColumn="Label"
-        className={classes.label}
-        data-qa-image-label
-      >
+      <TableCell className={classes.label} data-qa-image-label>
         {label}
       </TableCell>
-      <TableCell parentColumn="Created" data-qa-image-date>
-        {formatDate(created)}
-      </TableCell>
-      <TableCell parentColumn="Expires" data-qa-image-date>
-        {expiry ? formatDate(expiry) : 'Never'}
-      </TableCell>
-      <TableCell parentColumn="Size" data-qa-image-size>
-        {size} MB
-      </TableCell>
-      <TableCell>
-        <ActionMenu id={id} label={label} description={description} {...rest} />
+      <Hidden xsDown>
+        <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
+        <TableCell data-qa-image-date>
+          {expiry ? formatDate(expiry) : 'Never'}
+        </TableCell>
+      </Hidden>
+      <TableCell data-qa-image-size>{size} MB</TableCell>
+      <TableCell className={classes.actionMenu}>
+        <Menu id={id} label={label} description={description} {...rest} />
       </TableCell>
     </TableRow>
   );
@@ -115,4 +119,4 @@ const ProgressDisplay: React.FC<{
   );
 };
 
-export default RenderGuard(ImageRow);
+export default React.memo(ImageRow);
