@@ -143,5 +143,4 @@ describe('Migrate Linode With Firewall', () => {
       .its('status')
       .should('eq', 200);
   });
-
 });

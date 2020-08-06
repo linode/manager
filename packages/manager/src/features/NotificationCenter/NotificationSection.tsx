@@ -4,6 +4,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { formatDate } from 'src/utilities/formatDate';
+import Hidden from 'src/components/core/Hidden';
+import ExtendedExpansionPanel from 'src/components/ExtendedExpansionPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -75,29 +77,52 @@ export const NotificationSection: React.FC<Props> = props => {
   const _loading = Boolean(loading); // false if not provided
   const classes = useStyles();
 
+  const innerContent = () => {
+    return (
+      <ContentBody
+        loading={_loading}
+        content={content}
+        header={header}
+        emptyMessage={emptyMessage}
+      />
+    );
+  };
+
   return (
-    <div className={classes.root}>
-      <div className={classes.content}>
-        <div className={classes.header}>
-          <Typography variant="h3">{header}</Typography>
-          {showMoreTarget && (
-            <Typography variant="body1">
-              <strong>
-                <Link to={showMoreTarget}>
-                  {showMoreText ?? 'View history'}
-                </Link>
-              </strong>
-            </Typography>
-          )}
+    <>
+      <Hidden smDown>
+        <div className={classes.root}>
+          <div className={classes.content}>
+            <div className={classes.header}>
+              <Typography variant="h3">{header}</Typography>
+              {showMoreTarget && (
+                <Typography variant="body1">
+                  <strong>
+                    <Link to={showMoreTarget}>
+                      {showMoreText ?? 'View history'}
+                    </Link>
+                  </strong>
+                </Typography>
+              )}
+            </div>
+            <ContentBody
+              loading={_loading}
+              content={content}
+              header={header}
+              emptyMessage={emptyMessage}
+            />
+          </div>
         </div>
-        <ContentBody
-          loading={_loading}
-          content={content}
-          header={header}
-          emptyMessage={emptyMessage}
+      </Hidden>
+
+      <Hidden mdUp>
+        <ExtendedExpansionPanel
+          heading={header}
+          headingNumberCount={content.length > 0 ? content.length : undefined}
+          renderMainContent={innerContent}
         />
-      </div>
-    </div>
+      </Hidden>
+    </>
   );
 };
 
