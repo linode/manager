@@ -2,7 +2,10 @@ import {
   getActiveLongviewPlan,
   getLongviewSubscriptions
 } from '@linode/api-v4/lib/longview';
-import { LongviewSubscription, ActiveLongviewPlan } from '@linode/api-v4/lib/longview/types';
+import {
+  LongviewSubscription,
+  ActiveLongviewPlan
+} from '@linode/api-v4/lib/longview/types';
 import * as React from 'react';
 import {
   matchPath,

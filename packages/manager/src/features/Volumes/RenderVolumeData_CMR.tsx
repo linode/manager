@@ -1,7 +1,7 @@
 import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { ExtendedVolume } from './types';
-import VolumeTableRow from './VolumeTableRow_CMR';
+import VolumeTableRow from './VolumeTableRow';
 
 export interface RenderVolumeDataProps {
   isVolumesLanding: boolean;

@@ -12,21 +12,25 @@ import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
 import LinodeNews from './LinodeNews';
 
 import {
-  Alerts,
   Community,
   Maintenance,
   OpenSupportTickets,
   PendingActions
 } from 'src/features/NotificationCenter';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3),
-    borderRadius: 3,
-    marginBottom: 8
+    marginBottom: 30,
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(3),
+      borderRadius: 3
+    }
   },
   column: {
-    width: '45%'
+    [theme.breakpoints.up('md')]: {
+      width: '45%'
+    }
   }
 }));
 
@@ -59,38 +63,56 @@ export const Notifications: React.FC<{}> = _ => {
     <ErrorState errorText={context.error} />
   ) : (
     <>
-      <BillingSummary
-        balance={balance}
-        balanceUninvoiced={balanceUninvoiced}
-        mostRecentInvoiceId={mostRecentInvoiceRequest.data}
-      />
+      <Hidden smDown>
+        <BillingSummary
+          balance={balance}
+          balanceUninvoiced={balanceUninvoiced}
+          mostRecentInvoiceId={mostRecentInvoiceRequest.data}
+        />
+      </Hidden>
       <Paper className={classes.root}>
         <Grid container direction="row" justify="space-between">
-          <Grid item className={classes.column}>
-            <Grid container direction="column">
-              <Grid item>
-                <PendingActions />
-              </Grid>
-              <Grid item>
-                <Alerts />
-              </Grid>
-              <Grid item>
-                <Maintenance />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item className={classes.column}>
-            <Grid container direction="column">
-              <Grid item>
-                <OpenSupportTickets />
-              </Grid>
-              <Grid item>
-                <Community communityEvents={communityEvents} />
+          <Hidden smDown>
+            <Grid item className={classes.column}>
+              <Grid container direction="column">
+                <Grid item>
+                  <PendingActions />
+                </Grid>
+                <Grid item>
+                  <Maintenance />
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+            <Grid item className={classes.column}>
+              <Grid container direction="column">
+                <Grid item>
+                  <OpenSupportTickets />
+                </Grid>
+                <Grid item>
+                  <Community communityEvents={communityEvents} />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Hidden>
+
+          {/* Small screen version */}
+          <Hidden mdUp>
+            <PendingActions />
+            <Maintenance />
+            <OpenSupportTickets />
+            <Community communityEvents={communityEvents} />
+          </Hidden>
         </Grid>
       </Paper>
+
+      <Hidden mdUp>
+        <BillingSummary
+          balance={balance}
+          balanceUninvoiced={balanceUninvoiced}
+          mostRecentInvoiceId={mostRecentInvoiceRequest.data}
+        />
+      </Hidden>
+
       <LinodeNews />
     </>
   );
