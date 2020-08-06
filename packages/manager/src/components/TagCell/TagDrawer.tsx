@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import Tag from 'src/components/Tag';
+import Tag from 'src/components/Tag/Tag_CMR';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddTag from './AddTag';
 
