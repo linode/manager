@@ -124,8 +124,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       label: 'Size',
       dataColumn: 'size',
       sortable: true,
-      widthPercent: 25,
-      hideOnMobile: flags.cmr
+      widthPercent: 25
     },
     {
       label: 'Action Menu',

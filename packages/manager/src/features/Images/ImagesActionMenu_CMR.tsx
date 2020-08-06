@@ -40,7 +40,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
 
   const inlineActions = [
     {
-      actionText: 'Edit',
+      actionText: 'Details',
       onClick: (e: React.MouseEvent<HTMLElement>) => {
         onEdit(label, description ?? ' ', id);
         e.preventDefault();
@@ -76,7 +76,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
     if (matchesSmDown) {
       actions.unshift(
         {
-          title: 'Edit',
+          title: 'Details',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onEdit(label, description ?? ' ', id);
             e.preventDefault();

@@ -55,7 +55,6 @@ const ImageRow: React.FC<CombinedProps> = props => {
 
   const Menu = flags.cmr ? ActionMenu_CMR : ActionMenu;
 
-  // @todo CMR only show label and size for mobile
   return isImageUpdating(event) ? (
     <TableRow key={id} data-qa-image-cell={id}>
       <TableCell className={classes.label} data-qa-image-label>
