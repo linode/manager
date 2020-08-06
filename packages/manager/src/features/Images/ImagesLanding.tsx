@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { deleteImage, Image } from '@linode/api-v4/lib/images';
+import { Image } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -31,13 +31,17 @@ import Placeholder from 'src/components/Placeholder';
 import useFlags from 'src/hooks/useFlags';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
-import { requestImages as _requestImages } from 'src/store/image/image.requests';
+import {
+  deleteImage as _deleteImage,
+  requestImages as _requestImages
+} from 'src/store/image/image.requests';
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import ImageRow_CMR from './ImageRow_CMR';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
+import { DeleteImagePayload } from 'src/store/image/image.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -93,7 +97,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
 
   useReduxLoad(['images']);
 
-  const { imagesData, imagesLoading, imagesError } = props;
+  const { imagesData, imagesLoading, imagesError, deleteImage } = props;
 
   const headers: HeaderCell[] = [
     {
@@ -120,7 +124,8 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       label: 'Size',
       dataColumn: 'size',
       sortable: true,
-      widthPercent: 25
+      widthPercent: 25,
+      hideOnMobile: flags.cmr
     },
     {
       label: 'Action Menu',
@@ -166,7 +171,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       error: undefined
     }));
 
-    deleteImage(dialog.imageID!)
+    deleteImage({ imageID: dialog.imageID! })
       .then(() => {
         closeDialog();
         /**
@@ -466,12 +471,14 @@ interface WithPrivateImages {
 }
 
 interface ImageDispatch {
+  deleteImage: (imageID: DeleteImagePayload) => Promise<{}>;
   requestImages: () => Promise<Image[]>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<ImageDispatch, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
+  deleteImage: (imageID: DeleteImagePayload) => dispatch(_deleteImage(imageID)),
   requestImages: () => dispatch(_requestImages())
 });
 

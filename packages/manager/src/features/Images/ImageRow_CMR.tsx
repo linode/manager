@@ -15,8 +15,8 @@ import ActionMenu_CMR from './ImagesActionMenu_CMR';
 const useStyles = makeStyles((theme: Theme) => ({
   label: {
     width: '30%',
-    [theme.breakpoints.down('sm')]: {
-      width: '65%'
+    [theme.breakpoints.down('xs')]: {
+      width: '50%'
     }
   },
   loadingStatus: {
