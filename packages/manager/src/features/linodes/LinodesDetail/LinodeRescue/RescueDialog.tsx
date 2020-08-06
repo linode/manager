@@ -148,6 +148,18 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
 
   const [APIError, setAPIError] = React.useState<string>('');
 
+  const resetDialog = () => {
+    setCounter(initialCounter);
+    setRescueDevices(deviceMap);
+    setAPIError('');
+  };
+
+  React.useEffect(() => {
+    if (open) {
+      resetDialog();
+    }
+  }, [open]);
+
   const devices = {
     disks: linodeDisks ?? [],
     volumes: filteredVolumes ?? []
@@ -193,6 +205,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
       }}
       fullWidth
       maxWidth="md"
+      error={Boolean(diskError || volumesError)}
     >
       {APIError && <Notice error text={APIError} />}
       {diskError ? (
