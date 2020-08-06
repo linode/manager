@@ -8,7 +8,11 @@ import Request, {
 } from 'src/request';
 import { ResourcePage } from '../types';
 import { longviewClientCreate } from './longview.schema';
-import { LongviewClient, LongviewSubscription, ActiveLongviewPlan } from './types';
+import {
+  LongviewClient,
+  LongviewSubscription,
+  ActiveLongviewPlan
+} from './types';
 
 export const createLongviewClient = (label?: string) => {
   return Request<LongviewClient>(
