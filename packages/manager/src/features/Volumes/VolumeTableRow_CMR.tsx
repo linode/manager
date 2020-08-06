@@ -90,32 +90,19 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
       data-qa-volume-cell={id}
       // className="fade-in-table"
     >
-      <TableCell parentColumn="Label" data-qa-volume-cell-label={label}>
+      <TableCell data-qa-volume-cell-label={label}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
             <div>{label}</div>
           </Grid>
         </Grid>
       </TableCell>
-      {region && (
-        <TableCell parentColumn="Region" data-qa-volume-region>
-          {formattedRegion}
-        </TableCell>
-      )}
-      <TableCell parentColumn="Size" data-qa-volume-size>
-        {size} GiB
-      </TableCell>
-      <TableCell
-        className={classes.volumePath}
-        parentColumn="File System Path"
-        data-qa-fs-path
-      >
+      {region && <TableCell data-qa-volume-region>{formattedRegion}</TableCell>}
+      <TableCell data-qa-volume-size>{size} GiB</TableCell>
+      <TableCell className={classes.volumePath} data-qa-fs-path>
         {filesystemPath}
       </TableCell>
-      <TableCell
-        parentColumn="Attached To"
-        data-qa-volume-cell-attachment={linodeLabel}
-      >
+      <TableCell data-qa-volume-cell-attachment={linodeLabel}>
         {linodeId ? (
           <Link to={`/linodes/${linodeId}`} className="link secondaryLink">
             {linodeLabel}
