@@ -62,7 +62,8 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
     filesystem_path: filesystemPath,
     linodeLabel,
     linode_id: linodeId,
-    linodeStatus
+    linodeStatus,
+    originModifier: fromLinodeDashboardOrDetail
   } = props;
 
   const formattedRegion = formatRegion(region);
@@ -102,15 +103,20 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
       <TableCell className={classes.volumePath} data-qa-fs-path>
         {filesystemPath}
       </TableCell>
-      <TableCell data-qa-volume-cell-attachment={linodeLabel}>
-        {linodeId ? (
-          <Link to={`/linodes/${linodeId}`} className="link secondaryLink">
-            {linodeLabel}
-          </Link>
-        ) : (
-          <Typography data-qa-unattached>Unattached</Typography>
-        )}
-      </TableCell>
+      {!fromLinodeDashboardOrDetail && (
+        <TableCell
+          parentColumn="Attached To"
+          data-qa-volume-cell-attachment={linodeLabel}
+        >
+          {linodeId ? (
+            <Link to={`/linodes/${linodeId}`} className="link secondaryLink">
+              {linodeLabel}
+            </Link>
+          ) : (
+            <Typography data-qa-unattached>Unattached</Typography>
+          )}
+        </TableCell>
+      )}
       <TableCell className={classes.actionMenu}>
         <VolumesActionMenu
           onShowConfig={openForConfig}

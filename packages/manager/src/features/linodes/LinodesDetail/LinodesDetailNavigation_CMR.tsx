@@ -7,7 +7,6 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import VolumesLanding_CMR from 'src/features/Volumes/VolumesLanding_CMR';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
 const LinodeSummary_CMR = React.lazy(() =>
@@ -16,6 +15,7 @@ const LinodeSummary_CMR = React.lazy(() =>
 const LinodeNetworking_CMR = React.lazy(() =>
   import('./LinodeNetworking/LinodeNetworking_CMR')
 );
+const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
 const LinodeAdvanced_CMR = React.lazy(() =>
   import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel_CMR')
 );
@@ -39,12 +39,7 @@ type CombinedProps = ContextProps &
 
 const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
   const {
-    match: { url },
-    linodeLabel,
-    linodeConfigs,
-    linodeId,
-    linodeRegion,
-    readOnly
+    match: { url }
   } = props;
 
   const tabs = [
@@ -118,15 +113,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
           </SafeTabPanel>
 
           <SafeTabPanel index={2}>
-            <VolumesLanding_CMR
-              linodeId={linodeId}
-              linodeLabel={linodeLabel}
-              linodeRegion={linodeRegion}
-              linodeConfigs={linodeConfigs}
-              readOnly={readOnly}
-              fromLinodes
-              removeBreadCrumb
-            />
+            <LinodeStorage />
           </SafeTabPanel>
 
           <SafeTabPanel index={3}>

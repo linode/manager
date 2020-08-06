@@ -59,6 +59,7 @@ export const ListEntities: React.FC<CombinedProps> = props => {
                       {paginatedAndOrderedData.map(thisEntity => (
                         <RowComponent
                           key={thisEntity.id}
+                          originModifier={props.originModifier}
                           {...thisEntity}
                           {...handlers}
                         />
