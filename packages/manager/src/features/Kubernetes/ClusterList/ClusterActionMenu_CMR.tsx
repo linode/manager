@@ -90,7 +90,7 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
 
       if (matchesSmDown) {
         actions.unshift({
-          title: 'View kubeconfig',
+          title: 'Download kubeconfig',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
             e.stopPropagation();
@@ -152,7 +152,7 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
             e.preventDefault();
           }}
         >
-          View kubeconfig
+          Download kubeconfig
         </Button>
       </Hidden>
 
