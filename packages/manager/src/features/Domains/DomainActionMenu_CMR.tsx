@@ -135,7 +135,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       <Hidden smDown>
-        <div className="flex-center">
+        <div className="flexCenter">
           <button className={classes.button} onClick={handleEdit}>
             Edit
           </button>

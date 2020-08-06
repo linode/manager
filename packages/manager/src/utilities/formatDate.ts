@@ -47,19 +47,11 @@ export const formatDate = (
   date: string | number,
   options: FormatDateOptions = {}
 ): string => {
-  let time;
   /** get the timezone from redux and use it as the timezone */
-  const state = store.getState();
+  const stateTz = store.getState().__resources?.profile?.data?.timezone;
   const userTimezone =
-    state.__resources?.profile?.data?.timezone ?? DateTime.local().zoneName;
-  if (
-    IANAZone.isValidSpecifier(userTimezone) &&
-    IANAZone.isValidZone(userTimezone)
-  ) {
-    time = parseAPIDate(date).setZone(userTimezone);
-  } else {
-    time = parseAPIDate(date).toLocal();
-  }
+    stateTz && stateTz != '' && IANAZone.isValidZone(stateTz) ? stateTz : 'utc';
+  const time = parseAPIDate(date).setZone(userTimezone);
 
   const expectedFormat = options.format || DATETIME_DISPLAY_FORMAT;
   const now = DateTime.local();
