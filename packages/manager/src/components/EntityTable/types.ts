@@ -1,10 +1,11 @@
 import { Domain } from '@linode/api-v4/lib/domains/types';
 import { Firewall } from '@linode/api-v4/lib/firewalls/types';
 import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Volume } from '@linode/api-v4/lib/volumes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { OrderByProps } from 'src/components/OrderBy';
 export type Handlers = Record<string, Function>;
-export type Entity = Linode | Domain | Firewall; // @todo add more here
+export type Entity = Linode | Domain | Firewall | Volume; // @todo add more here
 
 export interface HeaderCell {
   sortable: boolean;

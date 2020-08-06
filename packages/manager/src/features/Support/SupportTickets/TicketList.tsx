@@ -220,9 +220,7 @@ export class TicketList extends React.Component<CombinedProps, {}> {
 const styled = withStyles(styles);
 
 const updatedRequest = (ownProps: Props, params: any, filters: any) => {
-  return getTicketsPage(params, filters, ownProps.filterStatus).then(
-    response => response
-  );
+  return getTicketsPage(params, filters, ownProps.filterStatus);
 };
 
 const paginated = Pagey(updatedRequest);

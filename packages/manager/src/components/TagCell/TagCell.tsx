@@ -25,9 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.bg.lightBlue,
+    backgroundColor: theme.color.tagButton,
     '& svg': {
-      color: theme.palette.primary.main
+      color: theme.color.tagIcon
     },
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
@@ -55,7 +55,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     marginLeft: theme.spacing(),
     width: '40px',
-    backgroundColor: theme.bg.lightBlue,
+    backgroundColor: theme.color.tagButton,
+    color: theme.color.tagIcon,
     borderRadius: 0,
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
@@ -81,7 +82,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: 10,
       width: 10,
       height: 10,
-      color: '#7daee8'
+      color: theme.color.tagIcon
     }
   }
 }));
