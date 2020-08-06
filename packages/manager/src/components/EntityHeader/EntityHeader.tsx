@@ -13,6 +13,7 @@ export interface HeaderProps extends BreadCrumbProps {
   isLanding?: boolean;
   isSecondary?: boolean;
   isDetailLanding?: boolean;
+  headerOnly?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -80,7 +81,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     title,
     bodyClassName,
     isSecondary,
-    isDetailLanding
+    isDetailLanding,
+    headerOnly
   } = props;
   const classes = useStyles();
 
@@ -101,6 +103,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
           title={title}
           parentLink={parentLink}
           parentText={parentText}
+          headerOnly={headerOnly}
         />
 
         <Hidden smDown>

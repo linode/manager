@@ -16,7 +16,7 @@ describe('delete linode', () => {
 
       // here i query using text to check the UI and there is only 1 Delete button
       // cy.get('[data-qa-delete-linode]').click();
-      cy.findByText('Delete').click();
+      cy.get('[data-qa-delete-linode="true"').click();
       cy.findByText(linode.label).should('exist');
 
       // confirm delete
