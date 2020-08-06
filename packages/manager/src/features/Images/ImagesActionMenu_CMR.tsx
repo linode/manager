@@ -4,6 +4,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 
 export interface Handlers {
   onRestore: (imageID: string) => void;
@@ -23,33 +25,56 @@ interface Props extends Handlers {
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const ImagesActionMenu: React.FC<CombinedProps> = props => {
-  const createActions = () => {
-    const {
-      description,
-      id,
-      label,
-      onRestore,
-      onDeploy,
-      onEdit,
-      onDelete
-    } = props;
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    return (): Action[] => {
-      return [
-        {
-          title: 'Restore to Existing Linode',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onRestore(id);
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Deploy New Linode',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDeploy(id);
-            e.preventDefault();
-          }
-        },
+  const {
+    description,
+    id,
+    label,
+    onRestore,
+    onDeploy,
+    onEdit,
+    onDelete
+  } = props;
+
+  const inlineActions = [
+    {
+      actionText: 'Edit',
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        onEdit(label, description ?? ' ', id);
+        e.preventDefault();
+      }
+    },
+    {
+      actionText: 'Delete',
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        onDelete(label, id);
+        e.preventDefault();
+      }
+    }
+  ];
+
+  const createActions = () => (): Action[] => {
+    const actions: Action[] = [
+      {
+        title: 'Restore to Existing Linode',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onRestore(id);
+          e.preventDefault();
+        }
+      },
+      {
+        title: 'Deploy New Linode',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onDeploy(id);
+          e.preventDefault();
+        }
+      }
+    ];
+
+    if (matchesSmDown) {
+      actions.unshift(
         {
           title: 'Edit',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -64,15 +89,29 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
             e.preventDefault();
           }
         }
-      ];
-    };
+      );
+    }
+
+    return actions;
   };
 
   return (
-    <ActionMenu
-      createActions={createActions()}
-      ariaLabel={`Action menu for Image ${props.label}`}
-    />
+    <>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      <ActionMenu
+        createActions={createActions()}
+        ariaLabel={`Action menu for Image ${props.label}`}
+      />
+    </>
   );
 };
 
