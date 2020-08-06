@@ -43,7 +43,7 @@ const styles = (theme: Theme) => {
       '& .MuiExpansionPanelSummary-root': {
         justifyContent: 'space-between',
         backgroundColor: 'transparent',
-        padding: '0 48px 0 18px',
+        padding: '0 9px 0 18px',
         borderTop: '1px solid #f4f5f6',
         '& h3': {
           color: theme.palette.text.primary
@@ -72,7 +72,7 @@ const styles = (theme: Theme) => {
     },
     itemCount: {
       position: 'absolute',
-      right: 20,
+      right: 50,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -142,9 +142,12 @@ class EExpansionPanel extends React.Component<CombinedProps> {
           <Typography {...headingProps} variant="h3" data-qa-panel-subheading>
             {this.props.heading}
           </Typography>
-          <span className={classes.itemCount}>
-            {this.props.headingNumberCount}
-          </span>
+          {this.props.headingNumberCount &&
+            this.props.headingNumberCount > 0 && (
+              <span className={classes.itemCount}>
+                {this.props.headingNumberCount}
+              </span>
+            )}
         </ExpansionPanelSummary>
         <ExpansionPanelDetails {...detailProps} data-qa-panel-details>
           <Grid container>

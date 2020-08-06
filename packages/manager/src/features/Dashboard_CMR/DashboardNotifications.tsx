@@ -63,11 +63,13 @@ export const Notifications: React.FC<{}> = _ => {
     <ErrorState errorText={context.error} />
   ) : (
     <>
-      <BillingSummary
-        balance={balance}
-        balanceUninvoiced={balanceUninvoiced}
-        mostRecentInvoiceId={mostRecentInvoiceRequest.data}
-      />
+      <Hidden smDown>
+        <BillingSummary
+          balance={balance}
+          balanceUninvoiced={balanceUninvoiced}
+          mostRecentInvoiceId={mostRecentInvoiceRequest.data}
+        />
+      </Hidden>
       <Paper className={classes.root}>
         <Grid container direction="row" justify="space-between">
           <Hidden smDown>
@@ -106,6 +108,14 @@ export const Notifications: React.FC<{}> = _ => {
           </Hidden>
         </Grid>
       </Paper>
+
+      <Hidden mdUp>
+        <BillingSummary
+          balance={balance}
+          balanceUninvoiced={balanceUninvoiced}
+          mostRecentInvoiceId={mostRecentInvoiceRequest.data}
+        />
+      </Hidden>
     </>
   );
 };
