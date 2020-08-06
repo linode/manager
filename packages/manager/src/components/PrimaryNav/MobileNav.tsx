@@ -1,5 +1,6 @@
 import Backdrop from '@material-ui/core/Backdrop';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
 import {
   Menu as ReachMenu,
@@ -161,7 +162,7 @@ export const MobileNav: React.FC<Props> = props => {
               setOpen(!open);
             }}
           >
-            <MenuIcon />
+            {isOpen ? <CloseIcon /> : <MenuIcon />}
             Menu
           </MenuButton>
           <MenuPopover className={classes.navDropdown}>
