@@ -70,6 +70,15 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     scrollErrorIntoView();
   }, [regionError, APIError, acceptError]);
 
+  React.useEffect(() => {
+    if (open) {
+      setAPIError('');
+      setRegionError('');
+      setConfirmed(false);
+      handleSelectRegion(null);
+    }
+  }, [open]);
+
   if (!linode) {
     return null;
   }

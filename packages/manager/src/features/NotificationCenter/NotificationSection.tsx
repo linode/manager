@@ -1,8 +1,11 @@
 import * as React from 'react';
+import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { formatDate } from 'src/utilities/formatDate';
+import Hidden from 'src/components/core/Hidden';
+import ExtendedExpansionPanel from 'src/components/ExtendedExpansionPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -19,6 +22,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     width: '100%'
+  },
+  loading: {
+    display: 'flex',
+    justifyContent: 'center'
   },
   icon: {
     marginRight: theme.spacing(),
@@ -52,50 +59,112 @@ interface Props {
   showMoreTarget?: string;
   content: NotificationItem[];
   showMore?: JSX.Element;
+  loading?: boolean;
+  emptyMessage?: string;
 }
 
 export type CombinedProps = Props;
 
 export const NotificationSection: React.FC<Props> = props => {
-  const { content, header, showMore, showMoreText, showMoreTarget } = props;
+  const {
+    content,
+    header,
+    emptyMessage,
+    loading,
+    showMoreText,
+    showMoreTarget
+  } = props;
+  const _loading = Boolean(loading); // false if not provided
   const classes = useStyles();
+
+  const innerContent = () => {
+    return (
+      <ContentBody
+        loading={_loading}
+        content={content}
+        header={header}
+        emptyMessage={emptyMessage}
+      />
+    );
+  };
+
   return (
-    <div className={classes.root}>
-      <div className={classes.content}>
-        <div className={classes.header}>
-          <Typography variant="h3">{header}</Typography>
-          {showMoreTarget && (
-            <Typography variant="body1">
-              <strong>
-                <Link to={showMoreTarget}>
-                  {showMoreText ?? 'View history'}
-                </Link>
-              </strong>
-            </Typography>
-          )}
-        </div>
-        {content.length > 0 ? (
-          content.map(thisItem => (
-            <ContentRow
-              key={`notification-row-${thisItem.id}`}
-              item={thisItem}
+    <>
+      <Hidden smDown>
+        <div className={classes.root}>
+          <div className={classes.content}>
+            <div className={classes.header}>
+              <Typography variant="h3">{header}</Typography>
+              {showMoreTarget && (
+                <Typography variant="body1">
+                  <strong>
+                    <Link to={showMoreTarget}>
+                      {showMoreText ?? 'View history'}
+                    </Link>
+                  </strong>
+                </Typography>
+              )}
+            </div>
+            <ContentBody
+              loading={_loading}
+              content={content}
+              header={header}
+              emptyMessage={emptyMessage}
             />
-          ))
-        ) : (
-          <Typography className={classes.notificationItem}>
-            You have no {header.toLocaleLowerCase()}.
-          </Typography>
-        )}
-        {showMore && (
-          <Typography className={classes.notificationItem}>
-            {showMore}
-          </Typography>
-        )}
-      </div>
-    </div>
+          </div>
+        </div>
+      </Hidden>
+
+      <Hidden mdUp>
+        <ExtendedExpansionPanel
+          heading={header}
+          headingNumberCount={content.length > 0 ? content.length : undefined}
+          renderMainContent={innerContent}
+        />
+      </Hidden>
+    </>
   );
 };
 
+// =============================================================================
+// Body
+// =============================================================================
+interface BodyProps {
+  header: string;
+  loading: boolean;
+  content: NotificationItem[];
+  emptyMessage?: string;
+}
+
+const ContentBody: React.FC<BodyProps> = React.memo(props => {
+  const { content, emptyMessage, header, loading } = props;
+  const classes = useStyles();
+  if (loading) {
+    return (
+      <div className={classes.loading}>
+        <CircleProgress mini />
+      </div>
+    );
+  }
+  return content.length > 0 ? (
+    // eslint-disable-next-line
+    <>
+      {content.map(thisItem => (
+        <ContentRow key={`notification-row-${thisItem.id}`} item={thisItem} />
+      ))}
+    </>
+  ) : (
+    <Typography className={classes.notificationItem}>
+      {emptyMessage
+        ? emptyMessage
+        : `You have no ${header.toLocaleLowerCase()}.`}
+    </Typography>
+  );
+});
+
+// =============================================================================
+// Row
+// =============================================================================
 const ContentRow: React.FC<{
   item: NotificationItem;
 }> = React.memo(props => {
