@@ -30,6 +30,11 @@ import { formatDate } from 'src/utilities/formatDate';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '& .MuiDialog-paper': {
+      height: '100vh'
+    }
+  },
   details: {
     marginTop: theme.spacing(2)
   },
@@ -175,6 +180,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       onClose={onClose}
       fullWidth
       maxWidth="md"
+      className={classes.root}
     >
       {APIError && <Notice error text={APIError} />}
 
