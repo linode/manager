@@ -140,16 +140,16 @@ export const MobileNav: React.FC<Props> = props => {
   const classes = useStyles();
   const { groups } = props;
 
-  const [open, setOpen] = React.useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
   const [, toggleMenu] = React.useState<boolean>(false);
 
   React.useMemo(() => {
-    if (open) {
+    if (isMenuOpen) {
       document.body.classList.add('overflow-hidden');
     } else {
       document.body.classList.remove('overflow-hidden');
     }
-  }, [open]);
+  }, [isMenuOpen]);
 
   return (
     <ReachMenu>
@@ -159,7 +159,7 @@ export const MobileNav: React.FC<Props> = props => {
             aria-label={isOpen ? 'Open menu' : 'Close menu'}
             className={classes.navIcon}
             onClick={() => {
-              setOpen(!open);
+              setIsMenuOpen(!isMenuOpen);
             }}
           >
             {isOpen ? <CloseIcon /> : <MenuIcon />}
