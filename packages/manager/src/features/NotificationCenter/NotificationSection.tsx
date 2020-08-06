@@ -42,11 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'space-between'
   },
-  body: {
-    width: '70%'
-  },
   showMore: {
     ...theme.applyLinkStyles,
+    fontSize: 14,
+    fontWeight: 'bold',
     paddingTop: theme.spacing(),
     display: 'flex',
     alignItems: 'center',
@@ -184,9 +183,7 @@ const ContentRow: React.FC<{
   const classes = useStyles();
   return (
     <div className={classes.notificationItem}>
-      <div className={item.timeStamp ? classes.body : undefined}>
-        {item.body}
-      </div>
+      <div style={{ width: item.timeStamp ? '70%' : '100%' }}>{item.body}</div>
       {item.timeStamp && (
         <Typography>
           {formatDate(item.timeStamp, { humanizeCutoff: 'week' })}
