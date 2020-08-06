@@ -11,7 +11,6 @@ import ErrorState from 'src/components/ErrorState';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
 
 import {
-  Alerts,
   Community,
   Maintenance,
   OpenSupportTickets,
@@ -79,9 +78,6 @@ export const Notifications: React.FC<{}> = _ => {
                   <PendingActions />
                 </Grid>
                 <Grid item>
-                  <Alerts />
-                </Grid>
-                <Grid item>
                   <Maintenance />
                 </Grid>
               </Grid>
@@ -101,7 +97,6 @@ export const Notifications: React.FC<{}> = _ => {
           {/* Small screen version */}
           <Hidden mdUp>
             <PendingActions />
-            <Alerts />
             <Maintenance />
             <OpenSupportTickets />
             <Community communityEvents={communityEvents} />

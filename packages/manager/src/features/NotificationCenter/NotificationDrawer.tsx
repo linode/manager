@@ -2,7 +2,6 @@ import * as React from 'react';
 import Clock from 'src/assets/icons/clock.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
-import Alerts from './Alerts';
 import Community from './Community';
 import Maintenance from './Maintenance';
 import OpenSupportTickets from './OpenSupportTickets';
@@ -53,7 +52,6 @@ export const NotificationDrawer: React.FC<Props> = props => {
       <div className={classes.notificationSectionContainer}>
         <PendingActions />
         <Maintenance />
-        <Alerts />
         <OpenSupportTickets />
         <Community communityEvents={[]} />
       </div>
