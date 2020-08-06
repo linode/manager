@@ -12,9 +12,7 @@ import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withRegions, {
   DefaultProps as RegionProps
 } from 'src/containers/regions.container';
-import withVolumes, {
-  StateProps as WithVolumesProps
-} from 'src/containers/volumes.container';
+import { StateProps as WithVolumesProps } from 'src/containers/volumes.container';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
@@ -42,7 +40,7 @@ import Grid from 'src/components/Grid';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import useExtendedLinode from 'src/hooks/useExtendedLinode';
+import { Volume } from '@linode/api-v4/lib/volumes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -165,7 +163,7 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
     volumesLoading,
     volumesLastUpdated,
     volumesError,
-    linodeId,
+    linodeVolumes,
     openForConfig,
     openForClone,
     openForEdit,
@@ -173,7 +171,6 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
   } = props;
 
   const classes = useStyles();
-  const linode = useExtendedLinode(linodeId);
 
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
     open: false,
@@ -314,7 +311,7 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
   const volumeRow = {
     handlers,
     Component: VolumeTableRow,
-    data: linode?._volumes ?? [],
+    data: linodeVolumes ?? [],
     loading: volumesLoading,
     lastUpdated: volumesLastUpdated,
     error: volumesError?.read,
@@ -395,45 +392,17 @@ interface LinodeContextProps {
   linodeId?: number;
   linodeStatus?: string;
   readOnly: boolean;
+  linodeVolumes?: Volume[];
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
   linodeStatus: linode.status,
-  readOnly: linode._permissions === 'read_only'
+  readOnly: linode._permissions === 'read_only',
+  linodeVolumes: linode._volumes
 }));
 
 const connected = connect(undefined, mapDispatchToProps);
-
-// const addAttachedLinodeInfoToVolume = (
-//   volume: Volume,
-//   linodes: Linode[]
-// ): Volume | ExtendedVolume => {
-//   if (!volume.linode_id) {
-//     return volume;
-//   }
-//   const attachedLinode = linodes.find(linode => linode.id === volume.linode_id);
-//   if (attachedLinode) {
-//     return {
-//       ...volume,
-//       linodeLabel: attachedLinode.label,
-//       linodeStatus: attachedLinode.status
-//     };
-//   } else {
-//     return volume;
-//   }
-// };
-
-// const addRecentEventToVolume = (volume: Volume, events: Event[]) => {
-//   // We're filtering out events without entities in the reducer, so we can assume these
-//   // all have an entity attached.
-//   const recentEvent = events.find(event => event.entity!.id === volume.id);
-//   if (recentEvent) {
-//     return { ...volume, recentEvent };
-//   } else {
-//     return volume;
-//   }
-// };
 
 const filterVolumeEvents = (event: Event): boolean => {
   return (
@@ -449,35 +418,6 @@ export default compose<CombinedProps, Props>(
     ...ownProps,
     eventsData: eventsData.filter(filterVolumeEvents)
   })),
-  withVolumes(
-    (
-      ownProps: CombinedProps,
-      volumesData,
-      volumesLoading,
-      volumesLastUpdated,
-      volumesResults,
-      volumesError
-    ) => {
-      //   const mappedVolumesDataWithLinodes = volumesData.map(volume => {
-      //     const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
-      //       volume,
-      //       ownProps.linodesData
-      //     );
-      //     return addRecentEventToVolume(
-      //       volumeWithLinodeData,
-      //       ownProps.eventsData
-      //     );
-      //   });
-      return {
-        ...ownProps,
-        volumesData,
-        // mappedVolumesDataWithLinodes,
-        volumesLoading,
-        volumesLastUpdated,
-        volumesError
-      };
-    }
-  ),
   withRegions(),
   withSnackbar
 )(LinodeStorage);
