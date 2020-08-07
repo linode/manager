@@ -35,7 +35,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     dialogContent: {
       padding: theme.spacing(2),
-      paddingTop: 0
+      paddingTop: 0,
+      margin: 'auto'
     },
     button: {
       minWidth: 'auto',
