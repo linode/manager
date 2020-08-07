@@ -1,4 +1,4 @@
-export type DialogType = 'delete' | 'migrate' | 'resize';
+export type DialogType = 'delete' | 'migrate' | 'resize' | 'rescue';
 export type OpenDialog = (
   type: DialogType,
   linodeID: number,

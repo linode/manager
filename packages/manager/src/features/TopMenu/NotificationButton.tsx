@@ -2,6 +2,7 @@ import * as React from 'react';
 import Bell from 'src/assets/icons/bell.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { NotificationDrawer } from 'src/features/NotificationCenter';
+import { notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -25,15 +26,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+const notificationEventTypes = [
+  'community_like',
+  'community_question_reply',
+  'community_mention'
+];
+// @todo add more here, or filter our events request directly once we
+// have a list of all relevant actions.
+
 export const NotificationButton: React.FC<{}> = _ => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const classes = useStyles();
 
+  const context = React.useContext(notificationContext);
+
   const openDrawer = () => setDrawerOpen(true);
   const closeDrawer = () => setDrawerOpen(false);
 
-  const numEvents = 42;
+  const numEvents = context.events.filter(thisEvent =>
+    notificationEventTypes.includes(thisEvent.action)
+  ).length;
 
   return (
     <>
@@ -45,7 +58,11 @@ export const NotificationButton: React.FC<{}> = _ => {
         <Bell aria-hidden />
         <strong className={classes.text}>{numEvents}</strong>
       </button>
-      <NotificationDrawer open={drawerOpen} onClose={closeDrawer} />
+      <NotificationDrawer
+        open={drawerOpen}
+        onClose={closeDrawer}
+        events={context.events}
+      />
     </>
   );
 };

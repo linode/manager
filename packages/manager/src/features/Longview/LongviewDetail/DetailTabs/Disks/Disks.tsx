@@ -1,6 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -21,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props extends RouteComponentProps<{}> {
+interface Props {
   clientAPIKey: string;
   clientID: number;
   clientLastUpdated?: number;
@@ -111,7 +110,7 @@ const Disks: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <div id="tabpanel-disks" role="tabpanel" aria-labelledby="tab-disks">
+    <div>
       <Box display="flex" flexDirection="row" justifyContent="flex-end">
         <TimeRangeSelect
           small

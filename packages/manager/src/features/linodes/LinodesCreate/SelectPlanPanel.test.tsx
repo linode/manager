@@ -1,32 +1,35 @@
-import { shallow } from 'enzyme';
+import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SelectPlanPanel } from './SelectPlanPanel';
 
+afterEach(cleanup);
+
 describe('Select Plan Panel', () => {
-  const component = shallow(
-    <SelectPlanPanel
-      classes={{
-        root: '',
-        copy: '',
-        disabledRow: '',
-        chip: '',
-        currentPlanChipCell: '',
-        radioCell: '',
-        headingCellContainer: ''
-      }}
-      types={extendedTypes}
-      currentPlanHeading="Linode 2GB"
-      selectedID="test"
-      onSelect={jest.fn()}
-      regionsData={[]}
-      regionsLoading={false}
-      regionsLastUpdated={0}
-    />
-  );
   it('should render TabbedPanel', () => {
-    expect(component.find('WithStyles(TabbedPanel)')).toHaveLength(1);
+    const { getByText } = renderWithTheme(
+      <SelectPlanPanel
+        classes={{
+          root: '',
+          copy: '',
+          disabledRow: '',
+          chip: '',
+          currentPlanChipCell: '',
+          radioCell: '',
+          headingCellContainer: ''
+        }}
+        types={extendedTypes}
+        currentPlanHeading="Linode 2GB"
+        selectedID="test"
+        onSelect={jest.fn()}
+        regionsData={[]}
+        regionsLoading={false}
+        regionsLastUpdated={0}
+      />
+    );
+    getByText(/linode plan/i);
   });
 });
