@@ -59,12 +59,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 30
   },
   username: {
+    maxWidth: '135px',
     overflow: 'hidden',
     paddingRight: 15,
     textOverflow: 'ellipsis',
     transition: theme.transitions.create(['color']),
     whiteSpace: 'nowrap',
-    width: '135px',
+    // Hides username as soon as things start to scroll
     [theme.breakpoints.down(1345)]: {
       ...theme.visually.hidden
     }
