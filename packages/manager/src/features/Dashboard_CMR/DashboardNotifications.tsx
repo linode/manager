@@ -9,6 +9,7 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
+import LinodeNews from './LinodeNews';
 
 import {
   Community,
@@ -111,6 +112,8 @@ export const Notifications: React.FC<{}> = _ => {
           mostRecentInvoiceId={mostRecentInvoiceRequest.data}
         />
       </Hidden>
+
+      <LinodeNews />
     </>
   );
 };
