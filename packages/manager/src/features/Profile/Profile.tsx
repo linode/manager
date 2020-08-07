@@ -14,8 +14,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import H1Header from 'src/components/H1Header';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
+import useFlags from 'src/hooks/useFlags';
 
 const SSHKeys = React.lazy(() => import('./SSHKeys'));
+const SSHKeys_CMR = React.lazy(() => import('./SSHKeys/SSHKeys_CMR'));
 const Settings = React.lazy(() => import('./Settings'));
 const Referrals = React.lazy(() => import('./Referrals'));
 const OAuthClients = React.lazy(() => import('./OAuthClients'));
@@ -29,6 +31,7 @@ const APITokens = React.lazy(() => import('./APITokens'));
 type Props = RouteComponentProps<{}>;
 
 const Profile: React.FC<Props> = props => {
+  const flags = useFlags();
   const {
     match: { url }
   } = props;
@@ -128,7 +131,11 @@ const Profile: React.FC<Props> = props => {
           <Route exact path={`${url}/clients`} component={OAuthClients} />
           <Route exact path={`${url}/lish`} component={LishSettings} />
           <Route exact path={`${url}/referrals`} component={Referrals} />
-          <Route exact path={`${url}/keys`} component={SSHKeys} />
+          {flags.cmr ? (
+            <Route exact path={`${url}/keys`} component={SSHKeys_CMR} />
+          ) : (
+            <Route exact path={`${url}/keys`} component={SSHKeys} />
+          )}
           <Route exact path={`${url}/display`} component={DisplaySettings} />
           <Redirect to={`${url}/display`} />
         </Switch>
