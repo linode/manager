@@ -1,23 +1,19 @@
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import AppBar from 'src/components/core/AppBar';
+
 import Box from 'src/components/core/Box';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import TabPanel from 'src/components/core/ReachTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
-import TabLink from 'src/components/TabLink';
+
 import withFirewalls, {
   Props as WithFirewallsProps
 } from 'src/containers/firewalls.container';
@@ -71,14 +67,6 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
     }
   ];
 
-  const handleTabChange = (
-    _: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const routeName = tabs[value].routeName;
-    props.history.push(`${routeName}`);
-  };
-
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
@@ -116,56 +104,24 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
         {/* @todo: Insert real link when the doc is written. */}
         <DocumentationButton href="https://www.linode.com/docs/platform" />
       </Box>
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-        >
-          {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((forwardedProps, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...forwardedProps}
-                  ref={ref}
-                />
-              ))}
-            />
-          ))}
-        </Tabs>
-      </AppBar>
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${URL}/rules`}
-          render={() => (
+      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+        <TabLinkList tabs={tabs} />
+
+        <TabPanels>
+          <TabPanel>
             <FirewallRulesLanding
               firewallID={+thisFirewallId}
               rules={thisFirewall.rules}
             />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${URL}/linodes`}
-          render={() => (
+          </TabPanel>
+          <TabPanel>
             <FirewallLinodesLanding
               firewallID={+thisFirewallId}
               firewallLabel={thisFirewall.label}
             />
-          )}
-        />
-        <Redirect to={`${URL}/rules`} />
-      </Switch>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </React.Fragment>
   );
 };

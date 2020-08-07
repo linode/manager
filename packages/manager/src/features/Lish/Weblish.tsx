@@ -246,7 +246,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
      * then render the terminal div, you end up with a blank black screen
      */
     return (
-      <div id="tabpanel-weblish" role="tabpanel" aria-labelledby="tab-weblish">
+      <div>
         {this.socket && this.socket.readyState === this.socket.OPEN ? (
           <div id="terminal" className="terminal" />
         ) : !retryingConnection ? ( // basically are we switching tabs after the lish token expired?

@@ -62,12 +62,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
       getQueryParam(window.location.search, 'preferenceEditor') === 'true';
 
     return (
-      <Paper
-        className={classes.root}
-        id="tabpanel-settings"
-        role="tabpanel"
-        aria-labelledby="tab-settings"
-      >
+      <Paper className={classes.root}>
         <DocumentTitleSegment segment="Settings" />
         <Typography variant="h2" className={classes.title}>
           Notifications

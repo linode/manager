@@ -204,7 +204,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
-      <div id="tabpanel-buckets" role="tabpanel" aria-labelledby="tab-buckets">
+      <div>
         <Grid container justify="flex-end">
           <Grid item>
             <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />

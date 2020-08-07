@@ -295,7 +295,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <div id="tabpanel-resize" role="tabpanel" aria-labelledby="tab-resize">
+      <div>
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
         <Paper className={classes.root}>
           {unauthorized && <LinodePermissionsError />}

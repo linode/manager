@@ -90,12 +90,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const initialTab = 0;
 
   return (
-    <div
-      id="tabpanel-passwordAuthentication"
-      role="tabpanel"
-      aria-labelledby="tab-passwordAuthentication"
-      data-testid="authSettings"
-    >
+    <div data-testid="authSettings">
       <DocumentTitleSegment segment={`Password & Authentication`} />
       {/* Remove when logic above is cleared */}
       {success && <Notice success text={success} />}
