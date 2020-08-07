@@ -1,4 +1,3 @@
-import { ZoneName } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -31,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  linodeRegion: ZoneName;
+  linodeRegion: string;
   linodeID: number;
   linodeCreated: string;
   linodeLabel: string;
