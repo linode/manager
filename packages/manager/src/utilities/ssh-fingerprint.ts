@@ -1,13 +1,17 @@
 import * as crypto from 'crypto';
-
-const pubre = /^(ssh-[dr]s[as]\s+)|(\s+.+)|\n/g;
+import { reportException } from 'src/exceptionReporting';
 
 export default (pub: string, alg: string = 'md5') => {
-  const cleanpub = pub.replace(pubre, '');
-  const pubbuffer = new Buffer(cleanpub, 'base64');
-  const key = hash(pubbuffer, alg);
+  try {
+    const cleanpub = pub.split(' ')?.[1] ?? '';
+    const pubbuffer = Buffer.from(cleanpub, 'base64');
+    const key = hash(pubbuffer, alg);
 
-  return colons(key);
+    return colons(key);
+  } catch (e) {
+    reportException(`Error ${e} when parsing SSH pubkey: ${pub}`);
+    return 'Error generating fingerprint';
+  }
 };
 
 // hash a string with the given alg
