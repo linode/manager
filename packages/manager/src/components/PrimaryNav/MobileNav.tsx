@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'transparent',
     border: 'none',
     color: '#fff',
+    cursor: 'pointer',
     fontSize: '1.125rem',
     height: 50,
     lineHeight: '20px',
@@ -168,7 +169,7 @@ export const MobileNav: React.FC<Props> = props => {
   return (
     <ReachMenu>
       <MenuButton
-        aria-label={isOpen ? 'Open menu' : 'Close menu'}
+        aria-label={isOpen ? 'Close menu' : 'Open menu'}
         className={classes.navIcon}
         onClick={openMenu}
       >

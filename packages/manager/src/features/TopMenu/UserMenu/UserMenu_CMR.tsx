@@ -59,10 +59,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 30
   },
   username: {
+    overflow: 'hidden',
     paddingRight: 15,
+    textOverflow: 'ellipsis',
     transition: theme.transitions.create(['color']),
-    // This is where things start to scroll
-    // @todo: Figure how to handle long usernames
+    whiteSpace: 'nowrap',
+    width: '135px',
     [theme.breakpoints.down(1345)]: {
       ...theme.visually.hidden
     }
@@ -117,10 +119,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.color.primaryNavText,
       cursor: 'pointer',
       fontSize: '1rem',
-      paddingTop: 12,
-      paddingBottom: 12,
-      paddingLeft: 15,
-      paddingRight: 40,
+      padding: '12px 40px 12px 15px',
       '&:hover': {
         backgroundColor: theme.bg.primaryNavActiveBG
       },
@@ -132,9 +131,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.bg.primaryNavActiveBG
     },
     [theme.breakpoints.down('sm')]: {
-      paddingTop: 10,
-      paddingBottom: 10,
-      paddingLeft: 7.5
+      padding: '10px 7.5px'
     }
   },
   menuItemList: {
