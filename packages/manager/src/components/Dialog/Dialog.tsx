@@ -1,6 +1,5 @@
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
-import * as classNames from 'classnames';
 import Button from 'src/components/Button';
 import MUIDialog, {
   DialogProps as _DialogProps
@@ -37,7 +36,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     dialogContent: {
       padding: theme.spacing(2),
-      paddingTop: 0
+      paddingTop: 0,
+      margin: 'auto'
     },
     button: {
       minWidth: 'auto',
@@ -66,9 +66,6 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       backgroundColor: theme.bg.white
-    },
-    error: {
-      margin: 'auto'
     }
   })
 );
@@ -119,14 +116,7 @@ const Dialog: React.FC<DialogProps> = props => {
           </Grid>
         </div>
         <Grid container>
-          <div
-            className={classNames({
-              [classes.dialogContent]: true,
-              [classes.error]: props.error
-            })}
-          >
-            {children}
-          </div>
+          <div className={classes.dialogContent}>{children}</div>
         </Grid>
       </Grid>
     </MUIDialog>

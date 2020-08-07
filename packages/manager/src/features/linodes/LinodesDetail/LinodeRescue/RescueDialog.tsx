@@ -205,7 +205,6 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
       }}
       fullWidth
       maxWidth="md"
-      error={Boolean(diskError || volumesError)}
     >
       {APIError && <Notice error text={APIError} />}
       {diskError ? (
