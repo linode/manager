@@ -10,6 +10,7 @@ import BillingActivityPanel, {
   makeFilter
 } from './BillingActivityPanel';
 import { DateTime } from 'luxon';
+jest.mock('../../../../utilities/getUserTimezone');
 
 afterEach(cleanup);
 
