@@ -108,6 +108,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const {
     _hasAccountAccess,
     _isManagedAccount,
+    _isLargeAccount,
     account
   } = useAccountManagement();
 
@@ -172,7 +173,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             icon: <Domain style={{ transform: 'scale(1.5)' }} />,
             prefetchRequestFn: requestDomains,
             prefetchRequestCondition:
-              !domains.loading && domains.lastUpdated === 0
+              !domains.loading && domains.lastUpdated === 0 && !_isLargeAccount
           },
           {
             display: 'Firewalls',
