@@ -11,7 +11,6 @@ import { convertForAria } from 'src/components/TabLink/TabLink';
 
 export interface DialogProps extends _DialogProps {
   title: string;
-  error?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
