@@ -48,7 +48,7 @@ export const TrustedDevices: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     props.handleOrderChange('expiry', 'asc');
-  }, [props]);
+  }, []);
 
   const {
     loading,
