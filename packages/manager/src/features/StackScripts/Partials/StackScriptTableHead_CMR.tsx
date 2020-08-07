@@ -1,17 +1,26 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  stackscriptTitles: {
-    width: '54%'
+const useStyles = makeStyles(() => ({
+  root: {
+    '& th': {
+      height: 40,
+      padding: '10px 15px'
+    }
   },
-  // Not sure what this does
+  stackscriptTitles: {
+    width: '54%',
+    '&:before': {
+      left: '0 !important'
+    }
+  },
   selectingStackscriptTitles: {
+    paddingLeft: '10px !important',
     width: 'calc(100% - 65px)'
   },
   deploys: {
@@ -64,7 +73,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = props => {
       : {};
 
   return (
-    <TableHead>
+    <TableHead className={classes.root}>
       <TableRow>
         {!!isSelecting && <TableCell />}
         <Cell

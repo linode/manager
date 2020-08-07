@@ -11,8 +11,10 @@ import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
+import SelectStackScriptPanel_CMR from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel_CMR';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import useFlags from 'src/hooks/useFlags';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { filterUDFErrors } from './formUtilities';
@@ -70,6 +72,7 @@ export type CombinedProps = Props &
 
 export const FromStackScriptContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const {
     errors,
@@ -145,20 +148,37 @@ export const FromStackScriptContent: React.FC<CombinedProps> = props => {
         className={`${classes.main} mlMain py0`}
       >
         <div className={classes.inner}>
-          <SelectStackScriptPanel
-            data-qa-select-stackscript
-            error={hasErrorFor('stackscript_id')}
-            header={header}
-            selectedId={selectedStackScriptID}
-            selectedUsername={selectedStackScriptUsername}
-            updateFor={[selectedStackScriptID, errors]}
-            onSelect={handleSelectStackScript}
-            publicImages={filterImagesByType(imagesData, 'public')}
-            resetSelectedStackScript={() => null}
-            disabled={userCannotCreateLinode}
-            request={request}
-            category={props.category}
-          />
+          {flags.cmr ? (
+            <SelectStackScriptPanel_CMR
+              data-qa-select-stackscript
+              error={hasErrorFor('stackscript_id')}
+              header={header}
+              selectedId={selectedStackScriptID}
+              selectedUsername={selectedStackScriptUsername}
+              updateFor={[selectedStackScriptID, errors]}
+              onSelect={handleSelectStackScript}
+              publicImages={filterImagesByType(imagesData, 'public')}
+              resetSelectedStackScript={() => null}
+              disabled={userCannotCreateLinode}
+              request={request}
+              category={props.category}
+            />
+          ) : (
+            <SelectStackScriptPanel
+              data-qa-select-stackscript
+              error={hasErrorFor('stackscript_id')}
+              header={header}
+              selectedId={selectedStackScriptID}
+              selectedUsername={selectedStackScriptUsername}
+              updateFor={[selectedStackScriptID, errors]}
+              onSelect={handleSelectStackScript}
+              publicImages={filterImagesByType(imagesData, 'public')}
+              resetSelectedStackScript={() => null}
+              disabled={userCannotCreateLinode}
+              request={request}
+              category={props.category}
+            />
+          )}
         </div>
         {!userCannotCreateLinode &&
           userDefinedFields &&

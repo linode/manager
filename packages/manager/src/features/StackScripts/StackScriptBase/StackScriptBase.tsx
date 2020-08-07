@@ -18,6 +18,7 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
+import Table_CMR from 'src/components/Table/Table_CMR';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -477,6 +478,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         ? getQueryParam(this.props.location.search, 'query')
         : undefined;
 
+      const _Table = this.props.flags.cmr ? Table_CMR : Table;
+
       return (
         <React.Fragment>
           {fieldError && fieldError.reason && (
@@ -536,7 +539,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   defaultValue={query}
                 />
               </div>
-              <Table
+              <_Table
                 isResponsive={!isSelecting}
                 aria-label="List of StackScripts"
                 rowCount={listOfStackScripts.length}
@@ -569,7 +572,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   getDataAtPage={this.getDataAtPage}
                   getNext={this.getNext}
                 />
-              </Table>
+              </_Table>
               {/*
                * show loading indicator if we're getting more stackscripts
                * and if we're not showing the "get more stackscripts" button
