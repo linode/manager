@@ -7,15 +7,18 @@ import {
 import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import StackScriptBase, {
-  StateProps
-} from '../StackScriptBase/StackScriptBase';
-import StackScriptsSection from './StackScriptsSection';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
+import StackScriptsSection from './StackScriptsSection';
+import StackScriptsSection_CMR from './StackScriptsSection_CMR';
+import StackScriptBase, {
+  StateProps
+} from '../StackScriptBase/StackScriptBase';
 
 interface DialogVariantProps {
   open: boolean;
@@ -46,7 +49,7 @@ interface Props {
   category: string;
 }
 
-type CombinedProps = Props & StateProps;
+type CombinedProps = Props & FeatureFlagConsumerProps & StateProps;
 
 class StackScriptPanelContent extends React.Component<CombinedProps, State> {
   state: State = {
@@ -304,15 +307,27 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
   render() {
     return (
       <React.Fragment>
-        <StackScriptsSection
-          isSorting={this.props.isSorting}
-          data={this.props.listOfStackScripts}
-          publicImages={this.props.publicImages}
-          triggerDelete={this.handleOpenDeleteDialog}
-          triggerMakePublic={this.handleOpenMakePublicDialog}
-          currentUser={this.props.currentUser}
-          category={this.props.category}
-        />
+        {this.props.flags.cmr ? (
+          <StackScriptsSection_CMR
+            isSorting={this.props.isSorting}
+            data={this.props.listOfStackScripts}
+            publicImages={this.props.publicImages}
+            triggerDelete={this.handleOpenDeleteDialog}
+            triggerMakePublic={this.handleOpenMakePublicDialog}
+            currentUser={this.props.currentUser}
+            category={this.props.category}
+          />
+        ) : (
+          <StackScriptsSection
+            isSorting={this.props.isSorting}
+            data={this.props.listOfStackScripts}
+            publicImages={this.props.publicImages}
+            triggerDelete={this.handleOpenDeleteDialog}
+            triggerMakePublic={this.handleOpenMakePublicDialog}
+            currentUser={this.props.currentUser}
+            category={this.props.category}
+          />
+        )}
         {this.renderDeleteStackScriptDialog()}
         {this.renderMakePublicDialog()}
       </React.Fragment>
@@ -321,5 +336,6 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
 }
 
 export default compose<CombinedProps, Props>(
-  StackScriptBase({ isSelecting: false, useQueryString: true })
+  StackScriptBase({ isSelecting: false, useQueryString: true }),
+  withFeatureFlagConsumer
 )(StackScriptPanelContent);

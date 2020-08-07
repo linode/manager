@@ -19,7 +19,8 @@ export type ClassNames =
   | 'stackScriptCell'
   | 'stackScriptUsername'
   | 'deployButton'
-  | 'detailsButton';
+  | 'detailsButton'
+  | 'actionCell';
 
 export const styles = (theme: Theme) =>
   createStyles({
@@ -63,7 +64,6 @@ export const styles = (theme: Theme) =>
       fontSize: '.9rem'
     },
     libDescription: {
-      marginTop: theme.spacing(1) / 2,
       [theme.breakpoints.down('sm')]: {
         fontSize: 12
       },
@@ -108,6 +108,11 @@ export const styles = (theme: Theme) =>
       '&:hover, &:focus': {
         backgroundColor: 'transparent'
       }
+    },
+    actionCell: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      margin: 0
     }
   });
 
