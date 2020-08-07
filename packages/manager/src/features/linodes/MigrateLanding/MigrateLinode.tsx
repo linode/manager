@@ -70,6 +70,15 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     scrollErrorIntoView();
   }, [regionError, APIError, acceptError]);
 
+  React.useEffect(() => {
+    if (open) {
+      setAPIError('');
+      setRegionError('');
+      setConfirmed(false);
+      handleSelectRegion(null);
+    }
+  }, [open]);
+
   if (!linode) {
     return null;
   }
@@ -165,6 +174,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       open={open}
       onClose={onClose}
       fullWidth
+      fullHeight
       maxWidth="md"
     >
       {APIError && <Notice error text={APIError} />}

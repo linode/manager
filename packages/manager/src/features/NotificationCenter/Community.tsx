@@ -23,6 +23,7 @@ export const Community: React.FC<CombinedProps> = props => {
       header="Community Updates"
       showMoreText="Visit the Community"
       showMoreTarget="https://linode.com/community"
+      emptyMessage="There have been no updates to your discussion topics since your last visit."
     />
   );
 };

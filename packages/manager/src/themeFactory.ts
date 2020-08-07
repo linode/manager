@@ -284,7 +284,10 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavText: '#fff',
       borderBilling: '#cce2ff',
       billingText: '#313335',
-      tagButton: '#f1f7fd'
+      tagButton: '#f1f7fd',
+      tagText: '#3a3f46',
+      tagIcon: '#7daee8',
+      tagBorder: '#fff'
     },
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,

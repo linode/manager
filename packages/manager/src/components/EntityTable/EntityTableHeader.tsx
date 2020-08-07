@@ -73,20 +73,45 @@ export const EntityTableHeader: React.FC<Props> = props => {
               </SortCell>
             )
           ) : (
-            <TableCell
-              key={thisCell.dataColumn}
-              data-testid={`${thisCell.label}-header-cell`}
-              className={classes.thead}
-              style={{ width: thisCell.widthPercent }}
-            >
-              <span
-                className={
-                  thisCell.visuallyHidden ? classes.hiddenHeaderCell : undefined
-                }
-              >
-                {thisCell.label}
-              </span>
-            </TableCell>
+            [
+              thisCell.hideOnMobile ? (
+                <Hidden xsDown>
+                  <TableCell
+                    key={thisCell.dataColumn}
+                    data-testid={`${thisCell.label}-header-cell`}
+                    className={classes.thead}
+                    style={{ width: thisCell.widthPercent }}
+                  >
+                    <span
+                      className={
+                        thisCell.visuallyHidden
+                          ? classes.hiddenHeaderCell
+                          : undefined
+                      }
+                    >
+                      {thisCell.label}
+                    </span>
+                  </TableCell>
+                </Hidden>
+              ) : (
+                <TableCell
+                  key={thisCell.dataColumn}
+                  data-testid={`${thisCell.label}-header-cell`}
+                  className={classes.thead}
+                  style={{ width: thisCell.widthPercent }}
+                >
+                  <span
+                    className={
+                      thisCell.visuallyHidden
+                        ? classes.hiddenHeaderCell
+                        : undefined
+                    }
+                  >
+                    {thisCell.label}
+                  </span>
+                </TableCell>
+              )
+            ]
           )
         )}
       </TableRow>

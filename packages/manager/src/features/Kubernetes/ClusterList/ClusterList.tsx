@@ -37,6 +37,7 @@ import ClusterRow from './ClusterRow';
 import useFlags from 'src/hooks/useFlags';
 import LandingHeader from 'src/components/LandingHeader';
 import ClusterRow_CMR from './ClusterRow_CMR';
+import Hidden from 'src/components/core/Hidden';
 
 type ClassNames = 'root' | 'title' | 'labelHeader';
 
@@ -138,6 +139,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
           docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
           onAddNew={() => history.push('/kubernetes/create')}
           entity="Cluster"
+          headerOnly
         />
       ) : (
         <Grid
@@ -196,24 +198,28 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                           >
                             Cluster Label
                           </TableSortCell_CMR>
-                          <TableSortCell_CMR
-                            active={orderBy === 'k8s_version'}
-                            label={'k8s_version'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-kubernetes-clusters-version-header
-                          >
-                            Version
-                          </TableSortCell_CMR>
-                          <TableSortCell_CMR
-                            active={orderBy === 'created'}
-                            label={'created'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-kubernetes-clusters-created-header
-                          >
-                            Created
-                          </TableSortCell_CMR>
+                          <Hidden smDown>
+                            <TableSortCell_CMR
+                              active={orderBy === 'k8s_version'}
+                              label={'k8s_version'}
+                              direction={order}
+                              handleClick={handleOrderChange}
+                              data-qa-kubernetes-clusters-version-header
+                            >
+                              Version
+                            </TableSortCell_CMR>
+                          </Hidden>
+                          <Hidden smDown>
+                            <TableSortCell_CMR
+                              active={orderBy === 'created'}
+                              label={'created'}
+                              direction={order}
+                              handleClick={handleOrderChange}
+                              data-qa-kubernetes-clusters-created-header
+                            >
+                              Created
+                            </TableSortCell_CMR>
+                          </Hidden>
                           <TableSortCell_CMR
                             active={orderBy === 'region'}
                             label={'region'}
@@ -223,24 +229,28 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                           >
                             Region
                           </TableSortCell_CMR>
-                          <TableSortCell_CMR
-                            active={orderBy === 'totalMemory'}
-                            label={'totalMemory'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-kubernetes-clusters-memory-header
-                          >
-                            Total Memory
-                          </TableSortCell_CMR>
-                          <TableSortCell_CMR
-                            active={orderBy === 'totalCPU'}
-                            label={'totalCPU'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-kubernetes-clusters-cpu-header
-                          >
-                            Total CPUs
-                          </TableSortCell_CMR>
+                          <Hidden xsDown>
+                            <TableSortCell_CMR
+                              active={orderBy === 'totalMemory'}
+                              label={'totalMemory'}
+                              direction={order}
+                              handleClick={handleOrderChange}
+                              data-qa-kubernetes-clusters-memory-header
+                            >
+                              Total Memory
+                            </TableSortCell_CMR>
+                          </Hidden>
+                          <Hidden xsDown>
+                            <TableSortCell_CMR
+                              active={orderBy === 'totalCPU'}
+                              label={'totalCPU'}
+                              direction={order}
+                              handleClick={handleOrderChange}
+                              data-qa-kubernetes-clusters-cpu-header
+                            >
+                              Total CPUs
+                            </TableSortCell_CMR>
+                          </Hidden>
                           <TableCell />
                         </TableRow_CMR>
                       </TableHead>
