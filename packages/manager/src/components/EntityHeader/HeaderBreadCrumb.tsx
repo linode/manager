@@ -29,7 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   rootHeaderOnly: {
     display: 'flex',
     alignItems: 'center',
-    flexBasis: '100%'
+    [theme.breakpoints.up('sm')]: {
+      flexBasis: '100%'
+    }
   },
   iconContainer: {
     padding: `5px !important`,

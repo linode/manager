@@ -154,7 +154,6 @@ interface Props {
   fromLinodes?: boolean;
 }
 
-//
 interface WithMappedVolumesProps {
   mappedVolumesDataWithLinodes: ExtendedVolume[];
 }

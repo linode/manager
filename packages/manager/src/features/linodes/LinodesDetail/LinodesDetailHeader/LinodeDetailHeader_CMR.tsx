@@ -25,6 +25,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import useLinodes from 'src/hooks/useLinodes';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
+import RescueDialog from '../LinodeRescue/RescueDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import { useHistory } from 'react-router-dom';
@@ -87,6 +88,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     linodeID: 0
   });
 
+  const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
+    open: false,
+    linodeID: 0
+  });
+
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: []
@@ -137,6 +143,13 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        break;
+      case 'rescue':
+        setRescueDialog(rescueDialog => ({
+          ...rescueDialog,
+          open: true,
+          linodeID
+        }));
     }
   };
 
@@ -145,6 +158,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     setDeleteDialog(deleteDialog => ({ ...deleteDialog, open: false }));
     setResizeDialog(resizeDialog => ({ ...resizeDialog, open: false }));
     setMigrateDialog(migrateDialog => ({ ...migrateDialog, open: false }));
+    setRescueDialog(rescueDialog => ({ ...rescueDialog, open: false }));
   };
 
   const closeTagDrawer = () => {
@@ -232,6 +246,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         open={resizeDialog.open}
         onClose={closeDialogs}
         linodeId={resizeDialog.linodeID}
+      />
+      <RescueDialog
+        open={rescueDialog.open}
+        onClose={closeDialogs}
+        linodeId={rescueDialog.linodeID}
       />
       <MigrateLinode
         open={migrateDialog.open}

@@ -90,20 +90,20 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
 
       if (matchesSmDown) {
         actions.unshift({
-          title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push({
-              pathname: `/kubernetes/clusters/${clusterId}`
-            });
-            e.preventDefault();
-          }
-        });
-        actions.unshift({
           title: 'Download kubeconfig',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
             e.stopPropagation();
             downloadKubeConfig();
+          }
+        });
+        actions.unshift({
+          title: 'Details',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push({
+              pathname: `/kubernetes/clusters/${clusterId}`
+            });
+            e.preventDefault();
           }
         });
       }
@@ -142,7 +142,7 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
     <div className={classes.inlineActions}>
       <Hidden smDown>
         <Link className={classes.link} to={`/kubernetes/clusters/${clusterId}`}>
-          <span>Edit</span>
+          <span>Details</span>
         </Link>
         <Button
           className={classes.button}

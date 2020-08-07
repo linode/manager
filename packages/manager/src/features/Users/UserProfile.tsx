@@ -128,11 +128,7 @@ class UserProfile extends React.Component<CombinedProps> {
     const generalProfileError = hasProfileErrorFor('none');
 
     return (
-      <div
-        id="tabpanel-userProfile"
-        role="tabpanel"
-        aria-labelledby="tab-userProfile"
-      >
+      <div>
         <Typography variant="h2" data-qa-profile-header>
           User Profile
         </Typography>
