@@ -107,7 +107,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
         </div>
         <div className={classes.post}>
           <ExternalLink
-            link="https://www.linode.com/community/questions/19137/mailing-ports-25-465-and-587-blocked-by-default"
+            link="https://www.linode.com/community/questions/19082/i-just-created-my-first-linode-and-i-cant-send-emails-why"
             text="Ports 25, 465, and 587 blocked?"
             className={classes.postLink}
             absoluteIcon
