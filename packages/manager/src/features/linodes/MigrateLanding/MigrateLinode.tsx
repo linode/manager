@@ -174,6 +174,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       open={open}
       onClose={onClose}
       fullWidth
+      fullHeight
       maxWidth="md"
     >
       {APIError && <Notice error text={APIError} />}

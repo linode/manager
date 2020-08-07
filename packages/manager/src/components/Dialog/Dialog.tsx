@@ -11,6 +11,7 @@ import { convertForAria } from 'src/components/TabLink/TabLink';
 
 export interface DialogProps extends _DialogProps {
   title: string;
+  fullHeight?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -25,6 +26,11 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .selectionCard': {
         maxWidth: '100%',
         flexBasis: '100%'
+      }
+    },
+    fullHeight: {
+      '& .MuiDialog-paper': {
+        height: '100vh'
       }
     },
     settingsBackdrop: {
@@ -70,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Dialog: React.FC<DialogProps> = props => {
-  const { title, children, ...rest } = props;
+  const { title, fullHeight, children, ...rest } = props;
 
   const classes = useStyles();
 
@@ -89,6 +95,7 @@ const Dialog: React.FC<DialogProps> = props => {
       BackdropProps={{
         className: classes.settingsBackdrop
       }}
+      className={fullHeight ? classes.fullHeight : undefined}
     >
       <Grid
         container
