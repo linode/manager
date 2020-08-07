@@ -71,7 +71,12 @@ export const Notifications: React.FC<{}> = _ => {
         />
       </Hidden>
       <Paper className={classes.root}>
-        <Grid container direction="row" justify="space-between">
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="flex-start"
+        >
           <Hidden smDown>
             <Grid item className={classes.column}>
               <Grid container direction="column">

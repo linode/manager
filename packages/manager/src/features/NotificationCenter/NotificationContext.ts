@@ -27,22 +27,24 @@ export const useNotificationContext = (): NotificationContextProps => {
   const [mostRecentLogin, setRecentLogin] = useState<string | undefined>();
 
   const request = useCallback(() => {
-    getEvents(
-      {},
-      {
-        created: {
-          '+gt': mostRecentLogin
+    if (mostRecentLogin) {
+      getEvents(
+        {},
+        {
+          created: {
+            '+gt': mostRecentLogin
+          }
         }
-      }
-    )
-      .then(response => {
-        setEvents(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        setError(error[0].reason);
-        setLoading(false);
-      });
+      )
+        .then(response => {
+          setEvents(response.data);
+          setLoading(false);
+        })
+        .catch(error => {
+          setError(error[0].reason);
+          setLoading(false);
+        });
+    }
   }, [mostRecentLogin]);
 
   useEffect(() => {

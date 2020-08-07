@@ -18,6 +18,7 @@ import {
   linodeTransferFactory,
   nodeBalancerFactory,
   profileFactory,
+  supportTicketFactory,
   volumeFactory,
   accountTransferFactory,
   eventFactory
@@ -157,5 +158,9 @@ export const handlers = [
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(10);
     return res(ctx.json(makeResourcePage(events)));
+  }),
+  rest.get('*/support/tickets', (req, res, ctx) => {
+    const tickets = supportTicketFactory.buildList(15, { status: 'open' });
+    return res(ctx.json(makeResourcePage(tickets)));
   })
 ];
