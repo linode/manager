@@ -9,6 +9,7 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
+import LinodeNews from './LinodeNews';
 
 import {
   Community,
@@ -70,7 +71,12 @@ export const Notifications: React.FC<{}> = _ => {
         />
       </Hidden>
       <Paper className={classes.root}>
-        <Grid container direction="row" justify="space-between">
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="flex-start"
+        >
           <Hidden smDown>
             <Grid item className={classes.column}>
               <Grid container direction="column">
@@ -111,6 +117,8 @@ export const Notifications: React.FC<{}> = _ => {
           mostRecentInvoiceId={mostRecentInvoiceRequest.data}
         />
       </Hidden>
+
+      <LinodeNews />
     </>
   );
 };
