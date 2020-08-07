@@ -76,22 +76,16 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
       // Previously Volumes
       {
         render: () => (
-          <div
-            id="tabpanel-storage"
-            role="tabpanel"
-            aria-labelledby="tab-storage"
-          >
-            <VolumesLanding_CMR
-              linodeId={linodeId}
-              linodeLabel={linodeLabel}
-              linodeRegion={linodeRegion}
-              linodeConfigs={linodeConfigs}
-              readOnly={readOnly}
-              fromLinodes
-              removeBreadCrumb
-              {...routeProps}
-            />
-          </div>
+          <VolumesLanding_CMR
+            linodeId={linodeId}
+            linodeLabel={linodeLabel}
+            linodeRegion={linodeRegion}
+            linodeConfigs={linodeConfigs}
+            readOnly={readOnly}
+            fromLinodes
+            removeBreadCrumb
+            {...routeProps}
+          />
         ),
         title: 'Storage'
       },

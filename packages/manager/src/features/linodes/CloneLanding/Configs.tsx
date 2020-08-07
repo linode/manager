@@ -42,11 +42,7 @@ export const Configs: React.FC<Props> = props => {
         count
       }) => {
         return (
-          <div
-            id="tabpanel-configurationProfiles"
-            role="tabpanel"
-            aria-labelledby="tab-configurationProfiles"
-          >
+          <div>
             <Table
               isResponsive={false}
               aria-label="List of Configurations"

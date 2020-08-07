@@ -66,12 +66,7 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Account & Billing`} />
-      <div
-        id="tabpanel-billingInfo"
-        role="tabpanel"
-        aria-labelledby="tab-billingInfo"
-        data-testid="billing-detail"
-      >
+      <div data-testid="billing-detail">
         <Grid container>
           <Grid item xs={12} md={12} lg={12} className={classes.main}>
             <BillingSummary

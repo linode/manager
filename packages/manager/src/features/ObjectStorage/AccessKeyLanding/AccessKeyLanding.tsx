@@ -267,11 +267,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <div
-      id="tabpanel-accessKeys"
-      role="tabpanel"
-      aria-labelledby="tab-accessKeys"
-    >
+    <div>
       <DocumentTitleSegment segment="Access Keys" />
       <Grid container justify="flex-end">
         <Grid item>
