@@ -42,7 +42,12 @@ class StoryTable extends React.Component {
                 order={order}
                 orderBy={orderBy}
                 handleOrderChange={handleOrderChange}
+                toggleLinodeView={() => 'grid'}
+                linodesAreGrouped={false}
+                toggleGroupLinodes={() => true}
+                linodeViewPreference={'list'}
               />
+
               <TableBody>
                 {orderedData.map(linode => (
                   <LinodeRow_CMR

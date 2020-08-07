@@ -39,7 +39,7 @@ export const Monitors: React.FC<CombinedProps> = props => {
   const { _loading } = useReduxLoad(['managed', 'managedIssues']);
 
   return (
-    <div id="tabpanel-monitors" role="tabpanel" aria-labelledby="tab-monitors">
+    <div>
       <MonitorTable
         monitors={monitors || []}
         credentials={credentials}

@@ -43,11 +43,7 @@ const LinodeSettings: React.FC<CombinedProps> = props => {
           ) : null;
 
         return (
-          <div
-            id="tabpanel-settings"
-            role="tabpanel"
-            aria-labelledby="tab-settings"
-          >
+          <div>
             <DocumentTitleSegment segment={`${linode.label} - Settings`} />
             {permissionsError}
             <Typography

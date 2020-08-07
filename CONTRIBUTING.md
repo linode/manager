@@ -32,11 +32,18 @@ If you're interested in learning how we write code and want to follow our guidel
 see our [code convention documentation.](CODE_CONVENTIONS.md).
 
 ### Testing
+
 Some projects, such as the Cloud Manager, use [Jest](https://facebook.github.io/jest/docs/en/api.html) for unit testing, snapshot testing, assertions, and mocking.
 
 End-to-end tests are written using WebdriverIO.
 
 For everything related to writing and running tests, [please see the documentation here.](TESTING.md)
+
+### Accessibility
+
+While we use [Material UI](https://material-ui.com/) as the basis for most of the UI in this project, we have recently been utilizing [Reach UI components](https://reacttraining.com/reach-ui/) to improve the accessibility and usability of the app.
+
+For additional documentation on coding for accessibility within this project, [please see the documentation here.](ACCESSIBILITY.md)
 
 ## Git workflows
 
