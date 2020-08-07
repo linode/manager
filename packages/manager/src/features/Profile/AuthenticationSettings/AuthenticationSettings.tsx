@@ -17,6 +17,7 @@ import SecuritySettings from './SecuritySettings';
 import ThirdParty from './ThirdParty';
 import ThirdPartyContent from './ThirdPartyContent';
 import TrustedDevices from './TrustedDevices';
+import TrustedDevices_CMR from './TrustedDevices_CMR';
 import TwoFactor from './TwoFactor';
 
 const useStyles = makeStyles(() => ({
@@ -65,7 +66,11 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
             updateProfile={updateProfile}
             disabled={thirdPartyEnabled}
           />
-          <TrustedDevices disabled={thirdPartyEnabled} />
+          {flags.cmr ? (
+            <TrustedDevices_CMR disabled={thirdPartyEnabled} />
+          ) : (
+            <TrustedDevices disabled={thirdPartyEnabled} />
+          )}
           {ipWhitelisting && (
             <SecuritySettings
               updateProfile={updateProfile}
