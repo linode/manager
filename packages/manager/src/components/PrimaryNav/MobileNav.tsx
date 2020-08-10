@@ -152,16 +152,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const MobileNav: React.FC<Props> = props => {
   const classes = useStyles();
   const ref = React.useRef<HTMLDivElement>(null);
-  const testref = React.useRef<HTMLDivElement>(null);
   const { groups } = props;
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    if (testref.current) {
-      testref.current.setAttribute('tabIndex', '0');
-    }
-  }, []);
 
   React.useMemo(() => {
     if (isOpen) {
@@ -211,14 +204,13 @@ export const MobileNav: React.FC<Props> = props => {
               const link = filteredLinks[0];
 
               return (
-                <MenuItems className={classes.menuItemList} tabIndex={0}>
+                <MenuItems className={classes.menuItemList}>
                   <MenuLink
                     key={link.display}
                     as={Link}
                     to={link.href}
                     onClick={closeMenu}
                     className={`${classes.menuItemLink} ${classes.menuItemLinkNoGroup}`}
-                    tabIndex={0}
                   >
                     {link.display}
                   </MenuLink>
@@ -235,11 +227,7 @@ export const MobileNav: React.FC<Props> = props => {
                   <KeyboardArrowDown className={classes.caret} />
                 </MenuButton>
                 <MenuPopover className={classes.menuPopover} portal={false}>
-                  <MenuItems
-                    className={classes.menuItemList}
-                    // tabIndex={0}
-                    ref={testref}
-                  >
+                  <MenuItems className={classes.menuItemList}>
                     {thisGroup.links.map((thisLink: any) => (
                       <MenuLink
                         key={thisLink.display}
@@ -247,7 +235,6 @@ export const MobileNav: React.FC<Props> = props => {
                         to={thisLink.href}
                         onClick={closeMenu}
                         className={classes.menuItemLink}
-                        tabIndex={0}
                       >
                         {thisLink.display}
                       </MenuLink>
