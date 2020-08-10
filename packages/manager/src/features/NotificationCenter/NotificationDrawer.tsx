@@ -41,7 +41,7 @@ interface Props {
 }
 
 export const NotificationDrawer: React.FC<Props> = props => {
-  const { open, onClose } = props;
+  const { open, events, onClose } = props;
   const { account } = useAccount();
   const classes = useStyles();
   const balance = (account.data?.balance ?? 0) + 50;
@@ -55,7 +55,7 @@ export const NotificationDrawer: React.FC<Props> = props => {
         <PendingActions />
         <Maintenance />
         <OpenSupportTickets />
-        <Community communityEvents={[]} />
+        <Community communityEvents={events} />
       </div>
     </Drawer>
   );
