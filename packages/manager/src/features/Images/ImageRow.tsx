@@ -1,17 +1,16 @@
-import { Image } from '@linode/api-v4/lib/images';
 import { Event } from '@linode/api-v4/lib/account';
+import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import TableRow from 'src/components/core/TableRow';
+import Typography from 'src/components/core/Typography';
+import LinearProgress from 'src/components/LinearProgress';
 import RenderGuard from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/core/TableRow';
 import { formatDate } from 'src/utilities/format-date-iso8601';
-import ActionMenu from './ImagesActionMenu';
-import LinearProgress from 'src/components/LinearProgress';
-import Typography from 'src/components/core/Typography';
+import ActionMenu, { Handlers } from './ImagesActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   label: {
     width: '30%',
     [theme.breakpoints.down('sm')]: {
@@ -23,26 +22,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
-  onEdit: (label: string, description: string, imageID: string) => void;
-  onDelete: (image: string, imageID: string) => void;
-  onRestore: (imageID: string) => void;
-  onDeploy: (imageID: string) => void;
-  image: ImageWithEvent;
-}
 export interface ImageWithEvent extends Image {
   event?: Event;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Handlers & ImageWithEvent;
 
 const ImageRow: React.FC<CombinedProps> = props => {
-  const { image, ...rest } = props;
-
   const classes = useStyles();
+  const {
+    created,
+    description,
+    event,
+    expiry,
+    id,
+    label,
+    size,
+    ...rest
+  } = props;
 
-  return isImageUpdating(image.event) ? (
-    <TableRow key={image.id} data-qa-image-cell={image.id}>
+  return isImageUpdating(event) ? (
+    <TableRow key={id} data-qa-image-cell={id}>
       <TableCell
         parentColumn="Label"
         className={classes.label}
@@ -51,34 +51,34 @@ const ImageRow: React.FC<CombinedProps> = props => {
         <ProgressDisplay
           className={classes.loadingStatus}
           text="Creating"
-          progress={progressFromEvent(image.event)}
+          progress={progressFromEvent(event)}
         />
-        {image.label}
+        {label}
       </TableCell>
       <TableCell colSpan={4}>
-        <LinearProgress value={progressFromEvent(image.event)} />
+        <LinearProgress value={progressFromEvent(event)} />
       </TableCell>
     </TableRow>
   ) : (
-    <TableRow key={image.id} data-qa-image-cell={image.id}>
+    <TableRow key={id} data-qa-image-cell={id}>
       <TableCell
         parentColumn="Label"
         className={classes.label}
         data-qa-image-label
       >
-        {image.label}
+        {label}
       </TableCell>
       <TableCell parentColumn="Created" data-qa-image-date>
-        {formatDate(image.created)}
+        {formatDate(created)}
       </TableCell>
       <TableCell parentColumn="Expires" data-qa-image-date>
-        {image.expiry ? formatDate(image.expiry) : 'Never'}
+        {expiry ? formatDate(expiry) : 'Never'}
       </TableCell>
       <TableCell parentColumn="Size" data-qa-image-size>
-        {image.size} MB
+        {size} MB
       </TableCell>
       <TableCell>
-        <ActionMenu image={image} {...rest} />
+        <ActionMenu id={id} label={label} description={description} {...rest} />
       </TableCell>
     </TableRow>
   );

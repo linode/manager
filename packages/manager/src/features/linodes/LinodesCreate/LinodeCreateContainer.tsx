@@ -675,7 +675,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleSubmitForm={this.submitForm}
             resetCreationState={this.clearCreationState}
             setBackupID={this.setBackupID}
-            regionsData={filteredRegions}
+            regionsData={filteredRegions!}
             regionHelperText={regionHelperText}
             {...restOfProps}
             {...restOfState}

@@ -63,7 +63,7 @@ export interface WithTypesProps {
  */
 export interface WithTypesRegionsAndImages {
   regionsData: ExtendedRegion[];
-  typesData: ExtendedType[];
+  typesData?: ExtendedType[];
   imagesData: Record<string, Image>;
 }
 
@@ -81,6 +81,18 @@ export type HandleSubmit = (
   payload: CreateLinodeRequest,
   linodeID?: number
 ) => void;
+
+export interface BasicFromContentProps {
+  errors?: APIError[];
+  selectedImageID?: string;
+  updateImageID: (id: string) => void;
+  selectedRegionID?: string;
+  disabledClasses?: LinodeTypeClass[];
+  regionHelperText?: string;
+  updateRegionID: (id: string) => void;
+  selectedTypeID?: string;
+  updateTypeID: (id: string) => void;
+}
 
 /**
  * minimum number of state and handlers needed for
@@ -120,7 +132,7 @@ export interface BaseFormStateAndHandlers {
  * additional form fields needed when creating a Linode from a Linode
  * AKA cloning a Linode
  */
-export interface CloneFormStateHandlers extends BaseFormStateAndHandlers {
+export interface CloneFormStateHandlers extends BasicFromContentProps {
   selectedDiskSize?: number;
   updateDiskSize: (id: number) => void;
   selectedLinodeID?: number;
@@ -130,7 +142,7 @@ export interface CloneFormStateHandlers extends BaseFormStateAndHandlers {
 /**
  * additional form fields needed when creating a Linode from a StackScript
  */
-export interface StackScriptFormStateHandlers extends BaseFormStateAndHandlers {
+export interface StackScriptFormStateHandlers extends BasicFromContentProps {
   selectedStackScriptID?: number;
   selectedStackScriptUsername?: string;
   selectedStackScriptLabel?: string;

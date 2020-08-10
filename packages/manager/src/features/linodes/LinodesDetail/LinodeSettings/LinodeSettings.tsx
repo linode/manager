@@ -43,11 +43,7 @@ const LinodeSettings: React.FC<CombinedProps> = props => {
           ) : null;
 
         return (
-          <div
-            id="tabpanel-settings"
-            role="tabpanel"
-            aria-labelledby="tab-settings"
-          >
+          <>
             <DocumentTitleSegment segment={`${linode.label} - Settings`} />
             {permissionsError}
             <Typography
@@ -76,7 +72,7 @@ const LinodeSettings: React.FC<CombinedProps> = props => {
               linodeId={linode.id}
               linodeLabel={linode.label}
             />
-          </div>
+          </>
         );
       }}
     </LinodeDetailContextConsumer>

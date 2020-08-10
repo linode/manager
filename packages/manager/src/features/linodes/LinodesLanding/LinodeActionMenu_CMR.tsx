@@ -238,7 +238,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Rescue',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
-            history.push(`/linodes/${linodeId}/rescue`);
+            openDialog('rescue', linodeId);
             e.preventDefault();
             e.stopPropagation();
           },

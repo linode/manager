@@ -62,6 +62,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   const goToDomain = () => {
     history.push(`/domains/${id}`);
@@ -98,12 +99,14 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
     ];
 
     if (matchesSmDown) {
-      baseActions.unshift({
-        title: 'Edit',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          handleEdit();
-        }
-      });
+      if (type === 'master') {
+        baseActions.unshift({
+          title: 'Edit',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            handleEdit();
+          }
+        });
+      }
       baseActions.unshift({
         title: status === 'active' ? 'Disable' : 'Enable',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -114,15 +117,20 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
           );
         }
       });
+      baseActions.unshift({
+        title: 'Details',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          type === 'master' ? goToDomain() : handleEdit();
+        }
+      });
     }
 
-    if (type === 'master') {
+    if (type === 'master' && matchesMdUp) {
       return [
         {
-          title: 'Edit DNS Records',
+          title: 'Edit',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            goToDomain();
-            e.preventDefault();
+            handleEdit();
           }
         },
         ...baseActions
@@ -135,9 +143,12 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       <Hidden smDown>
-        <div className="flex-center">
-          <button className={classes.button} onClick={handleEdit}>
-            Edit
+        <div className="flexCenter">
+          <button
+            className={classes.button}
+            onClick={type === 'master' ? goToDomain : handleEdit}
+          >
+            Details
           </button>
           <button
             className={classes.button}

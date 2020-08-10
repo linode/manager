@@ -85,6 +85,7 @@ export const PendingActions: React.FC<{}> = _ => {
       content={actions}
       header="Pending Actions"
       showMoreTarget={'/events'}
+      emptyMessage="There are no pending actions."
     />
   );
 };

@@ -92,7 +92,7 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
 
   const inlineActions = [
     {
-      actionText: 'Edit',
+      actionText: 'Details',
       className: classes.link,
       href: `/firewalls/${firewallID}`
     },
@@ -103,6 +103,12 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
       onClick: (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         handleEnableDisable();
+      }
+    },
+    {
+      actionText: 'Delete',
+      onClick: () => {
+        triggerDeleteFirewall(firewallID, firewallLabel);
       }
     }
   ];
@@ -116,7 +122,26 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
   };
 
   const createActions = () => (): Action[] => {
-    const actions: Action[] = [
+    return [
+      {
+        title: 'Details',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          history.push({
+            pathname: `/firewalls/${firewallID}`
+          });
+          e.preventDefault();
+        }
+      },
+      {
+        title:
+          firewallStatus === ('enabled' as FirewallStatus)
+            ? 'Disable'
+            : 'Enable',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          handleEnableDisable();
+        }
+      },
       {
         title: 'Delete',
         onClick: () => {
@@ -124,32 +149,6 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
         }
       }
     ];
-
-    if (matchesSmDown) {
-      actions.unshift(
-        {
-          title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push({
-              pathname: `/firewalls/${firewallID}`
-            });
-            e.preventDefault();
-          }
-        },
-        {
-          title:
-            firewallStatus === ('enabled' as FirewallStatus)
-              ? 'Disable'
-              : 'Enable',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            handleEnableDisable();
-          }
-        }
-      );
-    }
-
-    return actions;
   };
 
   return (
@@ -166,10 +165,12 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
             />
           );
         })}
-      <ActionMenu
-        createActions={createActions()}
-        ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
-      />
+      {matchesSmDown && (
+        <ActionMenu
+          createActions={createActions()}
+          ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
+        />
+      )}
     </div>
   );
 };
