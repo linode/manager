@@ -3,6 +3,7 @@ import { parseAPIDate } from 'src/utilities/date';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -48,11 +49,7 @@ const styles = (theme: Theme) =>
       marginTop: 8,
       marginBottom: 8,
       marginLeft: 15,
-      lineHeight: '1.5rem',
-      [theme.breakpoints.down('xs')]: {
-        marginBottom: 0,
-        marginTop: theme.spacing(2)
-      }
+      lineHeight: '1.5rem'
     },
     addNewWrapper: {
       '&.MuiGrid-item': {
@@ -119,12 +116,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     return (
-      <div
-        id="tabpanel-sshKeys"
-        className={classes.root}
-        role="tabpanel"
-        aria-labelledby="tab-sshKeys"
-      >
+      <div className={classes.root}>
         <Grid
           className={classes.sshKeysHeader}
           container
@@ -149,7 +141,9 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
               <TableRow>
                 <TableCell data-qa-label-column>Label</TableCell>
                 <TableCell data-qa-key-column>Key</TableCell>
-                <TableCell data-qa-created-column>Created</TableCell>
+                <Hidden xsDown>
+                  <TableCell data-qa-created-column>Created</TableCell>
+                </Hidden>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -226,7 +220,9 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
             Fingerprint: {key.fingerprint}
           </Typography>
         </TableCell>
-        <TableCell data-qa-key-created>{key.created}</TableCell>
+        <Hidden xsDown>
+          <TableCell data-qa-key-created>{key.created}</TableCell>
+        </Hidden>
         <TableCell className={classes.actionCell}>
           <SSHKeyActionMenu
             id={key.id}
