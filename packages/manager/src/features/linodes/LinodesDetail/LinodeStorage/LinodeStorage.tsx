@@ -1,9 +1,8 @@
 import { Event } from '@linode/api-v4/lib/account';
-import { Config } from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import Loading from 'src/components/LandingLoading';
@@ -69,22 +68,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
-  isVolumesLanding?: boolean;
-  linodeId?: number;
-  linodeLabel?: string;
-  linodeRegion?: string;
-  linodeConfigs?: Config[];
-  recentEvent?: Event;
-  readOnly?: boolean;
-  removeBreadCrumb?: boolean;
-  fromLinodes?: boolean;
-}
-
-interface WithMappedVolumesProps {
-  mappedVolumesDataWithLinodes: ExtendedVolume[];
-}
-
 interface DispatchProps {
   openForEdit: (
     volumeId: number,
@@ -111,8 +94,7 @@ interface DispatchProps {
 
 type RouteProps = RouteComponentProps<{ linodeId: string }>;
 
-type CombinedProps = Props &
-  LinodeContextProps &
+type CombinedProps = LinodeContextProps &
   VolumesRequests &
   WithVolumesProps &
   WithLinodesProps &
@@ -121,7 +103,6 @@ type CombinedProps = Props &
   DispatchProps &
   RouteProps &
   WithSnackbarProps &
-  WithMappedVolumesProps &
   RegionProps;
 
 const volumeHeaders = [
@@ -167,11 +148,14 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
     openForConfig,
     openForClone,
     openForEdit,
-    openForResize
+    openForResize,
+    openForCreating,
+    linodeId,
+    linodeLabel,
+    linodeRegion
   } = props;
 
   const classes = useStyles();
-  const history = useHistory();
 
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
     open: false,
@@ -299,6 +283,18 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
       });
   };
 
+  const openCreateVolumeDrawer = (e: any) => {
+    e.preventDefault();
+
+    if (linodeId && linodeLabel && linodeRegion) {
+      return openForCreating('Created from Linode Details', {
+        linodeId,
+        linodeLabel,
+        linodeRegion
+      });
+    }
+  };
+
   const handlers: VolumeHandlers = {
     openForConfig,
     openForEdit,
@@ -315,8 +311,7 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
     data: linodeVolumes ?? [],
     loading: volumesLoading,
     lastUpdated: volumesLastUpdated,
-    error: volumesError?.read,
-    originModifier: true
+    error: volumesError?.read
   };
 
   if (volumesLoading) {
@@ -341,8 +336,8 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
           </Grid>
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
-              onClick={() => history.push('/volumes/create')}
-              label="Add a Volume"
+              onClick={openCreateVolumeDrawer}
+              label="Add a Volume..."
               disabled={false}
             />
           </Grid>
@@ -392,6 +387,8 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 interface LinodeContextProps {
   linodeId?: number;
   linodeStatus?: string;
+  linodeLabel?: string;
+  linodeRegion?: string;
   readOnly: boolean;
   linodeVolumes?: Volume[];
 }
@@ -399,6 +396,8 @@ interface LinodeContextProps {
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
   linodeStatus: linode.status,
+  linodeLabel: linode.label,
+  linodeRegion: linode.region,
   readOnly: linode._permissions === 'read_only',
   linodeVolumes: linode._volumes
 }));
@@ -411,7 +410,7 @@ const filterVolumeEvents = (event: Event): boolean => {
   );
 };
 
-export default compose<CombinedProps, Props>(
+export default compose<CombinedProps, {}>(
   connected,
   linodeContext,
   withVolumesRequests,

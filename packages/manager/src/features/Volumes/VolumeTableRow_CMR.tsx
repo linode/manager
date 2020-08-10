@@ -1,6 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { makeStyles } from 'src/components/core/styles';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Typography from 'src/components/core/Typography';
@@ -62,9 +62,13 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
     filesystem_path: filesystemPath,
     linodeLabel,
     linode_id: linodeId,
-    linodeStatus,
-    originModifier: fromLinodeDashboardOrDetail
+    linodeStatus
   } = props;
+
+  const location = useLocation();
+  const fromLinodeDashboardOrDetail = location.pathname.match(/storage/)
+    ? true
+    : false;
 
   const formattedRegion = formatRegion(region);
 
