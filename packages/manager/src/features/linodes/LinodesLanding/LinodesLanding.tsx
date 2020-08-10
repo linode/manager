@@ -60,6 +60,7 @@ import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import DeleteDialog from './DeleteDialog';
+import RescueDialog from '../LinodesDetail/LinodeRescue/RescueDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import DisplayLinodes from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
@@ -77,6 +78,7 @@ interface State {
   selectedLinodeID?: number;
   selectedLinodeLabel?: string;
   deleteDialogOpen: boolean;
+  rescueDialogOpen: boolean;
   groupByTag: boolean;
   CtaDismissed: boolean;
   linodeResizeOpen: boolean;
@@ -105,6 +107,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
     powerDialogOpen: false,
     deleteDialogOpen: false,
+    rescueDialogOpen: false,
     groupByTag: false,
     CtaDismissed: BackupsCtaDismissed.get(),
     linodeResizeOpen: false,
@@ -167,6 +170,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           linodeMigrateOpen: true
         });
         break;
+      case 'rescue':
+        this.setState({
+          rescueDialogOpen: true
+        });
+        break;
     }
     this.setState({
       selectedLinodeID: linodeID,
@@ -178,6 +186,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({
       powerDialogOpen: false,
       deleteDialogOpen: false,
+      rescueDialogOpen: false,
       linodeResizeOpen: false,
       linodeMigrateOpen: false
     });
@@ -300,6 +309,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               open={this.state.linodeMigrateOpen}
               onClose={this.closeDialogs}
               linodeID={this.state.selectedLinodeID ?? -1}
+            />
+            <RescueDialog
+              open={this.state.rescueDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
             />
           </>
         )}
