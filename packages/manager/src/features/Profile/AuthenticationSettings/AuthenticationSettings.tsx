@@ -17,6 +17,7 @@ import SecuritySettings from './SecuritySettings';
 import ThirdParty from './ThirdParty';
 import ThirdPartyContent from './ThirdPartyContent';
 import TrustedDevices from './TrustedDevices';
+import TrustedDevices_CMR from './TrustedDevices_CMR';
 import TwoFactor from './TwoFactor';
 
 const useStyles = makeStyles(() => ({
@@ -65,7 +66,11 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
             updateProfile={updateProfile}
             disabled={thirdPartyEnabled}
           />
-          <TrustedDevices disabled={thirdPartyEnabled} />
+          {flags.cmr ? (
+            <TrustedDevices_CMR disabled={thirdPartyEnabled} />
+          ) : (
+            <TrustedDevices disabled={thirdPartyEnabled} />
+          )}
           {ipWhitelisting && (
             <SecuritySettings
               updateProfile={updateProfile}
@@ -90,12 +95,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const initialTab = 0;
 
   return (
-    <div
-      id="tabpanel-passwordAuthentication"
-      role="tabpanel"
-      aria-labelledby="tab-passwordAuthentication"
-      data-testid="authSettings"
-    >
+    <div data-testid="authSettings">
       <DocumentTitleSegment segment={`Password & Authentication`} />
       {/* Remove when logic above is cleared */}
       {success && <Notice success text={success} />}

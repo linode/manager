@@ -88,18 +88,23 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const classes = usePrimaryNavStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const matchesMobile = useMediaQuery('(min-width:750px)');
+  const matchesMobile = useMediaQuery('(max-width:750px)');
   const matchesTablet = useMediaQuery('(max-width:1190px)');
-
-  const { _isManagedAccount, account } = useAccountManagement();
-  const { domains, requestDomains } = useDomains();
-  const flags = useFlags();
 
   const { closeMenu, isCollapsed, toggleTheme, toggleSpacing } = props;
 
   const [anchorEl, setAnchorEl] = React.useState<
     (EventTarget & HTMLElement) | undefined
   >();
+
+  const flags = useFlags();
+  const { domains, requestDomains } = useDomains();
+
+  const {
+    _isManagedAccount,
+    _isLargeAccount,
+    account
+  } = useAccountManagement();
 
   const showFirewalls = isFeatureEnabled(
     'Cloud Firewall',
@@ -118,7 +123,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
           {
             display: 'Dashboard',
             href: '/dashboard',
-            hide: matchesMobile
+            hide: !matchesMobile
           }
         ]
       },
@@ -156,7 +161,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             href: '/domains',
             prefetchRequestFn: requestDomains,
             prefetchRequestCondition:
-              !domains.loading && domains.lastUpdated === 0
+              !domains.loading && domains.lastUpdated === 0 && !_isLargeAccount
           },
           {
             display: 'Firewalls',
@@ -213,6 +218,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       domains.loading,
       domains.lastUpdated,
       showFirewalls,
+      _isLargeAccount,
       _isManagedAccount
     ]
   );
@@ -247,9 +253,11 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
               </Link>
             </div>
           </Grid>
-          <Grid item>
-            <MobileNav groups={primaryLinkGroups} />
-          </Grid>
+          {matchesMobile && (
+            <Grid item>
+              <MobileNav groups={primaryLinkGroups} />
+            </Grid>
+          )}
           <div className={classes.hideOnMobile}>
             <Grid item>
               <div

@@ -73,6 +73,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         '& $caret': {
           transform: 'rotate(180deg)'
         }
+      },
+      '&:hover': {
+        backgroundColor: theme.bg.primaryNavActiveBG
+      },
+      '&:focus': {
+        backgroundColor: theme.bg.primaryNavActiveBG
       }
     }
   },
@@ -115,10 +121,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: 40,
       paddingRight: 40,
       '&:hover': {
-        backgroundColor: '#434951'
+        backgroundColor: theme.bg.primaryNavActiveBG
       },
       '&:focus': {
-        backgroundColor: '#434951'
+        backgroundColor: theme.bg.primaryNavActiveBG
       }
     },
     '&[data-reach-menu-item][data-selected]': {
@@ -128,7 +134,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuItemLinkNoGroup: {
     '&[data-reach-menu-item]': {
       paddingLeft: 20,
-      paddingRight: 14
+      paddingRight: 14,
+      '&:hover': {
+        backgroundColor: theme.bg.primaryNavActiveBG
+      },
+      '&:focus': {
+        backgroundColor: theme.bg.primaryNavActiveBG
+      }
     }
   },
   settingsBackdrop: {
@@ -140,9 +152,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const MobileNav: React.FC<Props> = props => {
   const classes = useStyles();
   const ref = React.useRef<HTMLDivElement>(null);
+  const testref = React.useRef<HTMLDivElement>(null);
   const { groups } = props;
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (testref.current) {
+      testref.current.setAttribute('tabIndex', '0');
+    }
+  }, []);
 
   React.useMemo(() => {
     if (isOpen) {
@@ -171,7 +190,7 @@ export const MobileNav: React.FC<Props> = props => {
       <MenuButton
         aria-label={isOpen ? 'Close menu' : 'Open menu'}
         className={classes.navIcon}
-        onClick={openMenu}
+        onClick={isOpen ? closeMenu : openMenu}
       >
         {isOpen ? <CloseIcon /> : <MenuIcon />}
         Menu
@@ -192,13 +211,14 @@ export const MobileNav: React.FC<Props> = props => {
               const link = filteredLinks[0];
 
               return (
-                <MenuItems className={classes.menuItemList}>
+                <MenuItems className={classes.menuItemList} tabIndex={0}>
                   <MenuLink
                     key={link.display}
                     as={Link}
                     to={link.href}
                     onClick={closeMenu}
                     className={`${classes.menuItemLink} ${classes.menuItemLinkNoGroup}`}
+                    tabIndex={0}
                   >
                     {link.display}
                   </MenuLink>
@@ -215,7 +235,11 @@ export const MobileNav: React.FC<Props> = props => {
                   <KeyboardArrowDown className={classes.caret} />
                 </MenuButton>
                 <MenuPopover className={classes.menuPopover} portal={false}>
-                  <MenuItems className={classes.menuItemList}>
+                  <MenuItems
+                    className={classes.menuItemList}
+                    // tabIndex={0}
+                    ref={testref}
+                  >
                     {thisGroup.links.map((thisLink: any) => (
                       <MenuLink
                         key={thisLink.display}
@@ -223,6 +247,7 @@ export const MobileNav: React.FC<Props> = props => {
                         to={thisLink.href}
                         onClick={closeMenu}
                         className={classes.menuItemLink}
+                        tabIndex={0}
                       >
                         {thisLink.display}
                       </MenuLink>

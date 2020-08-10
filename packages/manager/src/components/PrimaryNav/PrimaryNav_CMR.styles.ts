@@ -232,6 +232,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item]': {
       display: 'flex',
       alignItems: 'center',
+      backgroundColor: theme.bg.primaryNavPaper,
       color: theme.color.primaryNavText,
       fontSize: '1rem',
       paddingTop: 12,

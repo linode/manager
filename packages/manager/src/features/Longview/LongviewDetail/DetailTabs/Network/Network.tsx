@@ -55,13 +55,7 @@ export const NetworkLanding: React.FC<Props> = props => {
   const isToday = _isToday(time.start, time.end);
 
   return (
-    <Grid
-      container
-      id="tabpanel-processes"
-      role="tabpanel"
-      aria-labelledby="tab-processes"
-      direction="column"
-    >
+    <Grid container direction="column">
       <DocumentTitleSegment segment={'Network'} />
       <Grid item xs={12}>
         <Box
