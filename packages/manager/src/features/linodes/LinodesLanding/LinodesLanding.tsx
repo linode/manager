@@ -722,7 +722,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
       : false,
     linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
-    userTimezone: getUserTimezone(),
+    userTimezone: getUserTimezone(state),
     userTimezoneLoading: state.__resources.profile.loading,
     userTimezoneError: path<APIError[]>(
       ['read'],
