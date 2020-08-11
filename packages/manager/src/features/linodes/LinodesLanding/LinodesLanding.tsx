@@ -60,6 +60,7 @@ import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import DeleteDialog from './DeleteDialog';
+import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue/RescueDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import DisplayLinodes from './DisplayLinodes';
@@ -78,6 +79,7 @@ interface State {
   selectedLinodeID?: number;
   selectedLinodeLabel?: string;
   deleteDialogOpen: boolean;
+  rebuildDialogOpen: boolean;
   rescueDialogOpen: boolean;
   groupByTag: boolean;
   CtaDismissed: boolean;
@@ -107,6 +109,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
     powerDialogOpen: false,
     deleteDialogOpen: false,
+    rebuildDialogOpen: false,
     rescueDialogOpen: false,
     groupByTag: false,
     CtaDismissed: BackupsCtaDismissed.get(),
@@ -170,6 +173,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           linodeMigrateOpen: true
         });
         break;
+      case 'rebuild':
+        this.setState({
+          rebuildDialogOpen: true
+        });
+        break;
       case 'rescue':
         this.setState({
           rescueDialogOpen: true
@@ -186,6 +194,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({
       powerDialogOpen: false,
       deleteDialogOpen: false,
+      rebuildDialogOpen: false,
       rescueDialogOpen: false,
       linodeResizeOpen: false,
       linodeMigrateOpen: false
@@ -309,6 +318,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               open={this.state.linodeMigrateOpen}
               onClose={this.closeDialogs}
               linodeID={this.state.selectedLinodeID ?? -1}
+            />
+            <LinodeRebuildDialog
+              open={this.state.rebuildDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
             />
             <RescueDialog
               open={this.state.rescueDialogOpen}

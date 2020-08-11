@@ -25,6 +25,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import useLinodes from 'src/hooks/useLinodes';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
+import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue/RescueDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
@@ -93,6 +94,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     linodeID: 0
   });
 
+  const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
+    open: false,
+    linodeID: 0
+  });
+
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: []
@@ -150,6 +156,13 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        break;
+      case 'rebuild':
+        setRebuildDialog(rebuildDialog => ({
+          ...rebuildDialog,
+          open: true,
+          linodeID
+        }));
     }
   };
 
@@ -159,6 +172,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     setResizeDialog(resizeDialog => ({ ...resizeDialog, open: false }));
     setMigrateDialog(migrateDialog => ({ ...migrateDialog, open: false }));
     setRescueDialog(rescueDialog => ({ ...rescueDialog, open: false }));
+    setRebuildDialog(rebuildDialog => ({ ...rebuildDialog, open: false }));
   };
 
   const closeTagDrawer = () => {
@@ -246,6 +260,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         open={resizeDialog.open}
         onClose={closeDialogs}
         linodeId={resizeDialog.linodeID}
+      />
+      <LinodeRebuildDialog
+        open={rebuildDialog.open}
+        onClose={closeDialogs}
+        linodeId={rebuildDialog.linodeID}
       />
       <RescueDialog
         open={rescueDialog.open}
