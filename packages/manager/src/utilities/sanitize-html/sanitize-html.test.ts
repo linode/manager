@@ -1,12 +1,12 @@
 import { isURLValid, sanitizeHTML } from './sanitizeHTML';
 
 describe('sanitizeHTML', () => {
-  it('should escape non-whitelisted tags', () => {
+  it('should escape non-allowlisted tags', () => {
     // safe
     expect(sanitizeHTML('<script>')).not.toContain('<script>');
   });
 
-  it('should strip non-whitelisted attributes', () => {
+  it('should strip non-allowlisted attributes', () => {
     // safe
     expect(sanitizeHTML('<a onmouseover>')).not.toContain('onmouseover');
   });
