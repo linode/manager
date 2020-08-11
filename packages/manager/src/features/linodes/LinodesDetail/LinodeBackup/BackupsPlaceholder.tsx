@@ -22,7 +22,8 @@ export const BackupsPlaceholder: React.FC<Props> = props => {
   const backupPlaceholderText = backupsMonthlyPrice ? (
     <Typography variant="subtitle1">
       Three backup slots are executed and rotated automatically: a daily backup,
-      a 2-7 day old backup, and 8-14 day old backup. To enable backups for just{' '}
+      a 2-7 day old backup, and an 8-14 day old backup. To enable backups for
+      just{' '}
       <strong>
         <Currency quantity={backupsMonthlyPrice} /> per month
       </strong>
