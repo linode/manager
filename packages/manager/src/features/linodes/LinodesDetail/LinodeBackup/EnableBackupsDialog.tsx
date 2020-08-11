@@ -15,13 +15,12 @@ interface Props {
   linodeId: number;
   onClose: () => void;
   open: boolean;
-  onSuccess?: () => void;
 }
 
 export type CombinedProps = Props;
 
 export const EnableBackupsDialog: React.FC<Props> = props => {
-  const { linodeId, onClose, onSuccess, open } = props;
+  const { linodeId, onClose, open } = props;
   /**
    * Calculate the monthly backup price here.
    * Since this component is used in LinodesLanding
@@ -51,16 +50,13 @@ export const EnableBackupsDialog: React.FC<Props> = props => {
         enqueueSnackbar('Backups are being enabled for this Linode.', {
           variant: 'success'
         });
-        if (onSuccess) {
-          onSuccess();
-        }
         onClose();
       })
       .catch(error => {
         setError(error[0].reason);
         setSubmitting(false);
       });
-  }, [linodeId, onClose, enqueueSnackbar, onSuccess]);
+  }, [linodeId, onClose, enqueueSnackbar]);
 
   React.useEffect(() => {
     if (open) {

@@ -223,10 +223,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     return deleteLinode(linodeId);
   };
 
-  const handleEnableBackups = (linodeId: number) => {
-    history.push(`/linodes/${linodeId}/backup`);
-  };
-
   return (
     <React.Fragment>
       <HostMaintenance linodeStatus={linodeStatus} />
@@ -288,7 +284,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         linodeId={backupsDialog.linodeID}
         open={backupsDialog.open}
         onClose={closeDialogs}
-        onSuccess={() => handleEnableBackups(backupsDialog.linodeID)}
       />
     </React.Fragment>
   );

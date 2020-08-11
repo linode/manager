@@ -212,10 +212,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({ filterStatus: status });
   };
 
-  onBackupsEnableSuccess = () => {
-    this.props.history.push(`linodes/${this.state.selectedLinodeID}/backup`);
-  };
-
   render() {
     const {
       imagesError,
@@ -331,7 +327,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             <EnableBackupsDialog
               open={this.state.enableBackupsDialogOpen}
               onClose={this.closeDialogs}
-              onSuccess={this.onBackupsEnableSuccess}
               linodeId={this.state.selectedLinodeID ?? -1}
             />
           </>
