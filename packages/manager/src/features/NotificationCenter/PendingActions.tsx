@@ -6,6 +6,7 @@ import Typography from 'src/components/core/Typography';
 import useEvents from 'src/hooks/useEvents';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
+import { isInProgressEvent } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import {
   eventMessageGenerator,
@@ -14,6 +15,7 @@ import {
 import NotificationSection, { NotificationItem } from './NotificationSection';
 import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
 import { Link } from 'src/components/Link';
+import { reducer } from './eventQueue';
 
 const useStyles = makeStyles((theme: Theme) => ({
   action: {
@@ -27,11 +29,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const PendingActions: React.FC<{}> = _ => {
   const classes = useStyles();
-  const { inProgressEvents } = useEvents();
+  const { events } = useEvents();
   const { linodes } = useLinodes();
   const { types } = useTypes();
   const _linodes = Object.values(linodes.itemsById);
   const _types = types.entities;
+
+  const [state, dispatch] = React.useReducer(reducer, {
+    inProgressEvents: events.filter(isInProgressEvent),
+    completedEvents: []
+  });
+
+  React.useEffect(() => {
+    dispatch({ type: 'update', payload: { eventsFromRedux: events } });
+  }, [events]);
 
   const formatEventForDisplay = React.useCallback(
     (event: ExtendedEvent): NotificationItem | null => {
@@ -62,13 +73,17 @@ export const PendingActions: React.FC<{}> = _ => {
               {message}
               {timeRemaining}
             </Typography>
-            <BarPercent
-              className={classes.bar}
-              max={100}
-              value={event.percent_complete ?? 0}
-              rounded
-              narrow
-            />
+            {event.percent_complete ?? 0 < 100 ? (
+              <BarPercent
+                className={classes.bar}
+                max={100}
+                value={event.percent_complete ?? 0}
+                rounded
+                narrow
+              />
+            ) : (
+              <Typography>Complete</Typography>
+            )}
           </div>
         )
       };
@@ -76,7 +91,9 @@ export const PendingActions: React.FC<{}> = _ => {
     [classes, _linodes, _types]
   );
 
-  const actions = inProgressEvents
+  const allEvents = [...state.inProgressEvents, ...state.completedEvents];
+
+  const actions = allEvents
     .map(formatEventForDisplay)
     .filter(Boolean) as NotificationItem[];
 
