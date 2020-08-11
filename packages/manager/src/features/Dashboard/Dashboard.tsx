@@ -141,7 +141,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
       state
     ),
     notifications: pathOr([], ['data'], state.__resources.notifications),
-    userTimezone: getUserTimezone(),
+    userTimezone: getUserTimezone(state),
     userTimezoneLoading: state.__resources.profile.loading,
     userTimezoneError: path(['read'], state.__resources.profile.error),
     someLinodesHaveScheduledMaintenance: linodesWithMaintenance

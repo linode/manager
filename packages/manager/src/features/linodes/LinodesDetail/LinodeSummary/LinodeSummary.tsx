@@ -49,7 +49,6 @@ import SummaryPanel from './SummaryPanel';
 import { ChartProps } from './types';
 import { parseAPIDate } from 'src/utilities/date';
 import getUserTimezone from 'src/utilities/getUserTimezone';
-
 setUpCharts();
 
 type ClassNames =
@@ -532,7 +531,7 @@ interface StateProps {
 
 const connected = connect((state: ApplicationState, _ownProps) => ({
   typesData: state.__resources.types.entities,
-  timezone: getUserTimezone(),
+  timezone: getUserTimezone(state),
   inProgressEvents: state.events.inProgressEvents,
   events: state.events.events,
   mostRecentEventTime: state.events.mostRecentEventTime
