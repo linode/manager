@@ -15,12 +15,13 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
-import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
-import TableRowError from 'src/components/TableRowError/TableRowError_CMR';
-import TableRowLoading from 'src/components/TableRowLoading/TableRowLoading_CMR';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import TicketRow from './TicketRow_CMR';
 import { getTicketsPage } from './ticketUtils';
+import Hidden from 'src/components/core/Hidden';
 
 interface Props extends PaginationProps<SupportTicket> {
   filterStatus: 'open' | 'closed';
@@ -38,29 +39,29 @@ type ClassNames =
 
 const styles = () =>
   createStyles({
-    root: {}
-    // cellSubject: {
-    //   width: '35%',
-    //   minWidth: 175
-    // },
-    // cellId: {
-    //   width: '10%'
-    // },
-    // cellRegarding: {
-    //   width: '15%'
-    // },
-    // cellCreated: {
-    //   width: '15%',
-    //   minWidth: 175
-    // },
-    // cellUpdated: {
-    //   width: '15%',
-    //   minWidth: 175
-    // },
-    // cellUpdatedBy: {
-    //   width: '10%',
-    //   minWidth: 120
-    // }
+    root: {},
+    cellSubject: {
+      width: '35%',
+      minWidth: 175
+    },
+    cellId: {
+      width: '10%'
+    },
+    cellRegarding: {
+      width: '15%'
+    },
+    cellCreated: {
+      width: '15%',
+      minWidth: 175
+    },
+    cellUpdated: {
+      width: '15%',
+      minWidth: 175
+    },
+    cellUpdatedBy: {
+      width: '10%',
+      minWidth: 120
+    }
   });
 
 type CombinedProps = Props &
@@ -113,7 +114,7 @@ export class TicketList extends React.Component<CombinedProps, {}> {
 
   renderTickets = (tickets: SupportTicket[]) =>
     tickets.map((ticket, idx) => {
-      <TicketRow key={`ticket-row-${idx}`} ticket={ticket} />;
+      return <TicketRow key={`ticket-row-${idx}`} ticket={ticket} />;
     });
 
   render() {
@@ -123,8 +124,7 @@ export class TicketList extends React.Component<CombinedProps, {}> {
       handleOrderChange,
       count,
       page,
-      pageSize,
-      classes
+      pageSize
     } = this.props;
 
     const isActive = (label: string) => label === orderBy;
@@ -142,60 +142,58 @@ export class TicketList extends React.Component<CombinedProps, {}> {
                   active={isActive('summary')}
                   data-qa-support-subject-header
                   noWrap
-                  className={classes.cellSubject}
                 >
                   Subject
                 </TableSortCell>
-                <TableSortCell
-                  label="id"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('id')}
-                  data-qa-support-id-header
-                  noWrap
-                  className={classes.cellId}
-                >
-                  Ticket ID
-                </TableSortCell>
-                <TableCell
-                  data-qa-support-regarding-header
-                  className={classes.cellRegarding}
-                >
+                <Hidden smDown>
+                  <TableSortCell
+                    label="id"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    active={isActive('id')}
+                    data-qa-support-id-header
+                    noWrap
+                  >
+                    Ticket ID
+                  </TableSortCell>
+                </Hidden>
+                <TableCell data-qa-support-regarding-header>
                   Regarding
                 </TableCell>
-                <TableSortCell
-                  label="opened"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('opened')}
-                  data-qa-support-date-header
-                  noWrap
-                  className={classes.cellCreated}
-                >
-                  Date Created
-                </TableSortCell>
-                <TableSortCell
-                  label="updated"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('updated')}
-                  data-qa-support-updated-header
-                  noWrap
-                  className={classes.cellUpdated}
-                >
-                  Last Updated
-                </TableSortCell>
-                <TableSortCell
-                  label="updated_by"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('updated_by')}
-                  data-qa-support-updated-by-header
-                  noWrap
-                  className={classes.cellUpdatedBy}
-                >
-                  Updated By
-                </TableSortCell>
+                <Hidden xsDown>
+                  <TableSortCell
+                    label="opened"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    active={isActive('opened')}
+                    data-qa-support-date-header
+                    noWrap
+                  >
+                    Date Created
+                  </TableSortCell>
+                  <TableSortCell
+                    label="updated"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    active={isActive('updated')}
+                    data-qa-support-updated-header
+                    noWrap
+                  >
+                    Last Updated
+                  </TableSortCell>
+                </Hidden>
+                <Hidden smDown>
+                  <TableSortCell
+                    label="updated_by"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    active={isActive('updated_by')}
+                    data-qa-support-updated-by-header
+                    noWrap
+                  >
+                    Updated By
+                  </TableSortCell>
+                </Hidden>
               </TableRow>
             </TableHead>
             <TableBody>{this.renderContent()}</TableBody>

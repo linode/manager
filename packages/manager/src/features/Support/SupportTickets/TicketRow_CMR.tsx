@@ -12,6 +12,7 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { DATETIME_DISPLAY_FORMAT } from 'src/constants';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
+import Hidden from 'src/components/core/Hidden';
 
 interface Props {
   ticket: SupportTicket;
@@ -66,23 +67,30 @@ const TicketRow: React.FC<CombinedProps> = props => {
           </Typography>
         </Link>
       </TableCell>
-      <TableCell data-qa-support-id>{ticket.id}</TableCell>
+      <Hidden smDown>
+        <TableCell data-qa-support-id>{ticket.id}</TableCell>
+      </Hidden>
+
       <TableCell data-qa-support-entity className={classes.regarding}>
         {renderEntityLink(ticket)}
       </TableCell>
-      <TableCell data-qa-support-date>
-        <DateTimeDisplay
-          value={ticket.opened}
-          format={DATETIME_DISPLAY_FORMAT}
-        />
-      </TableCell>
-      <TableCell data-qa-support-updated>
-        <DateTimeDisplay
-          value={ticket.updated}
-          format={DATETIME_DISPLAY_FORMAT}
-        />
-      </TableCell>
-      <TableCell data-qa-support-updated-by>{ticket.updated_by}</TableCell>
+      <Hidden xsDown>
+        <TableCell data-qa-support-date>
+          <DateTimeDisplay
+            value={ticket.opened}
+            format={DATETIME_DISPLAY_FORMAT}
+          />
+        </TableCell>
+        <TableCell data-qa-support-updated>
+          <DateTimeDisplay
+            value={ticket.updated}
+            format={DATETIME_DISPLAY_FORMAT}
+          />
+        </TableCell>
+      </Hidden>
+      <Hidden smDown>
+        <TableCell data-qa-support-updated-by>{ticket.updated_by}</TableCell>
+      </Hidden>
     </TableRow>
   );
 };
