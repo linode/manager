@@ -28,40 +28,11 @@ interface Props extends PaginationProps<SupportTicket> {
   newTicket?: SupportTicket;
 }
 
-type ClassNames =
-  | 'root'
-  | 'cellSubject'
-  | 'cellId'
-  | 'cellRegarding'
-  | 'cellCreated'
-  | 'cellUpdated'
-  | 'cellUpdatedBy';
+type ClassNames = 'root';
 
 const styles = () =>
   createStyles({
-    root: {},
-    cellSubject: {
-      width: '35%',
-      minWidth: 175
-    },
-    cellId: {
-      width: '10%'
-    },
-    cellRegarding: {
-      width: '15%'
-    },
-    cellCreated: {
-      width: '15%',
-      minWidth: 175
-    },
-    cellUpdated: {
-      width: '15%',
-      minWidth: 175
-    },
-    cellUpdatedBy: {
-      width: '10%',
-      minWidth: 120
-    }
+    root: {}
   });
 
 type CombinedProps = Props &
