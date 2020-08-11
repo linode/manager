@@ -15,6 +15,7 @@ import {
 import NotificationSection, { NotificationItem } from './NotificationSection';
 import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
 import { Link } from 'src/components/Link';
+import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 import { reducer } from './eventQueue';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -50,9 +51,13 @@ export const PendingActions: React.FC<{}> = _ => {
       if (message === null) {
         return null;
       }
+      const completed = event.percent_complete === 100;
       const timeRemaining = event.time_remaining
         ? ` (~${formatTimeRemaining(event.time_remaining)})`
         : null;
+
+      const duration = formatEventSeconds(event.duration);
+
       const linkTarget = createLinkHandlerForNotification(
         event.action,
         event.entity,
@@ -72,8 +77,13 @@ export const PendingActions: React.FC<{}> = _ => {
               {` `}
               {message}
               {timeRemaining}
+              {completed
+                ? event.status === 'failed'
+                  ? ` (failed after ${duration})`
+                  : ` (completed in ${duration})`
+                : null}
             </Typography>
-            {event.percent_complete ?? 0 < 100 ? (
+            {!completed ? (
               <BarPercent
                 className={classes.bar}
                 max={100}
@@ -81,9 +91,7 @@ export const PendingActions: React.FC<{}> = _ => {
                 rounded
                 narrow
               />
-            ) : (
-              <Typography>Complete</Typography>
-            )}
+            ) : null}
           </div>
         )
       };
