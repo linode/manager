@@ -228,7 +228,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
             openDialog('rebuild', linodeId);
-            // history.push(`/linodes/${linodeId}/rebuild`);
             e.preventDefault();
             e.stopPropagation();
           },
