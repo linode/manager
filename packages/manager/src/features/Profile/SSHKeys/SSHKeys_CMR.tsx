@@ -34,6 +34,7 @@ type ClassNames =
   | 'sshKeysHeader'
   | 'headline'
   | 'addNewWrapper'
+  | 'createdCell'
   | 'actionCell';
 
 const styles = (theme: Theme) =>
@@ -56,10 +57,11 @@ const styles = (theme: Theme) =>
         padding: 5
       }
     },
+    createdCell: {
+      width: '16%'
+    },
     actionCell: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end'
+      textAlign: 'right'
     }
   });
 
@@ -221,7 +223,9 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
           </Typography>
         </TableCell>
         <Hidden xsDown>
-          <TableCell data-qa-key-created>{key.created}</TableCell>
+          <TableCell data-qa-key-created className={classes.createdCell}>
+            {key.created}
+          </TableCell>
         </Hidden>
         <TableCell className={classes.actionCell}>
           <SSHKeyActionMenu
