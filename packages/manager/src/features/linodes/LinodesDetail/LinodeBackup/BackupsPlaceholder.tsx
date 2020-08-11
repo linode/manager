@@ -57,7 +57,6 @@ export const BackupsPlaceholder: React.FC<Props> = props => {
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         linodeId={linodeId}
-        price={backupsMonthlyPrice ?? 0}
       />
     </>
   );

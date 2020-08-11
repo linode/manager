@@ -67,6 +67,7 @@ import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import ToggleBox from './ToggleBox';
+import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { ExtendedStatus, statusToPriority } from './utils';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
@@ -74,6 +75,7 @@ type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 interface State {
   powerDialogOpen: boolean;
   powerDialogAction?: Action;
+  enableBackupsDialogOpen: boolean;
   selectedLinodeConfigs?: Config[];
   selectedLinodeID?: number;
   selectedLinodeLabel?: string;
@@ -105,6 +107,7 @@ type CombinedProps = WithImages &
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
+    enableBackupsDialogOpen: false,
     powerDialogOpen: false,
     deleteDialogOpen: false,
     rescueDialogOpen: false,
@@ -175,6 +178,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           rescueDialogOpen: true
         });
         break;
+      case 'enable_backups':
+        this.setState({
+          enableBackupsDialogOpen: true
+        });
+        break;
     }
     this.setState({
       selectedLinodeID: linodeID,
@@ -188,7 +196,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       deleteDialogOpen: false,
       rescueDialogOpen: false,
       linodeResizeOpen: false,
-      linodeMigrateOpen: false
+      linodeMigrateOpen: false,
+      enableBackupsDialogOpen: false
     });
   };
 
@@ -201,6 +210,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   setFilterStatus = (status: FilterStatus) => {
     this.setState({ filterStatus: status });
+  };
+
+  onBackupsEnableSuccess = () => {
+    this.props.history.push(`linodes/${this.state.selectedLinodeID}/backup`);
   };
 
   render() {
@@ -313,6 +326,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             <RescueDialog
               open={this.state.rescueDialogOpen}
               onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
+            />
+            <EnableBackupsDialog
+              open={this.state.enableBackupsDialogOpen}
+              onClose={this.closeDialogs}
+              onSuccess={this.onBackupsEnableSuccess}
               linodeId={this.state.selectedLinodeID ?? -1}
             />
           </>
