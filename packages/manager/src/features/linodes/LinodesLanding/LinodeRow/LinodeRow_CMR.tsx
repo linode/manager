@@ -149,7 +149,9 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   const MaintenanceText = () => {
     return (
       <>
-        For more information, please see your{' '}
+        Your maintenance window for this entity is{' '}
+        {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}. For more
+        information, please see your{' '}
         <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
@@ -222,14 +224,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           )
         ) : (
           <>
-            <div>
-              <div>
-                <strong>Maintenance Scheduled</strong>
-              </div>
-              <div>
-                {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}
-              </div>
-            </div>
+            <strong>Maintenance Scheduled</strong>
             <HelpIcon
               text={<MaintenanceText />}
               className={classes.statusHelpIcon}
