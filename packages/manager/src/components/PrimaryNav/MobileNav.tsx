@@ -204,7 +204,7 @@ export const MobileNav: React.FC<Props> = props => {
               const link = filteredLinks[0];
 
               return (
-                <MenuItems className={classes.menuItemList}>
+                <MenuItems className={classes.menuItemList} key={link.display}>
                   <MenuLink
                     key={link.display}
                     as={Link}
@@ -227,7 +227,7 @@ export const MobileNav: React.FC<Props> = props => {
                   <KeyboardArrowDown className={classes.caret} />
                 </MenuButton>
                 <MenuPopover className={classes.menuPopover} portal={false}>
-                  <MenuItems className={classes.menuItemList}>
+                  <MenuItems className={classes.menuItemList} key={thisGroup}>
                     {thisGroup.links.map((thisLink: any) => (
                       <MenuLink
                         key={thisLink.display}

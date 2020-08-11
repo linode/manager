@@ -266,21 +266,21 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
                   [classes.logoCollapsed]: matchesSmDown
                 })}
               >
-                <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
-                  {matchesSmDown ? (
+                {matchesSmDown ? (
+                  <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
                     <Dashboard
                       width={20}
                       height={16}
                       style={{ marginRight: 6 }}
                     />
-                  ) : (
-                    <PrimaryNavLink
-                      display="Dashboard"
-                      href="/dashboard"
-                      closeMenu={closeMenu}
-                    />
-                  )}
-                </Link>
+                  </Link>
+                ) : (
+                  <PrimaryNavLink
+                    display="Dashboard"
+                    href="/dashboard"
+                    closeMenu={closeMenu}
+                  />
+                )}
               </div>
             </Grid>
             {primaryLinkGroups.map(thisGroup => {
