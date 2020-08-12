@@ -14,12 +14,7 @@ import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
@@ -49,24 +44,21 @@ import { RebuildDialog } from './RebuildDialog';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
-type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      paddingTop: theme.spacing(3)
-    },
-    error: {
-      marginTop: theme.spacing(2)
-    },
-    emptyImagePanel: {
-      padding: theme.spacing(3)
-    },
-    emptyImagePanelText: {
-      marginTop: theme.spacing(1),
-      padding: `${theme.spacing(1)}px 0`
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    paddingTop: theme.spacing(3)
+  },
+  error: {
+    marginTop: theme.spacing(2)
+  },
+  emptyImagePanel: {
+    padding: theme.spacing(3)
+  },
+  emptyImagePanelText: {
+    marginTop: theme.spacing(1),
+    padding: `${theme.spacing(1)}px 0`
+  }
+}));
 
 interface Props {
   type: 'community' | 'account';
@@ -78,7 +70,6 @@ interface Props {
 }
 
 export type CombinedProps = Props &
-  WithStyles<ClassNames> &
   WithImages &
   UserSSHKeyProps &
   RouteComponentProps &
@@ -98,7 +89,6 @@ const initialValues: RebuildFromStackScriptForm = {
 
 export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
   const {
-    classes,
     imagesData,
     userSSHKeys,
     sshError,
@@ -109,6 +99,8 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     passwordHelperText,
     passwordValidation
   } = props;
+
+  const classes = useStyles();
 
   /**
    * Dynamic validation schema, with password validation
@@ -390,11 +382,8 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
   userSSHKeyHoc,
-  styled,
   withSnackbar,
   withImages(),
   withRouter
