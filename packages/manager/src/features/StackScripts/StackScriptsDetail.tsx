@@ -20,6 +20,8 @@ import _StackScript from 'src/components/StackScript';
 import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
 import { getStackScriptUrl } from './stackScriptUtils';
+import EntityHeader from 'src/components/EntityHeader';
+import ActionMenu from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 
 interface MatchProps {
   stackScriptId: string;
@@ -100,7 +102,15 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { classes } = this.props;
+    const {
+      classes,
+      triggerDelete,
+      triggerMakePublic,
+      canModify,
+      isPublic,
+      category,
+      canAddLinodes
+    } = this.props;
     const { loading, stackScript } = this.state;
 
     if (loading) {
@@ -119,7 +129,29 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <Grid container justify="space-between" alignItems="center">
+        <EntityHeader
+          title={stackScript.label}
+          parentLink="/stackscripts"
+          parentText="Stackscripts"
+          iconType="stackscript"
+          isSecondary
+          actions={
+            <StackScriptsActionMenu
+              stackScriptID={stackScript.id}
+              stackScriptUsername={stackScript.username}
+              stackScriptLabel={stackScript.label}
+              triggerDelete={triggerDelete}
+              triggerMakePublic={triggerMakePublic}
+              canModify={canModify}
+              canAddLinodes={canAddLinodes}
+              isPublic={isPublic}
+              category={category}
+            />
+          }
+          //body={}
+        />
+
+        {/* <Grid container justify="space-between" alignItems="center">
           <Grid item>
             <Breadcrumb
               pathname={this.props.location.pathname}
@@ -143,7 +175,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
               Deploy New Linode
             </Button>
           </Grid>
-        </Grid>
+        </Grid> */}
         <div className="detailsWrapper">
           <_StackScript data={stackScript} />
         </div>
