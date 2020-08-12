@@ -8,10 +8,11 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Currency from 'src/components/Currency';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
+import useLinodes from 'src/hooks/useLinodes';
+import { useTypes } from 'src/hooks/useTypes';
 
 interface Props {
   linodeId: number;
-  price: number;
   onClose: () => void;
   open: boolean;
 }
@@ -19,7 +20,22 @@ interface Props {
 export type CombinedProps = Props;
 
 export const EnableBackupsDialog: React.FC<Props> = props => {
-  const { linodeId, onClose, open, price } = props;
+  const { linodeId, onClose, open } = props;
+  /**
+   * Calculate the monthly backup price here.
+   * Since this component is used in LinodesLanding
+   * as well as detail, can't rely on parents knowing
+   * this information.
+   */
+  const { types } = useTypes();
+  const { linodes } = useLinodes();
+  const thisLinode = linodes.itemsById[linodeId];
+  const thisLinodeType = types.entities.find(
+    thisType => thisType.id === thisLinode?.type
+  );
+
+  const price = thisLinodeType?.addons.backups.price.monthly ?? 0;
+
   const [submitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>();
 
