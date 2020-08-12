@@ -18,6 +18,10 @@ export interface LongviewSubscription {
   };
 }
 
+export interface LongviewSubscriptionPayload {
+  longview_subscription?: string;
+}
+
 /** If the user is on the free plan ActiveLongviewPlan is empty
  */
 export type ActiveLongviewPlan = LongviewSubscription | {};

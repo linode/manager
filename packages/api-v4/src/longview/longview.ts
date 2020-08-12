@@ -11,6 +11,7 @@ import { longviewClientCreate } from './longview.schema';
 import {
   LongviewClient,
   LongviewSubscription,
+  LongviewSubscriptionPayload,
   ActiveLongviewPlan
 } from './types';
 
@@ -64,4 +65,18 @@ export const getActiveLongviewPlan = () =>
   Request<ActiveLongviewPlan>(
     setURL(`${API_ROOT}/longview/plan`),
     setMethod('GET')
+  ).then(response => response.data);
+
+/**
+ * updateActiveLongviewPlan
+ *
+ * Change this account's Longview subscription. To move from a
+ * paid Longview Pro plan back to the free plan, submit an empty
+ * object.
+ */
+export const updateActiveLongviewPlan = (plan: LongviewSubscriptionPayload) =>
+  Request<ActiveLongviewPlan>(
+    setURL(`${API_ROOT}/longview/plan`),
+    setData(plan),
+    setMethod('PUT')
   ).then(response => response.data);
