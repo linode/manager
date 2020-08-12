@@ -52,8 +52,7 @@ export const LandingTable: React.FC<Props> = props => {
     headers,
     initialOrder,
     entity,
-    handlers: row.handlers,
-    originModifier: row.originModifier
+    handlers: row.handlers
   };
 
   if (row.request) {
