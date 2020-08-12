@@ -33,7 +33,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const {
     loading,
     authType,
-    ipWhitelisting,
+    ipAllowlisting,
     twoFactor,
     username,
     updateProfile
@@ -48,8 +48,8 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const clearState = () => {
     setSuccess(undefined);
   };
-  const onWhitelistingDisable = () => {
-    setSuccess('IP whitelisting disabled. This feature cannot be re-enabled.');
+  const onAllowlistingDisable = () => {
+    setSuccess('IP allowlisting disabled. This feature cannot be re-enabled.');
   };
 
   const tabs = [
@@ -71,13 +71,13 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
           ) : (
             <TrustedDevices disabled={thirdPartyEnabled} />
           )}
-          {ipWhitelisting && (
+          {ipAllowlisting && (
             <SecuritySettings
               updateProfile={updateProfile}
-              onSuccess={onWhitelistingDisable}
+              onSuccess={onAllowlistingDisable}
               updateProfileError={props.profileUpdateError}
-              ipWhitelistingEnabled={ipWhitelisting}
-              data-qa-whitelisting-form
+              ipAllowlistingEnabled={ipAllowlisting}
+              data-qa-allowlisting-form
             />
           )}
         </React.Fragment>
@@ -117,7 +117,7 @@ const docs = [AccountsAndPasswords, SecurityControls];
 interface StateProps {
   loading: boolean;
   authType: TPAProvider;
-  ipWhitelisting: boolean;
+  ipAllowlisting: boolean;
   twoFactor?: boolean;
   username?: string;
   profileUpdateError?: APIError[];
@@ -129,7 +129,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   return {
     loading: profile.loading,
     authType: profile?.data?.authentication_type ?? 'password',
-    ipWhitelisting: profile?.data?.ip_whitelist_enabled ?? false,
+    ipAllowlisting: profile?.data?.ip_whitelist_enabled ?? false,
     twoFactor: profile?.data?.two_factor_auth,
     username: profile?.data?.username,
     profileUpdateError: profile.error?.update
