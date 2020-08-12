@@ -12,12 +12,7 @@ import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
@@ -35,17 +30,14 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { RebuildDialog } from './RebuildDialog';
 
-type ClassNames = 'root' | 'error';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      paddingTop: theme.spacing(3)
-    },
-    error: {
-      marginTop: theme.spacing(2)
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    paddingTop: theme.spacing(3)
+  },
+  error: {
+    marginTop: theme.spacing(2)
+  }
+}));
 
 interface Props {
   disabled: boolean;
@@ -57,7 +49,6 @@ interface Props {
 
 export type CombinedProps = Props &
   WithImages &
-  WithStyles<ClassNames> &
   UserSSHKeyProps &
   RouteComponentProps &
   WithSnackbarProps;
@@ -74,7 +65,6 @@ const initialValues: RebuildFromImageForm = {
 
 export const RebuildFromImage: React.FC<CombinedProps> = props => {
   const {
-    classes,
     disabled,
     imagesData,
     imagesError,
@@ -87,6 +77,8 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     passwordHelperText,
     passwordValidation
   } = props;
+
+  const classes = useStyles();
 
   /**
    * Dynamic validation schema, with password validation
@@ -235,12 +227,9 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
   withImages(),
   userSSHKeyHoc,
-  styled,
   withSnackbar,
   withRouter
 );
