@@ -7,9 +7,11 @@ import TabLinkList from 'src/components/TabLinkList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import H1Header from 'src/components/H1Header';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import useFlags from 'src/hooks/useFlags';
 import Props from './OAuthClients';
 
 const SSHKeys = React.lazy(() => import('./SSHKeys'));
+const SSHKeys_CMR = React.lazy(() => import('./SSHKeys/SSHKeys_CMR'));
 const Settings = React.lazy(() => import('./Settings'));
 const Referrals = React.lazy(() => import('./Referrals'));
 const OAuthClients = React.lazy(() => import('./OAuthClients'));
@@ -23,6 +25,7 @@ const APITokens = React.lazy(() => import('./APITokens'));
 type Props = RouteComponentProps<{}>;
 
 const Profile: React.FC<Props> = props => {
+  const flags = useFlags();
   const {
     match: { url }
   } = props;
@@ -86,7 +89,7 @@ const Profile: React.FC<Props> = props => {
               <AuthenticationSettings />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
-              <SSHKeys />
+              {flags.cmr ? <SSHKeys_CMR /> : <SSHKeys />}
             </SafeTabPanel>
             <SafeTabPanel index={3}>
               <LishSettings />
