@@ -13,7 +13,13 @@ import useExtendedLinode from 'src/hooks/useExtendedLinode';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3)
+    paddingBottom: theme.spacing(2),
+    '& + div': {
+      padding: 0,
+      '& div': {
+        padding: 0
+      }
+    }
   },
   title: {
     marginBottom: theme.spacing(2)
@@ -68,19 +74,11 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
       onClose={onClose}
       fullWidth
       maxWidth="md"
+      fullHeight
     >
       <Paper className={classes.root}>
         {unauthorized && <LinodePermissionsError />}
         {hostMaintenance && <HostMaintenanceError />}
-        <Typography
-          role="heading"
-          aria-level={2}
-          variant="h2"
-          className={classes.title}
-          data-qa-title
-        >
-          Rebuild
-        </Typography>
         <Typography data-qa-rebuild-desc className={classes.helperText}>
           If you can&#39;t rescue an existing disk, it&#39;s time to rebuild
           your Linode. There are a couple of different ways you can do this:
