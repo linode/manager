@@ -19,17 +19,45 @@ import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
-import { getStackScriptUrl } from './stackScriptUtils';
+import {
+  getStackScriptUrl,
+  StackScriptCategory,
+  canUserModifyAccountStackScript
+} from './stackScriptUtils';
 import EntityHeader from 'src/components/EntityHeader';
-import ActionMenu from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import StackScriptActionMenu from './StackScriptPanel/StackScriptActionMenu_CMR';
+import withFeatureFlagConsumerContainer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
+import {
+  hasGrant,
+  isRestrictedUser as _isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
+import { Grant } from '@linode/api-v4/lib/account/types';
 
 interface MatchProps {
   stackScriptId: string;
 }
+
+interface Props {
+  triggerDelete: (id: number, label: string) => void;
+  triggerMakePublic: (id: number, label: string) => void;
+  canModify: boolean;
+  canAddLinodes: boolean;
+  isPublic: boolean;
+  // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
+  // Leaving this in as an escape hatch now, since there's a bunch of code in
+  // /LandingPanel that uses different values for categories that we shouldn't
+  // change until we're actually using it.
+  category: StackScriptCategory | string;
+}
+
 type RouteProps = RouteComponentProps<MatchProps>;
 interface State {
   loading: boolean;
   stackScript?: StackScript;
+  isRestrictedUser: boolean;
+  stackScriptGrants: Grant;
 }
 
 type ClassNames = 'root' | 'cta' | 'button' | 'userName' | 'userNameSlash';
@@ -67,12 +95,16 @@ interface ProfileProps {
 type CombinedProps = ProfileProps &
   RouteProps &
   WithStyles<ClassNames> &
-  SetDocsProps;
+  SetDocsProps &
+  Props &
+  FeatureFlagConsumerProps;
 
 export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   state: State = {
     loading: true,
     stackScript: undefined
+    // isRestrictedUser: ,
+    // stackScriptGrants:
   };
 
   componentDidMount() {
@@ -106,12 +138,17 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       classes,
       triggerDelete,
       triggerMakePublic,
-      canModify,
       isPublic,
       category,
-      canAddLinodes
+      canAddLinodes,
+      flags
     } = this.props;
-    const { loading, stackScript } = this.state;
+    const {
+      loading,
+      stackScript,
+      isRestrictedUser,
+      stackScriptGrants
+    } = this.state;
 
     if (loading) {
       return <CircleProgress />;
@@ -129,53 +166,58 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <EntityHeader
-          title={stackScript.label}
-          parentLink="/stackscripts"
-          parentText="Stackscripts"
-          iconType="stackscript"
-          isSecondary
-          actions={
-            <StackScriptsActionMenu
-              stackScriptID={stackScript.id}
-              stackScriptUsername={stackScript.username}
-              stackScriptLabel={stackScript.label}
-              triggerDelete={triggerDelete}
-              triggerMakePublic={triggerMakePublic}
-              canModify={canModify}
-              canAddLinodes={canAddLinodes}
-              isPublic={isPublic}
-              category={category}
-            />
-          }
-          //body={}
-        />
-
-        {/* <Grid container justify="space-between" alignItems="center">
-          <Grid item>
-            <Breadcrumb
-              pathname={this.props.location.pathname}
-              labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
-              labelTitle={stackScript.label}
-              crumbOverrides={[
-                {
-                  position: 1,
-                  label: 'StackScripts'
-                }
-              ]}
-            />
+        {flags.cmr ? (
+          <EntityHeader
+            title={stackScript.label}
+            parentLink="/stackscripts"
+            parentText="Stackscripts"
+            iconType="stackscript"
+            isSecondary
+            actions={
+              <StackScriptActionMenu
+                stackScriptID={stackScript.id}
+                stackScriptUsername={stackScript.username}
+                stackScriptLabel={stackScript.label}
+                triggerDelete={triggerDelete}
+                triggerMakePublic={triggerMakePublic}
+                canModify={canUserModifyAccountStackScript(
+                  isRestrictedUser,
+                  stackScriptGrants,
+                  stackScript.id
+                )}
+                canAddLinodes={canAddLinodes}
+                isPublic={isPublic}
+                category={category}
+              />
+            }
+          />
+        ) : (
+          <Grid container justify="space-between" alignItems="center">
+            <Grid item>
+              <Breadcrumb
+                pathname={this.props.location.pathname}
+                labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
+                labelTitle={stackScript.label}
+                crumbOverrides={[
+                  {
+                    position: 1,
+                    label: 'StackScripts'
+                  }
+                ]}
+              />
+            </Grid>
+            <Grid item className={classes.cta}>
+              <Button
+                buttonType="primary"
+                className={classes.button}
+                onClick={this.handleClick}
+                data-qa-stack-deploy
+              >
+                Deploy New Linode
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item className={classes.cta}>
-            <Button
-              buttonType="primary"
-              className={classes.button}
-              onClick={this.handleClick}
-              data-qa-stack-deploy
-            >
-              Deploy New Linode
-            </Button>
-          </Grid>
-        </Grid> */}
+        )}
         <div className="detailsWrapper">
           <_StackScript data={stackScript} />
         </div>
@@ -191,5 +233,6 @@ export default compose<CombinedProps, {}>(
       username: path(['data', 'username'], profile)
     };
   }),
-  withStyles(styles)
+  withStyles(styles),
+  withFeatureFlagConsumerContainer
 )(StackScriptsDetail);
