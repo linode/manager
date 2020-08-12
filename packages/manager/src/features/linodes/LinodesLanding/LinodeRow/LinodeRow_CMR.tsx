@@ -89,7 +89,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     id,
     ipv4,
     ipv6,
-    //maintenanceStartTime,
+    maintenanceStartTime,
     label,
     region,
     status,
@@ -113,9 +113,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   } = props;
 
   const { updateLinode } = useLinodes();
-
-  // TODO delete before merge
-  const maintenanceStartTime = '2020-08-22 18:58:41';
 
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
