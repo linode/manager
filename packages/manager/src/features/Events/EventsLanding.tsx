@@ -27,7 +27,7 @@ import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
-import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
+import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 
 import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import EventRow from './EventRow';
@@ -344,7 +344,7 @@ export const renderTableBody = (
   events?: Event[],
   emptyMessage = "You don't have any events on your account."
 ) => {
-  const filteredEvents = removeBlacklistedEvents(events, ['profile_update']);
+  const filteredEvents = removeBlocklistedEvents(events, ['profile_update']);
 
   if (loading) {
     return (
