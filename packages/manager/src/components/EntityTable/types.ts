@@ -21,7 +21,6 @@ export interface BaseProps {
   loading: boolean;
   lastUpdated: number;
   handlers?: Handlers;
-  originModifier?: boolean;
 }
 export interface ListProps extends BaseProps {
   entity: string;
