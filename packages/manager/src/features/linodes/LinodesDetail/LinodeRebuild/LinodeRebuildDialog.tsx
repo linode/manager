@@ -105,6 +105,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
           passwordValidation={passwordValidation}
           disabled={disabled}
           linodeId={linodeId}
+          linodeLabel={linodeLabel}
           onClose={onClose}
         />
       )}
@@ -115,6 +116,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
           passwordValidation={passwordValidation}
           disabled={disabled}
           linodeId={linodeId}
+          linodeLabel={linodeLabel}
           onClose={onClose}
         />
       )}
@@ -125,6 +127,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
           passwordValidation={passwordValidation}
           disabled={disabled}
           linodeId={linodeId}
+          linodeLabel={linodeLabel}
           onClose={onClose}
         />
       )}
