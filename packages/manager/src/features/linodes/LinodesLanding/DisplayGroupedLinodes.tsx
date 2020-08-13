@@ -149,37 +149,39 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
     return (
       <>
         <Grid item xs={12} className={'px0'}>
-          <div className={classes.controlHeader}>
-            <div id="displayViewDescription" className="visually-hidden">
-              Currently in {linodeViewPreference} view
-            </div>
-            <IconButton
-              aria-label="Toggle display"
-              aria-describedby={'displayViewDescription'}
-              title={`Toggle display`}
-              onClick={toggleLinodeView}
-              disableRipple
-              className={classes.toggleButton}
-            >
-              <TableView />
-            </IconButton>
+          {flags.cmr && (
+            <div className={classes.controlHeader}>
+              <div id="displayViewDescription" className="visually-hidden">
+                Currently in {linodeViewPreference} view
+              </div>
+              <IconButton
+                aria-label="Toggle display"
+                aria-describedby={'displayViewDescription'}
+                title={`Toggle display`}
+                onClick={toggleLinodeView}
+                disableRipple
+                className={classes.toggleButton}
+              >
+                <TableView />
+              </IconButton>
 
-            <div id="groupByDescription" className="visually-hidden">
-              {linodesAreGrouped
-                ? 'group by tag is currently enabled'
-                : 'group by tag is currently disabled'}
+              <div id="groupByDescription" className="visually-hidden">
+                {linodesAreGrouped
+                  ? 'group by tag is currently enabled'
+                  : 'group by tag is currently disabled'}
+              </div>
+              <IconButton
+                aria-label={`Toggle group by tag`}
+                aria-describedby={'groupByDescription'}
+                title={`Toggle group by tag`}
+                onClick={toggleGroupLinodes}
+                disableRipple
+                className={classes.toggleButton}
+              >
+                <GroupByTag />
+              </IconButton>
             </div>
-            <IconButton
-              aria-label={`Toggle group by tag`}
-              aria-describedby={'groupByDescription'}
-              title={`Toggle group by tag`}
-              onClick={toggleGroupLinodes}
-              disableRipple
-              className={classes.toggleButton}
-            >
-              <GroupByTag />
-            </IconButton>
-          </div>
+          )}
         </Grid>
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
