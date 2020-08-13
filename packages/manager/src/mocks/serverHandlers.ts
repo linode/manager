@@ -170,5 +170,11 @@ export const handlers = [
   rest.get('*/longview/plan', (req, res, ctx) => {
     const plan = longviewActivePlanFactory.build();
     return res(ctx.json(plan));
+  }),
+  rest.post('*/backups/enable/*', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.put('*/account/settings/*', (req, res, ctx) => {
+    return res(ctx.json({}));
   })
 ];
