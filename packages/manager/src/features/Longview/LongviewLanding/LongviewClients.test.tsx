@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, wait } from '@testing-library/react';
+import { cleanup, fireEvent, waitFor } from '@testing-library/react';
 import { LongviewClient } from '@linode/api-v4/lib/longview';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -119,7 +119,9 @@ describe('Longview clients list view', () => {
     const { getByText } = renderWithTheme(<LongviewClients {...props} />);
     const button = getByText('Add a Client');
     fireEvent.click(button);
-    await wait(() => expect(props.createLongviewClient).toHaveBeenCalledWith());
+    await waitFor(() =>
+      expect(props.createLongviewClient).toHaveBeenCalledWith()
+    );
   });
 
   it('should render a row for each client', () => {
