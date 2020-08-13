@@ -40,7 +40,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
-import { RebuildDialog } from './RebuildDialog';
+import TextField from 'src/components/TextField';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
@@ -66,6 +66,7 @@ interface Props {
   passwordHelperText: string;
   passwordValidation: PasswordValidationType;
   linodeId: number;
+  linodeLabel?: string;
   onClose: () => void;
 }
 
@@ -94,6 +95,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     sshError,
     requestKeys,
     linodeId,
+    linodeLabel,
     onClose,
     enqueueSnackbar,
     passwordHelperText,
@@ -116,6 +118,9 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     [passwordValidation]
   );
 
+  const [confirmationText, setConfirmationText] = React.useState<string>('');
+  const submitButtonDisabled = confirmationText !== linodeLabel;
+
   const [
     ss,
     handleSelectStackScript,
@@ -131,8 +136,6 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
   const [udfErrors, setUdfErrors] = React.useState<APIError[] | undefined>(
     undefined
   );
-
-  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
   const handleFormSubmit = (
     { image, root_pass }: RebuildFromStackScriptForm,
@@ -156,7 +159,6 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
         resetEventsPolling();
 
         setSubmitting(false);
-        setIsDialogOpen(false);
 
         enqueueSnackbar('Linode rebuild started', {
           variant: 'info'
@@ -196,7 +198,6 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
         handleFieldErrors(setErrors, modifiedErrors);
         handleGeneralErrors(mapErrorToStatus, modifiedErrors, defaultMessage);
 
-        setIsDialogOpen(false);
         scrollErrorIntoView();
       });
   };
@@ -232,14 +233,12 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
       {({
         errors,
         handleSubmit,
-        isSubmitting,
         setFieldValue,
         status,
         values,
         validateForm
       }) => {
-        // The "Rebuild" button opens a confirmation modal.
-        // We'd like to validate the form before this happens.
+        // We'd like to validate the form before submitting.
         const handleRebuildButtonClick = () => {
           // Validate stackscript_id, image, & root_pass
           validateForm().then(maybeErrors => {
@@ -247,9 +246,9 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
             const maybeUDFErrors = validateUdfs();
             setUdfErrors(maybeUDFErrors);
 
-            // If there aren't any errors, we can open the modal.
+            // If there aren't any errors, we can proceed.
             if (isEmpty(maybeErrors) && maybeUDFErrors.length === 0) {
-              setIsDialogOpen(true);
+              handleSubmit();
               // The form receives the errors automatically, and we scroll them into view.
             } else {
               scrollErrorIntoView();
@@ -358,7 +357,19 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
               />
             </form>
             <ActionsPanel>
+              <Typography variant="h2">Confirm</Typography>
+              <Typography style={{ marginBottom: 8 }}>
+                To confirm these changes, type the label of the Linode{' '}
+                <strong>({linodeLabel})</strong> in the field below:
+              </Typography>
+              <TextField
+                label="Linode Label"
+                hideLabel
+                onChange={e => setConfirmationText(e.target.value)}
+                style={{ marginBottom: 16 }}
+              />
               <Button
+                disabled={submitButtonDisabled}
                 buttonType="secondary"
                 className="destructive"
                 onClick={handleRebuildButtonClick}
@@ -368,12 +379,6 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
                 Rebuild
               </Button>
             </ActionsPanel>
-            <RebuildDialog
-              isOpen={isDialogOpen}
-              isLoading={isSubmitting}
-              handleClose={() => setIsDialogOpen(false)}
-              handleSubmit={handleSubmit}
-            />
             <StackScriptDrawer />
           </Grid>
         );
