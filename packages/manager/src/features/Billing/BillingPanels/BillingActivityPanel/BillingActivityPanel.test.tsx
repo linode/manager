@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, wait } from '@testing-library/react';
+import { cleanup, fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -52,7 +52,7 @@ const props: Props = {
 describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {
     const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
-    await wait(() => {
+    await waitFor(() => {
       getByText('Billing & Payment History');
       getByText('Description');
       getByText('Date');
@@ -64,7 +64,7 @@ describe('BillingActivityPanel', () => {
     const { getByText, getByTestId } = renderWithTheme(
       <BillingActivityPanel {...props} />
     );
-    await wait(() => {
+    await waitFor(() => {
       getByText('Invoice #0');
       getByText('Invoice #1');
       getByTestId(`payment-0`);
@@ -78,7 +78,7 @@ describe('BillingActivityPanel', () => {
     );
 
     // Test selecting "Invoices"
-    await wait(() => {
+    await waitFor(() => {
       const transactionTypeSelect = queryAllByTestId('select')?.[0];
       fireEvent.change(transactionTypeSelect, {
         target: { value: 'invoice' }
@@ -87,7 +87,7 @@ describe('BillingActivityPanel', () => {
     });
 
     // Test selecting "Payments"
-    await wait(() => {
+    await waitFor(() => {
       const transactionTypeSelect = queryAllByTestId('select')?.[0];
       fireEvent.change(transactionTypeSelect, {
         target: { value: 'payment' }
@@ -101,7 +101,7 @@ describe('BillingActivityPanel', () => {
       <BillingActivityPanel {...props} />
     );
 
-    await wait(() => {
+    await waitFor(() => {
       const transactionDateSelect = queryAllByTestId('select')?.[1];
       fireEvent.change(transactionDateSelect, {
         target: { value: '30 Days' }
@@ -113,7 +113,7 @@ describe('BillingActivityPanel', () => {
 
   it('should display transaction selection components with defaults', async () => {
     const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
-    await wait(() => {
+    await waitFor(() => {
       getByText('All Transaction Types');
       getByText('90 Days');
     });
@@ -123,7 +123,7 @@ describe('BillingActivityPanel', () => {
     const { getByText } = renderWithTheme(
       <BillingActivityPanel {...props} accountActiveSince="2018-01-01" />
     );
-    await wait(() => {
+    await waitFor(() => {
       getByText('Account active since 2018-01-01');
     });
   });
