@@ -1,4 +1,4 @@
-import { render, cleanup, wait } from '@testing-library/react';
+import { render, cleanup, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { domainFactory } from 'src/factories/domain';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -63,14 +63,16 @@ describe('Domains Landing', () => {
   });
 
   // @todo remove skip once large accounts logic is in place
-  it.skip('should sort by Domain name ascending by default', async () => {
+  it('should sort by Domain name ascending by default', async () => {
     const { container } = render(wrapWithTheme(<DomainsLanding {...props} />));
 
-    await wait(() =>
+    await waitFor(() =>
       assertOrder(container, '[data-qa-label]', [
-        'domain1.com',
-        'domain2.com',
-        'domain3.com'
+        'domain-0',
+        'domain-1',
+        'domain-2',
+        'domain-3',
+        'domain-4'
       ])
     );
   });
