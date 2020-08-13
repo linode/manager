@@ -285,65 +285,68 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
                 data-qa-notice
               />
             )}
-            <SelectStackScriptPanel
-              error={errors.stackscript_id}
-              selectedId={ss.id}
-              selectedUsername={ss.username}
-              updateFor={[classes, ss.id, errors]}
-              onSelect={handleSelect}
-              publicImages={filterImagesByType(imagesData, 'public')}
-              resetSelectedStackScript={resetStackScript}
-              data-qa-select-stackscript
-              category={props.type}
-              header="Select StackScript"
-              request={
-                props.type === 'account'
-                  ? getMineAndAccountStackScripts
-                  : getCommunityStackscripts
-              }
-            />
-            {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
-              <UserDefinedFieldsPanel
-                errors={udfErrors}
-                selectedLabel={ss.label}
-                selectedUsername={ss.username}
-                handleChange={handleChangeUDF}
-                userDefinedFields={ss.user_defined_fields}
-                updateFor={[
-                  classes,
-                  ss.user_defined_fields,
-                  ss.udf_data,
-                  udfErrors
-                ]}
-                udf_data={ss.udf_data}
-              />
-            )}
-            {ss.images && ss.images.length > 0 ? (
-              <ImageSelect
-                variant="public"
-                title="Choose Image"
-                images={ss.images}
-                handleSelectImage={selected => setFieldValue('image', selected)}
-                selectedImageID={values.image}
-                error={errors.image}
-              />
-            ) : (
-              <Paper className={classes.emptyImagePanel}>
-                {/* empty state for images */}
-                {errors.image && <Notice error={true} text={errors.image} />}
-                <Typography variant="h2" data-qa-tp="Select Image">
-                  Select Image
-                </Typography>
-                <Typography
-                  variant="body1"
-                  className={classes.emptyImagePanelText}
-                  data-qa-no-compatible-images
-                >
-                  No Compatible Images Available
-                </Typography>
-              </Paper>
-            )}
             <form>
+              <SelectStackScriptPanel
+                error={errors.stackscript_id}
+                selectedId={ss.id}
+                selectedUsername={ss.username}
+                updateFor={[classes, ss.id, errors]}
+                onSelect={handleSelect}
+                publicImages={filterImagesByType(imagesData, 'public')}
+                resetSelectedStackScript={resetStackScript}
+                data-qa-select-stackscript
+                category={props.type}
+                header="Select StackScript"
+                request={
+                  props.type === 'account'
+                    ? getMineAndAccountStackScripts
+                    : getCommunityStackscripts
+                }
+              />
+              {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
+                <UserDefinedFieldsPanel
+                  errors={udfErrors}
+                  selectedLabel={ss.label}
+                  selectedUsername={ss.username}
+                  handleChange={handleChangeUDF}
+                  userDefinedFields={ss.user_defined_fields}
+                  updateFor={[
+                    classes,
+                    ss.user_defined_fields,
+                    ss.udf_data,
+                    udfErrors
+                  ]}
+                  udf_data={ss.udf_data}
+                />
+              )}
+
+              {ss.images && ss.images.length > 0 ? (
+                <ImageSelect
+                  variant="public"
+                  title="Choose Image"
+                  images={ss.images}
+                  handleSelectImage={selected =>
+                    setFieldValue('image', selected)
+                  }
+                  selectedImageID={values.image}
+                  error={errors.image}
+                />
+              ) : (
+                <Paper className={classes.emptyImagePanel}>
+                  {/* empty state for images */}
+                  {errors.image && <Notice error={true} text={errors.image} />}
+                  <Typography variant="h2" data-qa-tp="Select Image">
+                    Select Image
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    className={classes.emptyImagePanelText}
+                    data-qa-no-compatible-images
+                  >
+                    No Compatible Images Available
+                  </Typography>
+                </Paper>
+              )}
               <AccessPanel
                 password={values.root_pass}
                 handleChange={value => setFieldValue('root_pass', value)}
@@ -355,30 +358,30 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
                 data-qa-access-panel
                 passwordHelperText={passwordHelperText}
               />
+              <ActionsPanel>
+                <Typography variant="h2">Confirm</Typography>
+                <Typography style={{ marginBottom: 8 }}>
+                  To confirm these changes, type the label of the Linode{' '}
+                  <strong>({linodeLabel})</strong> in the field below:
+                </Typography>
+                <TextField
+                  label="Linode Label"
+                  hideLabel
+                  onChange={e => setConfirmationText(e.target.value)}
+                  style={{ marginBottom: 16 }}
+                />
+                <Button
+                  disabled={submitButtonDisabled}
+                  buttonType="secondary"
+                  className="destructive"
+                  onClick={handleRebuildButtonClick}
+                  data-qa-rebuild
+                  data-testid="rebuild-button"
+                >
+                  Rebuild
+                </Button>
+              </ActionsPanel>
             </form>
-            <ActionsPanel>
-              <Typography variant="h2">Confirm</Typography>
-              <Typography style={{ marginBottom: 8 }}>
-                To confirm these changes, type the label of the Linode{' '}
-                <strong>({linodeLabel})</strong> in the field below:
-              </Typography>
-              <TextField
-                label="Linode Label"
-                hideLabel
-                onChange={e => setConfirmationText(e.target.value)}
-                style={{ marginBottom: 16 }}
-              />
-              <Button
-                disabled={submitButtonDisabled}
-                buttonType="secondary"
-                className="destructive"
-                onClick={handleRebuildButtonClick}
-                data-qa-rebuild
-                data-testid="rebuild-button"
-              >
-                Rebuild
-              </Button>
-            </ActionsPanel>
             <StackScriptDrawer />
           </Grid>
         );

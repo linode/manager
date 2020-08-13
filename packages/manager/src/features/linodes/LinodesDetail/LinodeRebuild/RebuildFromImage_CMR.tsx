@@ -170,19 +170,20 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
           <Grid item className={classes.root}>
             {/* `status` holds generalError messages */}
             {status && <Notice error>{status.generalError}</Notice>}
-            <ImageSelect
-              title="Select Image"
-              images={Object.values(imagesData)}
-              error={
-                (imagesError.read && imagesError.read[0].reason) || errors.image
-              }
-              selectedImageID={values.image}
-              handleSelectImage={selected => setFieldValue('image', selected)}
-              disabled={disabled}
-              variant="all"
-              data-qa-select-image
-            />
             <form>
+              <ImageSelect
+                title="Select Image"
+                images={Object.values(imagesData)}
+                error={
+                  (imagesError.read && imagesError.read[0].reason) ||
+                  errors.image
+                }
+                selectedImageID={values.image}
+                handleSelectImage={selected => setFieldValue('image', selected)}
+                disabled={disabled}
+                variant="all"
+                data-qa-select-image
+              />
               <AccessPanel
                 password={values.root_pass}
                 handleChange={input => setFieldValue('root_pass', input)}
@@ -203,29 +204,29 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
                 disabled={disabled}
                 passwordHelperText={passwordHelperText}
               />
+              <ActionsPanel>
+                <Typography variant="h2">Confirm</Typography>
+                <Typography style={{ marginBottom: 8 }}>
+                  To confirm these changes, type the label of the Linode{' '}
+                  <strong>({linodeLabel})</strong> in the field below:
+                </Typography>
+                <TextField
+                  label="Linode Label"
+                  hideLabel
+                  onChange={e => setConfirmationText(e.target.value)}
+                  style={{ marginBottom: 16 }}
+                />
+                <Button
+                  disabled={submitButtonDisabled || disabled}
+                  buttonType="secondary"
+                  className="destructive"
+                  onClick={handleRebuildButtonClick}
+                  data-testid="rebuild-button"
+                >
+                  Rebuild
+                </Button>
+              </ActionsPanel>
             </form>
-            <ActionsPanel>
-              <Typography variant="h2">Confirm</Typography>
-              <Typography style={{ marginBottom: 8 }}>
-                To confirm these changes, type the label of the Linode{' '}
-                <strong>({linodeLabel})</strong> in the field below:
-              </Typography>
-              <TextField
-                label="Linode Label"
-                hideLabel
-                onChange={e => setConfirmationText(e.target.value)}
-                style={{ marginBottom: 16 }}
-              />
-              <Button
-                disabled={submitButtonDisabled || disabled}
-                buttonType="secondary"
-                className="destructive"
-                onClick={handleRebuildButtonClick}
-                data-testid="rebuild-button"
-              >
-                Rebuild
-              </Button>
-            </ActionsPanel>
           </Grid>
         );
       }}
