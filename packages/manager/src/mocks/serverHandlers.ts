@@ -16,6 +16,7 @@ import {
   linodeIPFactory,
   linodeStatsFactory,
   linodeTransferFactory,
+  longviewActivePlanFactory,
   nodeBalancerFactory,
   profileFactory,
   supportTicketFactory,
@@ -162,5 +163,12 @@ export const handlers = [
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
     return res(ctx.json(makeResourcePage(tickets)));
+  }),
+  rest.put('*/longview/plan', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/longview/plan', (req, res, ctx) => {
+    const plan = longviewActivePlanFactory.build();
+    return res(ctx.json(plan));
   })
 ];
