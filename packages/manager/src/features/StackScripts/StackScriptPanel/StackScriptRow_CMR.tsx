@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -80,18 +81,18 @@ export const StackScriptRow: React.FC<CombinedProps> = props => {
 
   return (
     <TableRow data-qa-table-row={label} ariaLabel={label}>
-      <TableCell data-qa-stackscript-title parentColumn="StackScript">
-        {renderLabel()}
-      </TableCell>
-      <TableCell parentColumn="Total Deploys">
+      <TableCell data-qa-stackscript-title>{renderLabel()}</TableCell>
+      <TableCell>
         <Typography data-qa-stackscript-deploys>{deploymentsTotal}</Typography>
       </TableCell>
-      <TableCell parentColumn="Last Revision">
-        <Typography data-qa-stackscript-revision>{updated}</Typography>
-      </TableCell>
-      <TableCell data-qa-stackscript-images parentColumn="Compatible Images">
-        {displayTagsAndShowMore(images)}
-      </TableCell>
+      <Hidden smDown>
+        <TableCell>
+          <Typography data-qa-stackscript-revision>{updated}</Typography>
+        </TableCell>
+        <TableCell data-qa-stackscript-images>
+          {displayTagsAndShowMore(images)}
+        </TableCell>
+      </Hidden>
       <TableCell className={classes.actionCell}>
         <StackScriptsActionMenu
           stackScriptID={stackScriptID}

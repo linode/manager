@@ -1,5 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
@@ -46,7 +47,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 'calc(100% - 65px)'
   },
   deploys: {
-    width: '13%'
+    width: '13%',
+    [theme.breakpoints.down('sm')]: {
+      width: '28%'
+    }
   },
   revisions: {
     width: '13%'
@@ -55,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '15%'
   },
   actionMenu: {
-    width: '5%'
+    width: '4%'
   }
 }));
 
@@ -123,23 +127,27 @@ export const StackScriptTableHead: React.FC<CombinedProps> = props => {
           </Cell>
         )}
         {!isSelecting && (
-          <Cell
-            className={classes.revisions}
-            data-qa-stackscript-revision-header
-            {...maybeAddSortingProps('revision')}
-          >
-            Last Revision
-          </Cell>
+          <Hidden smDown>
+            <Cell
+              className={classes.revisions}
+              data-qa-stackscript-revision-header
+              {...maybeAddSortingProps('revision')}
+            >
+              Last Revision
+            </Cell>
+          </Hidden>
         )}
         {!isSelecting && (
-          <TableCell
-            className={classes.tags}
-            data-qa-stackscript-compatible-images
-          >
-            Compatible Images
-          </TableCell>
+          <Hidden smDown>
+            <TableCell
+              className={classes.tags}
+              data-qa-stackscript-compatible-images
+            >
+              Compatible Images
+            </TableCell>
+          </Hidden>
         )}
-        {!isSelecting && <TableCell />}
+        {!isSelecting && <TableCell className={classes.actionMenu} />}
       </TableRow>
     </TableHead>
   );
