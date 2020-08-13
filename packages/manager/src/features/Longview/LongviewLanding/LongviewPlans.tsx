@@ -451,7 +451,7 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
             {plan}
             {currentSubscriptionOnAccount === id && (
               <Chip
-                data-testid="current-plan"
+                data-testid={`current-plan-${id}`}
                 label="Current Plan"
                 className={styles.chip}
               />
