@@ -5,7 +5,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -223,23 +223,19 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
 
     if (diskError) {
       return (
-        <React.Fragment>
-          <div>
-            <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving Disks information." />
-          </div>
-        </React.Fragment>
+        <div>
+          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+          <ErrorState errorText="There was an error retrieving Disks information." />
+        </div>
       );
     }
 
     if (volumesError) {
       return (
-        <React.Fragment>
-          <div>
-            <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving Volumes information." />
-          </div>
-        </React.Fragment>
+        <div>
+          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+          <ErrorState errorText="There was an error retrieving Volumes information." />
+        </div>
       );
     }
 
@@ -317,6 +313,7 @@ export default compose<CombinedProps, {}>(
   SectionErrorBoundary,
   styled,
   withSnackbar,
+  withRouter,
   withVolumes(
     (
       ownProps,
