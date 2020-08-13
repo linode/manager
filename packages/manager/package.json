@@ -294,7 +294,7 @@
       "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
     ],
     "moduleNameMapper": {
       "\\.svg$": "<rootDir>/src/components/NullComponent",
