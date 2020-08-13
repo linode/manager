@@ -1,9 +1,4 @@
-import {
-  cleanup,
-  fireEvent,
-  render,
-  waitForElement
-} from '@testing-library/react';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { normalizedImages as images } from 'src/__data__/images';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -67,7 +62,7 @@ describe('RebuildFromStackScript', () => {
       wrapWithTheme(<RebuildFromStackScript {...props} />)
     );
     fireEvent.click(getByTestId('rebuild-button'));
-    await waitForElement(
+    await waitFor(
       () => [
         getByText('A StackScript is required.'),
         getByText('An image is required.'),
