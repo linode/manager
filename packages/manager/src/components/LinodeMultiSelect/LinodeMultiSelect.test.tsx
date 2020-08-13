@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, wait } from '@testing-library/react';
+import { cleanup, fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { linodeFactory } from 'src/factories/linodes';
@@ -108,7 +108,7 @@ describe('Linode Multi Select', () => {
     it('should call its handleSelect method with a list of Linode IDs', async () => {
       const { getByTestId } = renderWithTheme(<LinodeMultiSelect {...props} />);
 
-      await wait(() =>
+      await waitFor(() =>
         fireEvent.change(getByTestId('select'), {
           target: { value: [linodes[1].id] }
         })
@@ -119,7 +119,7 @@ describe('Linode Multi Select', () => {
     it('should call its handleSelect method with all Linode IDs if ALL is selected', async () => {
       const { getByTestId } = renderWithTheme(<LinodeMultiSelect {...props} />);
 
-      await wait(() =>
+      await waitFor(() =>
         fireEvent.change(getByTestId('select'), {
           target: { value: ['ALL'] }
         })
