@@ -20,7 +20,8 @@ type ClassNames =
   | 'planCell'
   | 'progressDisplay'
   | 'regionCell'
-  | 'tagCell';
+  | 'tagCell'
+  | 'maintenanceOuter';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -95,6 +96,10 @@ const styles = (theme: Theme) =>
     },
     tagCell: {
       borderRight: 'none'
+    },
+    maintenanceOuter: {
+      display: 'flex',
+      alignItems: 'center'
     }
   });
 
