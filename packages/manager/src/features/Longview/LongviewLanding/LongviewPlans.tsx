@@ -195,6 +195,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
 
     setUpdateLoading(true);
     setUpdateErrorMsg('');
+    setUpdateSuccessMsg('');
 
     // If the user has selected the free plan, which need to make a switch for
     // {}, which is what the API wants.
