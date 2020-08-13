@@ -3,6 +3,7 @@ import { rest } from 'msw';
 import {
   accountFactory,
   domainFactory,
+  domainRecordFactory,
   imageFactory,
   firewallFactory,
   firewallDeviceFactory,
@@ -129,6 +130,10 @@ export const handlers = [
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(25);
     return res(ctx.json(makeResourcePage(domains)));
+  }),
+  rest.post('*/domains/*/records', (req, res, ctx) => {
+    const record = domainRecordFactory.build();
+    return res(ctx.json(record));
   }),
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(10);
