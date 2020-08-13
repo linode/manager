@@ -65,6 +65,7 @@ class TagsInput extends React.Component<Props, State> {
         this.setState({ accountTags });
       })
       .catch(err => {
+        console.log(err);
         const defaultError = [
           { reason: 'There was an error retrieving your tags.' }
         ];

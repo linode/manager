@@ -1,21 +1,12 @@
-import { fireEvent } from '@testing-library/react';
+import * as tags from '@linode/api-v4/lib/tags/tags';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import TagsInput from './TagsInput';
 
-const request = require.requireMock('@linode/api-v4/lib/tags');
-
-jest.mock('@linode/api-v4/lib/tags', () => ({
-  getTags: jest.fn()
-}));
 jest.mock('src/components/EnhancedSelect/Select');
-
-const mockTags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
-
-request.getTags = jest
-  .fn()
-  .mockResolvedValue({ data: mockTags.map(tag => ({ label: tag })) });
+const mockGetTags = jest.spyOn<any, any>(tags, 'getTags');
 
 describe('TagsInput', () => {
   const onChange = jest.fn();
@@ -27,16 +18,22 @@ describe('TagsInput', () => {
     />
   );
 
-  it('sets account tags based on API request', () => {
+  it('sets account tags based on API request', async () => {
     fireEvent.click(getByTestId('select'));
-    expect(queryAllByTestId('mock-option')).toHaveLength(mockTags.length);
-    expect(request.getTags).toHaveBeenCalledTimes(1);
+    await waitFor(() =>
+      expect(queryAllByTestId('mock-option')).toHaveLength(5)
+    );
+    await waitFor(() => expect(mockGetTags).toHaveBeenCalledTimes(1));
   });
 
-  it('calls onChange handler when the value is updated', () => {
+  it('calls onChange handler when the value is updated', async () => {
     fireEvent.change(getByTestId('select'), {
-      target: { value: 'tag2' }
+      target: { value: 'tag-2' }
     });
-    expect(onChange).toHaveBeenCalledWith([{ label: 'tag2', value: 'tag2' }]);
+    await waitFor(() =>
+      expect(onChange).toHaveBeenCalledWith([
+        { label: 'tag-2', value: 'tag-2' }
+      ])
+    );
   });
 });

@@ -23,7 +23,8 @@ import {
   supportTicketFactory,
   volumeFactory,
   accountTransferFactory,
-  eventFactory
+  eventFactory,
+  tagFactory
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -181,5 +182,9 @@ export const handlers = [
   }),
   rest.put('*/account/settings/*', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.get('*/tags*', (req, res, ctx) => {
+    const tags = tagFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(tags)));
   })
 ];
