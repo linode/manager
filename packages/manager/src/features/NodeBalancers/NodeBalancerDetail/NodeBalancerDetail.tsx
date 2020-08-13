@@ -280,8 +280,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       updateTags: this.updateTags
     };
 
-    const findTabIndex = this.tabs.findIndex(tab => matches(tab.routeName));
-
     return (
       <NodeBalancerProvider value={p}>
         <React.Fragment>
@@ -289,14 +287,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             <Grid item>
               <Breadcrumb
                 pathname={location.pathname}
-                labelOptions={{ linkTo: this.getLabelLink() }}
-                crumbOverrides={[
-                  {
-                    position: 1,
-                    label: 'NodeBalancers'
-                  }
-                ]}
-                removeCrumbX={2}
+                firstAndLastOnly
                 onEditHandlers={{
                   editableTextTitle: nodeBalancerLabel,
                   onEdit: this.updateLabel,
@@ -307,7 +298,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
           {errorMap.none && <Notice error text={errorMap.none} />}
-          <Tabs defaultIndex={findTabIndex}>
+          <Tabs
+            defaultIndex={Math.max(
+              this.tabs.findIndex(tab => matches(tab.routeName)),
+              0
+            )}
+          >
             <TabLinkList tabs={this.tabs} />
 
             <TabPanels>
