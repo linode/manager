@@ -287,7 +287,7 @@
     "testPathIgnorePatterns": [
       "<rootDir>/src/components/Storyshots.test.tsx"
     ],
-    "testURL": "http://localhost",
+    "testURL": "https://cloud.linode.com",
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
