@@ -231,13 +231,13 @@ export const getStackScriptUrl = (
     case currentUser:
       // My StackScripts
       // @todo: handle account stackscripts
-      type = 'My%20Images';
-      subtype = 'Account%20StackScripts';
+      type = 'StackScripts';
+      subtype = 'Account';
       break;
     default:
       // Community StackScripts
-      type = 'One-Click';
-      subtype = 'Community%20StackScripts';
+      type = 'StackScripts';
+      subtype = 'Community';
   }
   return `/linodes/create?type=${type}&subtype=${subtype}&stackScriptID=${id}`;
 };
