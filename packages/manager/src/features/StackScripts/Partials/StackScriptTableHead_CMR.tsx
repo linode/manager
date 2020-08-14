@@ -58,8 +58,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   tags: {
     width: '15%'
   },
+  status: {
+    width: '10%'
+  },
   actionMenu: {
     width: '4%'
+  },
+  tr: {
+    height: 48
+  },
+  tableHead: {
+    top: theme.spacing(11)
   }
 }));
 
@@ -100,8 +109,10 @@ export const StackScriptTableHead: React.FC<CombinedProps> = props => {
 
   return (
     <TableHead className={classes.root}>
-      <TableRow>
-        {!!isSelecting && <TableCell className={classes.noHover} />}
+      <TableRow className={classes.tr}>
+        {!!isSelecting && (
+          <TableCell className={`${classes.tableHead} ${classes.noHover}`} />
+        )}
         {/* The column width jumps in the Linode Create flow when the user
             clicks on the table header. This is currently also happening in
             production and might be related to the difference in width between
@@ -109,6 +120,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = props => {
             Linode Create flow.  */}
         <Cell
           className={classNames({
+            [classes.tableHead]: true,
             [classes.stackscriptTitles]: true,
             [classes.selectingStackscriptTitles]: isSelecting
           })}
@@ -119,7 +131,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = props => {
         </Cell>
         {!isSelecting && (
           <Cell
-            className={classes.deploys}
+            className={`${classes.tableHead} ${classes.deploys}`}
             data-qa-stackscript-active-deploy-header
             {...maybeAddSortingProps('deploys')}
           >
@@ -129,7 +141,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = props => {
         {!isSelecting && (
           <Hidden smDown>
             <Cell
-              className={classes.revisions}
+              className={`${classes.tableHead} ${classes.revisions}`}
               data-qa-stackscript-revision-header
               {...maybeAddSortingProps('revision')}
             >
@@ -140,14 +152,28 @@ export const StackScriptTableHead: React.FC<CombinedProps> = props => {
         {!isSelecting && (
           <Hidden smDown>
             <TableCell
-              className={classes.tags}
+              className={`${classes.tableHead} ${classes.tags} ${classes.noHover}`}
               data-qa-stackscript-compatible-images
             >
               Compatible Images
             </TableCell>
           </Hidden>
         )}
-        {!isSelecting && <TableCell className={classes.actionMenu} />}
+        {!isSelecting && (
+          <Hidden mdDown>
+            <TableCell
+              className={`${classes.tableHead} ${classes.status} ${classes.noHover}`}
+              data-qa-stackscript-status-header
+            >
+              Status
+            </TableCell>
+          </Hidden>
+        )}
+        {!isSelecting && (
+          <TableCell
+            className={`${classes.tableHead} ${classes.actionMenu} ${classes.noHover}`}
+          />
+        )}
       </TableRow>
     </TableHead>
   );

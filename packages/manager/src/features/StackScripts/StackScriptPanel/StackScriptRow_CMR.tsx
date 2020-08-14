@@ -93,6 +93,11 @@ export const StackScriptRow: React.FC<CombinedProps> = props => {
           {displayTagsAndShowMore(images)}
         </TableCell>
       </Hidden>
+      <Hidden mdDown>
+        <TableCell data-qa-stackscript-status>
+          {isPublic ? 'Public' : 'Private'}
+        </TableCell>
+      </Hidden>
       <TableCell className={classes.actionCell}>
         <StackScriptsActionMenu
           stackScriptID={stackScriptID}
