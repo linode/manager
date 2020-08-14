@@ -69,6 +69,8 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
     updateImageID
   } = props;
 
+  const udfRef = React.useRef({});
+
   const [detailDrawerOpen, setDetailDrawerOpen] = React.useState<boolean>(
     false
   );
@@ -119,8 +121,10 @@ export const FromAppsContent: React.FC<CombinedProps> = props => {
 
   const handleChangeUDF = (key: string, value: string) => {
     // Either overwrite or create new selection
-    const newUDFData = assocPath([key], value, props.selectedUDFs);
-    props.handleSelectUDFs({ ...props.selectedUDFs, ...newUDFData });
+    const newUDFData = assocPath([key], value, udfRef.current);
+    const mergedData = { ...udfRef.current, ...newUDFData } as any;
+    props.handleSelectUDFs(mergedData);
+    udfRef.current = mergedData;
   };
 
   const openDrawer = (stackScriptLabel: string) => {

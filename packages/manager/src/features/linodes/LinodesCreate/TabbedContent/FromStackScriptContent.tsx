@@ -88,6 +88,8 @@ export const FromStackScriptContent: React.FC<CombinedProps> = props => {
     selectedUDFs: udf_data
   } = props;
 
+  const udfRef = React.useRef({});
+
   const handleSelectStackScript = (
     id: number,
     label: string,
@@ -131,8 +133,10 @@ export const FromStackScriptContent: React.FC<CombinedProps> = props => {
 
   const handleChangeUDF = (key: string, value: string) => {
     // Either overwrite or create new selection
-    const newUDFData = assocPath([key], value, props.selectedUDFs);
-    props.handleSelectUDFs({ ...props.selectedUDFs, ...newUDFData });
+    const newUDFData = assocPath([key], value, udfRef.current);
+    const merged = { ...udfRef.current, ...newUDFData } as any;
+    props.handleSelectUDFs(merged);
+    udfRef.current = merged;
   };
 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
