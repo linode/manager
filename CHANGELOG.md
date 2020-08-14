@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-08-14] - v1.16.2
+
+### Fixed:
+
+- Clear UDF data on tab change
+- Form fields issue on One-click Apps and StackScripts creation flows
+
 ## [2020-08-13] - v1.16.1
 
 ### Fixed:
