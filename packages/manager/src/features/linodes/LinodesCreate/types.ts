@@ -157,7 +157,7 @@ export interface StackScriptFormStateHandlers extends BasicFromContentProps {
     defaultData?: any
   ) => void;
   selectedUDFs?: any;
-  handleSelectUDFs: (stackScripts: any[]) => void;
+  handleSelectUDFs: (stackScripts: any) => void;
 }
 
 /**
