@@ -12,18 +12,23 @@ import { Provider } from 'react-redux';
 
 const mockProps: CombinedProps = {
   category: 'community',
+  classes: {
+    main: '',
+    emptyImagePanel: '',
+    emptyImagePanelText: ''
+  },
+  accountBackupsEnabled: false,
   updateImageID: jest.fn(),
   updateRegionID: jest.fn(),
   updateTypeID: jest.fn(),
   imagesData: {},
   regionsData: [],
   typesData: [],
+  userCannotCreateLinode: false,
   request: jest.fn(),
   header: '',
   updateStackScript: jest.fn(),
-  handleSelectUDFs: jest.fn(),
-  accountBackupsEnabled: false,
-  userCannotCreateLinode: false
+  handleSelectUDFs: jest.fn()
 };
 
 describe('FromImageContent', () => {
