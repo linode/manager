@@ -67,7 +67,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     /**
-     * Send pageviews unless blacklisted.
+     * Send pageviews unless blocklisted.
      */
     this.props.history.listen(({ pathname }) => {
       if ((window as any).ga) {
