@@ -15,7 +15,6 @@ import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import Notice from 'src/components/Notice';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
@@ -46,6 +45,7 @@ interface Props {
   passwordValidation: PasswordValidationType;
   linodeId: number;
   linodeLabel?: string;
+  handleRebuildError: (status: any) => void;
   onClose: () => void;
 }
 
@@ -75,6 +75,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     requestKeys,
     linodeId,
     linodeLabel,
+    handleRebuildError,
     onClose,
     enqueueSnackbar,
     passwordHelperText,
@@ -148,7 +149,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
         errors,
         handleSubmit,
         setFieldValue,
-        status,
+        status, // holds generalError messages
         values,
         validateForm
       }) => {
@@ -166,10 +167,12 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
           });
         };
 
+        if (status) {
+          handleRebuildError(status);
+        }
+
         return (
           <Grid item className={classes.root}>
-            {/* `status` holds generalError messages */}
-            {status && <Notice error>{status.generalError}</Notice>}
             <form>
               <ImageSelect
                 title="Select Image"

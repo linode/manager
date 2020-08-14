@@ -67,6 +67,7 @@ interface Props {
   passwordValidation: PasswordValidationType;
   linodeId: number;
   linodeLabel?: string;
+  handleRebuildError: (status: any) => void;
   onClose: () => void;
 }
 
@@ -96,6 +97,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     requestKeys,
     linodeId,
     linodeLabel,
+    handleRebuildError,
     onClose,
     enqueueSnackbar,
     passwordHelperText,
@@ -234,7 +236,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
         errors,
         handleSubmit,
         setFieldValue,
-        status,
+        status, // holds generalError messages
         values,
         validateForm
       }) => {
@@ -275,16 +277,12 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
           setFieldValue('image', '');
         };
 
+        if (status) {
+          handleRebuildError(status);
+        }
+
         return (
           <Grid item className={classes.root}>
-            {status && (
-              <Notice
-                error
-                className={classes.error}
-                text={status.generalError}
-                data-qa-notice
-              />
-            )}
             <form>
               <SelectStackScriptPanel
                 error={errors.stackscript_id}

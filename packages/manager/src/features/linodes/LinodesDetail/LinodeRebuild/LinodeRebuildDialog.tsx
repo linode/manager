@@ -10,6 +10,7 @@ import RebuildFromImage from './RebuildFromImage_CMR';
 import RebuildFromStackScript from './RebuildFromStackScript_CMR';
 import Dialog from 'src/components/Dialog';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
+import Notice from 'src/components/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -18,6 +19,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: 0,
       '& div': {
         padding: 0
+      },
+      '& .notice': {
+        padding: theme.spacing(2)
       }
     }
   },
@@ -66,6 +70,17 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
   const passwordValidation = flags.passwordValidation ?? 'none';
 
   const [mode, setMode] = React.useState<MODES>('fromImage');
+  const [rebuildError, setRebuildError] = React.useState<string>('');
+
+  React.useEffect(() => {
+    if (open) {
+      setRebuildError('');
+    }
+  }, [open]);
+
+  const handleRebuildError = (status: any) => {
+    setRebuildError(status.generalError);
+  };
 
   return (
     <Dialog
@@ -79,6 +94,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
       <Paper className={classes.root}>
         {unauthorized && <LinodePermissionsError />}
         {hostMaintenance && <HostMaintenanceError />}
+        {rebuildError && <Notice error>{rebuildError}</Notice>}
         <Typography data-qa-rebuild-desc className={classes.helperText}>
           If you can&#39;t rescue an existing disk, it&#39;s time to rebuild
           your Linode. There are a couple of different ways you can do this:
@@ -106,6 +122,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
           disabled={disabled}
           linodeId={linodeId}
           linodeLabel={linodeLabel}
+          handleRebuildError={handleRebuildError}
           onClose={onClose}
         />
       )}
@@ -117,6 +134,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
           disabled={disabled}
           linodeId={linodeId}
           linodeLabel={linodeLabel}
+          handleRebuildError={handleRebuildError}
           onClose={onClose}
         />
       )}
@@ -128,6 +146,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
           disabled={disabled}
           linodeId={linodeId}
           linodeLabel={linodeLabel}
+          handleRebuildError={handleRebuildError}
           onClose={onClose}
         />
       )}
