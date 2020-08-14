@@ -54,6 +54,8 @@ export const getInitialType = (): CreateTypes => {
         return 'fromImage';
       } else if (normalizedType.includes('backup')) {
         return 'fromBackup';
+      } else if (normalizedType.includes('clone')) {
+        return 'fromLinode';
       } else {
         return 'fromImage';
       }
