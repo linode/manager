@@ -11,7 +11,7 @@ export const getInitialType = (): CreateTypes => {
   let queryParams;
   try {
     queryParams = parse(location.search.replace('?', '').toLowerCase());
-  } catch {
+  } catch (e) {
     // Broken query params shouldn't break the app, just default to fromImage
     return 'fromImage';
   }
@@ -52,6 +52,8 @@ export const getInitialType = (): CreateTypes => {
         return 'fromApp';
       } else if (normalizedType.includes('images')) {
         return 'fromImage';
+      } else if (normalizedType.includes('backup')) {
+        return 'fromBackup';
       } else {
         return 'fromImage';
       }
