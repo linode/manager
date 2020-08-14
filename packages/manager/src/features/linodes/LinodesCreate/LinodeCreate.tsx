@@ -490,6 +490,7 @@ export class LinodeCreate extends React.PureComponent<
               </SafeTabPanel>
               <SafeTabPanel index={5}>
                 <FromLinodeContent
+                  errors={errors}
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
