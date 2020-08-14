@@ -4,11 +4,12 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(2),
-    marginTop: theme.spacing(5),
+    marginBottom: theme.spacing(2),
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const LinodeNews: React.FC<{}> = _ => {
   const classes = useStyles();
+  const flags = useFlags();
   const { VERSION } = process.env || null;
   if (!VERSION) {
     return null;
@@ -33,6 +35,10 @@ export const LinodeNews: React.FC<{}> = _ => {
         <Logo className={classes.logo} />
         <Typography style={{ fontSize: '1rem' }}>
           Cloud Manager v{VERSION} has been released! {` `}
+          {/** If changelog text for this version is present in LaunchDarkly, display it here. */}
+          {flags.changelog?.version === VERSION
+            ? `${flags.changelog.message} `
+            : null}
           <Link
             to={`https://github.com/linode/manager/releases/tag/linode-manager@v${VERSION}`}
           >
