@@ -66,9 +66,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
   } = props;
 
   const location = useLocation();
-  const fromLinodeDashboardOrDetail = location.pathname.match(/storage/)
-    ? true
-    : false;
+  const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
 
   const formattedRegion = formatRegion(region);
 
@@ -107,7 +105,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
       <TableCell className={classes.volumePath} data-qa-fs-path>
         {filesystemPath}
       </TableCell>
-      {!fromLinodeDashboardOrDetail && (
+      {isVolumesLanding && (
         <TableCell
           parentColumn="Attached To"
           data-qa-volume-cell-attachment={linodeLabel}
