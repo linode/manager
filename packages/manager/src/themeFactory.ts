@@ -560,6 +560,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             '&:active': {
               color: '#963530',
               borderColor: '#963530'
+            },
+            '&$disabled': {
+              borderColor: '#c9cacb',
+              backgroundColor: 'transparent',
+              color: '#c9cacb'
             }
           },
           '&.loading': {
