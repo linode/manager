@@ -64,7 +64,8 @@ const errorResources = {
   region: 'A region selection',
   label: 'A label',
   root_pass: 'A root password',
-  tags: 'Tags for this Linode'
+  tags: 'Tags for this Linode',
+  backup_id: 'Backup ID'
 };
 
 const filterLinodesWithBackups = (linodes: Linode[]) =>
