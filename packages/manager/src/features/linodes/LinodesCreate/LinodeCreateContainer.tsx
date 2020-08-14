@@ -96,7 +96,7 @@ interface State {
   backupsEnabled: boolean;
   privateIPEnabled: boolean;
   password: string;
-  udfs?: any[];
+  udfs?: any;
   tags?: Tag[];
   errors?: APIError[];
   formIsSubmitting: boolean;
@@ -135,6 +135,7 @@ const defaultState: State = {
   selectedRegionID: undefined,
   selectedTypeID: undefined,
   tags: [],
+  udfs: undefined,
   formIsSubmitting: false,
   errors: undefined,
   appInstancesLoading: false
@@ -334,7 +335,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setTags = (tags: Tag[]) => this.setState({ tags });
 
-  setUDFs = (udfs: any[]) => this.setState({ udfs });
+  setUDFs = (udfs: any) => this.setState({ udfs });
 
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
