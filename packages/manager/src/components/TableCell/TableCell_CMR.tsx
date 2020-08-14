@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1rem',
     padding: '0px 15px',
     '&.emptyCell': {
-      borderTop: `2px solid ${theme.palette.divider}`,
+      borderTop: 'none',
       height: 40
     },
     '&:last-child': {
