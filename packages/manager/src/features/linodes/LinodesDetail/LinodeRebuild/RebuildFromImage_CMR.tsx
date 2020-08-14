@@ -156,7 +156,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
         const handleRebuildButtonClick = () => {
           // Validate stackscript_id, image, & root_pass
           validateForm().then(maybeErrors => {
-            // If there aren't any errors, we can open the modal.
+            // If there aren't any errors, we can submit the form.
             if (isEmpty(maybeErrors)) {
               handleSubmit();
               // The form receives the errors automatically, and we scroll them into view.

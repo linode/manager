@@ -91,7 +91,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
         </Typography>
         <EnhancedSelect
           options={options}
-          defaultValue={options[0]}
+          defaultValue={options.find(option => option.value === mode)}
           onChange={(selected: Item<MODES>) => setMode(selected.value)}
           isClearable={false}
           disabled={disabled}
