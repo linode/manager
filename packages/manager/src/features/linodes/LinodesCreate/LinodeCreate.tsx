@@ -279,6 +279,7 @@ export class LinodeCreate extends React.PureComponent<
           .map(u => u.username),
         booted: true,
         backups_enabled: this.props.backupsEnabled,
+        backup_id: this.props.selectedBackupID,
         private_ip: this.props.privateIPEnabled,
 
         // StackScripts
