@@ -78,8 +78,8 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
     }
   }, [open]);
 
-  const handleRebuildError = (status: any) => {
-    setRebuildError(status.generalError);
+  const handleRebuildError = (status: string) => {
+    setRebuildError(status);
   };
 
   return (
@@ -108,7 +108,10 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
         <EnhancedSelect
           options={options}
           defaultValue={options.find(option => option.value === mode)}
-          onChange={(selected: Item<MODES>) => setMode(selected.value)}
+          onChange={(selected: Item<MODES>) => {
+            setMode(selected.value);
+            setRebuildError('');
+          }}
           isClearable={false}
           disabled={disabled}
           label="From Image"

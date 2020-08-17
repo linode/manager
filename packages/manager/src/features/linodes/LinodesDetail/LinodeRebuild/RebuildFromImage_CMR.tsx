@@ -45,7 +45,7 @@ interface Props {
   passwordValidation: PasswordValidationType;
   linodeId: number;
   linodeLabel?: string;
-  handleRebuildError: (status: any) => void;
+  handleRebuildError: (status: string) => void;
   onClose: () => void;
 }
 
@@ -168,7 +168,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
         };
 
         if (status) {
-          handleRebuildError(status);
+          handleRebuildError(status.generalError);
         }
 
         return (
