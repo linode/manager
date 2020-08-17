@@ -3,7 +3,8 @@ export type DialogType =
   | 'enable_backups'
   | 'migrate'
   | 'resize'
-  | 'rescue';
+  | 'rescue'
+  | 'rebuild';
 export type OpenDialog = (
   type: DialogType,
   linodeID: number,
