@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Bell from 'src/assets/icons/bell.svg';
+import Bell from 'src/assets/icons/bell_new.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { NotificationDrawer } from 'src/features/NotificationCenter';
 import { notificationContext } from 'src/features/NotificationCenter/NotificationContext';
