@@ -1,6 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { makeStyles } from 'src/components/core/styles';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Typography from 'src/components/core/Typography';
@@ -65,6 +65,9 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
     linodeStatus
   } = props;
 
+  const location = useLocation();
+  const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
+
   const formattedRegion = formatRegion(region);
 
   return isUpdating ? (
@@ -102,15 +105,17 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
       <TableCell className={classes.volumePath} data-qa-fs-path>
         {filesystemPath}
       </TableCell>
-      <TableCell data-qa-volume-cell-attachment={linodeLabel}>
-        {linodeId ? (
-          <Link to={`/linodes/${linodeId}`} className="link secondaryLink">
-            {linodeLabel}
-          </Link>
-        ) : (
-          <Typography data-qa-unattached>Unattached</Typography>
-        )}
-      </TableCell>
+      {isVolumesLanding && (
+        <TableCell data-qa-volume-cell-attachment={linodeLabel}>
+          {linodeId ? (
+            <Link to={`/linodes/${linodeId}`} className="link secondaryLink">
+              {linodeLabel}
+            </Link>
+          ) : (
+            <Typography data-qa-unattached>Unattached</Typography>
+          )}
+        </TableCell>
+      )}
       <TableCell className={classes.actionMenu}>
         <VolumesActionMenu
           onShowConfig={openForConfig}
@@ -132,6 +137,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
            * could sometimes get tagged as "attached" here.
            */
           attached={Boolean(linodeLabel)}
+          isVolumesLanding={isVolumesLanding} // Passing this down to govern logic re: showing Attach or Detach in action menu.
           onAttach={handleAttach}
           onDetach={handleDetach}
           poweredOff={linodeStatus === 'offline'}
