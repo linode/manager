@@ -26,14 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-// const notificationEventTypes = [
-//   'community_like',
-//   'community_question_reply',
-//   'community_mention'
-// ];
-// // @todo add more here, or filter our events request directly once we
-// // have a list of all relevant actions.
-
 export const NotificationButton: React.FC<{}> = _ => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
