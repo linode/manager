@@ -39,7 +39,13 @@ export const useNotificationContext = (): NotificationContextProps => {
         {
           '+and': [
             { created: { '+gt': mostRecentLogin } },
-            { action: 'community_like' }
+            {
+              '+or': [
+                { action: 'community_like' },
+                { action: 'community_question_reply' },
+                { action: 'community_mention' }
+              ]
+            }
           ]
         }
       )
