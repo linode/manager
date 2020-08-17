@@ -4,6 +4,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import useAccount from 'src/hooks/useAccount';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import CircleProgress from 'src/components/CircleProgress';
@@ -39,6 +40,8 @@ export const Notifications: React.FC<{}> = _ => {
   const { account } = useAccount();
   const balance = account.data?.balance ?? 0;
   const balanceUninvoiced = account.data?.balance_uninvoiced ?? 0;
+
+  const { support } = useNotificationData();
 
   const context = React.useContext(notificationContext);
   const mostRecentInvoiceRequest = useAPIRequest<number | undefined>(
@@ -91,7 +94,11 @@ export const Notifications: React.FC<{}> = _ => {
             <Grid item className={classes.column}>
               <Grid container direction="column">
                 <Grid item>
-                  <OpenSupportTickets />
+                  <OpenSupportTickets
+                    loading={support.loading}
+                    error={Boolean(support.error)}
+                    openTickets={support.data}
+                  />
                 </Grid>
                 <Grid item>
                   <Community communityEvents={communityEvents} />
@@ -104,7 +111,11 @@ export const Notifications: React.FC<{}> = _ => {
           <Hidden mdUp>
             <PendingActions />
             <Maintenance />
-            <OpenSupportTickets />
+            <OpenSupportTickets
+              loading={support.loading}
+              error={Boolean(support.error)}
+              openTickets={support.data}
+            />
             <Community communityEvents={communityEvents} />
           </Hidden>
         </Grid>

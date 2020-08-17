@@ -9,6 +9,7 @@ import OpenSupportTickets from './OpenSupportTickets';
 import PastDue from './PastDue';
 import PendingActions from './PendingActions';
 import useAccount from 'src/hooks/useAccount';
+import useNotificationData from './NotificationData/useNotificationData';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -45,6 +46,8 @@ export const NotificationDrawer: React.FC<Props> = props => {
   const { account } = useAccount();
   const classes = useStyles();
   const balance = (account.data?.balance ?? 0) + 50;
+  const { support } = useNotificationData();
+
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
       {balance > 0 ? <PastDue balance={balance} /> : null}
@@ -54,7 +57,11 @@ export const NotificationDrawer: React.FC<Props> = props => {
       <div className={classes.notificationSectionContainer}>
         <PendingActions />
         <Maintenance />
-        <OpenSupportTickets />
+        <OpenSupportTickets
+          loading={support.loading}
+          error={Boolean(support.error)}
+          openTickets={support.data}
+        />
         <Community communityEvents={events} />
       </div>
     </Drawer>
