@@ -5,7 +5,7 @@ import { reducer, ReducerActions, ReducerState } from './EventsLanding';
 const someEvent: Event[] = [
   {
     id: 1234,
-    time_remaining: 50,
+    time_remaining: null,
     secondary_entity: null,
     seen: true,
     created: '2018-12-02T20:23:43',

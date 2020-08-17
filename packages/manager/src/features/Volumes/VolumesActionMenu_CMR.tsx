@@ -33,26 +33,39 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export interface Props {
-  onShowConfig: (volumeLabel: string, volumePath: string) => void;
-  onEdit: (volumeId: number, volumeLabel: string, volumeTags: string[]) => void;
-  onResize: (volumeId: number, volumeSize: number, volumeLabel: string) => void;
-  onClone: (
+export interface ActionHandlers {
+  openForConfig: (volumeLabel: string, volumePath: string) => void;
+  openForEdit: (
+    volumeId: number,
+    volumeLabel: string,
+    volumeTags: string[]
+  ) => void;
+  openForResize: (
+    volumeId: number,
+    volumeSize: number,
+    volumeLabel: string
+  ) => void;
+  openForClone: (
     volumeId: number,
     label: string,
     size: number,
     regionID: string
   ) => void;
-  attached: boolean;
-  onAttach: (volumeId: number, label: string, linodeRegion: string) => void;
-  onDetach: (
+  handleAttach: (volumeId: number, label: string, linodeRegion: string) => void;
+  handleDetach: (
     volumeId: number,
     volumeLabel: string,
     linodeLabel: string,
     poweredOff: boolean
   ) => void;
+  handleDelete: (volumeId: number, volumeLabel: string) => void;
+  [index: string]: any;
+}
+
+interface Props extends ActionHandlers {
+  attached: boolean;
+  isVolumesLanding: boolean;
   poweredOff: boolean;
-  onDelete: (volumeId: number, volumeLabel: string) => void;
   filesystemPath: string;
   label: string;
   linodeLabel: string;
@@ -104,7 +117,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
   };
 
   const createActions = () => {
-    const { attached, poweredOff } = props;
+    const { attached, poweredOff, isVolumesLanding } = props;
 
     return (): Action[] => {
       const actions = [
@@ -124,7 +137,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
         }
       ];
 
-      if (!attached) {
+      if (!attached && isVolumesLanding) {
         actions.push({
           title: 'Attach',
           onClick: (e: React.MouseEvent<HTMLElement>) => {

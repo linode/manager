@@ -30,8 +30,6 @@ import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
-import { ZONES } from 'src/constants';
-import { reportException } from 'src/exceptionReporting';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
@@ -48,6 +46,7 @@ import { IPTypes } from './types';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
+import Hidden from 'src/components/core/Hidden';
 
 type ClassNames =
   | 'root'
@@ -487,14 +486,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const zoneName = ZONES[linodeRegion];
-
-    if (!zoneName) {
-      reportException(`Unknown region: ${linodeRegion}`, {
-        linodeID
-      });
-    }
-
     const ipsWithRDNS =
       currentlySelectedIPRange && currentlySelectedIPRange.prefix
         ? listIPv6InRange(
@@ -517,15 +508,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <div
-        id="tabpanel-networking"
-        role="tabpanel"
-        aria-labelledby="tab-networking"
-      >
+      <div>
         <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         {readOnly && <LinodePermissionsError />}
         <LinodeNetworkingSummaryPanel
-          linodeRegion={zoneName}
+          linodeRegion={linodeRegion}
           linodeID={linodeID}
           linodeCreated={linodeCreated}
           linodeLabel={linodeLabel}
@@ -633,20 +620,39 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       <div style={{ marginTop: 20 }}>
         <EntityHeader
           title="IP Addresses"
-          actions={
-            <div>
+          isSecondary
+          body={
+            <Hidden mdUp>
               <Button
-                style={{ padding: '16px 14px' }}
+                style={{ paddingTop: 5, paddingBottom: 5 }}
                 onClick={this.openTransferDialog}
               >
                 IP Transfer
               </Button>
               <Button
-                style={{ padding: '16px 28px 16px 14px' }}
+                style={{ paddingTop: 5, paddingBottom: 5 }}
                 onClick={this.openSharingDialog}
               >
                 IP Sharing
               </Button>
+            </Hidden>
+          }
+          actions={
+            <div>
+              <Hidden smDown>
+                <Button
+                  style={{ padding: '16px 14px' }}
+                  onClick={this.openTransferDialog}
+                >
+                  IP Transfer
+                </Button>
+                <Button
+                  style={{ padding: '16px 28px 16px 14px' }}
+                  onClick={this.openSharingDialog}
+                >
+                  IP Sharing
+                </Button>
+              </Hidden>
               <AddNewLink
                 label="Add an IP Address..."
                 onClick={this.openAddIPDrawer}

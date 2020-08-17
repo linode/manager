@@ -179,6 +179,7 @@ export type EventAction =
   | 'backups_enable'
   | 'backups_restore'
   | 'community_like'
+  | 'community_mention'
   | 'community_question_reply'
   | 'credit_card_updated'
   | 'disk_create'
@@ -276,7 +277,7 @@ export interface Event {
   read: boolean;
   seen: boolean;
   status: EventStatus;
-  time_remaining: null | number;
+  time_remaining: null | string;
   username: string;
   secondary_entity: Entity | null;
   _initial?: boolean;

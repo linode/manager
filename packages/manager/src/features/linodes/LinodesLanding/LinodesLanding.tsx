@@ -1,7 +1,6 @@
 import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import Close from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
 import * as classNames from 'classnames';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -13,8 +12,6 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import TableView from 'src/assets/icons/table-view.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
@@ -42,6 +39,7 @@ import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import BackupsCTA_CMR from 'src/features/Backups/BackupsCTA_CMR';
+import { DialogType } from 'src/features/linodes/types';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import {
@@ -57,30 +55,39 @@ import {
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { BackupsCtaDismissed } from 'src/utilities/storage';
 import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
+import MigrateLinode from '../MigrateLanding/MigrateLinode';
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import DeleteDialog from './DeleteDialog';
+import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
+import RescueDialog from '../LinodesDetail/LinodeRescue/RescueDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import DisplayLinodes from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import ToggleBox from './ToggleBox';
+import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { ExtendedStatus, statusToPriority } from './utils';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 
 interface State {
   powerDialogOpen: boolean;
   powerDialogAction?: Action;
+  enableBackupsDialogOpen: boolean;
   selectedLinodeConfigs?: Config[];
   selectedLinodeID?: number;
   selectedLinodeLabel?: string;
   deleteDialogOpen: boolean;
+  rebuildDialogOpen: boolean;
+  rescueDialogOpen: boolean;
   groupByTag: boolean;
   CtaDismissed: boolean;
   linodeResizeOpen: boolean;
+  linodeMigrateOpen: boolean;
   filterStatus: FilterStatus;
 }
 
@@ -103,11 +110,15 @@ type CombinedProps = WithImages &
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
+    enableBackupsDialogOpen: false,
     powerDialogOpen: false,
     deleteDialogOpen: false,
+    rebuildDialogOpen: false,
+    rescueDialogOpen: false,
     groupByTag: false,
     CtaDismissed: BackupsCtaDismissed.get(),
     linodeResizeOpen: false,
+    linodeMigrateOpen: false,
     filterStatus: 'all'
   };
 
@@ -149,18 +160,54 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   };
 
-  closeDialogs = () => {
+  openDialog = (type: DialogType, linodeID: number, linodeLabel?: string) => {
+    switch (type) {
+      case 'delete':
+        this.setState({
+          deleteDialogOpen: true
+        });
+        break;
+      case 'resize':
+        this.setState({
+          linodeResizeOpen: true
+        });
+        break;
+      case 'migrate':
+        this.setState({
+          linodeMigrateOpen: true
+        });
+        break;
+      case 'rebuild':
+        this.setState({
+          rebuildDialogOpen: true
+        });
+        break;
+      case 'rescue':
+        this.setState({
+          rescueDialogOpen: true
+        });
+        break;
+      case 'enable_backups':
+        this.setState({
+          enableBackupsDialogOpen: true
+        });
+        break;
+    }
     this.setState({
-      powerDialogOpen: false,
-      deleteDialogOpen: false
+      selectedLinodeID: linodeID,
+      selectedLinodeLabel: linodeLabel
     });
   };
 
-  openDeleteDialog = (linodeID: number, linodeLabel: string) => {
+  closeDialogs = () => {
     this.setState({
-      deleteDialogOpen: true,
-      selectedLinodeID: linodeID,
-      selectedLinodeLabel: linodeLabel
+      powerDialogOpen: false,
+      deleteDialogOpen: false,
+      rebuildDialogOpen: false,
+      rescueDialogOpen: false,
+      linodeResizeOpen: false,
+      linodeMigrateOpen: false,
+      enableBackupsDialogOpen: false
     });
   };
 
@@ -169,19 +216,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       CtaDismissed: true
     });
     BackupsCtaDismissed.set('true');
-  };
-
-  openLinodeResize = (linodeID: number) => {
-    this.setState({
-      linodeResizeOpen: true,
-      selectedLinodeID: linodeID
-    });
-  };
-
-  closeLinodeResize = () => {
-    this.setState({
-      linodeResizeOpen: false
-    });
   };
 
   setFilterStatus = (status: FilterStatus) => {
@@ -215,8 +249,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       someLinodesHaveMaintenance: this.props
         .someLinodesHaveScheduledMaintenance,
       openPowerActionDialog: this.openPowerDialog,
-      openDeleteDialog: this.openDeleteDialog,
-      openLinodeResize: this.openLinodeResize
+      openDialog: this.openDialog
     };
 
     if (imagesError.read || linodesRequestError) {
@@ -280,16 +313,38 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {this.props.flags.cmr && (
-          <LinodeResize_CMR
-            open={this.state.linodeResizeOpen}
-            onClose={this.closeLinodeResize}
-            linodeId={this.state.selectedLinodeID}
-            linodeLabel={
-              this.props.linodesData.find(
-                thisLinode => thisLinode.id === this.state.selectedLinodeID
-              )?.label ?? undefined
-            }
-          />
+          <>
+            <LinodeResize_CMR
+              open={this.state.linodeResizeOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID}
+              linodeLabel={
+                this.props.linodesData.find(
+                  thisLinode => thisLinode.id === this.state.selectedLinodeID
+                )?.label ?? undefined
+              }
+            />
+            <MigrateLinode
+              open={this.state.linodeMigrateOpen}
+              onClose={this.closeDialogs}
+              linodeID={this.state.selectedLinodeID ?? -1}
+            />
+            <LinodeRebuildDialog
+              open={this.state.rebuildDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
+            />
+            <RescueDialog
+              open={this.state.rescueDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
+            />
+            <EnableBackupsDialog
+              open={this.state.enableBackupsDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
+            />
+          </>
         )}
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner
@@ -418,51 +473,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   }
                                 />
                               </Grid>
-                              <Hidden xsDown>
-                                {params.view === 'grid' && (
-                                  <Grid item xs={12} className={'px0'}>
-                                    <div className={classes.controlHeader}>
-                                      <div
-                                        id="displayViewDescription"
-                                        className="visually-hidden"
-                                      >
-                                        Currently in {linodeViewPreference} view
-                                      </div>
-                                      <IconButton
-                                        aria-label="Toggle display"
-                                        aria-describedby={
-                                          'displayViewDescription'
-                                        }
-                                        title={`Toggle display`}
-                                        onClick={toggleLinodeView}
-                                        disableRipple
-                                        className={classes.toggleButton}
-                                      >
-                                        <TableView />
-                                      </IconButton>
-
-                                      <div
-                                        id="groupByDescription"
-                                        className="visually-hidden"
-                                      >
-                                        {linodesAreGrouped
-                                          ? 'group by tag is currently enabled'
-                                          : 'group by tag is currently disabled'}
-                                      </div>
-                                      <IconButton
-                                        aria-label={`Toggle group by tag`}
-                                        aria-describedby={'groupByDescription'}
-                                        title={`Toggle group by tag`}
-                                        onClick={toggleGroupLinodes}
-                                        disableRipple
-                                        className={classes.toggleButton}
-                                      >
-                                        <GroupByTag />
-                                      </IconButton>
-                                    </div>
-                                  </Grid>
-                                )}
-                              </Hidden>
                             </React.Fragment>
                           ) : (
                             <Grid
@@ -561,6 +571,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   <DisplayGroupedLinodes
                                     {...finalProps}
                                     display={linodeViewPreference}
+                                    toggleLinodeView={toggleLinodeView}
+                                    toggleGroupLinodes={toggleGroupLinodes}
+                                    linodesAreGrouped={true}
+                                    linodeViewPreference={linodeViewPreference}
                                     component={
                                       linodeViewPreference === 'grid'
                                         ? CardView
@@ -571,6 +585,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   <DisplayLinodes
                                     {...finalProps}
                                     display={linodeViewPreference}
+                                    toggleLinodeView={toggleLinodeView}
+                                    toggleGroupLinodes={toggleGroupLinodes}
+                                    linodesAreGrouped={false}
+                                    linodeViewPreference={linodeViewPreference}
                                     component={
                                       linodeViewPreference === 'grid'
                                         ? CardView
@@ -732,7 +750,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
       : false,
     linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
-    userTimezone: state.__resources.profile.data?.timezone ?? '',
+    userTimezone: getUserTimezone(state),
     userTimezoneLoading: state.__resources.profile.loading,
     userTimezoneError: path<APIError[]>(
       ['read'],

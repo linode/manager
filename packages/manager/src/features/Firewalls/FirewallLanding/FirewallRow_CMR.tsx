@@ -3,6 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import StatusIcon from 'src/components/StatusIcon';
@@ -73,10 +74,12 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
         {capitalize(status)}
       </TableCell>
-      <TableCell>{getRuleString(count)}</TableCell>
-      <TableCell>
-        {getLinodesCellString(devices, loading, error.read)}
-      </TableCell>
+      <Hidden xsDown>
+        <TableCell>{getRuleString(count)}</TableCell>
+        <TableCell>
+          {getLinodesCellString(devices, loading, error.read)}
+        </TableCell>
+      </Hidden>
       <TableCell>
         <ActionMenu
           firewallID={id}

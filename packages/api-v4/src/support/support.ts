@@ -31,7 +31,7 @@ export const getTickets = (params?: any, filter?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
-  );
+  ).then(response => response.data);
 
 /**
  * getTicket

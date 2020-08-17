@@ -6,7 +6,6 @@ import { makeStyles } from 'src/components/core/styles';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import VolumesLanding_CMR from 'src/features/Volumes/VolumesLanding_CMR';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
 const useStyles = makeStyles(() => ({
@@ -25,6 +24,7 @@ const LinodeSummary_CMR = React.lazy(() =>
 const LinodeNetworking_CMR = React.lazy(() =>
   import('./LinodeNetworking/LinodeNetworking_CMR')
 );
+const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
 const LinodeAdvanced_CMR = React.lazy(() =>
   import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel_CMR')
 );
@@ -49,16 +49,7 @@ const suspenseWrapper = (Component: React.ComponentType<any>) => (
   </React.Suspense>
 );
 
-const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
-  const {
-    linodeLabel,
-    linodeConfigs,
-    linodeId,
-    linodeRegion,
-    readOnly,
-    ...routeProps
-  } = props;
-
+const LinodesDetailNavigation: React.FC<CombinedProps> = () => {
   const classes = useStyles();
 
   const tabs: Tab[] = React.useMemo(
@@ -75,24 +66,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
       },
       // Previously Volumes
       {
-        render: () => (
-          <div
-            id="tabpanel-storage"
-            role="tabpanel"
-            aria-labelledby="tab-storage"
-          >
-            <VolumesLanding_CMR
-              linodeId={linodeId}
-              linodeLabel={linodeLabel}
-              linodeRegion={linodeRegion}
-              linodeConfigs={linodeConfigs}
-              readOnly={readOnly}
-              fromLinodes
-              removeBreadCrumb
-              {...routeProps}
-            />
-          </div>
-        ),
+        render: () => suspenseWrapper(LinodeStorage),
         title: 'Storage'
       },
       // Previously Disks/Configs
@@ -125,7 +99,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
         title: 'Settings'
       }
     ],
-    [linodeId, linodeConfigs, linodeRegion, linodeLabel, readOnly, routeProps]
+    []
   );
 
   return (

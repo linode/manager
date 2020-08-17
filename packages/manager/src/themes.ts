@@ -126,7 +126,10 @@ const darkThemeOptions = {
     primaryNavText: '#fff',
     borderBilling: primaryColors.light,
     billingText: '#fff',
-    tagButton: '#222'
+    tagButton: '#364863',
+    tagText: '#9caec9',
+    tagIcon: '#9caec9',
+    tagBorder: '#2e3238'
   },
   animateCircleIcon: {
     ...iconCircleAnimation
@@ -296,8 +299,7 @@ const darkThemeOptions = {
     },
     MuiDialog: {
       paper: {
-        boxShadow: '0 0 5px #222',
-        background: '#000'
+        boxShadow: '0 0 5px #222'
       }
     },
     MuiDialogTitle: {

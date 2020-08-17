@@ -144,6 +144,11 @@ const genericStatusPillStyle = {
     width: 16,
     minWidth: 16,
     marginRight: 8
+  },
+  [breakpoints.down('sm')]: {
+    fontSize: 14,
+    padding: '15px 12px',
+    borderRadius: 15
   }
 };
 
@@ -279,7 +284,10 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavText: '#fff',
       borderBilling: '#cce2ff',
       billingText: '#313335',
-      tagButton: '#f1f7fd'
+      tagButton: '#f1f7fd',
+      tagText: '#3a3f46',
+      tagIcon: '#7daee8',
+      tagBorder: '#fff'
     },
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
@@ -552,6 +560,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             '&:active': {
               color: '#963530',
               borderColor: '#963530'
+            },
+            '&$disabled': {
+              borderColor: '#c9cacb',
+              backgroundColor: 'transparent',
+              color: '#c9cacb'
             }
           },
           '&.loading': {

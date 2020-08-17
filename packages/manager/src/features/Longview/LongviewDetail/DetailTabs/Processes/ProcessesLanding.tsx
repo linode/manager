@@ -119,13 +119,7 @@ const ProcessesLanding: React.FC<Props> = props => {
 
   return (
     <>
-      <Grid
-        container
-        spacing={4}
-        id="tabpanel-processes"
-        role="tabpanel"
-        aria-labelledby="tab-processes"
-      >
+      <Grid container spacing={4}>
         <Grid item xs={12} lg={7}>
           <Box display="flex" justifyContent="space-between">
             <TextField

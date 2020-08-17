@@ -1,69 +1,94 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import CommunityIcon from 'src/assets/community.svg';
 import Typography from 'src/components/core/Typography';
+import Link from 'src/components/Link';
 import NotificationSection, { NotificationItem } from './NotificationSection';
+import { Event } from '@linode/api-v4/lib/account';
 
-export const Community: React.FC<{}> = _ => {
-  const communityUpdates: NotificationItem[] = [
-    {
-      id: 'community-12345',
-      body: (
-        <Typography>
-          <Link to="/">mlogan</Link> replied to{' '}
-          <Link to="/">&quot;NGINX as Node.js front end?&quot;</Link>
-        </Typography>
-      ),
-      timeStamp: '2020-07-20T19:03:37'
-    },
-    {
-      id: 'community-12346',
-      body: (
-        <Typography>
-          <Link to="/">mlogan</Link> replied to{' '}
-          <Link to="/">&quot;PostgreSQL performance tuning&quot;</Link>
-        </Typography>
-      ),
-      timeStamp: '2020-07-20T19:03:37'
-    },
-    {
-      id: 'community-18347',
-      body: (
-        <Typography>
-          <Link to="/">dsweeney</Link> replied to{' '}
-          <Link to="/">&quot;Lost my ssh key...help!&quot;</Link>
-        </Typography>
-      ),
-      timeStamp: '2020-07-20T16:03:37'
-    },
-    {
-      id: 'community-12347',
-      body: (
-        <Typography>
-          <Link to="/">mcintosh</Link> replied to{' '}
-          <Link to="/">&quot;N+1 query problem&quot;</Link>
-        </Typography>
-      ),
-      timeStamp: '2020-07-20T14:03:37'
-    },
-    {
-      id: 'community-12445',
-      body: (
-        <Typography>
-          <Link to="/">jschaeffer</Link> replied to{' '}
-          <Link to="/">&quot;Golang is a useless vanity project&quot;</Link>
-        </Typography>
-      ),
-      timeStamp: '2020-07-20T12:03:37'
-    }
-  ];
+interface Props {
+  communityEvents: Event[];
+}
+
+type CombinedProps = Props;
+
+export const Community: React.FC<CombinedProps> = props => {
+  const { communityEvents } = props;
+
+  const communityUpdates: NotificationItem[] = eventsToNotificationItems(
+    communityEvents
+  );
+
   return (
     <NotificationSection
       content={communityUpdates}
       header="Community Updates"
-      icon={<CommunityIcon />}
+      showMoreText="Visit the Community"
+      showMoreTarget="https://linode.com/community"
+      emptyMessage="There have been no updates to your discussion topics since your last visit."
     />
   );
+};
+
+const userHref = 'https://www.linode.com/community/user/';
+
+const eventsToNotificationItems = (events: Event[]): NotificationItem[] => {
+  return events
+    .map(event => {
+      const { entity } = event;
+      // Safety check; entity will always be defined for these events
+      if (!entity) {
+        return null;
+      }
+      const eventLabel = entity.label;
+
+      const id = `community-update-${entity.id}`;
+
+      switch (event.action) {
+        case 'community_question_reply':
+          return {
+            id,
+            body: (
+              <Typography>
+                <Link to={`${userHref}${event.username}`}>
+                  {event.username}
+                </Link>{' '}
+                replied to <Link to={`${entity.url}`}>{eventLabel}</Link>
+              </Typography>
+            ),
+            timeStamp: event.created
+          };
+
+        case 'community_mention':
+          return {
+            id,
+            body: (
+              <Typography>
+                <Link to={`${userHref}${event.username}`}>
+                  {event.username}
+                </Link>{' '}
+                mentioned you in <Link to={`${entity.url}`}>{eventLabel}</Link>
+              </Typography>
+            ),
+            timeStamp: event.created
+          };
+
+        case 'community_like':
+          const [likeSummary, postTitle] = eventLabel.split(':');
+
+          return {
+            id,
+            body: (
+              <Typography>
+                {likeSummary}: <Link to={`${entity.url}`}>{postTitle}</Link>
+              </Typography>
+            ),
+            timeStamp: event.created
+          };
+
+        default:
+          return null;
+      }
+    })
+    .filter(Boolean) as NotificationItem[];
 };
 
 export default React.memo(Community);

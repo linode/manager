@@ -5,11 +5,47 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import Hidden from 'src/components/core/Hidden';
+import IconButton from 'src/components/core/IconButton';
+import GroupByTag from 'src/assets/icons/group-by-tag.svg';
+import TableView from 'src/assets/icons/table-view.svg';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
-type CombinedProps = Omit<OrderByProps, 'data'>;
+const useStyles = makeStyles((theme: Theme) => ({
+  controlHeader: {
+    backgroundColor: theme.bg.controlHeader,
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
+  toggleButton: {
+    padding: '0 10px',
+    '&:focus': {
+      // Browser default until we get styling direction for focus states
+      outline: '1px dotted #999'
+    }
+  }
+}));
+
+interface Props {
+  toggleLinodeView: () => 'list' | 'grid';
+  linodeViewPreference: 'list' | 'grid';
+  toggleGroupLinodes: () => boolean;
+  linodesAreGrouped: boolean;
+}
+
+type CombinedProps = Props & Omit<OrderByProps, 'data'>;
 
 const SortableTableHead: React.FC<CombinedProps> = props => {
-  const { handleOrderChange, order, orderBy } = props;
+  const classes = useStyles();
+
+  const {
+    handleOrderChange,
+    order,
+    orderBy,
+    toggleLinodeView,
+    linodeViewPreference,
+    toggleGroupLinodes,
+    linodesAreGrouped
+  } = props;
 
   const isActive = (label: string) =>
     label.toLowerCase() === orderBy.toLowerCase();
@@ -66,7 +102,39 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
         <Hidden mdDown>
           <TableCell>Tags</TableCell>
         </Hidden>
-        <TableCell />
+        <TableCell>
+          <div className={classes.controlHeader}>
+            <div id="displayViewDescription" className="visually-hidden">
+              Currently in {linodeViewPreference} view
+            </div>
+            <IconButton
+              aria-label="Toggle display"
+              aria-describedby={'displayViewDescription'}
+              title={`Toggle display`}
+              onClick={toggleLinodeView}
+              disableRipple
+              className={classes.toggleButton}
+            >
+              <TableView />
+            </IconButton>
+
+            <div id="groupByDescription" className="visually-hidden">
+              {linodesAreGrouped
+                ? 'group by tag is currently enabled'
+                : 'group by tag is currently disabled'}
+            </div>
+            <IconButton
+              aria-label={`Toggle group by tag`}
+              aria-describedby={'groupByDescription'}
+              title={`Toggle group by tag`}
+              onClick={toggleGroupLinodes}
+              disableRipple
+              className={classes.toggleButton}
+            >
+              <GroupByTag />
+            </IconButton>
+          </div>
+        </TableCell>
       </TableRow>
     </TableHead>
   );

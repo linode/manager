@@ -63,7 +63,7 @@ export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
  */
 export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
   (doc as any).autoTable({
-    startY: 150,
+    startY: 155,
     styles: {
       lineWidth: 1
     },
