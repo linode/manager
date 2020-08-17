@@ -62,12 +62,15 @@ export const useNotificationContext = (): NotificationContextProps => {
 
   useEffect(() => {
     setLoading(true);
-    getLogins({}, { '+order_by': 'datetime', '+order': 'desc' }).then(
-      response => {
+    getLogins({}, { '+order_by': 'datetime', '+order': 'desc' })
+      .then(response => {
         setRecentLogin(response.data[0]?.datetime);
         request();
-      }
-    );
+      })
+      .catch(_ => {
+        setError('Unable to retrieve community events data');
+        setLoading(false);
+      });
   }, [request]);
 
   useEffect(() => {
