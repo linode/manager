@@ -30,70 +30,43 @@ export const APITokenMenu: React.FC<CombinedProps> = props => {
     type
   } = props;
 
-  const inlineActions = [
+  const actions: Action[] = [
     {
-      actionText: 'Revoke',
+      title: 'Revoke',
       onClick: () => {
         openRevokeDialog(token, type);
       }
     }
   ];
   if (!isThirdPartyAccessToken) {
-    inlineActions.unshift({
-      actionText: 'Rename Token',
+    actions.unshift({
+      title: 'Rename',
       onClick: () => {
         openEditDrawer(token);
       }
     });
   }
-  inlineActions.unshift({
-    actionText: 'View Token Scopes',
+  actions.unshift({
+    title: 'View Scopes',
     onClick: () => {
       openViewDrawer(token);
     }
   });
-
-  const createActions = () => (): Action[] => {
-    const actions: Action[] = [
-      {
-        title: 'Revoke',
-        onClick: () => {
-          openRevokeDialog(token, type);
-        }
-      }
-    ];
-    if (!isThirdPartyAccessToken) {
-      actions.unshift({
-        title: 'Rename Token',
-        onClick: () => {
-          openEditDrawer(token);
-        }
-      });
-    }
-    actions.unshift({
-      title: 'View Token Scopes',
-      onClick: () => {
-        openViewDrawer(token);
-      }
-    });
-
-    return actions;
-  };
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {matchesSmDown ? (
         <ActionMenu
-          createActions={createActions()}
+          createActions={() => actions}
           ariaLabel={`Action menu for API Token ${props.token.label}`}
         />
       ) : (
-        inlineActions.map(action => {
+        actions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );
