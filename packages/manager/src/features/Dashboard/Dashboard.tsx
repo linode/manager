@@ -27,6 +27,7 @@ import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 
 interface StateProps {
   accountBackups: boolean;
@@ -140,7 +141,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
       state
     ),
     notifications: pathOr([], ['data'], state.__resources.notifications),
-    userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
+    userTimezone: getUserTimezone(state),
     userTimezoneLoading: state.__resources.profile.loading,
     userTimezoneError: path(['read'], state.__resources.profile.error),
     someLinodesHaveScheduledMaintenance: linodesWithMaintenance
