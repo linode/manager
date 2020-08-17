@@ -61,6 +61,7 @@ export const useNotificationContext = (): NotificationContextProps => {
   }, [mostRecentLogin]);
 
   useEffect(() => {
+    setLoading(true);
     getLogins({}, { '+order_by': 'datetime', '+order': 'desc' }).then(
       response => {
         setRecentLogin(response.data[0]?.datetime);
