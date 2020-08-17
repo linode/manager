@@ -140,6 +140,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
            * could sometimes get tagged as "attached" here.
            */
           attached={Boolean(linodeLabel)}
+          isVolumesLanding={isVolumesLanding} // Passing this down to govern logic re: showing Attach or Detach in action menu.
           onAttach={handleAttach}
           onDetach={handleDetach}
           poweredOff={linodeStatus === 'offline'}
