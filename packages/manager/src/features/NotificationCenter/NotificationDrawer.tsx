@@ -46,7 +46,7 @@ export const NotificationDrawer: React.FC<Props> = props => {
   const { account } = useAccount();
   const classes = useStyles();
   const balance = (account.data?.balance ?? 0) + 50;
-  const { support } = useNotificationData();
+  const { pendingActions, support } = useNotificationData();
 
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
@@ -55,7 +55,7 @@ export const NotificationDrawer: React.FC<Props> = props => {
         <Clock />
       </div>
       <div className={classes.notificationSectionContainer}>
-        <PendingActions />
+        <PendingActions pendingActions={pendingActions} />
         <Maintenance />
         <OpenSupportTickets
           loading={support.loading}

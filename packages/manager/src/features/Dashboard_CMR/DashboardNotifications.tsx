@@ -41,7 +41,7 @@ export const Notifications: React.FC<{}> = _ => {
   const balance = account.data?.balance ?? 0;
   const balanceUninvoiced = account.data?.balance_uninvoiced ?? 0;
 
-  const { support } = useNotificationData();
+  const { pendingActions, support } = useNotificationData();
 
   const context = React.useContext(notificationContext);
   const mostRecentInvoiceRequest = useAPIRequest<number | undefined>(
@@ -84,7 +84,7 @@ export const Notifications: React.FC<{}> = _ => {
             <Grid item className={classes.column}>
               <Grid container direction="column">
                 <Grid item>
-                  <PendingActions />
+                  <PendingActions pendingActions={pendingActions} />
                 </Grid>
                 <Grid item>
                   <Maintenance />
@@ -109,7 +109,7 @@ export const Notifications: React.FC<{}> = _ => {
 
           {/* Small screen version */}
           <Hidden mdUp>
-            <PendingActions />
+            <PendingActions pendingActions={pendingActions} />
             <Maintenance />
             <OpenSupportTickets
               loading={support.loading}
