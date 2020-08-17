@@ -28,64 +28,41 @@ export const OAuthClientActionMenu: React.FC<CombinedProps> = props => {
 
   const { label, redirectUri, isPublic, clientID } = props;
 
-  const inlineActions = [
+  const actions: Action[] = [
     {
-      actionText: 'Edit',
+      title: 'Edit',
       onClick: () => {
         props.openEditDrawer(isPublic, redirectUri, label, clientID);
       }
     },
     {
-      actionText: 'Reset Secret',
+      title: 'Reset',
       onClick: () => {
         props.openSecretModal(clientID, label);
       }
     },
     {
-      actionText: 'Delete',
+      title: 'Delete',
       onClick: () => {
         props.openDeleteModal(clientID, label);
       }
     }
   ];
 
-  const createActions = () => (): Action[] => {
-    return [
-      {
-        title: 'Edit',
-        onClick: () => {
-          props.openEditDrawer(isPublic, redirectUri, label, clientID);
-        }
-      },
-      {
-        title: 'Reset Secret',
-        onClick: () => {
-          props.openSecretModal(clientID, label);
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          props.openDeleteModal(clientID, label);
-        }
-      }
-    ];
-  };
-
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {matchesSmDown ? (
         <ActionMenu
-          createActions={createActions()}
+          createActions={() => actions}
           ariaLabel={`Action menu for OAuth Client ${props.label}`}
         />
       ) : (
-        inlineActions.map(action => {
+        actions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );
