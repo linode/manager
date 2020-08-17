@@ -1,0 +1,36 @@
+# This workflow run unit tests for the SDK as well as a build. It will then
+# run npm publish if the preceding steps succeeded.
+
+name: Linode Cloud Manager
+
+on: push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install -g yarn
+    - run: yarn install:all
+    - name: Build
+      run: yarn build
+    - name: Unit tests
+      run: yarn test
+  e2e:
+    runs:
+      using: 'docker'
+      image: 'cypress/browsers:node12.18.0-chrome83-ff77'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      - run: yarn install:all && yarn run cypress verify && yarn build:sdk
+    - name: E2E test
+      - run: sh ./run_cypress_docker.sh 
