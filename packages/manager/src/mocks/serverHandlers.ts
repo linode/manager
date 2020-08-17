@@ -28,6 +28,7 @@ import {
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
+import cachedTypes from 'src/cachedData/types.json';
 
 export const makeResourcePage = (
   e: any[],
@@ -49,6 +50,9 @@ export const handlers = [
   }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(ctx.json(cachedRegions));
+  }),
+  rest.get('*/linode/types', async (req, res, ctx) => {
+    return res(ctx.json(cachedTypes));
   }),
   rest.get('*/images', async (req, res, ctx) => {
     const privateImages = imageFactory.buildList(10);
@@ -186,5 +190,8 @@ export const handlers = [
   rest.get('*/tags*', (req, res, ctx) => {
     const tags = tagFactory.buildList(5);
     return res(ctx.json(makeResourcePage(tags)));
+  }),
+  rest.get('*/account/notifications*', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage([])));
   })
 ];
