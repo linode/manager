@@ -1,6 +1,16 @@
-import useCommunityNotifications from './useCommunityNotifications';
+import { UseAPIRequest } from 'src/hooks/useAPIRequest';
+import useCommunityNotifications, {
+  CommunityNotifications
+} from './useCommunityNotifications';
 import usePendingActions from './PendingActionNotifications';
 import SupportNotifications from './SupportNotifications';
+import { NotificationItem } from '../NotificationSection';
+
+export interface NotificationData {
+  community: CommunityNotifications;
+  pendingActions: NotificationItem[];
+  support: UseAPIRequest<NotificationItem[]>;
+}
 
 /**
  * All data used for displaying notifications in the Dashboard
@@ -10,7 +20,7 @@ import SupportNotifications from './SupportNotifications';
  * - The drawer needs to be able to display a chronological list
  * of all notifications, in addition to sorting them by type.
  */
-export const useNotificationData = () => {
+export const useNotificationData = (): NotificationData => {
   const community = useCommunityNotifications();
   const support = SupportNotifications();
   const pendingActions = usePendingActions();

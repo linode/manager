@@ -4,6 +4,7 @@ import NotificationSection, { NotificationItem } from './NotificationSection';
 interface Props {
   pendingActions: NotificationItem[];
 }
+
 export const PendingActions: React.FC<Props> = props => {
   const { pendingActions } = props;
 

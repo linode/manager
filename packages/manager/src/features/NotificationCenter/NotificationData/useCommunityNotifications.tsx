@@ -5,7 +5,13 @@ import Link from 'src/components/Link';
 import { NotificationItem } from '../NotificationSection';
 import { Event } from '@linode/api-v4/lib/account';
 
-export const useCommunityNotifications = () => {
+export interface CommunityNotifications {
+  loading: boolean;
+  error?: string;
+  events: NotificationItem[];
+}
+
+export const useCommunityNotifications = (): CommunityNotifications => {
   const context = React.useContext(notificationContext);
 
   return {

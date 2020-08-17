@@ -8,7 +8,7 @@ import OpenSupportTickets from './OpenSupportTickets';
 import PastDue from './PastDue';
 import PendingActions from './PendingActions';
 import useAccount from 'src/hooks/useAccount';
-import useNotificationData from './NotificationData/useNotificationData';
+import { NotificationData } from './NotificationData/useNotificationData';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -35,16 +35,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  data: NotificationData;
   open: boolean;
   onClose: () => void;
 }
 
 export const NotificationDrawer: React.FC<Props> = props => {
-  const { open, onClose } = props;
+  const { data, open, onClose } = props;
   const { account } = useAccount();
   const classes = useStyles();
   const balance = (account.data?.balance ?? 0) + 50;
-  const { community, pendingActions, support } = useNotificationData();
+  const { community, pendingActions, support } = data;
 
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
