@@ -3,12 +3,9 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import { notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import useAccount from 'src/hooks/useAccount';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import CircleProgress from 'src/components/CircleProgress';
-import ErrorState from 'src/components/ErrorState';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
 import LinodeNews from './LinodeNews';
 
@@ -41,9 +38,8 @@ export const Notifications: React.FC<{}> = _ => {
   const balance = account.data?.balance ?? 0;
   const balanceUninvoiced = account.data?.balance_uninvoiced ?? 0;
 
-  const { pendingActions, support } = useNotificationData();
+  const { community, pendingActions, support } = useNotificationData();
 
-  const context = React.useContext(notificationContext);
   const mostRecentInvoiceRequest = useAPIRequest<number | undefined>(
     () =>
       getInvoices({}, { '+order': 'desc', '+order_by': 'date' }).then(
@@ -52,19 +48,7 @@ export const Notifications: React.FC<{}> = _ => {
     undefined
   );
 
-  const communityEvents = context.events.filter(event =>
-    [
-      'community_like',
-      'community_question_reply',
-      'community_mention'
-    ].includes(event.action)
-  );
-
-  return context.loading ? (
-    <CircleProgress />
-  ) : context.error ? (
-    <ErrorState errorText={context.error} />
-  ) : (
+  return (
     <>
       <Hidden smDown>
         <BillingSummary
@@ -101,7 +85,11 @@ export const Notifications: React.FC<{}> = _ => {
                   />
                 </Grid>
                 <Grid item>
-                  <Community communityEvents={communityEvents} />
+                  <Community
+                    loading={community.loading}
+                    communityEvents={community.events}
+                    error={Boolean(community.error)}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -116,7 +104,11 @@ export const Notifications: React.FC<{}> = _ => {
               error={Boolean(support.error)}
               openTickets={support.data}
             />
-            <Community communityEvents={communityEvents} />
+            <Community
+              loading={community.loading}
+              communityEvents={community.events}
+              error={Boolean(community.error)}
+            />
           </Hidden>
         </Grid>
       </Paper>

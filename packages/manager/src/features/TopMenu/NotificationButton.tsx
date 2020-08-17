@@ -58,11 +58,7 @@ export const NotificationButton: React.FC<{}> = _ => {
         <Bell aria-hidden />
         <strong className={classes.text}>{numEvents}</strong>
       </button>
-      <NotificationDrawer
-        open={drawerOpen}
-        onClose={closeDrawer}
-        events={context.events}
-      />
+      <NotificationDrawer open={drawerOpen} onClose={closeDrawer} />
     </>
   );
 };

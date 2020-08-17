@@ -1,4 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
 import Clock from 'src/assets/icons/clock.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -37,16 +36,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   open: boolean;
-  events: Event[];
   onClose: () => void;
 }
 
 export const NotificationDrawer: React.FC<Props> = props => {
-  const { open, events, onClose } = props;
+  const { open, onClose } = props;
   const { account } = useAccount();
   const classes = useStyles();
   const balance = (account.data?.balance ?? 0) + 50;
-  const { pendingActions, support } = useNotificationData();
+  const { community, pendingActions, support } = useNotificationData();
 
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
@@ -62,7 +60,11 @@ export const NotificationDrawer: React.FC<Props> = props => {
           error={Boolean(support.error)}
           openTickets={support.data}
         />
-        <Community communityEvents={events} />
+        <Community
+          communityEvents={community.events}
+          loading={community.loading}
+          error={Boolean(community.error)}
+        />
       </div>
     </Drawer>
   );

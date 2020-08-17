@@ -1,3 +1,4 @@
+import useCommunityNotifications from './useCommunityNotifications';
 import usePendingActions from './PendingActionNotifications';
 import SupportNotifications from './SupportNotifications';
 
@@ -10,10 +11,12 @@ import SupportNotifications from './SupportNotifications';
  * of all notifications, in addition to sorting them by type.
  */
 export const useNotificationData = () => {
+  const community = useCommunityNotifications();
   const support = SupportNotifications();
   const pendingActions = usePendingActions();
 
   return {
+    community,
     pendingActions,
     support
   };
