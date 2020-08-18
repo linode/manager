@@ -25,7 +25,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableSortCell from 'src/components/TableSortCell';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { useDialog } from 'src/hooks/useDialog';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -34,7 +34,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 
 import AddCredentialDrawer from './AddCredentialDrawer';
-import CredentialTableContent from './CredentialTableContent';
+import CredentialTableContent from './CredentialTableContent_CMR';
 import UpdateCredentialDrawer from './UpdateCredentialDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
