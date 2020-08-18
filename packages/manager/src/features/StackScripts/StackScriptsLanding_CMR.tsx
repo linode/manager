@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 15
   },
   addNewLinkWrapper: {
+    marginRight: 15,
     padding: 0
   },
   addNewLink: {

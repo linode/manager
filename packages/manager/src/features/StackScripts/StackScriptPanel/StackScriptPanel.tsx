@@ -7,6 +7,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import {
   createStyles,
   Theme,
@@ -14,7 +16,8 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
-import TabbedPanel from 'src/components/TabbedPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabLinkList from 'src/components/TabLinkList';
 import { MapState } from 'src/store/types';
 import { getQueryParam } from 'src/utilities/queryParams';
 import {
@@ -28,26 +31,14 @@ export interface ExtendedLinode extends Linode {
   subHeadings: string[];
 }
 
-type ClassNames = 'root' | 'creating' | 'table' | 'link';
+type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginBottom: theme.spacing(3)
-    },
-    table: {
-      flexGrow: 1,
-      width: '100%',
-      backgroundColor: theme.color.white
-    },
-    creating: {
-      paddingTop: 0
-    },
-    link: {
-      display: 'block',
-      textAlign: 'right',
-      marginBottom: theme.spacing(2),
-      marginTop: theme.spacing(1)
+      backgroundColor: theme.color.white,
+      marginBottom: theme.spacing(3),
+      padding: theme.spacing(3)
     }
   });
 
@@ -59,7 +50,10 @@ interface Props {
   location: RouteComponentProps<{}>['location'];
 }
 
-type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  StateProps &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}>;
 
 class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
@@ -100,15 +94,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
 
   createTabs = StackScriptTabs.map(tab => ({
     title: tab.title,
-    render: () => (
-      <StackScriptPanelContent
-        publicImages={this.props.publicImages}
-        currentUser={this.props.username}
-        request={tab.request}
-        key={tab.category + '-tab'}
-        category={tab.category}
-      />
-    )
+    routeName: tab.routeName
   }));
 
   // When the user clicks on a Tab, update the query string so a specific type
@@ -132,20 +118,36 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { error, classes, queryString } = this.props;
+    const { classes, queryString } = this.props;
 
     const tabValue = getTabValueFromQueryString(queryString, StackScriptTabs);
 
     return (
-      <TabbedPanel
-        error={error}
-        rootClass={classes.root}
-        shrinkTabContent={classes.creating}
-        tabs={this.createTabs}
-        header=""
-        value={tabValue}
-        handleTabChange={this.handleTabChange}
-      />
+      <div className={classes.root}>
+        <Tabs defaultIndex={tabValue} onChange={this.handleTabChange}>
+          <TabLinkList tabs={this.createTabs} />
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <StackScriptPanelContent
+                publicImages={this.props.publicImages}
+                currentUser={this.props.username}
+                request={getMineAndAccountStackScripts}
+                key="account-tab"
+                category="account"
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <StackScriptPanelContent
+                publicImages={this.props.publicImages}
+                currentUser={this.props.username}
+                request={getCommunityStackscripts}
+                key="community-tab"
+                category="community"
+              />
+            </SafeTabPanel>
+          </TabPanels>
+        </Tabs>
+      </div>
     );
   }
 }
@@ -158,18 +160,21 @@ export interface StackScriptTab {
     filter?: any
   ) => Promise<ResourcePage<StackScript>>;
   category: 'account' | 'community';
+  routeName: string;
 }
 
 export const StackScriptTabs: StackScriptTab[] = [
   {
     title: 'Account StackScripts',
     request: getMineAndAccountStackScripts,
-    category: 'account'
+    category: 'account',
+    routeName: '/stackscripts?type=account'
   },
   {
     title: 'Community StackScripts',
     request: getCommunityStackscripts,
-    category: 'community'
+    category: 'community',
+    routeName: '/stackscripts?type=community'
   }
 ];
 
