@@ -28,7 +28,9 @@ const mockProps: CombinedProps = {
   request: jest.fn(),
   header: '',
   updateStackScript: jest.fn(),
-  handleSelectUDFs: jest.fn()
+  handleSelectUDFs: jest.fn(),
+  ldClient: {} as any,
+  flags: {}
 };
 
 describe('FromImageContent', () => {

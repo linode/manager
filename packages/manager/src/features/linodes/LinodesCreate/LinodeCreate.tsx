@@ -436,26 +436,26 @@ export class LinodeCreate extends React.PureComponent<
                       <SafeTabPanel index={0}>
                         <FromStackScriptContent
                           category="community"
-                          accountBackupsEnabled={accountBackupsEnabled}
-                          userCannotCreateLinode={userCannotCreateLinode}
+                          // accountBackupsEnabled={accountBackupsEnabled}
+                          // userCannotCreateLinode={userCannotCreateLinode}
                           request={getCommunityStackscripts}
                           header={'Select a StackScript'}
-                          imagesData={imagesData!}
-                          regionsData={regionsData!}
-                          typesData={typesData!}
+                          // imagesData={imagesData!}
+                          // regionsData={regionsData!}
+                          // typesData={typesData!}
                           {...rest}
                         />
                       </SafeTabPanel>
                       <SafeTabPanel index={1}>
                         <FromStackScriptContent
                           category="account"
-                          accountBackupsEnabled={accountBackupsEnabled}
-                          userCannotCreateLinode={userCannotCreateLinode}
+                          // accountBackupsEnabled={accountBackupsEnabled}
+                          // userCannotCreateLinode={userCannotCreateLinode}
                           request={getMineAndAccountStackScripts}
                           header={'Select a StackScript'}
-                          imagesData={imagesData!}
-                          regionsData={regionsData!}
-                          typesData={typesData!}
+                          // imagesData={imagesData!}
+                          // regionsData={regionsData!}
+                          // typesData={typesData!}
                           {...rest}
                         />
                       </SafeTabPanel>
