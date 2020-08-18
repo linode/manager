@@ -109,27 +109,25 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     const deviceList = Object.values(devices.itemsById ?? {});
 
     // Returns boolean to determine if the Firewalls we've recieved are attached to the Linode to be migrated.
-    if (deviceList.filter(eachDevice => eachDevice.entity.id === linodeId)) {
-      return true;
-    } else {
-      return false;
-    }
+    deviceList.filter(eachDevice => eachDevice.entity.id === linodeId)
+      ? true
+      : false;
   };
 
   //Here we search through the FW list until we find one with the to-be-migrated Linode attached
   const getAttachedFirewall = () => {
-    return firewallList.find(
-      firewall => isAttachedFirewall(firewall.id) === true
-    );
+    return firewallList.find(firewall => isAttachedFirewall(firewall.id));
   };
 
   React.useEffect(() => {
     scrollErrorIntoView();
+  }, [regionError, APIError, acceptError]);
 
+  React.useEffect(() => {
     if (getAttachedFirewall !== undefined) {
       setHasFirewall(true);
     }
-  }, [hasFirewall, regionError, APIError, acceptError]);
+  }, [hasFirewall]);
 
   if (_loading) {
     return <CircleProgress />;

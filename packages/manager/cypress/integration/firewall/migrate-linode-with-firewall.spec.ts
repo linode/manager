@@ -133,8 +133,7 @@ describe('Migrate Linode With Firewall', () => {
     cy.findByText(`United States: Dallas, TX`).should('be.visible');
     cy.findByText('Regions').click();
     // cheking that eu-west is not selectable
-    // TODO: uncoimment this line once the logic is in the code to check for region with the cloud firewall capabilities
-    // cy.findByText('London, UK', {timeout:1000}).should('not.exist')
+    cy.findByText('London, UK', { timeout: 1000 }).should('not.exist');
     // checking that ap-south is selectable
     cy.findByText('Singapore, SG').click();
     cy.findByText('Enter Migration Queue').click();

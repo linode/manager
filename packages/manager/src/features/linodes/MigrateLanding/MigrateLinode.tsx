@@ -28,6 +28,13 @@ import { MBpsInterDC } from 'src/constants';
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { formatDate } from 'src/utilities/formatDate';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
+import { Region } from '@linode/api-v4/lib/regions/types';
+import useReduxLoad from 'src/hooks/useReduxLoad';
+import withFirewalls, {
+  Props as FireProps
+} from 'src/containers/firewalls.container';
+import CircleProgress from 'src/components/CircleProgress';
+import useFirewallDevices from 'src/hooks/useFirewallDevices';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -45,10 +52,16 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithTypesAndImages;
+type CombinedProps = Props & WithTypesAndImages & FireProps;
 
 const MigrateLanding: React.FC<CombinedProps> = props => {
-  const { linodeID, notifications, onClose, open } = props;
+  const {
+    linodeID,
+    notifications,
+    onClose,
+    open,
+    itemsById: firewalls
+  } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -65,6 +78,26 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
   const [APIError, setAPIError] = React.useState<string>('');
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
   const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [hasFirewall, setHasFirewall] = React.useState<boolean>(false);
+
+  const { _loading } = useReduxLoad(['firewalls']);
+  const firewallList = Object.values(firewalls ?? {});
+
+  // This is weird because the endpoint for attached Firewall devices is separate from the general get Firewalls endpoint.
+  const isAttachedFirewall = (id: number) => {
+    const { devices } = useFirewallDevices(id);
+    const deviceList = Object.values(devices.itemsById ?? {});
+
+    // Returns boolean to determine if the Firewalls we've recieved are attached to the Linode to be migrated.
+    deviceList.filter(eachDevice => eachDevice.entity.id === linodeID)
+      ? true
+      : false;
+  };
+
+  //Here we search through the FW list until we find one with the to-be-migrated Linode attached
+  const getAttachedFirewall = () => {
+    return firewallList.find(firewall => isAttachedFirewall(firewall.id));
+  };
 
   React.useEffect(() => {
     scrollErrorIntoView();
@@ -79,8 +112,18 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     }
   }, [open]);
 
+  React.useEffect(() => {
+    if (getAttachedFirewall !== undefined) {
+      setHasFirewall(true);
+    }
+  }, [hasFirewall]);
+
   if (!linode) {
     return null;
+  }
+
+  if (_loading) {
+    return <CircleProgress />;
   }
 
   const region = {
@@ -168,6 +211,10 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     addUsedDiskSpace(linode._disks) / MBpsInterDC / 60
   );
 
+  const firewallRegions = regions.entities.filter((thisRegion: Region) =>
+    thisRegion.capabilities.includes('Cloud Firewall')
+  );
+
   return (
     <Dialog
       title={`Migrate ${linode.label ?? ''}`}
@@ -199,10 +246,11 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       />
       <ConfigureForm
         currentRegion={region}
-        allRegions={regions.entities}
+        allRegions={hasFirewall ? firewallRegions : regions.entities}
         handleSelectRegion={handleSelectRegion}
         selectedRegion={selectedRegion}
         errorText={regionError}
+        hasFirewall={hasFirewall}
       />
       <div className={classes.actionWrapper}>
         <Button
@@ -235,6 +283,7 @@ const withReduxState = connect(mapStateToProps);
 
 export default compose<CombinedProps, Props>(
   withReduxState,
+  withFirewalls(),
   React.memo
 )(MigrateLanding);
 
