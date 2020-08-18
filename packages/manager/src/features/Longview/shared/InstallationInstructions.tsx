@@ -88,7 +88,7 @@ const InstallationInstructions: React.FC<CombinedProps> = props => {
           <Grid item className={classes.instruction}>
             <Typography>
               <a
-                href="https://www.linode.com/docs/platform/longview/what-is-longview/#troubleshooting"
+                href="https://www.linode.com/docs/platform/longview/troubleshooting-linode-longview/"
                 target="_blank"
                 aria-describedby="external-site"
                 rel="noopener noreferrer"
