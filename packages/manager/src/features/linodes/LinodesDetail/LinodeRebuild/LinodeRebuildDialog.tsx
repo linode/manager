@@ -17,11 +17,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(2),
     '& + div': {
       padding: 0,
-      '& + .MuiGrid-root': {
-        padding: 0
-      },
-      '& div': {
-        // padding: 0
+      '& .MuiPaper-root': {
+        padding: 0,
+        '& > div': {
+          padding: 0
+        },
+        '& .MuiTableCell-head': {
+          top: theme.spacing(11)
+        }
       },
       '& .notice': {
         padding: theme.spacing(2)
@@ -33,7 +36,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helperText: {
     paddingBottom: theme.spacing(2)
-  }
+  },
+  test: {}
 }));
 
 interface Props {
@@ -133,16 +137,18 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
         />
       )}
       {mode === 'fromCommunityStackScript' && (
-        <RebuildFromStackScript
-          type="community"
-          passwordHelperText={passwordHelperText}
-          passwordValidation={passwordValidation}
-          disabled={disabled}
-          linodeId={linodeId}
-          linodeLabel={linodeLabel}
-          handleRebuildError={handleRebuildError}
-          onClose={onClose}
-        />
+        <div className={classes.test}>
+          <RebuildFromStackScript
+            type="community"
+            passwordHelperText={passwordHelperText}
+            passwordValidation={passwordValidation}
+            disabled={disabled}
+            linodeId={linodeId}
+            linodeLabel={linodeLabel}
+            handleRebuildError={handleRebuildError}
+            onClose={onClose}
+          />
+        </div>
       )}
       {mode === 'fromAccountStackScript' && (
         <RebuildFromStackScript
