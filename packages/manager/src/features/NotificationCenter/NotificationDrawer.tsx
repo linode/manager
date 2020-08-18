@@ -95,10 +95,10 @@ export const NotificationDrawer: React.FC<Props> = props => {
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
       {balance > 0 ? <PastDue balance={balance} /> : null}
-      <div className={classes.actionHeader}>
+      <div id="viewToggle" className={classes.actionHeader}>
         <IconButton
           aria-label="Toggle chronological display"
-          aria-describedby={'displayViewDescription'}
+          aria-describedby={'viewToggle'}
           title={`Toggle chronological display`}
           onClick={handleToggleView}
           disableRipple
