@@ -37,10 +37,10 @@ export const LinodeNews: React.FC<{}> = _ => {
    * Rather than wait for the request to clear, when the banner is dismissed
    * immediately hide it.
    */
-  const [optimisticallyHidden, optimisticallyHide] = React.useState(false);
+  const [optimisticallyHidden, setOptimisticallyHidden] = React.useState(false);
 
   const handleClick = () => {
-    optimisticallyHide(true);
+    setOptimisticallyHidden(true);
     updatePreferences({ linode_news_banner_dismissed: true });
   };
 
