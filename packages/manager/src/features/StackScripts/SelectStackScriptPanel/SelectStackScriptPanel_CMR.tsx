@@ -76,12 +76,7 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(3)
     },
     inner: {
-      padding: theme.spacing(2),
-      paddingTop: theme.spacing(),
-      [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(3),
-        paddingTop: theme.spacing()
-      }
+      padding: 0
     },
     header: {}
   });

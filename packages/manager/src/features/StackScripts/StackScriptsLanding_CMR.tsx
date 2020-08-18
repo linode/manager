@@ -17,14 +17,17 @@ import StackScriptPanel from './StackScriptPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.color.white
+    backgroundColor: theme.color.white,
+    margin: 0,
+    marginRight: 15,
+    padding: 0,
+    width: '100%'
   },
   title: {
     marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(3)
+    marginLeft: 15
   },
   addNewLinkWrapper: {
-    marginRight: theme.spacing(3),
     padding: 0
   },
   addNewLink: {
@@ -55,7 +58,6 @@ export const StackScriptsLanding: React.FC<CombinedProps> = props => {
         container
         justify="space-between"
         alignItems="flex-end"
-        style={{ paddingBottom: 0 }}
       >
         <Grid item className="py0">
           <Breadcrumb

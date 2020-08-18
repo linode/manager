@@ -279,6 +279,7 @@ export class LinodeCreate extends React.PureComponent<
           .map(u => u.username),
         booted: true,
         backups_enabled: this.props.backupsEnabled,
+        backup_id: this.props.selectedBackupID,
         private_ip: this.props.privateIPEnabled,
 
         // StackScripts
@@ -476,6 +477,7 @@ export class LinodeCreate extends React.PureComponent<
               </SafeTabPanel>
               <SafeTabPanel index={4}>
                 <FromBackupsContent
+                  errors={errors}
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
@@ -488,6 +490,7 @@ export class LinodeCreate extends React.PureComponent<
               </SafeTabPanel>
               <SafeTabPanel index={5}>
                 <FromLinodeContent
+                  errors={errors}
                   imagesData={imagesData!}
                   regionsData={regionsData!}
                   typesData={typesData!}
