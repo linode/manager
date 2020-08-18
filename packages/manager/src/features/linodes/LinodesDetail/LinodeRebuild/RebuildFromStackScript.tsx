@@ -36,6 +36,7 @@ import {
   getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import { PasswordValidationType } from 'src/featureFlags';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -43,6 +44,7 @@ import {
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
 
@@ -71,6 +73,7 @@ interface Props {
   type: 'community' | 'account';
   disabled: boolean;
   passwordHelperText: string;
+  passwordValidation: PasswordValidationType;
 }
 
 interface ContextProps {
@@ -107,8 +110,23 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     linodeId,
     enqueueSnackbar,
     history,
-    passwordHelperText
+    passwordHelperText,
+    passwordValidation
   } = props;
+
+  /**
+   * Dynamic validation schema, with password validation
+   * dependent on a value from a feature flag. Remove this
+   * once API password validation is stable.
+   */
+  const RebuildSchema = React.useMemo(
+    () =>
+      extendValidationSchema(
+        passwordValidation ?? 'none',
+        RebuildLinodeFromStackScriptSchema
+      ),
+    [passwordValidation]
+  );
 
   const [
     ss,
@@ -219,20 +237,19 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={RebuildLinodeFromStackScriptSchema}
+      validationSchema={RebuildSchema}
       validateOnChange={false}
       onSubmit={handleFormSubmit}
-      render={formikProps => {
-        const {
-          errors,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-          status,
-          values,
-          validateForm
-        } = formikProps;
-
+    >
+      {({
+        errors,
+        handleSubmit,
+        isSubmitting,
+        setFieldValue,
+        status,
+        values,
+        validateForm
+      }) => {
         // The "Rebuild" button opens a confirmation modal.
         // We'd like to validate the form before this happens.
         const handleRebuildButtonClick = () => {
@@ -373,7 +390,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
           </Grid>
         );
       }}
-    />
+    </Formik>
   );
 };
 

@@ -33,7 +33,8 @@ export type AccountCapability =
   | 'NodeBalancers'
   | 'Block Storage'
   | 'Object Storage'
-  | 'Kubernetes';
+  | 'Kubernetes'
+  | 'Cloud Firewall';
 
 export interface AccountSettings {
   managed: boolean;
@@ -125,6 +126,12 @@ export interface NetworkUtilization {
   quota: number;
 }
 
+export interface NetworkTransfer {
+  bytes_in: number;
+  bytes_out: number;
+  bytes_total: number;
+}
+
 export interface CancelAccount {
   survey_link: string;
 }
@@ -172,6 +179,7 @@ export type EventAction =
   | 'backups_enable'
   | 'backups_restore'
   | 'community_like'
+  | 'community_mention'
   | 'community_question_reply'
   | 'credit_card_updated'
   | 'disk_create'
@@ -269,7 +277,7 @@ export interface Event {
   read: boolean;
   seen: boolean;
   status: EventStatus;
-  time_remaining: null | number;
+  time_remaining: null | string;
   username: string;
   secondary_entity: Entity | null;
   _initial?: boolean;

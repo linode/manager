@@ -6,7 +6,6 @@ import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -27,7 +26,7 @@ import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conve
 
 type ClassNames = 'root' | 'message' | 'occurredCell';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {},
     message: {

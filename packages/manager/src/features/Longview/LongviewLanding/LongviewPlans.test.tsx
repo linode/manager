@@ -1,4 +1,4 @@
-import { cleanup, within } from '@testing-library/react';
+import { act, cleanup, within } from '@testing-library/react';
 import * as React from 'react';
 import { accountSettings } from 'src/__data__/account';
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
@@ -82,21 +82,14 @@ describe('LongviewPlans', () => {
   });
 
   it('highlights the LV subscription currently on the account', async () => {
-    const currentLVSub = 'longview-3';
+    await act(async () => {
+      /** @todo fix this test, either by upgrading rtl or passing activeSub as prop */
+      const { findByTestId } = renderWithTheme(
+        <LongviewPlans accountSettings={accountSettings} {...props} />
+      );
 
-    const { getByTestId } = renderWithTheme(
-      <LongviewPlans
-        accountSettings={{
-          ...accountSettings,
-          longview_subscription: currentLVSub
-        }}
-        {...props}
-      />
-    );
-
-    within(getByTestId(`lv-sub-table-row-${currentLVSub}`)).getByText(
-      'Current Plan'
-    );
+      await findByTestId('current-plan-longview-3');
+    });
   });
 
   it('displays a notice if the user does not have permissions to modify', () => {

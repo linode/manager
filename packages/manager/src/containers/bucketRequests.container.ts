@@ -4,12 +4,15 @@ import {
   createBucket,
   CreateBucketRequest,
   deleteBucket,
-  DeleteBucketRequest
+  getBucket,
+  DeleteBucketRequest,
+  GetBucketRequest
 } from 'src/store/bucket/bucket.requests';
 
 export interface BucketsRequests {
   createBucket: (request: CreateBucketRequest) => Promise<ObjectStorageBucket>;
   deleteBucket: (request: DeleteBucketRequest) => Promise<{}>;
+  getBucket: (request: GetBucketRequest) => Promise<ObjectStorageBucket>;
 }
 
 export default connect(
@@ -17,6 +20,7 @@ export default connect(
   undefined,
   {
     createBucket,
-    deleteBucket
+    deleteBucket,
+    getBucket
   }
 );

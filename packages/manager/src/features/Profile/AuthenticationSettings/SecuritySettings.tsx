@@ -34,7 +34,7 @@ interface Props {
   onSuccess: () => void;
   updateProfile: (v: Partial<Profile>) => Promise<Profile>;
   updateProfileError?: APIError[];
-  ipWhitelistingEnabled: boolean;
+  ipAllowlistingEnabled: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -52,14 +52,14 @@ export class SecuritySettings extends React.Component<CombinedProps, {}> {
 
   onSubmit = () => {
     const { onSuccess } = this.props;
-    if (this.props.ipWhitelistingEnabled) {
+    if (this.props.ipAllowlistingEnabled) {
       return;
     }
 
     // This feature can only be disabled.
     this.props
       .updateProfile({
-        ip_whitelist_enabled: !this.props.ipWhitelistingEnabled
+        ip_whitelist_enabled: !this.props.ipAllowlistingEnabled
       })
       .then(() => {
         onSuccess();
@@ -71,28 +71,28 @@ export class SecuritySettings extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { classes, updateProfileError, ipWhitelistingEnabled } = this.props;
+    const { classes, updateProfileError, ipAllowlistingEnabled } = this.props;
     const hasErrorFor = getAPIErrorFor({}, updateProfileError);
     const generalError = hasErrorFor('none');
 
     return (
       <React.Fragment>
-        <Paper className={classes.root} data-testid="whitelisting-form">
+        <Paper className={classes.root} data-testid="allowlisting-form">
           <Typography variant="h2" className={classes.title}>
-            IP Whitelisting (Legacy)
+            IP Allowlisting (Legacy)
           </Typography>
           {generalError && <Notice error text={generalError} />}
           <Typography variant="body1" data-qa-copy>
-            Logins for your user will only be allowed from whitelisted IPs. This
+            Logins for your user will only be allowed from allowlisted IPs. This
             setting is currently deprecated, and cannot be enabled. If you
             disable this setting, you will not be able to re-enable it.
           </Typography>
           <FormControl fullWidth>
             <FormControlLabel
-              label={ipWhitelistingEnabled ? 'Enabled' : 'Disabled'}
+              label={ipAllowlistingEnabled ? 'Enabled' : 'Disabled'}
               control={
                 <Toggle
-                  checked={ipWhitelistingEnabled}
+                  checked={ipAllowlistingEnabled}
                   onChange={this.onSubmit}
                 />
               }

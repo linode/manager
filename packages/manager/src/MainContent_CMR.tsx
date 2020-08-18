@@ -16,13 +16,17 @@ import RegionStatusBanner from 'src/components/RegionStatusBanner';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
+import {
+  notificationContext,
+  useNotificationContext
+} from 'src/features/NotificationCenter/NotificationContext';
 import ToastNotifications from 'src/features/ToastNotifications';
-import TopMenu from 'src/features/TopMenu';
+import TopMenu from 'src/features/TopMenu/TopMenu_CMR';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 // @cmr
 import PrimaryNav_CMR from 'src/components/PrimaryNav/PrimaryNav_CMR';
@@ -33,6 +37,7 @@ import withGlobalErrors, {
 import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import Logo from 'src/assets/logo/logo-text.svg';
 
@@ -52,6 +57,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: theme.spacing(2),
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2)
+    }
+  },
+  // Removed padding here so width is full 1280- will further refine this when the breakpoint work is handled
+  cmrWrapper: {
+    padding: `${theme.spacing(3)}px 0`,
+    transition: theme.transitions.create('opacity'),
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: theme.spacing(2),
+      paddingLeft: 0,
+      paddingRight: 0
     }
   },
   content: {
@@ -132,7 +147,7 @@ const SupportTicketDetail = React.lazy(() =>
 );
 const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed'));
-const Dashboard = React.lazy(() => import('src/features/Dashboard'));
+const Dashboard = React.lazy(() => import('src/features/Dashboard_CMR'));
 const Help = React.lazy(() => import('src/features/Help'));
 const SupportSearchLanding = React.lazy(() =>
   import('src/features/Help/SupportSearchLanding')
@@ -149,7 +164,17 @@ const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
+  const NotificationProvider = notificationContext.Provider;
+  const contextValue = useNotificationContext();
+
   const [, toggleMenu] = React.useState<boolean>(false);
+  const { account } = useAccountManagement();
+
+  const showFirewalls = isFeatureEnabled(
+    'Cloud Firewall',
+    Boolean(props.flags.firewalls),
+    account.data?.capabilities ?? []
+  );
 
   /**
    * this is the case where the user has successfully completed signup
@@ -170,7 +195,6 @@ const MainContent: React.FC<CombinedProps> = props => {
           <Box
             style={{
               display: 'flex'
-              // justifyContent: 'flex-end'
             }}
           >
             <Logo width={150} height={87} className={classes.logo} />
@@ -200,116 +224,88 @@ const MainContent: React.FC<CombinedProps> = props => {
    * otherwise just show the rest of the app.
    */
   return (
-    <PreferenceToggle<boolean>
-      preferenceKey="desktop_sidebar_open"
-      preferenceOptions={[true, false]}
+    <div
+      className={classnames({
+        [classes.appFrame]: true,
+        /**
+         * hidden to prevent some jankiness with the app loading before the splash screen
+         */
+        [classes.hidden]: props.appIsLoading
+      })}
     >
-      {({
-        preference: desktopMenuIsOpen,
-        togglePreference: desktopMenuToggle
-      }: ToggleProps<boolean>) => {
-        return (
-          <div
-            className={classnames({
-              [classes.appFrame]: true,
-              /**
-               * hidden to prevent some jankiness with the app loading before the splash screen
-               */
-              [classes.hidden]: props.appIsLoading
-            })}
-          >
-            {/* @cmr */}
-            <PrimaryNav_CMR
-              isCollapsed={false}
-              closeMenu={() => toggleMenu(false)}
-              toggleTheme={props.toggleTheme}
-              toggleSpacing={props.toggleSpacing}
-            />
-            <div
-              className={`
-                ${classes.content}
-                ${
-                  desktopMenuIsOpen ||
-                  (desktopMenuIsOpen && desktopMenuIsOpen === true)
-                    ? classes.fullWidthContent
-                    : ''
-                }
-              `}
-            >
-              <TopMenu
-                openSideMenu={() => toggleMenu(true)}
-                desktopMenuToggle={desktopMenuToggle}
-                isLoggedInAsCustomer={props.isLoggedInAsCustomer}
-                username={props.username}
-              />
-              <main className={classes.wrapper} id="main-content" role="main">
-                <Grid container spacing={0} className={classes.grid}>
-                  <Grid item className={classes.switchWrapper}>
-                    <RegionStatusBanner />
-                    <React.Suspense fallback={<SuspenseLoader />}>
-                      <Switch>
-                        <Route path="/linodes" component={LinodesRoutes} />
-                        <Route path="/volumes" component={Volumes} />
-                        <Redirect path="/volumes*" to="/volumes" />
-                        <Route
-                          path="/nodebalancers"
-                          component={NodeBalancers}
-                        />
-                        <Route path="/domains" component={Domains} />
-                        <Route path="/managed" component={Managed} />
-                        <Route path="/longview" component={Longview} />
-                        <Route exact strict path="/images" component={Images} />
-                        <Redirect path="/images*" to="/images" />
-                        <Route path="/stackscripts" component={StackScripts} />
-                        <Route
-                          path="/object-storage"
-                          component={ObjectStorage}
-                        />
-                        <Route path="/kubernetes" component={Kubernetes} />
-                        <Route path="/account" component={Account} />
-                        <Route
-                          exact
-                          strict
-                          path="/support/tickets"
-                          component={SupportTickets}
-                        />
-                        <Route
-                          path="/support/tickets/:ticketId"
-                          component={SupportTicketDetail}
-                          exact
-                          strict
-                        />
-                        <Route path="/profile" component={Profile} />
-                        <Route exact path="/support" component={Help} />
-                        <Route path="/dashboard" component={Dashboard} />
-                        <Route path="/search" component={SearchLanding} />
-                        <Route
-                          exact
-                          strict
-                          path="/support/search/"
-                          component={SupportSearchLanding}
-                        />
-                        <Route path="/events" component={EventsLanding} />
-                        {props.flags.firewalls && (
-                          <Route path="/firewalls" component={Firewalls} />
-                        )}
-                        <Redirect exact from="/" to="/dashboard" />
-                        <Route component={NotFound} />
-                      </Switch>
-                    </React.Suspense>
-                  </Grid>
-                </Grid>
-              </main>
-            </div>
-            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-            <ToastNotifications />
-            <DomainDrawer />
-            <VolumeDrawer />
-            <BackupDrawer />
-          </div>
-        );
-      }}
-    </PreferenceToggle>
+      {/* @cmr */}
+      <PrimaryNav_CMR
+        closeMenu={() => toggleMenu(false)}
+        isCollapsed={false}
+        toggleTheme={props.toggleTheme}
+        toggleSpacing={props.toggleSpacing}
+      />
+      <NotificationProvider value={contextValue}>
+        <div className={classes.content}>
+          <TopMenu
+            isLoggedInAsCustomer={props.isLoggedInAsCustomer}
+            username={props.username}
+          />
+          <main className={classes.cmrWrapper} id="main-content" role="main">
+            <Grid container spacing={0} className={classes.grid}>
+              <Grid item className={classes.switchWrapper}>
+                <RegionStatusBanner />
+                <React.Suspense fallback={<SuspenseLoader />}>
+                  <Switch>
+                    <Route path="/linodes" component={LinodesRoutes} />
+                    <Route path="/volumes" component={Volumes} />
+                    <Redirect path="/volumes*" to="/volumes" />
+                    <Route path="/nodebalancers" component={NodeBalancers} />
+                    <Route path="/domains" component={Domains} />
+                    <Route path="/managed" component={Managed} />
+                    <Route path="/longview" component={Longview} />
+                    <Route exact strict path="/images" component={Images} />
+                    <Redirect path="/images*" to="/images" />
+                    <Route path="/stackscripts" component={StackScripts} />
+                    <Route path="/object-storage" component={ObjectStorage} />
+                    <Route path="/kubernetes" component={Kubernetes} />
+                    <Route path="/account" component={Account} />
+                    <Route
+                      exact
+                      strict
+                      path="/support/tickets"
+                      component={SupportTickets}
+                    />
+                    <Route
+                      path="/support/tickets/:ticketId"
+                      component={SupportTicketDetail}
+                      exact
+                      strict
+                    />
+                    <Route path="/profile" component={Profile} />
+                    <Route exact path="/support" component={Help} />
+                    <Route path="/dashboard" component={Dashboard} />
+                    <Route path="/search" component={SearchLanding} />
+                    <Route
+                      exact
+                      strict
+                      path="/support/search/"
+                      component={SupportSearchLanding}
+                    />
+                    <Route path="/events" component={EventsLanding} />
+                    {showFirewalls && (
+                      <Route path="/firewalls" component={Firewalls} />
+                    )}
+                    <Redirect exact from="/" to="/dashboard" />
+                    <Route component={NotFound} />
+                  </Switch>
+                </React.Suspense>
+              </Grid>
+            </Grid>
+          </main>
+        </div>
+      </NotificationProvider>
+      <Footer desktopMenuIsOpen={false} />
+      <ToastNotifications />
+      <DomainDrawer />
+      <VolumeDrawer />
+      <BackupDrawer />
+    </div>
   );
 };
 

@@ -10,7 +10,13 @@ type ClassNames =
   | 'tagGroup'
   | 'CSVlinkContainer'
   | 'CSVlink'
-  | 'addNewLink';
+  | 'addNewLink'
+  | 'chip'
+  | 'chipActive'
+  | 'chipRunning'
+  | 'chipPending'
+  | 'chipOffline'
+  | 'clearFilters';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -33,6 +39,39 @@ const styles = (theme: Theme) =>
     addNewLink: {
       marginBottom: -3,
       marginLeft: 15
+    },
+    chip: {
+      ...theme.applyStatusPillStyles,
+      '&:hover, &:focus, &:active': {
+        backgroundColor: theme.bg.chipActive
+      }
+    },
+    chipActive: {
+      backgroundColor: theme.bg.chipActive
+    },
+    chipRunning: {
+      '&:before': {
+        backgroundColor: theme.color.green
+      }
+    },
+    chipPending: {
+      '&:before': {
+        backgroundColor: theme.color.orange
+      }
+    },
+    chipOffline: {
+      '&:before': {
+        backgroundColor: theme.color.grey10
+      }
+    },
+    clearFilters: {
+      margin: '1px 0 0 0',
+      padding: 0,
+      '&:hover': {
+        '& svg': {
+          color: `${theme.palette.primary.main} !important`
+        }
+      }
     }
   });
 

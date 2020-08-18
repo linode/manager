@@ -111,10 +111,9 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   const numPackagesToUpdate = packages ? packages.length : 0;
   const packagesToUpdate = getPackageNoticeText(packages);
 
-  const utcLastUpdatedTime = new Date(longviewClientLastUpdated!).toUTCString();
   const formattedlastUpdatedTime =
     longviewClientLastUpdated !== undefined
-      ? `Last updated ${formatDate(utcLastUpdatedTime, {
+      ? `Last updated ${formatDate(longviewClientLastUpdated, {
           humanizeCutoff: 'never'
         })}`
       : 'Latest update time not available';

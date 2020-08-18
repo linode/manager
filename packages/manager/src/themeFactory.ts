@@ -48,6 +48,8 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     font?: any;
     animateCircleIcon?: any;
     addCircleHoverEffect?: any;
+    applyLinkStyles?: any;
+    applyStatusPillStyles?: any;
 
     notificationList: any;
     status: any;
@@ -84,6 +86,7 @@ const primaryColors = {
 
 const primaryFonts = {
   normal: '"LatoWeb", sans-serif',
+  semiBold: '"LatoWebSemibold", sans-serif',
   bold: '"LatoWebBold", sans-serif'
 };
 
@@ -110,6 +113,42 @@ const iconCircleHoverEffect = {
   },
   '& .insidePath *': {
     stroke: 'white'
+  }
+};
+
+// Used for styling html buttons to look like our generic links
+const genericLinkStyle = {
+  background: 'none',
+  color: primaryColors.main,
+  border: 'none',
+  padding: 0,
+  font: 'inherit',
+  cursor: 'pointer',
+  '&:hover': {
+    textDecoration: 'underline'
+  }
+};
+
+// Used for styling status pills as seen on Linodes
+const genericStatusPillStyle = {
+  backgroundColor: '#f7f7f8',
+  color: '#5d646f',
+  fontFamily: primaryFonts.bold,
+  fontSize: '1.1rem',
+  padding: 10,
+  '&:before': {
+    display: 'inline-block',
+    borderRadius: '50%',
+    content: '""',
+    height: 16,
+    width: 16,
+    minWidth: 16,
+    marginRight: 8
+  },
+  [breakpoints.down('sm')]: {
+    fontSize: 14,
+    padding: '15px 12px',
+    borderRadius: 15
   }
 };
 
@@ -200,12 +239,15 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#3a3f46',
       topMenu: '#fff',
-      billingHeader: '#f5f9ff'
+      billingHeader: '#f5f9ff',
+      controlHeader: '#f9fafa',
+      chipActive: '#cecece'
     },
     color: {
       headline: primaryColors.headline,
       red: '#ca0813',
       green: '#00b159',
+      orange: '#ffb31a',
       yellow: '#fecf2f',
       border1: '#abadaf',
       border2: '#c5c6c8',
@@ -217,6 +259,10 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey4: '#8C929D',
       grey5: '#f5f5f5',
       grey6: '#e3e5e8',
+      grey7: '#fafafa',
+      grey8: '#828a97',
+      grey9: '#f4f5f6',
+      grey10: '#dbdde1',
       white: '#fff',
       black: '#222',
       blue: primaryColors.main,
@@ -237,7 +283,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       kubeLabel: '#272b31',
       primaryNavText: '#fff',
       borderBilling: '#cce2ff',
-      billingText: '#313335'
+      billingText: '#313335',
+      tagButton: '#f1f7fd',
+      tagText: '#3a3f46',
+      tagIcon: '#7daee8',
+      tagBorder: '#fff'
     },
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
@@ -304,6 +354,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     font: {
       normal: primaryFonts.normal,
+      semiBold: primaryFonts.semiBold,
       bold: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold
     },
     animateCircleIcon: {
@@ -311,6 +362,12 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     addCircleHoverEffect: {
       ...iconCircleHoverEffect
+    },
+    applyLinkStyles: {
+      ...genericLinkStyle
+    },
+    applyStatusPillStyles: {
+      ...genericStatusPillStyle
     },
     notificationList: {
       padding: '16px 32px 16px 23px',
@@ -503,6 +560,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             '&:active': {
               color: '#963530',
               borderColor: '#963530'
+            },
+            '&$disabled': {
+              borderColor: '#c9cacb',
+              backgroundColor: 'transparent',
+              color: '#c9cacb'
             }
           },
           '&.loading': {

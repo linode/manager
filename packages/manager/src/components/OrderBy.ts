@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 import { pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -190,5 +190,5 @@ const enhanced = compose<CombinedProps, Props>(withPreferences());
 export default enhanced(OrderBy);
 
 const isValidDate = (date: any) => {
-  return moment(date, moment.ISO_8601, true).isValid();
+  return DateTime.fromISO(date).isValid;
 };

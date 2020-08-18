@@ -1,5 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 import {
   addToEvents,
   findInEvents,
@@ -83,9 +83,13 @@ describe('event.helpers', () => {
         mostRecentCreated(new Date(`1970-01-01T00:00:00`).getTime(), {
           created: `2018-12-03T22:37:20`
         })
-      ).toBe(moment.utc(`2018-12-03T22:37:20`).valueOf());
+      ).toBe(
+        DateTime.fromISO(`2018-12-03T22:37:20`, { zone: 'UTC' }).valueOf()
+      );
 
-      const recentTime = moment.utc(`2018-12-03T23:37:20`).valueOf();
+      const recentTime = DateTime.fromISO(`2018-12-03T23:37:20`, {
+        zone: 'UTC'
+      }).valueOf();
       expect(
         mostRecentCreated(recentTime, { created: `2018-12-03T22:37:20` })
       ).toBe(recentTime);
@@ -97,7 +101,7 @@ describe('event.helpers', () => {
       const events: Event[] = [
         {
           id: 17957944,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:15:45',
@@ -117,7 +121,7 @@ describe('event.helpers', () => {
         },
         {
           id: 17957108,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',
@@ -140,7 +144,7 @@ describe('event.helpers', () => {
       const expected: ExtendedEvent[] = [
         {
           id: 17957944,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:15:45',
@@ -161,7 +165,7 @@ describe('event.helpers', () => {
         },
         {
           id: 17957108,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',
@@ -192,7 +196,7 @@ describe('event.helpers', () => {
       const prevEvents: Event[] = [
         {
           id: 17957944,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:15:45',
@@ -207,7 +211,7 @@ describe('event.helpers', () => {
         },
         {
           id: 17957718,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:08:38',
@@ -222,7 +226,7 @@ describe('event.helpers', () => {
         },
         {
           id: 17957108,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',
@@ -239,7 +243,7 @@ describe('event.helpers', () => {
       const events: Event[] = [
         {
           id: 17957718,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:08:38',
@@ -258,7 +262,7 @@ describe('event.helpers', () => {
       expect(result).toEqual([
         {
           id: 17957944,
-          time_remaining: 0,
+          time_remaining: null,
           seen: true,
           created: '2018-12-02T23:15:45',
           action: 'linode_delete',
@@ -273,7 +277,7 @@ describe('event.helpers', () => {
         },
         {
           id: 17957718,
-          time_remaining: 0,
+          time_remaining: null,
           seen: true,
           created: '2018-12-02T23:08:38',
           action: 'linode_shutdown',
@@ -288,7 +292,7 @@ describe('event.helpers', () => {
         },
         {
           id: 17957108,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',

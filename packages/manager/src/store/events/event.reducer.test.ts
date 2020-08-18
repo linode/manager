@@ -1,5 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 import { addEvents } from './event.actions';
 import reducer, { defaultState } from './event.reducer';
 
@@ -18,7 +18,7 @@ describe('events.reducer', () => {
         const events: Event[] = [
           {
             id: 18029572,
-            time_remaining: 0,
+            time_remaining: null,
             secondary_entity: null,
             seen: true,
             created: '2018-12-03T22:34:09',
@@ -38,7 +38,7 @@ describe('events.reducer', () => {
           },
           {
             id: 18022171,
-            time_remaining: 0,
+            time_remaining: null,
             secondary_entity: null,
             seen: false,
             created: '2018-12-03T19:59:53',
@@ -67,7 +67,7 @@ describe('events.reducer', () => {
         it('should update the mostRecentEventTime', () => {
           expect(state).toHaveProperty(
             'mostRecentEventTime',
-            moment.utc('2018-12-03T22:34:09').valueOf()
+            DateTime.fromISO('2018-12-03T22:34:09', { zone: 'utc' }).valueOf()
           );
         });
 

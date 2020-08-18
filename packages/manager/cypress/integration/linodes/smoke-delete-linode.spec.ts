@@ -16,7 +16,7 @@ describe('delete linode', () => {
 
       // here i query using text to check the UI and there is only 1 Delete button
       // cy.get('[data-qa-delete-linode]').click();
-      cy.findByText('Delete').click();
+      cy.get('[data-qa-delete-linode="true"').click();
       cy.findByText(linode.label).should('exist');
 
       // confirm delete
@@ -30,10 +30,10 @@ describe('delete linode', () => {
       // Thanks to this we can use cy.server, cy.route and cy.wait
       cy.wait('@deleteLinode')
         .its('status')
-        .should('be', 200);
+        .should('eq', 200);
       cy.url().should('contain', '/linodes');
       cy.go('back');
-      cy.findByText('Not found');
+      cy.findByText('Not Found');
     });
   });
 });

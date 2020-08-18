@@ -13,7 +13,7 @@ import {
   Window
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as moment from 'moment-timezone';
+import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr, sortBy } from 'ramda';
 import * as React from 'react';
@@ -273,14 +273,13 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
 
   initWindows(timezone: string) {
     let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
-      const start = moment.utc({ hour }).tz(timezone);
-      const finish = moment
-        .utc({ hour })
-        .add(moment.duration({ hours: 2 }))
-        .tz(timezone);
+      const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(
+        timezone
+      );
+      const finish = start.plus({ hours: 2 });
       return [
-        `${start.format('HH:mm')} - ${finish.format('HH:mm')}`,
-        `W${evenize(+moment.utc({ hour }).format('H'))}`
+        `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,
+        `W${evenize(start.setZone('utc').hour)}`
       ];
     });
 
@@ -889,11 +888,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <div
-          id="tabpanel-backups"
-          role="tabpanel"
-          aria-labelledby="tab-backups"
-        >
+        <div>
           <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
           {backupsEnabled ? <this.Management /> : <this.Placeholder />}
         </div>

@@ -10,13 +10,52 @@ import {
 
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const testLinodeTag = testTag;
+export const makeRandomId = () => Math.floor(Math.random() * 99999999);
 export const makeLinodeLabel = makeTestLabel;
+
+export const makeLinodeDataWithStatus = status => {
+  return {
+    id: makeRandomId(),
+    label: makeLinodeLabel(),
+    group: 'cy-test',
+    status,
+    created: '2020-04-10T13:48:37',
+    updated: '2020-04-10T13:50:33',
+    type: 'g6-standard-6',
+    ipv4: ['50.116.62.58'],
+    ipv6: '2600:3ca3::f03c:92ff:fe7a:8361/64',
+    image: 'linode/debian9-kube-v1.16.2',
+    region: 'us-east',
+    specs: {
+      disk: 327680,
+      memory: 16384,
+      vcpus: 6,
+      gpus: 0,
+      transfer: 8000
+    },
+    alerts: {
+      cpu: 540,
+      network_in: 10,
+      network_out: 10,
+      transfer_quota: 80,
+      io: 10000
+    },
+    backups: {
+      enabled: true,
+      schedule: { day: 'Scheduling', window: 'Scheduling' },
+      last_successful: '2020-05-12T06:14:12'
+    },
+    hypervisor: 'kvm',
+    watchdog_enabled: true,
+    tags: []
+  };
+};
 
 const makeLinodeCreateReq = linode => {
   const linodeData = linode
     ? linode
     : {
-        root_pass: strings.randomPass(12),
+        root_pass: strings.randomPass(),
         label: makeLinodeLabel(),
         type: 'g6-standard-2',
         region: 'us-east',

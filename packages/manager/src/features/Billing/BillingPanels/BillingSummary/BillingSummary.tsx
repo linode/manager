@@ -85,10 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   iconButtonOuter: {
     display: 'flex',
     justifyContent: 'space-between',
-    [theme.breakpoints.only('xs')]: {
-      flexDirection: 'column'
-    },
-    [theme.breakpoints.only('md')]: {
+    [theme.breakpoints.between('sm', 'md')]: {
       flexDirection: 'column'
     }
   },

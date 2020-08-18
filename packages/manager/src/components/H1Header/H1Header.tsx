@@ -37,7 +37,8 @@ const H1Header: React.FC<Props> = props => {
       variant="h1"
       component={renderAsSecondary ? 'h2' : 'h1'}
       className={`${classes.root} ${className}`}
-      ref={h1Header}
+      // If we're rendering as an h2, we want to remove the autofocus functionality
+      ref={renderAsSecondary ? null : h1Header}
       tabIndex={0}
       data-qa-header={dataQaEl ? dataQaEl : ''}
     >

@@ -15,9 +15,6 @@ lib
 # local restart script with keys
 restart.sh
 
-# local switch script with client IDs
-switch.sh
-
 # dotenv environment variables file
 .env*
 *env.
@@ -129,3 +126,5 @@ packages/manager/cypress/fixtures/example.json
 
 nohup.out
 packages/manager/bundle_analyzer_report.html
+
+**/manager/src/dev-tools/*.local.*

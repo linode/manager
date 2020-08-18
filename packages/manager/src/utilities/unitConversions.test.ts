@@ -4,7 +4,7 @@ import {
   ReadableBytesOptions
 } from './unitConversions';
 
-describe('conversion helper functinos', () => {
+describe('conversion helper functions', () => {
   describe('readableBytes', () => {
     it('should return "0 bytes" if bytes === 0', () => {
       expect(readableBytes(0).formatted).toBe('0 bytes');
@@ -119,6 +119,18 @@ describe('conversion helper functinos', () => {
       expect(readableBytes(0.05, { round: 2 }).formatted).toBe('0.05 bytes');
     });
 
+    it('returns 0 bytes if the input is invalid', () => {
+      // This behavior is debatable. It's for potential situations where we mistakenly pass a
+      // nun-number value to readableBytes (something we didn't handle/expect from the API, etc.).
+      // Before adding this behavior, we were displaying "NaN bytes" in these situations. We could
+      // throw an error and let consumers handle each case (or display an error message) but this
+      // seemed the most straightforward path to me.
+      expect(readableBytes(undefined as any).value).toBe(0);
+      expect(readableBytes(undefined as any).formatted).toBe('0 bytes');
+      expect(readableBytes('invalid' as any).formatted).toBe('0 bytes');
+      expect(readableBytes({} as any).formatted).toBe('0 bytes');
+    });
+
     it('allows custom unit labels', () => {
       const unitLabels: ReadableBytesOptions['unitLabels'] = {
         bytes: 'B',
@@ -153,6 +165,16 @@ describe('conversion helper functinos', () => {
       expect(readableBytes(-1).formatted).toBe('-1 byte');
       expect(readableBytes(2).unit).toBe('bytes');
       expect(readableBytes(2).formatted).toBe('2 bytes');
+    });
+
+    it('handles base 10 when the option is given', () => {
+      expect(readableBytes(1000, { base10: true }).formatted).toBe('1 KB');
+      expect(readableBytes(1000 * 1000, { base10: true }).formatted).toBe(
+        '1 MB'
+      );
+      expect(
+        readableBytes(1000 * 1000 * 1000, { base10: true }).formatted
+      ).toBe('1 GB');
     });
   });
 

@@ -8,18 +8,14 @@ import {
   CombinedProps
 } from './AuthenticationSettings';
 
-const requests = require.requireMock('@linode/api-v4/lib/profile');
-jest.mock('@linode/api-v4/lib/profile');
-
-requests.updateProfile = jest.fn().mockResolvedValue([]);
-requests.getTrustedDevices = jest.fn().mockResolvedValue([]);
-
 afterEach(cleanup);
+
+const ALLOWLIST = 'allowlisting-form';
 
 const props: CombinedProps = {
   loading: false,
   authType: 'password',
-  ipWhitelisting: true,
+  ipAllowlisting: true,
   twoFactor: true,
   username: 'username',
   updateProfile: jest.fn()
@@ -33,27 +29,27 @@ describe('Authentication settings profile tab', () => {
     expect(getByTestId('authSettings'));
   });
 
-  it('should not render the whitelisting form when loading', () => {
+  it('should not render the allowlisting form when loading', () => {
     const { getByTestId, queryAllByTestId, rerender } = render(
       wrapWithTheme(<AuthenticationSettings {...props} />)
     );
-    getByTestId('whitelisting-form');
+    getByTestId(ALLOWLIST);
     rerender(
       wrapWithTheme(<AuthenticationSettings {...props} loading={true} />)
     );
-    expect(queryAllByTestId('whitelisting-form')).toHaveLength(0);
+    expect(queryAllByTestId(ALLOWLIST)).toHaveLength(0);
   });
 
-  it('should not render the whitelisting form if the user does not have this setting enabled', () => {
+  it('should not render the allowlisting form if the user does not have this setting enabled', () => {
     const { getByTestId, queryAllByTestId, rerender } = render(
       wrapWithTheme(<AuthenticationSettings {...props} />)
     );
-    getByTestId('whitelisting-form');
+    getByTestId(ALLOWLIST);
     rerender(
       wrapWithTheme(
-        <AuthenticationSettings {...props} ipWhitelisting={false} />
+        <AuthenticationSettings {...props} ipAllowlisting={false} />
       )
     );
-    expect(queryAllByTestId('whitelisting-form')).toHaveLength(0);
+    expect(queryAllByTestId(ALLOWLIST)).toHaveLength(0);
   });
 });

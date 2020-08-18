@@ -1,5 +1,5 @@
 import { Image } from '@linode/api-v4/lib/images';
-import * as moment from 'moment';
+import { parseAPIDate } from 'src/utilities/date';
 import {
   always,
   compose,
@@ -31,7 +31,7 @@ export const sortCreatedDESC = compose<any, any, any>(
   reverse,
   sortBy(
     compose(
-      (created: string) => moment(created).format('x'),
+      (created: string) => parseAPIDate(created).toFormat('x'),
       prop('created')
     )
   )
@@ -58,12 +58,13 @@ interface GroupedImages {
 }
 
 export let groupImages: (i: Image[]) => GroupedImages;
+// eslint-disable-next-line
 groupImages = groupBy(
   cond([
     [isRecentlyDeleted, always('deleted')],
     [isRecommended, always('recommended')],
     [isOlderImage, always('older')],
-    [(i: Image) => true, always('images')]
+    [_ => true, always('images')]
   ])
 );
 

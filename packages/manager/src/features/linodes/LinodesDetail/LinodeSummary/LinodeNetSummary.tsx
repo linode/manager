@@ -1,5 +1,5 @@
 import { getLinodeTransfer } from '@linode/api-v4/lib/linodes';
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -25,25 +25,29 @@ interface StateProps {
   used: number;
   loading: boolean;
   error: boolean;
+  quota: number;
 }
 
 type CombinedProps = Props & StoreProps & StateProps & WithStyles<ClassNames>;
+// @todo CMR: Remove this component
 
 class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
   state = {
     used: 0,
     loading: true,
-    error: false
+    error: false,
+    quota: 0
   };
 
   componentDidMount() {
     const { linodeId } = this.props;
     getLinodeTransfer(linodeId)
-      .then(({ used }) => {
+      .then(({ used, quota }) => {
         this.setState({
           used,
           loading: false,
-          error: false
+          error: false,
+          quota
         });
       })
       .catch(() => {
@@ -55,22 +59,22 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
   }
 
   render() {
-    const { total, classes, isTooEarlyForStats } = this.props;
-    const { used, loading, error } = this.state;
+    const { classes, isTooEarlyForStats } = this.props;
+    const { used, loading, error, quota } = this.state;
 
     const usedInGb = used / 1024 / 1024 / 1024;
 
-    const totalInBytes = total * 1024 * 1024 * 1024;
+    const quotaInBytes = quota * 1024 * 1024 * 1024;
 
     const usagePercent =
-      totalInBytes > used ? 100 - ((total - usedInGb) * 100) / total : 100;
+      quotaInBytes > used ? 100 - ((quota - usedInGb) * 100) / quota : 100;
 
     const readableUsed = readableBytes(used, {
       maxUnit: 'GB',
       round: { MB: 0, GB: 1 }
     });
 
-    const readableFree = readableBytes(totalInBytes - used, {
+    const readableFree = readableBytes(quotaInBytes - used, {
       maxUnit: 'GB',
       round: { MB: 0, GB: 1 },
       handleNegatives: true
@@ -128,7 +132,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
             value={Math.ceil(usagePercent)}
             className={classes.poolUsageProgress}
             rounded
-            overLimit={totalInBytes < used}
+            overLimit={quotaInBytes < used}
           />
           <Grid container justify="space-between">
             <Grid item style={{ marginRight: 10 }}>
@@ -138,7 +142,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
             </Grid>
             <Grid item>
               <Typography>
-                {totalInBytes >= used ? (
+                {quotaInBytes >= used ? (
                   <span>{readableFree.formatted} Available</span>
                 ) : (
                   <span className={classes.overLimit}>
@@ -156,16 +160,14 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
 }
 
 interface StoreProps {
-  total: number;
   isTooEarlyForStats?: boolean;
 }
 
 const mapStateToProps: MapState<StoreProps, CombinedProps> = (state, props) => {
   const linode = state.__resources.linodes.itemsById[props.linodeId];
   return {
-    total: linode ? linode.specs.transfer : 0,
     isTooEarlyForStats:
-      linode && isRecent(linode.created, moment.utc().format())
+      linode && isRecent(linode.created, DateTime.local().toISO())
   };
 };
 

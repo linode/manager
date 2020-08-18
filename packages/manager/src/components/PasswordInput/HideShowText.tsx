@@ -5,7 +5,7 @@ import { TextFieldProps } from 'src/components/core/TextField';
 import TextField from '../TextField';
 
 interface State {
-  hidden: Boolean;
+  hidden: boolean;
 }
 
 type Props = TextFieldProps & {
@@ -48,7 +48,7 @@ class HideShowText extends React.Component<Props, State> {
             />
           )
         }}
-        autoComplete="current-password"
+        autoComplete="off"
       />
     );
   }

@@ -1,9 +1,12 @@
-import { render } from '@testing-library/react';
+import { render, cleanup, wait } from '@testing-library/react';
 import * as React from 'react';
-import { domains } from 'src/__data__/domains';
+import { domainFactory } from 'src/factories/domain';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { wrapWithTheme, assertOrder } from 'src/utilities/testHelpers';
 import { CombinedProps, DomainsLanding } from './DomainsLanding';
+const domains = domainFactory.buildList(5);
+
+afterEach(cleanup);
 
 const props: CombinedProps = {
   domainsData: domains,
@@ -12,8 +15,9 @@ const props: CombinedProps = {
   domainsLastUpdated: 0,
   domainsResults: domains.length,
   isRestrictedUser: false,
+  isLargeAccount: false,
   howManyLinodesOnAccount: 0,
-  shouldGroupDomains: true,
+  shouldGroupDomains: false,
   createDomain: jest.fn(),
   updateDomain: jest.fn(),
   deleteDomain: jest.fn(),
@@ -26,6 +30,8 @@ const props: CombinedProps = {
   openForEditing: jest.fn(),
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
+  ldClient: {} as any,
+  flags: {},
   classes: {
     domain: '',
     dnsWarning: '',
@@ -34,7 +40,8 @@ const props: CombinedProps = {
     tagWrapper: '',
     tagGroup: '',
     title: '',
-    breadcrumbs: ''
+    breadcrumbs: '',
+    importButton: ''
   },
   ...reactRouterProps
 };
@@ -53,5 +60,18 @@ describe('Domains Landing', () => {
   it('should render a notice when there are no Linodes but at least 1 domain', () => {
     const { getByText } = render(wrapWithTheme(<DomainsLanding {...props} />));
     expect(getByText(/not being served/));
+  });
+
+  // @todo remove skip once large accounts logic is in place
+  it.skip('should sort by Domain name ascending by default', async () => {
+    const { container } = render(wrapWithTheme(<DomainsLanding {...props} />));
+
+    await wait(() =>
+      assertOrder(container, '[data-qa-label]', [
+        'domain1.com',
+        'domain2.com',
+        'domain3.com'
+      ])
+    );
   });
 });

@@ -13,7 +13,15 @@ describe('ListLinodes', () => {
     tagGroup: '',
     CSVlinkContainer: '',
     CSVlink: '',
-    addNewLink: ''
+    addNewLink: '',
+    chip: '',
+    chipActive: '',
+    chipRunning: '',
+    chipPending: '',
+    chipOffline: '',
+    controlHeader: '',
+    toggleButton: '',
+    clearFilters: ''
   };
 
   it('renders without error', () => {
@@ -40,6 +48,9 @@ describe('ListLinodes', () => {
           backupsCTA={false}
           deleteLinode={jest.fn()}
           {...reactRouterProps}
+          ldClient={{} as any}
+          flags={{}}
+          linodesInTransition={new Set<number>()}
         />
       )
     );

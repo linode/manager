@@ -168,8 +168,8 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             e.preventDefault();
             e.stopPropagation();
           },
-          ...readOnlyProps,
-          ...maintenanceProps
+          ...maintenanceProps,
+          ...readOnlyProps
         },
         {
           title: 'Migrate',
@@ -192,8 +192,8 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             e.preventDefault();
             e.stopPropagation();
           },
-          ...readOnlyProps,
-          ...maintenanceProps
+          ...maintenanceProps,
+          ...readOnlyProps
         },
         linodeBackups.enabled
           ? {

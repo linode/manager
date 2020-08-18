@@ -7,6 +7,7 @@ import {
   Payment
 } from '@linode/api-v4/lib/account';
 import { splitEvery } from 'ramda';
+import { ISO_DATE_FORMAT } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
@@ -98,6 +99,9 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
   }
   addLine(`${city}, ${state}, ${zip}`);
   addLine(`${country}`);
+  if (account.tax_id) {
+    addLine(`Tax ID: ${account.tax_id}`);
+  }
 
   return currentLine;
 };
@@ -135,7 +139,7 @@ export const printInvoice = (
 ): PdfResult => {
   try {
     const itemsPerPage = 12;
-    const date = formatDate(invoice.date, { format: 'YYYY-MM-DD' });
+    const date = formatDate(invoice.date, { format: ISO_DATE_FORMAT });
     const invoiceId = invoice.id;
 
     /**
@@ -186,29 +190,9 @@ export const printInvoice = (
       );
       const rightHeaderYPosition = addRightHeader(doc, account);
 
-      /** only show tax ID if there is one provided */
-      const strings =
-        account.tax_id && hasTax
-          ? [
-              {
-                text: `Invoice: #${invoiceId}`
-              },
-              {
-                /*
-          300px left margin is a hacky way of aligning the text to the right
-          because this library stinks
-         */
-                text: `Tax ID: ${account.tax_id}`,
-                leftMargin: 300
-              }
-            ]
-          : [{ text: `Invoice: #${invoiceId}` }];
-
-      addTitle(
-        doc,
-        Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4,
-        ...strings
-      );
+      addTitle(doc, Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4, {
+        text: `Invoice: #${invoiceId}`
+      });
 
       createInvoiceItemsTable(doc, itemsChunk);
       createFooter(doc, baseFont);
@@ -239,7 +223,7 @@ export const printPayment = (
   taxID?: string
 ): PdfResult => {
   try {
-    const date = formatDate(payment.date, { format: 'YYYY-MM-DD' });
+    const date = formatDate(payment.date, { format: ISO_DATE_FORMAT });
     const doc = new jsPDF({
       unit: 'px'
     });

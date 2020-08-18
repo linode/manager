@@ -1,4 +1,5 @@
 import '@reach/menu-button/styles.css';
+import '@reach/tabs/styles.css';
 import { Account, AccountCapability } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { Linode } from '@linode/api-v4/lib/linodes';
@@ -66,7 +67,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     /**
-     * Send pageviews unless blacklisted.
+     * Send pageviews unless blocklisted.
      */
     this.props.history.listen(({ pathname }) => {
       if ((window as any).ga) {
