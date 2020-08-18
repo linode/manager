@@ -1,10 +1,12 @@
 import * as React from 'react';
 import Logo from 'src/assets/logo/logo.svg';
+import Close from '@material-ui/icons/Close';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import useFlags from 'src/hooks/useFlags';
+import usePreferences from 'src/hooks/usePreferences';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -19,16 +21,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 30,
     width: 30,
     paddingRight: theme.spacing()
+  },
+  icon: {
+    ...theme.applyLinkStyles
   }
 }));
 
 export const LinodeNews: React.FC<{}> = _ => {
   const classes = useStyles();
   const flags = useFlags();
+  const { preferences, updatePreferences } = usePreferences();
   const { VERSION } = process.env || null;
-  if (!VERSION) {
+
+  /**
+   * Rather than wait for the request to clear, when the banner is dismissed
+   * immediately hide it.
+   */
+  const [optimisticallyHidden, setOptimisticallyHidden] = React.useState(false);
+
+  const handleClick = () => {
+    setOptimisticallyHidden(true);
+    updatePreferences({ linode_news_banner_dismissed: true });
+  };
+
+  if (
+    !VERSION ||
+    preferences?.linode_news_banner_dismissed ||
+    optimisticallyHidden
+  ) {
     return null;
   }
+
   return (
     <Paper className={classes.root}>
       <div className="flexCenter">
@@ -47,6 +70,9 @@ export const LinodeNews: React.FC<{}> = _ => {
           for details.
         </Typography>
       </div>
+      <button onClick={handleClick} className={classes.icon}>
+        <Close />
+      </button>
     </Paper>
   );
 };
