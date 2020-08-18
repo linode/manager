@@ -36,8 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helperText: {
     paddingBottom: theme.spacing(2)
-  },
-  test: {}
+  }
 }));
 
 interface Props {
@@ -137,18 +136,16 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
         />
       )}
       {mode === 'fromCommunityStackScript' && (
-        <div className={classes.test}>
-          <RebuildFromStackScript
-            type="community"
-            passwordHelperText={passwordHelperText}
-            passwordValidation={passwordValidation}
-            disabled={disabled}
-            linodeId={linodeId}
-            linodeLabel={linodeLabel}
-            handleRebuildError={handleRebuildError}
-            onClose={onClose}
-          />
-        </div>
+        <RebuildFromStackScript
+          type="community"
+          passwordHelperText={passwordHelperText}
+          passwordValidation={passwordValidation}
+          disabled={disabled}
+          linodeId={linodeId}
+          linodeLabel={linodeLabel}
+          handleRebuildError={handleRebuildError}
+          onClose={onClose}
+        />
       )}
       {mode === 'fromAccountStackScript' && (
         <RebuildFromStackScript
