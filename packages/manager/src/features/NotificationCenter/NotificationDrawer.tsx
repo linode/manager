@@ -9,6 +9,7 @@ import OpenSupportTickets from './OpenSupportTickets';
 import PastDue from './PastDue';
 import PendingActions from './PendingActions';
 import useAccount from 'src/hooks/useAccount';
+import usePreferences from 'src/hooks/usePreferences';
 import IconButton from 'src/components/core/IconButton';
 import { NotificationData } from './NotificationData/useNotificationData';
 import { ContentRow, NotificationItem } from './NotificationSection';
@@ -59,14 +60,31 @@ export const NotificationDrawer: React.FC<Props> = props => {
   const { data, open, onClose } = props;
   const { account } = useAccount();
   const classes = useStyles();
-  const balance = (account.data?.balance ?? 0) + 50;
+  const balance = account.data?.balance ?? 0;
   const { community, pendingActions, support } = data;
 
-  const [chronologicalView, setChronologicalView] = React.useState(false);
+  const { preferences, updatePreferences } = usePreferences();
+
+  const currentView = preferences?.notification_drawer_view ?? 'grouped';
+
+  const [chronologicalView, setChronologicalView] = React.useState(
+    currentView === 'list'
+  );
 
   const handleToggleView = () => {
     setChronologicalView(currentView => !currentView);
   };
+
+  React.useEffect(() => {
+    const newPreference = chronologicalView ? 'list' : 'grouped';
+    if (newPreference !== currentView) {
+      updatePreferences({
+        notification_drawer_view: newPreference
+      });
+    }
+
+    // eslint-disable-next-line
+  }, [chronologicalView, currentView]);
 
   const chronologicalNotificationList = React.useMemo(() => {
     return [...community.events, ...pendingActions, ...support.data].sort(
