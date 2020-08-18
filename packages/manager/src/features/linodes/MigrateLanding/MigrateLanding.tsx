@@ -44,6 +44,7 @@ import withRegions, {
 
 import { MBpsInterDC } from 'src/constants';
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
+import useFirewallDevices from 'src/hooks/useFirewallDevices';
 import { formatDate } from 'src/utilities/formatDate';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 
@@ -56,26 +57,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+interface Props {
+  firewallId: number;
+}
+
 type CombinedProps = LinodeContextProps &
   WithTypesAndImages &
   RegionProps &
-  RouteComponentProps<{}>;
+  RouteComponentProps<{}> &
+  Props;
 
 const MigrateLanding: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
-
-  const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
-    null
-  );
-  const [regionError, setRegionError] = React.useState<string>('');
-  const [acceptError, setAcceptError] = React.useState<string>('');
-  const [APIError, setAPIError] = React.useState<string>('');
-  const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
-  const [isLoading, setLoading] = React.useState<boolean>(false);
-
-  const [hasFirewall, setHasFirewall] = React.useState<boolean>(false);
-
   const {
+    firewallId,
     label,
     linodeId,
     region,
@@ -92,6 +86,20 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     regionsLastUpdated,
     notifications
   } = props;
+
+  const classes = useStyles();
+  const { devices } = useFirewallDevices(firewallId);
+  const deviceList = Object.values(devices.itemsById ?? {});
+  const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
+    null
+  );
+  const [regionError, setRegionError] = React.useState<string>('');
+  const [acceptError, setAcceptError] = React.useState<string>('');
+  const [APIError, setAPIError] = React.useState<string>('');
+  const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
+  const [isLoading, setLoading] = React.useState<boolean>(false);
+
+  const [hasFirewall, setHasFirewall] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     scrollErrorIntoView();
@@ -111,7 +119,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       setAcceptError('Please accept the conditions of this migration.');
     }
 
-    if (hasFirewall) {
+    if (deviceList.map(device => device.entity.id === linodeId)) {
       setHasFirewall(true);
     }
 
