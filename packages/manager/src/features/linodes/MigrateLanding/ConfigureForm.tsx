@@ -16,6 +16,7 @@ import {
   getHumanReadableCountry
 } from 'src/utilities/formatRegion';
 import { useFlags } from 'src/hooks/useFlags';
+import FormHelperText from 'src/components/core/FormHelperText';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -55,6 +56,7 @@ interface Props {
   handleSelectRegion: (id: string) => void;
   selectedRegion: string | null;
   errorText?: string;
+  hasFirewall?: boolean;
 }
 
 type CombinedProps = Props;
@@ -90,6 +92,12 @@ const ConfigureForm: React.FC<CombinedProps> = props => {
         }}
         label="Select a Region"
       />
+      {props.hasFirewall && (
+        <FormHelperText>
+          Please note that migration options for this Linode are limited to
+          regions that support Firewalls.
+        </FormHelperText>
+      )}
     </Paper>
   );
 };
