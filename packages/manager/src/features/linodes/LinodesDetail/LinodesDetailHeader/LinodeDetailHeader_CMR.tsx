@@ -25,9 +25,11 @@ import CircleProgress from 'src/components/CircleProgress';
 import useLinodes from 'src/hooks/useLinodes';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
+import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue/RescueDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
+import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import { useHistory } from 'react-router-dom';
 
 interface Props {
@@ -93,6 +95,16 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     linodeID: 0
   });
 
+  const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
+    open: false,
+    linodeID: 0
+  });
+  
+  const [backupsDialog, setBackupsDialog] = React.useState<DialogProps>({
+    open: false,
+    linodeID: 0
+  });
+
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: []
@@ -150,6 +162,21 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        break;
+      case 'rebuild':
+        setRebuildDialog(rebuildDialog => ({
+          ...rebuildDialog,
+          open: true,
+          linodeID
+        }));
+        break;
+      case 'enable_backups':
+        setBackupsDialog(backupsDialog => ({
+          ...backupsDialog,
+          open: true,
+          linodeID
+        }));
+        break;
     }
   };
 
@@ -159,6 +186,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     setResizeDialog(resizeDialog => ({ ...resizeDialog, open: false }));
     setMigrateDialog(migrateDialog => ({ ...migrateDialog, open: false }));
     setRescueDialog(rescueDialog => ({ ...rescueDialog, open: false }));
+    setRebuildDialog(rebuildDialog => ({ ...rebuildDialog, open: false }));
+    setBackupsDialog(backupsDialog => ({ ...backupsDialog, open: false }));
   };
 
   const closeTagDrawer = () => {
@@ -247,6 +276,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         onClose={closeDialogs}
         linodeId={resizeDialog.linodeID}
       />
+      <LinodeRebuildDialog
+        open={rebuildDialog.open}
+        onClose={closeDialogs}
+        linodeId={rebuildDialog.linodeID}
+      />
       <RescueDialog
         open={rescueDialog.open}
         onClose={closeDialogs}
@@ -264,6 +298,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         addTag={(newTag: string) => addTag(linode.id, newTag)}
         deleteTag={(tag: string) => deleteTag(linode.id, tag)}
         onClose={closeTagDrawer}
+      />
+      <EnableBackupDialog
+        linodeId={backupsDialog.linodeID}
+        open={backupsDialog.open}
+        onClose={closeDialogs}
       />
     </React.Fragment>
   );
