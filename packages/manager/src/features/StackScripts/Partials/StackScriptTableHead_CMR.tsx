@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& th': {
       cursor: 'pointer',
+      fontFamily: theme.font.bold,
       height: 40,
       padding: '10px 15px',
       '&:hover': {
