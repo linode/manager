@@ -69,10 +69,7 @@ import ListView from './ListView';
 import ToggleBox from './ToggleBox';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { ExtendedStatus, statusToPriority } from './utils';
-import {
-  getUserTimezone,
-  getUserTimezoneLoading
-} from 'src/utilities/getUserTimezone';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 import { path } from 'ramda';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
@@ -352,8 +349,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner
             userTimezone={this.props.userTimezone}
-            userTimezoneError={this.props.userTimezoneError}
-            userTimezoneLoading={this.props.userTimezoneLoading}
+            userTimezoneError={this.props.userProfileError}
+            userTimezoneLoading={this.props.userProfileLoading}
           />
         )}
         <Grid container>
@@ -726,8 +723,8 @@ interface StateProps {
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   userTimezone: string;
-  userTimezoneLoading: boolean;
-  userTimezoneError?: APIError[];
+  userProfileLoading: boolean;
+  userProfileError?: APIError[];
   someLinodesHaveScheduledMaintenance: boolean;
   linodesInTransition: Set<number>;
 }
@@ -751,10 +748,10 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
             !!eachLinode.maintenance && !!eachLinode.maintenance.when
         )
       : false,
-    linodesRequestLoading: getUserTimezoneLoading(state),
+    linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
     userTimezone: getUserTimezone(state),
-    userTimezoneLoading: getUserTimezoneLoading(state),
+    userProfileLoading: state.__resources.profile.loading,
     userProfileError: path<APIError[]>(
       ['read'],
       state.__resources.profile.error

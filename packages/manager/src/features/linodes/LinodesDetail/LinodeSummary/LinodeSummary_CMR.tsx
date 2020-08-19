@@ -42,7 +42,7 @@ import StatsPanel from './StatsPanel';
 import { ChartProps } from './types';
 import { parseAPIDate } from 'src/utilities/date';
 import Paper from 'src/components/core/Paper';
-import { getUserTimezone } from 'src/utilities/getUserTimezone';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 setUpCharts();
 
 type ClassNames =

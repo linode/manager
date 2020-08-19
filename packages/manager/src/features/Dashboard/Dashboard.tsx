@@ -26,10 +26,7 @@ import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
-import {
-  getUserTimezone,
-  getUserTimezoneLoading
-} from '../../utilities/getUserTimezone';
+import getUserTimezone from '../../utilities/getUserTimezone';
 import { pathOr, path } from 'ramda';
 
 interface StateProps {
@@ -145,7 +142,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     ),
     notifications: pathOr([], ['data'], state.__resources.notifications),
     userTimezone: getUserTimezone(state),
-    userTimezoneLoading: getUserTimezoneLoading(state),
+    userTimezoneLoading: state.__resources.profile.loading,
     userProfileError: path<APIError[]>(
       ['read'],
       state.__resources.profile.error
