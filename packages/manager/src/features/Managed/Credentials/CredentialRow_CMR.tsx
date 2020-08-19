@@ -1,7 +1,6 @@
 import { ManagedCredential } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { createStyles, makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
@@ -49,9 +48,7 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = props => {
       className={classes.credentialRow}
       ariaLabel={`Credential ${credential.label}`}
     >
-      <TableCell data-qa-credential-label>
-        <Typography variant="h3">{credential.label}</Typography>
-      </TableCell>
+      <TableCell data-qa-credential-label>{credential.label}</TableCell>
       <TableCell data-qa-credential-decrypted>
         {/** If credential.last_decrypted is null, it has never been decrypted */}
         {credential.last_decrypted ? (
