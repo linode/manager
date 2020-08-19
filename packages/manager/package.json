@@ -81,7 +81,7 @@
     "typescript-fsa-reducers": "^1.2.0",
     "xml2js": "^0.4.19",
     "xterm": "^4.2.0",
-    "yup": "^0.27.0",
+    "yup": "^0.28.2",
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
@@ -175,7 +175,7 @@
     "@types/url-parse": "^1.4.1",
     "@types/uuid": "^3.4.3",
     "@types/xml2js": "^0.4.3",
-    "@types/yup": "^0.24.9",
+    "@types/yup": "^0.28.2",
     "@types/zxcvbn": "^4.4.0",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
