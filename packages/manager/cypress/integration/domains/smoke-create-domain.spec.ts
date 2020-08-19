@@ -9,7 +9,7 @@ describe('Create a Domain', () => {
   it('Creates a Domain', () => {
     cy.visitWithLogin('/domains');
     cy.url().should('contain', '/domains');
-    cy.contains('Add a Domain').click();
+    cy.contains('Create a Domain...').click();
     cy.get('[data-testid="drawer"]').should('contain', 'Add a new Domain');
     const label = makeDomainLabel();
     cy.get(
