@@ -48,7 +48,7 @@ import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import { ChartProps } from './types';
 import { parseAPIDate } from 'src/utilities/date';
-import { getUserTimezone } from 'src/utilities/getUserTimezone';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 setUpCharts();
 
 type ClassNames =
