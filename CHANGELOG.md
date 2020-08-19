@@ -4,6 +4,104 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-08-14] - v1.16.2
+
+### Fixed:
+
+- Clear UDF data on tab change
+- Form fields issue on One-click Apps and StackScripts creation flows
+
+## [2020-08-13] - v1.16.1
+
+### Fixed:
+
+- Add withRouter to LinodeRescue
+- Update NodeBalancer details routing
+
+## [2020-08-11] - v.1.16.0
+
+### Added:
+
+- CMR
+- Table styles for Profile > Trusted Devices
+- Table styles for Volumes landing table
+- Table styles for Images landing table
+- Table styles for NodeBalancer landing table
+- Table styles for Firewall > Rules
+- Table styles for Firewall > Linodes
+- Responsive table styles for Firewall Landing and K8 Cluster landing
+- Responsive styling for entity header (all variants)
+- Responsive styling for Dashboard
+- Dashboard Notifications: Add Community Updates, Pending Actions, and “Show more” button to Drawer
+- Dialog full height
+- Rescue Linode dialog
+- Migration dialog
+- Static banner for Linode changelog
+- Tag styles
+- Support Tickets and loading state
+- Notification context
+- Notification drawer
+
+### Changed:
+
+- Refactor tabbable content to be accessible by keyboard
+- Update Popular Posts on /help page
+- Use API Pagination for Domains when account size is large
+- Display tax id of customer in invoice if available
+- Use longview/plan endpoint to get active plan
+
+### Fixed:
+
+- Default zone if no user timezone
+- Dates in several places displayed as “Invalid DateTime”
+- OAuth tokens with expiry of null were crashing the app
+
+## [2020-07-27] - v1.15.0
+
+### Added:
+
+- Ability to recycle all LKE pool nodes
+- CMR: Dashboard
+- Notifications
+- View for single Linodes
+- View for multiple Linodes
+- CMR: Linode Details - Filter Linodes by status - Implement LinodeEntityDetail component
+- Networking tab:
+- Add Linode Monthly Transfer graph
+- Add Historic Network Data graph - Add IP actions
+- CMR: Responsiveness
+- Linodes Landing
+- Domains Landing
+- Add reusable InlineMenuActions component - Apply updated table styles and action menu to Firewalls
+- Custom dev tools
+- User preferences editor
+
+### Changed:
+
+- CMR: Update Linode status pill designs
+- Use API search and hide search tips for large accounts
+
+- Use base 10 for network graphs
+
+### Fixed:
+
+- CMR: Adjust grid sizes to prevent EntityHeader elements from wrapping
+- Brasilia timezone offset should be GMT-3
+- Correct years in Linode Summary graph options
+- Create Object Storage Bucket types
+- Per-Linode network transfer total
+
+## JS Client
+
+### Added
+
+- getLinodeTransferByDate endpoint
+- recycleAllNodes endpoint (LKE)
+
+### Changed
+
+- Add access control and CORS fields to ObjectStorageBucketRequestPayload interface
+
 ## [2020-07-13] - v1.14.0
 
 ### Added:

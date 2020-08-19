@@ -16,6 +16,7 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import PowerDialogOrDrawer, {
   Action as BootAction
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { DialogType } from 'src/features/linodes/types';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
@@ -24,7 +25,11 @@ import CircleProgress from 'src/components/CircleProgress';
 import useLinodes from 'src/hooks/useLinodes';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
+import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
+import RescueDialog from '../LinodeRescue/RescueDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
+import MigrateLinode from '../../MigrateLanding/MigrateLinode';
+import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import { useHistory } from 'react-router-dom';
 
 interface Props {
@@ -46,14 +51,9 @@ interface PowerDialogProps {
   linodeConfigs?: Config[];
 }
 
-interface DeleteDialogProps {
+interface DialogProps {
   open: boolean;
-  linodeLabel: string;
-  linodeID: number;
-}
-
-interface ResizeDialogProps {
-  open: boolean;
+  linodeLabel?: string;
   linodeID: number;
 }
 
@@ -74,13 +74,33 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     linodeLabel: ''
   });
 
-  const [deleteDialog, setDeleteDialog] = React.useState<DeleteDialogProps>({
+  const [deleteDialog, setDeleteDialog] = React.useState<DialogProps>({
     open: false,
     linodeID: 0,
     linodeLabel: ''
   });
 
-  const [resizeDialog, setResizeDialog] = React.useState<ResizeDialogProps>({
+  const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
+    open: false,
+    linodeID: 0
+  });
+
+  const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
+    open: false,
+    linodeID: 0
+  });
+
+  const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
+    open: false,
+    linodeID: 0
+  });
+
+  const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
+    open: false,
+    linodeID: 0
+  });
+  
+  const [backupsDialog, setBackupsDialog] = React.useState<DialogProps>({
     open: false,
     linodeID: 0
   });
@@ -108,27 +128,66 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     });
   };
 
-  const openDeleteDialog = (linodeID: number, linodeLabel: string) => {
-    setDeleteDialog(deleteDialog => ({
-      ...deleteDialog,
-      open: true,
-      linodeLabel,
-      linodeID
-    }));
-  };
-
-  const openResizeDialog = (linodeID: number) => {
-    setResizeDialog(resizeDialog => ({
-      ...resizeDialog,
-      open: true,
-      linodeID
-    }));
+  const openDialog = (
+    dialogType: DialogType,
+    linodeID: number,
+    linodeLabel?: string
+  ) => {
+    switch (dialogType) {
+      case 'delete':
+        setDeleteDialog(deleteDialog => ({
+          ...deleteDialog,
+          open: true,
+          linodeLabel,
+          linodeID
+        }));
+        break;
+      case 'migrate':
+        setMigrateDialog(migrateDialog => ({
+          ...migrateDialog,
+          open: true,
+          linodeID
+        }));
+        break;
+      case 'resize':
+        setResizeDialog(resizeDialog => ({
+          ...resizeDialog,
+          open: true,
+          linodeID
+        }));
+        break;
+      case 'rescue':
+        setRescueDialog(rescueDialog => ({
+          ...rescueDialog,
+          open: true,
+          linodeID
+        }));
+        break;
+      case 'rebuild':
+        setRebuildDialog(rebuildDialog => ({
+          ...rebuildDialog,
+          open: true,
+          linodeID
+        }));
+        break;
+      case 'enable_backups':
+        setBackupsDialog(backupsDialog => ({
+          ...backupsDialog,
+          open: true,
+          linodeID
+        }));
+        break;
+    }
   };
 
   const closeDialogs = () => {
     setPowerDialog(powerDialog => ({ ...powerDialog, open: false }));
     setDeleteDialog(deleteDialog => ({ ...deleteDialog, open: false }));
     setResizeDialog(resizeDialog => ({ ...resizeDialog, open: false }));
+    setMigrateDialog(migrateDialog => ({ ...migrateDialog, open: false }));
+    setRescueDialog(rescueDialog => ({ ...rescueDialog, open: false }));
+    setRebuildDialog(rebuildDialog => ({ ...rebuildDialog, open: false }));
+    setBackupsDialog(backupsDialog => ({ ...backupsDialog, open: false }));
   };
 
   const closeTagDrawer = () => {
@@ -191,9 +250,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         linodeConfigs={linodeConfigs}
         backups={linode.backups}
         openTagDrawer={openTagDrawer}
-        openDeleteDialog={openDeleteDialog}
+        openDialog={openDialog}
         openPowerActionDialog={openPowerActionDialog}
-        openLinodeResize={openResizeDialog}
       />
       {linodeInTransition(linodeStatus, firstEventWithProgress) && (
         <LinodeBusyStatus />
@@ -218,6 +276,21 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         onClose={closeDialogs}
         linodeId={resizeDialog.linodeID}
       />
+      <LinodeRebuildDialog
+        open={rebuildDialog.open}
+        onClose={closeDialogs}
+        linodeId={rebuildDialog.linodeID}
+      />
+      <RescueDialog
+        open={rescueDialog.open}
+        onClose={closeDialogs}
+        linodeId={rescueDialog.linodeID}
+      />
+      <MigrateLinode
+        open={migrateDialog.open}
+        onClose={closeDialogs}
+        linodeID={migrateDialog.linodeID}
+      />
       <TagDrawer
         entityLabel={linode.label}
         open={tagDrawer.open}
@@ -225,6 +298,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         addTag={(newTag: string) => addTag(linode.id, newTag)}
         deleteTag={(tag: string) => deleteTag(linode.id, tag)}
         onClose={closeTagDrawer}
+      />
+      <EnableBackupDialog
+        linodeId={backupsDialog.linodeID}
+        open={backupsDialog.open}
+        onClose={closeDialogs}
       />
     </React.Fragment>
   );

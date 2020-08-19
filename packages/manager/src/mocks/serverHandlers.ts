@@ -16,10 +16,13 @@ import {
   linodeIPFactory,
   linodeStatsFactory,
   linodeTransferFactory,
+  longviewActivePlanFactory,
   nodeBalancerFactory,
   profileFactory,
+  supportTicketFactory,
   volumeFactory,
-  accountTransferFactory
+  accountTransferFactory,
+  eventFactory
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -27,11 +30,14 @@ import { MockData } from 'src/dev-tools/mockDataController';
 
 export const makeResourcePage = (
   e: any[],
-  override: { page: number; pages: number } = { page: 1, pages: 1 }
+  override: { page: number; pages: number; results?: number } = {
+    page: 1,
+    pages: 1
+  }
 ) => ({
   page: override.page ?? 1,
   pages: override.pages ?? 1,
-  results: e.length,
+  results: override.results ?? e.length,
   data: e
 });
 
@@ -122,8 +128,8 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(nodeBalancers)));
   }),
   rest.get('*/domains', (req, res, ctx) => {
-    const domains = domainFactory.buildList(500);
-    return res(ctx.json(makeResourcePage(domains, { page: 1, pages: 5 })));
+    const domains = domainFactory.buildList(25);
+    return res(ctx.json(makeResourcePage(domains)));
   }),
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(10);
@@ -150,6 +156,21 @@ export const handlers = [
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();
     return res(ctx.json(transfer));
+  }),
+  rest.get('*/events', (req, res, ctx) => {
+    const events = eventFactory.buildList(10);
+    return res(ctx.json(makeResourcePage(events)));
+  }),
+  rest.get('*/support/tickets', (req, res, ctx) => {
+    const tickets = supportTicketFactory.buildList(15, { status: 'open' });
+    return res(ctx.json(makeResourcePage(tickets)));
+  }),
+  rest.put('*/longview/plan', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/longview/plan', (req, res, ctx) => {
+    const plan = longviewActivePlanFactory.build();
+    return res(ctx.json(plan));
   })
 ];
 

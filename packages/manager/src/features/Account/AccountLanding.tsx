@@ -1,19 +1,13 @@
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
-import AppBar from 'src/components/core/AppBar';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import TabPanel from 'src/components/core/ReachTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLink from 'src/components/TabLink';
 
 import withProfile, {
   Props as ProfileActionsProps
@@ -54,10 +48,7 @@ class AccountLanding extends React.Component<Props> {
   ];
 
   render() {
-    const {
-      match: { url },
-      location
-    } = this.props;
+    const { location } = this.props;
 
     const matches = (p: string) => {
       return Boolean(matchPath(p, { path: this.props.location.pathname }));
@@ -73,55 +64,23 @@ class AccountLanding extends React.Component<Props> {
           removeCrumbX={1}
           data-qa-profile-header
         />
-        <AppBar position="static" color="default" role="tablist">
-          <Tabs
-            value={this.tabs.findIndex(tab => matches(tab.routeName))}
-            onChange={this.handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="on"
-          >
-            {this.tabs.map(tab => (
-              <Tab
-                key={tab.title}
-                data-qa-tab={tab.title}
-                component={React.forwardRef((props, ref) => (
-                  <TabLink
-                    to={tab.routeName}
-                    title={tab.title}
-                    {...props}
-                    ref={ref}
-                  />
-                ))}
-              />
-            ))}
-          </Tabs>
-        </AppBar>
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <Switch>
-            <Route exact strict path={`${url}/billing`} component={Billing} />
-            <Route
-              exact
-              strict
-              path={`${url}/users`}
-              render={props => (
-                <Users
-                  {...props}
-                  isRestrictedUser={this.props.isRestrictedUser}
-                />
-              )}
-            />
-            <Route
-              exact
-              strict
-              path={`${url}/settings`}
-              component={GlobalSettings}
-            />
-            <Route exact strict path={`${url}`} component={Billing} />
-            <Redirect to={`${url}/billing`} />
-          </Switch>
-        </React.Suspense>
+        <Tabs defaultIndex={this.tabs.findIndex(tab => matches(tab.routeName))}>
+          <TabLinkList tabs={this.tabs} />
+
+          <React.Suspense fallback={<SuspenseLoader />}>
+            <TabPanels>
+              <TabPanel>
+                <Billing />
+              </TabPanel>
+              <TabPanel>
+                <Users isRestrictedUser={this.props.isRestrictedUser} />
+              </TabPanel>
+              <TabPanel>
+                <GlobalSettings />
+              </TabPanel>
+            </TabPanels>
+          </React.Suspense>
+        </Tabs>
       </React.Fragment>
     );
   }

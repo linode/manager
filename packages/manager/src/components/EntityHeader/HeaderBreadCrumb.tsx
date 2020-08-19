@@ -11,17 +11,41 @@ export interface BreadCrumbProps {
   parentLink?: string;
   parentText?: string;
   displayIcon?: boolean;
+  headerOnly?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexBasis: '100%'
+    }
+  },
+  rootWithoutParent: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  rootHeaderOnly: {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.up('sm')]: {
+      flexBasis: '100%'
+    }
+  },
   iconContainer: {
-    padding: `5px !important`
+    padding: `5px !important`,
+    marginLeft: 16
   },
   headerWithLink: {
+    display: 'flex',
     flexWrap: 'nowrap',
+    height: 50,
     position: 'relative',
+    alignItems: 'center',
     backgroundColor: theme.bg.lightBlue,
     marginRight: theme.spacing(2),
+
     '&:before': {
       content: '""',
       position: 'absolute',
@@ -88,19 +112,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     paddingRight: theme.spacing(2) - 2,
+    paddingLeft: theme.spacing(2) - 2,
     lineHeight: 1.2
   }
 }));
 
 export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
-  const { iconType, parentLink, parentText, title, displayIcon } = props;
+  const {
+    iconType,
+    parentLink,
+    parentText,
+    title,
+    displayIcon,
+    headerOnly
+  } = props;
   const classes = useStyles();
 
   const _displayIcon = displayIcon ?? true;
 
   if (parentLink) {
     return (
-      <>
+      <div className={classes.root}>
         <Grid item className={classes.headerWithLink}>
           <Grid wrap="nowrap" container alignItems="center" justify="center">
             {iconType && _displayIcon && (
@@ -124,12 +156,16 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
             {title}
           </Typography>
         </Grid>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div
+      className={
+        headerOnly ? classes.rootHeaderOnly : classes.rootWithoutParent
+      }
+    >
       {iconType && _displayIcon && (
         <Grid item>
           <EntityIcon variant={iconType} />
@@ -140,7 +176,7 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
           {title}
         </Typography>
       </Grid>
-    </>
+    </div>
   );
 };
 

@@ -37,12 +37,7 @@ const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = () => {
   const classes = useStyles();
 
   return (
-    <Grid
-      container
-      id="tabpanel-advanced"
-      role="tabpanel"
-      aria-labelledby="tab-advanced"
-    >
+    <Grid container>
       <Grid item className={classes.enclosingGrid}>
         <LinodeConfigs />
       </Grid>

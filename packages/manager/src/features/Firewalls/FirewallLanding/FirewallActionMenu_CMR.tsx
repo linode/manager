@@ -1,9 +1,14 @@
 import { FirewallStatus } from '@linode/api-v4/lib/firewalls';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import ActionMenu from 'src/components/ActionMenu_CMR';
+import { useHistory } from 'react-router-dom';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
+import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -15,10 +20,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   },
   link: {
-    minWidth: 70,
     padding: '12px 10px',
     textAlign: 'center',
     '&:hover': {
@@ -70,6 +76,11 @@ interface Props extends ActionHandlers {
 type CombinedProps = Props;
 
 const FirewallActionMenu: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const history = useHistory();
+
   const {
     firewallID,
     firewallLabel,
@@ -78,7 +89,29 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
     triggerDisableFirewall,
     triggerDeleteFirewall
   } = props;
-  const classes = useStyles();
+
+  const inlineActions = [
+    {
+      actionText: 'Details',
+      className: classes.link,
+      href: `/firewalls/${firewallID}`
+    },
+    {
+      actionText:
+        firewallStatus === ('enabled' as FirewallStatus) ? 'Disable' : 'Enable',
+      className: classes.button,
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        handleEnableDisable();
+      }
+    },
+    {
+      actionText: 'Delete',
+      onClick: () => {
+        triggerDeleteFirewall(firewallID, firewallLabel);
+      }
+    }
+  ];
 
   const handleEnableDisable = () => {
     const request = () =>
@@ -88,35 +121,56 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
     request();
   };
 
-  const createActions = () => [
-    {
-      title: 'Delete',
-      onClick: () => {
-        triggerDeleteFirewall(firewallID, firewallLabel);
+  const createActions = () => (): Action[] => {
+    return [
+      {
+        title: 'Details',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          history.push({
+            pathname: `/firewalls/${firewallID}`
+          });
+          e.preventDefault();
+        }
+      },
+      {
+        title:
+          firewallStatus === ('enabled' as FirewallStatus)
+            ? 'Disable'
+            : 'Enable',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          handleEnableDisable();
+        }
+      },
+      {
+        title: 'Delete',
+        onClick: () => {
+          triggerDeleteFirewall(firewallID, firewallLabel);
+        }
       }
-    }
-  ];
+    ];
+  };
 
   return (
     <div className={classes.root}>
-      <div className={classes.inlineActions}>
-        <Link className={classes.link} to={`/firewalls/${firewallID}`}>
-          <span>Edit</span>
-        </Link>
-        <Button
-          className={classes.button}
-          onClick={(e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            handleEnableDisable();
-          }}
-        >
-          {firewallStatus === 'enabled' ? 'Disable' : 'Enable'}
-        </Button>
-      </div>
-      <ActionMenu
-        createActions={createActions}
-        ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
-      />
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              className={action.className}
+              href={action.href}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      {matchesSmDown && (
+        <ActionMenu
+          createActions={createActions()}
+          ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
+        />
+      )}
     </div>
   );
 };
