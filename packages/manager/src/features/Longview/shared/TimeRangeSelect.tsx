@@ -1,3 +1,5 @@
+import { getActiveLongviewPlan } from '@linode/api-v4/lib/longview';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -5,7 +7,6 @@ import Select, {
   BaseSelectProps,
   Item
 } from 'src/components/EnhancedSelect/Select';
-import withAccountSettings from 'src/containers/accountSettings.container';
 import withPreferences, {
   Props as PreferencesProps
 } from 'src/containers/preferences.container';
@@ -13,10 +14,6 @@ import withPreferences, {
 interface Props extends Omit<BaseSelectProps, 'onChange' | 'defaultValue'> {
   handleStatsChange?: (start: number, end: number) => void;
   defaultValue?: Labels;
-}
-
-interface ReduxStateProps {
-  isLongviewPro: boolean;
 }
 
 export type Labels =
@@ -27,18 +24,27 @@ export type Labels =
   | 'Past 30 Days'
   | 'Past Year';
 
-type CombinedProps = Props & ReduxStateProps & PreferencesProps;
+type CombinedProps = Props & PreferencesProps;
 
 const TimeRangeSelect: React.FC<CombinedProps> = props => {
   const {
     defaultValue,
-    isLongviewPro,
     handleStatsChange,
     preferences,
     getUserPreferences,
     updateUserPreferences,
     ...restOfSelectProps
   } = props;
+
+  const [isLongviewPro, setLongviewPro] = React.useState(false);
+
+  React.useEffect(() => {
+    getActiveLongviewPlan()
+      .then(response => {
+        setLongviewPro(!isEmpty(response));
+      })
+      .catch(_ => null); // Swallow errors, default to free tier time select options.
+  }, []);
 
   /*
     the time range is the label instead of the value because it's a lot harder
@@ -127,18 +133,6 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withAccountSettings<ReduxStateProps, Props>(
-    (own, loading, lastUpdated, error, data) => {
-      const subscription = (data || {}).longview_subscription;
-
-      /* if response is _null_, you're on the free tier */
-      const isLongviewPro = !!subscription;
-
-      return {
-        isLongviewPro
-      };
-    }
-  ),
   withPreferences()
 )(TimeRangeSelect);
 
@@ -165,7 +159,7 @@ export const generateSelectOptions = (
     }
   ];
 
-  const finalOptions: Item<Labels, Labels>[] = isLongviewPro
+  return isLongviewPro
     ? [
         ...baseOptions,
         {
@@ -190,8 +184,6 @@ export const generateSelectOptions = (
         }
       ]
     : baseOptions;
-
-  return finalOptions;
 };
 
 /**

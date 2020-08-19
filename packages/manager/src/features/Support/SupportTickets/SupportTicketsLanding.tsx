@@ -24,10 +24,13 @@ import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
-
+import TicketList_CMR from './TicketList_CMR';
 import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
+import withFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 
 type ClassNames =
   | 'title'
@@ -102,7 +105,8 @@ interface Props {
 type CombinedProps = Props &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
-  GlobalErrorProps;
+  GlobalErrorProps &
+  FeatureFlagConsumerProps;
 
 interface State {
   value: number;
@@ -274,10 +278,18 @@ export class SupportTicketsLanding extends React.PureComponent<
           </TabList>
           <TabPanels>
             <TabPanel>
-              <TicketList newTicket={newTicket} filterStatus={'open'} />
+              {this.props.flags.cmr ? (
+                <TicketList_CMR newTicket={newTicket} filterStatus={'open'} />
+              ) : (
+                <TicketList newTicket={newTicket} filterStatus={'open'} />
+              )}
             </TabPanel>
             <TabPanel>
-              <TicketList newTicket={newTicket} filterStatus={'closed'} />
+              {this.props.flags.cmr ? (
+                <TicketList_CMR newTicket={newTicket} filterStatus={'closed'} />
+              ) : (
+                <TicketList newTicket={newTicket} filterStatus={'closed'} />
+              )}
             </TabPanel>
           </TabPanels>
         </Tabs>
@@ -293,5 +305,6 @@ const styled = withStyles(styles);
 export default compose<CombinedProps, Props>(
   withRouter,
   styled,
-  withGlobalErrors()
+  withGlobalErrors(),
+  withFlags
 )(SupportTicketsLanding);
