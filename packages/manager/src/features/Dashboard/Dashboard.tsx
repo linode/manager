@@ -27,7 +27,7 @@ import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
-import getUserTimezone from '../../utilities/getUserTimezone';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 
 interface StateProps {
   accountBackups: boolean;
