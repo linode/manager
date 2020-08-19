@@ -21,10 +21,10 @@
   "types": "./lib/index.d.ts",
   "unpkg": "./index.js",
   "dependencies": {
-    "@types/yup": "^0.28.2",
+    "@types/yup": "^0.29.3",
     "axios": "~0.19.0",
     "querystring": "^0.2.0",
-    "yup": "^0.28.2"
+    "yup": "^0.29.3"
   },
   "scripts": {
     "start": "concurrently \"tsc -w\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\" -n 'tsc,babel' -k",
