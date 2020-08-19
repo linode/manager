@@ -71,10 +71,9 @@ import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDial
 import { ExtendedStatus, statusToPriority } from './utils';
 import {
   getUserTimezone,
-  getUserTimezoneLoading,
-  getUserTimezoneError,
-  getUserTimezoneRequestError
+  getUserTimezoneLoading
 } from 'src/utilities/getUserTimezone';
+import { path } from 'ramda';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 
@@ -753,10 +752,13 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
         )
       : false,
     linodesRequestLoading: getUserTimezoneLoading(state),
-    linodesRequestError: getUserTimezoneRequestError(state),
+    linodesRequestError: path(['error', 'read'], state.__resources.linodes),
     userTimezone: getUserTimezone(state),
     userTimezoneLoading: getUserTimezoneLoading(state),
-    userTimezoneError: getUserTimezoneError(state),
+    userProfileError: path<APIError[]>(
+      ['read'],
+      state.__resources.profile.error
+    ),
     linodesInTransition: _linodesInTransition(state.events.events)
   };
 };

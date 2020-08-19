@@ -28,10 +28,9 @@ import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
 import {
   getUserTimezone,
-  getUserTimezoneLoading,
-  getUserTimezoneError
+  getUserTimezoneLoading
 } from '../../utilities/getUserTimezone';
-import { pathOr } from 'ramda';
+import { pathOr, path } from 'ramda';
 
 interface StateProps {
   accountBackups: boolean;
@@ -147,7 +146,10 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     notifications: pathOr([], ['data'], state.__resources.notifications),
     userTimezone: getUserTimezone(state),
     userTimezoneLoading: getUserTimezoneLoading(state),
-    userTimezoneError: getUserTimezoneError(state),
+    userProfileError: path<APIError[]>(
+      ['read'],
+      state.__resources.profile.error
+    ),
     someLinodesHaveScheduledMaintenance: linodesWithMaintenance
       ? linodesWithMaintenance.some(eachLinode => !!eachLinode.maintenance)
       : false,
