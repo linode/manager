@@ -74,11 +74,13 @@ const errorResources = {
   stackscript_id: 'The selected StackScript'
 };
 
-export type CombinedProps = Props &
-  FeatureFlagConsumerProps &
-  StackScriptFormStateHandlers &
+type InnerProps = Props &
   ReduxStateProps &
-  WithTypesRegionsAndImages &
+  StackScriptFormStateHandlers &
+  WithTypesRegionsAndImages;
+
+export type CombinedProps = FeatureFlagConsumerProps &
+  InnerProps &
   WithStyles<ClassNames>;
 
 export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
@@ -137,8 +139,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       errors,
       classes,
       selectedStackScriptID,
-      imagesData,
-      userCannotCreateLinode: disabled,
+      userCannotCreateLinode,
       selectedStackScriptUsername,
       selectedStackScriptLabel,
       request,
@@ -146,7 +147,8 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       updateImageID,
       availableUserDefinedFields: userDefinedFields,
       availableStackScriptImages: compatibleImages,
-      selectedUDFs: udf_data
+      selectedUDFs: udf_data,
+      imagesData
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -158,7 +160,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           item
           className={`${classes.main} mlMain py0`}
         >
-          <CreateLinodeDisabled isDisabled={disabled} />
+          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           {this.props.flags.cmr ? (
             <SelectStackScriptPanel_CMR
               data-qa-select-stackscript
@@ -170,7 +172,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               onSelect={this.handleSelectStackScript}
               publicImages={filterImagesByType(imagesData, 'public')}
               resetSelectedStackScript={() => null}
-              disabled={disabled}
+              disabled={userCannotCreateLinode}
               request={request}
               category={this.props.category}
             />
@@ -185,24 +187,28 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               onSelect={this.handleSelectStackScript}
               publicImages={filterImagesByType(imagesData, 'public')}
               resetSelectedStackScript={() => null}
-              disabled={disabled}
+              disabled={userCannotCreateLinode}
               request={request}
               category={this.props.category}
             />
           )}
-          {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
-            <UserDefinedFieldsPanel
-              data-qa-udf-panel
-              errors={filterUDFErrors(errorResources, this.props.errors)}
-              selectedLabel={selectedStackScriptLabel || ''}
-              selectedUsername={selectedStackScriptUsername || ''}
-              handleChange={this.handleChangeUDF}
-              userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields, udf_data, errors]}
-              udf_data={udf_data || {}}
-            />
-          )}
-          {!disabled && compatibleImages && compatibleImages.length > 0 ? (
+          {!userCannotCreateLinode &&
+            userDefinedFields &&
+            userDefinedFields.length > 0 && (
+              <UserDefinedFieldsPanel
+                data-qa-udf-panel
+                errors={filterUDFErrors(errorResources, this.props.errors)}
+                selectedLabel={selectedStackScriptLabel || ''}
+                selectedUsername={selectedStackScriptUsername || ''}
+                handleChange={this.handleChangeUDF}
+                userDefinedFields={userDefinedFields}
+                updateFor={[userDefinedFields, udf_data, errors]}
+                udf_data={udf_data || {}}
+              />
+            )}
+          {!userCannotCreateLinode &&
+          compatibleImages &&
+          compatibleImages.length > 0 ? (
             <ImageSelect
               data-qa-select-image-panel
               title="Select an Image"
@@ -240,7 +246,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
+export default compose<CombinedProps, InnerProps>(
   styled,
   withFeatureFlags
 )(FromStackScriptContent);
