@@ -206,6 +206,7 @@ export const PrimaryNav: React.FC<Props> = props => {
       spacing={0}
       component="nav"
       role="navigation"
+      id="main-navigation"
     >
       <Grid item>
         <div
@@ -214,7 +215,12 @@ export const PrimaryNav: React.FC<Props> = props => {
             [classes.logoCollapsed]: isCollapsed
           })}
         >
-          <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
+          <Link
+            to={`/dashboard`}
+            onClick={closeMenu}
+            aria-label="Dashboard"
+            title="Dashboard"
+          >
             <Logo width={115} height={43} />
           </Link>
         </div>
@@ -402,16 +408,20 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
           listItemCollapsed: isCollapsed
         })}
       >
-        {icon && isCollapsed && <div className="icon">{icon}</div>}
-        <ListItemText
-          primary={display}
-          disableTypography={true}
+        {icon && isCollapsed && (
+          <div className="icon" aria-hidden>
+            {icon}
+          </div>
+        )}
+        <p
           className={classNames({
             [classes.linkItem]: true,
             primaryNavLink: true,
             hiddenWhenCollapsed: isCollapsed
           })}
-        />
+        >
+          {display}
+        </p>
       </Link>
       <Divider className={classes.divider} />
     </>
