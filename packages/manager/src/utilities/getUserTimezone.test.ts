@@ -1,4 +1,4 @@
-import getUserTimezone from './getUserTimezone';
+import { getUserTimezone } from './getUserTimezone';
 import { DateTime } from 'luxon';
 import { defaultState } from 'src/store/index';
 
