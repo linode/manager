@@ -233,6 +233,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       wrap="nowrap"
       component="nav"
       role="navigation"
+      id="main-navigation"
       spacing={0}
     >
       <div className={classes.menuGridInner}>
