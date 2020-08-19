@@ -5,6 +5,7 @@ import * as classNames from 'classnames';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -70,7 +71,6 @@ import ToggleBox from './ToggleBox';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { ExtendedStatus, statusToPriority } from './utils';
 import getUserTimezone from 'src/utilities/getUserTimezone';
-import { path } from 'ramda';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 

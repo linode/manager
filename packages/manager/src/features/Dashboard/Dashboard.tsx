@@ -1,6 +1,7 @@
 import { Notification } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -27,7 +28,6 @@ import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
 import getUserTimezone from '../../utilities/getUserTimezone';
-import { pathOr, path } from 'ramda';
 
 interface StateProps {
   accountBackups: boolean;
@@ -143,10 +143,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     notifications: pathOr([], ['data'], state.__resources.notifications),
     userTimezone: getUserTimezone(state),
     userTimezoneLoading: state.__resources.profile.loading,
-    userProfileError: path<APIError[]>(
-      ['read'],
-      state.__resources.profile.error
-    ),
+    userProfileError: path(['read'], state.__resources.profile.error),
     someLinodesHaveScheduledMaintenance: linodesWithMaintenance
       ? linodesWithMaintenance.some(eachLinode => !!eachLinode.maintenance)
       : false,
