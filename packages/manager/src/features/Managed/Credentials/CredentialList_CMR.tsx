@@ -15,7 +15,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Typography from 'src/components/core/Typography';
 import DeletionDialog from 'src/components/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -60,11 +60,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: 5
     }
   },
-  credCell: {
-    width: '30%'
-  },
-  decryptCell: {
-    width: '60%'
+  actionCell: {
+    '&.emptyCell': {
+      fontSize: '0.875em !important',
+      borderTop: '2px solid #f4f5f6'
+    }
   }
 }));
 
@@ -271,7 +271,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
                             direction={order}
                             handleClick={handleOrderChange}
                             data-qa-credential-label-header
-                            className={classes.credCell}
+                            style={{ width: '30%' }}
                           >
                             Credential
                           </TableSortCell>
@@ -281,11 +281,11 @@ export const CredentialList: React.FC<CombinedProps> = props => {
                             direction={order}
                             handleClick={handleOrderChange}
                             data-qa-credential-decrypted-header
-                            className={classes.decryptCell}
+                            style={{ width: '60%' }}
                           >
                             Last Decrypted
                           </TableSortCell>
-                          <TableCell />
+                          <TableCell className={classes.actionCell} />
                         </TableRow>
                       </TableHead>
                       <TableBody>

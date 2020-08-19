@@ -49,10 +49,10 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = props => {
       className={classes.credentialRow}
       ariaLabel={`Credential ${credential.label}`}
     >
-      <TableCell parentColumn="Credential" data-qa-credential-label>
+      <TableCell data-qa-credential-label>
         <Typography variant="h3">{credential.label}</Typography>
       </TableCell>
-      <TableCell parentColumn="Last Decrypted" data-qa-credential-decrypted>
+      <TableCell data-qa-credential-decrypted>
         {/** If credential.last_decrypted is null, it has never been decrypted */}
         {credential.last_decrypted ? (
           <DateTimeDisplay value={credential.last_decrypted} />
