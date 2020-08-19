@@ -1,4 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
 import Clock from 'src/assets/icons/clock.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -9,6 +8,7 @@ import OpenSupportTickets from './OpenSupportTickets';
 import PastDue from './PastDue';
 import PendingActions from './PendingActions';
 import useAccount from 'src/hooks/useAccount';
+import { NotificationData } from './NotificationData/useNotificationData';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -35,16 +35,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  data: NotificationData;
   open: boolean;
-  events: Event[];
   onClose: () => void;
 }
 
 export const NotificationDrawer: React.FC<Props> = props => {
-  const { open, events, onClose } = props;
+  const { data, open, onClose } = props;
   const { account } = useAccount();
   const classes = useStyles();
   const balance = (account.data?.balance ?? 0) + 50;
+  const { community, pendingActions, support } = data;
+
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
       {balance > 0 ? <PastDue balance={balance} /> : null}
@@ -52,10 +54,18 @@ export const NotificationDrawer: React.FC<Props> = props => {
         <Clock />
       </div>
       <div className={classes.notificationSectionContainer}>
-        <PendingActions />
+        <PendingActions pendingActions={pendingActions} />
         <Maintenance />
-        <OpenSupportTickets />
-        <Community communityEvents={events} />
+        <OpenSupportTickets
+          loading={support.loading}
+          error={Boolean(support.error)}
+          openTickets={support.data}
+        />
+        <Community
+          communityEvents={community.events}
+          loading={community.loading}
+          error={Boolean(community.error)}
+        />
       </div>
     </Drawer>
   );

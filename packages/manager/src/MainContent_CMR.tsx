@@ -195,7 +195,6 @@ const MainContent: React.FC<CombinedProps> = props => {
           <Box
             style={{
               display: 'flex'
-              // justifyContent: 'flex-end'
             }}
           >
             <Logo width={150} height={87} className={classes.logo} />
@@ -236,8 +235,8 @@ const MainContent: React.FC<CombinedProps> = props => {
     >
       {/* @cmr */}
       <PrimaryNav_CMR
-        isCollapsed={false}
         closeMenu={() => toggleMenu(false)}
+        isCollapsed={false}
         toggleTheme={props.toggleTheme}
         toggleSpacing={props.toggleSpacing}
       />
