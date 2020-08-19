@@ -11,7 +11,12 @@ export interface OrderSet {
   orderBy: string;
 }
 
-export type SortKey = 'listening-services' | 'active-connections';
+export type SortKey =
+  | 'listening-services'
+  | 'active-connections'
+  | 'top-processes'
+  | 'lv-detail-processes';
+
 export interface UserPreferences {
   longviewTimeRange?: string;
   gst_banner_dismissed?: boolean;
