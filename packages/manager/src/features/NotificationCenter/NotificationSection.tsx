@@ -201,7 +201,7 @@ const ContentBody: React.FC<BodyProps> = React.memo(props => {
 // =============================================================================
 // Row
 // =============================================================================
-const ContentRow: React.FC<{
+export const ContentRow: React.FC<{
   item: NotificationItem;
 }> = React.memo(props => {
   const { item } = props;
