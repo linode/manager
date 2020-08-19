@@ -17,6 +17,6 @@ describe('Create a Domain', () => {
     ).type(label);
     cy.get('[data-testid="soa-email-input"]').type('devs@linode.com');
     cy.get('[data-testid="create-domain-submit"]').click();
-    cy.get('[data-qa-header').should('contain', label);
+    cy.get('[data-qa-header]').should('contain', label);
   });
 });
