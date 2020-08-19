@@ -48,7 +48,7 @@ import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import { ChartProps } from './types';
 import { parseAPIDate } from 'src/utilities/date';
-
+import getUserTimezone from 'src/utilities/getUserTimezone';
 setUpCharts();
 
 type ClassNames =
@@ -150,7 +150,7 @@ interface State {
 
 type CombinedProps = LinodeContextProps &
   WithTheme &
-  WithTypesProps &
+  StateProps &
   WithImages &
   WithStyles<ClassNames>;
 
@@ -521,7 +521,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeVolumesError: linode._volumesError
 }));
 
-interface WithTypesProps {
+interface StateProps {
   typesData: LinodeType[];
   timezone: string;
   inProgressEvents: Record<number, number>;
@@ -529,20 +529,16 @@ interface WithTypesProps {
   mostRecentEventTime: string;
 }
 
-const withTypes = connect((state: ApplicationState, _ownProps) => ({
+const connected = connect((state: ApplicationState, _ownProps) => ({
   typesData: state.__resources.types.entities,
-  timezone: pathOr(
-    'UTC',
-    ['__resources', 'profile', 'data', 'timezone'],
-    state
-  ),
+  timezone: getUserTimezone(state),
   inProgressEvents: state.events.inProgressEvents,
   events: state.events.events,
   mostRecentEventTime: state.events.mostRecentEventTime
 }));
 
 const enhanced = compose<CombinedProps, {}>(
-  withTypes,
+  connected,
   linodeContext,
   withImages(),
   withTheme,

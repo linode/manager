@@ -190,10 +190,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               title: 'Enable Backups',
               onClick: (e: React.MouseEvent<HTMLElement>) => {
                 sendLinodeActionMenuItemEvent('Enable Backups');
-                history.push({
-                  pathname: `/linodes/${linodeId}/backup`,
-                  state: { enableOnLoad: true }
-                });
+                openDialog('enable_backups', linodeId);
                 e.preventDefault();
                 e.stopPropagation();
               },
@@ -227,7 +224,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Rebuild',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
-            history.push(`/linodes/${linodeId}/rebuild`);
+            openDialog('rebuild', linodeId);
             e.preventDefault();
             e.stopPropagation();
           },

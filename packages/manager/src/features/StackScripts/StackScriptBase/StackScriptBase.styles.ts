@@ -35,7 +35,7 @@ const styles = (theme: Theme) =>
       top: 0,
       zIndex: 11,
       paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(3),
+      paddingBottom: '40px !important',
       backgroundColor: theme.bg.white
     },
     searchBar: {
