@@ -1,3 +1,5 @@
+import { Notification } from '@linode/api-v4/lib/account';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Region } from '@linode/api-v4/lib/regions/types';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
@@ -6,21 +8,30 @@ import { dcDisplayNames } from 'src/constants';
 import useLinodes from 'src/hooks/useLinodes';
 import useNotifications from 'src/hooks/useNotifications';
 import useRegions from 'src/hooks/useRegions';
-import {
-  addNotificationsToLinodes,
-  LinodeWithMaintenance
-} from 'src/store/linodes/linodes.helpers';
 import { NotificationItem } from '../NotificationSection';
+
+interface LinodeWithNotification extends Linode {
+  notification?: Notification;
+}
 
 export const useSystemStatusData = (): NotificationItem[] => {
   const { linodes } = useLinodes();
   const { entities: regions } = useRegions();
   const notifications = useNotifications();
 
-  const linodesWithNotifications = addNotificationsToLinodes(
-    notifications,
-    Object.values(linodes.itemsById)
-  ).filter(thisLinode => thisLinode.maintenance !== null);
+  const linodesWithNotifications = Object.values(linodes.itemsById).reduce(
+    (acc, thisLinode) => {
+      const notification = notifications.find(
+        thisNotification => thisNotification.entity?.id === thisLinode.id
+      );
+      if (!notification) {
+        return acc;
+      }
+      const linodeWithNotification = { ...thisLinode, notification };
+      return [...acc, linodeWithNotification];
+    },
+    []
+  );
 
   const linodeRegions = Object.values(linodes.itemsById).map(
     thisLinode => thisLinode.region
@@ -32,10 +43,23 @@ export const useSystemStatusData = (): NotificationItem[] => {
   );
 
   const outages = regionsWithOutages.map(regionToNotificationItem);
-  const maintenance = linodesWithNotifications.map(
-    maintenanceToNotificationItem
-  );
-  return [...outages, ...maintenance];
+
+  const inProgressMaintenance = linodesWithNotifications
+    .filter(thisLinode => thisLinode.status === 'stopped')
+    .map(inProgressMaintenanceToItem);
+
+  const data = [...outages, ...inProgressMaintenance];
+
+  const pendingMaintenance =
+    linodesWithNotifications.filter(
+      thisLinode => thisLinode.status !== 'stopped'
+    ).length > 0;
+
+  if (pendingMaintenance) {
+    data.push(pendingMaintenanceItem());
+  }
+
+  return data;
 };
 
 const regionToNotificationItem = (region: Region) => {
@@ -52,17 +76,15 @@ const regionToNotificationItem = (region: Region) => {
   };
 };
 
-const maintenanceToNotificationItem = (linode: LinodeWithMaintenance) => {
-  const maintenanceInProgress = linode.status === 'stopped';
-
+const inProgressMaintenanceToItem = (linode: LinodeWithNotification) => {
   return {
     id: `status-item-maintenance-${linode.id}`,
-    body: maintenanceInProgress ? (
+    body: (
       <Typography>
         <Link to={`/linodes/${linode.id}`}>{linode.label}&apos;s</Link> physical
         host is currently undergoing maintenance. During the maintenance, your
         Linode will be shut down
-        {linode.maintenance?.type.match(/migrate/i)
+        {linode.notification?.label.match(/migrate/i)
           ? ', cold migrated to a new host, '
           : ' and remain offline, '}
         then returned to its last state (running or powered off). Please refer
@@ -70,7 +92,14 @@ const maintenanceToNotificationItem = (linode: LinodeWithMaintenance) => {
         <Link to="/support/tickets"> your Support tickets </Link> for more
         information.
       </Typography>
-    ) : (
+    )
+  };
+};
+
+const pendingMaintenanceItem = () => {
+  return {
+    id: `status-item-maintenance-pending}`,
+    body: (
       <Typography>
         Maintenance is required for one or more of your Linodes&apos; physical
         hosts. Your maintenance times will be listed under the
