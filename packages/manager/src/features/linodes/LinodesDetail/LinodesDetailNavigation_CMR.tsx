@@ -24,7 +24,6 @@ const LinodeBackup_CMR = React.lazy(() =>
 );
 const LinodeResize = React.lazy(() => import('./LinodeResize'));
 const LinodeRescue = React.lazy(() => import('./LinodeRescue'));
-const LinodeRebuild = React.lazy(() => import('./LinodeRebuild'));
 const LinodeActivity_CMR = React.lazy(() =>
   import('./LinodeActivity/LinodeActivity_CMR')
 );
@@ -74,10 +73,6 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     {
       routeName: `${url}/rescue`,
       title: 'Rescue'
-    },
-    {
-      routeName: `${url}/rebuild`,
-      title: 'Rebuild'
     },
     {
       routeName: `${url}/activity`,
@@ -133,14 +128,10 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
           </SafeTabPanel>
 
           <SafeTabPanel index={7}>
-            <LinodeRebuild />
-          </SafeTabPanel>
-
-          <SafeTabPanel index={8}>
             <LinodeActivity_CMR />
           </SafeTabPanel>
 
-          <SafeTabPanel index={9}>
+          <SafeTabPanel index={8}>
             <LinodeSettings_CMR />
           </SafeTabPanel>
         </TabPanels>
