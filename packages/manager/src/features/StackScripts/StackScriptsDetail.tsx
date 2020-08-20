@@ -1,6 +1,12 @@
-import { getStackScript, StackScript } from '@linode/api-v4/lib/stackscripts';
-import { path } from 'ramda';
+import {
+  getStackScript,
+  StackScript,
+  updateStackScript,
+  deleteStackScript
+} from '@linode/api-v4/lib/stackscripts';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -19,24 +25,44 @@ import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
-import { getStackScriptUrl, StackScriptCategory } from './stackScriptUtils';
-import EntityHeader from 'src/components/EntityHeader';
-import StackScriptActionMenu from './StackScriptPanel/StackScriptActionMenu_CMR';
+import {
+  getStackScriptUrl,
+  StackScriptCategory,
+  canUserModifyAccountStackScript
+} from './stackScriptUtils';
 import withFeatureFlagConsumerContainer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
-import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import {
+  hasGrant,
+  isRestrictedUser as _isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
+import StackScriptDetailsHeader from './StackScriptDetailsHeader';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ActionsPanel from 'src/components/ActionsPanel';
+import { Grant } from '@linode/api-v4/lib/account/types';
+import { MapState } from 'src/store/types';
+
+interface DialogVariantProps {
+  open: boolean;
+  submitting: boolean;
+  error?: string;
+}
+
+interface DialogState {
+  makePublic: DialogVariantProps;
+  delete: DialogVariantProps;
+  stackScriptID: number | undefined;
+  stackScriptLabel: string;
+}
 
 interface MatchProps {
   stackScriptId: string;
 }
 
 interface Props {
-  triggerDelete: (id: number, label: string) => void;
-  triggerMakePublic: (id: number, label: string) => void;
   canModify: boolean;
   canAddLinodes: boolean;
-  isPublic: boolean;
   // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
   // Leaving this in as an escape hatch now, since there's a bunch of code in
   // /LandingPanel that uses different values for categories that we shouldn't
@@ -45,9 +71,14 @@ interface Props {
 }
 
 type RouteProps = RouteComponentProps<MatchProps>;
+
 interface State {
   loading: boolean;
   stackScript?: StackScript;
+  dialog: DialogState;
+  isRestrictedUser: boolean;
+  stackScriptGrants: Grant[];
+  userCannotAddLinodes: boolean;
 }
 
 type ClassNames = 'root' | 'cta' | 'button' | 'userName' | 'userNameSlash';
@@ -92,11 +123,31 @@ type CombinedProps = ProfileProps &
 export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   state: State = {
     loading: true,
-    stackScript: undefined
+    stackScript: undefined,
+    dialog: {
+      makePublic: {
+        open: false,
+        submitting: false
+      },
+      delete: {
+        open: false,
+        submitting: false
+      },
+      stackScriptID: undefined,
+      stackScriptLabel: ''
+    },
+    isRestrictedUser: false,
+    stackScriptGrants: [],
+    userCannotAddLinodes: false
   };
+
+  //TODO do we even need this?
+  mounted: boolean = false;
 
   componentDidMount() {
     const { stackScriptId } = this.props.match.params;
+
+    this.mounted = true;
 
     getStackScript(+stackScriptId)
       .then(stackScript => {
@@ -107,7 +158,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       });
   }
 
-  handleClick = () => {
+  handleCreateClick = () => {
     const { history, username } = this.props;
     const { stackScript } = this.state;
     if (!stackScript) {
@@ -121,18 +172,241 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
     history.push(url);
   };
 
+  handleOpenDeleteDialog = (id: number, label: string) => {
+    this.setState({
+      dialog: {
+        delete: {
+          open: true,
+          submitting: false
+        },
+        makePublic: {
+          open: false,
+          submitting: false
+        },
+        stackScriptID: id,
+        stackScriptLabel: label
+      }
+    });
+  };
+
+  handleOpenMakePublicDialog = (id: number, label: string) => {
+    this.setState({
+      dialog: {
+        delete: {
+          open: false,
+          submitting: false
+        },
+        makePublic: {
+          open: true,
+          submitting: false
+        },
+        stackScriptID: id,
+        stackScriptLabel: label
+      }
+    });
+  };
+
+  handleCloseDialog = () => {
+    this.setState({
+      dialog: {
+        ...this.state.dialog,
+        delete: {
+          open: false,
+          submitting: false
+        },
+        makePublic: {
+          open: false,
+          submitting: false
+        }
+      }
+    });
+  };
+
+  handleDeleteStackScript = () => {
+    const { dialog } = this.state;
+    this.setState({
+      dialog: {
+        ...dialog,
+        delete: {
+          ...dialog.delete,
+          submitting: true,
+          error: undefined
+        }
+      }
+    });
+    deleteStackScript(this.state.dialog.stackScriptID!)
+      .then(_ => {
+        if (!this.mounted) {
+          return;
+        }
+        this.setState({
+          dialog: {
+            delete: {
+              open: false,
+              submitting: false
+            },
+            makePublic: {
+              open: false,
+              submitting: false
+            },
+            stackScriptID: undefined,
+            stackScriptLabel: ''
+          }
+        });
+        // this.props.getDataAtPage(1, this.props.currentFilter, true);
+      })
+      .catch(e => {
+        if (!this.mounted) {
+          return;
+        }
+        this.setState({
+          dialog: {
+            ...dialog,
+            delete: {
+              open: true,
+              submitting: false,
+              error: e[0].reason
+            },
+            makePublic: {
+              open: false,
+              submitting: false
+            }
+          }
+        });
+      });
+  };
+
+  handleMakePublic = () => {
+    const { dialog } = this.state;
+    //const { currentFilter } = this.props;
+
+    updateStackScript(dialog.stackScriptID!, { is_public: true })
+      .then(_ => {
+        if (!this.mounted) {
+          return;
+        }
+        this.setState({
+          successMessage: `${dialog.stackScriptLabel} successfully published to the public library`,
+          dialog: {
+            delete: {
+              open: false,
+              submitting: false
+            },
+            makePublic: {
+              open: false,
+              submitting: false
+            },
+            stackScriptID: undefined,
+            stackScriptLabel: ''
+          }
+        });
+        //this.props.getDataAtPage(1, currentFilter, true);
+      })
+      .catch(_ => {
+        if (!this.mounted) {
+          return;
+        }
+        this.setState({
+          dialog: {
+            delete: {
+              open: false,
+              submitting: false
+            },
+            makePublic: {
+              open: false,
+              submitting: false
+            },
+            stackScriptID: undefined,
+            stackScriptLabel: ''
+          },
+          fieldError: {
+            reason: 'Unable to complete your request at this time'
+          }
+        });
+      });
+  };
+
+  renderConfirmMakePublicActions = () => {
+    return (
+      <ActionsPanel>
+        <Button buttonType="cancel" onClick={this.handleCloseDialog}>
+          Cancel
+        </Button>
+        <Button
+          buttonType="secondary"
+          destructive
+          onClick={this.handleMakePublic}
+        >
+          Yes, make me a star!
+        </Button>
+      </ActionsPanel>
+    );
+  };
+
+  renderConfirmDeleteActions = () => {
+    return (
+      <ActionsPanel>
+        <Button buttonType="cancel" onClick={this.handleCloseDialog}>
+          Cancel
+        </Button>
+        <Button
+          buttonType="secondary"
+          destructive
+          onClick={this.handleDeleteStackScript}
+          loading={this.state.dialog.delete.submitting}
+        >
+          Delete
+        </Button>
+      </ActionsPanel>
+    );
+  };
+
+  renderDeleteStackScriptDialog = () => {
+    const { dialog } = this.state;
+
+    return (
+      <ConfirmationDialog
+        title={`Delete ${dialog.stackScriptLabel}?`}
+        open={dialog.delete.open}
+        actions={this.renderConfirmDeleteActions}
+        onClose={this.handleCloseDialog}
+        error={dialog.delete.error}
+      >
+        <Typography>
+          Are you sure you want to delete this StackScript?
+        </Typography>
+      </ConfirmationDialog>
+    );
+  };
+
+  renderMakePublicDialog = () => {
+    const { dialog } = this.state;
+
+    return (
+      <ConfirmationDialog
+        title={`Woah, just a word of caution...`}
+        open={dialog.makePublic.open}
+        actions={this.renderConfirmMakePublicActions}
+        onClose={this.handleCloseDialog}
+      >
+        <Typography>
+          Are you sure you want to make {dialog.stackScriptLabel} public? This
+          action cannot be undone, nor will you be able to delete the
+          StackScript once made available to the public.
+        </Typography>
+      </ConfirmationDialog>
+    );
+  };
+
   render() {
+    const { classes, username, flags } = this.props;
     const {
-      classes,
-      triggerDelete,
-      triggerMakePublic,
-      isPublic,
-      category,
-      canAddLinodes,
-      canModify,
-      flags
-    } = this.props;
-    const { loading, stackScript } = this.state;
+      loading,
+      stackScript,
+      userCannotAddLinodes,
+      isRestrictedUser,
+      stackScriptGrants
+    } = this.state;
 
     if (loading) {
       return <CircleProgress />;
@@ -151,26 +425,27 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
     return (
       <React.Fragment>
         {flags.cmr ? (
-          <EntityHeader
-            title={stackScript.label}
-            parentLink="/stackscripts"
-            parentText="Stackscripts"
-            iconType="stackscript"
-            isSecondary
-            actions={
-              <StackScriptActionMenu
-                stackScriptID={stackScript.id}
-                stackScriptUsername={stackScript.username}
-                stackScriptLabel={stackScript.label}
-                triggerDelete={triggerDelete}
-                triggerMakePublic={triggerMakePublic}
-                canModify={canModify}
-                canAddLinodes={canAddLinodes}
-                isPublic={isPublic}
-                category={category}
-              />
-            }
-          />
+          <>
+            <StackScriptDetailsHeader
+              isPublic={stackScript.is_public}
+              category={
+                stackScript.username === username ? 'account' : 'community'
+              }
+              stackScriptID={stackScript.id}
+              stackScriptLabel={stackScript.label}
+              stackScriptUsername={stackScript.username}
+              canModify={canUserModifyAccountStackScript(
+                isRestrictedUser,
+                stackScriptGrants,
+                stackScript.id
+              )}
+              canAddLinodes={!userCannotAddLinodes}
+              triggerDelete={this.handleOpenDeleteDialog}
+              triggerMakePublic={this.handleOpenMakePublicDialog}
+            />
+            {this.renderDeleteStackScriptDialog()}
+            {this.renderMakePublicDialog()}
+          </>
         ) : (
           <Grid container justify="space-between" alignItems="center">
             <Grid item>
@@ -190,7 +465,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
               <Button
                 buttonType="primary"
                 className={classes.button}
-                onClick={this.handleClick}
+                onClick={this.handleCreateClick}
                 data-qa-stack-deploy
               >
                 Deploy New Linode
@@ -206,7 +481,27 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   }
 }
 
-export default compose<CombinedProps, {}>(
+interface StateProps {
+  isRestrictedUser: boolean;
+  stackScriptGrants: Grant[];
+  userCannotAddLinodes: boolean;
+}
+
+const mapStateToProps: MapState<StateProps, {}> = state => ({
+  isRestrictedUser: _isRestrictedUser(state),
+  stackScriptGrants: pathOr(
+    [],
+    ['__resources', 'profile', 'data', 'grants', 'stackscript'],
+    state
+  ),
+  userCannotAddLinodes:
+    _isRestrictedUser(state) && !hasGrant(state, 'add_linodes')
+});
+
+const connected = connect(mapStateToProps);
+
+const enhanced = compose<CombinedProps, {}>(
+  connected,
   setDocs([StackScriptsDocs]),
   withProfile((ownProps, { profileData: profile }) => {
     return {
@@ -215,4 +510,6 @@ export default compose<CombinedProps, {}>(
   }),
   withStyles(styles),
   withFeatureFlagConsumerContainer
-)(StackScriptsDetail);
+);
+
+export default enhanced(StackScriptsDetail);
