@@ -20,11 +20,11 @@ describe('rescue linode', () => {
       cy.visit(rescueUrl);
       rebootInRescueMode();
       // check mocked response and make sure UI responded correctly
+      assertToast('Linode rescue started.');
       cy.wait('@postRebootInRescueMode')
         .its('status')
         .should('eq', 200);
-      assertToast('Linode rescue started.');
-      cy.url().should('endWith', `linodes/${linode.id}/rescue`);
+      cy.url().should('endWith', `linodes/${linode.id}/summary`);
       deleteLinodeById(linode.id);
     });
   });
