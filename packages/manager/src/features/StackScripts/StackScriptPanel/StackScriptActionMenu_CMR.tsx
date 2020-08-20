@@ -74,7 +74,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
     canModify,
     isPublic,
     username,
-    category,
+    // category,
     canAddLinodes
   } = props;
 
@@ -92,7 +92,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       // We only add the "Edit" option if the current tab/category isn't
       // "Community StackScripts". A user's own public StackScripts are still
       // editable under "Account StackScripts".
-      if (category === 'account' && matchesSmDown) {
+      if (matchesSmDown) {
         actions.push({
           title: 'Details',
           ...readonlyProps,
@@ -144,17 +144,15 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
     <div className={classes.stackScriptActionsWrapper}>
       <Hidden smDown>
         <div className="flexCenter">
-          {category === 'account' && (
-            <button
-              className={classes.button}
-              onClick={() => {
-                history.push(`/stackscripts/${stackScriptID}/edit`);
-              }}
-              disabled={!canModify}
-            >
-              Details
-            </button>
-          )}
+          <button
+            className={classes.button}
+            onClick={() => {
+              history.push(`/stackscripts/${stackScriptID}/edit`);
+            }}
+            disabled={!canModify}
+          >
+            Details
+          </button>
 
           <button
             className={classes.button}
@@ -170,19 +168,10 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
         </div>
       </Hidden>
 
-      {isPublic || category === 'community' ? (
-        <Hidden mdUp>
-          <ActionMenu
-            createActions={createActions()}
-            ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
-          />
-        </Hidden>
-      ) : (
-        <ActionMenu
-          createActions={createActions()}
-          ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
-        />
-      )}
+      <ActionMenu
+        createActions={createActions()}
+        ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
+      />
     </div>
   );
 };
