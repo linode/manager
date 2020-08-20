@@ -76,6 +76,10 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
       title: 'Rescue'
     },
     {
+      routeName: `${url}/rebuild`,
+      title: 'Rebuild'
+    },
+    {
       routeName: `${url}/activity`,
       title: 'Activity Logs'
     },
