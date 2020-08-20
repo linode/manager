@@ -19,21 +19,13 @@ import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
-import {
-  getStackScriptUrl,
-  StackScriptCategory,
-  canUserModifyAccountStackScript
-} from './stackScriptUtils';
+import { getStackScriptUrl, StackScriptCategory } from './stackScriptUtils';
 import EntityHeader from 'src/components/EntityHeader';
 import StackScriptActionMenu from './StackScriptPanel/StackScriptActionMenu_CMR';
 import withFeatureFlagConsumerContainer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
-import {
-  hasGrant,
-  isRestrictedUser as _isRestrictedUser
-} from 'src/features/Profile/permissionsHelpers';
-import { Grant } from '@linode/api-v4/lib/account/types';
+import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 
 interface MatchProps {
   stackScriptId: string;
@@ -56,8 +48,6 @@ type RouteProps = RouteComponentProps<MatchProps>;
 interface State {
   loading: boolean;
   stackScript?: StackScript;
-  isRestrictedUser: boolean;
-  stackScriptGrants: Grant;
 }
 
 type ClassNames = 'root' | 'cta' | 'button' | 'userName' | 'userNameSlash';
@@ -103,8 +93,6 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   state: State = {
     loading: true,
     stackScript: undefined
-    // isRestrictedUser: ,
-    // stackScriptGrants:
   };
 
   componentDidMount() {
@@ -141,14 +129,10 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       isPublic,
       category,
       canAddLinodes,
+      canModify,
       flags
     } = this.props;
-    const {
-      loading,
-      stackScript,
-      isRestrictedUser,
-      stackScriptGrants
-    } = this.state;
+    const { loading, stackScript } = this.state;
 
     if (loading) {
       return <CircleProgress />;
@@ -180,11 +164,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
                 stackScriptLabel={stackScript.label}
                 triggerDelete={triggerDelete}
                 triggerMakePublic={triggerMakePublic}
-                canModify={canUserModifyAccountStackScript(
-                  isRestrictedUser,
-                  stackScriptGrants,
-                  stackScript.id
-                )}
+                canModify={canModify}
                 canAddLinodes={canAddLinodes}
                 isPublic={isPublic}
                 category={category}

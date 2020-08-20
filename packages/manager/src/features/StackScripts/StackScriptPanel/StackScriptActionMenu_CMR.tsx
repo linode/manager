@@ -18,6 +18,7 @@ import {
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
+    fontSize: 14,
     height: '100%',
     minWidth: '70px',
     padding: '12px 10px',
@@ -27,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: '#3683dc',
       color: theme.color.white
     }
+  },
+  stackScriptActionsWrapper: {
+    display: 'flex'
   }
 }));
 
@@ -134,7 +138,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
     };
   };
   return (
-    <>
+    <div className={classes.stackScriptActionsWrapper}>
       <Hidden smDown>
         <div className="flexCenter">
           <button
@@ -164,7 +168,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
         createActions={createActions()}
         ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
       />
-    </>
+    </div>
   );
 };
 
