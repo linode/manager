@@ -1,7 +1,15 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 
 interface Props {
@@ -32,38 +40,65 @@ const CredentialActionMenu: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const onClickForEdit = (e: React.MouseEvent<HTMLElement>) => {
+    openForEdit(credentialID);
+    e.preventDefault();
+  };
+
+  const onClickForDelete = (e: React.MouseEvent<HTMLElement>) => {
+    openDialog(credentialID, label);
+    e.preventDefault();
+  };
+
+  const actions: Action[] = [
+    {
+      title: 'Edit',
+      onClick: onClickForEdit
+    },
+    {
+      title: 'Delete',
+      onClick: onClickForDelete
+    }
+  ];
+
   const inlineActions = [
     {
       actionText: 'Edit',
       className: classes.action,
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
-        openForEdit(credentialID);
-        // closeMenu();
-        e.preventDefault();
-      }
+      onClick: onClickForEdit
     },
     {
       actionText: 'Delete',
       className: classes.action,
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
-        openDialog(credentialID, label);
-        e.preventDefault();
-      }
+      onClick: onClickForDelete
     }
   ];
 
   return (
-    <div className={classes.actionInner}>
-      {inlineActions.map(action => {
-        return (
-          <InlineMenuAction
-            key={action.actionText}
-            actionText={action.actionText}
-            onClick={action.onClick}
-          />
-        );
-      })}
-    </div>
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {matchesSmDown ? (
+        <ActionMenu
+          createActions={() => actions}
+          ariaLabel={`Action menu for Managed Credentials for ${label}`}
+        />
+      ) : (
+        <div className={classes.actionInner}>
+          {inlineActions.map(action => {
+            return (
+              <InlineMenuAction
+                key={action.actionText}
+                actionText={action.actionText}
+                onClick={action.onClick}
+              />
+            );
+          })}
+        </div>
+      )}
+    </>
   );
 };
 
