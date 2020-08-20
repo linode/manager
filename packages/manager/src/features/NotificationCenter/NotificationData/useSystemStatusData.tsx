@@ -20,7 +20,7 @@ export const useSystemStatusData = (): NotificationItem[] => {
   const linodesWithNotifications = addNotificationsToLinodes(
     notifications,
     Object.values(linodes.itemsById)
-  );
+  ).filter(thisLinode => thisLinode.maintenance !== null);
 
   const linodeRegions = Object.values(linodes.itemsById).map(
     thisLinode => thisLinode.region
