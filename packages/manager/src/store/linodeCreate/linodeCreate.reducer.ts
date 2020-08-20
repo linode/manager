@@ -11,7 +11,7 @@ export const getInitialType = (): CreateTypes => {
   let queryParams;
   try {
     queryParams = parse(location.search.replace('?', '').toLowerCase());
-  } catch {
+  } catch (e) {
     // Broken query params shouldn't break the app, just default to fromImage
     return 'fromImage';
   }
@@ -28,7 +28,7 @@ export const getInitialType = (): CreateTypes => {
        * we have a subtype in the query string so now we need to deduce what
        * endpoint we should be POSTing to based on what is in the query params
        */
-      if (normalizedSubtype.includes('stackscript')) {
+      if (normalizedSubtype.includes('community' || 'account')) {
         return 'fromStackScript';
       } else if (normalizedSubtype.includes('clone')) {
         return 'fromLinode';
@@ -52,6 +52,10 @@ export const getInitialType = (): CreateTypes => {
         return 'fromApp';
       } else if (normalizedType.includes('images')) {
         return 'fromImage';
+      } else if (normalizedType.includes('backup')) {
+        return 'fromBackup';
+      } else if (normalizedType.includes('clone')) {
+        return 'fromLinode';
       } else {
         return 'fromImage';
       }

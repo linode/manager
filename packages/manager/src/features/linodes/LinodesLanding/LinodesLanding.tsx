@@ -60,6 +60,7 @@ import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import DeleteDialog from './DeleteDialog';
+import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue/RescueDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import DisplayLinodes from './DisplayLinodes';
@@ -69,6 +70,7 @@ import ListView from './ListView';
 import ToggleBox from './ToggleBox';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { ExtendedStatus, statusToPriority } from './utils';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 
@@ -80,6 +82,7 @@ interface State {
   selectedLinodeID?: number;
   selectedLinodeLabel?: string;
   deleteDialogOpen: boolean;
+  rebuildDialogOpen: boolean;
   rescueDialogOpen: boolean;
   groupByTag: boolean;
   CtaDismissed: boolean;
@@ -110,6 +113,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     enableBackupsDialogOpen: false,
     powerDialogOpen: false,
     deleteDialogOpen: false,
+    rebuildDialogOpen: false,
     rescueDialogOpen: false,
     groupByTag: false,
     CtaDismissed: BackupsCtaDismissed.get(),
@@ -173,6 +177,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           linodeMigrateOpen: true
         });
         break;
+      case 'rebuild':
+        this.setState({
+          rebuildDialogOpen: true
+        });
+        break;
       case 'rescue':
         this.setState({
           rescueDialogOpen: true
@@ -194,6 +203,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({
       powerDialogOpen: false,
       deleteDialogOpen: false,
+      rebuildDialogOpen: false,
       rescueDialogOpen: false,
       linodeResizeOpen: false,
       linodeMigrateOpen: false,
@@ -318,6 +328,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               open={this.state.linodeMigrateOpen}
               onClose={this.closeDialogs}
               linodeID={this.state.selectedLinodeID ?? -1}
+            />
+            <LinodeRebuildDialog
+              open={this.state.rebuildDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
             />
             <RescueDialog
               open={this.state.rescueDialogOpen}
@@ -735,7 +750,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
       : false,
     linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
-    userTimezone: state.__resources.profile.data?.timezone ?? '',
+    userTimezone: getUserTimezone(state),
     userTimezoneLoading: state.__resources.profile.loading,
     userTimezoneError: path<APIError[]>(
       ['read'],
