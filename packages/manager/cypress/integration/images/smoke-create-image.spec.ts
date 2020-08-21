@@ -1,5 +1,6 @@
-import { makeImageLabel, deleteAllTestImages } from '../../support/api/images';
+import { makeImageLabel } from '../../support/api/images';
 import { createLinode } from '../../support/api/linodes';
+import { deleteLinodeById } from '../../support/api/linodes.ts';
 
 describe('create linode', () => {
   it('creates first image', () => {
@@ -72,8 +73,10 @@ describe('create linode', () => {
       cy.wait('@postImages')
         .its('status')
         .should('eq', 200);
+
+      deleteLinodeById(linode.id);
+      // do not need to delete images, as the post is stubbed
     });
 
-    deleteAllTestImages();
   });
 });
