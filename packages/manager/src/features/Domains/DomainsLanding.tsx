@@ -194,6 +194,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   componentDidMount = () => {
     const {
       domainForEditing,
+      domainsLastUpdated,
       isLargeAccount,
       openForEditing,
       getAllDomains
@@ -204,7 +205,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       openForEditing(domainLabel, domainId);
     }
 
-    if (!isLargeAccount) {
+    if (!isLargeAccount && domainsLastUpdated === 0) {
       getAllDomains();
     }
   };
