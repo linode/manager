@@ -192,11 +192,20 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   static docs: Linode.Doc[] = [Domains];
 
   componentDidMount = () => {
-    const { domainForEditing, openForEditing } = this.props;
+    const {
+      domainForEditing,
+      isLargeAccount,
+      openForEditing,
+      getAllDomains
+    } = this.props;
     // Open the "Edit Domain" drawer if so specified by this component's props.
     if (domainForEditing) {
       const { domainId, domainLabel } = domainForEditing;
       openForEditing(domainLabel, domainId);
+    }
+
+    if (!isLargeAccount) {
+      getAllDomains();
     }
   };
 

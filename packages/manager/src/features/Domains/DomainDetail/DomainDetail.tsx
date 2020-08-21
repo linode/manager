@@ -23,7 +23,7 @@ import { getAllWithArguments } from 'src/utilities/getAll';
 
 import Loading from 'src/components/LandingLoading';
 
-import DomainRecords from './DomainRecordsWrapper';
+import DomainRecords from '../DomainRecordsWrapper';
 
 type RouteProps = RouteComponentProps<{ domainId?: string }>;
 
