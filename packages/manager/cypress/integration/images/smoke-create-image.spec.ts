@@ -1,9 +1,9 @@
 import { makeImageLabel } from '../../support/api/images';
-import { createLinode } from '../../support/api/linodes';
-import { deleteLinodeById } from '../../support/api/linodes.ts';
+import { createLinode, deleteLinodeById } from '../../support/api/linodes';
+import { assertToast } from '../../support/ui/events';
 
-describe('create linode', () => {
-  it('creates first image', () => {
+describe('create image', () => {
+  it('creates first image w/ drawer, and fail because POST is stubbed', () => {
     cy.server();
     cy.route({
       method: 'GET',
@@ -62,9 +62,8 @@ describe('create linode', () => {
         .type(`Debian{enter}`);
 
       cy.findAllByLabelText('Label').type(`${imageLabel}{enter}`);
-      // Line should be removed once bug fixed
-      cy.findByText('Snap', { exact: false, timeout: 1000 }).should(
-        'not.exist'
+      cy.findAllByLabelText('Description').type(
+        `${imageLabel} is an amazing image`
       );
       // here we should also stube the post to catch the call
       cy.findByText('Create')
@@ -73,10 +72,13 @@ describe('create linode', () => {
       cy.wait('@postImages')
         .its('status')
         .should('eq', 200);
-
+      cy.url().should('endWith', 'images');
+      // the image name should be in the table
+      cy.findByText(imageLabel).should('be.visible');
+      // this toast should check the failure as we stubbed the post
+      assertToast(`Error creating Image ${imageLabel}.`);
       deleteLinodeById(linode.id);
       // do not need to delete images, as the post is stubbed
     });
-
   });
 });
