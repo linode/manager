@@ -237,7 +237,7 @@
     "mixin-deep": "^2.0.1",
     "mongodb": "^3.1.13",
     "mountebank": "^1.14.1",
-    "msw": "^0.19.3",
+    "msw": "~0.20.5",
     "otplib": "^10.0.1",
     "postcss-flexbugs-fixes": "^4.1.0",
     "postcss-loader": "^3.0.0",
@@ -287,7 +287,7 @@
     "testPathIgnorePatterns": [
       "<rootDir>/src/components/Storyshots.test.tsx"
     ],
-    "testURL": "http://localhost",
+    "testURL": "https://api.linode.com",
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
