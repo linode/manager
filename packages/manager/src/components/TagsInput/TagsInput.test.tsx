@@ -11,14 +11,13 @@ const mockGetTags = jest.spyOn<any, any>(tags, 'getTags');
 describe('TagsInput', () => {
   const onChange = jest.fn();
 
-  const { getByTestId, queryAllByTestId } = renderWithTheme(
-    <TagsInput
-      value={'mockvalue' as any} // We're mocking this component so ignore the Props typing
-      onChange={onChange}
-    />
-  );
-
   it('sets account tags based on API request', async () => {
+    const { getByTestId, queryAllByTestId } = renderWithTheme(
+      <TagsInput
+        value={'mockvalue' as any} // We're mocking this component so ignore the Props typing
+        onChange={onChange}
+      />
+    );
     fireEvent.click(getByTestId('select'));
     await waitFor(() =>
       expect(queryAllByTestId('mock-option')).toHaveLength(5)
@@ -27,9 +26,16 @@ describe('TagsInput', () => {
   });
 
   it('calls onChange handler when the value is updated', async () => {
-    fireEvent.change(getByTestId('select'), {
+    const { findByTestId } = renderWithTheme(
+      <TagsInput
+        value={'mockvalue' as any} // We're mocking this component so ignore the Props typing
+        onChange={onChange}
+      />
+    );
+    fireEvent.change(await findByTestId('select'), {
       target: { value: 'tag-2' }
     });
+    // console.log(onChange.mock.calls);
     await waitFor(() =>
       expect(onChange).toHaveBeenCalledWith([
         { label: 'tag-2', value: 'tag-2' }
