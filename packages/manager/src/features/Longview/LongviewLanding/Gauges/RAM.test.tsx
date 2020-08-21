@@ -1,4 +1,4 @@
-import { cleanup, waitForElement } from '@testing-library/react';
+import { cleanup, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { memory } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -53,7 +53,7 @@ describe('Longview RAM Gauge UI', () => {
       customStore: errorStore
     });
 
-    const resolvedDiv = await waitForElement(() => getByText(/Error/));
+    const resolvedDiv = await waitFor(() => getByText(/Error/));
 
     expect(resolvedDiv).toHaveTextContent(/Error/);
     done();
@@ -64,10 +64,8 @@ describe('Longview RAM Gauge UI', () => {
       customStore: dataStore
     });
 
-    const innerText = await waitForElement(() =>
-      getByTestId('gauge-innertext')
-    );
-    const subtext = await waitForElement(() => getByTestId('gauge-subtext'));
+    const innerText = await waitFor(() => getByTestId('gauge-innertext'));
+    const subtext = await waitFor(() => getByTestId('gauge-subtext'));
     done();
 
     expect(innerText).toHaveTextContent('4.69 MB');
