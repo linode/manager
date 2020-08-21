@@ -80,7 +80,11 @@ export const PastDue: React.FC<Props> = props => {
     return (
       <div
         className={classes.root}
-        style={{ display: 'flex', justifyContent: 'center' }}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
       >
         <CircleProgress mini />
       </div>
