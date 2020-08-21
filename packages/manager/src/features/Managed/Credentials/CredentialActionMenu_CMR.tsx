@@ -26,10 +26,6 @@ const useStyles = makeStyles(() => ({
     '& a': {
       lineHeight: '1rem'
     }
-  },
-  action: {
-    marginLeft: 10,
-    padding: '12px 10px'
   }
 }));
 
@@ -64,19 +60,6 @@ const CredentialActionMenu: React.FC<CombinedProps> = props => {
     }
   ];
 
-  const inlineActions = [
-    {
-      actionText: 'Edit',
-      className: classes.action,
-      onClick: onClickForEdit
-    },
-    {
-      actionText: 'Delete',
-      className: classes.action,
-      onClick: onClickForDelete
-    }
-  ];
-
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
@@ -87,11 +70,11 @@ const CredentialActionMenu: React.FC<CombinedProps> = props => {
         />
       ) : (
         <div className={classes.actionInner}>
-          {inlineActions.map(action => {
+          {actions.map(action => {
             return (
               <InlineMenuAction
-                key={action.actionText}
-                actionText={action.actionText}
+                key={action.title}
+                actionText={action.title}
                 onClick={action.onClick}
               />
             );
