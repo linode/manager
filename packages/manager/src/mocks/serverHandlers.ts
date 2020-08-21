@@ -193,6 +193,7 @@ export const handlers = [
     return res(ctx.json({}));
   }),
   rest.get('*/tags', (req, res, ctx) => {
+    tagFactory.resetSequenceNumber();
     const tags = tagFactory.buildList(5);
     return res(ctx.json(makeResourcePage(tags)));
   }),

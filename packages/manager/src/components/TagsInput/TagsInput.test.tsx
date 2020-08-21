@@ -1,5 +1,6 @@
 import * as tags from '@linode/api-v4/lib/tags/tags';
 import { fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -26,16 +27,18 @@ describe('TagsInput', () => {
   });
 
   it('calls onChange handler when the value is updated', async () => {
-    const { findByTestId } = renderWithTheme(
+    const { findByTestId, queryAllByTestId } = renderWithTheme(
       <TagsInput
         value={'mockvalue' as any} // We're mocking this component so ignore the Props typing
         onChange={onChange}
       />
     );
-    fireEvent.change(await findByTestId('select'), {
-      target: { value: 'tag-2' }
-    });
-    // console.log(onChange.mock.calls);
+    await waitFor(() =>
+      expect(queryAllByTestId('mock-option')).toHaveLength(5)
+    );
+
+    userEvent.selectOptions(await findByTestId('select'), 'tag-2');
+
     await waitFor(() =>
       expect(onChange).toHaveBeenCalledWith([
         { label: 'tag-2', value: 'tag-2' }

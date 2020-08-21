@@ -142,6 +142,7 @@
     "@testing-library/jest-dom": "~5.11.3",
     "@testing-library/react": "~10.4.8",
     "@testing-library/react-hooks": "~3.4.1",
+    "@testing-library/user-event": "^12.1.1",
     "@types/algoliasearch": "^3.27.5",
     "@types/bluebird": "^3.5.20",
     "@types/chart.js": "^2.9.21",
