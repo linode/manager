@@ -349,8 +349,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner
             userTimezone={this.props.userTimezone}
-            userTimezoneError={this.props.userTimezoneError}
-            userTimezoneLoading={this.props.userTimezoneLoading}
+            userProfileError={this.props.userProfileError}
+            userProfileLoading={this.props.userProfileLoading}
           />
         )}
         <Grid container>
@@ -723,8 +723,8 @@ interface StateProps {
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   userTimezone: string;
-  userTimezoneLoading: boolean;
-  userTimezoneError?: APIError[];
+  userProfileLoading: boolean;
+  userProfileError?: APIError[];
   someLinodesHaveScheduledMaintenance: boolean;
   linodesInTransition: Set<number>;
 }
@@ -751,8 +751,8 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
     userTimezone: getUserTimezone(state),
-    userTimezoneLoading: state.__resources.profile.loading,
-    userTimezoneError: path<APIError[]>(
+    userProfileLoading: state.__resources.profile.loading,
+    userProfileError: path<APIError[]>(
       ['read'],
       state.__resources.profile.error
     ),
