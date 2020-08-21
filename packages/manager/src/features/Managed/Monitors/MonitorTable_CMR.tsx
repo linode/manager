@@ -245,8 +245,8 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                           Status
                         </TableSortCell>
                         <TableSortCell
-                          active={orderBy === 'resource'}
-                          label={'resource'}
+                          active={orderBy === 'address'}
+                          label={'address'}
                           direction={order}
                           handleClick={handleOrderChange}
                           data-qa-monitor-resource-header
