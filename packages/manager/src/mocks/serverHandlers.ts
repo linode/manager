@@ -9,6 +9,7 @@ import {
   firewallDeviceFactory,
   kubernetesClusterFactory,
   kubeEndpointFactory,
+  invoiceFactory,
   invoiceItemFactory,
   nodePoolFactory,
   linodeConfigFactory,
@@ -165,6 +166,10 @@ export const handlers = [
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();
     return res(ctx.json(transfer));
+  }),
+  rest.get('*/account/invoices', (req, res, ctx) => {
+    const invoices = invoiceFactory.buildList(10);
+    return res(ctx.delay(5000), ctx.json(makeResourcePage(invoices)));
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(10);

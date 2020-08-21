@@ -37,9 +37,16 @@ export const useNotificationContext = (): NotificationContextProps => {
       getEvents(
         {},
         {
-          created: {
-            '+gt': mostRecentLogin
-          }
+          '+and': [
+            { created: { '+gt': mostRecentLogin } },
+            {
+              '+or': [
+                { action: 'community_like' },
+                { action: 'community_question_reply' },
+                { action: 'community_mention' }
+              ]
+            }
+          ]
         }
       )
         .then(response => {
@@ -54,12 +61,16 @@ export const useNotificationContext = (): NotificationContextProps => {
   }, [mostRecentLogin]);
 
   useEffect(() => {
-    getLogins({}, { '+order_by': 'datetime', '+order': 'desc' }).then(
-      response => {
+    setLoading(true);
+    getLogins({}, { '+order_by': 'datetime', '+order': 'desc' })
+      .then(response => {
         setRecentLogin(response.data[0]?.datetime);
         request();
-      }
-    );
+      })
+      .catch(_ => {
+        setError('Unable to retrieve community events data');
+        setLoading(false);
+      });
   }, [request]);
 
   useEffect(() => {
