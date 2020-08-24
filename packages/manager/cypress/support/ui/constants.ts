@@ -75,7 +75,7 @@ export const pages = [
   },
   {
     name: 'Linode/Create/FromImages',
-    url: `${routes.createLinode}?type=My%20Images&subtype=Images`,
+    url: `${routes.createLinode}?type=Images`,
     assertIsLoaded: () => cy.findByText('Choose an Image').should('be.visible')
   },
   {
@@ -85,7 +85,7 @@ export const pages = [
   },
   {
     name: 'Linode/Create/Clone',
-    url: `${routes.createLinode}?type=My%20Images&subtype=Clone%20Linode`,
+    url: `${routes.createLinode}?type=Clone%20Linode`,
     assertIsLoaded: () =>
       cy.findByText('Select Linode to Clone From').should('be.visible')
   },
