@@ -30,6 +30,10 @@ export const getInitialType = (): CreateTypes => {
        */
       if (normalizedSubtype.includes('community' || 'account')) {
         return 'fromStackScript';
+      } else if (normalizedSubtype.includes('clone')) {
+        return 'fromLinode';
+      } else if (normalizedSubtype.includes('backup')) {
+        return 'fromBackup';
       } else {
         return 'fromApp';
       }
