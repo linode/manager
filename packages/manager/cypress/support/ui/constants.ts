@@ -80,7 +80,7 @@ export const pages = [
   },
   {
     name: 'Linode/Create/FromBackup',
-    url: `${routes.createLinode}?type=My%20Images&subtype=Backups`,
+    url: `${routes.createLinode}?type=Backups`,
     assertIsLoaded: () => cy.findByText('Select Backup').should('be.visible')
   },
   {
