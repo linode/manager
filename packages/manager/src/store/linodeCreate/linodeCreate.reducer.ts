@@ -30,10 +30,6 @@ export const getInitialType = (): CreateTypes => {
        */
       if (normalizedSubtype.includes('community' || 'account')) {
         return 'fromStackScript';
-      } else if (normalizedSubtype.includes('clone')) {
-        return 'fromLinode';
-      } else if (normalizedSubtype.includes('backup')) {
-        return 'fromBackup';
       } else {
         return 'fromApp';
       }
@@ -50,12 +46,6 @@ export const getInitialType = (): CreateTypes => {
        */
       if (normalizedType.includes('one-click')) {
         return 'fromApp';
-      } else if (normalizedType.includes('images')) {
-        return 'fromImage';
-      } else if (normalizedType.includes('backup')) {
-        return 'fromBackup';
-      } else if (normalizedType.includes('clone')) {
-        return 'fromLinode';
       } else {
         return 'fromImage';
       }
