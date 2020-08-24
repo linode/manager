@@ -21,7 +21,7 @@ export const DomainDetailRouting: React.FC<RouteComponentProps<{
 
   if (!foundDomain) {
     // Did we complete a request for Domains yet? If so, this Domain doesn't exist.
-    if (!request.loading) {
+    if (!request.loading && request.lastUpdated > 0) {
       return <NotFound />;
     }
     // If not, we don't know if the Domain exists yet so we have to stall
