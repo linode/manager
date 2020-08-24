@@ -263,7 +263,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       </Prompt>
 
       <Typography variant="body1" className={classes.copy}>
-        Firewall rules act as a whitelist, allowing network traffic that meets
+        Firewall rules act as an allowlist, allowing network traffic that meets
         the rules’ parameters to pass through. Any traffic not explicitly
         permitted by a rule is blocked.
       </Typography>

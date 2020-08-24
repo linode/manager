@@ -475,6 +475,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
             required
             value={summary}
             onChange={handleSummaryInputChange}
+            inputProps={{ maxLength: 64 }}
             errorText={summaryError}
             data-qa-ticket-summary
           />

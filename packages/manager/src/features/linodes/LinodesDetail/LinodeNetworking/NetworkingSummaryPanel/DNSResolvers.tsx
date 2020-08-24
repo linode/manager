@@ -1,12 +1,11 @@
-import { ZoneName } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import { getIPv6DNSResolvers, ipv4DNSResolvers } from './resolvers';
+import useRegions from 'src/hooks/useRegions';
 
 interface Props {
-  region: ZoneName;
+  region: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -18,16 +17,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const getIPv4DNSResolvers = (region: ZoneName) => {
-  return ipv4DNSResolvers[region] ?? ipv4DNSResolvers.newark;
-};
-
 export const DNSResolvers: React.FC<Props> = props => {
   const { region } = props;
   const classes = useStyles();
+  const regions = useRegions();
 
-  const v4Resolvers = getIPv4DNSResolvers(region);
-  const v6Resolvers = getIPv6DNSResolvers(region);
+  const linodeRegion = regions.entities.find(
+    thisRegion => thisRegion.id === region
+  );
+
+  const v4Resolvers = linodeRegion?.resolvers?.ipv4.split(',') ?? [];
+  const v6Resolvers = linodeRegion?.resolvers?.ipv6.split(',') ?? [];
 
   return (
     <div>

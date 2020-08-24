@@ -721,8 +721,12 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     openDialog
   } = props;
 
-  const _openDialog = React.useCallback(() => {
+  const _openMigrateDialog = React.useCallback(() => {
     openDialog('migrate', linodeId);
+  }, [linodeId, openDialog]);
+
+  const _openResizeDialog = React.useCallback(() => {
+    openDialog('resize', linodeId);
   }, [linodeId, openDialog]);
 
   const classes = useFooterStyles();
@@ -762,15 +766,12 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Grid item xs={12} sm={7}>
         <div className={classes.detailsSection}>
           {linodePlan && (
-            <Link
-              to={`/linodes/${linodeId}/resize`}
-              className={classes.listItem}
-            >
+            <button onClick={_openResizeDialog} className={classes.button}>
               {linodePlan} Plan
-            </Link>
+            </button>
           )}
           {linodeRegionDisplay && (
-            <button onClick={_openDialog} className={classes.button}>
+            <button onClick={_openMigrateDialog} className={classes.button}>
               {linodeRegionDisplay}
             </button>
           )}

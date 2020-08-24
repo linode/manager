@@ -351,3 +351,7 @@ button::-moz-focus-inner {
 .terminal {
   padding: 24px;
 }
+
+.overflow-hidden {
+  overflow: hidden !important;
+}
