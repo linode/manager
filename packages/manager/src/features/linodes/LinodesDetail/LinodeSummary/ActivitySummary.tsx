@@ -19,7 +19,7 @@ import {
   shouldUpdateEvents
 } from 'src/features/Events/Event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
-import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
+import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 
 type ClassNames = 'root' | 'header' | 'viewMore';
 
@@ -94,9 +94,9 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
             return (
               /** all events from Redux will have this flag as a boolean value */
               !eachEvent._initial &&
-              (eachEvent.entity &&
-                eachEvent.entity.id === this.props.linodeId &&
-                eachEvent.entity.type === 'linode')
+              eachEvent.entity &&
+              eachEvent.entity.id === this.props.linodeId &&
+              eachEvent.entity.type === 'linode'
             );
           }),
           /*
@@ -135,7 +135,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
     const { classes, linodeId } = this.props;
     const { events, error, loading } = this.state;
 
-    const filteredEvents = removeBlacklistedEvents(events);
+    const filteredEvents = removeBlocklistedEvents(events);
 
     return (
       <>

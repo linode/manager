@@ -31,7 +31,6 @@ export const pages = [
         name: 'Tab',
         go: () => {
           loadAppNoLogin(routes.createLinodeOCA);
-          cy.findByText('Create From:');
           cy.findByText('Distributions').click();
         }
       }
@@ -46,8 +45,9 @@ export const pages = [
         name: 'Tab',
         go: () => {
           loadAppNoLogin(routes.createLinode);
-          cy.findByText('Choose a Distribution');
-          cy.findByText('One-Click').click();
+          cy.get('[data-reach-tab]')
+            .contains('Marketplace')
+            .click();
         }
       },
       {
@@ -75,17 +75,17 @@ export const pages = [
   },
   {
     name: 'Linode/Create/FromImages',
-    url: `${routes.createLinode}?type=My%20Images&subtype=Images`,
+    url: `${routes.createLinode}?type=Images`,
     assertIsLoaded: () => cy.findByText('Choose an Image').should('be.visible')
   },
   {
     name: 'Linode/Create/FromBackup',
-    url: `${routes.createLinode}?type=My%20Images&subtype=Backups`,
+    url: `${routes.createLinode}?type=Backups`,
     assertIsLoaded: () => cy.findByText('Select Backup').should('be.visible')
   },
   {
     name: 'Linode/Create/Clone',
-    url: `${routes.createLinode}?type=My%20Images&subtype=Clone%20Linode`,
+    url: `${routes.createLinode}?type=Clone%20Linode`,
     assertIsLoaded: () =>
       cy.findByText('Select Linode to Clone From').should('be.visible')
   },
@@ -205,7 +205,7 @@ export const pages = [
   },
   {
     name: 'Support/tickets/open',
-    url: `${routes.supportTickets}?type=open`,
+    url: `${routes.supportTickets}`,
     assertIsLoaded: () => cy.findByText('Open New Ticket').should('be.visible'),
     goWithUI: [
       {
@@ -218,9 +218,9 @@ export const pages = [
     ]
   },
   {
-    name: 'Support/tickets',
+    name: 'Support/tickets/closed',
 
-    url: `${routes.supportTickets}?type=closed`,
+    url: `${routes.supportTickets}`,
     assertIsLoaded: () => cy.findByText('Open New Ticket').should('be.visible'),
     goWithUI: [
       {
@@ -267,7 +267,9 @@ export const pages = [
           loadAppNoLogin(routes.account);
           cy.findByText('Billing Contact');
           waitDoubleRerender();
-          cy.findByText('Users').click();
+          cy.get('[data-reach-tab]')
+            .contains('Users')
+            .click();
         }
       }
     ]
