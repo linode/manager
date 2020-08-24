@@ -234,7 +234,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
     const { history } = props;
     history.push({
       pathname: `/linodes/create/`,
-      search: `?type=My%20Images&imageID=${imageID}`,
+      search: `?type=Images&imageID=${imageID}`,
       state: { selectedImageId: imageID }
     });
   };
