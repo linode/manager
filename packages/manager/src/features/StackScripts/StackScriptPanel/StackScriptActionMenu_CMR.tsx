@@ -6,6 +6,8 @@ import { compose } from 'recompose';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 import withProfile from 'src/containers/profile.container';
 
 import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
@@ -33,6 +35,9 @@ interface ProfileProps {
 type CombinedProps = Props & RouteComponentProps<{}> & ProfileProps;
 
 const StackScriptActionMenu: React.FC<CombinedProps> = props => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
   const {
     stackScriptID,
     stackScriptUsername,
@@ -54,66 +59,104 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       : undefined
   };
 
-  const createActions = () => {
-    return (): Action[] => {
-      const actions: Action[] = [
-        {
-          title: 'Deploy New Linode',
-          disabled: !canAddLinodes,
-          tooltip: !canAddLinodes
-            ? "You don't have permissions to add Linodes"
-            : undefined,
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push(
-              getStackScriptUrl(stackScriptUsername, stackScriptID, username)
-            );
-            e.preventDefault();
-          }
-        }
-      ];
-
-      if (!isPublic) {
-        actions.push({
-          title: 'Delete',
-          ...readonlyProps,
-          onClick: () => {
-            triggerDelete(stackScriptID, stackScriptLabel);
-          }
-        });
+  const inlineActions: Action[] = [
+    {
+      title: 'Deploy',
+      disabled: !canAddLinodes,
+      tooltip: !canAddLinodes
+        ? "You don't have permissions to add Linodes"
+        : undefined,
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        history.push(
+          getStackScriptUrl(stackScriptUsername, stackScriptID, username)
+        );
+        e.preventDefault();
       }
+    }
+  ];
 
-      // We only add the "Edit" option if the current tab/category isn't
-      // "Community StackScripts". A user's own public StackScripts are still
-      // editable under "Account StackScripts".
-      if (category !== 'community') {
-        actions.push({
-          title: 'Edit',
-          ...readonlyProps,
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push(`/stackscripts/${stackScriptID}/edit`);
-            e.preventDefault();
-          }
-        });
+  if (category !== 'community') {
+    inlineActions.unshift({
+      title: 'Details',
+      ...readonlyProps,
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        history.push(`/stackscripts/${stackScriptID}/edit`);
+        e.preventDefault();
       }
+    });
+  }
 
-      if (!isPublic) {
-        actions.push({
-          title: 'Make StackScript Public',
-          ...readonlyProps,
-          onClick: () => {
-            triggerMakePublic(stackScriptID, stackScriptLabel);
-          }
-        });
+  const actions: Action[] = [];
+
+  if (!isPublic) {
+    actions.push({
+      title: 'Delete',
+      ...readonlyProps,
+      onClick: () => {
+        triggerDelete(stackScriptID, stackScriptLabel);
       }
+    });
+  }
 
-      return actions;
-    };
-  };
+  if (!isPublic) {
+    actions.push({
+      title: 'Make StackScript Public',
+      ...readonlyProps,
+      onClick: () => {
+        triggerMakePublic(stackScriptID, stackScriptLabel);
+      }
+    });
+  }
+
+  if (matchesSmDown) {
+    actions.unshift({
+      title: 'Deploy',
+      disabled: !canAddLinodes,
+      tooltip: !canAddLinodes
+        ? "You don't have permissions to add Linodes"
+        : undefined,
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        history.push(
+          getStackScriptUrl(stackScriptUsername, stackScriptID, username)
+        );
+        e.preventDefault();
+      }
+    });
+  }
+
+  // We only add the "Details" option if the current tab/category isn't
+  // "Community StackScripts". A user's own public StackScripts are still
+  // editable under "Account StackScripts".
+  if (matchesSmDown && category !== 'community') {
+    actions.unshift({
+      title: 'Details',
+      ...readonlyProps,
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        history.push(`/stackscripts/${stackScriptID}/edit`);
+        e.preventDefault();
+      }
+    });
+  }
+
   return (
-    <ActionMenu
-      createActions={createActions()}
-      ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
-    />
+    <>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      {category !== 'community' && (
+        <ActionMenu
+          createActions={() => actions}
+          ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
+        />
+      )}
+    </>
   );
 };
 

@@ -15,11 +15,6 @@ import { filterImagesByType } from 'src/store/image/image.helpers';
 import StackScriptPanel from './StackScriptPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  header: {
-    '& > .MuiGrid-root': {
-      paddingTop: 15
-    }
-  },
   panel: {
     '& > div': {
       padding: theme.spacing(2)
@@ -44,15 +39,13 @@ export const StackScriptsLanding: React.FC<CombinedProps> = props => {
       {!!history.location.state && !!history.location.state.successMessage && (
         <Notice success text={history.location.state.successMessage} />
       )}
-      <div className={classes.header}>
-        <LandingHeader
-          title="StackScripts"
-          entity="StackScript"
-          onAddNew={goToCreateStackScript}
-          docsLink="https://www.linode.com/docs/platform/stackscripts/"
-          createButtonWidth={180}
-        />
-      </div>
+      <LandingHeader
+        title="StackScripts"
+        entity="StackScript"
+        onAddNew={goToCreateStackScript}
+        docsLink="https://www.linode.com/docs/platform/stackscripts/"
+        createButtonWidth={180}
+      />
       <Grid container>
         {_loading ? (
           <CircleProgress />
