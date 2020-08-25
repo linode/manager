@@ -5,11 +5,14 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes blink': {
-    from: {
+    '0%': {
       opacity: 1
     },
-    to: {
+    '50%': {
       opacity: 0.25
+    },
+    '100%': {
+      opacity: 1
     }
   },
   statusCell: {
