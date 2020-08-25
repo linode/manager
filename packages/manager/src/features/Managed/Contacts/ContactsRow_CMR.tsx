@@ -36,9 +36,7 @@ export const ContactsRow: React.FunctionComponent<Props> = props => {
       <TableCell>{contact.email}</TableCell>
       <Hidden xsDown>
         <TableCell>{contact.phone.primary}</TableCell>
-        <TableCell parentColumn="Secondary Phone">
-          {contact.phone.secondary}
-        </TableCell>
+        <TableCell>{contact.phone.secondary}</TableCell>
       </Hidden>
       <TableCell className={classes.actionCell}>
         <ActionMenu
