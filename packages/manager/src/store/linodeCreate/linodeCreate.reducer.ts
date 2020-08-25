@@ -47,9 +47,14 @@ export const getInitialType = (): CreateTypes => {
        * here we know we don't have a subtype in the query string
        * but we do have a type (AKA a parent tab is selected). In this case,
        * we can assume the first child tab is selected within the parent tabs
+       * This is needed to determine the createType for conditional logic in the UI.
        */
       if (normalizedType.includes('one-click')) {
         return 'fromApp';
+      } else if (normalizedType.includes('clone')) {
+        return 'fromLinode';
+      } else if (normalizedType.includes('backup')) {
+        return 'fromBackup';
       } else {
         return 'fromImage';
       }

@@ -95,8 +95,8 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
               /** all events from Redux will have this flag as a boolean value */
               !eachEvent._initial &&
               eachEvent.entity &&
-                eachEvent.entity.id === this.props.linodeId &&
-                eachEvent.entity.type === 'linode'
+              eachEvent.entity.id === this.props.linodeId &&
+              eachEvent.entity.type === 'linode'
             );
           }),
           /*
