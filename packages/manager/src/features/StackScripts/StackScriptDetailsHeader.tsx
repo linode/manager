@@ -39,7 +39,7 @@ const StackScriptDetailsHeader: React.FC<CombinedProps> = props => {
     <EntityHeader
       title={stackScriptLabel}
       parentLink="/stackscripts"
-      parentText="Stackscripts"
+      parentText="StackScripts"
       iconType="stackscript"
       isSecondary
       actions={

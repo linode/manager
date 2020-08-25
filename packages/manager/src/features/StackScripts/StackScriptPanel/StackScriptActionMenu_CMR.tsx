@@ -74,7 +74,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
     canModify,
     isPublic,
     username,
-    // category,
+    category,
     canAddLinodes
   } = props;
 
@@ -94,7 +94,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       // editable under "Account StackScripts".
       if (matchesSmDown) {
         actions.push({
-          title: 'Details',
+          title: 'Edit',
           ...readonlyProps,
           onClick: () => {
             history.push(`/stackscripts/${stackScriptID}/edit`);
@@ -125,9 +125,6 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
             triggerMakePublic(stackScriptID, stackScriptLabel);
           }
         });
-      }
-
-      if (!isPublic) {
         actions.push({
           title: 'Delete',
           ...readonlyProps,
@@ -144,15 +141,17 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
     <div className={classes.stackScriptActionsWrapper}>
       <Hidden smDown>
         <div className="flexCenter">
-          <button
-            className={classes.button}
-            onClick={() => {
-              history.push(`/stackscripts/${stackScriptID}/edit`);
-            }}
-            disabled={!canModify}
-          >
-            Details
-          </button>
+          {props.category === 'account' && (
+            <button
+              className={classes.button}
+              onClick={() => {
+                history.push(`/stackscripts/${stackScriptID}/edit`);
+              }}
+              disabled={!canModify}
+            >
+              Edit
+            </button>
+          )}
 
           <button
             className={classes.button}
@@ -165,13 +164,17 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
           >
             Deploy new Linode
           </button>
+
+          <h3>Category: {category}</h3>
         </div>
       </Hidden>
 
-      <ActionMenu
-        createActions={createActions()}
-        ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
-      />
+      {props.category === 'account' && (
+        <ActionMenu
+          createActions={createActions()}
+          ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
+        />
+      )}
     </div>
   );
 };

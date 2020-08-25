@@ -76,9 +76,6 @@ interface State {
   loading: boolean;
   stackScript?: StackScript;
   dialog: DialogState;
-  isRestrictedUser: boolean;
-  stackScriptGrants: Grant[];
-  userCannotAddLinodes: boolean;
 }
 
 type ClassNames = 'root' | 'cta' | 'button' | 'userName' | 'userNameSlash';
@@ -115,6 +112,7 @@ interface ProfileProps {
 
 type CombinedProps = ProfileProps &
   RouteProps &
+  StateProps &
   WithStyles<ClassNames> &
   SetDocsProps &
   Props &
@@ -135,10 +133,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       },
       stackScriptID: undefined,
       stackScriptLabel: ''
-    },
-    isRestrictedUser: false,
-    stackScriptGrants: [],
-    userCannotAddLinodes: false
+    }
   };
 
   //TODO do we even need this?
@@ -253,7 +248,6 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             stackScriptLabel: ''
           }
         });
-        // this.props.getDataAtPage(1, this.props.currentFilter, true);
       })
       .catch(e => {
         if (!this.mounted) {
@@ -278,7 +272,6 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 
   handleMakePublic = () => {
     const { dialog } = this.state;
-    //const { currentFilter } = this.props;
 
     updateStackScript(dialog.stackScriptID!, { is_public: true })
       .then(_ => {
@@ -300,7 +293,6 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             stackScriptLabel: ''
           }
         });
-        //this.props.getDataAtPage(1, currentFilter, true);
       })
       .catch(_ => {
         if (!this.mounted) {
@@ -399,14 +391,15 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { classes, username, flags } = this.props;
     const {
-      loading,
-      stackScript,
-      userCannotAddLinodes,
+      classes,
+      username,
+      flags,
       isRestrictedUser,
-      stackScriptGrants
-    } = this.state;
+      stackScriptGrants,
+      userCannotAddLinodes
+    } = this.props;
+    const { loading, stackScript } = this.state;
 
     if (loading) {
       return <CircleProgress />;
@@ -429,7 +422,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             <StackScriptDetailsHeader
               isPublic={stackScript.is_public}
               category={
-                stackScript.username === username ? 'account' : 'community'
+                username === stackScript.username ? 'account' : 'community'
               }
               stackScriptID={stackScript.id}
               stackScriptLabel={stackScript.label}
