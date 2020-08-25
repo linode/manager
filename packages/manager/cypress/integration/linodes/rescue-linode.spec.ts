@@ -20,7 +20,7 @@ describe('rescue linode', () => {
         url: '*/linode/instances/*/rescue',
         response: {}
       }).as('postRebootInRescueMode');
-      const rescueUrl = `/linodes/${linode.id}/rescue`;
+      const rescueUrl = `/linodes/${linode.id}`;
       cy.visit(rescueUrl);
       clickLinodeActionMenu(linode.label);
       cy.get('[data-qa-action-menu-item="Rescue"]:visible')
@@ -32,7 +32,6 @@ describe('rescue linode', () => {
         .its('status')
         .should('eq', 200);
       assertToast('Linode rescue started.');
-      cy.url().should('endWith', `linodes/${linode.id}/rescue`);
       deleteLinodeById(linode.id);
     });
   });
