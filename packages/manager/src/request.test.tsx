@@ -40,8 +40,6 @@ const error401: AxiosError = {
   }
 };
 
-window.location.assign = jest.fn();
-
 describe('Expiring Tokens', () => {
   it('should properly expire tokens if given a 401 error', () => {
     store.dispatch(
@@ -63,7 +61,9 @@ describe('Expiring Tokens', () => {
       expiration: null,
       loggedInAsCustomer: false
     });
-    expireToken.catch((e: AxiosError) => expect(e.response!.status).toBe(401));
+    expireToken.catch((e: AxiosError) =>
+      expect(e[0].reason).toMatch(/unexpected error/)
+    );
   });
 
   it('should just promise reject if a non-401 error', () => {
@@ -86,6 +86,8 @@ describe('Expiring Tokens', () => {
       expiration: 'never',
       loggedInAsCustomer: false
     });
-    expireToken.catch((e: AxiosError) => expect(e.response!.status).toBe(400));
+    expireToken.catch((e: AxiosError) =>
+      expect(e[0].reason).toMatch(/unexpected error/)
+    );
   });
 });
