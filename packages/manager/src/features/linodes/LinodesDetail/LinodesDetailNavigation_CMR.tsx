@@ -7,7 +7,6 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import VolumesLanding_CMR from 'src/features/Volumes/VolumesLanding_CMR';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
 const LinodeSummary_CMR = React.lazy(() =>
@@ -16,15 +15,13 @@ const LinodeSummary_CMR = React.lazy(() =>
 const LinodeNetworking_CMR = React.lazy(() =>
   import('./LinodeNetworking/LinodeNetworking_CMR')
 );
+const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
 const LinodeAdvanced_CMR = React.lazy(() =>
   import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel_CMR')
 );
 const LinodeBackup_CMR = React.lazy(() =>
   import('./LinodeBackup/LinodeBackup_CMR')
 );
-const LinodeResize = React.lazy(() => import('./LinodeResize'));
-const LinodeRescue = React.lazy(() => import('./LinodeRescue'));
-const LinodeRebuild = React.lazy(() => import('./LinodeRebuild'));
 const LinodeActivity_CMR = React.lazy(() =>
   import('./LinodeActivity/LinodeActivity_CMR')
 );
@@ -39,12 +36,7 @@ type CombinedProps = ContextProps &
 
 const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
   const {
-    match: { url },
-    linodeLabel,
-    linodeConfigs,
-    linodeId,
-    linodeRegion,
-    readOnly
+    match: { url }
   } = props;
 
   const tabs = [
@@ -71,18 +63,6 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     {
       routeName: `${url}/backup`,
       title: 'Backups'
-    },
-    {
-      routeName: `${url}/resize`,
-      title: 'Resize'
-    },
-    {
-      routeName: `${url}/rescue`,
-      title: 'Rescue'
-    },
-    {
-      routeName: `${url}/rebuild`,
-      title: 'Rebuild'
     },
     {
       routeName: `${url}/activity`,
@@ -118,15 +98,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
           </SafeTabPanel>
 
           <SafeTabPanel index={2}>
-            <VolumesLanding_CMR
-              linodeId={linodeId}
-              linodeLabel={linodeLabel}
-              linodeRegion={linodeRegion}
-              linodeConfigs={linodeConfigs}
-              readOnly={readOnly}
-              fromLinodes
-              removeBreadCrumb
-            />
+            <LinodeStorage />
           </SafeTabPanel>
 
           <SafeTabPanel index={3}>
@@ -138,22 +110,10 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
           </SafeTabPanel>
 
           <SafeTabPanel index={5}>
-            <LinodeResize />
-          </SafeTabPanel>
-
-          <SafeTabPanel index={6}>
-            <LinodeRescue />
-          </SafeTabPanel>
-
-          <SafeTabPanel index={7}>
-            <LinodeRebuild />
-          </SafeTabPanel>
-
-          <SafeTabPanel index={8}>
             <LinodeActivity_CMR />
           </SafeTabPanel>
 
-          <SafeTabPanel index={9}>
+          <SafeTabPanel index={6}>
             <LinodeSettings_CMR />
           </SafeTabPanel>
         </TabPanels>

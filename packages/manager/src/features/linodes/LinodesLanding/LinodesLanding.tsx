@@ -60,6 +60,7 @@ import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import DeleteDialog from './DeleteDialog';
+import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue/RescueDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import DisplayLinodes from './DisplayLinodes';
@@ -67,17 +68,21 @@ import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import ToggleBox from './ToggleBox';
+import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { ExtendedStatus, statusToPriority } from './utils';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 
 interface State {
   powerDialogOpen: boolean;
   powerDialogAction?: Action;
+  enableBackupsDialogOpen: boolean;
   selectedLinodeConfigs?: Config[];
   selectedLinodeID?: number;
   selectedLinodeLabel?: string;
   deleteDialogOpen: boolean;
+  rebuildDialogOpen: boolean;
   rescueDialogOpen: boolean;
   groupByTag: boolean;
   CtaDismissed: boolean;
@@ -105,8 +110,10 @@ type CombinedProps = WithImages &
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
+    enableBackupsDialogOpen: false,
     powerDialogOpen: false,
     deleteDialogOpen: false,
+    rebuildDialogOpen: false,
     rescueDialogOpen: false,
     groupByTag: false,
     CtaDismissed: BackupsCtaDismissed.get(),
@@ -170,9 +177,19 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           linodeMigrateOpen: true
         });
         break;
+      case 'rebuild':
+        this.setState({
+          rebuildDialogOpen: true
+        });
+        break;
       case 'rescue':
         this.setState({
           rescueDialogOpen: true
+        });
+        break;
+      case 'enable_backups':
+        this.setState({
+          enableBackupsDialogOpen: true
         });
         break;
     }
@@ -186,9 +203,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({
       powerDialogOpen: false,
       deleteDialogOpen: false,
+      rebuildDialogOpen: false,
       rescueDialogOpen: false,
       linodeResizeOpen: false,
-      linodeMigrateOpen: false
+      linodeMigrateOpen: false,
+      enableBackupsDialogOpen: false
     });
   };
 
@@ -310,8 +329,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               onClose={this.closeDialogs}
               linodeID={this.state.selectedLinodeID ?? -1}
             />
+            <LinodeRebuildDialog
+              open={this.state.rebuildDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
+            />
             <RescueDialog
               open={this.state.rescueDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
+            />
+            <EnableBackupsDialog
+              open={this.state.enableBackupsDialogOpen}
               onClose={this.closeDialogs}
               linodeId={this.state.selectedLinodeID ?? -1}
             />
@@ -320,8 +349,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner
             userTimezone={this.props.userTimezone}
-            userTimezoneError={this.props.userTimezoneError}
-            userTimezoneLoading={this.props.userTimezoneLoading}
+            userProfileError={this.props.userProfileError}
+            userProfileLoading={this.props.userProfileLoading}
           />
         )}
         <Grid container>
@@ -694,8 +723,8 @@ interface StateProps {
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   userTimezone: string;
-  userTimezoneLoading: boolean;
-  userTimezoneError?: APIError[];
+  userProfileLoading: boolean;
+  userProfileError?: APIError[];
   someLinodesHaveScheduledMaintenance: boolean;
   linodesInTransition: Set<number>;
 }
@@ -721,9 +750,9 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
       : false,
     linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
-    userTimezone: state.__resources.profile.data?.timezone ?? '',
-    userTimezoneLoading: state.__resources.profile.loading,
-    userTimezoneError: path<APIError[]>(
+    userTimezone: getUserTimezone(state),
+    userProfileLoading: state.__resources.profile.loading,
+    userProfileError: path<APIError[]>(
       ['read'],
       state.__resources.profile.error
     ),

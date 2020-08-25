@@ -36,8 +36,8 @@ interface Props {
   maintenanceStart?: string | null;
   maintenanceEnd?: string | null;
   userTimezone?: string;
-  userTimezoneLoading: boolean;
-  userTimezoneError?: APIError[];
+  userProfileLoading: boolean;
+  userProfileError?: APIError[];
   type?: 'migration' | 'reboot';
 }
 
@@ -49,16 +49,16 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
     maintenanceEnd,
     maintenanceStart,
     userTimezone,
-    userTimezoneError,
-    userTimezoneLoading
+    userProfileError,
+    userProfileLoading
   } = props;
 
   const timezoneMsg = () => {
-    if (userTimezoneLoading) {
+    if (userProfileLoading) {
       return 'Fetching timezone...';
     }
 
-    if (userTimezoneError) {
+    if (userProfileError) {
       return 'Error retrieving timezone.';
     }
 

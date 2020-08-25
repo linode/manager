@@ -64,6 +64,7 @@ export interface ActionHandlers {
 
 interface Props extends ActionHandlers {
   attached: boolean;
+  isVolumesLanding: boolean;
   poweredOff: boolean;
   filesystemPath: string;
   label: string;
@@ -116,7 +117,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
   };
 
   const createActions = () => {
-    const { attached, poweredOff } = props;
+    const { attached, poweredOff, isVolumesLanding } = props;
 
     return (): Action[] => {
       const actions = [
@@ -136,7 +137,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
         }
       ];
 
-      if (!attached) {
+      if (!attached && isVolumesLanding) {
         actions.push({
           title: 'Attach',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
