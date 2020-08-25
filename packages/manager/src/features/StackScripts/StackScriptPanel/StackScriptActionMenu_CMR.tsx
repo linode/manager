@@ -87,23 +87,8 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
 
   const createActions = () => {
     return (): Action[] => {
-      const actions: Action[] = [];
-
-      // We only add the "Edit" option if the current tab/category isn't
-      // "Community StackScripts". A user's own public StackScripts are still
-      // editable under "Account StackScripts".
-      if (matchesSmDown) {
-        actions.push({
-          title: 'Edit',
-          ...readonlyProps,
-          onClick: () => {
-            history.push(`/stackscripts/${stackScriptID}/edit`);
-          }
-        });
-      }
-
-      if (matchesSmDown) {
-        actions.push({
+      const actions: Action[] = [
+        {
           title: 'Deploy New Linode',
           disabled: !canAddLinodes,
           tooltip: !canAddLinodes
@@ -113,6 +98,19 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
             history.push(
               getStackScriptUrl(stackScriptUsername, stackScriptID, username)
             );
+          }
+        }
+      ];
+
+      // We only add the "Edit" option if the current tab/category isn't
+      // "Community StackScripts". A user's own public StackScripts are still
+      // editable under "Account StackScripts".
+      if (matchesSmDown && category !== 'community') {
+        actions.unshift({
+          title: 'Edit',
+          ...readonlyProps,
+          onClick: () => {
+            history.push(`/stackscripts/${stackScriptID}/edit`);
           }
         });
       }
@@ -164,12 +162,18 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
           >
             Deploy new Linode
           </button>
-
-          <h3>Category: {category}</h3>
         </div>
       </Hidden>
 
-      {props.category === 'account' && (
+      {/* Hacky way to only display the action menu button on smaller screens for community StackScripts */}
+      {category === 'community' ? (
+        <Hidden mdUp>
+          <ActionMenu
+            createActions={createActions()}
+            ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
+          />
+        </Hidden>
+      ) : (
         <ActionMenu
           createActions={createActions()}
           ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}

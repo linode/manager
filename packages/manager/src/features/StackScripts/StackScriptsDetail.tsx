@@ -4,7 +4,7 @@ import {
   updateStackScript,
   deleteStackScript
 } from '@linode/api-v4/lib/stackscripts';
-import { path, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -78,6 +78,11 @@ interface State {
   dialog: DialogState;
 }
 
+interface ProfileProps {
+  // From Profile container
+  username?: string;
+}
+
 type ClassNames = 'root' | 'cta' | 'button' | 'userName' | 'userNameSlash';
 
 const styles = (theme: Theme) =>
@@ -104,11 +109,6 @@ const styles = (theme: Theme) =>
       marginRight: theme.spacing(1)
     }
   });
-
-interface ProfileProps {
-  // From Profile container
-  username?: string;
-}
 
 type CombinedProps = ProfileProps &
   RouteProps &
@@ -496,11 +496,9 @@ const connected = connect(mapStateToProps);
 const enhanced = compose<CombinedProps, {}>(
   connected,
   setDocs([StackScriptsDocs]),
-  withProfile((ownProps, { profileData: profile }) => {
-    return {
-      username: path(['data', 'username'], profile)
-    };
-  }),
+  withProfile<ProfileProps, {}>((ownProps, { profileData: profile }) => ({
+    username: profile?.username
+  })),
   withStyles(styles),
   withFeatureFlagConsumerContainer
 );
