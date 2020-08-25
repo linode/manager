@@ -8,12 +8,12 @@ import {
   RouteComponentProps,
   Switch
 } from 'react-router-dom';
-import { initAnalytics, initTagManager } from 'src/analytics';
+import { initAnalytics } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
 import SnackBar from 'src/components/SnackBar';
 import SplashScreen from 'src/components/SplashScreen';
-import { GA_ID, GTM_ID, isProductionBuild } from 'src/constants';
+import { GA_ID, isProductionBuild } from 'src/constants';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import 'src/request';
@@ -34,8 +34,6 @@ const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
  * Initialize Analytic and Google Tag Manager
  */
 initAnalytics(isProductionBuild, GA_ID);
-
-initTagManager(GTM_ID);
 
 const renderNullAuth = () => <span>null auth route</span>;
 

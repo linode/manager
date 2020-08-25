@@ -60,7 +60,7 @@ export const initAnalytics = (production: boolean, gaID?: string) => {
  *
  * @param gtmId Your Google Tag Manager Tracking ID
  */
-export const initTagManager = (gtmId?: string) => {
+const initTagManager = (gtmId?: string) => {
   if (!gtmId) {
     return;
   }
@@ -78,4 +78,5 @@ export const initGTMUser = (userId: string) => {
     gtmAccountID: GTM_ID,
     gtmIndividualUserId: userId
   });
+  initTagManager(GTM_ID)
 };
