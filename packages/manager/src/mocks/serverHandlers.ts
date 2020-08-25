@@ -21,6 +21,7 @@ import {
   longviewActivePlanFactory,
   nodeBalancerFactory,
   profileFactory,
+  supportReplyFactory,
   supportTicketFactory,
   volumeFactory,
   accountTransferFactory,
@@ -179,6 +180,14 @@ export const handlers = [
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
     return res(ctx.json(makeResourcePage(tickets)));
   }),
+  rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+    const ticket = supportTicketFactory.build({ id: req.params.ticketId });
+    return res(ctx.json(ticket));
+  }),
+  rest.get('*/support/tickets/:ticketId/replies', (req, res, ctx) => {
+    const replies = supportReplyFactory.buildList(15);
+    return res(ctx.json(makeResourcePage(replies)));
+  }),
   rest.put('*/longview/plan', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
@@ -199,5 +208,8 @@ export const handlers = [
   }),
   rest.get('*/account/notifications*', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage([])));
+  }),
+  rest.get('*gravatar*', (req, res, ctx) => {
+    return res(ctx.status(400), ctx.json({}));
   })
 ];

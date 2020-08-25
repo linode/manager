@@ -167,7 +167,6 @@ class CircleProgressComponent extends React.Component<CombinedProps> {
           },
           outerClasses
         )}
-        tabIndex={0}
         aria-label="Content is loading"
       >
         {children !== undefined && (
@@ -186,6 +185,7 @@ class CircleProgressComponent extends React.Component<CombinedProps> {
           variant={variant}
           thickness={green ? 4 : 2}
           data-qa-circle-progress={value}
+          data-testid="circle-progress"
         />
       </div>
     ) : (
@@ -199,6 +199,7 @@ class CircleProgressComponent extends React.Component<CombinedProps> {
         size={noPadding ? 22 : 40}
         data-qa-circle-progress
         aria-label="Content is loading"
+        data-testid="circle-progress"
         tabIndex={0}
       />
     );
