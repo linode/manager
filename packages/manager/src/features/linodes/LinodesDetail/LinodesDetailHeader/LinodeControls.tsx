@@ -101,10 +101,9 @@ const LinodeControls: React.FC<CombinedProps> = props => {
 
   const getLabelLink = (): string | undefined => {
     return last(location.pathname.split('/')) !== 'summary'
-      ? 'summary'
+      ? `${linode.id}/summary`
       : undefined;
   };
-
   return (
     <Grid
       container
