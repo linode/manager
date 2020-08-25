@@ -218,6 +218,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   };
 
   handleDeleteStackScript = () => {
+    const { history } = this.props;
     const { dialog } = this.state;
     this.setState({
       dialog: {
@@ -248,6 +249,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             stackScriptLabel: ''
           }
         });
+        history.push('/stackscripts');
       })
       .catch(e => {
         if (!this.mounted) {
