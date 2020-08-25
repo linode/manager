@@ -234,7 +234,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
     const { history } = props;
     history.push({
       pathname: `/linodes/create/`,
-      search: `?type=My%20Images&imageID=${imageID}`,
+      search: `?type=Images&imageID=${imageID}`,
       state: { selectedImageId: imageID }
     });
   };
@@ -255,16 +255,19 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
   };
 
   const setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
     setDrawer(prevDrawerState => ({
       ...prevDrawerState,
-      label: e.target.value
+      label: value
     }));
   };
 
   const setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
     setDrawer(prevDrawerState => ({
       ...prevDrawerState,
-      description: e.target.value
+      description: value
     }));
   };
 

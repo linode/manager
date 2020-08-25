@@ -23,6 +23,7 @@ const LongviewListRows: React.FC<CombinedProps> = props => {
   } = props;
 
   return (
+    // eslint-disable-next-line
     <React.Fragment>
       {longviewClientsData.map(eachClient => {
         return (

@@ -36,8 +36,8 @@ interface StateProps {
   backupError?: Error;
   notifications: Notification[];
   userTimezone: string;
-  userTimezoneLoading: boolean;
-  userTimezoneError?: APIError[];
+  userProfileLoading: boolean;
+  userProfileError?: APIError[];
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
@@ -73,8 +73,8 @@ export const Dashboard: React.FC<CombinedProps> = props => {
       {props.someLinodesHaveScheduledMaintenance && (
         <MaintenanceBanner
           userTimezone={props.userTimezone}
-          userTimezoneError={props.userTimezoneError}
-          userTimezoneLoading={props.userTimezoneLoading}
+          userProfileError={props.userProfileError}
+          userProfileLoading={props.userProfileLoading}
         />
       )}
       <Grid container spacing={3}>
@@ -142,8 +142,8 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     ),
     notifications: pathOr([], ['data'], state.__resources.notifications),
     userTimezone: getUserTimezone(state),
-    userTimezoneLoading: state.__resources.profile.loading,
-    userTimezoneError: path(['read'], state.__resources.profile.error),
+    userProfileLoading: state.__resources.profile.loading,
+    userProfileError: path(['read'], state.__resources.profile.error),
     someLinodesHaveScheduledMaintenance: linodesWithMaintenance
       ? linodesWithMaintenance.some(eachLinode => !!eachLinode.maintenance)
       : false,

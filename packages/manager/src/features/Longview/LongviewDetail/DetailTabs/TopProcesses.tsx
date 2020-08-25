@@ -62,53 +62,52 @@ export const TopProcesses: React.FC<Props> = props => {
         data={extendTopProcesses(topProcessesData)}
         orderBy={'cpu'}
         order={'desc'}
+        preferenceKey="top-processes"
       >
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <>
-            <Table spacingTop={16} aria-label="List of Top Processes">
-              <TableHead>
-                <TableRow>
-                  <TableSortCell
-                    data-qa-table-header="Process"
-                    active={orderBy === 'name'}
-                    label="name"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    style={{ width: '40%' }}
-                  >
-                    Process
-                  </TableSortCell>
-                  <TableSortCell
-                    data-qa-table-header="CPU"
-                    active={orderBy === 'cpu'}
-                    label="cpu"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    style={{ width: '25%' }}
-                  >
-                    CPU
-                  </TableSortCell>
-                  <TableSortCell
-                    data-qa-table-header="Memory"
-                    active={orderBy === 'mem'}
-                    label="mem"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    style={{ width: '15%' }}
-                  >
-                    Memory
-                  </TableSortCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {renderLoadingErrorData(
-                  orderedData,
-                  topProcessesLoading,
-                  errorMessage
-                )}
-              </TableBody>
-            </Table>
-          </>
+          <Table spacingTop={16} aria-label="List of Top Processes">
+            <TableHead>
+              <TableRow>
+                <TableSortCell
+                  data-qa-table-header="Process"
+                  active={orderBy === 'name'}
+                  label="name"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  style={{ width: '40%' }}
+                >
+                  Process
+                </TableSortCell>
+                <TableSortCell
+                  data-qa-table-header="CPU"
+                  active={orderBy === 'cpu'}
+                  label="cpu"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  style={{ width: '25%' }}
+                >
+                  CPU
+                </TableSortCell>
+                <TableSortCell
+                  data-qa-table-header="Memory"
+                  active={orderBy === 'mem'}
+                  label="mem"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  style={{ width: '15%' }}
+                >
+                  Memory
+                </TableSortCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {renderLoadingErrorData(
+                orderedData,
+                topProcessesLoading,
+                errorMessage
+              )}
+            </TableBody>
+          </Table>
         )}
       </OrderBy>
     </Grid>
