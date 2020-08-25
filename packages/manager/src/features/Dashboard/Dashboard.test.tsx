@@ -11,7 +11,7 @@ const props: CombinedProps = {
   accountBackups: false,
   notifications: [],
   userTimezone: 'GMT',
-  userTimezoneLoading: false,
+  userProfileLoading: false,
   someLinodesHaveScheduledMaintenance: true,
   actions: {
     openBackupDrawer: jest.fn()
