@@ -540,7 +540,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
           sshIPAddress={firstPublicIPAddress}
           linodeLabel={linodeLabel}
-          linodeRegion={zoneName}
+          linodeRegion={linodeRegion}
+          zoneName={zoneName}
         />
 
         {this.renderIPv4()}

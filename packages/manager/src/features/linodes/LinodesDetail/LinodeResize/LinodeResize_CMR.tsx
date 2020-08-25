@@ -9,7 +9,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -113,7 +112,6 @@ interface State {
 
 type CombinedProps = Props &
   WithTypesProps &
-  RouteComponentProps &
   WithStyles<ClassNames> &
   DispatchProps &
   WithSnackbarProps &
@@ -153,7 +151,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeId,
       linodeType,
       enqueueSnackbar,
-      history,
       updateLinode,
       currentTypesData
     } = this.props;
@@ -196,7 +193,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         // go away.
         updateLinode(linodeId);
 
-        history.push(`/linodes/${linodeId}/summary`);
+        this.props.onClose();
       })
       .catch(errorResponse => {
         const error = getAPIErrorOrDefault(
@@ -293,6 +290,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         open={this.props.open}
         onClose={this.props.onClose}
         fullWidth
+        fullHeight
         maxWidth="md"
       >
         {unauthorized && <LinodePermissionsError />}
@@ -535,6 +533,5 @@ export default compose<CombinedProps, Props>(
   withTypes,
   styled,
   withSnackbar,
-  withRouter,
   connected
 )(LinodeResize);

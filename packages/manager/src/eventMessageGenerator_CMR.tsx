@@ -26,7 +26,7 @@ export const eventMessageGenerator = (
         eventLinode ? `to ${dcDisplayNames[eventLinode.region]}` : ''
       }`;
     case 'disk_imagize':
-      return `creating from ${e.entity?.label}`;
+      return `create from ${e.entity?.label}`;
     case 'linode_boot':
       return `boot with ${e.secondary_entity?.label}`;
     case 'host_reboot':
@@ -36,7 +36,7 @@ export const eventMessageGenerator = (
     case 'linode_reboot':
       return `reboot with ${e.secondary_entity?.label}`;
     case 'linode_shutdown':
-      return 'is shutting down';
+      return 'shutdown';
     case 'linode_clone':
       return (
         <>
@@ -53,9 +53,9 @@ export const eventMessageGenerator = (
     case 'backups_restore':
       return 'backup restore';
     case 'linode_snapshot':
-      return 'snapshot backup in progress';
+      return 'snapshot backup';
     case 'linode_mutate':
-      return 'upgrade in progress';
+      return 'upgrade';
     case 'linode_rebuild':
       return 'rebuild';
     case 'linode_create':

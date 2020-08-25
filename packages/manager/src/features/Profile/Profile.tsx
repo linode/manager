@@ -7,12 +7,17 @@ import TabLinkList from 'src/components/TabLinkList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import H1Header from 'src/components/H1Header';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import useFlags from 'src/hooks/useFlags';
 import Props from './OAuthClients';
 
 const SSHKeys = React.lazy(() => import('./SSHKeys'));
+const SSHKeys_CMR = React.lazy(() => import('./SSHKeys/SSHKeys_CMR'));
 const Settings = React.lazy(() => import('./Settings'));
 const Referrals = React.lazy(() => import('./Referrals'));
 const OAuthClients = React.lazy(() => import('./OAuthClients'));
+const OAuthClients_CMR = React.lazy(() =>
+  import('./OAuthClients/OAuthClients_CMR')
+);
 const LishSettings = React.lazy(() => import('./LishSettings'));
 const DisplaySettings = React.lazy(() => import('./DisplaySettings'));
 const AuthenticationSettings = React.lazy(() =>
@@ -23,6 +28,7 @@ const APITokens = React.lazy(() => import('./APITokens'));
 type Props = RouteComponentProps<{}>;
 
 const Profile: React.FC<Props> = props => {
+  const flags = useFlags();
   const {
     match: { url }
   } = props;
@@ -86,7 +92,7 @@ const Profile: React.FC<Props> = props => {
               <AuthenticationSettings />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
-              <SSHKeys />
+              {flags.cmr ? <SSHKeys_CMR /> : <SSHKeys />}
             </SafeTabPanel>
             <SafeTabPanel index={3}>
               <LishSettings />
@@ -95,7 +101,7 @@ const Profile: React.FC<Props> = props => {
               <APITokens />
             </SafeTabPanel>
             <SafeTabPanel index={5}>
-              <OAuthClients />
+              {flags.cmr ? <OAuthClients_CMR /> : <OAuthClients />}
             </SafeTabPanel>
             <SafeTabPanel index={6}>
               <Referrals />

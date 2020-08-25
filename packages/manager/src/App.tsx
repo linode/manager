@@ -67,7 +67,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     /**
-     * Send pageviews unless blacklisted.
+     * Send pageviews unless blocklisted.
      */
     this.props.history.listen(({ pathname }) => {
       if ((window as any).ga) {
@@ -161,7 +161,11 @@ export class App extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {/** Accessibility helpers */}
-        <a href="#main-content" hidden>
+        {/* TODO these should become visible on focus as per: https://www.w3.org/TR/WCAG20-TECHS/G1 */}
+        <a href="#main-navigation" className="visually-hidden">
+          Skip to main navigation
+        </a>
+        <a href="#main-content" className="visually-hidden">
           Skip to main content
         </a>
         <div hidden>
