@@ -1,4 +1,4 @@
-import { getEnvLocalStorageOverrides } from './storage';
+import { getEnvLocalStorageOverrides, isDevToolsEnvValid } from './storage';
 
 describe('getLocalStorageOverrides', () => {
   const OLD_ENV = process.env;
@@ -49,5 +49,30 @@ describe('getLocalStorageOverrides', () => {
 
     // No overrides should be returned.
     expect(getEnvLocalStorageOverrides()).toBeUndefined();
+  });
+});
+
+describe('isDevToolsEnvValid', () => {
+  it('returns `true` if all properties are strings', () => {
+    expect(
+      isDevToolsEnvValid({
+        apiRoot: 'string-a',
+        loginRoot: 'string-b',
+        clientID: 'string-c'
+      })
+    ).toBe(true);
+    expect(
+      isDevToolsEnvValid({
+        apiRoot: {},
+        loginRoot: 'string-b',
+        clientID: 'string-c'
+      })
+    ).toBe(false);
+  });
+  it('works with mangled input', () => {
+    expect(isDevToolsEnvValid(true as any)).toBe(false);
+    expect(isDevToolsEnvValid('hello' as any)).toBe(false);
+    expect(isDevToolsEnvValid(null as any)).toBe(false);
+    expect(isDevToolsEnvValid(undefined as any)).toBe(false);
   });
 });

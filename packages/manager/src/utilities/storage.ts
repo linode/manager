@@ -162,8 +162,15 @@ export const storage: Storage = {
     set: s => setStorage(STACKSCRIPT, JSON.stringify(s))
   },
   devToolsEnv: {
-    get: () => getStorage(DEV_TOOLS_ENV), // no fallback (intentional)
-    set: devToolsEnv => setStorage(DEV_TOOLS_ENV, JSON.stringify(devToolsEnv))
+    get: () => {
+      const value = getStorage(DEV_TOOLS_ENV);
+      return isDevToolsEnvValid(value) ? value : undefined;
+    },
+    set: devToolsEnv => {
+      if (devToolsEnv) {
+        setStorage(DEV_TOOLS_ENV, JSON.stringify(devToolsEnv));
+      }
+    }
   }
 };
 
@@ -185,4 +192,12 @@ export const getEnvLocalStorageOverrides = () => {
     }
   }
   return undefined;
+};
+
+export const isDevToolsEnvValid = (value: any) => {
+  return (
+    typeof value?.apiRoot === 'string' &&
+    typeof value?.loginRoot === 'string' &&
+    typeof value?.clientID === 'string'
+  );
 };
