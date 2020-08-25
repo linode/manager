@@ -8,7 +8,6 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -34,9 +33,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.color.white
   },
+  userLandingHeader: {
+    margin: 0,
+    width: '100%'
+  },
   headline: {
-    marginBottom: 3,
-    marginLeft: 8,
+    marginTop: 8,
+    marginBottom: 8,
+    marginLeft: 15,
     lineHeight: '1.5rem',
     [theme.breakpoints.down('xs')]: {
       marginBottom: 0,
@@ -263,60 +267,65 @@ const UsersLanding: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Users" />
-      <Grid
-        container
-        justify="space-between"
-        alignItems="flex-end"
-        className={classes.root}
-      >
-        <Grid item>
-          <Typography variant="h3" data-qa-title className={classes.headline}>
-            Users
-          </Typography>
+      <div className={classes.root}>
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          className={classes.userLandingHeader}
+        >
+          <Grid item className="p0">
+            <Typography variant="h3" data-qa-title className={classes.headline}>
+              Users
+            </Typography>
+          </Grid>
+          <Grid item className={classes.addNewWrapper}>
+            <AddNewLink
+              disabled={props.isRestrictedUser}
+              disabledReason={
+                props.isRestrictedUser
+                  ? 'You cannot create other users as a restricted user.'
+                  : undefined
+              }
+              onClick={openForCreate}
+              label="Add a User"
+            />
+          </Grid>
         </Grid>
-        <Grid item className={classes.addNewWrapper}>
-          <AddNewLink
-            disabled={props.isRestrictedUser}
-            disabledReason={
-              props.isRestrictedUser
-                ? 'You cannot create other users as a restricted user.'
-                : undefined
-            }
-            onClick={openForCreate}
-            label="Add a User"
+        {newUsername && (
+          <Notice success text={`User ${newUsername} created successfully`} />
+        )}
+        {userDeleteError && (
+          <Notice
+            style={{ marginTop: newUsername ? 16 : 0 }}
+            error
+            text={`Error when deleting user, please try again later`}
           />
-        </Grid>
-      </Grid>
-      {newUsername && (
-        <Notice success text={`User ${newUsername} created successfully`} />
-      )}
-      {userDeleteError && (
-        <Notice
-          style={{ marginTop: newUsername ? 16 : 0 }}
-          error
-          text={`Error when deleting user, please try again later`}
-        />
-      )}
-      <Table aria-label="List of Users">
-        <TableHead>
-          <TableRow>
-            <TableCell className={classes.userNameCell} data-qa-username-column>
-              Username
-            </TableCell>
-            <TableCell className={classes.emailNameCell} data-qa-email-column>
-              Email Address
-            </TableCell>
-            <TableCell
-              className={classes.accountNameCell}
-              data-qa-restriction-column
-            >
-              Account Access
-            </TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>{renderTableContent(loading, error, users)}</TableBody>
-      </Table>
+        )}
+        <Table aria-label="List of Users">
+          <TableHead>
+            <TableRow>
+              <TableCell
+                className={classes.userNameCell}
+                data-qa-username-column
+              >
+                Username
+              </TableCell>
+              <TableCell className={classes.emailNameCell} data-qa-email-column>
+                Email Address
+              </TableCell>
+              <TableCell
+                className={classes.accountNameCell}
+                data-qa-restriction-column
+              >
+                Account Access
+              </TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>{renderTableContent(loading, error, users)}</TableBody>
+        </Table>
+      </div>
 
       <PaginationFooter
         count={props.count}
