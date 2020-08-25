@@ -90,20 +90,17 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
 
   if (!isPublic) {
     actions.push({
-      title: 'Delete',
-      ...readonlyProps,
-      onClick: () => {
-        triggerDelete(stackScriptID, stackScriptLabel);
-      }
-    });
-  }
-
-  if (!isPublic) {
-    actions.push({
       title: 'Make StackScript Public',
       ...readonlyProps,
       onClick: () => {
         triggerMakePublic(stackScriptID, stackScriptLabel);
+      }
+    });
+    actions.push({
+      title: 'Delete',
+      ...readonlyProps,
+      onClick: () => {
+        triggerDelete(stackScriptID, stackScriptLabel);
       }
     });
   }
