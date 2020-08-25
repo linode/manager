@@ -3,7 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
-import Box from 'src/components/core/Box';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import RootRef from 'src/components/core/RootRef';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -12,6 +12,7 @@ import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import DeletionDialog from 'src/components/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -24,18 +25,24 @@ import useOpenClose from 'src/hooks/useOpenClose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ManagedContactGroup, Mode } from './common';
 import ContactDrawer from './ContactsDrawer';
-import ContactTableContact from './ContactsTableContent';
+import ContactTableContact from './ContactsTableContent_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(1),
-    '&:before': {
-      display: 'none'
-    }
-  },
-  copy: {},
-  contactsTable: {
+    backgroundColor: theme.color.white,
     marginTop: theme.spacing(4)
+  },
+  contactsListHeader: {
+    margin: 0,
+    width: '100%'
+  },
+  headline: {
+    marginLeft: 15
+  },
+  addNewWrapper: {
+    '&.MuiGrid-item': {
+      padding: 5
+    }
   }
 }));
 
@@ -115,30 +122,36 @@ const Contacts: React.FC<CombinedProps> = props => {
   const groups = generateGroupsFromContacts(contacts);
 
   return (
-    <div>
+    <>
       <DocumentTitleSegment segment="Contacts" />
-      <Typography variant="subtitle1" className={classes.copy}>
+      <Typography variant="subtitle1">
         You can assign contact groups to monitors so we know who to talk to in
         the event of a support issue. Create contacts and assign them to a
         group, then assign the group to the appropriate monitor(s).
       </Typography>
-      <div className={classes.contactsTable}>
+      <div className={classes.root}>
         <RootRef rootRef={contactsTableRef}>
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
+          <Grid
+            className={classes.contactsListHeader}
+            container
             alignItems="center"
+            justify="space-between"
           >
-            <Typography variant="h2">Contacts</Typography>
-            <AddNewLink
-              onClick={() => {
-                setContactDrawerMode('create');
-                contactDrawer.open();
-              }}
-              label="Add a Contact..."
-            />
-          </Box>
+            <Grid item className="p0">
+              <Typography className={classes.headline} variant="h2">
+                Contacts
+              </Typography>
+            </Grid>
+            <Grid item className={classes.addNewWrapper}>
+              <AddNewLink
+                onClick={() => {
+                  setContactDrawerMode('create');
+                  contactDrawer.open();
+                }}
+                label="Add a Contact..."
+              />
+            </Grid>
+          </Grid>
         </RootRef>
         <OrderBy data={contacts} orderBy="name" order="asc">
           {({ data: orderedData, handleOrderChange, order, orderBy }) => {
@@ -154,7 +167,7 @@ const Contacts: React.FC<CombinedProps> = props => {
                 }) => {
                   return (
                     <>
-                      <Paper className={classes.root}>
+                      <Paper>
                         <Table aria-label="List of Your Managed Contacts">
                           <TableHead>
                             <TableRow>
@@ -166,14 +179,16 @@ const Contacts: React.FC<CombinedProps> = props => {
                               >
                                 Name
                               </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'group'}
-                                label={'group'}
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Group
-                              </TableSortCell>
+                              <Hidden smDown>
+                                <TableSortCell
+                                  active={orderBy === 'group'}
+                                  label={'group'}
+                                  direction={order}
+                                  handleClick={handleOrderChange}
+                                >
+                                  Group
+                                </TableSortCell>
+                              </Hidden>
                               <TableSortCell
                                 active={orderBy === 'email'}
                                 label={'email'}
@@ -182,23 +197,24 @@ const Contacts: React.FC<CombinedProps> = props => {
                               >
                                 E-mail
                               </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'phone:primary'}
-                                label={'phone:primary'}
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Primary Phone
-                              </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'phone:secondary'}
-                                label={'phone:secondary'}
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Secondary Phone
-                              </TableSortCell>
-                              {/* Empty TableCell for action menu */}
+                              <Hidden xsDown>
+                                <TableSortCell
+                                  active={orderBy === 'phone:primary'}
+                                  label={'phone:primary'}
+                                  direction={order}
+                                  handleClick={handleOrderChange}
+                                >
+                                  Primary Phone
+                                </TableSortCell>
+                                <TableSortCell
+                                  active={orderBy === 'phone:secondary'}
+                                  label={'phone:secondary'}
+                                  direction={order}
+                                  handleClick={handleOrderChange}
+                                >
+                                  Secondary Phone
+                                </TableSortCell>
+                              </Hidden>
                               <TableCell />
                             </TableRow>
                           </TableHead>
@@ -259,7 +275,7 @@ const Contacts: React.FC<CombinedProps> = props => {
         contact={contacts.find(contact => contact.id === selectedContactId)}
         groups={groups}
       />
-    </div>
+    </>
   );
 };
 
