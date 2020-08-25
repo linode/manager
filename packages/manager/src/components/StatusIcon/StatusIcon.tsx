@@ -4,6 +4,14 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes blink': {
+    from: {
+      opacity: 1
+    },
+    to: {
+      opacity: 0.25
+    }
+  },
   statusCell: {
     whiteSpace: 'nowrap',
     width: '17%',
@@ -50,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.green
   },
   statusIconOther: {
+    animation: '$blink 1.25s linear infinite',
     backgroundColor: theme.color.orange
   },
   statusIconOffline: {
