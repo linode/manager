@@ -57,7 +57,7 @@ export const sendPaginationEvent = (
 
 // LinodeThemeWrapper.tsx
 export const sendCurrentThemeSettingsEvent = (eventAction: string) => {
-  // AC 9/24/2020: disabling this event to reduce hits on GA as this seems to not be used
+  // AC 8/24/2020: disabling this event to reduce hits on GA as this seems to not be used
   // sendEvent({
   //   category: 'Theme Choice',
   //   action: eventAction,
@@ -125,7 +125,7 @@ export const sendImportDisplayGroupSubmitEvent = (
 
 // LinodeThemeWrapper.tsx
 export const sendSpacingToggleEvent = (eventLabel: string) => {
-  // AC 9/24/2020: disabling this event to reduce hits on GA as this seems to not be used
+  // AC 8/24/2020: disabling this event to reduce hits on GA as this seems to not be used
   // sendEvent({
   //   category: 'Theme Choice',
   //   action: 'Spacing Toggle',
