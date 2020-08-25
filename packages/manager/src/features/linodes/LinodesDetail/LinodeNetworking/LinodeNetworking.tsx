@@ -533,18 +533,15 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         : [];
 
     return (
-      <div
-        id="tabpanel-networking"
-        role="tabpanel"
-        aria-labelledby="tab-networking"
-      >
+      <div>
         <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         {readOnly && <LinodePermissionsError />}
         <LinodeNetworkingSummaryPanel
           linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
           sshIPAddress={firstPublicIPAddress}
           linodeLabel={linodeLabel}
-          linodeRegion={zoneName}
+          linodeRegion={linodeRegion}
+          zoneName={zoneName}
         />
 
         {this.renderIPv4()}

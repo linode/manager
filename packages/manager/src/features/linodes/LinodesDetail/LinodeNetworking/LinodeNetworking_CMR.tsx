@@ -30,8 +30,6 @@ import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
-import { ZONES } from 'src/constants';
-import { reportException } from 'src/exceptionReporting';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
@@ -488,14 +486,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const zoneName = ZONES[linodeRegion];
-
-    if (!zoneName) {
-      reportException(`Unknown region: ${linodeRegion}`, {
-        linodeID
-      });
-    }
-
     const ipsWithRDNS =
       currentlySelectedIPRange && currentlySelectedIPRange.prefix
         ? listIPv6InRange(
@@ -518,15 +508,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <div
-        id="tabpanel-networking"
-        role="tabpanel"
-        aria-labelledby="tab-networking"
-      >
+      <div>
         <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         {readOnly && <LinodePermissionsError />}
         <LinodeNetworkingSummaryPanel
-          linodeRegion={zoneName}
+          linodeRegion={linodeRegion}
           linodeID={linodeID}
           linodeCreated={linodeCreated}
           linodeLabel={linodeLabel}

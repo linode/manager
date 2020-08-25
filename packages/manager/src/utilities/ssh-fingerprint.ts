@@ -1,13 +1,24 @@
 import * as crypto from 'crypto';
+import { reportException } from 'src/exceptionReporting';
 
-const pubre = /^(ssh-[dr]s[as]\s+)|(\s+.+)|\n/g;
-
+/**
+ * Return the fingerprint of an SSH pubkey.
+ * Defaults to md5 as that's what e.g. GitHub displays.
+ *
+ * Originally taken from https://github.com/bahamas10/node-ssh-fingerprint/blob/master/ssh-fingerprint.js
+ * As of 8/20, replaced because the regex-based method does not handle ed25519 keys correctly.
+ */
 export default (pub: string, alg: string = 'md5') => {
-  const cleanpub = pub.replace(pubre, '');
-  const pubbuffer = new Buffer(cleanpub, 'base64');
-  const key = hash(pubbuffer, alg);
+  try {
+    const cleanpub = pub.split(' ')?.[1] ?? '';
+    const pubbuffer = Buffer.from(cleanpub, 'base64');
+    const key = hash(pubbuffer, alg);
 
-  return colons(key);
+    return colons(key);
+  } catch (e) {
+    reportException(`Error ${e} when parsing SSH pubkey: ${pub}`);
+    return 'Error generating fingerprint';
+  }
 };
 
 // hash a string with the given alg

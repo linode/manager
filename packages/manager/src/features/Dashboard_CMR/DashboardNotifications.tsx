@@ -1,30 +1,34 @@
+import { getInvoices } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import useAccount from 'src/hooks/useAccount';
-import { getLogins } from '@linode/api-v4/lib/profile';
-import { getEvents, Event } from '@linode/api-v4/lib/account';
-import CircleProgress from 'src/components/CircleProgress';
-import ErrorState from 'src/components/ErrorState';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
+import LinodeNews from './LinodeNews';
 
 import {
-  Alerts,
   Community,
   Maintenance,
   OpenSupportTickets,
   PendingActions
 } from 'src/features/NotificationCenter';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3),
-    borderRadius: 3,
-    marginBottom: 8
+    marginBottom: 30,
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(3),
+      borderRadius: 3
+    }
   },
   column: {
-    width: '45%'
+    [theme.breakpoints.up('md')]: {
+      width: '45%'
+    }
   }
 }));
 
@@ -32,87 +36,92 @@ export const Notifications: React.FC<{}> = _ => {
   const classes = useStyles();
   const { account } = useAccount();
   const balance = account.data?.balance ?? 0;
+  const balanceUninvoiced = account.data?.balance_uninvoiced ?? 0;
 
-  const [events, setEvents] = React.useState<Event[]>([]);
-  const [eventsError, setEventsError] = React.useState<string | null>(null);
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const { community, pendingActions, support } = useNotificationData();
 
-  /**
-   * 1. Figure out most recent login for this user
-   * 2. Request events since that time
-   * 3. Pass the ones we want to the Community component below
-   */
-
-  React.useEffect(() => {
-    getLogins({}, { '+order_by': 'datetime', '+order': 'desc' })
-      .then(response => {
-        const mostRecentLogin = response.data[0]?.datetime;
-
-        getEvents(
-          {},
-          {
-            created: {
-              '+gt': mostRecentLogin
-            }
-          }
-        )
-          .then(response => {
-            setEvents(response.data);
-            setLoading(false);
-          })
-          .catch(error => {
-            setEventsError(error[0].reason);
-            setLoading(false);
-          });
-      })
-      .catch(error => {
-        setEventsError(error[0].reason);
-        setLoading(false);
-      });
-  }, []);
-
-  const communityEvents = events.filter(event =>
-    [
-      'community_like',
-      'community_question_reply',
-      'community_mention'
-    ].includes(event.action)
+  const mostRecentInvoiceRequest = useAPIRequest<number | undefined>(
+    () =>
+      getInvoices({}, { '+order': 'desc', '+order_by': 'date' }).then(
+        response => response.data[0].id
+      ),
+    undefined
   );
 
-  return loading ? (
-    <CircleProgress />
-  ) : eventsError ? (
-    <ErrorState errorText={eventsError} />
-  ) : (
+  return (
     <>
-      <BillingSummary balance={balance} balanceUninvoiced={0} />
+      <Hidden smDown>
+        <BillingSummary
+          balance={balance}
+          balanceUninvoiced={balanceUninvoiced}
+          mostRecentInvoiceId={mostRecentInvoiceRequest.data}
+        />
+      </Hidden>
       <Paper className={classes.root}>
-        <Grid container direction="row" justify="space-between">
-          <Grid item className={classes.column}>
-            <Grid container direction="column">
-              <Grid item>
-                <PendingActions />
-              </Grid>
-              <Grid item>
-                <Alerts />
-              </Grid>
-              <Grid item>
-                <Maintenance />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item className={classes.column}>
-            <Grid container direction="column">
-              <Grid item>
-                <OpenSupportTickets />
-              </Grid>
-              <Grid item>
-                <Community communityEvents={communityEvents} />
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="flex-start"
+        >
+          <Hidden smDown>
+            <Grid item className={classes.column}>
+              <Grid container direction="column">
+                <Grid item>
+                  <PendingActions pendingActions={pendingActions} />
+                </Grid>
+                <Grid item>
+                  <Maintenance />
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+            <Grid item className={classes.column}>
+              <Grid container direction="column">
+                <Grid item>
+                  <OpenSupportTickets
+                    loading={support.loading}
+                    error={Boolean(support.error)}
+                    openTickets={support.data}
+                  />
+                </Grid>
+                <Grid item>
+                  <Community
+                    loading={community.loading}
+                    communityEvents={community.events}
+                    error={Boolean(community.error)}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Hidden>
+
+          {/* Small screen version */}
+          <Hidden mdUp>
+            <PendingActions pendingActions={pendingActions} />
+            <Maintenance />
+            <OpenSupportTickets
+              loading={support.loading}
+              error={Boolean(support.error)}
+              openTickets={support.data}
+            />
+            <Community
+              loading={community.loading}
+              communityEvents={community.events}
+              error={Boolean(community.error)}
+            />
+          </Hidden>
         </Grid>
       </Paper>
+
+      <Hidden mdUp>
+        <BillingSummary
+          balance={balance}
+          balanceUninvoiced={balanceUninvoiced}
+          mostRecentInvoiceId={mostRecentInvoiceRequest.data}
+        />
+      </Hidden>
+
+      <LinodeNews />
     </>
   );
 };

@@ -305,43 +305,41 @@ class Glish extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <div id="tabpanel-glish" role="tabpanel" aria-labelledby="tab-glish">
-        <div id="Glish">
-          {!powered && (
-            <div className={classes.errorState}>
-              <ErrorState errorText="Please power on your Linode to use Glish" />
-            </div>
-          )}
+      <div id="Glish">
+        {!powered && (
+          <div className={classes.errorState}>
+            <ErrorState errorText="Please power on your Linode to use Glish" />
+          </div>
+        )}
 
-          {/*
-           * The loading states have to render with the VncDisplay component
-           * because the messages from the websocket connection have to be send
-           * if you're rendering a loading state, then get a message from websockets,
-           * then render the VncDisplay, you end up with a blank black screen
-           */}
-          {powered && !initialConnect ? (
-            isRetryingConnection ? (
-              this.renderRetryState()
-            ) : (
-              <CircleProgress noInner />
-            )
+        {/*
+         * The loading states have to render with the VncDisplay component
+         * because the messages from the websocket connection have to be send
+         * if you're rendering a loading state, then get a message from websockets,
+         * then render the VncDisplay, you end up with a blank black screen
+         */}
+        {powered && !initialConnect ? (
+          isRetryingConnection ? (
+            this.renderRetryState()
           ) : (
-            <React.Fragment />
-          )}
+            <CircleProgress noInner />
+          )
+        ) : (
+          <React.Fragment />
+        )}
 
-          {powered && activeVnc && token && region && (
-            <div
-              className={classes.container}
-              style={!initialConnect ? { display: 'none' } : {}}
-            >
-              <VncDisplay
-                url={`${getLishSchemeAndHostname(region)}:8080/${token}`}
-                onUpdateState={this.onUpdateVNCState}
-                onResize={this.canvasResize}
-              />
-            </div>
-          )}
-        </div>
+        {powered && activeVnc && token && region && (
+          <div
+            className={classes.container}
+            style={!initialConnect ? { display: 'none' } : {}}
+          >
+            <VncDisplay
+              url={`${getLishSchemeAndHostname(region)}:8080/${token}`}
+              onUpdateState={this.onUpdateVNCState}
+              onResize={this.canvasResize}
+            />
+          </div>
+        )}
       </div>
     );
   }

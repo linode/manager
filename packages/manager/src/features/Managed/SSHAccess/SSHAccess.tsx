@@ -1,21 +1,19 @@
 import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import useFlags from 'src/hooks/useFlags';
 import LinodePubKey from './LinodePubKey';
 import SSHAccessTable from './SSHAccessTable';
+import SSHAccessTable_CMR from './SSHAccessTable_CMR';
 
-const SSHAcess: React.FC<{}> = props => {
+const SSHAcess: React.FC<{}> = () => {
+  const flags = useFlags();
+
   return (
-    <>
-      <div
-        id="tabpanel-sshAccess"
-        role="tabpanel"
-        aria-labelledby="tab-sshAccess"
-      >
-        <DocumentTitleSegment segment="SSH Access" />
-        <LinodePubKey />
-        <SSHAccessTable />
-      </div>
-    </>
+    <div>
+      <DocumentTitleSegment segment="SSH Access" />
+      <LinodePubKey />
+      {flags.cmr ? <SSHAccessTable_CMR /> : <SSHAccessTable />}
+    </div>
   );
 };
 

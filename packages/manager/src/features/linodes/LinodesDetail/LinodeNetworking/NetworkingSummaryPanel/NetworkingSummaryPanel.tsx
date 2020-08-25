@@ -1,4 +1,3 @@
-import { ZoneName } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -31,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  linodeRegion: ZoneName;
+  linodeRegion: string;
   linodeID: number;
   linodeCreated: string;
   linodeLabel: string;
@@ -51,10 +50,11 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
         justify="space-between"
         alignItems="flex-start"
       >
-        <Grid xs={12} sm={3}>
+        <Grid xs={12} sm={3} item>
           <NetworkTransfer linodeID={linodeID} linodeLabel={linodeLabel} />
         </Grid>
         <Grid
+          item
           xs={12}
           sm={9}
           md={6}
@@ -64,7 +64,7 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
           <TransferHistory linodeID={linodeID} linodeCreated={linodeCreated} />
         </Grid>
         <Hidden smDown>
-          <Grid md={3} lg={2} className={classes.dnsResolverContainer}>
+          <Grid item md={3} lg={2} className={classes.dnsResolverContainer}>
             <DNSResolvers region={linodeRegion} />
           </Grid>
         </Hidden>

@@ -26,6 +26,9 @@ import { ExtendedLinode } from '../LinodesDetail/types';
 import useFlags from 'src/hooks/useFlags';
 import TableWrapper from './TableWrapper';
 import TableWrapper_CMR from './TableWrapper_CMR';
+import IconButton from 'src/components/core/IconButton';
+import GroupByTag from 'src/assets/icons/group-by-tag.svg';
+import TableView from 'src/assets/icons/table-view.svg';
 
 type ClassNames =
   | 'root'
@@ -34,7 +37,9 @@ type ClassNames =
   | 'tagHeader'
   | 'tagHeaderOuter'
   | 'paginationCell'
-  | 'groupContainer';
+  | 'groupContainer'
+  | 'controlHeader'
+  | 'toggleButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -67,6 +72,19 @@ const styles = (theme: Theme) =>
       '& div:first-child': {
         marginTop: 0
       }
+    },
+    controlHeader: {
+      backgroundColor: theme.bg.controlHeader,
+      marginBottom: 28,
+      display: 'flex',
+      justifyContent: 'flex-end'
+    },
+    toggleButton: {
+      padding: 10,
+      '&:focus': {
+        // Browser default until we get styling direction for focus states
+        outline: '1px dotted #999'
+      }
     }
   });
 
@@ -82,6 +100,10 @@ interface Props {
   component: any;
   data: ExtendedLinode[];
   someLinodesHaveMaintenance: boolean;
+  toggleLinodeView: () => 'grid' | 'list';
+  toggleGroupLinodes: () => boolean;
+  linodeViewPreference: 'grid' | 'list';
+  linodesAreGrouped: boolean;
 }
 
 type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
@@ -95,6 +117,10 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
     orderBy,
     handleOrderChange,
     classes,
+    toggleLinodeView,
+    toggleGroupLinodes,
+    linodeViewPreference,
+    linodesAreGrouped,
     ...rest
   } = props;
 
@@ -121,8 +147,42 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
 
   if (display === 'grid') {
     return (
-      // eslint-disable-next-line
       <>
+        <Grid item xs={12} className={'px0'}>
+          {flags.cmr && (
+            <div className={classes.controlHeader}>
+              <div id="displayViewDescription" className="visually-hidden">
+                Currently in {linodeViewPreference} view
+              </div>
+              <IconButton
+                aria-label="Toggle display"
+                aria-describedby={'displayViewDescription'}
+                title={`Toggle display`}
+                onClick={toggleLinodeView}
+                disableRipple
+                className={classes.toggleButton}
+              >
+                <TableView />
+              </IconButton>
+
+              <div id="groupByDescription" className="visually-hidden">
+                {linodesAreGrouped
+                  ? 'group by tag is currently enabled'
+                  : 'group by tag is currently disabled'}
+              </div>
+              <IconButton
+                aria-label={`Toggle group by tag`}
+                aria-describedby={'groupByDescription'}
+                title={`Toggle group by tag`}
+                onClick={toggleGroupLinodes}
+                disableRipple
+                className={classes.toggleButton}
+              >
+                <GroupByTag />
+              </IconButton>
+            </div>
+          )}
+        </Grid>
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
             <div
@@ -205,7 +265,13 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
       // eslint-disable-next-line
       <React.Fragment>
         {flags.cmr ? (
-          <TableWrapper_CMR {...tableWrapperProps}>
+          <TableWrapper_CMR
+            {...tableWrapperProps}
+            linodeViewPreference="list"
+            linodesAreGrouped={true}
+            toggleLinodeView={toggleLinodeView}
+            toggleGroupLinodes={toggleGroupLinodes}
+          >
             {orderedGroupedLinodes.map(([tag, linodes]) => {
               return (
                 <React.Fragment key={tag}>

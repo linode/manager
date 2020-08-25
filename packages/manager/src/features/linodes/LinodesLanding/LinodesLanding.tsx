@@ -1,7 +1,6 @@
 import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import Close from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
 import * as classNames from 'classnames';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -13,8 +12,6 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import TableView from 'src/assets/icons/table-view.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
@@ -63,23 +60,30 @@ import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import DeleteDialog from './DeleteDialog';
+import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
+import RescueDialog from '../LinodesDetail/LinodeRescue/RescueDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import DisplayLinodes from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import ToggleBox from './ToggleBox';
+import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { ExtendedStatus, statusToPriority } from './utils';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 
 interface State {
   powerDialogOpen: boolean;
   powerDialogAction?: Action;
+  enableBackupsDialogOpen: boolean;
   selectedLinodeConfigs?: Config[];
   selectedLinodeID?: number;
   selectedLinodeLabel?: string;
   deleteDialogOpen: boolean;
+  rebuildDialogOpen: boolean;
+  rescueDialogOpen: boolean;
   groupByTag: boolean;
   CtaDismissed: boolean;
   linodeResizeOpen: boolean;
@@ -106,8 +110,11 @@ type CombinedProps = WithImages &
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
+    enableBackupsDialogOpen: false,
     powerDialogOpen: false,
     deleteDialogOpen: false,
+    rebuildDialogOpen: false,
+    rescueDialogOpen: false,
     groupByTag: false,
     CtaDismissed: BackupsCtaDismissed.get(),
     linodeResizeOpen: false,
@@ -170,6 +177,21 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           linodeMigrateOpen: true
         });
         break;
+      case 'rebuild':
+        this.setState({
+          rebuildDialogOpen: true
+        });
+        break;
+      case 'rescue':
+        this.setState({
+          rescueDialogOpen: true
+        });
+        break;
+      case 'enable_backups':
+        this.setState({
+          enableBackupsDialogOpen: true
+        });
+        break;
     }
     this.setState({
       selectedLinodeID: linodeID,
@@ -181,8 +203,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({
       powerDialogOpen: false,
       deleteDialogOpen: false,
+      rebuildDialogOpen: false,
+      rescueDialogOpen: false,
       linodeResizeOpen: false,
-      linodeMigrateOpen: false
+      linodeMigrateOpen: false,
+      enableBackupsDialogOpen: false
     });
   };
 
@@ -304,13 +329,28 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               onClose={this.closeDialogs}
               linodeID={this.state.selectedLinodeID ?? -1}
             />
+            <LinodeRebuildDialog
+              open={this.state.rebuildDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
+            />
+            <RescueDialog
+              open={this.state.rescueDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
+            />
+            <EnableBackupsDialog
+              open={this.state.enableBackupsDialogOpen}
+              onClose={this.closeDialogs}
+              linodeId={this.state.selectedLinodeID ?? -1}
+            />
           </>
         )}
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner
             userTimezone={this.props.userTimezone}
-            userTimezoneError={this.props.userTimezoneError}
-            userTimezoneLoading={this.props.userTimezoneLoading}
+            userProfileError={this.props.userProfileError}
+            userProfileLoading={this.props.userProfileLoading}
           />
         )}
         <Grid container>
@@ -433,51 +473,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   }
                                 />
                               </Grid>
-                              <Hidden xsDown>
-                                {params.view === 'grid' && (
-                                  <Grid item xs={12} className={'px0'}>
-                                    <div className={classes.controlHeader}>
-                                      <div
-                                        id="displayViewDescription"
-                                        className="visually-hidden"
-                                      >
-                                        Currently in {linodeViewPreference} view
-                                      </div>
-                                      <IconButton
-                                        aria-label="Toggle display"
-                                        aria-describedby={
-                                          'displayViewDescription'
-                                        }
-                                        title={`Toggle display`}
-                                        onClick={toggleLinodeView}
-                                        disableRipple
-                                        className={classes.toggleButton}
-                                      >
-                                        <TableView />
-                                      </IconButton>
-
-                                      <div
-                                        id="groupByDescription"
-                                        className="visually-hidden"
-                                      >
-                                        {linodesAreGrouped
-                                          ? 'group by tag is currently enabled'
-                                          : 'group by tag is currently disabled'}
-                                      </div>
-                                      <IconButton
-                                        aria-label={`Toggle group by tag`}
-                                        aria-describedby={'groupByDescription'}
-                                        title={`Toggle group by tag`}
-                                        onClick={toggleGroupLinodes}
-                                        disableRipple
-                                        className={classes.toggleButton}
-                                      >
-                                        <GroupByTag />
-                                      </IconButton>
-                                    </div>
-                                  </Grid>
-                                )}
-                              </Hidden>
                             </React.Fragment>
                           ) : (
                             <Grid
@@ -576,6 +571,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   <DisplayGroupedLinodes
                                     {...finalProps}
                                     display={linodeViewPreference}
+                                    toggleLinodeView={toggleLinodeView}
+                                    toggleGroupLinodes={toggleGroupLinodes}
+                                    linodesAreGrouped={true}
+                                    linodeViewPreference={linodeViewPreference}
                                     component={
                                       linodeViewPreference === 'grid'
                                         ? CardView
@@ -586,6 +585,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   <DisplayLinodes
                                     {...finalProps}
                                     display={linodeViewPreference}
+                                    toggleLinodeView={toggleLinodeView}
+                                    toggleGroupLinodes={toggleGroupLinodes}
+                                    linodesAreGrouped={false}
+                                    linodeViewPreference={linodeViewPreference}
                                     component={
                                       linodeViewPreference === 'grid'
                                         ? CardView
@@ -720,8 +723,8 @@ interface StateProps {
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   userTimezone: string;
-  userTimezoneLoading: boolean;
-  userTimezoneError?: APIError[];
+  userProfileLoading: boolean;
+  userProfileError?: APIError[];
   someLinodesHaveScheduledMaintenance: boolean;
   linodesInTransition: Set<number>;
 }
@@ -747,9 +750,9 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
       : false,
     linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
-    userTimezone: state.__resources.profile.data?.timezone ?? '',
-    userTimezoneLoading: state.__resources.profile.loading,
-    userTimezoneError: path<APIError[]>(
+    userTimezone: getUserTimezone(state),
+    userProfileLoading: state.__resources.profile.loading,
+    userProfileError: path<APIError[]>(
       ['read'],
       state.__resources.profile.error
     ),

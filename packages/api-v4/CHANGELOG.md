@@ -1,3 +1,15 @@
+## [2020-08-11] - v.0.31.0
+
+### Added:
+
+- Update Account capabilities type to include 'Cloud Firewall'
+- Update Events type to include 'community_mention'
+- New method getActiveLongviewPlan
+
+### Fixed:
+
+- Update Event time remaining to expect null or a string
+
 ## [2020-06-30] - v0.28.0
 
 ### Added:

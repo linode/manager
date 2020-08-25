@@ -4,6 +4,7 @@ import {
   DATETIME_DISPLAY_FORMAT
 } from 'src/constants';
 import { formatDate, shouldHumanize } from './formatDate';
+jest.mock('./getUserTimezone');
 
 describe('shouldHumanize', () => {
   it('should NOT humanize few days duration with day cutoff', () => {

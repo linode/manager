@@ -118,8 +118,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     const { linodeId, linodeRegion, linodeType } = props;
 
     const params: Record<string, string> = {
-      type: 'My Images',
-      subtype: 'Clone Linode',
+      type: 'Clone Linode',
       linodeID: String(linodeId)
     };
 
@@ -190,10 +189,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               title: 'Enable Backups',
               onClick: (e: React.MouseEvent<HTMLElement>) => {
                 sendLinodeActionMenuItemEvent('Enable Backups');
-                history.push({
-                  pathname: `/linodes/${linodeId}/backup`,
-                  state: { enableOnLoad: true }
-                });
+                openDialog('enable_backups', linodeId);
                 e.preventDefault();
                 e.stopPropagation();
               },
@@ -227,7 +223,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Rebuild',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
-            history.push(`/linodes/${linodeId}/rebuild`);
+            openDialog('rebuild', linodeId);
             e.preventDefault();
             e.stopPropagation();
           },
@@ -238,7 +234,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           title: 'Rescue',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
-            history.push(`/linodes/${linodeId}/rescue`);
+            openDialog('rescue', linodeId);
             e.preventDefault();
             e.stopPropagation();
           },

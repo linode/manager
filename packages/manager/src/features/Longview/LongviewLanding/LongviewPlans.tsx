@@ -1,6 +1,9 @@
 import * as classnames from 'classnames';
-import { AccountSettings } from '@linode/api-v4/lib/account';
-import { LongviewSubscription } from '@linode/api-v4/lib/longview/types';
+import {
+  getActiveLongviewPlan,
+  updateActiveLongviewPlan,
+  LongviewSubscription
+} from '@linode/api-v4/lib/longview';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -129,8 +132,8 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 // If an account has the "free" Longview plan,
-// accountSettings.longview_subscription will be `null`. We'd rather use
-// a string identifer in this component to be keep track of the "free" plan, so
+// longview_subscription will be {}. We'd rather use
+// a string identifer in this component to keep track of the "free" plan, so
 // we'll create a fake ID for it.
 export const LONGVIEW_FREE_ID = 'longview-free';
 
@@ -157,48 +160,55 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
   const {
     accountSettings,
     subscriptionRequestHook: subscriptions,
-    updateAccountSettings,
-    mayUserViewAccountSettings,
     mayUserModifyLVSubscription
   } = props;
   const styles = useStyles();
 
-  const currentSubscriptionOnAccount = getCurrentSubscriptionOnAccount(
-    mayUserViewAccountSettings,
-    accountSettings
-  );
+  const [currentSubscription, setCurrentSubscription] = React.useState<
+    string | undefined
+  >(undefined);
 
   const [selectedSub, setSelectedSub] = React.useState<string>(
-    currentSubscriptionOnAccount || ''
+    currentSubscription || ''
   );
   const [updateLoading, setUpdateLoading] = React.useState<boolean>(false);
   const [updateErrorMsg, setUpdateErrorMsg] = React.useState<string>('');
+  const [updateSuccessMsg, setUpdateSuccessMsg] = React.useState<string>('');
+
+  React.useEffect(() => {
+    getActiveLongviewPlan()
+      .then((plan: LongviewSubscription) => {
+        const activeID = plan.id ?? LONGVIEW_FREE_ID;
+        setCurrentSubscription(activeID);
+        setSelectedSub(activeID);
+      })
+      .catch(_ => {
+        setUpdateErrorMsg('Error loading your current Longview plan');
+      });
+  }, []);
 
   const onSubmit = () => {
     // No need to do anything if the user hasn't selected a different plan.
-    if (selectedSub === currentSubscriptionOnAccount) {
+    if (selectedSub === currentSubscription) {
       return;
     }
 
     setUpdateLoading(true);
     setUpdateErrorMsg('');
+    setUpdateSuccessMsg('');
 
     // If the user has selected the free plan, which need to make a switch for
-    // `null`, which is what the API wants.
-    const newSubscriptionID =
-      selectedSub === LONGVIEW_FREE_ID ? null : selectedSub;
+    // {}, which is what the API wants.
+    const payload =
+      selectedSub === LONGVIEW_FREE_ID
+        ? {}
+        : { longview_subscription: selectedSub };
 
-    updateAccountSettings({
-      longview_subscription: newSubscriptionID
-    })
+    updateActiveLongviewPlan(payload)
       .then(_ => {
         setUpdateLoading(false);
-        // If the user has selected the free plan, the response to the PUT
-        // request will have the old longview_subscription. I don't know why.
-        // We need to manually update the store in this case.
-        if (selectedSub === LONGVIEW_FREE_ID) {
-          props.updateAccountSettingsInStore({ longview_subscription: null });
-        }
+        setUpdateSuccessMsg('Plan updated successfully.');
+        setCurrentSubscription(selectedSub);
       })
       .catch(err => {
         const normalizedError = getAPIErrorOrDefault(
@@ -220,7 +230,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
 
   const isButtonDisabled =
     Boolean(subscriptions.error) ||
-    currentSubscriptionOnAccount === selectedSub ||
+    currentSubscription === selectedSub ||
     !mayUserModifyLVSubscription;
 
   return (
@@ -231,9 +241,6 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
           [styles.root]: true,
           [styles.collapsedTable]: isManaged
         })}
-        id="tabpanel-planDetails"
-        role="tabpanel"
-        aria-labelledby="tab-planDetails"
       >
         {updateErrorMsg && <Notice error text={updateErrorMsg} />}
         {!mayUserModifyLVSubscription && !isManaged && (
@@ -243,6 +250,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
             text="You don't have permissions to change the Longview plan. Please contact an account administrator for details."
           />
         )}
+        {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}
         {isManaged && <Notice success text={managedText} />}
         {!isManaged && (
           <>
@@ -267,7 +275,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
                   subscriptions={subscriptions.data}
                   onRadioSelect={onRadioSelect}
                   onRowSelect={setSelectedSub}
-                  currentSubscriptionOnAccount={currentSubscriptionOnAccount}
+                  currentSubscriptionOnAccount={currentSubscription}
                   selectedSub={selectedSub}
                   disabled={!mayUserModifyLVSubscription}
                 />
@@ -444,7 +452,7 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
             {plan}
             {currentSubscriptionOnAccount === id && (
               <Chip
-                data-testid="current-plan"
+                data-testid={`current-plan-${id}`}
                 label="Current Plan"
                 className={styles.chip}
               />
@@ -485,22 +493,4 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
 // =============================================================================
 export const formatPrice = (price: LongviewSubscription['price']): string => {
   return `$${price.hourly.toFixed(2)}/hr ($${price.monthly}/mo)`;
-};
-
-// Return the Longview subscription on the account, or the default if
-// accountSettings is undefined or if the account has the "free" plan enabled
-// (in which case accountSettings.longview_subscription will be `null`).
-export const getCurrentSubscriptionOnAccount = (
-  mayUserViewAccountSettings: boolean,
-  accountSettings?: AccountSettings,
-  defaultSubscriptionID = LONGVIEW_FREE_ID
-) => {
-  if (!mayUserViewAccountSettings) {
-    return undefined;
-  }
-
-  return accountSettings &&
-    typeof accountSettings.longview_subscription === 'string'
-    ? accountSettings.longview_subscription
-    : defaultSubscriptionID;
 };

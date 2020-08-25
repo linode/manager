@@ -1,48 +1,19 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import BarPercent from 'src/components/BarPercent/BarPercent_CMR';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import NotificationSection from './NotificationSection';
+import NotificationSection, { NotificationItem } from './NotificationSection';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  action: {
-    display: 'flex',
-    flexFlow: 'column nowrap'
-  },
-  bar: {
-    marginTop: theme.spacing()
-  }
-}));
+interface Props {
+  pendingActions: NotificationItem[];
+}
 
-export const PendingActions: React.FC<{}> = _ => {
-  const classes = useStyles();
-  const actions = [
-    {
-      id: 'resize-1',
-      body: (
-        <div className={classes.action}>
-          <Typography>
-            Linode <Link to="/linode/instances/2">linode-1</Link>
-            {` `}
-            resize to Linode 64GB Plan (~5 minutes)
-          </Typography>
-          <BarPercent
-            className={classes.bar}
-            max={100}
-            value={75}
-            rounded
-            narrow
-          />
-        </div>
-      )
-    }
-  ];
+export const PendingActions: React.FC<Props> = props => {
+  const { pendingActions } = props;
+
   return (
     <NotificationSection
-      content={actions}
+      content={pendingActions}
       header="Pending Actions"
       showMoreTarget={'/events'}
+      emptyMessage="There are no pending actions."
     />
   );
 };

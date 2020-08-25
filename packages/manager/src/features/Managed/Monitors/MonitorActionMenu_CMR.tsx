@@ -1,0 +1,144 @@
+import { MonitorStatus } from '@linode/api-v4/lib/managed';
+import { APIError } from '@linode/api-v4/lib/types';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
+import * as React from 'react';
+import { compose } from 'recompose';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import withManagedServices, {
+  DispatchProps
+} from 'src/containers/managedServices.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+interface Props {
+  monitorID: number;
+  status: MonitorStatus;
+  label: string;
+  openDialog: (id: number, label: string) => void;
+  openMonitorDrawer: (id: number, mode: string) => void;
+  openHistoryDrawer: (id: number, label: string) => void;
+}
+
+export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
+
+const MonitorActionMenu: React.FC<CombinedProps> = props => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const {
+    disableServiceMonitor,
+    enableServiceMonitor,
+    enqueueSnackbar,
+    label,
+    monitorID,
+    openDialog,
+    openHistoryDrawer,
+    openMonitorDrawer,
+    status
+  } = props;
+
+  const handleError = (message: string, error: APIError[]) => {
+    const errMessage = getAPIErrorOrDefault(error, message);
+    enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
+  };
+
+  const inlineActions: Action[] = [
+    {
+      title: 'View Issue History',
+      onClick: () => {
+        openHistoryDrawer(monitorID, label);
+      }
+    },
+    {
+      title: 'Edit',
+      onClick: () => {
+        openMonitorDrawer(monitorID, 'edit');
+      }
+    }
+  ];
+
+  const actions: Action[] = [
+    status === 'disabled'
+      ? {
+          title: 'Enable',
+          onClick: () => {
+            enableServiceMonitor(monitorID)
+              .then(_ => {
+                enqueueSnackbar('Monitor enabled successfully.', {
+                  variant: 'success'
+                });
+              })
+              .catch(e => {
+                handleError('Error enabling this Service Monitor.', e);
+              });
+          }
+        }
+      : {
+          title: 'Disable',
+          onClick: () => {
+            disableServiceMonitor(monitorID)
+              .then(_ => {
+                enqueueSnackbar('Monitor disabled successfully.', {
+                  variant: 'success'
+                });
+              })
+              .catch(e => {
+                handleError('Error disabling this Service Monitor.', e);
+              });
+          }
+        },
+    {
+      title: 'Delete',
+      onClick: () => {
+        openDialog(monitorID, label);
+      }
+    }
+  ];
+
+  if (matchesSmDown) {
+    actions.unshift(
+      {
+        title: 'View Issue History',
+        onClick: () => {
+          openHistoryDrawer(monitorID, label);
+        }
+      },
+      {
+        title: 'Edit',
+        onClick: () => {
+          openMonitorDrawer(monitorID, 'edit');
+        }
+      }
+    );
+  }
+
+  return (
+    <>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      <ActionMenu
+        createActions={() => actions}
+        ariaLabel={`Action menu for Monitor ${props.label}`}
+      />
+    </>
+  );
+};
+
+const enhanced = compose<CombinedProps, Props>(
+  // This is just a quick way to get access to managed Redux actions
+  withManagedServices(() => ({})),
+  withSnackbar
+);
+
+export default enhanced(MonitorActionMenu);

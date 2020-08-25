@@ -8,16 +8,19 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import IconTextLink from 'src/components/IconTextLink';
 import PaymentDrawer from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { formatDate } from 'src/utilities/formatDate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(3) + 1,
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    justifyContent: 'space-around',
+    marginBottom: theme.spacing(4),
+    padding: theme.spacing(3) - 4,
     border: `solid 1px ${theme.color.borderBilling}`,
     borderRadius: 8,
-    backgroundColor: theme.bg.billingHeader,
-    height: 160
+    backgroundColor: theme.bg.billingHeader
   },
   iconButton: {
     paddingLeft: 0,
@@ -36,10 +39,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing()
   },
   actions: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(),
     display: 'flex',
     alignItems: 'flex-start',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
   }
 }));
 
@@ -64,27 +68,23 @@ export const PastDue: React.FC<Props> = props => {
     []
   );
 
-  /**
-   * Request Invoices
-   */
-  const [invoiceLoading, setInvoiceLoading] = React.useState(false);
-  const [mostRecentInvoice, setMostRecentInvoice] = React.useState<Invoice>();
+  const mostRecentInvoiceRequest = useAPIRequest<Invoice | undefined>(
+    () =>
+      getInvoices({}, { '+order': 'desc', '+order_by': 'date' }).then(
+        response => response.data[0]
+      ),
+    undefined
+  );
 
-  React.useEffect(() => {
-    setInvoiceLoading(true);
-    getInvoices({}, { '+order': 'desc', '+order_by': 'date' })
-      .then(response => {
-        setMostRecentInvoice(response.data?.[0]);
-        setInvoiceLoading(false);
-      })
-      .catch(_ => setInvoiceLoading(false)); // Just leave the invoice as undefined
-  }, []);
-
-  if (invoiceLoading) {
+  if (mostRecentInvoiceRequest.loading) {
     return (
       <div
         className={classes.root}
-        style={{ display: 'flex', justifyContent: 'center' }}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
       >
         <CircleProgress mini />
       </div>
@@ -97,10 +97,12 @@ export const PastDue: React.FC<Props> = props => {
           <Currency quantity={balance} /> Past Due
         </Typography>
         <Typography>
-          {mostRecentInvoice && (
+          {mostRecentInvoiceRequest.data && (
             <>
               Your payment was due on{' '}
-              {formatDate(mostRecentInvoice.date, { format: 'dd-LLL-yyyy' })}
+              {formatDate(mostRecentInvoiceRequest.data.date, {
+                format: 'dd-LLL-yyyy'
+              })}
               {`. `}
             </>
           )}
@@ -119,9 +121,9 @@ export const PastDue: React.FC<Props> = props => {
             SideIcon={InvoiceIcon}
             text="View most recent invoice"
             title="View most recent invoice"
-            to={`/account/billing/invoices/${mostRecentInvoice?.id}`}
+            to={`/account/billing/invoices/${mostRecentInvoiceRequest?.data?.id}`}
             className={classes.iconButton}
-            disabled={!mostRecentInvoice?.id}
+            disabled={!mostRecentInvoiceRequest?.data?.id}
           />
         </div>
       </div>

@@ -3,7 +3,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
 import Hidden from 'src/components/core/Hidden';
-import Typography from 'src/components/core/Typography';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
@@ -74,20 +73,45 @@ export const EntityTableHeader: React.FC<Props> = props => {
               </SortCell>
             )
           ) : (
-            <TableCell
-              key={thisCell.dataColumn}
-              data-testid={`${thisCell.label}-header-cell`}
-              className={classes.thead}
-              style={{ width: thisCell.widthPercent }}
-            >
-              <Typography
-                className={
-                  thisCell.visuallyHidden ? classes.hiddenHeaderCell : undefined
-                }
-              >
-                {thisCell.label}
-              </Typography>
-            </TableCell>
+            [
+              thisCell.hideOnMobile ? (
+                <Hidden xsDown>
+                  <TableCell
+                    key={thisCell.dataColumn}
+                    data-testid={`${thisCell.label}-header-cell`}
+                    className={classes.thead}
+                    style={{ width: thisCell.widthPercent }}
+                  >
+                    <span
+                      className={
+                        thisCell.visuallyHidden
+                          ? classes.hiddenHeaderCell
+                          : undefined
+                      }
+                    >
+                      {thisCell.label}
+                    </span>
+                  </TableCell>
+                </Hidden>
+              ) : (
+                <TableCell
+                  key={thisCell.dataColumn}
+                  data-testid={`${thisCell.label}-header-cell`}
+                  className={classes.thead}
+                  style={{ width: thisCell.widthPercent }}
+                >
+                  <span
+                    className={
+                      thisCell.visuallyHidden
+                        ? classes.hiddenHeaderCell
+                        : undefined
+                    }
+                  >
+                    {thisCell.label}
+                  </span>
+                </TableCell>
+              )
+            ]
           )
         )}
       </TableRow>
