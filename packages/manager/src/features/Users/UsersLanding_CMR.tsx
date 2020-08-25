@@ -27,7 +27,7 @@ import { getGravatarUrl } from 'src/utilities/gravatar';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
-import ActionMenu from './UsersActionMenu';
+import ActionMenu from './UsersActionMenu_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -85,15 +85,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 40,
       height: 40
     }
-  },
-  userNameCell: {
-    width: '32%'
-  },
-  emailNameCell: {
-    width: '32%'
-  },
-  accountNameCell: {
-    width: '32%'
   }
 }));
 
@@ -305,21 +296,9 @@ const UsersLanding: React.FC<CombinedProps> = props => {
         <Table aria-label="List of Users">
           <TableHead>
             <TableRow>
-              <TableCell
-                className={classes.userNameCell}
-                data-qa-username-column
-              >
-                Username
-              </TableCell>
-              <TableCell className={classes.emailNameCell} data-qa-email-column>
-                Email Address
-              </TableCell>
-              <TableCell
-                className={classes.accountNameCell}
-                data-qa-restriction-column
-              >
-                Account Access
-              </TableCell>
+              <TableCell data-qa-username-column>Username</TableCell>
+              <TableCell data-qa-email-column>Email Address</TableCell>
+              <TableCell data-qa-restriction-column>Account Access</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
