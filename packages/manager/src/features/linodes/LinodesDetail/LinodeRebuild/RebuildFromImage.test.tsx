@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { imagesByID as images } from 'src/__data__/images';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -13,8 +13,6 @@ jest.mock('src/hooks/useReduxLoad', () => ({
 jest.mock('src/hooks/useImages', () => ({
   useImages: jest.fn().mockResolvedValue({ error: {} })
 }));
-
-afterEach(cleanup);
 
 const props: CombinedProps = {
   classes: { root: '', error: '' },

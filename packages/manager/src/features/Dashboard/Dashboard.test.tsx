@@ -1,11 +1,8 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { withLinodesLoaded, withManaged } from 'src/utilities/testHelpersStore';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import Dashboard, { CombinedProps } from './Dashboard';
-
-afterEach(cleanup);
 
 const props: CombinedProps = {
   accountBackups: false,

@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { normalizedImages as images } from 'src/__data__/images';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -16,8 +16,6 @@ jest.mock('@linode/api-v4/lib/account', () => ({
 }));
 
 request.getUsers = jest.fn().mockResolvedValue([]);
-
-afterEach(cleanup);
 
 const props: CombinedProps = {
   type: 'community',

@@ -1,12 +1,10 @@
-import { cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import BackupsDashboardCard from './BackupsDashboardCard';
-
-afterEach(cleanup);
 
 jest.mock('src/hooks/useReduxLoad', () => ({
   useReduxLoad: () => ({ _loading: false })

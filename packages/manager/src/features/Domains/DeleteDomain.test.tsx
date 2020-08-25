@@ -1,10 +1,8 @@
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps, DeleteDomain } from './DeleteDomain';
-
-afterEach(cleanup);
 
 const mockDeleteDomain = jest.fn(() => Promise.resolve({}));
 const domainId = 1;

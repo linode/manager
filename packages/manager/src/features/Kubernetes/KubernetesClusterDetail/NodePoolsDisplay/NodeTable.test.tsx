@@ -1,11 +1,8 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { kubeLinodeFactory } from 'src/factories/kubernetesCluster';
 import { linodeFactory } from 'src/factories/linodes';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { NodeTable, Props } from './NodeTable';
-
-afterEach(cleanup);
 
 const mockLinodes = linodeFactory.buildList(3);
 

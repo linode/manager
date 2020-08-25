@@ -1,12 +1,10 @@
-import { render, cleanup, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { domainFactory } from 'src/factories/domain';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme, assertOrder } from 'src/utilities/testHelpers';
 import { CombinedProps, DomainsLanding } from './DomainsLanding';
 const domains = domainFactory.buildList(5);
-
-afterEach(cleanup);
 
 const props: CombinedProps = {
   domainsData: domains,

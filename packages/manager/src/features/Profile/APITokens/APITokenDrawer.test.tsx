@@ -1,11 +1,9 @@
-import { cleanup, fireEvent, within } from '@testing-library/react';
+import { fireEvent, within } from '@testing-library/react';
 import * as React from 'react';
 import { APITokenDrawer } from './APITokenDrawer';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { basePermNameMap, basePerms } from './utils';
-
-afterEach(cleanup);
 
 const props = {
   classes: {

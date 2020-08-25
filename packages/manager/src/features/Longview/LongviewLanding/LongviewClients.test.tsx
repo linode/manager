@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { LongviewClient } from '@linode/api-v4/lib/longview';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -15,8 +15,6 @@ import {
   sortClientsBy,
   sortFunc
 } from './LongviewClients';
-
-afterEach(cleanup);
 
 jest.mock('../request');
 jest.mock('./LongviewClientRow');

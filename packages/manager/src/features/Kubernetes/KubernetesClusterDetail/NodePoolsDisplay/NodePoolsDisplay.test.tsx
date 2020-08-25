@@ -1,11 +1,8 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { types } from 'src/__data__/types';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { NodePoolsDisplay, Props } from './NodePoolsDisplay';
-
-afterEach(cleanup);
 
 // Custom type to match the mock data we have in __data__.
 const mockPools = nodePoolFactory.buildList(1, { type: 'g5-standard-1' });

@@ -1,4 +1,3 @@
-// import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import {
   objectStorageBucketFactory,

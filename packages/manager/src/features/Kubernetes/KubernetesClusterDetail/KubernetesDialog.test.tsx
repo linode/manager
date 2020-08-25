@@ -1,4 +1,4 @@
-import { cleanup, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { node1, node2 } from 'src/__data__/nodePools';
@@ -14,8 +14,6 @@ const props = {
   onClose: jest.fn(),
   onDelete: jest.fn()
 };
-
-afterEach(cleanup);
 
 describe('Kubernetes deletion dialog', () => {
   it('should display a count of node pools in the cluster', () => {

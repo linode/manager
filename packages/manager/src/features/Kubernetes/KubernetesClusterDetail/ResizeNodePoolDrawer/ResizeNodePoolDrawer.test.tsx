@@ -1,12 +1,10 @@
-import { cleanup, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { types as _types } from 'src/__data__/types';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import ResizeNodePoolDrawer, { Props } from './ResizeNodePoolDrawer';
-
-afterEach(cleanup);
 
 const pool = nodePoolFactory.build({ type: 'g5-standard-1' });
 const smallPool = nodePoolFactory.build({ count: 2 });

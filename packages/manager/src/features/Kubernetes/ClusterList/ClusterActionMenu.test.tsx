@@ -1,5 +1,5 @@
 import * as kube from '@linode/api-v4/lib/kubernetes/kubernetes';
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { ClusterActionMenu } from './ClusterActionMenu';
@@ -16,8 +16,6 @@ const props = {
   openDialog: jest.fn(),
   ...reactRouterProps
 };
-
-afterEach(cleanup);
 
 describe('Kubernetes cluster action menu', () => {
   it('should include the correct Kube actions', () => {

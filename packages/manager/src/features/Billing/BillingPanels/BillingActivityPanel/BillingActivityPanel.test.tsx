@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -11,8 +11,6 @@ import BillingActivityPanel, {
 } from './BillingActivityPanel';
 import { DateTime } from 'luxon';
 jest.mock('../../../../utilities/getUserTimezone');
-
-afterEach(cleanup);
 
 // Mock global Date object so Transaction Date tests are deterministic.
 global.Date.now = jest.fn(() => new Date('2020-01-02T00:00:00').getTime());

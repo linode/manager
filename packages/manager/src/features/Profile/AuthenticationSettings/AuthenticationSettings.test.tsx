@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -7,8 +7,6 @@ import {
   AuthenticationSettings,
   CombinedProps
 } from './AuthenticationSettings';
-
-afterEach(cleanup);
 
 const ALLOWLIST = 'allowlisting-form';
 

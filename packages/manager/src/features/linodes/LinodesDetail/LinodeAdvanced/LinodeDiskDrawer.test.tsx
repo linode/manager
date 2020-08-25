@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { linodeDiskFactory } from 'src/factories/disk';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -8,7 +8,6 @@ import LinodeDiskDrawer, { Props } from './LinodeDiskDrawer';
 const disk = linodeDiskFactory.build();
 
 afterEach(() => {
-  cleanup();
   jest.clearAllMocks();
 });
 

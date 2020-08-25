@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { linode1, linode2, linode3 } from 'src/__data__/linodes';
@@ -65,8 +65,6 @@ const props = {
   autoEnrollError: undefined,
   updatedCount: 0
 };
-
-afterEach(cleanup);
 
 const { rerender, getByTestId, findByTestId, queryByTestId } = render(
   wrapWithTheme(
