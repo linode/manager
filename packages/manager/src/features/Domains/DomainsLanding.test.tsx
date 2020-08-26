@@ -60,7 +60,6 @@ describe('Domains Landing', () => {
     expect(getByText(/not being served/));
   });
 
-  // @todo remove skip once large accounts logic is in place
   it('should sort by Domain name ascending by default', async () => {
     const { container } = render(wrapWithTheme(<DomainsLanding {...props} />));
 
