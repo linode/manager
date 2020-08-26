@@ -33,13 +33,8 @@ export const useSystemStatusData = (): NotificationItem[] => {
     []
   );
 
-  const linodeRegions = Object.values(linodes.itemsById).map(
-    thisLinode => thisLinode.region
-  );
-
   const regionsWithOutages = regions.filter(
-    thisRegion =>
-      thisRegion.status === 'outage' && linodeRegions.includes(thisRegion.id)
+    thisRegion => thisRegion.status === 'outage'
   );
 
   const outages = regionsWithOutages.map(regionToNotificationItem);
