@@ -1,21 +1,22 @@
 import { getInvoices } from '@linode/api-v4/lib/account';
 import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
-import useAccount from 'src/hooks/useAccount';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
-import LinodeNews from './LinodeNews';
-
 import {
   Community,
   Maintenance,
   OpenSupportTickets,
   PendingActions
 } from 'src/features/NotificationCenter';
-import Hidden from 'src/components/core/Hidden';
+import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import useAccount from 'src/hooks/useAccount';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import LinodeNews from './LinodeNews';
+import ManagedDashboardCard from '../Dashboard/ManagedDashboardCard/ManagedDashboardCard_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -44,6 +45,7 @@ export const Notifications: React.FC<{}> = _ => {
     statusNotifications,
     support
   } = useNotificationData();
+  const { _isManagedAccount } = useAccountManagement();
 
   const mostRecentInvoiceRequest = useAPIRequest<number | undefined>(
     () =>
@@ -62,6 +64,7 @@ export const Notifications: React.FC<{}> = _ => {
           mostRecentInvoiceId={mostRecentInvoiceRequest.data}
         />
       </Hidden>
+      {_isManagedAccount && <ManagedDashboardCard />}
       <Paper className={classes.root}>
         <Grid
           container

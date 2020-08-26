@@ -1,6 +1,5 @@
 import { Route } from '../support/api/routes';
 import { createLinode, deleteAllTestLinodes } from '../support/api/linodes';
-import { waitForAppLoad } from '../support/ui/common';
 
 describe('dashboard', () => {
   it('checks the dashboard page with 2+ linodes', () => {
