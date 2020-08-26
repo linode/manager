@@ -1,8 +1,5 @@
 import { getInvoices } from '@linode/api-v4/lib/account';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -16,14 +13,10 @@ import {
 } from 'src/features/NotificationCenter';
 import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import useAccount from 'src/hooks/useAccount';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { MapState } from 'src/store/types';
 import LinodeNews from './LinodeNews';
 import ManagedDashboardCard from '../Dashboard/ManagedDashboardCard/ManagedDashboardCard_CMR';
-
-interface StateProps {
-  managed: boolean;
-}
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -40,15 +33,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export type CombinedProps = StateProps;
-
-export const Notifications: React.FC<CombinedProps> = props => {
+export const Notifications: React.FC<{}> = _ => {
   const classes = useStyles();
   const { account } = useAccount();
   const balance = account.data?.balance ?? 0;
   const balanceUninvoiced = account.data?.balance_uninvoiced ?? 0;
 
-  const { managed } = props;
+  const { _isManagedAccount } = useAccountManagement();
   const { community, pendingActions, support } = useNotificationData();
 
   const mostRecentInvoiceRequest = useAPIRequest<number | undefined>(
@@ -68,7 +59,7 @@ export const Notifications: React.FC<CombinedProps> = props => {
           mostRecentInvoiceId={mostRecentInvoiceRequest.data}
         />
       </Hidden>
-      {managed && <ManagedDashboardCard />}
+      {_isManagedAccount && <ManagedDashboardCard />}
       <Paper className={classes.root}>
         <Grid
           container
@@ -138,18 +129,4 @@ export const Notifications: React.FC<CombinedProps> = props => {
   );
 };
 
-const mapStateToProps: MapState<StateProps, {}> = state => {
-  return {
-    managed: pathOr(
-      false,
-      ['__resources', 'accountSettings', 'data', 'managed'],
-      state
-    )
-  };
-};
-
-const connected = connect(mapStateToProps);
-
-const enhanced = compose<CombinedProps, {}>(connected)(Notifications);
-
-export default enhanced;
+export default React.memo(Notifications);
