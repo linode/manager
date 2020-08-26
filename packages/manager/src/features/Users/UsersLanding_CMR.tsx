@@ -258,6 +258,16 @@ const UsersLanding: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Users" />
+      {newUsername && (
+        <Notice success text={`User ${newUsername} created successfully`} />
+      )}
+      {userDeleteError && (
+        <Notice
+          style={{ marginTop: newUsername ? 16 : 0 }}
+          error
+          text={`Error when deleting user, please try again later`}
+        />
+      )}
       <div className={classes.root}>
         <Grid
           container
@@ -283,16 +293,6 @@ const UsersLanding: React.FC<CombinedProps> = props => {
             />
           </Grid>
         </Grid>
-        {newUsername && (
-          <Notice success text={`User ${newUsername} created successfully`} />
-        )}
-        {userDeleteError && (
-          <Notice
-            style={{ marginTop: newUsername ? 16 : 0 }}
-            error
-            text={`Error when deleting user, please try again later`}
-          />
-        )}
         <Table aria-label="List of Users">
           <TableHead>
             <TableRow>
