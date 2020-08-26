@@ -66,7 +66,10 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/instances', async (req, res, ctx) => {
-    const linodes = linodeFactory.buildList(1);
+    const onlineLinodes = linodeFactory.buildList(3);
+    const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
+    const busyLinodes = linodeFactory.buildList(10, { status: 'migrating' });
+    const linodes = [...onlineLinodes, ...offlineLinodes, ...busyLinodes];
     return res(ctx.json(makeResourcePage(linodes)));
   }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
