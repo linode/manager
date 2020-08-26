@@ -19,10 +19,11 @@ export const sendEvent = (eventPayload: AnalyticsEvent) => {
 
 // LinodeActionMenu.tsx
 export const sendLinodeActionEvent = () => {
-  sendEvent({
-    category: 'Linode Action Menu',
-    action: 'Open Action Menu'
-  });
+  // AC 8/26/2020: disabling this event to reduce hits on GA as this seems to not be used
+  // sendEvent({
+  //   category: 'Linode Action Menu',
+  //   action: 'Open Action Menu'
+  // });
 };
 
 // LinodeActionMenu.tsx
