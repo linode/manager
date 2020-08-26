@@ -101,10 +101,9 @@ const LinodeControls: React.FC<CombinedProps> = props => {
 
   const getLabelLink = (): string | undefined => {
     return last(location.pathname.split('/')) !== 'summary'
-      ? 'summary'
+      ? `${linode.id}/summary`
       : undefined;
   };
-
   return (
     <Grid
       container
@@ -115,7 +114,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
       <Grid item>
         <Breadcrumb
           pathname={props.location.pathname}
-          removeCrumbX={2}
+          firstAndLastOnly
           labelOptions={{ linkTo: getLabelLink() }}
           className={classes.breadCrumbs}
           onEditHandlers={
