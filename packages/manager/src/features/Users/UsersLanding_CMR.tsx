@@ -41,17 +41,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 8,
     marginBottom: 8,
     marginLeft: 15,
-    lineHeight: '1.5rem',
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: 0,
-      marginTop: theme.spacing(2)
-    }
+    lineHeight: '1.5rem'
   },
   addNewWrapper: {
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
       marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-      marginTop: -theme.spacing(1)
+      padding: 5
+    },
+    '&.MuiGrid-item': {
+      padding: 5
     }
   },
   '@keyframes fadeIn': {
