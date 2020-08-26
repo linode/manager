@@ -61,7 +61,7 @@ export const NotificationDrawer: React.FC<Props> = props => {
   const { account } = useAccount();
   const classes = useStyles();
   const balance = account.data?.balance ?? 0;
-  const { community, pendingActions, support } = data;
+  const { community, pendingActions, statusNotifications, support } = data;
 
   const { preferences, updatePreferences } = usePreferences();
 
@@ -87,10 +87,13 @@ export const NotificationDrawer: React.FC<Props> = props => {
   }, [chronologicalView, currentView]);
 
   const chronologicalNotificationList = React.useMemo(() => {
-    return [...community.events, ...pendingActions, ...support.data].sort(
-      chronologicalSort
-    );
-  }, [community.events, pendingActions, support.data]);
+    return [
+      ...community.events,
+      ...pendingActions,
+      ...statusNotifications,
+      ...support.data
+    ].sort(chronologicalSort);
+  }, [community.events, pendingActions, support.data, statusNotifications]);
 
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
@@ -112,7 +115,7 @@ export const NotificationDrawer: React.FC<Props> = props => {
       ) : (
         <div className={classes.notificationSectionContainer}>
           <PendingActions pendingActions={pendingActions} />
-          <Maintenance />
+          <Maintenance statusNotifications={statusNotifications} />
           <OpenSupportTickets
             loading={support.loading}
             error={Boolean(support.error)}

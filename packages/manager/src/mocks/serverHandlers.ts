@@ -22,6 +22,7 @@ import {
   managedStatsFactory,
   monitorFactory,
   nodeBalancerFactory,
+  notificationFactory,
   profileFactory,
   supportReplyFactory,
   supportTicketFactory,
@@ -230,5 +231,8 @@ export const handlers = [
   }),
   rest.get('*managed/issues', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage([])));
+  }),
+  rest.get('*/notifications', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(notificationFactory.buildList(1))));
   })
 ];
