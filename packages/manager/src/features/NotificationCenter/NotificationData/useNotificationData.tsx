@@ -3,12 +3,14 @@ import useCommunityNotifications, {
   CommunityNotifications
 } from './useCommunityNotifications';
 import usePendingActions from './PendingActionNotifications';
+import useSystemStatusData from './useSystemStatusData';
 import SupportNotifications from './SupportNotifications';
 import { NotificationItem } from '../NotificationSection';
 
 export interface NotificationData {
   community: CommunityNotifications;
   pendingActions: NotificationItem[];
+  statusNotifications: NotificationItem[];
   support: UseAPIRequest<NotificationItem[]>;
 }
 
@@ -24,10 +26,12 @@ export const useNotificationData = (): NotificationData => {
   const community = useCommunityNotifications();
   const support = SupportNotifications();
   const pendingActions = usePendingActions();
+  const statusNotifications = useSystemStatusData();
 
   return {
     community,
     pendingActions,
+    statusNotifications,
     support
   };
 };

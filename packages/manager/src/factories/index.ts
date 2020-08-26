@@ -20,6 +20,7 @@ export * from './longviewTopProcesses';
 export * from './managed';
 export * from './networking';
 export * from './nodebalancer';
+export * from './notification';
 export * from './objectStorage';
 export * from './profile';
 export * from './promotionalOffer';
