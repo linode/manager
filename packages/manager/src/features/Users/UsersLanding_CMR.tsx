@@ -8,7 +8,12 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  useTheme,
+  Theme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -122,6 +127,8 @@ const UsersLanding: React.FC<CombinedProps> = props => {
   >('');
 
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   React.useEffect(() => {
     request();
@@ -196,7 +203,9 @@ const UsersLanding: React.FC<CombinedProps> = props => {
             </Grid>
           </Grid>
         </TableCell>
-        <TableCell data-qa-user-email>{user.email}</TableCell>
+        {!matchesSmDown && (
+          <TableCell data-qa-user-email>{user.email}</TableCell>
+        )}
         <TableCell data-qa-user-restriction>
           {user.restricted ? 'Limited' : 'Full'}
         </TableCell>
@@ -269,7 +278,9 @@ const UsersLanding: React.FC<CombinedProps> = props => {
           <TableHead>
             <TableRow>
               <TableCell data-qa-username-column>Username</TableCell>
-              <TableCell data-qa-email-column>Email Address</TableCell>
+              {!matchesSmDown && (
+                <TableCell data-qa-email-column>Email Address</TableCell>
+              )}
               <TableCell data-qa-restriction-column>Account Access</TableCell>
               <TableCell />
             </TableRow>
