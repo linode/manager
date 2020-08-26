@@ -1,4 +1,3 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
@@ -26,8 +25,6 @@ const props: CombinedProps = {
   onClose: mockOnClose,
   onSubmit: mockOnSubmit
 };
-
-afterEach(cleanup);
 
 describe('AddRuleDrawer', () => {
   it('renders the title', () => {

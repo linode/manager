@@ -1,10 +1,15 @@
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { CancelLanding } from './CancelLanding';
 
-afterEach(cleanup);
+const realLocation = window.location;
+
+afterAll(() => {
+  // eslint-disable-next-line
+  window.location = realLocation;
+});
 
 describe('CancelLanding', () => {
   it('does not render the body when there is no survey_link in the state', () => {
@@ -29,8 +34,9 @@ describe('CancelLanding', () => {
     // Mock window.location.assign.
     // See this blog post: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
     const mockAssign = jest.fn();
-    delete window.location.assign;
-    window.location.assign = mockAssign;
+    delete window.location;
+    // eslint-disable-next-line
+    window.location = { ...realLocation, assign: mockAssign };
 
     const survey_link = 'https://linode.com';
 

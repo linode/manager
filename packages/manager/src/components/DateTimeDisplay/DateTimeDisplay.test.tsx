@@ -1,5 +1,4 @@
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { cleanup } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { DateTimeDisplay, Props } from './DateTimeDisplay';
@@ -7,8 +6,6 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 jest.mock('../../utilities/getUserTimezone');
 
 const APIDate = '2018-07-20T04:23:17';
-
-beforeEach(cleanup);
 
 describe('DateTimeDisplay component', () => {
   describe('Non-humanized dates', () => {

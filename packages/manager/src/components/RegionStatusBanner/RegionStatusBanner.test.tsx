@@ -1,11 +1,9 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps, RegionStatusBanner } from './RegionStatusBanner';
 
 afterEach(() => {
-  cleanup();
   regionFactory.resetSequenceNumber();
 });
 

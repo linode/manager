@@ -1,4 +1,3 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -6,8 +5,6 @@ import {
   checkStringOrDefault,
   PromotionalOfferCard
 } from './PromotionalOfferCard';
-
-afterEach(cleanup);
 
 const promo = promotionalOfferFactory.build();
 

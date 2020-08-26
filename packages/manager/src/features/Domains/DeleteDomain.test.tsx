@@ -1,10 +1,8 @@
-import { cleanup, fireEvent, render, wait } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps, DeleteDomain } from './DeleteDomain';
-
-afterEach(cleanup);
 
 const mockDeleteDomain = jest.fn(() => Promise.resolve({}));
 const domainId = 1;
@@ -38,8 +36,10 @@ describe('DeleteDomain', () => {
   it('dispatches the deleteDomain action when the "Delete" button is clicked', async () => {
     const { getByText } = render(wrapWithTheme(<DeleteDomain {...props} />));
     fireEvent.click(getByText('Delete Domain'));
-    await wait(() => fireEvent.click(getByText('Delete')));
-    expect(mockDeleteDomain).toHaveBeenCalledWith({ domainId });
+    fireEvent.click(getByText('Delete'));
+    await waitFor(() =>
+      expect(mockDeleteDomain).toHaveBeenCalledWith({ domainId })
+    );
   });
 
   it('closes the modal when the "Cancel" button is clicked', async () => {
@@ -47,8 +47,8 @@ describe('DeleteDomain', () => {
       wrapWithTheme(<DeleteDomain {...props} />)
     );
     fireEvent.click(getByText('Delete Domain'));
-    await wait(() => fireEvent.click(getByText('Cancel')));
-    await wait(() =>
+    fireEvent.click(getByText('Cancel'));
+    await waitFor(() =>
       expect(queryByText(/Are you sure you want to delete/)).toBeNull()
     );
   });

@@ -1,10 +1,9 @@
-import { cleanup, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import * as React from 'react';
 
 import OverflowIPs from './OverflowIPs';
-afterEach(cleanup);
 
 describe('OverflowIPs', () => {
   it('should render without error and display the number of IPs', () => {

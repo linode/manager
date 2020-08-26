@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { CombinedProps as Props, VolumesActionMenu } from './VolumesActionMenu';
@@ -27,8 +27,6 @@ const props: Props = {
   volumeLabel: '',
   ...reactRouterProps
 };
-
-afterEach(cleanup);
 
 describe('Volume action menu', () => {
   it('should include standard Volume actions', () => {

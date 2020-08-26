@@ -1,10 +1,7 @@
-import { cleanup } from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useSet } from './useSet';
 
 describe('useSet', () => {
-  afterEach(cleanup);
-
   it('adds to the set', () => {
     const { result } = renderHook(() => useSet());
     act(() => {

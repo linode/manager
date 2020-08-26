@@ -1,11 +1,9 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { clearDocs, setDocs } from 'src/store/documentation';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { ListLinodes } from './LinodesLanding';
-
-afterEach(cleanup);
 
 describe('ListLinodes', () => {
   const classes = {

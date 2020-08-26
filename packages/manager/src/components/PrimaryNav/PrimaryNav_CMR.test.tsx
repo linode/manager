@@ -1,10 +1,7 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import { withManaged, withoutManaged } from 'src/utilities/testHelpersStore';
 import PrimaryNav_CMR, { PrimaryNavProps } from './PrimaryNav_CMR';
-
-afterEach(cleanup);
 
 const props: PrimaryNavProps = {
   closeMenu: jest.fn(),

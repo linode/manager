@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import {
@@ -23,7 +23,6 @@ const props: PageNumbersProps = {
   currentPage: 1,
   handlePageClick: jest.fn()
 };
-afterEach(cleanup);
 
 describe('PageNumbers', () => {
   it('should render all pages when numOfPages <= 6', () => {

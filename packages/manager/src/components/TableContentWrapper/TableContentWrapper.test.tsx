@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import * as React from 'react';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
@@ -12,7 +12,6 @@ const children = [
     <td>Another row!</td>
   </tr>
 ];
-afterEach(cleanup);
 
 describe('TableContentWrapper component', () => {
   it('should render its children if everything is kosher', () => {

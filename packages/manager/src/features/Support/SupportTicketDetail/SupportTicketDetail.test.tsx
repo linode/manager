@@ -1,11 +1,15 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import * as React from 'react';
-import { ClassNames, SupportTicketDetail } from './SupportTicketDetail';
+import {
+  ClassNames,
+  SupportTicketDetail,
+  CombinedProps
+} from './SupportTicketDetail';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { supportTicketFactory } from 'src/factories/support';
-
-const supportTicket = supportTicketFactory.build();
+import { rest, server } from 'src/mocks/testServer';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 const classes: Record<ClassNames, string> = {
   title: '',
@@ -20,60 +24,60 @@ const classes: Record<ClassNames, string> = {
   breadcrumbs: ''
 };
 
+const props: CombinedProps = {
+  classes,
+  profileUsername: 'username',
+  ...reactRouterProps
+};
+
+const mockClosedTicket = () => {
+  server.use(
+    rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+      const ticket = supportTicketFactory.build({
+        id: req.params.ticketId,
+        status: 'closed'
+      });
+      return res(ctx.json(ticket));
+    })
+  );
+};
+
 describe('Support Ticket Detail', () => {
-  let wrapper: ShallowWrapper;
-  beforeEach(() => {
-    wrapper = shallow(
-      <SupportTicketDetail {...reactRouterProps} classes={classes} />
-    );
-  });
-  describe('render', () => {
-    it('renders a CircleProgress component when loading', () => {
-      wrapper.setState({ loading: true });
-      expect(wrapper.find('WithStyles(CircleProgressComponent)')).toHaveLength(
-        1
+  describe('Component', () => {
+    it('should display a loading spinner', () => {
+      render(wrapWithTheme(<SupportTicketDetail {...props} />));
+      expect(screen.getByTestId('circle-progress')).toBeInTheDocument();
+    });
+
+    it('should display the ticket summary', async () => {
+      render(wrapWithTheme(<SupportTicketDetail {...props} />));
+      expect(
+        await screen.findByText(/#0: TEST Support Ticket/i)
+      ).toBeInTheDocument();
+    });
+
+    it('should display the ticket body', async () => {
+      const { findByText } = render(
+        wrapWithTheme(<SupportTicketDetail {...props} />)
       );
+      expect(await findByText(/TEST Support Ticket body/i)).toBeInTheDocument();
     });
 
-    it('renders an ErrorState when there are errors', () => {
-      wrapper.setState({ loading: false, errors: 'ERROR' });
-      expect(wrapper.find('WithStyles(ErrorState)')).toHaveLength(1);
+    it("should display a 'new' icon and 'updated by' messaging", async () => {
+      render(wrapWithTheme(<SupportTicketDetail {...props} />));
+      expect(await screen.findByText(/new/)).toBeInTheDocument();
+      expect(
+        await screen.findByText(/updated by test-account/i)
+      ).toBeInTheDocument();
     });
 
-    it('contains a Breadcrumb component when rendered normally', () => {
-      wrapper.setState({ loading: false, ticket: supportTicket });
-      expect(wrapper.find('[data-qa-breadcrumb]')).toHaveLength(1);
-    });
-  });
-
-  describe('breadcrumb', () => {
-    let breadcrumbProps: any;
-    beforeAll(() => {
-      wrapper.setState({ loading: false, ticket: supportTicket });
-      breadcrumbProps = wrapper.find('[data-qa-breadcrumb]').props();
-    });
-
-    it('contains linkTo prop when open', () => {
-      expect(breadcrumbProps.crumbOverrides[0].linkTo).toEqual({
-        pathname: '/support/tickets',
-        search: 'type=open'
-      });
-    });
-
-    it('contains linkTo prop when closed', () => {
-      wrapper.setState({
-        ticket: { ...supportTicket, status: 'closed' },
-        loading: false
-      });
-      breadcrumbProps = wrapper.find('[data-qa-breadcrumb]').props();
-      expect(breadcrumbProps.crumbOverrides[0].linkTo).toEqual({
-        pathname: '/support/tickets',
-        search: 'type=closed'
-      });
-    });
-
-    it('contains label', () => {
-      expect(breadcrumbProps.labelTitle).toBe('#0: TEST Support Ticket');
+    it("should display a 'closed' status and 'closed by' messaging", async () => {
+      mockClosedTicket();
+      render(wrapWithTheme(<SupportTicketDetail {...props} />));
+      expect(await screen.findByText(/closed/)).toBeInTheDocument();
+      expect(
+        await screen.findByText(/closed by test-account/i)
+      ).toBeInTheDocument();
     });
   });
 });

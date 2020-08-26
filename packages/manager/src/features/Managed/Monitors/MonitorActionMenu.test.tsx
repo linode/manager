@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
@@ -27,8 +27,6 @@ const props: CombinedProps = {
   disableServiceMonitor: jest.fn(),
   ...reactRouterProps
 };
-
-afterEach(cleanup);
 
 describe('Volume action menu', () => {
   it('should include basic Monitor actions', () => {

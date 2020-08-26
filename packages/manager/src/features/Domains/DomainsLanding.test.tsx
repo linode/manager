@@ -1,12 +1,10 @@
-import { render, cleanup, wait } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { domainFactory } from 'src/factories/domain';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme, assertOrder } from 'src/utilities/testHelpers';
 import { CombinedProps, DomainsLanding } from './DomainsLanding';
 const domains = domainFactory.buildList(5);
-
-afterEach(cleanup);
 
 const props: CombinedProps = {
   domainsData: domains,
@@ -62,15 +60,16 @@ describe('Domains Landing', () => {
     expect(getByText(/not being served/));
   });
 
-  // @todo remove skip once large accounts logic is in place
-  it.skip('should sort by Domain name ascending by default', async () => {
+  it('should sort by Domain name ascending by default', async () => {
     const { container } = render(wrapWithTheme(<DomainsLanding {...props} />));
 
-    await wait(() =>
+    await waitFor(() =>
       assertOrder(container, '[data-qa-label]', [
-        'domain1.com',
-        'domain2.com',
-        'domain3.com'
+        'domain-0',
+        'domain-1',
+        'domain-2',
+        'domain-3',
+        'domain-4'
       ])
     );
   });
