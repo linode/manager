@@ -175,11 +175,11 @@ export const handlers = [
   }),
   rest.get('*/account/invoices', (req, res, ctx) => {
     const invoices = invoiceFactory.buildList(10);
-    return res(ctx.delay(5000), ctx.json(makeResourcePage(invoices)));
+    return res(ctx.json(makeResourcePage(invoices)));
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(events)));
+    return res.once(ctx.json(makeResourcePage(events)));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
