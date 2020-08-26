@@ -19,6 +19,8 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   longviewActivePlanFactory,
+  managedStatsFactory,
+  monitorFactory,
   nodeBalancerFactory,
   profileFactory,
   supportReplyFactory,
@@ -214,5 +216,19 @@ export const handlers = [
   }),
   rest.get('*gravatar*', (req, res, ctx) => {
     return res(ctx.status(400), ctx.json({}));
+  }),
+  rest.get('*linode.com/blog/feed*', (req, res, ctx) => {
+    return res(ctx.status(400));
+  }),
+  rest.get('*managed/services', (req, res, ctx) => {
+    const monitors = monitorFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(monitors)));
+  }),
+  rest.get('*managed/stats', (req, res, ctx) => {
+    const stats = managedStatsFactory.build();
+    return res(ctx.json(stats));
+  }),
+  rest.get('*managed/issues', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage([])));
   })
 ];
