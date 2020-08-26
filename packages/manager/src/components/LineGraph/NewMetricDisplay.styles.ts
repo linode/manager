@@ -12,6 +12,8 @@ export type ClassNames =
   | 'blue'
   | 'green'
   | 'text'
+  | 'toggle'
+  | 'tableHead'
   | 'tableHeadInner'
   | 'simpleLegend'
   | 'simpleLegendRoot'
@@ -60,12 +62,13 @@ const newMetricDisplayStyles = (theme: Theme) =>
       },
       [theme.breakpoints.down('sm')]: {
         maxWidth: '100%',
+        '& table': {
+          display: 'flex'
+        },
         '& td': {
           justifyContent: 'normal',
           minHeight: 'auto'
-        }
-      },
-      [theme.breakpoints.only('xs')]: {
+        },
         '& tr:not(:first-child) td': {
           '&:first-child': {
             marginTop: theme.spacing(2)
@@ -73,16 +76,28 @@ const newMetricDisplayStyles = (theme: Theme) =>
         }
       },
       [theme.breakpoints.only('sm')]: {
-        '& tr:not(:nth-last-child(n+3)) td:first-child': {
-          marginTop: theme.spacing(2)
-        },
         '& tbody': {
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'space-between'
         },
         '& tr': {
-          flexBasis: '45%'
+          flexBasis: '100%'
+        }
+      }
+    },
+    tableHead: {
+      [theme.breakpoints.down('sm')]: {
+        display: 'block !important',
+        '& tr': {
+          display: 'flex',
+          flexDirection: 'column',
+          marginTop: 26,
+          marginBottom: 42,
+          marginRight: theme.spacing(2),
+          '&:last-of-type': {
+            marginBottom: 0
+          }
         }
       }
     },
@@ -113,6 +128,11 @@ const newMetricDisplayStyles = (theme: Theme) =>
     },
     text: {
       color: theme.color.black
+    },
+    toggle: {
+      [theme.breakpoints.down('sm')]: {
+        display: 'none'
+      }
     },
     simpleLegendRoot: {
       maxWidth: 'initial',
