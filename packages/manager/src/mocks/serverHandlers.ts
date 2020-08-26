@@ -19,6 +19,7 @@ import {
   linodeTransferFactory,
   longviewActivePlanFactory,
   nodeBalancerFactory,
+  notificationFactory,
   profileFactory,
   supportTicketFactory,
   volumeFactory,
@@ -175,5 +176,8 @@ export const handlers = [
   rest.get('*/longview/plan', (req, res, ctx) => {
     const plan = longviewActivePlanFactory.build();
     return res(ctx.json(plan));
+  }),
+  rest.get('*/notifications', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(notificationFactory.buildList(1))));
   })
 ];
