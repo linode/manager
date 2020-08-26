@@ -50,6 +50,9 @@ const options = getOptions(process.env);
 const EnvironmentToggleTool: React.FC<{}> = () => {
   const [selectedOption, setSelectedOption] = React.useState(0);
 
+  const localStorageEnv = storage.devToolsEnv.get();
+  const currentEnvLabel = localStorageEnv?.label;
+
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -68,9 +71,14 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
             Select an environment
           </option>
           {options.map(thisOption => {
+            const { label } = thisOption;
             return (
-              <option key={thisOption.label} value={thisOption.label}>
-                {thisOption.label}
+              <option
+                key={label}
+                value={label}
+                selected={currentEnvLabel === label}
+              >
+                {label}
               </option>
             );
           })}

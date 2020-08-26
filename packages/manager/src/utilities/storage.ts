@@ -70,6 +70,7 @@ export interface DevToolsEnv {
   apiRoot: string;
   loginRoot: string;
   clientID: string;
+  label: string;
 }
 
 export interface Storage {
@@ -194,6 +195,7 @@ export const isDevToolsEnvValid = (value: any) => {
   return (
     typeof value?.apiRoot === 'string' &&
     typeof value?.loginRoot === 'string' &&
-    typeof value?.clientID === 'string'
+    typeof value?.clientID === 'string' &&
+    typeof value?.label === 'string'
   );
 };
