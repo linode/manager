@@ -48,9 +48,13 @@ import {
   curriedCloneLandingReducer,
   defaultState
 } from './utilities';
+import useFlags from 'src/hooks/useFlags';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
+const LinodesDetailHeader_CMR = React.lazy(() =>
+  import('../LinodesDetail/LinodesDetailHeader/LinodeDetailHeader_CMR')
+);
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -104,6 +108,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
 
   /**
    * ROUTING
@@ -300,22 +305,26 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       */}
       <MutationNotification disks={props.disks} />
       <Notifications />
-      <LinodeControls
-        breadcrumbProps={{
-          removeCrumbX: 4,
-          crumbOverrides: [
-            {
-              label,
-              position: 2,
-              linkTo: {
-                pathname: `/linodes/${linodeId}/summary`
-              },
-              noCap: true
-            }
-          ],
-          onEditHandlers: undefined
-        }}
-      />
+      {flags.cmr ? (
+        <LinodesDetailHeader_CMR />
+      ) : (
+        <LinodeControls
+          breadcrumbProps={{
+            removeCrumbX: 4,
+            crumbOverrides: [
+              {
+                label,
+                position: 2,
+                linkTo: {
+                  pathname: `/linodes/${linodeId}/summary`
+                },
+                noCap: true
+              }
+            ],
+            onEditHandlers: undefined
+          }}
+        />
+      )}
       {linodeInTransition(linodeStatus, firstEventWithProgress) && (
         <LinodeBusyStatus />
       )}
