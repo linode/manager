@@ -6,7 +6,7 @@ import { wrapWithTheme, assertOrder } from 'src/utilities/testHelpers';
 import {
   CombinedProps,
   DomainsLanding,
-  normalizeDomains
+  getReduxCopyOfDomains
 } from './DomainsLanding';
 const domains = domainFactory.buildList(5);
 
@@ -82,14 +82,14 @@ describe('Domains Landing', () => {
   });
 });
 
-describe('normalizeDomains fn', () => {
+describe('getReduxCopyOfDomains fn', () => {
   it('returns corresponding domains', () => {
     const domain1 = domainFactory.build({ id: 1 });
     const domain2 = domainFactory.build({ id: 2 });
     const domain3 = domainFactory.build({ id: 3 });
 
     expect(
-      normalizeDomains([domain1, domain2], {
+      getReduxCopyOfDomains([domain1, domain2], {
         1: domain1,
         2: domain2,
         3: domain3

@@ -89,8 +89,8 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
 const enhanced = compose<CombinedProps, any>(
   Pagey((ownProps, params, filters) => ownProps.request(params, filters), {
     cb: (ownProps, response) => {
-      if (ownProps.persistPagey) {
-        ownProps.persistPagey(response.data);
+      if (ownProps.persistData) {
+        ownProps.persistData(response.data);
       }
     }
   })

@@ -40,6 +40,6 @@ export interface EntityTableRow<T> extends BaseProps {
 }
 
 export interface PageyIntegrationProps {
-  persistPagey?: (data: Entity[]) => void;
+  persistData?: (data: Entity[]) => void;
   normalizeData?: (data: Entity[]) => Entity[];
 }

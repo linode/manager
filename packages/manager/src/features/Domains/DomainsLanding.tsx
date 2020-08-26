@@ -553,11 +553,16 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                   row={domainRow}
                   headers={headers}
                   initialOrder={initialOrder}
-                  persistPagey={(data: Domain[]) => {
-                    this.props.upsertMultipleDomains(data);
-                  }}
                   normalizeData={(pageyData: Domain[]) => {
-                    return normalizeDomains(pageyData, this.props.domainsByID);
+                    // Use Redux copies of each Domain, since Redux is more up-to-date.
+                    return getReduxCopyOfDomains(
+                      pageyData,
+                      this.props.domainsByID
+                    );
+                  }}
+                  // Persist Pagey data to Redux.
+                  persistData={(data: Domain[]) => {
+                    this.props.upsertMultipleDomains(data);
                   }}
                 />
               </React.Fragment>
@@ -709,21 +714,18 @@ export default compose<CombinedProps, Props>(
   styled
 )(DomainsLanding);
 
-// Given a list of Domains (requested from the API via Pagey) and all Domains from Redux,
-// return the *Redux* copy of each Domain retrieved by Pagey.
-//
-// We do this because Redux may know about updates that Pagey doesn't.
-//
-// @todo: find better name for this function (and corresponding PageyIntegration Prop)
-export const normalizeDomains = (
-  pageyDomains: Domain[],
+// Given a list of "baseDomains" (requested from the API via Pagey) and a record of Domains
+// from Redux, return the Redux copy of each base Domain. This is useful because the Redux
+// copy of the Domain may have updates the original data from Pagey doesn't.
+export const getReduxCopyOfDomains = (
+  baseDomains: Domain[],
   reduxDomains: Record<string, Domain>
 ) => {
-  const normalizedDomains: Domain[] = [];
-  pageyDomains.forEach(thisPageyDomain => {
-    if (reduxDomains[thisPageyDomain.id]) {
-      normalizedDomains.push(reduxDomains[thisPageyDomain.id]);
+  return baseDomains.reduce((acc, thisDomain) => {
+    const thisReduxDomain = reduxDomains[thisDomain.id];
+    if (thisReduxDomain) {
+      return [...acc, thisReduxDomain];
     }
-  });
-  return normalizedDomains;
+    return acc;
+  }, []);
 };

@@ -40,7 +40,7 @@ export const LandingTable: React.FC<CombinedProps> = props => {
     return (
       <APIPaginatedTable
         {...tableProps}
-        persistPagey={props.persistPagey}
+        persistData={props.persistData}
         normalizeData={props.normalizeData}
       />
     );
