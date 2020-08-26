@@ -202,7 +202,7 @@
     "coveralls": "^3.0.2",
     "css-loader": "^3.5.2",
     "csstype": "^2.5.5",
-    "cypress": "^4.11.0",
+    "cypress": "^5.0.0",
     "cypress-axe": "^0.8.1",
     "dotenv": "^6.2.0",
     "enzyme": "^3.10.0",
