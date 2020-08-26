@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -34,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   stackScriptActionsWrapper: {
     display: 'flex'
+  },
+  buttonCommunity: {
+    marginRight: theme.spacing()
   }
 }));
 
@@ -154,7 +158,10 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
           )}
 
           <button
-            className={classes.button}
+            className={classNames({
+              [classes.button]: true,
+              [classes.buttonCommunity]: props.category === 'community'
+            })}
             onClick={() => {
               history.push(
                 getStackScriptUrl(stackScriptUsername, stackScriptID, username)
