@@ -1,4 +1,4 @@
-import { getDomains, Domain } from '@linode/api-v4/lib/domains';
+import { Domain, getDomains } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { equals, pathOr } from 'ramda';
@@ -14,6 +14,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
   Theme,
@@ -30,18 +31,18 @@ import EntityTable, {
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { Order } from 'src/components/Pagey';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
+import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
 import domainsContainer, {
   Props as DomainProps
 } from 'src/containers/domains.container';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { Domains } from 'src/documentation';
 import { ApplicationState } from 'src/store';
 import {
@@ -50,14 +51,14 @@ import {
   openForEditing as _openForEditing,
   Origin as DomainDrawerOrigin
 } from 'src/store/domainDrawer';
+import { upsertMultipleDomains } from 'src/store/domains/domains.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
-import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DisableDomainDialog from './DisableDomainDialog';
+import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DomainRow from './DomainTableRow';
 import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
-import Hidden from 'src/components/core/Hidden';
 
 type ClassNames =
   | 'root'
@@ -552,6 +553,12 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                   row={domainRow}
                   headers={headers}
                   initialOrder={initialOrder}
+                  persistPagey={(data: Domain[]) => {
+                    this.props.upsertMultipleDomains(data);
+                  }}
+                  normalizeData={(pageyData: Domain[]) => {
+                    return normalizeDomains(pageyData, this.props.domainsByID);
+                  }}
                 />
               </React.Fragment>
             );
@@ -658,6 +665,7 @@ interface DispatchProps {
   openForCloning: (domain: string, id: number) => void;
   openForEditing: (domain: string, id: number) => void;
   openForCreating: (origin: DomainDrawerOrigin) => void;
+  upsertMultipleDomains: (domains: Domain[]) => void;
 }
 
 interface StateProps {
@@ -665,6 +673,7 @@ interface StateProps {
   linodesLoading: boolean;
   isRestrictedUser: boolean;
   isLargeAccount: boolean;
+  domainsByID: Record<string, Domain>;
 }
 
 const mapStateToProps: MapStateToProps<
@@ -680,13 +689,15 @@ const mapStateToProps: MapStateToProps<
     state
   ),
   // @todo remove this when ARB-2091 is merged
-  isLargeAccount: state.preferences.data?.is_large_account ?? false
+  isLargeAccount: state.preferences.data?.is_large_account ?? false,
+  domainsByID: state.__resources.domains.itemsById
 });
 
 export const connected = connect(mapStateToProps, {
   openForCreating,
   openForCloning,
-  openForEditing: _openForEditing
+  openForEditing: _openForEditing,
+  upsertMultipleDomains
 });
 
 export default compose<CombinedProps, Props>(
@@ -697,3 +708,22 @@ export default compose<CombinedProps, Props>(
   withFeatureFlags,
   styled
 )(DomainsLanding);
+
+// Given a list of Domains (requested from the API via Pagey) and all Domains from Redux,
+// return the *Redux* copy of each Domain retrieved by Pagey.
+//
+// We do this because Redux may know about updates that Pagey doesn't.
+//
+// @todo: find better name for this function (and corresponding PageyIntegration Prop)
+export const normalizeDomains = (
+  pageyDomains: Domain[],
+  reduxDomains: Record<string, Domain>
+) => {
+  const normalizedDomains: Domain[] = [];
+  pageyDomains.forEach(thisPageyDomain => {
+    if (reduxDomains[thisPageyDomain.id]) {
+      normalizedDomains.push(reduxDomains[thisPageyDomain.id]);
+    }
+  });
+  return normalizedDomains;
+};
