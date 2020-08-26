@@ -125,32 +125,6 @@ const UsersLanding: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
-  //   static docs: Linode.Doc[] = [
-  //     {
-  //       title: 'Accounts and Password',
-  //       src:
-  //         'https://www.linode.com/docs/platform/manager/accounts-and-passwords-new-manager/',
-  //       body: `Maintaining your user Linode Manager accounts, passwords, and
-  //       contact information is just as important as administering your Linode.
-  //       This guide shows you how to control access to the Linode Manager,
-  //       update your contact information, and modify account passwords. Note
-  //       that the information in this guide applies to the Linode Manager only,
-  //       except for the section on resetting the root password.`
-  //     },
-  //     {
-  //       title: 'Linode Manager Security Controls',
-  //       src:
-  //         'https://www.linode.com/docs/security/linode-manager-security-controls-new-manager/',
-  //       body: `The Linode Manager is the gateway to all of your Linode products
-  //       and services, and you should take steps to protect it from unauthorized
-  //       access. This guide documents several of Linode Manager’s features that
-  //       can help mitigate your risk. Whether you’re worried about malicious
-  //       users gaining access to your username and password, or authorized users
-  //       abusing their access privileges, Linode Manager’s built-in security
-  //       tools can help.`
-  //     }
-  //   ];
-
   React.useEffect(() => {
     request();
   }, [request]);
@@ -204,7 +178,7 @@ const UsersLanding: React.FC<CombinedProps> = props => {
         rowLink={`/account/users/${user.username}/profile`}
         ariaLabel={`User ${user.username}`}
       >
-        <TableCell padata-qa-username>
+        <TableCell data-qa-username>
           <Grid container alignItems="center">
             <Grid item style={{ display: 'flex' }}>
               {user.gravatarUrl === undefined ? (

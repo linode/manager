@@ -26,16 +26,8 @@ const Users_CMR = React.lazy(() =>
 const Billing = React.lazy(() => import('src/features/Billing'));
 
 const AccountLanding: React.FC<Props> = props => {
-  const { history, location } = props;
+  const { location } = props;
   const flags = useFlags();
-
-  const handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const routeName = tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
 
   const Users = flags.cmr ? Users_CMR : Users_PreCMR;
 

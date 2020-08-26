@@ -88,6 +88,7 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
                 key={action.title}
                 actionText={action.title}
                 onClick={action.onClick}
+                disabled={action.disabled}
               />
             );
           })}
