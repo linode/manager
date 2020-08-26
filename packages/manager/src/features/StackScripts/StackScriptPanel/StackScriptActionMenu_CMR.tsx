@@ -87,8 +87,10 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
 
   const createActions = () => {
     return (): Action[] => {
-      const actions: Action[] = [
-        {
+      const actions: Action[] = [];
+
+      if (matchesSmDown) {
+        actions.unshift({
           title: 'Deploy New Linode',
           disabled: !canAddLinodes,
           tooltip: !canAddLinodes
@@ -99,8 +101,8 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
               getStackScriptUrl(stackScriptUsername, stackScriptID, username)
             );
           }
-        }
-      ];
+        });
+      }
 
       // We only add the "Edit" option if the current tab/category isn't
       // "Community StackScripts". A user's own public StackScripts are still
