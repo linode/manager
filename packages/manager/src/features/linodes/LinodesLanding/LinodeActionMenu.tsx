@@ -96,8 +96,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
     } = this.props;
 
     const params: Record<string, string> = {
-      type: 'My Images',
-      subtype: 'Clone Linode',
+      type: 'Clone Linode',
       linodeID: String(linodeId)
     };
 
