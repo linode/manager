@@ -99,7 +99,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     open: false,
     linodeID: 0
   });
-  
+
   const [backupsDialog, setBackupsDialog] = React.useState<DialogProps>({
     open: false,
     linodeID: 0

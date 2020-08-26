@@ -1,3 +1,9 @@
+## [2020-08-25] - v.0.32.0
+
+### Added:
+
+- DNS resolvers to Region response
+
 ## [2020-08-11] - v.0.31.0
 
 ### Added:
