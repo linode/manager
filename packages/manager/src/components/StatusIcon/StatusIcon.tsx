@@ -4,17 +4,6 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes blink': {
-    '0%': {
-      opacity: 1
-    },
-    '50%': {
-      opacity: 0.25
-    },
-    '100%': {
-      opacity: 1
-    }
-  },
   statusCell: {
     whiteSpace: 'nowrap',
     width: '17%',
@@ -61,7 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.green
   },
   statusIconOther: {
-    animation: '$blink 1.25s linear infinite',
     backgroundColor: theme.color.orange
   },
   statusIconOffline: {
@@ -96,7 +84,8 @@ export const StatusIcon: React.FC<StatusProps> = props => {
         [classes.statusIconError]: status === 'error',
         [classes.statusIconOther]: !['inactive', 'active', 'error'].includes(
           status
-        )
+        ),
+        statusOther: !['inactive', 'active', 'error'].includes(status)
       })}
     />
   );

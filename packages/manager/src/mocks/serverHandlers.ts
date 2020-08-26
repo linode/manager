@@ -58,7 +58,7 @@ export const handlers = [
   rest.get('*/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(3);
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
-    const busyLinodes = linodeFactory.buildList(2, { status: 'migrating' });
+    const busyLinodes = linodeFactory.buildList(10, { status: 'migrating' });
     const linodes = [...onlineLinodes, ...offlineLinodes, ...busyLinodes];
     return res(ctx.json(makeResourcePage(linodes)));
   }),

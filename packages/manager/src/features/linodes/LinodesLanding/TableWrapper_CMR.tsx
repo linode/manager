@@ -7,8 +7,24 @@ import Table from 'src/components/Table/Table_CMR';
 import SortableTableHead_CMR from './SortableTableHead_CMR';
 
 const useStyles = makeStyles(() => ({
+  '@keyframes blink': {
+    '0%': {
+      opacity: 1
+    },
+    '50%': {
+      opacity: 0.25
+    },
+    '100%': {
+      opacity: 1
+    }
+  },
   paperWrapper: {
     backgroundColor: 'transparent'
+  },
+  table: {
+    '& .statusOther': {
+      animation: '$blink 1.25s linear infinite'
+    }
   }
 }));
 
@@ -44,6 +60,7 @@ const TableWrapper: React.FC<CombinedProps> = props => {
             aria-label="List of Linodes"
             rowCount={dataLength}
             colCount={5}
+            className={classes.table}
           >
             <SortableTableHead_CMR
               order={order}
