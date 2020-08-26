@@ -149,6 +149,9 @@ export const handlers = [
   rest.get('*/profile/preferences', (req, res, ctx) => {
     return res(ctx.json({ display: 'compact' }));
   }),
+  rest.get('*/profile/devices', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage([])));
+  }),
   rest.put('*/profile/preferences', (req, res, ctx) => {
     const body = req.body as any;
     return res(ctx.json({ ...body }));
