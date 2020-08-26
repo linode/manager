@@ -11,9 +11,9 @@ export const Maintenance: React.FC<Props> = props => {
     <NotificationSection
       content={statusNotifications}
       header="System Status"
-      showMoreText="View fleet status"
+      showMoreText="View status page"
       showMoreTarget="https://status.linode.com"
-      emptyMessage="All datacenters used by this account are online."
+      emptyMessage="No outages or host maintenance pending."
     />
   );
 };
