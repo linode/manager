@@ -1,11 +1,9 @@
-import { path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import useProfile from 'src/hooks/useProfile';
 import { useHistory } from 'react-router-dom';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import { MapState } from 'src/store/types';
 import {
   makeStyles,
   Theme,
@@ -19,7 +17,7 @@ interface Props {
   onDelete: (username: string) => void;
 }
 
-type CombinedProps = Props & StateProps;
+type CombinedProps = Props;
 
 const useStyles = makeStyles(() => ({
   actionInner: {
@@ -32,9 +30,12 @@ const useStyles = makeStyles(() => ({
 }));
 
 const UsersActionMenu: React.FC<CombinedProps> = props => {
-  const { onDelete, username, profileUsername } = props;
+  const { onDelete, username } = props;
 
   const history = useHistory();
+
+  const { profile } = useProfile();
+  const profileUsername = profile.data?.username;
 
   const classes = useStyles();
   const theme = useTheme<Theme>();
@@ -75,7 +76,7 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
       {matchesSmDown ? (
         <ActionMenu
           createActions={() => actions}
-          ariaLabel={`Action menu for user ${props.profileUsername}`}
+          ariaLabel={`Action menu for user ${profileUsername}`}
         />
       ) : (
         <div className={classes.actionInner}>
@@ -94,14 +95,5 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
     </>
   );
 };
-interface StateProps {
-  profileUsername?: string;
-}
 
-const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
-  profileUsername: path(['data', 'username'], state.__resources.profile)
-});
-
-export const connected = connect(mapStateToProps);
-
-export default connected(UsersActionMenu);
+export default UsersActionMenu;
