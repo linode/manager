@@ -4,6 +4,46 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-08-25] - v1.17.0
+
+### Added:
+
+- CMR:
+- Primary Nav responsive scaffold + styles
+- Use CMR action menu for Longview client rows
+- Plan link in Linode detail header should open the resize dialog
+- Table Styles:
+  Managed: SSH Access, Credentials
+  Profile: SSH Keys, API Tokens, OAuth Apps
+  Support Tickets
+- Linode Table Adjustments
+- Notification drawer: chronological display
+- Linode Storage Tab
+- Linode Rebuild Dialog
+- Flavor text in LinodeNews banner
+- Backups enable from Linode action menu
+- Mark events as seen when requesting in the notificationContext
+- Completed progress events
+- Longview processes tables to preferences sortKeys
+- Enforced 64 character limit on text input
+- Confirm enabling backups
+- Handling strange timezone cases for summary graphs
+
+### Changed:
+
+- Longview installation instructions
+- Clear UDF data on tab change in Linode Create
+- Language to “allowlist” and “blocklist”
+
+### Fixed:
+
+- Interoperability issues
+- Linode creation preselection params for from Clone, from Image, from Backup
+- Loading spinner in Notification drawer
+- Missing yup types dependency
+- SSH fingerprint display issues for various key types
+- Issue where loading a Domain’s Detail page directly wasn’t working on large accounts
+
 ## [2020-08-14] - v1.16.2
 
 ### Fixed:

@@ -2,12 +2,11 @@ import { Grant } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import useFlags from 'src/hooks/useFlags';
 import CPUGauge from './Gauges/CPU';
-
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import LoadGauge from './Gauges/Load';
 import NetworkGauge from './Gauges/Network';
@@ -15,9 +14,9 @@ import RAMGauge from './Gauges/RAM';
 import StorageGauge from './Gauges/Storage';
 import SwapGauge from './Gauges/Swap';
 import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
+import ActionMenu_CMR from './LongviewActionMenu_CMR';
 import LongviewClientHeader from './LongviewClientHeader';
 import LongviewClientInstructions from './LongviewClientInstructions';
-
 import withLongviewClients, {
   DispatchProps
 } from 'src/containers/longview.container';
@@ -61,6 +60,9 @@ type CombinedProps = Props & LVDataProps & DispatchProps & GrantProps;
 
 const LongviewClientRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
+
+  const Menu = flags.cmr ? ActionMenu_CMR : ActionMenu;
 
   const {
     clientID,
@@ -167,7 +169,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <Grid item xs={1}>
           <Grid container justify="flex-end">
             <Grid item>
-              <ActionMenu
+              <Menu
                 longviewClientID={clientID}
                 longviewClientLabel={clientLabel}
                 triggerDeleteLongviewClient={triggerDeleteLongviewClient}

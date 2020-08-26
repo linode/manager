@@ -6,7 +6,7 @@ import {
   createVolume
 } from '../../support/api/volumes';
 import { assertToast } from '../../support/ui/events';
-import { createLinode } from '../../support/api/linodes';
+import { createLinode, deleteAllTestLinodes } from '../../support/api/linodes';
 
 const urlExtension = '/volumes/create';
 const tag = 'cy-test';
@@ -80,7 +80,8 @@ describe('volumes', () => {
     createBasicVolume().then(({ label, id }) => {
       validateBasicVolume(label, id);
       clickVolumeActionMenu(label);
-      cy.findByText('Delete').should('be.visible');
+      cy.get('[data-qa-action-menu-item="Delete"]').should('be.visible');
+      deleteAllTestLinodes();
       deleteAllTestVolumes();
     });
   });
@@ -104,11 +105,12 @@ describe('volumes', () => {
         cy.findByText(
           `Are you sure you want to detach this Volume from ${linodeLabel}?`
         );
-        clickDetach();
+        cy.get('[data-qa-confirm="true"]').click();
         cy.wait('@volumeDetached')
           .its('status')
           .should('eq', 200);
         assertToast('Volume detachment started', 2);
+        deleteAllTestLinodes();
         deleteAllTestVolumes();
       });
     });

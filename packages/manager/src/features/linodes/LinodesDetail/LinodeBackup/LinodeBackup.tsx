@@ -209,6 +209,7 @@ export const aggregateBackups = (
 };
 
 /* tslint:disable-next-line */
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 class _LinodeBackup extends React.Component<CombinedProps, State> {
   state: State = {
     backups: this.props.backups.response,
@@ -514,7 +515,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     const { history, linodeID } = this.props;
     history.push(
       '/linodes/create' +
-        `?type=My%20Images&subtype=Backups&backupID=${backup.id}&linodeID=${linodeID}`
+        `?type=Backups&backupID=${backup.id}&linodeID=${linodeID}`
     );
   };
 
