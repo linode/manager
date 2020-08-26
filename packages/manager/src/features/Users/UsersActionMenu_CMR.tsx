@@ -1,7 +1,7 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
@@ -19,7 +19,7 @@ interface Props {
   onDelete: (username: string) => void;
 }
 
-type CombinedProps = Props & StateProps & RouteComponentProps<{}>;
+type CombinedProps = Props & StateProps;
 
 const useStyles = makeStyles(() => ({
   actionInner: {
@@ -32,12 +32,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 const UsersActionMenu: React.FC<CombinedProps> = props => {
-  const {
-    onDelete,
-    username,
-    profileUsername,
-    history: { push }
-  } = props;
+  const { onDelete, username, profileUsername } = props;
+
+  const history = useHistory();
 
   const classes = useStyles();
   const theme = useTheme<Theme>();
@@ -47,14 +44,14 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
     {
       title: 'User Profile',
       onClick: (e: React.MouseEvent<HTMLElement>) => {
-        push(`/account/users/${username}`);
+        history.push(`/account/users/${username}`);
         e.preventDefault();
       }
     },
     {
       title: 'User Permissions',
       onClick: (e: React.MouseEvent<HTMLElement>) => {
-        push(`/account/users/${username}/permissions`);
+        history.push(`/account/users/${username}/permissions`);
         e.preventDefault();
       }
     },
@@ -107,4 +104,4 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
 
 export const connected = connect(mapStateToProps);
 
-export default withRouter(connected(UsersActionMenu));
+export default connected(UsersActionMenu);
