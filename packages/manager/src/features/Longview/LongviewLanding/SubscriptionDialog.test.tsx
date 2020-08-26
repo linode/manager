@@ -1,4 +1,4 @@
-import { cleanup, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -11,8 +11,6 @@ const props = {
   onClose: jest.fn(),
   onSubmit: jest.fn()
 };
-
-afterEach(cleanup);
 
 describe('Subscription Dialog component', () => {
   it("should include the user's client count in the message", () => {

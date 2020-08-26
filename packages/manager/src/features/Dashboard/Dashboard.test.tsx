@@ -1,11 +1,9 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
+import { screen } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { withLinodesLoaded, withManaged } from 'src/utilities/testHelpersStore';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import Dashboard, { CombinedProps } from './Dashboard';
-
-afterEach(cleanup);
 
 const props: CombinedProps = {
   accountBackups: false,
@@ -24,24 +22,24 @@ const props: CombinedProps = {
 
 describe('Dashboard view', () => {
   describe('Backups CTA card', () => {
-    it('display for non-managed users', () => {
-      const { getByText } = renderWithTheme(<Dashboard {...props} />, {
+    it('display for non-managed users', async () => {
+      renderWithTheme(<Dashboard {...props} />, {
         customStore: {
           ...withLinodesLoaded
         }
       });
-      getByText('Linode Backup Auto-Enrollment');
+      await screen.findByText('Linode Backup Auto-Enrollment');
     });
     it('should never display for managed users', () => {
       const _props = { ...props, managed: true };
-      const { queryByText } = renderWithTheme(<Dashboard {..._props} />, {
+      renderWithTheme(<Dashboard {..._props} />, {
         customStore: {
           ...withLinodesLoaded,
           ...withManaged
         }
       });
       expect(
-        queryByText('Linode Backup Auto-Enrollment')
+        screen.queryByText('Linode Backup Auto-Enrollment')
       ).not.toBeInTheDocument();
     });
   });

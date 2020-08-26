@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { cleanup } from '@testing-library/react';
 import Currency from './Currency';
-
-beforeEach(cleanup);
 
 describe('Currency Component', () => {
   it('displays a given quantity in USD', () => {

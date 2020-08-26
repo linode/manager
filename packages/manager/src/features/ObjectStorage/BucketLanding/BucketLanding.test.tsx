@@ -1,4 +1,3 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import {
   objectStorageBucketFactory,
@@ -6,8 +5,6 @@ import {
 } from 'src/factories/objectStorage';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import BucketLanding, { CombinedProps } from './BucketLanding';
-
-afterEach(cleanup);
 
 const mockCloseBucketDrawer = jest.fn();
 const mockOpenBucketDrawer = jest.fn();
@@ -21,7 +18,7 @@ const props: CombinedProps = {
 describe('ObjectStorageLanding', () => {
   it('renders a loading state', () => {
     const { getByTestId } = renderWithTheme(<BucketLanding {...props} />);
-    getByTestId('loading-state');
+    getByTestId('circle-progress');
   });
 
   it('renders an empty state', () => {

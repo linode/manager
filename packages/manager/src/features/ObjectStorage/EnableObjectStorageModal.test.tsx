@@ -1,10 +1,8 @@
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { EnableObjectStorageModal, Props } from './EnableObjectStorageModal';
-
-afterEach(cleanup);
 
 const handleSubmit = jest.fn();
 const onClose = jest.fn();

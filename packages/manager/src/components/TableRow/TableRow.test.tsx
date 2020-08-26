@@ -1,11 +1,9 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import TableCell from 'src/components/TableCell';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import { CombinedProps, TableRow } from './TableRow';
-
-afterEach(cleanup);
 
 const mockHistoryPush = jest.fn();
 
