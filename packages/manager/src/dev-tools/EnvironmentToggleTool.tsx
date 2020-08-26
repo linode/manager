@@ -79,8 +79,10 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
           style={{ marginLeft: 8 }}
           onClick={() => {
             const selected = options[selectedOption];
-            storage.devToolsEnv.set(selected);
-            window.location.reload();
+            if (selected) {
+              storage.devToolsEnv.set(selected);
+              window.location.reload();
+            }
           }}
         >
           Refresh

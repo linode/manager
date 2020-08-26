@@ -166,11 +166,7 @@ export const storage: Storage = {
       const value = getStorage(DEV_TOOLS_ENV);
       return isDevToolsEnvValid(value) ? value : undefined;
     },
-    set: devToolsEnv => {
-      if (devToolsEnv) {
-        setStorage(DEV_TOOLS_ENV, JSON.stringify(devToolsEnv));
-      }
-    }
+    set: devToolsEnv => setStorage(DEV_TOOLS_ENV, JSON.stringify(devToolsEnv))
   }
 };
 
