@@ -145,11 +145,12 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     if (!item || item.label === '') {
       return;
     }
-    const text = item.data.searchText;
 
-    if (item.value === 'info') {
+    if (item.value === 'info' || item.value === 'error') {
       return;
     }
+
+    const text = item.data.searchText;
 
     if (item.value === 'redirect') {
       props.history.push({
