@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { linode1, linode2, linode3 } from 'src/__data__/linodes';
@@ -66,7 +66,7 @@ const props = {
   updatedCount: 0
 };
 
-const { rerender, getByTestId, queryByTestId } = render(
+const { rerender, getByTestId, findByTestId, queryByTestId } = render(
   wrapWithTheme(
     <BackupDrawer
       closeSnackbar={jest.fn()}
@@ -123,28 +123,6 @@ describe('BackupDrawer component', () => {
     });
   });
   describe('Backup Drawer', () => {
-    it('should close the drawer on successful submission', () => {
-      rerender(
-        wrapWithTheme(
-          <BackupDrawer
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
-            {...props}
-            enableSuccess={true}
-          />
-        )
-      );
-      expect(actions.close).toHaveBeenCalled();
-    });
-    // it("should request un-backed-up Linodes on load, if the list is empty", () => {
-    //   component.instance().componentDidMount!();
-    //   expect(actions.getLinodesWithoutBackups).toHaveBeenCalledTimes(1);
-    // });
-    // it("should not request Linodes in cDM if there are already Linodes in props", () => {
-    //   component.setProps({ linodesWithoutBackups: [linode3]});
-    //   component.instance().componentDidMount!();
-    //   expect(actions.getLinodesWithoutBackups).not.toHaveBeenCalled();
-    // });
     it('should display an error Notice', () => {
       expect(queryByTestId('result-notice')).toBeNull();
       rerender(
@@ -174,15 +152,33 @@ describe('BackupDrawer component', () => {
       expect(getByTestId('result-notice')).toHaveTextContent('1 Linode failed');
       expect(getByTestId('result-notice')).toHaveTextContent('2 Linodes');
     });
-    it('should call enrollAutoBackups on submit', () => {
-      const submit = getByTestId('submit');
+    it('should call enrollAutoBackups on submit', async () => {
+      rerender(
+        wrapWithTheme(
+          <BackupDrawer
+            closeSnackbar={jest.fn()}
+            enqueueSnackbar={jest.fn()}
+            {...props}
+          />
+        )
+      );
+      const submit = await findByTestId('submit');
       fireEvent.click(submit);
-      expect(actions.enroll).toHaveBeenCalled();
+      await waitFor(() => expect(actions.enroll).toHaveBeenCalled());
     });
-    it('should close the drawer on Cancel', () => {
-      const cancelButton = getByTestId('cancel');
+    it('should close the drawer on Cancel', async () => {
+      rerender(
+        wrapWithTheme(
+          <BackupDrawer
+            closeSnackbar={jest.fn()}
+            enqueueSnackbar={jest.fn()}
+            {...props}
+          />
+        )
+      );
+      const cancelButton = await findByTestId('cancel');
       fireEvent.click(cancelButton);
-      expect(actions.close).toHaveBeenCalled();
+      await waitFor(() => expect(actions.close).toHaveBeenCalled());
     });
   });
 });

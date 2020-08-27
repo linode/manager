@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { BucketActionMenu } from './BucketActionMenu';
@@ -10,8 +10,6 @@ const mockOnRemove = jest.fn();
 const props = {
   onRemove: mockOnRemove
 };
-
-afterAll(cleanup);
 
 describe('BucketActionMenu', () => {
   it('Includes a "Delete" option', () => {

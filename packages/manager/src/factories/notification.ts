@@ -1,4 +1,5 @@
 import * as Factory from 'factory.ts';
+import { DateTime } from 'luxon';
 import { Notification, Entity } from '@linode/api-v4/lib/account';
 
 const generateEntity = (id: number): Entity => ({
@@ -11,7 +12,9 @@ const generateEntity = (id: number): Entity => ({
 export const notificationFactory = Factory.Sync.makeFactory<Notification>({
   type: 'maintenance',
   entity: Factory.each(i => generateEntity(i)),
-  when: '2020-06-16T01:00:00',
+  when: DateTime.local()
+    .plus({ days: 7 })
+    .toISODate(),
   message: 'This Linode will be affected by critical maintenance!',
   label: 'maintenance',
   severity: 'critical',

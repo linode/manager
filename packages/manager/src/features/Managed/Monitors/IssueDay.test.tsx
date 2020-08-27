@@ -1,10 +1,7 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { IssueDay, Props } from './IssueDay';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { DateTime } from 'luxon';
-
-afterEach(cleanup);
 
 describe('IssueDay', () => {
   it('should include basic Monitor actions', () => {
