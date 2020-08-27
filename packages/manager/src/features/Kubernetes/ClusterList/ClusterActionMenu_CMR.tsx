@@ -77,19 +77,19 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
 
   const createActions = () => {
     return (): Action[] => {
-      const actions = [
-        {
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            openDialog();
-
-            e.preventDefault();
-          }
-        }
-      ];
+      const actions = [];
 
       if (matchesSmDown) {
-        actions.unshift({
+        actions.push({
+          title: 'Details',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push({
+              pathname: `/kubernetes/clusters/${clusterId}`
+            });
+            e.preventDefault();
+          }
+        });
+        actions.push({
           title: 'Download kubeconfig',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
@@ -97,12 +97,11 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
             downloadKubeConfig();
           }
         });
-        actions.unshift({
-          title: 'Details',
+        actions.push({
+          title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push({
-              pathname: `/kubernetes/clusters/${clusterId}`
-            });
+            openDialog();
+
             e.preventDefault();
           }
         });
@@ -154,12 +153,22 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
         >
           Download kubeconfig
         </Button>
+        <Button
+          className={classes.button}
+          onClick={() => {
+            openDialog();
+          }}
+        >
+          Delete
+        </Button>
       </Hidden>
 
-      <ActionMenu
-        createActions={createActions()}
-        ariaLabel={`Action menu for Cluster ${props.clusterLabel}`}
-      />
+      <Hidden mdUp>
+        <ActionMenu
+          createActions={createActions()}
+          ariaLabel={`Action menu for Cluster ${props.clusterLabel}`}
+        />
+      </Hidden>
     </div>
   );
 };

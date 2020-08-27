@@ -47,9 +47,9 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
       }
     },
     {
-      actionText: 'Delete',
+      actionText: 'Deploy New Linode',
       onClick: (e: React.MouseEvent<HTMLElement>) => {
-        onDelete(label, id);
+        onDeploy(id);
         e.preventDefault();
       }
     }
@@ -65,9 +65,9 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
         }
       },
       {
-        title: 'Deploy New Linode',
+        title: 'Delete',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          onDeploy(id);
+          onDelete(label, id);
           e.preventDefault();
         }
       }
@@ -83,9 +83,9 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
           }
         },
         {
-          title: 'Delete',
+          title: 'Deploy New Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDelete(label, id);
+            onDeploy(id);
             e.preventDefault();
           }
         }
