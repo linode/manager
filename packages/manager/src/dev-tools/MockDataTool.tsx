@@ -1,5 +1,6 @@
 import * as React from 'react';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
+import Grid from 'src/components/core/Grid';
 import { MockData, mockDataController } from './mockDataController';
 
 const options: { label: string; key: keyof MockData }[] = [
@@ -29,24 +30,29 @@ const MockDataTool: React.FC<{}> = () => {
   // specific fields, like label, region, etc. (via <input /> or even JSON entry?)
 
   return (
-    <div>
-      {options.map(thisOption => {
-        return (
-          <div key={thisOption.key} style={{ marginTop: 4 }}>
-            <label>Mock {thisOption.label}</label>
-            <input
-              style={{ marginLeft: 4 }}
-              type="number"
-              min="0"
-              onChange={e =>
-                handleInputChange(thisOption.key, Number(e.target.value))
-              }
-              value={localMockData[thisOption.key]?.quantity ?? 0}
-            />
-          </div>
-        );
-      })}
-    </div>
+    <Grid>
+      <Grid item xs={12}>
+        <h4>Mock Data</h4>
+      </Grid>
+      <Grid item xs={12}>
+        {options.map(thisOption => {
+          return (
+            <div key={thisOption.key} style={{ marginTop: 4 }}>
+              <label>{thisOption.label}: </label>
+              <input
+                style={{ marginLeft: 4 }}
+                type="number"
+                min="0"
+                onChange={e =>
+                  handleInputChange(thisOption.key, Number(e.target.value))
+                }
+                value={localMockData[thisOption.key]?.quantity ?? 0}
+              />
+            </div>
+          );
+        })}
+      </Grid>
+    </Grid>
   );
 };
 

@@ -12,13 +12,6 @@ import Grid from 'src/components/core/Grid';
 
 function install() {
   (window as any).devToolsEnabled = true;
-  // Load local dev tools, untracked by Git.
-  const requireDevToolsLocal = require.context('./', false, /\.local\.tsx/);
-  const local = requireDevToolsLocal.keys()[0];
-  if (local) {
-    LocalDevTools = requireDevToolsLocal(local).default;
-  }
-  LocalDevTools = LocalDevTools || (() => null);
 
   function DevTools() {
     return (
@@ -34,9 +27,9 @@ function install() {
             </Grid>
           )}
           {MOCK_SERVICE_WORKER && (
-            <div style={{ marginTop: 8 }}>
+            <Grid item xs={2}>
               <MockDataTool />
-            </div>
+            </Grid>
           )}
         </Grid>
       </div>
