@@ -268,7 +268,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
       if (
         (linodeStatus === 'running' && inTableContext) ||
-        (!inTableContext && matchesSmDown)
+        (linodeStatus === 'running' && !inTableContext && matchesSmDown)
       ) {
         actions.unshift({
           title: 'Reboot',
