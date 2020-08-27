@@ -278,7 +278,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         resetEventsPolling();
         requestDisks(linodeId);
-        history.push(`/linodes/${linodeId}/advanced`);
+        flags.cmr
+          ? history.push(`/linodes/${linodeId}/configurations`)
+          : history.push(`/linodes/${linodeId}/advanced`);
       })
       .catch(errors => {
         setSubmitting(false);
@@ -308,25 +310,27 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       {flags.cmr ? (
         <LinodesDetailHeader_CMR />
       ) : (
-        <LinodeControls
-          breadcrumbProps={{
-            removeCrumbX: 4,
-            crumbOverrides: [
-              {
-                label,
-                position: 2,
-                linkTo: {
-                  pathname: `/linodes/${linodeId}/summary`
-                },
-                noCap: true
-              }
-            ],
-            onEditHandlers: undefined
-          }}
-        />
-      )}
-      {linodeInTransition(linodeStatus, firstEventWithProgress) && (
-        <LinodeBusyStatus />
+        <>
+          <LinodeControls
+            breadcrumbProps={{
+              removeCrumbX: 4,
+              crumbOverrides: [
+                {
+                  label,
+                  position: 2,
+                  linkTo: {
+                    pathname: `/linodes/${linodeId}/summary`
+                  },
+                  noCap: true
+                }
+              ],
+              onEditHandlers: undefined
+            }}
+          />
+          {linodeInTransition(linodeStatus, firstEventWithProgress) && (
+            <LinodeBusyStatus />
+          )}
+        </>
       )}
       <Grid container className={classes.root}>
         <Grid item xs={12} md={8} lg={9}>
