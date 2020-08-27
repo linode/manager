@@ -1,4 +1,4 @@
-import { rest } from 'msw';
+import { rest, RequestHandler } from 'msw';
 
 import {
   accountFactory,
@@ -33,6 +33,7 @@ import {
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
+import { MockData } from 'src/dev-tools/mockDataController';
 import cachedTypes from 'src/cachedData/types.json';
 
 export const makeResourcePage = (
@@ -239,3 +240,15 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(notificationFactory.buildList(1))));
   })
 ];
+
+// Generator functions for dynamic handlers, in use by mock data dev tools.
+export const mockDataHandlers: Record<
+  keyof MockData,
+  (count: number) => RequestHandler
+> = {
+  linode: count =>
+    rest.get('*/instances', async (req, res, ctx) => {
+      const linodes = linodeFactory.buildList(count);
+      return res(ctx.json(makeResourcePage(linodes)));
+    })
+};
