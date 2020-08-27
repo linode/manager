@@ -62,7 +62,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexDirection: 'column',
       alignItems: 'flex-start',
       [theme.breakpoints.down('xs')]: {
-        marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2)
+        marginLeft: 15,
+        paddingLeft: 0
       }
     }
   },
