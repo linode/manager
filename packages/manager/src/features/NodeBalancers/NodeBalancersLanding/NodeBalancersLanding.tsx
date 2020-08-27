@@ -126,7 +126,7 @@ const headers: HeaderCell[] = [
     label: 'Name',
     dataColumn: 'label',
     sortable: true,
-    widthPercent: 40
+    widthPercent: 25
   },
   {
     label: 'Backend Status',
