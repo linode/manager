@@ -317,8 +317,8 @@ const Header: React.FC<HeaderProps> = props => {
                 <IconTextLink
                   className={classes.actionItem}
                   SideIcon={ViewDetailsIcon}
-                  text="ViewDetails"
-                  title="ViewDetails"
+                  text="View Details"
+                  title="View Details"
                   to={`linodes/${linodeId}`}
                 />
               </Hidden>
@@ -344,22 +344,24 @@ const Header: React.FC<HeaderProps> = props => {
               disabled={!['running', 'offline'].includes(linodeStatus)}
             />
 
-            <Hidden xsDown>
-              <IconTextLink
-                className={classes.actionItem}
-                SideIcon={RebootIcon}
-                text="Reboot"
-                title="Reboot"
-                onClick={() => {
-                  sendLinodeActionMenuItemEvent('Reboot Linode');
-                  openPowerActionDialog(
-                    'Reboot',
-                    linodeId,
-                    linodeLabel,
-                    linodeConfigs
-                  );
-                }}
-              />
+            <Hidden smDown>
+              {linodeStatus !== 'offline' && (
+                <IconTextLink
+                  className={classes.actionItem}
+                  SideIcon={RebootIcon}
+                  text="Reboot"
+                  title="Reboot"
+                  onClick={() => {
+                    sendLinodeActionMenuItemEvent('Reboot Linode');
+                    openPowerActionDialog(
+                      'Reboot',
+                      linodeId,
+                      linodeLabel,
+                      linodeConfigs
+                    );
+                  }}
+                />
+              )}
               <IconTextLink
                 className={classes.actionItem}
                 SideIcon={ConsoleIcon}
@@ -382,6 +384,7 @@ const Header: React.FC<HeaderProps> = props => {
               openPowerActionDialog={openPowerActionDialog}
               noImage={!image}
               inlineLabel={matchesMdDown ? undefined : 'More Actions'}
+              inLandingDetailContext={isDetailLanding}
             />
           </div>
           {isDetails && (
