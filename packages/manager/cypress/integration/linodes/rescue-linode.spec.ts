@@ -17,7 +17,7 @@ describe('rescue linode', () => {
       // mock 200 response
       cy.route({
         method: 'POST',
-        url: '*/linode/instances/*/rescue',
+        url: `*/linode/instances/${linode.id}/rescue`,
         response: {}
       }).as('postRebootInRescueMode');
       const rescueUrl = `/linodes/${linode.id}`;
@@ -28,6 +28,14 @@ describe('rescue linode', () => {
         .click();
       rebootInRescueMode();
       // check mocked response and make sure UI responded correctly
+      cy.route({
+        url: `*/account/events**`,
+        method: 'GET',
+        response: {
+          results: 0,
+          data: []
+        }
+      });
       cy.wait('@postRebootInRescueMode')
         .its('status')
         .should('eq', 200);
@@ -40,10 +48,18 @@ describe('rescue linode', () => {
     cy.visitWithLogin('/support');
     createLinode().then(linode => {
       cy.server();
+      cy.route({
+        url: `*/account/events**`,
+        method: 'GET',
+        response: {
+          results: 0,
+          data: []
+        }
+      });
       // not mocking response here
       cy.route({
         method: 'POST',
-        url: '*/linode/instances/*/rescue'
+        url: `*/linode/instances/${linode.id}/rescue`
       }).as('postRebootInRescueMode');
       const rescueUrl = `/linodes/${linode.id}/rescue`;
       cy.visit(rescueUrl);
