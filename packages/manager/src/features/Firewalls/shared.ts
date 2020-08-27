@@ -78,7 +78,7 @@ export const portPresets: Record<FirewallPreset, string> = {
 };
 
 export const allIPv4 = '0.0.0.0/0';
-export const allIPv6 = '::0/0';
+export const allIPv6 = '::/0';
 
 export const allIPs = {
   ipv4: [allIPv4],

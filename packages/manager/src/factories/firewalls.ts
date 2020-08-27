@@ -12,7 +12,7 @@ export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
   protocol: 'TCP',
   addresses: {
     ipv4: ['0.0.0.0/0'],
-    ipv6: ['::0/0']
+    ipv6: ['::/0']
   }
 });
 

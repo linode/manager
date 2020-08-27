@@ -128,7 +128,7 @@ describe('generateAddressLabel', () => {
     expect(
       generateAddressesLabel({
         ipv4: ['1.1.1.1', '2.2.2.2', '3.3.3.3', '4.4.4.4', '5.5.5.5'],
-        ipv6: ['::0/0']
+        ipv6: ['::/0']
       })
     ).toBe('All IPv6, 1.1.1.1, 2.2.2.2, plus 3 more');
   });
