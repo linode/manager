@@ -12,7 +12,6 @@ export type ClassNames =
   | 'blue'
   | 'green'
   | 'text'
-  | 'toggle'
   | 'tableHead'
   | 'tableHeadInner'
   | 'simpleLegend'
@@ -50,7 +49,10 @@ const newMetricDisplayStyles = (theme: Theme) =>
         backgroundColor: 'transparent'
       },
       '& td:first-child': {
-        backgroundColor: 'transparent !important'
+        backgroundColor: 'transparent !important',
+        [theme.breakpoints.down('sm')]: {
+          marginLeft: -50
+        }
       },
       '& .data': {
         minWidth: 100
@@ -128,11 +130,6 @@ const newMetricDisplayStyles = (theme: Theme) =>
     },
     text: {
       color: theme.color.black
-    },
-    toggle: {
-      [theme.breakpoints.down('sm')]: {
-        display: 'none'
-      }
     },
     simpleLegendRoot: {
       maxWidth: 'initial',

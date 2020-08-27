@@ -269,22 +269,10 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         <div className={classes.container}>
           <Table aria-label="Stats and metrics" className={classes.root}>
             <TableHead className={classes.tableHead}>
+              {/* Remove "Toggle Graph" label and repeat legend for each data set for mobile */}
               {matchesSmDown ? (
-                data.map((section, i) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <TableRow>
-                    <TableCell
-                      className={`${classes.tableHeadInner} ${classes.toggle}`}
-                    >
-                      <Typography
-                        variant="body2"
-                        component="span"
-                        className={classes.text}
-                      >
-                        Toggle Graphs
-                      </Typography>
-                      <LineChartIcon className={classes.chartIcon} />
-                    </TableCell>
+                data.map(section => (
+                  <TableRow key={section.label}>
                     {finalRowHeaders.map((section, i) => (
                       <TableCell
                         key={i}
@@ -304,7 +292,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                     <Typography
                       variant="body2"
                       component="span"
-                      className={`${classes.text} ${classes.toggle}`}
+                      className={classes.text}
                     >
                       Toggle Graphs
                     </Typography>
