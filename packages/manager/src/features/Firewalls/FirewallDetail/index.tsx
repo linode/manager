@@ -90,7 +90,12 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={thisFirewall.label} />
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        paddingBottom={'20px'}
+      >
         <Breadcrumb
           pathname={props.location.pathname}
           removeCrumbX={2}
