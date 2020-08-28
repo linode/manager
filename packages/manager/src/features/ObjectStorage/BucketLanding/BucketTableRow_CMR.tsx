@@ -101,6 +101,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
         <BucketActionMenu
           onRemove={onRemove}
           label={label}
+          cluster={cluster}
           data-qa-action-menu
         />
       </TableCell>

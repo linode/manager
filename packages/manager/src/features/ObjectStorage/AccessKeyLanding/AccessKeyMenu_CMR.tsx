@@ -50,20 +50,20 @@ const AccessKeyMenu: React.FC<CombinedProps> = props => {
 
   const createActions = () => {
     return (): Action[] => {
-      const actions = [];
-
-      actions.push({
-        title: 'Rename Access Key',
-        onClick: () => {
-          openDrawerForEditing(objectStorageKey);
+      const actions = [
+        {
+          title: 'Edit label',
+          onClick: () => {
+            openDrawerForEditing(objectStorageKey);
+          }
+        },
+        {
+          title: 'Revoke',
+          onClick: () => {
+            openRevokeDialog(objectStorageKey);
+          }
         }
-      });
-      actions.push({
-        title: 'Revoke',
-        onClick: () => {
-          openRevokeDialog(objectStorageKey);
-        }
-      });
+      ];
 
       return actions;
     };
@@ -77,7 +77,7 @@ const AccessKeyMenu: React.FC<CombinedProps> = props => {
             openDrawerForEditing(objectStorageKey);
           }}
         >
-          Rename Access Key
+          Edit label
         </Button>
         <Button
           className={classes.button}

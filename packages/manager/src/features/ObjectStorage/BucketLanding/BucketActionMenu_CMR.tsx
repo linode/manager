@@ -3,6 +3,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu_CMR/';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Hidden from 'src/components/core/Hidden';
 import Button from 'src/components/Button';
+import { Link, useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
@@ -33,14 +34,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   onRemove: () => void;
   label: string;
+  cluster: string;
 }
 
 export const BucketActionMenu: React.FC<Props> = props => {
   const classes = useStyles();
+  const history = useHistory();
 
   const createActions = () => {
     return (): Action[] => {
       const actions = [
+        {
+          title: 'Details',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push({
+              pathname: `/object-storage/buckets/${props.cluster}/${props.label}`
+            });
+            e.preventDefault();
+          }
+        },
         {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -57,6 +69,12 @@ export const BucketActionMenu: React.FC<Props> = props => {
   return (
     <div className={classes.inlineActions}>
       <Hidden smDown>
+        <Link
+          className={classes.button}
+          to={`/object-storage/buckets/${props.cluster}/${props.label}`}
+        >
+          Details
+        </Link>
         <Button
           className={classes.button}
           onClick={() => {

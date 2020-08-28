@@ -215,6 +215,11 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     },
     '& span': {
       fontFamily: `${theme.font.normal} !important`
+    },
+    '&:disabled': {
+      '& svg': {
+        fill: theme.color.disabled
+      }
     }
   },
   statusChip: {
@@ -345,23 +350,23 @@ const Header: React.FC<HeaderProps> = props => {
             />
 
             <Hidden smDown>
-              {linodeStatus !== 'offline' && (
-                <IconTextLink
-                  className={classes.actionItem}
-                  SideIcon={RebootIcon}
-                  text="Reboot"
-                  title="Reboot"
-                  onClick={() => {
-                    sendLinodeActionMenuItemEvent('Reboot Linode');
-                    openPowerActionDialog(
-                      'Reboot',
-                      linodeId,
-                      linodeLabel,
-                      linodeConfigs
-                    );
-                  }}
-                />
-              )}
+              <IconTextLink
+                className={classes.actionItem}
+                SideIcon={RebootIcon}
+                disabled={linodeStatus === 'offline'}
+                text="Reboot"
+                title="Reboot"
+                onClick={() => {
+                  sendLinodeActionMenuItemEvent('Reboot Linode');
+                  openPowerActionDialog(
+                    'Reboot',
+                    linodeId,
+                    linodeLabel,
+                    linodeConfigs
+                  );
+                }}
+              />
+
               <IconTextLink
                 className={classes.actionItem}
                 SideIcon={ConsoleIcon}
