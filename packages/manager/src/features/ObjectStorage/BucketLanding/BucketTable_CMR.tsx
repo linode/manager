@@ -10,13 +10,14 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableSortCell from 'src/components/TableSortCell';
-import BucketTableRow from './BucketTableRow';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import BucketTableRow from './BucketTableRow_CMR';
+import Hidden from 'src/components/core/Hidden';
 
 type ClassNames = 'root' | 'label' | 'confirmationCopy';
 
@@ -39,14 +40,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const BucketTable: React.FC<CombinedProps> = props => {
-  const {
-    data,
-    orderBy,
-    order,
-    handleOrderChange,
-    handleClickRemove,
-    classes
-  } = props;
+  const { data, orderBy, order, handleOrderChange, handleClickRemove } = props;
 
   return (
     <Paginate data={data} pageSize={25}>
@@ -60,42 +54,40 @@ export const BucketTable: React.FC<CombinedProps> = props => {
       }) => (
         <React.Fragment>
           <Paper>
-            <Table
-              removeLabelonMobile
-              aria-label="List of your Buckets"
-              rowCount={data.length}
-              colCount={3}
-            >
+            <Table removeLabelonMobile aria-label="List of your Buckets">
               <TableHead>
-                <TableRow role="rowgroup">
+                <TableRow>
                   <TableSortCell
                     active={orderBy === 'label'}
                     label="label"
                     direction={order}
                     handleClick={handleOrderChange}
-                    className={classes.label}
                     data-qa-name
                   >
                     Name
                   </TableSortCell>
-                  <TableSortCell
-                    active={orderBy === 'cluster'}
-                    label="cluster"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    data-qa-region
-                  >
-                    Region
-                  </TableSortCell>
-                  <TableSortCell
-                    active={orderBy === 'created'}
-                    label="created"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    data-qa-created
-                  >
-                    Created
-                  </TableSortCell>
+                  <Hidden xsDown>
+                    <TableSortCell
+                      active={orderBy === 'cluster'}
+                      label="cluster"
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      data-qa-region
+                    >
+                      Region
+                    </TableSortCell>
+                  </Hidden>
+                  <Hidden smDown>
+                    <TableSortCell
+                      active={orderBy === 'created'}
+                      label="created"
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      data-qa-created
+                    >
+                      Created
+                    </TableSortCell>
+                  </Hidden>
                   <TableSortCell
                     active={orderBy === 'size'}
                     label="size"
@@ -105,6 +97,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
                   >
                     Size
                   </TableSortCell>
+
                   {/* Empty TableCell for ActionMenu*/}
                   <TableCell />
                 </TableRow>

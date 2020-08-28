@@ -31,6 +31,8 @@ import {
 } from 'src/utilities/ga';
 import CancelNotice from '../CancelNotice';
 import BucketTable from './BucketTable';
+import BucketTable_CMR from './BucketTable_CMR';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -48,6 +50,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   const { isRestrictedUser, openBucketDrawer } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
 
   const { objectStorageClusters } = useObjectStorageClusters();
   const {
@@ -221,7 +224,11 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
                 handleClickRemove,
                 data: orderedData
               };
-              return <BucketTable {...bucketTableProps} />;
+              return flags.cmr ? (
+                <BucketTable_CMR {...bucketTableProps} />
+              ) : (
+                <BucketTable {...bucketTableProps} />
+              );
             }}
           </OrderBy>
         </Grid>
