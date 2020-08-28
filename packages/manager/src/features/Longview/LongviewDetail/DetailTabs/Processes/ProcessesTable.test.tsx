@@ -1,11 +1,8 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { longviewProcessFactory } from 'src/factories/longviewProcess';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { extendData } from './ProcessesLanding';
 import { ProcessesTable, Props } from './ProcessesTable';
-
-afterEach(cleanup);
 
 const mockSetSelectedRow = jest.fn();
 

@@ -1,19 +1,12 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import * as kube from '@linode/api-v4/lib/kubernetes/kubernetes';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { ClusterActionMenu } from './ClusterActionMenu';
-const requests = require.requireMock('@linode/api-v4/lib/kubernetes');
-
 import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
-jest.mock('@linode/api-v4/lib/kubernetes', () => ({
-  getKubeConfig: () => jest.fn()
-}));
-
-requests.getKubeConfig = jest
-  .fn()
-  .mockResolvedValueOnce({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' });
+const mockGetKubeConfig = jest.spyOn<any, any>(kube, 'getKubeConfig');
 
 const props = {
   clusterId: 123456,
@@ -23,8 +16,6 @@ const props = {
   openDialog: jest.fn(),
   ...reactRouterProps
 };
-
-afterEach(cleanup);
 
 describe('Kubernetes cluster action menu', () => {
   it('should include the correct Kube actions', () => {
@@ -39,6 +30,6 @@ describe('Kubernetes cluster action menu', () => {
       wrapWithTheme(<ClusterActionMenu {...props} />)
     );
     fireEvent.click(getByText(/download/i));
-    expect(requests.getKubeConfig).toHaveBeenCalledWith(123456);
+    expect(mockGetKubeConfig).toHaveBeenCalledWith(123456);
   });
 });

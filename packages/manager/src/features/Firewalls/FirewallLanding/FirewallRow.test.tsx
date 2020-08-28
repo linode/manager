@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import {} from 'history';
 import * as React from 'react';
 import { firewalls } from 'src/__data__/firewalls';
@@ -14,8 +14,6 @@ import {
   getDeviceLinks,
   getRuleString
 } from './FirewallRow';
-
-afterEach(cleanup);
 
 describe('FirewallRow', () => {
   describe('Utility functions', () => {

@@ -57,11 +57,12 @@ export const sendPaginationEvent = (
 
 // LinodeThemeWrapper.tsx
 export const sendCurrentThemeSettingsEvent = (eventAction: string) => {
-  sendEvent({
-    category: 'Theme Choice',
-    action: eventAction,
-    label: location.pathname
-  });
+  // AC 8/24/2020: disabling this event to reduce hits on GA as this seems to not be used
+  // sendEvent({
+  //   category: 'Theme Choice',
+  //   action: eventAction,
+  //   label: location.pathname
+  // });
 };
 
 // CreateVolumeForm.tsx
@@ -124,20 +125,22 @@ export const sendImportDisplayGroupSubmitEvent = (
 
 // LinodeThemeWrapper.tsx
 export const sendSpacingToggleEvent = (eventLabel: string) => {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Spacing Toggle',
-    label: eventLabel
-  });
+  // AC 8/24/2020: disabling this event to reduce hits on GA as this seems to not be used
+  // sendEvent({
+  //   category: 'Theme Choice',
+  //   action: 'Spacing Toggle',
+  //   label: eventLabel
+  // });
 };
 
 // LinodeThemeWrapper.tsx
 export const sendThemeToggleEvent = (eventLabel: string) => {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Theme Toggle',
-    label: eventLabel
-  });
+  // AC 9/24/2020: disabling this event to reduce hits on GA as this seems to not be used
+  // sendEvent({
+  //   category: 'Theme Choice',
+  //   action: 'Theme Toggle',
+  //   label: eventLabel
+  // });
 };
 
 // backupDrawer/index.ts
