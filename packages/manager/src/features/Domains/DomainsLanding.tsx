@@ -441,6 +441,9 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
             </Typography>
           </Notice>
         )}
+        {this.props.location.state?.recordError && (
+          <Notice error text={this.props.location.state.recordError} />
+        )}
         <PreferenceToggle<boolean>
           preferenceKey="domains_group_by_tag"
           preferenceOptions={[false, true]}
@@ -535,14 +538,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     </Grid>
                   </Grid>
                 )}
-
-                {this.props.location.state &&
-                  this.props.location.state.recordError && (
-                    <Notice
-                      error
-                      text={this.props.location.state.recordError}
-                    />
-                  )}
                 <Table
                   entity="domain"
                   groupByTag={domainsAreGrouped}
