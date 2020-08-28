@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       alignItems: 'flex-start'
     }
@@ -58,13 +58,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 5,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
-      [theme.breakpoints.down('xs')]: {
-        marginLeft: 15,
-        paddingLeft: 0
-      }
+      marginLeft: 15,
+      paddingLeft: 0
     }
   },
   flexContainer: {
@@ -109,10 +107,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   descriptionColumn: {
-    width: '17%'
+    width: '25%'
   },
   dateColumn: {
-    width: '10%'
+    width: '25%'
   },
   totalColumn: {
     [theme.breakpoints.up('md')]: {
@@ -561,11 +559,11 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
 
     return (
       <TableRow {...rowProps} data-testid={`${type}-${id}`}>
-        <TableCell parentColumn="Description">{label}</TableCell>
-        <TableCell parentColumn="Date">
+        <TableCell>{label}</TableCell>
+        <TableCell>
           <DateTimeDisplay format={ISO_DATE_FORMAT} value={date} />
         </TableCell>
-        <TableCell parentColumn="Amount" className={classes.totalColumn}>
+        <TableCell className={classes.totalColumn}>
           <Currency quantity={total} wrapInParentheses={total < 0} />
         </TableCell>
         <TableCell className={classes.pdfDownloadColumn}>
