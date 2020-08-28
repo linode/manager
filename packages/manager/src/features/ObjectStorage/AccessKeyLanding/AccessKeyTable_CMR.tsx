@@ -11,15 +11,15 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { PaginationProps } from 'src/components/Pagey';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import AccessKeyMenu from './AccessKeyMenu';
+import AccessKeyMenu from './AccessKeyMenu_CMR';
 
 type ClassNames = 'root' | 'headline' | 'paper' | 'labelCell' | 'copyIcon';
 
@@ -130,7 +130,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
           colCount={2}
         >
           <TableHead>
-            <TableRow data-qa-table-head role="rowgroup">
+            <TableRow data-qa-table-head>
               <TableCell className={classes.labelCell} data-qa-header-label>
                 Label
               </TableCell>
