@@ -115,7 +115,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     { Ports: { listening: [], active: [] } },
     [clientAPIKey, lastUpdated]
   );
-  console.warn('route to match', props.match.url, client?.apps.mysql);
 
   const tabOptions = [
     {
