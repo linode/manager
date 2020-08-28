@@ -115,6 +115,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     { Ports: { listening: [], active: [] } },
     [clientAPIKey, lastUpdated]
   );
+  console.warn('route to match', props.match.url, client?.apps.mysql);
 
   const tabOptions = [
     {
@@ -285,15 +286,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             )}
 
             {client && client.apps.nginx && (
-              <SafeTabPanel
-                index={
-                  client.apps.nginx && client.apps.apache
-                    ? 5
-                    : client.apps.nginx && !client.apps.apache
-                    ? 4
-                    : null
-                }
-              >
+              <SafeTabPanel index={4 + (client.apps.apache ? 1 : 0)}>
                 <NGINX
                   timezone={timezone}
                   clientAPIKey={clientAPIKey}
@@ -306,16 +299,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             {client && client.apps.mysql && (
               <SafeTabPanel
                 index={
-                  client.apps.mysql && client.apps.nginx && client.apps.apache
-                    ? 6
-                    : (client.apps.mysql && !client.apps.apache) ||
-                      !client.apps.nginx
-                    ? 5
-                    : client.apps.mysql &&
-                      !client.apps.apache &&
-                      !client.apps.nginx
-                    ? 4
-                    : null
+                  4 + (client.apps.nginx ? 1 : 0) + (client.apps.apache ? 1 : 0)
                 }
               >
                 <MySQLLanding
