@@ -7,7 +7,8 @@ import {
   onError,
   onGetAllSuccess,
   onGetOneSuccess,
-  onStart
+  onStart,
+  onGetOneFailure
 } from 'src/store/store.helpers.tmp';
 import { EntityError, MappedEntityState2 } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -73,14 +74,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, getLinodeActions.failed)) {
-    const { error } = action.payload;
-
-    return onError(
-      {
-        read: error
-      },
-      state
-    );
+    return onGetOneFailure(state);
   }
 
   if (isType(action, upsertLinode)) {
