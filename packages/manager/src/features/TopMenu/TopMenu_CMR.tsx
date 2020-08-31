@@ -21,17 +21,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   toolbar: {
     padding: 0,
     height: `50px !important`,
-    [theme.breakpoints.up('md')]: {
+    width: 1280,
+    [theme.breakpoints.down('lg')]: {
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1)
     },
     [theme.breakpoints.up('lg')]: {
-      paddingLeft: theme.spacing(3),
-      paddingRight: theme.spacing(3)
-    },
-    width: 1280,
-    paddingLeft: '0px !important',
-    paddingRight: '0px !important'
+      paddingLeft: 0,
+      paddingRight: 0
+    }
   }
 }));
 
