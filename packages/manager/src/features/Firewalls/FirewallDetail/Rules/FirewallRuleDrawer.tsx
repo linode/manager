@@ -322,6 +322,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         errorText={errors.ports}
         onChange={handlePortsChange}
         onBlur={handleBlur}
+        disabled={values.protocol === 'ICMP'}
       />
       <Select
         label={`${capitalize(addressesLabel)}s`}
