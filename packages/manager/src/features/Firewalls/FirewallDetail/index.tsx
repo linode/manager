@@ -98,6 +98,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
       >
         <Breadcrumb
           pathname={props.location.pathname}
+          firstAndLastOnly
           onEditHandlers={{
             editableTextTitle: thisFirewall.label,
             onEdit: handleLabelChange,
