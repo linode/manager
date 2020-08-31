@@ -265,7 +265,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
 
       <Typography variant="body1" className={classes.copy}>
         Firewall rules act as a blocklist, preventing network traffic that
-        doesn&apos;t meets the rules&apos; parameters to pass through. If there
+        doesn&apos;t match the rules&apos; parameters to pass through. If there
         are no outbound rules set, all traffic will be permitted. Please note a
         Firewall requires at least one inbound rule to be valid, otherwise it
         cannot be applied to a Linode.
