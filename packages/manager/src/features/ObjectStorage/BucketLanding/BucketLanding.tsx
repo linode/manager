@@ -204,6 +204,8 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
     );
   }
 
+  const _BucketTable = flags.cmr ? BucketTable_CMR : BucketTable;
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
@@ -224,11 +226,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
                 handleClickRemove,
                 data: orderedData
               };
-              return flags.cmr ? (
-                <BucketTable_CMR {...bucketTableProps} />
-              ) : (
-                <BucketTable {...bucketTableProps} />
-              );
+              return <_BucketTable {...bucketTableProps} />;
             }}
           </OrderBy>
         </Grid>

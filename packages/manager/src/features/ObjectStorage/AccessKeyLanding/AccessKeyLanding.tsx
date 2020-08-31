@@ -270,6 +270,8 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     revokeKeysDialog.close();
   };
 
+  const KeyTable = flags.cmr ? AccessKeyTable_CMR : AccessKeyTable;
+
   return (
     <div>
       <DocumentTitleSegment segment="Access Keys" />
@@ -282,19 +284,11 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         </Grid>
       </Grid>
 
-      {flags.cmr ? (
-        <AccessKeyTable_CMR
-          {...paginationProps}
-          openDrawerForEditing={openDrawerForEditing}
-          openRevokeDialog={openRevokeDialog}
-        />
-      ) : (
-        <AccessKeyTable
-          {...paginationProps}
-          openDrawerForEditing={openDrawerForEditing}
-          openRevokeDialog={openRevokeDialog}
-        />
-      )}
+      <KeyTable
+        {...paginationProps}
+        openDrawerForEditing={openDrawerForEditing}
+        openRevokeDialog={openRevokeDialog}
+      />
 
       <PaginationFooter
         page={props.page}

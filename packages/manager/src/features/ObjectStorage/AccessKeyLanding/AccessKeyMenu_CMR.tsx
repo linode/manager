@@ -68,6 +68,7 @@ const AccessKeyMenu: React.FC<CombinedProps> = props => {
       return actions;
     };
   };
+
   return (
     <div className={classes.inlineActions}>
       <Hidden smDown>
