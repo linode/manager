@@ -105,11 +105,17 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
       values.label = undefined;
     }
 
-    if (values.rules.inbound === []) {
+    if (
+      Array.isArray(values.rules.inbound) &&
+      values.rules.inbound.length === 0
+    ) {
       values.rules.inbound = undefined;
     }
 
-    if (values.rules.outbound === []) {
+    if (
+      Array.isArray(values.rules.outbound) &&
+      values.rules.outbound.length === 0
+    ) {
       values.rules.outbound = undefined;
     }
 
