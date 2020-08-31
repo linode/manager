@@ -32,6 +32,7 @@ import { Category, parseFirewallRuleError } from './shared';
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     fontSize: '1em',
+    lineHeight: 1.5,
     paddingBottom: theme.spacing(1)
   },
   table: {
@@ -263,9 +264,11 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       </Prompt>
 
       <Typography variant="body1" className={classes.copy}>
-        Firewall rules act as an allowlist, allowing network traffic that meets
-        the rules’ parameters to pass through. Any traffic not explicitly
-        permitted by a rule is blocked.
+        Firewall rules act as a blocklist, preventing network traffic that
+        doesn&apos;t match the rules&apos; parameters to pass through. If there
+        are no outbound rules set, all traffic will be permitted. Please note a
+        Firewall requires at least one inbound rule to be valid, otherwise it
+        cannot be applied to a Linode.
       </Typography>
 
       {generalErrors?.length === 1 && (
