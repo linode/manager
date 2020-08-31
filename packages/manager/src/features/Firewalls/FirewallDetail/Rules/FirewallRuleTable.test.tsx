@@ -6,7 +6,7 @@ describe('firewallRuleToRowData', () => {
     const rule: ExtendedFirewallRule = {
       ports: '22',
       protocol: 'TCP',
-      addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::0/0'] },
+      addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] },
       status: 'NOT_MODIFIED'
     };
     expect(firewallRuleToRowData([rule])[0]).toHaveProperty('type', 'SSH');
