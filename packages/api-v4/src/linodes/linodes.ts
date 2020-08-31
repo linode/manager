@@ -22,7 +22,7 @@ export const getLinode = (linodeId: number) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}`),
     setMethod('GET')
-  );
+  ).then(response => response.data);
 
 /**
  * getLinodeLishToken
@@ -35,7 +35,7 @@ export const getLinodeLishToken = (linodeId: number) =>
   Request<{ lish_token: string }>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/lish_token`),
     setMethod('POST')
-  );
+  ).then(response => response.data);
 
 /**
  * getLinodeVolumes
@@ -116,4 +116,4 @@ export const deleteLinode = (linodeId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}`),
     setMethod('DELETE')
-  );
+  ).then(response => response.data);
