@@ -71,8 +71,8 @@ export const mergeRules = (
         return acc;
       }
       return {
-        inbound: [...acc.inbound, ...rule.inbound],
-        outbound: [...acc.outbound, ...rule.outbound]
+        inbound: [...(acc?.inbound ?? []), ...(rule.inbound ?? [])],
+        outbound: [...(acc?.outbound ?? []), ...(rule.outbound ?? [])]
       };
     },
     {
@@ -103,6 +103,14 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
 
     if (values.label === '') {
       values.label = undefined;
+    }
+
+    if (values.rules.inbound === []) {
+      values.rules.inbound = undefined;
+    }
+
+    if (values.rules.outbound === []) {
+      values.rules.outbound = undefined;
     }
 
     onSubmit(values)
