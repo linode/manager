@@ -171,7 +171,6 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               onChange={handleChange}
               errorText={errors.label}
               onBlur={handleBlur}
-              required
               inputProps={{
                 autoFocus: true
               }}
