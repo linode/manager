@@ -1,4 +1,4 @@
-import { act, cleanup, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import * as React from 'react';
 import { accountSettings } from 'src/__data__/account';
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
@@ -12,8 +12,6 @@ import {
 } from './LongviewPlans';
 
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
-
-afterEach(cleanup);
 
 const props: CombinedProps = {
   accountSettingsError: {},
@@ -41,9 +39,9 @@ describe('LongviewPlans', () => {
   });
 
   it('renders all columns for all plan types', async () => {
-    const { getByTestId } = renderWithTheme(<LongviewPlans {...props} />);
+    renderWithTheme(<LongviewPlans {...props} />);
 
-    const testRow = (
+    const testRow = async (
       id: string,
       label: string,
       clients: string,
@@ -51,13 +49,17 @@ describe('LongviewPlans', () => {
       dataResolution: string,
       price: string
     ) => {
-      within(getByTestId(`plan-cell-${id}`)).getByText(label);
-      within(getByTestId(`clients-cell-${id}`)).getByText(String(clients));
-      within(getByTestId(`data-retention-cell-${id}`)).getByText(dataRetention);
-      within(getByTestId(`data-resolution-cell-${id}`)).getByText(
+      within(await screen.findByTestId(`plan-cell-${id}`)).getByText(label);
+      within(await screen.findByTestId(`clients-cell-${id}`)).getByText(
+        String(clients)
+      );
+      within(await screen.findByTestId(`data-retention-cell-${id}`)).getByText(
+        dataRetention
+      );
+      within(await screen.findByTestId(`data-resolution-cell-${id}`)).getByText(
         dataResolution
       );
-      within(getByTestId(`price-cell-${id}`)).getByText(price);
+      within(await screen.findByTestId(`price-cell-${id}`)).getByText(price);
     };
 
     testRow(
@@ -82,14 +84,11 @@ describe('LongviewPlans', () => {
   });
 
   it('highlights the LV subscription currently on the account', async () => {
-    await act(async () => {
-      /** @todo fix this test, either by upgrading rtl or passing activeSub as prop */
-      const { findByTestId } = renderWithTheme(
-        <LongviewPlans accountSettings={accountSettings} {...props} />
-      );
+    renderWithTheme(
+      <LongviewPlans accountSettings={accountSettings} {...props} />
+    );
 
-      await findByTestId('current-plan-longview-3');
-    });
+    await screen.findByTestId('current-plan-longview-3');
   });
 
   it('displays a notice if the user does not have permissions to modify', () => {

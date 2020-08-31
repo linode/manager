@@ -34,10 +34,9 @@ describe('LinodeActionMenu', () => {
   const wrapper = shallow<LinodeActionMenu>(<LinodeActionMenu {...props} />);
 
   describe('buildQueryStringForLinodeClone', () => {
-    it('returns `type`, `subtype`, and `linodeID` params', () => {
+    it('returns `type` and `linodeID` params', () => {
       const result = wrapper.instance().buildQueryStringForLinodeClone();
       expect(result).toMatch('type=');
-      expect(result).toMatch('subtype=');
       expect(result).toMatch('linodeID=');
     });
 

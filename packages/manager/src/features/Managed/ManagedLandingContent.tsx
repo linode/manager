@@ -20,11 +20,16 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import SupportWidget from './SupportWidget';
+import useFlags from 'src/hooks/useFlags';
 
+const Contacts = React.lazy(() => import('./Contacts'));
+const Contacts_CMR = React.lazy(() => import('./Contacts/Contacts_CMR'));
 const Monitors = React.lazy(() => import('./Monitors'));
 const SSHAccess = React.lazy(() => import('./SSHAccess'));
-const Credentials = React.lazy(() => import('./Credentials'));
-const Contacts = React.lazy(() => import('./Contacts'));
+const CredentialList = React.lazy(() => import('./Credentials'));
+const CredentialList_CMR = React.lazy(() =>
+  import('./Credentials/CredentialList_CMR')
+);
 
 export type CombinedProps = {} & RouteComponentProps<{}>;
 
@@ -37,6 +42,8 @@ const getAllContacts = () =>
   getAll<ManagedContact>(getManagedContacts)().then(res => res.data);
 
 export const ManagedLandingContent: React.FC<CombinedProps> = props => {
+  const flags = useFlags();
+
   const credentials = useAPIRequest<ManagedCredential[]>(getAllCredentials, []);
 
   const contacts = useAPIRequest<ManagedContact[]>(getAllContacts, []);
@@ -85,6 +92,9 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
+
+  const ContactsTable = flags.cmr ? Contacts_CMR : Contacts;
+  const Credentials = flags.cmr ? CredentialList_CMR : CredentialList;
 
   return (
     <React.Fragment>
@@ -141,7 +151,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
               />
             </SafeTabPanel>
             <SafeTabPanel index={3}>
-              <Contacts
+              <ContactsTable
                 contacts={contacts.data}
                 loading={contacts.loading && contacts.lastUpdated === 0}
                 error={contacts.error}

@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -7,8 +7,6 @@ import {
   AuthenticationSettings,
   CombinedProps
 } from './AuthenticationSettings';
-
-afterEach(cleanup);
 
 const ALLOWLIST = 'allowlisting-form';
 
@@ -22,11 +20,11 @@ const props: CombinedProps = {
 };
 
 describe('Authentication settings profile tab', () => {
-  it('should render', () => {
-    const { getByTestId } = render(
+  it('should render', async () => {
+    const { findByTestId } = render(
       wrapWithTheme(<AuthenticationSettings {...props} />)
     );
-    expect(getByTestId('authSettings'));
+    expect(await findByTestId('authSettings')).toBeInTheDocument();
   });
 
   it('should not render the allowlisting form when loading', () => {
@@ -40,11 +38,11 @@ describe('Authentication settings profile tab', () => {
     expect(queryAllByTestId(ALLOWLIST)).toHaveLength(0);
   });
 
-  it('should not render the allowlisting form if the user does not have this setting enabled', () => {
-    const { getByTestId, queryAllByTestId, rerender } = render(
+  it('should not render the allowlisting form if the user does not have this setting enabled', async () => {
+    const { findByTestId, queryAllByTestId, rerender } = render(
       wrapWithTheme(<AuthenticationSettings {...props} />)
     );
-    getByTestId(ALLOWLIST);
+    await findByTestId(ALLOWLIST);
     rerender(
       wrapWithTheme(
         <AuthenticationSettings {...props} ipAllowlisting={false} />

@@ -1,4 +1,4 @@
-import { cleanup, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
@@ -12,8 +12,6 @@ const props: Props = {
   onRemove: jest.fn(),
   updateNodeCount: jest.fn()
 };
-
-afterEach(cleanup);
 
 describe('Node Pool Summary', () => {
   it("should render the label of its pool's plan", () => {

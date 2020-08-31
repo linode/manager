@@ -1,6 +1,5 @@
 import { Route } from '../support/api/routes';
 import { createLinode, deleteAllTestLinodes } from '../support/api/linodes';
-import { waitForAppLoad } from '../support/ui/common';
 
 describe('dashboard', () => {
   it('checks the dashboard page with 2+ linodes', () => {
@@ -23,7 +22,7 @@ describe('dashboard', () => {
         cy.findByText('Community Updates').should('be.visible');
         cy.findByText('Visit the Community').should('be.visible');
         cy.findByText('System Status').should('be.visible');
-        cy.findByText('View fleet status').should('be.visible');
+        cy.findByText('View status page').should('be.visible');
         cy.get('[data-qa-loading="true"]').should('be.visible');
         cy.get('[data-qa-tp]').should('be.visible');
         cy.findByText('Docs').should('be.visible');
