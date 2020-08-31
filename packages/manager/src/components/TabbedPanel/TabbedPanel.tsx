@@ -95,7 +95,7 @@ interface Props {
   initTab?: number;
   bodyClass?: string;
   noPadding?: boolean;
-  handleTabChange?: (e: any, value: number) => void;
+  handleTabChange?: (index: number) => void;
   value?: number;
 }
 
@@ -130,7 +130,7 @@ export const TabbedPanel: React.FC<CombinedProps> = props => {
           </Typography>
         )}
 
-        <Tabs className={classes.tabsWrapper}>
+        <Tabs className={classes.tabsWrapper} onChange={handleTabChange}>
           <TabList className={classes.tabList}>
             {tabs.map((tab, idx) => (
               <Tab className={classes.tab} key={`tabs-${tab.title}-${idx}`}>
@@ -143,7 +143,6 @@ export const TabbedPanel: React.FC<CombinedProps> = props => {
             {tabs.map((tab, idx) => (
               <TabPanel
                 className={classes.tabPanel}
-                onChange={handleTabChange}
                 key={`tabs-panel-${tab.title}-${idx}`}
               >
                 {tab.render(rest.children)}
