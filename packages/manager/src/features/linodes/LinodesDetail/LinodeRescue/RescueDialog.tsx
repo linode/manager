@@ -204,6 +204,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
         onClose();
       }}
       fullWidth
+      fullHeight
       maxWidth="md"
     >
       {APIError && <Notice error text={APIError} />}
