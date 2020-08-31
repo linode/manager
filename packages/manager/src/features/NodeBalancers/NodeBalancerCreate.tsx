@@ -64,7 +64,11 @@ type ClassNames = 'root' | 'main' | 'sidebar' | 'title';
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    main: {},
+    main: {
+      '&.MuiGrid-item': {
+        paddingLeft: 0
+      }
+    },
     sidebar: {
       [theme.breakpoints.up('md')]: {
         marginTop: '60px !important'
@@ -497,7 +501,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a NodeBalancer" />
-        <Grid container>
+        <Grid container className="m0">
           <Grid item className={`${classes.main} mlMain`}>
             <Breadcrumb
               pathname={this.props.location.pathname}

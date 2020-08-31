@@ -9,6 +9,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'transparent'
   },
   innerClass: {
+    overflowX: 'hidden',
     padding: 0
   }
 }));

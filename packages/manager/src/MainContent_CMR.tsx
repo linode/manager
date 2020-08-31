@@ -63,6 +63,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   cmrWrapper: {
     padding: `${theme.spacing(3)}px 0`,
     transition: theme.transitions.create('opacity'),
+    [theme.breakpoints.down('lg')]: {
+      '& > .MuiGrid-container': {
+        margin: 0,
+        width: '100%',
+        '& > .MuiGrid-item': {
+          padding: 0
+        }
+      }
+    },
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing(2),
       paddingLeft: 0,
@@ -91,9 +100,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
     maxWidth: '100%',
     position: 'relative',
+    '& > .MuiGrid-container': {
+      width: 1280
+    },
     '&.mlMain': {
       [theme.breakpoints.up('lg')]: {
         maxWidth: '78.8%'
+      }
+    },
+    '& .mlSidebar': {
+      [theme.breakpoints.up('lg')]: {
+        paddingRight: `0 !important`
       }
     }
   },

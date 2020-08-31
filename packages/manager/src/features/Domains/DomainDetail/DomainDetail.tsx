@@ -40,7 +40,6 @@ const styles = (theme: Theme) =>
       padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`,
       height: 34,
       minWidth: 80,
-      marginRight: theme.spacing(1),
       marginTop: theme.spacing(1)
     },
     editIcon: {
@@ -68,6 +67,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   const [records, updateRecords] = React.useState<DomainRecord[]>([]);
   React.useEffect(() => {
     refreshDomainRecords();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const tagSection = document.getElementById('domains-tag-section');
@@ -112,8 +112,8 @@ const DomainDetail: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Grid container justify="space-between">
-        <Grid item>
+      <Grid container justify="space-between" className="m0">
+        <Grid item className="px0">
           <Breadcrumb
             pathname={location.pathname}
             labelTitle={domain.domain}

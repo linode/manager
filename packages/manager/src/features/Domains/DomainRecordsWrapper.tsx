@@ -15,9 +15,14 @@ import DomainRecords from './DomainRecords';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    marginLeft: 0,
+    marginRight: 0
   },
   main: {
+    '&.MuiGrid-item': {
+      padding: 0
+    },
     [theme.breakpoints.up('md')]: {
       order: 1
     }

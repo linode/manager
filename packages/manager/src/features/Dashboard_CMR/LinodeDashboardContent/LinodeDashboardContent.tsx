@@ -15,9 +15,7 @@ export const LinodeDashboardContent: React.FC<{}> = _ => {
 
   // @todo change this logic once there's a no-Linodes view
   return (
-    <div style={{ minHeight: 1500 }}>
-      {linodes.results === 1 ? <SingleLinode /> : <MultipleLinodes />}
-    </div>
+    <div>{linodes.results === 1 ? <SingleLinode /> : <MultipleLinodes />}</div>
   );
 };
 
