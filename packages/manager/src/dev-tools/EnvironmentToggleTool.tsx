@@ -66,18 +66,15 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
             );
             setSelectedOption(Math.max(selectedIndex, 0));
           }}
+          defaultValue={currentEnvLabel}
         >
-          <option value="" disabled selected>
+          <option value="" disabled>
             Select an environment
           </option>
           {options.map(thisOption => {
             const { label } = thisOption;
             return (
-              <option
-                key={label}
-                value={label}
-                selected={currentEnvLabel === label}
-              >
+              <option key={label} value={label}>
                 {label}
               </option>
             );
