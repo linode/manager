@@ -19,6 +19,7 @@ export default ({
   label,
   onChange,
   errorText,
+  placeholder,
   isMulti
 }: any) => {
   const handleChange = (event: any) => {
@@ -32,8 +33,10 @@ export default ({
   const _options = groupsToItems(options);
   return (
     <>
-      <div>{label}</div>
+      <label htmlFor="select">{label}</label>
       <select
+        placeholder={placeholder}
+        name="select"
         data-testid="select"
         value={value ?? ''}
         onBlur={handleChange}

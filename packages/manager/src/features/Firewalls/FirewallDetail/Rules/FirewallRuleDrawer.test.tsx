@@ -1,3 +1,5 @@
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
@@ -18,6 +20,8 @@ import { FirewallRuleError } from './shared';
 const mockOnClose = jest.fn();
 const mockOnSubmit = jest.fn();
 
+jest.mock('src/components/EnhancedSelect/Select');
+
 const props: CombinedProps = {
   category: 'inbound',
   mode: 'create',
@@ -32,6 +36,13 @@ describe('AddRuleDrawer', () => {
       <RuleDrawer {...props} mode="create" category="inbound" />
     );
     getByText('Add an Inbound Rule');
+  });
+
+  it('disables the port input when the ICMP protocol is selected', () => {
+    renderWithTheme(<RuleDrawer {...props} mode="create" category="inbound" />);
+    expect(screen.getByPlaceholderText(/port/i)).not.toBeDisabled();
+    userEvent.selectOptions(screen.getByPlaceholderText(/protocol/i), 'ICMP');
+    expect(screen.getByPlaceholderText(/port/i)).toBeDisabled();
   });
 });
 
