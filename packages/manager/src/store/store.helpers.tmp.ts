@@ -210,8 +210,7 @@ export const onGetOneSuccess = <E extends Entity>(
     itemsById: { ...state.itemsById, [entity.id]: entity }
   });
 
-// We don't want to set the global `error.read` state when a request to
-// get ONE item fails. This error is reserved for `getMany` failures.
+// Don't set the global `error.read` state when a request to get only ONE item fails.
 export const onGetOneFailure = <E extends Entity>(
   state: MappedEntityState<E>
 ): MappedEntityState<E> =>
