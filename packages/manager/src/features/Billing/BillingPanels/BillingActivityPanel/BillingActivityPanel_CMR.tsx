@@ -10,7 +10,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import { parseAPIDate } from 'src/utilities/date';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -553,7 +552,9 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       title: hasError
         ? 'Error downloading PDF. Click to try again.'
         : 'Download PDF',
-      className: `pdfDownloadButton ${hasError ? 'pdfError' : ''}`,
+      className: `${classes.pdfDownloadButton} ${
+        hasError ? `${classes.pdfError}` : ''
+      }`,
       onClick: handleClick
     };
 
@@ -567,18 +568,12 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
           <Currency quantity={total} wrapInParentheses={total < 0} />
         </TableCell>
         <TableCell className={classes.pdfDownloadColumn}>
-          {isLoading ? (
-            <span className={classes.progress}>
-              <CircleProgress mini tag />
-            </span>
-          ) : (
-            <InlineMenuAction
-              key={action.title}
-              actionText={action.title}
-              className={action.className}
-              onClick={action.onClick}
-            />
-          )}
+          <InlineMenuAction
+            actionText={action.title}
+            className={action.className}
+            onClick={action.onClick}
+            loading={isLoading}
+          />
         </TableCell>
       </TableRow>
     );

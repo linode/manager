@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Button from 'src/components/Button/Button.tsx';
 
 const useStyles = makeStyles((theme: Theme) => ({
   btnRoot: {
@@ -38,13 +39,14 @@ interface Props {
   className?: string;
   href?: string;
   disabled?: boolean;
+  loading?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
 type CombinedProps = Props;
 
 const InlineMenuAction: React.FC<CombinedProps> = props => {
-  const { actionText, className, href, disabled, onClick } = props;
+  const { actionText, className, href, disabled, onClick, loading } = props;
 
   const classes = useStyles();
 
@@ -56,13 +58,14 @@ const InlineMenuAction: React.FC<CombinedProps> = props => {
     );
   } else {
     return (
-      <button
+      <Button
         className={`${className} ${classes.btnRoot}`}
         onClick={onClick}
         disabled={disabled}
+        loading={loading}
       >
         {actionText}
-      </button>
+      </Button>
     );
   }
 };
