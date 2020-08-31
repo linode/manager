@@ -101,6 +101,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '100%',
     position: 'relative',
     '& > .MuiGrid-container': {
+      maxWidth: '100%',
       width: 1280
     },
     '&.mlMain': {

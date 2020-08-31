@@ -77,10 +77,10 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
                 // from changing when the active tab is changed.
                 isDashboard ? (
                   // For single linode view
-                  <React.Fragment>
+                  <div style={{ overflowX: 'hidden' }}>
                     <LinodesDetailHeader_CMR />
                     <LinodesDashboardNavigation />
-                  </React.Fragment>
+                  </div>
                 ) : (
                   <React.Fragment>
                     <LinodesDetailHeader_CMR />
