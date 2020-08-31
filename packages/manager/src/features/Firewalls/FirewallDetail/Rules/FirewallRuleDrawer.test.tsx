@@ -47,7 +47,7 @@ describe('utilities', () => {
       });
       expect(formValueToIPs('allIPv6', [''].map(stringToExtendedIP))).toEqual({
         ipv4: [],
-        ipv6: ['::0/0']
+        ipv6: ['::/0']
       });
       expect(
         formValueToIPs('ip/netmask', ['1.1.1.1'].map(stringToExtendedIP))
