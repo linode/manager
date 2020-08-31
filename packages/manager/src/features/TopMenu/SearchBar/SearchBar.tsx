@@ -149,7 +149,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
       return;
     }
 
-    const text = item.data.searchText;
+    const text = item?.data?.searchText ?? '';
 
     if (item.value === 'redirect') {
       props.history.push({
