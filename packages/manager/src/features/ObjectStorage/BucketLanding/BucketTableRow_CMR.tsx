@@ -15,6 +15,7 @@ import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import { readableBytes } from 'src/utilities/unitConversions';
 import BucketActionMenu from './BucketActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
+import { Link } from 'react-router-dom';
 
 type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link';
 
@@ -57,19 +58,13 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
           <Grid item>
             <div className={classes.bucketNameWrapper}>
               <Typography variant="body2" component="h3" data-qa-label>
-                {label}
+                <Link to={`/object-storage/buckets/${cluster}/${label}`}>
+                  {label}{' '}
+                </Link>
               </Typography>
             </div>
-            <a
-              className={classes.link}
-              href={`https://${hostname}`}
-              target="_blank"
-              aria-describedby="external-site"
-              rel="noopener noreferrer"
-              data-qa-hostname
-            >
-              {hostname}
-            </a>
+
+            {hostname}
           </Grid>
         </Grid>
       </TableCell>
