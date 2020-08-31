@@ -43,9 +43,12 @@ const styles = (theme: Theme) =>
       }
     },
     root: {
-      minWidth: '105px',
-      paddingLeft: theme.spacing(3) + 4,
-      paddingRight: theme.spacing(3) + 4,
+      ':not(.btnRoot)': {
+        // Don't override styling of btnRoot from InlineMenuAction component.
+        minWidth: '105px',
+        paddingLeft: theme.spacing(3) + 4,
+        paddingRight: theme.spacing(3) + 4
+      },
       '&.cancel': {
         border: `1px solid transparent`,
         transition: theme.transitions.create(['color', 'border-color']),

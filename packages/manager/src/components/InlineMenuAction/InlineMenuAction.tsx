@@ -5,18 +5,13 @@ import Button from 'src/components/Button/Button.tsx';
 
 const useStyles = makeStyles((theme: Theme) => ({
   btnRoot: {
-    ...theme.applyLinkStyles,
-    padding: '12px 10px',
+    '&:not(.pdfDownloadButton)': {
+      ...theme.applyLinkStyles,
+      padding: '12px 10px',
 
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      color: theme.color.white
-    },
-    '&[disabled]': {
-      color: '#cdd0d5',
-      cursor: 'default',
       '&:hover': {
-        backgroundColor: 'inherit'
+        backgroundColor: '#3683dc',
+        color: theme.color.white
       }
     }
   },
