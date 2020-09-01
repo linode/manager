@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   // Removed padding here so width is full 1280- will further refine this when the breakpoint work is handled
   cmrWrapper: {
+    overflowX: 'hidden',
     padding: `${theme.spacing(3)}px 0`,
     transition: theme.transitions.create('opacity'),
     [theme.breakpoints.down('lg')]: {

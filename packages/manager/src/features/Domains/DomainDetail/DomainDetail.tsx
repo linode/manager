@@ -40,7 +40,10 @@ const styles = (theme: Theme) =>
       padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`,
       height: 34,
       minWidth: 80,
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(1),
+      [theme.breakpoints.down('md')]: {
+        marginRight: theme.spacing()
+      }
     },
     editIcon: {
       width: 20,

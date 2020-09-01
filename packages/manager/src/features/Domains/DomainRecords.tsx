@@ -6,6 +6,7 @@ import {
   RecordType
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
+import * as classnames from 'classnames';
 import {
   compose,
   equals,
@@ -19,6 +20,7 @@ import {
   propEq
 } from 'ramda';
 import * as React from 'react';
+import { compose as recompose } from 'recompose';
 import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -43,6 +45,9 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault
@@ -53,7 +58,7 @@ import { truncateEnd } from 'src/utilities/truncate';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
-type ClassNames = 'root' | 'cells' | 'titles' | 'linkContainer';
+type ClassNames = 'root' | 'cells' | 'titles' | 'linkContainer' | 'cmrPadding';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -84,6 +89,10 @@ const styles = (theme: Theme) =>
           padding: 0
         }
       }
+    },
+    cmrPadding: {
+      paddingLeft: theme.spacing(),
+      paddingRight: theme.spacing()
     }
   });
 
@@ -113,7 +122,7 @@ interface State {
   confirmDialog: ConfirmationState;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & FeatureFlagConsumerProps;
 
 interface IType {
   title: string;
@@ -660,7 +669,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { domain, domainRecords, classes } = this.props;
+    const { domain, domainRecords, classes, flags } = this.props;
     const { drawer, confirmDialog } = this.state;
 
     return (
@@ -682,7 +691,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                     role="heading"
                     aria-level={2}
                     variant="h2"
-                    className={classes.titles}
+                    className={classnames({
+                      [classes.titles]: true,
+                      [classes.cmrPadding]: flags.cmr
+                    })}
                     data-qa-domain-record={type.title}
                   >
                     {type.title}
@@ -691,7 +703,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 {type.link && (
                   <Grid item>
                     {' '}
-                    <div className={classes.linkContainer}>
+                    <div
+                      className={classnames({
+                        [classes.linkContainer]: true,
+                        [classes.cmrPadding]: flags.cmr
+                      })}
+                    >
                       {type.link()}
                     </div>{' '}
                   </Grid>
@@ -922,4 +939,9 @@ const getNSRecords = compose<
 
 const styled = withStyles(styles);
 
-export default styled(DomainRecords);
+// export default styled(DomainRecords);
+
+export default recompose<CombinedProps, Props>(
+  styled,
+  withFeatureFlags
+)(DomainRecords);

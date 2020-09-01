@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   edgePadding: {
     [theme.breakpoints.down('md')]: {
-      paddingLeft: theme.spacing(3)
+      paddingLeft: theme.spacing(1)
     }
   }
 }));
