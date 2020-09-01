@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   editablePreContainer: {
     alignItems: 'flex-start'
   },
-  cmrPadding: {
+  cmrSpacing: {
     [theme.breakpoints.down('md')]: {
       paddingLeft: theme.spacing(1)
     }
@@ -68,7 +68,7 @@ export const Breadcrumb: React.FC<CombinedProps> = props => {
         className={classNames({
           [classes.preContainer]: true,
           [classes.editablePreContainer]: onEditHandlers !== undefined,
-          [classes.cmrPadding]: flags.cmr
+          [classes.cmrSpacing]: flags.cmr
         })}
       >
         <Crumbs

@@ -63,13 +63,7 @@ import {
   transformConfigsForRequest
 } from './utils';
 
-type ClassNames =
-  | 'root'
-  | 'main'
-  | 'sidebar'
-  | 'title'
-  | 'cmrPadding'
-  | 'cmrMargin';
+type ClassNames = 'root' | 'main' | 'sidebar' | 'title' | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -87,11 +81,8 @@ const styles = (theme: Theme) =>
     title: {
       marginTop: theme.spacing(3)
     },
-    [theme.breakpoints.down('md')]: {
-      cmrPadding: {
-        paddingLeft: theme.spacing()
-      },
-      cmrMargin: {
+    cmrSpacing: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing()
       }
     }
@@ -574,7 +565,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 variant="h2"
                 className={classnames({
                   [classes.title]: true,
-                  [classes.cmrPadding]: flags.cmr
+                  [classes.cmrSpacing]: flags.cmr
                 })}
               >
                 NodeBalancer Settings
@@ -705,7 +696,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   );
                 }
               )}
-              <Grid item className={flags.cmr ? classes.cmrMargin : ''}>
+              <Grid item className={flags.cmr ? classes.cmrSpacing : ''}>
                 <Button
                   buttonType="secondary"
                   onClick={this.addNodeBalancer}
