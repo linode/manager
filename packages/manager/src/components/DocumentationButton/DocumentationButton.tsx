@@ -22,8 +22,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       strokeWidth: '1.5'
     }
   },
-  cmrMargin: {
-    marginRight: -4
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginRight: -4
+    }
   }
 }));
 
@@ -41,7 +43,7 @@ export const DocumentationButton: React.FC<CombinedProps> = props => {
 
   return (
     <IconTextLink
-      className={`${classes.root} ${flags.cmr ? classes.cmrMargin : ''}`}
+      className={`${classes.root} ${flags.cmr ? classes.cmrSpacing : ''}`}
       SideIcon={BookIcon}
       text="Documentation"
       title="Documentation"
