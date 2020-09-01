@@ -87,11 +87,13 @@ const styles = (theme: Theme) =>
     title: {
       marginTop: theme.spacing(3)
     },
-    cmrPadding: {
-      paddingLeft: theme.spacing()
-    },
-    cmrMargin: {
-      marginLeft: theme.spacing()
+    [theme.breakpoints.down('md')]: {
+      cmrPadding: {
+        paddingLeft: theme.spacing()
+      },
+      cmrMargin: {
+        marginLeft: theme.spacing()
+      }
     }
   });
 
