@@ -131,35 +131,39 @@ export const OrderBy: React.FC<CombinedProps> = props => {
   );
   const [order, setOrder] = React.useState<Order>(props.order ?? 'desc');
 
-  const _updateUserPreferences = (orderBy: string, order: Order) => {
-    /**
-     * If the preferenceKey is provided, we will store the passed
-     * order props in user preferences. They will be read the next
-     * time this component is loaded.
-     */
-    const { getUserPreferences, preferenceKey, updateUserPreferences } = props;
-    if (preferenceKey) {
-      getUserPreferences()
-        .then(preferences => {
-          updateUserPreferences({
-            ...preferences,
-            sortKeys: {
-              ...preferences.sortKeys,
-              [preferenceKey]: { order, orderBy }
-            }
-          });
-        })
-        // It doesn't matter if this fails, the value simply won't be preserved.
-        .catch(_ => null);
-    }
-  };
-
-  const updateUserPreferences = debounce(1500, false, _updateUserPreferences);
+  const debouncedUpdateUserPreferences = React.useRef(
+    debounce(1500, false, (orderBy: string, order: Order) => {
+      /**
+       * If the preferenceKey is provided, we will store the passed
+       * order props in user preferences. They will be read the next
+       * time this component is loaded.
+       */
+      const {
+        getUserPreferences,
+        preferenceKey,
+        updateUserPreferences
+      } = props;
+      if (preferenceKey) {
+        getUserPreferences()
+          .then(preferences => {
+            updateUserPreferences({
+              ...preferences,
+              sortKeys: {
+                ...preferences.sortKeys,
+                [preferenceKey]: { order, orderBy }
+              }
+            });
+          })
+          // It doesn't matter if this fails, the value simply won't be preserved.
+          .catch(_ => null);
+      }
+    })
+  ).current;
 
   const handleOrderChange = (newOrderBy: string, newOrder: Order) => {
     setOrderBy(newOrderBy);
     setOrder(newOrder);
-    updateUserPreferences(newOrderBy, newOrder);
+    debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
 
   const sortedData = sortData(orderBy, order)(props.data);
