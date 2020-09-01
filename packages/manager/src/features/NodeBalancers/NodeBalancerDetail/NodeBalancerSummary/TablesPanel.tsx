@@ -41,7 +41,8 @@ type ClassNames =
   | 'header'
   | 'title'
   | 'panel'
-  | 'graphWrapper';
+  | 'graphWrapper'
+  | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -98,6 +99,11 @@ const styles = (theme: Theme) =>
     yellow: {
       '&:before': {
         backgroundColor: theme.color.yellow
+      }
+    },
+    cmrSpacing: {
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing()
       }
     }
   });
@@ -348,7 +354,10 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.graphControls}>
-          <Typography variant="h2" style={{ paddingLeft: flags.cmr ? 8 : 0 }}>
+          <Typography
+            className={flags.cmr ? classes.cmrSpacing : ''}
+            variant="h2"
+          >
             Graphs
           </Typography>
         </div>

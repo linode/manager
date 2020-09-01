@@ -63,7 +63,7 @@ import {
   transformConfigsForRequest
 } from '../utils';
 
-type ClassNames = 'root' | 'title' | 'port' | 'nbStatuses';
+type ClassNames = 'root' | 'title' | 'port' | 'nbStatuses' | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -79,6 +79,11 @@ const styles = (theme: Theme) =>
       display: 'block',
       [theme.breakpoints.up('sm')]: {
         display: 'inline'
+      }
+    },
+    cmrSpacing: {
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing()
       }
     }
   });
@@ -1090,7 +1095,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { nodeBalancerLabel, flags } = this.props;
+    const { classes, nodeBalancerLabel, flags } = this.props;
     const {
       configs,
       configErrors,
@@ -1114,7 +1119,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             <Button
               buttonType="secondary"
               onClick={() => this.addNodeBalancerConfig()}
-              style={{ marginLeft: flags.cmr ? 8 : 0 }}
+              className={flags.cmr ? classes.cmrSpacing : ''}
               data-qa-add-config
             >
               {configs.length === 0

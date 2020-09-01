@@ -42,10 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   actions: {
     alignSelf: 'flex-end'
   },
-  cmrPadding: {
+  cmrSpacing: {
     [theme.breakpoints.down('md')]: {
-      paddingLeft: theme.spacing(),
-      paddingRight: theme.spacing()
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
     }
   }
 }));
@@ -273,7 +273,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         variant="body1"
         className={classnames({
           [classes.copy]: true,
-          [classes.cmrPadding]: flags.cmr
+          [classes.cmrSpacing]: flags.cmr
         })}
       >
         Firewall rules act as an allowlist, allowing network traffic that meets

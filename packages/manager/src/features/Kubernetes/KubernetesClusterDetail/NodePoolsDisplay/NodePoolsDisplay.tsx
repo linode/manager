@@ -2,6 +2,7 @@ import {
   PoolNodeRequest,
   PoolNodeResponse
 } from '@linode/api-v4/lib/kubernetes/types';
+import classnames from 'classnames';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import AddNewLink from 'src/components/AddNewLink';
@@ -57,6 +58,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   nodePool: {
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(4)
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -217,16 +224,20 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
         <Grid item>
           <Typography
             variant="h2"
-            className={classes.nodePoolHeader}
-            style={{ marginLeft: flags.cmr ? 8 : 0 }}
+            className={classnames({
+              [classes.nodePoolHeader]: true,
+              [classes.cmrSpacing]: flags.cmr
+            })}
           >
             Node Pools
           </Typography>
         </Grid>
         <Grid item>
           <div
-            className={classes.addNodePoolLink}
-            style={{ marginRight: flags.cmr ? 8 : 0 }}
+            className={classnames({
+              [classes.addNodePoolLink]: true,
+              [classes.cmrSpacing]: flags.cmr
+            })}
           >
             <AddNewLink
               onClick={() => {

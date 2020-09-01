@@ -43,7 +43,7 @@ export const DocumentationButton: React.FC<CombinedProps> = props => {
 
   return (
     <IconTextLink
-      className={`${classes.root} ${flags.cmr ? classes.cmrSpacing : ''}`}
+      className={`${classes.root} ${flags.cmr && classes.cmrSpacing}`}
       SideIcon={BookIcon}
       text="Documentation"
       title="Documentation"
