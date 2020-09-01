@@ -1,11 +1,8 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import NativeSelect from './NativeSelect';
-
-afterEach(cleanup);
 
 describe('Native Select', () => {
   it('should always have render label', () => {

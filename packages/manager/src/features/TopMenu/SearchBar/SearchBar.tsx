@@ -144,11 +144,12 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     if (!item || item.label === '') {
       return;
     }
-    const text = item.data.searchText;
 
-    if (item.value === 'info') {
+    if (item.value === 'info' || item.value === 'error') {
       return;
     }
+
+    const text = item?.data?.searchText ?? '';
 
     if (item.value === 'redirect') {
       props.history.push({
@@ -204,7 +205,10 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     _isLargeAccount ? apiResults : combinedResults,
     searchText,
     _loading || apiSearchLoading,
-    Boolean(apiError)
+    // Ignore "Unauthorized" errors, since these will always happen on LKE
+    // endpoints for restricted users. It's not really an "error" in this case.
+    // We still want these users to be able to use the search feature.
+    Boolean(apiError) && apiError !== 'Unauthorized'
   );
 
   return (

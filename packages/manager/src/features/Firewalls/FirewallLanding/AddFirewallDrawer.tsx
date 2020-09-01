@@ -71,8 +71,8 @@ export const mergeRules = (
         return acc;
       }
       return {
-        inbound: [...acc.inbound, ...rule.inbound],
-        outbound: [...acc.outbound, ...rule.outbound]
+        inbound: [...(acc?.inbound ?? []), ...(rule.inbound ?? [])],
+        outbound: [...(acc?.outbound ?? []), ...(rule.outbound ?? [])]
       };
     },
     {
@@ -103,6 +103,20 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
 
     if (values.label === '') {
       values.label = undefined;
+    }
+
+    if (
+      Array.isArray(values.rules.inbound) &&
+      values.rules.inbound.length === 0
+    ) {
+      values.rules.inbound = undefined;
+    }
+
+    if (
+      Array.isArray(values.rules.outbound) &&
+      values.rules.outbound.length === 0
+    ) {
+      values.rules.outbound = undefined;
     }
 
     onSubmit(values)
@@ -157,7 +171,6 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               onChange={handleChange}
               errorText={errors.label}
               onBlur={handleBlur}
-              required
               inputProps={{
                 autoFocus: true
               }}

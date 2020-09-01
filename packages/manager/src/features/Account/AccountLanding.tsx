@@ -8,6 +8,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import useFlags from 'src/hooks/useFlags';
 
 import withProfile, {
   Props as ProfileActionsProps
@@ -18,73 +19,68 @@ import TaxBanner from 'src/components/TaxBanner';
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
-const Users = React.lazy(() => import('src/features/Users'));
+const Users_PreCMR = React.lazy(() => import('src/features/Users'));
+const Users_CMR = React.lazy(() =>
+  import('src/features/Users/UsersLanding_CMR')
+);
 const Billing = React.lazy(() => import('src/features/Billing'));
 
-class AccountLanding extends React.Component<Props> {
-  handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = this.props;
-    const routeName = this.tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
+const AccountLanding: React.FC<Props> = props => {
+  const { location } = props;
+  const flags = useFlags();
 
-  tabs = [
+  const Users = flags.cmr ? Users_CMR : Users_PreCMR;
+
+  const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Billing Info',
-      routeName: `${this.props.match.url}/billing`
+      routeName: `${props.match.url}/billing`
     },
     {
       title: 'Users',
-      routeName: `${this.props.match.url}/users`
+      routeName: `${props.match.url}/users`
     },
     {
       title: 'Settings',
-      routeName: `${this.props.match.url}/settings`
+      routeName: `${props.match.url}/settings`
     }
   ];
 
-  render() {
-    const { location } = this.props;
+  const matches = (p: string) => {
+    return Boolean(matchPath(p, { path: location.pathname }));
+  };
 
-    const matches = (p: string) => {
-      return Boolean(matchPath(p, { path: this.props.location.pathname }));
-    };
+  return (
+    <React.Fragment>
+      <DocumentTitleSegment segment="Account Settings" />
+      <TaxBanner location={location} marginBottom={24} />
+      <Breadcrumb
+        pathname={location.pathname}
+        labelTitle="Account"
+        removeCrumbX={1}
+        data-qa-profile-header
+      />
+      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+        <TabLinkList tabs={tabs} />
 
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Account Settings" />
-        <TaxBanner location={location} marginBottom={24} />
-        <Breadcrumb
-          pathname={location.pathname}
-          labelTitle="Account"
-          removeCrumbX={1}
-          data-qa-profile-header
-        />
-        <Tabs defaultIndex={this.tabs.findIndex(tab => matches(tab.routeName))}>
-          <TabLinkList tabs={this.tabs} />
-
-          <React.Suspense fallback={<SuspenseLoader />}>
-            <TabPanels>
-              <TabPanel>
-                <Billing />
-              </TabPanel>
-              <TabPanel>
-                <Users isRestrictedUser={this.props.isRestrictedUser} />
-              </TabPanel>
-              <TabPanel>
-                <GlobalSettings />
-              </TabPanel>
-            </TabPanels>
-          </React.Suspense>
-        </Tabs>
-      </React.Fragment>
-    );
-  }
-}
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <TabPanel>
+              <Billing />
+            </TabPanel>
+            <TabPanel>
+              <Users isRestrictedUser={props.isRestrictedUser} />
+            </TabPanel>
+            <TabPanel>
+              <GlobalSettings />
+            </TabPanel>
+          </TabPanels>
+        </React.Suspense>
+      </Tabs>
+    </React.Fragment>
+  );
+};
 
 interface StateProps {
   isRestrictedUser: boolean;

@@ -68,7 +68,21 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
           */}
           <Route path={`${path}/clone`} component={CloneLanding} />
-          <Route path={`${path}/migrate`} component={MigrateLanding} />
+          {/* With CMR, the Migrate screen no longer has its own route, so some
+          conditional rendering is required here. */}
+          <Route
+            path={`${path}/migrate`}
+            render={() => {
+              return flags.cmr ? (
+                <React.Fragment>
+                  <LinodesDetailHeader_CMR />
+                  <LinodesDetailNavigation_CMR />
+                </React.Fragment>
+              ) : (
+                <MigrateLanding />
+              );
+            }}
+          />
           <Route
             render={() =>
               flags.cmr ? (

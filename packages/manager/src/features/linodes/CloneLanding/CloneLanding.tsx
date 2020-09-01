@@ -48,17 +48,20 @@ import {
   curriedCloneLandingReducer,
   defaultState
 } from './utilities';
+import useFlags from 'src/hooks/useFlags';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
+const LinodesDetailHeader_CMR = React.lazy(() =>
+  import('../LinodesDetail/LinodesDetailHeader/LinodeDetailHeader_CMR')
+);
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(1)
   },
   paper: {
-    paddingTop: theme.spacing(3),
-    paddingLeft: theme.spacing(3)
+    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0`
   },
   appBar: {
     '& > div': {
@@ -104,6 +107,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
 
   /**
    * ROUTING
@@ -273,7 +277,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         resetEventsPolling();
         requestDisks(linodeId);
-        history.push(`/linodes/${linodeId}/advanced`);
+        flags.cmr
+          ? history.push(`/linodes/${linodeId}/configurations`)
+          : history.push(`/linodes/${linodeId}/advanced`);
       })
       .catch(errors => {
         setSubmitting(false);
@@ -300,24 +306,30 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       */}
       <MutationNotification disks={props.disks} />
       <Notifications />
-      <LinodeControls
-        breadcrumbProps={{
-          removeCrumbX: 4,
-          crumbOverrides: [
-            {
-              label,
-              position: 2,
-              linkTo: {
-                pathname: `/linodes/${linodeId}/summary`
-              },
-              noCap: true
-            }
-          ],
-          onEditHandlers: undefined
-        }}
-      />
-      {linodeInTransition(linodeStatus, firstEventWithProgress) && (
-        <LinodeBusyStatus />
+      {flags.cmr ? (
+        <LinodesDetailHeader_CMR />
+      ) : (
+        <>
+          <LinodeControls
+            breadcrumbProps={{
+              removeCrumbX: 4,
+              crumbOverrides: [
+                {
+                  label,
+                  position: 2,
+                  linkTo: {
+                    pathname: `/linodes/${linodeId}/summary`
+                  },
+                  noCap: true
+                }
+              ],
+              onEditHandlers: undefined
+            }}
+          />
+          {linodeInTransition(linodeStatus, firstEventWithProgress) && (
+            <LinodeBusyStatus />
+          )}
+        </>
       )}
       <Grid container className={classes.root}>
         <Grid item xs={12} md={8} lg={9}>

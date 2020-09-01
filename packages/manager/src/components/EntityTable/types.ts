@@ -38,3 +38,8 @@ export interface EntityTableRow<T> extends BaseProps {
   data: T[];
   request?: () => Promise<T[]>;
 }
+
+export interface PageyIntegrationProps {
+  persistData?: (data: Entity[]) => void;
+  normalizeData?: (data: Entity[]) => Entity[];
+}

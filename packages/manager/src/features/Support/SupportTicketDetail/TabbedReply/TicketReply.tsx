@@ -34,22 +34,20 @@ class TicketReply extends React.Component<CombinedProps> {
     const { placeholder, classes, value, handleChange, error } = this.props;
 
     return (
-      <React.Fragment>
-        <TextField
-          className={classes.replyField}
-          multiline
-          rows={9}
-          value={value}
-          placeholder={placeholder || 'Enter your reply'}
-          data-qa-ticket-description
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleChange(e.target.value)
-          }
-          errorText={error}
-          label="Enter your reply"
-          hideLabel
-        />
-      </React.Fragment>
+      <TextField
+        className={classes.replyField}
+        multiline
+        rows={9}
+        value={value}
+        placeholder={placeholder || 'Enter your reply'}
+        data-qa-ticket-description
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          handleChange(e.target.value)
+        }
+        errorText={error}
+        label="Enter your reply"
+        hideLabel
+      />
     );
   }
 }

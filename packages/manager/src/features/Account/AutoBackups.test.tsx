@@ -1,13 +1,9 @@
-import { cleanup } from '@testing-library/react';
-// import { render} from '@testing-library/react';
 import * as jaxe from 'jest-axe';
 import * as React from 'react';
 import { renderWithTheme, toPassAxeCheck } from 'src/utilities/testHelpers';
 import AutoBackups from './AutoBackups';
 
 jest.setTimeout(10000);
-
-afterEach(cleanup);
 
 expect.extend(toPassAxeCheck);
 expect.extend(jaxe.toHaveNoViolations);

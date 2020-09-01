@@ -1,10 +1,7 @@
-import { cleanup, waitForElement } from '@testing-library/react';
 import * as React from 'react';
 import { longviewLoad, systemInfo } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import Load from './Load';
-
-afterEach(cleanup);
 
 const mockError = [{ TEXT: 'no reason', CODE: 0, SEVERITY: 3 }];
 
@@ -47,22 +44,19 @@ describe('Longview Load Gauge UI', () => {
   });
 
   it('should render an error state on 400 responses', async () => {
-    const { getByText } = renderWithTheme(<Load clientID={123} />, {
+    const { findByText } = renderWithTheme(<Load clientID={123} />, {
       customStore: errorStore
     });
 
-    await waitForElement(() => getByText(/Error/));
+    await findByText(/Error/);
   });
 
   it('should render a data state on 200 responses', async () => {
-    const { getByTestId } = renderWithTheme(<Load clientID={123} />, {
+    const { findByTestId } = renderWithTheme(<Load clientID={123} />, {
       customStore: dataStore
     });
 
-    const innerText = await waitForElement(
-      () => getByTestId('gauge-innertext'),
-      {}
-    );
+    const innerText = await findByTestId('gauge-innertext');
 
     expect(innerText).toHaveTextContent('2');
   });

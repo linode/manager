@@ -43,6 +43,8 @@ export interface DomainRecord {
   ttl_sec: number;
   type: RecordType;
   weight: number;
+  created: string;
+  updated: string;
 }
 
 export type CreateDomainPayload = Partial<Domain>;

@@ -90,6 +90,7 @@ typings/
 
 # custom files
 restart-manager.sh
+makefile
 
 # E2E Test Temporary Files
 **/e2e/errorShots/*.png

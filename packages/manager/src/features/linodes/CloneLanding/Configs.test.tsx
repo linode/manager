@@ -1,10 +1,8 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { linodeConfigs } from 'src/__data__/linodeConfigs';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { Configs, Props } from './Configs';
-
-afterEach(cleanup);
 
 const mockHandleSelect = jest.fn();
 

@@ -1,4 +1,4 @@
-import { cleanup, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import store from 'src/store';
@@ -41,8 +41,6 @@ const props = {
   markAllSeen: jest.fn(),
   ...(reactRouterProps as RouteComponentProps<any>)
 };
-
-afterEach(cleanup);
 
 describe('UserEventsList component', () => {
   it('should display a View All Events button', async () => {

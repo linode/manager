@@ -1,4 +1,3 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
@@ -27,8 +26,6 @@ const props: CombinedProps = {
   onSubmit: mockOnSubmit
 };
 
-afterEach(cleanup);
-
 describe('AddRuleDrawer', () => {
   it('renders the title', () => {
     const { getByText } = renderWithTheme(
@@ -50,7 +47,7 @@ describe('utilities', () => {
       });
       expect(formValueToIPs('allIPv6', [''].map(stringToExtendedIP))).toEqual({
         ipv4: [],
-        ipv6: ['::0/0']
+        ipv6: ['::/0']
       });
       expect(
         formValueToIPs('ip/netmask', ['1.1.1.1'].map(stringToExtendedIP))

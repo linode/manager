@@ -1,10 +1,8 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import PrimaryNav, { Props } from './PrimaryNav';
 import useFlags from 'src/hooks/useFlags';
-
-afterEach(cleanup);
 
 jest.mock('src/hooks/useFlags', () => ({
   default: jest.fn().mockReturnValue({})

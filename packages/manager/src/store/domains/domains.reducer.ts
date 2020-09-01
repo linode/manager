@@ -23,7 +23,8 @@ import {
   getDomainsActions,
   getDomainsPageActions,
   updateDomainActions,
-  upsertDomain
+  upsertDomain,
+  upsertMultipleDomains
 } from './domains.actions';
 
 /**
@@ -60,6 +61,21 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, upsertDomain)) {
     const { payload } = action;
     const updated = addEntityRecord(state.itemsById, payload);
+
+    return {
+      ...state,
+      itemsById: updated,
+      results: Object.keys(updated).length
+    };
+  }
+
+  // Upsert multiple Domains at once (vs. separate action & UI update for each Domain).
+  if (isType(action, upsertMultipleDomains)) {
+    const { payload } = action;
+    let updated = state.itemsById;
+    payload.forEach(thisDomain => {
+      updated = addEntityRecord(updated, thisDomain);
+    });
 
     return {
       ...state,

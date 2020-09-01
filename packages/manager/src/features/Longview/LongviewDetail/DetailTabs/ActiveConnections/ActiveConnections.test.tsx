@@ -1,4 +1,3 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { longviewPortFactory } from 'src/factories/longviewService';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -11,8 +10,6 @@ const props: TableProps = {
   connectionsLoading: false,
   connections: mockConnections
 };
-
-afterEach(cleanup);
 
 describe('ActiveConnections (and by extension ListeningServices)', () => {
   it('should render a table with one row per active connection', () => {

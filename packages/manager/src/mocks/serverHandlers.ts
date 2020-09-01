@@ -1,8 +1,9 @@
-import { rest } from 'msw';
+import { rest, RequestHandler } from 'msw';
 
 import {
   accountFactory,
   domainFactory,
+  domainRecordFactory,
   imageFactory,
   firewallFactory,
   firewallDeviceFactory,
@@ -18,15 +19,22 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   longviewActivePlanFactory,
+  managedStatsFactory,
+  monitorFactory,
   nodeBalancerFactory,
+  notificationFactory,
   profileFactory,
+  supportReplyFactory,
   supportTicketFactory,
   volumeFactory,
   accountTransferFactory,
-  eventFactory
+  eventFactory,
+  tagFactory
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
+import { MockData } from 'src/dev-tools/mockDataController';
+import cachedTypes from 'src/cachedData/types.json';
 
 export const makeResourcePage = (
   e: any[],
@@ -49,6 +57,9 @@ export const handlers = [
   rest.get('*/regions', async (req, res, ctx) => {
     return res(ctx.json(cachedRegions));
   }),
+  rest.get('*/linode/types', async (req, res, ctx) => {
+    return res(ctx.json(cachedTypes));
+  }),
   rest.get('*/images', async (req, res, ctx) => {
     const privateImages = imageFactory.buildList(10);
     const publicImages = imageFactory.buildList(10, { is_public: true });
@@ -56,7 +67,10 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/instances', async (req, res, ctx) => {
-    const linodes = linodeFactory.buildList(1);
+    const onlineLinodes = linodeFactory.buildList(3);
+    const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
+    const busyLinodes = linodeFactory.buildList(10, { status: 'migrating' });
+    const linodes = [...onlineLinodes, ...offlineLinodes, ...busyLinodes];
     return res(ctx.json(makeResourcePage(linodes)));
   }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
@@ -131,12 +145,19 @@ export const handlers = [
     const domains = domainFactory.buildList(25);
     return res(ctx.json(makeResourcePage(domains)));
   }),
+  rest.post('*/domains/*/records', (req, res, ctx) => {
+    const record = domainRecordFactory.build();
+    return res(ctx.json(record));
+  }),
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(10);
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
     return res(ctx.json({ display: 'compact' }));
+  }),
+  rest.get('*/profile/devices', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage([])));
   }),
   rest.put('*/profile/preferences', (req, res, ctx) => {
     const body = req.body as any;
@@ -159,15 +180,23 @@ export const handlers = [
   }),
   rest.get('*/account/invoices', (req, res, ctx) => {
     const invoices = invoiceFactory.buildList(10);
-    return res(ctx.delay(5000), ctx.json(makeResourcePage(invoices)));
+    return res(ctx.json(makeResourcePage(invoices)));
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(events)));
+    return res.once(ctx.json(makeResourcePage(events)));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
     return res(ctx.json(makeResourcePage(tickets)));
+  }),
+  rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
+    const ticket = supportTicketFactory.build({ id: req.params.ticketId });
+    return res(ctx.json(ticket));
+  }),
+  rest.get('*/support/tickets/:ticketId/replies', (req, res, ctx) => {
+    const replies = supportReplyFactory.buildList(15);
+    return res(ctx.json(makeResourcePage(replies)));
   }),
   rest.put('*/longview/plan', (req, res, ctx) => {
     return res(ctx.json({}));
@@ -175,5 +204,51 @@ export const handlers = [
   rest.get('*/longview/plan', (req, res, ctx) => {
     const plan = longviewActivePlanFactory.build();
     return res(ctx.json(plan));
+  }),
+  rest.post('*/backups/enable/*', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.put('*/account/settings/*', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/tags', (req, res, ctx) => {
+    tagFactory.resetSequenceNumber();
+    const tags = tagFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(tags)));
+  }),
+  rest.get('*/account/notifications*', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage([])));
+  }),
+  rest.get('*gravatar*', (req, res, ctx) => {
+    return res(ctx.status(400), ctx.json({}));
+  }),
+  rest.get('*linode.com/blog/feed*', (req, res, ctx) => {
+    return res(ctx.status(400));
+  }),
+  rest.get('*managed/services', (req, res, ctx) => {
+    const monitors = monitorFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(monitors)));
+  }),
+  rest.get('*managed/stats', (req, res, ctx) => {
+    const stats = managedStatsFactory.build();
+    return res(ctx.json(stats));
+  }),
+  rest.get('*managed/issues', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage([])));
+  }),
+  rest.get('*/notifications', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(notificationFactory.buildList(1))));
   })
 ];
+
+// Generator functions for dynamic handlers, in use by mock data dev tools.
+export const mockDataHandlers: Record<
+  keyof MockData,
+  (count: number) => RequestHandler
+> = {
+  linode: count =>
+    rest.get('*/instances', async (req, res, ctx) => {
+      const linodes = linodeFactory.buildList(count);
+      return res(ctx.json(makeResourcePage(linodes)));
+    })
+};

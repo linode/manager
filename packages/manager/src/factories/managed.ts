@@ -1,7 +1,8 @@
 import * as Factory from 'factory.ts';
 import {
   ManagedCredential,
-  ManagedServiceMonitor
+  ManagedServiceMonitor,
+  ManagedStatsData
 } from '@linode/api-v4/lib/managed/types';
 
 export const credentialFactory = Factory.Sync.makeFactory<ManagedCredential>({
@@ -24,4 +25,12 @@ export const monitorFactory = Factory.Sync.makeFactory<ManagedServiceMonitor>({
   credentials: credentialFactory.buildList(3),
   address: 'http://www.example.com',
   body: ''
+});
+
+export const managedStatsFactory = Factory.Sync.makeFactory<ManagedStatsData>({
+  cpu: [],
+  disk: [],
+  net_in: [],
+  net_out: [],
+  swap: []
 });
