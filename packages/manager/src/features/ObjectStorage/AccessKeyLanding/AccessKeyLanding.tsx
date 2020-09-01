@@ -288,6 +288,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         {...paginationProps}
         openDrawerForEditing={openDrawerForEditing}
         openRevokeDialog={openRevokeDialog}
+        data-qa-access-key-table
       />
 
       <PaginationFooter
