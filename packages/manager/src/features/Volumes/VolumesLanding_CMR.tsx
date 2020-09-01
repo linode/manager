@@ -119,7 +119,8 @@ const volumeHeaders = [
     label: 'File System Path',
     dataColumn: 'File System Path',
     sortable: false,
-    widthPercent: 25
+    widthPercent: 25,
+    hideOnMobile: true
   },
   {
     label: 'Attached To',

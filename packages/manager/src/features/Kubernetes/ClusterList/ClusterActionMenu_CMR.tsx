@@ -4,12 +4,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter, useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Link } from 'react-router-dom';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import { reportException } from 'src/exceptionReporting';
 import { downloadFile } from 'src/utilities/downloadFile';
@@ -69,8 +64,6 @@ type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 
 export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props => {
   const classes = useStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const history = useHistory();
 
   const { clusterId, clusterLabel, enqueueSnackbar, openDialog } = props;
@@ -78,6 +71,23 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
   const createActions = () => {
     return (): Action[] => {
       const actions = [
+        {
+          title: 'Details',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push({
+              pathname: `/kubernetes/clusters/${clusterId}`
+            });
+            e.preventDefault();
+          }
+        },
+        {
+          title: 'Download kubeconfig',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            e.preventDefault();
+            e.stopPropagation();
+            downloadKubeConfig();
+          }
+        },
         {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -87,26 +97,6 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
           }
         }
       ];
-
-      if (matchesSmDown) {
-        actions.unshift({
-          title: 'Download kubeconfig',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            e.stopPropagation();
-            downloadKubeConfig();
-          }
-        });
-        actions.unshift({
-          title: 'Details',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push({
-              pathname: `/kubernetes/clusters/${clusterId}`
-            });
-            e.preventDefault();
-          }
-        });
-      }
 
       return actions;
     };
@@ -154,12 +144,22 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
         >
           Download kubeconfig
         </Button>
+        <Button
+          className={classes.button}
+          onClick={() => {
+            openDialog();
+          }}
+        >
+          Delete
+        </Button>
       </Hidden>
 
-      <ActionMenu
-        createActions={createActions()}
-        ariaLabel={`Action menu for Cluster ${props.clusterLabel}`}
-      />
+      <Hidden mdUp>
+        <ActionMenu
+          createActions={createActions()}
+          ariaLabel={`Action menu for Cluster ${props.clusterLabel}`}
+        />
+      </Hidden>
     </div>
   );
 };
