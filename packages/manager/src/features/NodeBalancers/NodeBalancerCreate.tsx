@@ -1,4 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import * as classnames from 'classnames';
 import {
   append,
   clone,
@@ -38,6 +39,9 @@ import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import {
   hasGrant,
   isRestrictedUser
@@ -59,7 +63,13 @@ import {
   transformConfigsForRequest
 } from './utils';
 
-type ClassNames = 'root' | 'main' | 'sidebar' | 'title';
+type ClassNames =
+  | 'root'
+  | 'main'
+  | 'sidebar'
+  | 'title'
+  | 'cmrPadding'
+  | 'cmrMargin';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -76,6 +86,12 @@ const styles = (theme: Theme) =>
     },
     title: {
       marginTop: theme.spacing(3)
+    },
+    cmrPadding: {
+      paddingLeft: theme.spacing()
+    },
+    cmrMargin: {
+      marginLeft: theme.spacing()
     }
   });
 
@@ -83,7 +99,8 @@ type CombinedProps = WithNodeBalancerActions &
   StateProps &
   WithRegions &
   RouteComponentProps<{}> &
-  WithStyles<ClassNames>;
+  WithStyles<ClassNames> &
+  FeatureFlagConsumerProps;
 
 interface NodeBalancerFieldsState {
   label?: string;
@@ -473,7 +490,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { classes, regionsData, disabled } = this.props;
+    const { classes, regionsData, disabled, flags } = this.props;
     const { nodeBalancerFields } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
@@ -551,7 +568,13 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               disabled={disabled}
             />
             <Grid item xs={12}>
-              <Typography variant="h2" className={classes.title}>
+              <Typography
+                variant="h2"
+                className={classnames({
+                  [classes.title]: true,
+                  [classes.cmrPadding]: flags.cmr
+                })}
+              >
                 NodeBalancer Settings
               </Typography>
             </Grid>
@@ -680,7 +703,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   );
                 }
               )}
-              <Grid item>
+              <Grid item className={flags.cmr ? classes.cmrMargin : ''}>
                 <Button
                   buttonType="secondary"
                   onClick={this.addNodeBalancer}
@@ -823,5 +846,6 @@ export default recompose<CombinedProps, {}>(
   withRegions,
   withNodeBalancerActions,
   styled,
-  withRouter
+  withRouter,
+  withFeatureFlags
 )(NodeBalancerCreate);

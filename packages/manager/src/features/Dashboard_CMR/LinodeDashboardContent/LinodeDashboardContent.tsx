@@ -14,9 +14,8 @@ export const LinodeDashboardContent: React.FC<{}> = _ => {
   }
 
   // @todo change this logic once there's a no-Linodes view
-  return (
-    <div>{linodes.results === 1 ? <SingleLinode /> : <MultipleLinodes />}</div>
-  );
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{linodes.results === 1 ? <SingleLinode /> : <MultipleLinodes />}</>;
 };
 
 export default React.memo(LinodeDashboardContent);
