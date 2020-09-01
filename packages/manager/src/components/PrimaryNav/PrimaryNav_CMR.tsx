@@ -431,6 +431,7 @@ interface PrimaryNavMenuLinkProps extends MenuLinkProps {
   display: string;
   prefetchRequestFn?: () => void;
   prefetchRequestCondition?: boolean;
+  to: string;
 }
 
 export const PrimaryNavMenuLink: React.FC<PrimaryNavMenuLinkProps> = React.memo(
@@ -441,6 +442,7 @@ export const PrimaryNavMenuLink: React.FC<PrimaryNavMenuLinkProps> = React.memo(
       display,
       prefetchRequestFn,
       prefetchRequestCondition,
+      to,
       ...rest
     } = props;
 
@@ -452,6 +454,7 @@ export const PrimaryNavMenuLink: React.FC<PrimaryNavMenuLinkProps> = React.memo(
     return (
       <MenuLink
         as={ReactRouterLink}
+        to={to}
         className={classes.menuItemLink}
         data-testid={`menu-item-${display}`}
         {...handlers}
