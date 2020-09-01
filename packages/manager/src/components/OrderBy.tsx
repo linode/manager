@@ -68,8 +68,8 @@ export const getInitialValuesFromUserPreferences = (
   );
 };
 
-export const sortData = (orderBy: string, order: Order) =>
-  sort((a, b) => {
+export const sortData = (orderBy: string, order: Order) => {
+  return sort((a, b) => {
     /* If the column we're sorting on is an array (e.g. 'tags', which is string[]),
      *  we want to sort by the length of the array. Otherwise, do a simple comparison.
      */
@@ -123,6 +123,7 @@ export const sortData = (orderBy: string, order: Order) =>
     }
     return sortByNumber(aValue, bValue, order);
   });
+};
 
 export const OrderBy: React.FC<CombinedProps> = props => {
   const { preferenceKey, preferences } = props;
@@ -136,7 +137,9 @@ export const OrderBy: React.FC<CombinedProps> = props => {
 
   const [orderBy, setOrderBy] = React.useState<string>(initialValues.orderBy);
   const [order, setOrder] = React.useState<Order>(initialValues.order);
-  const [sortedData, setSortedData] = React.useState<any[]>(props.data);
+  const [sortedData, setSortedData] = React.useState<any[]>(() => {
+    return sortData(initialValues.order, initialValues.order)(props.data);
+  });
 
   // Re-sort the data when it changes.
   const prevData = usePrevious(props.data);
@@ -147,7 +150,7 @@ export const OrderBy: React.FC<CombinedProps> = props => {
 
     const newlySortedData = sortData(orderBy, order)(props.data);
     setSortedData(newlySortedData);
-  }, [props.data, props.preferences, order, orderBy, prevData]);
+  }, [props.data, order, orderBy, prevData]);
 
   // Potentially reset the order and orderBy options when preferences change.
   // (They might have just been requested when this component first renders.)
@@ -217,7 +220,7 @@ export const OrderBy: React.FC<CombinedProps> = props => {
   return <>{props.children(downstreamProps)}</>;
 };
 
-const enhanced = compose<CombinedProps, Props>(withPreferences());
+const enhanced = compose<CombinedProps, Props>(withPreferences(), React.memo);
 
 export default enhanced(OrderBy);
 
