@@ -3,7 +3,11 @@ import * as React from 'react';
 import { domainFactory } from 'src/factories/domain';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme, assertOrder } from 'src/utilities/testHelpers';
-import { CombinedProps, DomainsLanding } from './DomainsLanding';
+import {
+  CombinedProps,
+  DomainsLanding,
+  getReduxCopyOfDomains
+} from './DomainsLanding';
 const domains = domainFactory.buildList(5);
 
 const props: CombinedProps = {
@@ -41,6 +45,8 @@ const props: CombinedProps = {
     breadcrumbs: '',
     importButton: ''
   },
+  domainsByID: {},
+  upsertMultipleDomains: jest.fn(),
   ...reactRouterProps
 };
 
@@ -72,5 +78,21 @@ describe('Domains Landing', () => {
         'domain-4'
       ])
     );
+  });
+});
+
+describe('getReduxCopyOfDomains fn', () => {
+  it('returns corresponding domains', () => {
+    const domain1 = domainFactory.build({ id: 1 });
+    const domain2 = domainFactory.build({ id: 2 });
+    const domain3 = domainFactory.build({ id: 3 });
+
+    expect(
+      getReduxCopyOfDomains([domain1, domain2], {
+        1: domain1,
+        2: domain2,
+        3: domain3
+      })
+    ).toEqual([domain1, domain2]);
   });
 });

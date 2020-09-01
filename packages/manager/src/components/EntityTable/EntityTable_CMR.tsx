@@ -4,7 +4,7 @@ import { OrderByProps } from 'src/components/OrderBy';
 import APIPaginatedTable from './APIPaginatedTable';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag_CMR';
 import ListEntities from './ListEntities_CMR';
-import { EntityTableRow } from './types';
+import { EntityTableRow, PageyIntegrationProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
@@ -37,9 +37,9 @@ interface Props {
   };
 }
 
-export type CombinedProps = Props;
+export type CombinedProps = Props & PageyIntegrationProps;
 
-export const LandingTable: React.FC<Props> = props => {
+export const LandingTable: React.FC<CombinedProps> = props => {
   const { entity, headers, groupByTag, row, initialOrder } = props;
   const classes = useStyles();
   const tableProps = {
@@ -56,7 +56,14 @@ export const LandingTable: React.FC<Props> = props => {
   };
 
   if (row.request) {
-    return <APIPaginatedTable {...tableProps} data={undefined} />;
+    return (
+      <APIPaginatedTable
+        {...tableProps}
+        persistData={props.persistData}
+        normalizeData={props.normalizeData}
+        data={undefined}
+      />
+    );
   }
 
   if (groupByTag) {
