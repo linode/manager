@@ -209,11 +209,3 @@ export const onGetOneSuccess = <E extends Entity>(
     results: Object.keys(state.itemsById).length,
     itemsById: { ...state.itemsById, [entity.id]: entity }
   });
-
-// Don't set the global `error.read` state when a request to get only ONE item fails.
-export const onGetOneFailure = <E extends Entity>(
-  state: MappedEntityState<E>
-): MappedEntityState<E> =>
-  Object.assign({}, state, {
-    loading: false
-  });
