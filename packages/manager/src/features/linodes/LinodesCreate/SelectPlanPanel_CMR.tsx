@@ -69,10 +69,12 @@ const styles = (theme: Theme) =>
       alignItems: 'center'
     },
     headerCell: {
+      borderTop: 'none !important',
+      borderBottom: '1px solid #f4f5f6 !important',
       '&.emptyCell': {
         borderRight: 'none'
       },
-      '&:not(emptyCell)': {
+      '&:not(.emptyCell)': {
         borderLeft: 'none !important'
       }
     },
@@ -261,11 +263,21 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
           <TableCell className={classes.headerCell} data-qa-plan-header>
             Linode Plan
           </TableCell>
-          <TableCell data-qa-monthly-header>Monthly</TableCell>
-          <TableCell data-qa-hourly-header>Hourly</TableCell>
-          <TableCell data-qa-ram-header>RAM</TableCell>
-          <TableCell data-qa-cpu-header>CPUs</TableCell>
-          <TableCell data-qa-storage-header>Storage</TableCell>
+          <TableCell className={classes.headerCell} data-qa-monthly-header>
+            Monthly
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-hourly-header>
+            Hourly
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-ram-header>
+            RAM
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-cpu-header>
+            CPUs
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-storage-header>
+            Storage
+          </TableCell>
         </TableRow>
       </TableHead>
     );
