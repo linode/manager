@@ -1,15 +1,9 @@
-import { pathOr } from 'ramda';
 import store from 'src/store';
+import getUserTimezone from './getUserTimezone';
 
 export const useTimezone = (): string => {
   const state = store.getState();
-  const timezone = pathOr(
-    'GMT',
-    ['__resources', 'profile', 'data', 'timezone'],
-    state
-  );
-
-  return timezone;
+  return getUserTimezone(state);
 };
 
 export default useTimezone;

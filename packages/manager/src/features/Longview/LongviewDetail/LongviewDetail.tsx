@@ -274,7 +274,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             </SafeTabPanel>
 
             {client && client.apps.apache && (
-              <SafeTabPanel index={client && client.apps.apache ? 4 : null}>
+              <SafeTabPanel index={4}>
                 <Apache
                   timezone={timezone}
                   clientAPIKey={clientAPIKey}
@@ -285,15 +285,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             )}
 
             {client && client.apps.nginx && (
-              <SafeTabPanel
-                index={
-                  client.apps.nginx && client.apps.apache
-                    ? 5
-                    : client.apps.nginx && !client.apps.apache
-                    ? 4
-                    : null
-                }
-              >
+              <SafeTabPanel index={client.apps.apache ? 5 : 4}>
                 <NGINX
                   timezone={timezone}
                   clientAPIKey={clientAPIKey}
@@ -306,16 +298,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             {client && client.apps.mysql && (
               <SafeTabPanel
                 index={
-                  client.apps.mysql && client.apps.nginx && client.apps.apache
-                    ? 6
-                    : (client.apps.mysql && !client.apps.apache) ||
-                      !client.apps.nginx
-                    ? 5
-                    : client.apps.mysql &&
-                      !client.apps.apache &&
-                      !client.apps.nginx
-                    ? 4
-                    : null
+                  4 + (client.apps.nginx ? 1 : 0) + (client.apps.apache ? 1 : 0)
                 }
               >
                 <MySQLLanding

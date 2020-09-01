@@ -73,14 +73,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, getLinodeActions.failed)) {
-    const { error } = action.payload;
-
-    return onError(
-      {
-        read: error
-      },
-      state
-    );
+    return onError({}, state);
   }
 
   if (isType(action, upsertLinode)) {

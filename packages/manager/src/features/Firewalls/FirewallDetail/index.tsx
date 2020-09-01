@@ -98,7 +98,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
       >
         <Breadcrumb
           pathname={props.location.pathname}
-          removeCrumbX={2}
+          firstAndLastOnly
           onEditHandlers={{
             editableTextTitle: thisFirewall.label,
             onEdit: handleLabelChange,
@@ -106,8 +106,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
             errorText: updateError
           }}
         />
-        {/* @todo: Insert real link when the doc is written. */}
-        <DocumentationButton href="https://www.linode.com/docs/platform" />
+        <DocumentationButton href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
       </Box>
       <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
         <TabLinkList tabs={tabs} />
