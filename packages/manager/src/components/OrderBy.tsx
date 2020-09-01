@@ -39,7 +39,7 @@ interface Props {
   preferenceKey?: SortKey; // If provided, will store/read values from user preferences
 }
 
-type CombinedProps = Props & PreferencesProps;
+export type CombinedProps = Props & PreferencesProps;
 
 /**
  * Given a set of UserPreferences (returned from the API),
