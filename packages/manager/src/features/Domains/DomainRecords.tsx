@@ -939,8 +939,6 @@ const getNSRecords = compose<
 
 const styled = withStyles(styles);
 
-// export default styled(DomainRecords);
-
 export default recompose<CombinedProps, Props>(
   styled,
   withFeatureFlags
