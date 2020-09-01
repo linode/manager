@@ -38,22 +38,20 @@ const HelpIcon: React.FC<CombinedProps> = props => {
   } = props;
 
   return (
-    <React.Fragment>
-      <Tooltip
-        title={text}
-        data-qa-help-tooltip
-        enterTouchDelay={0}
-        leaveTouchDelay={5000}
-        leaveDelay={leaveDelay ? 3000 : undefined}
-        interactive={interactive && interactive}
-        placement={tooltipPosition ? tooltipPosition : 'bottom'}
-        classes={classes}
-      >
-        <IconButton className={className} data-qa-help-button>
-          <HelpOutline />
-        </IconButton>
-      </Tooltip>
-    </React.Fragment>
+    <Tooltip
+      title={text}
+      data-qa-help-tooltip
+      enterTouchDelay={0}
+      leaveTouchDelay={5000}
+      leaveDelay={leaveDelay ? 3000 : undefined}
+      interactive={interactive}
+      placement={tooltipPosition ? tooltipPosition : 'bottom'}
+      classes={classes}
+    >
+      <IconButton className={className} data-qa-help-button>
+        <HelpOutline />
+      </IconButton>
+    </Tooltip>
   );
 };
 
