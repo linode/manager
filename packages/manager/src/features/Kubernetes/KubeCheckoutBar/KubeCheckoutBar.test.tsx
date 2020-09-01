@@ -1,4 +1,3 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
@@ -16,8 +15,6 @@ const props: Props = {
   createCluster: jest.fn(),
   typesData: extendedTypes
 };
-
-afterEach(cleanup);
 
 const renderComponent = (_props: Props) =>
   renderWithTheme(<KubeCheckoutBar {..._props} />);

@@ -24,12 +24,8 @@ const FirewallRuleTypeSchema = object().shape({
 });
 
 export const FirewallRuleSchema = object().shape({
-  inbound: array(FirewallRuleTypeSchema)
-    .required('You must provide a set of Firewall rules.')
-    .nullable(true),
-  outbound: array(FirewallRuleTypeSchema)
-    .required('You must provide a set of Firewall rules.')
-    .nullable(true)
+  inbound: array(FirewallRuleTypeSchema).nullable(true),
+  outbound: array(FirewallRuleTypeSchema).nullable(true)
 });
 
 export const CreateFirewallSchema = object().shape({

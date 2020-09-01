@@ -7,9 +7,11 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import EntityTableHeader from './EntityTableHeader';
-import { Entity, ListProps } from './types';
+import { Entity, ListProps, PageyIntegrationProps } from './types';
 
-export type CombinedProps = ListProps & PaginationProps<Entity>;
+export type CombinedProps = ListProps &
+  PaginationProps<Entity> &
+  PageyIntegrationProps;
 
 export const APIPaginatedTable: React.FC<CombinedProps> = props => {
   const {
@@ -31,6 +33,10 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
   } = props;
 
   const _data = data ?? [];
+
+  const normalizedData = props.normalizeData
+    ? props.normalizeData(_data)
+    : _data;
 
   React.useEffect(() => {
     if (initialOrder) {
@@ -57,7 +63,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
               error={error}
               lastUpdated={100}
             >
-              {_data.map(thisEntity => (
+              {normalizedData.map(thisEntity => (
                 <RowComponent
                   key={thisEntity.id}
                   {...thisEntity}
@@ -81,7 +87,13 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
 };
 
 const enhanced = compose<CombinedProps, any>(
-  Pagey((ownProps, params, filters) => ownProps.request(params, filters))
+  Pagey((ownProps, params, filters) => ownProps.request(params, filters), {
+    cb: (ownProps, response) => {
+      if (ownProps.persistData) {
+        ownProps.persistData(response.data);
+      }
+    }
+  })
 );
 
 export default enhanced(APIPaginatedTable);

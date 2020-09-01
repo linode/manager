@@ -1,4 +1,5 @@
 import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
+import { devToolsEnabled } from 'src/dev-tools/load';
 const localStorageCache = {};
 
 export const getStorage = (key: string, fallback?: any) => {
@@ -47,6 +48,7 @@ const SCOPES = 'authentication/scopes';
 const EXPIRE = 'authentication/expire';
 const SUPPORT = 'support';
 const STACKSCRIPT = 'stackscript';
+const DEV_TOOLS_ENV = 'devTools/env';
 
 export type PageSize = number;
 
@@ -62,6 +64,13 @@ interface SupportText {
 
 interface StackScriptData extends StackScriptPayload {
   id: number | string;
+}
+
+export interface DevToolsEnv {
+  apiRoot: string;
+  loginRoot: string;
+  clientID: string;
+  label: string;
 }
 
 export interface Storage {
@@ -90,6 +99,10 @@ export interface Storage {
   stackScriptInProgress: {
     get: () => StackScriptData;
     set: (s: StackScriptData) => void;
+  };
+  devToolsEnv: {
+    get: () => DevToolsEnv | null;
+    set: (devToolsEnv: DevToolsEnv) => void;
   };
 }
 
@@ -148,6 +161,13 @@ export const storage: Storage = {
         images: []
       }),
     set: s => setStorage(STACKSCRIPT, JSON.stringify(s))
+  },
+  devToolsEnv: {
+    get: () => {
+      const value = getStorage(DEV_TOOLS_ENV);
+      return isDevToolsEnvValid(value) ? value : undefined;
+    },
+    set: devToolsEnv => setStorage(DEV_TOOLS_ENV, JSON.stringify(devToolsEnv))
   }
 };
 
@@ -157,3 +177,25 @@ export const {
   stackScriptInProgress,
   supportText
 } = storage;
+
+// Only return these if the dev tools are enabled and we're in development mode.
+export const getEnvLocalStorageOverrides = () => {
+  // This is broken into two logical branches so that local storage is accessed
+  // ONLY if the dev tools are enabled and it's a development build.
+  if (devToolsEnabled() && process.env.NODE_ENV === 'development') {
+    const localStorageOverrides = storage.devToolsEnv.get();
+    if (localStorageOverrides) {
+      return localStorageOverrides;
+    }
+  }
+  return undefined;
+};
+
+export const isDevToolsEnvValid = (value: any) => {
+  return (
+    typeof value?.apiRoot === 'string' &&
+    typeof value?.loginRoot === 'string' &&
+    typeof value?.clientID === 'string' &&
+    typeof value?.label === 'string'
+  );
+};

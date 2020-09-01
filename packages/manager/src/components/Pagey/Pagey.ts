@@ -49,6 +49,9 @@ interface State<T = {}> {
 interface Options {
   orderBy?: OrderBy;
   order?: Order;
+  // Callback to be executed after successful request, with the component's own
+  // props and the result of the request.
+  cb?: (ownProps: any, response: ResourcePage<any>) => any;
 }
 
 export interface PaginationProps<T> extends State<T> {
@@ -78,6 +81,16 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
       filter: {},
       searching: false
     };
+
+    mounted: boolean = false;
+
+    componentDidMount() {
+      this.mounted = true;
+    }
+
+    componentWillUnmount() {
+      this.mounted = false;
+    }
 
     private onDelete = () => {
       const { page, data } = this.state;
@@ -119,16 +132,22 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
         filters
       )
         .then(response => {
-          this.setState({
-            count: response.results,
-            page: response.page,
-            pages: response.pages,
-            data: map ? map(response.data) : response.data,
-            loading: false,
-            error: undefined,
-            isSorting: false,
-            searching: false
-          });
+          if (options.cb) {
+            options.cb(this.props, response);
+          }
+
+          if (this.mounted) {
+            this.setState({
+              count: response.results,
+              page: response.page,
+              pages: response.pages,
+              data: map ? map(response.data) : response.data,
+              loading: false,
+              error: undefined,
+              isSorting: false,
+              searching: false
+            });
+          }
         })
         .catch(response => {
           this.setState({ loading: false, error: response });

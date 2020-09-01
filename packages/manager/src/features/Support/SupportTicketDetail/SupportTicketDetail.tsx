@@ -127,7 +127,7 @@ interface State {
   ticketCloseSuccess: boolean;
 }
 
-type CombinedProps = RouteProps & StateProps & WithStyles<ClassNames>;
+export type CombinedProps = RouteProps & StateProps & WithStyles<ClassNames>;
 
 export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -158,6 +158,10 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     history.replace(location.pathname, {});
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.match.params.ticketId !== this.props.match.params.ticketId) {
       this.setState({ loading: true, ticketCloseSuccess: false });
@@ -166,20 +170,14 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   }
 
   loadTicket = (): any => {
-    const ticketId = this.props.match.params.ticketId;
-    if (!ticketId) {
-      return null;
-    }
+    const ticketId = Number(this.props.match.params.ticketId ?? 0);
     return getTicket(+ticketId);
   };
 
   loadReplies = (): any => {
-    const ticketId = this.props.match.params.ticketId;
-    if (!ticketId) {
-      return null;
-    }
+    const ticketId = Number(this.props.match.params.ticketId ?? 0);
     return (
-      getTicketReplies(+ticketId)
+      getTicketReplies(ticketId)
         // This is a paginated method but here we only need the list of replies
         .then(response => response.data)
     );
@@ -217,14 +215,16 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         /** We now have the gravatar map from the reducer above, and the replies from further up,
          * so we can merge them together.
          */
-        this.setState({
-          replies: replyResponse.map(matchGravatarURLToReply(gravatarMap)),
-          ticket: {
-            ...ticketResponse,
-            gravatarUrl: gravatarMap[ticketResponse.gravatar_id]
-          },
-          loading: false
-        });
+        if (this.mounted) {
+          this.setState({
+            replies: replyResponse.map(matchGravatarURLToReply(gravatarMap)),
+            ticket: {
+              ...ticketResponse,
+              gravatarUrl: gravatarMap[ticketResponse.gravatar_id]
+            },
+            loading: false
+          });
+        }
       }
     );
   };

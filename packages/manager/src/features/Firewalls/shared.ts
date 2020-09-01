@@ -78,7 +78,7 @@ export const portPresets: Record<FirewallPreset, string> = {
 };
 
 export const allIPv4 = '0.0.0.0/0';
-export const allIPv6 = '::0/0';
+export const allIPv6 = '::/0';
 
 export const allIPs = {
   ipv4: [allIPv4],
@@ -98,25 +98,11 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
         protocol: 'TCP',
         addresses: allIPs
       }
-    ],
-    outbound: [
-      {
-        ports: portPresets.ssh,
-        protocol: 'TCP',
-        addresses: allIPs
-      }
     ]
   },
   http: {
     label: 'HTTP',
     inbound: [
-      {
-        ports: portPresets.http,
-        protocol: 'TCP',
-        addresses: allIPs
-      }
-    ],
-    outbound: [
       {
         ports: portPresets.http,
         protocol: 'TCP',
@@ -132,13 +118,6 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
         protocol: 'TCP',
         addresses: allIPs
       }
-    ],
-    outbound: [
-      {
-        ports: portPresets.https,
-        protocol: 'TCP',
-        addresses: allIPs
-      }
     ]
   },
   mysql: {
@@ -149,25 +128,11 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
         protocol: 'TCP',
         addresses: allIPs
       }
-    ],
-    outbound: [
-      {
-        ports: portPresets.mysql,
-        protocol: 'TCP',
-        addresses: allIPs
-      }
     ]
   },
   dns: {
     label: 'DNS',
     inbound: [
-      {
-        ports: portPresets.dns,
-        protocol: 'TCP',
-        addresses: allIPs
-      }
-    ],
-    outbound: [
       {
         ports: portPresets.dns,
         protocol: 'TCP',

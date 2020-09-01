@@ -13,7 +13,6 @@ export interface CommunityNotifications {
 
 export const useCommunityNotifications = (): CommunityNotifications => {
   const context = React.useContext(notificationContext);
-
   return {
     loading: context.loading,
     error: context.error,

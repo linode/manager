@@ -24,7 +24,7 @@ export default ({
   const handleChange = (event: any) => {
     const option = _options.find(
       /* tslint:disable-next-line */
-      (thisOption: any) => thisOption.value == event.currentTarget.value
+      (thisOption: any) => thisOption.value == event.target.value
     );
     isMulti ? onChange([option]) : onChange(option);
   };

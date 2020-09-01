@@ -14,8 +14,7 @@ describe('delete linode', () => {
       clickLinodeActionMenu(linode.label);
 
       // delete linode
-      cy.get('[data-qa-action-menu-item="Delete"]')
-        .first()
+      cy.get('[data-qa-action-menu-item="Delete"]:visible')
         .should('be.visible')
         .click();
 

@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, wait } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { linodeDiskFactory } from 'src/factories/disk';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -8,7 +8,6 @@ import LinodeDiskDrawer, { Props } from './LinodeDiskDrawer';
 const disk = linodeDiskFactory.build();
 
 afterEach(() => {
-  cleanup();
   jest.clearAllMocks();
 });
 
@@ -61,14 +60,14 @@ describe('Component', () => {
     const { getByTestId } = render(
       wrapWithTheme(<LinodeDiskDrawer {...props} mode="rename" />)
     );
-    await wait(() => fireEvent.click(getByTestId('submit-disk-form')));
-    expect(props.onSubmit).toHaveBeenCalledTimes(1);
+    fireEvent.click(getByTestId('submit-disk-form'));
+    await waitFor(() => expect(props.onSubmit).toHaveBeenCalledTimes(1));
   });
   it('should call the cancel handler when Cancel is clicked', async () => {
     const { getByText } = render(
       wrapWithTheme(<LinodeDiskDrawer {...props} mode="resize" />)
     );
-    await wait(() => fireEvent.click(getByText(/cancel/i)));
-    expect(props.onClose).toHaveBeenCalledTimes(1);
+    fireEvent.click(getByText(/cancel/i));
+    await waitFor(() => expect(props.onClose).toHaveBeenCalledTimes(1));
   });
 });

@@ -17,7 +17,7 @@ export const getGravatarUrlFromHash = (hash: string): Promise<string> => {
         throw new Error('not found');
       }
     })
-    .catch(error => {
+    .catch(_ => {
       return Promise.resolve('not found');
     });
 };

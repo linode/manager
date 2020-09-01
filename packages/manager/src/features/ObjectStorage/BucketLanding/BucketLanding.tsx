@@ -247,7 +247,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
 };
 
 const RenderLoading: React.FC<{}> = () => {
-  return <CircleProgress data-testid="loading-state" />;
+  return <CircleProgress />;
 };
 
 const RenderError: React.FC<{}> = () => {

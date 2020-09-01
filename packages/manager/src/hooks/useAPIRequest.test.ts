@@ -1,4 +1,3 @@
-import { cleanup } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 import { useAPIRequest } from './useAPIRequest';
 
@@ -14,8 +13,6 @@ const mockRequestFailure = (): Promise<number> =>
   new Promise((_, reject) => reject(mockError));
 
 describe('useAPIRequest', () => {
-  afterEach(cleanup);
-
   it('sets `data` on load', async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useAPIRequest<number>(mockRequestSuccess, 0)

@@ -23,5 +23,5 @@
 }
 
 #dev-tools:hover .tools {
-  display: block;
+  display: flex;
 }

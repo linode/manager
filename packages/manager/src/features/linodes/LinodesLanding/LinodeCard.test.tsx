@@ -1,4 +1,3 @@
-import { cleanup } from '@testing-library/react';
 import { shallow } from 'enzyme';
 import Flag from 'src/assets/icons/flag.svg';
 import Divider from 'src/components/core/Divider';
@@ -6,8 +5,6 @@ import Tooltip from 'src/components/core/Tooltip';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import * as React from 'react';
-
-afterEach(cleanup);
 
 describe('Flag', () => {
   it('should render the flag', () => {
