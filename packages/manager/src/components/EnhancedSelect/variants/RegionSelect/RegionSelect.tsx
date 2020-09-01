@@ -6,21 +6,44 @@ import IN from 'flag-icon-css/flags/4x3/in.svg';
 import JP from 'flag-icon-css/flags/4x3/jp.svg';
 import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
-import { Region } from '@linode/api-v4/lib/regions';
+import { Capabilities, Region, RegionStatus } from '@linode/api-v4/lib/regions';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,
   GroupType
 } from 'src/components/EnhancedSelect/Select';
+import Link from 'src/components/Link';
 
 import RegionOption, { RegionItem } from './RegionOption';
 
+/**
+ * We are deprecating the Atlanta region. The API doesn't support this
+ * in its region.status, and it's unclear how situation-specific this
+ * will end up being (e.g., will the linked blog post name Atlanta specifically)?
+ *
+ * For these reasons, we're doing a hard-coded, manual solution rather than try
+ * to come up with something more abstract/general.
+ */
+const atlantaDisabledMessage = (
+  <Typography>
+    The Atlanta datacenter is currently sold out as we prepare for a move to an
+    upgraded facility. Please see{' '}
+    <Link to="https://www.linode.com/blog/linode/atlanta-data-center-update/">
+      this blog post
+    </Link>
+    {` `}
+    for more information.
+  </Typography>
+);
+
 export interface ExtendedRegion extends Region {
   display: string;
+  disabled?: boolean;
 }
 
 interface Props extends Omit<BaseSelectProps, 'onChange'> {
@@ -95,8 +118,12 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
               value: thisRegion.id,
               flag:
                 flags[thisRegion.country.toLocaleLowerCase()] ?? (() => null),
-              country: thisRegion.country
+              country: thisRegion.country,
+              disabledMessage: thisRegion.disabled
+                ? atlantaDisabledMessage
+                : undefined
             }))
+
             .sort(sortRegions)
         }
       ];
@@ -134,6 +161,25 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
   return 0;
 };
 
+/**
+ * For display purposes only, a disabled
+ * version of the us-southeast region that
+ * is otherwise not returned by the API.
+ */
+const fakeAtlanta = {
+  id: 'us-southeast',
+  country: 'us',
+  capabilities: ['Linodes', 'NodeBalancers'] as Capabilities[],
+  status: 'ok' as RegionStatus,
+  resolvers: {
+    ipv4:
+      '173.230.129.5,173.230.136.5,173.230.140.5,66.228.59.5,66.228.62.5,50.116.35.5,50.116.41.5,23.239.18.5',
+    ipv6: ''
+  },
+  disabled: true,
+  display: 'Atlanta, GA'
+};
+
 const SelectRegionPanel: React.FC<Props> = props => {
   const {
     label,
@@ -146,9 +192,32 @@ const SelectRegionPanel: React.FC<Props> = props => {
     ...restOfReactSelectProps
   } = props;
 
+  const onChange = React.useCallback(
+    (selection: RegionItem) => {
+      if (selection.disabledMessage) {
+        // React Select's disabled state should prevent anything
+        // from firing, this is basic paranoia.
+        return;
+      }
+      handleSelection(selection.value);
+    },
+    [handleSelection]
+  );
+
   const classes = useStyles();
 
-  const options = getRegionOptions(regions);
+  /**
+   * If the API response includes us-southeast (Atlanta),
+   * they can access the datacenter normally and there's nothing for us to do.
+   * If it doesn't come back, we want to show a disabled Atlanta option in the select
+   * with messaging and a link to the relevant blog post, so that users aren't
+   * confused by the sudden, temporary disappearance of a region.
+   */
+  const _regions = regions.some(thisRegion => thisRegion.id === 'us-southeast')
+    ? regions
+    : [...regions, fakeAtlanta];
+
+  const options = React.useMemo(() => getRegionOptions(_regions), [_regions]);
 
   return (
     <div className={classes.root}>
@@ -159,8 +228,11 @@ const SelectRegionPanel: React.FC<Props> = props => {
         disabled={disabled}
         placeholder="Regions"
         options={options}
-        onChange={(selection: RegionItem) => handleSelection(selection.value)}
+        onChange={onChange}
         components={{ Option: RegionOption, SingleValue }}
+        isOptionDisabled={(option: RegionItem) =>
+          Boolean(option.disabledMessage)
+        }
         styles={styles || selectStyles}
         textFieldProps={{
           tooltipText: helperText
