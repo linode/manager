@@ -125,25 +125,19 @@ export const sortData = (orderBy: string, order: Order) =>
     return sortByNumber(aValue, bValue, order);
   });
 
-export class OrderBy extends React.Component<CombinedProps, State> {
-  state: State = getInitialValuesFromUserPreferences(
-    this.props.preferenceKey ?? '',
-    this.props.preferences,
-    this.props.orderBy ?? 'label',
-    this.props.order ?? 'asc'
+export const OrderBy: React.FC<CombinedProps> = props => {
+  const [orderBy, setOrderBy] = React.useState<string>(
+    props.orderBy ?? 'label'
   );
+  const [order, setOrder] = React.useState<Order>(props.order ?? 'desc');
 
-  _updateUserPreferences = (orderBy: string, order: Order) => {
+  const _updateUserPreferences = (orderBy: string, order: Order) => {
     /**
      * If the preferenceKey is provided, we will store the passed
      * order props in user preferences. They will be read the next
      * time this component is loaded.
      */
-    const {
-      getUserPreferences,
-      preferenceKey,
-      updateUserPreferences
-    } = this.props;
+    const { getUserPreferences, preferenceKey, updateUserPreferences } = props;
     if (preferenceKey) {
       getUserPreferences()
         .then(preferences => {
@@ -160,30 +154,28 @@ export class OrderBy extends React.Component<CombinedProps, State> {
     }
   };
 
-  updateUserPreferences = debounce(1500, false, this._updateUserPreferences);
+  const updateUserPreferences = debounce(1500, false, _updateUserPreferences);
 
-  handleOrderChange = (orderBy: string, order: Order) => {
-    this.setState({ orderBy, order });
-    this.updateUserPreferences(orderBy, order);
+  const handleOrderChange = (newOrderBy: string, newOrder: Order) => {
+    setOrderBy(newOrderBy);
+    setOrder(newOrder);
+    updateUserPreferences(newOrderBy, newOrder);
   };
 
-  render() {
-    const sortedData = sortData(
-      this.state.orderBy,
-      this.state.order
-    )(this.props.data);
+  const sortedData = sortData(orderBy, order)(props.data);
 
-    const props = {
-      ...this.props,
-      ...this.state,
-      handleOrderChange: this.handleOrderChange,
-      data: sortedData,
-      count: this.props.data.length
-    };
+  const downstreamProps = {
+    ...props,
+    order,
+    orderBy,
+    handleOrderChange,
+    data: sortedData,
+    count: props.data.length
+  };
 
-    return this.props.children(props);
-  }
-}
+  // eslint-disable-next-line
+  return <>{props.children(downstreamProps)}</>;
+};
 
 const enhanced = compose<CombinedProps, Props>(withPreferences());
 
