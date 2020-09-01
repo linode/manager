@@ -92,8 +92,8 @@ const styles = (theme: Theme) =>
     },
     cmrSpacing: {
       [theme.breakpoints.down('md')]: {
-        paddingLeft: theme.spacing(),
-        paddingRight: theme.spacing()
+        marginLeft: theme.spacing(),
+        marginRight: theme.spacing()
       }
     }
   });
