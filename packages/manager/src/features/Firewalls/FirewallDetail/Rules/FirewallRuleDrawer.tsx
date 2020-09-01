@@ -231,6 +231,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       }
 
       setFieldValue('protocol', item?.value);
+      if (item?.value === 'ICMP') {
+        // Submitting the form with ICMP and defined ports causes an error
+        setFieldValue('ports', '');
+      }
     },
     [formTouched, setFieldValue]
   );
@@ -322,6 +326,12 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         errorText={errors.ports}
         onChange={handlePortsChange}
         onBlur={handleBlur}
+        disabled={values.protocol === 'ICMP'}
+        tooltipText={
+          values.protocol === 'ICMP'
+            ? 'Ports are not allowed for ICMP protocols.'
+            : undefined
+        }
       />
       <Select
         label={`${capitalize(addressesLabel)}s`}
