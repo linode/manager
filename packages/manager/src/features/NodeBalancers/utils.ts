@@ -157,5 +157,5 @@ export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {
 };
 
 export const shouldIncludeCheckBody = (config: NodeBalancerConfigFields) => {
-  return config.check === 'http_body' && config.check_path;
+  return config.check === 'http_body' && config.check_body;
 };
