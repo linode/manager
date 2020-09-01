@@ -3,7 +3,7 @@ import { OrderByProps } from 'src/components/OrderBy';
 import APIPaginatedTable from './APIPaginatedTable';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag';
 import ListEntities from './ListEntities';
-import { BaseProps } from './types';
+import { BaseProps, PageyIntegrationProps } from './types';
 
 export interface EntityTableRow<T> extends BaseProps {
   Component: React.ComponentType<any>;
@@ -22,9 +22,9 @@ interface Props {
   };
 }
 
-export type CombinedProps = Props;
+export type CombinedProps = Props & PageyIntegrationProps;
 
-export const LandingTable: React.FC<Props> = props => {
+export const LandingTable: React.FC<CombinedProps> = props => {
   const { entity, headers, groupByTag, row, initialOrder } = props;
 
   if (row.request) {
@@ -37,7 +37,13 @@ export const LandingTable: React.FC<Props> = props => {
       handlers: row.handlers,
       lastUpdated: row.lastUpdated
     };
-    return <APIPaginatedTable {...tableProps} />;
+    return (
+      <APIPaginatedTable
+        {...tableProps}
+        persistData={props.persistData}
+        normalizeData={props.normalizeData}
+      />
+    );
   }
 
   const tableProps = {

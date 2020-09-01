@@ -49,6 +49,9 @@ interface State<T = {}> {
 interface Options {
   orderBy?: OrderBy;
   order?: Order;
+  // Callback to be executed after successful request, with the component's own
+  // props and the result of the request.
+  cb?: (ownProps: any, response: ResourcePage<any>) => any;
 }
 
 export interface PaginationProps<T> extends State<T> {
@@ -129,6 +132,10 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
         filters
       )
         .then(response => {
+          if (options.cb) {
+            options.cb(this.props, response);
+          }
+
           if (this.mounted) {
             this.setState({
               count: response.results,
