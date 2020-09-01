@@ -58,7 +58,7 @@ import { truncateEnd } from 'src/utilities/truncate';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
-type ClassNames = 'root' | 'cells' | 'titles' | 'linkContainer' | 'cmrPadding';
+type ClassNames = 'root' | 'cells' | 'titles' | 'linkContainer' | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -90,9 +90,11 @@ const styles = (theme: Theme) =>
         }
       }
     },
-    cmrPadding: {
-      paddingLeft: theme.spacing(),
-      paddingRight: theme.spacing()
+    cmrSpacing: {
+      [theme.breakpoints.down('md')]: {
+        paddingLeft: theme.spacing(),
+        paddingRight: theme.spacing()
+      }
     }
   });
 
@@ -693,7 +695,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                     variant="h2"
                     className={classnames({
                       [classes.titles]: true,
-                      [classes.cmrPadding]: flags.cmr
+                      [classes.cmrSpacing]: flags.cmr
                     })}
                     data-qa-domain-record={type.title}
                   >
@@ -706,7 +708,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                     <div
                       className={classnames({
                         [classes.linkContainer]: true,
-                        [classes.cmrPadding]: flags.cmr
+                        [classes.cmrSpacing]: flags.cmr
                       })}
                     >
                       {type.link()}
