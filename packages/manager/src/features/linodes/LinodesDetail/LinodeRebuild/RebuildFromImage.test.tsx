@@ -1,10 +1,4 @@
-import {
-  cleanup,
-  fireEvent,
-  render,
-  wait,
-  waitForElement
-} from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { imagesByID as images } from 'src/__data__/images';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -19,8 +13,6 @@ jest.mock('src/hooks/useReduxLoad', () => ({
 jest.mock('src/hooks/useImages', () => ({
   useImages: jest.fn().mockResolvedValue({ error: {} })
 }));
-
-afterEach(cleanup);
 
 const props: CombinedProps = {
   classes: { root: '', error: '' },
@@ -49,21 +41,17 @@ describe('RebuildFromImage', () => {
   });
 
   it('validates the form upon clicking the "Rebuild" button', async () => {
-    const { getByTestId, getByText } = render(
+    const { getByTestId, findByText } = render(
       wrapWithTheme(<RebuildFromImage {...props} />)
     );
     fireEvent.click(getByTestId('rebuild-button'));
-    await waitForElement(
-      () => [
-        getByText('An image is required.'),
-        getByText('Password is required.')
-      ],
-      {}
-    );
+
+    await findByText('An image is required.');
+    await findByText('Password is required.');
   });
 
   it('opens a confirmation modal after form has been validated', async () => {
-    const { getByTestId, getByText, getByPlaceholderText } = render(
+    const { getByTestId, findByText, getByPlaceholderText } = render(
       wrapWithTheme(<RebuildFromImage {...props} />)
     );
     fireEvent.change(getByTestId('select'), {
@@ -72,13 +60,13 @@ describe('RebuildFromImage', () => {
 
     fireEvent.blur(getByTestId('select'));
 
-    await wait(() =>
+    await waitFor(() =>
       fireEvent.change(getByPlaceholderText('Enter a password.'), {
         target: { value: 'xE7%9hX#hJsM' }
       })
     );
     fireEvent.click(getByTestId('rebuild-button'));
 
-    await waitForElement(() => getByText('Confirm Linode Rebuild'), {});
+    await findByText('Confirm Linode Rebuild');
   });
 });

@@ -430,6 +430,21 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Domains" />
+        {shouldShowBanner && (
+          <Notice warning important className={classes.dnsWarning}>
+            <Typography variant="h3">
+              Your DNS zones are not being served.
+            </Typography>
+            <Typography>
+              Your domains will not be served by Linode&#39;s nameservers unless
+              you have at least one active Linode on your account.
+              <Link to="/linodes/create"> You can create one here.</Link>
+            </Typography>
+          </Notice>
+        )}
+        {this.props.location.state?.recordError && (
+          <Notice error text={this.props.location.state.recordError} />
+        )}
         <PreferenceToggle<boolean>
           preferenceKey="domains_group_by_tag"
           preferenceOptions={[false, true]}
@@ -524,29 +539,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     </Grid>
                   </Grid>
                 )}
-                {shouldShowBanner && (
-                  <Notice warning important className={classes.dnsWarning}>
-                    <Typography variant="h3">
-                      Your DNS zones are not being served.
-                    </Typography>
-                    <Typography>
-                      Your domains will not be served by Linode&#39;s
-                      nameservers unless you have at least one active Linode on
-                      your account.
-                      <Link to="/linodes/create">
-                        {' '}
-                        You can create one here.
-                      </Link>
-                    </Typography>
-                  </Notice>
-                )}
-                {this.props.location.state &&
-                  this.props.location.state.recordError && (
-                    <Notice
-                      error
-                      text={this.props.location.state.recordError}
-                    />
-                  )}
                 <Table
                   entity="domain"
                   groupByTag={domainsAreGrouped}

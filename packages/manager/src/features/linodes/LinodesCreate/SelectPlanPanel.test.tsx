@@ -1,12 +1,9 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SelectPlanPanel } from './SelectPlanPanel';
-
-afterEach(cleanup);
 
 describe('Select Plan Panel', () => {
   it('should render TabbedPanel', () => {

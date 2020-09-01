@@ -82,6 +82,16 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
       searching: false
     };
 
+    mounted: boolean = false;
+
+    componentDidMount() {
+      this.mounted = true;
+    }
+
+    componentWillUnmount() {
+      this.mounted = false;
+    }
+
     private onDelete = () => {
       const { page, data } = this.state;
 
@@ -126,16 +136,18 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
             options.cb(this.props, response);
           }
 
-          this.setState({
-            count: response.results,
-            page: response.page,
-            pages: response.pages,
-            data: map ? map(response.data) : response.data,
-            loading: false,
-            error: undefined,
-            isSorting: false,
-            searching: false
-          });
+          if (this.mounted) {
+            this.setState({
+              count: response.results,
+              page: response.page,
+              pages: response.pages,
+              data: map ? map(response.data) : response.data,
+              loading: false,
+              error: undefined,
+              isSorting: false,
+              searching: false
+            });
+          }
         })
         .catch(response => {
           this.setState({ loading: false, error: response });
