@@ -126,19 +126,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   pdfDownloadButton: {
-    ...theme.applyLinkStyles,
     '&:hover': {
-      textDecoration: 'underline',
-      color: '#3683dc !important',
-      backgroundColor: `${theme.color.white} !important`
+      color: theme.color.blue,
+      backgroundColor: 'inherit',
+      textDecoration: 'underline'
     }
   },
   pdfError: {
-    color: `${theme.color.red} !important`,
-    textDecoration: 'none',
+    color: theme.color.red,
     '&:hover': {
-      color: `${theme.color.red} !important`,
-      backgroundColor: 'inherit'
+      color: theme.color.red,
+      backgroundColor: 'inherit',
+      textDecoration: 'underline'
     }
   }
 }));
