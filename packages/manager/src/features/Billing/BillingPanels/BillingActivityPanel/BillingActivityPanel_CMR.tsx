@@ -125,19 +125,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       stroke: theme.color.blue
     }
   },
-  pdfDownloadButton: {
-    '&:hover': {
-      color: theme.color.blue,
-      backgroundColor: 'inherit',
-      textDecoration: 'underline'
-    }
-  },
   pdfError: {
     color: theme.color.red,
     '&:hover': {
-      color: theme.color.red,
-      backgroundColor: 'inherit',
-      textDecoration: 'underline'
+      color: theme.color.white,
+      backgroundColor: theme.color.red
     }
   }
 }));
@@ -561,9 +553,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       title: hasError
         ? 'Error downloading PDF. Click to try again.'
         : 'Download PDF',
-      className: `${classes.pdfDownloadButton} ${
-        hasError ? `${classes.pdfError}` : ''
-      }`,
+      className: hasError ? classes.pdfError : '',
       onClick: handleClick
     };
 
