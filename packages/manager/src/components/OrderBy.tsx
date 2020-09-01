@@ -1,25 +1,24 @@
 import { DateTime } from 'luxon';
-import { pathOr, sort, splitAt } from 'ramda';
+import { equals, pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { debounce } from 'throttle-debounce';
-
 import { Order } from 'src/components/Pagey';
 import withPreferences, {
   Props as PreferencesProps
 } from 'src/containers/preferences.container';
+import usePrevious from 'src/hooks/usePrevious';
 import {
   SortKey,
   UserPreferences
 } from 'src/store/preferences/preferences.actions';
-import { isArray } from 'util';
-
 import {
   sortByArrayLength,
   sortByNumber,
   sortByString,
   sortByUTFDate
 } from 'src/utilities/sort-by';
+import { debounce } from 'throttle-debounce';
+import { isArray } from 'util';
 
 export interface OrderByProps extends State {
   handleOrderChange: (orderBy: string, order: Order) => void;
@@ -126,10 +125,49 @@ export const sortData = (orderBy: string, order: Order) =>
   });
 
 export const OrderBy: React.FC<CombinedProps> = props => {
-  const [orderBy, setOrderBy] = React.useState<string>(
-    props.orderBy ?? 'label'
+  const { preferenceKey, preferences } = props;
+
+  const initialValues = getInitialValuesFromUserPreferences(
+    preferenceKey ?? '',
+    preferences,
+    props.orderBy ?? 'label',
+    props.order ?? 'desc'
   );
-  const [order, setOrder] = React.useState<Order>(props.order ?? 'desc');
+
+  const [orderBy, setOrderBy] = React.useState<string>(initialValues.orderBy);
+  const [order, setOrder] = React.useState<Order>(initialValues.order);
+  const [sortedData, setSortedData] = React.useState<any[]>(props.data);
+
+  // Re-sort the data when it changes.
+  const prevData = usePrevious(props.data);
+  React.useEffect(() => {
+    if (equals(props.data, prevData)) {
+      return;
+    }
+
+    const newlySortedData = sortData(orderBy, order)(props.data);
+    setSortedData(newlySortedData);
+  }, [props.data, props.preferences, order, orderBy, prevData]);
+
+  // Potentially reset the order and orderBy options when preferences change.
+  // (They might have just been requested when this component first renders.)
+  const prevPreferences = usePrevious(preferences);
+  React.useEffect(() => {
+    if (!preferenceKey || equals(prevPreferences, preferences)) {
+      return;
+    }
+
+    const sortKeys = preferences?.sortKeys?.[preferenceKey];
+    const newOrder = sortKeys?.order;
+    const newOrderBy = sortKeys?.orderBy;
+
+    if (newOrder) {
+      setOrder(newOrder);
+    }
+    if (newOrderBy) {
+      setOrderBy(newOrderBy);
+    }
+  }, [prevPreferences, preferences, preferenceKey]);
 
   const debouncedUpdateUserPreferences = React.useRef(
     debounce(1500, false, (orderBy: string, order: Order) => {
@@ -138,15 +176,11 @@ export const OrderBy: React.FC<CombinedProps> = props => {
        * order props in user preferences. They will be read the next
        * time this component is loaded.
        */
-      const {
-        getUserPreferences,
-        preferenceKey,
-        updateUserPreferences
-      } = props;
       if (preferenceKey) {
-        getUserPreferences()
+        props
+          .getUserPreferences()
           .then(preferences => {
-            updateUserPreferences({
+            props.updateUserPreferences({
               ...preferences,
               sortKeys: {
                 ...preferences.sortKeys,
@@ -163,10 +197,12 @@ export const OrderBy: React.FC<CombinedProps> = props => {
   const handleOrderChange = (newOrderBy: string, newOrder: Order) => {
     setOrderBy(newOrderBy);
     setOrder(newOrder);
+
+    const newlySortedData = sortData(newOrderBy, newOrder)(sortedData);
+    setSortedData(newlySortedData);
+
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
-
-  const sortedData = sortData(orderBy, order)(props.data);
 
   const downstreamProps = {
     ...props,
