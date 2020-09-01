@@ -1,6 +1,7 @@
 import * as React from 'react';
 import BookIcon from 'src/assets/icons/book.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import useFlags from 'src/hooks/useFlags';
 import IconTextLink from '../IconTextLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -20,6 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       strokeLinejoin: 'round',
       strokeWidth: '1.5'
     }
+  },
+  cmrMargin: {
+    marginRight: -4
   }
 }));
 
@@ -31,10 +35,13 @@ type CombinedProps = Props;
 
 export const DocumentationButton: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
+
   const { href } = props;
+
   return (
     <IconTextLink
-      className={classes.root}
+      className={`${classes.root} ${flags.cmr ? classes.cmrMargin : ''}`}
       SideIcon={BookIcon}
       text="Documentation"
       title="Documentation"

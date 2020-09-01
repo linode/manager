@@ -12,6 +12,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { useDialog } from 'src/hooks/useDialog';
+import useFlags from 'src/hooks/useFlags';
 import useLinodes from 'src/hooks/useLinodes';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -84,6 +85,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
 
   const { deleteLinode } = useLinodes();
 
@@ -213,12 +215,19 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
         style={{ paddingBottom: 0 }}
       >
         <Grid item>
-          <Typography variant="h2" className={classes.nodePoolHeader}>
+          <Typography
+            variant="h2"
+            className={classes.nodePoolHeader}
+            style={{ marginLeft: flags.cmr ? 8 : 0 }}
+          >
             Node Pools
           </Typography>
         </Grid>
         <Grid item>
-          <div className={classes.addNodePoolLink}>
+          <div
+            className={classes.addNodePoolLink}
+            style={{ marginRight: flags.cmr ? 8 : 0 }}
+          >
             <AddNewLink
               onClick={() => {
                 handleOpenAddDrawer();

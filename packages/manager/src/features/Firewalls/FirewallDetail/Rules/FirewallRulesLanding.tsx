@@ -1,5 +1,6 @@
 import { FirewallRules, FirewallRuleType } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
+import classnames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -40,6 +41,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actions: {
     alignSelf: 'flex-end'
+  },
+  cmrPadding: {
+    [theme.breakpoints.down('md')]: {
+      paddingLeft: theme.spacing(),
+      paddingRight: theme.spacing()
+    }
   }
 }));
 
@@ -262,7 +269,13 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         }}
       </Prompt>
 
-      <Typography variant="body1" className={classes.copy}>
+      <Typography
+        variant="body1"
+        className={classnames({
+          [classes.copy]: true,
+          [classes.cmrPadding]: flags.cmr
+        })}
+      >
         Firewall rules act as an allowlist, allowing network traffic that meets
         the rules’ parameters to pass through. Any traffic not explicitly
         permitted by a rule is blocked.
