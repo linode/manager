@@ -25,14 +25,20 @@ import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
+import Table_CMR from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell';
+import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow';
+import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import { dcDisplayNames } from 'src/constants';
 import withRegions, {
   DefaultProps as RegionsProps
 } from 'src/containers/regions.container';
 import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
+import withFeatureFlags from 'src/containers/withFeatureFlagConsumer.container.ts';
+import { LDClient } from 'launchdarkly-js-client-sdk';
+import { FlagSet } from 'src/featureFlags';
 
 export interface ExtendedType extends LinodeType {
   heading: string;
@@ -43,6 +49,7 @@ type ClassNames =
   | 'root'
   | 'copy'
   | 'disabledRow'
+  | 'headerCell'
   | 'chip'
   | 'headingCellContainer'
   | 'currentPlanChipCell'
@@ -66,6 +73,16 @@ const styles = (theme: Theme) =>
     headingCellContainer: {
       display: 'flex',
       alignItems: 'center'
+    },
+    headerCell: {
+      borderTop: 'none !important',
+      borderBottom: '1px solid #f4f5f6 !important',
+      '&.emptyCell': {
+        borderRight: 'none'
+      },
+      '&:not(.emptyCell)': {
+        borderLeft: 'none !important'
+      }
     },
     chip: {
       backgroundColor: theme.color.green,
@@ -94,6 +111,8 @@ interface Props {
   copy?: string;
   disabledClasses?: LinodeTypeClass[];
   tabbedPanelInnerClass?: string;
+  flags?: FlagSet;
+  ldClient?: LDClient;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -130,7 +149,13 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
   };
 
   renderSelection = (type: ExtendedType, idx: number) => {
-    const { selectedID, currentPlanHeading, disabled, classes } = this.props;
+    const {
+      selectedID,
+      currentPlanHeading,
+      disabled,
+      classes,
+      flags
+    } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
       : 0;
@@ -151,11 +176,14 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         ? `${type.label} this plan is too small for resize`
         : type.label;
 
+    const _TableRow = flags?.cmr ? TableRow_CMR : TableRow;
+    const _TableCell = flags?.cmr ? TableCell_CMR : TableCell;
+
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
         <Hidden smDown>
-          <TableRow
+          <_TableRow
             data-qa-plan-row={type.label}
             aria-label={rowAriaLabel}
             key={type.id}
@@ -171,7 +199,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 isSamePlan || planTooSmall || isDisabledClass
             })}
           >
-            <TableCell className={classes.radioCell}>
+            <_TableCell className={classes.radioCell}>
               {!isSamePlan && (
                 <FormControlLabel
                   label={type.heading}
@@ -187,8 +215,8 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                   }
                 />
               )}
-            </TableCell>
-            <TableCell data-qa-plan-name>
+            </_TableCell>
+            <_TableCell data-qa-plan-name>
               <div className={classes.headingCellContainer}>
                 {type.heading}{' '}
                 {isSamePlan && (
@@ -207,23 +235,23 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                   />
                 )}
               </div>
-            </TableCell>
-            <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
-            <TableCell data-qa-hourly>
+            </_TableCell>
+            <_TableCell data-qa-monthly> ${type.price.monthly}</_TableCell>
+            <_TableCell data-qa-hourly>
               {isGPU ? (
                 <Currency quantity={type.price.hourly} />
               ) : (
                 `$` + type.price.hourly
               )}
-            </TableCell>
-            <TableCell data-qa-ram>
+            </_TableCell>
+            <_TableCell data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
-            </TableCell>
-            <TableCell data-qa-cpu>{type.vcpus}</TableCell>
-            <TableCell data-qa-storage>
+            </_TableCell>
+            <_TableCell data-qa-cpu>{type.vcpus}</_TableCell>
+            <_TableCell data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
-            </TableCell>
-          </TableRow>
+            </_TableCell>
+          </_TableRow>
         </Hidden>
         {/* Displays SelectionCard for small screens */}
         <Hidden mdUp>
@@ -243,7 +271,33 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
   };
 
   renderPlanContainer = (plans: ExtendedType[]) => {
-    const tableHeader = (
+    const { flags, classes } = this.props;
+
+    const tableHeader = flags?.cmr ? (
+      <TableHead>
+        <TableRow_CMR>
+          <TableCell_CMR className={classes.headerCell} />
+          <TableCell_CMR className={classes.headerCell} data-qa-plan-header>
+            Linode Plan
+          </TableCell_CMR>
+          <TableCell_CMR className={classes.headerCell} data-qa-monthly-header>
+            Monthly
+          </TableCell_CMR>
+          <TableCell_CMR className={classes.headerCell} data-qa-hourly-header>
+            Hourly
+          </TableCell_CMR>
+          <TableCell_CMR className={classes.headerCell} data-qa-ram-header>
+            RAM
+          </TableCell_CMR>
+          <TableCell_CMR className={classes.headerCell} data-qa-cpu-header>
+            CPUs
+          </TableCell_CMR>
+          <TableCell_CMR className={classes.headerCell} data-qa-storage-header>
+            Storage
+          </TableCell_CMR>
+        </TableRow_CMR>
+      </TableHead>
+    ) : (
       <TableHead>
         <TableRow>
           <TableCell />
@@ -262,17 +316,31 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
         <Hidden smDown>
           <Grid item xs={12} lg={10}>
-            <Table
-              isResponsive={false}
-              border
-              spacingBottom={16}
-              aria-label="List of Linode Plans"
-            >
-              {tableHeader}
-              <TableBody role="radiogroup">
-                {plans.map(this.renderSelection)}
-              </TableBody>
-            </Table>
+            {flags?.cmr ? (
+              <Table_CMR
+                isResponsive={false}
+                border
+                spacingBottom={16}
+                aria-label="List of Linode Plans"
+              >
+                {tableHeader}
+                <TableBody role="radiogroup">
+                  {plans.map(this.renderSelection)}
+                </TableBody>
+              </Table_CMR>
+            ) : (
+              <Table
+                isResponsive={false}
+                border
+                spacingBottom={16}
+                aria-label="List of Linode Plans"
+              >
+                {tableHeader}
+                <TableBody role="radiogroup">
+                  {plans.map(this.renderSelection)}
+                </TableBody>
+              </Table>
+            )}
           </Grid>
         </Hidden>
       </Grid>
@@ -440,6 +508,7 @@ const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
+  withFeatureFlags,
   styled,
   withRegions()
 )(SelectPlanPanel);

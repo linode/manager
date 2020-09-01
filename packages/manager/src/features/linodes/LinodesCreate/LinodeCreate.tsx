@@ -41,8 +41,7 @@ import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import AddonsPanel from './AddonsPanel';
-import SelectPlanPanel_PreCMR from './SelectPlanPanel';
-import SelectPlanPanel_CMR from './SelectPlanPanel_CMR';
+import SelectPlanPanel from './SelectPlanPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
@@ -65,9 +64,6 @@ import {
 } from './types';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Notice from 'src/components/Notice';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -150,7 +146,6 @@ type CombinedProps = Props &
   WithRegionsProps &
   WithStyles<ClassNames> &
   WithTypesProps &
-  FeatureFlagConsumerProps &
   RouteComponentProps<{}>;
 
 interface State {
@@ -328,7 +323,6 @@ export class LinodeCreate extends React.PureComponent<
       userCannotCreateLinode,
       accountBackupsEnabled,
       showGeneralError,
-      flags,
       ...rest
     } = this.props;
 
@@ -397,10 +391,6 @@ export class LinodeCreate extends React.PureComponent<
         )
       );
     }
-
-    const SelectPlanPanel = flags.cmr
-      ? SelectPlanPanel_CMR
-      : SelectPlanPanel_PreCMR;
 
     return (
       <form className={classes.form}>
@@ -673,7 +663,6 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = recompose<CombinedProps, InnerProps>(
   connected,
-  withFeatureFlags,
   styled,
   setDocs(generateDocs, updateCond)
 );
