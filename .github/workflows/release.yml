@@ -89,10 +89,6 @@ jobs:
       - run: cp packages/manager/config/environments/beta pacakges/manager/.env
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build
-        # TODO: determine how environment variables will be handled
-        env:
-          REACT_APP_APP_ROOT: https://${{ secrets.AWS_S3_BUCKET }}.website-us-east-1.linodeobjects.com
-          REACT_APP_CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
       - uses: actions/upload-artifact@v2
         with:
           name: linode-manager
