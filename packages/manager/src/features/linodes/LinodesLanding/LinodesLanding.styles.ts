@@ -16,7 +16,8 @@ type ClassNames =
   | 'chipRunning'
   | 'chipPending'
   | 'chipOffline'
-  | 'clearFilters';
+  | 'clearFilters'
+  | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -71,6 +72,13 @@ const styles = (theme: Theme) =>
         '& svg': {
           color: `${theme.palette.primary.main} !important`
         }
+      }
+    },
+    cmrSpacing: {
+      margin: 0,
+      '& > .MuiGrid-item': {
+        paddingLeft: 0,
+        paddingRight: 0
       }
     }
   });

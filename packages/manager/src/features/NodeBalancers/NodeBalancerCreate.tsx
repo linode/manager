@@ -63,14 +63,23 @@ import {
   transformConfigsForRequest
 } from './utils';
 
-type ClassNames = 'root' | 'main' | 'sidebar' | 'title' | 'cmrSpacing';
+type ClassNames =
+  | 'root'
+  | 'main'
+  | 'sidebar'
+  | 'title'
+  | 'cmrSidebar'
+  | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
     main: {
       '&.MuiGrid-item': {
-        paddingLeft: 0
+        paddingLeft: 0,
+        [theme.breakpoints.down('md')]: {
+          paddingRight: 0
+        }
       }
     },
     sidebar: {
@@ -80,6 +89,14 @@ const styles = (theme: Theme) =>
     },
     title: {
       marginTop: theme.spacing(3)
+    },
+    cmrSidebar: {
+      [theme.breakpoints.down('md')]: {
+        '&.MuiGrid-item': {
+          paddingLeft: 0,
+          paddingRight: 0
+        }
+      }
     },
     cmrSpacing: {
       [theme.breakpoints.down('md')]: {
@@ -512,7 +529,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment="Create a NodeBalancer" />
         <Grid container className="m0">
-          <Grid item className={`${classes.main} mlMain`}>
+          <Grid item className={`mlMain ${flags.cmr && classes.main} `}>
             <Breadcrumb
               pathname={this.props.location.pathname}
               data-qa-create-nodebalancer-header
@@ -708,7 +725,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={`${classes.sidebar} mlSidebar`}>
+          <Grid
+            item
+            className={`mlSidebar ${classes.sidebar} ${flags.cmr &&
+              classes.cmrSidebar}`}
+          >
             <CheckoutBar
               heading={`${this.state.nodeBalancerFields.label ||
                 'NodeBalancer'} Summary`}
