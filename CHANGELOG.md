@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-08-25] - v1.18.0
+
+### Changed:
+
+- Disable Atlanta region for most customers, add messaging regarding the datacenter upgrade
+
 ## [2020-08-25] - v1.17.0
 
 ### Added:
