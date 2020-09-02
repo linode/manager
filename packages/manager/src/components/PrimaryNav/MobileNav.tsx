@@ -240,6 +240,7 @@ export const MobileNav: React.FC<Props> = props => {
                     <MenuItems className={classes.menuItemList} key={thisGroup}>
                       {thisGroup.links.map((thisLink: any) => (
                         <MenuLink
+                          data-testid={`menu-item-${thisLink.display}`}
                           key={thisLink.display}
                           as={Link}
                           to={thisLink.href}
