@@ -118,11 +118,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   pdfDownloadColumn: {
-    textAlign: 'right'
-  },
-  progress: {
-    '& circle': {
-      stroke: theme.color.blue
+    textAlign: 'right',
+    '& > .loading': {
+      width: 115
     }
   },
   pdfError: {
