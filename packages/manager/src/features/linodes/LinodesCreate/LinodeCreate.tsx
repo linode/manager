@@ -70,14 +70,31 @@ type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: '#F4F4F4',
-
-      '& > :first-child': {
-        padding: 0
+      '& .mlMain': {
+        maxWidth: '100%',
+        flexBasis: '100%',
+        [theme.breakpoints.up('md')]: {
+          maxWidth: '78.8%',
+          flexBasis: '78.8%'
+        }
+      },
+      '& .mlSidebar': {
+        position: 'static',
+        width: '100%',
+        flexBasis: '100%',
+        maxWidth: '100%',
+        [theme.breakpoints.up('md')]: {
+          position: 'sticky',
+          maxWidth: '21.2%',
+          flexBasis: '21.2%'
+        }
       }
     },
     form: {
-      display: 'flex'
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        display: 'flex'
+      }
     },
     stackScriptWrapper: {
       padding: theme.spacing(3),
