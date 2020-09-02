@@ -18,6 +18,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import OrderBy from 'src/components/OrderBy';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -32,6 +33,7 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { LinodeAPI } from 'src/documentation';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -296,8 +298,8 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
       });
   };
 
-  renderContent = () => {
-    const { data, error, loading } = this.props;
+  renderContent = (data: OAuthClient[]) => {
+    const { error, loading } = this.props;
 
     if (error) {
       return (
@@ -321,6 +323,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
   renderRows = (data: OAuthClient[]) => {
     const { classes } = this.props;
+
     return data.map(({ id, label, redirect_uri, public: isPublic, status }) => (
       <TableRow ariaLabel={label} key={id} data-qa-table-row={label}>
         <TableCell data-qa-oauth-label>{label}</TableCell>
@@ -361,7 +364,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, data } = this.props;
 
     // TODO Need to unify internal & external usage of 'OAuth Clients'/'OAuth Apps'.
     // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'OAuth Apps' for user-facing displays.
@@ -392,22 +395,38 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper>
-          <Table aria-label="List of OAuth Apps">
-            <TableHead data-qa-table-head>
-              <TableRow>
-                <TableCell style={{ width: '20%' }}>Label</TableCell>
-                <Hidden xsDown>
-                  <TableCell>Access</TableCell>
-                </Hidden>
-                <TableCell style={{ width: '20%' }}>ID</TableCell>
-                <Hidden xsDown>
-                  <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
-                </Hidden>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
+          <OrderBy data={data!} orderBy={'label'} order={'asc'}>
+            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+              return (
+                <Table aria-label="List of OAuth Apps">
+                  <TableHead data-qa-table-head>
+                    <TableRow>
+                      <TableSortCell
+                        active={orderBy === 'label'}
+                        label="label"
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        style={{ width: '20%' }}
+                      >
+                        Label
+                      </TableSortCell>
+                      <Hidden xsDown>
+                        <TableCell>Access</TableCell>
+                      </Hidden>
+                      <TableCell style={{ width: '20%' }}>ID</TableCell>
+                      <Hidden xsDown>
+                        <TableCell style={{ width: '20%' }}>
+                          Callback URL
+                        </TableCell>
+                      </Hidden>
+                      <TableCell />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{this.renderContent(orderedData)}</TableBody>
+                </Table>
+              );
+            }}
+          </OrderBy>
         </Paper>
 
         <Modals
