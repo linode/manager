@@ -6,7 +6,7 @@ import IN from 'flag-icon-css/flags/4x3/in.svg';
 import JP from 'flag-icon-css/flags/4x3/jp.svg';
 import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
-import { Capabilities, Region, RegionStatus } from '@linode/api-v4/lib/regions';
+import { Region } from '@linode/api-v4/lib/regions';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -161,25 +161,6 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
   return 0;
 };
 
-/**
- * For display purposes only, a disabled
- * version of the us-southeast region that
- * is otherwise not returned by the API.
- */
-const fakeAtlanta = {
-  id: 'us-southeast',
-  country: 'us',
-  capabilities: ['Linodes', 'NodeBalancers'] as Capabilities[],
-  status: 'ok' as RegionStatus,
-  resolvers: {
-    ipv4:
-      '173.230.129.5,173.230.136.5,173.230.140.5,66.228.59.5,66.228.62.5,50.116.35.5,50.116.41.5,23.239.18.5',
-    ipv6: ''
-  },
-  disabled: true,
-  display: 'Atlanta, GA'
-};
-
 const SelectRegionPanel: React.FC<Props> = props => {
   const {
     label,
@@ -206,18 +187,7 @@ const SelectRegionPanel: React.FC<Props> = props => {
 
   const classes = useStyles();
 
-  /**
-   * If the API response includes us-southeast (Atlanta),
-   * they can access the datacenter normally and there's nothing for us to do.
-   * If it doesn't come back, we want to show a disabled Atlanta option in the select
-   * with messaging and a link to the relevant blog post, so that users aren't
-   * confused by the sudden, temporary disappearance of a region.
-   */
-  const _regions = regions.some(thisRegion => thisRegion.id === 'us-southeast')
-    ? regions
-    : [...regions, fakeAtlanta];
-
-  const options = React.useMemo(() => getRegionOptions(_regions), [_regions]);
+  const options = React.useMemo(() => getRegionOptions(regions), [regions]);
 
   return (
     <div className={classes.root}>
