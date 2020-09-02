@@ -30,6 +30,7 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import OrderBy from 'src/components/OrderBy';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
@@ -38,6 +39,7 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -469,8 +471,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  renderContent() {
-    const { error, loading, data } = this.props;
+  renderContent(data: Token[]) {
+    const { error, loading } = this.props;
 
     if (loading) {
       return <TableRowLoading colSpan={6} oneLine />;
@@ -480,10 +482,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     }
 
-    const filteredData = data ? data.filter(filterOutLinodeApps) : [];
-
-    return filteredData.length > 0 ? (
-      this.renderRows(filteredData)
+    return data.length > 0 ? (
+      this.renderRows(data)
     ) : (
       <TableRowEmptyState colSpan={6} />
     );
@@ -540,11 +540,13 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, type, title } = this.props;
+    const { classes, data, type, title } = this.props;
     const { form, dialog, submitting } = this.state;
 
     const basePermsWithLKE = [...basePerms];
     basePermsWithLKE.splice(5, 0, 'lke');
+
+    const filteredData = data ? data.filter(filterOutLinodeApps) : [];
 
     return (
       <React.Fragment>
@@ -574,17 +576,45 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper className={classes.paper}>
-          <Table aria-label="List of Personal Access Tokens">
-            <TableHead>
-              <TableRow data-qa-table-head>
-                <TableCell className={classes.labelCell}>Label</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell>Expires</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
+          <OrderBy data={filteredData} orderBy={'label'} order={'asc'}>
+            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+              return (
+                <Table aria-label="List of Personal Access Tokens">
+                  <TableHead>
+                    <TableRow data-qa-table-head>
+                      <TableSortCell
+                        className={classes.labelCell}
+                        active={orderBy === 'label'}
+                        label="label"
+                        direction={order}
+                        handleClick={handleOrderChange}
+                      >
+                        Label
+                      </TableSortCell>
+                      <TableSortCell
+                        active={orderBy === 'created'}
+                        label="created"
+                        direction={order}
+                        handleClick={handleOrderChange}
+                      >
+                        Created
+                      </TableSortCell>
+                      <TableSortCell
+                        active={orderBy === 'expiry'}
+                        label="expiry"
+                        direction={order}
+                        handleClick={handleOrderChange}
+                      >
+                        Expires
+                      </TableSortCell>
+                      <TableCell />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{this.renderContent(orderedData)}</TableBody>
+                </Table>
+              );
+            }}
+          </OrderBy>
         </Paper>
         <PaginationFooter
           page={this.props.page}
