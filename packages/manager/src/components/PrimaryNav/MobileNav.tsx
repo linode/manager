@@ -1,5 +1,4 @@
-// import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-// import Backdrop from '@material-ui/core/Backdrop';
+import Backdrop from '@material-ui/core/Backdrop';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -151,11 +150,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'rgba(50, 54, 60, 0.5)',
     top: 50,
     left: 0,
-    position: 'fixed',
-    width: '100%',
-    height: '100%',
-    zIndex: 1,
-    display: 'none'
+    zIndex: 1
   }
 }));
 
@@ -255,7 +250,7 @@ export const MobileNav: React.FC<Props> = props => {
           </div>
         </MenuPopover>
       </ReachMenu>
-      <div className={classes.settingsBackdrop}></div>
+      <Backdrop className={classes.settingsBackdrop} open={isOpen} />
     </>
   );
 };
