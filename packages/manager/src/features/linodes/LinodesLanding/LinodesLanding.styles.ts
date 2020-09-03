@@ -76,6 +76,7 @@ const styles = (theme: Theme) =>
     },
     cmrSpacing: {
       margin: 0,
+      width: '100%',
       '& > .MuiGrid-item': {
         paddingLeft: 0,
         paddingRight: 0

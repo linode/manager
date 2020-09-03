@@ -64,15 +64,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflowX: 'hidden',
     padding: `${theme.spacing(3)}px 0`,
     transition: theme.transitions.create('opacity'),
-    [theme.breakpoints.down('lg')]: {
-      '& > .MuiGrid-container': {
-        margin: 0,
-        width: '100%',
-        '& > .MuiGrid-item': {
-          padding: 0
-        }
-      }
-    },
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing(2),
       paddingLeft: 0,
@@ -102,8 +93,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '100%',
     position: 'relative',
     '& > .MuiGrid-container': {
-      maxWidth: '100%',
-      width: 1280
+      maxWidth: 1280,
+      width: '100%'
     },
     '&.mlMain': {
       [theme.breakpoints.up('lg')]: {
