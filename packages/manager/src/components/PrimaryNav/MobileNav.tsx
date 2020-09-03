@@ -1,5 +1,5 @@
 // import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Backdrop from '@material-ui/core/Backdrop';
+// import Backdrop from '@material-ui/core/Backdrop';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -150,34 +150,32 @@ const useStyles = makeStyles((theme: Theme) => ({
   settingsBackdrop: {
     backgroundColor: 'rgba(50, 54, 60, 0.5)',
     top: 50,
-    zIndex: 1
+    left: 0,
+    position: 'fixed',
+    width: '100%',
+    height: '100%',
+    zIndex: 1,
+    display: 'none'
   }
 }));
 
 export const MobileNav: React.FC<Props> = props => {
   const classes = useStyles();
+  const mainButton = document.getElementById('mobile-menu-initiator');
   const ref = React.useRef<HTMLDivElement>(null);
   const { groups } = props;
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  React.useMemo(() => {
-    if (isOpen) {
-      document.body.classList.add('overflow-hidden');
-    } else {
-      document.body.classList.remove('overflow-hidden');
+  React.useEffect(() => {
+    if (mainButton) {
+      mainButton.hasAttribute('aria-expanded')
+        ? setIsOpen(true)
+        : setIsOpen(false);
     }
   }, [isOpen]);
 
-  // const openMenu = () => {
-  //   setIsOpen(true);
-  //   if (ref.current) {
-  //     ref.current.removeAttribute('hidden');
-  //   }
-  // };
-
   const closeMenu = () => {
-    setIsOpen(false);
     if (ref.current) {
       ref.current.setAttribute('hidden', '');
     }
@@ -187,14 +185,13 @@ export const MobileNav: React.FC<Props> = props => {
     <>
       <ReachMenu>
         <MenuButton
+          id="mobile-menu-initiator"
           aria-label={isOpen ? 'Close menu' : 'Open menu'}
           className={classes.navIcon}
-          //onClick={isOpen ? closeMenu : openMenu}
         >
           {isOpen ? <CloseIcon /> : <MenuIcon />}
           Menu
         </MenuButton>
-        {/* Click on the "Menu" text won't open the menu */}
 
         <MenuPopover className={classes.navDropdown} ref={ref}>
           <div className={classes.menuWrapper}>
@@ -257,8 +254,8 @@ export const MobileNav: React.FC<Props> = props => {
             })}
           </div>
         </MenuPopover>
-        <Backdrop className={classes.settingsBackdrop} open={isOpen} />
       </ReachMenu>
+      <div className={classes.settingsBackdrop}></div>
     </>
   );
 };
