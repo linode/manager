@@ -1,4 +1,4 @@
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+// import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Backdrop from '@material-ui/core/Backdrop';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import CloseIcon from '@material-ui/icons/Close';
@@ -169,12 +169,12 @@ export const MobileNav: React.FC<Props> = props => {
     }
   }, [isOpen]);
 
-  const openMenu = () => {
-    setIsOpen(true);
-    if (ref.current) {
-      ref.current.removeAttribute('hidden');
-    }
-  };
+  // const openMenu = () => {
+  //   setIsOpen(true);
+  //   if (ref.current) {
+  //     ref.current.removeAttribute('hidden');
+  //   }
+  // };
 
   const closeMenu = () => {
     setIsOpen(false);
@@ -184,17 +184,18 @@ export const MobileNav: React.FC<Props> = props => {
   };
 
   return (
-    <ReachMenu>
-      <MenuButton
-        aria-label={isOpen ? 'Close menu' : 'Open menu'}
-        className={classes.navIcon}
-        onClick={isOpen ? closeMenu : openMenu}
-      >
-        {isOpen ? <CloseIcon /> : <MenuIcon />}
-        Menu
-      </MenuButton>
-      {/* Click on the "Menu" text won't open the menu */}
-      <ClickAwayListener onClickAway={closeMenu}>
+    <>
+      <ReachMenu>
+        <MenuButton
+          aria-label={isOpen ? 'Close menu' : 'Open menu'}
+          className={classes.navIcon}
+          //onClick={isOpen ? closeMenu : openMenu}
+        >
+          {isOpen ? <CloseIcon /> : <MenuIcon />}
+          Menu
+        </MenuButton>
+        {/* Click on the "Menu" text won't open the menu */}
+
         <MenuPopover className={classes.navDropdown} ref={ref}>
           <div className={classes.menuWrapper}>
             {groups.map((thisGroup: any) => {
@@ -256,9 +257,9 @@ export const MobileNav: React.FC<Props> = props => {
             })}
           </div>
         </MenuPopover>
-      </ClickAwayListener>
-      <Backdrop className={classes.settingsBackdrop} open={isOpen} />
-    </ReachMenu>
+        <Backdrop className={classes.settingsBackdrop} open={isOpen} />
+      </ReachMenu>
+    </>
   );
 };
 
