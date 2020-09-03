@@ -1,3 +1,57 @@
-describe.skip('Add Firewall Drawer', () => {
-  it('should be true', () => expect(true).toBe(true));
+import * as React from 'react';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import AddFirewallDrawer, { CombinedProps } from './AddFirewallDrawer';
+
+const props: CombinedProps = {
+  onClose: jest.fn(),
+  onSubmit: jest.fn().mockResolvedValue({}),
+  title: 'Add a Firewall',
+  open: true
+};
+
+describe('Add Firewall Drawer', () => {
+  it('should render a title', () => {
+    renderWithTheme(<AddFirewallDrawer {...props} />);
+    expect(screen.getByText(/add a firewall/i)).toBeInTheDocument();
+  });
+
+  it('should validate the form on submit', async () => {
+    renderWithTheme(<AddFirewallDrawer {...props} />);
+    userEvent.type(screen.getByLabelText('Label'), 'a');
+    userEvent.click(screen.getByTestId('add-firewall-submit'));
+    const error = await screen.findByText(
+      /Label must be between 3 and 32 characters./i
+    );
+    expect(error).toBeInTheDocument();
+  });
+
+  it('should add default rules for ssh and dns', async () => {
+    renderWithTheme(<AddFirewallDrawer {...props} />);
+    userEvent.click(screen.getByTestId('add-firewall-submit'));
+
+    await waitFor(() =>
+      expect(props.onSubmit).toHaveBeenCalledWith({
+        devices: {
+          linodes: []
+        },
+        label: undefined,
+        rules: {
+          inbound: [
+            {
+              ports: '22',
+              protocol: 'TCP',
+              addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] }
+            },
+            {
+              ports: '53',
+              protocol: 'TCP',
+              addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] }
+            }
+          ]
+        }
+      })
+    );
+  });
 });

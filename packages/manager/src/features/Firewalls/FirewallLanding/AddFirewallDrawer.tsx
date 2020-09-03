@@ -5,7 +5,6 @@ import {
   Firewall
 } from '@linode/api-v4/lib/firewalls';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
@@ -19,15 +18,14 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { predefinedFirewalls } from '../shared';
 
-/* tslint:disable-next-line */
-interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
+export interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
   onClose: () => void;
   onSubmit: (payload: CreateFirewallPayload) => Promise<Firewall>;
 }
 
 export type FormikProps = FormikBag<CombinedProps, CreateFirewallPayload>;
 
-type CombinedProps = Props;
+export type CombinedProps = Props;
 
 const initialValues: CreateFirewallPayload = {
   label: '',
@@ -52,26 +50,27 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
     // Clear drawer error state
     setStatus(undefined);
     setErrors({});
+    const payload = { ...values };
 
-    if (values.label === '') {
-      values.label = undefined;
+    if (payload.label === '') {
+      payload.label = undefined;
     }
 
     if (
-      Array.isArray(values.rules.inbound) &&
-      values.rules.inbound.length === 0
+      Array.isArray(payload.rules.inbound) &&
+      payload.rules.inbound.length === 0
     ) {
-      values.rules.inbound = undefined;
+      payload.rules.inbound = undefined;
     }
 
     if (
-      Array.isArray(values.rules.outbound) &&
-      values.rules.outbound.length === 0
+      Array.isArray(payload.rules.outbound) &&
+      payload.rules.outbound.length === 0
     ) {
-      values.rules.outbound = undefined;
+      payload.rules.outbound = undefined;
     }
 
-    onSubmit(values)
+    onSubmit(payload)
       .then(() => {
         setSubmitting(false);
         onClose();
@@ -153,6 +152,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
                   buttonType="primary"
                   onClick={() => handleSubmit()}
                   data-qa-submit
+                  data-testid="add-firewall-submit"
                   loading={isSubmitting}
                 >
                   Create
@@ -169,4 +169,4 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(AddFirewallDrawer);
+export default React.memo(AddFirewallDrawer);

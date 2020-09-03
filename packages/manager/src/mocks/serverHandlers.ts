@@ -137,6 +137,13 @@ export const handlers = [
     });
     return res(ctx.json(firewall));
   }),
+  rest.post('*/firewalls', (req, res, ctx) => {
+    const payload = req.body as any;
+    const newFirewall = firewallFactory.build({
+      label: payload.label ?? 'mock-firewall'
+    });
+    return res(ctx.json(newFirewall));
+  }),
   rest.get('*/nodebalancers', (req, res, ctx) => {
     const nodeBalancers = nodeBalancerFactory.buildList(10);
     return res(ctx.json(makeResourcePage(nodeBalancers)));
