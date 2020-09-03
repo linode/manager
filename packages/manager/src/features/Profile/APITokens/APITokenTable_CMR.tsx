@@ -30,7 +30,6 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import OrderBy from 'src/components/OrderBy';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
@@ -471,8 +470,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  renderContent(data: Token[]) {
-    const { error, loading } = this.props;
+  renderContent() {
+    const { error, loading, data } = this.props;
 
     if (loading) {
       return <TableRowLoading colSpan={6} oneLine />;
@@ -482,8 +481,10 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     }
 
-    return data.length > 0 ? (
-      this.renderRows(data)
+    const filteredData = data ? data.filter(filterOutLinodeApps) : [];
+
+    return filteredData.length > 0 ? (
+      this.renderRows(filteredData)
     ) : (
       <TableRowEmptyState colSpan={6} />
     );
@@ -540,13 +541,11 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, data, type, title } = this.props;
+    const { classes, type, title } = this.props;
     const { form, dialog, submitting } = this.state;
 
     const basePermsWithLKE = [...basePerms];
     basePermsWithLKE.splice(5, 0, 'lke');
-
-    const filteredData = data ? data.filter(filterOutLinodeApps) : [];
 
     return (
       <React.Fragment>
@@ -576,45 +575,39 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper className={classes.paper}>
-          <OrderBy data={filteredData} orderBy={'label'} order={'asc'}>
-            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-              return (
-                <Table aria-label="List of Personal Access Tokens">
-                  <TableHead>
-                    <TableRow data-qa-table-head>
-                      <TableSortCell
-                        className={classes.labelCell}
-                        active={orderBy === 'label'}
-                        label="label"
-                        direction={order}
-                        handleClick={handleOrderChange}
-                      >
-                        Label
-                      </TableSortCell>
-                      <TableSortCell
-                        active={orderBy === 'created'}
-                        label="created"
-                        direction={order}
-                        handleClick={handleOrderChange}
-                      >
-                        Created
-                      </TableSortCell>
-                      <TableSortCell
-                        active={orderBy === 'expiry'}
-                        label="expiry"
-                        direction={order}
-                        handleClick={handleOrderChange}
-                      >
-                        Expires
-                      </TableSortCell>
-                      <TableCell />
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>{this.renderContent(orderedData)}</TableBody>
-                </Table>
-              );
-            }}
-          </OrderBy>
+          <Table aria-label="List of Personal Access Tokens">
+            <TableHead>
+              <TableRow data-qa-table-head>
+                <TableSortCell
+                  className={classes.labelCell}
+                  active={this.props.orderBy === 'label'}
+                  label="label"
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                >
+                  Label
+                </TableSortCell>
+                <TableSortCell
+                  active={this.props.orderBy === 'created'}
+                  label="created"
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                >
+                  Created
+                </TableSortCell>
+                <TableSortCell
+                  active={this.props.orderBy === 'expiry'}
+                  label="expiry"
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                >
+                  Expires
+                </TableSortCell>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>{this.renderContent()}</TableBody>
+          </Table>
         </Paper>
         <PaginationFooter
           page={this.props.page}
