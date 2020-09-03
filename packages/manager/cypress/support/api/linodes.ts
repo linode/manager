@@ -88,7 +88,7 @@ const makeLinodeCreateReqWithBackupsEnabled = linode => {
         image: 'linode/debian10',
         tags: [testLinodeTag],
         backups_enabled: true,
-        booted: false,
+        booted: true,
         private_ip: true,
         authorized_users: []
       };
