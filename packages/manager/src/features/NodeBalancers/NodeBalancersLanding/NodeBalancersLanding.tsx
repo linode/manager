@@ -132,19 +132,22 @@ const headers: HeaderCell[] = [
     label: 'Backend Status',
     dataColumn: 'status',
     sortable: false,
-    widthPercent: 25
+    widthPercent: 25,
+    hideOnMobile: true
   },
   {
     label: 'Transferred',
     dataColumn: 'transfer:total',
     sortable: true,
-    widthPercent: 15
+    widthPercent: 15,
+    hideOnMobile: true
   },
   {
     label: 'Ports',
     dataColumn: 'updated',
     sortable: true,
-    widthPercent: 25
+    widthPercent: 25,
+    hideOnMobile: true
   },
   {
     label: 'IP Address',
@@ -156,7 +159,8 @@ const headers: HeaderCell[] = [
     label: 'Region',
     dataColumn: 'region',
     sortable: true,
-    widthPercent: 5
+    widthPercent: 5,
+    hideOnMobile: true
   },
   {
     label: 'Action Menu',

@@ -88,7 +88,6 @@ export const transformConfigsForRequest = (
       /* remove the (key: value) pairs that we set to undefined */
       el => el !== undefined,
       {
-        check_path: config.check_path || undefined,
         protocol:
           /*
            * If the provided protocol is "https" and the cert and key are set
@@ -113,7 +112,12 @@ export const transformConfigsForRequest = (
           ? +config.check_attempts
           : undefined,
         port: config.port ? +config.port : undefined,
-        check_body: config.check_body || undefined,
+        check_path: shouldIncludeCheckPath(config)
+          ? config.check_path
+          : undefined,
+        check_body: shouldIncludeCheckBody(config)
+          ? config.check_body
+          : undefined,
         check_passive: config.check_passive /* will be boolean or undefined */,
         cipher_suite: config.cipher_suite || undefined,
         ssl_cert:
@@ -143,4 +147,15 @@ export const transformConfigNodesForRequest = (
   return nodes.map((node: NodeBalancerConfigNodeFields) =>
     nodeForRequest(node)
   );
+};
+
+export const shouldIncludeCheckPath = (config: NodeBalancerConfigFields) => {
+  return (
+    (config.check === 'http' || config.check === 'http_body') &&
+    config.check_path
+  );
+};
+
+export const shouldIncludeCheckBody = (config: NodeBalancerConfigFields) => {
+  return config.check === 'http_body' && config.check_body;
 };

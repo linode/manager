@@ -76,6 +76,7 @@ export interface Props {
   ) => void;
   inlineLabel?: string;
   inTableContext?: boolean;
+  inLandingDetailContext?: boolean;
 }
 
 export type CombinedProps = Props & StateProps;
@@ -146,7 +147,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       linodeStatus,
       openDialog,
       openPowerActionDialog,
-      readOnly
+      readOnly,
+      inLandingDetailContext
     } = props;
 
     const readOnlyProps = readOnly
@@ -264,7 +266,10 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         }
       ];
 
-      if (linodeStatus === 'running') {
+      if (
+        (linodeStatus === 'running' && inTableContext) ||
+        (linodeStatus === 'running' && !inTableContext && matchesSmDown)
+      ) {
         actions.unshift({
           title: 'Reboot',
           disabled:
@@ -286,16 +291,20 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesSmDown) {
+      if (matchesSmDown || inTableContext) {
         actions.unshift({
-          title: 'Details',
+          title: 'Launch Console',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push({
-              pathname: `/linodes/${linodeId}`
-            });
+            sendLinodeActionMenuItemEvent('Launch Console');
+            lishLaunch(linodeId);
             e.preventDefault();
-          }
+            e.stopPropagation();
+          },
+          ...readOnlyProps
         });
+      }
+
+      if (matchesSmDown && inTableContext) {
         actions.unshift({
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -315,16 +324,18 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (inTableContext === true) {
+      if (
+        (matchesSmDown && inLandingDetailContext) ||
+        (matchesSmDown && inTableContext)
+      ) {
         actions.unshift({
-          title: 'Launch Console',
+          title: 'Details',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Launch Console');
-            lishLaunch(linodeId);
+            history.push({
+              pathname: `/linodes/${linodeId}`
+            });
             e.preventDefault();
-            e.stopPropagation();
-          },
-          ...readOnlyProps
+          }
         });
       }
 
