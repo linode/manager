@@ -1,11 +1,8 @@
 import { DateTime } from 'luxon';
 import { equals, pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { Order } from 'src/components/Pagey';
-import withPreferences, {
-  Props as PreferencesProps
-} from 'src/containers/preferences.container';
+import usePreferences from 'src/hooks/usePreferences';
 import usePrevious from 'src/hooks/usePrevious';
 import {
   SortKey,
@@ -38,7 +35,7 @@ interface Props {
   preferenceKey?: SortKey; // If provided, will store/read values from user preferences
 }
 
-export type CombinedProps = Props & PreferencesProps;
+export type CombinedProps = Props;
 
 /**
  * Given a set of UserPreferences (returned from the API),
@@ -126,19 +123,21 @@ export const sortData = (orderBy: string, order: Order) => {
 };
 
 export const OrderBy: React.FC<CombinedProps> = props => {
-  const { preferenceKey, preferences } = props;
+  const { preferences, updatePreferences } = usePreferences();
 
   const initialValues = getInitialValuesFromUserPreferences(
-    preferenceKey ?? '',
-    preferences,
+    props.preferenceKey ?? '',
+    preferences ?? {},
     props.orderBy ?? 'label',
     props.order ?? 'desc'
   );
 
   const [orderBy, setOrderBy] = React.useState<string>(initialValues.orderBy);
   const [order, setOrder] = React.useState<Order>(initialValues.order);
+
+  // Give this initial value in the form of a function so it's run only once.
   const [sortedData, setSortedData] = React.useState<any[]>(() => {
-    return sortData(initialValues.order, initialValues.order)(props.data);
+    return sortData(initialValues.orderBy, initialValues.order)(props.data);
   });
 
   // Re-sort the data when it changes.
@@ -152,26 +151,6 @@ export const OrderBy: React.FC<CombinedProps> = props => {
     setSortedData(newlySortedData);
   }, [props.data, order, orderBy, prevData]);
 
-  // Potentially reset the order and orderBy options when preferences change.
-  // (They might have just been requested when this component first renders.)
-  const prevPreferences = usePrevious(preferences);
-  React.useEffect(() => {
-    if (!preferenceKey || equals(prevPreferences, preferences)) {
-      return;
-    }
-
-    const sortKeys = preferences?.sortKeys?.[preferenceKey];
-    const newOrder = sortKeys?.order;
-    const newOrderBy = sortKeys?.orderBy;
-
-    if (newOrder) {
-      setOrder(newOrder);
-    }
-    if (newOrderBy) {
-      setOrderBy(newOrderBy);
-    }
-  }, [prevPreferences, preferences, preferenceKey]);
-
   const debouncedUpdateUserPreferences = React.useRef(
     debounce(1500, false, (orderBy: string, order: Order) => {
       /**
@@ -179,20 +158,13 @@ export const OrderBy: React.FC<CombinedProps> = props => {
        * order props in user preferences. They will be read the next
        * time this component is loaded.
        */
-      if (preferenceKey) {
-        props
-          .getUserPreferences()
-          .then(preferences => {
-            props.updateUserPreferences({
-              ...preferences,
-              sortKeys: {
-                ...preferences.sortKeys,
-                [preferenceKey]: { order, orderBy }
-              }
-            });
-          })
-          // It doesn't matter if this fails, the value simply won't be preserved.
-          .catch(_ => null);
+      if (props.preferenceKey) {
+        updatePreferences({
+          sortKeys: {
+            ...(preferences?.sortKeys ?? {}),
+            [props.preferenceKey]: { order, orderBy }
+          }
+        });
       }
     })
   ).current;
@@ -220,9 +192,7 @@ export const OrderBy: React.FC<CombinedProps> = props => {
   return <>{props.children(downstreamProps)}</>;
 };
 
-const enhanced = compose<CombinedProps, Props>(withPreferences(), React.memo);
-
-export default enhanced(OrderBy);
+export default React.memo(OrderBy);
 
 const isValidDate = (date: any) => {
   return DateTime.fromISO(date).isValid;
