@@ -43,26 +43,22 @@ export const BucketActionMenu: React.FC<Props> = props => {
 
   const createActions = () => {
     return (): Action[] => {
-      const actions = [
+      return [
         {
           title: 'Details',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             history.push({
               pathname: `/object-storage/buckets/${props.cluster}/${props.label}`
             });
-            e.preventDefault();
           }
         },
         {
           title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             props.onRemove();
-            e.preventDefault();
           }
         }
       ];
-
-      return actions;
     };
   };
 
