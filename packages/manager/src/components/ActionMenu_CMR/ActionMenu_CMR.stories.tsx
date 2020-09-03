@@ -13,27 +13,19 @@ class StoryActionMenu extends React.Component<CombinedProps> {
     return [
       {
         title: 'First Action',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-        }
+        onClick: jest.fn()
       },
       {
         title: 'Action 1',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-        }
+        onClick: jest.fn()
       },
       {
         title: 'Action 3',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-        }
+        onClick: jest.fn()
       },
       {
         title: 'Last Action',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-        }
+        onClick: jest.fn()
       }
     ];
   };
@@ -50,22 +42,16 @@ class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
     return [
       {
         title: 'First Action',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-        }
+        onClick: jest.fn()
       },
       {
         title: 'Another Action',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-        }
+        onClick: jest.fn()
       },
       {
         title: 'Disabled Action',
         disabled: true,
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-        },
+        onClick: jest.fn(),
         tooltip: 'An explanation as to why this item is disabled'
       }
     ];
@@ -83,9 +69,7 @@ class StoryActionMenuWithInlineLabel extends React.Component<CombinedProps> {
     return [
       {
         title: 'Single Action',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-        }
+        onClick: jest.fn()
       }
     ];
   };
