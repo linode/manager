@@ -3,6 +3,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import AddFirewallDrawer, { CombinedProps } from './AddFirewallDrawer';
+import { predefinedFirewalls } from '../shared';
 
 const props: CombinedProps = {
   onClose: jest.fn(),
@@ -39,16 +40,8 @@ describe('Add Firewall Drawer', () => {
         label: undefined,
         rules: {
           inbound: [
-            {
-              ports: '22',
-              protocol: 'TCP',
-              addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] }
-            },
-            {
-              ports: '53',
-              protocol: 'TCP',
-              addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] }
-            }
+            ...predefinedFirewalls.ssh.inbound,
+            ...predefinedFirewalls.dns.inbound
           ]
         }
       })
