@@ -38,7 +38,9 @@ import {
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer, { MODES } from './AccessKeyDrawer';
 import AccessKeyTable from './AccessKeyTable';
+import AccessKeyTable_CMR from './AccessKeyTable_CMR';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
+import useFlags from 'src/hooks/useFlags';
 
 type ClassNames = 'headline';
 
@@ -77,6 +79,8 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     requestSettings,
     ...paginationProps
   } = props;
+
+  const flags = useFlags();
 
   const [mode, setMode] = React.useState<MODES>('creating');
 
@@ -266,6 +270,8 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     revokeKeysDialog.close();
   };
 
+  const KeyTable = flags.cmr ? AccessKeyTable_CMR : AccessKeyTable;
+
   return (
     <div>
       <DocumentTitleSegment segment="Access Keys" />
@@ -278,10 +284,11 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         </Grid>
       </Grid>
 
-      <AccessKeyTable
+      <KeyTable
         {...paginationProps}
         openDrawerForEditing={openDrawerForEditing}
         openRevokeDialog={openRevokeDialog}
+        data-qa-access-key-table
       />
 
       <PaginationFooter
