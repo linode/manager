@@ -180,17 +180,17 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
             important
           />
         )}
+        {generalError && <Notice text={generalError} error={true} />}
         <LinodeSelect
           selectedLinode={selectedLinode}
           region={linodeRegion}
           handleChange={linode => this.changeSelectedLinode(linode.id)}
           linodeError={linodeError}
-          generalError={generalError}
           disabled={disabled || readOnly}
         />
-        {!(linodeError || generalError || linodesError) && (
+        {!(linodeError || linodesError) && (
           <FormHelperText>
-            Only Linodes in this Volume's region are displayed.
+            Only Linodes in this Volume&#39;s region are displayed.
           </FormHelperText>
         )}
 
