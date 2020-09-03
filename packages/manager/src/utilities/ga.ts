@@ -304,15 +304,6 @@ export const generateTimeOfDay = (currentHour: number) => {
   return currentTimeOfDay;
 };
 
-export const sendOneClickNavigationEvent = (
-  whichButton: 'Add New Menu' | 'Primary Nav'
-) => {
-  return sendEvent({
-    category: 'One Click App Navigation',
-    action: `From ${whichButton}`
-  });
-};
-
 export const sendDomainStatusChangeEvent = (action: 'Enable' | 'Disable') => {
   return sendEvent({
     category: 'Domain Status Change',
@@ -336,15 +327,11 @@ export const sendObjectsQueuedForUploadEvent = (numObjects: number) => {
 };
 
 export const sendSearchBarUsedEvent = (
-  category: 'Search Landing' | 'Search Select' | 'Search Auto',
-  searchText: string
+  action: 'Search Landing' | 'Search Select' | 'Search Auto'
 ) => {
-  if (searchText === '') {
-    return;
-  }
   sendEvent({
-    category,
-    action: searchText,
+    category: 'Search',
+    action,
     label: window.location.pathname
   });
 };
