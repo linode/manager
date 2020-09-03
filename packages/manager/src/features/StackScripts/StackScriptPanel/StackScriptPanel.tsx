@@ -18,6 +18,9 @@ import {
 import RenderGuard from 'src/components/RenderGuard';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { MapState } from 'src/store/types';
 import { getQueryParam } from 'src/utilities/queryParams';
 import {
@@ -31,7 +34,7 @@ export interface ExtendedLinode extends Linode {
   subHeadings: string[];
 }
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -39,6 +42,9 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.color.white,
       marginBottom: theme.spacing(3),
       padding: theme.spacing(3)
+    },
+    cmrSpacing: {
+      paddingTop: `0 !important`
     }
   });
 
@@ -53,7 +59,8 @@ interface Props {
 type CombinedProps = Props &
   StateProps &
   WithStyles<ClassNames> &
-  RouteComponentProps<{}>;
+  RouteComponentProps<{}> &
+  FeatureFlagConsumerProps;
 
 class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
@@ -118,12 +125,12 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { classes, queryString } = this.props;
+    const { classes, flags, queryString } = this.props;
 
     const tabValue = getTabValueFromQueryString(queryString, StackScriptTabs);
 
     return (
-      <div className={classes.root}>
+      <div className={`${classes.root} ${flags.cmr && classes.cmrSpacing}`}>
         <Tabs defaultIndex={tabValue} onChange={this.handleTabChange}>
           <TabLinkList tabs={this.createTabs} />
           <TabPanels>
@@ -214,5 +221,6 @@ const styled = withStyles(styles);
 export default compose<CombinedProps, Props>(
   connected,
   RenderGuard,
-  styled
+  styled,
+  withFeatureFlags
 )(SelectStackScriptPanel);
