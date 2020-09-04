@@ -231,8 +231,9 @@ export const MobileNav: React.FC<Props> = props => {
                   </MenuButton>
                   <MenuPopover className={classes.menuPopover} portal={false}>
                     <MenuItems className={classes.menuItemList} key={thisGroup}>
-                      {thisGroup.links.map((thisLink: any) => (
+                      {filteredLinks.map((thisLink: any) => (
                         <MenuLink
+                          data-testid={`menu-item-${thisLink.display}`}
                           key={thisLink.display}
                           as={Link}
                           to={thisLink.href}

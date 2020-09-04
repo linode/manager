@@ -70,35 +70,28 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
 
   const createActions = () => {
     return (): Action[] => {
-      const actions = [
+      return [
         {
           title: 'Details',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             history.push({
               pathname: `/kubernetes/clusters/${clusterId}`
             });
-            e.preventDefault();
           }
         },
         {
           title: 'Download kubeconfig',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            e.stopPropagation();
+          onClick: () => {
             downloadKubeConfig();
           }
         },
         {
           title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             openDialog();
-
-            e.preventDefault();
           }
         }
       ];
-
-      return actions;
     };
   };
 

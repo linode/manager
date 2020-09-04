@@ -73,11 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 30,
     height: 30,
     marginRight: theme.spacing(2),
-    animation: '$fadeIn 150ms linear forwards',
-    [theme.breakpoints.up('md')]: {
-      width: 40,
-      height: 40
-    }
+    animation: '$fadeIn 150ms linear forwards'
   },
   emptyImage: {
     display: 'inline',
