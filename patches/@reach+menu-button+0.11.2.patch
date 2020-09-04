@@ -1,0 +1,22 @@
+diff --git a/node_modules/@reach/menu-button/dist/menu-button.esm.js b/node_modules/@reach/menu-button/dist/menu-button.esm.js
+index 32cc48a..d443e1f 100644
+--- a/node_modules/@reach/menu-button/dist/menu-button.esm.js
++++ b/node_modules/@reach/menu-button/dist/menu-button.esm.js
+@@ -800,9 +800,6 @@ var MenuPopover = /*#__PURE__*/forwardRef(function MenuPopover(_ref8, forwardedR
+   var ref = useForkedRef(popoverRef, forwardedRef);
+   useEffect(function () {
+     function listener(event) {
+-      if (buttonClickedRef.current) {
+-        buttonClickedRef.current = false;
+-      } else {
+         // We on want to close only if focus rests outside the menu
+         if (isExpanded && popoverRef.current) {
+           if (!popoverRef.current.contains(event.target)) {
+@@ -813,7 +810,6 @@ var MenuPopover = /*#__PURE__*/forwardRef(function MenuPopover(_ref8, forwardedR
+               }
+             });
+           }
+-        }
+       }
+     }
+ 
