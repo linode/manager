@@ -44,7 +44,7 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
     const tooltip = readOnly
       ? "You don't have permission to perform this action"
       : undefined;
-    const actions = [
+    return [
       {
         title: 'Boot This Config',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -87,8 +87,6 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
         tooltip
       }
     ];
-
-    return actions;
   };
 
   render() {

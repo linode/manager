@@ -71,16 +71,14 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
     return [
       {
         title: 'Imagize',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
+        onClick: () => {
           props.onImagize();
         },
         ...(readOnly ? disabledProps : {})
       },
       {
         title: 'Clone',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
+        onClick: () => {
           history.push(
             `/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`
           );
@@ -89,8 +87,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
       },
       {
         title: 'Delete',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
+        onClick: () => {
           props.onDelete();
         },
         ...(readOnly ? disabledProps : {})

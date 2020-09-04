@@ -139,6 +139,17 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     return stringify(params);
   };
 
+  const handlePowerAction = () => {
+    const action = linodeStatus === 'running' ? 'Power Off' : 'Power On';
+    sendLinodeActionMenuItemEvent(`${action} Linode`);
+    openPowerActionDialog(
+      `${action}` as BootAction,
+      linodeId,
+      linodeLabel,
+      linodeStatus === 'running' ? configs : []
+    );
+  };
+
   const createLinodeActions = () => {
     const {
       linodeId,
@@ -170,96 +181,79 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       const actions: Action[] = [
         {
           title: 'Settings',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             sendLinodeActionMenuItemEvent('Navigate to Settings Page');
             history.push(`/linodes/${linodeId}/settings`);
-            e.preventDefault();
-            e.stopPropagation();
           }
         },
         linodeBackups.enabled
           ? {
               title: 'View Backups',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
+              onClick: () => {
                 sendLinodeActionMenuItemEvent('Navigate to Backups Page');
                 history.push(`/linodes/${linodeId}/backup`);
-                e.preventDefault();
-                e.stopPropagation();
               }
             }
           : {
               title: 'Enable Backups',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
+              onClick: () => {
                 sendLinodeActionMenuItemEvent('Enable Backups');
                 openDialog('enable_backups', linodeId);
-                e.preventDefault();
-                e.stopPropagation();
               },
               ...readOnlyProps
             },
         {
           title: 'Clone',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             sendLinodeActionMenuItemEvent('Clone');
             history.push({
               pathname: '/linodes/create',
               search: buildQueryStringForLinodeClone()
             });
-            e.preventDefault();
-            e.stopPropagation();
           },
           ...maintenanceProps,
           ...readOnlyProps
         },
         {
           title: 'Resize',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             openDialog('resize', linodeId);
-            e.preventDefault();
-            e.stopPropagation();
           },
           ...maintenanceProps,
           ...readOnlyProps
         },
         {
           title: 'Rebuild',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
             openDialog('rebuild', linodeId);
-            e.preventDefault();
-            e.stopPropagation();
           },
           ...maintenanceProps,
           ...readOnlyProps
         },
         {
           title: 'Rescue',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
             openDialog('rescue', linodeId);
-            e.preventDefault();
-            e.stopPropagation();
           },
           ...maintenanceProps,
           ...readOnlyProps
         },
         {
           title: 'Migrate',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             sendMigrationNavigationEvent('/linodes');
             sendLinodeActionMenuItemEvent('Migrate');
             openDialog('migrate', linodeId);
-            e.preventDefault();
-            e.stopPropagation();
           },
           ...readOnlyProps
         },
         {
           title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             sendLinodeActionMenuItemEvent('Delete Linode');
-            e.preventDefault();
-            e.stopPropagation();
+
             openDialog('delete', linodeId, linodeLabel);
           },
           ...readOnlyProps
@@ -281,10 +275,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             : configsError
             ? 'Could not load configs for this Linode.'
             : undefined,
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             sendLinodeActionMenuItemEvent('Reboot Linode');
-            e.preventDefault();
-            e.stopPropagation();
             openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
           },
           ...readOnlyProps
@@ -294,11 +286,9 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       if (matchesSmDown || inTableContext) {
         actions.unshift({
           title: 'Launch Console',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             sendLinodeActionMenuItemEvent('Launch Console');
             lishLaunch(linodeId);
-            e.preventDefault();
-            e.stopPropagation();
           },
           ...readOnlyProps
         });
@@ -307,19 +297,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       if (matchesSmDown && inTableContext) {
         actions.unshift({
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            const action =
-              linodeStatus === 'running' ? 'Power Off' : 'Power On';
-            sendLinodeActionMenuItemEvent(`${action} Linode`);
-            e.preventDefault();
-            e.stopPropagation();
-            openPowerActionDialog(
-              `${action}` as BootAction,
-              linodeId,
-              linodeLabel,
-              linodeStatus === 'running' ? configs : []
-            );
-          },
+          onClick: handlePowerAction,
           disabled: !['running', 'offline'].includes(linodeStatus)
         });
       }
@@ -330,11 +308,10 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       ) {
         actions.unshift({
           title: 'Details',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             history.push({
               pathname: `/linodes/${linodeId}`
             });
-            e.preventDefault();
           }
         });
       }
@@ -362,18 +339,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       actionText: linodeStatus === 'running' ? 'Power Off' : 'Power On',
       disabled: !['running', 'offline'].includes(linodeStatus),
       className: classes.powerOnOrOff,
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
-        const action = linodeStatus === 'running' ? 'Power Off' : 'Power On';
-        sendLinodeActionMenuItemEvent(`${action} Linode`);
-        e.preventDefault();
-        e.stopPropagation();
-        openPowerActionDialog(
-          `${action}` as BootAction,
-          linodeId,
-          linodeLabel,
-          linodeStatus === 'running' ? configs : []
-        );
-      }
+      onClick: handlePowerAction
     }
   ];
 

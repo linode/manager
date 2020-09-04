@@ -75,8 +75,7 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
     return [
       {
         title: 'Clone',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
+        onClick: () => {
           history.push(
             `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
           );
@@ -85,8 +84,7 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
       },
       {
         title: 'Delete',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
+        onClick: () => {
           handleDelete();
         },
         disabled: readOnly,
@@ -98,15 +96,13 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
   const inlineActions = [
     {
       actionText: 'Boot',
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
+      onClick: () => {
         handleBoot();
       }
     },
     {
       actionText: 'Edit',
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
+      onClick: () => {
         handleEdit();
       }
     }
