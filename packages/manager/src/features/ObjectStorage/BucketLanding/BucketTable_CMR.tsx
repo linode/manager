@@ -1,12 +1,9 @@
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-// import Grid from 'src/components/Grid';
-// import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
-// import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
@@ -73,6 +70,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
         title="Objects"
         entity="Object"
         onAddNew={openBucketDrawer}
+        iconType="bucket"
         docsLink="https://www.linode.com/docs/platform/object-storage/"
       />
       <Paginate data={data} pageSize={25}>
@@ -86,25 +84,6 @@ export const BucketTable: React.FC<CombinedProps> = props => {
         }) => (
           <React.Fragment>
             <div className={classes.root}>
-              {/* <Grid
-              container
-              justify="space-between"
-              alignItems="flex-end"
-              className={classes.objBucketHeader}
-            >
-              <Grid item className="p0">
-                <Typography
-                  variant="h3"
-                  data-qa-title
-                  className={classes.headline}
-                >
-                  Objects
-                </Typography>
-              </Grid>
-              <Grid item className={classes.addNewWrapper}>
-                <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
-              </Grid>
-            </Grid> */}
               <Table removeLabelonMobile aria-label="List of your Buckets">
                 <TableHead>
                   <TableRow>
