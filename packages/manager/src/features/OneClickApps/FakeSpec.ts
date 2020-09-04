@@ -695,7 +695,7 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/openvpn_color.svg'
   },
   {
-    name: 'Minecraft - Java Edition',
+    name: 'Minecraft: Java Edition',
     description: `With over 100 million users around the world, Minecraft is the most popular
       online game of all time. Less of a game and more of a lifestyle choice, you
       and other players are free to build and explore in a 3D generated world made
