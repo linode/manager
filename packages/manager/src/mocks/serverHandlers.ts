@@ -29,7 +29,9 @@ import {
   volumeFactory,
   accountTransferFactory,
   eventFactory,
-  tagFactory
+  tagFactory,
+  nodeBalancerConfigFactory,
+  nodeBalancerConfigNodeFactory
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -148,6 +150,27 @@ export const handlers = [
     const nodeBalancers = nodeBalancerFactory.buildList(10);
     return res(ctx.json(makeResourcePage(nodeBalancers)));
   }),
+  rest.get('*/nodebalancers/:nodeBalancerID', (req, res, ctx) => {
+    const nodeBalancer = nodeBalancerFactory.build({
+      id: req.params.nodeBalancerID
+    });
+    return res(ctx.json(nodeBalancer));
+  }),
+  rest.get('*/nodebalancers/:nodeBalancerID/configs', (req, res, ctx) => {
+    const configs = nodeBalancerConfigFactory.buildList(2, {
+      nodebalancer_id: req.params.nodeBalancerID
+    });
+    return res(ctx.json(makeResourcePage(configs)));
+  }),
+  rest.get(
+    '*/nodebalancers/:nodeBalancerID/configs/:configID/nodes',
+    (req, res, ctx) => {
+      const configs = nodeBalancerConfigNodeFactory.buildList(2, {
+        nodebalancer_id: req.params.nodeBalancerID
+      });
+      return res(ctx.json(makeResourcePage(configs)));
+    }
+  ),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(25);
     return res(ctx.json(makeResourcePage(domains)));

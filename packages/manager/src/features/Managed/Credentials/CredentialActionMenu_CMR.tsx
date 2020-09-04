@@ -39,14 +39,12 @@ const CredentialActionMenu: React.FC<CombinedProps> = props => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const onClickForEdit = (e: React.MouseEvent<HTMLElement>) => {
+  const onClickForEdit = () => {
     openForEdit(credentialID);
-    e.preventDefault();
   };
 
-  const onClickForDelete = (e: React.MouseEvent<HTMLElement>) => {
+  const onClickForDelete = () => {
     openDialog(credentialID, label);
-    e.preventDefault();
   };
 
   const actions: Action[] = [

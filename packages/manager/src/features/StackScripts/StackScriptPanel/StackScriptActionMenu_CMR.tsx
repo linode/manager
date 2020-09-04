@@ -6,15 +6,15 @@ import { compose } from 'recompose';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
-import withProfile from 'src/containers/profile.container';
-
-import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 import {
   makeStyles,
   Theme,
   useTheme,
   useMediaQuery
 } from 'src/components/core/styles';
+import withProfile from 'src/containers/profile.container';
+
+import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -55,6 +55,7 @@ interface Props {
   // /LandingPanel that uses different values for categories that we shouldn't
   // change until we're actually using it.
   category: StackScriptCategory | string;
+  isHeader?: boolean;
 }
 
 interface ProfileProps {
@@ -141,6 +142,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       return actions;
     };
   };
+
   return (
     <div className={classes.stackScriptActionsWrapper}>
       <Hidden smDown>
@@ -160,7 +162,8 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
           <button
             className={classNames({
               [classes.button]: true,
-              [classes.buttonCommunity]: props.category === 'community'
+              [classes.buttonCommunity]:
+                props.category === 'community' && props.isHeader === true
             })}
             onClick={() => {
               history.push(
@@ -175,7 +178,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       </Hidden>
 
       {/* Hacky way to only display the action menu button on smaller screens for community StackScripts */}
-      {category === 'community' ? (
+      {category === 'community' || isPublic ? (
         <Hidden mdUp>
           <ActionMenu
             createActions={createActions()}

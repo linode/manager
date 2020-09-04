@@ -17,8 +17,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(2),
     '& + div': {
       padding: 0,
-      '& div': {
-        padding: 0
+      '& .MuiPaper-root': {
+        padding: 0,
+        '& > div': {
+          padding: 0
+        },
+        '& .MuiTableCell-head': {
+          top: theme.spacing(11)
+        }
       },
       '& .notice': {
         padding: theme.spacing(2)
