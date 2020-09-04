@@ -228,7 +228,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                   <React.Fragment>
                     <Grid container>
                       <Grid item xs={12}>
-                        <Table isResponsive={false} aria-label="List of Disks">
+                        <Table aria-label="List of Disks">
                           <TableHead>
                             <TableRow>
                               <TableSortCell

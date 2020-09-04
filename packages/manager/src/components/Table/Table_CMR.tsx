@@ -74,7 +74,6 @@ export interface Props extends TableProps {
   noOverflow?: boolean;
   tableClass?: string;
   border?: boolean;
-  isResponsive?: boolean; // back-door for tables that don't need to be responsive
   spacingTop?: 0 | 8 | 16 | 24;
   spacingBottom?: 0 | 8 | 16 | 24;
   stickyHeader?: boolean;
