@@ -45,15 +45,13 @@ export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
       const actions = [
         {
           title: 'Settings',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             history.push(`/nodebalancers/${nodeBalancerId}/settings`);
-            e.preventDefault();
           }
         },
         {
           title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             toggleDialog(nodeBalancerId, label);
           }
         }

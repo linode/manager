@@ -41,16 +41,14 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
   const inlineActions = [
     {
       actionText: 'Details',
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
+      onClick: () => {
         onEdit(label, description ?? ' ', id);
-        e.preventDefault();
       }
     },
     {
       actionText: 'Deploy New Linode',
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
+      onClick: () => {
         onDeploy(id);
-        e.preventDefault();
       }
     }
   ];
@@ -59,16 +57,14 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
     const actions: Action[] = [
       {
         title: 'Restore to Existing Linode',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
+        onClick: () => {
           onRestore(id);
-          e.preventDefault();
         }
       },
       {
         title: 'Delete',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
+        onClick: () => {
           onDelete(label, id);
-          e.preventDefault();
         }
       }
     ];
@@ -77,16 +73,14 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
       actions.unshift(
         {
           title: 'Details',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             onEdit(label, description ?? ' ', id);
-            e.preventDefault();
           }
         },
         {
           title: 'Deploy New Linode',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             onDeploy(id);
-            e.preventDefault();
           }
         }
       );
