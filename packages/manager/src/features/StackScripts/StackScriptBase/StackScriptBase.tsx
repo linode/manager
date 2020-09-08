@@ -477,8 +477,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         ? getQueryParam(this.props.location.search, 'query')
         : undefined;
 
-      const _Table = this.props.flags.cmr ? Table_CMR : Table;
-
       return (
         <React.Fragment>
           {fieldError && fieldError.reason && (
@@ -538,39 +536,55 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   defaultValue={query}
                 />
               </div>
-              <_Table
-                aria-label="List of StackScripts"
-                rowCount={listOfStackScripts.length}
-                colCount={isSelecting ? 1 : 4}
-                noOverflow={true}
-                tableClass={classes.table}
-                removeLabelonMobile={!isSelecting}
-                border
-                stickyHeader
-              >
-                {this.props.flags.cmr ? (
+              {this.props.flags.cmr ? (
+                <Table_CMR
+                  aria-label="List of StackScripts"
+                  rowCount={listOfStackScripts.length}
+                  colCount={isSelecting ? 1 : 4}
+                  noOverflow={true}
+                  tableClass={classes.table}
+                  border
+                  stickyHeader
+                >
                   <StackScriptTableHead_CMR
                     handleClickTableHeader={this.handleClickTableHeader}
                     sortOrder={sortOrder}
                     currentFilterType={currentFilterType}
                     isSelecting={isSelecting}
                   />
-                ) : (
+                  <Component
+                    {...this.props}
+                    {...this.state}
+                    getDataAtPage={this.getDataAtPage}
+                    getNext={this.getNext}
+                  />
+                </Table_CMR>
+              ) : (
+                <Table
+                  aria-label="List of StackScripts"
+                  rowCount={listOfStackScripts.length}
+                  colCount={isSelecting ? 1 : 4}
+                  noOverflow={true}
+                  tableClass={classes.table}
+                  removeLabelonMobile={!isSelecting}
+                  border
+                  stickyHeader
+                >
                   <StackScriptTableHead
                     handleClickTableHeader={this.handleClickTableHeader}
                     sortOrder={sortOrder}
                     currentFilterType={currentFilterType}
                     isSelecting={isSelecting}
                   />
-                )}
+                  <Component
+                    {...this.props}
+                    {...this.state}
+                    getDataAtPage={this.getDataAtPage}
+                    getNext={this.getNext}
+                  />
+                </Table>
+              )}
 
-                <Component
-                  {...this.props}
-                  {...this.state}
-                  getDataAtPage={this.getDataAtPage}
-                  getNext={this.getNext}
-                />
-              </_Table>
               {/*
                * show loading indicator if we're getting more stackscripts
                * and if we're not showing the "get more stackscripts" button
