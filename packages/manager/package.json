@@ -150,7 +150,7 @@
     "@types/enzyme": "^3.9.3",
     "@types/he": "^1.1.0",
     "@types/highlight.js": "^9.12.3",
-    "@types/jest": "^24.0.23",
+    "@types/jest": "^26.0.13",
     "@types/jest-axe": "^3.2.1",
     "@types/js-cookie": "^2.2.0",
     "@types/jspdf": "^1.2.2",
