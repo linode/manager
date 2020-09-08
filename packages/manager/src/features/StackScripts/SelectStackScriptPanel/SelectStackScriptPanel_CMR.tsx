@@ -167,7 +167,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         return (
           <React.Fragment>
             <Table
-              isResponsive={false}
               aria-label="List of StackScripts"
               noOverflow={true}
               tableClass={classes.table}

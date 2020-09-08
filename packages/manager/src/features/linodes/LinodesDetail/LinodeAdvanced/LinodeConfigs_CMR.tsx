@@ -461,11 +461,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
               } = this.props;
               return (
                 <React.Fragment>
-                  <Table
-                    isResponsive={false}
-                    aria-label="List of Configurations"
-                    border
-                  >
+                  <Table aria-label="List of Configurations" border>
                     <TableHead>
                       <TableRow>
                         <TableSortCell

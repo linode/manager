@@ -132,7 +132,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
           const allRows = [...sortedUnmodifiedRows, ...modifiedRows];
 
           return (
-            <Table isResponsive={false}>
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableSortCell

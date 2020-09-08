@@ -539,7 +539,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                 />
               </div>
               <_Table
-                isResponsive={!isSelecting}
                 aria-label="List of StackScripts"
                 rowCount={listOfStackScripts.length}
                 colCount={isSelecting ? 1 : 4}
