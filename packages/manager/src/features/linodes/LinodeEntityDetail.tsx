@@ -572,7 +572,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
               </Grid>
 
               <Grid item className={classes.iconTextOuter}>
-                <Typography>{gbRAM} RAM</Typography>
+                <Typography>{gbRAM} GB RAM</Typography>
               </Grid>
             </Grid>
           </Grid>
