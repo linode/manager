@@ -266,7 +266,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       <Typography variant="body1" className={classes.copy}>
         Firewall rules act as an allowlist, permitting only network traffic that
         matches the rules&apos; parameters to pass through. If there are no
-        outbound rules set, all traffic will be permitted.
+        outbound rules set, all outbound traffic will be permitted.
       </Typography>
 
       {generalErrors?.length === 1 && (
