@@ -152,7 +152,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
       });
       return;
     }
-    sendSearchBarUsedEvent('Search Select');
+    sendSearchBarUsedEvent();
     props.history.push(item.data.path);
   };
 

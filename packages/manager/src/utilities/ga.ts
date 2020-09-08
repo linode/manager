@@ -326,12 +326,10 @@ export const sendObjectsQueuedForUploadEvent = (numObjects: number) => {
   });
 };
 
-export const sendSearchBarUsedEvent = (
-  action: 'Search Landing' | 'Search Select' | 'Search Auto'
-) => {
+export const sendSearchBarUsedEvent = () => {
   sendEvent({
     category: 'Search',
-    action,
+    action: 'Search Select',
     label: window.location.pathname
   });
 };
