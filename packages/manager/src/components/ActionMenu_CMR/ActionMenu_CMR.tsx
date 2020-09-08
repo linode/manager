@@ -3,8 +3,8 @@ import KebabIcon from 'src/assets/icons/kebab.svg';
 import {
   Menu,
   MenuButton,
+  MenuItem,
   MenuItems,
-  MenuLink,
   MenuPopover
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
@@ -17,7 +17,7 @@ export interface Action {
   title: string;
   disabled?: boolean;
   tooltip?: string;
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  onClick: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -164,17 +164,16 @@ const ActionMenu: React.FC<CombinedProps> = props => {
         <MenuPopover className={classes.popover} position={positionRight}>
           <MenuItems className={classes.itemsOuter}>
             {(actions as Action[]).map((a, idx) => (
-              <MenuLink
+              <MenuItem
                 key={idx}
                 className={classNames({
                   [classes.item]: true,
                   [classes.disabled]: a.disabled
                 })}
-                onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                onSelect={() => {
                   if (!a.disabled) {
-                    return a.onClick(e);
+                    return a.onClick();
                   }
-                  e.preventDefault();
                 }}
                 data-qa-action-menu-item={a.title}
                 disabled={a.disabled}
@@ -188,7 +187,7 @@ const ActionMenu: React.FC<CombinedProps> = props => {
                     className={classes.tooltip}
                   />
                 )}
-              </MenuLink>
+              </MenuItem>
             ))}
           </MenuItems>
         </MenuPopover>
