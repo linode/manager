@@ -227,7 +227,7 @@
     "fs-extra": "^8.0.1",
     "html-webpack-plugin": "^4.3.0",
     "inquirer": "^6.2.0",
-    "jest": "~26.4.0",
+    "jest": "~26.4.2",
     "jest-axe": "^3.3.0",
     "jest-junit": "^10.0.0",
     "jest-sonar-reporter": "^2.0.0",
