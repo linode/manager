@@ -32,8 +32,6 @@ import { openForCreating as openDomainDrawerForCreating } from 'src/store/domain
 import { MapState } from 'src/store/types';
 import AddNewMenuItem from './AddNewMenuItem';
 
-import { sendOneClickNavigationEvent } from 'src/utilities/ga';
-
 type CSSClasses =
   | 'wrapper'
   | 'button'
@@ -206,9 +204,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
               <MenuLink
                 as={Link}
                 to="/linodes/create?type=One-Click"
-                onClick={() => {
-                  sendOneClickNavigationEvent('Add New Menu');
-                }}
                 className={classes.menuItemLink}
               >
                 <AddNewMenuItem
