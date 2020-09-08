@@ -4,8 +4,11 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import TableCell_PreCMR from 'src/components/TableCell';
+import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
+import TableRow_PreCMR from 'src/components/TableRow';
+import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
+import { useFlags } from 'src/hooks/useFlags';
 
 // Keep this for when we display URL on hover
 // import { generateObjectUrl } from '../utilities';
@@ -39,9 +42,14 @@ const FolderTableRow: React.FC<Props> = props => {
 
   const classes = useStyles();
 
+  const flags = useFlags();
+
   const handleClick = () => {
     history.push({ search: `?prefix=${folderName}` });
   };
+
+  const TableRow = flags.cmr ? TableRow_CMR : TableRow_PreCMR;
+  const TableCell = flags.cmr ? TableCell_CMR : TableCell_PreCMR;
 
   return (
     <TableRow
