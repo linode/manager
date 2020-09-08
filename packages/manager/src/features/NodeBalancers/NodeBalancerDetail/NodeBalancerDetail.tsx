@@ -248,7 +248,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   render() {
     const matches = (pathName: string) =>
       Boolean(matchPath(this.props.location.pathname, { path: pathName }));
-    const { error, loading, location } = this.props;
+    const { error, loading } = this.props;
     const { nodeBalancer } = this.state;
 
     /** Loading State */
@@ -286,7 +286,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           <Grid container justify="space-between">
             <Grid item>
               <Breadcrumb
-                pathname={location.pathname}
+                pathname={`/NodeBalancers/${nodeBalancerLabel}`}
                 firstAndLastOnly
                 onEditHandlers={{
                   editableTextTitle: nodeBalancerLabel,
