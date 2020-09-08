@@ -1,14 +1,8 @@
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CopyTooltip from 'src/components/CopyTooltip';
-import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import Grid from 'src/components/Grid';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -20,52 +14,65 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import AccessKeyMenu from './AccessKeyMenu_CMR';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 
-type ClassNames = 'root' | 'headline' | 'paper' | 'labelCell' | 'copyIcon';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    headline: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    backgroundColor: theme.color.white
+  },
+  accessKeyHeader: {
+    margin: 0,
+    width: '100%'
+  },
+  headline: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    marginLeft: 15,
+    lineHeight: '1.5rem'
+  },
+  addNewWrapper: {
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
+      padding: 5
     },
-    paper: {
-      marginBottom: theme.spacing(2)
-    },
-    labelCell: {
-      width: '48%'
-    },
-    copyIcon: {
-      '& svg': {
-        top: 1,
-        width: 12,
-        height: 12
-      },
-      marginLeft: theme.spacing(1)
+    '&.MuiGrid-item': {
+      padding: 5
     }
-  });
+  },
+  labelCell: {
+    width: '48%'
+  },
+  copyIcon: {
+    '& svg': {
+      top: 1,
+      width: 12,
+      height: 12
+    },
+    marginLeft: theme.spacing(1)
+  }
+}));
 
 interface Props {
   isRestrictedUser: boolean;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
   openDrawerForEditing: (objectStorageKey: ObjectStorageKey) => void;
+  openDrawerForCreating: () => void;
 }
 
-export type CombinedProps = Props &
-  WithStyles<ClassNames> &
-  PaginationProps<ObjectStorageKey>;
+export type CombinedProps = Props & PaginationProps<ObjectStorageKey>;
 
 export const AccessKeyTable: React.FC<CombinedProps> = props => {
   const {
-    classes,
     data,
     loading,
     error,
     isRestrictedUser,
     openRevokeDialog,
-    openDrawerForEditing
+    openDrawerForEditing,
+    openDrawerForCreating
   } = props;
+
+  const classes = useStyles();
 
   const renderContent = () => {
     if (isRestrictedUser) {
@@ -122,37 +129,46 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <React.Fragment>
-      <Paper className={classes.paper}>
-        <Table
-          aria-label="List of Object Storage Access Keys"
-          rowCount={data && data.length}
-          colCount={2}
-        >
-          <TableHead>
-            <TableRow data-qa-table-head>
-              <TableCell className={classes.labelCell} data-qa-header-label>
-                Label
-              </TableCell>
-              <TableCell className={classes.labelCell} data-qa-header-key>
-                Access Key
-              </TableCell>
-              {/* empty cell for kebab menu */}
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderContent()}</TableBody>
-        </Table>
-      </Paper>
-    </React.Fragment>
+    <div className={classes.root}>
+      <Grid
+        container
+        justify="space-between"
+        alignItems="flex-end"
+        className={classes.accessKeyHeader}
+      >
+        <Grid item className="p0">
+          <Typography variant="h3" data-qa-title className={classes.headline}>
+            Access Keys
+          </Typography>
+        </Grid>
+        <Grid item className={classes.addNewWrapper}>
+          <AddNewLink
+            onClick={openDrawerForCreating}
+            label="Add an Access Key..."
+          />
+        </Grid>
+      </Grid>
+      <Table
+        aria-label="List of Object Storage Access Keys"
+        rowCount={data && data.length}
+        colCount={2}
+      >
+        <TableHead>
+          <TableRow data-qa-table-head>
+            <TableCell className={classes.labelCell} data-qa-header-label>
+              Label
+            </TableCell>
+            <TableCell className={classes.labelCell} data-qa-header-key>
+              Access Key
+            </TableCell>
+            {/* empty cell for kebab menu */}
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderContent()}</TableBody>
+      </Table>
+    </div>
   );
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<
-  CombinedProps,
-  Props & PaginationProps<ObjectStorageKey>
->(styled);
-
-export default enhanced(AccessKeyTable);
+export default AccessKeyTable;
