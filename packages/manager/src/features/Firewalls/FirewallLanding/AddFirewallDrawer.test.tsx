@@ -1,48 +1,50 @@
-import { firewallRulesFactory } from 'src/factories/firewalls';
+import * as React from 'react';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import AddFirewallDrawer, { CombinedProps } from './AddFirewallDrawer';
+import { predefinedFirewalls } from '../shared';
 
-import { mergeRules } from './AddFirewallDrawer';
-
-const rule1 = firewallRulesFactory.build();
-const rule2 = firewallRulesFactory.build();
-
-const sampleRulesMap = {
-  a: rule1,
-  b: rule2
-} as any;
-
-const makeItems = (items: string[]) => {
-  return items.map(thisItem => ({
-    label: thisItem,
-    value: thisItem
-  }));
+const props: CombinedProps = {
+  onClose: jest.fn(),
+  onSubmit: jest.fn().mockResolvedValue({}),
+  title: 'Add a Firewall',
+  open: true
 };
 
 describe('Add Firewall Drawer', () => {
-  describe('mergeRules helper function', () => {
-    it('should return an empty object if no rule sets are provided', () => {
-      expect(mergeRules([], sampleRulesMap)).toEqual({});
-    });
+  it('should render a title', () => {
+    renderWithTheme(<AddFirewallDrawer {...props} />);
+    expect(screen.getByText(/add a firewall/i)).toBeInTheDocument();
+  });
 
-    it('should return an empty object if none of the keys match the provided rules map', () => {
-      expect(mergeRules(makeItems(['d', 'e', 'f']), sampleRulesMap)).toEqual(
-        {}
-      );
-    });
+  it('should validate the form on submit', async () => {
+    renderWithTheme(<AddFirewallDrawer {...props} />);
+    userEvent.type(screen.getByLabelText('Label'), 'a');
+    userEvent.click(screen.getByTestId('add-firewall-submit'));
+    const error = await screen.findByText(
+      /Label must be between 3 and 32 characters./i
+    );
+    expect(error).toBeInTheDocument();
+  });
 
-    it('should return the full rule set for a single matched selected rule', () => {
-      expect(mergeRules(makeItems(['a']), sampleRulesMap)).toEqual(rule1);
-    });
+  it('should add default rules for ssh and dns', async () => {
+    renderWithTheme(<AddFirewallDrawer {...props} />);
+    userEvent.click(screen.getByTestId('add-firewall-submit'));
 
-    it('should merge multiple matching rulesets', () => {
-      const rules = mergeRules(makeItems(['a', 'b']), sampleRulesMap);
-      expect(rules).toHaveProperty('inbound', [
-        ...rule1.inbound,
-        ...rule2.inbound
-      ]);
-      expect(rules).toHaveProperty('outbound', [
-        ...rule1.outbound,
-        ...rule2.outbound
-      ]);
-    });
+    await waitFor(() =>
+      expect(props.onSubmit).toHaveBeenCalledWith({
+        devices: {
+          linodes: []
+        },
+        label: undefined,
+        rules: {
+          inbound: [
+            ...predefinedFirewalls.ssh.inbound,
+            ...predefinedFirewalls.dns.inbound
+          ]
+        }
+      })
+    );
   });
 });
