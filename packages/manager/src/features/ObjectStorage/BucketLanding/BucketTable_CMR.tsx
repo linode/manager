@@ -67,8 +67,8 @@ export const BucketTable: React.FC<CombinedProps> = props => {
   return (
     <>
       <LandingHeader
-        title="Objects"
-        entity="Object"
+        title="Buckets"
+        entity="Bucket"
         onAddNew={openBucketDrawer}
         iconType="bucket"
         docsLink="https://www.linode.com/docs/platform/object-storage/"
