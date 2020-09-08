@@ -335,9 +335,9 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/lemp_color.svg'
   },
   {
-    name: 'MySQL',
-    description: ``,
-    summary: `MySQL is a popular open source database management system used for web and server applications.`,
+    name: 'MySQL/MariaDB',
+    description: `MySQL, or MariaDB for Linux distributions, is primarily used for web and server applications, including as a component of the industry-standard LAMP and LEMP stacks.`,
+    summary: `World's most popular open source database.`,
     related_info: [
       {
         title: 'https://www.mysql.com/',
