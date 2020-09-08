@@ -38,6 +38,7 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -577,9 +578,31 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           <Table aria-label="List of Personal Access Tokens">
             <TableHead>
               <TableRow data-qa-table-head>
-                <TableCell className={classes.labelCell}>Label</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell>Expires</TableCell>
+                <TableSortCell
+                  className={classes.labelCell}
+                  active={this.props.orderBy === 'label'}
+                  label="label"
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                >
+                  Label
+                </TableSortCell>
+                <TableSortCell
+                  active={this.props.orderBy === 'created'}
+                  label="created"
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                >
+                  Created
+                </TableSortCell>
+                <TableSortCell
+                  active={this.props.orderBy === 'expiry'}
+                  label="expiry"
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                >
+                  Expires
+                </TableSortCell>
                 <TableCell />
               </TableRow>
             </TableHead>

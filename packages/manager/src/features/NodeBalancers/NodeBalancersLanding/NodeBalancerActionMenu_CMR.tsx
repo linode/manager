@@ -4,7 +4,13 @@ import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
@@ -29,34 +35,46 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { nodeBalancerId, history, toggleDialog, label } = props;
 
   const createActions = () => {
     return (): Action[] => {
-      return [
-        {
-          title: 'Configurations',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
-            e.preventDefault();
-          }
-        },
+      const actions = [
         {
           title: 'Settings',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             history.push(`/nodebalancers/${nodeBalancerId}/settings`);
-            e.preventDefault();
           }
         },
         {
           title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             toggleDialog(nodeBalancerId, label);
           }
         }
       ];
+
+      if (matchesSmDown) {
+        actions.unshift(
+          {
+            title: 'Details',
+            onClick: () => {
+              history.push(`/nodebalancers/${nodeBalancerId}/summary`);
+            }
+          },
+          {
+            title: 'Configurations',
+            onClick: () => {
+              history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
+            }
+          }
+        );
+      }
+
+      return actions;
     };
   };
 
@@ -65,21 +83,28 @@ export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
       actionText: 'Details',
       href: `/nodebalancers/${nodeBalancerId}/summary`,
       className: classes.link
+    },
+    {
+      actionText: 'Configurations',
+      href: `/nodebalancers/${nodeBalancerId}/configurations`,
+      className: classes.link
     }
   ];
 
   return (
     <>
-      {inlineActions.map(action => {
-        return (
-          <InlineMenuAction
-            key={action.actionText}
-            actionText={action.actionText}
-            href={action.href}
-            className={action.className}
-          />
-        );
-      })}
+      <Hidden smDown>
+        {inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              href={action.href}
+              className={action.className}
+            />
+          );
+        })}
+      </Hidden>
       <ActionMenu
         className={classes.action}
         createActions={createActions()}

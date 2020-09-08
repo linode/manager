@@ -5,7 +5,13 @@ import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
@@ -80,6 +86,8 @@ export type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const VolumesActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleShowConfig = () => {
     const { onShowConfig, label, filesystemPath } = props;
@@ -123,33 +131,44 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
       const actions = [
         {
           title: 'Resize',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleResize();
           }
         },
         {
           title: 'Clone',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleClone();
           }
         }
       ];
 
+      if (matchesSmDown) {
+        actions.unshift({
+          title: 'Edit',
+          onClick: () => {
+            handleOpenEdit();
+          }
+        });
+        actions.unshift({
+          title: 'Details',
+          onClick: () => {
+            handleShowConfig();
+          }
+        });
+      }
+
       if (!attached && isVolumesLanding) {
         actions.push({
           title: 'Attach',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleAttach();
           }
         });
       } else {
         actions.push({
           title: 'Detach',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleDetach();
           }
         });
@@ -158,8 +177,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
       if (!attached || poweredOff) {
         actions.push({
           title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleDelete();
           }
         });
@@ -171,24 +189,26 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <div className={classes.inlineActions}>
-      <Button
-        className={classes.button}
-        onClick={e => {
-          e.preventDefault();
-          handleShowConfig();
-        }}
-      >
-        Details
-      </Button>
-      <Button
-        className={classes.button}
-        onClick={e => {
-          e.preventDefault();
-          handleOpenEdit();
-        }}
-      >
-        Edit
-      </Button>
+      <Hidden smDown>
+        <Button
+          className={classes.button}
+          onClick={e => {
+            e.preventDefault();
+            handleShowConfig();
+          }}
+        >
+          Details
+        </Button>
+        <Button
+          className={classes.button}
+          onClick={e => {
+            e.preventDefault();
+            handleOpenEdit();
+          }}
+        >
+          Edit
+        </Button>
+      </Hidden>
       <ActionMenu
         createActions={createActions()}
         ariaLabel={`Action menu for Volume ${props.volumeLabel}`}

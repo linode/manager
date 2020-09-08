@@ -1,6 +1,5 @@
 import { FirewallRules, FirewallRuleType } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
-import classnames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -270,19 +269,13 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         }}
       </Prompt>
 
-      <Typography
-        variant="body1"
-        className={classnames({
-          [classes.copy]: true,
-          [classes.cmrSpacing]: flags.cmr
-        })}
-      >
+      {/* <Typography variant="body1" className={classes.copy}>
         Firewall rules act as a blocklist, preventing network traffic that
         doesn&apos;t match the rules&apos; parameters to pass through. If there
         are no outbound rules set, all traffic will be permitted. Please note a
         Firewall requires at least one inbound rule to be valid, otherwise it
         cannot be applied to a Linode.
-      </Typography>
+      </Typography> */}
 
       {generalErrors?.length === 1 && (
         <Notice spacingTop={8} error text={generalErrors[0].reason} />

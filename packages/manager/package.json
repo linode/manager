@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.17.0",
+  "version": "1.18.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -322,7 +322,10 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.test.json"
+        "tsConfig": "tsconfig.test.json",
+        "diagnostics": {
+          "warnOnly": true
+        }
       }
     }
   },
