@@ -20,7 +20,8 @@ describe('ListLinodes', () => {
     controlHeader: '',
     toggleButton: '',
     clearFilters: '',
-    cmrSpacing: ''
+    cmrSpacing: '',
+    cmrCSVlink: ''
   };
 
   it('renders without error', () => {

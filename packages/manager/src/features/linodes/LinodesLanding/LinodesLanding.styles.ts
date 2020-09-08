@@ -17,7 +17,8 @@ type ClassNames =
   | 'chipPending'
   | 'chipOffline'
   | 'clearFilters'
-  | 'cmrSpacing';
+  | 'cmrSpacing'
+  | 'cmrCSVlink';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -80,6 +81,11 @@ const styles = (theme: Theme) =>
       '& > .MuiGrid-item': {
         paddingLeft: 0,
         paddingRight: 0
+      }
+    },
+    cmrCSVlink: {
+      [theme.breakpoints.down('md')]: {
+        marginRight: theme.spacing()
       }
     }
   });

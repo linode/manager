@@ -13,9 +13,11 @@ export const LinodeDashboardContent: React.FC<{}> = _ => {
     return <CircleProgress />;
   }
 
-  // @todo change this logic once there's a no-Linodes view
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <>{linodes.results === 1 ? <SingleLinode /> : <MultipleLinodes />}</>;
+  if (linodes.results === 1) {
+    return <SingleLinode />;
+  } else {
+    return <MultipleLinodes />;
+  }
 };
 
 export default React.memo(LinodeDashboardContent);

@@ -15,7 +15,7 @@ import RegionStatusBanner from 'src/components/RegionStatusBanner';
 
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
-import Footer from 'src/features/Footer';
+import Footer from 'src/features/Footer/Footer_CMR';
 import {
   notificationContext,
   useNotificationContext
