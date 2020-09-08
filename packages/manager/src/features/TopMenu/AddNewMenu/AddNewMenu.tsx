@@ -219,7 +219,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                 className={classes.menuItemLink}
               >
                 <AddNewMenuItem
-                  title="Kubernetes"
+                  title="Kubernetes Cluster"
                   body="Create and manage Kubernetes Clusters for highly available container workloads"
                   ItemIcon={KubernetesIcon}
                 />
