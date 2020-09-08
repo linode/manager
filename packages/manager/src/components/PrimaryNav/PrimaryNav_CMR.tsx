@@ -431,6 +431,7 @@ interface PrimaryNavMenuLinkProps extends MenuLinkProps {
   display: string;
   prefetchRequestFn?: () => void;
   prefetchRequestCondition?: boolean;
+  to: string;
 }
 
 export const PrimaryNavMenuLink: React.FC<PrimaryNavMenuLinkProps> = React.memo(

@@ -211,7 +211,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       height: 20,
       width: 20,
       fill: theme.color.blue,
-      color: `${theme.color.blue} !important`,
+      color: theme.color.blue,
       marginRight: 10
     },
     '& span': {
