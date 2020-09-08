@@ -122,7 +122,9 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
           labelTitle="Object Storage"
           removeCrumbX={1}
         />
-        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
+        {!flags.cmr && (
+          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
+        )}
       </Box>
       <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
         <TabLinkList tabs={tabs} />
