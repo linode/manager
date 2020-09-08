@@ -12,10 +12,11 @@ import withImagesContainer, {
 } from 'src/containers/withImages.container';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import StackScriptPanel from './StackScriptPanel';
+import StackScriptPanel from './StackScriptPanel/StackScriptPanel_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    marginBottom: theme.spacing(3),
     // Temporary fix for the negative padding since it's a part of the LandingHeader component
     '& > .MuiGrid-root > .MuiGrid-root': {
       paddingTop: 8
