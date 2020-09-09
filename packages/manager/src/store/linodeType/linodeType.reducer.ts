@@ -60,6 +60,11 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getLinodeTypeActions.done)) {
     const { result } = action.payload;
 
+    // If the type is already in state, don't do anything.
+    if (state.results.includes(result.id)) {
+      return state;
+    }
+
     const extendedType = extendType(result);
 
     if (action.payload.params.isShadowPlan) {
@@ -68,7 +73,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
     return {
       ...state,
-      // @todo: de-dupe
       entities: [...state.entities, extendedType],
       results: [...state.results, extendedType.id]
     };
