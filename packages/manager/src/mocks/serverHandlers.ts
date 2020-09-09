@@ -80,12 +80,10 @@ export const handlers = [
       ...offlineLinodes,
       ...busyLinodes,
       linodeFactory.build({
-        label: 'shadow-1',
+        label: 'shadow-plan',
         type: 'g6-standard-3-s',
         backups: { enabled: false }
-      }),
-      linodeFactory.build({ label: 'shadow-2', type: 'g6-standard-20-s' }),
-      linodeFactory.build({ label: 'shadow-3', type: 'g6-standard-4-s' })
+      })
     ];
     return res(ctx.json(makeResourcePage(linodes)));
   }),
