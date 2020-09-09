@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 
 export interface UseTypesOptions {
   includeDeprecatedTypes?: boolean;
@@ -11,22 +12,27 @@ export const useTypes = (options?: UseTypesOptions) => {
     (state: ApplicationState) => state.__resources.types
   );
 
+  const finalTypes = maybeFilterTypes(types.entities, options);
+
+  return { types: { ...types, entities: finalTypes } };
+};
+
+export const maybeFilterTypes = (
+  types: ExtendedType[],
+  options?: UseTypesOptions
+) => {
   const includeDeprecatedTypes = options?.includeDeprecatedTypes ?? false;
   const includeShadowPlans = options?.includeShadowPlans ?? false;
 
-  let filteredEntities = [...types.entities];
+  let filteredTypes = [...types];
 
   if (!includeDeprecatedTypes) {
-    filteredEntities = filteredEntities.filter(
-      thisType => !thisType.isDeprecated
-    );
+    filteredTypes = filteredTypes.filter(thisType => !thisType.isDeprecated);
   }
 
   if (!includeShadowPlans) {
-    filteredEntities = filteredEntities.filter(
-      thisType => !thisType.isShadowPlan
-    );
+    filteredTypes = filteredTypes.filter(thisType => !thisType.isShadowPlan);
   }
 
-  return { types: { ...types, entities: filteredEntities } };
+  return filteredTypes;
 };
