@@ -28,6 +28,7 @@ import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { MapState } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
+import { GetLinodeTypeParams } from 'src/store/linodeType/linodeType.actions';
 
 type CombinedProps = DispatchProps & StateProps;
 
@@ -108,9 +109,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     }
   };
 
-  // Some special types aren't returned from /types or /types-legacy. They only available by hitting
-  // /types/:id directly. If there are Linodes with these special types, we have to request each one.
-  ensureAllTypesPresent = () => {
+  // Some special types aren't returned from /types or /types-legacy. They are
+  // only available by hitting /types/:id directly. If there are Linodes with
+  // these special types, we have to request each one.
+  ensureAllTypes = () => {
     const { linodes, types } = this.props;
 
     // The types we already know about (from /types and /types-legacy).
@@ -121,7 +123,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       thisLinode => thisLinode.type
     );
 
-    // The types belonging to a Linode on the account, but which we don't know about.
+    // The difference between these two, i.e. the types we don't know about.
     const missingTypeIds = difference(linodeTypeIds, knownTypeIds);
 
     // For each type we don't know about, request it.
@@ -183,7 +185,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.linodesLastUpdated > 0
     ) {
       this.setState({ hasEnsuredAllTypes: true });
-      this.ensureAllTypesPresent();
+      this.ensureAllTypes();
     }
   }
 
@@ -210,7 +212,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
   linodesLastUpdated: state.__resources.linodes.lastUpdated,
   linodes: Object.values(state.__resources.linodes.itemsById),
   types: state.__resources.types.entities,
-  // typesLoading: state.__resources.types.loading,
   typesLastUpdated: state.__resources.types.lastUpdated
 });
 
@@ -224,10 +225,7 @@ interface DispatchProps {
   requestRegions: () => Promise<Region[]>;
   requestProfile: () => Promise<Profile>;
   markAppAsDoneLoading: () => void;
-  requestLinodeType: (options: {
-    typeId: string;
-    isShadowPlan: boolean;
-  }) => void;
+  requestLinodeType: (params: GetLinodeTypeParams) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (

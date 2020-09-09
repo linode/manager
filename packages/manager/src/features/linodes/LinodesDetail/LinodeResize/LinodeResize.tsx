@@ -321,7 +321,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
           <SelectPlanPanel
             currentPlanHeading={currentPlanHeading}
-            types={this.props.typesData.filter(
+            types={typesData.filter(
               thisType => !thisType.isDeprecated && !thisType.isShadowPlan
             )}
             onSelect={this.handleSelectPlan}

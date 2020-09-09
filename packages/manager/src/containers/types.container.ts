@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { ApplicationState } from 'src/store';
 import { UseTypesOptions, maybeFilterTypes } from 'src/hooks/useTypes';
+
 export interface WithTypesProps {
   typesData: ExtendedType[];
   typesLoading: boolean;
