@@ -5,7 +5,8 @@ const extendTypes = () => {
     return {
       ...type,
       heading: 'test',
-      subHeadings: ['test', 'test'] as [string, string]
+      subHeadings: ['test', 'test'] as [string, string],
+      isDeprecated: false
     };
   });
 };
