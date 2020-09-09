@@ -421,6 +421,10 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsError: error
 }));
 
-const enhanced = compose<CombinedProps, {}>(withRouter, withRegions, withTypes);
+const enhanced = compose<CombinedProps, {}>(
+  withRouter,
+  withRegions,
+  withTypes()
+);
 
 export default enhanced(CreateCluster);

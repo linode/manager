@@ -734,7 +734,7 @@ export default recompose<CombinedProps, {}>(
     linodesError
   })),
   withRegions,
-  withTypes,
+  withTypes(),
   withLinodeActions,
   connected,
   withSnackbar,

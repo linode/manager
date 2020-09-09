@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
-interface UseTypesOptions {
+export interface UseTypesOptions {
   includeDeprecatedTypes?: boolean;
   includeShadowPlans?: boolean;
 }

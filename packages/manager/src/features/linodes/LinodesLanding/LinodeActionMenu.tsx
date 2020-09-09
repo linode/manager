@@ -338,7 +338,7 @@ const withRegions = regionsContainer();
 
 const enhanced = compose<CombinedProps, Props>(
   connected,
-  withTypes,
+  withTypes(),
   withRegions,
   withRouter
 );

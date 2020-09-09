@@ -27,6 +27,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel, {
   ExtendedType
@@ -155,10 +156,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   };
 
   openConfirmationModal = () => {
-    const { linodeType, currentTypesData } = this.props;
+    const { linodeType, typesData } = this.props;
     const { selectedId } = this.state;
-    const _current = getLinodeType(currentTypesData, linodeType || 'none');
-    const _target = getLinodeType(currentTypesData, selectedId);
+    const _current = getLinodeType(typesData, linodeType || 'none');
+    const _target = getLinodeType(typesData, selectedId);
     const currentPlan = _current ? _current.label : 'Unknown plan';
     const targetPlan = _target ? _target.label : 'Unknown plan';
     this.setState({
@@ -188,7 +189,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       enqueueSnackbar,
       history,
       updateLinode,
-      currentTypesData
+      typesData
     } = this.props;
     const { selectedId } = this.state;
 
@@ -199,7 +200,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const isSmaller = isSmallerThanCurrentPlan(
       selectedId,
       linodeType || '',
-      currentTypesData
+      typesData
     );
 
     this.setState({
@@ -259,8 +260,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      currentTypesData,
-      deprecatedTypesData,
+      typesData,
       linodeType,
       linodeLabel,
       permissions,
@@ -268,9 +268,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeDisks,
       linodeStatus
     } = this.props;
-    const type = [...currentTypesData, ...deprecatedTypesData].find(
-      t => t.id === linodeType
-    );
+    const type = typesData.find(t => t.id === linodeType);
 
     const hostMaintenance = linodeStatus === 'stopped';
     const unauthorized = permissions === 'read_only';
@@ -291,7 +289,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const isSmaller = isSmallerThanCurrentPlan(
       this.state.selectedId,
       linodeType || '',
-      currentTypesData
+      typesData
     );
 
     return (
@@ -323,7 +321,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
           <SelectPlanPanel
             currentPlanHeading={currentPlanHeading}
-            types={this.props.currentTypesData}
+            types={this.props.typesData.filter(
+              thisType => !thisType.isDeprecated && !thisType.isShadowPlan
+            )}
             onSelect={this.handleSelectPlan}
             selectedID={this.state.selectedId}
             disabled={disabled}
@@ -395,21 +395,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles);
-
-interface WithTypesProps {
-  currentTypesData: ExtendedType[];
-  deprecatedTypesData: ExtendedType[];
-}
-
-const withTypes = connect((state: ApplicationState) => ({
-  currentTypesData: state.__resources.types.entities
-    .filter(eachType => !eachType.isDeprecated && !eachType.isShadowPlan)
-    .map(LinodeResize.extendType),
-
-  deprecatedTypesData: state.__resources.types.entities
-    .filter(eachType => eachType.isDeprecated && !eachType.isShadowPlan)
-    .map(LinodeResize.extendType)
-}));
 
 interface DispatchProps {
   updateLinode: (id: number) => void;
@@ -493,7 +478,7 @@ export const isSmallerThanCurrentPlan = (
 
 export default compose<CombinedProps, {}>(
   linodeContext,
-  withTypes,
+  withTypes({ includeDeprecatedTypes: true, includeShadowPlans: true }),
   styled,
   withSnackbar,
   withRouter,

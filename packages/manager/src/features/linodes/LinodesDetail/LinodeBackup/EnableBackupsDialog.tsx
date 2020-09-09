@@ -27,7 +27,10 @@ export const EnableBackupsDialog: React.FC<Props> = props => {
    * as well as detail, can't rely on parents knowing
    * this information.
    */
-  const { types } = useTypes();
+  const { types } = useTypes({
+    includeShadowPlans: true,
+    includeDeprecatedTypes: true
+  });
   const { linodes } = useLinodes();
   const thisLinode = linodes.itemsById[linodeId];
   const thisLinodeType = types.entities.find(

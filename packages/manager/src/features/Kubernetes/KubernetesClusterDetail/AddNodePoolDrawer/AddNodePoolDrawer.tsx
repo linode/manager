@@ -200,6 +200,6 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withTypes);
+const enhanced = compose<CombinedProps, Props>(withTypes());
 
 export default enhanced(AddNodePoolDrawer);
