@@ -21,6 +21,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -268,6 +269,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
 
   return (
     <div>
+      <DocumentTitleSegment segment="Access Keys" />
       {!flags.cmr && (
         <Grid container justify="flex-end">
           <Grid item>
