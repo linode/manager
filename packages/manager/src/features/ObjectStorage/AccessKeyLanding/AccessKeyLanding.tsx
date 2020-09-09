@@ -73,12 +73,7 @@ type CombinedProps = Props &
   DispatchProps;
 
 export const AccessKeyLanding: React.FC<CombinedProps> = props => {
-  const {
-    classes,
-    object_storage,
-    requestSettings,
-    ...paginationProps
-  } = props;
+  const { object_storage, requestSettings, ...paginationProps } = props;
 
   const flags = useFlags();
 
@@ -275,19 +270,21 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
   return (
     <div>
       <DocumentTitleSegment segment="Access Keys" />
-      <Grid container justify="flex-end">
-        <Grid item>
-          <AddNewLink
-            onClick={openDrawerForCreating}
-            label="Create an Access Key"
-          />
+      {!flags.cmr && (
+        <Grid container justify="flex-end">
+          <Grid item>
+            <AddNewLink
+              onClick={openDrawerForCreating}
+              label="Create an Access Key"
+            />
+          </Grid>
         </Grid>
-      </Grid>
-
+      )}
       <KeyTable
         {...paginationProps}
         openDrawerForEditing={openDrawerForEditing}
         openRevokeDialog={openRevokeDialog}
+        openDrawerForCreating={openDrawerForCreating}
         data-qa-access-key-table
       />
 

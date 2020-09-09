@@ -26,7 +26,6 @@ import Menu from 'src/components/core/Menu';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
-import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import useStyles from './PrimaryNav.styles';
 import SpacingToggle from './SpacingToggle';
@@ -143,10 +142,7 @@ export const PrimaryNav: React.FC<Props> = props => {
         display: 'Marketplace',
         href: '/linodes/create?type=One-Click',
         attr: { 'data-qa-one-click-nav-btn': true },
-        icon: <OCA />,
-        onClick: () => {
-          sendOneClickNavigationEvent('Primary Nav');
-        }
+        icon: <OCA />
       },
       {
         display: 'Longview',
