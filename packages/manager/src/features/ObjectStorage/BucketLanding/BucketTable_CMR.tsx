@@ -84,7 +84,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
         }) => (
           <React.Fragment>
             <div className={classes.root}>
-              <Table removeLabelonMobile aria-label="List of your Buckets">
+              <Table aria-label="List of your Buckets">
                 <TableHead>
                   <TableRow>
                     <TableSortCell

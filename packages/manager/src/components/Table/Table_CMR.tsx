@@ -77,7 +77,6 @@ export interface Props extends TableProps {
   spacingTop?: 0 | 8 | 16 | 24;
   spacingBottom?: 0 | 8 | 16 | 24;
   stickyHeader?: boolean;
-  removeLabelonMobile?: boolean; // only for table instances where we want to hide the cell label for small screens
   tableCaption?: string;
   colCount?: number;
   rowCount?: number;
