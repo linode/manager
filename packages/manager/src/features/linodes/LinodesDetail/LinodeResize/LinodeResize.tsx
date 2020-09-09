@@ -403,11 +403,11 @@ interface WithTypesProps {
 
 const withTypes = connect((state: ApplicationState) => ({
   currentTypesData: state.__resources.types.entities
-    .filter(eachType => eachType.successor === null)
+    .filter(eachType => !eachType.isDeprecated && !eachType.isShadowPlan)
     .map(LinodeResize.extendType),
 
   deprecatedTypesData: state.__resources.types.entities
-    .filter(eachType => eachType.successor !== null)
+    .filter(eachType => eachType.isDeprecated && !eachType.isShadowPlan)
     .map(LinodeResize.extendType)
 }));
 
