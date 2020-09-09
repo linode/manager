@@ -67,6 +67,9 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
     const extendedType = extendType(result);
 
+    // There's no way to tell from the response of /linode/types/:id whether or
+    // not it's one of the "shadow plans", so it's up to the dispatcher of this
+    // action to make the determination.
     if (action.payload.params.isShadowPlan) {
       extendedType.isShadowPlan = true;
     }
