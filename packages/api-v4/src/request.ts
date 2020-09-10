@@ -165,10 +165,7 @@ export const requestGenerator = <T>(...fns: Function[]): Promise<T> => {
       config.validationErrors // All failed requests, client or server errors, should be APIError[]
     );
   }
-  return baseRequest(config).then(response => {
-    console.log(response);
-    return response.data;
-  });
+  return baseRequest(config).then(response => response.data);
 
   /*
    * If in the future, we want to hook into every single

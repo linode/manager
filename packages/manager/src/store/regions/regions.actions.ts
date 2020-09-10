@@ -17,7 +17,7 @@ export const requestRegions: RequestRegionsThunk = () => dispatch => {
   dispatch(regionsRequestActions.started());
   return getRegions()
     .then(regions => {
-      dispatch(regionsRequestActions.done({ result: regions }));
+      dispatch(regionsRequestActions.done({ result: regions.data }));
       return regions;
     })
     .catch(error => {
