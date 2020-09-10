@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   },
   table: {
     '& .statusOther': {
-      animation: '$blink 1.25s linear infinite'
+      animation: '$blink 2s linear infinite'
     }
   }
 }));
