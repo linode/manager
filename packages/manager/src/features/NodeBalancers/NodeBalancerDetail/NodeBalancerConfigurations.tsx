@@ -865,6 +865,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     );
   };
 
+  afterProxyProtocolUpdate = () => () => {
+    return;
+  };
+
   afterHealthCheckTypeUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
       compose(
@@ -967,6 +971,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       checkPathLens: lensTo(['check_path']),
       portLens: lensTo(['port']),
       protocolLens: lensTo(['protocol']),
+      proxyProtocolLens: lensTo(['proxy_protocol']),
       healthCheckTypeLens: lensTo(['check']),
       healthCheckAttemptsLens: lensTo(['check_attempts']),
       healthCheckIntervalLens: lensTo(['check_interval']),
@@ -1021,10 +1026,16 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           port={view(L.portLens, this.state)}
           onPortChange={this.updateState(L.portLens)}
           protocol={view(L.protocolLens, this.state)}
+          proxyProtocol={view(L.proxyProtocolLens, this.state)}
           onProtocolChange={this.updateState(
             L.protocolLens,
             L,
             this.afterProtocolUpdate
+          )}
+          onProxyProtocolChange={this.updateState(
+            L.proxyProtocolLens,
+            L,
+            this.afterProxyProtocolUpdate
           )}
           healthCheckType={view(L.healthCheckTypeLens, this.state)}
           onHealthCheckTypeChange={this.updateState(

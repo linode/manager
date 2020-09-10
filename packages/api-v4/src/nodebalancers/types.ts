@@ -51,7 +51,7 @@ export interface NodeBalancerConfig {
   check_timeout: number;
   check_body: string;
   check_path: string;
-  proxy_protocol: 'none' | 'v1' | 'v2';
+  proxy_protocol: NodeBalancerProxyProtocol;
   check: 'none' | 'connection' | 'http' | 'http_body';
   ssl_key: string;
   stickiness: 'none' | 'table' | 'http_cookie';
@@ -61,6 +61,8 @@ export interface NodeBalancerConfig {
   nodes: NodeBalancerConfigNode[];
   modifyStatus?: 'new';
 }
+
+export type NodeBalancerProxyProtocol = 'none' | 'v1' | 'v2';
 
 export interface NodeBalancerConfigPort {
   configId: number;
