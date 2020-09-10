@@ -8,7 +8,7 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { readableBytes } from 'src/utilities/unitConversions';
-import ObjectActionMenu from './ObjectActionMenu';
+import ObjectActionMenu from './ObjectActionMenu_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   manuallyCreated: {
@@ -28,6 +28,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& g': {
       fill: theme.bg.lightBlue
     }
+  },
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0
   }
 }));
 
@@ -81,7 +87,7 @@ const ObjectTableRow: React.FC<Props> = props => {
       <TableCell noWrap>
         <DateTimeDisplay value={objectLastModified} humanizeCutoff="never" />
       </TableCell>
-      <TableCell>
+      <TableCell className={classes.actionCell}>
         <ObjectActionMenu
           handleClickDownload={handleClickDownload}
           handleClickDelete={handleClickDelete}

@@ -80,13 +80,13 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2)
     },
     nameColumn: {
-      width: '60%'
+      width: '50%'
     },
     sizeColumn: {
-      width: '20%'
+      width: '10%'
     },
     updatedColumn: {
-      width: '20%'
+      width: '15%'
     },
     footer: {
       marginTop: theme.spacing(3),
