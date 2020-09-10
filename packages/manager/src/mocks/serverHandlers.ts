@@ -113,12 +113,12 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(clusters)));
   }),
   rest.get('*/lke/clusters/:clusterId', async (req, res, ctx) => {
-    const id = req.params.clusterId;
+    const id = Number(req.params.clusterId);
     const cluster = kubernetesAPIResponse.build({ id });
     return res(ctx.json(cluster));
   }),
   rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {
-    const pools = nodePoolFactory.buildList(2);
+    const pools = nodePoolFactory.buildList(10);
     nodePoolFactory.resetSequenceNumber();
     return res(ctx.json(makeResourcePage(pools)));
   }),

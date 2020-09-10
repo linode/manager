@@ -36,14 +36,14 @@ export const nodePoolAPIFactory = Factory.Sync.makeFactory<
 >({
   id: Factory.each(id => id),
   count: 3,
-  type: 'g5-standard-1',
+  type: 'g6-standard-1',
   nodes: kubeLinodeFactory.buildList(3)
 });
 
 export const _nodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>({
   id: Factory.each(id => id),
   count: 3,
-  type: 'g5-standard-1',
+  type: 'g6-standard-1',
   totalMonthlyPrice: 1000
 });
 
