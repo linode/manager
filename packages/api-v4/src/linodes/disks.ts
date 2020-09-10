@@ -27,7 +27,7 @@ export const getLinodeDisks = (linodeId: number, params?: any, filter?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
-  ).then(response => response.data);
+  );
 
 /**
  * createLinodeDisk
@@ -44,7 +44,7 @@ export const createLinodeDisk = (
     setURL(`${API_ROOT}/linode/instances/${linodeId}/disks`),
     setMethod('POST'),
     setData(data, CreateLinodeDiskSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * getLinodeDisk
@@ -58,7 +58,7 @@ export const getLinodeDisk = (linodeId: number, diskId: number) =>
   Request<Disk>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * updateLinodeDisk
@@ -77,7 +77,7 @@ export const updateLinodeDisk = (
     setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}`),
     setMethod('PUT'),
     setData(data)
-  ).then(response => response.data);
+  );
 
 /**
  * resizeLinodeDisk
@@ -115,7 +115,7 @@ export const cloneLinodeDisk = (linodeId: number, diskId: number) =>
   Request<Disk>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}/clone`),
     setMethod('POST')
-  ).then(response => response.data);
+  );
 
 /**
  * deleteLinodeDisk
@@ -129,7 +129,7 @@ export const deleteLinodeDisk = (linodeId: number, diskId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}`),
     setMethod('DELETE')
-  ).then(response => response.data);
+  );
 
 /**
  * changeLinodeDiskPassword
@@ -149,4 +149,4 @@ export const changeLinodeDiskPassword = (
     setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}/password`),
     setMethod('POST'),
     setData({ password }, UpdateLinodePasswordSchema)
-  ).then(response => response.data);
+  );

@@ -23,7 +23,7 @@ export const getNodeBalancerConfigs = (nodeBalancerId: number) =>
   Request<Page<NodeBalancerConfig>>(
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * getNodeBalancerConfig
@@ -39,7 +39,7 @@ export const getNodeBalancerConfig = (
   Request<Page<NodeBalancerConfig>>(
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * createNodeBalancerConfig
@@ -61,7 +61,7 @@ export const createNodeBalancerConfig = (
       createNodeBalancerConfigSchema,
       combineConfigNodeAddressAndPort
     )
-  ).then(response => response.data);
+  );
 
 /**
  * updateNodeBalancerConfig
@@ -80,7 +80,7 @@ export const updateNodeBalancerConfig = (
     setMethod('PUT'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
     setData(data, UpdateNodeBalancerConfigSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteNodeBalancerConfig
@@ -97,4 +97,4 @@ export const deleteNodeBalancerConfig = (
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`)
-  ).then(response => response.data);
+  );

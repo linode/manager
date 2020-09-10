@@ -1,9 +1,4 @@
-import Axios, {
-  AxiosError,
-  AxiosPromise,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
+import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ObjectSchema, ValidationError } from 'yup';
 import { APIError } from './types';
 
@@ -163,14 +158,17 @@ const reduceRequestConfig = (...fns: Function[]): RequestConfig =>
   });
 
 /** Generator */
-export const requestGenerator = <T>(...fns: Function[]): AxiosPromise<T> => {
+export const requestGenerator = <T>(...fns: Function[]): Promise<T> => {
   const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
     return Promise.reject(
       config.validationErrors // All failed requests, client or server errors, should be APIError[]
     );
   }
-  return baseRequest(config);
+  return baseRequest(config).then(response => {
+    console.log(response);
+    return response.data;
+  });
 
   /*
    * If in the future, we want to hook into every single

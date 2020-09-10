@@ -20,9 +20,7 @@ import {
  *
  */
 export const getAccountInfo = () => {
-  return Request<Account>(setURL(`${API_ROOT}/account`), setMethod('GET')).then(
-    response => response.data
-  );
+  return Request<Account>(setURL(`${API_ROOT}/account`), setMethod('GET'));
 };
 
 /**
@@ -35,7 +33,7 @@ export const getNetworkUtilization = () =>
   Request<NetworkUtilization>(
     setURL(`${API_ROOT}/account/transfer`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * updateAccountInfo
@@ -48,7 +46,7 @@ export const updateAccountInfo = (data: Partial<Account>) =>
     setURL(`${API_ROOT}/account`),
     setMethod('PUT'),
     setData(data, updateAccountSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * getAccountSettings
@@ -60,7 +58,7 @@ export const getAccountSettings = () =>
   Request<AccountSettings>(
     setURL(`${API_ROOT}/account/settings`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * updateAccountSettings
@@ -73,7 +71,7 @@ export const updateAccountSettings = (data: Partial<AccountSettings>) =>
     setURL(`${API_ROOT}/account/settings`),
     setMethod('PUT'),
     setData(data, UpdateAccountSettingsSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * cancelAccount
@@ -85,5 +83,5 @@ export const cancelAccount = (data: CancelAccountPayload) => {
     setURL(`${API_ROOT}/account/cancel`),
     setMethod('POST'),
     setData(data)
-  ).then(response => response.data);
+  );
 };

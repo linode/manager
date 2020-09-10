@@ -27,7 +27,7 @@ export const getIPs = (params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
-  ).then(response => response.data);
+  );
 
 /**
  * Returns information about a single IP Address on your Account.
@@ -38,7 +38,7 @@ export const getIP = (address: string) =>
   Request<IPAddress>(
     setURL(`${API_ROOT}/networking/ips/${address}`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * Sets RDNS on an IP Address. Forward DNS must already be set up for reverse
@@ -55,7 +55,7 @@ export const updateIP = (address: string, rdns: string | null = null) =>
     setURL(`${API_ROOT}/networking/ips/${address}`),
     setData({ rdns }, updateIPSchema),
     setMethod('PUT')
-  ).then(response => response.data);
+  );
 
 /**
  * Allocates a new IPv4 Address on your Account. The Linode must be configured
@@ -75,7 +75,7 @@ export const allocateIp = (payload: any) =>
     setURL(`${API_ROOT}/networking/ips/`),
     setData(payload, allocateIPSchema),
     setMethod('POST')
-  ).then(response => response.data);
+  );
 
 /**
  * Assign multiple IPs to multiple Linodes in one Region. This allows swapping,
@@ -126,7 +126,7 @@ export const getIPv6Pools = (params?: any) =>
     setURL(`${API_ROOT}/networking/ipv6/pools`),
     setMethod('GET'),
     setParams(params)
-  ).then(response => response.data);
+  );
 
 /**
  * Displays the IPv6 ranges on your Account.
@@ -137,4 +137,4 @@ export const getIPv6Ranges = (params?: any) =>
     setURL(`${API_ROOT}/networking/ipv6/ranges`),
     setMethod('GET'),
     setParams(params)
-  ).then(response => response.data);
+  );
