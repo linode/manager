@@ -7,7 +7,7 @@ import {
   imageFactory,
   firewallFactory,
   firewallDeviceFactory,
-  kubernetesClusterFactory,
+  kubernetesAPIResponse,
   kubeEndpointFactory,
   invoiceFactory,
   invoiceItemFactory,
@@ -109,16 +109,17 @@ export const handlers = [
     return res(ctx.json(linode));
   }),
   rest.get('*/lke/clusters', async (req, res, ctx) => {
-    const clusters = kubernetesClusterFactory.buildList(10);
+    const clusters = kubernetesAPIResponse.buildList(10);
     return res(ctx.json(makeResourcePage(clusters)));
   }),
   rest.get('*/lke/clusters/:clusterId', async (req, res, ctx) => {
     const id = req.params.clusterId;
-    const cluster = kubernetesClusterFactory.build({ id });
+    const cluster = kubernetesAPIResponse.build({ id });
     return res(ctx.json(cluster));
   }),
   rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {
     const pools = nodePoolFactory.buildList(2);
+    nodePoolFactory.resetSequenceNumber();
     return res(ctx.json(makeResourcePage(pools)));
   }),
   rest.get('*/lke/clusters/*/api-endpoints', async (req, res, ctx) => {

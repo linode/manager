@@ -1,6 +1,8 @@
 import * as Factory from 'factory.ts';
 import {
+  KubernetesCluster,
   KubernetesEndpointResponse,
+  KubeNodePoolResponse,
   PoolNodeResponse
 } from '@linode/api-v4/lib/kubernetes/types';
 import {
@@ -27,6 +29,15 @@ export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
   id: Factory.each(id => `id-${id}`),
   instance_id: Factory.each(id => id),
   status: 'ready'
+});
+
+export const nodePoolAPIFactory = Factory.Sync.makeFactory<
+  KubeNodePoolResponse
+>({
+  id: Factory.each(id => id),
+  count: 3,
+  type: 'g5-standard-1',
+  nodes: kubeLinodeFactory.buildList(3)
 });
 
 export const _nodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>({
@@ -70,4 +81,17 @@ export const kubeEndpointFactory = Factory.Sync.makeFactory<
   KubernetesEndpointResponse
 >({
   endpoint: `https://${v4()}`
+});
+
+export const kubernetesAPIResponse = Factory.Sync.makeFactory<
+  KubernetesCluster
+>({
+  id: Factory.each(id => id),
+  created: '2020-04-08T16:58:21',
+  updated: '2020-04-08T16:58:21',
+  region: 'us-central',
+  status: 'ready',
+  label: Factory.each(i => `test-cluster-${i}`),
+  k8s_version: '1.17',
+  tags: []
 });
