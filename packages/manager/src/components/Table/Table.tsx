@@ -140,7 +140,7 @@ class WrappedTable extends React.Component<CombinedProps> {
           'tableWrapper',
           {
             [classes.root]: !noOverflow,
-            [classes.responsive]: !(isResponsive === false), // must be explicity set to false
+            [classes.responsive]: isResponsive !== false, // must be explicity set to false
             [classes.border]: border,
             [classes.noMobileLabel]: removeLabelonMobile,
             [classes.stickyHeader]: stickyHeader

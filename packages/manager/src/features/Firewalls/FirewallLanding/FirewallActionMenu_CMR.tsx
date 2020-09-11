@@ -100,8 +100,7 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
       actionText:
         firewallStatus === ('enabled' as FirewallStatus) ? 'Disable' : 'Enable',
       className: classes.button,
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
+      onClick: () => {
         handleEnableDisable();
       }
     },
@@ -125,11 +124,10 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
     return [
       {
         title: 'Details',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
+        onClick: () => {
           history.push({
             pathname: `/firewalls/${firewallID}`
           });
-          e.preventDefault();
         }
       },
       {
@@ -137,8 +135,7 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
           firewallStatus === ('enabled' as FirewallStatus)
             ? 'Disable'
             : 'Enable',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
+        onClick: () => {
           handleEnableDisable();
         }
       },

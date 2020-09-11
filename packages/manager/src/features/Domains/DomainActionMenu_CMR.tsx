@@ -84,16 +84,14 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
     const baseActions = [
       {
         title: 'Clone',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
+        onClick: () => {
           handleClone();
-          e.preventDefault();
         }
       },
       {
         title: 'Delete',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
+        onClick: () => {
           handleRemove();
-          e.preventDefault();
         }
       }
     ];
@@ -102,14 +100,14 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
       if (type === 'master') {
         baseActions.unshift({
           title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             handleEdit();
           }
         });
       }
       baseActions.unshift({
         title: status === 'active' ? 'Disable' : 'Enable',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
+        onClick: () => {
           onDisableOrEnable(
             status === 'active' ? 'disable' : 'enable',
             domain,
@@ -119,7 +117,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
       });
       baseActions.unshift({
         title: 'Details',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
+        onClick: () => {
           type === 'master' ? goToDomain() : handleEdit();
         }
       });
@@ -129,7 +127,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
       return [
         {
           title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             handleEdit();
           }
         },

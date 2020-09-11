@@ -210,11 +210,13 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
       <div>
-        <Grid container justify="flex-end">
-          <Grid item>
-            <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
+        {!flags.cmr && (
+          <Grid container justify="flex-end">
+            <Grid item>
+              <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
+            </Grid>
           </Grid>
-        </Grid>
+        )}
         {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
         <Grid item xs={12}>
           <OrderBy data={data} order={'asc'} orderBy={'label'}>
@@ -224,6 +226,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
                 order,
                 handleOrderChange,
                 handleClickRemove,
+                openBucketDrawer,
                 data: orderedData
               };
               return <_BucketTable {...bucketTableProps} />;

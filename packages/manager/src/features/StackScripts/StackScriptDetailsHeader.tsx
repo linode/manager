@@ -53,6 +53,7 @@ const StackScriptDetailsHeader: React.FC<CombinedProps> = props => {
           canAddLinodes={canAddLinodes}
           isPublic={isPublic}
           category={category}
+          isHeader={true}
         />
       }
     />

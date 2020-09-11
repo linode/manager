@@ -63,10 +63,10 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. Use this matching to determine
   // if a modal should be open when this component is first rendered.
-  const match = useRouteMatch<{ linodeId: string; action: string }>({
-    path: '/linodes/:linodeId/:action'
+  const match = useRouteMatch<{ linodeId: string; subpath: string }>({
+    path: '/linodes/:linodeId/:subpath'
   });
-  const isAction = (action: string) => match?.params?.action === action;
+  const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
   const {
@@ -90,22 +90,22 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   });
 
   const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
-    open: isAction('resize'),
+    open: isSubpath('resize'),
     linodeID: matchedLinodeId
   });
 
   const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
-    open: isAction('migrate'),
+    open: isSubpath('migrate'),
     linodeID: matchedLinodeId
   });
 
   const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
-    open: isAction('rescue'),
+    open: isSubpath('rescue'),
     linodeID: matchedLinodeId
   });
 
   const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
-    open: isAction('rebuild'),
+    open: isSubpath('rebuild'),
     linodeID: matchedLinodeId
   });
 
@@ -190,6 +190,16 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   };
 
   const closeDialogs = () => {
+    // If the user is on e.g. /linodes/:id/resize and they close the modal,
+    // change the URL to reflect what they see (which is the Details page).
+    if (
+      isSubpath('resize') ||
+      isSubpath('rescue') ||
+      isSubpath('rebuild') ||
+      isSubpath('migrate')
+    ) {
+      history.replace(`/linodes/${match?.params.linodeId}`);
+    }
     setPowerDialog(powerDialog => ({ ...powerDialog, open: false }));
     setDeleteDialog(deleteDialog => ({ ...deleteDialog, open: false }));
     setResizeDialog(resizeDialog => ({ ...resizeDialog, open: false }));
