@@ -8,7 +8,7 @@ export const types: LinodeType[] = [
       monthly: 10.0,
       hourly: 0.015
     },
-    id: 'g6-standard-1',
+    id: 'g5-standard-1',
     label: 'Linode 2GB',
     class: 'standard',
     addons: {
@@ -31,7 +31,7 @@ export const types: LinodeType[] = [
       monthly: 20.0,
       hourly: 0.03
     },
-    id: 'g6-standard-2',
+    id: 'g5-standard-2',
     label: 'Linode 4096',
     class: 'standard',
     addons: {
@@ -54,7 +54,7 @@ export const types: LinodeType[] = [
       monthly: 40.0,
       hourly: 0.06
     },
-    id: 'g6-standard-4',
+    id: 'g5-standard-4',
     label: 'Linode 8192',
     class: 'standard',
     addons: {
@@ -77,7 +77,7 @@ export const types: LinodeType[] = [
       monthly: 80.0,
       hourly: 0.12
     },
-    id: 'g6-standard-6',
+    id: 'g5-standard-6',
     label: 'Linode 12288',
     class: 'standard',
     addons: {
@@ -100,7 +100,7 @@ export const types: LinodeType[] = [
       monthly: 160.0,
       hourly: 0.24
     },
-    id: 'g6-standard-8',
+    id: 'g5-standard-8',
     label: 'Linode 24576',
     class: 'standard',
     addons: {
@@ -123,7 +123,7 @@ export const types: LinodeType[] = [
       monthly: 320.0,
       hourly: 0.48
     },
-    id: 'g6-standard-12',
+    id: 'g5-standard-12',
     label: 'Linode 49152',
     class: 'standard',
     addons: {
@@ -146,7 +146,7 @@ export const types: LinodeType[] = [
       monthly: 480.0,
       hourly: 0.72
     },
-    id: 'g6-standard-16',
+    id: 'g5-standard-16',
     label: 'Linode 65536',
     class: 'standard',
     addons: {
@@ -169,7 +169,7 @@ export const types: LinodeType[] = [
       monthly: 640.0,
       hourly: 0.96
     },
-    id: 'g6-standard-20',
+    id: 'g5-standard-20',
     label: 'Linode 81920',
     class: 'standard',
     addons: {
@@ -192,7 +192,7 @@ export const types: LinodeType[] = [
       monthly: 5.0,
       hourly: 0.0075
     },
-    id: 'g6-nanode-1',
+    id: 'g5-nanode-1',
     label: 'Linode 1024',
     class: 'nanode',
     addons: {
@@ -215,7 +215,7 @@ export const types: LinodeType[] = [
       monthly: 60.0,
       hourly: 0.09
     },
-    id: 'g6-highmem-1',
+    id: 'g5-highmem-1',
     label: 'Linode 16384',
     class: 'highmem',
     addons: {
@@ -238,7 +238,7 @@ export const types: LinodeType[] = [
       monthly: 120.0,
       hourly: 0.18
     },
-    id: 'g6-highmem-2',
+    id: 'g5-highmem-2',
     label: 'Linode 32768',
     class: 'highmem',
     addons: {
@@ -261,7 +261,7 @@ export const types: LinodeType[] = [
       monthly: 240.0,
       hourly: 0.36
     },
-    id: 'g6-highmem-4',
+    id: 'g5-highmem-4',
     label: 'Linode 61440',
     class: 'highmem',
     addons: {
@@ -284,7 +284,7 @@ export const types: LinodeType[] = [
       monthly: 480.0,
       hourly: 0.72
     },
-    id: 'g6-highmem-8',
+    id: 'g5-highmem-8',
     label: 'Linode 102400',
     class: 'highmem',
     addons: {
@@ -307,7 +307,7 @@ export const types: LinodeType[] = [
       monthly: 960.0,
       hourly: 1.44
     },
-    id: 'g6-highmem-16',
+    id: 'g5-highmem-16',
     label: 'Linode 204800',
     class: 'highmem',
     addons: {
