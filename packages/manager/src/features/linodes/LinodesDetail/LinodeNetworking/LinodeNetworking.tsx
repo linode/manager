@@ -33,7 +33,6 @@ import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { ZONES } from 'src/constants';
-import { reportException } from 'src/exceptionReporting';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
@@ -516,12 +515,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     }
 
     const zoneName = ZONES[linodeRegion];
-
-    if (!zoneName) {
-      reportException(`Unknown region: ${linodeRegion}`, {
-        linodeID
-      });
-    }
 
     const ipsWithRDNS =
       currentlySelectedIPRange && currentlySelectedIPRange.prefix

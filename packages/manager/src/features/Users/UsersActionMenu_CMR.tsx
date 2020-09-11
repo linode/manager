@@ -44,24 +44,21 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
   const actions: Action[] = [
     {
       title: 'User Profile',
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
+      onClick: () => {
         history.push(`/account/users/${username}`);
-        e.preventDefault();
       }
     },
     {
       title: 'User Permissions',
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
+      onClick: () => {
         history.push(`/account/users/${username}/permissions`);
-        e.preventDefault();
       }
     },
     {
       disabled: username === profileUsername,
       title: 'Delete',
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
+      onClick: () => {
         onDelete(username);
-        e.preventDefault();
       },
       tooltip:
         username === profileUsername

@@ -62,9 +62,6 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
 
-// Timeout of 1sec in debounce to avoid sending too many events to GA
-const debouncedSearchAutoEvent = debounce(1000, false, sendSearchBarUsedEvent);
-
 export const SearchBar: React.FC<CombinedProps> = props => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
@@ -116,10 +113,6 @@ export const SearchBar: React.FC<CombinedProps> = props => {
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
-    // do not trigger debounce for empty text
-    if (searchText !== '') {
-      debouncedSearchAutoEvent('Search Auto', searchText);
-    }
     props.search(_searchText);
   };
 
@@ -156,12 +149,9 @@ export const SearchBar: React.FC<CombinedProps> = props => {
         pathname: `/search`,
         search: `?query=${encodeURIComponent(text)}`
       });
-      // we are selecting the View all option sending the user to the landing,
-      // this is like key down enter
-      sendSearchBarUsedEvent('Search Landing', text);
       return;
     }
-    sendSearchBarUsedEvent('Search Select', text);
+    sendSearchBarUsedEvent();
     props.history.push(item.data.path);
   };
 
@@ -175,7 +165,6 @@ export const SearchBar: React.FC<CombinedProps> = props => {
         pathname: `/search`,
         search: `?query=${encodeURIComponent(searchText)}`
       });
-      sendSearchBarUsedEvent('Search Landing', searchText);
       onClose();
     }
   };

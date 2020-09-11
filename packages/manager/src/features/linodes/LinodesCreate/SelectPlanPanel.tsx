@@ -318,7 +318,6 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
           <Grid item xs={12} lg={10}>
             {flags?.cmr ? (
               <Table_CMR
-                isResponsive={false}
                 border
                 spacingBottom={16}
                 aria-label="List of Linode Plans"

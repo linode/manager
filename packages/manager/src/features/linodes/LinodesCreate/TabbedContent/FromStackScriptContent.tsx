@@ -4,6 +4,7 @@ import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { ResourcePage } from '@linode/api-v4/lib/types';
 import { assocPath } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -16,14 +17,16 @@ import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
+import SelectStackScriptPanel_CMR from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel_CMR';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-
-import { filterUDFErrors } from './formUtilities';
-
 import { filterImagesByType } from 'src/store/image/image.helpers';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { filterUDFErrors } from './formUtilities';
 
 import {
   ReduxStateProps,
@@ -71,10 +74,13 @@ const errorResources = {
   stackscript_id: 'The selected StackScript'
 };
 
-export type CombinedProps = Props &
-  StackScriptFormStateHandlers &
+type InnerProps = Props &
   ReduxStateProps &
-  WithTypesRegionsAndImages &
+  StackScriptFormStateHandlers &
+  WithTypesRegionsAndImages;
+
+export type CombinedProps = FeatureFlagConsumerProps &
+  InnerProps &
   WithStyles<ClassNames>;
 
 export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
@@ -133,8 +139,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       errors,
       classes,
       selectedStackScriptID,
-      imagesData,
-      userCannotCreateLinode: disabled,
+      userCannotCreateLinode,
       selectedStackScriptUsername,
       selectedStackScriptLabel,
       request,
@@ -142,7 +147,8 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       updateImageID,
       availableUserDefinedFields: userDefinedFields,
       availableStackScriptImages: compatibleImages,
-      selectedUDFs: udf_data
+      selectedUDFs: udf_data,
+      imagesData
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -154,34 +160,55 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           item
           className={`${classes.main} mlMain py0`}
         >
-          <CreateLinodeDisabled isDisabled={disabled} />
-          <SelectStackScriptPanel
-            data-qa-select-stackscript
-            error={hasErrorFor('stackscript_id')}
-            header={header}
-            selectedId={selectedStackScriptID}
-            selectedUsername={selectedStackScriptUsername}
-            updateFor={[selectedStackScriptID, errors]}
-            onSelect={this.handleSelectStackScript}
-            publicImages={filterImagesByType(imagesData, 'public')}
-            resetSelectedStackScript={() => null}
-            disabled={disabled}
-            request={request}
-            category={this.props.category}
-          />
-          {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
-            <UserDefinedFieldsPanel
-              data-qa-udf-panel
-              errors={filterUDFErrors(errorResources, this.props.errors)}
-              selectedLabel={selectedStackScriptLabel || ''}
-              selectedUsername={selectedStackScriptUsername || ''}
-              handleChange={this.handleChangeUDF}
-              userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields, udf_data, errors]}
-              udf_data={udf_data || {}}
+          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
+          {this.props.flags.cmr ? (
+            <SelectStackScriptPanel_CMR
+              data-qa-select-stackscript
+              error={hasErrorFor('stackscript_id')}
+              header={header}
+              selectedId={selectedStackScriptID}
+              selectedUsername={selectedStackScriptUsername}
+              updateFor={[selectedStackScriptID, errors]}
+              onSelect={this.handleSelectStackScript}
+              publicImages={filterImagesByType(imagesData, 'public')}
+              resetSelectedStackScript={() => null}
+              disabled={userCannotCreateLinode}
+              request={request}
+              category={this.props.category}
+            />
+          ) : (
+            <SelectStackScriptPanel
+              data-qa-select-stackscript
+              error={hasErrorFor('stackscript_id')}
+              header={header}
+              selectedId={selectedStackScriptID}
+              selectedUsername={selectedStackScriptUsername}
+              updateFor={[selectedStackScriptID, errors]}
+              onSelect={this.handleSelectStackScript}
+              publicImages={filterImagesByType(imagesData, 'public')}
+              resetSelectedStackScript={() => null}
+              disabled={userCannotCreateLinode}
+              request={request}
+              category={this.props.category}
             />
           )}
-          {!disabled && compatibleImages && compatibleImages.length > 0 ? (
+          {!userCannotCreateLinode &&
+            userDefinedFields &&
+            userDefinedFields.length > 0 && (
+              <UserDefinedFieldsPanel
+                data-qa-udf-panel
+                errors={filterUDFErrors(errorResources, this.props.errors)}
+                selectedLabel={selectedStackScriptLabel || ''}
+                selectedUsername={selectedStackScriptUsername || ''}
+                handleChange={this.handleChangeUDF}
+                userDefinedFields={userDefinedFields}
+                updateFor={[userDefinedFields, udf_data, errors]}
+                udf_data={udf_data || {}}
+              />
+            )}
+          {!userCannotCreateLinode &&
+          compatibleImages &&
+          compatibleImages.length > 0 ? (
             <ImageSelect
               data-qa-select-image-panel
               title="Select an Image"
@@ -219,4 +246,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default styled(FromStackScriptContent);
+export default compose<CombinedProps, InnerProps>(
+  styled,
+  withFeatureFlags
+)(FromStackScriptContent);

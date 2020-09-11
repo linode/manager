@@ -131,15 +131,13 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
       const actions = [
         {
           title: 'Resize',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleResize();
           }
         },
         {
           title: 'Clone',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleClone();
           }
         }
@@ -148,15 +146,13 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
       if (matchesSmDown) {
         actions.unshift({
           title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleOpenEdit();
           }
         });
         actions.unshift({
           title: 'Details',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleShowConfig();
           }
         });
@@ -165,16 +161,14 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
       if (!attached && isVolumesLanding) {
         actions.push({
           title: 'Attach',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleAttach();
           }
         });
       } else {
         actions.push({
           title: 'Detach',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleDetach();
           }
         });
@@ -183,8 +177,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
       if (!attached || poweredOff) {
         actions.push({
           title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+          onClick: () => {
             handleDelete();
           }
         });

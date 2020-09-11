@@ -200,4 +200,4 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
   );
 };
 
-export default DisplayLinodes;
+export default React.memo(DisplayLinodes);

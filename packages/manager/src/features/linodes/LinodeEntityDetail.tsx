@@ -211,7 +211,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       height: 20,
       width: 20,
       fill: theme.color.blue,
-      color: `${theme.color.blue} !important`,
+      color: theme.color.blue,
       marginRight: 10
     },
     '& span': {
@@ -572,7 +572,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
               </Grid>
 
               <Grid item className={classes.iconTextOuter}>
-                <Typography>{gbRAM} RAM</Typography>
+                <Typography>{gbRAM} GB RAM</Typography>
               </Grid>
             </Grid>
           </Grid>

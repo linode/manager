@@ -32,6 +32,7 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { LinodeAPI } from 'src/documentation';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -62,6 +63,7 @@ const styles = (theme: Theme) =>
     }
   });
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Props extends PaginationProps<OAuthClient> {}
 
 interface State {
@@ -321,7 +323,8 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
   renderRows = (data: OAuthClient[]) => {
     const { classes } = this.props;
-    return data.map(({ id, label, redirect_uri, public: isPublic, status }) => (
+
+    return data.map(({ id, label, redirect_uri, public: isPublic }) => (
       <TableRow ariaLabel={label} key={id} data-qa-table-row={label}>
         <TableCell data-qa-oauth-label>{label}</TableCell>
         <Hidden xsDown>
@@ -395,7 +398,15 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           <Table aria-label="List of OAuth Apps">
             <TableHead data-qa-table-head>
               <TableRow>
-                <TableCell style={{ width: '20%' }}>Label</TableCell>
+                <TableSortCell
+                  active={this.props.orderBy === 'label'}
+                  label="label"
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                  style={{ width: '20%' }}
+                >
+                  Label
+                </TableSortCell>
                 <Hidden xsDown>
                   <TableCell>Access</TableCell>
                 </Hidden>

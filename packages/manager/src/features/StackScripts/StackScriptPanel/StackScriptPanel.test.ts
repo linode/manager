@@ -5,12 +5,14 @@ describe('getTabValueFromQueryString helper function', () => {
     {
       title: 'Account StackScripts',
       request: jest.fn(),
-      category: 'account'
+      category: 'account',
+      routeName: '/stackscripts?type=account'
     },
     {
       title: 'Community StackScripts',
       request: jest.fn(),
-      category: 'community'
+      category: 'community',
+      routeName: '/stackscripts?type=community'
     }
   ];
   it('provides the index of the desired tab', () => {
