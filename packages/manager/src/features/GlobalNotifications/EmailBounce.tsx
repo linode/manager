@@ -154,7 +154,7 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo(props => {
               buttonType="primary"
               onClick={changeEmail}
             >
-              No, let&apos;s update it
+              No, let&apos;s update it.
             </Button>
           </Grid>
         </Grid>
