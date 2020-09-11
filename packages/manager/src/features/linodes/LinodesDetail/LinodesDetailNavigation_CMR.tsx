@@ -77,13 +77,20 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: location.pathname }));
   };
 
-  const activeTabIndex = tabs.findIndex(tab => matches(tab.routeName));
+  const defaultIndex = tabs.findIndex(tab => matches(tab.routeName));
+
+  const [tabIndex, setTabIndex] = React.useState(Math.max(defaultIndex, 0));
+
+  const handleTabChange = (index: number) => {
+    setTabIndex(index);
+  };
+
   return (
     <>
       <DocumentTitleSegment
-        segment={`${linodeLabel} - ${tabs[activeTabIndex].title}`}
+        segment={`${linodeLabel} - ${tabs[tabIndex]?.title ?? 'Detail View'}`}
       />
-      <Tabs defaultIndex={Math.max(activeTabIndex, 0)}>
+      <Tabs index={tabIndex} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
