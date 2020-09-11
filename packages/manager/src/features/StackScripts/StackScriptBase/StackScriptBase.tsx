@@ -518,7 +518,10 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
             </div>
           ) : (
             <React.Fragment>
-              <div className={classes.searchWrapper}>
+              <div
+                className={`${classes.searchWrapper} ${this.props.flags.cmr &&
+                  classes.cmrSpacing}`}
+              >
                 <DebouncedSearch
                   placeholder="Search by Label, Username, or Description"
                   onSearch={this.handleSearch}

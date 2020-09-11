@@ -31,14 +31,13 @@ export interface ExtendedLinode extends Linode {
   subHeadings: string[];
 }
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: theme.color.white,
       marginBottom: theme.spacing(3),
-      padding: theme.spacing(3)
+      padding: '0 !important'
     }
   });
 
