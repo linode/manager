@@ -612,13 +612,14 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                * Otherwise, try to lazy load some more dang stackscripts
                */}
               {!getMoreStackScriptsFailed ? (
-                <Waypoint onEnter={() => this.getNext}>
+                <Waypoint onEnter={this.getNext}>
                   {/*
                    * The reason for this empty div is that there was some wonkiness when
                    * scrolling to the waypoint with trackpads. For some reason, the Waypoint
                    * would never be scrolled into view no matter how much you scrolled on the
                    * trackpad. Especially finicky at zoomed in browser sizes
                    */}
+                  <div style={{ minHeight: '150px' }}></div>
                 </Waypoint>
               ) : (
                 <Button
