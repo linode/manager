@@ -104,3 +104,9 @@ export const extendType = (type: LinodeType): ExtendedType => {
     isDeprecated: type.successor !== null
   };
 };
+
+export const filterCurrentTypes = (types: ExtendedType[] = []) => {
+  return types.filter(
+    thisType => !thisType.isDeprecated && !thisType.isShadowPlan
+  );
+};

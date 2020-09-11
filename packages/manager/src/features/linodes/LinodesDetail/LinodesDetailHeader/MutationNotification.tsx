@@ -245,7 +245,7 @@ const connected = connect(undefined, mapDispatchToProps);
 const enhanced = compose<CombinedProps, Props>(
   styled,
   connected,
-  withTypes(),
+  withTypes,
   withLinodeDetailContext<ContextProps>(({ linode }) => ({
     linodeSpecs: linode.specs,
     linodeId: linode.id,

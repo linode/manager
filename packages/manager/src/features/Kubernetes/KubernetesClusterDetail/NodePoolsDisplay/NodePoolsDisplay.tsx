@@ -10,7 +10,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { useDialog } from 'src/hooks/useDialog';
 import useLinodes from 'src/hooks/useLinodes';
 import { ApplicationState } from 'src/store';

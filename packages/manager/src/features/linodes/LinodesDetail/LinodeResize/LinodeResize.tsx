@@ -29,11 +29,9 @@ import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import SelectPlanPanel, {
-  ExtendedType
-} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
@@ -132,27 +130,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       currentPlan: '',
       targetPlan: ''
     }
-  };
-
-  static extendType = (type: LinodeType): ExtendedType => {
-    const {
-      label,
-      memory,
-      vcpus,
-      disk,
-      price: { monthly, hourly }
-    } = type;
-
-    const isGPU = type.class === 'gpu';
-
-    return {
-      ...type,
-      heading: label,
-      subHeadings: [
-        `$${monthly}/mo ($${isGPU ? hourly.toFixed(2) : hourly}/hr)`,
-        typeLabelDetails(memory, disk, vcpus)
-      ]
-    };
   };
 
   openConfirmationModal = () => {
@@ -478,7 +455,7 @@ export const isSmallerThanCurrentPlan = (
 
 export default compose<CombinedProps, {}>(
   linodeContext,
-  withTypes({ includeDeprecatedTypes: true, includeShadowPlans: true }),
+  withTypes,
   styled,
   withSnackbar,
   withRouter,

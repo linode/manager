@@ -35,10 +35,7 @@ export const RenderEvent: React.FC<Props> = props => {
   const classes = useStyles();
 
   const { linodes } = useLinodes();
-  const { types } = useTypes({
-    includeDeprecatedTypes: true,
-    includeShadowPlans: true
-  });
+  const { types } = useTypes();
   const _linodes = Object.values(linodes.itemsById);
   const _types = types.entities;
 

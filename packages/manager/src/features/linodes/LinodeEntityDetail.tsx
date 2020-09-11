@@ -85,10 +85,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
 
   useReduxLoad(['images', 'types']);
   const { images } = useImages();
-  const { types } = useTypes({
-    includeDeprecatedTypes: true,
-    includeShadowPlans: true
-  });
+  const { types } = useTypes();
 
   const imageSlug = linode.image;
 

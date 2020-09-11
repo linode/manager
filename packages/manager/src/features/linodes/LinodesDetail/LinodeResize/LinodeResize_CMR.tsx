@@ -30,10 +30,8 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import SelectPlanPanel, {
-  ExtendedType
-} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
+import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
@@ -124,27 +122,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     autoDiskResize: false,
     confirmationText: '',
     submitting: false
-  };
-
-  static extendType = (type: LinodeType): ExtendedType => {
-    const {
-      label,
-      memory,
-      vcpus,
-      disk,
-      price: { monthly, hourly }
-    } = type;
-
-    const isGPU = type.class === 'gpu';
-
-    return {
-      ...type,
-      heading: label,
-      subHeadings: [
-        `$${monthly}/mo ($${isGPU ? hourly.toFixed(2) : hourly}/hr)`,
-        typeLabelDetails(memory, disk, vcpus)
-      ]
-    };
   };
 
   onSubmit = () => {
@@ -515,7 +492,7 @@ export const isSmallerThanCurrentPlan = (
 };
 
 export default compose<CombinedProps, Props>(
-  withTypes({ includeDeprecatedTypes: true, includeShadowPlans: true }),
+  withTypes,
   styled,
   withSnackbar,
   connected

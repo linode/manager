@@ -28,10 +28,7 @@ interface Search {
 
 export const useAPISearch = (): Search => {
   const { images } = useImages('public');
-  const { types } = useTypes({
-    includeDeprecatedTypes: true,
-    includeShadowPlans: true
-  });
+  const { types } = useTypes();
   const searchAPI = useCallback(
     (searchText: string) => {
       if (!searchText || searchText === '') {

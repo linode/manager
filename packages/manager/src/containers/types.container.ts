@@ -1,8 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { connect } from 'react-redux';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { ApplicationState } from 'src/store';
-import { UseTypesOptions, maybeFilterTypes } from 'src/hooks/useTypes';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 
 export interface WithTypesProps {
   typesData: ExtendedType[];
@@ -10,15 +9,10 @@ export interface WithTypesProps {
   typesError?: APIError[];
 }
 
-export default (options?: UseTypesOptions) =>
-  connect((state: ApplicationState) => {
-    const allTypes = state.__resources.types.entities;
-
-    const finalTypes = maybeFilterTypes(allTypes, options);
-
-    return {
-      typesData: finalTypes,
-      typesLoading: state.__resources.types?.loading ?? false,
-      typesError: state.__resources.types?.error
-    };
-  });
+export default connect((state: ApplicationState) => {
+  return {
+    typesData: state.__resources.types.entities,
+    typesLoading: state.__resources.types?.loading ?? false,
+    typesError: state.__resources.types?.error
+  };
+});

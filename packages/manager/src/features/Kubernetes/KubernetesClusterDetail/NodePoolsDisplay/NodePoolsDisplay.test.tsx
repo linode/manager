@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { types } from 'src/__data__/types';
+import { extendedTypes } from 'src/__data__/ExtendedType';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { NodePoolsDisplay, Props } from './NodePoolsDisplay';
@@ -9,11 +9,7 @@ const mockPools = nodePoolFactory.buildList(1, { type: 'g5-standard-1' });
 
 const props: Props = {
   pools: mockPools,
-  types: types.map(thisType => ({
-    ...thisType,
-    heading: 'heading',
-    subHeadings: ['a', 'subheading']
-  })),
+  types: extendedTypes,
   updatePool: jest.fn(),
   deletePool: jest.fn(),
   addNodePool: jest.fn(),

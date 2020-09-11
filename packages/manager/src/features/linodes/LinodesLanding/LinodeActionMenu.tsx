@@ -31,6 +31,7 @@ import { MapState } from 'src/store/types';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 
 import { sendMigrationNavigationEvent } from 'src/utilities/ga';
+import { filterCurrentTypes } from 'src/store/linodeType/linodeType.reducer';
 
 export interface Props {
   linodeId: number;
@@ -91,9 +92,12 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
       linodeId,
       linodeRegion,
       linodeType,
-      typesData,
+      typesData: allTypes,
       regionsData
     } = this.props;
+
+    // Only want to use current types here.
+    const typesData = filterCurrentTypes(allTypes);
 
     const params: Record<string, string> = {
       type: 'Clone Linode',
@@ -338,7 +342,7 @@ const withRegions = regionsContainer();
 
 const enhanced = compose<CombinedProps, Props>(
   connected,
-  withTypes(),
+  withTypes,
   withRegions,
   withRouter
 );

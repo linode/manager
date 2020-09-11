@@ -12,6 +12,7 @@ import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolP
 import SelectPlanQuantityPanel, {
   ExtendedTypeWithCount
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel.tsx';
+import { filterCurrentTypes } from 'src/store/linodeType/linodeType.reducer';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { nodeWarning } from '../../kubeUtils';
@@ -83,9 +84,12 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     onClose,
     onSubmit,
     open,
-    typesData
+    typesData: allTypes
   } = props;
   const classes = useStyles();
+
+  // Only want to use current types here.
+  const typesData = filterCurrentTypes(allTypes);
 
   const [selectedType, setSelectedType] = React.useState<string | undefined>(
     undefined
@@ -200,6 +204,6 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withTypes());
+const enhanced = compose<CombinedProps, Props>(withTypes);
 
 export default enhanced(AddNodePoolDrawer);

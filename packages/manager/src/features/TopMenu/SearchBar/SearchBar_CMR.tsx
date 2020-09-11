@@ -262,7 +262,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
 };
 
 export default compose<CombinedProps, {}>(
-  withTypes({ includeDeprecatedTypes: true, includeShadowPlans: true }),
+  withTypes,
   withRouter,
   withImages(),
   withStoreSearch(),

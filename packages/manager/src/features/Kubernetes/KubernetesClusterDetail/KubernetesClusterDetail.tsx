@@ -452,7 +452,7 @@ const withCluster = KubeContainer<
 
 const enhanced = compose<CombinedProps, RouteComponentProps>(
   styled,
-  withTypes(),
+  withTypes,
   withCluster
 );
 
