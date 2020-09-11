@@ -267,7 +267,24 @@ export const handlers = [
     return res(ctx.json(makeResourcePage([])));
   }),
   rest.get('*/notifications', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(notificationFactory.buildList(1))));
+    // const emailBounce = notificationFactory.build({
+    //   type: 'billing_email_bounce',
+    //   entity: null,
+    //   when: null,
+    //   message: 'We are unable to send emails to your billing email address!',
+    //   label: 'We are unable to send emails to your billing email address!',
+    //   severity: 'major',
+    //   until: null,
+    //   body: null
+    // });
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...notificationFactory.buildList(1)
+          // emailBounce
+        ])
+      )
+    );
   })
 ];
 

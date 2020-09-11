@@ -11,11 +11,11 @@ import {
   withTheme,
   WithTheme
 } from 'src/components/core/styles';
-import RegionStatusBanner from 'src/components/RegionStatusBanner';
 
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
+import GlobalNotifications from 'src/features/GlobalNotifications';
 import {
   notificationContext,
   useNotificationContext
@@ -249,7 +249,7 @@ const MainContent: React.FC<CombinedProps> = props => {
           <main className={classes.cmrWrapper} id="main-content" role="main">
             <Grid container spacing={0} className={classes.grid}>
               <Grid item className={classes.switchWrapper}>
-                <RegionStatusBanner />
+                <GlobalNotifications />
                 <React.Suspense fallback={<SuspenseLoader />}>
                   <Switch>
                     <Route path="/linodes" component={LinodesRoutes} />

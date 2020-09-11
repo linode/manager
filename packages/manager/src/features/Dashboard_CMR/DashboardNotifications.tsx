@@ -15,12 +15,8 @@ import useNotificationData from 'src/features/NotificationCenter/NotificationDat
 import useAccount from 'src/hooks/useAccount';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import ManagedDashboardCard from '../Dashboard/ManagedDashboardCard/ManagedDashboardCard_CMR';
-import EmailBounceNotification from './EmailBounceNotification';
 import LinodeNews from './LinodeNews';
-import useNotifications from 'src/hooks/useNotifications';
-import useProfile from 'src/hooks/useProfile';
-import { useHistory } from 'react-router-dom';
+import ManagedDashboardCard from '../Dashboard/ManagedDashboardCard/ManagedDashboardCard_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -39,26 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const Notifications: React.FC<{}> = _ => {
   const classes = useStyles();
-
-  const [
-    dismissedAccountEmailNotice,
-    setDismissedAccountEmailNotice
-  ] = React.useState(false);
-
-  const [
-    dismissedUserEmailNotice,
-    setDismissedUserEmailNotice
-  ] = React.useState(false);
-
-  const [accountSubmitting, setAccountSubmitting] = React.useState(false);
-  const [profileSubmitting, setProfileSubmitting] = React.useState(false);
-
-  const { _isManagedAccount, account, profile } = useAccountManagement();
-  const { updateAccount } = useAccount();
-  const { updateProfile } = useProfile();
-
-  const history = useHistory();
-
+  const { account } = useAccount();
   const balance = account.data?.balance ?? 0;
   const balanceUninvoiced = account.data?.balance_uninvoiced ?? 0;
 
@@ -68,16 +45,7 @@ export const Notifications: React.FC<{}> = _ => {
     statusNotifications,
     support
   } = useNotificationData();
-
-  const notifications = useNotifications();
-
-  const billingEmailBounceNotification = notifications.find(
-    thisNotification => thisNotification.type === 'billing_email_bounce'
-  );
-
-  const userEmailBounceNotification = notifications.find(
-    thisNotification => thisNotification.type === 'user_email_bounce'
-  );
+  const { _isManagedAccount } = useAccountManagement();
 
   const mostRecentInvoiceRequest = useAPIRequest<number | undefined>(
     () =>
@@ -89,44 +57,6 @@ export const Notifications: React.FC<{}> = _ => {
 
   return (
     <>
-      {!dismissedAccountEmailNotice &&
-        billingEmailBounceNotification &&
-        account?.data?.email && (
-          <EmailBounceNotification
-            email={account.data.email}
-            onConfirm={() => {
-              setAccountSubmitting(true);
-              updateAccount({ email: account?.data?.email ?? '' })
-                .then(() => {
-                  setDismissedAccountEmailNotice(true);
-                })
-                .catch(() => {
-                  // @todo: what to do here?
-                });
-            }}
-            onRequestChange={() => history.push('/account')} // We also need a way to re-request notifications
-            loading={accountSubmitting}
-          />
-        )}
-      {!dismissedUserEmailNotice &&
-        userEmailBounceNotification &&
-        profile?.data?.email && (
-          <EmailBounceNotification
-            email={profile.data.email}
-            onConfirm={() => {
-              setProfileSubmitting(true);
-              updateProfile({ email: profile?.data?.email })
-                .then(() => {
-                  setDismissedUserEmailNotice(true);
-                })
-                .catch(_ => {
-                  // @todo: what here?
-                });
-            }}
-            onRequestChange={() => history.push('/profile')} // We also need a way to re-request notifications
-            loading={profileSubmitting}
-          />
-        )}
       <Hidden smDown>
         <BillingSummary
           balance={balance}
