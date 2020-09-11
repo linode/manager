@@ -11,20 +11,6 @@ import {
 } from 'src/features/Kubernetes/types';
 import { v4 } from 'uuid';
 
-/**
- * These factories work with the "extended" types used in our logic.
- * Separate factories will be needed to work with API response types,
- * or typing will have to be adjusted to combine the 2.
- *
- * It looks like factory.ts does not allow you to override the type when
- * extending a factory. If we could do:
- *
- * baseClusterFactory = makeFactory<KubernetesCluster>(...)
- * extendedClusterFactory = baseClusterFactory.extend<ExtendedCluster>(...)
- *
- * ...we would be set.
- */
-
 export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
   id: Factory.each(id => `id-${id}`),
   instance_id: Factory.each(id => id),
