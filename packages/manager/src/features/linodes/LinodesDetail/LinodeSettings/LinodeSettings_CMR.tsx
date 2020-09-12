@@ -6,7 +6,6 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LinodeDetailContextConsumer } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
@@ -44,7 +43,6 @@ const LinodeSettings: React.FC<CombinedProps> = props => {
 
         return (
           <div>
-            <DocumentTitleSegment segment={`${linode.label} - Settings`} />
             {permissionsError}
             <Typography
               variant="h2"
