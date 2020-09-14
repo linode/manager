@@ -1,4 +1,11 @@
 import Backdrop from '@material-ui/core/Backdrop';
+import IconButton from '@material-ui/core/IconButton';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Collapse from '@material-ui/core/Collapse';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -12,6 +19,7 @@ import {
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import RootRef from '../core/RootRef';
 
 interface Props {
   groups: any;
@@ -151,6 +159,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: 50,
     left: 0,
     zIndex: 1
+  },
+  menuIcon: {
+    color: 'white'
+  },
+  menu: {
+    display: 'none'
   }
 }));
 
@@ -159,96 +173,159 @@ export const MobileNav: React.FC<Props> = props => {
 
   const { groups } = props;
 
+  const ref = React.useRef<HTMLButtonElement>(null);
+
+  const [open, setOpen] = React.useState(false);
+
+  const toggleMenu = () => {
+    if (open) {
+      hideMenu();
+      setOpen(false);
+    } else {
+      showMenu();
+      setOpen(true);
+    }
+    // console.log(
+    //   document.getElementById('mobile-menu')?.getAttribute('display')
+    // );
+    // if (document.getElementById('mobile-menu').style.display === 'block') {
+    //   hideMenu();
+    //   console.log('hide');
+    // } else {
+    //   showMenu();
+    //   console.log('show');
+    // }
+  };
+
+  const showMenu = () => {
+    document.getElementById('mobile-menu')?.style.display = 'block';
+  };
+
+  const hideMenu = () => {
+    document.getElementById('mobile-menu')?.style.display = 'none';
+  };
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   return (
-    <ReachMenu key={window.location.pathname}>
-      {({ isExpanded }) => {
-        return (
-          <>
-            <MenuButton
-              id="mobile-menu-initiator"
-              aria-label={isExpanded ? 'Close menu' : 'Open menu'}
-              className={classes.navIcon}
-            >
-              {isExpanded ? <CloseIcon /> : <MenuIcon />}
-              Menu
-            </MenuButton>
-            <MenuPopover className={classes.navDropdown} portal={false}>
-              <div className={classes.menuWrapper}>
-                {groups.map((thisGroup: any) => {
-                  // For each group, filter out hidden links.
-                  const filteredLinks = thisGroup.links.filter(
-                    (thisLink: any) => !thisLink.hide
-                  );
-                  if (filteredLinks.length === 0) {
-                    return null;
-                  }
+    // <ReachMenu key={window.location.pathname}>
+    //   {({ isExpanded }) => {
+    //     return (
+    //       <>
+    //         <MenuButton
+    //           id="mobile-menu-initiator"
+    //           aria-label={isExpanded ? 'Close menu' : 'Open menu'}
+    //           className={classes.navIcon}
+    //         >
+    //           {isExpanded ? <CloseIcon /> : <MenuIcon />}
+    //           Menu
+    //         </MenuButton>
+    //         <MenuPopover className={classes.navDropdown} portal={false}>
+    //           <div className={classes.menuWrapper}>
+    //             {groups.map((thisGroup: any) => {
+    //               // For each group, filter out hidden links.
+    //               const filteredLinks = thisGroup.links.filter(
+    //                 (thisLink: any) => !thisLink.hide
+    //               );
+    //               if (filteredLinks.length === 0) {
+    //                 return null;
+    //               }
 
-                  // Render a singular PrimaryNavLink for links without a group.
-                  if (
-                    thisGroup.group === 'None' &&
-                    filteredLinks.length === 1
-                  ) {
-                    const link = filteredLinks[0];
+    //               // Render a singular PrimaryNavLink for links without a group.
+    //               if (
+    //                 thisGroup.group === 'None' &&
+    //                 filteredLinks.length === 1
+    //               ) {
+    //                 const link = filteredLinks[0];
 
-                    return (
-                      <MenuItems
-                        className={classes.menuItemList}
-                        key={link.display}
-                      >
-                        <MenuLink
-                          key={link.display}
-                          as={Link}
-                          to={link.href}
-                          className={`${classes.menuItemLink} ${classes.menuItemLinkNoGroup}`}
-                        >
-                          {link.display}
-                        </MenuLink>
-                      </MenuItems>
-                    );
-                  }
+    //                 return (
+    //                   <MenuItems
+    //                     className={classes.menuItemList}
+    //                     key={link.display}
+    //                   >
+    //                     <MenuLink
+    //                       key={link.display}
+    //                       as={Link}
+    //                       to={link.href}
+    //                       className={`${classes.menuItemLink} ${classes.menuItemLinkNoGroup}`}
+    //                     >
+    //                       {link.display}
+    //                     </MenuLink>
+    //                   </MenuItems>
+    //                 );
+    //               }
 
-                  return (
-                    <ReachMenu key={thisGroup.group}>
-                      <MenuButton
-                        className={`${classes.menuButton} ${classes.linkItem}`}
-                      >
-                        {thisGroup.group}
-                        <KeyboardArrowDown className={classes.caret} />
-                      </MenuButton>
-                      <MenuPopover
-                        className={classes.menuPopover}
-                        portal={false}
-                      >
-                        <MenuItems
-                          className={classes.menuItemList}
-                          key={thisGroup}
-                        >
-                          {filteredLinks.map((thisLink: any) => (
-                            <MenuLink
-                              data-testid={`menu-item-${thisLink.display}`}
-                              key={thisLink.display}
-                              as={Link}
-                              to={thisLink.href}
-                              className={classes.menuItemLink}
-                              disabled={
-                                window.location.pathname === thisLink.href
-                              }
-                            >
-                              {thisLink.display}
-                            </MenuLink>
-                          ))}
-                        </MenuItems>
-                      </MenuPopover>
-                    </ReachMenu>
-                  );
-                })}
-              </div>
-            </MenuPopover>
-            <Backdrop className={classes.settingsBackdrop} open={isExpanded} />
-          </>
-        );
-      }}
-    </ReachMenu>
+    //               return (
+    //                 <ReachMenu key={thisGroup.group}>
+    //                   <MenuButton
+    //                     className={`${classes.menuButton} ${classes.linkItem}`}
+    //                   >
+    //                     {thisGroup.group}
+    //                     <KeyboardArrowDown className={classes.caret} />
+    //                   </MenuButton>
+    //                   <MenuPopover
+    //                     className={classes.menuPopover}
+    //                     portal={false}
+    //                   >
+    //                     <MenuItems
+    //                       className={classes.menuItemList}
+    //                       key={thisGroup}
+    //                     >
+    //                       {filteredLinks.map((thisLink: any) => (
+    //                         <MenuLink
+    //                           data-testid={`menu-item-${thisLink.display}`}
+    //                           key={thisLink.display}
+    //                           as={Link}
+    //                           to={thisLink.href}
+    //                           className={classes.menuItemLink}
+    //                           disabled={
+    //                             window.location.pathname === thisLink.href
+    //                           }
+    //                         >
+    //                           {thisLink.display}
+    //                         </MenuLink>
+    //                       ))}
+    //                     </MenuItems>
+    //                   </MenuPopover>
+    //                 </ReachMenu>
+    //               );
+    //             })}
+    //           </div>
+    //         </MenuPopover>
+    //         <Backdrop className={classes.settingsBackdrop} open={isExpanded} />
+    //       </>
+    //     );
+    //   }}
+    // </ReachMenu>
+    <>
+      <IconButton edge="start" onClick={toggleMenu} aria-label="menu">
+        <MenuIcon className={classes.menuIcon} />
+      </IconButton>
+      <List id="mobile-menu" className={classes.menu}>
+        <ListItem button onClick={handleClick}>
+          <ListItemText primary="A" />
+        </ListItem>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button>
+              <ListItemText primary="Starred" />
+            </ListItem>
+          </List>
+        </Collapse>
+        <ListItem button onClick={handleClick}>
+          <ListItemText primary="B" />
+        </ListItem>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button>
+              <ListItemText primary="Starred" />
+            </ListItem>
+          </List>
+        </Collapse>
+      </List>
+    </>
   );
 };
 
