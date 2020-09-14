@@ -120,11 +120,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
 
-  // const [drawerOpen, setDrawerOpen] = React.useState(false);
-
-  // const openDrawer = () => setDrawerOpen(true);
-  // const closeDrawer = () => setDrawerOpen(false);
-
   const addTag = React.useCallback(
     (tag: string) => {
       const newTags = [...tags, tag];
