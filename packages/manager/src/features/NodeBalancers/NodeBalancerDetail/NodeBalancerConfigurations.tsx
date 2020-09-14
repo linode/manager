@@ -865,10 +865,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     );
   };
 
-  afterProxyProtocolUpdate = () => () => {
-    return;
-  };
-
   afterHealthCheckTypeUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
       compose(
@@ -1032,11 +1028,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             L,
             this.afterProtocolUpdate
           )}
-          onProxyProtocolChange={this.updateState(
-            L.proxyProtocolLens,
-            L,
-            this.afterProxyProtocolUpdate
-          )}
+          onProxyProtocolChange={this.updateState(L.proxyProtocolLens)}
           healthCheckType={view(L.healthCheckTypeLens, this.state)}
           onHealthCheckTypeChange={this.updateState(
             L.healthCheckTypeLens,
