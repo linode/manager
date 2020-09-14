@@ -104,14 +104,6 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
     openRuleDrawer(category, 'create');
   }, [openRuleDrawer, category]);
 
-  // Modified rows will be unsorted and will appear at the bottom of the table.
-  const unmodifiedRows = rowData.filter(
-    thisRow => thisRow.status === 'NOT_MODIFIED'
-  );
-  const modifiedRows = rowData.filter(
-    thisRow => thisRow.status !== 'NOT_MODIFIED'
-  );
-
   return (
     <>
       <div className={classes.header}>
@@ -122,14 +114,16 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
           className={classes.link}
         />
       </div>
-      <OrderBy data={unmodifiedRows} orderBy={'type'} order={'asc'}>
-        {({
-          data: sortedUnmodifiedRows,
-          handleOrderChange,
-          order,
-          orderBy
-        }) => {
-          const allRows = [...sortedUnmodifiedRows, ...modifiedRows];
+      <OrderBy data={rowData} orderBy={'type'} order={'asc'}>
+        {({ data: sortedRows, handleOrderChange, order, orderBy }) => {
+          // Modified rows will be unsorted and will appear at the bottom of the table.
+          const unmodifiedRows = sortedRows.filter(
+            thisRow => thisRow.status === 'NOT_MODIFIED'
+          );
+          const modifiedRows = sortedRows.filter(
+            thisRow => thisRow.status !== 'NOT_MODIFIED'
+          );
+          const allRows = [...unmodifiedRows, ...modifiedRows];
 
           return (
             <Table>

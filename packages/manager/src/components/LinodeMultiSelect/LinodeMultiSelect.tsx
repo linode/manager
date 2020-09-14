@@ -6,6 +6,7 @@ import withLinodes, {
 } from 'src/containers/withLinodes.container';
 
 export interface Props extends Partial<BaseSelectProps> {
+  allowedRegions?: string[];
   filteredLinodes?: number[];
   helperText?: string;
   showAllOption?: boolean;
@@ -16,6 +17,7 @@ export type CombinedProps = Props & LinodeProps;
 
 export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
   const {
+    allowedRegions,
     errorText,
     filteredLinodes,
     helperText,
@@ -32,9 +34,12 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
   const filteredLinodesData = React.useMemo(
     () =>
       linodesData.filter(
-        thisLinode => !_filteredLinodes.includes(thisLinode.id)
+        thisLinode =>
+          !_filteredLinodes.includes(thisLinode.id) &&
+          // If allowedRegions wasn't passed, don't use region as a filter.
+          (!allowedRegions || allowedRegions.includes(thisLinode.region))
       ),
-    [filteredLinodes, linodesData]
+    [allowedRegions, _filteredLinodes, linodesData]
   );
 
   const linodeError = linodesError && linodesError[0]?.reason;
@@ -107,6 +112,10 @@ export const generateOptions = (
 ): Item<any>[] => {
   /** if there's an error, don't show any options */
   if (linodeError) {
+    return [];
+  }
+
+  if (linodesData.length === 0) {
     return [];
   }
 
