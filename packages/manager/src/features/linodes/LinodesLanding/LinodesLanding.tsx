@@ -361,7 +361,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             userProfileLoading={this.props.userProfileLoading}
           />
         )}
-        <Grid container>
+        <Grid
+          container
+          className={this.props.flags.cmr ? classes.cmrSpacing : ''}
+        >
           <Grid
             item
             className={`${
@@ -643,7 +646,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   filename={`linodes-${formatDate(
                                     DateTime.local().toISO()
                                   )}.csv`}
-                                  className={classes.CSVlink}
+                                  className={`${classes.CSVlink} ${this.props
+                                    .flags.cmr && classes.cmrCSVlink}`}
                                 >
                                   Download CSV
                                 </CSVLink>
