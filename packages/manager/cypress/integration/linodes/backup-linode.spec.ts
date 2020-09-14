@@ -9,29 +9,35 @@ import { assertToast } from '../../support/ui/events';
 
 describe('linode backups', () => {
   it('enable backups', () => {
-    cy.visitWithLogin('/dashboard');
     createLinode().then(linode => {
       cy.server();
+      cy.route('*/account/settings', [
+        { managed: false, backups_enabled: false }
+      ]).as('mockNonManaged');
       cy.route({
         method: 'POST',
         url: `*/linode/instances/${linode.id}/backups/enable`
       }).as('enableBackups');
-      waitForAppLoad();
-      cy.visit(`/linodes/${linode.id}/backup`);
-      cy.contains('Enable Backups')
-        .should('be.visible')
-        .click();
-      cy.get('[data-qa-confirm-enable-backups="true"]')
-        .should('be.visible')
-        .click();
-      cy.wait('@enableBackups');
+      cy.visitWithLogin(`/linodes/${linode.id}/backup`);
+      cy.wait('@mockNonManaged');
+      if (cy.contains('Enable Backups').should('be.visible')) {
+        cy.contains('Enable Backups')
+          .should('be.visible')
+          .click();
+        cy.get('[data-qa-confirm-enable-backups="true"]')
+          .should('be.visible')
+          .click();
+        cy.wait('@enableBackups');
+      }
+      // cy.visit(`/linodes/${linode.id}/backup`);
+      // cy.wait('@mockNonManaged');
       cy.findByText(`${linode.label}`).should('be.visible');
       cy.findByText('Automatic and manual backups will be listed here');
       deleteLinodeById(linode.id);
     });
   });
 
-  it('cant snapshot while booting linode', () => {
+  it.skip('cant snapshot while booting linode', () => {
     cy.visitWithLogin('/dashboard');
     createLinodeWithBackupsEnabled().then(linode => {
       cy.visit(`/linodes/${linode.id}/backup`);
@@ -51,7 +57,7 @@ describe('linode backups', () => {
     });
   });
 
-  it('create linode from snapshot', () => {
+  it.skip('create linode from snapshot', () => {
     cy.visitWithLogin('/dashboard');
     createLinodeWithBackupsEnabled().then(linode => {
       cy.visit(`/linodes/${linode.id}/backup`);
