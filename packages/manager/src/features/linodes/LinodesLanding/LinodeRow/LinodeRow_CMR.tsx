@@ -24,8 +24,6 @@ import {
   transitionText
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
-import { NotificationDrawer } from 'src/features/NotificationCenter';
-import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import useLinodes from 'src/hooks/useLinodes';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -76,6 +74,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openNotificationDrawer: () => void;
 }
 
 export type CombinedProps = Props &
@@ -109,6 +108,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     openTagDrawer,
     openDialog,
     openPowerActionDialog,
+    openNotificationDrawer,
     // displayType, @todo use for M3-2059
     recentEvent,
     mutationAvailable
@@ -120,12 +120,10 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
 
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  // const [drawerOpen, setDrawerOpen] = React.useState(false);
 
-  const openDrawer = () => setDrawerOpen(true);
-  const closeDrawer = () => setDrawerOpen(false);
-
-  const notificationData = useNotificationData();
+  // const openDrawer = () => setDrawerOpen(true);
+  // const closeDrawer = () => setDrawerOpen(false);
 
   const addTag = React.useCallback(
     (tag: string) => {
@@ -196,111 +194,107 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   );
 
   return (
-    <>
-      <TableRow
-        key={id}
-        className={classes.bodyRow}
-        data-qa-loading
-        data-qa-linode={label}
-        rowLink={`/linodes/${id}`}
-        ariaLabel={label}
+    <TableRow
+      key={id}
+      className={classes.bodyRow}
+      data-qa-loading
+      data-qa-linode={label}
+      rowLink={`/linodes/${id}`}
+      ariaLabel={label}
+    >
+      {headCell}
+      <TableCell
+        className={classNames({
+          [classes.statusCell]: true,
+          [classes.statusCellMaintenance]: maintenanceStartTime
+        })}
+        data-qa-status
       >
-        {headCell}
-        <TableCell
-          className={classNames({
-            [classes.statusCell]: true,
-            [classes.statusCellMaintenance]: maintenanceStartTime
-          })}
-          data-qa-status
-        >
-          {!maintenanceStartTime ? (
-            loading ? (
-              recentEvent && (
-                <>
-                  <StatusIcon status={iconStatus} />
-                  <button className={classes.statusLink} onClick={openDrawer}>
-                    <ProgressDisplay
-                      className={classes.progressDisplay}
-                      progress={recentEvent.percent_complete}
-                      text={transitionText(status, id, recentEvent)}
-                    />
-                  </button>
-                </>
-              )
-            ) : (
+        {!maintenanceStartTime ? (
+          loading ? (
+            recentEvent && (
               <>
                 <StatusIcon status={iconStatus} />
-                {displayStatus.includes('_')
-                  ? capitalizeAllWords(displayStatus.replace('_', ' '))
-                  : capitalize(displayStatus)}
+                <button
+                  className={classes.statusLink}
+                  onClick={() => openNotificationDrawer()}
+                >
+                  <ProgressDisplay
+                    className={classes.progressDisplay}
+                    progress={recentEvent.percent_complete}
+                    text={transitionText(status, id, recentEvent)}
+                  />
+                </button>
               </>
             )
           ) : (
-            <div className={classes.maintenanceOuter}>
-              <strong>Maintenance Scheduled</strong>
-              <HelpIcon
-                text={<MaintenanceText />}
-                className={classes.statusHelpIcon}
-                tooltipPosition="top"
-                interactive
-              />
-            </div>
-          )}
-        </TableCell>
-        <Hidden xsDown>
-          <TableCell className={classes.ipCell} data-qa-ips>
-            <div className={classes.ipCellWrapper}>
-              <IPAddress ips={ipv4} copyRight />
-            </div>
-          </TableCell>
-          <TableCell className={classes.regionCell} data-qa-region>
-            <RegionIndicator region={region} />
-          </TableCell>
-          <LinodeRowBackupCell
-            linodeId={id}
-            backupsEnabled={backups.enabled || false}
-            mostRecentBackup={mostRecentBackup || ''}
-          />
-        </Hidden>
-        <Hidden mdDown>
-          <TagCell
-            tags={tags}
-            addTag={addTag}
-            deleteTag={deleteTag}
-            listAllTags={() => openTagDrawer(id, label, tags)}
-            width={300}
-            inTableContext
-          />
-        </Hidden>
-
-        <TableCell className={classes.actionCell} data-qa-notifications>
-          <div className={classes.actionInner}>
-            <RenderFlag
-              mutationAvailable={mutationAvailable}
-              linodeNotifications={linodeNotifications}
-              classes={classes}
-            />
-            <LinodeActionMenu
-              linodeId={id}
-              linodeLabel={label}
-              linodeRegion={region}
-              linodeType={type}
-              linodeStatus={status}
-              linodeBackups={backups}
-              openDialog={openDialog}
-              openPowerActionDialog={openPowerActionDialog}
-              noImage={!image}
-              inTableContext
+            <>
+              <StatusIcon status={iconStatus} />
+              {displayStatus.includes('_')
+                ? capitalizeAllWords(displayStatus.replace('_', ' '))
+                : capitalize(displayStatus)}
+            </>
+          )
+        ) : (
+          <div className={classes.maintenanceOuter}>
+            <strong>Maintenance Scheduled</strong>
+            <HelpIcon
+              text={<MaintenanceText />}
+              className={classes.statusHelpIcon}
+              tooltipPosition="top"
+              interactive
             />
           </div>
+        )}
+      </TableCell>
+      <Hidden xsDown>
+        <TableCell className={classes.ipCell} data-qa-ips>
+          <div className={classes.ipCellWrapper}>
+            <IPAddress ips={ipv4} copyRight />
+          </div>
         </TableCell>
-      </TableRow>
-      <NotificationDrawer
-        open={drawerOpen}
-        onClose={closeDrawer}
-        data={notificationData}
-      />
-    </>
+        <TableCell className={classes.regionCell} data-qa-region>
+          <RegionIndicator region={region} />
+        </TableCell>
+        <LinodeRowBackupCell
+          linodeId={id}
+          backupsEnabled={backups.enabled || false}
+          mostRecentBackup={mostRecentBackup || ''}
+        />
+      </Hidden>
+      <Hidden mdDown>
+        <TagCell
+          tags={tags}
+          addTag={addTag}
+          deleteTag={deleteTag}
+          listAllTags={() => openTagDrawer(id, label, tags)}
+          width={300}
+          inTableContext
+        />
+      </Hidden>
+
+      <TableCell className={classes.actionCell} data-qa-notifications>
+        <div className={classes.actionInner}>
+          <RenderFlag
+            mutationAvailable={mutationAvailable}
+            linodeNotifications={linodeNotifications}
+            classes={classes}
+          />
+          <LinodeActionMenu
+            linodeId={id}
+            linodeLabel={label}
+            linodeRegion={region}
+            linodeType={type}
+            linodeStatus={status}
+            linodeBackups={backups}
+            openDialog={openDialog}
+            openPowerActionDialog={openPowerActionDialog}
+            noImage={!image}
+            inTableContext
+          />
+        </div>
+      </TableCell>
+    </TableRow>
   );
 };
 
