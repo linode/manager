@@ -460,10 +460,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
             <>
               {flags.cmr ? (
                 <div className={classes.objectTable}>
-                  <Table_CMR
-                    removeLabelonMobile
-                    aria-label="List of Bucket Objects"
-                  >
+                  <Table_CMR aria-label="List of Bucket Objects">
                     <TableHead>
                       <TableRow_CMR>
                         <TableCell_CMR className={classes.nameColumn}>
