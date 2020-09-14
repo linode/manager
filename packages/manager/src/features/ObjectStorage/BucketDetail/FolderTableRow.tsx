@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
@@ -9,6 +9,7 @@ import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
 import TableRow_PreCMR from 'src/components/TableRow';
 import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import { useFlags } from 'src/hooks/useFlags';
+import Hidden from 'src/components/core/Hidden';
 
 // Keep this for when we display URL on hover
 // import { generateObjectUrl } from '../utilities';
@@ -64,17 +65,29 @@ const FolderTableRow: React.FC<Props> = props => {
             <EntityIcon variant="folder" size={22} />
           </Grid>
           <Grid item>
-            <div className={classes.folderNameWrapper}>
-              <Typography variant="h3" style={{ whiteSpace: 'nowrap' }}>
+            {flags.cmr ? (
+              <Link to={`?prefix=${folderName}`} className="secondaryLink">
                 {displayName}
-              </Typography>
-            </div>
+              </Link>
+            ) : (
+              <div className={classes.folderNameWrapper}>
+                <Typography variant="h3" style={{ whiteSpace: 'nowrap' }}>
+                  {displayName}
+                </Typography>
+              </div>
+            )}
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell parentColumn="Size" />
-      <TableCell parentColumn="Last Modified" />
-      {/* Empty TableCell for Action Menu (for ObjectTableRow).*/}
+      {/* Three empty TableCells corresponding to the Size, Last Modified, and Action Menu (for ObjectTableRow) columns for formatting purposes. */}
+      <TableCell />
+      {flags.cmr ? (
+        <Hidden smDown>
+          <TableCell />
+        </Hidden>
+      ) : (
+        <TableCell />
+      )}
       <TableCell />
     </TableRow>
   );

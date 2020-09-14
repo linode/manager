@@ -55,6 +55,7 @@ import ObjectTableContent from './ObjectTableContent';
 import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
+import Hidden from 'src/components/core/Hidden';
 
 const page_size = 100;
 
@@ -469,7 +470,9 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                         <TableCell_CMR className={classes.sizeColumn}>
                           Size
                         </TableCell_CMR>
-                        <TableCell_CMR>Last Modified</TableCell_CMR>
+                        <Hidden smDown>
+                          <TableCell_CMR>Last Modified</TableCell_CMR>
+                        </Hidden>
                         {/* Empty TableCell for Action Menu */}
                         <TableCell_CMR />
                       </TableRow_CMR>

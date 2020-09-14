@@ -9,6 +9,7 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { readableBytes } from 'src/utilities/unitConversions';
 import ObjectActionMenu from './ObjectActionMenu_CMR';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   manuallyCreated: {
@@ -84,9 +85,11 @@ const ObjectTableRow: React.FC<Props> = props => {
         </Grid>
       </TableCell>
       <TableCell noWrap>{readableBytes(objectSize).formatted}</TableCell>
-      <TableCell noWrap>
-        <DateTimeDisplay value={objectLastModified} humanizeCutoff="never" />
-      </TableCell>
+      <Hidden smDown>
+        <TableCell noWrap>
+          <DateTimeDisplay value={objectLastModified} humanizeCutoff="never" />
+        </TableCell>
+      </Hidden>
       <TableCell className={classes.actionCell}>
         <ObjectActionMenu
           handleClickDownload={handleClickDownload}
