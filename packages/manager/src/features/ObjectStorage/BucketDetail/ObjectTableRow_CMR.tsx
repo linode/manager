@@ -45,6 +45,7 @@ interface Props {
   objectLastModified: string;
   handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
+  handleClickDetails: () => void;
   manuallyCreated: boolean;
 }
 
@@ -56,6 +57,7 @@ const ObjectTableRow: React.FC<Props> = props => {
     objectLastModified,
     handleClickDownload,
     handleClickDelete,
+    handleClickDetails,
     manuallyCreated
   } = props;
 
@@ -94,6 +96,7 @@ const ObjectTableRow: React.FC<Props> = props => {
         <ObjectActionMenu
           handleClickDownload={handleClickDownload}
           handleClickDelete={handleClickDelete}
+          handleClickDetails={handleClickDetails}
           objectName={fullName}
         />
       </TableCell>

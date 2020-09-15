@@ -56,6 +56,7 @@ import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
 import Hidden from 'src/components/core/Hidden';
+import ObjectDetailDrawer from './ObjectDetailDrawer';
 
 const page_size = 100;
 
@@ -134,9 +135,11 @@ interface State {
   generalError?: APIError[];
   nextPageError?: APIError[];
   objectToDelete?: string;
+  objectDetailDrawerOpen: boolean;
+  selectedObject?: ExtendedObject;
 }
 
-export class BucketDetail extends React.Component<CombinedProps, {}> {
+export class BucketDetail extends React.Component<CombinedProps, State> {
   state: State = {
     data: [],
     loading: false,
@@ -145,7 +148,8 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     deleteObjectDialogOpen: false,
     deleteObjectLoading: false,
     generalError: undefined,
-    nextPageError: undefined
+    nextPageError: undefined,
+    objectDetailDrawerOpen: false
   };
 
   fetchData() {
@@ -485,6 +489,12 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                         prefix={prefix}
                         handleClickDownload={this.handleDownload}
                         handleClickDelete={this.handleClickDelete}
+                        handleClickDetails={(selectedObject: ExtendedObject) =>
+                          this.setState({
+                            selectedObject,
+                            objectDetailDrawerOpen: true
+                          })
+                        }
                       />
                     </TableBody>
                   </Table_CMR>
@@ -517,6 +527,14 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                         prefix={prefix}
                         handleClickDownload={this.handleDownload}
                         handleClickDelete={this.handleClickDelete}
+                        handleClickDetails={(
+                          selectedObject: ExtendedObject
+                        ) => {
+                          this.setState({
+                            selectedObject,
+                            objectDetailDrawerOpen: true
+                          });
+                        }}
                       />
                     </TableBody>
                   </Table>
@@ -586,6 +604,15 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
             </>
           </Grid>
         </Grid>
+        <ObjectDetailDrawer
+          open={this.state.objectDetailDrawerOpen}
+          onClose={() => this.setState({ objectDetailDrawerOpen: false })}
+          name={this.state.selectedObject?._displayName}
+          lastModified={this.state.selectedObject?.last_modified}
+          size={this.state.selectedObject?.size}
+          // @todo: get the full url
+          url={bucketName}
+        />
       </>
     );
   }
