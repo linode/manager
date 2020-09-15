@@ -119,6 +119,7 @@ class UpdateContactInformationForm extends React.Component<
     // email address is correct).
     if (this.props.focusEmail && this.emailRef.current) {
       this.emailRef.current.focus();
+      this.emailRef.current.scrollIntoView();
       this.setState({
         fields: { ...this.state.fields, email: account?.email }
       });

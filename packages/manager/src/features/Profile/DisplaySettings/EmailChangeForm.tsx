@@ -69,6 +69,7 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
   componentDidMount = () => {
     if (this.props.location.state?.focusEmail && this.emailRef.current) {
       this.emailRef.current.focus();
+      this.emailRef.current.scrollIntoView();
     }
   };
 
@@ -82,6 +83,7 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
       this.emailRef.current
     ) {
       this.emailRef.current.focus();
+      this.emailRef.current.scrollIntoView();
     }
   };
 

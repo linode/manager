@@ -43,7 +43,13 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
     <>
       {billingEmailBounceNotification && accountEmailRef && (
         <EmailBounceNotification
-          text={`An email to your account's email address couldn't be delivered. Is ${accountEmailRef.current} the correct address?`}
+          text={
+            <Typography>
+              An email to your account&apos;s email address couldn&apos;t be
+              delivered. Is <strong>{accountEmailRef.current}</strong> the
+              correct address?
+            </Typography>
+          }
           confirmEmail={confirmAccountEmail}
           changeEmail={() =>
             history.push('/account', { contactDrawerOpen: true })
@@ -52,7 +58,13 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
       )}
       {userEmailBounceNotification && profileEmailRef && (
         <EmailBounceNotification
-          text={`An email to your user profile's email address couldn't be delivered. Is ${profileEmailRef.current} the correct address?`}
+          text={
+            <Typography>
+              An email to your user profile&apos;s email address couldn&apos;t
+              be delivered. Is <strong>{profileEmailRef.current}</strong> the
+              correct address?
+            </Typography>
+          }
           confirmEmail={confirmProfileEmail}
           changeEmail={() =>
             history.push('/profile/display', { focusEmail: true })
@@ -89,7 +101,7 @@ const useEmailBounceNotificationStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  text: string;
+  text: React.ReactNode;
   confirmEmail: () => Promise<any>;
   changeEmail: () => void;
 }
@@ -132,7 +144,7 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo(props => {
       text={
         <Grid container alignItems="center">
           <Grid item xs={12} md={6} lg={8}>
-            <Typography>{text}</Typography>
+            {text}
           </Grid>
           <Grid
             container
