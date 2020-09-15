@@ -1,3 +1,4 @@
+import * as classnames from 'classnames';
 import { Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
@@ -12,6 +13,7 @@ import { compose } from 'recompose';
 import StackScriptsIcon from 'src/assets/addnewmenu/stackscripts.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Typography from 'src/components/core/Typography';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
@@ -519,25 +521,46 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           ) : (
             <React.Fragment>
               <div
-                className={`${classes.searchWrapper} ${this.props.flags.cmr &&
-                  classes.cmrSpacing}`}
+                className={classnames({
+                  [classes.searchWrapper]: true,
+                  [classes.cmrSpacing]: this.props.flags.cmr,
+                  [classes.cmrHeaderWrapper]: this.props.flags.cmr
+                })}
               >
-                <DebouncedSearch
-                  placeholder="Search by Label, Username, or Description"
-                  onSearch={this.handleSearch}
-                  debounceTime={400}
-                  className={classes.searchBar}
-                  isSearching={isSearching}
-                  tooltipText={
-                    this.props.category === 'community'
-                      ? `Hint: try searching for a specific item by prepending your
+                <div
+                  className={classnames({
+                    [classes.searchBarCMR]: this.props.flags.cmr
+                  })}
+                >
+                  <DebouncedSearch
+                    placeholder="Search by Label, Username, or Description"
+                    onSearch={this.handleSearch}
+                    debounceTime={400}
+                    className={classes.searchBar}
+                    isSearching={isSearching}
+                    tooltipText={
+                      this.props.category === 'community'
+                        ? `Hint: try searching for a specific item by prepending your
                   search term with "username:", "label:", or "description:"`
-                      : ''
-                  }
-                  label="Search by Label, Username, or Description"
-                  hideLabel
-                  defaultValue={query}
-                />
+                        : ''
+                    }
+                    label="Search by Label, Username, or Description"
+                    hideLabel
+                    defaultValue={query}
+                  />
+                </div>
+
+                <div className={classes.cmrActions}>
+                  <Button
+                    buttonType="primary"
+                    className={classes.button}
+                    onClick={this.goToCreateStackScript}
+                  >
+                    Create a StackScript...
+                  </Button>
+
+                  <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
+                </div>
               </div>
               {this.props.flags.cmr ? (
                 <Table_CMR
@@ -547,7 +570,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   noOverflow={true}
                   tableClass={classes.table}
                   border
-                  stickyHeader
                 >
                   <StackScriptTableHead_CMR
                     handleClickTableHeader={this.handleClickTableHeader}
@@ -571,7 +593,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   tableClass={classes.table}
                   removeLabelonMobile={!isSelecting}
                   border
-                  stickyHeader
                 >
                   <StackScriptTableHead
                     handleClickTableHeader={this.handleClickTableHeader}

@@ -2,10 +2,11 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
+
+import Breadcrumb from 'src/components/Breadcrumb';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
 import withImagesContainer, {
   WithImages
@@ -32,10 +33,6 @@ export const StackScriptsLanding: React.FC<CombinedProps> = props => {
   const { _loading } = useReduxLoad(['images']);
   const classes = useStyles();
 
-  const goToCreateStackScript = () => {
-    history.push('/stackscripts/create');
-  };
-
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="StackScripts" />
@@ -43,12 +40,10 @@ export const StackScriptsLanding: React.FC<CombinedProps> = props => {
         <Notice success text={history.location.state.successMessage} />
       )}
       <div className={classes.root}>
-        <LandingHeader
-          title="StackScripts"
-          entity="StackScript"
-          onAddNew={goToCreateStackScript}
-          docsLink="https://www.linode.com/docs/platform/stackscripts/"
-          createButtonWidth={180}
+        <Breadcrumb
+          pathname={location.pathname}
+          labelTitle="StackScripts"
+          removeCrumbX={1}
         />
       </div>
       <Grid container>

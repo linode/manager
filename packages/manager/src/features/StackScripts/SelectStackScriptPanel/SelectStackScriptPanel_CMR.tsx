@@ -170,7 +170,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               aria-label="List of StackScripts"
               noOverflow={true}
               tableClass={classes.table}
-              stickyHeader
               data-qa-select-stackscript
             >
               <StackScriptTableHead
