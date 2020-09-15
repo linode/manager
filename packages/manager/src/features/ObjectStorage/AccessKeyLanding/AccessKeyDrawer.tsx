@@ -1,5 +1,4 @@
 import { Formik } from 'formik';
-import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   AccessType,
   createObjectStorageKeysSchema,
@@ -8,9 +7,8 @@ import {
   ObjectStorageKeyRequest,
   Scope
 } from '@linode/api-v4/lib/object-storage';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
@@ -35,11 +33,7 @@ export interface Props {
   isRestrictedUser: boolean;
 }
 
-interface ReduxStateProps {
-  object_storage: AccountSettings['object_storage'];
-}
-
-type CombinedProps = Props & ReduxStateProps;
+type CombinedProps = Props;
 
 interface FormState {
   label: string;
@@ -81,6 +75,11 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
     objectStorageKey
   } = props;
 
+  const object_storage = useSelector(
+    (state: ApplicationState) =>
+      state.__resources.accountSettings.data?.object_storage ?? 'disabled'
+  );
+
   const { objectStorageBuckets: buckets } = useBuckets();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -120,10 +119,8 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
           } = formikProps;
 
           const beforeSubmit = () => {
-            confirmObjectStorage<FormState>(
-              props.object_storage,
-              formikProps,
-              () => setDialogOpen(true)
+            confirmObjectStorage<FormState>(object_storage, formikProps, () =>
+              setDialogOpen(true)
             );
           };
 
@@ -209,16 +206,4 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-const mapStateToProps = (state: ApplicationState) => {
-  return {
-    object_storage: pathOr<AccountSettings['object_storage']>(
-      'disabled',
-      ['data', 'object_storage'],
-      state.__resources.accountSettings
-    )
-  };
-};
-
-const connected = connect(mapStateToProps);
-
-export default connected(AccessKeyDrawer);
+export default React.memo(AccessKeyDrawer);

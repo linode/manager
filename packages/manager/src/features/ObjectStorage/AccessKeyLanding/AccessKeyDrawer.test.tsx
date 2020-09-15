@@ -1,23 +1,18 @@
-import { shallow } from 'enzyme';
-import { AccountSettings } from '@linode/api-v4/lib/account';
+import { screen } from '@testing-library/react';
 import * as React from 'react';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AccessKeyDrawer, MODES, Props } from './AccessKeyDrawer';
 
 describe('AccessKeyDrawer', () => {
-  const props = {
-    classes: { root: '' },
+  const props: Props = {
     open: true,
     onSubmit: jest.fn(),
     onClose: jest.fn(),
-    label: 'test-label',
-    updateLabel: jest.fn(),
-    isLoading: false,
     mode: 'creating' as MODES,
-    isRestrictedUser: false,
-    object_storage: 'active' as AccountSettings['object_storage']
+    isRestrictedUser: false
   };
-  const wrapper = shallow<Props>(<AccessKeyDrawer {...props} />);
+  renderWithTheme(<AccessKeyDrawer {...props} />);
   it('renders without crashing', () => {
-    expect(wrapper).toHaveLength(1);
+    expect(screen.getByText(/create an access key/i)).toBeInTheDocument();
   });
 });
