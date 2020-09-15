@@ -381,6 +381,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
+      <DocumentTitleSegment segment="Images" />
       {flags.cmr ? (
         <LandingHeader
           title="Images"
@@ -389,31 +390,28 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
           docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
         />
       ) : (
-        <>
-          <DocumentTitleSegment segment="Images" />
-          <Grid
-            container
-            justify="space-between"
-            alignItems="flex-end"
-            updateFor={[classes]}
-            style={{ paddingBottom: 0 }}
-          >
-            <Grid item>
-              <Breadcrumb
-                pathname={props.location.pathname}
-                labelTitle="Images"
-                className={classes.title}
-              />
-            </Grid>
-            <Grid item>
-              <Grid container alignItems="flex-end">
-                <Grid item className="pt0">
-                  <AddNewLink onClick={openForCreate} label="Add an Image" />
-                </Grid>
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          updateFor={[classes]}
+          style={{ paddingBottom: 0 }}
+        >
+          <Grid item>
+            <Breadcrumb
+              pathname={props.location.pathname}
+              labelTitle="Images"
+              className={classes.title}
+            />
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="flex-end">
+              <Grid item className="pt0">
+                <AddNewLink onClick={openForCreate} label="Add an Image" />
               </Grid>
             </Grid>
           </Grid>
-        </>
+        </Grid>
       )}
       <Paper>
         <Table
