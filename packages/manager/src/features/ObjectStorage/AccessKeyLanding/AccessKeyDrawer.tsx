@@ -17,6 +17,7 @@ import TextField from 'src/components/TextField';
 import { ApplicationState } from 'src/store';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
+import LimitedAccessControls from './LimitedAccessControls';
 
 export type MODES = 'creating' | 'editing';
 
@@ -51,6 +52,9 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   } = props;
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
+  // This is for local display management only, not part of the payload
+  // and so not included in Formik's types
+  const [limitedAccessChecked, setLimitedAccessChecked] = React.useState(false);
 
   const title =
     mode === 'creating' ? 'Create an Access Key' : 'Edit Access Key';
@@ -131,6 +135,12 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={isRestrictedUser}
+              />
+              <LimitedAccessControls
+                handleToggle={() =>
+                  setLimitedAccessChecked(checked => !checked)
+                }
+                checked={limitedAccessChecked}
               />
               <ActionsPanel>
                 <Button
