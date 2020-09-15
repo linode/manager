@@ -70,7 +70,11 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Breadcrumb pathname={props.location.pathname} labelTitle="Firewalls" />
-        <DocumentationButton href={'https://google.com'} />
+        <DocumentationButton
+          href={
+            'https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/'
+          }
+        />
       </Box>
       <Divider className={classes.line} type="landingHeader" />
       <Grid

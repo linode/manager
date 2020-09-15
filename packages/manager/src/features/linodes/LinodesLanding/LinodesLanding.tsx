@@ -98,7 +98,12 @@ interface Params {
 
 type RouteProps = RouteComponentProps<Params>;
 
-type CombinedProps = WithImages &
+interface Props {
+  isDashboard?: boolean;
+}
+
+type CombinedProps = Props &
+  WithImages &
   StateProps &
   DispatchProps &
   RouteProps &
@@ -271,7 +276,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
       return (
         <React.Fragment>
-          <DocumentTitleSegment segment="Linodes" />
+          {/** Don't override the document title if we're rendering this on the Dashboard */}
+          {!this.props.isDashboard ? (
+            <DocumentTitleSegment segment="Linodes" />
+          ) : null}
           <ErrorState errorText={errorText} />
         </React.Fragment>
       );
@@ -364,7 +372,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             }`}
             xs={this.props.flags.cmr || !displayBackupsCTA ? 12 : undefined}
           >
-            <DocumentTitleSegment segment="Linodes" />
+            {/** Don't override the document title if we're rendering this on the Dashboard */}
+            {!this.props.isDashboard ? (
+              <DocumentTitleSegment segment="Linodes" />
+            ) : null}
             <PreferenceToggle<boolean>
               localStorageKey="GROUP_LINODES"
               preferenceOptions={[false, true]}
@@ -773,7 +784,7 @@ const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
   return stringify(updater(paramsAsObject));
 };
 
-export const enhanced = compose<CombinedProps, {}>(
+export const enhanced = compose<CombinedProps, Props>(
   withRouter,
   setDocs(ListLinodes.docs),
   withSnackbar,
