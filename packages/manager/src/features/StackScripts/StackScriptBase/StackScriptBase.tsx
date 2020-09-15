@@ -550,17 +550,19 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   />
                 </div>
 
-                <div className={classes.cmrActions}>
-                  <Button
-                    buttonType="primary"
-                    className={classes.button}
-                    onClick={this.goToCreateStackScript}
-                  >
-                    Create a StackScript...
-                  </Button>
+                {this.props.flags.cmr && (
+                  <div className={classes.cmrActions}>
+                    <Button
+                      buttonType="primary"
+                      className={classes.button}
+                      onClick={this.goToCreateStackScript}
+                    >
+                      Create a StackScript...
+                    </Button>
 
-                  <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
-                </div>
+                    <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
+                  </div>
+                )}
               </div>
               {this.props.flags.cmr ? (
                 <Table_CMR
