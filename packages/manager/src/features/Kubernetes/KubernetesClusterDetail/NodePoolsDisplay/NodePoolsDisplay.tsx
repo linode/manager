@@ -4,6 +4,7 @@ import {
 } from '@linode/api-v4/lib/kubernetes/types';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
+import { Waypoint } from 'react-waypoint';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -90,6 +91,13 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   const deletePoolDialog = useDialog<number>(deletePool);
   const recycleAllNodesDialog = useDialog<number>(recycleAllNodes);
   const recycleNodeDialog = useDialog<number>(deleteLinode);
+
+  const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(25);
+  const handleShowMore = () => {
+    if (numPoolsToDisplay < pools.length) {
+      setNumPoolsToDisplay(Math.min(numPoolsToDisplay + 25, pools.length));
+    }
+  };
 
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const [resizeDrawerOpen, setResizeDrawerOpen] = React.useState<boolean>(
@@ -184,6 +192,8 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     });
   };
 
+  const _pools = pools.slice(0, numPoolsToDisplay);
+
   /**
    * If the API returns an error when fetching node pools,
    * we want to display this error to the user from the
@@ -234,7 +244,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
         ) : (
           <Grid container direction="column">
             <Grid item xs={12} className={classes.displayTable}>
-              {pools.map(thisPool => {
+              {_pools.map(thisPool => {
                 const { id, nodes } = thisPool;
 
                 const thisPoolType = types.find(
@@ -259,7 +269,13 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                   </div>
                 );
               })}
+              {pools.length > numPoolsToDisplay && (
+                <Waypoint onEnter={handleShowMore} scrollableAncestor="window">
+                  <div style={{ minHeight: 50 }} />
+                </Waypoint>
+              )}
             </Grid>
+
             <AddNodePoolDrawer
               clusterLabel={clusterLabel}
               open={addDrawerOpen}
