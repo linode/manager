@@ -31,7 +31,7 @@ import { MapState } from 'src/store/types';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 
 import { sendMigrationNavigationEvent } from 'src/utilities/ga';
-import { filterCurrentTypes } from 'src/store/linodeType/linodeType.reducer';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 
 export interface Props {
   linodeId: number;

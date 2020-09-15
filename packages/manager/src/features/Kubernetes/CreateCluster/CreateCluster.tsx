@@ -24,7 +24,7 @@ import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
-import { filterCurrentTypes } from 'src/store/linodeType/linodeType.reducer';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';

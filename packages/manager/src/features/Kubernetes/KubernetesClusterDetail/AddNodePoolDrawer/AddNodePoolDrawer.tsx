@@ -12,7 +12,7 @@ import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolP
 import SelectPlanQuantityPanel, {
   ExtendedTypeWithCount
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel.tsx';
-import { filterCurrentTypes } from 'src/store/linodeType/linodeType.reducer';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { nodeWarning } from '../../kubeUtils';

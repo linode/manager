@@ -77,7 +77,6 @@ import { sendCreateLinodeEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 import { getRegionIDFromLinodeID } from './utilities';
-import { filterCurrentTypes } from 'src/store/linodeType/linodeType.reducer';
 
 const DEFAULT_IMAGE = 'linode/debian10';
 
@@ -680,7 +679,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             setBackupID={this.setBackupID}
             regionsData={filteredRegions!}
             regionHelperText={regionHelperText}
-            typesData={filterCurrentTypes(typesData)}
+            typesData={typesData}
             {...restOfProps}
             {...restOfState}
           />
