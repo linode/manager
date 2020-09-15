@@ -1,4 +1,4 @@
-import * as classnames from 'classnames';
+import classnames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 import Undo from 'src/assets/icons/undo.svg';
@@ -29,7 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   header: {
     display: 'flex',
     justifyContent: 'space-between',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   },
   undoButtonContainer: {
     display: 'flex',
