@@ -15,6 +15,7 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 
 type ClassNames =
   | 'root'
@@ -123,6 +124,13 @@ class AddonsPanel extends React.Component<CombinedProps> {
             Optional Add-ons
           </Typography>
           <Grid container>
+            <SMTPRestrictionText>
+              {({ text }) => (
+                <Grid item xs={12}>
+                  {text}
+                </Grid>
+              )}
+            </SMTPRestrictionText>
             <Grid item xs={12}>
               <FormControlLabel
                 className={classes.label}
