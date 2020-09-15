@@ -5,8 +5,16 @@ export interface ObjectStorageKey {
   secret_key: string;
 }
 
+export type AccessType = 'read-only' | 'read-write' | 'none';
+export interface Scope {
+  bucket: string;
+  cluster: string;
+  access: AccessType;
+}
+
 export interface ObjectStorageKeyRequest {
   label: string;
+  permissions?: Scope[]; // sent only when creating a limited access key
 }
 
 export interface ObjectStorageBucketRequestPayload {

@@ -1,3 +1,4 @@
+import { Scope } from '@linode/api-v4/lib/object-storage/types';
 import * as React from 'react';
 import Toggle from 'src/components/Toggle';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -57,12 +58,6 @@ export const LimitedAccessControls: React.FC<Props> = props => {
 };
 
 export default React.memo(LimitedAccessControls);
-
-export interface Scope {
-  bucket: string;
-  cluster: string;
-  access: 'read-only' | 'read-write' | 'none';
-}
 
 interface TableProps {
   mode: 'creating' | 'editing';
