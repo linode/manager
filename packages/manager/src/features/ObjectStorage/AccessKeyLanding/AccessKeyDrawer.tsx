@@ -67,7 +67,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Drawer title={title} open={open} onClose={onClose}>
+    <Drawer title={title} open={open} onClose={onClose} wide>
       <Formik
         initialValues={initialValues}
         validationSchema={createObjectStorageKeysSchema}
@@ -137,6 +137,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
                 disabled={isRestrictedUser}
               />
               <LimitedAccessControls
+                mode={mode}
                 handleToggle={() =>
                   setLimitedAccessChecked(checked => !checked)
                 }
