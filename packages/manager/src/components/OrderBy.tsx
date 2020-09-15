@@ -15,7 +15,6 @@ import {
   sortByUTFDate
 } from 'src/utilities/sort-by';
 import { debounce } from 'throttle-debounce';
-import { isArray } from 'util';
 
 export interface OrderByProps extends State {
   handleOrderChange: (orderBy: string, order: Order) => void;
@@ -107,7 +106,7 @@ export const sortData = (orderBy: string, order: Order) => {
     const aValue = pathOr('', !!orderByProp ? orderByProp : [orderBy], a);
     const bValue = pathOr('', !!orderByProp ? orderByProp : [orderBy], b);
 
-    if (isArray(aValue) && isArray(bValue)) {
+    if (Array.isArray(aValue) && Array.isArray(bValue)) {
       return sortByArrayLength(aValue, bValue, order);
     }
 
