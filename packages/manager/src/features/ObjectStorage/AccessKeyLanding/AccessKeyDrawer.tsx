@@ -1,9 +1,12 @@
 import { Formik } from 'formik';
 import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
+  AccessType,
   createObjectStorageKeysSchema,
+  ObjectStorageBucket,
   ObjectStorageKey,
-  ObjectStorageKeyRequest
+  ObjectStorageKeyRequest,
+  Scope
 } from '@linode/api-v4/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -14,6 +17,7 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import useBuckets from 'src/hooks/useObjectStorageBuckets';
 import { ApplicationState } from 'src/store';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
@@ -39,7 +43,33 @@ type CombinedProps = Props & ReduxStateProps;
 
 interface FormState {
   label: string;
+  scopes?: Scope[];
 }
+
+/**
+ * Helpers for converting a list of buckets
+ * on the user's account into a list of
+ * permissions in the shape the API will expect,
+ * sorted by cluster.
+ */
+const sortByCluster = (a: Scope, b: Scope) => {
+  if (a.cluster > b.cluster) {
+    return 1;
+  }
+  if (a.cluster < b.cluster) {
+    return -1;
+  }
+  return 0;
+};
+
+export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
+  buckets
+    .map(thisBucket => ({
+      cluster: thisBucket.cluster,
+      bucket: thisBucket.label,
+      access: 'none' as AccessType
+    }))
+    .sort(sortByCluster);
 
 export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   const {
@@ -50,6 +80,8 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
     mode,
     objectStorageKey
   } = props;
+
+  const { objectStorageBuckets: buckets } = useBuckets();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   // This is for local display management only, not part of the payload
@@ -63,7 +95,8 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
     mode === 'editing' && objectStorageKey ? objectStorageKey.label : '';
 
   const initialValues: FormState = {
-    label: initialLabelValue
+    label: initialLabelValue,
+    scopes: getDefaultScopes(buckets.data)
   };
 
   return (
@@ -138,6 +171,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
               />
               <LimitedAccessControls
                 mode={mode}
+                scopes={values.scopes}
                 handleToggle={() =>
                   setLimitedAccessChecked(checked => !checked)
                 }

@@ -12,34 +12,35 @@ import TableCell from 'src/components/TableCell';
 interface Props {
   mode: 'creating' | 'editing';
   checked: boolean;
+  scopes?: Scope[];
   handleToggle: () => void;
 }
 
-const fakeScopes = [
-  {
-    cluster: 'us-east-1',
-    bucket: 'bucket-name-1',
-    access: 'read-only'
-  },
-  {
-    cluster: 'us-east-1',
-    bucket: 'bucket-name-2',
-    access: 'read-write'
-  },
-  {
-    cluster: 'eu-central-1',
-    bucket: 'bucket-name-3',
-    access: 'none'
-  },
-  {
-    cluster: 'ap-south-1',
-    bucket: 'bucket-name-4',
-    access: 'none'
-  }
-];
+// const fakeScopes = [
+//   {
+//     cluster: 'us-east-1',
+//     bucket: 'bucket-name-1',
+//     access: 'read-only'
+//   },
+//   {
+//     cluster: 'us-east-1',
+//     bucket: 'bucket-name-2',
+//     access: 'read-write'
+//   },
+//   {
+//     cluster: 'eu-central-1',
+//     bucket: 'bucket-name-3',
+//     access: 'none'
+//   },
+//   {
+//     cluster: 'ap-south-1',
+//     bucket: 'bucket-name-4',
+//     access: 'none'
+//   }
+// ];
 
 export const LimitedAccessControls: React.FC<Props> = props => {
-  const { checked, handleToggle, mode } = props;
+  const { checked, handleToggle, mode, scopes } = props;
   return (
     <>
       <FormControlLabel
@@ -52,7 +53,7 @@ export const LimitedAccessControls: React.FC<Props> = props => {
         }
         label={'Limited Access'}
       />
-      <AccessTable mode={mode} scopes={fakeScopes as any} />
+      <AccessTable mode={mode} scopes={scopes ?? []} />
     </>
   );
 };
