@@ -2,7 +2,11 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
-import { makeStyles } from 'src/components/core/styles';
+import {
+  makeStyles,
+  useMediaQuery,
+  useTheme
+} from 'src/components/core/styles';
 import { Theme } from 'src/components/core/styles/createMuiTheme';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -80,11 +84,7 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
 // =============================================================================
 const useEmailBounceNotificationStyles = makeStyles((theme: Theme) => ({
   updateButton: {
-    marginLeft: 16,
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: 0,
-      marginTop: 12
-    }
+    marginLeft: 16
   },
   buttonContainer: {
     justifyContent: 'flex-end',
@@ -93,9 +93,6 @@ const useEmailBounceNotificationStyles = makeStyles((theme: Theme) => ({
       marginBottom: 4,
       marginLeft: 2,
       justifyContent: 'flex-start'
-    },
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column'
     }
   }
 }));
@@ -132,6 +129,12 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo(props => {
       });
   };
 
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const confirmationText = matchesSmDown ? 'Confirm' : "Yes it's correct.";
+  const updateText = matchesSmDown ? 'Update' : "No, let's update it.";
+
   if (dismissed) {
     return null;
   }
@@ -159,14 +162,14 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo(props => {
               onClick={handleConfirm}
               loading={loading}
             >
-              Yes, it&apos;s correct.
+              {confirmationText}
             </Button>
             <Button
               className={classes.updateButton}
               buttonType="primary"
               onClick={changeEmail}
             >
-              No, let&apos;s update it.
+              {updateText}
             </Button>
           </Grid>
         </Grid>
