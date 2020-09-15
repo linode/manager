@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(1)
+      marginLeft: theme.spacing()
     }
   }
 }));

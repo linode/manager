@@ -14,6 +14,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { LongviewService } from 'src/features/Longview/request.types';
+import useFlags from 'src/hooks/useFlags';
 import LongviewServiceRow from './LongviewServiceRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -31,6 +32,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         textAlign: 'right'
       }
     }
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
   }
 }));
 
@@ -41,10 +47,15 @@ export interface TableProps {
 }
 
 export const ListeningServices: React.FC<TableProps> = props => {
+  const classes = useStyles();
+  const flags = useFlags();
+
   const { services, servicesError, servicesLoading } = props;
   return (
     <Grid item xs={12} md={8}>
-      <Typography variant="h2">Listening Services</Typography>
+      <Typography variant="h2" className={flags.cmr ? classes.cmrSpacing : ''}>
+        Listening Services
+      </Typography>
       <ServicesTable
         services={services}
         servicesLoading={servicesLoading}
