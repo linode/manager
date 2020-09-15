@@ -88,7 +88,10 @@ const styles = (theme: Theme) =>
     },
     title: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(1)
+      }
     },
     subTitle: {
       marginBottom: theme.spacing(1)

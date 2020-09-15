@@ -16,9 +16,15 @@ import StackScriptPanel from './StackScriptPanel/StackScriptPanel_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
+    '& + div': {
+      margin: 0
+    }
   },
   panel: {
+    '&.MuiGrid-item': {
+      padding: 0
+    },
     '& > div': {
       padding: theme.spacing(2)
     }
