@@ -36,7 +36,8 @@ type CombinedProps = ContextProps &
 
 const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
   const {
-    match: { url }
+    match: { url },
+    linodeLabel
   } = props;
 
   const tabs = [
@@ -98,7 +99,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
           </SafeTabPanel>
 
           <SafeTabPanel index={2}>
-            <LinodeStorage />
+            <LinodeStorage linodeLabel={linodeLabel} />
           </SafeTabPanel>
 
           <SafeTabPanel index={3}>
