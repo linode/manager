@@ -53,7 +53,7 @@ export const EntityTableHeader: React.FC<Props> = props => {
                   label={thisCell.dataColumn}
                   direction={order}
                   handleClick={handleOrderChange}
-                  style={{ width: thisCell.widthPercent }}
+                  style={{ width: `${thisCell.widthPercent}%` }}
                   data-testid={`${thisCell.label}-header-cell`}
                 >
                   {thisCell.label}
@@ -66,7 +66,7 @@ export const EntityTableHeader: React.FC<Props> = props => {
                 label={thisCell.dataColumn}
                 direction={order}
                 handleClick={handleOrderChange}
-                style={{ width: thisCell.widthPercent }}
+                style={{ width: `${thisCell.widthPercent}%` }}
                 data-testid={`${thisCell.label}-header-cell`}
               >
                 {thisCell.label}
@@ -80,7 +80,7 @@ export const EntityTableHeader: React.FC<Props> = props => {
                     key={thisCell.dataColumn}
                     data-testid={`${thisCell.label}-header-cell`}
                     className={classes.thead}
-                    style={{ width: thisCell.widthPercent }}
+                    style={{ width: `${thisCell.widthPercent}%` }}
                   >
                     <span
                       className={
@@ -98,7 +98,7 @@ export const EntityTableHeader: React.FC<Props> = props => {
                   key={thisCell.dataColumn}
                   data-testid={`${thisCell.label}-header-cell`}
                   className={classes.thead}
-                  style={{ width: thisCell.widthPercent }}
+                  style={{ width: `${thisCell.widthPercent}%` }}
                 >
                   <span
                     className={

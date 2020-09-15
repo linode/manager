@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-09-14] - 1.19.1
+
+### Fixed:
+
+- Cloud Firewalls could be attached to Linodes in unsupported regions
+- Duplicate rows when editing Firewall rules
+
 ## [2020-09-09] - 1.19.0
 
 ### Added:

@@ -5,7 +5,9 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+  root: {
+    width: '100% !important'
+  },
   container: {
     marginTop: theme.spacing(3)
   },
@@ -48,6 +50,7 @@ const DashboardCard: React.FC<CombinedProps> = props => {
     <Grid
       container
       className={classNames(className, {
+        [classes.root]: true,
         [classes.container]: true
       })}
       data-qa-card={title}
