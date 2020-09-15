@@ -319,7 +319,7 @@ export const EventsLanding: React.FC<CombinedProps> = props => {
         </Table>
       </Paper>
       {loadMoreEvents && initialLoaded && !isLoading ? (
-        <Waypoint onEnter={getNext} scrollableAncestor="window">
+        <Waypoint onEnter={getNext}>
           <div />
         </Waypoint>
       ) : (
