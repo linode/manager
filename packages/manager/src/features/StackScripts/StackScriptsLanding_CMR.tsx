@@ -16,9 +16,7 @@ import { filterImagesByType } from 'src/store/image/image.helpers';
 import StackScriptPanel from './StackScriptPanel/StackScriptPanel_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(3)
-  },
+  root: {},
   panel: {
     '& > div': {
       padding: theme.spacing(2)
