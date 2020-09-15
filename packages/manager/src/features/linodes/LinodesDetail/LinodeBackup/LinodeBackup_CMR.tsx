@@ -38,7 +38,6 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
@@ -794,7 +793,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { backupsEnabled, linodeLabel, permissions, type } = this.props;
+    const { backupsEnabled, permissions, type } = this.props;
 
     if (this.props.backups.error) {
       /** @todo remove promise loader and source backups from Redux */
@@ -808,7 +807,6 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
 
     return (
       <div>
-        <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
         {backupsEnabled ? (
           <this.Management />
         ) : (

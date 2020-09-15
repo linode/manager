@@ -5,6 +5,8 @@ import { PaginationProps } from 'src/components/Paginate';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
+import { NotificationDrawer } from 'src/features/NotificationCenter';
+import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import useFlags from 'src/hooks/useFlags';
 import useLinodes from 'src/hooks/useLinodes';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
@@ -35,8 +37,13 @@ export const ListView: React.FC<CombinedProps> = props => {
     label: '',
     linodeID: 0
   });
+  const [notificationDrawerOpen, setNotificationDrawerOpen] = React.useState(
+    false
+  );
 
   const { updateLinode } = useLinodes();
+  const flags = useFlags();
+  const notificationData = useNotificationData();
 
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
@@ -74,7 +81,8 @@ export const ListView: React.FC<CombinedProps> = props => {
     props.openDialog('delete', linodeID, linodeLabel);
   };
 
-  const flags = useFlags();
+  const openNotificationDrawer = () => setNotificationDrawerOpen(true);
+  const closeNotificationDrawer = () => setNotificationDrawerOpen(false);
 
   const Row = flags.cmr ? LinodeRow_CMR : LinodeRow;
 
@@ -104,6 +112,7 @@ export const ListView: React.FC<CombinedProps> = props => {
           key={`linode-row-${idx}`}
           openTagDrawer={openTagDrawer}
           openDialog={openDialog}
+          openNotificationDrawer={openNotificationDrawer}
           // @todo delete after CMR
           openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
@@ -116,6 +125,11 @@ export const ListView: React.FC<CombinedProps> = props => {
         addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
         deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
         onClose={closeTagDrawer}
+      />
+      <NotificationDrawer
+        open={notificationDrawerOpen}
+        onClose={closeNotificationDrawer}
+        data={notificationData}
       />
     </>
   );

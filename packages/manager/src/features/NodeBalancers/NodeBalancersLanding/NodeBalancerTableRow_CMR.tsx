@@ -11,11 +11,17 @@ import NodeBalancerActionMenu from './NodeBalancerActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  // @todo: temporary measure that will cause scroll for the 'Name' and 'Backend Status'
+  // column until we implement a hideOnTablet prop for EntityTables to prevent the
+  // ActionCell from being misaligned
   labelWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    wordBreak: 'break-all'
+    whiteSpace: 'nowrap'
+  },
+  statusWrapper: {
+    whiteSpace: 'nowrap'
   },
   link: {
     display: 'block',
@@ -79,7 +85,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = props => {
         </div>
       </TableCell>
       <Hidden xsDown>
-        <TableCell data-qa-node-status>
+        <TableCell data-qa-node-status className={classes.statusWrapper}>
           <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
         </TableCell>
         <TableCell data-qa-transferred>

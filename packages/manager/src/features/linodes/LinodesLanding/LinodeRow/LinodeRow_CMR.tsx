@@ -25,7 +25,7 @@ import {
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
 import useLinodes from 'src/hooks/useLinodes';
-import { capitalize } from 'src/utilities/capitalize';
+import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
@@ -74,6 +74,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openNotificationDrawer: () => void;
 }
 
 export type CombinedProps = Props &
@@ -107,17 +108,17 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     openTagDrawer,
     openDialog,
     openPowerActionDialog,
+    openNotificationDrawer,
     // displayType, @todo use for M3-2059
     recentEvent,
     mutationAvailable
   } = props;
 
   const { updateLinode } = useLinodes();
+  const { enqueueSnackbar } = useSnackbar();
 
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const addTag = React.useCallback(
     (tag: string) => {
@@ -209,17 +210,24 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             recentEvent && (
               <>
                 <StatusIcon status={iconStatus} />
-                <ProgressDisplay
-                  className={classes.progressDisplay}
-                  progress={recentEvent.percent_complete}
-                  text={transitionText(status, id, recentEvent)}
-                />
+                <button
+                  className={classes.statusLink}
+                  onClick={() => openNotificationDrawer()}
+                >
+                  <ProgressDisplay
+                    className={classes.progressDisplay}
+                    progress={recentEvent.percent_complete}
+                    text={transitionText(status, id, recentEvent)}
+                  />
+                </button>
               </>
             )
           ) : (
             <>
               <StatusIcon status={iconStatus} />
-              {capitalize(displayStatus)}
+              {displayStatus.includes('_')
+                ? capitalizeAllWords(displayStatus.replace('_', ' '))
+                : capitalize(displayStatus)}
             </>
           )
         ) : (
@@ -341,8 +349,7 @@ const ProgressDisplay: React.FC<{
 
   return (
     <Typography variant="body2" className={className}>
-      {text}:{' '}
-      {displayProgress === 'scheduled' ? '(0%)' : `(${displayProgress})`}
+      {text} {displayProgress === 'scheduled' ? '(0%)' : `(${displayProgress})`}
     </Typography>
   );
 };

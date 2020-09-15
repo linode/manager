@@ -19,7 +19,9 @@ describe('ListLinodes', () => {
     chipOffline: '',
     controlHeader: '',
     toggleButton: '',
-    clearFilters: ''
+    clearFilters: '',
+    cmrSpacing: '',
+    cmrCSVlink: ''
   };
 
   it('renders without error', () => {

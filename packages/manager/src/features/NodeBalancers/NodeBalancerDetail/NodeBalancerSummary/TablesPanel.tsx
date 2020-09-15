@@ -21,6 +21,9 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import { ExtendedNodeBalancer } from 'src/features/NodeBalancers/types';
 import { ApplicationState } from 'src/store';
@@ -38,7 +41,8 @@ type ClassNames =
   | 'header'
   | 'title'
   | 'panel'
-  | 'graphWrapper';
+  | 'graphWrapper'
+  | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -96,6 +100,11 @@ const styles = (theme: Theme) =>
       '&:before': {
         backgroundColor: theme.color.yellow
       }
+    },
+    cmrSpacing: {
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing()
+      }
     }
   });
 
@@ -110,7 +119,11 @@ interface State {
   statsError?: string;
 }
 
-type CombinedProps = Props & WithTheme & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  WithTheme &
+  StateProps &
+  WithStyles<ClassNames> &
+  FeatureFlagConsumerProps;
 
 const statsFetchInterval = 30000;
 
@@ -336,12 +349,17 @@ class TablesPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, flags } = this.props;
     const { statsError, loadingStats } = this.state;
     return (
       <React.Fragment>
         <div className={classes.graphControls}>
-          <Typography variant="h2">Graphs</Typography>
+          <Typography
+            className={flags.cmr ? classes.cmrSpacing : ''}
+            variant="h2"
+          >
+            Graphs
+          </Typography>
         </div>
         <Paper className={classes.panel}>
           {this.renderConnectionsChart(statsError, loadingStats)}
@@ -364,6 +382,11 @@ const withTimezone = connect((state: ApplicationState, ownProps) => ({
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(withTheme, withTimezone, styled);
+const enhanced = compose<CombinedProps, Props>(
+  withTheme,
+  withTimezone,
+  styled,
+  withFeatureFlags
+);
 
 export default enhanced(TablesPanel);

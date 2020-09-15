@@ -2,6 +2,7 @@ import {
   PoolNodeRequest,
   PoolNodeResponse
 } from '@linode/api-v4/lib/kubernetes/types';
+import classnames from 'classnames';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import AddNewLink from 'src/components/AddNewLink';
@@ -12,6 +13,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { useDialog } from 'src/hooks/useDialog';
+import useFlags from 'src/hooks/useFlags';
 import useLinodes from 'src/hooks/useLinodes';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -56,6 +58,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   nodePool: {
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(4)
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -84,6 +92,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
 
   const { deleteLinode } = useLinodes();
 
@@ -213,12 +222,23 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
         style={{ paddingBottom: 0 }}
       >
         <Grid item>
-          <Typography variant="h2" className={classes.nodePoolHeader}>
+          <Typography
+            variant="h2"
+            className={classnames({
+              [classes.nodePoolHeader]: true,
+              [classes.cmrSpacing]: flags.cmr
+            })}
+          >
             Node Pools
           </Typography>
         </Grid>
         <Grid item>
-          <div className={classes.addNodePoolLink}>
+          <div
+            className={classnames({
+              [classes.addNodePoolLink]: true,
+              [classes.cmrSpacing]: flags.cmr
+            })}
+          >
             <AddNewLink
               onClick={() => {
                 handleOpenAddDrawer();

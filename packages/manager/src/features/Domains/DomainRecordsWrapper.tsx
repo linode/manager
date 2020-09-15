@@ -10,26 +10,41 @@ import TagsPanel from 'src/components/TagsPanel';
 import summaryPanelStyles, {
   StyleProps
 } from 'src/containers/SummaryPanels.styles';
+import useFlags from 'src/hooks/useFlags';
 import DeleteDomain from './DeleteDomain';
 import DomainRecords from './DomainRecords';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    marginLeft: 0,
+    marginRight: 0
   },
   main: {
+    '&.MuiGrid-item': {
+      padding: 0
+    },
     [theme.breakpoints.up('md')]: {
       order: 1
     }
   },
   sidebar: {
     [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing(1),
       order: 2
     }
   },
-  domainSidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(1)
+  cmrSidebar: {
+    [theme.breakpoints.down('md')]: {
+      '&.MuiGrid-item': {
+        paddingLeft: 0,
+        paddingRight: 0
+      }
+    }
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
     }
   },
   tagPanel: {
@@ -50,6 +65,7 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
   const { domain, records, updateRecords, handleUpdateTags, classes } = props;
   const hookClasses = useStyles();
   const history = useHistory();
+  const flags = useFlags();
 
   return (
     <Grid container className={hookClasses.root}>
@@ -63,7 +79,8 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
       <Grid
         item
         xs={12}
-        className={`${hookClasses.sidebar} ${hookClasses.domainSidebar}`}
+        className={`${hookClasses.sidebar} ${flags.cmr &&
+          hookClasses.cmrSidebar}`}
         id="domains-tag-section"
       >
         <Paper className={classes.summarySection}>
@@ -74,7 +91,10 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
             <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
           </div>
         </Paper>
-        <div className={hookClasses.tagPanel}>
+        <div
+          className={`${hookClasses.tagPanel} ${flags.cmr &&
+            hookClasses.cmrSpacing}`}
+        >
           <DeleteDomain
             domainId={domain.id}
             domainLabel={domain.domain}
