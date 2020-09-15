@@ -12,7 +12,8 @@ type ClassNames =
   | 'table'
   | 'searchWrapper'
   | 'searchBar'
-  | 'stackscriptPlaceholder';
+  | 'stackscriptPlaceholder'
+  | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -44,6 +45,11 @@ const styles = (theme: Theme) =>
       '& > div': {
         marginRight: 0
       }
+    },
+    cmrSpacing: {
+      paddingTop: 4,
+      paddingBottom: `4px !important`,
+      paddingLeft: 4
     },
     // Styles to override base placeholder styles for StackScript null state
     stackscriptPlaceholder: {

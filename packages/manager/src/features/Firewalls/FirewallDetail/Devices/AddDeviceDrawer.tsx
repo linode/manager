@@ -1,3 +1,4 @@
+import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -5,6 +6,7 @@ import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
+import useRegions from 'src/hooks/useRegions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import v4 from 'uuid';
 
@@ -28,6 +30,14 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
     onClose,
     open
   } = props;
+
+  const regions = useRegions();
+
+  const regionsWithFirewalls = Object.values(regions.entities)
+    .filter(thisRegion =>
+      thisRegion.capabilities.includes('Cloud Firewall' as Capabilities)
+    )
+    .map(thisRegion => thisRegion.id);
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
 
@@ -67,8 +77,10 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
         {errorMessage && <Notice error text={errorMessage} />}
         <LinodeMultiSelect
           key={key}
+          allowedRegions={regionsWithFirewalls}
           handleChange={selected => setSelectedLinodes(selected)}
-          helperText="You can assign one or more Linodes to this Firewall."
+          helperText="You can assign one or more Linodes to this Firewall. Only Linodes
+          in regions that currently support Firewalls will be displayed as options."
           filteredLinodes={currentDevices}
         />
         <ActionsPanel>

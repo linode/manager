@@ -22,7 +22,6 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import EntityHeader from 'src/components/EntityHeader';
 import ErrorState from 'src/components/ErrorState';
 import OrderBy from 'src/components/OrderBy';
@@ -509,7 +508,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     return (
       <div>
-        <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         {readOnly && <LinodePermissionsError />}
         <LinodeNetworkingSummaryPanel
           linodeRegion={linodeRegion}

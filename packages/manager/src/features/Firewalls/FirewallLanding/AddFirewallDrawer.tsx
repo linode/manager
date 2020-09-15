@@ -4,6 +4,7 @@ import {
   CreateFirewallSchema,
   Firewall
 } from '@linode/api-v4/lib/firewalls';
+import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -12,6 +13,7 @@ import Drawer, { DrawerProps } from 'src/components/Drawer';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import useRegions from 'src/hooks/useRegions';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -42,6 +44,14 @@ const initialValues: CreateFirewallPayload = {
 
 const AddFirewallDrawer: React.FC<CombinedProps> = props => {
   const { onClose, onSubmit, ...restOfDrawerProps } = props;
+
+  const regions = useRegions();
+
+  const regionsWithFirewalls = Object.values(regions.entities)
+    .filter(thisRegion =>
+      thisRegion.capabilities.includes('Cloud Firewall' as Capabilities)
+    )
+    .map(thisRegion => thisRegion.id);
 
   const submitForm = (
     values: CreateFirewallPayload,
@@ -140,7 +150,10 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               />
               <LinodeMultiSelect
                 showAllOption
-                helperText="Assign one or more Linodes to this firewall. You can add Linodes later if you want to customize your rules first."
+                allowedRegions={regionsWithFirewalls}
+                helperText={`Assign one or more Linodes to this firewall. You can add
+                 Linodes later if you want to customize your rules first. Only Linodes in
+                 regions that support Firewalls will be displayed as options.`}
                 errorText={errors['devices.linodes']}
                 handleChange={(selected: number[]) =>
                   setFieldValue('devices.linodes', selected)

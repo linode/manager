@@ -1,6 +1,8 @@
 import * as Factory from 'factory.ts';
 import {
+  KubernetesCluster,
   KubernetesEndpointResponse,
+  KubeNodePoolResponse,
   PoolNodeResponse
 } from '@linode/api-v4/lib/kubernetes/types';
 import {
@@ -9,30 +11,25 @@ import {
 } from 'src/features/Kubernetes/types';
 import { v4 } from 'uuid';
 
-/**
- * These factories work with the "extended" types used in our logic.
- * Separate factories will be needed to work with API response types,
- * or typing will have to be adjusted to combine the 2.
- *
- * It looks like factory.ts does not allow you to override the type when
- * extending a factory. If we could do:
- *
- * baseClusterFactory = makeFactory<KubernetesCluster>(...)
- * extendedClusterFactory = baseClusterFactory.extend<ExtendedCluster>(...)
- *
- * ...we would be set.
- */
-
 export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
   id: Factory.each(id => `id-${id}`),
   instance_id: Factory.each(id => id),
   status: 'ready'
 });
 
+export const nodePoolAPIFactory = Factory.Sync.makeFactory<
+  KubeNodePoolResponse
+>({
+  id: Factory.each(id => id),
+  count: 3,
+  type: 'g6-standard-1',
+  nodes: kubeLinodeFactory.buildList(3)
+});
+
 export const _nodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>({
   id: Factory.each(id => id),
   count: 3,
-  type: 'g5-standard-1',
+  type: 'g6-standard-1',
   totalMonthlyPrice: 1000
 });
 
@@ -70,4 +67,17 @@ export const kubeEndpointFactory = Factory.Sync.makeFactory<
   KubernetesEndpointResponse
 >({
   endpoint: `https://${v4()}`
+});
+
+export const kubernetesAPIResponse = Factory.Sync.makeFactory<
+  KubernetesCluster
+>({
+  id: Factory.each(id => id),
+  created: '2020-04-08T16:58:21',
+  updated: '2020-04-08T16:58:21',
+  region: 'us-central',
+  status: 'ready',
+  label: Factory.each(i => `test-cluster-${i}`),
+  k8s_version: '1.17',
+  tags: []
 });

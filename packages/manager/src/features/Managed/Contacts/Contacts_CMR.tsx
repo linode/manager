@@ -32,6 +32,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.white,
     marginTop: theme.spacing(4)
   },
+  copy: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
+  },
   contactsListHeader: {
     margin: 0,
     width: '100%'
@@ -124,7 +130,7 @@ const Contacts: React.FC<CombinedProps> = props => {
   return (
     <>
       <DocumentTitleSegment segment="Contacts" />
-      <Typography variant="subtitle1">
+      <Typography className={classes.copy} variant="subtitle1">
         You can assign contact groups to monitors so we know who to talk to in
         the event of a support issue. Create contacts and assign them to a
         group, then assign the group to the appropriate monitor(s).
@@ -138,7 +144,7 @@ const Contacts: React.FC<CombinedProps> = props => {
             justify="space-between"
           >
             <Grid item className="p0">
-              <Typography className={classes.headline} variant="h2">
+              <Typography className={classes.headline} variant="h3">
                 Contacts
               </Typography>
             </Grid>
