@@ -18,9 +18,13 @@ const SMTPRestrictionText: React.FC<Props> = props => {
 
   // If there account was created before restrictions were put into place,
   // there's no need to display anything.
-  const text = !accountCreatedAfterRestrictions(
-    account.data?.active_since
-  ) ? null : (
+
+  // @todo: uncomment:
+  // const text = !accountCreatedAfterRestrictions(
+  //   account.data?.active_since
+  // ) ? null : (
+
+  const text = (
     <Typography variant="body1">
       Need to send mail from your Linode? New Linode accounts have ports{' '}
       <strong>25, 465, and 587</strong> blocked by default. To have these
