@@ -46,7 +46,7 @@ interface FormState {
  * permissions in the shape the API will expect,
  * sorted by cluster.
  */
-const sortByCluster = (a: Scope, b: Scope) => {
+export const sortByCluster = (a: Scope, b: Scope) => {
   if (a.cluster > b.cluster) {
     return 1;
   }
