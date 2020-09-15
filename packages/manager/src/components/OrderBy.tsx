@@ -135,21 +135,28 @@ export const OrderBy: React.FC<CombinedProps> = props => {
   const [orderBy, setOrderBy] = React.useState<string>(initialValues.orderBy);
   const [order, setOrder] = React.useState<Order>(initialValues.order);
 
-  // Give this initial value in the form of a function so it's run only once.
-  const [sortedData, setSortedData] = React.useState<any[]>(() => {
-    return sortData(initialValues.orderBy, initialValues.order)(props.data);
-  });
-
-  // Re-sort the data when it changes.
+  // Stash a copy of the previous data for equality check.
   const prevData = usePrevious(props.data);
-  React.useEffect(() => {
-    if (equals(props.data, prevData)) {
-      return;
-    }
 
-    const newlySortedData = sortData(orderBy, order)(props.data);
-    setSortedData(newlySortedData);
-  }, [props.data, order, orderBy, prevData]);
+  // Our working copy of the data to be sorted,.
+  const dataToSort = React.useRef(props.data);
+
+  // If `props.data` has changed, that's the data we should sort.
+  //
+  // Note: I really don't like this equality check that runs every render, but
+  // I have yet to find a another solution.
+  if (!equals(props.data, prevData)) {
+    dataToSort.current = props.data;
+  }
+
+  // SORT THE DATA!
+  const sortedData = sortData(orderBy, order)(dataToSort.current);
+
+  // Save this – this is what will be sorted next time around, if e.g. the order
+  // or orderBy keys change. In that case we don't want to start from scratch
+  // and sort `props.data`. That might result in odd UI behavior depending on
+  // the data. See: https://github.com/linode/manager/pull/6855.
+  dataToSort.current = sortedData;
 
   const debouncedUpdateUserPreferences = React.useRef(
     debounce(1500, false, (orderBy: string, order: Order) => {
@@ -172,9 +179,6 @@ export const OrderBy: React.FC<CombinedProps> = props => {
   const handleOrderChange = (newOrderBy: string, newOrder: Order) => {
     setOrderBy(newOrderBy);
     setOrder(newOrder);
-
-    const newlySortedData = sortData(newOrderBy, newOrder)(sortedData);
-    setSortedData(newlySortedData);
 
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
