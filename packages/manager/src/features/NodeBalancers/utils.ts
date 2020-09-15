@@ -101,7 +101,7 @@ export const transformConfigsForRequest = (
             ? undefined
             : config.protocol || undefined,
         proxy_protocol:
-          config.protocol === 'tcp' ? config.proxy_protocol : undefined,
+          config.protocol === 'tcp' ? config.proxy_protocol : 'none',
         algorithm: config.algorithm || undefined,
         stickiness: config.stickiness || undefined,
         check: config.check || undefined,
