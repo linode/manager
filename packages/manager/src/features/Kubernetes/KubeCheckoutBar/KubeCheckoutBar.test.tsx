@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { extendedTypes } from 'src/__data__/ExtendedType';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
+
+const types = require('src/cachedData/types.json');
 
 const pools = nodePoolFactory.buildList(5, { count: 3 });
 
@@ -13,7 +13,7 @@ const props: Props = {
   updatePool: jest.fn(),
   removePool: jest.fn(),
   createCluster: jest.fn(),
-  typesData: extendedTypes
+  typesData: types.data
 };
 
 const renderComponent = (_props: Props) =>

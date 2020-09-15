@@ -70,6 +70,7 @@ class StoryTable extends React.Component {
                     vcpus={linode.specs.vcpus}
                     openDialog={this.handleDialog}
                     openPowerActionDialog={this.handlePowerActionDialog}
+                    openNotificationDrawer={() => null}
                   ></LinodeRow_CMR>
                 ))}
               </TableBody>

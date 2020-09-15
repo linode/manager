@@ -19,7 +19,7 @@ export const MultipleLinodes: React.FC<{}> = _ => {
   const tabs: Tab[] = [
     {
       title: 'Linodes',
-      render: () => <LinodesLanding />
+      render: () => <LinodesLanding isDashboard />
     }
   ];
 

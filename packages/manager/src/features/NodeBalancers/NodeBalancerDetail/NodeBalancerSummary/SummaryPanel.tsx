@@ -28,6 +28,9 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     ...summaryPanelStyles(theme),
+    root: {
+      paddingTop: theme.spacing()
+    },
     NBsummarySection: {
       [theme.breakpoints.up('md')]: {
         marginTop: theme.spacing(3) + 24
