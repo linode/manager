@@ -31,9 +31,6 @@ const LinodeAdvanced_CMR = React.lazy(() =>
 const LinodeBackup_CMR = React.lazy(() =>
   import('./LinodeBackup/LinodeBackup_CMR')
 );
-const LinodeResize = React.lazy(() => import('./LinodeResize'));
-const LinodeRescue = React.lazy(() => import('./LinodeRescue'));
-const LinodeRebuild = React.lazy(() => import('./LinodeRebuild'));
 const LinodeActivity_CMR = React.lazy(() =>
   import('./LinodeActivity/LinodeActivity_CMR')
 );
@@ -77,18 +74,6 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = () => {
       {
         render: () => suspenseWrapper(LinodeBackup_CMR),
         title: 'Backups'
-      },
-      {
-        render: () => suspenseWrapper(LinodeResize),
-        title: 'Resize'
-      },
-      {
-        render: () => suspenseWrapper(LinodeRescue),
-        title: 'Rescue'
-      },
-      {
-        render: () => suspenseWrapper(LinodeRebuild),
-        title: 'Rebuild'
       },
       {
         render: () => suspenseWrapper(LinodeActivity_CMR),

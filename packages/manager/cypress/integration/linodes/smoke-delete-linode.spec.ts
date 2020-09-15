@@ -1,7 +1,8 @@
-import { createLinode } from '../../support/api/linodes';
+/* eslint-disable sonarjs/no-duplicate-string */
+import { createLinode, clickLinodeActionMenu } from '../../support/api/linodes';
 
 describe('delete linode', () => {
-  it('deletes test nanode', () => {
+  it('deletes linode from linodes page', () => {
     cy.visitWithLogin('/linodes');
     createLinode().then(linode => {
       cy.server();
@@ -10,30 +11,27 @@ describe('delete linode', () => {
         url: '*/linode/instances/*'
       }).as('deleteLinode');
 
-      cy.visit(`/linodes/${linode.id}/settings`);
+      clickLinodeActionMenu(linode.label);
 
-      cy.findByText('Delete Linode').click();
+      // delete linode
+      cy.get('[data-qa-action-menu-item="Delete"]:visible')
+        .should('be.visible')
+        .click();
 
-      // here i query using text to check the UI and there is only 1 Delete button
-      // cy.get('[data-qa-delete-linode]').click();
-      cy.get('[data-qa-delete-linode="true"').click();
-      cy.findByText(linode.label).should('exist');
+      cy.findByText(linode.label).should('be.visible');
+
+      cy.get('[data-qa-loading="false"]')
+        .should('have.text', 'Delete')
+        .should('be.visible')
+        .click();
 
       // confirm delete
-      // there is now 2 delete on the page so i use the attribute selector
-      // cy.findByText('Delete').debug()
-      cy.get('[data-qa-confirm-delete]').click();
-
-      // Here if the request is against a local route
-      // this is because we use a proxy in webpack config
-      // this redirects localhost:3000/api to api.linode.com/api
-      // Thanks to this we can use cy.server, cy.route and cy.wait
       cy.wait('@deleteLinode')
         .its('status')
         .should('eq', 200);
       cy.url().should('contain', '/linodes');
-      cy.go('back');
-      cy.findByText('Not Found');
+      cy.findByText(linode.label).should('not.be.visible');
     });
   });
+  // will add a test for deleting from the dashboard here and maybe one for deleting from linode detail
 });

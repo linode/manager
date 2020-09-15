@@ -1,14 +1,9 @@
+import * as account from '@linode/api-v4/lib/account/events';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { ActivitySummary } from './ActivitySummary';
 
-const requests = require.requireMock('@linode/api-v4/lib/account');
-
-requests.getEvents = jest.fn(() => Promise.resolve([]));
-
-jest.mock('@linode/api-v4/lib/account', () => ({
-  getEvents: () => jest.fn()
-}));
+const mockGetEvents = jest.spyOn<any, any>(account, 'getEvents');
 
 const props = {
   linodeId: 123456,
@@ -29,7 +24,7 @@ describe('ActivitySummary component', () => {
   });
 
   it("should request the Linode's events on load", () => {
-    expect(requests.getEvents).toHaveBeenCalledWith(
+    expect(mockGetEvents).toHaveBeenCalledWith(
       {},
       { 'entity.id': 123456, 'entity.type': 'linode' }
     );

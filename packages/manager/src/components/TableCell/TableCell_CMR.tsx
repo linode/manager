@@ -10,7 +10,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1rem',
     padding: '0px 15px',
     '&.emptyCell': {
-      borderTop: 'none',
       height: 40
     },
     '&:last-child': {

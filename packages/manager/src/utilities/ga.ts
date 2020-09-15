@@ -19,10 +19,11 @@ export const sendEvent = (eventPayload: AnalyticsEvent) => {
 
 // LinodeActionMenu.tsx
 export const sendLinodeActionEvent = () => {
-  sendEvent({
-    category: 'Linode Action Menu',
-    action: 'Open Action Menu'
-  });
+  // AC 8/26/2020: disabling this event to reduce hits on GA as this seems to not be used
+  // sendEvent({
+  //   category: 'Linode Action Menu',
+  //   action: 'Open Action Menu'
+  // });
 };
 
 // LinodeActionMenu.tsx
@@ -57,11 +58,12 @@ export const sendPaginationEvent = (
 
 // LinodeThemeWrapper.tsx
 export const sendCurrentThemeSettingsEvent = (eventAction: string) => {
-  sendEvent({
-    category: 'Theme Choice',
-    action: eventAction,
-    label: location.pathname
-  });
+  // AC 8/24/2020: disabling this event to reduce hits on GA as this seems to not be used
+  // sendEvent({
+  //   category: 'Theme Choice',
+  //   action: eventAction,
+  //   label: location.pathname
+  // });
 };
 
 // CreateVolumeForm.tsx
@@ -124,20 +126,22 @@ export const sendImportDisplayGroupSubmitEvent = (
 
 // LinodeThemeWrapper.tsx
 export const sendSpacingToggleEvent = (eventLabel: string) => {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Spacing Toggle',
-    label: eventLabel
-  });
+  // AC 8/24/2020: disabling this event to reduce hits on GA as this seems to not be used
+  // sendEvent({
+  //   category: 'Theme Choice',
+  //   action: 'Spacing Toggle',
+  //   label: eventLabel
+  // });
 };
 
 // LinodeThemeWrapper.tsx
 export const sendThemeToggleEvent = (eventLabel: string) => {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Theme Toggle',
-    label: eventLabel
-  });
+  // AC 9/24/2020: disabling this event to reduce hits on GA as this seems to not be used
+  // sendEvent({
+  //   category: 'Theme Choice',
+  //   action: 'Theme Toggle',
+  //   label: eventLabel
+  // });
 };
 
 // backupDrawer/index.ts
@@ -300,15 +304,6 @@ export const generateTimeOfDay = (currentHour: number) => {
   return currentTimeOfDay;
 };
 
-export const sendOneClickNavigationEvent = (
-  whichButton: 'Add New Menu' | 'Primary Nav'
-) => {
-  return sendEvent({
-    category: 'One Click App Navigation',
-    action: `From ${whichButton}`
-  });
-};
-
 export const sendDomainStatusChangeEvent = (action: 'Enable' | 'Disable') => {
   return sendEvent({
     category: 'Domain Status Change',
@@ -331,16 +326,10 @@ export const sendObjectsQueuedForUploadEvent = (numObjects: number) => {
   });
 };
 
-export const sendSearchBarUsedEvent = (
-  category: 'Search Landing' | 'Search Select' | 'Search Auto',
-  searchText: string
-) => {
-  if (searchText === '') {
-    return;
-  }
+export const sendSearchBarUsedEvent = () => {
   sendEvent({
-    category,
-    action: searchText,
+    category: 'Search',
+    action: 'Search Select',
     label: window.location.pathname
   });
 };

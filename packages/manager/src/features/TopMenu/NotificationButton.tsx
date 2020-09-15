@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Bell from 'src/assets/icons/bell.svg';
+import Bell from 'src/assets/icons/bell_new.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { NotificationDrawer } from 'src/features/NotificationCenter';
-import { notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -26,27 +26,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const notificationEventTypes = [
-  'community_like',
-  'community_question_reply',
-  'community_mention'
-];
-// @todo add more here, or filter our events request directly once we
-// have a list of all relevant actions.
-
 export const NotificationButton: React.FC<{}> = _ => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const classes = useStyles();
 
-  const context = React.useContext(notificationContext);
-
   const openDrawer = () => setDrawerOpen(true);
   const closeDrawer = () => setDrawerOpen(false);
 
-  const numEvents = context.events.filter(thisEvent =>
-    notificationEventTypes.includes(thisEvent.action)
-  ).length;
+  const notificationData = useNotificationData();
+
+  const numEvents =
+    notificationData.community.events.length +
+    notificationData.support.data.length +
+    notificationData.pendingActions.length +
+    notificationData.statusNotifications.length;
 
   return (
     <>
@@ -61,7 +55,7 @@ export const NotificationButton: React.FC<{}> = _ => {
       <NotificationDrawer
         open={drawerOpen}
         onClose={closeDrawer}
-        events={context.events}
+        data={notificationData}
       />
     </>
   );

@@ -15,6 +15,9 @@ const SSHKeys_CMR = React.lazy(() => import('./SSHKeys/SSHKeys_CMR'));
 const Settings = React.lazy(() => import('./Settings'));
 const Referrals = React.lazy(() => import('./Referrals'));
 const OAuthClients = React.lazy(() => import('./OAuthClients'));
+const OAuthClients_CMR = React.lazy(() =>
+  import('./OAuthClients/OAuthClients_CMR')
+);
 const LishSettings = React.lazy(() => import('./LishSettings'));
 const DisplaySettings = React.lazy(() => import('./DisplaySettings'));
 const AuthenticationSettings = React.lazy(() =>
@@ -98,7 +101,7 @@ const Profile: React.FC<Props> = props => {
               <APITokens />
             </SafeTabPanel>
             <SafeTabPanel index={5}>
-              <OAuthClients />
+              {flags.cmr ? <OAuthClients_CMR /> : <OAuthClients />}
             </SafeTabPanel>
             <SafeTabPanel index={6}>
               <Referrals />

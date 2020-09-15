@@ -89,7 +89,6 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
   componentDidUpdate() {
     const { close, dismissSuccess } = this.props.actions;
     const { autoEnroll, enableSuccess, updatedCount } = this.props;
-
     if (enableSuccess) {
       const pluralizedLinodes =
         updatedCount > 1 ? 'Linodes have' : 'Linode has';

@@ -8,13 +8,20 @@ import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import NodeBalancerActionMenu from './NodeBalancerActionMenu_CMR';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  // @todo: temporary measure that will cause scroll for the 'Name' and 'Backend Status'
+  // column until we implement a hideOnTablet prop for EntityTables to prevent the
+  // ActionCell from being misaligned
   labelWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    wordBreak: 'break-all'
+    whiteSpace: 'nowrap'
+  },
+  statusWrapper: {
+    whiteSpace: 'nowrap'
   },
   link: {
     display: 'block',
@@ -66,7 +73,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = props => {
       className="fade-in-table"
       ariaLabel={label}
     >
-      <TableCell parentColumn="Name" data-qa-nodebalancer-label>
+      <TableCell data-qa-nodebalancer-label>
         <div className={classes.labelWrapper}>
           <Link
             to={`/nodebalancers/${id}`}
@@ -77,34 +84,39 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = props => {
           </Link>
         </div>
       </TableCell>
-      <TableCell parentColumn="Backend Status" data-qa-node-status>
-        <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
-      </TableCell>
-      <TableCell parentColumn="Transferred" data-qa-transferred>
-        {convertMegabytesTo(transfer.total)}
-      </TableCell>
-      <TableCell parentColumn="Ports" data-qa-ports>
-        {configs.length === 0 && 'None'}
-        {configs.map(({ port, id: configId }, i) => (
-          <React.Fragment key={id}>
-            <Link
-              to={`/nodebalancers/${id}/configurations/${configId}`}
-              className="secondaryLink"
-            >
-              {port}
-            </Link>
-            {i < configs.length - 1 ? ', ' : ''}
-          </React.Fragment>
-        ))}
-      </TableCell>
-      <TableCell parentColumn="IP Address" data-qa-nodebalancer-ips>
+      <Hidden xsDown>
+        <TableCell data-qa-node-status className={classes.statusWrapper}>
+          <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
+        </TableCell>
+        <TableCell data-qa-transferred>
+          {convertMegabytesTo(transfer.total)}
+        </TableCell>
+        <TableCell data-qa-ports>
+          {configs.length === 0 && 'None'}
+          {configs.map(({ port, id: configId }, i) => (
+            <React.Fragment key={id}>
+              <Link
+                to={`/nodebalancers/${id}/configurations/${configId}`}
+                className="secondaryLink"
+              >
+                {port}
+              </Link>
+              {i < configs.length - 1 ? ', ' : ''}
+            </React.Fragment>
+          ))}
+        </TableCell>
+      </Hidden>
+      <TableCell data-qa-nodebalancer-ips>
         <div className={classes.ipsWrapper}>
           <IPAddress ips={[ipv4]} copyRight showMore />
         </div>
       </TableCell>
-      <TableCell parentColumn="Region" data-qa-region>
-        <RegionIndicator region={region} />
-      </TableCell>
+      <Hidden xsDown>
+        <TableCell data-qa-region>
+          <RegionIndicator region={region} />
+        </TableCell>
+      </Hidden>
+
       <TableCell className={classes.actionCell}>
         <NodeBalancerActionMenu
           nodeBalancerId={id}

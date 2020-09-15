@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.31.0",
+  "version": "0.33.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
@@ -50,7 +50,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-typescript": "^7.10.1",
-    "@types/jest": "^24.0.23",
+    "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
     "axios-mock-adapter": "^1.18.1",
     "babel-plugin-module-resolver": "^4.0.0",
@@ -58,7 +58,7 @@
     "eslint": "^6.8.0",
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-sonarjs": "^0.5.0",
-    "jest": "^24.8.0",
+    "jest": "~26.4.2",
     "lint-staged": "^9.4.2",
     "npm-dts-webpack-plugin": "^1.2.1",
     "prettier": "^1.18.2",

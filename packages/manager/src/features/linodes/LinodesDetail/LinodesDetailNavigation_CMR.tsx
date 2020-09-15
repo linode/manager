@@ -8,7 +8,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { withLinodeDetailContext } from './linodeDetailContext';
-
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 const LinodeSummary_CMR = React.lazy(() =>
   import('./LinodeSummary/LinodeSummary_CMR')
 );
@@ -22,9 +22,6 @@ const LinodeAdvanced_CMR = React.lazy(() =>
 const LinodeBackup_CMR = React.lazy(() =>
   import('./LinodeBackup/LinodeBackup_CMR')
 );
-const LinodeResize = React.lazy(() => import('./LinodeResize'));
-const LinodeRescue = React.lazy(() => import('./LinodeRescue'));
-const LinodeRebuild = React.lazy(() => import('./LinodeRebuild'));
 const LinodeActivity_CMR = React.lazy(() =>
   import('./LinodeActivity/LinodeActivity_CMR')
 );
@@ -39,12 +36,11 @@ type CombinedProps = ContextProps &
 
 const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
   const {
+    linodeLabel,
     match: { url }
   } = props;
 
   const tabs = [
-    /* NB: These must correspond to the routes inside the Switch */
-    // Previously Summary
     {
       routeName: `${url}/analytics`,
       title: 'Analytics'
@@ -68,14 +64,6 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
       title: 'Backups'
     },
     {
-      routeName: `${url}/resize`,
-      title: 'Resize'
-    },
-    {
-      routeName: `${url}/rescue`,
-      title: 'Rescue'
-    },
-    {
       routeName: `${url}/activity`,
       title: 'Activity Logs'
     },
@@ -89,59 +77,55 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: location.pathname }));
   };
 
+  const defaultIndex = tabs.findIndex(tab => matches(tab.routeName));
+
+  const [tabIndex, setTabIndex] = React.useState(Math.max(defaultIndex, 0));
+
+  const handleTabChange = (index: number) => {
+    setTabIndex(index);
+  };
+
   return (
-    <Tabs
-      defaultIndex={Math.max(
-        tabs.findIndex(tab => matches(tab.routeName)),
-        0
-      )}
-    >
-      <TabLinkList tabs={tabs} />
+    <>
+      <DocumentTitleSegment
+        segment={`${linodeLabel} - ${tabs[tabIndex]?.title ?? 'Detail View'}`}
+      />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TabLinkList tabs={tabs} />
 
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <LinodeSummary_CMR />
-          </SafeTabPanel>
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <LinodeSummary_CMR />
+            </SafeTabPanel>
 
-          <SafeTabPanel index={1}>
-            <LinodeNetworking_CMR />
-          </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <LinodeNetworking_CMR />
+            </SafeTabPanel>
 
-          <SafeTabPanel index={2}>
-            <LinodeStorage />
-          </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <LinodeStorage />
+            </SafeTabPanel>
 
-          <SafeTabPanel index={3}>
-            <LinodeAdvanced_CMR />
-          </SafeTabPanel>
+            <SafeTabPanel index={3}>
+              <LinodeAdvanced_CMR />
+            </SafeTabPanel>
 
-          <SafeTabPanel index={4}>
-            <LinodeBackup_CMR />
-          </SafeTabPanel>
+            <SafeTabPanel index={4}>
+              <LinodeBackup_CMR />
+            </SafeTabPanel>
 
-          <SafeTabPanel index={5}>
-            <LinodeResize />
-          </SafeTabPanel>
+            <SafeTabPanel index={5}>
+              <LinodeActivity_CMR />
+            </SafeTabPanel>
 
-          <SafeTabPanel index={6}>
-            <LinodeRescue />
-          </SafeTabPanel>
-
-          <SafeTabPanel index={7}>
-            <LinodeRebuild />
-          </SafeTabPanel>
-
-          <SafeTabPanel index={8}>
-            <LinodeActivity_CMR />
-          </SafeTabPanel>
-
-          <SafeTabPanel index={9}>
-            <LinodeSettings_CMR />
-          </SafeTabPanel>
-        </TabPanels>
-      </React.Suspense>
-    </Tabs>
+            <SafeTabPanel index={6}>
+              <LinodeSettings_CMR />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
+      </Tabs>
+    </>
   );
 };
 

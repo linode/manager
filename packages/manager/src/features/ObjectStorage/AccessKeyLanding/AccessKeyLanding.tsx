@@ -38,7 +38,9 @@ import {
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer, { MODES } from './AccessKeyDrawer';
 import AccessKeyTable from './AccessKeyTable';
+import AccessKeyTable_CMR from './AccessKeyTable_CMR';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
+import useFlags from 'src/hooks/useFlags';
 
 type ClassNames = 'headline';
 
@@ -71,12 +73,9 @@ type CombinedProps = Props &
   DispatchProps;
 
 export const AccessKeyLanding: React.FC<CombinedProps> = props => {
-  const {
-    classes,
-    object_storage,
-    requestSettings,
-    ...paginationProps
-  } = props;
+  const { object_storage, requestSettings, ...paginationProps } = props;
+
+  const flags = useFlags();
 
   const [mode, setMode] = React.useState<MODES>('creating');
 
@@ -266,22 +265,27 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     revokeKeysDialog.close();
   };
 
+  const KeyTable = flags.cmr ? AccessKeyTable_CMR : AccessKeyTable;
+
   return (
     <div>
       <DocumentTitleSegment segment="Access Keys" />
-      <Grid container justify="flex-end">
-        <Grid item>
-          <AddNewLink
-            onClick={openDrawerForCreating}
-            label="Create an Access Key"
-          />
+      {!flags.cmr && (
+        <Grid container justify="flex-end">
+          <Grid item>
+            <AddNewLink
+              onClick={openDrawerForCreating}
+              label="Create an Access Key"
+            />
+          </Grid>
         </Grid>
-      </Grid>
-
-      <AccessKeyTable
+      )}
+      <KeyTable
         {...paginationProps}
         openDrawerForEditing={openDrawerForEditing}
         openRevokeDialog={openRevokeDialog}
+        openDrawerForCreating={openDrawerForCreating}
+        data-qa-access-key-table
       />
 
       <PaginationFooter

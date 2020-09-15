@@ -111,3 +111,7 @@ export const deleteAllTestLinodes = () => {
     });
   });
 };
+
+export const clickLinodeActionMenu = title => {
+  cy.get(`[aria-label="Action menu for Linode ${title}"]`).click();
+};

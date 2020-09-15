@@ -286,18 +286,12 @@ class UserDetail extends React.Component<CombinedProps> {
   };
 
   render() {
-    const {
-      classes,
-      match: {
-        params: { username }
-      },
-      location,
-      profileUsername
-    } = this.props;
+    const { classes, location, profileUsername } = this.props;
     const {
       error,
       gravatarUrl,
       createdUsername,
+      username,
       email,
       profileSaving,
       profileSuccess,

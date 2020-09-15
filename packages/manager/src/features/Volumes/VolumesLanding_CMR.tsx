@@ -9,7 +9,6 @@ import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import Loading from 'src/components/LandingLoading';
 import { PaginationProps } from 'src/components/Pagey';
-import { REFRESH_INTERVAL } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withRegions, {
   DefaultProps as RegionProps
@@ -41,6 +40,7 @@ import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
 import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu_CMR';
 import VolumeTableRow from './VolumeTableRow_CMR';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 
 interface Props {
   isVolumesLanding?: boolean;
@@ -119,7 +119,8 @@ const volumeHeaders = [
     label: 'File System Path',
     dataColumn: 'File System Path',
     sortable: false,
-    widthPercent: 25
+    widthPercent: 25,
+    hideOnMobile: true
   },
   {
     label: 'Attached To',
@@ -139,7 +140,6 @@ const volumeHeaders = [
 export const VolumesLanding: React.FC<CombinedProps> = props => {
   const {
     volumesLoading,
-    getAllVolumes,
     mappedVolumesDataWithLinodes,
     volumesLastUpdated,
     volumesError,
@@ -174,11 +174,7 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
     poweredOff: false
   });
 
-  React.useEffect(() => {
-    if (Date.now() - volumesLastUpdated > REFRESH_INTERVAL) {
-      getAllVolumes().catch(_ => null); // Errors through Redux
-    }
-  }, [getAllVolumes, volumesLastUpdated]);
+  const { _loading } = useReduxLoad(['volumes']);
 
   const handleCloseAttachDrawer = () => {
     setAttachmentDrawer(attachmentDrawer => ({
@@ -281,7 +277,7 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
       });
   };
 
-  if (volumesLoading) {
+  if (_loading) {
     return <Loading shouldDelay />;
   }
 

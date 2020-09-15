@@ -184,15 +184,11 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     const usedDiskSpace = addUsedDiskSpace(disks);
 
     const freeDiskSpace = linodeTotalDisk && linodeTotalDisk > usedDiskSpace;
+    const noFreeDiskSpaceWarning =
+      'You do not have enough unallocated storage to create a Disk. Please choose a different plan with more storage or delete an existing Disk.';
 
     return (
       <React.Fragment>
-        {!freeDiskSpace && (
-          <Notice
-            warning
-            text="You do not have enough unallocated storage to create a Disk."
-          />
-        )}
         <Grid
           className={classes.root}
           container
@@ -211,6 +207,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
               onClick={this.openDrawerForCreation}
               label="Add a Disk..."
               disabled={readOnly || !freeDiskSpace}
+              disabledReason={
+                !freeDiskSpace ? noFreeDiskSpaceWarning : undefined
+              }
             />
           </Grid>
         </Grid>
@@ -229,7 +228,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                   <React.Fragment>
                     <Grid container>
                       <Grid item xs={12}>
-                        <Table isResponsive={false} aria-label="List of Disks">
+                        <Table aria-label="List of Disks">
                           <TableHead>
                             <TableRow>
                               <TableSortCell

@@ -30,7 +30,7 @@ import RescueDialog from '../LinodeRescue/RescueDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 interface Props {
   numVolumes: number;
@@ -60,6 +60,15 @@ interface DialogProps {
 type CombinedProps = Props & LinodeDetailContext & LinodeContext;
 
 const LinodeDetailHeader: React.FC<CombinedProps> = props => {
+  // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
+  // now show their content in modals instead. Use this matching to determine
+  // if a modal should be open when this component is first rendered.
+  const match = useRouteMatch<{ linodeId: string; subpath: string }>({
+    path: '/linodes/:linodeId/:subpath'
+  });
+  const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
+  const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
+
   const {
     linode,
     linodeEvents,
@@ -81,25 +90,25 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   });
 
   const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
-    open: false,
-    linodeID: 0
+    open: isSubpath('resize'),
+    linodeID: matchedLinodeId
   });
 
   const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
-    open: false,
-    linodeID: 0
+    open: isSubpath('migrate'),
+    linodeID: matchedLinodeId
   });
 
   const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
-    open: false,
-    linodeID: 0
+    open: isSubpath('rescue'),
+    linodeID: matchedLinodeId
   });
 
   const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
-    open: false,
-    linodeID: 0
+    open: isSubpath('rebuild'),
+    linodeID: matchedLinodeId
   });
-  
+
   const [backupsDialog, setBackupsDialog] = React.useState<DialogProps>({
     open: false,
     linodeID: 0
@@ -181,6 +190,16 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   };
 
   const closeDialogs = () => {
+    // If the user is on e.g. /linodes/:id/resize and they close the modal,
+    // change the URL to reflect what they see (which is the Details page).
+    if (
+      isSubpath('resize') ||
+      isSubpath('rescue') ||
+      isSubpath('rebuild') ||
+      isSubpath('migrate')
+    ) {
+      history.replace(`/linodes/${match?.params.linodeId}`);
+    }
     setPowerDialog(powerDialog => ({ ...powerDialog, open: false }));
     setDeleteDialog(deleteDialog => ({ ...deleteDialog, open: false }));
     setResizeDialog(resizeDialog => ({ ...resizeDialog, open: false }));

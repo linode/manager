@@ -1,4 +1,3 @@
-import { cleanup } from '@testing-library/react';
 import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -19,8 +18,6 @@ const props = {
   status: 'active' as DomainStatus,
   ...reactRouterProps
 };
-
-afterEach(cleanup);
 
 describe('Domain action menu', () => {
   it('should include standard Domain actions', () => {

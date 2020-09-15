@@ -18,6 +18,10 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
+import Table_CMR from 'src/components/Table/Table_CMR';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import {
   hasGrant,
   isRestrictedUser
@@ -29,6 +33,7 @@ import { getDisplayName } from 'src/utilities/getDisplayName';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import { getQueryParam } from 'src/utilities/queryParams';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
+import StackScriptTableHead_CMR from '../Partials/StackScriptTableHead_CMR';
 import {
   AcceptedFilters,
   generateCatchAllFilter,
@@ -72,6 +77,7 @@ interface StoreProps {
 }
 
 type CombinedProps = StyleProps &
+  FeatureFlagConsumerProps &
   RouteComponentProps &
   StoreProps & {
     publicImages: Record<string, Image>;
@@ -129,7 +135,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
     componentDidMount() {
       this.mounted = true;
-
       // If the URL contains a QS param called "query" treat it as a filter.
       const query = getQueryParam(this.props.location.search, 'query');
       if (query) {
@@ -513,7 +518,10 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
             </div>
           ) : (
             <React.Fragment>
-              <div className={classes.searchWrapper}>
+              <div
+                className={`${classes.searchWrapper} ${this.props.flags.cmr &&
+                  classes.cmrSpacing}`}
+              >
                 <DebouncedSearch
                   placeholder="Search by Label, Username, or Description"
                   onSearch={this.handleSearch}
@@ -531,30 +539,55 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   defaultValue={query}
                 />
               </div>
-              <Table
-                isResponsive={!isSelecting}
-                aria-label="List of StackScripts"
-                rowCount={listOfStackScripts.length}
-                colCount={isSelecting ? 1 : 4}
-                noOverflow={true}
-                tableClass={classes.table}
-                removeLabelonMobile={!isSelecting}
-                border
-                stickyHeader
-              >
-                <StackScriptTableHead
-                  handleClickTableHeader={this.handleClickTableHeader}
-                  sortOrder={sortOrder}
-                  currentFilterType={currentFilterType}
-                  isSelecting={isSelecting}
-                />
-                <Component
-                  {...this.props}
-                  {...this.state}
-                  getDataAtPage={this.getDataAtPage}
-                  getNext={this.getNext}
-                />
-              </Table>
+              {this.props.flags.cmr ? (
+                <Table_CMR
+                  aria-label="List of StackScripts"
+                  rowCount={listOfStackScripts.length}
+                  colCount={isSelecting ? 1 : 4}
+                  noOverflow={true}
+                  tableClass={classes.table}
+                  border
+                  stickyHeader
+                >
+                  <StackScriptTableHead_CMR
+                    handleClickTableHeader={this.handleClickTableHeader}
+                    sortOrder={sortOrder}
+                    currentFilterType={currentFilterType}
+                    isSelecting={isSelecting}
+                  />
+                  <Component
+                    {...this.props}
+                    {...this.state}
+                    getDataAtPage={this.getDataAtPage}
+                    getNext={this.getNext}
+                  />
+                </Table_CMR>
+              ) : (
+                <Table
+                  aria-label="List of StackScripts"
+                  rowCount={listOfStackScripts.length}
+                  colCount={isSelecting ? 1 : 4}
+                  noOverflow={true}
+                  tableClass={classes.table}
+                  removeLabelonMobile={!isSelecting}
+                  border
+                  stickyHeader
+                >
+                  <StackScriptTableHead
+                    handleClickTableHeader={this.handleClickTableHeader}
+                    sortOrder={sortOrder}
+                    currentFilterType={currentFilterType}
+                    isSelecting={isSelecting}
+                  />
+                  <Component
+                    {...this.props}
+                    {...this.state}
+                    getDataAtPage={this.getDataAtPage}
+                    getNext={this.getNext}
+                  />
+                </Table>
+              )}
+
               {/*
                * show loading indicator if we're getting more stackscripts
                * and if we're not showing the "get more stackscripts" button
@@ -586,7 +619,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                    * would never be scrolled into view no matter how much you scrolled on the
                    * trackpad. Especially finicky at zoomed in browser sizes
                    */}
-                  <div style={{ minHeight: '150px' }} />
+                  <div style={{ minHeight: '150px' }}></div>
                 </Waypoint>
               ) : (
                 <Button
@@ -650,7 +683,12 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
   const connected = connect(mapStateToProps);
 
-  return compose(withRouter, connected, withStyles)(EnhancedComponent);
+  return compose(
+    withRouter,
+    connected,
+    withFeatureFlagConsumer,
+    withStyles
+  )(EnhancedComponent);
 };
 
 export default withStackScriptBase;

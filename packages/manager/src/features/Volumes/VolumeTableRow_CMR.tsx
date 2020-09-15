@@ -11,6 +11,7 @@ import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu_CMR';
 import { compose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -102,9 +103,11 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
       </TableCell>
       {region && <TableCell data-qa-volume-region>{formattedRegion}</TableCell>}
       <TableCell data-qa-volume-size>{size} GiB</TableCell>
-      <TableCell className={classes.volumePath} data-qa-fs-path>
-        {filesystemPath}
-      </TableCell>
+      <Hidden xsDown>
+        <TableCell className={classes.volumePath} data-qa-fs-path>
+          {filesystemPath}
+        </TableCell>
+      </Hidden>
       {isVolumesLanding && (
         <TableCell data-qa-volume-cell-attachment={linodeLabel}>
           {linodeId ? (

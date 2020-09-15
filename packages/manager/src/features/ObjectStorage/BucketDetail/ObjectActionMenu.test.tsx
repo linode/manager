@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { ObjectActionMenu, Props } from './ObjectActionMenu';
@@ -13,8 +13,6 @@ const props: Props = {
   handleClickDelete: mockHandleClickDelete,
   objectName: 'my-object'
 };
-
-afterEach(cleanup);
 
 describe('ObjectActionMenu', () => {
   it('Includes a "Delete" option', () => {

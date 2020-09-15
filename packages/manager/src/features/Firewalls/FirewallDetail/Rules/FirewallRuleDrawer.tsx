@@ -231,6 +231,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       }
 
       setFieldValue('protocol', item?.value);
+      if (item?.value === 'ICMP') {
+        // Submitting the form with ICMP and defined ports causes an error
+        setFieldValue('ports', '');
+      }
     },
     [formTouched, setFieldValue]
   );
@@ -322,6 +326,12 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         errorText={errors.ports}
         onChange={handlePortsChange}
         onBlur={handleBlur}
+        disabled={values.protocol === 'ICMP'}
+        tooltipText={
+          values.protocol === 'ICMP'
+            ? 'Ports are not allowed for ICMP protocols.'
+            : undefined
+        }
       />
       <Select
         label={`${capitalize(addressesLabel)}s`}
@@ -507,10 +517,10 @@ export const getInitialIPs = (
 ): ExtendedIP[] => {
   const { addresses } = ruleToModify;
 
-  const ips: ExtendedIP[] = [
-    ...addresses?.ipv4?.map(stringToExtendedIP),
-    ...addresses?.ipv6?.map(stringToExtendedIP)
-  ];
+  const extendedIPv4 = (addresses?.ipv4 ?? []).map(stringToExtendedIP);
+  const extendedIPv6 = (addresses?.ipv6 ?? []).map(stringToExtendedIP);
+
+  const ips: ExtendedIP[] = [...extendedIPv4, ...extendedIPv6];
 
   // eslint-disable-next-line no-unused-expressions
   ruleToModify.errors?.forEach(thisError => {
@@ -547,6 +557,7 @@ export const validateForm = (protocol?: string, ports?: string) => {
   const errors: Partial<Form> = {};
 
   if (!protocol) {
+    // eslint-disable-next-line
     errors.protocol = 'Protocol is required.';
   }
 

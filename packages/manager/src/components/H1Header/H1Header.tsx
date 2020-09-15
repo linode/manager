@@ -26,11 +26,11 @@ const H1Header: React.FC<Props> = props => {
   const { className, title, dataQaEl, renderAsSecondary } = props;
   const classes = useStyles();
 
-  React.useEffect(() => {
-    if (h1Header.current !== null) {
-      h1Header.current.focus();
-    }
-  }, []);
+  // React.useEffect(() => {
+  //   if (h1Header.current !== null) {
+  //     h1Header.current.focus();
+  //   }
+  // }, []);
 
   return (
     <Typography

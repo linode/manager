@@ -32,6 +32,7 @@ import { Category, parseFirewallRuleError } from './shared';
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     fontSize: '1em',
+    lineHeight: 1.5,
     paddingBottom: theme.spacing(1)
   },
   table: {
@@ -40,6 +41,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actions: {
     alignSelf: 'flex-end'
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -263,9 +270,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       </Prompt>
 
       <Typography variant="body1" className={classes.copy}>
-        Firewall rules act as an allowlist, allowing network traffic that meets
-        the rules’ parameters to pass through. Any traffic not explicitly
-        permitted by a rule is blocked.
+        Firewall rules act as an allowlist, permitting only network traffic that
+        matches the rules&apos; parameters to pass through. If there are no
+        outbound rules set, all outbound traffic will be permitted.
       </Typography>
 
       {generalErrors?.length === 1 && (

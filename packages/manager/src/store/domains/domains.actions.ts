@@ -18,6 +18,10 @@ const actionCreator = actionCreatorFactory(`@@manager/domains`);
 
 export const upsertDomain = actionCreator<Domain>('upsert');
 
+export const upsertMultipleDomains = actionCreator<Domain[]>(
+  'upsert-multiple-domains'
+);
+
 export const deleteDomain = actionCreator<number>('delete');
 
 export const createDomainActions = actionCreator.async<

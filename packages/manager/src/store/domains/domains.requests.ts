@@ -69,10 +69,10 @@ export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
     });
 };
 
-type RequestDomainForStoreThunk = ThunkActionCreator<void, number>;
+type RequestDomainForStoreThunk = ThunkActionCreator<Promise<void>, number>;
 export const requestDomainForStore: RequestDomainForStoreThunk = id => dispatch => {
-  getDomain(id).then(domain => {
-    return dispatch(upsertDomain(domain));
+  return getDomain(id).then(domain => {
+    dispatch(upsertDomain(domain));
   });
 };
 

@@ -211,10 +211,16 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       height: 20,
       width: 20,
       fill: theme.color.blue,
+      color: theme.color.blue,
       marginRight: 10
     },
     '& span': {
       fontFamily: `${theme.font.normal} !important`
+    },
+    '&:disabled': {
+      '& svg': {
+        fill: theme.color.disabled
+      }
     }
   },
   statusChip: {
@@ -317,8 +323,8 @@ const Header: React.FC<HeaderProps> = props => {
                 <IconTextLink
                   className={classes.actionItem}
                   SideIcon={ViewDetailsIcon}
-                  text="ViewDetails"
-                  title="ViewDetails"
+                  text="View Details"
+                  title="View Details"
                   to={`linodes/${linodeId}`}
                 />
               </Hidden>
@@ -344,10 +350,11 @@ const Header: React.FC<HeaderProps> = props => {
               disabled={!['running', 'offline'].includes(linodeStatus)}
             />
 
-            <Hidden xsDown>
+            <Hidden smDown>
               <IconTextLink
                 className={classes.actionItem}
                 SideIcon={RebootIcon}
+                disabled={linodeStatus === 'offline'}
                 text="Reboot"
                 title="Reboot"
                 onClick={() => {
@@ -360,6 +367,7 @@ const Header: React.FC<HeaderProps> = props => {
                   );
                 }}
               />
+
               <IconTextLink
                 className={classes.actionItem}
                 SideIcon={ConsoleIcon}
@@ -382,6 +390,7 @@ const Header: React.FC<HeaderProps> = props => {
               openPowerActionDialog={openPowerActionDialog}
               noImage={!image}
               inlineLabel={matchesMdDown ? undefined : 'More Actions'}
+              inLandingDetailContext={isDetailLanding}
             />
           </div>
           {isDetails && (
@@ -563,7 +572,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
               </Grid>
 
               <Grid item className={classes.iconTextOuter}>
-                <Typography>{gbRAM} RAM</Typography>
+                <Typography>{gbRAM} GB RAM</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -721,8 +730,12 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     openDialog
   } = props;
 
-  const _openDialog = React.useCallback(() => {
+  const _openMigrateDialog = React.useCallback(() => {
     openDialog('migrate', linodeId);
+  }, [linodeId, openDialog]);
+
+  const _openResizeDialog = React.useCallback(() => {
+    openDialog('resize', linodeId);
   }, [linodeId, openDialog]);
 
   const classes = useFooterStyles();
@@ -762,15 +775,12 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Grid item xs={12} sm={7}>
         <div className={classes.detailsSection}>
           {linodePlan && (
-            <Link
-              to={`/linodes/${linodeId}/resize`}
-              className={classes.listItem}
-            >
+            <button onClick={_openResizeDialog} className={classes.button}>
               {linodePlan} Plan
-            </Link>
+            </button>
           )}
           {linodeRegionDisplay && (
-            <button onClick={_openDialog} className={classes.button}>
+            <button onClick={_openMigrateDialog} className={classes.button}>
               {linodeRegionDisplay}
             </button>
           )}

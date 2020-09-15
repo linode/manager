@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -16,8 +16,6 @@ const disabledProps = {
   ...props,
   disabled: true
 };
-
-afterEach(cleanup);
 
 beforeEach(jest.clearAllMocks);
 

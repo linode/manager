@@ -12,6 +12,7 @@ import Box from 'src/components/core/Box';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
@@ -20,11 +21,24 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import SupportWidget from './SupportWidget';
+import useFlags from 'src/hooks/useFlags';
 
+const Contacts = React.lazy(() => import('./Contacts'));
+const Contacts_CMR = React.lazy(() => import('./Contacts/Contacts_CMR'));
 const Monitors = React.lazy(() => import('./Monitors'));
 const SSHAccess = React.lazy(() => import('./SSHAccess'));
-const Credentials = React.lazy(() => import('./Credentials'));
-const Contacts = React.lazy(() => import('./Contacts'));
+const CredentialList = React.lazy(() => import('./Credentials'));
+const CredentialList_CMR = React.lazy(() =>
+  import('./Credentials/CredentialList_CMR')
+);
+
+const useStyles = makeStyles((theme: Theme) => ({
+  cmrSpacing: {
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing()
+    }
+  }
+}));
 
 export type CombinedProps = {} & RouteComponentProps<{}>;
 
@@ -37,6 +51,9 @@ const getAllContacts = () =>
   getAll<ManagedContact>(getManagedContacts)().then(res => res.data);
 
 export const ManagedLandingContent: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+  const flags = useFlags();
+
   const credentials = useAPIRequest<ManagedCredential[]>(getAllCredentials, []);
 
   const contacts = useAPIRequest<ManagedContact[]>(getAllContacts, []);
@@ -86,6 +103,9 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const ContactsTable = flags.cmr ? Contacts_CMR : Contacts;
+  const Credentials = flags.cmr ? CredentialList_CMR : CredentialList;
+
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -102,7 +122,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           alignItems="center"
           xs={8}
         >
-          <Grid item>
+          <Grid item className={flags.cmr ? classes.cmrSpacing : ''}>
             <SupportWidget />
           </Grid>
           <Grid item>
@@ -141,7 +161,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
               />
             </SafeTabPanel>
             <SafeTabPanel index={3}>
-              <Contacts
+              <ContactsTable
                 contacts={contacts.data}
                 loading={contacts.loading && contacts.lastUpdated === 0}
                 error={contacts.error}

@@ -1,23 +1,22 @@
 import { getInvoices } from '@linode/api-v4/lib/account';
 import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import { notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import useAccount from 'src/hooks/useAccount';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import CircleProgress from 'src/components/CircleProgress';
-import ErrorState from 'src/components/ErrorState';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
-import LinodeNews from './LinodeNews';
-
 import {
   Community,
   Maintenance,
   OpenSupportTickets,
   PendingActions
 } from 'src/features/NotificationCenter';
-import Hidden from 'src/components/core/Hidden';
+import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import useAccount from 'src/hooks/useAccount';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import LinodeNews from './LinodeNews';
+import ManagedDashboardCard from '../Dashboard/ManagedDashboardCard/ManagedDashboardCard_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -40,7 +39,14 @@ export const Notifications: React.FC<{}> = _ => {
   const balance = account.data?.balance ?? 0;
   const balanceUninvoiced = account.data?.balance_uninvoiced ?? 0;
 
-  const context = React.useContext(notificationContext);
+  const {
+    community,
+    pendingActions,
+    statusNotifications,
+    support
+  } = useNotificationData();
+  const { _isManagedAccount } = useAccountManagement();
+
   const mostRecentInvoiceRequest = useAPIRequest<number | undefined>(
     () =>
       getInvoices({}, { '+order': 'desc', '+order_by': 'date' }).then(
@@ -49,19 +55,7 @@ export const Notifications: React.FC<{}> = _ => {
     undefined
   );
 
-  const communityEvents = context.events.filter(event =>
-    [
-      'community_like',
-      'community_question_reply',
-      'community_mention'
-    ].includes(event.action)
-  );
-
-  return context.loading ? (
-    <CircleProgress />
-  ) : context.error ? (
-    <ErrorState errorText={context.error} />
-  ) : (
+  return (
     <>
       <Hidden smDown>
         <BillingSummary
@@ -70,6 +64,7 @@ export const Notifications: React.FC<{}> = _ => {
           mostRecentInvoiceId={mostRecentInvoiceRequest.data}
         />
       </Hidden>
+      {_isManagedAccount && <ManagedDashboardCard />}
       <Paper className={classes.root}>
         <Grid
           container
@@ -81,20 +76,28 @@ export const Notifications: React.FC<{}> = _ => {
             <Grid item className={classes.column}>
               <Grid container direction="column">
                 <Grid item>
-                  <PendingActions />
+                  <PendingActions pendingActions={pendingActions} />
                 </Grid>
                 <Grid item>
-                  <Maintenance />
+                  <Maintenance statusNotifications={statusNotifications} />
                 </Grid>
               </Grid>
             </Grid>
             <Grid item className={classes.column}>
               <Grid container direction="column">
                 <Grid item>
-                  <OpenSupportTickets />
+                  <OpenSupportTickets
+                    loading={support.loading}
+                    error={Boolean(support.error)}
+                    openTickets={support.data}
+                  />
                 </Grid>
                 <Grid item>
-                  <Community communityEvents={communityEvents} />
+                  <Community
+                    loading={community.loading}
+                    communityEvents={community.events}
+                    error={Boolean(community.error)}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -102,10 +105,18 @@ export const Notifications: React.FC<{}> = _ => {
 
           {/* Small screen version */}
           <Hidden mdUp>
-            <PendingActions />
-            <Maintenance />
-            <OpenSupportTickets />
-            <Community communityEvents={communityEvents} />
+            <PendingActions pendingActions={pendingActions} />
+            <Maintenance statusNotifications={statusNotifications} />
+            <OpenSupportTickets
+              loading={support.loading}
+              error={Boolean(support.error)}
+              openTickets={support.data}
+            />
+            <Community
+              loading={community.loading}
+              communityEvents={community.events}
+              error={Boolean(community.error)}
+            />
           </Hidden>
         </Grid>
       </Paper>

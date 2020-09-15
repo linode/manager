@@ -21,8 +21,8 @@ const Notifications: React.FC<CombinedProps> = props => {
     requestNotifications,
     linodeNotifications,
     userTimezone,
-    userTimezoneError,
-    userTimezoneLoading,
+    userProfileError,
+    userProfileLoading,
     linodeId,
     linodeStatus
   } = props;
@@ -33,8 +33,8 @@ const Notifications: React.FC<CombinedProps> = props => {
         return (
           <MaintenanceBanner
             userTimezone={userTimezone}
-            userTimezoneLoading={userTimezoneLoading}
-            userTimezoneError={userTimezoneError}
+            userProfileLoading={userProfileLoading}
+            userProfileError={userProfileError}
             maintenanceStart={notification.when}
             maintenanceEnd={notification.until}
             type={
@@ -88,8 +88,8 @@ interface ContextProps {
 }
 
 interface ProfileProps {
-  userTimezoneLoading: boolean;
-  userTimezoneError?: APIError[];
+  userProfileLoading: boolean;
+  userProfileError?: APIError[];
   userTimezone?: string;
 }
 
@@ -107,8 +107,8 @@ const enhanced = compose<CombinedProps, {}>(
     (undefined, { profileData: profile, profileLoading, profileError }) => {
       return {
         userTimezone: profile?.timezone,
-        userTimezoneError: profileError?.read,
-        userTimezoneLoading: profileLoading
+        userProfileError: profileError?.read,
+        userProfileLoading: profileLoading
       };
     }
   )

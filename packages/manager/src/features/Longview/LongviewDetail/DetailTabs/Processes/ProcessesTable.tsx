@@ -48,89 +48,90 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
   const { width } = useWindowDimensions();
 
   return (
-    <>
-      <OrderBy data={processesData} orderBy={'name'} order={'asc'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <>
-            <Table
-              spacingTop={16}
-              // This prop is necessary to show the "ActiveCaret", and we only
-              // want it on large viewports.
-              noOverflow={width >= 1280}
-              isResponsive={false}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableSortCell
-                    active={orderBy === 'name'}
-                    label="name"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    style={{ width: '20%' }}
-                  >
-                    Process
-                  </TableSortCell>
-                  <TableSortCell
-                    active={orderBy === 'user'}
-                    label="user"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    style={{ width: '20%' }}
-                  >
-                    User
-                  </TableSortCell>
-                  <TableSortCell
-                    active={orderBy === 'maxCount'}
-                    label="maxCount"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    style={{ width: '15%' }}
-                  >
-                    Max Count
-                  </TableSortCell>
-                  <TableSortCell
-                    active={orderBy === 'averageIO'}
-                    label="averageIO"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    style={{ width: '15%' }}
-                  >
-                    Avg IO
-                  </TableSortCell>
-                  <TableSortCell
-                    active={orderBy === 'averageCPU'}
-                    label="averageCPU"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    style={{ width: '15%' }}
-                  >
-                    Avg CPU
-                  </TableSortCell>
-                  <TableSortCell
-                    active={orderBy === 'averageMem'}
-                    label="averageMem"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    style={{ width: '15%' }}
-                  >
-                    Avg Mem
-                  </TableSortCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {renderLoadingErrorData(
-                  processesLoading,
-                  orderedData,
-                  selectedProcess,
-                  setSelectedProcess,
-                  error
-                )}
-              </TableBody>
-            </Table>
-          </>
-        )}
-      </OrderBy>
-    </>
+    <OrderBy
+      data={processesData}
+      orderBy={'name'}
+      order={'asc'}
+      preferenceKey="lv-detail-processes"
+    >
+      {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+        <Table
+          spacingTop={16}
+          // This prop is necessary to show the "ActiveCaret", and we only
+          // want it on large viewports.
+          noOverflow={width >= 1280}
+          isResponsive={false}
+        >
+          <TableHead>
+            <TableRow>
+              <TableSortCell
+                active={orderBy === 'name'}
+                label="name"
+                direction={order}
+                handleClick={handleOrderChange}
+                style={{ width: '20%' }}
+              >
+                Process
+              </TableSortCell>
+              <TableSortCell
+                active={orderBy === 'user'}
+                label="user"
+                direction={order}
+                handleClick={handleOrderChange}
+                style={{ width: '20%' }}
+              >
+                User
+              </TableSortCell>
+              <TableSortCell
+                active={orderBy === 'maxCount'}
+                label="maxCount"
+                direction={order}
+                handleClick={handleOrderChange}
+                style={{ width: '15%' }}
+              >
+                Max Count
+              </TableSortCell>
+              <TableSortCell
+                active={orderBy === 'averageIO'}
+                label="averageIO"
+                direction={order}
+                handleClick={handleOrderChange}
+                style={{ width: '15%' }}
+              >
+                Avg IO
+              </TableSortCell>
+              <TableSortCell
+                active={orderBy === 'averageCPU'}
+                label="averageCPU"
+                direction={order}
+                handleClick={handleOrderChange}
+                style={{ width: '15%' }}
+              >
+                Avg CPU
+              </TableSortCell>
+              <TableSortCell
+                active={orderBy === 'averageMem'}
+                label="averageMem"
+                direction={order}
+                handleClick={handleOrderChange}
+                style={{ width: '15%' }}
+              >
+                Avg Mem
+              </TableSortCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {renderLoadingErrorData(
+              processesLoading,
+              orderedData,
+              selectedProcess,
+              setSelectedProcess,
+              error
+            )}
+          </TableBody>
+        </Table>
+      )}
+    </OrderBy>
   );
 };
 

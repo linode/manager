@@ -233,6 +233,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       wrap="nowrap"
       component="nav"
       role="navigation"
+      id="main-navigation"
       spacing={0}
     >
       <div className={classes.menuGridInner}>
@@ -430,6 +431,7 @@ interface PrimaryNavMenuLinkProps extends MenuLinkProps {
   display: string;
   prefetchRequestFn?: () => void;
   prefetchRequestCondition?: boolean;
+  to: string;
 }
 
 export const PrimaryNavMenuLink: React.FC<PrimaryNavMenuLinkProps> = React.memo(
