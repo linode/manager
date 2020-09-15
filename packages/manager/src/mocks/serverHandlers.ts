@@ -71,8 +71,18 @@ export const handlers = [
   rest.get('*/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(3);
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
-    const busyLinodes = linodeFactory.buildList(10, { status: 'migrating' });
-    const linodes = [...onlineLinodes, ...offlineLinodes, ...busyLinodes];
+    const busyLinodes = linodeFactory.buildList(5, { status: 'migrating' });
+    const eventLinode = linodeFactory.build({
+      id: 999,
+      status: 'rebooting',
+      label: 'eventful'
+    });
+    const linodes = [
+      ...onlineLinodes,
+      ...offlineLinodes,
+      ...busyLinodes,
+      eventLinode
+    ];
     return res(ctx.json(makeResourcePage(linodes)));
   }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
@@ -214,7 +224,11 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(invoices)));
   }),
   rest.get('*/events', (req, res, ctx) => {
-    const events = eventFactory.buildList(10);
+    const events = eventFactory.buildList(1, {
+      action: 'linode_reboot',
+      percent_complete: 15,
+      entity: { type: 'linode', id: 999, label: 'linode-1' }
+    });
     return res.once(ctx.json(makeResourcePage(events)));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
