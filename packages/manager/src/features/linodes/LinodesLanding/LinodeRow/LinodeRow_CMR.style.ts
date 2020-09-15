@@ -15,6 +15,7 @@ type ClassNames =
   | 'statusCell'
   | 'statusCellMaintenance'
   | 'statusHelpIcon'
+  | 'statusLink'
   | 'ipCell'
   | 'ipCellWrapper'
   | 'planCell'
@@ -78,6 +79,16 @@ const styles = (theme: Theme) =>
     statusHelpIcon: {
       position: 'relative',
       top: -2
+    },
+    statusLink: {
+      backgroundColor: 'transparent',
+      border: 'none',
+      cursor: 'pointer',
+      padding: 0,
+      '& p': {
+        color: theme.palette.primary.main,
+        fontFamily: theme.font.bold
+      }
     },
     ipCell: {
       width: '14%'

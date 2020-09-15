@@ -13,12 +13,11 @@ export const LinodeDashboardContent: React.FC<{}> = _ => {
     return <CircleProgress />;
   }
 
-  // @todo change this logic once there's a no-Linodes view
-  return (
-    <div style={{ minHeight: 1500 }}>
-      {linodes.results === 1 ? <SingleLinode /> : <MultipleLinodes />}
-    </div>
-  );
+  if (linodes.results === 1) {
+    return <SingleLinode />;
+  } else {
+    return <MultipleLinodes />;
+  }
 };
 
 export default React.memo(LinodeDashboardContent);

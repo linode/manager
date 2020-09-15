@@ -104,13 +104,13 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       label: 'Image',
       dataColumn: 'label',
       sortable: true,
-      widthPercent: 25
+      widthPercent: 22
     },
     {
       label: 'Created',
       dataColumn: 'created',
       sortable: false,
-      widthPercent: 25,
+      widthPercent: 15,
       hideOnMobile: flags.cmr
     },
     {
@@ -124,14 +124,14 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       label: 'Size',
       dataColumn: 'size',
       sortable: true,
-      widthPercent: 25
+      widthPercent: 12
     },
     {
       label: 'Action Menu',
       visuallyHidden: true,
       dataColumn: '',
       sortable: false,
-      widthPercent: 5
+      widthPercent: 35
     }
   ];
 
