@@ -601,7 +601,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               />
 
               <FormControlLabel
-                label="automount devtpmfs"
+                label="automount devtmpfs"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
@@ -614,7 +614,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               />
 
               <FormControlLabel
-                label="auto-configure networking"
+                label="Auto-configure Networking"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
