@@ -42,7 +42,11 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
   const classes = useStyles();
 
   return (
-    <Drawer open={open} onClose={onClose} title={name ?? 'Object Detail'}>
+    <Drawer
+      open={open}
+      onClose={onClose}
+      title={truncateMiddle(name ?? 'Object Detail')}
+    >
       {size && (
         <Typography variant="subtitle2">
           {readableBytes(size).formatted}
