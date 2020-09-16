@@ -286,6 +286,13 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
     });
   };
 
+  handleClickDetails = (selectedObject: ExtendedObject) => {
+    this.setState({
+      selectedObject,
+      objectDetailDrawerOpen: true
+    });
+  };
+
   deleteObject = async () => {
     const { clusterId, bucketName } = this.props.match.params;
     const { objectToDelete } = this.state;
@@ -408,6 +415,10 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
     });
   };
 
+  closeObjectDetailsDrawer = () => {
+    this.setState({ objectDetailDrawerOpen: false });
+  };
+
   render() {
     const { classes, flags } = this.props;
     const {
@@ -492,12 +503,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
                         prefix={prefix}
                         handleClickDownload={this.handleDownload}
                         handleClickDelete={this.handleClickDelete}
-                        handleClickDetails={(selectedObject: ExtendedObject) =>
-                          this.setState({
-                            selectedObject,
-                            objectDetailDrawerOpen: true
-                          })
-                        }
+                        handleClickDetails={this.handleClickDetails}
                       />
                     </TableBody>
                   </Table_CMR>
@@ -530,14 +536,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
                         prefix={prefix}
                         handleClickDownload={this.handleDownload}
                         handleClickDelete={this.handleClickDelete}
-                        handleClickDetails={(
-                          selectedObject: ExtendedObject
-                        ) => {
-                          this.setState({
-                            selectedObject,
-                            objectDetailDrawerOpen: true
-                          });
-                        }}
+                        handleClickDetails={this.handleClickDetails}
                       />
                     </TableBody>
                   </Table>
@@ -609,7 +608,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
         </Grid>
         <ObjectDetailDrawer
           open={objectDetailDrawerOpen}
-          onClose={() => this.setState({ objectDetailDrawerOpen: false })}
+          onClose={this.closeObjectDetailsDrawer}
           name={selectedObject?._displayName}
           lastModified={selectedObject?.last_modified}
           size={selectedObject?.size}

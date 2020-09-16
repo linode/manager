@@ -76,4 +76,4 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
   );
 };
 
-export default ObjectDetailsDrawer;
+export default React.memo(ObjectDetailsDrawer);
