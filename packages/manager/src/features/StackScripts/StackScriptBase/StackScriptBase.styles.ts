@@ -44,6 +44,7 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.bg.white
     },
     cmrHeaderWrapper: {
+      position: 'static',
       [theme.breakpoints.up('sm')]: {
         display: 'flex',
         alignItems: 'center',

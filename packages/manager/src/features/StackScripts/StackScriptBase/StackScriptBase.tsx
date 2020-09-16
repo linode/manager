@@ -76,6 +76,7 @@ export interface State {
 interface StoreProps {
   stackScriptGrants?: Grant[];
   userCannotCreateStackScripts: boolean;
+  isOnCreate?: boolean;
 }
 
 type CombinedProps = StyleProps &
@@ -447,7 +448,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         getMoreStackScriptsFailed
       } = this.state;
 
-      const { classes, userCannotCreateStackScripts } = this.props;
+      const { classes, userCannotCreateStackScripts, isOnCreate } = this.props;
 
       if (error) {
         return (
@@ -550,7 +551,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   />
                 </div>
 
-                {this.props.flags.cmr && (
+                {this.props.flags.cmr && !isOnCreate && (
                   <div className={classes.cmrActions}>
                     <Button
                       buttonType="primary"
