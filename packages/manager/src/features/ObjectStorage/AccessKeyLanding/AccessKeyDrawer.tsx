@@ -145,6 +145,12 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
             setFieldValue('bucket_access', newScopes);
           };
 
+          const handleToggleAccess = () => {
+            setLimitedAccessChecked(checked => !checked);
+            // Reset scopes
+            setFieldValue('bucket_access', getDefaultScopes(buckets.data));
+          };
+
           return (
             <>
               {status && (
@@ -191,9 +197,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
                 mode={mode}
                 bucket_access={values.bucket_access}
                 updateScopes={handleScopeUpdate}
-                handleToggle={() =>
-                  setLimitedAccessChecked(checked => !checked)
-                }
+                handleToggle={handleToggleAccess}
                 checked={limitedAccessChecked}
               />
               <ActionsPanel>
