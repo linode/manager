@@ -48,6 +48,7 @@ import {
   displayName,
   ExtendedObject,
   extendObject,
+  generateObjectUrl,
   tableUpdateAction
 } from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
@@ -418,7 +419,9 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
       objectToDelete,
       deleteObjectLoading,
       deleteObjectError,
-      deleteObjectDialogOpen
+      deleteObjectDialogOpen,
+      selectedObject,
+      objectDetailDrawerOpen
     } = this.state;
 
     const { bucketName, clusterId } = this.props.match.params;
@@ -605,13 +608,17 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <ObjectDetailDrawer
-          open={this.state.objectDetailDrawerOpen}
+          open={objectDetailDrawerOpen}
           onClose={() => this.setState({ objectDetailDrawerOpen: false })}
-          name={this.state.selectedObject?._displayName}
-          lastModified={this.state.selectedObject?.last_modified}
-          size={this.state.selectedObject?.size}
-          // @todo: get the full url
-          url={bucketName}
+          name={selectedObject?._displayName}
+          lastModified={selectedObject?.last_modified}
+          size={selectedObject?.size}
+          url={
+            selectedObject
+              ? generateObjectUrl(clusterId, bucketName, selectedObject.name)
+                  .absolute
+              : undefined
+          }
         />
       </>
     );

@@ -144,6 +144,7 @@ const ObjectTableContent: React.FC<Props> = props => {
             manuallyCreated={object._manuallyCreated}
             handleClickDownload={handleClickDownload}
             handleClickDelete={handleClickDelete}
+            handleClickDetails={() => handleClickDetails(object)}
           />
         );
       })}

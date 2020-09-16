@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: 0
+  },
+  objectNameButton: {
+    ...theme.applyLinkStyles
   }
 }));
 
@@ -80,7 +83,12 @@ const ObjectTableRow: React.FC<Props> = props => {
           <Grid item>
             <Box display="flex" alignItems="center">
               <Typography>
-                <strong>{displayName}</strong>
+                <button
+                  className={classes.objectNameButton}
+                  onClick={handleClickDetails}
+                >
+                  <strong>{displayName}</strong>
+                </button>
               </Typography>
             </Box>
           </Grid>
