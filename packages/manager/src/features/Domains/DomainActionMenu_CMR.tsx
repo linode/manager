@@ -77,7 +77,9 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
   };
 
   const handleClone = () => {
-    onClone(domain, id);
+    setTimeout(() => {
+      onClone(domain, id);
+    }, 800);
   };
 
   const createActions = () => (): Action[] => {
