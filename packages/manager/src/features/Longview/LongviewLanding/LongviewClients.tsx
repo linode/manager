@@ -37,10 +37,11 @@ import SubscriptionDialog from './SubscriptionDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing()
   },
   addNew: {
-    marginLeft: 'auto'
+    marginLeft: 'auto',
+    marginRight: 0
   },
   searchbar: {
     width: '100%',
@@ -70,7 +71,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: '65px'
   },
   cmrSpacing: {
-    marginRight: theme.spacing()
+    [theme.breakpoints.down('md')]: {
+      marginLeft: 0,
+      marginRight: 0
+    }
+  },
+  cmrSpacingAddNew: {
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(2)
+    }
   }
 }));
 
@@ -261,7 +270,12 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Grid container className={classes.headingWrapper} alignItems="center">
+      <Grid
+        container
+        className={`${classes.headingWrapper} ${flags.cmr &&
+          classes.cmrSpacing}`}
+        alignItems="center"
+      >
         <Grid item className={`py0 ${classes.searchbar}`}>
           <Search
             placeholder="Filter by client label or hostname"
@@ -286,7 +300,8 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid
           item
-          className={`py0 ${classes.addNew} ${flags.cmr && classes.cmrSpacing}`}
+          className={`py0 ${classes.addNew} ${flags.cmr &&
+            classes.cmrSpacingAddNew}`}
         >
           <AddNewLink
             onClick={handleAddClient}

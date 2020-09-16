@@ -10,11 +10,6 @@ const props: RowProps = {
   type: 'linode',
   created: '2018-01-01',
   username: null,
-  classes: {
-    root: '',
-    message: '',
-    occurredCell: ''
-  },
   linkTarget: jest.fn()
 };
 
