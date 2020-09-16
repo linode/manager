@@ -604,20 +604,20 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               />
 
               <FormControlLabel
-                label="automount devtpmfs"
+                label="Automount devtmpfs"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
                     checked={helpers.devtmpfs_automount}
                     onChange={this.handleToggleAutoMountHelper}
-                    disabled={readOnly}
+                    disabled={readOnl}
                     tooltipText="Controls if pv_ops kernels automount devtmpfs at boot"
                   />
                 }
               />
 
               <FormControlLabel
-                label="auto-configure networking"
+                label="Auto-configure networking"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
