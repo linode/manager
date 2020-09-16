@@ -19,6 +19,7 @@ import {
 } from 'src/features/Longview/request.types';
 import OverviewGraphs from './OverviewGraphs';
 import TopProcesses from './TopProcesses';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -66,6 +67,8 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
     timezone
   } = props;
 
+  const flags = useFlags();
+
   /**
    * Package drawer open/close logic
    */
@@ -111,6 +114,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                 topProcessesLoading={topProcessesLoading}
                 topProcessesError={topProcessesError}
                 lastUpdatedError={lastUpdatedError}
+                cmrFlag={flags.cmr}
               />
             </Grid>
           </Paper>
@@ -126,11 +130,13 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
             servicesLoading={listeningPortsLoading && !lastUpdated}
             servicesError={portsError}
+            cmrFlag={flags.cmr}
           />
           <ActiveConnections
             connections={pathOr([], ['Ports', 'active'], listeningPortsData)}
             connectionsLoading={listeningPortsLoading && !lastUpdated}
             connectionsError={portsError}
+            cmrFlag={flags.cmr}
           />
         </Grid>
       </Grid>
