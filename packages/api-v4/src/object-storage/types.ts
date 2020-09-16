@@ -16,7 +16,7 @@ export interface Scope {
 
 export interface ObjectStorageKeyRequest {
   label: string;
-  bucket_access?: Scope[]; // sent only when creating a limited access key
+  bucket_access: Scope[] | null;
 }
 
 export interface ObjectStorageBucketRequestPayload {

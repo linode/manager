@@ -3,17 +3,30 @@ import { update } from 'ramda';
 import * as React from 'react';
 import Toggle from 'src/components/Toggle';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import { makeStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Radio from 'src/components/Radio';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+
+const useStyles = makeStyles(() => ({
+  clusterCell: {
+    width: '25%'
+  },
+  bucketCell: {
+    width: '35%'
+  },
+  radioCell: {
+    width: '15%'
+  }
+}));
 
 interface Props {
   mode: 'creating' | 'editing';
   checked: boolean;
-  bucket_access?: Scope[];
+  bucket_access: Scope[] | null;
   updateScopes: (newScopes: Scope[]) => void;
   handleToggle: () => void;
 }
@@ -63,12 +76,15 @@ export default React.memo(LimitedAccessControls);
 
 interface TableProps {
   mode: 'creating' | 'editing';
-  bucket_access?: Scope[];
+  bucket_access: Scope[] | null;
   updateScopes: (newScopes: Scope[]) => void;
 }
 
 const AccessTable: React.FC<TableProps> = props => {
   const { mode, bucket_access, updateScopes } = props;
+
+  const classes = useStyles();
+
   if (!bucket_access) {
     return null;
   }
@@ -93,11 +109,7 @@ const AccessTable: React.FC<TableProps> = props => {
   };
 
   return (
-    <Table
-      aria-label="Personal Access Token Permissions"
-      // className={classes.permsTable}
-      spacingTop={24}
-    >
+    <Table aria-label="Personal Access Token Permissions" spacingTop={24}>
       <TableHead>
         <TableRow>
           <TableCell data-qa-perm-cluster>Cluster</TableCell>
@@ -110,23 +122,10 @@ const AccessTable: React.FC<TableProps> = props => {
       <TableBody>
         {mode === 'creating' && (
           <TableRow data-qa-row="Select All">
-            <TableCell
-              parentColumn="Cluster"
-              padding="checkbox"
-              // className={classes.selectCell}
-            >
-              Select All
+            <TableCell parentColumn="Cluster" padding="checkbox" colSpan={2}>
+              <strong>Select All</strong>
             </TableCell>
-            <TableCell
-              parentColumn="Bucket"
-              padding="checkbox"
-              // className={classes.selectCell}
-            />
-            <TableCell
-              parentColumn="None"
-              padding="checkbox"
-              // className={classes.noneCell}
-            >
+            <TableCell parentColumn="None" padding="checkbox">
               <Radio
                 name="Select All"
                 checked={allScopesEqual(SCOPES.none)}
@@ -139,11 +138,7 @@ const AccessTable: React.FC<TableProps> = props => {
                 }}
               />
             </TableCell>
-            <TableCell
-              parentColumn="Read Only"
-              padding="checkbox"
-              // className={classes.readOnlyCell}
-            >
+            <TableCell parentColumn="Read Only" padding="checkbox">
               <Radio
                 name="Select All"
                 checked={allScopesEqual('read_only')}
@@ -156,11 +151,7 @@ const AccessTable: React.FC<TableProps> = props => {
                 }}
               />
             </TableCell>
-            <TableCell
-              parentColumn="Read/Write"
-              padding="checkbox"
-              // className={classes.readWritecell}
-            >
+            <TableCell parentColumn="Read/Write" padding="checkbox">
               <Radio
                 name="Select All"
                 checked={allScopesEqual(SCOPES.write)}
@@ -179,25 +170,13 @@ const AccessTable: React.FC<TableProps> = props => {
           const scopeName = `${thisScope.cluster}-${thisScope.bucket_name}`;
           return (
             <TableRow key={scopeName} data-testid={scopeName}>
-              <TableCell
-                parentColumn="Cluster"
-                padding="checkbox"
-                // className={classes.accessCell}
-              >
+              <TableCell padding="checkbox" className={classes.clusterCell}>
                 {thisScope.cluster}
               </TableCell>
-              <TableCell
-                parentColumn="Bucket"
-                padding="checkbox"
-                // className={classes.accessCell}
-              >
+              <TableCell padding="checkbox" className={classes.bucketCell}>
                 {thisScope.bucket_name}
               </TableCell>
-              <TableCell
-                parentColumn="None"
-                padding="checkbox"
-                // className={classes.noneCell}
-              >
+              <TableCell padding="checkbox" className={classes.radioCell}>
                 <Radio
                   name={thisScope.bucket_name}
                   disabled={
@@ -217,11 +196,7 @@ const AccessTable: React.FC<TableProps> = props => {
                   }}
                 />
               </TableCell>
-              <TableCell
-                parentColumn="Read Only"
-                padding="checkbox"
-                // className={classes.readOnlyCell}
-              >
+              <TableCell padding="checkbox" className={classes.radioCell}>
                 <Radio
                   name={scopeName}
                   disabled={
@@ -241,11 +216,7 @@ const AccessTable: React.FC<TableProps> = props => {
                   }}
                 />
               </TableCell>
-              <TableCell
-                parentColumn="Read/Write"
-                padding="checkbox"
-                // className={classes.readWritecell}
-              >
+              <TableCell padding="checkbox" className={classes.radioCell}>
                 <Radio
                   name={scopeName}
                   disabled={mode !== 'creating'}

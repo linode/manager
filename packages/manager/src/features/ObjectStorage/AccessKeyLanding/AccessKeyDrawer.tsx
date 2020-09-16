@@ -37,7 +37,7 @@ type CombinedProps = Props;
 
 interface FormState {
   label: string;
-  bucket_access?: Scope[];
+  bucket_access: Scope[] | null;
 }
 
 /**
@@ -87,6 +87,12 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   // and so not included in Formik's types
   const [limitedAccessChecked, setLimitedAccessChecked] = React.useState(false);
 
+  React.useEffect(() => {
+    if (open) {
+      setLimitedAccessChecked(false);
+    }
+  }, [open]);
+
   const title =
     mode === 'creating' ? 'Create an Access Key' : 'Edit Access Key';
 
@@ -103,7 +109,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
     // don't include any bucket_access information in the payload.
     const payload = limitedAccessChecked
       ? values
-      : { ...values, bucket_access: undefined };
+      : { ...values, bucket_access: null };
 
     return onSubmit(payload, formikProps);
   };
