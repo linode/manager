@@ -56,6 +56,9 @@ export const handlers = [
     const profile = profileFactory.build();
     return res(ctx.json(profile));
   }),
+  rest.put('*/profile', (req, res, ctx) => {
+    return res(ctx.json({ ...profileFactory.build(), ...(req.body as any) }));
+  }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(ctx.json(cachedRegions));
   }),
@@ -214,6 +217,9 @@ export const handlers = [
   rest.get('*/account', (req, res, ctx) => {
     const account = accountFactory.build({ balance: 50 });
     return res(ctx.json(account));
+  }),
+  rest.put('*/account', (req, res, ctx) => {
+    return res(ctx.json({ ...accountFactory.build(), ...(req.body as any) }));
   }),
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();

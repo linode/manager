@@ -48,7 +48,7 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
       {billingEmailBounceNotification && accountEmailRef && (
         <EmailBounceNotification
           text={
-            <Typography>
+            <Typography data-testid="billing_email_bounce">
               An email to your account&apos;s email address couldn&apos;t be
               delivered. Is <strong>{accountEmailRef.current}</strong> the
               correct address?
@@ -63,7 +63,7 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
       {userEmailBounceNotification && profileEmailRef && (
         <EmailBounceNotification
           text={
-            <Typography>
+            <Typography data-testid="user_email_bounce">
               An email to your user profile&apos;s email address couldn&apos;t
               be delivered. Is <strong>{profileEmailRef.current}</strong> the
               correct address?
@@ -161,6 +161,7 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo(props => {
               buttonType="secondary"
               onClick={handleConfirm}
               loading={loading}
+              data-testid="confirmButton"
             >
               {confirmationText}
             </Button>
@@ -168,6 +169,7 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo(props => {
               className={classes.updateButton}
               buttonType="primary"
               onClick={changeEmail}
+              data-testid="updateButton"
             >
               {updateText}
             </Button>
