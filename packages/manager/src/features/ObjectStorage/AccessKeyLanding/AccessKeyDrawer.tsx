@@ -37,7 +37,7 @@ type CombinedProps = Props;
 
 interface FormState {
   label: string;
-  scopes?: Scope[];
+  permissions?: Scope[];
 }
 
 /**
@@ -95,7 +95,17 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
 
   const initialValues: FormState = {
     label: initialLabelValue,
-    scopes: getDefaultScopes(buckets.data)
+    permissions: getDefaultScopes(buckets.data)
+  };
+
+  const handleSubmit = (values: ObjectStorageKeyRequest, formikProps: any) => {
+    // If the user hasn't toggled the Limited Access button,
+    // don't include any permissions information in the payload.
+    const payload = limitedAccessChecked
+      ? values
+      : { ...values, permissions: undefined };
+
+    return onSubmit(payload, formikProps);
   };
 
   return (
@@ -105,7 +115,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
         validationSchema={createObjectStorageKeysSchema}
         validateOnChange={false}
         validateOnBlur={true}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       >
         {formikProps => {
           const {
@@ -126,7 +136,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
           };
 
           const handleScopeUpdate = (newScopes: Scope[]) => {
-            setFieldValue('scopes', newScopes);
+            setFieldValue('permissions', newScopes);
           };
 
           return (
@@ -173,7 +183,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
               />
               <LimitedAccessControls
                 mode={mode}
-                scopes={values.scopes}
+                permissions={values.permissions}
                 updateScopes={handleScopeUpdate}
                 handleToggle={() =>
                   setLimitedAccessChecked(checked => !checked)

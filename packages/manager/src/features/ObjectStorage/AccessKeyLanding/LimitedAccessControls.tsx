@@ -13,7 +13,7 @@ import TableCell from 'src/components/TableCell';
 interface Props {
   mode: 'creating' | 'editing';
   checked: boolean;
-  scopes?: Scope[];
+  permissions?: Scope[];
   updateScopes: (newScopes: Scope[]) => void;
   handleToggle: () => void;
 }
@@ -32,6 +32,12 @@ export const getUpdatedScopes = (
     return oldScopes;
   }
   return update(scopeToUpdate, newScope, oldScopes);
+};
+
+export const SCOPES: Record<string, AccessType> = {
+  none: 'none',
+  read: 'read-only',
+  write: 'read-write'
 };
 
 export const LimitedAccessControls: React.FC<Props> = props => {
@@ -57,23 +63,23 @@ export default React.memo(LimitedAccessControls);
 
 interface TableProps {
   mode: 'creating' | 'editing';
-  scopes?: Scope[];
+  permissions?: Scope[];
   updateScopes: (newScopes: Scope[]) => void;
 }
 
 const AccessTable: React.FC<TableProps> = props => {
-  const { mode, scopes, updateScopes } = props;
-  if (!scopes) {
+  const { mode, permissions, updateScopes } = props;
+  if (!permissions) {
     return null;
   }
 
   const updateSingleScope = (newScope: Scope) => {
-    const newScopes = getUpdatedScopes(scopes, newScope);
+    const newScopes = getUpdatedScopes(permissions, newScope);
     updateScopes(newScopes);
   };
 
   const updateAllScopes = (accessType: AccessType) => {
-    const newScopes = scopes.map(thisScope => ({
+    const newScopes = permissions.map(thisScope => ({
       ...thisScope,
       access: accessType
     }));
@@ -81,7 +87,7 @@ const AccessTable: React.FC<TableProps> = props => {
   };
 
   const allScopesEqual = (accessType: AccessType) => {
-    return scopes.every(thisScope => thisScope.access === accessType);
+    return permissions.every(thisScope => thisScope.access === accessType);
   };
 
   return (
@@ -121,10 +127,10 @@ const AccessTable: React.FC<TableProps> = props => {
             >
               <Radio
                 name="Select All"
-                checked={allScopesEqual('none')}
+                checked={allScopesEqual(SCOPES.none)}
                 data-testid="set-all-none"
                 value="none"
-                onChange={() => updateAllScopes('none')}
+                onChange={() => updateAllScopes(SCOPES.none)}
                 data-qa-perm-none-radio
                 inputProps={{
                   'aria-label': 'Select none for all'
@@ -155,10 +161,10 @@ const AccessTable: React.FC<TableProps> = props => {
             >
               <Radio
                 name="Select All"
-                checked={allScopesEqual('read-write')}
+                checked={allScopesEqual(SCOPES.write)}
                 data-testid="set-all-write"
                 value="read-write"
-                onChange={() => updateAllScopes('read-write')}
+                onChange={() => updateAllScopes(SCOPES.write)}
                 data-qa-perm-rw-radio
                 inputProps={{
                   'aria-label': 'Select read/write for all'
@@ -167,7 +173,7 @@ const AccessTable: React.FC<TableProps> = props => {
             </TableCell>
           </TableRow>
         )}
-        {scopes.map(thisScope => {
+        {permissions.map(thisScope => {
           const scopeName = `${thisScope.cluster}-${thisScope.bucket}`;
           return (
             <TableRow key={scopeName} data-testid={scopeName}>
@@ -192,11 +198,13 @@ const AccessTable: React.FC<TableProps> = props => {
               >
                 <Radio
                   name={thisScope.bucket}
-                  disabled={mode !== 'creating' && thisScope.access !== 'none'}
-                  checked={thisScope.access === 'none'}
+                  disabled={
+                    mode !== 'creating' && thisScope.access !== SCOPES.none
+                  }
+                  checked={thisScope.access === SCOPES.none}
                   value="none"
                   onChange={() =>
-                    updateSingleScope({ ...thisScope, access: 'none' })
+                    updateSingleScope({ ...thisScope, access: SCOPES.none })
                   }
                   data-qa-perm-none-radio
                   inputProps={{
@@ -212,12 +220,12 @@ const AccessTable: React.FC<TableProps> = props => {
                 <Radio
                   name={scopeName}
                   disabled={
-                    mode !== 'creating' && thisScope.access !== 'read-only'
+                    mode !== 'creating' && thisScope.access !== SCOPES.read
                   }
-                  checked={thisScope.access === 'read-only'}
+                  checked={thisScope.access === SCOPES.read}
                   value="read-only"
                   onChange={() =>
-                    updateSingleScope({ ...thisScope, access: 'read-only' })
+                    updateSingleScope({ ...thisScope, access: SCOPES.read })
                   }
                   data-qa-perm-read-radio
                   inputProps={{
@@ -233,10 +241,10 @@ const AccessTable: React.FC<TableProps> = props => {
                 <Radio
                   name={scopeName}
                   disabled={mode !== 'creating'}
-                  checked={thisScope.access === 'read-write'}
+                  checked={thisScope.access === SCOPES.write}
                   value="read-write"
                   onChange={() =>
-                    updateSingleScope({ ...thisScope, access: 'read-write' })
+                    updateSingleScope({ ...thisScope, access: SCOPES.write })
                   }
                   data-qa-perm-rw-radio
                   data-testid="perm-rw-radio"
