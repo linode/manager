@@ -137,7 +137,7 @@ export const OrderBy: React.FC<CombinedProps> = props => {
   // Stash a copy of the previous data for equality check.
   const prevData = usePrevious(props.data);
 
-  // Our working copy of the data to be sorted,.
+  // Our working copy of the data to be sorted.
   const dataToSort = React.useRef(props.data);
 
   // If `props.data` has changed, that's the data we should sort.
