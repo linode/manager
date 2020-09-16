@@ -7,6 +7,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
+import Typography from 'src/components/core/Typography';
 import Radio from 'src/components/Radio';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
@@ -73,6 +74,11 @@ export const LimitedAccessControls: React.FC<Props> = props => {
         }
         label={'Limited Access'}
       />
+      <Typography>
+        Limited access keys can list all buckets, regardless of access. They can
+        also create new buckets, but will not have access to the buckets they
+        create.
+      </Typography>
       <AccessTable key={String(checked)} checked={checked} {...rest} />
     </>
   );
