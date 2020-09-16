@@ -7,6 +7,7 @@ import {
   ObjectStorageKeyRequest,
   Scope
 } from '@linode/api-v4/lib/object-storage';
+import { update } from 'ramda';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -65,6 +66,22 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
     }))
     .sort(sortByCluster);
 
+export const getUpdatedScopes = (
+  oldScopes: Scope[],
+  newScope: Scope
+): Scope[] => {
+  // Cluster and bucket together form a primary key
+  const scopeToUpdate = oldScopes.findIndex(
+    thisScope =>
+      thisScope.bucket === newScope.bucket &&
+      thisScope.cluster === newScope.cluster
+  );
+  if (scopeToUpdate < 0) {
+    return oldScopes;
+  }
+  return update(scopeToUpdate, newScope, oldScopes);
+};
+
 export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   const {
     isRestrictedUser,
@@ -114,6 +131,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
             handleChange,
             handleBlur,
             handleSubmit,
+            setFieldValue,
             isSubmitting,
             status
           } = formikProps;
@@ -122,6 +140,11 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
             confirmObjectStorage<FormState>(object_storage, formikProps, () =>
               setDialogOpen(true)
             );
+          };
+
+          const handleScopeUpdate = (newScope: Scope) => {
+            const newScopes = getUpdatedScopes(values.scopes ?? [], newScope);
+            setFieldValue('scopes', newScopes);
           };
 
           return (
@@ -169,6 +192,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
               <LimitedAccessControls
                 mode={mode}
                 scopes={values.scopes}
+                updateScopes={handleScopeUpdate}
                 handleToggle={() =>
                   setLimitedAccessChecked(checked => !checked)
                 }

@@ -13,6 +13,7 @@ interface Props {
   mode: 'creating' | 'editing';
   checked: boolean;
   scopes?: Scope[];
+  updateScopes: (newScope: Scope) => void;
   handleToggle: () => void;
 }
 
@@ -40,7 +41,7 @@ interface Props {
 // ];
 
 export const LimitedAccessControls: React.FC<Props> = props => {
-  const { checked, handleToggle, mode, scopes } = props;
+  const { checked, handleToggle, ...rest } = props;
   return (
     <>
       <FormControlLabel
@@ -53,7 +54,7 @@ export const LimitedAccessControls: React.FC<Props> = props => {
         }
         label={'Limited Access'}
       />
-      <AccessTable mode={mode} scopes={scopes ?? []} />
+      <AccessTable {...rest} />
     </>
   );
 };
@@ -62,11 +63,16 @@ export default React.memo(LimitedAccessControls);
 
 interface TableProps {
   mode: 'creating' | 'editing';
-  scopes: Scope[];
+  scopes?: Scope[];
+  updateScopes: (newScope: Scope) => void;
 }
 
 const AccessTable: React.FC<TableProps> = props => {
-  const { mode, scopes } = props;
+  const { mode, scopes, updateScopes } = props;
+  if (!scopes) {
+    return null;
+  }
+
   return (
     <Table
       aria-label="Personal Access Token Permissions"
@@ -184,7 +190,9 @@ const AccessTable: React.FC<TableProps> = props => {
                   disabled={mode !== 'creating' && thisScope.access !== 'none'}
                   checked={thisScope.access === 'none'}
                   value="none"
-                  onChange={() => null}
+                  onChange={() =>
+                    updateScopes({ ...thisScope, access: 'none' })
+                  }
                   data-qa-perm-none-radio
                   inputProps={{
                     'aria-label': `no access for ${thisScope.cluster}`
@@ -203,7 +211,9 @@ const AccessTable: React.FC<TableProps> = props => {
                   }
                   checked={thisScope.access === 'read-only'}
                   value="read-only"
-                  onChange={() => null}
+                  onChange={() =>
+                    updateScopes({ ...thisScope, access: 'read-only' })
+                  }
                   data-qa-perm-read-radio
                   inputProps={{
                     'aria-label': `read-only for ${scopeName}`
@@ -220,7 +230,9 @@ const AccessTable: React.FC<TableProps> = props => {
                   disabled={mode !== 'creating'}
                   checked={thisScope.access === 'read-write'}
                   value="read-write"
-                  onChange={() => null}
+                  onChange={() =>
+                    updateScopes({ ...thisScope, access: 'read-write' })
+                  }
                   data-qa-perm-rw-radio
                   data-testid="perm-rw-radio"
                   inputProps={{

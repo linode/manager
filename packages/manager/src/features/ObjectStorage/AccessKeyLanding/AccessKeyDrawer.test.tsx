@@ -1,3 +1,4 @@
+import { Scope } from '@linode/api-v4/lib/object-storage/types';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
@@ -5,6 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
   AccessKeyDrawer,
   getDefaultScopes,
+  getUpdatedScopes,
   MODES,
   Props
 } from './AccessKeyDrawer';
@@ -51,6 +53,37 @@ describe('AccessKeyDrawer', () => {
       expect(
         getDefaultScopes(unsortedBuckets).map(scope => scope.cluster)
       ).toEqual(['ap-south-1', 'eu-central-1', 'us-east-1']);
+    });
+  });
+
+  describe('Updating scopes', () => {
+    const mockBuckets = objectStorageBucketFactory.buildList(3);
+
+    const mockScopes = getDefaultScopes(mockBuckets);
+
+    it('should update the correct scope', () => {
+      const newScope = { ...mockScopes[2], access: 'read-write' } as Scope;
+      expect(getUpdatedScopes(mockScopes, newScope)[2]).toHaveProperty(
+        'access',
+        'read-write'
+      );
+    });
+
+    it('should leave other scopes unchanged', () => {
+      const newScope = { ...mockScopes[2], access: 'read-write' } as Scope;
+      const updatedScopes = getUpdatedScopes(mockScopes, newScope);
+      expect(updatedScopes[0]).toEqual(mockScopes[0]);
+      expect(updatedScopes[1]).toEqual(mockScopes[1]);
+      expect(updatedScopes.length).toEqual(mockScopes.length);
+    });
+
+    it('should handle crappy input', () => {
+      const newScope = {
+        cluster: 'totally-fake',
+        bucket: 'not-real',
+        access: 'read-only'
+      } as Scope;
+      expect(getUpdatedScopes(mockScopes, newScope)).toEqual(mockScopes);
     });
   });
 });
