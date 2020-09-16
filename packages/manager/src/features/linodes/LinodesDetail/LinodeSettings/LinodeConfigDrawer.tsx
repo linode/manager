@@ -617,7 +617,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               />
 
               <FormControlLabel
-                label="Auto-configure networking"
+                label="Auto-configure Networking"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
