@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import SupportLink from 'src/components/SupportLink';
 // import useAccount from 'src/hooks/useAccount';
 
 // "In an effort to fight spam, Linode restricts outbound connections on ports 25, 465, and 587 on all Linodes for new accounts created after November 5th, 2019."
@@ -19,7 +18,7 @@ const SMTPRestrictionText: React.FC<Props> = props => {
   // If there account was created before restrictions were put into place,
   // there's no need to display anything.
 
-  // @todo: uncomment:
+  // @todo BEFORE MERGE: uncomment:
   // const text = !accountCreatedAfterRestrictions(
   //   account.data?.active_since
   // ) ? null : (
@@ -34,12 +33,7 @@ const SMTPRestrictionText: React.FC<Props> = props => {
         text="this guide"
         hideIcon
       />
-      , then{' '}
-      <SupportLink
-        text="open a Support Ticket"
-        title="Request for email restriction removal"
-      />{' '}
-      so our team can review your request.
+      , then <strong>open a Support Ticket after creating your Linode.</strong>
     </Typography>
   );
 

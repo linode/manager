@@ -64,6 +64,7 @@ import {
 } from './types';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Notice from 'src/components/Notice';
+import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -614,6 +615,11 @@ export class LinodeCreate extends React.PureComponent<
             isMakingRequest={this.props.formIsSubmitting}
             disabled={this.props.formIsSubmitting || userCannotCreateLinode}
             onDeploy={this.createLinode}
+            footer={
+              <SMTPRestrictionText>
+                {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
+              </SMTPRestrictionText>
+            }
           >
             <DisplaySectionList displaySections={displaySections} />
           </CheckoutBar>
