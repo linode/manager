@@ -5,7 +5,7 @@ export interface ObjectStorageKey {
   secret_key: string;
 }
 
-export type AccessType = 'read-only' | 'read-write' | 'none';
+export type AccessType = 'read_only' | 'read_write' | 'none';
 export interface Scope {
   bucket: string;
   cluster: string;

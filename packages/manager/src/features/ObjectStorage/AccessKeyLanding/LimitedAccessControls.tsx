@@ -36,8 +36,8 @@ export const getUpdatedScopes = (
 
 export const SCOPES: Record<string, AccessType> = {
   none: 'none',
-  read: 'read-only',
-  write: 'read-write'
+  read: 'read_only',
+  write: 'read_write'
 };
 
 export const LimitedAccessControls: React.FC<Props> = props => {
@@ -144,10 +144,10 @@ const AccessTable: React.FC<TableProps> = props => {
             >
               <Radio
                 name="Select All"
-                checked={allScopesEqual('read-only')}
+                checked={allScopesEqual('read_only')}
                 value="read-only"
                 data-testid="set-all-read"
-                onChange={() => updateAllScopes('read-only')}
+                onChange={() => updateAllScopes('read_only')}
                 data-qa-perm-read-radio
                 inputProps={{
                   'aria-label': 'Select read-only for all'

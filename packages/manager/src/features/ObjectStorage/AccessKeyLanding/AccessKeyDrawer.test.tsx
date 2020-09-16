@@ -62,7 +62,7 @@ describe('AccessKeyDrawer', () => {
     const mockScopes = getDefaultScopes(mockBuckets);
 
     it('should update the correct scope', () => {
-      const newScope = { ...mockScopes[2], access: 'read-write' } as Scope;
+      const newScope = { ...mockScopes[2], access: 'read_write' } as Scope;
       expect(getUpdatedScopes(mockScopes, newScope)[2]).toHaveProperty(
         'access',
         'read-write'
@@ -70,7 +70,7 @@ describe('AccessKeyDrawer', () => {
     });
 
     it('should leave other scopes unchanged', () => {
-      const newScope = { ...mockScopes[2], access: 'read-write' } as Scope;
+      const newScope = { ...mockScopes[2], access: 'read_write' } as Scope;
       const updatedScopes = getUpdatedScopes(mockScopes, newScope);
       expect(updatedScopes[0]).toEqual(mockScopes[0]);
       expect(updatedScopes[1]).toEqual(mockScopes[1]);
@@ -81,7 +81,7 @@ describe('AccessKeyDrawer', () => {
       const newScope = {
         cluster: 'totally-fake',
         bucket: 'not-real',
-        access: 'read-only'
+        access: 'read_only'
       } as Scope;
       expect(getUpdatedScopes(mockScopes, newScope)).toEqual(mockScopes);
     });
