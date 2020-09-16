@@ -6,10 +6,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
   AccessKeyDrawer,
   getDefaultScopes,
-  getUpdatedScopes,
   MODES,
   Props
 } from './AccessKeyDrawer';
+import { getUpdatedScopes } from './LimitedAccessControls';
 
 describe('AccessKeyDrawer', () => {
   const props: Props = {

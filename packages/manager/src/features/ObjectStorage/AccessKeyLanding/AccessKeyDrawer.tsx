@@ -7,7 +7,6 @@ import {
   ObjectStorageKeyRequest,
   Scope
 } from '@linode/api-v4/lib/object-storage';
-import { update } from 'ramda';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -65,22 +64,6 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
       access: 'none' as AccessType
     }))
     .sort(sortByCluster);
-
-export const getUpdatedScopes = (
-  oldScopes: Scope[],
-  newScope: Scope
-): Scope[] => {
-  // Cluster and bucket together form a primary key
-  const scopeToUpdate = oldScopes.findIndex(
-    thisScope =>
-      thisScope.bucket === newScope.bucket &&
-      thisScope.cluster === newScope.cluster
-  );
-  if (scopeToUpdate < 0) {
-    return oldScopes;
-  }
-  return update(scopeToUpdate, newScope, oldScopes);
-};
 
 export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   const {
@@ -142,8 +125,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
             );
           };
 
-          const handleScopeUpdate = (newScope: Scope) => {
-            const newScopes = getUpdatedScopes(values.scopes ?? [], newScope);
+          const handleScopeUpdate = (newScopes: Scope[]) => {
             setFieldValue('scopes', newScopes);
           };
 
