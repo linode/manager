@@ -37,13 +37,13 @@ type CombinedProps = Props;
 
 interface FormState {
   label: string;
-  permissions?: Scope[];
+  bucket_access?: Scope[];
 }
 
 /**
  * Helpers for converting a list of buckets
  * on the user's account into a list of
- * permissions in the shape the API will expect,
+ * bucket_access in the shape the API will expect,
  * sorted by cluster.
  */
 export const sortByCluster = (a: Scope, b: Scope) => {
@@ -60,8 +60,8 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
   buckets
     .map(thisBucket => ({
       cluster: thisBucket.cluster,
-      bucket: thisBucket.label,
-      access: 'none' as AccessType
+      bucket_name: thisBucket.label,
+      permissions: 'none' as AccessType
     }))
     .sort(sortByCluster);
 
@@ -95,15 +95,15 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
 
   const initialValues: FormState = {
     label: initialLabelValue,
-    permissions: getDefaultScopes(buckets.data)
+    bucket_access: getDefaultScopes(buckets.data)
   };
 
   const handleSubmit = (values: ObjectStorageKeyRequest, formikProps: any) => {
     // If the user hasn't toggled the Limited Access button,
-    // don't include any permissions information in the payload.
+    // don't include any bucket_access information in the payload.
     const payload = limitedAccessChecked
       ? values
-      : { ...values, permissions: undefined };
+      : { ...values, bucket_access: undefined };
 
     return onSubmit(payload, formikProps);
   };
@@ -136,7 +136,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
           };
 
           const handleScopeUpdate = (newScopes: Scope[]) => {
-            setFieldValue('permissions', newScopes);
+            setFieldValue('bucket_access', newScopes);
           };
 
           return (
@@ -149,7 +149,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
                 <Notice
                   error
                   important
-                  text="You don't have permissions to create an Access Key. Please contact an account administrator for details."
+                  text="You don't have bucket_access to create an Access Key. Please contact an account administrator for details."
                 />
               )}
 
@@ -183,7 +183,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
               />
               <LimitedAccessControls
                 mode={mode}
-                permissions={values.permissions}
+                bucket_access={values.bucket_access}
                 updateScopes={handleScopeUpdate}
                 handleToggle={() =>
                   setLimitedAccessChecked(checked => !checked)

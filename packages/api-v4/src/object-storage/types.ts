@@ -3,18 +3,20 @@ export interface ObjectStorageKey {
   id: number;
   label: string;
   secret_key: string;
+  limited: boolean;
+  bucket_access: Scope[] | null;
 }
 
 export type AccessType = 'read_only' | 'read_write' | 'none';
 export interface Scope {
-  bucket: string;
+  bucket_name: string;
   cluster: string;
-  access: AccessType;
+  permissions: AccessType;
 }
 
 export interface ObjectStorageKeyRequest {
   label: string;
-  permissions?: Scope[]; // sent only when creating a limited access key
+  bucket_access?: Scope[]; // sent only when creating a limited access key
 }
 
 export interface ObjectStorageBucketRequestPayload {

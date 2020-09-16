@@ -13,7 +13,7 @@ import TableCell from 'src/components/TableCell';
 interface Props {
   mode: 'creating' | 'editing';
   checked: boolean;
-  permissions?: Scope[];
+  bucket_access?: Scope[];
   updateScopes: (newScopes: Scope[]) => void;
   handleToggle: () => void;
 }
@@ -25,7 +25,7 @@ export const getUpdatedScopes = (
   // Cluster and bucket together form a primary key
   const scopeToUpdate = oldScopes.findIndex(
     thisScope =>
-      thisScope.bucket === newScope.bucket &&
+      thisScope.bucket_name === newScope.bucket_name &&
       thisScope.cluster === newScope.cluster
   );
   if (scopeToUpdate < 0) {
@@ -49,7 +49,7 @@ export const LimitedAccessControls: React.FC<Props> = props => {
           <Toggle
             onChange={handleToggle}
             checked={checked}
-            data-testid="limited-access-toggle"
+            data-testid="limited-permissions-toggle"
           />
         }
         label={'Limited Access'}
@@ -63,31 +63,33 @@ export default React.memo(LimitedAccessControls);
 
 interface TableProps {
   mode: 'creating' | 'editing';
-  permissions?: Scope[];
+  bucket_access?: Scope[];
   updateScopes: (newScopes: Scope[]) => void;
 }
 
 const AccessTable: React.FC<TableProps> = props => {
-  const { mode, permissions, updateScopes } = props;
-  if (!permissions) {
+  const { mode, bucket_access, updateScopes } = props;
+  if (!bucket_access) {
     return null;
   }
 
   const updateSingleScope = (newScope: Scope) => {
-    const newScopes = getUpdatedScopes(permissions, newScope);
+    const newScopes = getUpdatedScopes(bucket_access, newScope);
     updateScopes(newScopes);
   };
 
   const updateAllScopes = (accessType: AccessType) => {
-    const newScopes = permissions.map(thisScope => ({
+    const newScopes = bucket_access.map(thisScope => ({
       ...thisScope,
-      access: accessType
+      permissions: accessType
     }));
     updateScopes(newScopes);
   };
 
   const allScopesEqual = (accessType: AccessType) => {
-    return permissions.every(thisScope => thisScope.access === accessType);
+    return bucket_access.every(
+      thisScope => thisScope.permissions === accessType
+    );
   };
 
   return (
@@ -173,8 +175,8 @@ const AccessTable: React.FC<TableProps> = props => {
             </TableCell>
           </TableRow>
         )}
-        {permissions.map(thisScope => {
-          const scopeName = `${thisScope.cluster}-${thisScope.bucket}`;
+        {bucket_access.map(thisScope => {
+          const scopeName = `${thisScope.cluster}-${thisScope.bucket_name}`;
           return (
             <TableRow key={scopeName} data-testid={scopeName}>
               <TableCell
@@ -189,7 +191,7 @@ const AccessTable: React.FC<TableProps> = props => {
                 padding="checkbox"
                 // className={classes.accessCell}
               >
-                {thisScope.bucket}
+                {thisScope.bucket_name}
               </TableCell>
               <TableCell
                 parentColumn="None"
@@ -197,18 +199,21 @@ const AccessTable: React.FC<TableProps> = props => {
                 // className={classes.noneCell}
               >
                 <Radio
-                  name={thisScope.bucket}
+                  name={thisScope.bucket_name}
                   disabled={
-                    mode !== 'creating' && thisScope.access !== SCOPES.none
+                    mode !== 'creating' && thisScope.permissions !== SCOPES.none
                   }
-                  checked={thisScope.access === SCOPES.none}
+                  checked={thisScope.permissions === SCOPES.none}
                   value="none"
                   onChange={() =>
-                    updateSingleScope({ ...thisScope, access: SCOPES.none })
+                    updateSingleScope({
+                      ...thisScope,
+                      permissions: SCOPES.none
+                    })
                   }
                   data-qa-perm-none-radio
                   inputProps={{
-                    'aria-label': `no access for ${thisScope.cluster}`
+                    'aria-label': `no permissions for ${thisScope.cluster}`
                   }}
                 />
               </TableCell>
@@ -220,12 +225,15 @@ const AccessTable: React.FC<TableProps> = props => {
                 <Radio
                   name={scopeName}
                   disabled={
-                    mode !== 'creating' && thisScope.access !== SCOPES.read
+                    mode !== 'creating' && thisScope.permissions !== SCOPES.read
                   }
-                  checked={thisScope.access === SCOPES.read}
+                  checked={thisScope.permissions === SCOPES.read}
                   value="read-only"
                   onChange={() =>
-                    updateSingleScope({ ...thisScope, access: SCOPES.read })
+                    updateSingleScope({
+                      ...thisScope,
+                      permissions: SCOPES.read
+                    })
                   }
                   data-qa-perm-read-radio
                   inputProps={{
@@ -241,10 +249,13 @@ const AccessTable: React.FC<TableProps> = props => {
                 <Radio
                   name={scopeName}
                   disabled={mode !== 'creating'}
-                  checked={thisScope.access === SCOPES.write}
+                  checked={thisScope.permissions === SCOPES.write}
                   value="read-write"
                   onChange={() =>
-                    updateSingleScope({ ...thisScope, access: SCOPES.write })
+                    updateSingleScope({
+                      ...thisScope,
+                      permissions: SCOPES.write
+                    })
                   }
                   data-qa-perm-rw-radio
                   data-testid="perm-rw-radio"
