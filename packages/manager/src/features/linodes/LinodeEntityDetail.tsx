@@ -15,6 +15,7 @@ import VolumeIcon from 'src/assets/icons/volume.svg';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
+import Hidden from 'src/components/core/Hidden';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import {
@@ -27,27 +28,26 @@ import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
-import TagCell from 'src/components/TagCell';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 import { distroIcons } from 'src/components/ImageSelect/icons';
+import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
+import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { OpenDialog } from 'src/features/linodes/types';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useImages from 'src/hooks/useImages';
 import useLinodes from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
+import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
-import { lishLaunch } from 'src/features/Lish/lishUtils';
-import Hidden from 'src/components/core/Hidden';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -66,6 +66,7 @@ interface LinodeEntityDetailProps {
   linodeConfigs: Config[];
   numVolumes: number;
   openTagDrawer: (tags: string[]) => void;
+  openNotificationDrawer?: () => void;
   isDetailLanding?: boolean;
 }
 
@@ -80,7 +81,8 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     linodeConfigs,
     numVolumes,
     isDetailLanding,
-    openTagDrawer
+    openTagDrawer,
+    openNotificationDrawer
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -119,6 +121,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           isDetailLanding={isDetailLanding}
           type={'something'}
           image={'something'}
+          openNotificationDrawer={openNotificationDrawer || (() => null)}
         />
       }
       body={
@@ -175,6 +178,7 @@ export interface HeaderProps {
   image: string;
   linodeConfigs: Config[];
   isDetailLanding?: boolean;
+  openNotificationDrawer: () => void;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -236,6 +240,11 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.color.grey10
     }
   },
+  statusOther: {
+    '&:before': {
+      backgroundColor: theme.color.orange
+    }
+  },
   actionItemsOuter: {
     display: 'flex',
     alignItems: 'center'
@@ -256,7 +265,8 @@ const Header: React.FC<HeaderProps> = props => {
     type,
     image,
     linodeConfigs,
-    isDetailLanding
+    isDetailLanding,
+    openNotificationDrawer
   } = props;
 
   const classes = useHeaderStyles();
@@ -271,6 +281,8 @@ const Header: React.FC<HeaderProps> = props => {
   const isRunning = linodeStatus === 'running';
 
   const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
+
+  const isOther = !['running', 'stopped', 'offline'].includes(linodeStatus);
 
   const handleConsoleButtonClick = (id: number) => {
     sendLinodeActionMenuItemEvent('Launch Console');
@@ -310,11 +322,21 @@ const Header: React.FC<HeaderProps> = props => {
             className={classnames({
               [classes.statusChip]: true,
               [classes.statusRunning]: isRunning,
-              [classes.statusOffline]: isOffline
+              [classes.statusOffline]: isOffline,
+              [classes.statusOther]: isOther,
+
+              statusOther: !['running', 'stopped', 'offline'].includes(
+                linodeStatus
+              )
             })}
-            label={linodeStatus.toUpperCase()}
+            label={
+              linodeStatus.includes('_')
+                ? linodeStatus.replace('_', ' ').toUpperCase()
+                : linodeStatus.toUpperCase()
+            }
             component="span"
-            clickable={false}
+            clickable={isOther}
+            {...(isOther && { onClick: openNotificationDrawer })}
           />
 
           <div className={classes.actionItemsOuter}>
@@ -454,16 +476,6 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       lineHeight: 1.43
     }
   },
-  // @todo: use mixin for this button reset (M3-4270)
-  button: {
-    backgroundColor: 'inherit',
-    border: 'none',
-    fontSize: 'inherit',
-    fontFamily: theme.font.semiBold,
-    color: theme.color.blue,
-    padding: 0,
-    cursor: 'pointer'
-  },
   accessTable: {
     '& tr': {
       height: 34
@@ -511,8 +523,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     }
   },
   code: {
-    // @todo: use font from designs
-    fontFamily: '"Ubuntu Mono", monospace, sans-serif'
+    fontFamily: '"SourceCodePro", monospace, sans-serif'
   },
   bodyWrapper: {
     [theme.breakpoints.up('lg')]: {
