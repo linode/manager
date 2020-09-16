@@ -65,7 +65,7 @@ describe('AccessKeyDrawer', () => {
       const newScope = { ...mockScopes[2], permissions: 'read_write' } as Scope;
       expect(getUpdatedScopes(mockScopes, newScope)[2]).toHaveProperty(
         'permissions',
-        'read-write'
+        'read_write'
       );
     });
 

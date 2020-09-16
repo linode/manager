@@ -107,8 +107,16 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   const handleSubmit = (values: ObjectStorageKeyRequest, formikProps: any) => {
     // If the user hasn't toggled the Limited Access button,
     // don't include any bucket_access information in the payload.
+
+    // If any/all values are 'none', don't include them in the response.
+    const access = values.bucket_access ?? [];
     const payload = limitedAccessChecked
-      ? values
+      ? {
+          ...values,
+          bucket_access: access.filter(
+            thisAccess => thisAccess.permissions !== 'none'
+          )
+        }
       : { ...values, bucket_access: null };
 
     return onSubmit(payload, formikProps);
