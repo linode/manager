@@ -57,7 +57,7 @@ import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
 import Hidden from 'src/components/core/Hidden';
-import ObjectDetailDrawer from './ObjectDetailDrawer';
+import ObjectDetailDrawer from './ObjectDetailsDrawer';
 
 const page_size = 100;
 

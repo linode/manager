@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
   copy: { marginTop: 16, padding: 0 }
 }));
 
-interface Props {
+export interface Props {
   open: boolean;
   onClose: () => void;
   name?: string;
@@ -29,7 +29,7 @@ interface Props {
   url?: string;
 }
 
-const ObjectDetailDrawer: React.FC<Props> = props => {
+const ObjectDetailsDrawer: React.FC<Props> = props => {
   const { open, onClose, name, size, lastModified, url } = props;
 
   let formattedLastModified;
@@ -49,7 +49,7 @@ const ObjectDetailDrawer: React.FC<Props> = props => {
         </Typography>
       )}
       {formattedLastModified && (
-        <Typography variant="subtitle2">
+        <Typography variant="subtitle2" data-testid="lastModified">
           Last modified: {formattedLastModified}
         </Typography>
       )}
@@ -72,4 +72,4 @@ const ObjectDetailDrawer: React.FC<Props> = props => {
   );
 };
 
-export default ObjectDetailDrawer;
+export default ObjectDetailsDrawer;
