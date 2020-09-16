@@ -4,40 +4,45 @@ import {
   createLinodeWithBackupsEnabled,
   deleteLinodeById
 } from '../../support/api/linodes';
-import { waitForAppLoad } from '../../support/ui/common';
 import { assertToast } from '../../support/ui/events';
 
 describe('linode backups', () => {
   it('enable backups', () => {
     createLinode().then(linode => {
+      cy.visitWithLogin(`/dashboard`);
       cy.server();
-      cy.route('*/account/settings', [
-        { managed: false, backups_enabled: false }
-      ]).as('mockNonManaged');
       cy.route({
         method: 'POST',
         url: `*/linode/instances/${linode.id}/backups/enable`
       }).as('enableBackups');
-      cy.visitWithLogin(`/linodes/${linode.id}/backup`);
-      cy.wait('@mockNonManaged');
-      if (cy.contains('Enable Backups').should('be.visible')) {
-        cy.contains('Enable Backups')
-          .should('be.visible')
-          .click();
-        cy.get('[data-qa-confirm-enable-backups="true"]')
-          .should('be.visible')
-          .click();
-        cy.wait('@enableBackups');
-      }
-      // cy.visit(`/linodes/${linode.id}/backup`);
-      // cy.wait('@mockNonManaged');
+      cy.route({
+        method: 'GET',
+        url: `*/account/settings`
+      }).as('getSettings');
+      cy.contains(`${linode.label}`).should('be.visible');
+      cy.visit(`/linodes/${linode.id}/backup`);
+      // if account is managed, test will pass but skip enabling backups
+      cy.wait('@getSettings').then(xhr => {
+        const response = xhr.response.body;
+        const managed: boolean = response['managed'];
+        cy.contains(`${linode.label}`).should('be.visible');
+        if (!managed) {
+          cy.contains('Enable Backups')
+            .should('be.visible')
+            .click();
+          cy.get('[data-qa-confirm-enable-backups="true"]')
+            .should('be.visible')
+            .click();
+          cy.wait('@enableBackups');
+        }
+      });
       cy.findByText(`${linode.label}`).should('be.visible');
       cy.findByText('Automatic and manual backups will be listed here');
       deleteLinodeById(linode.id);
     });
   });
 
-  it.skip('cant snapshot while booting linode', () => {
+  it('cant snapshot while booting linode', () => {
     cy.visitWithLogin('/dashboard');
     createLinodeWithBackupsEnabled().then(linode => {
       cy.visit(`/linodes/${linode.id}/backup`);
@@ -57,7 +62,7 @@ describe('linode backups', () => {
     });
   });
 
-  it.skip('create linode from snapshot', () => {
+  it('create linode from snapshot', () => {
     cy.visitWithLogin('/dashboard');
     createLinodeWithBackupsEnabled().then(linode => {
       cy.visit(`/linodes/${linode.id}/backup`);
