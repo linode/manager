@@ -86,7 +86,7 @@ jobs:
         with:
           name: linode-api-v4
           path: packages/api-v4
-      - run: cp packages/manager/config/environments/beta pacakges/manager/.env
+      - run: cp packages/manager/config/environments/beta packages/manager/.env
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build
       - uses: actions/upload-artifact@v2
