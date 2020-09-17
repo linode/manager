@@ -13,6 +13,7 @@ const props: CombinedProps = {
   openDeleteDialog: jest.fn(),
   readOnly: false,
   typesLoading: false,
+  typesData: [],
   regionsData: [],
   regionsLastUpdated: 0,
   regionsLoading: false,

@@ -21,10 +21,7 @@ import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
-import {
-  withTypes,
-  WithTypes
-} from 'src/store/linodeType/linodeType.containers';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import MutateDrawer from '../MutateDrawer';
@@ -54,7 +51,7 @@ interface Props {
 type CombinedProps = Props &
   MutationDrawerProps &
   ContextProps &
-  WithTypes &
+  WithTypesProps &
   WithSnackbarProps &
   DispatchProps &
   WithStyles<ClassNames>;
@@ -62,7 +59,7 @@ type CombinedProps = Props &
 const MutationNotification: React.FC<CombinedProps> = props => {
   const {
     classes,
-    types: allTypes,
+    typesData,
     linodeId,
     linodeType,
     linodeSpecs,
@@ -87,11 +84,11 @@ const MutationNotification: React.FC<CombinedProps> = props => {
     }
 
     /** did we find successor meta data in GET /types or GET /types-legacy? */
-    const foundSuccessorInAllTypes = allTypes.find(
+    const foundSuccessorInAllTypes = typesData.find(
       ({ id }) => id === linodeType.successor
     );
 
-    if (allTypes.length > 0 && !!foundSuccessorInAllTypes) {
+    if (typesData.length > 0 && !!foundSuccessorInAllTypes) {
       setSuccessorMetaData(foundSuccessorInAllTypes);
     } else {
       /**
@@ -110,7 +107,7 @@ const MutationNotification: React.FC<CombinedProps> = props => {
           .catch(e => e);
       }
     }
-  }, [allTypes, linodeType]);
+  }, [typesData, linodeType]);
 
   const initMutation = () => {
     openMutationDrawer();
@@ -248,7 +245,7 @@ const connected = connect(undefined, mapDispatchToProps);
 const enhanced = compose<CombinedProps, Props>(
   styled,
   connected,
-  withTypes(),
+  withTypes,
   withLinodeDetailContext<ContextProps>(({ linode }) => ({
     linodeSpecs: linode.specs,
     linodeId: linode.id,

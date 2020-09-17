@@ -69,7 +69,9 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/instances', async (req, res, ctx) => {
-    const onlineLinodes = linodeFactory.buildList(3);
+    const onlineLinodes = linodeFactory.buildList(3, {
+      backups: { enabled: false }
+    });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
     const busyLinodes = linodeFactory.buildList(5, { status: 'migrating' });
     const eventLinode = linodeFactory.build({
@@ -81,6 +83,11 @@ export const handlers = [
       ...onlineLinodes,
       ...offlineLinodes,
       ...busyLinodes,
+      linodeFactory.build({
+        label: 'shadow-plan',
+        type: 'g6-standard-3-s',
+        backups: { enabled: false }
+      }),
       eventLinode
     ];
     return res(ctx.json(makeResourcePage(linodes)));

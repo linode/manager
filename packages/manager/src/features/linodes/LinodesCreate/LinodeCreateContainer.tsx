@@ -50,7 +50,7 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import LinodeCreate from './LinodeCreate';
-import { ExtendedType } from './SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 
 import {
   HandleSubmit,
@@ -621,6 +621,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       enqueueSnackbar,
       closeSnackbar,
       regionsData,
+      typesData,
       ...restOfProps
     } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
@@ -678,6 +679,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             setBackupID={this.setBackupID}
             regionsData={filteredRegions!}
             regionHelperText={regionHelperText}
+            typesData={typesData}
             {...restOfProps}
             {...restOfState}
           />
