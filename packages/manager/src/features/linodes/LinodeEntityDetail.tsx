@@ -324,10 +324,7 @@ const Header: React.FC<HeaderProps> = props => {
               [classes.statusRunning]: isRunning,
               [classes.statusOffline]: isOffline,
               [classes.statusOther]: isOther,
-
-              statusOther: !['running', 'stopped', 'offline'].includes(
-                linodeStatus
-              )
+              statusOther: isOther
             })}
             label={
               linodeStatus.includes('_')
