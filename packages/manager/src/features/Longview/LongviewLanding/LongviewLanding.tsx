@@ -10,7 +10,7 @@ import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
-import TabPanel from 'src/components/core/ReachTabPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
@@ -66,18 +66,18 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
-            <TabPanel>
+            <SafeTabPanel index={0}>
               <LongviewClients
                 activeSubscription={activeSubscriptionRequestHook.data}
                 {...props}
               />
-            </TabPanel>
+            </SafeTabPanel>
 
-            <TabPanel>
+            <SafeTabPanel index={1}>
               <LongviewPlans
                 subscriptionRequestHook={subscriptionsRequestHook}
               />
-            </TabPanel>
+            </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
       </Tabs>
