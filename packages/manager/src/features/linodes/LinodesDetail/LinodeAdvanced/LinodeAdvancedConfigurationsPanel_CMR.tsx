@@ -4,7 +4,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import LinodeConfigs from './LinodeConfigs_CMR';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -34,32 +33,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = LinodeContextProps;
 
-const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = props => {
-  const { linodeLabel } = props;
+const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = () => {
   const classes = useStyles();
 
   return (
-    <>
-      <DocumentTitleSegment
-        segment={`${linodeLabel ? `${linodeLabel} - ` : ''} Configurations`}
-      />
-      <Grid container>
-        <Grid item className={classes.enclosingGrid}>
-          <LinodeConfigs />
-        </Grid>
+    <Grid container>
+      <Grid item className={classes.enclosingGrid}>
+        <LinodeConfigs />
       </Grid>
-    </>
+    </Grid>
   );
 };
 
 interface LinodeContextProps {
   linodeID: number;
-  linodeLabel: string;
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeID: linode.id,
-  linodeLabel: linode.label
+  linodeID: linode.id
 }));
 
 const enhanced = compose<CombinedProps, {}>(linodeContext);
