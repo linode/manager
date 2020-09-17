@@ -47,6 +47,7 @@ import {
   Origin as DomainDrawerOrigin,
   resetDrawer
 } from 'src/store/domainDrawer';
+import { upsertDomain } from 'src/store/domains/domains.actions';
 import {
   DomainActionsProps,
   withDomainActions
@@ -674,6 +675,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
+        upsertDomain(data);
         this.redirect(data.id || '');
         this.closeDrawer();
       })

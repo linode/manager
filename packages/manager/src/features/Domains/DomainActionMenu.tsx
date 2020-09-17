@@ -42,9 +42,7 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
 
   handleClone = () => {
     const { domain, id, onClone } = this.props;
-    setTimeout(() => {
-      onClone(domain, id);
-    }, 800);
+    onClone(domain, id);
   };
 
   createActions = () => (closeMenu: Function): Action[] => {
