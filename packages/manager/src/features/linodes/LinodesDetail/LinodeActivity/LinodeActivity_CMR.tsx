@@ -10,7 +10,6 @@ import Typography from 'src/components/core/Typography';
 import EventsLanding from 'src/features/Events/EventsLanding';
 import { getEventsForEntity } from 'src/utilities/getEventsForEntity';
 import { withLinodeDetailContext } from '../linodeDetailContext';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 type ClassNames = 'root' | 'title';
 
@@ -25,13 +24,10 @@ const styles = (theme: Theme) =>
 type CombinedProps = WithStyles<ClassNames> & StateProps;
 
 export const LinodeActivity: React.FC<CombinedProps> = props => {
-  const { classes, linodeID, linodeLabel } = props;
+  const { classes, linodeID } = props;
 
   return (
     <div>
-      <DocumentTitleSegment
-        segment={`${linodeLabel ? `${linodeLabel} - ` : ''} Activity Logs`}
-      />
       <Typography
         variant="h2"
         className={classes.title}
@@ -54,11 +50,9 @@ export const LinodeActivity: React.FC<CombinedProps> = props => {
 
 interface StateProps {
   linodeID: number;
-  linodeLabel: string;
 }
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeID: linode.id,
-  linodeLabel: linode.label
+  linodeID: linode.id
 }));
 
 const styled = withStyles(styles);
