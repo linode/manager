@@ -108,6 +108,7 @@ interface Props extends RenderGuardProps {
   ) => Promise<ResourcePage<any>>;
   category: string;
   header: string;
+  isOnCreate?: boolean;
 }
 
 type CombinedProps = Props &
@@ -230,6 +231,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               key={category + '-tab'}
               category={category}
               disabled={this.props.disabled}
+              isOnCreate={this.props.isOnCreate}
             />
           </Paper>
         </div>

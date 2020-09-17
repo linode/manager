@@ -8,7 +8,7 @@ import {
 } from 'src/components/core/styles';
 import Table, { TableProps } from 'src/components/core/Table';
 
-type ClassNames = 'root' | 'border' | 'stickyHeader';
+type ClassNames = 'root' | 'border';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -43,29 +43,6 @@ const styles = (theme: Theme) =>
     border: {
       border: `1px solid ${theme.palette.divider}`,
       borderBottom: 0
-    },
-    stickyHeader: {
-      borderTop: 0,
-      '& th': {
-        position: 'sticky',
-        backgroundColor: theme.bg.tableHeader,
-        paddingTop: 0,
-        paddingBottom: 0,
-        height: 48,
-        zIndex: 5,
-        borderTop: `1px solid ${theme.palette.divider}`,
-        '&:first-child::before': {
-          content: '""',
-          borderTop: `1px solid ${theme.palette.divider}`,
-          backgroundColor: theme.bg.tableHeader,
-          position: 'absolute',
-          width: 5,
-          top: -1,
-          borderBottom: `2px solid ${theme.palette.divider}`,
-          height: 48,
-          left: -5
-        }
-      }
     }
   });
 
@@ -76,7 +53,7 @@ export interface Props extends TableProps {
   border?: boolean;
   spacingTop?: 0 | 8 | 16 | 24;
   spacingBottom?: 0 | 8 | 16 | 24;
-  stickyHeader?: boolean;
+
   tableCaption?: string;
   colCount?: number;
   rowCount?: number;
@@ -94,7 +71,6 @@ class WrappedTable extends React.Component<CombinedProps> {
       noOverflow,
       spacingTop,
       spacingBottom,
-      stickyHeader,
       colCount,
       rowCount,
       ...rest
@@ -106,8 +82,7 @@ class WrappedTable extends React.Component<CombinedProps> {
           'tableWrapper',
           {
             [classes.root]: !noOverflow,
-            [classes.border]: border,
-            [classes.stickyHeader]: stickyHeader
+            [classes.border]: border
           },
           className
         )}
