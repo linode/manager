@@ -63,7 +63,7 @@ const styles = (theme: Theme) =>
     },
     cmrSpacing: {
       paddingTop: 4,
-      paddingBottom: `4px !important`,
+      paddingBottom: `0 !important`,
       paddingLeft: 4
     },
     // Styles to override base placeholder styles for StackScript null state
