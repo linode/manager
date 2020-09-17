@@ -150,7 +150,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'rgba(50, 54, 60, 0.5)',
     top: 50,
     left: 0,
-    zIndex: 1
+    zIndex: 6
   }
 }));
 

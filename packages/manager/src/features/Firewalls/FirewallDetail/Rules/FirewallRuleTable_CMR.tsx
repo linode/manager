@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   header: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
     flexDirection: 'row',
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
