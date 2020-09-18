@@ -15,7 +15,7 @@ describe('ObjectDetailsDrawer', () => {
   it('renders formatted size, formatted last modified, truncated URL', () => {
     const { getByText } = renderWithTheme(<ObjectDetailsDrawer {...props} />);
     getByText('12.1 KB');
-    getByText('Last modified: 2019-12-31 18:59:59');
+    getByText(/^Last modified: 2019-12-31/);
     getByText(/^https:\/\/my-bucket/);
   });
 
