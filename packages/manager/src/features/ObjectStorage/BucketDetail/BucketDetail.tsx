@@ -48,6 +48,7 @@ import {
   displayName,
   ExtendedObject,
   extendObject,
+  generateObjectUrl,
   tableUpdateAction
 } from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
@@ -56,6 +57,7 @@ import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
 import Hidden from 'src/components/core/Hidden';
+import ObjectDetailDrawer from './ObjectDetailsDrawer';
 
 const page_size = 100;
 
@@ -134,9 +136,11 @@ interface State {
   generalError?: APIError[];
   nextPageError?: APIError[];
   objectToDelete?: string;
+  objectDetailDrawerOpen: boolean;
+  selectedObject?: ExtendedObject;
 }
 
-export class BucketDetail extends React.Component<CombinedProps, {}> {
+export class BucketDetail extends React.Component<CombinedProps, State> {
   state: State = {
     data: [],
     loading: false,
@@ -145,7 +149,8 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     deleteObjectDialogOpen: false,
     deleteObjectLoading: false,
     generalError: undefined,
-    nextPageError: undefined
+    nextPageError: undefined,
+    objectDetailDrawerOpen: false
   };
 
   fetchData() {
@@ -281,6 +286,13 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     });
   };
 
+  handleClickDetails = (selectedObject: ExtendedObject) => {
+    this.setState({
+      selectedObject,
+      objectDetailDrawerOpen: true
+    });
+  };
+
   deleteObject = async () => {
     const { clusterId, bucketName } = this.props.match.params;
     const { objectToDelete } = this.state;
@@ -403,6 +415,10 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     });
   };
 
+  closeObjectDetailsDrawer = () => {
+    this.setState({ objectDetailDrawerOpen: false });
+  };
+
   render() {
     const { classes, flags } = this.props;
     const {
@@ -414,7 +430,9 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       objectToDelete,
       deleteObjectLoading,
       deleteObjectError,
-      deleteObjectDialogOpen
+      deleteObjectDialogOpen,
+      selectedObject,
+      objectDetailDrawerOpen
     } = this.state;
 
     const { bucketName, clusterId } = this.props.match.params;
@@ -485,6 +503,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                         prefix={prefix}
                         handleClickDownload={this.handleDownload}
                         handleClickDelete={this.handleClickDelete}
+                        handleClickDetails={this.handleClickDetails}
                       />
                     </TableBody>
                   </Table_CMR>
@@ -517,6 +536,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                         prefix={prefix}
                         handleClickDownload={this.handleDownload}
                         handleClickDelete={this.handleClickDelete}
+                        handleClickDetails={this.handleClickDetails}
                       />
                     </TableBody>
                   </Table>
@@ -586,6 +606,19 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
             </>
           </Grid>
         </Grid>
+        <ObjectDetailDrawer
+          open={objectDetailDrawerOpen}
+          onClose={this.closeObjectDetailsDrawer}
+          name={selectedObject?._displayName}
+          lastModified={selectedObject?.last_modified}
+          size={selectedObject?.size}
+          url={
+            selectedObject
+              ? generateObjectUrl(clusterId, bucketName, selectedObject.name)
+                  .absolute
+              : undefined
+          }
+        />
       </>
     );
   }

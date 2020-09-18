@@ -13,7 +13,11 @@ type ClassNames =
   | 'searchWrapper'
   | 'searchBar'
   | 'stackscriptPlaceholder'
-  | 'cmrSpacing';
+  | 'cmrSpacing'
+  | 'button'
+  | 'cmrHeaderWrapper'
+  | 'searchBarCMR'
+  | 'cmrActions';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -39,6 +43,14 @@ const styles = (theme: Theme) =>
       paddingBottom: '40px !important',
       backgroundColor: theme.bg.white
     },
+    cmrHeaderWrapper: {
+      position: 'static',
+      [theme.breakpoints.up('sm')]: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }
+    },
     searchBar: {
       marginTop: 0,
       backgroundColor: theme.color.white,
@@ -46,9 +58,12 @@ const styles = (theme: Theme) =>
         marginRight: 0
       }
     },
+    searchBarCMR: {
+      flexBasis: '100%'
+    },
     cmrSpacing: {
       paddingTop: 4,
-      paddingBottom: `4px !important`,
+      paddingBottom: `0 !important`,
       paddingLeft: 4
     },
     // Styles to override base placeholder styles for StackScript null state
@@ -56,6 +71,17 @@ const styles = (theme: Theme) =>
       padding: `${theme.spacing(1)}px 0`,
       margin: 0,
       width: '100%'
+    },
+    button: {
+      width: 180,
+      borderRadius: 3,
+      height: 34,
+      padding: 0,
+      marginRight: 8
+    },
+    cmrActions: {
+      display: 'flex',
+      alignItems: 'center'
     }
   });
 

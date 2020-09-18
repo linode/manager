@@ -7,10 +7,12 @@ jest.mock('src/components/ActionMenu/ActionMenu');
 
 const mockHandleClickDelete = jest.fn();
 const mockHandleClickDownload = jest.fn();
+const mockHandleClickDetails = jest.fn();
 
 const props: Props = {
   handleClickDownload: mockHandleClickDownload,
   handleClickDelete: mockHandleClickDelete,
+  handleClickDetails: mockHandleClickDetails,
   objectName: 'my-object'
 };
 

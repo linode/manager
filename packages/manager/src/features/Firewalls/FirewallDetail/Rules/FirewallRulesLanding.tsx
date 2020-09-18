@@ -41,6 +41,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actions: {
     alignSelf: 'flex-end'
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 

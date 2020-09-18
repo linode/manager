@@ -21,6 +21,7 @@ interface Props {
   prefix: string;
   handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
+  handleClickDetails: (object: ExtendedObject) => void;
 }
 
 const ObjectTableContent: React.FC<Props> = props => {
@@ -30,7 +31,8 @@ const ObjectTableContent: React.FC<Props> = props => {
     error,
     prefix,
     handleClickDownload,
-    handleClickDelete
+    handleClickDelete,
+    handleClickDetails
   } = props;
 
   const flags = useFlags();
@@ -124,6 +126,7 @@ const ObjectTableContent: React.FC<Props> = props => {
             manuallyCreated={object._manuallyCreated}
             handleClickDownload={handleClickDownload}
             handleClickDelete={handleClickDelete}
+            handleClickDetails={() => handleClickDetails(object)}
           />
         ) : (
           <ObjectTableRow
@@ -141,6 +144,7 @@ const ObjectTableContent: React.FC<Props> = props => {
             manuallyCreated={object._manuallyCreated}
             handleClickDownload={handleClickDownload}
             handleClickDelete={handleClickDelete}
+            handleClickDetails={() => handleClickDetails(object)}
           />
         );
       })}

@@ -34,6 +34,7 @@ export const nodeBalancerConfigFactory = Factory.Sync.makeFactory<
   check_interval: 5,
   check_passive: true,
   check_path: '/ping_me',
+  proxy_protocol: 'none',
   check_timeout: 3,
   cipher_suite: 'recommended',
   nodebalancer_id: Factory.each(id => id),

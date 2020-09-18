@@ -24,6 +24,7 @@ import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -138,11 +139,14 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
     regionsData,
-    typesData,
+    typesData: allTypes,
     typesLoading,
     typesError,
     regionsError
   } = props;
+
+  // Only want to use current types here.
+  const typesData = filterCurrentTypes(allTypes);
 
   // Only include regions that have LKE capability
   const filteredRegions = React.useMemo(() => {

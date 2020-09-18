@@ -5,11 +5,20 @@ export interface Props {
   objectName: string;
   handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
+  handleClickDetails: () => void;
 }
 
 export const ObjectActionMenu: React.FC<Props> = props => {
   const createActions = () => (closeMenu: Function): Action[] => {
     return [
+      {
+        title: 'Details',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          props.handleClickDetails();
+          closeMenu();
+          e.preventDefault();
+        }
+      },
       {
         title: 'Download',
         onClick: (e: React.MouseEvent<HTMLElement>) => {

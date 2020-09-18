@@ -1,6 +1,7 @@
 import {
   getDeprecatedLinodeTypes,
   getLinodeTypes,
+  getType,
   LinodeType
 } from '@linode/api-v4/lib/linodes';
 import cachedTypes from 'src/cachedData/types.json';
@@ -8,7 +9,11 @@ import cachedDeprecatedTypes from 'src/cachedData/typesLegacy.json';
 import { isProdAPI } from 'src/constants';
 import { ThunkActionCreator } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';
-import { getLinodeTypesActions } from './linodeType.actions';
+import { createRequestThunk } from '../store.helpers.tmp';
+import {
+  getLinodeTypeActions,
+  getLinodeTypesActions
+} from './linodeType.actions';
 
 type RequestTypesThunk = ThunkActionCreator<Promise<LinodeType[]>>;
 export const requestTypes: RequestTypesThunk = () => dispatch => {
@@ -50,3 +55,8 @@ export const requestTypes: RequestTypesThunk = () => dispatch => {
       return error;
     });
 };
+
+export const requestLinodeType = createRequestThunk(
+  getLinodeTypeActions,
+  ({ typeId }) => getType(typeId)
+);

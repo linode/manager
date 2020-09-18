@@ -12,6 +12,7 @@ import Box from 'src/components/core/Box';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
@@ -31,6 +32,14 @@ const CredentialList_CMR = React.lazy(() =>
   import('./Credentials/CredentialList_CMR')
 );
 
+const useStyles = makeStyles((theme: Theme) => ({
+  cmrSpacing: {
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing()
+    }
+  }
+}));
+
 export type CombinedProps = {} & RouteComponentProps<{}>;
 
 const getAllCredentials = () =>
@@ -42,6 +51,7 @@ const getAllContacts = () =>
   getAll<ManagedContact>(getManagedContacts)().then(res => res.data);
 
 export const ManagedLandingContent: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
   const flags = useFlags();
 
   const credentials = useAPIRequest<ManagedCredential[]>(getAllCredentials, []);
@@ -112,7 +122,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           alignItems="center"
           xs={8}
         >
-          <Grid item>
+          <Grid item className={flags.cmr ? classes.cmrSpacing : ''}>
             <SupportWidget />
           </Grid>
           <Grid item>

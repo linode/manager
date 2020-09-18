@@ -66,7 +66,7 @@ describe('getYearAndMonthFromOffset', () => {
 });
 
 describe('getOffsetFromDate', () => {
-  it('returns the the number needed to offset the current date from the target date', () => {
+  it('returns the number needed to offset the current date from the target date', () => {
     const d1 = new Date('2020-06-01T12:00:00');
     const d2 = new Date('2020-05-01T12:00:00');
     const d3 = new Date('2020-05-15T12:00:00');

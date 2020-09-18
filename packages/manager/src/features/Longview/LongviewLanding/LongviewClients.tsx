@@ -22,6 +22,7 @@ import withLongviewClients, {
   Props as LongviewProps
 } from 'src/containers/longview.container';
 import withProfile from 'src/containers/profile.container';
+import useFlags from 'src/hooks/useFlags';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -67,6 +68,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectLabel: {
     minWidth: '65px'
+  },
+  cmrSpacing: {
+    marginRight: theme.spacing()
   }
 }));
 
@@ -141,6 +145,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   >(false);
 
   const classes = useStyles();
+  const flags = useFlags();
 
   React.useEffect(() => {
     props.getLongviewClients();
@@ -279,7 +284,10 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
             hideLabel
           />
         </Grid>
-        <Grid item className={`${classes.addNew} py0`}>
+        <Grid
+          item
+          className={`py0 ${classes.addNew} ${flags.cmr && classes.cmrSpacing}`}
+        >
           <AddNewLink
             onClick={handleAddClient}
             label={newClientLoading ? 'Loading...' : 'Add a Client'}

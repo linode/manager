@@ -2,7 +2,7 @@ import * as React from 'react';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
-import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import NodePoolSummary from './NodePoolSummary';

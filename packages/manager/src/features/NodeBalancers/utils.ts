@@ -41,6 +41,7 @@ export const createNewNodeBalancerConfig = (
   cipher_suite: undefined,
   port: withDefaultPort ? 80 : undefined,
   protocol: 'http',
+  proxy_protocol: 'none',
   ssl_cert: undefined,
   ssl_key: undefined,
   stickiness: 'table',
@@ -99,6 +100,8 @@ export const transformConfigsForRequest = (
           config.ssl_key === '<REDACTED>'
             ? undefined
             : config.protocol || undefined,
+        proxy_protocol:
+          config.protocol === 'tcp' ? config.proxy_protocol : 'none',
         algorithm: config.algorithm || undefined,
         stickiness: config.stickiness || undefined,
         check: config.check || undefined,
