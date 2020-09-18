@@ -47,22 +47,22 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
       onClose={onClose}
       title={truncateMiddle(name ?? 'Object Detail')}
     >
-      {size && (
+      {size ? (
         <Typography variant="subtitle2">
           {readableBytes(size).formatted}
         </Typography>
-      )}
-      {formattedLastModified && (
+      ) : null}
+      {formattedLastModified ? (
         <Typography variant="subtitle2" data-testid="lastModified">
           Last modified: {formattedLastModified}
         </Typography>
-      )}
+      ) : null}
 
       <Divider className={classes.divider} />
 
       {/* ENABLE PUBLIC URL TOGGLE GOES HERE*/}
 
-      {url && (
+      {url ? (
         <>
           <ExternalLink link={url} text={truncateMiddle(url, 50)} />
           <CopyTooltip
@@ -71,7 +71,7 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
             displayText="Copy to clipboard"
           />
         </>
-      )}
+      ) : null}
     </Drawer>
   );
 };
