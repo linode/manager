@@ -65,6 +65,7 @@ import {
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Notice from 'src/components/Notice';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -537,7 +538,7 @@ export class LinodeCreate extends React.PureComponent<
           <SelectPlanPanel
             data-qa-select-plan
             error={hasErrorFor.type}
-            types={typesData!}
+            types={filterCurrentTypes(typesData)!}
             onSelect={this.props.updateTypeID}
             selectedID={this.props.selectedTypeID}
             updateFor={[

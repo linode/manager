@@ -15,7 +15,7 @@ const addTo = <T>(list: T[] = [], i: T) => [...list, i];
 
 /**
  * If an entity has no tags, push it onto the none record, otherwise iterate over its
- * tags pushing the entity onto the the appropriate record.
+ * tags pushing the entity onto the appropriate record.
  */
 const reduceEntitiesToTags = <T extends Tagged>(
   obj: Record<string, T[]>,
