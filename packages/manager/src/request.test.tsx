@@ -153,31 +153,3 @@ describe('injectEuuidToProfile', () => {
     expect(injectEuuidToProfile(accountResponse as any).data).toEqual(profile);
   });
 });
-
-// describe('isSuccessfulGETProfileResponse', () => {
-// const response: Partial<AxiosResponse> = {
-//   data: profileFactory.build(),
-//   status: 200,
-//   config: { url: '/profile', method: 'get' },
-//   headers: { 'x-customer-uuid': '1234 ' }
-// };
-// it('returns `false` for non-GET requests', () => {
-//   const postResponse = {
-//     ...response,
-//     config: { ...response.config, method: 'post' }
-//   };
-//   expect(isSuccessfulGETProfileResponse(postResponse as any)).toBe(false);
-// });
-// it('returns `false` for failed requests', () => {
-//   expect(
-//     isSuccessfulGETProfileResponse({ ...response, status: 400 } as any)
-//   ).toBe(false);
-// });
-// it('returns `false` for requests not to /profile', () => {
-//   const accountResponse = { ...response, config: { url: '/account' } };
-//   expect(isSuccessfulGETProfileResponse(accountResponse as any)).toBe(false);
-// });
-// it('returns `true` for successful GET requests to /profile', () => {
-//   expect(isSuccessfulGETProfileResponse(response as any)).toBe(true);
-// });
-// });
