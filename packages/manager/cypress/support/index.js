@@ -25,9 +25,11 @@ import { deleteAllTestLinodes } from './api/linodes';
 import { deleteAllTestNodeBalancers } from './api/nodebalancers';
 import { deleteAllTestVolumes } from './api/volumes';
 import { deleteAllTestImages } from './api/images';
+import { deleteAllTestTickets } from './api/helpAndSupport';
 it('Delete All Test Entities before anything happens', () => {
   deleteAllTestLinodes();
   deleteAllTestNodeBalancers();
   deleteAllTestVolumes();
   deleteAllTestImages();
+  deleteAllTestTickets();
 });
