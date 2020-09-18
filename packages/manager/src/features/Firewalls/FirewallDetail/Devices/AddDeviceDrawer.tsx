@@ -6,7 +6,9 @@ import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
+import { dcDisplayNames } from 'src/constants';
 import useRegions from 'src/hooks/useRegions';
+import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import v4 from 'uuid';
 
@@ -79,8 +81,10 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
           key={key}
           allowedRegions={regionsWithFirewalls}
           handleChange={selected => setSelectedLinodes(selected)}
-          helperText="You can assign one or more Linodes to this Firewall. Only Linodes
-          in regions that currently support Firewalls will be displayed as options."
+          helperText={`You can assign one or more Linodes to this Firewall. Only Linodes
+          in regions that currently support Firewalls (${arrayToList(
+            regionsWithFirewalls.map(thisId => dcDisplayNames[thisId])
+          )}) will be displayed as options.`}
           filteredLinodes={currentDevices}
         />
         <ActionsPanel>
