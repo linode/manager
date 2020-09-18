@@ -31,7 +31,7 @@ export interface Props {
   colSpan: Columns;
   numberOfRows?: number;
   numberOfColumns?: Columns;
-  widths?: number[];
+  widths: number[];
   transparent?: any;
   oneLine?: boolean;
   compact?: boolean;
@@ -90,7 +90,7 @@ const tableRowLoading: React.FC<CombinedProps> = props => {
             <Skeleton
               table
               numColumns={numColumns}
-              widths={widths ? widths : undefined}
+              widths={widths}
               oneLine={oneLine}
               compact={compact}
               hasEntityIcon={hasEntityIcon}

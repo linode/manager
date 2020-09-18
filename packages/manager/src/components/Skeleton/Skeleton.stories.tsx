@@ -29,7 +29,7 @@ storiesOf('Skeleton', module)
     <Table>
       {renderTableHead()}
       <TableBody>
-        <TableRowLoading colSpan={4} />
+        <TableRowLoading colSpan={4} widths={[40, 20, 20, 20]} />
       </TableBody>
     </Table>
   ))

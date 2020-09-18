@@ -77,7 +77,8 @@ const _Skeleton: React.FC<combinedProps> = props => {
         item
         style={{
           flexBasis: `${calcColumns(colCount)}%`,
-          width: `${widths && widths[colCount]}px`
+          width: `${widths && widths[colCount]}%`,
+          border: '1px solid red'
         }}
         key={`ske-${colCount}`}
         data-testid={'skeletonCol'}
