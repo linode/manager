@@ -162,6 +162,12 @@ export const MobileNav: React.FC<Props> = props => {
   return (
     <ReachMenu key={window.location.pathname}>
       {({ isExpanded }) => {
+        // How we are preventing scroll on the body
+        if (isExpanded) {
+          document.body.classList.add('overflow-hidden');
+        } else {
+          document.body.classList.remove('overflow-hidden');
+        }
         return (
           <>
             <MenuButton
