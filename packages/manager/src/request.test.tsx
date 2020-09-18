@@ -1,6 +1,7 @@
-import { AxiosError, AxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
-import { handleError, getURL } from './request';
+import { profileFactory } from './factories';
+import { handleError, getURL, injectEuuidToProfile } from './request';
 import store from './store';
 
 const baseErrorConfig: AxiosRequestConfig = {
@@ -122,3 +123,61 @@ describe('getURL', () => {
     expect(getURL(config)).toBe('https://login.linode.com/revoke');
   });
 });
+
+describe('injectEuuidToProfile', () => {
+  const profile = profileFactory.build();
+  const response: Partial<AxiosResponse> = {
+    data: profile,
+    status: 200,
+    config: { url: '/profile', method: 'get' },
+    headers: { 'x-customer-uuid': '1234' }
+  };
+
+  it('injects the euuid on successful GET profile response ', () => {
+    const results = injectEuuidToProfile(response as any);
+    expect(results.data).toHaveProperty('_euuidFromHttpHeader', '1234');
+    // eslint-disable-next-line
+    const { _euuidFromHttpHeader, ...originalData } = results.data;
+    expect(originalData).toEqual(profile);
+  });
+
+  it('returns the original profile data if no header is present', () => {
+    const responseWithNoHeaders = { ...response, headers: {} };
+    expect(injectEuuidToProfile(responseWithNoHeaders as any).data).toEqual(
+      profile
+    );
+  });
+
+  it("doesn't inject the euuid on other endpoints", () => {
+    const accountResponse = { ...response, config: { url: '/account' } };
+    expect(injectEuuidToProfile(accountResponse as any).data).toEqual(profile);
+  });
+});
+
+// describe('isSuccessfulGETProfileResponse', () => {
+// const response: Partial<AxiosResponse> = {
+//   data: profileFactory.build(),
+//   status: 200,
+//   config: { url: '/profile', method: 'get' },
+//   headers: { 'x-customer-uuid': '1234 ' }
+// };
+// it('returns `false` for non-GET requests', () => {
+//   const postResponse = {
+//     ...response,
+//     config: { ...response.config, method: 'post' }
+//   };
+//   expect(isSuccessfulGETProfileResponse(postResponse as any)).toBe(false);
+// });
+// it('returns `false` for failed requests', () => {
+//   expect(
+//     isSuccessfulGETProfileResponse({ ...response, status: 400 } as any)
+//   ).toBe(false);
+// });
+// it('returns `false` for requests not to /profile', () => {
+//   const accountResponse = { ...response, config: { url: '/account' } };
+//   expect(isSuccessfulGETProfileResponse(accountResponse as any)).toBe(false);
+// });
+// it('returns `true` for successful GET requests to /profile', () => {
+//   expect(isSuccessfulGETProfileResponse(response as any)).toBe(true);
+// });
+// });
