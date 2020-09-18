@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-// import useAccount from 'src/hooks/useAccount';
+import useAccount from 'src/hooks/useAccount';
 
 // "In an effort to fight spam, Linode restricts outbound connections on ports 25, 465, and 587 on all Linodes for new accounts created after November 5th, 2019."
 // https://www.linode.com/docs/email/best-practices/running-a-mail-server/
@@ -13,17 +13,13 @@ interface Props {
 }
 
 const SMTPRestrictionText: React.FC<Props> = props => {
-  // const { account } = useAccount();
+  const { account } = useAccount();
 
   // If there account was created before restrictions were put into place,
   // there's no need to display anything.
-
-  // @todo BEFORE MERGE: uncomment:
-  // const text = !accountCreatedAfterRestrictions(
-  //   account.data?.active_since
-  // ) ? null : (
-
-  const text = (
+  const text = !accountCreatedAfterRestrictions(
+    account.data?.active_since
+  ) ? null : (
     <Typography variant="body1">
       Need to send mail from your Linode? New Linode accounts have ports{' '}
       <strong>25, 465, and 587</strong> blocked by default. To have these
