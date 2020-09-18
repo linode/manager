@@ -37,7 +37,7 @@ storiesOf('Skeleton', module)
     <Table>
       {renderTableHead(40, 20, 20, 20)}
       <TableBody>
-        <TableRowLoading colSpan={4} firstColWidth={40} />
+        <TableRowLoading colSpan={4} widths={[40, 20, 20, 20]} />
       </TableBody>
     </Table>
   ))
@@ -45,7 +45,7 @@ storiesOf('Skeleton', module)
     <Table>
       {renderTableHead(40, 20, 20, 20)}
       <TableBody>
-        <TableRowLoading colSpan={4} firstColWidth={40} oneLine />
+        <TableRowLoading colSpan={4} widths={[40, 20, 20, 20]} oneLine />
       </TableBody>
     </Table>
   ))
@@ -57,7 +57,7 @@ storiesOf('Skeleton', module)
         <TableBody>
           <TableRowLoading
             colSpan={4}
-            firstColWidth={40}
+            widths={[40, 20, 20, 20]}
             oneLine
             hasEntityIcon
           />
