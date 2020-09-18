@@ -85,7 +85,8 @@ type ClassNames =
   | 'scheduleAction'
   | 'chooseTime'
   | 'chooseDay'
-  | 'cancelButton';
+  | 'cancelButton'
+  | 'notice';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -134,6 +135,11 @@ const styles = (theme: Theme) =>
     },
     snapshotGeneralError: {
       minWidth: '100%'
+    },
+    notice: {
+      '& .noticeText': {
+        fontSize: '0.875rem !important'
+      }
     }
   });
 
@@ -849,6 +855,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           <Typography>
             Cancelling backups associated with this Linode will delete all
             existing backups. Are you sure?
+          </Typography>
+          <Typography style={{ marginTop: 12 }}>
+            <strong>Note: </strong>
+            Once backups for this Linode have been cancelled, you won&apos;t be
+            able to enable them again for 24 hours.
           </Typography>
         </ConfirmationDialog>
       </React.Fragment>
