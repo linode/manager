@@ -85,8 +85,7 @@ type ClassNames =
   | 'scheduleAction'
   | 'chooseTime'
   | 'chooseDay'
-  | 'cancelButton'
-  | 'notice';
+  | 'cancelButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -135,11 +134,6 @@ const styles = (theme: Theme) =>
     },
     snapshotGeneralError: {
       minWidth: '100%'
-    },
-    notice: {
-      '& .noticeText': {
-        fontSize: '0.875rem !important'
-      }
     }
   });
 
