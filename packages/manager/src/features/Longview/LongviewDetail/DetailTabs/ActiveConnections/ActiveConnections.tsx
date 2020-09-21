@@ -14,6 +14,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { LongviewPort } from 'src/features/Longview/request.types';
+import useFlags from 'src/hooks/useFlags';
 import ConnectionRow from './ConnectionRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,6 +37,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         textAlign: 'right'
       }
     }
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -48,9 +55,13 @@ export interface TableProps {
 export const ActiveConnections: React.FC<TableProps> = props => {
   const { connections, connectionsError, connectionsLoading } = props;
   const classes = useStyles();
+  const flags = useFlags();
+
   return (
     <Grid item xs={12} md={4} className={classes.container}>
-      <Typography variant="h2">Active Connections</Typography>
+      <Typography className={flags.cmr ? classes.cmrSpacing : ''} variant="h2">
+        Active Connections
+      </Typography>
       <ConnectionsTable
         connections={connections}
         connectionsLoading={connectionsLoading}

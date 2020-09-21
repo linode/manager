@@ -36,7 +36,7 @@ export const LinodeActivity: React.FC<CombinedProps> = props => {
         className={classes.title}
         data-qa-settings-header
       >
-        Activity Logs
+        Activity Feed
       </Typography>
       <EventsLanding
         entityId={linodeID}
