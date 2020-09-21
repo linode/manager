@@ -1,16 +1,16 @@
 import { AccessType, Scope } from '@linode/api-v4/lib/object-storage/types';
 import { update } from 'ramda';
 import * as React from 'react';
-import Toggle from 'src/components/Toggle';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Radio from 'src/components/Radio';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
+import Toggle from 'src/components/Toggle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   clusterCell: {
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     opacity: 0.4
   },
   tableRoot: {
-    maxHeight: 750,
+    maxHeight: 800,
     overflowY: 'scroll'
   }
 }));
