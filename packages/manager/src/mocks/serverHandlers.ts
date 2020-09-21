@@ -23,6 +23,7 @@ import {
   monitorFactory,
   nodeBalancerFactory,
   notificationFactory,
+  objectStorageBucketFactory,
   profileFactory,
   supportReplyFactory,
   supportTicketFactory,
@@ -189,6 +190,10 @@ export const handlers = [
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
+  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
+    const buckets = objectStorageBucketFactory.buildList(20);
+    return res(ctx.json(makeResourcePage(buckets)));
+  }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(25);
     return res(ctx.json(makeResourcePage(domains)));

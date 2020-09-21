@@ -1,22 +1,25 @@
 import { Formik } from 'formik';
-import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
+  AccessType,
   createObjectStorageKeysSchema,
+  ObjectStorageBucket,
   ObjectStorageKey,
-  ObjectStorageKeyRequest
+  ObjectStorageKeyRequest,
+  Scope
 } from '@linode/api-v4/lib/object-storage';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import useBuckets from 'src/hooks/useObjectStorageBuckets';
 import { ApplicationState } from 'src/store';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
+import LimitedAccessControls from './LimitedAccessControls';
 
 export type MODES = 'creating' | 'editing';
 
@@ -30,15 +33,37 @@ export interface Props {
   isRestrictedUser: boolean;
 }
 
-interface ReduxStateProps {
-  object_storage: AccountSettings['object_storage'];
-}
-
-type CombinedProps = Props & ReduxStateProps;
+type CombinedProps = Props;
 
 interface FormState {
   label: string;
+  bucket_access: Scope[] | null;
 }
+
+/**
+ * Helpers for converting a list of buckets
+ * on the user's account into a list of
+ * bucket_access in the shape the API will expect,
+ * sorted by cluster.
+ */
+export const sortByCluster = (a: Scope, b: Scope) => {
+  if (a.cluster > b.cluster) {
+    return 1;
+  }
+  if (a.cluster < b.cluster) {
+    return -1;
+  }
+  return 0;
+};
+
+export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
+  buckets
+    .map(thisBucket => ({
+      cluster: thisBucket.cluster,
+      bucket_name: thisBucket.label,
+      permissions: 'none' as AccessType
+    }))
+    .sort(sortByCluster);
 
 export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   const {
@@ -50,7 +75,23 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
     objectStorageKey
   } = props;
 
+  const object_storage = useSelector(
+    (state: ApplicationState) =>
+      state.__resources.accountSettings.data?.object_storage ?? 'disabled'
+  );
+
+  const { objectStorageBuckets: buckets } = useBuckets();
+
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
+  // This is for local display management only, not part of the payload
+  // and so not included in Formik's types
+  const [limitedAccessChecked, setLimitedAccessChecked] = React.useState(false);
+
+  React.useEffect(() => {
+    if (open) {
+      setLimitedAccessChecked(false);
+    }
+  }, [open]);
 
   const title =
     mode === 'creating' ? 'Create an Access Key' : 'Edit Access Key';
@@ -59,17 +100,36 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
     mode === 'editing' && objectStorageKey ? objectStorageKey.label : '';
 
   const initialValues: FormState = {
-    label: initialLabelValue
+    label: initialLabelValue,
+    bucket_access: getDefaultScopes(buckets.data)
+  };
+
+  const handleSubmit = (values: ObjectStorageKeyRequest, formikProps: any) => {
+    // If the user hasn't toggled the Limited Access button,
+    // don't include any bucket_access information in the payload.
+
+    // If any/all values are 'none', don't include them in the response.
+    const access = values.bucket_access ?? [];
+    const payload = limitedAccessChecked
+      ? {
+          ...values,
+          bucket_access: access.filter(
+            thisAccess => thisAccess.permissions !== 'none'
+          )
+        }
+      : { ...values, bucket_access: null };
+
+    return onSubmit(payload, formikProps);
   };
 
   return (
-    <Drawer title={title} open={open} onClose={onClose}>
+    <Drawer title={title} open={open} onClose={onClose} wide>
       <Formik
         initialValues={initialValues}
         validationSchema={createObjectStorageKeysSchema}
         validateOnChange={false}
         validateOnBlur={true}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       >
         {formikProps => {
           const {
@@ -78,16 +138,25 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
             handleChange,
             handleBlur,
             handleSubmit,
+            setFieldValue,
             isSubmitting,
             status
           } = formikProps;
 
           const beforeSubmit = () => {
-            confirmObjectStorage<FormState>(
-              props.object_storage,
-              formikProps,
-              () => setDialogOpen(true)
+            confirmObjectStorage<FormState>(object_storage, formikProps, () =>
+              setDialogOpen(true)
             );
+          };
+
+          const handleScopeUpdate = (newScopes: Scope[]) => {
+            setFieldValue('bucket_access', newScopes);
+          };
+
+          const handleToggleAccess = () => {
+            setLimitedAccessChecked(checked => !checked);
+            // Reset scopes
+            setFieldValue('bucket_access', getDefaultScopes(buckets.data));
           };
 
           return (
@@ -100,7 +169,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
                 <Notice
                   error
                   important
-                  text="You don't have permissions to create an Access Key. Please contact an account administrator for details."
+                  text="You don't have bucket_access to create an Access Key. Please contact an account administrator for details."
                 />
               )}
 
@@ -131,6 +200,13 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={isRestrictedUser}
+              />
+              <LimitedAccessControls
+                mode={mode}
+                bucket_access={values.bucket_access}
+                updateScopes={handleScopeUpdate}
+                handleToggle={handleToggleAccess}
+                checked={limitedAccessChecked}
               />
               <ActionsPanel>
                 <Button
@@ -164,16 +240,4 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-const mapStateToProps = (state: ApplicationState) => {
-  return {
-    object_storage: pathOr<AccountSettings['object_storage']>(
-      'disabled',
-      ['data', 'object_storage'],
-      state.__resources.accountSettings
-    )
-  };
-};
-
-const connected = connect(mapStateToProps);
-
-export default connected(AccessKeyDrawer);
+export default React.memo(AccessKeyDrawer);
