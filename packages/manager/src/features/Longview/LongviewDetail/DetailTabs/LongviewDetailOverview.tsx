@@ -19,6 +19,7 @@ import {
 } from 'src/features/Longview/request.types';
 import OverviewGraphs from './OverviewGraphs';
 import TopProcesses from './TopProcesses';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -85,6 +86,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
+      <DocumentTitleSegment segment="Overview" />
       <Grid container>
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>

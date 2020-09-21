@@ -9,6 +9,7 @@ import LandingLoading from 'src/components/LandingLoading';
 import Placeholder from 'src/components/Placeholder';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import DiskGraph from './DiskGraph';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import { WithStartAndEnd } from '../../../request.types';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
@@ -111,6 +112,7 @@ const Disks: React.FC<CombinedProps> = props => {
 
   return (
     <div>
+      <DocumentTitleSegment segment="Disks" />
       <Box display="flex" flexDirection="row" justifyContent="flex-end">
         <TimeRangeSelect
           small
