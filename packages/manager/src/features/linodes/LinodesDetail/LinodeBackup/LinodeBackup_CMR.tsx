@@ -767,8 +767,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           </Typography>
           <Typography style={{ marginTop: 12 }}>
             <strong>Note: </strong>
-            Once backups for this Linode have been cancelled, you won&apos;t be
-            able to enable them again for 24 hours.
+            Once backups for this Linode have been cancelled, you cannot
+            re-enable them for 24 hours.
           </Typography>
         </ConfirmationDialog>
       </React.Fragment>
