@@ -8,6 +8,7 @@ import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 export interface Handlers {
   handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
+  handleClickDetails: (objectName: string) => void;
 }
 
 interface Props extends Handlers {
@@ -18,9 +19,20 @@ export const ObjectActionMenu: React.FC<Props> = props => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { handleClickDownload, handleClickDelete, objectName } = props;
+  const {
+    handleClickDownload,
+    handleClickDelete,
+    handleClickDetails,
+    objectName
+  } = props;
 
   const actions: Action[] = [
+    {
+      title: 'Details',
+      onClick: () => {
+        handleClickDetails(objectName);
+      }
+    },
     {
       title: 'Download',
       onClick: () => {

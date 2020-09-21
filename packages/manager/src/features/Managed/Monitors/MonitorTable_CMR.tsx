@@ -38,7 +38,10 @@ import MonitorTableContent from './MonitorTableContent_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addNewWrapper: {
-    marginBottom: 5
+    marginBottom: 5,
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing()
+    }
   },
   headers: {
     '& > th': {
@@ -176,6 +179,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     // Clear drawer error state
     setStatus(undefined);
 
+    // eslint-disable-next-line no-unused-expressions
     drawerMode === 'create'
       ? createServiceMonitor({ ...values, timeout: +values.timeout })
           .then(_success)
@@ -191,7 +195,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Service Monitors" />
+      <DocumentTitleSegment segment="Monitors" />
       <Grid
         container
         justify="flex-end"

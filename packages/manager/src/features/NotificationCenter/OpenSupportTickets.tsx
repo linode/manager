@@ -5,10 +5,11 @@ interface Props {
   error?: boolean;
   loading: boolean;
   openTickets: NotificationItem[];
+  onClose?: () => void;
 }
 
 export const OpenSupportTickets: React.FC<Props> = props => {
-  const { error, loading, openTickets } = props;
+  const { error, loading, openTickets, onClose } = props;
 
   if (error) {
     // Open for debate. I'd like to avoid showing separate
@@ -24,6 +25,7 @@ export const OpenSupportTickets: React.FC<Props> = props => {
       showMoreText="View all tickets"
       showMoreTarget="/support/tickets"
       loading={loading}
+      onClose={onClose}
     />
   );
 };
