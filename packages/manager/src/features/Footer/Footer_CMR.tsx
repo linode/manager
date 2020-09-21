@@ -139,7 +139,7 @@ export class Footer extends React.PureComponent<CombinedProps> {
               className={classes.link}
               href={createMailto(
                 window.navigator.userAgent || '',
-                'feedback-beta@linode.com'
+                'cloudbeta@linode.com'
               )}
             >
               Provide Feedback
