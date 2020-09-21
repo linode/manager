@@ -8,7 +8,7 @@
  *
  * These things must happen in this order or the paypal payment will not
  * process correctly. It is imperative that the APIv4 staging call happens before
- * the the createOrder callback is returned.
+ * the createOrder callback is returned.
  *
  * For all documentation, see below:
  *

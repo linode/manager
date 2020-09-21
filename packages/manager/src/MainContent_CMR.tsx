@@ -60,7 +60,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   cmrWrapper: {
-    overflowX: 'hidden',
     padding: `${theme.spacing(3)}px 0`,
     transition: theme.transitions.create('opacity'),
     [theme.breakpoints.down('sm')]: {
