@@ -48,6 +48,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& td': {
       borderTopColor: theme.palette.primary.light,
       borderBottomColor: theme.palette.primary.light,
+      '&:not(:last-child)': {
+        borderTop: `1px solid ${theme.palette.primary.light}`
+      },
       position: 'relative',
       '&:first-child': {
         borderLeft: `1px solid ${theme.palette.primary.light}`
