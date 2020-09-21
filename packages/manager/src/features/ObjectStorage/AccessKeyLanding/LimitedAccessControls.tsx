@@ -26,6 +26,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.tableHeader,
     cursor: 'not-allowed',
     opacity: 0.4
+  },
+  tableRoot: {
+    maxHeight: 750,
+    overflowY: 'scroll'
   }
 }));
 
@@ -70,6 +74,7 @@ export const LimitedAccessControls: React.FC<Props> = props => {
             onChange={handleToggle}
             checked={checked}
             data-testid="limited-permissions-toggle"
+            disabled={props.mode !== 'creating'}
           />
         }
         label={'Limited Access'}
@@ -93,7 +98,7 @@ interface TableProps {
   updateScopes: (newScopes: Scope[]) => void;
 }
 
-const AccessTable: React.FC<TableProps> = props => {
+const AccessTable: React.FC<TableProps> = React.memo(props => {
   const { checked, mode, bucket_access, updateScopes } = props;
 
   const classes = useStyles();
@@ -124,7 +129,11 @@ const AccessTable: React.FC<TableProps> = props => {
   const disabled = mode !== 'creating' || !checked;
 
   return (
-    <Table aria-label="Personal Access Token Permissions" spacingTop={24}>
+    <Table
+      aria-label="Object Storage Access Key Permissions"
+      spacingTop={24}
+      className={classes.tableRoot}
+    >
       <TableHead>
         <TableRow>
           <TableCell data-qa-perm-cluster>Cluster</TableCell>
@@ -262,4 +271,4 @@ const AccessTable: React.FC<TableProps> = props => {
       </TableBody>
     </Table>
   );
-};
+});
