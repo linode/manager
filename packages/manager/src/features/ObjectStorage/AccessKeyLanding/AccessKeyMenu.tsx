@@ -11,6 +11,7 @@ interface Props {
   // ObjectStorageKeys --> ObjectStorageKeyTable --> HERE
   openRevokeDialog: (key: ObjectStorageKey) => void;
   openDrawerForEditing: (key: ObjectStorageKey) => void;
+  openDrawerForViewing: (key: ObjectStorageKey) => void;
   label: string;
 }
 
@@ -18,7 +19,12 @@ type CombinedProps = Props;
 
 const AccessKeyMenu: React.FC<CombinedProps> = props => {
   const createActions = () => {
-    const { openRevokeDialog, objectStorageKey, openDrawerForEditing } = props;
+    const {
+      openRevokeDialog,
+      objectStorageKey,
+      openDrawerForEditing,
+      openDrawerForViewing
+    } = props;
 
     return (closeMenu: Function): Action[] => {
       return [
@@ -26,6 +32,13 @@ const AccessKeyMenu: React.FC<CombinedProps> = props => {
           title: 'Rename Access Key',
           onClick: () => {
             openDrawerForEditing(objectStorageKey);
+            closeMenu();
+          }
+        },
+        {
+          title: 'View Permissions',
+          onClick: () => {
+            openDrawerForViewing(objectStorageKey);
             closeMenu();
           }
         },

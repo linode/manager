@@ -1,9 +1,9 @@
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
-import Button from 'src/components/Button';
+import ActionMenu from 'src/components/ActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
+import InlineAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
@@ -39,6 +39,7 @@ interface Props {
   // ObjectStorageKeys --> ObjectStorageKeyTable --> HERE
   openRevokeDialog: (key: ObjectStorageKey) => void;
   openDrawerForEditing: (key: ObjectStorageKey) => void;
+  openDrawerForViewing: (key: ObjectStorageKey) => void;
   label: string;
 }
 
@@ -46,52 +47,48 @@ type CombinedProps = Props;
 
 const AccessKeyMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { openRevokeDialog, objectStorageKey, openDrawerForEditing } = props;
+  const {
+    openRevokeDialog,
+    objectStorageKey,
+    openDrawerForEditing,
+    openDrawerForViewing
+  } = props;
 
-  const createActions = () => {
-    return (): Action[] => {
-      const actions = [
-        {
-          title: 'Edit label',
-          onClick: () => {
-            openDrawerForEditing(objectStorageKey);
-          }
-        },
-        {
-          title: 'Revoke',
-          onClick: () => {
-            openRevokeDialog(objectStorageKey);
-          }
-        }
-      ];
-
-      return actions;
-    };
-  };
+  const actions = [
+    {
+      title: 'Edit label',
+      onClick: () => {
+        openDrawerForEditing(objectStorageKey);
+      }
+    },
+    {
+      title: 'View permissions',
+      onClick: () => {
+        openDrawerForViewing(objectStorageKey);
+      }
+    },
+    {
+      title: 'Revoke',
+      onClick: () => {
+        openRevokeDialog(objectStorageKey);
+      }
+    }
+  ];
 
   return (
     <div className={classes.inlineActions}>
       <Hidden smDown>
-        <Button
-          className={classes.button}
-          onClick={() => {
-            openDrawerForEditing(objectStorageKey);
-          }}
-        >
-          Edit label
-        </Button>
-        <Button
-          className={classes.button}
-          onClick={() => {
-            openRevokeDialog(objectStorageKey);
-          }}
-        >
-          Revoke
-        </Button>
+        {actions.map(thisAction => (
+          <InlineAction
+            key={thisAction.title}
+            actionText={thisAction.title}
+            onClick={thisAction.onClick}
+          />
+        ))}
       </Hidden>
       <Hidden mdUp>
         <ActionMenu
-          createActions={createActions()}
+          createActions={() => actions}
           ariaLabel={`Action menu for Object Storage Key ${props.label}`}
         />
       </Hidden>

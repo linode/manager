@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   labelCell: {
-    width: '48%'
+    width: '35%'
   },
   copyIcon: {
     '& svg': {
@@ -56,6 +56,7 @@ interface Props {
   isRestrictedUser: boolean;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
   openDrawerForEditing: (objectStorageKey: ObjectStorageKey) => void;
+  openDrawerForViewing: (objectStorageKey: ObjectStorageKey) => void;
   openDrawerForCreating: () => void;
 }
 
@@ -69,7 +70,8 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
     isRestrictedUser,
     openRevokeDialog,
     openDrawerForEditing,
-    openDrawerForCreating
+    openDrawerForCreating,
+    openDrawerForViewing
   } = props;
 
   const classes = useStyles();
@@ -121,6 +123,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
             objectStorageKey={eachKey}
             openRevokeDialog={openRevokeDialog}
             openDrawerForEditing={openDrawerForEditing}
+            openDrawerForViewing={openDrawerForViewing}
             label={eachKey.label}
           />
         </TableCell>

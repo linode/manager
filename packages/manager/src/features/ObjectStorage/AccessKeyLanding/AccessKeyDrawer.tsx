@@ -19,15 +19,12 @@ import useBuckets from 'src/hooks/useObjectStorageBuckets';
 import { ApplicationState } from 'src/store';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
-import LimitedAccessControls from './LimitedAccessControls';
-
-export type MODES = 'creating' | 'editing';
-
+import LimitedAccessControls, { MODE } from './LimitedAccessControls';
 export interface Props {
   open: boolean;
   onClose: () => void;
   onSubmit: (values: ObjectStorageKeyRequest, formikProps: any) => void;
-  mode: MODES;
+  mode: MODE;
   // If the mode is 'editing', we should have an ObjectStorageKey to edit
   objectStorageKey?: ObjectStorageKey;
   isRestrictedUser: boolean;
@@ -94,10 +91,10 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   }, [open]);
 
   const title =
-    mode === 'creating' ? 'Create an Access Key' : 'Edit Access Key';
+    mode === 'creating' ? 'Create an Access Key' : 'Edit Access Key Label';
 
   const initialLabelValue =
-    mode === 'editing' && objectStorageKey ? objectStorageKey.label : '';
+    mode !== 'creating' && objectStorageKey ? objectStorageKey.label : '';
 
   const initialValues: FormState = {
     label: initialLabelValue,
@@ -199,15 +196,17 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
                 errorText={errors.label}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                disabled={isRestrictedUser}
+                disabled={isRestrictedUser || mode === 'viewing'}
               />
-              <LimitedAccessControls
-                mode={mode}
-                bucket_access={values.bucket_access}
-                updateScopes={handleScopeUpdate}
-                handleToggle={handleToggleAccess}
-                checked={limitedAccessChecked}
-              />
+              {mode === 'creating' && (
+                <LimitedAccessControls
+                  mode={mode}
+                  bucket_access={values.bucket_access}
+                  updateScopes={handleScopeUpdate}
+                  handleToggle={handleToggleAccess}
+                  checked={limitedAccessChecked}
+                />
+              )}
               <ActionsPanel>
                 <Button
                   buttonType="primary"
