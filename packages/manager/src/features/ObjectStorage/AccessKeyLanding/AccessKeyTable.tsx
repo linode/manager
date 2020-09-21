@@ -50,6 +50,7 @@ interface Props {
   isRestrictedUser: boolean;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
   openDrawerForEditing: (objectStorageKey: ObjectStorageKey) => void;
+  openDrawerForViewing: (objectStorageKey: ObjectStorageKey) => void;
 }
 
 export type CombinedProps = Props &
@@ -64,7 +65,8 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
     error,
     isRestrictedUser,
     openRevokeDialog,
-    openDrawerForEditing
+    openDrawerForEditing,
+    openDrawerForViewing
   } = props;
 
   const renderContent = () => {
@@ -114,6 +116,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
             objectStorageKey={eachKey}
             openRevokeDialog={openRevokeDialog}
             openDrawerForEditing={openDrawerForEditing}
+            openDrawerForViewing={openDrawerForViewing}
             label={eachKey.label}
           />
         </TableCell>
@@ -122,29 +125,27 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <React.Fragment>
-      <Paper className={classes.paper}>
-        <Table
-          aria-label="List of Object Storage Access Keys"
-          rowCount={data && data.length}
-          colCount={2}
-        >
-          <TableHead>
-            <TableRow data-qa-table-head role="rowgroup">
-              <TableCell className={classes.labelCell} data-qa-header-label>
-                Label
-              </TableCell>
-              <TableCell className={classes.labelCell} data-qa-header-key>
-                Access Key
-              </TableCell>
-              {/* empty cell for kebab menu */}
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderContent()}</TableBody>
-        </Table>
-      </Paper>
-    </React.Fragment>
+    <Paper className={classes.paper}>
+      <Table
+        aria-label="List of Object Storage Access Keys"
+        rowCount={data && data.length}
+        colCount={2}
+      >
+        <TableHead>
+          <TableRow data-qa-table-head role="rowgroup">
+            <TableCell className={classes.labelCell} data-qa-header-label>
+              Label
+            </TableCell>
+            <TableCell className={classes.labelCell} data-qa-header-key>
+              Access Key
+            </TableCell>
+            {/* empty cell for kebab menu */}
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderContent()}</TableBody>
+      </Table>
+    </Paper>
   );
 };
 

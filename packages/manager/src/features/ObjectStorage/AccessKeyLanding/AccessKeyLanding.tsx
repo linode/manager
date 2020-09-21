@@ -36,10 +36,12 @@ import {
   sendRevokeAccessKeyEvent
 } from 'src/utilities/ga';
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
-import AccessKeyDrawer, { MODES } from './AccessKeyDrawer';
+import AccessKeyDrawer from './AccessKeyDrawer';
+import { MODE } from './LimitedAccessControls';
 import AccessKeyTable from './AccessKeyTable';
 import AccessKeyTable_CMR from './AccessKeyTable_CMR';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
+import ViewPermissionsDrawer from './ViewPermissionsDrawer';
 import useFlags from 'src/hooks/useFlags';
 
 type ClassNames = 'headline';
@@ -77,7 +79,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
 
   const flags = useFlags();
 
-  const [mode, setMode] = React.useState<MODES>('creating');
+  const [mode, setMode] = React.useState<MODE>('creating');
 
   // Key to display in Confirmation Modal upon creation
   const [
@@ -100,6 +102,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
   const displayKeysDialog = useOpenClose();
   const revokeKeysDialog = useOpenClose();
   const createOrEditDrawer = useOpenClose();
+  const viewPermissionsDrawer = useOpenClose();
 
   // Request object storage key when component is first rendered
   React.useEffect(() => {
@@ -246,6 +249,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
 
   const openDrawerForCreating = () => {
     setMode('creating');
+    setKeyToEdit(null);
     createOrEditDrawer.open();
   };
 
@@ -253,6 +257,11 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     setMode('editing');
     setKeyToEdit(objectStorageKey);
     createOrEditDrawer.open();
+  };
+
+  const openDrawerForViewing = (objectStorageKey: ObjectStorageKey) => {
+    setKeyToEdit(objectStorageKey);
+    viewPermissionsDrawer.open();
   };
 
   const openRevokeDialog = (objectStorageKey: ObjectStorageKey) => {
@@ -285,6 +294,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         openDrawerForEditing={openDrawerForEditing}
         openRevokeDialog={openRevokeDialog}
         openDrawerForCreating={openDrawerForCreating}
+        openDrawerForViewing={openDrawerForViewing}
         data-qa-access-key-table
       />
 
@@ -304,6 +314,12 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         mode={mode}
         objectStorageKey={keyToEdit ? keyToEdit : undefined}
         isRestrictedUser={props.isRestrictedUser}
+      />
+
+      <ViewPermissionsDrawer
+        open={viewPermissionsDrawer.isOpen}
+        onClose={viewPermissionsDrawer.close}
+        objectStorageKey={keyToEdit}
       />
 
       <AccessKeyDisplayDialog

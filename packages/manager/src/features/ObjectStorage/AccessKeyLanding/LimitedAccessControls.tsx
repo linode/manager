@@ -12,6 +12,8 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Toggle from 'src/components/Toggle';
 
+export type MODE = 'creating' | 'editing' | 'viewing';
+
 const useStyles = makeStyles((theme: Theme) => ({
   clusterCell: {
     width: '18%'
@@ -29,12 +31,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tableRoot: {
     maxHeight: 800,
-    overflowY: 'scroll'
+    overflowY: 'auto'
   }
 }));
 
 interface Props {
-  mode: 'creating' | 'editing';
+  mode: MODE;
   checked: boolean;
   bucket_access: Scope[] | null;
   updateScopes: (newScopes: Scope[]) => void;
@@ -84,7 +86,7 @@ export const LimitedAccessControls: React.FC<Props> = props => {
         also create new buckets, but will not have access to the buckets they
         create.
       </Typography>
-      <AccessTable key={String(checked)} checked={checked} {...rest} />
+      <AccessTable checked={checked} {...rest} />
     </>
   );
 };
@@ -93,12 +95,12 @@ export default React.memo(LimitedAccessControls);
 
 interface TableProps {
   checked: boolean;
-  mode: 'creating' | 'editing';
+  mode: MODE;
   bucket_access: Scope[] | null;
   updateScopes: (newScopes: Scope[]) => void;
 }
 
-const AccessTable: React.FC<TableProps> = React.memo(props => {
+export const AccessTable: React.FC<TableProps> = React.memo(props => {
   const { checked, mode, bucket_access, updateScopes } = props;
 
   const classes = useStyles();
@@ -126,7 +128,14 @@ const AccessTable: React.FC<TableProps> = React.memo(props => {
     );
   };
 
-  const disabled = mode !== 'creating' || !checked;
+  const disabled = !checked;
+
+  const radioDisabled = (scope: Scope, access: AccessType) => {
+    if (mode !== 'viewing') {
+      return disabled;
+    }
+    return scope.permissions !== access;
+  };
 
   return (
     <Table
@@ -202,7 +211,9 @@ const AccessTable: React.FC<TableProps> = React.memo(props => {
             <TableRow
               key={scopeName}
               data-testid={scopeName}
-              className={disabled ? classes.disabledRow : undefined}
+              className={
+                disabled && mode !== 'viewing' ? classes.disabledRow : undefined
+              }
             >
               <TableCell padding="checkbox" className={classes.clusterCell}>
                 {thisScope.cluster}
@@ -213,7 +224,7 @@ const AccessTable: React.FC<TableProps> = React.memo(props => {
               <TableCell padding="checkbox" className={classes.radioCell}>
                 <Radio
                   name={thisScope.bucket_name}
-                  disabled={disabled}
+                  disabled={radioDisabled(thisScope, SCOPES.none)}
                   checked={thisScope.permissions === SCOPES.none}
                   value="none"
                   onChange={() =>
@@ -231,7 +242,7 @@ const AccessTable: React.FC<TableProps> = React.memo(props => {
               <TableCell padding="checkbox" className={classes.radioCell}>
                 <Radio
                   name={scopeName}
-                  disabled={disabled}
+                  disabled={radioDisabled(thisScope, SCOPES.read)}
                   checked={thisScope.permissions === SCOPES.read}
                   value="read-only"
                   onChange={() =>
@@ -249,7 +260,7 @@ const AccessTable: React.FC<TableProps> = React.memo(props => {
               <TableCell padding="checkbox" className={classes.radioCell}>
                 <Radio
                   name={scopeName}
-                  disabled={disabled}
+                  disabled={radioDisabled(thisScope, SCOPES.write)}
                   checked={thisScope.permissions === SCOPES.write}
                   value="read-write"
                   onChange={() =>
