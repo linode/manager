@@ -1,6 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import OrderBy from 'src/components/OrderBy';
@@ -24,12 +24,38 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import { Process } from './types';
 import useFlags from 'src/hooks/useFlags';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   processName: {
     display: 'flex',
     flexFlow: 'row nowrap',
     wordBreak: 'break-all',
     alignItems: 'center'
+  },
+  cmrTableModifier: {
+    '& tbody': {
+      transition: theme.transitions.create(['opacity'])
+    },
+    '& tbody.sorting': {
+      opacity: 0.5
+    },
+    '& thead': {
+      '& th': {
+        borderTop: `2px solid ${theme.color.grey9}`,
+        borderRight: `1px solid ${theme.color.grey9}`,
+        borderBottom: `2px solid ${theme.color.grey9}`,
+        borderLeft: `1px solid ${theme.color.grey9}`,
+        fontFamily: theme.font.bold,
+        fontSize: '0.875em !important',
+        color: theme.palette.text.primary,
+        padding: '10px 15px',
+        '&:first-of-type': {
+          borderLeft: 'none'
+        },
+        '&:last-of-type': {
+          borderRight: 'none'
+        }
+      }
+    }
   }
 }));
 
@@ -59,6 +85,7 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
   const TableSortCell = flags.cmr ? TableSortCell_CMR : TableSortCell_PreCMR;
 
   const { width } = useWindowDimensions();
+  const classes = useStyles();
 
   return (
     <OrderBy
@@ -73,6 +100,7 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
           // This prop is necessary to show the "ActiveCaret", and we only
           // want it on large viewports.
           noOverflow={width >= 1280}
+          className={flags.cmr ? classes.cmrTableModifier : ''}
         >
           <TableHead>
             <TableRow>
