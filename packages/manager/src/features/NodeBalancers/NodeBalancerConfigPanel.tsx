@@ -803,7 +803,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               )}
 
               {tcpSelected && (
-                <Grid item xs={6} md={3}>
+                <Grid item xs={6} md={4}>
                   <Select
                     options={proxyProtocolOptions}
                     label="Proxy Protocol"
@@ -822,6 +822,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     small
                     isClearable={false}
                   />
+                  <FormHelperText>
+                    Brief explanation of Proxy Protocols and a link to docs here
+                  </FormHelperText>
                 </Grid>
               )}
 
