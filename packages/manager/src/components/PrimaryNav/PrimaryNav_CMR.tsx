@@ -50,7 +50,8 @@ type NavEntity =
   | 'Dashboard'
   | 'StackScripts'
   | 'Help & Support'
-  | 'Community';
+  | 'Community'
+  | 'Virtual LANS';
 
 type NavGroup =
   | 'Compute'
@@ -112,6 +113,12 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
     account?.data?.capabilities ?? []
   );
 
+  const showVlans = isFeatureEnabled(
+    'Vlans',
+    Boolean(flags.vlans),
+    account?.data?.capabilities ?? []
+  );
+
   const primaryLinkGroups: {
     group: NavGroup;
     links: PrimaryLink[];
@@ -167,6 +174,11 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             display: 'Firewalls',
             href: '/firewalls',
             hide: !showFirewalls
+          },
+          {
+            display: 'Virtual LANS',
+            href: '/vlans',
+            hide: !showVlans
           }
         ]
       },
