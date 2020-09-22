@@ -90,7 +90,9 @@ export const ServicesTable: React.FC<TableProps> = props => {
             <>
               <Table
                 spacingTop={16}
-                tableClass={`${services.length > 0 ? classes.table : ''}`}
+                tableClass={`${
+                  services.length > 0 && !cmrFlag ? classes.table : ''
+                }`}
               >
                 <TableHead>
                   <TableRow>

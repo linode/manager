@@ -95,7 +95,9 @@ export const ConnectionsTable: React.FC<TableProps> = props => {
             <>
               <Table
                 spacingTop={16}
-                tableClass={`${connections.length > 0 ? classes.table : ''}`}
+                tableClass={`${
+                  connections.length > 0 && !cmrFlag ? classes.table : ''
+                }`}
               >
                 <TableHead>
                   <TableRow>
