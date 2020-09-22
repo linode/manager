@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
 import DNSResolvers from './DNSResolvers';
 import NetworkTransfer from './NetworkTransfer';
 import TransferHistory from './TransferHistory';
@@ -50,16 +49,14 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
 
   return (
     <Paper className={classes.root}>
-      <Grid item>
-        <NetworkTransfer linodeID={linodeID} linodeLabel={linodeLabel} />
-      </Grid>
-      <Grid item className={classes.transferHistoryContainer}>
+      <NetworkTransfer linodeID={linodeID} linodeLabel={linodeLabel} />
+      <div className={classes.transferHistoryContainer}>
         <TransferHistory linodeID={linodeID} linodeCreated={linodeCreated} />
-      </Grid>
+      </div>
       <Hidden smDown>
-        <Grid item className={classes.dnsResolverContainer}>
+        <div className={classes.dnsResolverContainer}>
           <DNSResolvers region={linodeRegion} />
-        </Grid>
+        </div>
       </Hidden>
     </Paper>
   );
