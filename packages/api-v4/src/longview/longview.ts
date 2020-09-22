@@ -25,7 +25,7 @@ export const createLongviewClient = (label?: string) => {
       longviewClientCreate
     ),
     setMethod('POST')
-  ).then(response => response.data);
+  );
 };
 
 export const getLongviewClients = (params?: any, filter?: any) =>
@@ -34,13 +34,13 @@ export const getLongviewClients = (params?: any, filter?: any) =>
     setParams(params),
     setXFilter(filter),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 export const deleteLongviewClient = (id: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/longview/clients/${id}`),
     setMethod('DELETE')
-  ).then(response => response.data);
+  );
 
 export const updateLongviewClient = (id: number, label: string) => {
   return Request<LongviewClient>(
@@ -52,20 +52,20 @@ export const updateLongviewClient = (id: number, label: string) => {
       longviewClientCreate
     ),
     setMethod('PUT')
-  ).then(response => response.data);
+  );
 };
 
 export const getLongviewSubscriptions = () =>
   Request<ResourcePage<LongviewSubscription>>(
     setURL(`${API_ROOT}/longview/subscriptions`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 export const getActiveLongviewPlan = () =>
   Request<ActiveLongviewPlan>(
     setURL(`${API_ROOT}/longview/plan`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * updateActiveLongviewPlan
@@ -79,4 +79,4 @@ export const updateActiveLongviewPlan = (plan: LongviewSubscriptionPayload) =>
     setURL(`${API_ROOT}/longview/plan`),
     setData(plan),
     setMethod('PUT')
-  ).then(response => response.data);
+  );
