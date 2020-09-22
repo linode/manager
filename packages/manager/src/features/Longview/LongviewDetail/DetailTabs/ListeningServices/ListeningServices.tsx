@@ -196,7 +196,11 @@ const renderLoadingErrorData = (
   }
 
   return data.map((thisService, idx) => (
-    <LongviewServiceRow key={`longview-service-${idx}`} service={thisService} />
+    <LongviewServiceRow
+      key={`longview-service-${idx}`}
+      service={thisService}
+      cmrFlag={cmrFlag}
+    />
   ));
 };
 

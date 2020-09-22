@@ -183,6 +183,7 @@ const renderLoadingErrorData = (
     <ConnectionRow
       key={`longview-active-connection-${idx}`}
       connection={thisConnection}
+      cmrFlag={cmrFlag}
     />
   ));
 };
