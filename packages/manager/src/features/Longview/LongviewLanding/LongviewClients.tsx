@@ -34,6 +34,7 @@ import { getUsedStorage } from './Gauges/Storage';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
@@ -270,6 +271,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
+      <DocumentTitleSegment segment="Clients" />
       <Grid
         container
         className={`${classes.headingWrapper} ${flags.cmr &&
