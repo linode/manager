@@ -25,7 +25,7 @@ export const getDomains = (params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
-  ).then(response => response.data);
+  );
 
 /**
  * Returns all of the information about a specified Domain.
@@ -33,10 +33,7 @@ export const getDomains = (params?: any, filters?: any) =>
  * @param domainId { number } The ID of the Domain to access.
  */
 export const getDomain = (domainId: number) =>
-  Request<Domain>(
-    setURL(`${API_ROOT}/domains/${domainId}`),
-    setMethod('GET')
-  ).then(response => response.data);
+  Request<Domain>(setURL(`${API_ROOT}/domains/${domainId}`), setMethod('GET'));
 
 /**
  * Adds a new Domain to Linode's DNS Manager.
@@ -48,7 +45,7 @@ export const createDomain = (data: Partial<Domain>) =>
     setData(data, createDomainSchema),
     setURL(`${API_ROOT}/domains`),
     setMethod('POST')
-  ).then(response => response.data);
+  );
 
 /**
  * Update information about a Domain in Linode's DNS Manager.
@@ -61,7 +58,7 @@ export const updateDomain = (domainId: number, data: Partial<Domain>) =>
     setURL(`${API_ROOT}/domains/${domainId}`),
     setMethod('PUT'),
     setData(data, updateDomainSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * Deletes a Domain from Linode's DNS Manager. The Domain will be removed from Linode's nameservers shortly after this
@@ -83,7 +80,7 @@ export const cloneDomain = (domainId: number, cloneName: string) =>
     setData({ domain: cloneName }),
     setURL(`${API_ROOT}/domains/${domainId}/clone`),
     setMethod('POST')
-  ).then(response => response.data);
+  );
 
 /**
  * Imports a domain zone from a remote nameserver.
@@ -96,4 +93,4 @@ export const importZone = (domain: string, remote_nameserver: string) =>
     setData({ domain, remote_nameserver }, importZoneSchema),
     setURL(`${API_ROOT}/domains/import`),
     setMethod('POST')
-  ).then(response => response.data);
+  );
