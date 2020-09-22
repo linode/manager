@@ -23,6 +23,6 @@ export const revokeToken = (client_id: string, token: string) =>
     setHeaders({
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
     })
-  ).then(response => response.data);
+  );
 
 export { Success };

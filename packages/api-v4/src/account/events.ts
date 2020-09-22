@@ -15,7 +15,7 @@ export const getEvents = (params: any = {}, filter: any = {}) =>
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
-  ).then(response => response.data);
+  );
 
 /**
  * getEvent
@@ -68,4 +68,4 @@ export const getNotifications = (params?: any, filter?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
-  ).then(response => response.data);
+  );

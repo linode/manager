@@ -112,7 +112,7 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
              */
             if (!!volume.linode_id) {
               return getLinode(volume.linode_id).then(response => {
-                const linode = response.data;
+                const linode = response;
 
                 /*
                  * Now add our new volume, include the newly attached
