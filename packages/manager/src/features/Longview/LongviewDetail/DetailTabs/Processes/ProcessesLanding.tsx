@@ -2,7 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import {
@@ -17,8 +17,9 @@ import { useGraphs } from '../OverviewGraphs/useGraphs';
 import ProcessesGraphs from './ProcessesGraphs';
 import ProcessesTable, { ExtendedProcess } from './ProcessesTable';
 import { Process } from './types';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   filterInput: {
     width: 300
   },
@@ -119,6 +120,7 @@ const ProcessesLanding: React.FC<Props> = props => {
 
   return (
     <>
+      <DocumentTitleSegment segment="Processes" />
       <Grid container spacing={4}>
         <Grid item xs={12} lg={7}>
           <Box display="flex" justifyContent="space-between">

@@ -9,3 +9,13 @@ export const getLinodeTypesActions = actionCreator.async<
   LinodeType[],
   APIError[]
 >(`request`);
+
+export interface GetLinodeTypeParams {
+  typeId: string;
+  isShadowPlan?: boolean;
+}
+export const getLinodeTypeActions = actionCreator.async<
+  GetLinodeTypeParams,
+  LinodeType,
+  APIError[]
+>(`request-one`);

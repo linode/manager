@@ -1,5 +1,5 @@
 import * as classnames from 'classnames';
-import { LinodeType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -39,11 +39,7 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import withFeatureFlags from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { LDClient } from 'launchdarkly-js-client-sdk';
 import { FlagSet } from 'src/featureFlags';
-
-export interface ExtendedType extends LinodeType {
-  heading: string;
-  subHeadings: [string, string];
-}
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 
 type ClassNames =
   | 'root'

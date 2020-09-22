@@ -13,7 +13,9 @@ import Drawer, { DrawerProps } from 'src/components/Drawer';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import { dcDisplayNames } from 'src/constants';
 import useRegions from 'src/hooks/useRegions';
+import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -153,7 +155,9 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
                 allowedRegions={regionsWithFirewalls}
                 helperText={`Assign one or more Linodes to this firewall. You can add
                  Linodes later if you want to customize your rules first. Only Linodes in
-                 regions that support Firewalls will be displayed as options.`}
+                 regions that support Firewalls (${arrayToList(
+                   regionsWithFirewalls.map(thisId => dcDisplayNames[thisId])
+                 )}) will be displayed as options.`}
                 errorText={errors['devices.linodes']}
                 handleChange={(selected: number[]) =>
                   setFieldValue('devices.linodes', selected)

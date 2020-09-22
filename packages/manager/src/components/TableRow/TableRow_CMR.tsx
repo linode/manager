@@ -175,6 +175,9 @@ export const TableRow: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withRouter)(TableRow);
+const enhanced = compose<CombinedProps, Props>(
+  withRouter,
+  React.memo
+)(TableRow);
 
 export default enhanced;
