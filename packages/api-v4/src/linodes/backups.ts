@@ -18,7 +18,7 @@ export const getLinodeBackups = (id: number) =>
   Request<LinodeBackupsResponse>(
     setURL(`${API_ROOT}/linode/instances/${id}/backups`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * enableBackups
@@ -85,4 +85,4 @@ export const restoreBackup = (
     ),
     setMethod('POST'),
     setData({ linode_id: targetLinodeId, overwrite })
-  ).then(response => response.data);
+  );

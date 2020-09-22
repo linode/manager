@@ -765,6 +765,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             Cancelling backups associated with this Linode will delete all
             existing backups. Are you sure?
           </Typography>
+          <Typography style={{ marginTop: 12 }}>
+            <strong>Note: </strong>
+            Once backups for this Linode have been cancelled, you cannot
+            re-enable them for 24 hours.
+          </Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );

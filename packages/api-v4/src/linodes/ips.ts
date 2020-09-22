@@ -15,7 +15,7 @@ export const getLinodeIPs = (id: number) =>
   Request<LinodeIPsResponse>(
     setURL(`${API_ROOT}/linode/instances/${id}/ips`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * allocateIPAddress
@@ -35,7 +35,7 @@ export const allocateIPAddress = (
     setURL(`${API_ROOT}/linode/instances/${linodeID}/ips`),
     setMethod('POST'),
     setData(data, IPAllocationSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * removeIPAddress
