@@ -4,7 +4,8 @@ import * as React from 'react';
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AccessKeyDrawer, getDefaultScopes, Props } from './AccessKeyDrawer';
-import { getUpdatedScopes, MODE } from './LimitedAccessControls';
+import { getUpdatedScopes } from './LimitedAccessControls';
+import { MODE } from './types';
 
 describe('AccessKeyDrawer', () => {
   const props: Props = {
