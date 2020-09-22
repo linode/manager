@@ -565,7 +565,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           >
             <FormGroup>
               <FormControlLabel
-                label="Distro Helper"
+                label="Enable distro helper"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
@@ -591,7 +591,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               />
 
               <FormControlLabel
-                label="modules.dep Helper"
+                label="Enable modules.dep helper"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
@@ -604,7 +604,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               />
 
               <FormControlLabel
-                label="automount devtpmfs"
+                label="Auto-mount devtmpfs"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
@@ -617,7 +617,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               />
 
               <FormControlLabel
-                label="auto-configure networking"
+                label="Auto-configure networking"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
