@@ -96,6 +96,23 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const getIndex = React.useCallback(() => {
+    return Math.max(
+      tabs.findIndex(tab => matches(tab.routeName)),
+      0
+    );
+  }, [tabs]);
+
+  const [idx, setIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    setIndex(getIndex());
+  }, [props.match, tabs, getIndex]);
+
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
+  };
+
   const flags = useFlags();
 
   const objPromotionalOffers = (
@@ -125,7 +142,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
           <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
         )}
       </Box>
-      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+      <Tabs index={idx} onChange={navToURL}>
         <TabLinkList tabs={tabs} />
 
         {objPromotionalOffers.map(promotionalOffer => (

@@ -22,7 +22,7 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import TabPanel from 'src/components/core/ReachTabPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
@@ -127,6 +127,23 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   // Helper function for the <Tabs /> component
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
+  };
+
+  const getIndex = React.useCallback(() => {
+    return Math.max(
+      tabs.findIndex(tab => matches(tab.routeName)),
+      0
+    );
+  }, [tabs]);
+
+  const [idx, setIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    setIndex(getIndex());
+  }, [props.match, tabs, getIndex]);
+
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
   };
 
   /**
@@ -344,10 +361,10 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
               Clone
             </Typography>
 
-            <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+            <Tabs index={idx} onChange={navToURL}>
               <TabLinkList tabs={tabs} />
               <TabPanels>
-                <TabPanel>
+                <SafeTabPanel index={0}>
                   <div className={classes.outerContainer}>
                     <Configs
                       configs={configsInState}
@@ -355,9 +372,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                       handleSelect={toggleConfig}
                     />
                   </div>
-                </TabPanel>
+                </SafeTabPanel>
 
-                <TabPanel>
+                <SafeTabPanel index={1}>
                   <div className={classes.outerContainer}>
                     <Typography>
                       You can make a copy of a disk to the same or different
@@ -374,7 +391,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                       />
                     </div>
                   </div>
-                </TabPanel>
+                </SafeTabPanel>
               </TabPanels>
             </Tabs>
           </Paper>
