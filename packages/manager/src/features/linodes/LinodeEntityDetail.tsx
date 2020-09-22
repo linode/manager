@@ -1,9 +1,10 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
-import * as React from 'react';
 import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
+import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
 import ConsoleIcon from 'src/assets/icons/console.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
@@ -37,23 +38,32 @@ import { distroIcons } from 'src/components/ImageSelect/icons';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import {
+  linodeInTransition,
+  transitionText
+} from 'src/features/linodes/transitions';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useImages from 'src/hooks/useImages';
 import useLinodes from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
+import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import withRecentEvent, {
+  WithRecentEvent
+} from './LinodesLanding/withRecentEvent';
+import { Event } from '@linode/api-v4/lib/account';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
 interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
-  linode: Linode;
+  linode: LinodeWithMaintenanceAndDisplayStatus;
   username?: string;
   openDialog: OpenDialog;
   openPowerActionDialog: (
@@ -70,7 +80,9 @@ interface LinodeEntityDetailProps {
   isDetailLanding?: boolean;
 }
 
-const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
+export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
+
+const LinodeEntityDetail: React.FC<CombinedProps> = props => {
   const {
     variant,
     linode,
@@ -82,7 +94,8 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     numVolumes,
     isDetailLanding,
     openTagDrawer,
-    openNotificationDrawer
+    openNotificationDrawer,
+    recentEvent
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -113,6 +126,8 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
+          linodeDisplayStatus={linode.displayStatus || ''}
+          recentEvent={recentEvent || undefined}
           openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
           linodeRegionDisplay={linodeRegionDisplay}
@@ -154,7 +169,10 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
   );
 };
 
-export default React.memo(LinodeEntityDetail);
+// export default React.memo(LinodeEntityDetail);
+
+const enhanced = compose<CombinedProps, {}>(withRecentEvent, React.memo);
+export default enhanced(LinodeEntityDetail);
 
 // =============================================================================
 // Header
@@ -165,6 +183,7 @@ export interface HeaderProps {
   linodeLabel: string;
   linodeId: number;
   linodeStatus: Linode['status'];
+  linodeDisplayStatus: string;
   openDialog: OpenDialog;
   openPowerActionDialog: (
     bootAction: BootAction,
@@ -179,6 +198,7 @@ export interface HeaderProps {
   linodeConfigs: Config[];
   isDetailLanding?: boolean;
   openNotificationDrawer: () => void;
+  recentEvent?: Event;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -225,6 +245,11 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       '& svg': {
         fill: theme.color.disabled
       }
+    },
+    '&:hover': {
+      '& svg': {
+        color: theme.color.blue
+      }
     }
   },
   statusChip: {
@@ -248,6 +273,9 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   actionItemsOuter: {
     display: 'flex',
     alignItems: 'center'
+  },
+  progressDisplay: {
+    display: 'inline-block'
   }
 }));
 
@@ -258,6 +286,8 @@ const Header: React.FC<HeaderProps> = props => {
     linodeLabel,
     linodeId,
     linodeStatus,
+    // linodeDisplayStatus,
+    recentEvent,
     linodeRegionDisplay,
     openDialog,
     openPowerActionDialog,
@@ -276,12 +306,12 @@ const Header: React.FC<HeaderProps> = props => {
   const distroIconClassName =
     imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
 
+  const loading = linodeInTransition(linodeStatus, recentEvent);
+
   const isDetails = variant === 'details';
 
   const isRunning = linodeStatus === 'running';
-
   const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
-
   const isOther = !['running', 'stopped', 'offline'].includes(linodeStatus);
 
   const handleConsoleButtonClick = (id: number) => {
@@ -323,12 +353,18 @@ const Header: React.FC<HeaderProps> = props => {
               [classes.statusChip]: true,
               [classes.statusRunning]: isRunning,
               [classes.statusOffline]: isOffline,
-              [classes.statusOther]: isOther,
-              statusOther: isOther
+              [classes.statusOther]: loading || isOther,
+              statusOther: loading || isOther
             })}
             label={
-              linodeStatus.includes('_')
-                ? linodeStatus.replace('_', ' ').toUpperCase()
+              loading
+                ? recentEvent && (
+                    <ProgressDisplay
+                      className={classes.progressDisplay}
+                      progress={recentEvent.percent_complete}
+                      text={transitionText(linodeStatus, linodeId, recentEvent)}
+                    />
+                  )
                 : linodeStatus.toUpperCase()
             }
             component="span"
@@ -828,3 +864,18 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     </Grid>
   );
 });
+
+const ProgressDisplay: React.FC<{
+  className?: string;
+  progress: null | number;
+  text: string;
+}> = props => {
+  const { className, progress, text } = props;
+  const displayProgress = progress ? `${progress}%` : `scheduled`;
+
+  return (
+    <Typography variant="body2" className={className}>
+      {text} {displayProgress === 'scheduled' ? '(0%)' : `(${displayProgress})`}
+    </Typography>
+  );
+};
