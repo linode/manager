@@ -17,8 +17,7 @@ describe('ObjectStorageKeyTable', () => {
           labelCell: '',
           copyIcon: ''
         }}
-        openDrawerForEditing={jest.fn()}
-        openDrawerForViewing={jest.fn()}
+        openDrawer={jest.fn()}
         openRevokeDialog={jest.fn()}
         isRestrictedUser={false}
         {...pageyProps}

@@ -4,6 +4,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionMenu from 'src/components/ActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
 import InlineAction from 'src/components/InlineMenuAction';
+import { OpenAccessDrawer } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
@@ -38,8 +39,7 @@ interface Props {
   // prop-drilled from grandparent:
   // ObjectStorageKeys --> ObjectStorageKeyTable --> HERE
   openRevokeDialog: (key: ObjectStorageKey) => void;
-  openDrawerForEditing: (key: ObjectStorageKey) => void;
-  openDrawerForViewing: (key: ObjectStorageKey) => void;
+  openDrawer: OpenAccessDrawer;
   label: string;
 }
 
@@ -47,24 +47,19 @@ type CombinedProps = Props;
 
 const AccessKeyMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const {
-    openRevokeDialog,
-    objectStorageKey,
-    openDrawerForEditing,
-    openDrawerForViewing
-  } = props;
+  const { openRevokeDialog, objectStorageKey, openDrawer } = props;
 
   const actions = [
     {
       title: 'Edit label',
       onClick: () => {
-        openDrawerForEditing(objectStorageKey);
+        openDrawer('editing', objectStorageKey);
       }
     },
     {
       title: 'View permissions',
       onClick: () => {
-        openDrawerForViewing(objectStorageKey);
+        openDrawer('viewing', objectStorageKey);
       }
     },
     {

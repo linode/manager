@@ -1,4 +1,3 @@
-import { FormikBag } from 'formik';
 import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   createObjectStorageKeys,
@@ -8,6 +7,7 @@ import {
   revokeObjectStorageKey,
   updateObjectStorageKey
 } from '@linode/api-v4/lib/object-storage';
+import { FormikBag } from 'formik';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -26,6 +26,7 @@ import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { useErrors } from 'src/hooks/useErrors';
+import useFlags from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { ApplicationState } from 'src/store';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
@@ -37,12 +38,11 @@ import {
 } from 'src/utilities/ga';
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer from './AccessKeyDrawer';
-import { MODE } from './LimitedAccessControls';
 import AccessKeyTable from './AccessKeyTable';
 import AccessKeyTable_CMR from './AccessKeyTable_CMR';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
+import { MODE, OpenAccessDrawer } from './types';
 import ViewPermissionsDrawer from './ViewPermissionsDrawer';
-import useFlags from 'src/hooks/useFlags';
 
 type ClassNames = 'headline';
 
@@ -247,21 +247,20 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
       });
   };
 
-  const openDrawerForCreating = () => {
-    setMode('creating');
-    setKeyToEdit(null);
-    createOrEditDrawer.open();
-  };
-
-  const openDrawerForEditing = (objectStorageKey: ObjectStorageKey) => {
-    setMode('editing');
+  const openDrawer: OpenAccessDrawer = (
+    mode: MODE,
+    objectStorageKey: ObjectStorageKey | null = null
+  ) => {
+    setMode(mode);
     setKeyToEdit(objectStorageKey);
-    createOrEditDrawer.open();
-  };
-
-  const openDrawerForViewing = (objectStorageKey: ObjectStorageKey) => {
-    setKeyToEdit(objectStorageKey);
-    viewPermissionsDrawer.open();
+    switch (mode) {
+      case 'creating':
+      case 'editing':
+        createOrEditDrawer.open();
+        break;
+      case 'viewing':
+        viewPermissionsDrawer.open();
+    }
   };
 
   const openRevokeDialog = (objectStorageKey: ObjectStorageKey) => {
@@ -283,7 +282,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         <Grid container justify="flex-end">
           <Grid item>
             <AddNewLink
-              onClick={openDrawerForCreating}
+              onClick={() => openDrawer('creating')}
               label="Create an Access Key"
             />
           </Grid>
@@ -291,10 +290,8 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
       )}
       <KeyTable
         {...paginationProps}
-        openDrawerForEditing={openDrawerForEditing}
+        openDrawer={openDrawer}
         openRevokeDialog={openRevokeDialog}
-        openDrawerForCreating={openDrawerForCreating}
-        openDrawerForViewing={openDrawerForViewing}
         data-qa-access-key-table
       />
 

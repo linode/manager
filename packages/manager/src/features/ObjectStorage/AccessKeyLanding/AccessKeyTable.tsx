@@ -20,6 +20,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import AccessKeyMenu from './AccessKeyMenu';
+import { OpenAccessDrawer } from './types';
 
 type ClassNames = 'root' | 'headline' | 'paper' | 'labelCell' | 'copyIcon';
 
@@ -49,8 +50,7 @@ const styles = (theme: Theme) =>
 interface Props {
   isRestrictedUser: boolean;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
-  openDrawerForEditing: (objectStorageKey: ObjectStorageKey) => void;
-  openDrawerForViewing: (objectStorageKey: ObjectStorageKey) => void;
+  openDrawer: OpenAccessDrawer;
 }
 
 export type CombinedProps = Props &
@@ -65,8 +65,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
     error,
     isRestrictedUser,
     openRevokeDialog,
-    openDrawerForEditing,
-    openDrawerForViewing
+    openDrawer
   } = props;
 
   const renderContent = () => {
@@ -115,8 +114,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
           <AccessKeyMenu
             objectStorageKey={eachKey}
             openRevokeDialog={openRevokeDialog}
-            openDrawerForEditing={openDrawerForEditing}
-            openDrawerForViewing={openDrawerForViewing}
+            openDrawer={openDrawer}
             label={eachKey.label}
           />
         </TableCell>

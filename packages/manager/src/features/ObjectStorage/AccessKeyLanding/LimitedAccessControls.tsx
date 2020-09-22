@@ -11,8 +11,7 @@ import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Toggle from 'src/components/Toggle';
-
-export type MODE = 'creating' | 'editing' | 'viewing';
+import { MODE } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   clusterCell: {
