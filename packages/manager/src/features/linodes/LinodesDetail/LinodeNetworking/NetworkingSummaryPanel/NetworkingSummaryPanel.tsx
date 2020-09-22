@@ -9,20 +9,30 @@ import Hidden from 'src/components/core/Hidden';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
-    flexFlow: 'row-nowrap',
-    justifyContent: 'flex-start',
-    alignItems: 'start',
+    flexFlow: 'row nowrap',
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(2) + theme.spacing(1) / 2
+    paddingBottom: theme.spacing(2) + theme.spacing(1) / 2,
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column'
+    }
   },
   transferHistoryContainer: {
     padding: '16px 0px',
     flex: 1.3,
+    [theme.breakpoints.up('md')]: {
+      padding: '0px 32px'
+    },
     [theme.breakpoints.up('sm')]: {
       padding: '0px 16px'
     },
-    [theme.breakpoints.up('md')]: {
-      padding: '0px 32px'
+    [theme.breakpoints.down('sm')]: {
+      paddingRight: 0,
+      width: '50%'
+    },
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: theme.spacing(3),
+      paddingBottom: 0,
+      width: '100%'
     }
   },
   dnsResolverContainer: {
