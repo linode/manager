@@ -48,7 +48,8 @@ type ClassNames =
   | 'currentPlanContainer'
   | 'resizeTitle'
   | 'checkbox'
-  | 'currentHeaderEmptyCell';
+  | 'currentHeaderEmptyCell'
+  | 'error';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -86,6 +87,10 @@ const styles = (theme: Theme) =>
     },
     currentHeaderEmptyCell: {
       width: '13%'
+    },
+    error: {
+      color: '#C44742',
+      marginTop: theme.spacing(2)
     }
   });
 
@@ -100,7 +105,7 @@ interface LinodeContextProps {
 
 interface ConfirmationDialog {
   isOpen: boolean;
-  error?: string;
+  error?: string | JSX.Element;
   submitting: boolean;
   currentPlan: string;
   targetPlan: string;
@@ -213,10 +218,28 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
-        const error = getAPIErrorOrDefault(
-          errorResponse,
-          'There was an issue resizing your Linode.'
-        )[0].reason;
+        let error: string | JSX.Element = '';
+        if (errorResponse[0].reason.match(/allocated more disk/i)) {
+          error = (
+            <Typography className={this.props.classes.error}>
+              The current disk size of your Linode is too large for the new
+              service plan. Please resize your disk to accommodate the new plan.
+              You can read our{' '}
+              <ExternalLink
+                hideIcon
+                text="Resize Your Linode"
+                link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
+              />{' '}
+              guide for more detailed instructions.
+            </Typography>
+          );
+        } else {
+          error = getAPIErrorOrDefault(
+            errorResponse,
+            'There was an issue resizing your Linode.'
+          )[0].reason;
+        }
+
         this.setState({
           confirmationDialog: {
             ...this.state.confirmationDialog,
