@@ -80,13 +80,25 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     }
   ];
 
+  const getIndex = React.useCallback(() => {
+    return Math.max(
+      tabs.findIndex(tab => matches(tab.routeName)),
+      0
+    );
+  }, [tabs]);
+
+  const [idx, setIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    setIndex(getIndex());
+  }, [props.match, tabs, getIndex]);
+
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
+  };
+
   return (
-    <Tabs
-      defaultIndex={Math.max(
-        tabs.findIndex(tab => matches(tab.routeName)),
-        0
-      )}
-    >
+    <Tabs index={idx} onChange={navToURL}>
       <TabLinkList tabs={tabs} />
 
       <React.Suspense fallback={<SuspenseLoader />}>
