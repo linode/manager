@@ -3,22 +3,19 @@ import * as React from 'react';
 
 import { searchbarResult1, searchbarResult2 } from 'src/__data__/searchResults';
 import Button from 'src/components/Button';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 import { ResultGroup } from './ResultGroup';
 
-const classes = {
-  root: '',
-  entityHeadingWrapper: '',
-  entityHeading: '',
-  button: '',
-  emptyCell: '',
-  headerCell: ''
-};
+// jest.mock('src/components/core/styles', () => ({ useStyles: () => ({ classes: {} }));
+jest.mock(makeStyles, () => ({ classes: {} }));
+jest.mock('src/hooks/useFlags', () => ({
+  default: jest.fn().mockReturnValue({})
+}));
 
 const props = {
   entity: 'linodes',
-  classes,
   results: [
     searchbarResult1,
     searchbarResult2,
@@ -35,7 +32,6 @@ const props = {
 
 const emptyProps = {
   entity: 'linodes',
-  classes,
   results: [],
   groupSize: 5,
   showMore: false,
