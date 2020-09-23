@@ -146,6 +146,11 @@ export type LinodeStatus =
   | 'restoring'
   | 'stopped';
 
+export type InterfaceSlot = Record<string, InterfaceBody>;
+
+export interface InterfaceBody {
+  id: number;
+}
 export interface Config {
   id: number;
   kernel: string;
@@ -160,6 +165,7 @@ export interface Config {
   created: string;
   updated: string;
   initrd: string | null;
+  interfaces: InterfaceSlot;
 }
 
 export interface DiskDevice {
@@ -339,4 +345,21 @@ export interface LinodeDiskCreationData {
   root_pass?: string;
   stackscript_id?: number;
   stackscript_data?: any;
+}
+
+export type InterfaceType = 'default' | 'additional';
+
+export interface LinodeInterfacePayload {
+  type: InterfaceType;
+  vlan_id?: number;
+}
+
+export interface LinodeInterface {
+  id: number;
+  type: InterfaceType;
+  description: string;
+  linode_id: number;
+  vlan_id: number;
+  mac_address: string;
+  ip_address: string;
 }
