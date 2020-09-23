@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     flexFlow: 'row nowrap',
+    justifyContent: 'space-between',
     padding: theme.spacing(3),
     paddingBottom: theme.spacing(2) + theme.spacing(1) / 2,
     [theme.breakpoints.down('xs')]: {
@@ -18,7 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   transferHistoryContainer: {
     padding: '16px 0px',
-    flex: 1.3,
     [theme.breakpoints.up('md')]: {
       padding: '0px 32px'
     },
@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   dnsResolverContainer: {
-    flex: 1,
     paddingTop: 8,
     [theme.breakpoints.up('md')]: {
       paddingTop: 0
