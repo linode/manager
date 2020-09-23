@@ -146,7 +146,7 @@ export type LinodeStatus =
   | 'restoring'
   | 'stopped';
 
-export type InterfaceSlot = Record<string, InterfaceBody>;
+export type InterfaceSlot = Record<string, InterfaceBody>; // e.g. { "eth0": { "id": 111 }}
 
 export interface InterfaceBody {
   id: number;
@@ -255,6 +255,7 @@ export interface LinodeConfigCreationData {
     devtmpfs_automount: boolean;
   };
   root_device: string;
+  interfaces?: InterfaceSlot;
 }
 
 export interface PriceObject {
