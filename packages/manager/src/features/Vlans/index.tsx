@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
@@ -20,9 +20,9 @@ const VLan: React.FC<CombinedProps> = props => {
       <React.Fragment>
         <DocumentTitleSegment segment="VLans" />
         <Switch>
-          <Route exact path={`${path}`} component={VlanLanding} />
           {/* <Route path={`${path}/:id`} component={VlanDetail} /> */}
-          <Route component={VlanLanding} />
+          <Route component={VlanLanding} exact path={path} />
+          <Redirect to={path} />
         </Switch>
       </React.Fragment>
     </React.Suspense>
