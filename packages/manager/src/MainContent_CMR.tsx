@@ -168,6 +168,7 @@ const AccountActivationLanding = React.lazy(() =>
   import('src/components/AccountActivation/AccountActivationLanding')
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
+const VLans = React.lazy(() => import('src/features/Vlans'));
 
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -183,6 +184,15 @@ const MainContent: React.FC<CombinedProps> = props => {
     Boolean(props.flags.firewalls),
     account.data?.capabilities ?? []
   );
+
+  // TODO remove and uncomment next line pre-merge
+  const showVlans = true;
+
+  // const showVlans = isFeatureEnabled(
+  //   'Vlans',
+  //   Boolean(flags.vlans),
+  //   account?.data?.capabilities ?? []
+  // );
 
   /**
    * this is the case where the user has successfully completed signup
@@ -299,6 +309,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                     {showFirewalls && (
                       <Route path="/firewalls" component={Firewalls} />
                     )}
+                    {showVlans && <Route path="/vlans" component={VLans} />}
                     <Redirect exact from="/" to="/dashboard" />
                     <Route component={NotFound} />
                   </Switch>

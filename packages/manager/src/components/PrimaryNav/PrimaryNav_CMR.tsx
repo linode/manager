@@ -113,11 +113,11 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
     account?.data?.capabilities ?? []
   );
 
-  const showVlans = isFeatureEnabled(
-    'Vlans',
-    Boolean(flags.vlans),
-    account?.data?.capabilities ?? []
-  );
+  // const showVlans = isFeatureEnabled(
+  //   'Vlans',
+  //   Boolean(flags.vlans),
+  //   account?.data?.capabilities ?? []
+  // );
 
   const primaryLinkGroups: {
     group: NavGroup;
@@ -177,8 +177,8 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
           },
           {
             display: 'Virtual LANS',
-            href: '/vlans',
-            hide: !showVlans
+            href: '/vlans'
+            //hide: !showVlans
           }
         ]
       },

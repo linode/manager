@@ -1,0 +1,32 @@
+import * as React from 'react';
+import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import SuspenseLoader from 'src/components/SuspenseLoader';
+
+const VlanLanding = React.lazy(() => import('./VlanLanding/VlanLanding'));
+//const VlanDetail = React.lazy(() => import('./VlanLanding/VlanDetail'));
+
+type Props = RouteComponentProps<{}>;
+
+type CombinedProps = Props;
+
+const VLan: React.FC<CombinedProps> = props => {
+  const {
+    match: { path }
+  } = props;
+
+  return (
+    <React.Suspense fallback={<SuspenseLoader />}>
+      <React.Fragment>
+        <DocumentTitleSegment segment="VLans" />
+        <Switch>
+          <Route exact path={`${path}`} component={VlanLanding} />
+          {/* <Route path={`${path}/:id`} component={VlanDetail} /> */}
+          <Route component={VlanLanding} />
+        </Switch>
+      </React.Fragment>
+    </React.Suspense>
+  );
+};
+
+export default VLan;
