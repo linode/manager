@@ -168,6 +168,7 @@ const AccountActivationLanding = React.lazy(() =>
   import('src/components/AccountActivation/AccountActivationLanding')
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
+const VLans = React.lazy(() => import('src/features/Vlans'));
 
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -182,6 +183,12 @@ const MainContent: React.FC<CombinedProps> = props => {
     'Cloud Firewall',
     Boolean(props.flags.firewalls),
     account.data?.capabilities ?? []
+  );
+
+  const showVlans = isFeatureEnabled(
+    'Vlans',
+    Boolean(props.flags.vlans),
+    account?.data?.capabilities ?? []
   );
 
   /**
@@ -299,6 +306,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                     {showFirewalls && (
                       <Route path="/firewalls" component={Firewalls} />
                     )}
+                    {showVlans && <Route path="/vlans" component={VLans} />}
                     <Redirect exact from="/" to="/dashboard" />
                     <Route component={NotFound} />
                   </Switch>
