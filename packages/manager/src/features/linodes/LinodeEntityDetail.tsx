@@ -1,10 +1,11 @@
+import { Event } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
 import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
+// import { compose } from 'recompose';
 import ConsoleIcon from 'src/assets/icons/console.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
@@ -48,22 +49,20 @@ import useImages from 'src/hooks/useImages';
 import useLinodes from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
-import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import withRecentEvent, {
-  WithRecentEvent
-} from './LinodesLanding/withRecentEvent';
-import { Event } from '@linode/api-v4/lib/account';
+// import withRecentEvent, {
+//   WithRecentEvent
+// } from './LinodesLanding/withRecentEvent';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
 interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
-  linode: LinodeWithMaintenanceAndDisplayStatus;
+  linode: Linode;
   username?: string;
   openDialog: OpenDialog;
   openPowerActionDialog: (
@@ -78,9 +77,10 @@ interface LinodeEntityDetailProps {
   openTagDrawer: (tags: string[]) => void;
   openNotificationDrawer?: () => void;
   isDetailLanding?: boolean;
+  recentEvent?: Event;
 }
 
-export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
+export type CombinedProps = LinodeEntityDetailProps;
 
 const LinodeEntityDetail: React.FC<CombinedProps> = props => {
   const {
@@ -126,7 +126,6 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
-          linodeDisplayStatus={linode.displayStatus || ''}
           recentEvent={recentEvent || undefined}
           openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
@@ -169,10 +168,10 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
   );
 };
 
-// export default React.memo(LinodeEntityDetail);
+export default React.memo(LinodeEntityDetail);
 
-const enhanced = compose<CombinedProps, {}>(withRecentEvent, React.memo);
-export default enhanced(LinodeEntityDetail);
+// const enhanced = compose<CombinedProps, {}>(withRecentEvent, React.memo);
+// export default enhanced(LinodeEntityDetail);
 
 // =============================================================================
 // Header
@@ -183,7 +182,6 @@ export interface HeaderProps {
   linodeLabel: string;
   linodeId: number;
   linodeStatus: Linode['status'];
-  linodeDisplayStatus: string;
   openDialog: OpenDialog;
   openPowerActionDialog: (
     bootAction: BootAction,
@@ -286,8 +284,6 @@ const Header: React.FC<HeaderProps> = props => {
     linodeLabel,
     linodeId,
     linodeStatus,
-    // linodeDisplayStatus,
-    recentEvent,
     linodeRegionDisplay,
     openDialog,
     openPowerActionDialog,
@@ -296,7 +292,8 @@ const Header: React.FC<HeaderProps> = props => {
     image,
     linodeConfigs,
     isDetailLanding,
-    openNotificationDrawer
+    openNotificationDrawer,
+    recentEvent
   } = props;
 
   const classes = useHeaderStyles();
@@ -353,8 +350,8 @@ const Header: React.FC<HeaderProps> = props => {
               [classes.statusChip]: true,
               [classes.statusRunning]: isRunning,
               [classes.statusOffline]: isOffline,
-              [classes.statusOther]: loading || isOther,
-              statusOther: loading || isOther
+              [classes.statusOther]: isOther,
+              statusOther: isOther
             })}
             label={
               loading
