@@ -804,7 +804,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               )}
 
               {tcpSelected && (
-                <Grid item xs={6} md={4}>
+                <Grid item xs={6} md={3}>
                   <Select
                     options={proxyProtocolOptions}
                     label="Proxy Protocol"
