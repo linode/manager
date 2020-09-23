@@ -11,6 +11,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
@@ -20,14 +21,12 @@ import { ApplicationState } from 'src/store';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
 import LimitedAccessControls from './LimitedAccessControls';
-
-export type MODES = 'creating' | 'editing';
-
+import { MODE } from './types';
 export interface Props {
   open: boolean;
   onClose: () => void;
   onSubmit: (values: ObjectStorageKeyRequest, formikProps: any) => void;
-  mode: MODES;
+  mode: MODE;
   // If the mode is 'editing', we should have an ObjectStorageKey to edit
   objectStorageKey?: ObjectStorageKey;
   isRestrictedUser: boolean;
@@ -94,10 +93,10 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   }, [open]);
 
   const title =
-    mode === 'creating' ? 'Create an Access Key' : 'Edit Access Key';
+    mode === 'creating' ? 'Create an Access Key' : 'Edit Access Key Label';
 
   const initialLabelValue =
-    mode === 'editing' && objectStorageKey ? objectStorageKey.label : '';
+    mode !== 'creating' && objectStorageKey ? objectStorageKey.label : '';
 
   const initialValues: FormState = {
     label: initialLabelValue,
@@ -123,119 +122,130 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Drawer title={title} open={open} onClose={onClose} wide>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={createObjectStorageKeysSchema}
-        validateOnChange={false}
-        validateOnBlur={true}
-        onSubmit={handleSubmit}
-      >
-        {formikProps => {
-          const {
-            values,
-            errors,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            setFieldValue,
-            isSubmitting,
-            status
-          } = formikProps;
+    <Drawer
+      title={title}
+      open={open}
+      onClose={onClose}
+      wide={mode === 'creating'}
+    >
+      {buckets.loading ? (
+        <CircleProgress />
+      ) : (
+        <Formik
+          initialValues={initialValues}
+          validationSchema={createObjectStorageKeysSchema}
+          validateOnChange={false}
+          validateOnBlur={true}
+          onSubmit={handleSubmit}
+        >
+          {formikProps => {
+            const {
+              values,
+              errors,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              setFieldValue,
+              isSubmitting,
+              status
+            } = formikProps;
 
-          const beforeSubmit = () => {
-            confirmObjectStorage<FormState>(object_storage, formikProps, () =>
-              setDialogOpen(true)
-            );
-          };
+            const beforeSubmit = () => {
+              confirmObjectStorage<FormState>(object_storage, formikProps, () =>
+                setDialogOpen(true)
+              );
+            };
 
-          const handleScopeUpdate = (newScopes: Scope[]) => {
-            setFieldValue('bucket_access', newScopes);
-          };
+            const handleScopeUpdate = (newScopes: Scope[]) => {
+              setFieldValue('bucket_access', newScopes);
+            };
 
-          const handleToggleAccess = () => {
-            setLimitedAccessChecked(checked => !checked);
-            // Reset scopes
-            setFieldValue('bucket_access', getDefaultScopes(buckets.data));
-          };
+            const handleToggleAccess = () => {
+              setLimitedAccessChecked(checked => !checked);
+              // Reset scopes
+              setFieldValue('bucket_access', getDefaultScopes(buckets.data));
+            };
 
-          return (
-            <>
-              {status && (
-                <Notice key={status} text={status} error data-qa-error />
-              )}
+            return (
+              <>
+                {status && (
+                  <Notice key={status} text={status} error data-qa-error />
+                )}
 
-              {isRestrictedUser && (
-                <Notice
-                  error
-                  important
-                  text="You don't have bucket_access to create an Access Key. Please contact an account administrator for details."
+                {isRestrictedUser && (
+                  <Notice
+                    error
+                    important
+                    text="You don't have bucket_access to create an Access Key. Please contact an account administrator for details."
+                  />
+                )}
+
+                {/* Explainer copy if we're in 'creating' mode */}
+                {mode === 'creating' && (
+                  <Typography>
+                    Generate an Access Key for use with an{' '}
+                    <a
+                      href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
+                      target="_blank"
+                      aria-describedby="external-site"
+                      rel="noopener noreferrer"
+                      className="h-u"
+                    >
+                      S3-compatible client
+                    </a>
+                    .
+                  </Typography>
+                )}
+
+                <TextField
+                  name="label"
+                  label="Label"
+                  data-qa-add-label
+                  value={values.label}
+                  error={!!errors.label}
+                  errorText={errors.label}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  disabled={isRestrictedUser || mode === 'viewing'}
                 />
-              )}
-
-              {/* Explainer copy if we're in 'creating' mode */}
-              {mode === 'creating' && (
-                <Typography>
-                  Generate an Access Key for use with an{' '}
-                  <a
-                    href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
-                    target="_blank"
-                    aria-describedby="external-site"
-                    rel="noopener noreferrer"
-                    className="h-u"
+                {mode === 'creating' && (
+                  <LimitedAccessControls
+                    mode={mode}
+                    bucket_access={values.bucket_access}
+                    updateScopes={handleScopeUpdate}
+                    handleToggle={handleToggleAccess}
+                    checked={limitedAccessChecked}
+                  />
+                )}
+                <ActionsPanel>
+                  <Button
+                    buttonType="primary"
+                    onClick={beforeSubmit}
+                    loading={isSubmitting}
+                    disabled={isRestrictedUser}
+                    data-qa-submit
                   >
-                    S3-compatible client
-                  </a>
-                  .
-                </Typography>
-              )}
-
-              <TextField
-                name="label"
-                label="Label"
-                data-qa-add-label
-                value={values.label}
-                error={!!errors.label}
-                errorText={errors.label}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                disabled={isRestrictedUser}
-              />
-              <LimitedAccessControls
-                mode={mode}
-                bucket_access={values.bucket_access}
-                updateScopes={handleScopeUpdate}
-                handleToggle={handleToggleAccess}
-                checked={limitedAccessChecked}
-              />
-              <ActionsPanel>
-                <Button
-                  buttonType="primary"
-                  onClick={beforeSubmit}
-                  loading={isSubmitting}
-                  disabled={isRestrictedUser}
-                  data-qa-submit
-                >
-                  Submit
-                </Button>
-                <Button
-                  onClick={onClose}
-                  data-qa-cancel
-                  buttonType="secondary"
-                  className="cancel"
-                >
-                  Cancel
-                </Button>
-              </ActionsPanel>
-              <EnableObjectStorageModal
-                open={dialogOpen}
-                onClose={() => setDialogOpen(false)}
-                handleSubmit={handleSubmit}
-              />
-            </>
-          );
-        }}
-      </Formik>
+                    Submit
+                  </Button>
+                  <Button
+                    onClick={onClose}
+                    data-qa-cancel
+                    buttonType="secondary"
+                    className="cancel"
+                  >
+                    Cancel
+                  </Button>
+                </ActionsPanel>
+                <EnableObjectStorageModal
+                  open={dialogOpen}
+                  onClose={() => setDialogOpen(false)}
+                  handleSubmit={handleSubmit}
+                />
+              </>
+            );
+          }}
+        </Formik>
+      )}
     </Drawer>
   );
 };
