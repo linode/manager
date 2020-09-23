@@ -59,7 +59,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
   // `-1` represents the previous month, etc. This value should not be greater than `0`.
   const [monthOffset, setMonthOffset] = React.useState(0);
 
-  const now = new Date();
+  const now = DateTime.utc();
 
   const { year, month, humanizedDate } = parseMonthOffset(monthOffset, now);
 
@@ -105,7 +105,10 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
   const _formatTooltip = (valueInBytes: number) =>
     formatNetworkTooltip(valueInBytes / 8);
 
-  const maxMonthOffset = getOffsetFromDate(now, new Date(props.linodeCreated));
+  const maxMonthOffset = getOffsetFromDate(
+    now,
+    DateTime.fromISO(props.linodeCreated, { zone: 'utc' })
+  );
   const minMonthOffset = 0;
 
   const decrementOffset = () =>
@@ -232,14 +235,12 @@ export const sumPublicOutboundTraffic = (stats: Stats) => {
 
 // Get the year, month, and humanized month/year, assuming an offset of `0` refers to "now".
 // An offset of `-1` refers to the previous month, `-2` refers to two months ago, etc.
-export const parseMonthOffset = (offset: number, date: Date) => {
+export const parseMonthOffset = (offset: number, date: DateTime) => {
   if (offset > 0) {
     throw Error('Offset must be <= 0');
   }
 
-  const datetime = DateTime.fromJSDate(date);
-
-  const resultingDate = datetime.minus({ months: Math.abs(offset) });
+  const resultingDate = date.minus({ months: Math.abs(offset) });
 
   const year = String(resultingDate.year);
   const month = String(resultingDate.month).padStart(2, '0');
@@ -250,7 +251,7 @@ export const parseMonthOffset = (offset: number, date: Date) => {
 
 // We don't want to allow the user to scroll back further than the Linode was created,
 // so we determine the max offset given "now" and a target date (i.e. Linode Created date).
-export const getOffsetFromDate = (now: Date, target: Date) => {
+export const getOffsetFromDate = (now: DateTime, target: DateTime) => {
   const interval = Interval.fromDateTimes(target, now);
   // Need to subtract `1` here, because Luxon considers these intervals to be inclusive.
   const count = interval.count('month') - 1;
