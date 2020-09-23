@@ -20,7 +20,7 @@ import { LinodeInterface, LinodeInterfacePayload } from './types';
  */
 export const getInterfaces = (linodeID: number, params?: any, filters?: any) =>
   Request<Page<LinodeInterface>>(
-    setURL(`${API_ROOT}/linode/instances/${linodeID}`),
+    setURL(`${API_ROOT}/linode/instances/${linodeID}/interfaces`),
     setMethod('GET'),
     setXFilter(filters),
     setParams(params)
@@ -34,7 +34,9 @@ export const getInterfaces = (linodeID: number, params?: any, filters?: any) =>
  */
 export const getInterface = (linodeID: number, interfaceID: number) =>
   Request<LinodeInterface>(
-    setURL(`${API_ROOT}/linode/instances/${linodeID}/${interfaceID}`),
+    setURL(
+      `${API_ROOT}/linode/instances/${linodeID}/interfaces/${interfaceID}`
+    ),
     setMethod('GET')
   );
 
@@ -52,7 +54,7 @@ export const createInterface = (
   data: LinodeInterfacePayload
 ) =>
   Request<LinodeInterface>(
-    setURL(`${API_ROOT}/linode/instances/${linodeID}`),
+    setURL(`${API_ROOT}/linode/instances/${linodeID}/interfaces`),
     setMethod('POST'),
     setData(data)
   );
@@ -65,6 +67,8 @@ export const createInterface = (
  */
 export const deleteInterface = (linodeID: number, interfaceID: number) =>
   Request<LinodeInterface>(
-    setURL(`${API_ROOT}/linode/instances/${linodeID}/${interfaceID}`),
+    setURL(
+      `${API_ROOT}/linode/instances/${linodeID}/interfaces/${interfaceID}`
+    ),
     setMethod('DELETE')
   );
