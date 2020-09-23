@@ -3,20 +3,16 @@ import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import {
-  AccessKeyDrawer,
-  getDefaultScopes,
-  MODES,
-  Props
-} from './AccessKeyDrawer';
+import { AccessKeyDrawer, getDefaultScopes, Props } from './AccessKeyDrawer';
 import { getUpdatedScopes } from './LimitedAccessControls';
+import { MODE } from './types';
 
 describe('AccessKeyDrawer', () => {
   const props: Props = {
     open: true,
     onSubmit: jest.fn(),
     onClose: jest.fn(),
-    mode: 'creating' as MODES,
+    mode: 'creating' as MODE,
     isRestrictedUser: false
   };
   renderWithTheme(<AccessKeyDrawer {...props} />);
