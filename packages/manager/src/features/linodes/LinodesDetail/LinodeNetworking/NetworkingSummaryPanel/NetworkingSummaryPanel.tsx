@@ -19,11 +19,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   transferHistoryContainer: {
     padding: '16px 0px',
-    [theme.breakpoints.up('md')]: {
-      padding: '0px 32px'
-    },
+    flex: 1,
     [theme.breakpoints.up('sm')]: {
       padding: '0px 16px'
+    },
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 600
     },
     [theme.breakpoints.down('sm')]: {
       paddingRight: 0,
