@@ -122,7 +122,12 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Drawer title={title} open={open} onClose={onClose} wide>
+    <Drawer
+      title={title}
+      open={open}
+      onClose={onClose}
+      wide={mode === 'creating'}
+    >
       {buckets.loading ? (
         <CircleProgress />
       ) : (
