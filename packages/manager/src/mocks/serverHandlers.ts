@@ -224,7 +224,10 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
   }),
   rest.get('*/account', (req, res, ctx) => {
-    const account = accountFactory.build({ balance: 50 });
+    const account = accountFactory.build({
+      balance: 50,
+      active_since: '2019-11-05'
+    });
     return res(ctx.json(account));
   }),
   rest.get('*/account/transfer', (req, res, ctx) => {
