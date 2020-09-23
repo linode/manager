@@ -180,6 +180,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     this.refreshIPs();
   }
 
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (prevProps.linode.id !== this.props.linode.id) {
+      this.refreshIPs();
+    }
+  }
+
   openRemoveIPDialog = (IPToRemove: IPAddress) => {
     this.setState({
       removeIPDialogOpen: !this.state.removeIPDialogOpen,
