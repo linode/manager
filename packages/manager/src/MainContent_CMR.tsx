@@ -185,14 +185,11 @@ const MainContent: React.FC<CombinedProps> = props => {
     account.data?.capabilities ?? []
   );
 
-  // TODO remove and uncomment next line pre-merge
-  const showVlans = true;
-
-  // const showVlans = isFeatureEnabled(
-  //   'Vlans',
-  //   Boolean(flags.vlans),
-  //   account?.data?.capabilities ?? []
-  // );
+  const showVlans = isFeatureEnabled(
+    'Vlans',
+    Boolean(props.flags.vlans),
+    account?.data?.capabilities ?? []
+  );
 
   /**
    * this is the case where the user has successfully completed signup
