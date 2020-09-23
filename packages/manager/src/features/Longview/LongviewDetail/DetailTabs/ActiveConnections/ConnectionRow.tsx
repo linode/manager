@@ -1,14 +1,21 @@
 import * as React from 'react';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import TableCell_PreCMR from 'src/components/TableCell';
+import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
+import TableRow_PreCMR from 'src/components/TableRow';
+import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import { LongviewPort } from 'src/features/Longview/request.types';
 
 interface Props {
   connection: LongviewPort;
+  cmrFlag?: boolean;
 }
 
 export const ConnectionRow: React.FC<Props> = props => {
-  const { connection } = props;
+  const { connection, cmrFlag } = props;
+
+  const TableCell = cmrFlag ? TableCell_CMR : TableCell_PreCMR;
+  const TableRow = cmrFlag ? TableRow_CMR : TableRow_PreCMR;
+
   return (
     <TableRow ariaLabel={connection.name} data-testid="longview-connection-row">
       <TableCell parentColumn="Name" data-qa-active-connection-name>

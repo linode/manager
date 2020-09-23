@@ -90,7 +90,9 @@ export const ServicesTable: React.FC<TableProps> = props => {
             <>
               <Table
                 spacingTop={16}
-                tableClass={`${services.length > 0 ? classes.table : ''}`}
+                tableClass={`${
+                  services.length > 0 && !cmrFlag ? classes.table : ''
+                }`}
               >
                 <TableHead>
                   <TableRow>
@@ -196,7 +198,11 @@ const renderLoadingErrorData = (
   }
 
   return data.map((thisService, idx) => (
-    <LongviewServiceRow key={`longview-service-${idx}`} service={thisService} />
+    <LongviewServiceRow
+      key={`longview-service-${idx}`}
+      service={thisService}
+      cmrFlag={cmrFlag}
+    />
   ));
 };
 
