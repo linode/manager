@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import CreateVLANDialog from './CreateVLANDialog';
 
 const VlanLanding = React.lazy(() => import('./VlanLanding/VlanLanding'));
 //const VlanDetail = React.lazy(() => import('./VlanLanding/VlanDetail'));
@@ -25,6 +26,7 @@ const VLan: React.FC<CombinedProps> = props => {
           <Redirect to={path} />
         </Switch>
       </React.Fragment>
+      <CreateVLANDialog />
     </React.Suspense>
   );
 };
