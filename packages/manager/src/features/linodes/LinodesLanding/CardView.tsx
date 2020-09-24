@@ -23,9 +23,6 @@ import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 import useLinodes from 'src/hooks/useLinodes';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
-import withRecentEvent, {
-  WithRecentEvent
-} from 'src/features/linodes/LinodesLanding/withRecentEvent';
 
 const useStyles = makeStyles(() => ({
   '@keyframes blink': {
@@ -63,10 +60,7 @@ interface Props {
   linodeID: number;
 }
 
-type CombinedProps = WithImagesProps &
-  WithRecentEvent &
-  PaginationProps &
-  Props;
+type CombinedProps = WithImagesProps & PaginationProps & Props;
 
 const CardView: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -124,8 +118,7 @@ const CardView: React.FC<CombinedProps> = props => {
     openPowerActionDialog,
     linodeConfigs,
     linodeLabel,
-    linodeID,
-    recentEvent
+    linodeID
   } = props;
 
   if (!profile.data?.username) {
@@ -158,7 +151,6 @@ const CardView: React.FC<CombinedProps> = props => {
                     openDialog={openDialog}
                     openPowerActionDialog={openPowerActionDialog}
                     openNotificationDrawer={openNotificationDrawer}
-                    recentEvent={recentEvent}
                   />
                 </Grid>
               </React.Fragment>
@@ -215,8 +207,7 @@ const enhanced = compose<CombinedProps, Props>(
   withImages((ownProps, imagesData) => ({
     ...ownProps,
     imagesData
-  })),
-  withRecentEvent
+  }))
 );
 
 export default enhanced(CardView);

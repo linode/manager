@@ -4,8 +4,8 @@ import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
 import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-// import { compose } from 'recompose';
 import ConsoleIcon from 'src/assets/icons/console.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
@@ -54,9 +54,7 @@ import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-// import withRecentEvent, {
-//   WithRecentEvent
-// } from './LinodesLanding/withRecentEvent';
+import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -77,7 +75,6 @@ interface LinodeEntityDetailProps {
   openTagDrawer: (tags: string[]) => void;
   openNotificationDrawer?: () => void;
   isDetailLanding?: boolean;
-  recentEvent?: Event;
 }
 
 export type CombinedProps = LinodeEntityDetailProps;
@@ -94,8 +91,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
     numVolumes,
     isDetailLanding,
     openTagDrawer,
-    openNotificationDrawer,
-    recentEvent
+    openNotificationDrawer
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -117,6 +113,10 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
 
   const linodeRegionDisplay = dcDisplayNames[linode.region] ?? null;
 
+  const recentEvent = useSelector((state: any) => {
+    return recentEventForLinode(linode.id)(state);
+  });
+
   return (
     <EntityDetail
       header={
@@ -126,7 +126,6 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
-          recentEvent={recentEvent || undefined}
           openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
           linodeRegionDisplay={linodeRegionDisplay}
@@ -136,6 +135,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
           type={'something'}
           image={'something'}
           openNotificationDrawer={openNotificationDrawer || (() => null)}
+          recentEvent={recentEvent || undefined}
         />
       }
       body={
@@ -169,9 +169,6 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
 };
 
 export default React.memo(LinodeEntityDetail);
-
-// const enhanced = compose<CombinedProps, {}>(withRecentEvent, React.memo);
-// export default enhanced(LinodeEntityDetail);
 
 // =============================================================================
 // Header
@@ -309,7 +306,10 @@ const Header: React.FC<HeaderProps> = props => {
 
   const isRunning = linodeStatus === 'running';
   const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
-  const isOther = !['running', 'stopped', 'offline'].includes(linodeStatus);
+  const isOther =
+    !['running', 'stopped', 'offline'].includes(linodeStatus) ||
+    loading ||
+    recentEvent;
 
   const handleConsoleButtonClick = (id: number) => {
     sendLinodeActionMenuItemEvent('Launch Console');
@@ -365,7 +365,7 @@ const Header: React.FC<HeaderProps> = props => {
                 : linodeStatus.toUpperCase()
             }
             component="span"
-            clickable={isOther}
+            clickable={isOther ? true : false}
             {...(isOther && { onClick: openNotificationDrawer })}
           />
 
