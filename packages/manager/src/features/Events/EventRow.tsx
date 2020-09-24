@@ -4,11 +4,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
@@ -24,16 +20,11 @@ import { formatEventWithUsername } from './Event.helpers';
 
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
-type ClassNames = 'root' | 'message' | 'occurredCell';
-
-const styles = () =>
-  createStyles({
-    root: {},
-    message: {
-      wordBreak: 'break-all',
-      paddingLeft: 4
-    }
-  });
+const useStyles = makeStyles(() => ({
+  message: {
+    wordBreak: 'break-all'
+  }
+}));
 
 interface ExtendedEvent extends Event {
   _deleted?: string;
@@ -44,10 +35,10 @@ interface Props {
   entityId?: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const EventRow: React.FC<CombinedProps> = props => {
-  const { event, entityId, classes } = props;
+  const { event, entityId } = props;
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
@@ -67,14 +58,13 @@ export const EventRow: React.FC<CombinedProps> = props => {
     entityId,
     duration: event.duration,
     username: event.username,
-    action: event.action,
-    classes
+    action: event.action
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
 };
 
-export interface RowProps extends WithStyles<ClassNames> {
+export interface RowProps {
   message?: string | void;
   entityId?: number;
   linkTarget?: (e: React.MouseEvent<HTMLElement>) => void;
@@ -87,9 +77,10 @@ export interface RowProps extends WithStyles<ClassNames> {
 }
 
 export const Row: React.FC<RowProps> = props => {
+  const classes = useStyles();
+
   const {
     action,
-    classes,
     entityId,
     linkTarget,
     message,
@@ -118,7 +109,7 @@ export const Row: React.FC<RowProps> = props => {
       {/** We don't use the event argument, so typing isn't critical here. */}
       {/* Only display entity icon on the Global EventsLanding page */}
       {!entityId && (
-        <TableCell data-qa-event-icon-cell compact>
+        <TableCell data-qa-event-icon-cell>
           <Hidden smDown>
             <EntityIcon
               data-qa-entity-icon
@@ -130,7 +121,7 @@ export const Row: React.FC<RowProps> = props => {
           </Hidden>
         </TableCell>
       )}
-      <TableCell parentColumn={'Event'} data-qa-event-message-cell compact>
+      <TableCell parentColumn={'Event'} data-qa-event-message-cell>
         <Typography
           className={classes.message}
           data-qa-event-message
@@ -147,19 +138,16 @@ export const Row: React.FC<RowProps> = props => {
           {action === 'host_reboot' ? '' : formatEventSeconds(duration)}
         </Typography>
       </TableCell>
-      <TableCell parentColumn={'When'} data-qa-event-created-cell compact>
+      <TableCell parentColumn={'When'} data-qa-event-created-cell>
         <DateTimeDisplay value={created} />
       </TableCell>
     </TableRow>
   );
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props & RenderGuardProps>(
   withRouter,
-  renderGuard,
-  styled
+  renderGuard
 );
 
 export default enhanced(EventRow);

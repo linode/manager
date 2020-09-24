@@ -7,6 +7,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import useFlags from 'src/hooks/useFlags';
 import { isToday as _isToday } from 'src/utilities/isToday';
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
@@ -16,6 +17,12 @@ import ApacheGraphs from './ApacheGraphs';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: 250
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -29,6 +36,7 @@ interface Props {
 export const Apache: React.FC<Props> = props => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
+  const flags = useFlags();
   const [version, setVersion] = React.useState<string | undefined>();
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
@@ -97,7 +105,12 @@ export const Apache: React.FC<Props> = props => {
           alignItems="center"
         >
           <div>
-            <Typography variant="h2">{'Apache'}</Typography>
+            <Typography
+              className={flags.cmr ? classes.cmrSpacing : ''}
+              variant="h2"
+            >
+              {'Apache'}
+            </Typography>
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
 

@@ -7,6 +7,7 @@ import Box from 'src/components/core/Box';
 import ErrorState from 'src/components/ErrorState';
 import LandingLoading from 'src/components/LandingLoading';
 import Placeholder from 'src/components/Placeholder';
+import useFlags from 'src/hooks/useFlags';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import DiskGraph from './DiskGraph';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -18,6 +19,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: 250,
     marginBottom: theme.spacing()
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -34,6 +40,8 @@ type CombinedProps = Props;
 
 const Disks: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
+
   const {
     lastUpdated,
     lastUpdatedError,
@@ -113,7 +121,12 @@ const Disks: React.FC<CombinedProps> = props => {
   return (
     <div>
       <DocumentTitleSegment segment="Disks" />
-      <Box display="flex" flexDirection="row" justifyContent="flex-end">
+      <Box
+        className={flags.cmr ? classes.cmrSpacing : ''}
+        display="flex"
+        flexDirection="row"
+        justifyContent="flex-end"
+      >
         <TimeRangeSelect
           small
           className={classes.root}

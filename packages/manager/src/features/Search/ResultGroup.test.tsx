@@ -7,18 +7,16 @@ import Typography from 'src/components/core/Typography';
 
 import { ResultGroup } from './ResultGroup';
 
-const classes = {
-  root: '',
-  entityHeadingWrapper: '',
-  entityHeading: '',
-  button: '',
-  emptyCell: '',
-  headerCell: ''
-};
+jest.mock('src/components/core/styles', () => ({
+  ...(jest.requireActual('src/components/core/styles') as any),
+  makeStyles: jest.fn(() => () => ({}))
+}));
+jest.mock('src/hooks/useFlags', () => ({
+  default: jest.fn().mockReturnValue({})
+}));
 
 const props = {
   entity: 'linodes',
-  classes,
   results: [
     searchbarResult1,
     searchbarResult2,
@@ -35,7 +33,6 @@ const props = {
 
 const emptyProps = {
   entity: 'linodes',
-  classes,
   results: [],
   groupSize: 5,
   showMore: false,
