@@ -29,5 +29,6 @@ export const configFactory = Factory.Sync.makeFactory<Config>({
   memory_limit: 0,
   root_device: 'sda',
   run_level: 'default',
-  virt_mode: 'paravirt'
+  virt_mode: 'paravirt',
+  interfaces: {}
 });
