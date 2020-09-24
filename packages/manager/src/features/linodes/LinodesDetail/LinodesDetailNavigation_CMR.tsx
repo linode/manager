@@ -65,7 +65,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     },
     {
       routeName: `${url}/activity`,
-      title: 'Activity Logs'
+      title: 'Activity Feed'
     },
     {
       routeName: `${url}/settings`,
