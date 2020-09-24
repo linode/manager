@@ -49,12 +49,13 @@ import useImages from 'src/hooks/useImages';
 import useLinodes from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
+import { ApplicationState } from 'src/store';
+import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -113,7 +114,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
 
   const linodeRegionDisplay = dcDisplayNames[linode.region] ?? null;
 
-  const recentEvent = useSelector((state: any) => {
+  const recentEvent = useSelector((state: ApplicationState) => {
     return recentEventForLinode(linode.id)(state);
   });
 
