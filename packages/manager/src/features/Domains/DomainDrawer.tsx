@@ -816,10 +816,11 @@ const styled = withStyles(styles);
 
 interface DispatchProps {
   resetDrawer: () => void;
+  upsertDomain: (domain: Domain) => void;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators({ resetDrawer }, dispatch);
+  bindActionCreators({ resetDrawer, upsertDomain }, dispatch);
 
 interface StateProps {
   mode: typeof CLONING | typeof CREATING | typeof EDITING;
