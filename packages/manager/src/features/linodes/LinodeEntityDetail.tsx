@@ -360,7 +360,12 @@ const Header: React.FC<HeaderProps> = props => {
                     <ProgressDisplay
                       className={classes.progressDisplay}
                       progress={recentEvent.percent_complete}
-                      text={transitionText(linodeStatus, linodeId, recentEvent)}
+                      text={transitionText(
+                        linodeStatus,
+                        linodeId,
+                        recentEvent,
+                        true
+                      )}
                     />
                   )
                 : linodeStatus.toUpperCase()
