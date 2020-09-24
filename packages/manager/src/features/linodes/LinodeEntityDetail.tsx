@@ -271,7 +271,8 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   progressDisplay: {
-    display: 'inline-block'
+    display: 'inline-block',
+    fontFamily: theme.font.bold
   }
 }));
 
@@ -365,7 +366,7 @@ const Header: React.FC<HeaderProps> = props => {
                         linodeId,
                         recentEvent,
                         true
-                      )}
+                      ).toUpperCase()}
                     />
                   )
                 : linodeStatus.toUpperCase()
