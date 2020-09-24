@@ -32,7 +32,8 @@ import {
   eventFactory,
   tagFactory,
   nodeBalancerConfigFactory,
-  nodeBalancerConfigNodeFactory
+  nodeBalancerConfigNodeFactory,
+  VLANFactory
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -205,6 +206,10 @@ export const handlers = [
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(10);
     return res(ctx.json(makeResourcePage(volumes)));
+  }),
+  rest.get('*/vlans', (req, res, ctx) => {
+    const vlans = VLANFactory.buildList(4);
+    return res(ctx.json(makeResourcePage(vlans)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
     return res(ctx.json({ display: 'compact' }));

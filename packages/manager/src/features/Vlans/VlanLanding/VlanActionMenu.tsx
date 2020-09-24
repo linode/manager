@@ -61,7 +61,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface ActionHandlers {
   triggerDeleteVlan: (vlanID: number, vlanLabel: string) => void;
-  [index: string]: any;
 }
 
 interface Props extends ActionHandlers {

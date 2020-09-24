@@ -4,10 +4,13 @@ import { compose } from 'recompose';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
 import VLanRow from './VLanRow';
+import { VLANFactory } from 'src/factories/vlans';
 
 type CombinedProps = RouteComponentProps<{}>;
 
-const VlanLanding: React.FC<CombinedProps> = props => {
+const VlanLanding: React.FC<CombinedProps> = () => {
+  const vlans = VLANFactory.buildList(10);
+
   const headers = [
     {
       label: 'Label',
@@ -24,9 +27,8 @@ const VlanLanding: React.FC<CombinedProps> = props => {
     {
       label: 'Linodes',
       dataColumn: 'linodes',
-      sortable: true,
-      widthPercent: 25,
-      hideOnMobile: true
+      sortable: false,
+      widthPercent: 25
     },
     {
       label: 'Action Menu',
@@ -39,7 +41,7 @@ const VlanLanding: React.FC<CombinedProps> = props => {
 
   const vLanRow = {
     Component: VLanRow,
-    data: [],
+    data: Object.values(vlans) ?? [],
     loading: false,
     lastUpdated: 1234,
     error: undefined
