@@ -28,13 +28,13 @@ const VlanLanding: React.FC<CombinedProps> = props => {
       widthPercent: 25,
       hideOnMobile: true
     },
-    {
-      label: 'Tags',
-      dataColumn: 'tags',
-      sortable: false,
-      widthPercent: 40,
-      hideOnMobile: true
-    },
+    // {
+    //   label: 'Tags',
+    //   dataColumn: 'tags',
+    //   sortable: false,
+    //   widthPercent: 40,
+    //   hideOnMobile: true
+    // },
     {
       label: 'Action Menu',
       visuallyHidden: true,
@@ -52,14 +52,18 @@ const VlanLanding: React.FC<CombinedProps> = props => {
     error: undefined
   };
 
+  const addNew = () => console.log('test');
+
   return (
     <React.Fragment>
       <LandingHeader
         title="Virtual LANS"
         entity="VLAN"
+        onAddNew={addNew}
         // TODO add vlan to type list
         iconType="linode"
         docsLink="http://google.com"
+        headerOnly
       />
       <EntityTable
         entity="vlans"
