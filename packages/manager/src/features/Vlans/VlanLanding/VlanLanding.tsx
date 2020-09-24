@@ -24,17 +24,10 @@ const VlanLanding: React.FC<CombinedProps> = props => {
     {
       label: 'Linodes',
       dataColumn: 'linodes',
-      sortable: false,
+      sortable: true,
       widthPercent: 25,
       hideOnMobile: true
     },
-    // {
-    //   label: 'Tags',
-    //   dataColumn: 'tags',
-    //   sortable: false,
-    //   widthPercent: 40,
-    //   hideOnMobile: true
-    // },
     {
       label: 'Action Menu',
       visuallyHidden: true,
@@ -52,7 +45,7 @@ const VlanLanding: React.FC<CombinedProps> = props => {
     error: undefined
   };
 
-  const addNew = () => console.log('test');
+  const addNew = () => alert('You just created a vlan!');
 
   return (
     <React.Fragment>
