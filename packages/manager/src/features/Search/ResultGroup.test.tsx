@@ -3,13 +3,14 @@ import * as React from 'react';
 
 import { searchbarResult1, searchbarResult2 } from 'src/__data__/searchResults';
 import Button from 'src/components/Button';
-import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 import { ResultGroup } from './ResultGroup';
 
-// jest.mock('src/components/core/styles', () => ({ useStyles: () => ({ classes: {} }));
-jest.mock(makeStyles, () => ({ classes: {} }));
+jest.mock('src/components/core/styles', () => ({
+  ...(jest.requireActual('src/components/core/styles') as any),
+  makeStyles: jest.fn(() => () => ({}))
+}));
 jest.mock('src/hooks/useFlags', () => ({
   default: jest.fn().mockReturnValue({})
 }));
