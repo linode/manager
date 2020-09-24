@@ -1,9 +1,11 @@
-// import {
-//   CreateVLANPayload,
-//   createVlanSchema,
-//   VLAN
-// } from '@linode/api-v4/lib/vlans';
+import { linodeReboot } from '@linode/api-v4/lib/linodes';
+import {
+  createVlan,
+  CreateVLANPayload,
+  createVlanSchema
+} from '@linode/api-v4/lib/vlans';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -20,6 +22,11 @@ import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 import Typography from 'src/components/core/Typography';
 import CheckBox from 'src/components/CheckBox';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
+import { vlanContext } from './CreateVLANContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {},
@@ -34,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const CreateVLANDialog: React.FC<{}> = _ => {
   const classes = useStyles();
+  const history = useHistory();
   const regions = useRegions();
   const regionsWithVLANS: ExtendedRegion[] = regions.entities
     .filter(thisRegion => thisRegion.capabilities.includes('Vlans'))
@@ -41,6 +49,8 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
   const regionIDsWithVLANs = React.useMemo(() => {
     return regionsWithVLANS.map(thisRegion => thisRegion.id);
   }, [regionsWithVLANS]);
+
+  const context = React.useContext(vlanContext);
 
   /**
    * Track whether to reboot attached Linodes after
@@ -53,9 +63,36 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
     setRebootOnCreate(current => !current);
   };
 
-  const submitForm = (values: any) => {
-    console.log(values);
-    formik.setSubmitting(false);
+  const submitForm = (values: CreateVLANPayload) => {
+    const payload = { ...values };
+    if (payload.cidr_block === '') {
+      // This field is not required; if the user cleared the input,
+      // don't submit anything.
+      payload.cidr_block = undefined;
+    }
+    createVlan(values)
+      .then(response => {
+        formik.setSubmitting(false);
+        if (rebootOnCreate) {
+          // If we've been asked to do this, reboot every Linode we just
+          // attached to the VLAN.
+          response.linodes.forEach(thisLinode => linodeReboot(thisLinode));
+        }
+        context.close();
+        history.push('/vlans');
+      })
+      .catch(err => {
+        const mapErrorToStatus = (generalError: string) =>
+          formik.setStatus({ generalError });
+
+        formik.setSubmitting(false);
+        handleFieldErrors(formik.setErrors, err);
+        handleGeneralErrors(
+          mapErrorToStatus,
+          err,
+          'An unexpected error occurred.'
+        );
+      });
   };
 
   const formik = useFormik({
@@ -65,7 +102,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
       region: regionIDsWithVLANs[0] ?? '',
       linodes: []
     },
-    // validationSchema: createVLANSchema,
+    validationSchema: createVlanSchema,
     validateOnChange: true,
     onSubmit: values => submitForm(values)
   });
@@ -73,8 +110,8 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
   return (
     <Dialog
       title="Create a Virtual LAN"
-      open={true}
-      onClose={() => null}
+      open={context.isOpen}
+      onClose={context.close}
       fullWidth
       fullHeight
       maxWidth="md"

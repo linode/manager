@@ -23,6 +23,11 @@ import {
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu/TopMenu_CMR';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import CreateVLANDialog from 'src/features/Vlans/CreateVLANDialog';
+import {
+  useVLANContext,
+  vlanContext
+} from 'src/features/Vlans/CreateVLANDialog/CreateVLANContext';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 
 import Grid from 'src/components/Grid';
@@ -176,6 +181,9 @@ const MainContent: React.FC<CombinedProps> = props => {
   const NotificationProvider = notificationContext.Provider;
   const contextValue = useNotificationContext();
 
+  const VlanContextProvider = vlanContext.Provider;
+  const vlanContextValue = useVLANContext();
+
   const [, toggleMenu] = React.useState<boolean>(false);
   const { account } = useAccountManagement();
 
@@ -248,79 +256,82 @@ const MainContent: React.FC<CombinedProps> = props => {
         [classes.hidden]: props.appIsLoading
       })}
     >
-      {/* @cmr */}
-      <PrimaryNav_CMR
-        closeMenu={() => toggleMenu(false)}
-        isCollapsed={false}
-        toggleTheme={props.toggleTheme}
-        toggleSpacing={props.toggleSpacing}
-      />
-      <NotificationProvider value={contextValue}>
-        <div className={classes.content}>
-          <TopMenu
-            isLoggedInAsCustomer={props.isLoggedInAsCustomer}
-            username={props.username}
-          />
-          <main className={classes.cmrWrapper} id="main-content" role="main">
-            <Grid container spacing={0} className={classes.grid}>
-              <Grid item className={classes.switchWrapper}>
-                <RegionStatusBanner />
-                <React.Suspense fallback={<SuspenseLoader />}>
-                  <Switch>
-                    <Route path="/linodes" component={LinodesRoutes} />
-                    <Route path="/volumes" component={Volumes} />
-                    <Redirect path="/volumes*" to="/volumes" />
-                    <Route path="/nodebalancers" component={NodeBalancers} />
-                    <Route path="/domains" component={Domains} />
-                    <Route path="/managed" component={Managed} />
-                    <Route path="/longview" component={Longview} />
-                    <Route exact strict path="/images" component={Images} />
-                    <Redirect path="/images*" to="/images" />
-                    <Route path="/stackscripts" component={StackScripts} />
-                    <Route path="/object-storage" component={ObjectStorage} />
-                    <Route path="/kubernetes" component={Kubernetes} />
-                    <Route path="/account" component={Account} />
-                    <Route
-                      exact
-                      strict
-                      path="/support/tickets"
-                      component={SupportTickets}
-                    />
-                    <Route
-                      path="/support/tickets/:ticketId"
-                      component={SupportTicketDetail}
-                      exact
-                      strict
-                    />
-                    <Route path="/profile" component={Profile} />
-                    <Route exact path="/support" component={Help} />
-                    <Route path="/dashboard" component={Dashboard} />
-                    <Route path="/search" component={SearchLanding} />
-                    <Route
-                      exact
-                      strict
-                      path="/support/search/"
-                      component={SupportSearchLanding}
-                    />
-                    <Route path="/events" component={EventsLanding} />
-                    {showFirewalls && (
-                      <Route path="/firewalls" component={Firewalls} />
-                    )}
-                    {showVlans && <Route path="/vlans" component={VLans} />}
-                    <Redirect exact from="/" to="/dashboard" />
-                    <Route component={NotFound} />
-                  </Switch>
-                </React.Suspense>
+      <VlanContextProvider value={vlanContextValue}>
+        {/* @cmr */}
+        <PrimaryNav_CMR
+          closeMenu={() => toggleMenu(false)}
+          isCollapsed={false}
+          toggleTheme={props.toggleTheme}
+          toggleSpacing={props.toggleSpacing}
+        />
+        <NotificationProvider value={contextValue}>
+          <div className={classes.content}>
+            <TopMenu
+              isLoggedInAsCustomer={props.isLoggedInAsCustomer}
+              username={props.username}
+            />
+            <main className={classes.cmrWrapper} id="main-content" role="main">
+              <Grid container spacing={0} className={classes.grid}>
+                <Grid item className={classes.switchWrapper}>
+                  <RegionStatusBanner />
+                  <React.Suspense fallback={<SuspenseLoader />}>
+                    <Switch>
+                      <Route path="/linodes" component={LinodesRoutes} />
+                      <Route path="/volumes" component={Volumes} />
+                      <Redirect path="/volumes*" to="/volumes" />
+                      <Route path="/nodebalancers" component={NodeBalancers} />
+                      <Route path="/domains" component={Domains} />
+                      <Route path="/managed" component={Managed} />
+                      <Route path="/longview" component={Longview} />
+                      <Route exact strict path="/images" component={Images} />
+                      <Redirect path="/images*" to="/images" />
+                      <Route path="/stackscripts" component={StackScripts} />
+                      <Route path="/object-storage" component={ObjectStorage} />
+                      <Route path="/kubernetes" component={Kubernetes} />
+                      <Route path="/account" component={Account} />
+                      <Route
+                        exact
+                        strict
+                        path="/support/tickets"
+                        component={SupportTickets}
+                      />
+                      <Route
+                        path="/support/tickets/:ticketId"
+                        component={SupportTicketDetail}
+                        exact
+                        strict
+                      />
+                      <Route path="/profile" component={Profile} />
+                      <Route exact path="/support" component={Help} />
+                      <Route path="/dashboard" component={Dashboard} />
+                      <Route path="/search" component={SearchLanding} />
+                      <Route
+                        exact
+                        strict
+                        path="/support/search/"
+                        component={SupportSearchLanding}
+                      />
+                      <Route path="/events" component={EventsLanding} />
+                      {showFirewalls && (
+                        <Route path="/firewalls" component={Firewalls} />
+                      )}
+                      {showVlans && <Route path="/vlans" component={VLans} />}
+                      <Redirect exact from="/" to="/dashboard" />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </React.Suspense>
+                </Grid>
               </Grid>
-            </Grid>
-          </main>
-        </div>
-      </NotificationProvider>
-      <Footer desktopMenuIsOpen={false} />
-      <ToastNotifications />
-      <DomainDrawer />
-      <VolumeDrawer />
-      <BackupDrawer />
+            </main>
+          </div>
+        </NotificationProvider>
+        <Footer desktopMenuIsOpen={false} />
+        <ToastNotifications />
+        <DomainDrawer />
+        <VolumeDrawer />
+        <BackupDrawer />
+        <CreateVLANDialog />
+      </VlanContextProvider>
     </div>
   );
 };
