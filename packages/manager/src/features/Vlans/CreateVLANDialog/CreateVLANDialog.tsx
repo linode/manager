@@ -4,24 +4,24 @@ import {
   CreateVLANPayload,
   createVlanSchema
 } from '@linode/api-v4/lib/vlans';
+import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { useFormik } from 'formik';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CheckBox from 'src/components/CheckBox';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import RegionSelect, {
   ExtendedRegion
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import useRegions from 'src/hooks/useRegions';
-import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
-import Typography from 'src/components/core/Typography';
-import CheckBox from 'src/components/CheckBox';
-import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
   handleFieldErrors,
   handleGeneralErrors
