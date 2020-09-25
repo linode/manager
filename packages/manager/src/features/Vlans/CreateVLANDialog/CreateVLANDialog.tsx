@@ -70,7 +70,11 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
       // don't submit anything.
       payload.cidr_block = undefined;
     }
-    createVlan(values)
+
+    if (payload.description === '') {
+      payload.description = undefined;
+    }
+    createVlan(payload)
       .then(response => {
         formik.setSubmitting(false);
         if (rebootOnCreate) {
@@ -116,7 +120,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
       fullHeight
       maxWidth="md"
     >
-      <form className={classes.form}>
+      <form className={classes.form} onSubmit={formik.handleSubmit}>
         <div className={classes.formSection}>
           <TextField
             label="Label"
@@ -174,7 +178,6 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
             automatically after creating the VLAN?{' '}
           </Typography>
           <FormControlLabel
-            // className={classes.label}
             control={
               <CheckBox
                 checked={rebootOnCreate}
@@ -191,7 +194,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
             onClick={() => formik.handleSubmit()}
             buttonType="primary"
             loading={formik.isSubmitting}
-            data-testid="submit-disk-form"
+            data-testid="submit-vlan-form"
           >
             Create VLAN
           </Button>
