@@ -8,6 +8,8 @@ export * from './disks';
 
 export * from './info';
 
+export * from './interfaces';
+
 export * from './ips';
 
 export * from './linodes.schema';

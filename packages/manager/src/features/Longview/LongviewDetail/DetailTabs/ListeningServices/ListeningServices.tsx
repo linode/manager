@@ -7,13 +7,20 @@ import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
-import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
-import TableSortCell from 'src/components/TableSortCell';
+import Table_PreCMR from 'src/components/Table';
+import Table_CMR from 'src/components/Table/Table_CMR';
+import TableRow_PreCMR from 'src/components/TableRow';
+import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
+import TableRowEmptyState_PreCMR from 'src/components/TableRowEmptyState';
+import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
+import TableRowError_PreCMR from 'src/components/TableRowError';
+import TableRowError_CMR from 'src/components/TableRowError/TableRowError_CMR';
+import TableRowLoading_PreCMR from 'src/components/TableRowLoading';
+import TableRowLoading_CMR from 'src/components/TableRowLoading/TableRowLoading_CMR';
+import TableSortCell_PreCMR from 'src/components/TableSortCell';
+import TableSortCell_CMR from 'src/components/TableSortCell/TableSortCell_CMR';
 import { LongviewService } from 'src/features/Longview/request.types';
+import useFlags from 'src/hooks/useFlags';
 import LongviewServiceRow from './LongviewServiceRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -31,6 +38,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         textAlign: 'right'
       }
     }
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
   }
 }));
 
@@ -38,25 +50,36 @@ export interface TableProps {
   services: LongviewService[];
   servicesLoading: boolean;
   servicesError?: string;
+  cmrFlag?: boolean;
 }
 
 export const ListeningServices: React.FC<TableProps> = props => {
-  const { services, servicesError, servicesLoading } = props;
+  const classes = useStyles();
+  const flags = useFlags();
+
+  const { services, servicesError, servicesLoading, cmrFlag } = props;
   return (
     <Grid item xs={12} md={8}>
-      <Typography variant="h2">Listening Services</Typography>
+      <Typography variant="h2" className={flags.cmr ? classes.cmrSpacing : ''}>
+        Listening Services
+      </Typography>
       <ServicesTable
         services={services}
         servicesLoading={servicesLoading}
         servicesError={servicesError}
+        cmrFlag={cmrFlag}
       />
     </Grid>
   );
 };
 
 export const ServicesTable: React.FC<TableProps> = props => {
-  const { services, servicesError, servicesLoading } = props;
+  const { services, servicesError, servicesLoading, cmrFlag } = props;
   const classes = useStyles();
+
+  const Table = cmrFlag ? Table_CMR : Table_PreCMR;
+  const TableRow = cmrFlag ? TableRow_CMR : TableRow_PreCMR;
+  const TableSortCell = cmrFlag ? TableSortCell_CMR : TableSortCell_PreCMR;
 
   return (
     <OrderBy
@@ -78,7 +101,9 @@ export const ServicesTable: React.FC<TableProps> = props => {
             <>
               <Table
                 spacingTop={16}
-                tableClass={`${services.length > 0 ? classes.table : ''}`}
+                tableClass={`${
+                  services.length > 0 && !cmrFlag ? classes.table : ''
+                }`}
               >
                 <TableHead>
                   <TableRow>
@@ -138,7 +163,8 @@ export const ServicesTable: React.FC<TableProps> = props => {
                   {renderLoadingErrorData(
                     servicesLoading,
                     paginatedData,
-                    servicesError
+                    servicesError,
+                    cmrFlag
                   )}
                 </TableBody>
               </Table>
@@ -161,8 +187,17 @@ export const ServicesTable: React.FC<TableProps> = props => {
 const renderLoadingErrorData = (
   loading: boolean,
   data: LongviewService[],
-  error?: string
+  error?: string,
+  cmrFlag?: boolean
 ) => {
+  const TableRowError = cmrFlag ? TableRowError_CMR : TableRowError_PreCMR;
+  const TableRowLoading = cmrFlag
+    ? TableRowLoading_CMR
+    : TableRowLoading_PreCMR;
+  const TableRowEmptyState = cmrFlag
+    ? TableRowEmptyState_CMR
+    : TableRowEmptyState_PreCMR;
+
   if (error) {
     return <TableRowError colSpan={12} message={error} />;
   }
@@ -174,7 +209,11 @@ const renderLoadingErrorData = (
   }
 
   return data.map((thisService, idx) => (
-    <LongviewServiceRow key={`longview-service-${idx}`} service={thisService} />
+    <LongviewServiceRow
+      key={`longview-service-${idx}`}
+      service={thisService}
+      cmrFlag={cmrFlag}
+    />
   ));
 };
 

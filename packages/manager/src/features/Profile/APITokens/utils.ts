@@ -123,15 +123,10 @@ export const scopeStringToPermTuples = (
     scopeMap
   );
 
-  const permTuples = perms.reduce(
-    (tups: Permission[], permName: string): Permission[] => {
-      const tup = [permName, combinedScopeMap[permName]] as Permission;
-      return [...tups, tup];
-    },
-    []
-  );
-
-  return permTuples;
+  return perms.reduce((tups: Permission[], permName: string): Permission[] => {
+    const tup = [permName, combinedScopeMap[permName]] as Permission;
+    return [...tups, tup];
+  }, []);
 };
 
 export const allMaxPerm = (

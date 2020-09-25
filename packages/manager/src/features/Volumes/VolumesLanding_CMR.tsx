@@ -41,6 +41,7 @@ import LandingHeader from 'src/components/LandingHeader';
 import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu_CMR';
 import VolumeTableRow from './VolumeTableRow_CMR';
 import useReduxLoad from 'src/hooks/useReduxLoad';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 interface Props {
   isVolumesLanding?: boolean;
@@ -302,6 +303,7 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
+      <DocumentTitleSegment segment="Volumes" />
       <LandingHeader
         title="Volumes"
         entity="Volume"

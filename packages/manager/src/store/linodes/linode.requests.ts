@@ -21,7 +21,7 @@ import {
 } from './linodes.actions';
 
 export const getLinode = createRequestThunk(getLinodeActions, ({ linodeId }) =>
-  _getLinode(linodeId).then(({ data }) => data)
+  _getLinode(linodeId)
 );
 
 export const updateLinode = createRequestThunk(
@@ -65,7 +65,6 @@ export const requestLinodeForStore: RequestLinodeForStoreThunk = (
     Boolean(state.__resources.linodes.itemsById[id])
   ) {
     return _getLinode(id)
-      .then(response => response.data)
       .then(linode => {
         return dispatch(upsertLinode(linode));
       })

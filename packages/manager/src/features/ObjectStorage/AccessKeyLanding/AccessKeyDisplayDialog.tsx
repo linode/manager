@@ -56,7 +56,7 @@ export const AccessKeyDisplayDialog: React.FC<CombinedProps> = props => {
       <Typography variant="body1" className={classes.helperText}>
         Your keys have been generated. For security purposes, we can only
         display your Secret Key once, after which it can’t be recovered.{' '}
-        <strong>Be sure to keep it in a safe place</strong>
+        <strong>Be sure to keep it in a safe place.</strong>
       </Typography>
 
       <Typography>

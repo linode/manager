@@ -28,6 +28,8 @@ export * from './support';
 
 export * from './tags';
 
+export * from './vlans';
+
 export * from './volumes';
 
 export { baseRequest, setToken } from './request';

@@ -1,106 +1,91 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
+import useFlags from 'src/hooks/useFlags';
 
 import { ExtendedReply, ExtendedTicket } from './types';
 import { Hively, shouldRenderHively } from './Hively';
 import TicketDetailBody from './TicketDetailText';
 
-type ClassNames =
-  | 'root'
-  | 'userWrapper'
-  | 'leftIcon'
-  | 'userName'
-  | 'expert'
-  | 'content'
-  | 'header'
-  | 'headerInner'
-  | 'isCurrentUser'
-  | 'hivelyContainer'
-  | 'hivelyLink'
-  | 'hivelyLinkIcon'
-  | 'hivelyImage';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    '@keyframes fadeIn': {
-      from: {
-        opacity: 0
-      },
-      to: {
-        opacity: 1
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0
     },
-    root: {
-      width: '100%',
-      padding: 0,
-      marginBottom: theme.spacing(2),
-      position: 'relative'
-    },
-    userWrapper: {
-      marginTop: theme.spacing(1) / 2,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: '50%',
-      width: 32,
-      height: 32,
-      position: 'relative',
-      top: -2,
-      [theme.breakpoints.up('sm')]: {
-        marginRight: theme.spacing(1),
-        width: 40,
-        height: 40
-      }
-    },
-    leftIcon: {
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
-      color: theme.palette.text.primary
-    },
-    content: {
-      width: '100%',
-      marginTop: theme.spacing(1),
+    to: {
+      opacity: 1
+    }
+  },
+  root: {
+    width: '100%',
+    padding: 0,
+    marginBottom: theme.spacing(2),
+    position: 'relative'
+  },
+  userWrapper: {
+    marginTop: theme.spacing(1) / 2,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    width: 32,
+    height: 32,
+    position: 'relative',
+    top: -2,
+    [theme.breakpoints.up('sm')]: {
       marginRight: theme.spacing(1),
-      padding: theme.spacing(2),
-      backgroundColor: theme.color.white,
-      border: `1px solid ${theme.color.grey2}`,
-      borderRadius: theme.shape.borderRadius
-    },
-    header: {
-      padding: `0 ${theme.spacing(1)}px`,
-      minHeight: 40,
-      backgroundColor: theme.color.grey2,
-      borderTopLeftRadius: theme.shape.borderRadius,
-      borderTopRightRadius: theme.shape.borderRadius
-    },
-    headerInner: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      alignItems: 'center'
-    },
-    userName: {
-      whiteSpace: 'nowrap',
-      fontFamily: 'LatoWebBold', // we keep this bold at all times
-      color: theme.color.headline,
-      marginRight: 4
-    },
-    expert: {
-      marginRight: 4,
-      whiteSpace: 'nowrap'
-    },
-    isCurrentUser: {}
-  });
+      width: 40,
+      height: 40
+    }
+  },
+  leftIcon: {
+    width: '100%',
+    height: '100%',
+    borderRadius: '50%',
+    color: theme.palette.text.primary
+  },
+  content: {
+    width: '100%',
+    marginTop: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    padding: theme.spacing(2),
+    backgroundColor: theme.color.white,
+    border: `1px solid ${theme.color.grey2}`,
+    borderRadius: theme.shape.borderRadius
+  },
+  header: {
+    padding: `0 ${theme.spacing(1)}px`,
+    minHeight: 40,
+    backgroundColor: theme.color.grey2,
+    borderTopLeftRadius: theme.shape.borderRadius,
+    borderTopRightRadius: theme.shape.borderRadius
+  },
+  headerInner: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center'
+  },
+  userName: {
+    whiteSpace: 'nowrap',
+    fontFamily: 'LatoWebBold', // we keep this bold at all times
+    color: theme.color.headline,
+    marginRight: 4
+  },
+  expert: {
+    marginRight: 4,
+    whiteSpace: 'nowrap'
+  },
+  isCurrentUser: {},
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
+  }
+}));
 
 interface Props {
   reply?: ExtendedReply;
@@ -111,7 +96,7 @@ interface Props {
   ticketUpdated?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 interface Data {
   gravatar_id: string;
@@ -126,8 +111,10 @@ interface Data {
 }
 
 export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+  const flags = useFlags();
+
   const {
-    classes,
     // isCurrentUser,
     parentTicket,
     ticket,
@@ -171,11 +158,15 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
 
   const renderAvatar = (url: string) => {
     return url !== 'not found' ? (
-      <div className={classes.userWrapper}>
+      <div
+        className={`${classes.userWrapper} ${flags.cmr && classes.cmrSpacing}`}
+      >
         <img src={url} className={classes.leftIcon} alt="Gravatar" />
       </div>
     ) : (
-      <div className={classes.userWrapper}>
+      <div
+        className={`${classes.userWrapper} ${flags.cmr && classes.cmrSpacing}`}
+      >
         <UserIcon className={classes.leftIcon} />
       </div>
     );
@@ -244,9 +235,4 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(ExpandableTicketPanel);
+export default compose<CombinedProps, Props>(React.memo)(ExpandableTicketPanel);

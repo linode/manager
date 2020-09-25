@@ -539,7 +539,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 onChange={this.handleRootDeviceChangeTextfield}
                 inputProps={{ name: 'root_device', id: 'root_device' }}
                 fullWidth
-                autoFocus={true}
                 errorText={errorFor('root_device')}
                 errorGroup="linode-config-drawer"
                 disabled={readOnly}
@@ -565,7 +564,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           >
             <FormGroup>
               <FormControlLabel
-                label="Distro Helper"
+                label="Enable distro helper"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
@@ -591,7 +590,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               />
 
               <FormControlLabel
-                label="modules.dep Helper"
+                label="Enable modules.dep helper"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
@@ -604,7 +603,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               />
 
               <FormControlLabel
-                label="automount devtpmfs"
+                label="Auto-mount devtmpfs"
                 className={classes.formControlToggle}
                 control={
                   <Toggle
@@ -617,7 +616,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               />
 
               <FormControlLabel
-                label="auto-configure networking"
+                label="Auto-configure networking"
                 className={classes.formControlToggle}
                 control={
                   <Toggle

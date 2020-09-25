@@ -16,10 +16,7 @@ import { Image } from './types';
  * @param imageId { string } ID of the Image to look up.
  */
 export const getImage = (imageId: string) =>
-  Request<Image>(
-    setURL(`${API_ROOT}/images/${imageId}`),
-    setMethod('GET')
-  ).then(response => response.data);
+  Request<Image>(setURL(`${API_ROOT}/images/${imageId}`), setMethod('GET'));
 
 /**
  * Returns a paginated list of Images.
@@ -31,7 +28,7 @@ export const getImages = (params: any = {}, filters: any = {}) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
-  ).then(response => response.data);
+  );
 
 /**
  * Create a private gold-master Image from a Linode Disk.
