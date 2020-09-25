@@ -675,7 +675,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        upsertDomain(data);
+        this.props.upsertDomain(data);
         this.redirect(data.id || '');
         this.closeDrawer();
       })
