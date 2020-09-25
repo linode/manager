@@ -18,6 +18,7 @@ import RegionSelect, {
   ExtendedRegion
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import useRegions from 'src/hooks/useRegions';
@@ -51,6 +52,25 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
   }, [regionsWithVLANS]);
 
   const context = React.useContext(vlanContext);
+
+  const { resetForm, ...formik } = useFormik({
+    initialValues: {
+      description: '',
+      cidr_block: '10.0.0.0/24',
+      region: regionIDsWithVLANs[0] ?? '',
+      linodes: []
+    },
+    validationSchema: createVlanSchema,
+    validateOnChange: true,
+    onSubmit: values => submitForm(values)
+  });
+
+  /** Reset errors and state when the modal opens */
+  React.useEffect(() => {
+    if (context.isOpen) {
+      resetForm();
+    }
+  }, [context.isOpen, resetForm]);
 
   /**
    * Track whether to reboot attached Linodes after
@@ -99,18 +119,6 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
       });
   };
 
-  const formik = useFormik({
-    initialValues: {
-      description: '',
-      cidr_block: '10.0.0.0/24',
-      region: regionIDsWithVLANs[0] ?? '',
-      linodes: []
-    },
-    validationSchema: createVlanSchema,
-    validateOnChange: true,
-    onSubmit: values => submitForm(values)
-  });
-
   return (
     <Dialog
       title="Create a Virtual LAN"
@@ -120,8 +128,9 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
       fullHeight
       maxWidth="md"
     >
+      {!!formik.status && <Notice error text={formik.status.generalError} />}
       <form className={classes.form} onSubmit={formik.handleSubmit}>
-        <div className={classes.formSection}>
+        <div className={classes.formSection} data-testid="label-input">
           <TextField
             label="Label"
             name="description"
