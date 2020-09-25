@@ -23,6 +23,7 @@ import {
   monitorFactory,
   nodeBalancerFactory,
   notificationFactory,
+  objectStorageBucketFactory,
   profileFactory,
   supportReplyFactory,
   supportTicketFactory,
@@ -189,6 +190,10 @@ export const handlers = [
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
+  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
+    const buckets = objectStorageBucketFactory.buildList(20);
+    return res(ctx.json(makeResourcePage(buckets)));
+  }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(25);
     return res(ctx.json(makeResourcePage(domains)));
@@ -219,7 +224,10 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
   }),
   rest.get('*/account', (req, res, ctx) => {
-    const account = accountFactory.build({ balance: 50 });
+    const account = accountFactory.build({
+      balance: 50,
+      active_since: '2019-11-05'
+    });
     return res(ctx.json(account));
   }),
   rest.get('*/account/transfer', (req, res, ctx) => {

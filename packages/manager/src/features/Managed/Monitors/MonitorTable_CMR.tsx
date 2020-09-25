@@ -195,7 +195,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Service Monitors" />
+      <DocumentTitleSegment segment="Monitors" />
       <Grid
         container
         justify="flex-end"

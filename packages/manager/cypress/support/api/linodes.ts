@@ -77,6 +77,32 @@ const makeLinodeCreateReq = (linode, password) => {
   });
 };
 
+const makeLinodeCreateReqWithBackupsEnabled = linode => {
+  const linodeData = linode
+    ? linode
+    : {
+        root_pass: strings.randomPass(),
+        label: makeLinodeLabel(),
+        type: 'g6-standard-2',
+        region: 'us-east',
+        image: 'linode/debian10',
+        tags: [testLinodeTag],
+        backups_enabled: true,
+        booted: true,
+        private_ip: true,
+        authorized_users: []
+      };
+
+  return cy.request({
+    method: 'POST',
+    url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
+    body: linodeData,
+    auth: {
+      bearer: oauthtoken
+    }
+  });
+};
+
 /**
  *  Use this method if you do not need to get the request detail
  * if linode is undefined, will create default test debian linode in us-east
@@ -84,6 +110,14 @@ const makeLinodeCreateReq = (linode, password) => {
  */
 export const createLinode = (linode = undefined, password) => {
   return makeLinodeCreateReq(linode, password).then(resp => {
+    apiCheckErrors(resp);
+    console.log(`Created Linode ${resp.body.label} successfully`, resp);
+    return resp.body;
+  });
+};
+
+export const createLinodeWithBackupsEnabled = (linode = undefined) => {
+  return makeLinodeCreateReqWithBackupsEnabled(linode).then(resp => {
     apiCheckErrors(resp);
     console.log(`Created Linode ${resp.body.label} successfully`, resp);
     return resp.body;
