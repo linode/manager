@@ -7,14 +7,17 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import ActionMenu, { ActionHandlers } from './VlanActionMenu';
+import { getLinodeLabel } from 'src/features/Dashboard/VolumesDashboardCard/VolumeDashboardRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
     display: 'block',
     fontFamily: theme.font.bold,
     fontSize: '.875rem',
-    lineHeight: '1.125rem',
-    textDecoration: 'underline'
+    lineHeight: '1.14rem'
+  },
+  linodesWrapper: {
+    padding: '8px 0'
   },
   labelWrapper: {
     display: 'flex',
@@ -44,6 +47,43 @@ export const VlanRow: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
+  const getLinodesCellString = (
+    data: number[],
+    loading: boolean,
+    error?: APIError[]
+  ): string | JSX.Element => {
+    if (loading) {
+      return 'Loading...';
+    }
+
+    if (error) {
+      return 'Error retrieving Linodes';
+    }
+
+    if (data.length === 0) {
+      return 'None assigned';
+    }
+
+    return getLinodeLinks(data);
+  };
+
+  const getLinodeLinks = (data: number[]): JSX.Element => {
+    return (
+      <>
+        {data.map((linodeID, idx) => (
+          <Link
+            className={classes.link}
+            key={linodeID}
+            to={`/linodes/${linodeID}`}
+            data-testid="vlan-row-link"
+          >
+            {getLinodeLabel(linodeID)}
+          </Link>
+        ))}
+      </>
+    );
+  };
+
   return (
     <TableRow
       key={`vlan-row-${id}`}
@@ -59,59 +99,14 @@ export const VlanRow: React.FC<CombinedProps> = props => {
       </TableCell>
       <TableCell>{region}</TableCell>
 
-      <TableCell>{getLinodesCellString(linodes, loading, error)}</TableCell>
+      <TableCell className={classes.linodesWrapper}>
+        {getLinodesCellString(linodes, loading, error)}
+      </TableCell>
 
       <TableCell>
         <ActionMenu vlanID={id} vlanLabel={description} {...actionHandlers} />
       </TableCell>
     </TableRow>
-  );
-};
-
-const getLinodesCellString = (
-  data: number[],
-  loading: boolean,
-  error?: APIError[]
-): string | JSX.Element => {
-  if (loading) {
-    return 'Loading...';
-  }
-
-  if (error) {
-    return 'Error retrieving Linodes';
-  }
-
-  if (data.length === 0) {
-    return 'None assigned';
-  }
-
-  return getLinodeLinks(data);
-};
-
-{
-  /* TODO need to verify this logic */
-}
-const getLinodeLinks = (data: number[]): JSX.Element => {
-  const firstThree = data.slice(0, 3);
-  return (
-    <>
-      {firstThree.map((thisDevice, idx) => (
-        <Link
-          className="link secondaryLink"
-          key={thisDevice}
-          to={`/linodes/${thisDevice}`}
-          data-testid="vlan-row-link"
-        >
-          {idx > 0 && `, `}
-          {thisDevice}
-        </Link>
-      ))}
-      {data.length > 3 && (
-        <span>
-          {`, `}plus {data.length - 3} more.
-        </span>
-      )}
-    </>
   );
 };
 
