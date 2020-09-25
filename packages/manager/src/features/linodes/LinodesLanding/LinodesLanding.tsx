@@ -44,7 +44,7 @@ import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import {
   addNotificationsToLinodes,
-  LinodeWithMaintenance
+  LinodeWithMaintenanceAndEvent
 } from 'src/store/linodes/linodes.helpers';
 import { MapState } from 'src/store/types';
 import formatDate, { formatDateISO } from 'src/utilities/formatDate';
@@ -71,6 +71,7 @@ import ToggleBox from './ToggleBox';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { ExtendedStatus, statusToPriority } from './utils';
 import getUserTimezone from 'src/utilities/getUserTimezone';
+import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 
@@ -694,18 +695,22 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
 const filterLinodesByStatus = (
   status: FilterStatus,
-  linodes: LinodeWithMaintenance[]
+  linodes: LinodeWithMaintenanceAndEvent[]
 ) => {
   if (status === 'all') {
     return linodes;
   }
   return linodes.filter(thisLinode => {
-    const displayStatus = mapLinodeStatus(thisLinode.status);
+    const displayStatus = mapLinodeStatus(thisLinode.status, thisLinode.event);
     return displayStatus === status;
   });
 };
 
-const mapLinodeStatus = (linodeStatus: LinodeStatus) => {
+const mapLinodeStatus = (linodeStatus: LinodeStatus, linodeEvent?: Event) => {
+  if (linodeEvent) {
+    return 'busy';
+  }
+
   switch (linodeStatus) {
     case 'offline':
     case 'stopped':
@@ -726,7 +731,7 @@ const sendGroupByAnalytic = (value: boolean) => {
 interface StateProps {
   managed: boolean;
   linodesCount: number;
-  linodesData: LinodeWithMaintenance[];
+  linodesData: LinodeWithMaintenanceAndEvent[];
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   userTimezone: string;
@@ -740,9 +745,13 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   const linodes = Object.values(state.__resources.linodes.itemsById);
   const notifications = state.__resources.notifications.data || [];
 
+  const linodesWithEvents = linodes.map(thisLinode => ({
+    ...thisLinode,
+    event: recentEventForLinode(thisLinode.id)(state)
+  }));
   const linodesWithMaintenance = addNotificationsToLinodes(
     notifications,
-    linodes
+    linodesWithEvents
   );
 
   return {
