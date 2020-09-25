@@ -15,7 +15,7 @@ import RegionStatusBanner from 'src/components/RegionStatusBanner';
 
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
-import Footer from 'src/features/Footer';
+import Footer from 'src/features/Footer/Footer_CMR';
 import {
   notificationContext,
   useNotificationContext
@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: theme.spacing(2)
     }
   },
-  // Removed padding here so width is full 1280- will further refine this when the breakpoint work is handled
   cmrWrapper: {
     padding: `${theme.spacing(3)}px 0`,
     transition: theme.transitions.create('opacity'),
@@ -91,9 +90,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
     maxWidth: '100%',
     position: 'relative',
+    '& > .MuiGrid-container': {
+      maxWidth: 1280,
+      width: '100%'
+    },
     '&.mlMain': {
       [theme.breakpoints.up('lg')]: {
         maxWidth: '78.8%'
+      }
+    },
+    '& .mlSidebar': {
+      [theme.breakpoints.up('lg')]: {
+        paddingRight: `0 !important`
       }
     }
   },
@@ -160,6 +168,7 @@ const AccountActivationLanding = React.lazy(() =>
   import('src/components/AccountActivation/AccountActivationLanding')
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
+const VLans = React.lazy(() => import('src/features/Vlans'));
 
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -174,6 +183,12 @@ const MainContent: React.FC<CombinedProps> = props => {
     'Cloud Firewall',
     Boolean(props.flags.firewalls),
     account.data?.capabilities ?? []
+  );
+
+  const showVlans = isFeatureEnabled(
+    'Vlans',
+    Boolean(props.flags.vlans),
+    account?.data?.capabilities ?? []
   );
 
   /**
@@ -291,6 +306,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                     {showFirewalls && (
                       <Route path="/firewalls" component={Firewalls} />
                     )}
+                    {showVlans && <Route path="/vlans" component={VLans} />}
                     <Redirect exact from="/" to="/dashboard" />
                     <Route component={NotFound} />
                   </Switch>

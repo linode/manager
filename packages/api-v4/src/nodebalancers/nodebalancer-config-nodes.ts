@@ -27,7 +27,7 @@ export const getNodeBalancerConfigNodes = (
     setURL(
       `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`
     )
-  ).then(response => response.data);
+  );
 
 /**
  * getNodeBalancerConfigNode
@@ -48,7 +48,7 @@ export const getNodeBalancerConfigNode = (
     setURL(
       `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
     )
-  ).then(response => response.data);
+  );
 /**
  * createNodeBalancerConfigNode
  *
@@ -84,7 +84,7 @@ export const createNodeBalancerConfigNode = (
       `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`
     ),
     setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
-  ).then(response => response.data);
+  );
 
 /**
  * createNodeBalancerConfigNode
@@ -121,7 +121,7 @@ export const updateNodeBalancerConfigNode = (
       `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
     ),
     setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteNodeBalancerConfigNode
@@ -142,4 +142,4 @@ export const deleteNodeBalancerConfigNode = (
     setURL(
       `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
     )
-  ).then(response => response.data);
+  );

@@ -40,5 +40,6 @@ export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
     sdg: null,
     sde: null
   },
-  kernel: 'linode/grub2'
+  kernel: 'linode/grub2',
+  interfaces: {}
 });

@@ -42,8 +42,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.white
   },
   subHeader: {
-    marginLeft: theme.spacing(1),
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(4),
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   },
   credentialListHeader: {
     margin: 0,
@@ -221,14 +224,12 @@ export const CredentialList: React.FC<CombinedProps> = props => {
   return (
     <div>
       <DocumentTitleSegment segment="Credentials" />
-      <Grid container xs={12}>
-        <Typography variant="subtitle1" className={classes.subHeader}>
-          Please share any credentials our support team may need when responding
-          to a service issue.
-          <br /> Credentials are stored encrypted and all decryption attempts
-          are logged. You can revoke credentials at any time by deleting them.
-        </Typography>
-      </Grid>
+      <Typography variant="subtitle1" className={classes.subHeader}>
+        Please share any credentials our support team may need when responding
+        to a service issue.
+        <br /> Credentials are stored encrypted and all decryption attempts are
+        logged. You can revoke credentials at any time by deleting them.
+      </Typography>
       <div className={classes.root}>
         <Grid
           className={classes.credentialListHeader}

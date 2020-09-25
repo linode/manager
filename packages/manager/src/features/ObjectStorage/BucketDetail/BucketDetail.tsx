@@ -30,8 +30,11 @@ import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Table from 'src/components/Table';
+import Table_CMR from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell';
+import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow';
+import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { sendDownloadObjectEvent } from 'src/utilities/ga';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -45,10 +48,16 @@ import {
   displayName,
   ExtendedObject,
   extendObject,
+  generateObjectUrl,
   tableUpdateAction
 } from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
 import ObjectTableContent from './ObjectTableContent';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
+import Hidden from 'src/components/core/Hidden';
+import ObjectDetailDrawer from './ObjectDetailsDrawer';
 
 const page_size = 100;
 
@@ -74,13 +83,13 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2)
     },
     nameColumn: {
-      width: '60%'
+      width: '50%'
     },
     sizeColumn: {
-      width: '20%'
+      width: '10%'
     },
     updatedColumn: {
-      width: '20%'
+      width: '15%'
     },
     footer: {
       marginTop: theme.spacing(3),
@@ -113,7 +122,8 @@ interface MatchProps {
 type CombinedProps = RouteComponentProps<MatchProps> &
   WithStyles<ClassNames> &
   WithSnackbarProps &
-  BucketsRequests;
+  BucketsRequests &
+  FeatureFlagConsumerProps;
 
 interface State {
   data: ExtendedObject[];
@@ -126,9 +136,11 @@ interface State {
   generalError?: APIError[];
   nextPageError?: APIError[];
   objectToDelete?: string;
+  objectDetailDrawerOpen: boolean;
+  selectedObject?: ExtendedObject;
 }
 
-export class BucketDetail extends React.Component<CombinedProps, {}> {
+export class BucketDetail extends React.Component<CombinedProps, State> {
   state: State = {
     data: [],
     loading: false,
@@ -137,7 +149,8 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     deleteObjectDialogOpen: false,
     deleteObjectLoading: false,
     generalError: undefined,
-    nextPageError: undefined
+    nextPageError: undefined,
+    objectDetailDrawerOpen: false
   };
 
   fetchData() {
@@ -273,6 +286,13 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     });
   };
 
+  handleClickDetails = (selectedObject: ExtendedObject) => {
+    this.setState({
+      selectedObject,
+      objectDetailDrawerOpen: true
+    });
+  };
+
   deleteObject = async () => {
     const { clusterId, bucketName } = this.props.match.params;
     const { objectToDelete } = this.state;
@@ -395,8 +415,12 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     });
   };
 
+  closeObjectDetailsDrawer = () => {
+    this.setState({ objectDetailDrawerOpen: false });
+  };
+
   render() {
-    const { classes } = this.props;
+    const { classes, flags } = this.props;
     const {
       data,
       loading,
@@ -406,7 +430,9 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       objectToDelete,
       deleteObjectLoading,
       deleteObjectError,
-      deleteObjectDialogOpen
+      deleteObjectDialogOpen,
+      selectedObject,
+      objectDetailDrawerOpen
     } = this.state;
 
     const { bucketName, clusterId } = this.props.match.params;
@@ -451,47 +477,83 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
           </Grid>
           <Grid item xs={12} lg={8} className={classes.tableContainer}>
             <>
-              <Paper className={classes.objectTable}>
-                <Table
-                  removeLabelonMobile
-                  aria-label="List of Bucket Objects"
-                  isResponsive={false}
-                >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell className={classes.nameColumn}>
-                        Object
-                      </TableCell>
-                      <TableCell className={classes.sizeColumn}>Size</TableCell>
-                      <TableCell>Last Modified</TableCell>
-                      {/* Empty TableCell for Action Menu */}
-                      <TableCell />
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <ObjectTableContent
-                      data={data}
-                      loading={loading}
-                      error={generalError}
-                      prefix={prefix}
-                      handleClickDownload={this.handleDownload}
-                      handleClickDelete={this.handleClickDelete}
-                    />
-                  </TableBody>
-                </Table>
-                {/* We shouldn't allow infinite scrolling if we're still loading,
+              {flags.cmr ? (
+                <div className={classes.objectTable}>
+                  <Table_CMR aria-label="List of Bucket Objects">
+                    <TableHead>
+                      <TableRow_CMR>
+                        <TableCell_CMR className={classes.nameColumn}>
+                          Object
+                        </TableCell_CMR>
+                        <TableCell_CMR className={classes.sizeColumn}>
+                          Size
+                        </TableCell_CMR>
+                        <Hidden smDown>
+                          <TableCell_CMR>Last Modified</TableCell_CMR>
+                        </Hidden>
+                        {/* Empty TableCell for Action Menu */}
+                        <TableCell_CMR />
+                      </TableRow_CMR>
+                    </TableHead>
+                    <TableBody>
+                      <ObjectTableContent
+                        data={data}
+                        loading={loading}
+                        error={generalError}
+                        prefix={prefix}
+                        handleClickDownload={this.handleDownload}
+                        handleClickDelete={this.handleClickDelete}
+                        handleClickDetails={this.handleClickDetails}
+                      />
+                    </TableBody>
+                  </Table_CMR>
+                </div>
+              ) : (
+                <Paper className={classes.objectTable}>
+                  <Table
+                    removeLabelonMobile
+                    aria-label="List of Bucket Objects"
+                    isResponsive={false}
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell className={classes.nameColumn}>
+                          Object
+                        </TableCell>
+                        <TableCell className={classes.sizeColumn}>
+                          Size
+                        </TableCell>
+                        <TableCell>Last Modified</TableCell>
+                        {/* Empty TableCell for Action Menu */}
+                        <TableCell />
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <ObjectTableContent
+                        data={data}
+                        loading={loading}
+                        error={generalError}
+                        prefix={prefix}
+                        handleClickDownload={this.handleDownload}
+                        handleClickDelete={this.handleClickDelete}
+                        handleClickDetails={this.handleClickDetails}
+                      />
+                    </TableBody>
+                  </Table>
+                  {/* We shouldn't allow infinite scrolling if we're still loading,
                 if we've gotten all objects in the bucket (or folder), or if there
                 are errors. */}
-                {!loading &&
-                  !allObjectsFetched &&
-                  !generalError &&
-                  !nextPageError &&
-                  data.length >= 100 && (
-                    <Waypoint onEnter={this.getNextPage}>
-                      <div />
-                    </Waypoint>
-                  )}
-              </Paper>
+                  {!loading &&
+                    !allObjectsFetched &&
+                    !generalError &&
+                    !nextPageError &&
+                    data.length >= 100 && (
+                      <Waypoint onEnter={this.getNextPage}>
+                        <div />
+                      </Waypoint>
+                    )}
+                </Paper>
+              )}
               {nextPageError && (
                 <Typography variant="subtitle2" className={classes.footer}>
                   The next objects in the list failed to load.{' '}
@@ -544,6 +606,19 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
             </>
           </Grid>
         </Grid>
+        <ObjectDetailDrawer
+          open={objectDetailDrawerOpen}
+          onClose={this.closeObjectDetailsDrawer}
+          name={selectedObject?._displayName}
+          lastModified={selectedObject?.last_modified}
+          size={selectedObject?.size}
+          url={
+            selectedObject
+              ? generateObjectUrl(clusterId, bucketName, selectedObject.name)
+                  .absolute
+              : undefined
+          }
+        />
       </>
     );
   }
@@ -554,7 +629,8 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, {}>(
   styled,
   withSnackbar,
-  bucketRequestsContainer
+  bucketRequestsContainer,
+  withFeatureFlags
 );
 
 export default enhanced(BucketDetail);

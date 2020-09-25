@@ -4,25 +4,65 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-09-21] - v1.20.0
+
+### Added:
+
+- Object Details Drawer
+- Proxy Protocol field in NodeBalancer settings
+- Add link to NotificationDrawer from Linode busy status
+- Prevent text and other components from being flushed to the edge when <1280px
+
+### Changed:
+
+- Improve handling for unknown Linode types
+- List allowed regions when creating or adding Linodes to Firewalls
+- Prevent migration of a Linode with attached Firewalls to an unsupported Data Center
+- CMR:
+- Close notification drawer on internal links
+- Style updates for:
+- Object Storage > Buckets & Object Storage > Access Key headers
+- OBJ Bucket Detail table
+
+### Fixed:
+
+- Change "Create Kubernetes" to "Create Kubernetes Cluster"
+- Calculations for large LKE clusters (total CPU/memory) were incorrect
+- Missing/duplicate page titles throughout app
+- OrderBy lifecycle bug
+- Typos: consecutive occurrences of 'the'
+- MigrateLanding routing bug
+- Add units (GB) to RAM in Linode Detail view
+- Various CMR menu issues
+
+## [2020-09-14] - 1.19.1
+
+### Fixed:
+
+- Cloud Firewalls could be attached to Linodes in unsupported regions
+- Duplicate rows when editing Firewall rules
+
 ## [2020-09-09] - 1.19.0
 
 ### Added:
+
 CMR:
+
 - Managed Dashboard card to CMR dashboard
 - System Status section in Notification drawer
 
 - Environment switcher for dev tools
 - Controls for mock service worker in dev tools
 
-
 ### Changed:
+
 CMR:
+
 - Change URL on Linode modal close
 - Make OAuth apps table sortable
 - Linode status icons should blink for in-progress actions
 - Adding CMR header to the config/disk clone landing
-- Table style updates for:
-	- Account > Users
+- Table style updates for: - Account > Users
 - Managed
 - Billing
 - SelectPlanPanel
@@ -32,6 +72,7 @@ CMR:
 - Graph labels hidden for mobile
 
 Cloud Firewalls:
+
 - All IPv6 for Firewalls should be read as ::/0
 - Disable port range in Firewalls drawer when selecting ICMP protocol
 - Update Firewall doc URL
@@ -46,10 +87,10 @@ Cloud Firewalls:
 - Change Minecraft OCA to Minecraft: Java Edition
 - Display general errors at top of VolumeAttachmentDrawer
 
-
-
 ### Fixed:
+
 CMR:
+
 - Hide hidden links from mobile nav
 - Close action menu after action is selected
 - Move domains banner above table
@@ -64,7 +105,6 @@ CMR:
 - Managed Issue Drawer was crashing for users with empty timezones
 - Longview: MySQL tab not rendering if NGINX is not installed
 - Firewalls: handling of empty IPv6 responses
-
 
 ## [2020-08-25] - v1.18.0
 

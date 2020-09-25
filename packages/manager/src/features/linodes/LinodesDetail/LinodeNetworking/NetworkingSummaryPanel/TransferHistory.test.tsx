@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import {
   sumPublicOutboundTraffic,
   parseMonthOffset,
@@ -36,7 +37,7 @@ describe('combineGraphData', () => {
   });
 });
 
-const now = new Date('2020-07-01T12:00:00');
+const now = DateTime.fromISO('2020-07-01T12:00:00');
 
 describe('getYearAndMonthFromOffset', () => {
   it('returns the current year and month with an offset is 0', () => {
@@ -66,10 +67,10 @@ describe('getYearAndMonthFromOffset', () => {
 });
 
 describe('getOffsetFromDate', () => {
-  it('returns the the number needed to offset the current date from the target date', () => {
-    const d1 = new Date('2020-06-01T12:00:00');
-    const d2 = new Date('2020-05-01T12:00:00');
-    const d3 = new Date('2020-05-15T12:00:00');
+  it('returns the number needed to offset the current date from the target date', () => {
+    const d1 = DateTime.fromISO('2020-06-01T12:00:00');
+    const d2 = DateTime.fromISO('2020-05-01T12:00:00');
+    const d3 = DateTime.fromISO('2020-05-15T12:00:00');
 
     // Test from the beginning of the month.
     expect(getOffsetFromDate(now, d1)).toBe(-1);
@@ -77,7 +78,7 @@ describe('getOffsetFromDate', () => {
     expect(getOffsetFromDate(now, d3)).toBe(-2);
 
     // Test from the middle of the month
-    const midMonth = new Date('2020-07-15T12:00:00');
+    const midMonth = DateTime.fromISO('2020-07-15T12:00:00');
     expect(getOffsetFromDate(midMonth, now)).toBe(0);
     expect(getOffsetFromDate(midMonth, d1)).toBe(-1);
     expect(getOffsetFromDate(midMonth, d2)).toBe(-2);

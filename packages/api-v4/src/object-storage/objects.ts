@@ -18,4 +18,4 @@ export const getObjectURL = (
       `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-url`
     ),
     setData({ name, method, ...options })
-  ).then(response => response.data);
+  );

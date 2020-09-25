@@ -254,6 +254,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item][data-selected]': {
       backgroundColor: theme.bg.primaryNavActiveBG
     }
+  },
+  mobileNav: {
+    position: 'absolute',
+    top: 0,
+    left: theme.spacing(4),
+    zIndex: 1200
   }
 }));
 

@@ -7,7 +7,7 @@ import {
   imageFactory,
   firewallFactory,
   firewallDeviceFactory,
-  kubernetesClusterFactory,
+  kubernetesAPIResponse,
   kubeEndpointFactory,
   invoiceFactory,
   invoiceItemFactory,
@@ -23,6 +23,7 @@ import {
   monitorFactory,
   nodeBalancerFactory,
   notificationFactory,
+  objectStorageBucketFactory,
   profileFactory,
   supportReplyFactory,
   supportTicketFactory,
@@ -69,10 +70,27 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/instances', async (req, res, ctx) => {
-    const onlineLinodes = linodeFactory.buildList(3);
+    const onlineLinodes = linodeFactory.buildList(3, {
+      backups: { enabled: false }
+    });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
-    const busyLinodes = linodeFactory.buildList(10, { status: 'migrating' });
-    const linodes = [...onlineLinodes, ...offlineLinodes, ...busyLinodes];
+    const busyLinodes = linodeFactory.buildList(5, { status: 'migrating' });
+    const eventLinode = linodeFactory.build({
+      id: 999,
+      status: 'rebooting',
+      label: 'eventful'
+    });
+    const linodes = [
+      ...onlineLinodes,
+      ...offlineLinodes,
+      ...busyLinodes,
+      linodeFactory.build({
+        label: 'shadow-plan',
+        type: 'g6-standard-3-s',
+        backups: { enabled: false }
+      }),
+      eventLinode
+    ];
     return res(ctx.json(makeResourcePage(linodes)));
   }),
   rest.delete('*/instances/*', async (req, res, ctx) => {
@@ -109,16 +127,17 @@ export const handlers = [
     return res(ctx.json(linode));
   }),
   rest.get('*/lke/clusters', async (req, res, ctx) => {
-    const clusters = kubernetesClusterFactory.buildList(10);
+    const clusters = kubernetesAPIResponse.buildList(10);
     return res(ctx.json(makeResourcePage(clusters)));
   }),
   rest.get('*/lke/clusters/:clusterId', async (req, res, ctx) => {
-    const id = req.params.clusterId;
-    const cluster = kubernetesClusterFactory.build({ id });
+    const id = Number(req.params.clusterId);
+    const cluster = kubernetesAPIResponse.build({ id });
     return res(ctx.json(cluster));
   }),
   rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {
-    const pools = nodePoolFactory.buildList(2);
+    const pools = nodePoolFactory.buildList(10);
+    nodePoolFactory.resetSequenceNumber();
     return res(ctx.json(makeResourcePage(pools)));
   }),
   rest.get('*/lke/clusters/*/api-endpoints', async (req, res, ctx) => {
@@ -171,6 +190,10 @@ export const handlers = [
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
+  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
+    const buckets = objectStorageBucketFactory.buildList(20);
+    return res(ctx.json(makeResourcePage(buckets)));
+  }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(25);
     return res(ctx.json(makeResourcePage(domains)));
@@ -201,7 +224,10 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
   }),
   rest.get('*/account', (req, res, ctx) => {
-    const account = accountFactory.build({ balance: 50 });
+    const account = accountFactory.build({
+      balance: 50,
+      active_since: '2019-11-05'
+    });
     return res(ctx.json(account));
   }),
   rest.get('*/account/transfer', (req, res, ctx) => {
@@ -213,7 +239,11 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(invoices)));
   }),
   rest.get('*/events', (req, res, ctx) => {
-    const events = eventFactory.buildList(10);
+    const events = eventFactory.buildList(1, {
+      action: 'linode_reboot',
+      percent_complete: 15,
+      entity: { type: 'linode', id: 999, label: 'linode-1' }
+    });
     return res.once(ctx.json(makeResourcePage(events)));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {

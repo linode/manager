@@ -64,6 +64,8 @@ import {
 } from './types';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Notice from 'src/components/Notice';
+import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -536,7 +538,7 @@ export class LinodeCreate extends React.PureComponent<
           <SelectPlanPanel
             data-qa-select-plan
             error={hasErrorFor.type}
-            types={typesData!}
+            types={filterCurrentTypes(typesData)!}
             onSelect={this.props.updateTypeID}
             selectedID={this.props.selectedTypeID}
             updateFor={[
@@ -614,6 +616,11 @@ export class LinodeCreate extends React.PureComponent<
             isMakingRequest={this.props.formIsSubmitting}
             disabled={this.props.formIsSubmitting || userCannotCreateLinode}
             onDeploy={this.createLinode}
+            footer={
+              <SMTPRestrictionText>
+                {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
+              </SMTPRestrictionText>
+            }
           >
             <DisplaySectionList displaySections={displaySections} />
           </CheckoutBar>

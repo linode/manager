@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { extDisk, swapDisk } from 'src/__data__/disks';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { types } from 'src/__data__/types';
+import { extendedTypes } from 'src/__data__/ExtendedType';
 import {
   isSmallerThanCurrentPlan,
   LinodeResize,
@@ -20,8 +20,6 @@ window.matchMedia = jest.fn().mockImplementation(query => {
 });
 
 describe('LinodeResize', () => {
-  const mockTypes = types.map(LinodeResize.extendType);
-
   const component = shallow(
     <LinodeResize
       closeSnackbar={jest.fn()}
@@ -42,8 +40,8 @@ describe('LinodeResize', () => {
       permissions={{} as any}
       updateLinode={jest.fn()}
       linodeType={null}
-      currentTypesData={mockTypes}
-      deprecatedTypesData={mockTypes}
+      typesData={extendedTypes}
+      typesLoading={false}
       linodeLabel=""
     />
   );
@@ -98,25 +96,33 @@ describe('LinodeResize', () => {
     describe('isSmallerThanCurrentPlan', () => {
       it('returns false when the first type provided is larger than the second', () => {
         expect(
-          isSmallerThanCurrentPlan('g5-standard-2', 'g5-standard-1', mockTypes)
+          isSmallerThanCurrentPlan(
+            'g5-standard-2',
+            'g5-standard-1',
+            extendedTypes
+          )
         ).toBe(false);
       });
 
       it('returns true when the first type provided is smaller than the second', () => {
         expect(
-          isSmallerThanCurrentPlan('g5-standard-1', 'g5-standard-2', mockTypes)
+          isSmallerThanCurrentPlan(
+            'g5-standard-1',
+            'g5-standard-2',
+            extendedTypes
+          )
         ).toBe(true);
       });
 
       it("defaults to false if one or both of the passed plans aren't found", () => {
         expect(
-          isSmallerThanCurrentPlan('g5-standard-2', 'g5-fake-1', mockTypes)
+          isSmallerThanCurrentPlan('g5-standard-2', 'g5-fake-1', extendedTypes)
         ).toBe(false);
         expect(
-          isSmallerThanCurrentPlan('g5-fake-2', 'g5-standard-1', mockTypes)
+          isSmallerThanCurrentPlan('g5-fake-2', 'g5-standard-1', extendedTypes)
         ).toBe(false);
         expect(
-          isSmallerThanCurrentPlan('g5-fake-2', 'g5-fake-1', mockTypes)
+          isSmallerThanCurrentPlan('g5-fake-2', 'g5-fake-1', extendedTypes)
         ).toBe(false);
         expect(
           isSmallerThanCurrentPlan('g5-standard-2', 'g5-standard-1', [])

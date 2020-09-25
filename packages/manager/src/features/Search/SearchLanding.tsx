@@ -9,8 +9,9 @@ import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import useAccountManagement from 'src/hooks/useAccountManagement';
 import useAPISearch from 'src/features/Search/useAPISearch';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import useFlags from 'src/hooks/useFlags';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -49,6 +50,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 60,
     color: theme.palette.text.primary,
     marginBottom: theme.spacing(4)
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
   }
 }));
 
@@ -99,6 +105,7 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
   const { entities, errors, search, searchResultsByEntity } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
   const { _isLargeAccount } = useAccountManagement();
 
   const [apiResults, setAPIResults] = React.useState<any>({});
@@ -161,7 +168,7 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
         {!resultsEmpty && !_loading && (
           <H1Header
             title={`Search Results ${query && `for "${query}"`}`}
-            className={classes.headline}
+            className={`${classes.headline} ${flags.cmr && classes.cmrSpacing}`}
           />
         )}
       </Grid>
@@ -196,7 +203,7 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
               {query && splitWord(query)}
             </Typography>
             <Typography style={{ marginTop: 56 }} className="nothing">
-              sorry, no results for this one
+              Sorry, no results for this one
             </Typography>
           </div>
         </Grid>

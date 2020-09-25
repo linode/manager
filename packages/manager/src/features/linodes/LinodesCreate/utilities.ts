@@ -1,7 +1,7 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { displayType } from 'src/features/linodes/presentation';
-import { ExtendedType } from './SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { ExtendedLinode } from './types';
 
 /**
