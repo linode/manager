@@ -3,7 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 
-export const actionCreator = actionCreatorFactory(`@@manager/firewalls`);
+export const actionCreator = actionCreatorFactory(`@@manager/vlans`);
 
 export const getVlansActions = actionCreator.async<
   {
