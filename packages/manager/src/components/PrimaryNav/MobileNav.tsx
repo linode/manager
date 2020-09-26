@@ -4,7 +4,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-// import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
 // import {
@@ -178,10 +178,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 1200,
     '& span': {
       color: 'white'
+    },
+    '& .MuiListItem-root': {
+      backgroundColor: '#434951'
     }
   },
   showMenu: {
     display: 'block'
+  },
+  primaryLink: {
+    borderTop: '1px solid #59626d',
+    padding: '15px 20px',
+    paddingRight: 14,
+    '& span': {
+      fontSize: '1rem'
+    }
+  },
+  nestedLink: {
+    paddingBottom: 15,
+    paddingLeft: 40,
+    paddingRight: 40,
+    '& span': {
+      fontSize: '1rem'
+    }
   }
 }));
 
@@ -221,7 +240,16 @@ export const MobileNav: React.FC<Props> = props => {
     }
   };
 
+  const closeNestedMenus = () => {
+    setOpenCompute(false);
+    setOpenNetwork(false);
+    setOpenStorage(false);
+    setOpenMonitors(false);
+  };
+
   const handleClick = (group: NavGroup) => {
+    closeNestedMenus();
+
     switch (group) {
       case 'Compute':
         setOpenCompute(!openCompute);
@@ -241,102 +269,6 @@ export const MobileNav: React.FC<Props> = props => {
   };
 
   return (
-    // <ReachMenu key={window.location.pathname}>
-    //   {({ isExpanded }) => {
-    //     // How we are preventing scroll on the body
-    //     if (isExpanded) {
-    //       document.body.classList.add('overflow-hidden');
-    //     } else {
-    //       document.body.classList.remove('overflow-hidden');
-    //     }
-    //     return (
-    //       <>
-    //         <MenuButton
-    //           id="mobile-menu-initiator"
-    //           aria-label={isExpanded ? 'Close menu' : 'Open menu'}
-    //           className={classes.navIcon}
-    //         >
-    //           {isExpanded ? <CloseIcon /> : <MenuIcon />}
-    //           Menu
-    //         </MenuButton>
-    //         <MenuPopover className={classes.navDropdown} portal={false}>
-    //           <div className={classes.menuWrapper}>
-    //             {groups.map((thisGroup: any) => {
-    //               // For each group, filter out hidden links.
-    //               const filteredLinks = thisGroup.links.filter(
-    //                 (thisLink: any) => !thisLink.hide
-    //               );
-    //               if (filteredLinks.length === 0) {
-    //                 return null;
-    //               }
-
-    //               // Render a singular PrimaryNavLink for links without a group.
-    //               if (
-    //                 thisGroup.group === 'None' &&
-    //                 filteredLinks.length === 1
-    //               ) {
-    //                 const link = filteredLinks[0];
-
-    //                 return (
-    //                   <MenuItems
-    //                     className={classes.menuItemList}
-    //                     key={link.display}
-    //                   >
-    //                     <MenuLink
-    //                       key={link.display}
-    //                       as={Link}
-    //                       to={link.href}
-    //                       className={`${classes.menuItemLink} ${classes.menuItemLinkNoGroup}`}
-    //                     >
-    //                       {link.display}
-    //                     </MenuLink>
-    //                   </MenuItems>
-    //                 );
-    //               }
-
-    //               return (
-    //                 <ReachMenu key={thisGroup.group}>
-    //                   <MenuButton
-    //                     className={`${classes.menuButton} ${classes.linkItem}`}
-    //                   >
-    //                     {thisGroup.group}
-    //                     <KeyboardArrowDown className={classes.caret} />
-    //                   </MenuButton>
-    //                   <MenuPopover
-    //                     className={classes.menuPopover}
-    //                     portal={false}
-    //                   >
-    //                     <MenuItems
-    //                       className={classes.menuItemList}
-    //                       key={thisGroup}
-    //                     >
-    //                       {filteredLinks.map((thisLink: any) => (
-    //                         <MenuLink
-    //                           data-testid={`menu-item-${thisLink.display}`}
-    //                           key={thisLink.display}
-    //                           as={Link}
-    //                           to={thisLink.href}
-    //                           className={classes.menuItemLink}
-    //                           disabled={
-    //                             window.location.pathname === thisLink.href
-    //                           }
-    //                         >
-    //                           {thisLink.display}
-    //                         </MenuLink>
-    //                       ))}
-    //                     </MenuItems>
-    //                   </MenuPopover>
-    //                 </ReachMenu>
-    //               );
-    //             })}
-    //           </div>
-    //         </MenuPopover>
-    //         <Backdrop className={classes.settingsBackdrop} open={isExpanded} />
-    //       </>
-    //     );
-    //   }}
-    // </ReachMenu>
-
     <>
       {/* How we are preventing scroll on the body */}
       {open
@@ -370,7 +302,12 @@ export const MobileNav: React.FC<Props> = props => {
 
             return (
               <Link to={link.href} onClick={() => setOpen(false)}>
-                <ListItem>
+                <ListItem
+                  className={classes.primaryLink}
+                  style={{
+                    borderTop: `${link.display === 'Dashboard' ? 'none' : ''}`
+                  }}
+                >
                   <ListItemText primary={link.display} />
                 </ListItem>
               </Link>
@@ -383,14 +320,19 @@ export const MobileNav: React.FC<Props> = props => {
               <ListItem
                 key={thisGroup.group}
                 button
+                className={classes.primaryLink}
                 onClick={() => handleClick(thisGroup.group)}
               >
                 <ListItemText primary={thisGroup.group} />
+                <KeyboardArrowDown className={classes.caret} />
               </ListItem>
               <Collapse in={groupMap[thisGroup.group]}>
                 <List component="div" disablePadding>
                   {filteredLinks.map((thisLink: any) => (
-                    <ListItem button key={thisLink.group}>
+                    <ListItem
+                      key={thisLink.group}
+                      className={classes.nestedLink}
+                    >
                       <Link to={thisLink.href} onClick={() => setOpen(false)}>
                         <ListItemText primary={thisLink.display} />
                       </Link>
