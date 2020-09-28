@@ -4,7 +4,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const VlanLanding = React.lazy(() => import('./VlanLanding/VlanLanding'));
-//const VlanDetail = React.lazy(() => import('./VlanLanding/VlanDetail'));
+const VlanDetail = React.lazy(() => import('./VlanDetail/VlanDetail'));
 
 type Props = RouteComponentProps<{}>;
 
@@ -21,6 +21,7 @@ const VLan: React.FC<CombinedProps> = props => {
         <DocumentTitleSegment segment="VLans" />
         <Switch>
           {/* <Route path={`${path}/:id`} component={VlanDetail} /> */}
+          <Route path={`${path}/detail`} component={VlanDetail} />
           <Route component={VlanLanding} exact path={path} />
           <Redirect to={path} />
         </Switch>
