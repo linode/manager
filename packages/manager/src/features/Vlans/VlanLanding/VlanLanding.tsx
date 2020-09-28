@@ -4,17 +4,14 @@ import { compose } from 'recompose';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
 import VLanRow from './VLanRow';
-import { Props as VLANProps } from 'src/containers/vlans.container';
+import withVlans, { Props as VLANProps } from 'src/containers/vlans.container';
 import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
-import { VLANFactory } from 'src/factories/vlans';
 import VlanDialog from './VlanDialog';
 
 type CombinedProps = RouteComponentProps<{}> & VLANProps;
 
 const VlanLanding: React.FC<CombinedProps> = props => {
   const { deleteVlan } = props;
-
-  const vlans = VLANFactory.buildList(10);
 
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
   const [selectedVlanID, setSelectedVlanID] = React.useState<
@@ -31,6 +28,13 @@ const VlanLanding: React.FC<CombinedProps> = props => {
   const handleOpenDeleteVlanModal = (id: number, label: string) => {
     openModal(id, label);
   };
+
+  const {
+    itemsById: vlans,
+    loading: vlansLoading,
+    error: vlansError,
+    lastUpdated: vlansLastUpdated
+  } = props;
 
   const headers = [
     {
@@ -68,9 +72,9 @@ const VlanLanding: React.FC<CombinedProps> = props => {
     handlers,
     Component: VLanRow,
     data: Object.values(vlans) ?? [],
-    loading: false,
-    lastUpdated: 1234,
-    error: undefined
+    loading: vlansLoading,
+    lastUpdated: vlansLastUpdated,
+    error: vlansError.read
   };
 
   return (
@@ -102,4 +106,7 @@ const VlanLanding: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, {}>(React.memo)(VlanLanding);
+export default compose<CombinedProps, {}>(
+  React.memo,
+  withVlans<{}, CombinedProps>()
+)(VlanLanding);
