@@ -410,9 +410,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return getLabel(arg1, arg2, arg3);
   };
 
-  submitForm: HandleSubmit = (payload, linodeID?: number) => {
+  submitForm: HandleSubmit = (_payload, linodeID?: number) => {
     const { createType } = this.props;
-
+    const payload = { ..._payload };
     /**
      * Do manual password validation (someday we'll use Formik and
      * not need this). Only run this check if a password is present
@@ -423,6 +423,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * The downside of this approach is that only the password error
      * will be displayed, even if other required fields are missing.
      */
+
+    if (this.state.selectedVlanID) {
+      payload.interfaces = {
+        eth0: { type: 'default' },
+        eth1: { type: 'additional', vlan_id: this.state.selectedVlanID }
+      };
+    }
 
     if (payload.root_pass) {
       const passwordError = validatePassword(
