@@ -7,13 +7,6 @@ import Collapse from '@material-ui/core/Collapse';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
-// import {
-//   Menu as ReachMenu,
-//   MenuButton,
-//   MenuItems,
-//   MenuLink,
-//   MenuPopover
-// } from '@reach/menu-button';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -192,14 +185,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: 14,
     '& span': {
       fontSize: '1rem'
+    },
+    '&:hover': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    },
+    '&:focus': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    },
+    '&.Mui-focusVisable': {
+      backgroundColor: theme.bg.primaryNavActiveBG
     }
   },
   nestedLink: {
-    paddingBottom: 15,
-    paddingLeft: 40,
-    paddingRight: 40,
+    padding: '10px 40px',
     '& span': {
       fontSize: '1rem'
+    },
+    '&.Mui-focusVisable': {
+      backgroundColor: theme.bg.primaryNavActiveBG
     }
   }
 }));
@@ -268,6 +271,8 @@ export const MobileNav: React.FC<Props> = props => {
     }
   };
 
+  // TODO: fix hover/focus state and expanding/collapsing arrow
+
   return (
     <>
       {/* How we are preventing scroll on the body */}
@@ -283,10 +288,7 @@ export const MobileNav: React.FC<Props> = props => {
       >
         {open ? <CloseIcon /> : <MenuIcon />} Menu
       </IconButton>
-      <List
-        id="mobile-menu"
-        className={`${classes.menu} ${open && classes.showMenu}`}
-      >
+      <List className={`${classes.menu} ${open && classes.showMenu}`}>
         {groups.map((thisGroup: any) => {
           // For each group, filter out hidden links
           const filteredLinks = thisGroup.links.filter(
@@ -301,16 +303,17 @@ export const MobileNav: React.FC<Props> = props => {
             const link = filteredLinks[0];
 
             return (
-              <Link to={link.href} onClick={() => setOpen(false)}>
-                <ListItem
-                  className={classes.primaryLink}
-                  style={{
-                    borderTop: `${link.display === 'Dashboard' ? 'none' : ''}`
-                  }}
-                >
+              <ListItem
+                button
+                className={classes.primaryLink}
+                style={{
+                  borderTop: `${link.display === 'Dashboard' ? 'none' : ''}`
+                }}
+              >
+                <Link to={link.href} onClick={() => setOpen(false)}>
                   <ListItemText primary={link.display} />
-                </ListItem>
-              </Link>
+                </Link>
+              </ListItem>
             );
           }
 
@@ -331,6 +334,7 @@ export const MobileNav: React.FC<Props> = props => {
                   {filteredLinks.map((thisLink: any) => (
                     <ListItem
                       key={thisLink.group}
+                      button
                       className={classes.nestedLink}
                     >
                       <Link to={thisLink.href} onClick={() => setOpen(false)}>
