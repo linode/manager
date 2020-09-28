@@ -68,7 +68,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
         className={classes.headerBox}
       >
         <Breadcrumb
-          // The actual pathname doesn't match what we want` in the Breadcrumb,
+          // The actual pathname doesn't match what we want in the Breadcrumb,
           // so we create a custom one.
           pathname={`/object-storage/${bucketName}`}
           crumbOverrides={[
