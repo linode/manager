@@ -3,16 +3,16 @@ import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/vlans/vlans.reducer';
 import {
-  createVLAN as _create,
-  deleteVLAN as _delete,
-  getAllVLANs as _getVLANs
+  createVlan as _create,
+  deleteVlan as _delete,
+  getAllVlans as _getVLANs
 } from 'src/store/vlans/vlans.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
 export interface DispatchProps {
-  getVLANs: (params?: any, filters?: any) => Promise<GetAllData<VLAN>>;
-  deleteVLAN: (vlanID: number) => Promise<{}>;
+  getVlans: (params?: any, filters?: any) => Promise<GetAllData<VLAN>>;
+  deleteVlan: (vlanID: number) => Promise<{}>;
 }
 
 /* tslint:disable-next-line */
@@ -40,8 +40,8 @@ const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
       return state.vlans;
     },
     (dispatch: ThunkDispatch) => ({
-      getVLANs: (params, filter) => dispatch(_getVLANs({ params, filter })),
-      deleteVLAN: (vlanID: number) => dispatch(_delete({ vlanID }))
+      getVlans: (params, filter) => dispatch(_getVLANs({ params, filter })),
+      deleteVlan: (vlanID: number) => dispatch(_delete({ vlanID }))
     })
   );
 

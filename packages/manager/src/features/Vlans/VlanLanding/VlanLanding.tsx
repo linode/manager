@@ -12,7 +12,7 @@ import VlanDialog from './VlanDialog';
 type CombinedProps = RouteComponentProps<{}> & VLANProps;
 
 const VlanLanding: React.FC<CombinedProps> = props => {
-  const { deleteVLAN } = props;
+  const { deleteVlan } = props;
 
   const vlans = VLANFactory.buildList(10);
 
@@ -93,7 +93,7 @@ const VlanLanding: React.FC<CombinedProps> = props => {
       />
       <VlanDialog
         open={modalOpen}
-        deleteVLAN={deleteVLAN}
+        deleteVlan={deleteVlan}
         selectedVlanID={selectedVlanID}
         selectedVlanLabel={selectedVlanLabel}
         closeDialog={() => toggleModal(false)}

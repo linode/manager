@@ -5,7 +5,7 @@ import Dialog from 'src/components/ConfirmationDialog';
 import { DispatchProps } from 'src/containers/vlans.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-interface Props extends Pick<DispatchProps, 'deleteVLAN'> {
+interface Props extends Pick<DispatchProps, 'deleteVlan'> {
   open: boolean;
   closeDialog: () => void;
   selectedVlanID?: number;
@@ -21,7 +21,7 @@ const VlanDialog: React.FC<CombinedProps> = props => {
   const {
     open,
     closeDialog,
-    deleteVLAN,
+    deleteVlan,
     selectedVlanID,
     selectedVlanLabel: label
   } = props;
@@ -42,7 +42,7 @@ const VlanDialog: React.FC<CombinedProps> = props => {
     setSubmitting(true);
     setError(undefined);
 
-    deleteVLAN(selectedVlanID)
+    deleteVlan(selectedVlanID)
       .then(_ => {
         setSubmitting(false);
         closeDialog();
