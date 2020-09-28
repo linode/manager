@@ -24,8 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2)
   },
   divider: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginTop: theme.spacing(1)
   },
   lastItem: {
     paddingBottom: '0 !important'
@@ -58,6 +57,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       paddingLeft: theme.spacing(4) + 18 // 50
     }
+  },
+  vlanSelect: {
+    paddingLeft: '54px !important'
   }
 }));
 
@@ -161,7 +163,7 @@ const AddonsPanel: React.FC<CombinedProps> = props => {
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item xs={12} className={classes.lastItem}>
+              <Grid item xs={12}>
                 <FormControlLabel
                   className={classes.label}
                   control={
@@ -179,15 +181,19 @@ const AddonsPanel: React.FC<CombinedProps> = props => {
           </React.Fragment>
         )}
         {true ? (
-          <>
-            <Divider className={classes.divider} />
-            <SelectVLAN
-              selectedRegionID={props.selectedRegionID}
-              selectedVlanID={props.selectedVlanID}
-              handleSelectVLAN={handleVlanChange}
-              error={vlanError}
-            />
-          </>
+          <Grid container className={classes.lastItem}>
+            <Grid item xs={12}>
+              <Divider className={classes.divider} />
+            </Grid>
+            <div className={classes.vlanSelect}>
+              <SelectVLAN
+                selectedRegionID={props.selectedRegionID}
+                selectedVlanID={props.selectedVlanID}
+                handleSelectVLAN={handleVlanChange}
+                error={vlanError}
+              />
+            </div>
+          </Grid>
         ) : null}
       </div>
     </Paper>
