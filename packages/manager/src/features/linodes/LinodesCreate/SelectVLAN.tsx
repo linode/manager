@@ -1,8 +1,23 @@
 import * as React from 'react';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVlans from 'src/hooks/useVlans';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  header: {
+    color: theme.color.headline,
+    fontFamily: theme.font.bold,
+    fontSize: '1rem',
+    lineHeight: '1.2em'
+  },
+  helperText: {
+    paddingTop: theme.spacing(),
+    paddingBottom: theme.spacing()
+  }
+}));
 
 export interface Props {
   selectedRegionID?: string;
@@ -14,6 +29,7 @@ export interface Props {
 export const SelectVLAN: React.FC<Props> = props => {
   const { error, selectedRegionID, selectedVlanID, handleSelectVLAN } = props;
   useReduxLoad(['vlans']);
+  const classes = useStyles();
 
   React.useEffect(() => {
     /**
@@ -48,23 +64,28 @@ export const SelectVLAN: React.FC<Props> = props => {
   };
 
   const _Select = (
-    <Select
-      options={options}
-      isClearable
-      value={
-        options.find(thisOption => thisOption.value === selectedVlanID) ?? null
-      }
-      label={'Virtual LAN'}
-      disabled={disabled}
-      errorText={error}
-      noOptionsMessage={() => 'No VLANS available in the selected region.'}
-      placeholder="Select a VLAN"
-      onChange={onChange}
-      textFieldProps={{
-        helperText: 'Attach the new Linode to a Virtual LAN',
-        helperTextPosition: 'top'
-      }}
-    />
+    <>
+      <Typography className={classes.header}>
+        <strong>Virtual LAN</strong>
+      </Typography>
+      <Typography className={classes.helperText}>
+        Attach the new Linode to a virtual LAN.
+      </Typography>
+      <Select
+        options={options}
+        isClearable
+        value={
+          options.find(thisOption => thisOption.value === selectedVlanID) ??
+          null
+        }
+        label={''}
+        disabled={disabled}
+        errorText={error}
+        noOptionsMessage={() => 'No VLANS available in the selected region.'}
+        placeholder="Select a VLAN"
+        onChange={onChange}
+      />
+    </>
   );
 
   return disabled ? (
