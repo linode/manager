@@ -33,11 +33,13 @@ export const SelectVLAN: React.FC<Props> = props => {
   const { vlans } = useVlans();
 
   const options = React.useMemo(() => {
-    return Object.values(vlans.itemsById).map(thisVlan => ({
-      label: thisVlan.description || thisVlan.id,
-      value: thisVlan.id
-    }));
-  }, [vlans]);
+    return Object.values(vlans.itemsById)
+      .filter(thisVlan => thisVlan.region === selectedRegionID)
+      .map(thisVlan => ({
+        label: thisVlan.description || thisVlan.id,
+        value: thisVlan.id
+      }));
+  }, [selectedRegionID, vlans]);
 
   const onChange = (selected: Item<number> | null) => {
     const value = selected === null ? selected : selected.value;
@@ -53,7 +55,7 @@ export const SelectVLAN: React.FC<Props> = props => {
       }
       label={'Virtual LAN'}
       disabled={disabled}
-      emptyMessage="No VLANS available in the selected region."
+      noOptionsMessage={() => 'No VLANS available in the selected region.'}
       placeholder="Select a VLAN"
       onChange={onChange}
       textFieldProps={{
