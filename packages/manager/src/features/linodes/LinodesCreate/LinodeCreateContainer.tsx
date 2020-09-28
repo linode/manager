@@ -104,6 +104,7 @@ interface State {
   appInstancesLoading: boolean;
   appInstancesError?: string;
   disabledClasses?: LinodeTypeClass[];
+  selectedVlanID: number | null;
 }
 
 type CombinedProps = WithSnackbarProps &
@@ -138,7 +139,8 @@ const defaultState: State = {
   udfs: undefined,
   formIsSubmitting: false,
   errors: undefined,
-  appInstancesLoading: false
+  appInstancesLoading: false,
+  selectedVlanID: null
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -336,6 +338,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   setTags = (tags: Tag[]) => this.setState({ tags });
 
   setUDFs = (udfs: any) => this.setState({ udfs });
+
+  setVlanID = (vlanID: number | null) => {
+    this.setState({ selectedVlanID: vlanID });
+  };
 
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
@@ -680,6 +686,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             regionsData={filteredRegions!}
             regionHelperText={regionHelperText}
             typesData={typesData}
+            setVlanID={this.setVlanID}
             {...restOfProps}
             {...restOfState}
           />

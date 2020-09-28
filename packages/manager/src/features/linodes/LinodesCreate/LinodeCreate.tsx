@@ -134,6 +134,7 @@ interface Props {
   resetCreationState: () => void;
   setBackupID: (id: number) => void;
   showGeneralError?: boolean;
+  setVlanID: (id: number | null) => void;
 }
 
 const errorMap = [
@@ -598,14 +599,11 @@ export class LinodeCreate extends React.PureComponent<
             privateIP={this.props.privateIPEnabled}
             changeBackups={this.props.toggleBackupsEnabled}
             changePrivateIP={this.props.togglePrivateIPEnabled}
-            updateFor={[
-              this.props.privateIPEnabled,
-              this.props.backupsEnabled,
-              this.props.selectedTypeID,
-              this.props.createType
-            ]}
             disabled={userCannotCreateLinode}
             hidePrivateIP={this.props.createType === 'fromLinode'}
+            changeSelectedVLAN={this.props.setVlanID}
+            selectedVlanID={this.props.selectedVlanID}
+            selectedRegionID={this.props.selectedRegionID}
           />
         </Grid>
         <Grid item className="mlSidebar">
