@@ -21,8 +21,10 @@ export const linodeInterfaceItemSchema = object({
   id: number().required('Interface ID is required.')
 }).default(undefined);
 
-export const linodeInterfaceSchema = lazy((obj: Record<any, any>) =>
-  object(Object.keys(obj).map(_ => linodeInterfaceItemSchema))
+export const linodeInterfaceSchema = lazy((obj?: Record<any, any>) =>
+  typeof obj === 'undefined'
+    ? object().notRequired()
+    : object(Object.keys(obj).map(_ => linodeInterfaceItemSchema))
 );
 
 // const rootPasswordValidation = string().test(

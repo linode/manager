@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2)
   },
   divider: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   lastItem: {
     paddingBottom: '0 !important'
