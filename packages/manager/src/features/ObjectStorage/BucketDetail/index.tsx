@@ -49,6 +49,16 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
       routeName: `${props.match.url}/ssl`
     }
   ];
+
+  const [index, setIndex] = React.useState(
+    tabs.findIndex(tab => matches(tab.routeName)) || 0
+  );
+
+  const handleTabChange = (index: number) => {
+    setIndex(index);
+    props.history.push(tabs[index].routeName);
+  };
+
   return (
     <>
       <Box
@@ -72,7 +82,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
         <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
       </Box>
 
-      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName)) || 0}>
+      <Tabs index={index} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
