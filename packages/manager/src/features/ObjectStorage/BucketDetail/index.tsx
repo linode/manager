@@ -12,7 +12,7 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 
 const ObjectList = React.lazy(() => import('./BucketDetail'));
-const Access = React.lazy(() => import('./BucketAccess'));
+// const Access = React.lazy(() => import('./BucketAccess'));
 const BucketSSL = React.lazy(() => import('./BucketSSL'));
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -40,10 +40,10 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
       title: 'Objects',
       routeName: `${props.match.url}/objects`
     },
-    {
-      title: 'Access',
-      routeName: `${props.match.url}/access`
-    },
+    // {
+    //   title: 'Access',
+    //   routeName: `${props.match.url}/access`
+    // },
     {
       title: 'SSL',
       routeName: `${props.match.url}/ssl`
@@ -90,10 +90,10 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
             <SafeTabPanel index={0}>
               <ObjectList {...props} />
             </SafeTabPanel>
-            <SafeTabPanel index={1}>
+            {/* <SafeTabPanel index={1}>
               <Access />
-            </SafeTabPanel>
-            <SafeTabPanel index={2}>
+            </SafeTabPanel> */}
+            <SafeTabPanel index={1}>
               <BucketSSL />
             </SafeTabPanel>
           </TabPanels>
