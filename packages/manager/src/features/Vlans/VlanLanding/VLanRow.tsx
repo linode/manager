@@ -27,12 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
-  loading: boolean;
-  error: APIError[];
-}
-
-export type CombinedProps = Props & VLAN & ActionHandlers;
+export type CombinedProps = VLAN & ActionHandlers;
 
 export const VlanRow: React.FC<CombinedProps> = props => {
   const {
@@ -110,4 +105,6 @@ export const VlanRow: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, ActionHandlers>(React.memo)(VlanRow);
+export default compose<CombinedProps, ActionHandlers & VLAN>(React.memo)(
+  VlanRow
+);
