@@ -7,11 +7,12 @@ import useVlans from 'src/hooks/useVlans';
 export interface Props {
   selectedRegionID?: string;
   selectedVlanID: number | null;
+  error?: string;
   handleSelectVLAN: (vlanID: number | null) => void;
 }
 
 export const SelectVLAN: React.FC<Props> = props => {
-  const { selectedRegionID, selectedVlanID, handleSelectVLAN } = props;
+  const { error, selectedRegionID, selectedVlanID, handleSelectVLAN } = props;
   useReduxLoad(['vlans']);
 
   React.useEffect(() => {
@@ -55,6 +56,7 @@ export const SelectVLAN: React.FC<Props> = props => {
       }
       label={'Virtual LAN'}
       disabled={disabled}
+      errorText={error}
       noOptionsMessage={() => 'No VLANS available in the selected region.'}
       placeholder="Select a VLAN"
       onChange={onChange}

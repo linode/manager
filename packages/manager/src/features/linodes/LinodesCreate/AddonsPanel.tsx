@@ -71,6 +71,7 @@ interface Props {
   disabled?: boolean;
   hidePrivateIP?: boolean;
   selectedVlanID: number | null;
+  vlanError?: string;
   selectedRegionID?: string; // Used for filtering VLANs
 }
 
@@ -81,6 +82,7 @@ const AddonsPanel: React.FC<CombinedProps> = props => {
     changeBackups,
     changePrivateIP,
     changeSelectedVLAN,
+    vlanError,
     disabled
   } = props;
 
@@ -182,6 +184,7 @@ const AddonsPanel: React.FC<CombinedProps> = props => {
               selectedRegionID={props.selectedRegionID}
               selectedVlanID={props.selectedVlanID}
               handleSelectVLAN={handleVlanChange}
+              error={vlanError}
             />
           </>
         ) : null}

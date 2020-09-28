@@ -145,7 +145,8 @@ const errorMap = [
   'region',
   'root_pass',
   'stackscript_id',
-  'type'
+  'type',
+  'interfaces'
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -604,6 +605,7 @@ export class LinodeCreate extends React.PureComponent<
             changeSelectedVLAN={this.props.setVlanID}
             selectedVlanID={this.props.selectedVlanID}
             selectedRegionID={this.props.selectedRegionID}
+            vlanError={hasErrorFor.interfaces}
           />
         </Grid>
         <Grid item className="mlSidebar">
