@@ -8,6 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
+import useFlags from 'src/hooks/useFlags';
 import SelectVLAN from './SelectVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -88,6 +89,8 @@ const AddonsPanel: React.FC<CombinedProps> = props => {
     vlanError,
     disabled
   } = props;
+
+  const flags = useFlags();
 
   const handleVlanChange = React.useCallback(
     (vlan: number | null) => {
@@ -180,7 +183,7 @@ const AddonsPanel: React.FC<CombinedProps> = props => {
             </Grid>
           </React.Fragment>
         )}
-        {true ? (
+        {flags.cmr ? (
           <Grid container className={classes.lastItem}>
             <Grid item xs={12}>
               <Divider className={classes.divider} />
