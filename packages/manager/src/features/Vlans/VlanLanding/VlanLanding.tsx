@@ -80,7 +80,7 @@ const VlanLanding: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <LandingHeader
-        title="Virtual LANS"
+        title="Virtual LANs"
         entity="VLAN"
         //onAddNew={addNew}
         // TODO add vlan to type list
