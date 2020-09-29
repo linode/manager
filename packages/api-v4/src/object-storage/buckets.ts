@@ -11,6 +11,7 @@ import { CreateBucketSchema } from './buckets.schema';
 import {
   ObjectStorageBucket,
   ObjectStorageBucketRequestPayload,
+  ObjectStorageBucketSSLRequest,
   ObjectStorageBucketSSLResponse,
   ObjectStorageDeleteBucketRequestPayload,
   ObjectStorageObjectListParams,
@@ -111,11 +112,11 @@ export const getObjectList = (
 export const uploadSSLCert = (
   clusterId: string,
   bucketName: string,
-  cert: any
+  data: ObjectStorageBucketSSLRequest
 ) =>
-  Request<{}>(
+  Request<ObjectStorageBucketSSLResponse>(
     setMethod('POST'),
-    setData(cert),
+    setData(data),
     setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/ssl`)
   );
 
