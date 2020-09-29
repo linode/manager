@@ -7,11 +7,14 @@ import VLanRow from './VLanRow';
 import withVlans, { Props as VLANProps } from 'src/containers/vlans.container';
 import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
 import VlanDialog from './VlanDialog';
+import { VLANFactory } from 'src/factories/vlans';
 
 type CombinedProps = RouteComponentProps<{}> & VLANProps;
 
 const VlanLanding: React.FC<CombinedProps> = props => {
   const { deleteVlan } = props;
+
+  const fakeVlans = VLANFactory.buildList(10);
 
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
   const [selectedVlanID, setSelectedVlanID] = React.useState<
@@ -71,7 +74,7 @@ const VlanLanding: React.FC<CombinedProps> = props => {
   const vLanRow = {
     handlers,
     Component: VLanRow,
-    data: Object.values(vlans) ?? [],
+    data: Object.values(fakeVlans) ?? [],
     loading: vlansLoading,
     lastUpdated: vlansLastUpdated,
     error: vlansError.read
