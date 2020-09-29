@@ -8,11 +8,15 @@ import nginx from 'highlight.js/lib/languages/nginx';
 import yaml from 'highlight.js/lib/languages/yaml';
 import 'highlight.js/styles/lightfair.css';
 import * as React from 'react';
-import { Converter } from 'showdown';
+import * as commonmark from 'commonmark';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
+
+const reader = new commonmark.Parser();
+// eslint-disable-next-line
+const writer = new commonmark.HtmlRenderer({ softbreak: '<br />' });
 
 // Register all languages we intend to use
 hljs.registerLanguage('apache', apache);
@@ -59,14 +63,16 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => 
     }
   }, [language]);
 
-  const html = React.useMemo(() => {
-    return new Converter({
-      simplifiedAutoLink: true,
-      openLinksInNewWindow: true
-    }).makeHtml(textOrMarkdown);
-  }, [textOrMarkdown]);
+  // @todo: AUTO-LINK functionality (transform plain text links to anchors with hrefs)
 
-  const sanitizedHtml = sanitizeHTML(html);
+  // Parse into AST.
+  const parsedHTML = reader.parse(textOrMarkdown);
+
+  // Render as string.
+  const htmlString = writer.render(parsedHTML);
+
+  // Sanitize it.
+  const sanitizedHtml = sanitizeHTML(htmlString);
 
   // Adapted from https://stackblitz.com/edit/react-highlighted-markdown?file=highlighted-markdown.tsx
   // All the safety checking is due to a reported error from certain versions of FireFox.
