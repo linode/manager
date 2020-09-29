@@ -1,7 +1,12 @@
 import * as React from 'react';
+import TextField from 'src/components/TextField';
 
 export const BucketSSL: React.FC<{}> = _ => {
-  return <h2>Bucket SSL</h2>;
+  return (
+    <div>
+      <TextField value={0} label="SSL Cert" />
+    </div>
+  );
 };
 
 export default React.memo(BucketSSL);

@@ -11,6 +11,7 @@ import { CreateBucketSchema } from './buckets.schema';
 import {
   ObjectStorageBucket,
   ObjectStorageBucketRequestPayload,
+  ObjectStorageBucketSSLResponse,
   ObjectStorageDeleteBucketRequestPayload,
   ObjectStorageObjectListParams,
   ObjectStorageObjectListResponse
@@ -102,4 +103,43 @@ export const getObjectList = (
     setURL(
       `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-list`
     )
+  );
+
+/**
+ * uploadSSLCert
+ */
+export const uploadSSLCert = (
+  clusterId: string,
+  bucketName: string,
+  cert: any
+) =>
+  Request<{}>(
+    setMethod('POST'),
+    setData(cert),
+    setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/ssl`)
+  );
+
+/**
+ * getSSLCert
+ *
+ * Returns { ssl: true } if there is an SSL certificate available for
+ * the specified bucket, { ssl: false } otherwise.
+ */
+export const getSSLCert = (clusterId: string, bucketName: string) =>
+  Request<ObjectStorageBucketSSLResponse>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/ssl`)
+  );
+
+/**
+ * deleteSSLCert
+ *
+ * Removes any SSL cert associated with the specified bucket. Certs are
+ * removed automatically when a bucket is deleted; this endpoint is only
+ * for removing certs without altering the bucket.
+ */
+export const deleteSSLCert = (clusterId: string, bucketName: string) =>
+  Request<ObjectStorageBucketSSLResponse>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/ssl`)
   );
