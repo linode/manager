@@ -5,11 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import Loading from 'src/components/LandingLoading';
-import withRegions, {
-  DefaultProps as RegionProps
-} from 'src/containers/regions.container';
 import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -17,11 +13,10 @@ import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { getInterfaces } from '@linode/api-v4/lib/linodes/interfaces';
-// import VLanTableRow from 'src/features/linodes/LinodesDetail/LinodeNetworking/VLANPanel/VLanTableRow';
-import VLanRow from 'src/features/Vlans/VlanLanding/VLanRow';
+import VlanTableRow from './VlanTableRow';
 import withVlans, { Props as VLANProps } from 'src/containers/vlans.container';
 import { ActionHandlers as VlanHandlers } from 'src/features/Vlans/VlanLanding/VlanActionMenu';
-import VlanDialog from 'src/features/Vlans/VlanLanding/VlanDialog';
+import RemoveVlanDialog from './RemoveVlanDialog';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVlans from 'src/hooks/useVlans';
@@ -53,17 +48,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface DispatchProps {}
-
 type RouteProps = RouteComponentProps<{ linodeId: string }>;
 
 type CombinedProps = VLANProps &
   LinodeContextProps &
   WithLinodesProps &
-  DispatchProps &
   RouteProps &
-  WithSnackbarProps &
-  RegionProps;
+  WithSnackbarProps;
 
 const vlanHeaders = [
   {
@@ -100,22 +91,11 @@ const vlanHeaders = [
 ];
 
 export const LinodeVLANs: React.FC<CombinedProps> = props => {
-  const {
-    itemsById: tempVlans,
-    loading: vlansLoading,
-    error: vlansError,
-    lastUpdated: vlansLastUpdated,
-    deleteVlan,
-    configs,
-    //--------------
-    linodeId,
-    linodeLabel,
-    linodeRegion
-  } = props;
+  const { configs, linodeId } = props;
 
   const { _loading } = useReduxLoad(['vlans']);
 
-  const { vlans } = useVlans();
+  const { vlans, disconnectVlan } = useVlans();
 
   const request = useAPIRequest(
     () =>
@@ -129,18 +109,17 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     []
   );
 
+  const { loading, lastUpdated, error } = request;
+
   const vlanData = React.useMemo(
     () =>
       request.data.map(thisInterface => ({
         ...vlans.itemsById[thisInterface.vlan_id],
         ip_address: thisInterface.ip_address,
-        // Write helper function for interfaceName
         interfaceName: getInterfaceName(thisInterface.id, configs)
       })),
-    [request.data, vlans.itemsById]
+    [request.data, vlans.itemsById, configs]
   );
-
-  console.log(props);
 
   const classes = useStyles();
 
@@ -156,24 +135,24 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     toggleModal(true);
   };
 
-  const handleOpenDeleteVlanModal = (id: number, label: string) => {
+  const handleOpenRemoveVlanModal = (id: number, label: string) => {
     openModal(id, label);
   };
 
   const handlers: VlanHandlers = {
-    triggerDeleteVlan: handleOpenDeleteVlanModal
+    triggerRemoveVlan: handleOpenRemoveVlanModal
   };
 
   const vlanRow = {
     handlers,
-    Component: VLanRow,
+    Component: VlanTableRow,
     data: vlanData ?? [],
-    loading: vlansLoading,
-    lastUpdated: vlansLastUpdated,
-    error: vlansError.read
+    loading,
+    lastUpdated,
+    error
   };
 
-  if (vlansLoading || request.loading) {
+  if (loading || _loading) {
     return <Loading shouldDelay />;
   }
 
@@ -192,8 +171,8 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
-            onClick={() => console.log('Add a VLAN')}
-            label="Add a VLAN..."
+            onClick={() => null}
+            label="Attach a VLAN..."
             disabled={false}
           />
         </Grid>
@@ -205,11 +184,12 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         row={vlanRow}
         initialOrder={{ order: 'asc', orderBy: 'label' }}
       />
-      <VlanDialog
+      <RemoveVlanDialog
         open={modalOpen}
-        deleteVlan={deleteVlan}
+        removeVlan={disconnectVlan}
         selectedVlanID={selectedVlanID}
         selectedVlanLabel={selectedVlanLabel}
+        linodeId={linodeId}
         closeDialog={() => toggleModal(false)}
       />
     </div>
@@ -229,19 +209,13 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
   );
 
 interface LinodeContextProps {
-  linodeId?: number;
-  linodeStatus?: string;
-  linodeLabel?: string;
-  linodeRegion?: string;
+  linodeId: number;
   configs: Config[];
   readOnly: boolean;
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
-  linodeStatus: linode.status,
-  linodeLabel: linode.label,
-  linodeRegion: linode.region,
   configs: linode._configs,
   readOnly: linode._permissions === 'read_only'
 }));
@@ -252,7 +226,6 @@ export default compose<CombinedProps, {}>(
   connected,
   linodeContext,
   withVlans<{}, CombinedProps>(),
-  withRegions(),
   withSnackbar
 )(LinodeVLANs);
 

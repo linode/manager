@@ -86,7 +86,7 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
       href: `networking/vlans/${vlanID}`
     },
     {
-      actionText: 'Delete',
+      actionText: 'Remove',
       onClick: () => {
         triggerRemoveVlan(vlanID, vlanLabel);
       }
