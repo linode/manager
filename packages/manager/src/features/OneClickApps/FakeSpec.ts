@@ -56,7 +56,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.azuracast.com/'
       }
     ],
-    logo_url: 'assets/webmin_color.svg'
+    logo_url: 'assets/azuracast.svg'
   },
   {
     name: 'cPanel',
