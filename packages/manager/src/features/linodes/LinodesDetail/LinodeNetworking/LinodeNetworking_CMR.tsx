@@ -46,6 +46,7 @@ import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
 import Hidden from 'src/components/core/Hidden';
+import LinodeVLANs from './VLANPanel/LinodeVLANs';
 
 type ClassNames =
   | 'root'
@@ -138,6 +139,7 @@ const styles = (theme: Theme) =>
 interface State {
   linodeIPs?: LinodeIPsResponse;
   allIPs?: IPAddress[];
+  linodeVLANs?: any;
   removeIPDialogOpen: boolean;
   initialLoading: boolean;
   ipv6Loading: boolean;
@@ -613,6 +615,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             ipRemoveSuccess={this.handleRemoveIPSuccess}
           />
         )}
+
+        <LinodeVLANs />
       </div>
     );
   }
