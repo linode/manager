@@ -14,8 +14,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { getInterfaces } from '@linode/api-v4/lib/linodes/interfaces';
 import VlanTableRow from './VlanTableRow';
-import withVlans, { Props as VLANProps } from 'src/containers/vlans.container';
-import { ActionHandlers as VlanHandlers } from 'src/features/Vlans/VlanLanding/VlanActionMenu';
+import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
 import RemoveVlanDialog from './RemoveVlanDialog';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useReduxLoad from 'src/hooks/useReduxLoad';
@@ -50,8 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type RouteProps = RouteComponentProps<{ linodeId: string }>;
 
-type CombinedProps = VLANProps &
-  LinodeContextProps &
+type CombinedProps = LinodeContextProps &
   WithLinodesProps &
   RouteProps &
   WithSnackbarProps;
@@ -225,7 +223,6 @@ const connected = connect(undefined, mapDispatchToProps);
 export default compose<CombinedProps, {}>(
   connected,
   linodeContext,
-  withVlans<{}, CombinedProps>(),
   withSnackbar
 )(LinodeVLANs);
 
