@@ -56,11 +56,8 @@ We have some older tests that still use the Enzyme framework, but for new tests 
 A simple test using this library will look something like this:
 
 ```js
-import { cleanup } from "@testing-library/react";
 import { renderWithTheme } from "src/utilities/testHelpers";
 import Component from "./wherever";
-
-afterEach(cleanup);
 
 describe("My component", () => {
   it("should have some text", () => {
@@ -73,11 +70,9 @@ describe("My component", () => {
 Handling events such as clicks is a little more involved:
 
 ```js
-import { cleanup, fireEvent } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import { renderWithTheme } from "src/utilities/testHelpers";
 import Component from "./wherever";
-
-afterEach(cleanup);
 
 const props = { onClick: jest.fn() };
 

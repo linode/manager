@@ -1,4 +1,3 @@
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Backdrop from '@material-ui/core/Backdrop';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import CloseIcon from '@material-ui/icons/Close';
@@ -150,114 +149,111 @@ const useStyles = makeStyles((theme: Theme) => ({
   settingsBackdrop: {
     backgroundColor: 'rgba(50, 54, 60, 0.5)',
     top: 50,
-    zIndex: 1
+    left: 0,
+    zIndex: 6
   }
 }));
 
 export const MobileNav: React.FC<Props> = props => {
   const classes = useStyles();
-  const ref = React.useRef<HTMLDivElement>(null);
+
   const { groups } = props;
 
-  const [isOpen, setIsOpen] = React.useState<boolean>(false);
-
-  React.useMemo(() => {
-    if (isOpen) {
-      document.body.classList.add('overflow-hidden');
-    } else {
-      document.body.classList.remove('overflow-hidden');
-    }
-  }, [isOpen]);
-
-  const openMenu = () => {
-    setIsOpen(true);
-    if (ref.current) {
-      ref.current.removeAttribute('hidden');
-    }
-  };
-
-  const closeMenu = () => {
-    setIsOpen(false);
-    if (ref.current) {
-      ref.current.setAttribute('hidden', '');
-    }
-  };
-
   return (
-    <ReachMenu>
-      <MenuButton
-        aria-label={isOpen ? 'Close menu' : 'Open menu'}
-        className={classes.navIcon}
-        onClick={isOpen ? closeMenu : openMenu}
-      >
-        {isOpen ? <CloseIcon /> : <MenuIcon />}
-        Menu
-      </MenuButton>
-      {/* Click on the "Menu" text won't open the menu */}
-      <ClickAwayListener onClickAway={closeMenu}>
-        <MenuPopover className={classes.navDropdown} ref={ref}>
-          <div className={classes.menuWrapper}>
-            {groups.map((thisGroup: any) => {
-              // For each group, filter out hidden links.
-              const filteredLinks = thisGroup.links.filter(
-                (thisLink: any) => !thisLink.hide
-              );
-              if (filteredLinks.length === 0) {
-                return null;
-              }
+    <ReachMenu key={window.location.pathname}>
+      {({ isExpanded }) => {
+        // How we are preventing scroll on the body
+        if (isExpanded) {
+          document.body.classList.add('overflow-hidden');
+        } else {
+          document.body.classList.remove('overflow-hidden');
+        }
+        return (
+          <>
+            <MenuButton
+              id="mobile-menu-initiator"
+              aria-label={isExpanded ? 'Close menu' : 'Open menu'}
+              className={classes.navIcon}
+            >
+              {isExpanded ? <CloseIcon /> : <MenuIcon />}
+              Menu
+            </MenuButton>
+            <MenuPopover className={classes.navDropdown} portal={false}>
+              <div className={classes.menuWrapper}>
+                {groups.map((thisGroup: any) => {
+                  // For each group, filter out hidden links.
+                  const filteredLinks = thisGroup.links.filter(
+                    (thisLink: any) => !thisLink.hide
+                  );
+                  if (filteredLinks.length === 0) {
+                    return null;
+                  }
 
-              // Render a singular PrimaryNavLink for links without a group.
-              if (thisGroup.group === 'None' && filteredLinks.length === 1) {
-                const link = filteredLinks[0];
+                  // Render a singular PrimaryNavLink for links without a group.
+                  if (
+                    thisGroup.group === 'None' &&
+                    filteredLinks.length === 1
+                  ) {
+                    const link = filteredLinks[0];
 
-                return (
-                  <MenuItems
-                    className={classes.menuItemList}
-                    key={link.display}
-                  >
-                    <MenuLink
-                      key={link.display}
-                      as={Link}
-                      to={link.href}
-                      onClick={closeMenu}
-                      className={`${classes.menuItemLink} ${classes.menuItemLinkNoGroup}`}
-                    >
-                      {link.display}
-                    </MenuLink>
-                  </MenuItems>
-                );
-              }
-
-              return (
-                <ReachMenu key={thisGroup.group}>
-                  <MenuButton
-                    className={`${classes.menuButton} ${classes.linkItem}`}
-                  >
-                    {thisGroup.group}
-                    <KeyboardArrowDown className={classes.caret} />
-                  </MenuButton>
-                  <MenuPopover className={classes.menuPopover} portal={false}>
-                    <MenuItems className={classes.menuItemList} key={thisGroup}>
-                      {thisGroup.links.map((thisLink: any) => (
+                    return (
+                      <MenuItems
+                        className={classes.menuItemList}
+                        key={link.display}
+                      >
                         <MenuLink
-                          key={thisLink.display}
+                          key={link.display}
                           as={Link}
-                          to={thisLink.href}
-                          onClick={closeMenu}
-                          className={classes.menuItemLink}
+                          to={link.href}
+                          className={`${classes.menuItemLink} ${classes.menuItemLinkNoGroup}`}
                         >
-                          {thisLink.display}
+                          {link.display}
                         </MenuLink>
-                      ))}
-                    </MenuItems>
-                  </MenuPopover>
-                </ReachMenu>
-              );
-            })}
-          </div>
-        </MenuPopover>
-      </ClickAwayListener>
-      <Backdrop className={classes.settingsBackdrop} open={isOpen} />
+                      </MenuItems>
+                    );
+                  }
+
+                  return (
+                    <ReachMenu key={thisGroup.group}>
+                      <MenuButton
+                        className={`${classes.menuButton} ${classes.linkItem}`}
+                      >
+                        {thisGroup.group}
+                        <KeyboardArrowDown className={classes.caret} />
+                      </MenuButton>
+                      <MenuPopover
+                        className={classes.menuPopover}
+                        portal={false}
+                      >
+                        <MenuItems
+                          className={classes.menuItemList}
+                          key={thisGroup}
+                        >
+                          {filteredLinks.map((thisLink: any) => (
+                            <MenuLink
+                              data-testid={`menu-item-${thisLink.display}`}
+                              key={thisLink.display}
+                              as={Link}
+                              to={thisLink.href}
+                              className={classes.menuItemLink}
+                              disabled={
+                                window.location.pathname === thisLink.href
+                              }
+                            >
+                              {thisLink.display}
+                            </MenuLink>
+                          ))}
+                        </MenuItems>
+                      </MenuPopover>
+                    </ReachMenu>
+                  );
+                })}
+              </div>
+            </MenuPopover>
+            <Backdrop className={classes.settingsBackdrop} open={isExpanded} />
+          </>
+        );
+      }}
     </ReachMenu>
   );
 };

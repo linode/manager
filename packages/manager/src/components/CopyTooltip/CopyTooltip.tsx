@@ -8,19 +8,21 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 
 interface Props {
   text: string;
   className?: string;
   standAlone?: boolean;
   ariaLabel?: string;
+  displayText?: string;
 }
 
 interface State {
   copied: boolean;
 }
 
-type CSSClasses = 'root' | 'copied' | 'standAlone';
+type CSSClasses = 'root' | 'copied' | 'standAlone' | 'displayText' | 'flex';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -73,6 +75,15 @@ const styles = (theme: Theme) =>
       '& svg': {
         width: 14
       }
+    },
+    flex: {
+      display: 'flex'
+    },
+    displayText: {
+      alignSelf: 'flex-end',
+      marginLeft: 6,
+      fontSize: '1rem',
+      color: theme.color.blue
     }
   });
 
@@ -92,7 +103,7 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, text, className, standAlone } = this.props;
+    const { classes, text, className, standAlone, displayText } = this.props;
     const { copied } = this.state;
 
     return (
@@ -103,7 +114,8 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
         onClick={this.clickIcon}
         className={classNames(className, {
           [classes.root]: true,
-          [classes.standAlone]: standAlone
+          [classes.standAlone]: standAlone,
+          [classes.flex]: Boolean(displayText)
         })}
       >
         {copied && (
@@ -112,6 +124,9 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
           </span>
         )}
         <FileCopy />
+        {displayText && (
+          <Typography className={classes.displayText}>{displayText}</Typography>
+        )}
       </button>
     );
   }

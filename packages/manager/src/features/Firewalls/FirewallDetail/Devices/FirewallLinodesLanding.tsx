@@ -1,12 +1,13 @@
-import Promise from 'bluebird';
 import { APIError } from '@linode/api-v4/lib/types';
+import Promise from 'bluebird';
+import classnames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import AddNewLink_CMR from 'src/components/AddNewLink/AddNewLink_CMR';
 import Box from 'src/components/core/Box';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import withLinodes, {
   Props as LinodesProps
@@ -20,12 +21,18 @@ import FirewallDevicesTable from './FirewallDevicesTable';
 import FirewallDevicesTable_CMR from './FirewallDevicesTable_CMR';
 import RemoveDeviceDialog from './RemoveDeviceDialog';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   message: {
     fontSize: '16px'
   },
   link: {
-    margin: '8px 0px'
+    margin: '8px 8px 8px 0px'
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -129,7 +136,12 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <Typography className={classes.message}>
+      <Typography
+        className={classnames({
+          [classes.message]: true,
+          [classes.cmrSpacing]: flags.cmr
+        })}
+      >
         The following Linodes have been assigned to this Firewall.
       </Typography>
       <Box

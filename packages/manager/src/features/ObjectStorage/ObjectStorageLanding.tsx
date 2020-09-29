@@ -3,10 +3,9 @@ import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
-
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import TabPanel from 'src/components/core/ReachTabPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
@@ -122,7 +121,9 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
           labelTitle="Object Storage"
           removeCrumbX={1}
         />
-        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
+        {!flags.cmr && (
+          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
+        )}
       </Box>
       <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
         <TabLinkList tabs={tabs} />
@@ -138,12 +139,12 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
         {shouldDisplayBillingNotice && <BillingNotice />}
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
-            <TabPanel>
+            <SafeTabPanel index={0}>
               <BucketLanding isRestrictedUser={_isRestrictedUser} />
-            </TabPanel>
-            <TabPanel>
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
               <AccessKeyLanding isRestrictedUser={_isRestrictedUser} />
-            </TabPanel>
+            </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
         <BucketDrawer isRestrictedUser={_isRestrictedUser} />

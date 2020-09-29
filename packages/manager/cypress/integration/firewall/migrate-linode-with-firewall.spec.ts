@@ -1,3 +1,12 @@
+/* eslint-disable sonarjs/no-duplicate-string */
+import { createLinode, deleteAllTestLinodes } from '../../support/api/linodes';
+import { deleteFirewallByLabel } from '../../support/api/firewalls';
+import {
+  getVisibleClick,
+  containsVisibleClick,
+  fbtVisibleClick
+} from '../../support/helpers';
+
 const fakeRegionsData = {
   data: [
     {
@@ -22,7 +31,7 @@ const fakeRegionsData = {
 describe('Migrate Linode With Firewall', () => {
   // In the upcoming future, API wiull have /linode/instances/{ID}/firewalls
   // when it is the case, the /firewalls request should be replaced by that
-  it('Cannot migrate - mocking all data, using get all firewalls', () => {
+  it.skip('test migrate flow - mocking all data, using get all firewalls', () => {
     cy.server();
     // faking firewall 1001
     const fakeFirewallId = 6666;
@@ -43,14 +52,14 @@ describe('Migrate Linode With Firewall', () => {
                 {
                   ports: '80',
                   protocol: 'TCP',
-                  addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::0/0'] }
+                  addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] }
                 }
               ],
               outbound: [
                 {
                   ports: '80',
                   protocol: 'TCP',
-                  addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::0/0'] }
+                  addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] }
                 }
               ]
             },
@@ -132,9 +141,9 @@ describe('Migrate Linode With Firewall', () => {
     cy.findByText('Accept').click();
     cy.findByText(`United States: Dallas, TX`).should('be.visible');
     cy.findByText('Regions').click();
-    // cheking that eu-west is not selectable
-    // TODO: uncoimment this line once the logic is in the code to check for region with the cloud firewall capabilities
-    // cy.findByText('London, UK', {timeout:1000}).should('not.exist')
+    // checking that eu-west is not selectable
+    // TODO uncomment this line once the logic is in the code to check for region with the cloud firewall capabilities
+    // cy.findByText('London, UK', { timeout: 1000 }).should('not.exist');
     // checking that ap-south is selectable
     cy.findByText('Singapore, SG').click();
     cy.findByText('Enter Migration Queue').click();
@@ -142,5 +151,58 @@ describe('Migrate Linode With Firewall', () => {
     cy.wait('@migrateReq')
       .its('status')
       .should('eq', 200);
+  });
+
+  // create linode w/ non firewall region then add firewall to it then attempt to migrate linode to firewall region, should fail
+  it('Cannot migrate linode with firewall to location w/out firewall - real data, ', () => {
+    const firewallLabel = 'testFirewall';
+    cy.server();
+    cy.route({
+      method: 'POST',
+      url: `*/networking/firewalls`
+    }).as('createFirewall');
+    cy.visitWithLogin('/firewalls');
+    createLinode().then(linode => {
+      cy.route({
+        method: 'POST',
+        url: `*/linode/instances/${linode.id}/migrate`
+      }).as('migrateLinode');
+      fbtVisibleClick('Create a Firewall...');
+      cy.get('[data-testid="textfield-input"]').type(firewallLabel);
+      getVisibleClick('[data-qa-multi-select="Select a value..."]');
+      containsVisibleClick('HTTPS');
+      getVisibleClick(
+        '[data-qa-multi-select="Select a Linode or type to search..."]'
+      );
+      fbtVisibleClick(linode.label);
+      fbtVisibleClick('Create');
+      cy.wait('@createFirewall');
+      cy.visit(`/linodes/${linode.id}`);
+      fbtVisibleClick('More Actions');
+      fbtVisibleClick('Migrate');
+      getVisibleClick('[data-qa-checked="false"]');
+      fbtVisibleClick('Regions');
+      fbtVisibleClick('Dallas, TX');
+      if (
+        cy.contains('Provisioning').should('not.be.visible') &&
+        cy.contains('Booting').should('not.be.visible')
+      ) {
+        fbtVisibleClick('Enter Migration Queue');
+      }
+      cy.wait('@migrateLinode')
+        .its('status')
+        .should('eq', 400);
+      if (!cy.findByText('Linode busy.').should('not.be.visible')) {
+        fbtVisibleClick('Enter Migration Queue');
+        cy.wait('@migrateLinode')
+          .its('status')
+          .should('eq', 400);
+      }
+      cy.findByText(
+        'Target region for this Linode does not support Cloud Firewalls at this time. Please choose a different region or remove your firewall before migrating.'
+      ).should('be.visible');
+    });
+    deleteAllTestLinodes();
+    deleteFirewallByLabel(firewallLabel);
   });
 });

@@ -6,7 +6,7 @@ import {
 export const formatRegion = (region: string) => {
   const city = dcDisplayNames[region];
 
-  return `${city || ''}`;
+  return `${city || region}`;
 
   /**
    * There doesn't seem to be a good way to format Country, City, Province/State inline.

@@ -21,7 +21,6 @@ import {
   withTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
@@ -417,8 +416,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <Paper>
-        <DocumentTitleSegment segment={`${linode.label} - Summary`} />
-
         <Grid item className={classes.main}>
           <Grid item className="py0">
             <div className={classes.graphControls}>

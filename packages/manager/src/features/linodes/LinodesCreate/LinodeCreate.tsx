@@ -64,20 +64,38 @@ import {
 } from './types';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import Notice from 'src/components/Notice';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: '#F4F4F4',
-
-      '& > :first-child': {
-        padding: 0
+      '& .mlMain': {
+        maxWidth: '100%',
+        flexBasis: '100%',
+        [theme.breakpoints.up('md')]: {
+          maxWidth: '78.8%',
+          flexBasis: '78.8%'
+        }
+      },
+      '& .mlSidebar': {
+        position: 'static',
+        width: '100%',
+        flexBasis: '100%',
+        maxWidth: '100%',
+        [theme.breakpoints.up('md')]: {
+          position: 'sticky',
+          maxWidth: '21.2%',
+          flexBasis: '21.2%'
+        }
       }
     },
     form: {
-      display: 'flex'
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        display: 'flex'
+      }
     },
     stackScriptWrapper: {
       padding: theme.spacing(3),
@@ -519,7 +537,7 @@ export class LinodeCreate extends React.PureComponent<
           <SelectPlanPanel
             data-qa-select-plan
             error={hasErrorFor.type}
-            types={typesData!}
+            types={filterCurrentTypes(typesData)!}
             onSelect={this.props.updateTypeID}
             selectedID={this.props.selectedTypeID}
             updateFor={[

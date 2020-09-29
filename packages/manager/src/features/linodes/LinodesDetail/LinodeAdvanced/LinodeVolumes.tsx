@@ -47,19 +47,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%'
   },
   headline: {
-    marginBottom: 3,
-    marginLeft: 8,
-    lineHeight: '1.5rem',
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: 0,
-      marginTop: theme.spacing(2)
-    }
+    marginTop: 8,
+    marginBottom: 8,
+    marginLeft: 15,
+    lineHeight: '1.5rem'
   },
   addNewWrapper: {
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
       marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
       marginTop: -theme.spacing(1)
+    },
+    '&.MuiGrid-item': {
+      padding: 5
     }
   },
   volumesPanel: {
@@ -325,7 +324,7 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
         alignItems="flex-end"
         className={classes.root}
       >
-        <Grid item>
+        <Grid item className="p0">
           <Typography variant="h3" className={classes.headline}>
             Volumes
           </Typography>

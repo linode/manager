@@ -1,4 +1,5 @@
-import { cleanup } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
@@ -19,6 +20,8 @@ import { FirewallRuleError } from './shared';
 const mockOnClose = jest.fn();
 const mockOnSubmit = jest.fn();
 
+jest.mock('src/components/EnhancedSelect/Select');
+
 const props: CombinedProps = {
   category: 'inbound',
   mode: 'create',
@@ -27,14 +30,19 @@ const props: CombinedProps = {
   onSubmit: mockOnSubmit
 };
 
-afterEach(cleanup);
-
 describe('AddRuleDrawer', () => {
   it('renders the title', () => {
     const { getByText } = renderWithTheme(
       <RuleDrawer {...props} mode="create" category="inbound" />
     );
     getByText('Add an Inbound Rule');
+  });
+
+  it('disables the port input when the ICMP protocol is selected', () => {
+    renderWithTheme(<RuleDrawer {...props} mode="create" category="inbound" />);
+    expect(screen.getByPlaceholderText(/port/i)).not.toBeDisabled();
+    userEvent.selectOptions(screen.getByPlaceholderText(/protocol/i), 'ICMP');
+    expect(screen.getByPlaceholderText(/port/i)).toBeDisabled();
   });
 });
 
@@ -50,7 +58,7 @@ describe('utilities', () => {
       });
       expect(formValueToIPs('allIPv6', [''].map(stringToExtendedIP))).toEqual({
         ipv4: [],
-        ipv6: ['::0/0']
+        ipv6: ['::/0']
       });
       expect(
         formValueToIPs('ip/netmask', ['1.1.1.1'].map(stringToExtendedIP))

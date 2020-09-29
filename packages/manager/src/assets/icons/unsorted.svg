@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-    <g fill="#ACB1B9">
+    <g fill="currentColor">
         <path d="M1.41 10L6 13.709 10.59 10 12 11.142 6 16 0 11.142z" transform="translate(4 2)"/>
         <path d="M1.41 0L6 3.709 10.59 0 12 1.142 6 6 0 1.142z" transform="translate(4 2) matrix(1 0 0 -1 0 6)"/>
     </g>

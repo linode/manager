@@ -39,7 +39,8 @@ export const NotificationButton: React.FC<{}> = _ => {
   const numEvents =
     notificationData.community.events.length +
     notificationData.support.data.length +
-    notificationData.pendingActions.length;
+    notificationData.pendingActions.length +
+    notificationData.statusNotifications.length;
 
   return (
     <>

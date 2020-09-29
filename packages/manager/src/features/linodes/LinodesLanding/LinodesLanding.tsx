@@ -98,7 +98,12 @@ interface Params {
 
 type RouteProps = RouteComponentProps<Params>;
 
-type CombinedProps = WithImages &
+interface Props {
+  isDashboard?: boolean;
+}
+
+type CombinedProps = Props &
+  WithImages &
   StateProps &
   DispatchProps &
   RouteProps &
@@ -271,7 +276,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
       return (
         <React.Fragment>
-          <DocumentTitleSegment segment="Linodes" />
+          {/** Don't override the document title if we're rendering this on the Dashboard */}
+          {!this.props.isDashboard ? (
+            <DocumentTitleSegment segment="Linodes" />
+          ) : null}
           <ErrorState errorText={errorText} />
         </React.Fragment>
       );
@@ -353,7 +361,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             userProfileLoading={this.props.userProfileLoading}
           />
         )}
-        <Grid container>
+        <Grid
+          container
+          className={this.props.flags.cmr ? classes.cmrSpacing : ''}
+        >
           <Grid
             item
             className={`${
@@ -361,20 +372,15 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             }`}
             xs={this.props.flags.cmr || !displayBackupsCTA ? 12 : undefined}
           >
-            <DocumentTitleSegment segment="Linodes" />
+            {/** Don't override the document title if we're rendering this on the Dashboard */}
+            {!this.props.isDashboard ? (
+              <DocumentTitleSegment segment="Linodes" />
+            ) : null}
             <PreferenceToggle<boolean>
               localStorageKey="GROUP_LINODES"
               preferenceOptions={[false, true]}
               preferenceKey="linodes_group_by_tag"
               toggleCallbackFnDebounced={sendGroupByAnalytic}
-              value={
-                // If some Linodes need maintenance, default to NOT grouping by tag.
-                // This is because the "Group by Tag" view can reduce visibility of Linodes needing
-                // maintenance, since the ordering of groups is alphanumeric and can't be changed.
-                this.props.someLinodesHaveScheduledMaintenance
-                  ? false
-                  : undefined
-              }
             >
               {({
                 preference: linodesAreGrouped,
@@ -640,7 +646,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   filename={`linodes-${formatDate(
                                     DateTime.local().toISO()
                                   )}.csv`}
-                                  className={classes.CSVlink}
+                                  className={`${classes.CSVlink} ${this.props
+                                    .flags.cmr && classes.cmrCSVlink}`}
                                 >
                                   Download CSV
                                 </CSVLink>
@@ -777,7 +784,7 @@ const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
   return stringify(updater(paramsAsObject));
 };
 
-export const enhanced = compose<CombinedProps, {}>(
+export const enhanced = compose<CombinedProps, Props>(
   withRouter,
   setDocs(ListLinodes.docs),
   withSnackbar,

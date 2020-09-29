@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 
 import {
@@ -9,8 +9,6 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { AbuseTicketBanner } from './AbuseTicketBanner';
 
 import filterAbuseTickets from 'src/store/selectors/getAbuseTicket';
-
-afterEach(cleanup);
 
 describe('Abuse ticket banner', () => {
   it('should render a banner for an abuse ticket', () => {

@@ -16,9 +16,8 @@ export const SSHKeyActionMenu: React.FC<CombinedProps> = props => {
     <InlineMenuAction
       key="Delete"
       actionText="Delete"
-      onClick={(e: React.MouseEvent<HTMLElement>) => {
+      onClick={() => {
         onDelete(id, label);
-        e.preventDefault();
       }}
     />
   );

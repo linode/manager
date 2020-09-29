@@ -11,7 +11,7 @@ import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
@@ -56,13 +56,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = LinodeContextProps &
-  WithTypesAndImages &
-  RegionProps &
-  RouteComponentProps<{}>;
+type CombinedProps = LinodeContextProps & WithTypesAndImages & RegionProps;
 
 const MigrateLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+
+  const history = useHistory();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
     null
@@ -128,7 +127,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
             format: 'H'
           })
         );
-        props.history.push(`/linodes/${linodeId}`);
+        history.push(`/linodes/${linodeId}`);
       })
       .catch((e: APIErrorType[]) => {
         setLoading(false);

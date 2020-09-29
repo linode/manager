@@ -6,7 +6,7 @@ import {
   KubeNodePoolResponse,
   updateNodePool as _updateNodePool
 } from '@linode/api-v4/lib/kubernetes';
-import { getAll } from 'src/utilities/getAll';
+import { getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
@@ -18,8 +18,7 @@ import {
   upsertNodePool
 } from './nodePools.actions';
 
-const getAllNodePools = (clusterID: number) =>
-  getAll<KubeNodePoolResponse>(() => getNodePools(clusterID));
+const getAllNodePools = getAllWithArguments<KubeNodePoolResponse>(getNodePools);
 
 export const extendNodePools = (
   clusterID: number,
@@ -43,7 +42,7 @@ export const requestNodePoolsForCluster: ThunkActionCreator<
 > = ({ clusterID }) => dispatch => {
   dispatch(requestNodePoolsActions.started());
 
-  return getAllNodePools(clusterID)()
+  return getAllNodePools([clusterID])
     .then(({ data }) => {
       return extendNodePools(clusterID, data);
     })

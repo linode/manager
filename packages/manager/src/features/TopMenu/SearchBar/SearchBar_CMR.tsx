@@ -62,9 +62,6 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
 
-// Timeout of 1sec in debounce to avoid sending too many events to GA
-const debouncedSearchAutoEvent = debounce(1000, false, sendSearchBarUsedEvent);
-
 export const SearchBar: React.FC<CombinedProps> = props => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
@@ -117,10 +114,6 @@ export const SearchBar: React.FC<CombinedProps> = props => {
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
-    // do not trigger debounce for empty text
-    if (searchText !== '') {
-      debouncedSearchAutoEvent('Search Auto', searchText);
-    }
     props.search(_searchText);
   };
 
@@ -145,23 +138,21 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     if (!item || item.label === '') {
       return;
     }
-    const text = item.data.searchText;
 
-    if (item.value === 'info') {
+    if (item.value === 'info' || item.value === 'error') {
       return;
     }
+
+    const text = item?.data?.searchText ?? '';
 
     if (item.value === 'redirect') {
       props.history.push({
         pathname: `/search`,
         search: `?query=${encodeURIComponent(text)}`
       });
-      // we are selecting the View all option sending the user to the landing,
-      // this is like key down enter
-      sendSearchBarUsedEvent('Search Landing', text);
       return;
     }
-    sendSearchBarUsedEvent('Search Select', text);
+    sendSearchBarUsedEvent();
     props.history.push(item.data.path);
   };
 
@@ -175,7 +166,6 @@ export const SearchBar: React.FC<CombinedProps> = props => {
         pathname: `/search`,
         search: `?query=${encodeURIComponent(searchText)}`
       });
-      sendSearchBarUsedEvent('Search Landing', searchText);
       onClose();
     }
   };
@@ -205,7 +195,10 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     _isLargeAccount ? apiResults : combinedResults,
     searchText,
     _loading || apiSearchLoading,
-    Boolean(apiError)
+    // Ignore "Unauthorized" errors, since these will always happen on LKE
+    // endpoints for restricted users. It's not really an "error" in this case.
+    // We still want these users to be able to use the search feature.
+    Boolean(apiError) && apiError !== 'Unauthorized'
   );
 
   return (

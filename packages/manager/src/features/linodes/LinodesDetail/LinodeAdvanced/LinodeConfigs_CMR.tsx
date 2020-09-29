@@ -70,15 +70,10 @@ const styles = (theme: Theme) =>
     headline: {
       marginBottom: 3,
       marginLeft: 8,
-      lineHeight: '1.5rem',
-      [theme.breakpoints.down('xs')]: {
-        marginBottom: 0,
-        marginTop: theme.spacing(2)
-      }
+      lineHeight: '1.5rem'
     },
     addNewWrapper: {
       [theme.breakpoints.down('xs')]: {
-        width: '100%',
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
       }
@@ -461,11 +456,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
               } = this.props;
               return (
                 <React.Fragment>
-                  <Table
-                    isResponsive={false}
-                    aria-label="List of Configurations"
-                    border
-                  >
+                  <Table aria-label="List of Configurations" border>
                     <TableHead>
                       <TableRow>
                         <TableSortCell

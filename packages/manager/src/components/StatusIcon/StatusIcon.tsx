@@ -84,7 +84,8 @@ export const StatusIcon: React.FC<StatusProps> = props => {
         [classes.statusIconError]: status === 'error',
         [classes.statusIconOther]: !['inactive', 'active', 'error'].includes(
           status
-        )
+        ),
+        statusOther: !['inactive', 'active', 'error'].includes(status)
       })}
     />
   );
