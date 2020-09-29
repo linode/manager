@@ -18,11 +18,10 @@ const VLan: React.FC<CombinedProps> = props => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <React.Fragment>
-        <DocumentTitleSegment segment="VLans" />
+        <DocumentTitleSegment segment="VLANs" />
         <Switch>
-          {/* <Route path={`${path}/:id`} component={VlanDetail} /> */}
-          <Route path={`${path}/detail`} component={VlanDetail} />
-          <Route component={VlanLanding} exact path={path} />
+          <Route component={VlanLanding} path={path} exact />
+          <Route component={VlanDetail} path={`${path}/:id`} />
           <Redirect to={path} />
         </Switch>
       </React.Fragment>

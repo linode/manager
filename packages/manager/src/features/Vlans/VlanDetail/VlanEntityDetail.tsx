@@ -1,56 +1,57 @@
-import { Linode } from '@linode/api-v4/lib/linodes/types';
-import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
+// import { Linode } from '@linode/api-v4/lib/linodes/types';
+// import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import * as classnames from 'classnames';
-import { useSnackbar } from 'notistack';
-import { Link } from 'react-router-dom';
-import ConsoleIcon from 'src/assets/icons/console.svg';
+// import { useSnackbar } from 'notistack';
+// import { Link } from 'react-router-dom';
+// import ConsoleIcon from 'src/assets/icons/console.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
-import RebootIcon from 'src/assets/icons/reboot.svg';
-import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
-import PowerOnIcon from 'src/assets/icons/power-button.svg';
+// import RebootIcon from 'src/assets/icons/reboot.svg';
+// import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
+// import PowerOnIcon from 'src/assets/icons/power-button.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
-import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
+// import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
 import List from 'src/components/core/List';
-import ListItem from 'src/components/core/ListItem';
+// import ListItem from 'src/components/core/ListItem';
 import {
   makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
+  Theme
+  // useTheme,
+  // useMediaQuery
 } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
-import TagCell from 'src/components/TagCell';
+// import TagCell from 'src/components/TagCell';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
-import IconTextLink from 'src/components/IconTextLink';
-import { distroIcons } from 'src/components/ImageSelect/icons';
-import { dcDisplayNames } from 'src/constants';
-import { OpenDialog } from 'src/features/linodes/types';
-import useImages from 'src/hooks/useImages';
-import useLinodes from 'src/hooks/useLinodes';
+// import IconTextLink from 'src/components/IconTextLink';
+// import { distroIcons } from 'src/components/ImageSelect/icons';
+// import { dcDisplayNames } from 'src/constants';
+// import { OpenDialog } from 'src/features/linodes/types';
+// import useImages from 'src/hooks/useImages';
+// import useLinodes from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
-import { useTypes } from 'src/hooks/useTypes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import formatDate from 'src/utilities/formatDate';
-import { pluralize } from 'src/utilities/pluralize';
-import { lishLink, sshLink } from './LinodesDetail/utilities';
-import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
-import { lishLaunch } from 'src/features/Lish/lishUtils';
+// import { useTypes } from 'src/hooks/useTypes';
+// import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+// import formatDate from 'src/utilities/formatDate';
+// import { pluralize } from 'src/utilities/pluralize';
+// import { lishLink, sshLink } from './LinodesDetail/utilities';
+// import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+// import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
+// import { lishLaunch } from 'src/features/Lish/lishUtils';
 import Hidden from 'src/components/core/Hidden';
 
-type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
+// type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface VlanEntityDetailProps {
   // variant: LinodeEntityDetailVariant;
   // linode: Linode;
@@ -84,8 +85,8 @@ const VlanEntityDetail: React.FC<VlanEntityDetailProps> = props => {
   } = props;
 
   useReduxLoad(['images', 'types']);
-  const { images } = useImages();
-  const { types } = useTypes();
+  // const { images } = useImages();
+  // const { types } = useTypes();
 
   // const imageSlug = linode.image;
 
@@ -156,6 +157,7 @@ export default React.memo(VlanEntityDetail);
 // =============================================================================
 // Header
 // =============================================================================
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface HeaderProps {
   // variant: LinodeEntityDetailVariant;
   // imageVendor: string | null;
@@ -260,8 +262,8 @@ const Header: React.FC<HeaderProps> = props => {
   } = props;
 
   const classes = useHeaderStyles();
-  const theme = useTheme<Theme>();
-  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
+  // const theme = useTheme<Theme>();
+  // const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   // const distroIconClassName =
   //   imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
@@ -272,10 +274,10 @@ const Header: React.FC<HeaderProps> = props => {
 
   // const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
 
-  const handleConsoleButtonClick = (id: number) => {
-    sendLinodeActionMenuItemEvent('Launch Console');
-    lishLaunch(id);
-  };
+  // const handleConsoleButtonClick = (id: number) => {
+  //   sendLinodeActionMenuItemEvent('Launch Console');
+  //   lishLaunch(id);
+  // };
 
   return (
     <EntityHeader
@@ -408,6 +410,7 @@ const Header: React.FC<HeaderProps> = props => {
 // =============================================================================
 // Body
 // =============================================================================
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface BodyProps {
   // numCPUs: number;
   // gbRAM: number;
@@ -661,6 +664,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
 // =============================================================================
 // Footer
 // =============================================================================
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface FooterProps {
   // linodePlan: string | null;
   // linodeRegionDisplay: string | null;
@@ -741,8 +745,8 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const classes = useFooterStyles();
 
-  const { updateLinode } = useLinodes();
-  const { enqueueSnackbar } = useSnackbar();
+  // const { updateLinode } = useLinodes();
+  // const { enqueueSnackbar } = useSnackbar();
 
   // const addTag = React.useCallback(
   //   (tag: string) => {
