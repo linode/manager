@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-09-29] - v1.21.0
+
+### Added:
+
+One-Click Apps:
+  - Jitsi
+  - Webmin
+  - Virtualmin
+  - Plex
+  - phpMyAdmin
+  - Azuracast
+
 ## [2020-09-21] - v1.20.0
 
 ### Added:
