@@ -48,18 +48,6 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   };
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
-  const [idx, setIndex] = React.useState(0);
-
-  const getIndex = React.useCallback(() => {
-    return Math.max(
-      tabs.findIndex(tab => matches(tab.routeName)),
-      0
-    );
-  }, [tabs]);
-
-  React.useEffect(() => {
-    setIndex(getIndex());
-  }, [props.match, tabs, getIndex]);
 
   const navToURL = (index: number) => {
     props.history.push(tabs[index].routeName);
@@ -124,7 +112,13 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
         />
         <DocumentationButton href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
       </Box>
-      <Tabs index={idx} onChange={navToURL}>
+      <Tabs
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
+      >
         <TabLinkList tabs={tabs} />
 
         <TabPanels>

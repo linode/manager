@@ -51,19 +51,6 @@ const AccountLanding: React.FC<Props> = props => {
     return Boolean(matchPath(p, { path: location.pathname }));
   };
 
-  const getIndex = React.useCallback(() => {
-    return Math.max(
-      tabs.findIndex(tab => matches(tab.routeName)),
-      0
-    );
-  }, [tabs]);
-
-  const [idx, setIndex] = React.useState(0);
-
-  React.useEffect(() => {
-    setIndex(getIndex());
-  }, [props.match, tabs, getIndex]);
-
   const navToURL = (index: number) => {
     props.history.push(tabs[index].routeName);
   };
@@ -78,7 +65,14 @@ const AccountLanding: React.FC<Props> = props => {
         removeCrumbX={1}
         data-qa-profile-header
       />
-      <Tabs index={idx} onChange={navToURL}>
+
+      <Tabs
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
+      >
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>

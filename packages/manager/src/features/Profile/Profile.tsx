@@ -73,19 +73,6 @@ const Profile: React.FC<Props> = props => {
     return Boolean(matchPath(p, { path: location.pathname }));
   };
 
-  const getIndex = React.useCallback(() => {
-    return Math.max(
-      tabs.findIndex(tab => matches(tab.routeName)),
-      0
-    );
-  }, [tabs]);
-
-  const [idx, setIndex] = React.useState(0);
-
-  React.useEffect(() => {
-    setIndex(getIndex());
-  }, [props.match, tabs, getIndex]);
-
   const navToURL = (index: number) => {
     props.history.push(tabs[index].routeName);
   };
@@ -94,7 +81,14 @@ const Profile: React.FC<Props> = props => {
     <React.Fragment>
       <DocumentTitleSegment segment="My Profile " />
       <H1Header title="My Profile" data-qa-profile-header />
-      <Tabs index={idx} onChange={navToURL} data-qa-tabs>
+      <Tabs
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
+        data-qa-tabs
+      >
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>

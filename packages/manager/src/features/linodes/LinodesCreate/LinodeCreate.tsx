@@ -223,9 +223,6 @@ export class LinodeCreate extends React.PureComponent<
   handleTabChange = (index: number) => {
     this.props.resetCreationState();
 
-    // Update URL to match tab change
-    this.props.history.push(this.tabs[index].routeName);
-
     /** set the tab in redux state */
     this.props.setTab(this.tabs[index].type);
 

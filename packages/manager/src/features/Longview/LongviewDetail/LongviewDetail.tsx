@@ -166,19 +166,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
-  const getIndex = React.useCallback(() => {
-    return Math.max(
-      tabs.findIndex(tab => matches(tab.routeName)),
-      0
-    );
-  }, [tabs]);
-
-  const [idx, setIndex] = React.useState(0);
-
-  React.useEffect(() => {
-    setIndex(getIndex());
-  }, [props.match, tabs, getIndex]);
-
   const navToURL = (index: number) => {
     props.history.push(tabs[index].routeName);
   };
@@ -237,7 +224,14 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           text={thisNotification.TEXT}
         />
       ))}
-      <Tabs index={idx} onChange={navToURL} className={classes.tabList}>
+      <Tabs
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
+        className={classes.tabList}
+      >
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>

@@ -77,18 +77,12 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: location.pathname }));
   };
 
-  const getIndex = React.useCallback(() => {
+  const getIndex = () => {
     return Math.max(
       tabs.findIndex(tab => matches(tab.routeName)),
       0
     );
-  }, [tabs]);
-
-  const [idx, setIndex] = React.useState(0);
-
-  React.useEffect(() => {
-    setIndex(getIndex());
-  }, [props.match, tabs, getIndex]);
+  };
 
   const navToURL = (index: number) => {
     props.history.push(tabs[index].routeName);
@@ -97,9 +91,9 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
   return (
     <>
       <DocumentTitleSegment
-        segment={`${linodeLabel} - ${tabs[idx]?.title ?? 'Detail View'}`}
+        segment={`${linodeLabel} - ${tabs[getIndex()]?.title ?? 'Detail View'}`}
       />
-      <Tabs index={idx} onChange={navToURL}>
+      <Tabs index={getIndex()} onChange={navToURL}>
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
