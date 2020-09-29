@@ -155,3 +155,45 @@ export const getURL = ({ url, baseURL }: AxiosRequestConfig) => {
     ? url.replace(baseURL, LOGIN_ROOT)
     : url.replace(baseURL, API_ROOT);
 };
+
+// A user's external UUID can be found on the response to /account.
+// Since that endpoint is not available to restricted users, the API also
+// returns it as an HTTP header ("X-Customer-Uuid"). This middleware injects
+// the value of the header to the GET /profile response so it can be added to
+// the Redux store and used throughout the app.
+export const injectEuuidToProfile = (
+  response: AxiosResponse
+): AxiosResponse => {
+  if (isSuccessfulGETProfileResponse(response)) {
+    const xCustomerUuidHeader = getXCustomerUuidHeader(response);
+    if (xCustomerUuidHeader) {
+      const profileWithEuuid = {
+        ...response.data,
+        _euuidFromHttpHeader: xCustomerUuidHeader
+      };
+
+      return {
+        ...response,
+        data: profileWithEuuid
+      };
+    }
+  }
+  return response;
+};
+
+export const isSuccessfulGETProfileResponse = (response: AxiosResponse) => {
+  const { config, status } = response;
+
+  const method = config.method?.toLowerCase();
+  const url = config.url?.toLowerCase();
+
+  return method === 'get' && status === 200 && url?.endsWith('/profile');
+};
+
+export const getXCustomerUuidHeader = (
+  response: AxiosResponse
+): string | undefined => {
+  return response.headers['x-customer-uuid'];
+};
+
+baseRequest.interceptors.response.use(injectEuuidToProfile);
