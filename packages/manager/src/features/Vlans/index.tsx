@@ -21,7 +21,7 @@ const VLan: React.FC<CombinedProps> = props => {
         <DocumentTitleSegment segment="VLANs" />
         <Switch>
           <Route component={VlanLanding} path={path} exact />
-          <Route component={VlanDetail} path={`${path}/detail`} />
+          <Route component={VlanDetail} path={`${path}/:id`} />
           <Redirect to={path} />
         </Switch>
       </React.Fragment>
