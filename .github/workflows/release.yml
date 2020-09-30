@@ -3,7 +3,7 @@ name: release
 on:
   push:
     branches:
-      - ci/publish-manager
+      - master
 
 jobs:
   test-sdk:
