@@ -134,9 +134,6 @@ export const Row: React.FC<RowProps> = props => {
           {displayedMessage}
         </Typography>
       </TableCell>
-      <TableCell parentColumn="Message">
-        <Typography variant="body1">{eventMessage}</Typography>
-      </TableCell>
 
       <TableCell parentColumn="Duration">
         <Typography variant="body1">
@@ -148,6 +145,9 @@ export const Row: React.FC<RowProps> = props => {
       </TableCell>
       <TableCell parentColumn={'When'} data-qa-event-created-cell>
         <DateTimeDisplay value={created} />
+      </TableCell>
+      <TableCell parentColumn={'Message'}>
+        <Typography variant="body1">{eventMessage}</Typography>
       </TableCell>
     </TableRow>
   );
