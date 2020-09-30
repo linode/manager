@@ -34,7 +34,7 @@ interface Props {
   readOnly: boolean;
   linodeDisks: Disk[];
   linodeKernel: string;
-  interfaces: LinodeInterface[];
+  linodeInterfaces: LinodeInterface[];
   vlans: Record<string, VLAN>;
 }
 
@@ -56,7 +56,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     onEdit,
     onDelete,
     readOnly,
-    interfaces,
+    linodeInterfaces,
     vlans
   } = props;
 
@@ -76,21 +76,18 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
   }, [config, linodeDisks]);
 
   const InterfaceList = Object.keys(config.interfaces).map(interfaceName => {
-    const interfaceId = config.interfaces[interfaceName].id;
-
-    const linodeInterface = interfaces.find(
-      thisInterface => thisInterface.id === interfaceId
+    const linodeInterface = linodeInterfaces.find(
+      thisInterface => thisInterface.id === config.interfaces[interfaceName].id
     );
 
+    // Just a failsafe.
     if (!linodeInterface) {
       return null;
     }
 
-    const label = getInterfaceLabel(linodeInterface, vlans);
-
     return (
       <li key={config.id + interfaceName} className={classes.interfaceListItem}>
-        {interfaceName} – {label}
+        {interfaceName} – {getInterfaceLabel(linodeInterface, vlans)}
       </li>
     );
   });
@@ -106,7 +103,9 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
       <TableCell>{linodeKernel}</TableCell>
       <TableCell>{rootDeviceLabel}</TableCell>
       <TableCell>
-        <ul className={classes.interfaceList}>{InterfaceList}</ul>
+        {InterfaceList.length > 0 ? (
+          <ul className={classes.interfaceList}>{InterfaceList}</ul>
+        ) : null}
       </TableCell>
       <TableCell className={classes.actionInner}>
         <LinodeConfigActionMenu
@@ -135,10 +134,11 @@ export const getInterfaceLabel = (
 
   const vlan = vlans[linodeInterface.vlan_id];
 
-  // I don't think this woulod ever happen, but here's a fallback anyway.
+  // I don't think this would ever happen, but here's a fallback anyway.
   if (!vlan) {
     return linodeInterface.description;
   }
 
+  // @todo: this should be vlan.label whenever that's available.
   return <Link to={`/vlans/${vlan.id}`}>{vlan.description}</Link>;
 };

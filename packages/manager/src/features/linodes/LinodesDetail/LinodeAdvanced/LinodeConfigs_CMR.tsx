@@ -97,10 +97,10 @@ const styles = (theme: Theme) =>
       width: '9%'
     },
     kernelColumn: {
-      width: '25%'
+      width: '10%'
     },
     interfacesColumn: {
-      width: '25%'
+      width: '40%'
     },
     rootDeviceColumn: {
       width: '20%'
@@ -574,7 +574,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               onEdit={this.openForEditing}
                               onDelete={this.confirmDelete}
                               readOnly={readOnly}
-                              interfaces={this.state.interfaces}
+                              linodeInterfaces={this.state.interfaces}
                               vlans={this.props.vlansData}
                             />
                           );
