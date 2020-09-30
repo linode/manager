@@ -22,11 +22,6 @@ export interface LinodeWithMaintenance extends Linode {
   maintenance?: Maintenance | null;
 }
 
-export interface LinodeWithMaintenanceAndEvent extends Linode {
-  maintenance?: Maintenance | null;
-  event?: Event;
-}
-
 export const addNotificationsToLinodes = (
   notifications: Notification[],
   linodes: Linode[]
