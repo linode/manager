@@ -217,7 +217,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
               >
                 <AddNewMenuItem
                   title="Virtual LAN"
-                  body="Create private Local Area Networks (LANS) for secure communication between Linodes."
+                  body="Create private Local Area Networks (LANs) for secure communication between Linodes."
                   ItemIcon={LinodeIcon}
                 />
               </MenuItem>

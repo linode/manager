@@ -84,6 +84,16 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
     setRebootOnCreate(current => !current);
   };
 
+  const handleLinodeSelect = (selected: number[]) => {
+    /**
+     * Uncheck the reboot on create button if no Linodes are selected
+     */
+    if (selected.length === 0) {
+      setRebootOnCreate(false);
+    }
+    formik.setFieldValue('linodes', selected);
+  };
+
   const submitForm = (values: CreateVLANPayload) => {
     const payload = { ...values };
     if (payload.cidr_block === '') {
@@ -175,9 +185,9 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
         <div className={classes.formSection}>
           <LinodeMultiSelect
             allowedRegions={regionIDsWithVLANs}
-            handleChange={selected => formik.setFieldValue('linodes', selected)}
+            handleChange={handleLinodeSelect}
             helperText={`Assign one or more Linodes to this VLAN, or add them later. Only Linodes
-          in regions that currently support VLANS (${arrayToList(
+          in regions that currently support VLANs (${arrayToList(
             regionIDsWithVLANs.map(thisId => dcDisplayNames[thisId])
           )}) will be displayed as options.`}
           />
