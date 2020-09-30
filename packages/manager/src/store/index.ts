@@ -198,8 +198,7 @@ const __resourcesDefaultState = {
   types: defaultTypesState,
   volumes: defaultVolumesState,
   buckets: defaultBucketsState,
-  clusters: defaultClustersState,
-  vlans: defaultVLANState
+  clusters: defaultClustersState
 };
 
 export interface ResourcesState {
@@ -223,7 +222,6 @@ export interface ResourcesState {
   volumes: VolumesState;
   buckets: BucketsState;
   clusters: ClustersState;
-  vlans: VlanState;
 }
 
 export interface ApplicationState {

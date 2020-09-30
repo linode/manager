@@ -79,37 +79,25 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
 
   const { vlanID, vlanLabel, triggerDeleteVlan } = props;
 
-  const inlineActions = [
+  const inlineActions: Action[] = [
     {
-      actionText: 'Details',
-      className: classes.link,
-      href: `/vlans/${vlanID}`
+      title: 'Details',
+      onClick: () => {
+        history.push({ pathname: `/vlans/${vlanID}` });
+      }
     },
     {
-      actionText: 'Delete',
+      title: 'Delete',
       onClick: () => {
         triggerDeleteVlan(vlanID, vlanLabel);
       }
     }
   ];
 
-  const createActions = () => (): Action[] => {
-    return [
-      {
-        title: 'Details',
-        onClick: () => {
-          history.push({
-            pathname: `/vlans/${vlanID}`
-          });
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          triggerDeleteVlan(vlanID, vlanLabel);
-        }
-      }
-    ];
+  const createActions = () => {
+    return (): Action[] => {
+      return inlineActions;
+    };
   };
 
   return (
@@ -118,10 +106,8 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
         inlineActions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
-              className={action.className}
-              href={action.href}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );

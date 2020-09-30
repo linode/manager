@@ -42,7 +42,7 @@ const VlanLanding: React.FC<CombinedProps> = props => {
   const headers = [
     {
       label: 'Label',
-      dataColumn: 'label',
+      dataColumn: 'description',
       sortable: true,
       widthPercent: 10
     },

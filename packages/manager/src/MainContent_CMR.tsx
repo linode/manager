@@ -185,13 +185,11 @@ const MainContent: React.FC<CombinedProps> = props => {
     account.data?.capabilities ?? []
   );
 
-  const showVlans = true;
-
-  // const showVlans = isFeatureEnabled(
-  //   'Vlans',
-  //   Boolean(props.flags.vlans),
-  //   account?.data?.capabilities ?? []
-  // );
+  const showVlans = isFeatureEnabled(
+    'Vlans',
+    Boolean(props.flags.vlans),
+    account?.data?.capabilities ?? []
+  );
 
   /**
    * this is the case where the user has successfully completed signup
