@@ -1,9 +1,7 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators, Dispatch } from 'redux';
 import Loading from 'src/components/LandingLoading';
 import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
@@ -194,18 +192,6 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(
-    {
-      // openForEdit,
-      // openForResize,
-      // openForClone,
-      // openForCreating,
-      // openForConfig
-    },
-    dispatch
-  );
-
 interface LinodeContextProps {
   linodeId: number;
   configs: Config[];
@@ -218,10 +204,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   readOnly: linode._permissions === 'read_only'
 }));
 
-const connected = connect(undefined, mapDispatchToProps);
-
 export default compose<CombinedProps, {}>(
-  connected,
   linodeContext,
   withSnackbar
 )(LinodeVLANs);
