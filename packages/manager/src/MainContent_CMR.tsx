@@ -24,10 +24,7 @@ import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu/TopMenu_CMR';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import CreateVLANDialog from 'src/features/Vlans/CreateVLANDialog';
-import {
-  useVLANContext,
-  vlanContext
-} from 'src/features/Vlans/CreateVLANDialog/CreateVLANContext';
+import { useDialogContext, vlanContext } from 'src/context';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 
 import Grid from 'src/components/Grid';
@@ -182,7 +179,7 @@ const MainContent: React.FC<CombinedProps> = props => {
   const contextValue = useNotificationContext();
 
   const VlanContextProvider = vlanContext.Provider;
-  const vlanContextValue = useVLANContext();
+  const vlanContextValue = useDialogContext();
 
   const [, toggleMenu] = React.useState<boolean>(false);
   const { account } = useAccountManagement();

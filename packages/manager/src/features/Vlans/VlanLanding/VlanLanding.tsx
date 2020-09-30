@@ -3,8 +3,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
+import { vlanContext } from 'src/context';
 import VLanRow from './VLanRow';
-import { vlanContext } from '../CreateVLANDialog/CreateVLANContext';
 
 type CombinedProps = RouteComponentProps<{}>;
 

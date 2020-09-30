@@ -26,7 +26,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
-import { vlanContext } from './CreateVLANContext';
+import { vlanContext } from 'src/context';
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {},

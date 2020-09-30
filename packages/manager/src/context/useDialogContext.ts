@@ -1,20 +1,20 @@
 import { createContext, useCallback, useState } from 'react';
 
-export interface VLANContextProps {
+export interface DialogContextProps {
   isOpen: boolean;
   open: () => void;
   close: () => void;
 }
 
-const defaultContext = {
+export const defaultContext = {
   isOpen: false,
-  open: () => null,
-  close: () => null
+  open: () => void 0,
+  close: () => void 0
 };
 
-export const vlanContext = createContext<VLANContextProps>(defaultContext);
+export const dialogContext = createContext<DialogContextProps>(defaultContext);
 
-export const useVLANContext = (): VLANContextProps => {
+export const useDialogContext = (): DialogContextProps => {
   const [isOpen, setIsOpen] = useState(false);
   const open = useCallback(() => setIsOpen(true), [setIsOpen]);
   const close = useCallback(() => setIsOpen(false), [setIsOpen]);
@@ -24,3 +24,5 @@ export const useVLANContext = (): VLANContextProps => {
     close
   };
 };
+
+export default useDialogContext;
