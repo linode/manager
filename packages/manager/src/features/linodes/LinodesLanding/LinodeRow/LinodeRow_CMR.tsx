@@ -209,7 +209,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           loading ? (
             recentEvent && (
               <>
-                <StatusIcon status="other" />
+                <StatusIcon status={iconStatus} />
                 <button
                   className={classes.statusLink}
                   onClick={() => openNotificationDrawer()}

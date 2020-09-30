@@ -1,10 +1,8 @@
-import { Event } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
 import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ConsoleIcon from 'src/assets/icons/console.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
@@ -39,18 +37,12 @@ import { distroIcons } from 'src/components/ImageSelect/icons';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import {
-  linodeInTransition,
-  transitionText
-} from 'src/features/linodes/transitions';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useImages from 'src/hooks/useImages';
 import useLinodes from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
-import { ApplicationState } from 'src/store';
-import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
@@ -114,10 +106,6 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
 
   const linodeRegionDisplay = dcDisplayNames[linode.region] ?? null;
 
-  const recentEvent = useSelector((state: ApplicationState) => {
-    return recentEventForLinode(linode.id)(state);
-  });
-
   return (
     <EntityDetail
       header={
@@ -136,7 +124,6 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
           type={'something'}
           image={'something'}
           openNotificationDrawer={openNotificationDrawer || (() => null)}
-          recentEvent={recentEvent || undefined}
         />
       }
       body={
@@ -194,7 +181,6 @@ export interface HeaderProps {
   linodeConfigs: Config[];
   isDetailLanding?: boolean;
   openNotificationDrawer: () => void;
-  recentEvent?: Event;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -291,8 +277,7 @@ const Header: React.FC<HeaderProps> = props => {
     image,
     linodeConfigs,
     isDetailLanding,
-    openNotificationDrawer,
-    recentEvent
+    openNotificationDrawer
   } = props;
 
   const classes = useHeaderStyles();
@@ -302,16 +287,11 @@ const Header: React.FC<HeaderProps> = props => {
   const distroIconClassName =
     imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
 
-  const loading = linodeInTransition(linodeStatus, recentEvent);
-
   const isDetails = variant === 'details';
 
   const isRunning = linodeStatus === 'running';
   const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
-  const isOther =
-    !['running', 'stopped', 'offline'].includes(linodeStatus) ||
-    loading ||
-    recentEvent;
+  const isOther = !['running', 'stopped', 'offline'].includes(linodeStatus);
 
   const handleConsoleButtonClick = (id: number) => {
     sendLinodeActionMenuItemEvent('Launch Console');
@@ -355,22 +335,7 @@ const Header: React.FC<HeaderProps> = props => {
               [classes.statusOther]: isOther,
               statusOther: isOther
             })}
-            label={
-              loading
-                ? recentEvent && (
-                    <ProgressDisplay
-                      className={classes.progressDisplay}
-                      progress={recentEvent.percent_complete}
-                      text={transitionText(
-                        linodeStatus,
-                        linodeId,
-                        recentEvent,
-                        true
-                      ).toUpperCase()}
-                    />
-                  )
-                : linodeStatus.toUpperCase()
-            }
+            label={linodeStatus.toUpperCase()}
             component="span"
             clickable={isOther ? true : false}
             {...(isOther && { onClick: openNotificationDrawer })}
@@ -868,18 +833,3 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     </Grid>
   );
 });
-
-const ProgressDisplay: React.FC<{
-  className?: string;
-  progress: null | number;
-  text: string;
-}> = props => {
-  const { className, progress, text } = props;
-  const displayProgress = progress ? `${progress}%` : `scheduled`;
-
-  return (
-    <Typography variant="body2" className={className}>
-      {text} {displayProgress === 'scheduled' ? '(0%)' : `(${displayProgress})`}
-    </Typography>
-  );
-};
