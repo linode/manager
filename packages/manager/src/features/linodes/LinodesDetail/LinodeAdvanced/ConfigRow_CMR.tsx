@@ -69,10 +69,8 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
           : 'Paravirtualization'}
       </TableCell>
       <TableCell>{linodeKernel}</TableCell>
-      <TableCell>
-        {config.memory_limit === 0 ? 'No limit' : `${config.memory_limit} MB`}
-      </TableCell>
       <TableCell>{rootDeviceLabel}</TableCell>
+      <TableCell>Interfaces</TableCell>
       <TableCell className={classes.actionInner}>
         <LinodeConfigActionMenu
           config={config}
