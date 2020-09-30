@@ -29,6 +29,7 @@ import {
   deleteAllTestAccessKeys,
   deleteAllTestBuckets
 } from './api/objectStorage';
+import { deleteAllTestClients } from './api/longview';
 it('Delete All Test Entities before anything happens', () => {
   deleteAllTestLinodes();
   deleteAllTestNodeBalancers();
@@ -37,4 +38,5 @@ it('Delete All Test Entities before anything happens', () => {
   deleteAllTestAccessKeys();
   deleteAllTestBuckets();
   deleteAllTestAccessKeys();
+  deleteAllTestClients();
 });
