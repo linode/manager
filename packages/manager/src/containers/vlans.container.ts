@@ -21,7 +21,7 @@ export type StateProps = State;
 export type Props = DispatchProps & StateProps;
 
 const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
-  mapAccountToProps?: (
+  mapStateToProps?: (
     ownProps: OwnProps,
     state: StateProps
   ) => ReduxStateProps & Partial<StateProps>
@@ -33,8 +33,8 @@ const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
     ApplicationState
   >(
     (state, ownProps) => {
-      if (mapAccountToProps) {
-        return mapAccountToProps(ownProps, state.vlans);
+      if (mapStateToProps) {
+        return mapStateToProps(ownProps, state.vlans);
       }
 
       return state.vlans;
