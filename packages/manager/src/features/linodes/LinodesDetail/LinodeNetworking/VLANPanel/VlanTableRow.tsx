@@ -71,7 +71,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
     return (
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
-        {data.slice(0, 2).map(linodeID => (
+        {data.map(linodeID => (
           <Link
             className={classes.link}
             key={linodeID}
