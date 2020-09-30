@@ -232,6 +232,7 @@ export const getInterfaceName = (
 ): string | null => {
   let interfaceName = '';
 
+  // Loop over the configs to find the matching interface.
   configs.forEach(config => {
     for (const [key, value] of Object.entries(config.interfaces)) {
       if (value?.id === interfaceID) {
@@ -242,5 +243,3 @@ export const getInterfaceName = (
 
   return interfaceName.length > 0 ? interfaceName : null;
 };
-
-// Configs is array, config.interfaces is an object
