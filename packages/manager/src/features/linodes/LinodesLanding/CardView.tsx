@@ -10,6 +10,8 @@ import withImages from 'src/containers/withImages.container';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
+import { NotificationDrawer } from 'src/features/NotificationCenter';
+import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import useFlags from 'src/hooks/useFlags';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
@@ -23,8 +25,22 @@ import useLinodes from 'src/hooks/useLinodes';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 
 const useStyles = makeStyles(() => ({
+  '@keyframes blink': {
+    '0%': {
+      opacity: 1
+    },
+    '50%': {
+      opacity: 0.25
+    },
+    '100%': {
+      opacity: 1
+    }
+  },
   summaryOuter: {
-    marginBottom: 20
+    marginBottom: 20,
+    '& .statusOther:before': {
+      animation: '$blink 2.5s linear infinite'
+    }
   }
 }));
 
@@ -49,6 +65,9 @@ type CombinedProps = WithImagesProps & PaginationProps & Props;
 const CardView: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
+  const notificationData = useNotificationData();
+
+  const { updateLinode } = useLinodes();
   const { profile } = useProfile();
   const { _loading } = useReduxLoad(['volumes']);
   const { volumes } = useVolumes();
@@ -58,8 +77,12 @@ const CardView: React.FC<CombinedProps> = props => {
     label: '',
     linodeID: 0
   });
+  const [notificationDrawerOpen, setNotificationDrawerOpen] = React.useState(
+    false
+  );
 
-  const { updateLinode } = useLinodes();
+  const openNotificationDrawer = () => setNotificationDrawerOpen(true);
+  const closeNotificationDrawer = () => setNotificationDrawerOpen(false);
 
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
@@ -127,6 +150,7 @@ const CardView: React.FC<CombinedProps> = props => {
                     openTagDrawer={openTagDrawer}
                     openDialog={openDialog}
                     openPowerActionDialog={openPowerActionDialog}
+                    openNotificationDrawer={openNotificationDrawer}
                   />
                 </Grid>
               </React.Fragment>
@@ -165,6 +189,11 @@ const CardView: React.FC<CombinedProps> = props => {
         addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
         deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
         onClose={closeTagDrawer}
+      />
+      <NotificationDrawer
+        open={notificationDrawerOpen}
+        onClose={closeNotificationDrawer}
+        data={notificationData}
       />
     </React.Fragment>
   );
