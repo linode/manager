@@ -77,7 +77,7 @@ const RemoveVlanDialog: React.FC<CombinedProps> = props => {
         />
       }
     >
-      Are you sure you want to remove {label}?
+      Are you sure you want to remove {_label}?
     </Dialog>
   );
 };

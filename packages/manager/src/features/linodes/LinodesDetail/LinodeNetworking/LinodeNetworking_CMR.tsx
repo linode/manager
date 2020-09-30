@@ -139,7 +139,6 @@ const styles = (theme: Theme) =>
 interface State {
   linodeIPs?: LinodeIPsResponse;
   allIPs?: IPAddress[];
-  linodeVLANs?: any;
   removeIPDialogOpen: boolean;
   initialLoading: boolean;
   ipv6Loading: boolean;

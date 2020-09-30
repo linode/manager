@@ -105,15 +105,21 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     []
   );
 
-  const { loading, lastUpdated, error } = request;
+  const { loading, lastUpdated } = request;
 
   const vlanData = React.useMemo(
     () =>
-      request.data.map(thisInterface => ({
-        ...vlans.itemsById[thisInterface.vlan_id],
-        ip_address: thisInterface.ip_address,
-        interfaceName: getInterfaceName(thisInterface.id, configs)
-      })),
+      request.data.map(thisInterface => {
+        if (vlans.itemsById[thisInterface.vlan_id]) {
+          return {
+            ...vlans.itemsById[thisInterface.vlan_id],
+            ip_address: thisInterface.ip_address,
+            interfaceName: getInterfaceName(thisInterface.id, configs)
+          };
+        } else {
+          return undefined;
+        }
+      }),
     [request.data, vlans.itemsById, configs]
   );
 
@@ -145,7 +151,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     data: vlanData ?? [],
     loading,
     lastUpdated,
-    error
+    error: request.error || vlans.error.read
   };
 
   if (loading || _loading) {
