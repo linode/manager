@@ -1,13 +1,12 @@
+import { APIError } from '@linode/api-v4/lib/types';
 import {
   getSSLCert,
   deleteSSLCert,
   uploadSSLCert
 } from '@linode/api-v4/lib/object-storage';
-
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-// import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -16,6 +15,7 @@ import Notice from 'src/components/Notice';
 import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     ...theme.applyLinkStyles
+  },
+  helperText: {
+    paddingTop: theme.spacing()
   }
 }));
 
@@ -36,7 +39,7 @@ export const BucketSSL: React.FC<Props> = props => {
   const [certificate, setCertificate] = React.useState('');
   const [sslKey, setSSLKey] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
-  const [error, setError] = React.useState<string | undefined>(undefined);
+  const [error, setError] = React.useState<APIError[] | undefined>(undefined);
 
   const classes = useStyles();
 
@@ -52,10 +55,12 @@ export const BucketSSL: React.FC<Props> = props => {
       .then(_ => {
         setSubmitting(false);
         request.update();
+        setCertificate('');
+        setSSLKey('');
       })
       .catch(error => {
         setSubmitting(false);
-        setError(error[0].reason);
+        setError(error);
       });
   };
 
@@ -68,6 +73,7 @@ export const BucketSSL: React.FC<Props> = props => {
 
   const removeCertificate = () => {
     setSubmittingDialog(true);
+    setError(undefined);
     deleteSSLCert(clusterId, bucketName)
       .then(() => {
         setOpen(false);
@@ -101,33 +107,36 @@ export const BucketSSL: React.FC<Props> = props => {
 
   const hasSSL = request.data;
 
+  const errorMap = getErrorMap(['certificate', 'private_key'], error);
+
+  const getNoticeText = () => {
+    return request.loading ? (
+      'Loading...'
+    ) : (
+      <>
+        This bucket {hasSSL ? 'has' : 'does not have'} a TLS certificate
+        available.{' '}
+        {hasSSL ? (
+          <button className={classes.button} onClick={() => setOpen(true)}>
+            Remove
+          </button>
+        ) : null}
+      </>
+    );
+  };
+
   return (
     <>
       <Paper className={classes.root}>
         <Typography variant="h2">SSL/TLS Certificate</Typography>
-        {error && <Notice error text={error} spacingTop={8} />}
-        {!(request.loading || error) && (
-          <Notice
-            success={hasSSL}
-            warning={!hasSSL}
-            spacingTop={8}
-            text={
-              <>
-                This bucket {hasSSL ? 'has' : 'does not have'} a TLS certificate
-                available.{' '}
-                {hasSSL ? (
-                  <button
-                    className={classes.button}
-                    onClick={() => setOpen(true)}
-                  >
-                    Remove
-                  </button>
-                ) : null}
-              </>
-            }
-          />
-        )}
-        <Typography>
+        <Notice
+          success={hasSSL}
+          warning={!hasSSL}
+          spacingTop={8}
+          spacingBottom={0}
+          text={getNoticeText()}
+        />
+        <Typography className={classes.helperText}>
           Object Storage buckets are automatically served with a default TLS
           certificate that is valid for subdomains of linodeobjects.com. You can
           upload a custom certificate that will be used for the TLS portion of
@@ -144,6 +153,7 @@ export const BucketSSL: React.FC<Props> = props => {
               rows="4"
               // className={classes.keyTextarea}
               data-testid="ssl-cert-input"
+              errorText={errorMap.certificate}
             />
           </Grid>
           <Grid item xs={6}>
@@ -155,9 +165,19 @@ export const BucketSSL: React.FC<Props> = props => {
               rows="4"
               // className={classes.keyTextarea}
               data-testid="ssl-cert-input"
+              errorText={errorMap.private_key}
             />
           </Grid>
+
           <Grid item>
+            {errorMap.none && (
+              <Notice
+                error
+                text={errorMap.none}
+                spacingTop={8}
+                spacingBottom={0}
+              />
+            )}
             <ActionsPanel>
               <Button
                 onClick={onSubmit}

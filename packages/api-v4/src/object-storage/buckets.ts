@@ -7,7 +7,7 @@ import Request, {
   setXFilter
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { CreateBucketSchema } from './buckets.schema';
+import { CreateBucketSchema, UploadCertificateSchema } from './buckets.schema';
 import {
   ObjectStorageBucket,
   ObjectStorageBucketRequestPayload,
@@ -116,7 +116,7 @@ export const uploadSSLCert = (
 ) =>
   Request<ObjectStorageBucketSSLResponse>(
     setMethod('POST'),
-    setData(data),
+    setData(data, UploadCertificateSchema),
     setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/ssl`)
   );
 
