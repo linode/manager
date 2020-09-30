@@ -60,7 +60,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   vlanSelect: {
-    paddingLeft: '54px !important'
+    paddingLeft: theme.spacing(2) + 24,
+    paddingTop: theme.spacing(),
+    paddingBottom: theme.spacing(),
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: theme.spacing(4) + 24
+    }
   }
 }));
 

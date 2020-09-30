@@ -83,7 +83,9 @@ export const SelectVLAN: React.FC<Props> = props => {
           options.find(thisOption => thisOption.value === selectedVlanID) ??
           null
         }
-        label={''}
+        label={'Select a VLAN'}
+        aria-describedby={helperText}
+        hideLabel
         disabled={disabled}
         errorText={error || vlanError}
         noOptionsMessage={() => 'No VLANS available in the selected region.'}
