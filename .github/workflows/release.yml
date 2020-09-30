@@ -107,8 +107,6 @@ jobs:
           path: packages/api-v4
       - uses: JS-DevTools/npm-publish@v1
         with:
-          # TODO: remove dry-run flag
-          dry-run: true
           token: ${{ secrets.NPM_AUTH_TOKEN }}
           package: ./packages/api-v4/package.json
 
