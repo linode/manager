@@ -273,6 +273,7 @@ export const EventsLanding: React.FC<CombinedProps> = props => {
               >
                 Event
               </TableCell>
+              <TableCell data-qa-message-header>Message</TableCell>
               <TableCell data-qa-events-duration-header>Duration</TableCell>
               <TableCell data-qa-events-time-header>When</TableCell>
             </TableRow>

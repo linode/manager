@@ -58,7 +58,9 @@ export const EventRow: React.FC<CombinedProps> = props => {
     entityId,
     duration: event.duration,
     username: event.username,
-    action: event.action
+    action: event.action,
+    // This references the message field we get from API, whereas the generic 'message' prop is constructed by Cloud above.
+    eventMessage: event.message
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
@@ -74,6 +76,7 @@ export interface RowProps {
   created: string;
   username: string | null;
   duration: Event['duration'];
+  eventMessage: string | null;
 }
 
 export const Row: React.FC<RowProps> = props => {
@@ -88,7 +91,8 @@ export const Row: React.FC<RowProps> = props => {
     type,
     created,
     username,
-    duration
+    duration,
+    eventMessage
   } = props;
 
   /** Some event types may not be handled by our system (or new types
@@ -130,6 +134,10 @@ export const Row: React.FC<RowProps> = props => {
           {displayedMessage}
         </Typography>
       </TableCell>
+      <TableCell parentColumn="Message">
+        <Typography variant="body1">{eventMessage}</Typography>
+      </TableCell>
+
       <TableCell parentColumn="Duration">
         <Typography variant="body1">
           {/* There is currently an API bug where host_reboot event durations are

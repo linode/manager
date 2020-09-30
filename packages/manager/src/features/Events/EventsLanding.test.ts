@@ -21,7 +21,8 @@ const someEvent: Event[] = [
       url: '/v4/linode/instances/11440645'
     },
     status: 'finished',
-    duration: 0
+    duration: 0,
+    message: null
   }
 ];
 
