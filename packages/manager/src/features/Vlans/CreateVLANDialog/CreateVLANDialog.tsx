@@ -7,7 +7,6 @@ import {
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -32,10 +31,12 @@ import { vlanContext } from './CreateVLANContext';
 const useStyles = makeStyles((theme: Theme) => ({
   form: {},
   formSection: {
-    marginBottom: theme.spacing(4)
+    marginBottom: theme.spacing(3)
   },
   helperText: {
     marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(),
+    lineHeight: 1.5,
     fontSize: '1rem'
   }
 }));
@@ -57,7 +58,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
     initialValues: {
       description: '',
       cidr_block: '10.0.0.0/24',
-      region: regionIDsWithVLANs[0] ?? '',
+      region: '',
       linodes: []
     },
     validationSchema: createVlanSchema,
@@ -130,6 +131,18 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
     >
       {!!formik.status && <Notice error text={formik.status.generalError} />}
       <form className={classes.form} onSubmit={formik.handleSubmit}>
+        <div className={classes.formSection}>
+          <RegionSelect
+            label={'Region'}
+            placeholder={'Regions'}
+            errorText={formik.errors.region}
+            handleSelection={(regionID: string) =>
+              formik.setFieldValue('region', regionID)
+            }
+            regions={regionsWithVLANS}
+            selectedID={formik.values.region}
+          />
+        </div>
         <div className={classes.formSection} data-testid="label-input">
           <TextField
             label="Label"
@@ -141,18 +154,6 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
               formik.touched.description ? formik.errors.description : undefined
             }
             data-testid="description"
-          />
-        </div>
-        <div className={classes.formSection}>
-          <RegionSelect
-            label={'Region'}
-            placeholder={' '}
-            errorText={formik.errors.region}
-            handleSelection={(regionID: string) =>
-              formik.setFieldValue('region', regionID)
-            }
-            regions={regionsWithVLANS}
-            selectedID={formik.values.region}
           />
         </div>
         <div className={classes.formSection}>
@@ -198,16 +199,14 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
             label="Reboot the selected Linodes automatically after creating the VLAN"
           />
         </div>
-        <ActionsPanel>
-          <Button
-            onClick={() => formik.handleSubmit()}
-            buttonType="primary"
-            loading={formik.isSubmitting}
-            data-testid="submit-vlan-form"
-          >
-            Create VLAN
-          </Button>
-        </ActionsPanel>
+        <Button
+          onClick={() => formik.handleSubmit()}
+          buttonType="primary"
+          loading={formik.isSubmitting}
+          data-testid="submit-vlan-form"
+        >
+          Create VLAN
+        </Button>
       </form>
     </Dialog>
   );
