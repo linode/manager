@@ -1,20 +1,25 @@
 import {
   Config,
-  linodeReboot,
   Disk,
+  getInterfaces,
   getLinodeKernels,
-  Kernel
+  Kernel,
+  LinodeInterface,
+  linodeReboot
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { VLAN } from '@linode/api-v4/lib/vlans';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
+import { bindActionCreators, Dispatch } from 'redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import RootRef from 'src/components/core/RootRef';
+import { getAllVlans } from 'src/store/vlans/vlans.requests';
 import {
   createStyles,
   Theme,
@@ -22,16 +27,18 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/TableCell/TableCell_CMR.tsx';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import OrderBy from 'src/components/OrderBy';
+import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR.tsx';
 import TableContentWrapper from 'src/components/TableContentWrapper';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   DeleteLinodeConfig,
@@ -39,12 +46,9 @@ import {
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAll, GetAllData } from 'src/utilities/getAll';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer_CMR';
 import ConfigRow from './ConfigRow_CMR';
-import OrderBy from 'src/components/OrderBy';
-import { getAll } from 'src/utilities/getAll';
-
-import Paginate from 'src/components/Paginate';
 
 type ClassNames =
   | 'root'
@@ -109,7 +113,8 @@ const styles = (theme: Theme) =>
 type CombinedProps = LinodeContext &
   WithStyles<ClassNames> &
   WithSnackbarProps &
-  StateProps;
+  StateProps &
+  DispatchProps;
 
 interface State {
   configDrawer: ConfigDrawerState;
@@ -120,6 +125,9 @@ interface State {
   kernels: Kernel[];
   kernelError: APIError[] | null;
   kernelsLoading: boolean;
+  interfaces: LinodeInterface[];
+  interfacesLoading: boolean;
+  interfacesError: APIError[] | null;
 }
 
 interface ConfigDrawerState {
@@ -163,7 +171,10 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     configDrawer: this.defaultConfigDrawerState,
     kernels: [],
     kernelError: null,
-    kernelsLoading: false
+    kernelsLoading: false,
+    interfaces: [],
+    interfacesLoading: false,
+    interfacesError: null
   };
 
   requestKernels = (linodeHypervisor: 'kvm' | 'xen') => {
@@ -184,8 +195,37 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       });
   };
 
+  requestInterfaces = () => {
+    this.setState({ interfacesLoading: true, interfacesError: null });
+
+    getInterfaces(this.props.linodeId)
+      .then(({ data: interfaces }) => {
+        this.setState({
+          interfaces,
+          interfacesLoading: false
+        });
+      })
+      .catch(error => {
+        this.setState({
+          interfacesLoading: false,
+          interfacesError: getAPIErrorOrDefault(
+            error,
+            'Unable to load Linode Interfaces.'
+          )
+        });
+      });
+  };
+
+  maybeRequestVlans = () => {
+    if (this.props.vlansLastUpdated === 0 && !this.props.vlansLoading) {
+      this.props.getAllVlans().catch(() => null); // Handle errors with Redux.
+    }
+  };
+
   componentDidMount() {
     this.requestKernels(this.props.linodeHypervisor);
+    this.requestInterfaces();
+    this.maybeRequestVlans();
   }
 
   configsPanel = React.createRef();
@@ -236,7 +276,8 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           actions={this.deleteConfigConfirmationActions}
         >
           <Typography>
-            Are you sure you want to delete "{this.state.confirmDelete.label}?"
+            Are you sure you want to delete &quot;
+            {this.state.confirmDelete.label}?&quot;
           </Typography>
         </ConfirmationDialog>
         <ConfirmationDialog
@@ -247,7 +288,8 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           actions={this.bootConfigConfirmationActions}
         >
           <Typography>
-            Are you sure you want to boot "{this.state.confirmBoot.label}?"
+            Are you sure you want to boot &quot;{this.state.confirmBoot.label}
+            ?&quot;
           </Typography>
         </ConfirmationDialog>
       </React.Fragment>
@@ -503,11 +545,18 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                       <TableContentWrapper
                         loading={
                           (configsLoading && configsLastUpdated === 0) ||
-                          this.state.kernelsLoading
+                          this.state.kernelsLoading ||
+                          this.state.interfacesLoading ||
+                          this.props.vlansLoading
                         }
                         lastUpdated={configsLastUpdated}
                         length={paginatedData.length}
-                        error={configsError}
+                        error={
+                          configsError ??
+                          this.state.interfacesError ??
+                          this.props.vlansError ??
+                          undefined
+                        }
                       >
                         {paginatedData.map(thisConfig => {
                           const kernel = this.state.kernels.find(
@@ -525,6 +574,8 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               onEdit={this.openForEditing}
                               onDelete={this.confirmDelete}
                               readOnly={readOnly}
+                              interfaces={this.state.interfaces}
+                              vlans={this.props.vlansData}
                             />
                           );
                         })}
@@ -591,6 +642,10 @@ interface StateProps {
   configsError?: APIError[];
   configsLoading: boolean;
   configsLastUpdated: number;
+  vlansData: Record<string, VLAN>;
+  vlansLoading: boolean;
+  vlansLastUpdated: number;
+  vlansError?: APIError[];
 }
 
 const mapStateToProps: MapState<StateProps, LinodeContext> = (
@@ -601,11 +656,27 @@ const mapStateToProps: MapState<StateProps, LinodeContext> = (
   return {
     configsLastUpdated: configState?.lastUpdated ?? 0,
     configsLoading: configState?.loading ?? false,
-    configsError: configState?.error.read ?? undefined
+    configsError: configState?.error.read ?? undefined,
+    vlansData: state.__resources.vlans.itemsById,
+    vlansLoading: state.__resources.vlans.loading,
+    vlansLastUpdated: state.__resources.vlans.lastUpdated,
+    vlansError: state.__resources.vlans.error.read
   };
 };
 
-const connected = connect(mapStateToProps);
+interface DispatchProps {
+  getAllVlans: () => Promise<GetAllData<VLAN>>;
+}
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      getAllVlans
+    },
+    dispatch
+  );
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   linodeContext,
