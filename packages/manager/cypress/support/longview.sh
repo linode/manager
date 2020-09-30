@@ -5,15 +5,18 @@
 # set curlCommand [lindex $argv 2]
 
 spawn ssh root@$env(LINODEIP)
-expect "*?yes/no"
+sleep 65
+expect "*yes/no*"
 send "yes\r"
-expect "*?assword"
+expect "*assword"
 send "$env(LINODEPASSWORD)\r"
-expect "*?localhost"
+expect "*root@localhost:~#"
 send "$env(CURLCOMMAND)\r"
-expect "*?localhost"
+expect "*root@localhost:~#"
 send "sudo systemctl start longview\r"
-expect "*?localhost"
+expect "*root@localhost:~#"
 send "exit\r"
+expect "%closed."
+sleep 60
 exit
 interact
