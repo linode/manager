@@ -11,7 +11,7 @@ import { handlers, mockDataHandlers } from './serverHandlers';
  */
 if (MOCK_SERVICE_WORKER) {
   const worker = setupWorker(...handlers);
-  // worker.start();
+  worker.start();
 
   // Subscribe to changes from the mockDataController, which is updated by local dev tools.
   mockDataController.subscribe(mockData => {
