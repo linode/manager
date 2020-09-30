@@ -1,15 +1,17 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import { makeStyles } from 'src/components/core/styles';
+import EntityHeader from 'src/components/EntityHeader';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
-import LandingHeader from 'src/components/LandingHeader';
 import VlanDetailRow from './VlanDetailRow';
 import VlanEntityDetail from './VlanEntityDetail';
 
 const useStyles = makeStyles(() => ({
-  table: {
-    marginTop: 40
+  link: {
+    marginRight: -11
   }
 }));
 
@@ -26,16 +28,16 @@ const VlanDetail: React.FC<CombinedProps> = props => {
       widthPercent: 15
     },
     {
-      label: 'Region',
-      dataColumn: 'region',
+      label: 'Status',
+      dataColumn: 'status',
       sortable: true,
       widthPercent: 15
     },
     {
-      label: 'Linodes',
-      dataColumn: 'linodes',
-      sortable: false,
-      widthPercent: 25,
+      label: 'VLAN IP',
+      dataColumn: 'ip',
+      sortable: true,
+      widthPercent: 15,
       hideOnMobile: true
     },
     {
@@ -50,7 +52,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
       visuallyHidden: true,
       dataColumn: '',
       sortable: false,
-      widthPercent: 5
+      widthPercent: 15
     }
   ];
 
@@ -64,17 +66,21 @@ const VlanDetail: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <VlanEntityDetail />
-      <div className={classes.table}>
-        <LandingHeader
+      <VlanEntityDetail openTagDrawer={() => {}} />
+      <div style={{ marginTop: 20 }}>
+        <EntityHeader
           title="Linodes"
-          entity="Linode"
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          onAddNew={() => {}}
-          docsLink=""
+          isSecondary
+          actions={
+            <AddNewLink
+              className={classes.link}
+              label="Add a Linode..."
+              onClick={() => {}}
+            />
+          }
         />
         <EntityTable
-          entity="vlans"
+          entity="linodes"
           groupByTag={false}
           row={vLanRow}
           headers={headers}
