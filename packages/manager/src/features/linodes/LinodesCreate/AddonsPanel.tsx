@@ -183,7 +183,7 @@ const AddonsPanel: React.FC<CombinedProps> = props => {
             </Grid>
           </React.Fragment>
         )}
-        {flags.cmr ? (
+        {flags.cmr && flags.vlans ? (
           <Grid container className={classes.lastItem}>
             <Grid item xs={12}>
               <Divider className={classes.divider} />

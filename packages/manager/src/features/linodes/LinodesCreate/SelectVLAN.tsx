@@ -5,6 +5,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVlans from 'src/hooks/useVlans';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -63,6 +64,10 @@ export const SelectVLAN: React.FC<Props> = props => {
     handleSelectVLAN(value);
   };
 
+  const vlanError = vlans.error.read
+    ? getAPIErrorOrDefault(vlans.error.read, 'Error loading VLANs')[0].reason
+    : undefined;
+
   const _Select = (
     <>
       <Typography className={classes.header}>
@@ -80,7 +85,7 @@ export const SelectVLAN: React.FC<Props> = props => {
         }
         label={''}
         disabled={disabled}
-        errorText={error}
+        errorText={error || vlanError}
         noOptionsMessage={() => 'No VLANS available in the selected region.'}
         placeholder="Select a VLAN"
         onChange={onChange}
