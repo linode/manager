@@ -97,7 +97,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
 
   const request = useAPIRequest(
     () =>
-      getInterfaces(linodeId ?? 0).then(interfaces => {
+      getInterfaces(linodeId).then(interfaces => {
         return interfaces.data.filter(
           individualInterface =>
             individualInterface.type !== 'default' &&
@@ -230,11 +230,17 @@ export const getInterfaceName = (
   interfaceID: number,
   configs: Config[]
 ): string | null => {
-  const firstConfig = configs[0];
-  for (const [key, value] of Object.entries(firstConfig.interfaces)) {
-    if (value?.id === interfaceID) {
-      return key;
+  let interfaceName = '';
+
+  configs.forEach(config => {
+    for (const [key, value] of Object.entries(config.interfaces)) {
+      if (value?.id === interfaceID) {
+        interfaceName = key;
+      }
     }
-  }
-  return null;
+  });
+
+  return interfaceName.length > 0 ? interfaceName : null;
 };
+
+// Configs is array, config.interfaces is an object
