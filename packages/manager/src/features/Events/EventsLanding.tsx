@@ -37,9 +37,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center'
   },
   labelCell: {
-    width: '60%',
+    width: '40%',
     minWidth: 200,
     paddingLeft: 10
+  },
+  messageCell: {
+    width: '30%'
   }
 }));
 
@@ -275,7 +278,7 @@ export const EventsLanding: React.FC<CombinedProps> = props => {
               </TableCell>
               <TableCell data-qa-events-duration-header>Duration</TableCell>
               <TableCell data-qa-events-time-header>When</TableCell>
-              <TableCell>Message</TableCell>
+              <TableCell className={classes.messageCell}>Message</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -322,12 +325,11 @@ export const renderTableBody = (
   if (loading) {
     return (
       <TableRowLoading
-        colSpan={4}
+        colSpan={5}
         numberOfRows={10}
-        numberOfColumns={3}
+        numberOfColumns={4}
         oneLine
         data-qa-events-table-loading
-        firstColWidth={60}
         compact
       />
     );
@@ -359,12 +361,11 @@ export const renderTableBody = (
         ))}
         {isRequesting && (
           <TableRowLoading
-            colSpan={4}
-            numberOfColumns={3}
+            colSpan={5}
+            numberOfColumns={4}
             numberOfRows={4}
             oneLine
             compact
-            firstColWidth={60}
             transparent
           />
         )}
