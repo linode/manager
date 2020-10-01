@@ -15,6 +15,8 @@ const close = jest.fn();
 
 const spy = jest.spyOn<any, any>(request, 'createVlan');
 
+jest.mock('src/components/EnhancedSelect/Select');
+
 beforeEach(() => jest.clearAllMocks());
 
 const renderComponent = () =>
@@ -37,6 +39,7 @@ describe('Create VLAN dialog', () => {
 
   it('should create a VLAN on submit', async () => {
     renderComponent();
+    userEvent.selectOptions(screen.getByLabelText(/region/i), 'ca-central');
 
     userEvent.click(screen.getByTestId('submit-vlan-form'));
     await waitFor(() => expect(spy).toHaveBeenCalledTimes(1));
@@ -44,6 +47,7 @@ describe('Create VLAN dialog', () => {
 
   it('should close the dialog on submit', async () => {
     renderComponent();
+    userEvent.selectOptions(screen.getByLabelText(/region/i), 'ca-central');
 
     userEvent.click(screen.getByTestId('submit-vlan-form'));
     await waitFor(() => expect(close).toHaveBeenCalledTimes(1));
