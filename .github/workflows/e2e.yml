@@ -1,0 +1,27 @@
+name: Run Cypress E2E Tests
+on:
+  push:
+    branches:
+      - M3-4577-github-actions-e2e
+jobs:
+  run-cypress-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}        
+        env:
+          REACT_APP_LOGIN_ROOT: https://login.linode.com
+          REACT_APP_API_ROOT: https://api.linode.com/v4
+          REACT_APP_APP_ROOT: http://localhost:3000
+          REACT_APP_MOCK_SERVICE_WORKER: false
+          REACT_APP_LAUNCH_DARKLY_ID: 5cd5be32283709081fd70fbb
+       - run: yarn up
+       - run: yarn cy:e2e
