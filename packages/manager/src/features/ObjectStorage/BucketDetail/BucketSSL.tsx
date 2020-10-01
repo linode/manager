@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
     paddingTop: theme.spacing(),
     lineHeight: 1.5
+  },
+  textArea: {
+    minWidth: '100%'
   }
 }));
 
@@ -98,6 +101,8 @@ export const AddCertForm: React.FC<FormProps> = props => {
 
   const errorMap = getErrorMap(['certificate', 'private_key'], error);
 
+  const classes = useStyles();
+
   const onSubmit = () => {
     setSubmitting(true);
     setError(undefined);
@@ -120,30 +125,43 @@ export const AddCertForm: React.FC<FormProps> = props => {
         <Notice error text={errorMap.none} spacingTop={8} spacingBottom={0} />
       )}
       <Grid container>
-        <Grid item xs={6}>
-          <TextField
-            label="Certificate"
-            onChange={(e: any) => setCertificate(e.target.value)}
-            value={certificate}
-            multiline
-            fullWidth={false}
-            rows="4"
-            // className={classes.keyTextarea}
-            data-testid="ssl-cert-input"
-            errorText={errorMap.certificate}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label="Private Key"
-            onChange={(e: any) => setSSLKey(e.target.value)}
-            value={sslKey}
-            multiline
-            rows="4"
-            // className={classes.keyTextarea}
-            data-testid="ssl-cert-input"
-            errorText={errorMap.private_key}
-          />
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          justify="center"
+          spacing={4}
+        >
+          <Grid item xs={6}>
+            <TextField
+              label="Certificate"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setCertificate(e.target.value)
+              }
+              value={certificate}
+              multiline
+              fullWidth={false}
+              rows="4"
+              className={classes.textArea}
+              data-testid="ssl-cert-input"
+              errorText={errorMap.certificate}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Private Key"
+              fullWidth
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSSLKey(e.target.value)
+              }
+              value={sslKey}
+              className={classes.textArea}
+              multiline
+              rows="4"
+              data-testid="ssl-cert-input"
+              errorText={errorMap.private_key}
+            />
+          </Grid>
         </Grid>
         <Grid item>
           <ActionsPanel>
