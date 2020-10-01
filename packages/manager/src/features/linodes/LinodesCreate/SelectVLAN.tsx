@@ -88,7 +88,7 @@ export const SelectVLAN: React.FC<Props> = props => {
         hideLabel
         disabled={disabled}
         errorText={error || vlanError}
-        noOptionsMessage={() => 'No VLANS available in the selected region.'}
+        noOptionsMessage={() => 'No VLANs available in the selected region.'}
         placeholder="Select a VLAN"
         onChange={onChange}
       />
