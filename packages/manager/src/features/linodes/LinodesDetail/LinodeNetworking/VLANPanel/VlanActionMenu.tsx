@@ -6,7 +6,7 @@ import {
   useTheme,
   useMediaQuery
 } from 'src/components/core/styles';
-import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import ActionMenu from 'src/components/ActionMenu_CMR';
 import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -79,56 +79,40 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
 
   const { vlanID, vlanLabel, triggerRemoveVlan } = props;
 
-  const inlineActions = [
+  const actions = [
     {
-      actionText: 'Details',
+      title: 'Details',
       className: classes.link,
-      href: `networking/vlans/${vlanID}`
+      onClick: () => {
+        history.push({
+          pathname: `/networking/vlans/${vlanID}`
+        });
+      }
     },
     {
-      actionText: 'Remove',
+      title: 'Remove',
       onClick: () => {
         triggerRemoveVlan(vlanID, vlanLabel);
       }
     }
   ];
 
-  const createActions = () => (): Action[] => {
-    return [
-      {
-        title: 'Details',
-        onClick: () => {
-          history.push({
-            pathname: `networking/vlans/${vlanID}`
-          });
-        }
-      },
-      {
-        title: 'Remove',
-        onClick: () => {
-          triggerRemoveVlan(vlanID, vlanLabel);
-        }
-      }
-    ];
-  };
-
   return (
     <div className={classes.root}>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        actions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               className={action.className}
-              href={action.href}
               onClick={action.onClick}
             />
           );
         })}
       {matchesSmDown && (
         <ActionMenu
-          createActions={createActions()}
+          createActions={() => actions}
           ariaLabel={`Action menu for Virtual LAN ${props.vlanLabel}`}
         />
       )}

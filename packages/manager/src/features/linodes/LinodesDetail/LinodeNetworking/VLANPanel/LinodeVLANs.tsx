@@ -55,19 +55,19 @@ type CombinedProps = LinodeContextProps &
 const vlanHeaders = [
   {
     label: 'Label',
-    dataColumn: 'label',
+    dataColumn: 'description',
     sortable: true,
     widthPercent: 25
   },
   {
     label: 'Address',
-    dataColumn: 'address',
+    dataColumn: 'ip_address',
     sortable: true,
     widthPercent: 10
   },
   {
     label: 'Interface',
-    dataColumn: 'interface',
+    dataColumn: 'interfaceName',
     sortable: true,
     widthPercent: 5
   },
