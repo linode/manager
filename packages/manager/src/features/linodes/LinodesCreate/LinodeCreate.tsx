@@ -269,14 +269,14 @@ export class LinodeCreate extends React.PureComponent<
 
   stackScriptTabs: CreateTab[] = [
     {
-      title: 'Community StackScripts',
-      type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`
-    },
-    {
       title: 'Account StackScripts',
       type: 'fromStackScript',
       routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`
+    },
+    {
+      title: 'Community StackScripts',
+      type: 'fromStackScript',
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`
     }
   ];
 
@@ -456,10 +456,10 @@ export class LinodeCreate extends React.PureComponent<
                     <TabPanels className={classes.imageSelect}>
                       <SafeTabPanel index={0}>
                         <FromStackScriptContent
-                          category="community"
+                          category="account"
                           accountBackupsEnabled={accountBackupsEnabled}
                           userCannotCreateLinode={userCannotCreateLinode}
-                          request={getCommunityStackscripts}
+                          request={getMineAndAccountStackScripts}
                           header={'Select a StackScript'}
                           imagesData={imagesData!}
                           regionsData={regionsData!}
@@ -469,10 +469,10 @@ export class LinodeCreate extends React.PureComponent<
                       </SafeTabPanel>
                       <SafeTabPanel index={1}>
                         <FromStackScriptContent
-                          category="account"
+                          category="community"
                           accountBackupsEnabled={accountBackupsEnabled}
                           userCannotCreateLinode={userCannotCreateLinode}
-                          request={getMineAndAccountStackScripts}
+                          request={getCommunityStackscripts}
                           header={'Select a StackScript'}
                           imagesData={imagesData!}
                           regionsData={regionsData!}
