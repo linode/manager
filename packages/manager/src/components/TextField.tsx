@@ -97,7 +97,7 @@ const styles = (theme: Theme) =>
     },
     helperTextTop: {
       marginBottom: theme.spacing(),
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing()
     },
     noMarginTop: {
       marginTop: 0

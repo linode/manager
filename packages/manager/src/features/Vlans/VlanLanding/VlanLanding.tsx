@@ -3,11 +3,13 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
+import { vlanContext } from 'src/context';
 import VLanRow from './VLanRow';
 
 type CombinedProps = RouteComponentProps<{}>;
 
 const VlanLanding: React.FC<CombinedProps> = props => {
+  const context = React.useContext(vlanContext);
   const headers = [
     {
       label: 'Label',
@@ -60,6 +62,7 @@ const VlanLanding: React.FC<CombinedProps> = props => {
         // TODO add vlan to type list
         iconType="linode"
         docsLink="http://google.com"
+        onAddNew={context.open}
       />
       <EntityTable
         entity="vlans"
