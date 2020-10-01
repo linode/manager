@@ -60,3 +60,31 @@ export const deleteVlan = (vlanID: number) =>
     setURL(`${API_ROOT}/networking/vlans/${vlanID}`),
     setMethod('DELETE')
   );
+
+/**
+ * connectVlan
+ *
+ * Connect one or more Linodes from a VLAN. The VLAN
+ * will be attached to an interface on every config
+ * on each target Linode.
+ */
+export const connectVlan = (vlanID: number, linodes: number[]) =>
+  Request<VLAN>(
+    setURL(`${API_ROOT}/networking/vlans/${vlanID}/connect`),
+    setMethod('POST'),
+    setData({ linodes })
+  );
+
+/**
+ * disconnectVlan
+ *
+ * Disconnect one or more Linodes from a VLAN. The VLAN
+ * will be detached from every config
+ * on each target Linode.
+ */
+export const disconnectVlan = (vlanID: number, linodes: number[]) =>
+  Request<VLAN>(
+    setURL(`${API_ROOT}/networking/vlans/${vlanID}/disconnect`),
+    setMethod('POST'),
+    setData({ linodes })
+  );

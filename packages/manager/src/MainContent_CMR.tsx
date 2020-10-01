@@ -259,7 +259,6 @@ const MainContent: React.FC<CombinedProps> = props => {
           closeMenu={() => toggleMenu(false)}
           isCollapsed={false}
           toggleTheme={props.toggleTheme}
-          toggleSpacing={props.toggleSpacing}
         />
         <NotificationProvider value={contextValue}>
           <div className={classes.content}>
