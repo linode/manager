@@ -23,5 +23,5 @@ jobs:
           REACT_APP_APP_ROOT: http://localhost:3000
           REACT_APP_MOCK_SERVICE_WORKER: false
           REACT_APP_LAUNCH_DARKLY_ID: 5cd5be32283709081fd70fbb
-       - run: yarn up
-       - run: yarn cy:e2e
+      - run: yarn up
+      - run: yarn cy:e2e
