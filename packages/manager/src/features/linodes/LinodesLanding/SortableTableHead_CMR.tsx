@@ -6,8 +6,8 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
+import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import TableView from 'src/assets/icons/table-view.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -115,7 +115,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
               disableRipple
               className={classes.toggleButton}
             >
-              <TableView />
+              <GridView />
             </IconButton>
 
             <div id="groupByDescription" className="visually-hidden">
