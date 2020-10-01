@@ -91,7 +91,7 @@ const styles = (theme: Theme) =>
       }
     },
     ipCell: {
-      width: '14%'
+      minWidth: 135
     },
     ipCellWrapper: {
       display: 'inline-flex',
