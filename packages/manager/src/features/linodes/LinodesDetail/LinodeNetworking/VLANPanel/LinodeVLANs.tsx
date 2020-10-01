@@ -109,17 +109,21 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
 
   const vlanData = React.useMemo(
     () =>
-      request.data.map(thisInterface => {
-        if (vlans.itemsById[thisInterface.vlan_id]) {
-          return {
-            ...vlans.itemsById[thisInterface.vlan_id],
-            ip_address: thisInterface.ip_address,
-            interfaceName: getInterfaceName(thisInterface.id, configs)
-          };
-        } else {
-          return undefined;
-        }
-      }),
+      request.data
+        .map(thisInterface => {
+          const thisVlan = vlans.itemsById[thisInterface.vlan_id];
+
+          if (thisVlan) {
+            return {
+              ...vlans.itemsById[thisInterface.vlan_id],
+              ip_address: thisInterface.ip_address,
+              interfaceName: getInterfaceName(thisInterface.id, configs)
+            };
+          } else {
+            return undefined;
+          }
+        })
+        .filter(Boolean),
     [request.data, vlans.itemsById, configs]
   );
 
@@ -148,7 +152,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
   const vlanRow = {
     handlers,
     Component: VlanTableRow,
-    data: removeUnmatchedVlans(vlanData) ?? [],
+    data: vlanData ?? [],
     loading,
     lastUpdated,
     error: request.error || vlans.error.read
@@ -219,36 +223,13 @@ export const getInterfaceName = (
   interfaceID: number,
   configs: Config[]
 ): string | null => {
-  let interfaceName = '';
-
   // Loop over the configs to find the matching interface.
-  configs.forEach(config => {
-    for (const [key, value] of Object.entries(config.interfaces)) {
+  for (let i = 0; i < configs.length; i++) {
+    for (const [key, value] of Object.entries(configs[i].interfaces)) {
       if (value?.id === interfaceID) {
-        interfaceName = key;
+        return key;
       }
     }
-  });
-
-  return interfaceName.length > 0 ? interfaceName : null;
-};
-
-interface VlanData {
-  ip_address: string;
-  interfaceName: string | null;
-  id: number;
-  description: string;
-  region: string;
-  linodes: number[];
-  cidr_block: string;
-}
-
-export const removeUnmatchedVlans = (vlanData: VlanData[]) => {
-  vlanData.forEach((vlan, idx) => {
-    if (typeof vlan !== 'object') {
-      vlanData.splice(idx, 1);
-    }
-  });
-
-  return vlanData;
+  }
+  return null;
 };
