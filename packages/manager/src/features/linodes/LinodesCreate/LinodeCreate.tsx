@@ -134,6 +134,7 @@ interface Props {
   resetCreationState: () => void;
   setBackupID: (id: number) => void;
   showGeneralError?: boolean;
+  setVlanID: (id: number | null) => void;
 }
 
 const errorMap = [
@@ -144,7 +145,8 @@ const errorMap = [
   'region',
   'root_pass',
   'stackscript_id',
-  'type'
+  'type',
+  'interfaces'
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -267,14 +269,14 @@ export class LinodeCreate extends React.PureComponent<
 
   stackScriptTabs: CreateTab[] = [
     {
-      title: 'Community StackScripts',
-      type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`
-    },
-    {
       title: 'Account StackScripts',
       type: 'fromStackScript',
       routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`
+    },
+    {
+      title: 'Community StackScripts',
+      type: 'fromStackScript',
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`
     }
   ];
 
@@ -454,10 +456,10 @@ export class LinodeCreate extends React.PureComponent<
                     <TabPanels className={classes.imageSelect}>
                       <SafeTabPanel index={0}>
                         <FromStackScriptContent
-                          category="community"
+                          category="account"
                           accountBackupsEnabled={accountBackupsEnabled}
                           userCannotCreateLinode={userCannotCreateLinode}
-                          request={getCommunityStackscripts}
+                          request={getMineAndAccountStackScripts}
                           header={'Select a StackScript'}
                           imagesData={imagesData!}
                           regionsData={regionsData!}
@@ -467,10 +469,10 @@ export class LinodeCreate extends React.PureComponent<
                       </SafeTabPanel>
                       <SafeTabPanel index={1}>
                         <FromStackScriptContent
-                          category="account"
+                          category="community"
                           accountBackupsEnabled={accountBackupsEnabled}
                           userCannotCreateLinode={userCannotCreateLinode}
-                          request={getMineAndAccountStackScripts}
+                          request={getCommunityStackscripts}
                           header={'Select a StackScript'}
                           imagesData={imagesData!}
                           regionsData={regionsData!}
@@ -598,14 +600,12 @@ export class LinodeCreate extends React.PureComponent<
             privateIP={this.props.privateIPEnabled}
             changeBackups={this.props.toggleBackupsEnabled}
             changePrivateIP={this.props.togglePrivateIPEnabled}
-            updateFor={[
-              this.props.privateIPEnabled,
-              this.props.backupsEnabled,
-              this.props.selectedTypeID,
-              this.props.createType
-            ]}
             disabled={userCannotCreateLinode}
             hidePrivateIP={this.props.createType === 'fromLinode'}
+            changeSelectedVLAN={this.props.setVlanID}
+            selectedVlanID={this.props.selectedVlanID}
+            selectedRegionID={this.props.selectedRegionID}
+            vlanError={hasErrorFor.interfaces}
           />
         </Grid>
         <Grid item className="mlSidebar">

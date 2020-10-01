@@ -3,18 +3,19 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
+import { Props as VLANProps } from 'src/containers/vlans.container';
+import { vlanContext } from 'src/context';
 import VLanRow from './VLanRow';
-import withVlans, { Props as VLANProps } from 'src/containers/vlans.container';
 import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
 import VlanDialog from './VlanDialog';
-import { VLANFactory } from 'src/factories/vlans';
+import useVlans from 'src/hooks/useVlans';
 
 type CombinedProps = RouteComponentProps<{}> & VLANProps;
 
 const VlanLanding: React.FC<CombinedProps> = props => {
   const { deleteVlan } = props;
-
-  const fakeVlans = VLANFactory.buildList(10);
+  const { vlans } = useVlans();
+  const context = React.useContext(vlanContext);
 
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
   const [selectedVlanID, setSelectedVlanID] = React.useState<
@@ -31,13 +32,6 @@ const VlanLanding: React.FC<CombinedProps> = props => {
   const handleOpenDeleteVlanModal = (id: number, label: string) => {
     openModal(id, label);
   };
-
-  const {
-    itemsById: vlans,
-    loading: vlansLoading,
-    error: vlansError,
-    lastUpdated: vlansLastUpdated
-  } = props;
 
   const headers = [
     {
@@ -74,10 +68,10 @@ const VlanLanding: React.FC<CombinedProps> = props => {
   const vLanRow = {
     handlers,
     Component: VLanRow,
-    data: Object.values(fakeVlans) ?? [],
-    loading: vlansLoading,
-    lastUpdated: vlansLastUpdated,
-    error: vlansError.read
+    data: Object.values(vlans.itemsById) ?? [],
+    loading: vlans.loading,
+    lastUpdated: vlans.lastUpdated,
+    error: vlans.error.read
   };
 
   return (
@@ -85,11 +79,10 @@ const VlanLanding: React.FC<CombinedProps> = props => {
       <LandingHeader
         title="Virtual LANs"
         entity="VLAN"
-        //onAddNew={addNew}
-        // TODO add vlan to type list
         iconType="linode"
         docsLink="http://google.com"
         headerOnly
+        onAddNew={context.open}
       />
       <EntityTable
         entity="vlans"
@@ -109,7 +102,4 @@ const VlanLanding: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, {}>(
-  React.memo,
-  withVlans<{}, CombinedProps>()
-)(VlanLanding);
+export default compose<CombinedProps, {}>(React.memo)(VlanLanding);

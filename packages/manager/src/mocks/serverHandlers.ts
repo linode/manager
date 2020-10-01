@@ -303,6 +303,9 @@ export const handlers = [
   }),
   rest.get('*/notifications', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(notificationFactory.buildList(1))));
+  }),
+  rest.post('*/networking/vlans', (req, res, ctx) => {
+    return res(ctx.json({}));
   })
 ];
 
