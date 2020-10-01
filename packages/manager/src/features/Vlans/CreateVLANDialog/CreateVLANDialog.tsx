@@ -89,6 +89,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
     formik.setFieldValue('region', regionID);
     // Reset the selected Linodes
     formik.setFieldValue('linodes', []);
+    setRebootOnCreate(false);
   };
 
   const handleLinodeSelect = (selected: number[]) => {
@@ -200,6 +201,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
             allowedRegions={
               formik.values.region ? [formik.values.region] : regionIDsWithVLANs
             }
+            selectedLinodes={formik.values.linodes}
             handleChange={handleLinodeSelect}
             errorText={formik.errors.linodes?.[0]}
             helperText={`Assign one or more Linodes to this VLAN, or add them later. Linodes must
