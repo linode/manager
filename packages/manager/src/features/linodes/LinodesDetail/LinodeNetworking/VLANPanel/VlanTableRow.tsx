@@ -68,10 +68,11 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
   };
 
   const getLinodeLinks = (data: number[]): JSX.Element => {
+    const firstFour = data.slice(0, 4);
     return (
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
-        {data.map(linodeID => (
+        {firstFour.map((linodeID, idx) => (
           <Link
             className={classes.link}
             key={linodeID}
@@ -79,8 +80,15 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
             data-testid="vlan-row-link"
           >
             {getLinodeLabel(linodeID)}
+            {(idx !== firstFour.length - 1 && data.length < 4 && `, `) ||
+              (data.length > 4 && `, `)}
           </Link>
         ))}
+        {data.length > 4 && (
+          <span>
+            {` `}plus {data.length - 4} more.
+          </span>
+        )}
       </>
     );
   };

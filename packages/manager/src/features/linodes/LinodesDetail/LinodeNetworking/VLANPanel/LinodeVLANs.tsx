@@ -148,7 +148,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
   const vlanRow = {
     handlers,
     Component: VlanTableRow,
-    data: vlanData ?? [],
+    data: removeUnmatchedVlans(vlanData) ?? [],
     loading,
     lastUpdated,
     error: request.error || vlans.error.read
@@ -231,4 +231,24 @@ export const getInterfaceName = (
   });
 
   return interfaceName.length > 0 ? interfaceName : null;
+};
+
+interface VlanData {
+  ip_address: string;
+  interfaceName: string | null;
+  id: number;
+  description: string;
+  region: string;
+  linodes: number[];
+  cidr_block: string;
+}
+
+export const removeUnmatchedVlans = (vlanData: VlanData[]) => {
+  vlanData.forEach((vlan, idx) => {
+    if (typeof vlan !== 'object') {
+      vlanData.splice(idx, 1);
+    }
+  });
+
+  return vlanData;
 };
