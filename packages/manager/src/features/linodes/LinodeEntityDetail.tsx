@@ -709,6 +709,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     ...theme.applyLinkStyles,
     padding: `0px 10px`,
     borderRight: `1px solid ${theme.color.grey6}`,
+    fontSize: '.875rem',
     fontWeight: 'bold',
     '&:hover': {
       textDecoration: 'none'

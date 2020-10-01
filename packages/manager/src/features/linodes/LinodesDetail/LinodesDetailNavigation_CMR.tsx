@@ -2,11 +2,12 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import TabLinkList from 'src/components/TabLinkList';
 import { withLinodeDetailContext } from './linodeDetailContext';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 const LinodeSummary_CMR = React.lazy(() =>
@@ -29,12 +30,25 @@ const LinodeSettings_CMR = React.lazy(() =>
   import('./LinodeSettings/LinodeSettings_CMR')
 );
 
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '& [data-reach-tab-list]': {
+      marginTop: 22
+    },
+    '& [data-reach-tab]': {
+      color: theme.color.blue
+    }
+  }
+}));
+
 type CombinedProps = ContextProps &
   RouteComponentProps<{
     linodeId: string;
   }>;
 
 const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const {
     linodeLabel,
     match: { url }
@@ -90,7 +104,11 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
       <DocumentTitleSegment
         segment={`${linodeLabel} - ${tabs[tabIndex]?.title ?? 'Detail View'}`}
       />
-      <Tabs index={tabIndex} onChange={handleTabChange}>
+      <Tabs
+        className={classes.root}
+        index={tabIndex}
+        onChange={handleTabChange}
+      >
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
