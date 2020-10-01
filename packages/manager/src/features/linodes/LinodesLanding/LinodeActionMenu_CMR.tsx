@@ -154,7 +154,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     const {
       linodeId,
       linodeLabel,
-      linodeBackups,
       linodeStatus,
       openDialog,
       openPowerActionDialog,
@@ -179,29 +178,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
     return (): Action[] => {
       const actions: Action[] = [
-        // inLandingDetailContext && {
-        //   title: 'Settings',
-        //   onClick: () => {
-        //     sendLinodeActionMenuItemEvent('Navigate to Settings Page');
-        //     history.push(`/linodes/${linodeId}/settings`);
-        //   }
-        // },
-        // linodeBackups.enabled
-        //   ? {
-        //       title: 'View Backups',
-        //       onClick: () => {
-        //         sendLinodeActionMenuItemEvent('Navigate to Backups Page');
-        //         history.push(`/linodes/${linodeId}/backup`);
-        //       }
-        //     }
-        //   : {
-        //       title: 'Enable Backups',
-        //       onClick: () => {
-        //         sendLinodeActionMenuItemEvent('Enable Backups');
-        //         openDialog('enable_backups', linodeId);
-        //       },
-        //       ...readOnlyProps
-        //     },
         {
           title: 'Clone',
           onClick: () => {
@@ -260,8 +236,19 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         }
       ];
 
+      if (matchesSmDown || inTableContext) {
+        actions.unshift({
+          title: 'Launch Console',
+          onClick: () => {
+            sendLinodeActionMenuItemEvent('Launch Console');
+            lishLaunch(linodeId);
+          },
+          ...readOnlyProps
+        });
+      }
+
       if (
-        linodeStatus === 'running' ||
+        (linodeStatus === 'running' && inTableContext) ||
         (linodeStatus === 'running' && !inTableContext && matchesSmDown)
       ) {
         actions.unshift({
@@ -278,17 +265,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           onClick: () => {
             sendLinodeActionMenuItemEvent('Reboot Linode');
             openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
-          },
-          ...readOnlyProps
-        });
-      }
-
-      if (matchesSmDown || inTableContext) {
-        actions.unshift({
-          title: 'Launch Console',
-          onClick: () => {
-            sendLinodeActionMenuItemEvent('Launch Console');
-            lishLaunch(linodeId);
           },
           ...readOnlyProps
         });
