@@ -6,6 +6,27 @@ const stackscript_data = array()
   .of(object())
   .nullable(true);
 
+/**
+ * Interfaces are Record<string, InterfaceItem>
+ *
+ * {
+ *  "eth0": { "id": 10 },
+ *  "eth1": { "id": 12 }
+ * }
+ *
+ * .default() and .lazy() below are required to
+ * make this dynamic field naming work out
+ */
+export const linodeInterfaceItemSchema = object({
+  id: number().required('Interface ID is required.')
+}).default(undefined);
+
+export const linodeInterfaceSchema = lazy((obj?: Record<any, any>) =>
+  typeof obj === 'undefined'
+    ? object().notRequired()
+    : object(Object.keys(obj).map(_ => linodeInterfaceItemSchema))
+);
+
 // const rootPasswordValidation = string().test(
 //   'is-strong-password',
 //   'Password does not meet strength requirements.',
@@ -60,7 +81,8 @@ export const CreateLinodeSchema = object({
     ),
     // .concat(rootPasswordValidation),
     otherwise: string().notRequired()
-  })
+  }),
+  interfaces: linodeInterfaceSchema
 });
 
 const alerts = object({
@@ -185,25 +207,6 @@ const helpers = object({
   network: boolean(),
   devtmpfs_automount: boolean()
 });
-
-/**
- * Interfaces are Record<string, InterfaceItem>
- *
- * {
- *  "eth0": { "id": 10 },
- *  "eth1": { "id": 12 }
- * }
- *
- * .default() and .lazy() below are required to
- * make this dynamic field naming work out
- */
-export const linodeInterfaceItemSchema = object({
-  id: number().required('Interface ID is required.')
-}).default(undefined);
-
-export const linodeInterfaceSchema = lazy((obj: Record<any, any>) =>
-  object(Object.keys(obj).map(_ => linodeInterfaceItemSchema))
-);
 
 export const CreateLinodeConfigSchema = object({
   label: string()
