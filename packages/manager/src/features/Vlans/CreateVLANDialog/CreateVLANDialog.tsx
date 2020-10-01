@@ -20,6 +20,7 @@ import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
+import useLinodes from 'src/hooks/useLinodes';
 import useRegions from 'src/hooks/useRegions';
 import {
   handleFieldErrors,
@@ -44,6 +45,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
   const classes = useStyles();
   const history = useHistory();
   const regions = useRegions();
+  const { linodes } = useLinodes();
   const regionsWithVLANS: ExtendedRegion[] = regions.entities
     .filter(thisRegion => thisRegion.capabilities.includes('Vlans'))
     .map(r => ({ ...r, display: dcDisplayNames[r.id] }));
@@ -61,7 +63,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
       linodes: []
     },
     validationSchema: createVlanSchema,
-    validateOnChange: true,
+    validateOnChange: false,
     onSubmit: values => submitForm(values)
   });
 
@@ -97,6 +99,14 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
       setRebootOnCreate(false);
     }
     formik.setFieldValue('linodes', selected);
+    const selectedLinode = linodes.itemsById[selected[0]];
+    if (selectedLinode && !formik.values.region) {
+      // Set the region to the selected Linode's region.
+      // Because we update our filtering, we can assume
+      // that all selected Linodes in the array have the same
+      // region.
+      formik.setFieldValue('region', selectedLinode.region);
+    }
   };
 
   const submitForm = (values: CreateVLANPayload) => {
@@ -191,7 +201,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
               formik.values.region ? [formik.values.region] : regionIDsWithVLANs
             }
             handleChange={handleLinodeSelect}
-            selectedLinodes={formik.values.linodes}
+            errorText={formik.errors.linodes?.[0]}
             helperText={`Assign one or more Linodes to this VLAN, or add them later. Linodes must
             be in the same region as the VLAN.`}
           />
