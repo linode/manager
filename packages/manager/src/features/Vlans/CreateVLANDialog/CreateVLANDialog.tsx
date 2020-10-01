@@ -21,7 +21,6 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import useRegions from 'src/hooks/useRegions';
-import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -82,6 +81,12 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
   const [rebootOnCreate, setRebootOnCreate] = React.useState(false);
   const toggleRebootOnCreate = () => {
     setRebootOnCreate(current => !current);
+  };
+
+  const handleRegionSelect = (regionID: string) => {
+    formik.setFieldValue('region', regionID);
+    // Reset the selected Linodes
+    formik.setFieldValue('linodes', []);
   };
 
   const handleLinodeSelect = (selected: number[]) => {
@@ -146,9 +151,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
             label={'Region'}
             placeholder={'Regions'}
             errorText={formik.errors.region}
-            handleSelection={(regionID: string) =>
-              formik.setFieldValue('region', regionID)
-            }
+            handleSelection={handleRegionSelect}
             regions={regionsWithVLANS}
             selectedID={formik.values.region}
           />
@@ -184,12 +187,13 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
         </div>
         <div className={classes.formSection}>
           <LinodeMultiSelect
-            allowedRegions={regionIDsWithVLANs}
+            allowedRegions={
+              formik.values.region ? [formik.values.region] : regionIDsWithVLANs
+            }
             handleChange={handleLinodeSelect}
-            helperText={`Assign one or more Linodes to this VLAN, or add them later. Only Linodes
-          in regions that currently support VLANs (${arrayToList(
-            regionIDsWithVLANs.map(thisId => dcDisplayNames[thisId])
-          )}) will be displayed as options.`}
+            selectedLinodes={formik.values.linodes}
+            helperText={`Assign one or more Linodes to this VLAN, or add them later. Linodes must
+            be in the same region as the VLAN.`}
           />
           <Typography className={classes.helperText}>
             After creating this VLAN,{' '}
