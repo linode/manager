@@ -24,8 +24,8 @@ export const VlanDetailRow: React.FC = () => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell>Region</TableCell>
-      <TableCell>Linodes</TableCell>
+      <TableCell>Status</TableCell>
+      <TableCell>VLAN IP</TableCell>
       <TableCell>Tags</TableCell>
       <TableCell></TableCell>
     </TableRow>
