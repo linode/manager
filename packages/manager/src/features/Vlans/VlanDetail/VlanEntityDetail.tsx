@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 // import { Linode } from '@linode/api-v4/lib/linodes/types';
 // import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
+import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as React from 'react';
 import * as classnames from 'classnames';
 // import { useSnackbar } from 'notistack';
@@ -21,7 +22,7 @@ import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 // import { distroIcons } from 'src/components/ImageSelect/icons';
-// import { dcDisplayNames } from 'src/constants';
+import { dcDisplayNames } from 'src/constants';
 // import { OpenDialog } from 'src/features/linodes/types';
 // import useImages from 'src/hooks/useImages';
 // import useLinodes from 'src/hooks/useLinodes';
@@ -40,7 +41,7 @@ import Hidden from 'src/components/core/Hidden';
 
 interface VlanEntityDetailProps {
   // variant: LinodeEntityDetailVariant;
-  // linode: Linode;
+  vlan: VLAN;
   // username?: string;
   // openDialog: OpenDialog;
   // openPowerActionDialog: (
@@ -53,20 +54,18 @@ interface VlanEntityDetailProps {
   // linodeConfigs: Config[];
   // numVolumes: number;
   openTagDrawer: (tags: string[]) => void;
-  // isDetailLanding?: boolean;
 }
 
 const VlanEntityDetail: React.FC<VlanEntityDetailProps> = props => {
   const {
     // variant,
-    // linode,
+    vlan,
     // username,
     // openDialog,
     // openPowerActionDialog,
     // backups,
     // linodeConfigs,
     // numVolumes,
-    // isDetailLanding,
     openTagDrawer
   } = props;
 
@@ -87,32 +86,31 @@ const VlanEntityDetail: React.FC<VlanEntityDetailProps> = props => {
 
   // const linodePlan = linodeType?.label ?? null;
 
-  // const linodeRegionDisplay = dcDisplayNames[linode.region] ?? null;
+  const regionDisplay = dcDisplayNames[vlan.region] ?? null;
 
   return (
     <EntityDetail
       header={
         <Header
-        // variant={variant}
-        // imageVendor={imageVendor}
-        // linodeLabel={linode.label}
-        // linodeId={linode.id}
-        // linodeStatus={linode.status}
-        // openDialog={openDialog}
-        // openPowerActionDialog={openPowerActionDialog}
-        // linodeRegionDisplay={linodeRegionDisplay}
-        // backups={backups}
-        // linodeConfigs={linodeConfigs}
-        // isDetailLanding={isDetailLanding}
-        // type={'something'}
-        // image={'something'}
+          // variant={variant}
+          // imageVendor={imageVendor}
+          label={vlan.description}
+          id={vlan.id}
+          // linodeStatus={linode.status}
+          // openDialog={openDialog}
+          // openPowerActionDialog={openPowerActionDialog}
+          regionDisplay={regionDisplay}
+          // backups={backups}
+          // linodeConfigs={linodeConfigs}
+          // type={'something'}
+          // image={'something'}
         />
       }
       footer={
         <Footer
           // linodePlan={linodePlan}
-          // linodeRegionDisplay={linodeRegionDisplay}
-          // linodeId={linode.id}
+          regionDisplay={regionDisplay}
+          id={vlan.id}
           // linodeCreated={linode.created}
           tags={[]}
           // linodeLabel={linode.label}
@@ -132,8 +130,8 @@ export default React.memo(VlanEntityDetail);
 export interface HeaderProps {
   // variant: LinodeEntityDetailVariant;
   // imageVendor: string | null;
-  // linodeLabel: string;
-  // linodeId: number;
+  label: string;
+  id: number;
   // linodeStatus: Linode['status'];
   // openDialog: OpenDialog;
   // openPowerActionDialog: (
@@ -142,12 +140,11 @@ export interface HeaderProps {
   //   linodeLabel: string,
   //   linodeConfigs: Config[]
   // ) => void;
-  // linodeRegionDisplay: string;
+  regionDisplay: string;
   // backups: LinodeBackups;
   // type: string;
   // image: string;
   // linodeConfigs: Config[];
-  // isDetailLanding?: boolean;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -198,17 +195,16 @@ const Header: React.FC<HeaderProps> = props => {
   const {
     // variant,
     // imageVendor,
-    // linodeLabel,
-    // linodeId,
+    label,
+    id,
     // linodeStatus,
-    // linodeRegionDisplay,
+    regionDisplay
     // openDialog,
     // openPowerActionDialog,
     // backups,
     // type,
     // image,
-    // linodeConfigs,
-    // isDetailLanding
+    // linodeConfigs
   } = props;
 
   const classes = useHeaderStyles();
@@ -228,7 +224,7 @@ const Header: React.FC<HeaderProps> = props => {
           <DocumentationButton hideText href="https://www.linode.com/" />
         </Hidden>
       }
-      title="Insert Label"
+      title={label}
       bodyClassName={classes.body}
       body={
         <>
@@ -264,8 +260,8 @@ const Header: React.FC<HeaderProps> = props => {
 
 interface FooterProps {
   // linodePlan: string | null;
-  // linodeRegionDisplay: string | null;
-  // linodeId: number;
+  regionDisplay: string | null;
+  id: number;
   // linodeCreated: string;
   tags: string[];
   // linodeLabel: string;
@@ -326,8 +322,8 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
 export const Footer: React.FC<FooterProps> = React.memo(props => {
   const {
     // linodePlan,
-    // linodeRegionDisplay,
-    // linodeId,
+    regionDisplay,
+    id,
     // linodeCreated,
     tags,
     openTagDrawer
@@ -370,9 +366,11 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     <Grid container direction="row" justify="space-between" alignItems="center">
       <Grid item xs={12} sm={7}>
         <div className={classes.detailsSection}>
-          <button onClick={() => {}} className={classes.button}>
-            Insert Region
-          </button>
+          {regionDisplay && (
+            <button onClick={() => {}} className={classes.button}>
+              {regionDisplay}
+            </button>
+          )}
           <Typography
             className={classnames({
               [classes.listItem]: true
@@ -386,7 +384,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
               [classes.listItemLast]: true
             })}
           >
-            Insert ID
+            {id}
           </Typography>
           <Hidden xsDown>
             <Typography className={classes.linodeCreated}>

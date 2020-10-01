@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -15,7 +16,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-type CombinedProps = RouteComponentProps<{}>;
+export type CombinedProps = RouteComponentProps<{}> & VLAN;
 
 const VlanDetail: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -64,9 +65,11 @@ const VlanDetail: React.FC<CombinedProps> = props => {
     error: undefined
   };
 
+  const { vlan } = props;
+
   return (
     <React.Fragment>
-      <VlanEntityDetail openTagDrawer={() => {}} />
+      <VlanEntityDetail vlan={vlan} openTagDrawer={() => {}} />
       <div style={{ marginTop: 20 }}>
         <EntityHeader
           title="Linodes"
