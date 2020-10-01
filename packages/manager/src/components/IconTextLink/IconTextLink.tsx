@@ -41,7 +41,8 @@ const styles = (theme: Theme) =>
         '& .border': {
           color: theme.palette.primary.light
         }
-      }
+      },
+      '&:focus': { outline: '1px dotted #999' }
     },
     active: {
       color: '#1f64b6'
@@ -130,6 +131,7 @@ const IconTextLink: React.FC<FinalProps> = props => {
         title={title}
         onClick={onClick}
         data-qa-icon-text-link={title}
+        disableRipple
       >
         <SideIcon className={`${classes.icon} ${hideText === true && 'm0'}`} />
         <span

@@ -87,6 +87,7 @@ const IconTextLink: React.FC<CombinedProps> = props => {
         )}
         title={title}
         onClick={onClick}
+        disableRipple
         data-qa-icon-text-link={title}
       >
         <span className={classes.label}>{text}</span>

@@ -179,29 +179,29 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
     return (): Action[] => {
       const actions: Action[] = [
-        {
-          title: 'Settings',
-          onClick: () => {
-            sendLinodeActionMenuItemEvent('Navigate to Settings Page');
-            history.push(`/linodes/${linodeId}/settings`);
-          }
-        },
-        linodeBackups.enabled
-          ? {
-              title: 'View Backups',
-              onClick: () => {
-                sendLinodeActionMenuItemEvent('Navigate to Backups Page');
-                history.push(`/linodes/${linodeId}/backup`);
-              }
-            }
-          : {
-              title: 'Enable Backups',
-              onClick: () => {
-                sendLinodeActionMenuItemEvent('Enable Backups');
-                openDialog('enable_backups', linodeId);
-              },
-              ...readOnlyProps
-            },
+        // inLandingDetailContext && {
+        //   title: 'Settings',
+        //   onClick: () => {
+        //     sendLinodeActionMenuItemEvent('Navigate to Settings Page');
+        //     history.push(`/linodes/${linodeId}/settings`);
+        //   }
+        // },
+        // linodeBackups.enabled
+        //   ? {
+        //       title: 'View Backups',
+        //       onClick: () => {
+        //         sendLinodeActionMenuItemEvent('Navigate to Backups Page');
+        //         history.push(`/linodes/${linodeId}/backup`);
+        //       }
+        //     }
+        //   : {
+        //       title: 'Enable Backups',
+        //       onClick: () => {
+        //         sendLinodeActionMenuItemEvent('Enable Backups');
+        //         openDialog('enable_backups', linodeId);
+        //       },
+        //       ...readOnlyProps
+        //     },
         {
           title: 'Clone',
           onClick: () => {
@@ -261,7 +261,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       ];
 
       if (
-        (linodeStatus === 'running' && inTableContext) ||
+        linodeStatus === 'running' ||
         (linodeStatus === 'running' && !inTableContext && matchesSmDown)
       ) {
         actions.unshift({
