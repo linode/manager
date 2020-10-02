@@ -76,11 +76,11 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
           <Link
             className={classes.link}
             key={linodeID}
-            to={`/linodes/${linodeID}`}
+            to={`/linodes/${linodeID}/networking`}
             data-testid="vlan-row-link"
           >
             {getLinodeLabel(linodeID)}
-            {(idx !== firstFour.length - 1 && data.length < 4 && `, `) ||
+            {(idx !== firstFour.length - 1 && data.length <= 4 && `, `) ||
               (data.length > 4 && `, `)}
           </Link>
         ))}

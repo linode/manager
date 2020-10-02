@@ -14,13 +14,13 @@ import { getInterfaces } from '@linode/api-v4/lib/linodes/interfaces';
 import VlanTableRow from './VlanTableRow';
 import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
 import RemoveVlanDialog from './RemoveVlanDialog';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVlans from 'src/hooks/useVlans';
-import { Config } from '@linode/api-v4/lib/linodes';
+import { Config, LinodeInterface } from '@linode/api-v4/lib/linodes';
 import useFlags from 'src/hooks/useFlags';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import { APIError } from '@linode/api-v4/lib/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -92,6 +92,28 @@ const vlanHeaders = [
 export const LinodeVLANs: React.FC<CombinedProps> = props => {
   const { configs, linodeId, readOnly } = props;
 
+  const classes = useStyles();
+
+  const [modalOpen, toggleModal] = React.useState<boolean>(false);
+  const [selectedVlanID, setSelectedVlanID] = React.useState<
+    number | undefined
+  >(undefined);
+  const [selectedVlanLabel, setSelectedVlanLabel] = React.useState<string>('');
+
+  // Local state to manage requested interfaces.
+  const [interfaceData, setInterfaceData] = React.useState<LinodeInterface[]>(
+    []
+  );
+  const [interfaceRequestError, setInterfaceRequestError] = React.useState<
+    APIError[] | undefined
+  >(undefined);
+  const [interfaceDataLoading, setInterfaceDataLoading] = React.useState<
+    boolean
+  >(false);
+  const [interfacesLastUpdated, setInterfacesLastUpdated] = React.useState<
+    number
+  >(0);
+
   const { _loading } = useReduxLoad(['vlans']);
 
   const { vlans, disconnectVlan } = useVlans();
@@ -105,22 +127,38 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     account?.data?.capabilities ?? []
   );
 
-  const request = useAPIRequest(
-    () =>
-      getInterfaces(linodeId).then(interfaces => {
-        return interfaces.data.filter(
+  const requestInterfaces = React.useCallback(() => {
+    setInterfaceDataLoading(true);
+    setInterfaceRequestError(undefined);
+
+    getInterfaces(linodeId)
+      .then(interfaces => {
+        const privateInterfaces = interfaces.data.filter(
           individualInterface =>
             individualInterface.type !== 'default' &&
             individualInterface.ip_address !== ''
         );
-      }),
-    []
-  );
 
-  const { loading, lastUpdated, data } = request;
+        setInterfaceData(privateInterfaces);
+        setInterfacesLastUpdated(Date.now());
+        setInterfaceDataLoading(false);
+      })
+      .catch(err => {
+        setInterfaceRequestError(err);
+        setInterfaceDataLoading(false);
+      });
+  }, [linodeId]);
+
+  React.useEffect(() => {
+    // Request interfaces upon page first loading.
+    if (interfacesLastUpdated === 0) {
+      requestInterfaces();
+    }
+  }, [interfacesLastUpdated, requestInterfaces, linodeId]);
+
   const vlanData = React.useMemo(
     () =>
-      data
+      interfaceData
         .map(thisInterface => {
           const thisVlan = vlans.itemsById[thisInterface.vlan_id];
 
@@ -135,16 +173,8 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
           }
         })
         .filter(Boolean),
-    [data, vlans.itemsById, configs]
+    [interfaceData, vlans.itemsById, configs]
   );
-
-  const classes = useStyles();
-
-  const [modalOpen, toggleModal] = React.useState<boolean>(false);
-  const [selectedVlanID, setSelectedVlanID] = React.useState<
-    number | undefined
-  >(undefined);
-  const [selectedVlanLabel, setSelectedVlanLabel] = React.useState<string>('');
 
   const handleOpenRemoveVlanModal = (id: number, label: string) => {
     setSelectedVlanID(id);
@@ -160,12 +190,12 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     handlers,
     Component: VlanTableRow,
     data: vlanData ?? [],
-    loading,
-    lastUpdated,
-    error: request.error || vlans.error.read
+    loading: interfaceDataLoading,
+    lastUpdated: interfacesLastUpdated,
+    error: interfaceRequestError || vlans.error.read
   };
 
-  if (loading || _loading) {
+  if (interfaceDataLoading || _loading) {
     return <Loading shouldDelay />;
   }
 
@@ -204,6 +234,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         selectedVlanLabel={selectedVlanLabel}
         linodeId={linodeId}
         closeDialog={() => toggleModal(false)}
+        resetInterfaces={requestInterfaces}
       />
     </div>
   ) : null;

@@ -14,6 +14,7 @@ interface Props {
   selectedVlanLabel: string;
   linodeId: number;
   removeVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
+  resetInterfaces: () => void;
 }
 
 type CombinedProps = Props;
@@ -28,7 +29,8 @@ const RemoveVlanDialog: React.FC<CombinedProps> = props => {
     removeVlan,
     selectedVlanID,
     selectedVlanLabel: label,
-    linodeId
+    linodeId,
+    resetInterfaces
   } = props;
 
   const dispatch = useDispatch();
@@ -54,6 +56,7 @@ const RemoveVlanDialog: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         closeDialog();
         dispatch(getLinodeConfigs({ linodeId })); // Re-request Linode Configs so that the page refreshes.
+        resetInterfaces();
       })
       .catch(e => {
         setSubmitting(false);
