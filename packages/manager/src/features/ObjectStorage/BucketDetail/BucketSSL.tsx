@@ -32,6 +32,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   textArea: {
     minWidth: '100%'
+  },
+  wrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    flexDirection: 'row'
+  },
+  certWrapper: {
+    paddingRight: theme.spacing(2)
+  },
+  keyWrapper: {
+    paddingLeft: theme.spacing(2)
   }
 }));
 
@@ -124,15 +136,9 @@ export const AddCertForm: React.FC<FormProps> = props => {
       {errorMap.none && (
         <Notice error text={errorMap.none} spacingTop={8} spacingBottom={0} />
       )}
-      <Grid container>
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justify="center"
-          spacing={4}
-        >
-          <Grid item xs={6}>
+      <div>
+        <div className={classes.wrapper}>
+          <Grid item xs={6} className={classes.certWrapper}>
             <TextField
               label="Certificate"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -147,7 +153,7 @@ export const AddCertForm: React.FC<FormProps> = props => {
               errorText={errorMap.certificate}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={6} className={classes.keyWrapper}>
             <TextField
               label="Private Key"
               fullWidth
@@ -162,7 +168,7 @@ export const AddCertForm: React.FC<FormProps> = props => {
               errorText={errorMap.private_key}
             />
           </Grid>
-        </Grid>
+        </div>
         <Grid item>
           <ActionsPanel>
             <Button
@@ -174,7 +180,7 @@ export const AddCertForm: React.FC<FormProps> = props => {
             </Button>
           </ActionsPanel>
         </Grid>
-      </Grid>
+      </div>
     </>
   );
 };
