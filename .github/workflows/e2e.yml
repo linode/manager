@@ -17,8 +17,10 @@ jobs:
             */*/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/checkout@v2
-      - name: Install dependencies
-        uses: cypress-io/github-action@v2
+      # - name: Install dependencies
+      #   uses: cypress-io/github-action@v2
+      - name: Start server in the background
+        run: yarn up
         with:
           # just perform install
           runTests: false
@@ -28,8 +30,6 @@ jobs:
           REACT_APP_API_ROOT: https://api.linode.com/v4
           REACT_APP_APP_ROOT: http://localhost:3000
           REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
-      - name: Start server in the background
-        run: yarn up
       - name: Run tests
         uses: cypress-io/github-action@v2
         with:
@@ -37,3 +37,4 @@ jobs:
           wait-on: 'http://localhost:3000'
           browser: chrome
           headless: true
+
