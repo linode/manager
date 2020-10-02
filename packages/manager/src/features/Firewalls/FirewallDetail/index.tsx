@@ -5,7 +5,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 
 import Box from 'src/components/core/Box';
-import TabPanel from 'src/components/core/ReachTabPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
@@ -30,7 +30,28 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   // Source the Firewall's ID from the /:id path param.
   const thisFirewallId = props.match.params.id;
 
+  const URL = props.match.url;
+
+  const tabs = [
+    {
+      title: 'Rules',
+      routeName: `${URL}/rules`
+    },
+    {
+      title: 'Linodes',
+      routeName: `${URL}/linodes`
+    }
+  ];
+
+  const matches = (p: string) => {
+    return Boolean(matchPath(p, { path: props.location.pathname }));
+  };
+
   const [updateError, setUpdateError] = React.useState<string | undefined>();
+
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
+  };
 
   // Find the Firewall in the store.
   const thisFirewall = props.itemsById[thisFirewallId];
@@ -53,23 +74,6 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   if (!thisFirewall) {
     return <NotFound />;
   }
-
-  const URL = props.match.url;
-
-  const tabs = [
-    {
-      title: 'Rules',
-      routeName: `${URL}/rules`
-    },
-    {
-      title: 'Linodes',
-      routeName: `${URL}/linodes`
-    }
-  ];
-
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
 
   const handleLabelChange = (newLabel: string) => {
     setUpdateError(undefined);
@@ -108,22 +112,28 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
         />
         <DocumentationButton href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
       </Box>
-      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+      <Tabs
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
+      >
         <TabLinkList tabs={tabs} />
 
         <TabPanels>
-          <TabPanel>
+          <SafeTabPanel index={0}>
             <FirewallRulesLanding
               firewallID={+thisFirewallId}
               rules={thisFirewall.rules}
             />
-          </TabPanel>
-          <TabPanel>
+          </SafeTabPanel>
+          <SafeTabPanel index={1}>
             <FirewallLinodesLanding
               firewallID={+thisFirewallId}
               firewallLabel={thisFirewall.label}
             />
-          </TabPanel>
+          </SafeTabPanel>
         </TabPanels>
       </Tabs>
     </React.Fragment>
