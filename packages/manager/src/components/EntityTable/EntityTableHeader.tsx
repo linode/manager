@@ -46,9 +46,8 @@ export const EntityTableHeader: React.FC<Props> = props => {
         {headers.map(thisCell =>
           thisCell.sortable ? (
             thisCell.hideOnMobile ? (
-              <Hidden xsDown>
+              <Hidden xsDown key={thisCell.dataColumn}>
                 <SortCell
-                  key={thisCell.dataColumn}
                   active={orderBy === thisCell.dataColumn}
                   label={thisCell.dataColumn}
                   direction={order}
@@ -75,9 +74,8 @@ export const EntityTableHeader: React.FC<Props> = props => {
           ) : (
             [
               thisCell.hideOnMobile ? (
-                <Hidden xsDown>
+                <Hidden xsDown key={thisCell.dataColumn}>
                   <TableCell
-                    key={thisCell.dataColumn}
                     data-testid={`${thisCell.label}-header-cell`}
                     className={classes.thead}
                     style={{ width: `${thisCell.widthPercent}%` }}

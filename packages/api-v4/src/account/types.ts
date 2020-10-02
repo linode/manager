@@ -282,6 +282,7 @@ export interface Event {
   username: string;
   secondary_entity: Entity | null;
   _initial?: boolean;
+  message: string | null;
 }
 /**
  * Represents an event which has an entity. For use with type guards.
