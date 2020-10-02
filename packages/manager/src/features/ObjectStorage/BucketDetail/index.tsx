@@ -33,7 +33,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
-  const { bucketName } = props.match.params;
+  const { bucketName, clusterId } = props.match.params;
 
   const tabs = [
     {
@@ -94,7 +94,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
               <Access />
             </SafeTabPanel> */}
             <SafeTabPanel index={1}>
-              <BucketSSL />
+              <BucketSSL bucketName={bucketName} clusterId={clusterId} />
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
