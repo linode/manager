@@ -34,6 +34,7 @@ interface Props {
   linodeKernel: string;
   linodeInterfaces: LinodeInterface[];
   vlans: Record<string, VLAN>;
+  vlansEnabled: boolean;
 }
 
 interface Handlers {
@@ -55,7 +56,8 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     onDelete,
     readOnly,
     linodeInterfaces,
-    vlans
+    vlans,
+    vlansEnabled
   } = props;
 
   const classes = useStyles();
@@ -100,11 +102,13 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
       </TableCell>
       <TableCell>{linodeKernel}</TableCell>
       <TableCell>{rootDeviceLabel}</TableCell>
-      <TableCell>
-        {InterfaceList.length > 0 ? (
-          <ul className={classes.interfaceList}>{InterfaceList}</ul>
-        ) : null}
-      </TableCell>
+      {vlansEnabled ? (
+        <TableCell>
+          {InterfaceList.length > 0 ? (
+            <ul className={classes.interfaceList}>{InterfaceList}</ul>
+          ) : null}
+        </TableCell>
+      ) : null}
       <TableCell className={classes.actionInner}>
         <LinodeConfigActionMenu
           config={config}
