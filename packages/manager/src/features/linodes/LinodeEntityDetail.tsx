@@ -212,7 +212,8 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   actionItem: {
     marginRight: 10,
     marginBottom: 0,
-    padding: 10,
+    padding: '15px 10px',
+    transition: 'none',
     '& svg': {
       height: 20,
       width: 20,
@@ -229,9 +230,20 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       }
     },
     '&:hover': {
+      color: 'white',
+      backgroundColor: theme.color.blue,
       '& svg': {
-        color: theme.color.blue
+        fill: 'white',
+        '& g': {
+          stroke: 'white'
+        },
+        '& path': {
+          stroke: 'white'
+        }
       }
+    },
+    '&:focus': {
+      outline: '1px dotted #999'
     }
   },
   statusChip: {
