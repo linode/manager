@@ -50,7 +50,7 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import LinodeCreate from './LinodeCreate';
-import { ExtendedType } from './SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 
 import {
   HandleSubmit,
@@ -104,6 +104,7 @@ interface State {
   appInstancesLoading: boolean;
   appInstancesError?: string;
   disabledClasses?: LinodeTypeClass[];
+  selectedVlanID: number | null;
 }
 
 type CombinedProps = WithSnackbarProps &
@@ -138,7 +139,8 @@ const defaultState: State = {
   udfs: undefined,
   formIsSubmitting: false,
   errors: undefined,
-  appInstancesLoading: false
+  appInstancesLoading: false,
+  selectedVlanID: null
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -337,6 +339,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setUDFs = (udfs: any) => this.setState({ udfs });
 
+  setVlanID = (vlanID: number | null) => {
+    this.setState({ selectedVlanID: vlanID });
+  };
+
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
     const {
@@ -404,9 +410,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return getLabel(arg1, arg2, arg3);
   };
 
-  submitForm: HandleSubmit = (payload, linodeID?: number) => {
+  submitForm: HandleSubmit = (_payload, linodeID?: number) => {
     const { createType } = this.props;
-
+    const payload = { ..._payload };
     /**
      * Do manual password validation (someday we'll use Formik and
      * not need this). Only run this check if a password is present
@@ -417,6 +423,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * The downside of this approach is that only the password error
      * will be displayed, even if other required fields are missing.
      */
+
+    if (this.state.selectedVlanID) {
+      payload.interfaces = {
+        eth0: { type: 'default' },
+        eth1: { type: 'additional', vlan_id: this.state.selectedVlanID }
+      };
+    }
 
     if (payload.root_pass) {
       const passwordError = validatePassword(
@@ -621,6 +634,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       enqueueSnackbar,
       closeSnackbar,
       regionsData,
+      typesData,
       ...restOfProps
     } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
@@ -678,6 +692,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             setBackupID={this.setBackupID}
             regionsData={filteredRegions!}
             regionHelperText={regionHelperText}
+            typesData={typesData}
+            setVlanID={this.setVlanID}
             {...restOfProps}
             {...restOfState}
           />

@@ -55,6 +55,7 @@ export const createNodeBalancerConfigSchema = object({
       is: check => check === 'http_body',
       then: string().required()
     }),
+  proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
   check_timeout: number()
     .typeError('Timeout must be a number.')
     .integer(),
@@ -100,6 +101,7 @@ export const UpdateNodeBalancerConfigSchema = object({
       is: check => check === 'http_body',
       then: string().required()
     }),
+  proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
   check_timeout: number()
     .typeError('Timeout must be a number.')
     .integer(),

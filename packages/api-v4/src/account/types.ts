@@ -34,7 +34,8 @@ export type AccountCapability =
   | 'Block Storage'
   | 'Object Storage'
   | 'Kubernetes'
-  | 'Cloud Firewall';
+  | 'Cloud Firewall'
+  | 'Vlans';
 
 export interface AccountSettings {
   managed: boolean;
@@ -283,6 +284,7 @@ export interface Event {
   username: string;
   secondary_entity: Entity | null;
   _initial?: boolean;
+  message: string | null;
 }
 /**
  * Represents an event which has an entity. For use with type guards.

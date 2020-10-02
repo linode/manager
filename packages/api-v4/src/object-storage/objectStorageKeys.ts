@@ -21,7 +21,7 @@ export const getObjectStorageKeys = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/object-storage/keys`)
-  ).then(response => response.data);
+  );
 
 /**
  * createObjectStorageKeys
@@ -33,7 +33,7 @@ export const createObjectStorageKeys = (data: ObjectStorageKeyRequest) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/object-storage/keys`),
     setData(data, createObjectStorageKeysSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * updateObjectStorageKeys
@@ -48,7 +48,7 @@ export const updateObjectStorageKey = (
     setMethod('PUT'),
     setURL(`${API_ROOT}/object-storage/keys/${id}`),
     setData(data, createObjectStorageKeysSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * revokeObjectStorageKey
@@ -59,4 +59,4 @@ export const revokeObjectStorageKey = (id: number) =>
   Request<ObjectStorageKey>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/object-storage/keys/${id}`)
-  ).then(response => response.data);
+  );

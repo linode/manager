@@ -2,6 +2,11 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { Row, RowProps } from './EventRow';
 
+jest.mock('src/components/core/styles', () => ({
+  ...(jest.requireActual('src/components/core/styles') as any),
+  makeStyles: jest.fn(() => () => ({}))
+}));
+
 const message = 'this is a message.';
 const props: RowProps = {
   action: 'linode_boot',
@@ -10,12 +15,8 @@ const props: RowProps = {
   type: 'linode',
   created: '2018-01-01',
   username: null,
-  classes: {
-    root: '',
-    message: '',
-    occurredCell: ''
-  },
-  linkTarget: jest.fn()
+  linkTarget: jest.fn(),
+  eventMessage: null
 };
 
 describe('EventRow component', () => {

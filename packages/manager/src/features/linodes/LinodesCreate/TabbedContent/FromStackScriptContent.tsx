@@ -175,6 +175,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               disabled={userCannotCreateLinode}
               request={request}
               category={this.props.category}
+              isOnCreate
             />
           ) : (
             <SelectStackScriptPanel
@@ -190,6 +191,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               disabled={userCannotCreateLinode}
               request={request}
               category={this.props.category}
+              isOnCreate
             />
           )}
           {!userCannotCreateLinode &&

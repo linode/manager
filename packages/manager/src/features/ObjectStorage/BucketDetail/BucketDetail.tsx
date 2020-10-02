@@ -12,12 +12,10 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Box from 'src/components/core/Box';
-import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -28,7 +26,6 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import DocumentationButton from 'src/components/DocumentationButton';
 import Table from 'src/components/Table';
 import Table_CMR from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell';
@@ -36,31 +33,31 @@ import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow';
 import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
+import bucketRequestsContainer, {
+  BucketsRequests
+} from 'src/containers/bucketRequests.container';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { sendDownloadObjectEvent } from 'src/utilities/ga';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
 import ObjectUploader from '../ObjectUploader';
 import { deleteObject } from '../requests';
-import bucketRequestsContainer, {
-  BucketsRequests
-} from 'src/containers/bucketRequests.container';
 import {
   displayName,
   ExtendedObject,
   extendObject,
+  generateObjectUrl,
   tableUpdateAction
 } from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
+import ObjectDetailDrawer from './ObjectDetailsDrawer';
 import ObjectTableContent from './ObjectTableContent';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
-import Hidden from 'src/components/core/Hidden';
 
 const page_size = 100;
 
 type ClassNames =
-  | 'divider'
   | 'tableContainer'
   | 'uploaderContainer'
   | 'objectTable'
@@ -72,11 +69,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    divider: {
-      marginTop: theme.spacing(4),
-      marginBottom: theme.spacing(2),
-      backgroundColor: theme.color.grey3
-    },
     objectTable: {
       marginTop: theme.spacing(2)
     },
@@ -134,9 +126,11 @@ interface State {
   generalError?: APIError[];
   nextPageError?: APIError[];
   objectToDelete?: string;
+  objectDetailDrawerOpen: boolean;
+  selectedObject?: ExtendedObject;
 }
 
-export class BucketDetail extends React.Component<CombinedProps, {}> {
+export class BucketDetail extends React.Component<CombinedProps, State> {
   state: State = {
     data: [],
     loading: false,
@@ -145,7 +139,8 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     deleteObjectDialogOpen: false,
     deleteObjectLoading: false,
     generalError: undefined,
-    nextPageError: undefined
+    nextPageError: undefined,
+    objectDetailDrawerOpen: false
   };
 
   fetchData() {
@@ -281,6 +276,13 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     });
   };
 
+  handleClickDetails = (selectedObject: ExtendedObject) => {
+    this.setState({
+      selectedObject,
+      objectDetailDrawerOpen: true
+    });
+  };
+
   deleteObject = async () => {
     const { clusterId, bucketName } = this.props.match.params;
     const { objectToDelete } = this.state;
@@ -403,6 +405,10 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     });
   };
 
+  closeObjectDetailsDrawer = () => {
+    this.setState({ objectDetailDrawerOpen: false });
+  };
+
   render() {
     const { classes, flags } = this.props;
     const {
@@ -414,7 +420,9 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       objectToDelete,
       deleteObjectLoading,
       deleteObjectError,
-      deleteObjectDialogOpen
+      deleteObjectDialogOpen,
+      selectedObject,
+      objectDetailDrawerOpen
     } = this.state;
 
     const { bucketName, clusterId } = this.props.match.params;
@@ -426,23 +434,6 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
 
     return (
       <>
-        <Box display="flex" flexDirection="row" justifyContent="space-between">
-          <Breadcrumb
-            // The actual pathname doesn't match what we want` in the Breadcrumb,
-            // so we create a custom one.
-            pathname={`/object-storage/${bucketName}`}
-            crumbOverrides={[
-              {
-                position: 1,
-                label: 'Object Storage'
-              }
-            ]}
-            labelOptions={{ noCap: true }}
-          />
-          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
-        </Box>
-        <Divider className={classes.divider} />
-
         <BucketBreadcrumb
           prefix={prefix}
           history={this.props.history}
@@ -485,6 +476,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                         prefix={prefix}
                         handleClickDownload={this.handleDownload}
                         handleClickDelete={this.handleClickDelete}
+                        handleClickDetails={this.handleClickDetails}
                       />
                     </TableBody>
                   </Table_CMR>
@@ -517,6 +509,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                         prefix={prefix}
                         handleClickDownload={this.handleDownload}
                         handleClickDelete={this.handleClickDelete}
+                        handleClickDetails={this.handleClickDetails}
                       />
                     </TableBody>
                   </Table>
@@ -586,6 +579,19 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
             </>
           </Grid>
         </Grid>
+        <ObjectDetailDrawer
+          open={objectDetailDrawerOpen}
+          onClose={this.closeObjectDetailsDrawer}
+          name={selectedObject?._displayName}
+          lastModified={selectedObject?.last_modified}
+          size={selectedObject?.size}
+          url={
+            selectedObject
+              ? generateObjectUrl(clusterId, bucketName, selectedObject.name)
+                  .absolute
+              : undefined
+          }
+        />
       </>
     );
   }
@@ -593,7 +599,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, RouteComponentProps<MatchProps>>(
   styled,
   withSnackbar,
   bucketRequestsContainer,

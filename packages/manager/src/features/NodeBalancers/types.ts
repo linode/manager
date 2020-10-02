@@ -1,7 +1,8 @@
 import {
   NodeBalancer,
   NodeBalancerConfigPort,
-  NodeBalancerConfigNodeMode
+  NodeBalancerConfigNodeMode,
+  NodeBalancerProxyProtocol
 } from '@linode/api-v4/lib/nodebalancers/types';
 import { APIError } from '@linode/api-v4/lib/types';
 
@@ -32,6 +33,7 @@ export interface NodeBalancerConfigFields {
   cipher_suite?: 'recommended' | 'legacy';
   port?: number /** 1..65535 */;
   protocol?: 'http' | 'https' | 'tcp';
+  proxy_protocol?: NodeBalancerProxyProtocol;
   ssl_cert?: string;
   ssl_key?: string;
   stickiness?: 'none' | 'table' | 'http_cookie';
