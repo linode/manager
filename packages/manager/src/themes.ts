@@ -13,6 +13,33 @@ export const light = (spacingOverride?: number) => {
   return createTheme(options);
 };
 
+const cmrBGColors = {
+  bgApp: '#3a3f46',
+  bgPrimaryNav: '#23262a',
+  bgSecondaryActions: '#2e3238',
+  bgSearchBar: '#515862',
+  bgPaper: '#2e3238',
+  bgPrimaryButton: '#3683dc',
+  // notification center, add a tag, breadcrumb
+  bgSecondaryButton: '#364863',
+  bgTableHeader: '#33373e',
+  bgStatusChip: '454b54'
+};
+
+const cmrTextColors = {
+  textAction: '#74aae6'
+};
+
+const cmrBorderColors = {
+  borderNotificationCenter: '#486084',
+  borderTypography: '#454b54',
+  borderTabs: '#5c6470'
+};
+
+const cmrIconColors = {
+  iStatic: '#abb1ba'
+};
+
 const primaryColors = {
   main: '#3683dc',
   light: '#4d99f1',
@@ -145,6 +172,10 @@ const darkThemeOptions = {
   },
   palette: {
     divider: primaryColors.divider,
+    cmrBGColors: cmrBGColors,
+    cmrTextColors: cmrTextColors,
+    cmrBorderColors: cmrBorderColors,
+    cmrIconColors: cmrIconColors,
     primary: primaryColors,
     text: {
       primary: primaryColors.text

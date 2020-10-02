@@ -4,7 +4,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuGrid: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.bg.primaryNavPaper,
+    backgroundColor: theme.palette.cmrBGColors.bgPrimaryNav,
     borderColor: theme.bg.primaryNavBorder,
     boxShadow: 'none',
     height: '100%',
@@ -182,7 +182,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: 1,
     padding: 0,
     '&[data-reach-menu-button]': {
-      backgroundColor: theme.bg.primaryNavPaper,
+      backgroundColor: theme.palette.cmrBGColors.bgPrimaryNav,
       border: 'none',
       borderRadius: 0,
       color: theme.color.primaryNavText,

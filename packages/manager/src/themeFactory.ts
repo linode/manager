@@ -73,6 +73,33 @@ declare module '@material-ui/core/styles/createMuiTheme' {
 
 const breakpoints = createBreakpoints({});
 
+const cmrBGColors = {
+  bgApp: '#f4f5f6',
+  bgPrimaryNav: '#3a3f46',
+  bgSecondaryActions: '#ffffff',
+  bgSearchBar: '#f7f7f8',
+  bgPaper: '#ffffff',
+  bgPrimaryButton: '#3683dc',
+  // notification center, add a tag, breadcrumb
+  bgSecondaryButton: '#e5f1ff',
+  bgTableHeader: '#f9fafa',
+  bgStatusChip: '#f9fafa'
+};
+
+const cmrTextColors = {
+  textAction: '#3683dc'
+};
+
+const cmrBorderColors = {
+  borderNotificationCenter: '#cce4ff',
+  borderTypography: '#e3e5e8',
+  borderTabs: '#e3e5e8'
+};
+
+const cmrIconColors = {
+  iStatic: '#5d646f'
+};
+
 const primaryColors = {
   main: '#3683dc',
   light: '#4d99f1',
@@ -379,6 +406,10 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     palette: {
       divider: primaryColors.divider,
+      cmrBGColors: cmrBGColors,
+      cmrTextColors: cmrTextColors,
+      cmrBorderColors: cmrBorderColors,
+      cmrIconColors: cmrIconColors,
       primary: primaryColors,
       text: {
         primary: primaryColors.text
