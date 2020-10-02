@@ -9,8 +9,6 @@ import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu_CMR
 
 const useStyles = makeStyles(() => ({
   actionInner: {
-    display: 'flex',
-    justifyContent: 'flex-end',
     padding: 0,
     '&.MuiTableCell-root': {
       paddingRight: 0
