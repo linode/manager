@@ -3,10 +3,11 @@ import { createLinode } from '../support/api/linodes';
 import { createClient, deleteAllTestClients } from '../support/api/longview';
 import { containsVisibleClick, getVisibleClick } from '../support/helpers';
 import { waitForAppLoad } from '../support/ui/common';
+import strings from '../support/cypresshelpers';
 
 describe('longview', () => {
   it('tests longview', () => {
-    const linodePassword = '12345&TestingTesting';
+    const linodePassword = strings.randomPass();
     const clientLabel = 'cy-test-client';
     cy.server();
     cy.visitWithLogin('/dashboard');
