@@ -37,13 +37,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    flexDirection: 'row'
+    flexFlow: 'row wrap',
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-start'
+    }
   },
   certWrapper: {
-    paddingRight: theme.spacing(2)
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.down('md')]: {
+      padding: 0
+    }
   },
   keyWrapper: {
-    paddingLeft: theme.spacing(2)
+    paddingLeft: theme.spacing(2),
+    [theme.breakpoints.down('md')]: {
+      padding: 0
+    }
   }
 }));
 
@@ -138,7 +147,7 @@ export const AddCertForm: React.FC<FormProps> = props => {
       )}
       <div>
         <div className={classes.wrapper}>
-          <Grid item xs={6} className={classes.certWrapper}>
+          <Grid item xs={12} md={6} className={classes.certWrapper}>
             <TextField
               label="Certificate"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -153,7 +162,7 @@ export const AddCertForm: React.FC<FormProps> = props => {
               errorText={errorMap.certificate}
             />
           </Grid>
-          <Grid item xs={6} className={classes.keyWrapper}>
+          <Grid item xs={12} md={6} className={classes.keyWrapper}>
             <TextField
               label="Private Key"
               fullWidth
