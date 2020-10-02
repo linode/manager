@@ -198,7 +198,8 @@ const __resourcesDefaultState = {
   types: defaultTypesState,
   volumes: defaultVolumesState,
   buckets: defaultBucketsState,
-  clusters: defaultClustersState
+  clusters: defaultClustersState,
+  vlans: defaultVLANState
 };
 
 export interface ResourcesState {
@@ -222,6 +223,7 @@ export interface ResourcesState {
   volumes: VolumesState;
   buckets: BucketsState;
   clusters: ClustersState;
+  vlans: VlanState;
 }
 
 export interface ApplicationState {
@@ -245,7 +247,6 @@ export interface ApplicationState {
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
   mockFeatureFlags: MockFeatureFlagState;
-  vlans: VlanState;
 }
 
 export const defaultState: ApplicationState = {
@@ -268,8 +269,7 @@ export const defaultState: ApplicationState = {
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
-  mockFeatureFlags: defaultMockFeatureFlagState,
-  vlans: defaultVLANState
+  mockFeatureFlags: defaultMockFeatureFlagState
 };
 
 /**
@@ -319,8 +319,7 @@ const reducers = combineReducers<ApplicationState>({
   globalErrors,
   longviewClients: longview,
   longviewStats,
-  mockFeatureFlags,
-  vlans
+  mockFeatureFlags
 });
 
 const enhancers = compose(

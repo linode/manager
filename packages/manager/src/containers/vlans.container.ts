@@ -1,48 +1,64 @@
-import { VLAN } from '@linode/api-v4/lib/vlans';
+import { VLAN, CreateVLANPayload } from '@linode/api-v4/lib/vlans';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
-import { State } from 'src/store/vlans/vlans.reducer';
 import {
   createVlan as _create,
   deleteVlan as _delete,
   getAllVlans as _getVLANs
 } from 'src/store/vlans/vlans.requests';
-import { ThunkDispatch } from 'src/store/types';
-import { GetAllData } from 'src/utilities/getAll';
+import { EntityError, ThunkDispatch } from 'src/store/types';
 
-export interface DispatchProps {
-  getVlans: (params?: any, filters?: any) => Promise<GetAllData<VLAN>>;
-  deleteVlan: (vlanID: number) => Promise<{}>;
+export interface StateProps {
+  vlansData?: VLAN[];
+  vlansLoading: boolean;
+  vlansError: EntityError;
+  vlansLastUpdated: number;
+  vlansResults: number;
 }
 
-/* tslint:disable-next-line */
-export type StateProps = State;
+export interface VlanActionsProps {
+  createVlan: (payload: CreateVLANPayload) => Promise<VLAN>;
+  deleteVlan: (vlanID: number) => Promise<{}>;
+  getAllVlans: () => Promise<VLAN[]>;
+}
 
-export type Props = DispatchProps & StateProps;
+export type Props = StateProps & VlanActionsProps;
 
-const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
-  mapStateToProps?: (
-    ownProps: OwnProps,
-    state: StateProps
-  ) => ReduxStateProps & Partial<StateProps>
+export default <InnerStateProps extends {}, TOuter extends {}>(
+  mapVlansToProps?: (
+    ownProps: TOuter,
+    vlansData: VLAN[],
+    vlansLoading: boolean,
+    vlansError: EntityError,
+    vlansResults: number,
+    vlansLastUpdated: number
+  ) => InnerStateProps
 ) =>
-  connect<
-    ReduxStateProps | StateProps,
-    DispatchProps,
-    OwnProps,
-    ApplicationState
-  >(
-    (state, ownProps) => {
-      if (mapStateToProps) {
-        return mapStateToProps(ownProps, state.vlans);
+  connect(
+    (state: ApplicationState, ownProps: TOuter) => {
+      const { vlans } = state.__resources;
+      if (mapVlansToProps) {
+        return mapVlansToProps(
+          ownProps,
+          Object.values(vlans.itemsById),
+          vlans.loading,
+          vlans.error,
+          vlans.results,
+          vlans.lastUpdated
+        );
       }
 
-      return state.vlans;
+      return {
+        vlansLoading: vlans.loading,
+        vlansError: vlans.error,
+        vlansData: Object.values(vlans.itemsById),
+        vlansResults: vlans.results,
+        vlansLastUpdated: vlans.lastUpdated
+      };
     },
     (dispatch: ThunkDispatch) => ({
-      getVlans: (params, filter) => dispatch(_getVLANs({ params, filter })),
-      deleteVlan: (vlanID: number) => dispatch(_delete({ vlanID }))
+      createVlan: (payload: CreateVLANPayload) => dispatch(_create(payload)),
+      deleteDomain: (vlanId: { vlanID: number }) => dispatch(_delete(vlanId)),
+      getAllVlans: () => dispatch(_getVLANs({}))
     })
   );
-
-export default connected;

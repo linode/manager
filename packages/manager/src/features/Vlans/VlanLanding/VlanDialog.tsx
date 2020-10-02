@@ -2,10 +2,10 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
-import { DispatchProps } from 'src/containers/vlans.container';
+import { VlanActionsProps } from 'src/containers/vlans.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-interface Props extends Pick<DispatchProps, 'deleteVlan'> {
+interface Props extends Pick<VlanActionsProps, 'deleteVlan'> {
   open: boolean;
   closeDialog: () => void;
   selectedVlanID?: number;
