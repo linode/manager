@@ -7,11 +7,6 @@ jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
     steps:
-    env:
-      REACT_APP_LOGIN_ROOT: https://login.linode.com
-      REACT_APP_API_ROOT: https://api.linode.com/v4
-      REACT_APP_APP_ROOT: http://localhost:3000
-      REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
       - uses: cypress-io/github-action@v2
       - uses: actions/setup-node@v1
         with:
@@ -32,6 +27,11 @@ jobs:
         with:
           install: false
           wait-on: 'http://localhost:3000'
+        env:
+          REACT_APP_LOGIN_ROOT: https://login.linode.com
+          REACT_APP_API_ROOT: https://api.linode.com/v4
+          REACT_APP_APP_ROOT: http://localhost:3000
+          REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
           # browser: chrome
           # headless: true
 
