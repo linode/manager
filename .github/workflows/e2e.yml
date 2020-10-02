@@ -29,8 +29,8 @@ jobs:
           REACT_APP_APP_ROOT: http://localhost:3000
           REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
       - name: Start server in the background
-        run: yarn up &
-      - name: Install Cypress and run tests
+        run: yarn up
+      - name: Run tests
         uses: cypress-io/github-action@v2
         with:
           install: false
