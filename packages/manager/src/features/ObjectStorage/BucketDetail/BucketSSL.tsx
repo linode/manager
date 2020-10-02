@@ -78,7 +78,7 @@ export const SSLBody: React.FC<BodyProps> = props => {
   }
 
   if (request.error) {
-    return <ErrorState errorText="Error loading TSL cert data" />;
+    return <ErrorState errorText="Error loading TLS cert data" />;
   }
 
   if (hasSSL) {
