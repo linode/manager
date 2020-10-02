@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
       cursor: 'pointer',
       padding: theme.spacing(1) + theme.spacing(1) / 2,
       color: theme.palette.primary.main,
-      transition: theme.transitions.create(['color']),
+      transition: 'none',
       margin: `0 -${theme.spacing(1) + theme.spacing(1) / 2}px 2px 0`,
       minHeight: 'auto',
       '&:hover': {
@@ -56,12 +56,12 @@ const styles = (theme: Theme) =>
       }
     },
     icon: {
-      transition: theme.transitions.create(['fill', 'color']),
+      transition: 'none',
       fontSize: 18,
       marginRight: theme.spacing(0.5),
       color: theme.palette.primary.main,
       '& .border': {
-        transition: theme.transitions.create(['color'])
+        transition: 'none'
       }
     },
     left: {
