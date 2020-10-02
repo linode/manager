@@ -41,7 +41,7 @@ const RemoveVlanDialog: React.FC<CombinedProps> = props => {
   }, [open]);
 
   const handleSubmit = () => {
-    const defaultError = 'There was an issue deleting this Virtual LAN.';
+    const defaultError = 'There was an issue removing this Virtual LAN.';
     if (!selectedVlanID) {
       return setError(defaultError);
     }
