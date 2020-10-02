@@ -22,18 +22,18 @@ jobs:
         with:
           # just perform install
           runTests: false
-      - name: Start server in the background
-        run: yarn up &
-        with:
           working-directory: packages/manager
         env:
           REACT_APP_LOGIN_ROOT: https://login.linode.com
           REACT_APP_API_ROOT: https://api.linode.com/v4
           REACT_APP_APP_ROOT: http://localhost:3000
           REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
+      - name: Start server in the background
+        run: yarn up &
       - name: Install Cypress and run tests
         uses: cypress-io/github-action@v2
         with:
+          install: false
           wait-on: 'http://localhost:3000'
           browser: chrome
           headless: true
