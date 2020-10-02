@@ -49,6 +49,11 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll, GetAllData } from 'src/utilities/getAll';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer_CMR';
 import ConfigRow from './ConfigRow_CMR';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { Account } from '@linode/api-v4/lib/account';
 
 type ClassNames =
   | 'root'
@@ -111,6 +116,7 @@ const styles = (theme: Theme) =>
   });
 
 type CombinedProps = LinodeContext &
+  FeatureFlagConsumerProps &
   WithStyles<ClassNames> &
   WithSnackbarProps &
   StateProps &
@@ -222,10 +228,21 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     }
   };
 
+  vlansEnabled = () => {
+    return isFeatureEnabled(
+      'Vlans',
+      Boolean(this.props.flags.vlans),
+      this.props.accountData?.capabilities ?? []
+    );
+  };
+
   componentDidMount() {
     this.requestKernels(this.props.linodeHypervisor);
-    this.requestInterfaces();
-    this.maybeRequestVlans();
+
+    if (this.vlansEnabled()) {
+      this.requestInterfaces();
+      this.maybeRequestVlans();
+    }
   }
 
   configsPanel = React.createRef();
@@ -533,11 +550,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                         >
                           Root Device
                         </TableCell>
-                        <TableCell
-                          className={`${classes.tableCell} ${classes.interfacesColumn}`}
-                        >
-                          Network Interfaces
-                        </TableCell>
+                        {this.vlansEnabled() ? (
+                          <TableCell
+                            className={`${classes.tableCell} ${classes.interfacesColumn}`}
+                          >
+                            Network Interfaces
+                          </TableCell>
+                        ) : null}
                         <TableCell className={classes.actionsColumn} />
                       </TableRow>
                     </TableHead>
@@ -576,6 +595,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               readOnly={readOnly}
                               linodeInterfaces={this.state.interfaces}
                               vlans={this.props.vlansData}
+                              vlansEnabled={this.vlansEnabled()}
                             />
                           );
                         })}
@@ -646,6 +666,7 @@ interface StateProps {
   vlansLoading: boolean;
   vlansLastUpdated: number;
   vlansError?: APIError[];
+  accountData?: Account;
 }
 
 const mapStateToProps: MapState<StateProps, LinodeContext> = (
@@ -660,7 +681,8 @@ const mapStateToProps: MapState<StateProps, LinodeContext> = (
     vlansData: state.__resources.vlans.itemsById,
     vlansLoading: state.__resources.vlans.loading,
     vlansLastUpdated: state.__resources.vlans.lastUpdated,
-    vlansError: state.__resources.vlans.error.read
+    vlansError: state.__resources.vlans.error.read,
+    accountData: state.__resources.account.data
   };
 };
 
@@ -680,6 +702,7 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   linodeContext,
+  withFeatureFlags,
   connected,
   styled,
   errorBoundary,
