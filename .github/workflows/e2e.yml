@@ -6,23 +6,34 @@ on:
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
-    steps:
+      # - uses: actions/setup-node@v1
+      #   with:
+      #     node-version: '10.x'
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       node_modules
+      #       */*/node_modules
+      #     key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Install dependencies
+        uses: cypress-io/github-action@v2
         with:
-          node-version: '10.x'
-      - uses: actions/cache@v2
+          # just perform install
+          runTests: false
+      - name: Start server in the background
+        run: yarn up &
         with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}        
-      - uses: cypress-io/github-action@v2
-        with:
-          browser: chrome
-          headless: true
+          working-directory: packages/manager
         env:
           REACT_APP_LOGIN_ROOT: https://login.linode.com
           REACT_APP_API_ROOT: https://api.linode.com/v4
           REACT_APP_APP_ROOT: http://localhost:3000
           REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
+      - name: Install Cypress and run tests
+        uses: cypress-io/github-action@v2
+        with:
+          wait-on: 'http://localhost:3000'
+          browser: chrome
+          headless: true
