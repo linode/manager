@@ -2,7 +2,7 @@ import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
-import TabPanel from 'src/components/core/ReachTabPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
@@ -51,6 +51,10 @@ const AccountLanding: React.FC<Props> = props => {
     return Boolean(matchPath(p, { path: location.pathname }));
   };
 
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
@@ -61,20 +65,27 @@ const AccountLanding: React.FC<Props> = props => {
         removeCrumbX={1}
         data-qa-profile-header
       />
-      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+
+      <Tabs
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
+      >
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
-            <TabPanel>
+            <SafeTabPanel index={0}>
               <Billing />
-            </TabPanel>
-            <TabPanel>
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
               <Users isRestrictedUser={props.isRestrictedUser} />
-            </TabPanel>
-            <TabPanel>
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
               <GlobalSettings />
-            </TabPanel>
+            </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
       </Tabs>
