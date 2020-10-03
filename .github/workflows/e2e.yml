@@ -20,9 +20,9 @@ jobs:
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: Run tests
         uses: cypress-io/github-action@v2
-        working-directory: packages/manager
         with:
-          start: yarn up  
+          start: yarn up
+          working-directory: packages/manager
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 300
           install: false
