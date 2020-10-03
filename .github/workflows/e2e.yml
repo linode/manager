@@ -17,15 +17,11 @@ jobs:
             node_modules
             */*/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      # - uses: actions/checkout@v2
-      # - name: Install dependencies
-      #  
-      - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p 
-      - run: yarn up
-        
+      - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p       
       - name: Run tests
         uses: cypress-io/github-action@v2
         with:
+          start: yarn up
           install: false
           wait-on: 'http://localhost:3000'
         env:
