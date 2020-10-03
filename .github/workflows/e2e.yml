@@ -19,7 +19,8 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       # - uses: actions/checkout@v2
       # - name: Install dependencies
-      #   
+      #  
+      - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p 
       - run: yarn up
         
       - name: Run tests
