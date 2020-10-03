@@ -22,8 +22,9 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           start: yarn up
-          install: false
           wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+          install: false
         env:
           REACT_APP_LOGIN_ROOT: https://login.linode.com
           REACT_APP_API_ROOT: https://api.linode.com/v4
