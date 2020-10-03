@@ -18,14 +18,14 @@ jobs:
             */*/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-      - start: yarn up  
       - name: Run tests
         uses: cypress-io/github-action@v2
+        working-directory: packages/manager
         with:
+          start: yarn up  
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 300
           install: false
-          working-directory: packages/manager
         env:
           REACT_APP_LOGIN_ROOT: https://login.linode.com
           REACT_APP_API_ROOT: https://api.linode.com/v4
