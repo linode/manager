@@ -226,6 +226,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         groupByTag={false}
         row={vlanRow}
         initialOrder={{ order: 'asc', orderBy: 'label' }}
+        readOnly={readOnly}
       />
       <RemoveVlanDialog
         open={modalOpen}

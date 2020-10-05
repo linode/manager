@@ -35,12 +35,13 @@ interface Props {
     order: OrderByProps['order'];
     orderBy: OrderByProps['orderBy'];
   };
+  readOnly?: boolean;
 }
 
 export type CombinedProps = Props & PageyIntegrationProps;
 
 export const LandingTable: React.FC<CombinedProps> = props => {
-  const { entity, headers, groupByTag, row, initialOrder } = props;
+  const { entity, headers, groupByTag, row, initialOrder, readOnly } = props;
   const classes = useStyles();
   const tableProps = {
     data: row.data,
@@ -52,7 +53,8 @@ export const LandingTable: React.FC<CombinedProps> = props => {
     headers,
     initialOrder,
     entity,
-    handlers: row.handlers
+    handlers: row.handlers,
+    readOnly
   };
 
   if (row.request) {

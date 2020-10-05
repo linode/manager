@@ -21,7 +21,8 @@ export const ListEntities: React.FC<CombinedProps> = props => {
     initialOrder,
     loading,
     lastUpdated,
-    RowComponent
+    RowComponent,
+    readOnly
   } = props;
   return (
     <OrderBy
@@ -59,6 +60,7 @@ export const ListEntities: React.FC<CombinedProps> = props => {
                       {paginatedAndOrderedData.map(thisEntity => (
                         <RowComponent
                           key={thisEntity.id}
+                          readOnly={readOnly}
                           {...thisEntity}
                           {...handlers}
                         />
