@@ -112,6 +112,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                 lastUpdatedError={lastUpdatedError}
               />
               <TopProcesses
+                clientID={clientID}
                 topProcessesData={topProcessesData}
                 topProcessesLoading={topProcessesLoading}
                 topProcessesError={topProcessesError}
