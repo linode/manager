@@ -21,12 +21,13 @@ jobs:
       - run: yarn up &
       - name: Run tests
         # uses: cypress-io/github-action@v2
+        wait-on: 'http://localhost:3000'
+        wait-on-timeout: 1000
         run: yarn cy:e2e
-        with:
+        
+          # install: false
           # working-directory: packages/manager
-          wait-on: 'http://localhost:3000'
-          wait-on-timeout: 1000
-          install: false
+          
         env:
           REACT_APP_LOGIN_ROOT: https://login.linode.com
           REACT_APP_API_ROOT: https://api.linode.com/v4
