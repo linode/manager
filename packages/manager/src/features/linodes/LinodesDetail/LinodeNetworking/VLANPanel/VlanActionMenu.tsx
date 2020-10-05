@@ -85,7 +85,7 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
       className: classes.link,
       onClick: () => {
         history.push({
-          pathname: `/networking/vlans/${vlanID}`
+          pathname: `/vlans/${vlanID}`
         });
       }
     },

@@ -107,7 +107,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
             {/* Make this bolder later */}
             <Typography variant="body2" component="h3" data-qa-label>
               {' '}
-              <Link to={`/networking/vlans/${id}`}>{vlanLabel} </Link>
+              <Link to={`/vlans/${id}`}>{vlanLabel} </Link>
             </Typography>
           </Grid>
         </Grid>
