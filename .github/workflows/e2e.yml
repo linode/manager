@@ -19,7 +19,8 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: Run tests
-        uses: cypress-io/github-action@v2
+        # uses: cypress-io/github-action@v2
+        run: yarn cy:e2e
         with:
           start: yarn up
           # working-directory: packages/manager
