@@ -20,13 +20,12 @@ jobs:
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: Run tests
         # uses: cypress-io/github-action@v2
+        start: yarn up
         run: yarn cy:e2e
-        with:
-          start: yarn up
           # working-directory: packages/manager
-          wait-on: 'http://localhost:3000'
-          wait-on-timeout: 1000
-          install: false
+        wait-on: 'http://localhost:3000'
+        wait-on-timeout: 1000
+          nstall: false
         env:
           REACT_APP_LOGIN_ROOT: https://login.linode.com
           REACT_APP_API_ROOT: https://api.linode.com/v4
