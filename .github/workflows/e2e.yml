@@ -23,7 +23,8 @@ jobs:
       - name: Run tests
         uses: cypress-io/github-action@v2
         with:
-          working-directory: packages/manager
+          start: yarn up
+          # working-directory: packages/manager
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 1000
           install: false
