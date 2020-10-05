@@ -18,6 +18,7 @@ import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import ExternalLink from 'src/components/ExternalLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -72,7 +73,14 @@ export const BucketSSL: React.FC<Props> = props => {
         Object Storage buckets are automatically served with a default TLS
         certificate that is valid for subdomains of linodeobjects.com. You can
         upload a custom certificate that will be used for the TLS portion of the
-        HTTPS request instead.
+        HTTPS request instead. For more information, please see our guide on
+        using{' '}
+        <ExternalLink
+          link="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/"
+          hideIcon
+          text="custom certificates for Object Storage buckets"
+        />
+        .
       </Typography>
       <SSLBody bucketName={bucketName} clusterId={clusterId} />
     </Paper>
