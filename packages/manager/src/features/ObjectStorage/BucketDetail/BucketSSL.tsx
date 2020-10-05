@@ -76,7 +76,7 @@ export const BucketSSL: React.FC<Props> = props => {
         HTTPS request instead. For more information, please see our guide on
         using{' '}
         <ExternalLink
-          link="https://www.linode.com/docs/platform/object-storage/"
+          link="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/"
           hideIcon
           text="custom certificates for Object Storage buckets"
         />
