@@ -25,7 +25,7 @@ jobs:
           # working-directory: packages/manager
         wait-on: 'http://localhost:3000'
         wait-on-timeout: 1000
-          nstall: false
+        install: false
         env:
           REACT_APP_LOGIN_ROOT: https://login.linode.com
           REACT_APP_API_ROOT: https://api.linode.com/v4
