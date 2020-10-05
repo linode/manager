@@ -44,13 +44,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   certWrapper: {
     paddingRight: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       padding: 0
     }
   },
   keyWrapper: {
     paddingLeft: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       padding: 0
     }
   }
