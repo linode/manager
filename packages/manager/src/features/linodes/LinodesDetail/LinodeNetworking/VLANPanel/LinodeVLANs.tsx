@@ -114,8 +114,6 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     number
   >(0);
 
-  const { _loading } = useReduxLoad(['vlans']);
-
   const { vlans, disconnectVlan } = useVlans();
 
   const { account } = useAccountManagement();
@@ -126,6 +124,8 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     Boolean(flags.vlans),
     account?.data?.capabilities ?? []
   );
+
+  const { _loading } = useReduxLoad(['vlans'], undefined, vlansEnabled);
 
   const requestInterfaces = React.useCallback(() => {
     setInterfaceDataLoading(true);
@@ -151,10 +151,10 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     // Request interfaces upon page first loading.
-    if (interfacesLastUpdated === 0) {
+    if (vlansEnabled && interfacesLastUpdated === 0) {
       requestInterfaces();
     }
-  }, [interfacesLastUpdated, requestInterfaces, linodeId]);
+  }, [vlansEnabled, interfacesLastUpdated, requestInterfaces, linodeId]);
 
   const vlanData = React.useMemo(
     () =>
