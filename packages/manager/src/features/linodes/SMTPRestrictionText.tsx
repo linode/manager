@@ -6,7 +6,7 @@ import useAccount from 'src/hooks/useAccount';
 // "In an effort to fight spam, Linode restricts outbound connections on ports 25, 465, and 587 on all Linodes for new accounts created after November 5th, 2019."
 // https://www.linode.com/docs/email/best-practices/running-a-mail-server/
 const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
-  '2019-11-06 00:00:00Z';
+  '2019-11-06T00:00:00.000Z';
 
 interface Props {
   children: (props: { text: React.ReactNode }) => React.ReactNode;
