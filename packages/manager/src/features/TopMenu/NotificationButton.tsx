@@ -17,7 +17,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexFlow: 'row nowrap',
     alignItems: 'center',
     justifyContent: 'space-around',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    '& svg': {
+      color: theme.palette.cmrTextColors.textAction
+    }
   },
   text: {
     color: theme.palette.cmrTextColors.textAction,

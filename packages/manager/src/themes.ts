@@ -23,17 +23,21 @@ const cmrBGColors = {
   // notification center, add a tag, breadcrumb
   bgSecondaryButton: '#364863',
   bgTableHeader: '#33373e',
-  bgStatusChip: '454b54'
+  bgStatusChip: '#454b54',
+  bgBillingSummary: '#2d3d53'
 };
 
 const cmrTextColors = {
-  textAction: '#74aae6'
+  textAction: '#74aae6',
+  textBillingSummary: '#f2f2f2'
 };
 
 const cmrBorderColors = {
   borderNotificationCenter: '#486084',
   borderTypography: '#454b54',
-  borderTabs: '#5c6470'
+  borderTabs: '#5c6470',
+  borderBillingSummary: '#243142',
+  borderBalance: '#4d79b2'
 };
 
 const cmrIconColors = {
@@ -483,7 +487,8 @@ const darkThemeOptions = {
     },
     MuiPaper: {
       root: {
-        backgroundColor: '#32363c'
+        // originally '#32363c'
+        backgroundColor: cmrBGColors.bgPaper
       }
     },
     MuiPopover: {

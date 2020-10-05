@@ -83,17 +83,21 @@ const cmrBGColors = {
   // notification center, add a tag, breadcrumb
   bgSecondaryButton: '#e5f1ff',
   bgTableHeader: '#f9fafa',
-  bgStatusChip: '#f9fafa'
+  bgStatusChip: '#f9fafa',
+  bgBillingSummary: '#f5f9ff'
 };
 
 const cmrTextColors = {
-  textAction: '#3683dc'
+  textAction: '#3683dc',
+  textBillingSummary: '#32363c'
 };
 
 const cmrBorderColors = {
   borderNotificationCenter: '#cce4ff',
   borderTypography: '#e3e5e8',
-  borderTabs: '#e3e5e8'
+  borderTabs: '#e3e5e8',
+  borderBillingSummary: '#cce2ff',
+  borderBalance: '#c2daff'
 };
 
 const cmrIconColors = {

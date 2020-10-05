@@ -224,7 +224,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menuItemList: {
     '&[data-reach-menu-items]': {
-      backgroundColor: theme.bg.primaryNavPaper,
+      backgroundColor: theme.palette.cmrBGColors.bgPrimaryNav,
       border: 'none',
       padding: 0,
       whiteSpace: 'normal'
@@ -234,7 +234,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item]': {
       display: 'flex',
       alignItems: 'center',
-      backgroundColor: theme.bg.primaryNavPaper,
+      backgroundColor: theme.palette.cmrBGColors.bgPrimaryNav,
       color: theme.color.primaryNavText,
       fontSize: '1rem',
       paddingTop: 12,
