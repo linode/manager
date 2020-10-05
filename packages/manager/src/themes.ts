@@ -25,7 +25,10 @@ const cmrBGColors = {
   bgTableHeader: '#33373e',
   bgTableBody: '#2e3238',
   bgStatusChip: '#454b54',
-  bgBillingSummary: '#2d3d53'
+  bgBillingSummary: '#2d3d53',
+  bgBreadcrumbParent: '#364863',
+  bgAccessRow: '#454b54',
+  bgAccessHeader: '#3a3f46'
 };
 
 const cmrTextColors = {
@@ -37,7 +40,12 @@ const cmrTextColors = {
   linkActiveMedium: '#2575d0',
   linkActiveLight: '#74aae6',
   headlineStatic: '#e6e6e6',
-  tableStatic: '#e6e6e6'
+  headlineActive: '#abb1ba',
+  tableStatic: '#e6e6e6',
+  textTagButton: '#9caec9',
+  textAccessTable: '#acb0b4',
+  textAccessCode: '#e4e5e7',
+  textBreadcrumbParent: '#ffffff'
 };
 
 const cmrBorderColors = {

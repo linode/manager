@@ -20,19 +20,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   header: {},
   body: {
     padding: `20px !important`,
-    backgroundColor: theme.color.white,
-    borderTop: `1px solid ${theme.color.grey9}`,
-    borderBottom: `1px solid ${theme.color.grey9}`
+    backgroundColor: theme.palette.cmrBGColors.bgSecondaryActions,
+    borderTop: `1px solid ${theme.palette.cmrBorderColors.borderTable}`,
+    borderBottom: `1px solid ${theme.palette.cmrBorderColors.borderTable}`
   },
   footer: {
-    backgroundColor: theme.color.white,
+    backgroundColor: theme.palette.cmrBGColors.bgSecondaryActions,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     padding: `11px 12px !important`
   },
   footerBorder: {
-    borderTop: `1px solid ${theme.color.grey9}`
+    borderTop: `1px solid ${theme.palette.cmrBorderColors.borderTable}`
   }
 }));
 

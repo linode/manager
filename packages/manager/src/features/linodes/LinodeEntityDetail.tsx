@@ -185,7 +185,7 @@ export interface HeaderProps {
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.bg.white
+    backgroundColor: theme.palette.cmrBGColors.bgSecondaryActions
   },
   linodeLabelWithDistro: {
     display: 'flex',
@@ -193,7 +193,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   linodeLabel: {
     marginLeft: 7,
-    color: theme.color.blue
+    color: theme.palette.cmrTextColors.headlineActive
   },
   distroIcon: {
     fontSize: 25,
@@ -217,28 +217,27 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     '& svg': {
       height: 20,
       width: 20,
-      fill: theme.color.blue,
-      color: theme.color.blue,
       marginRight: 10
     },
     '& span': {
       fontFamily: `${theme.font.normal} !important`
     },
     '&:disabled': {
+      color: theme.color.disabled,
       '& svg': {
         fill: theme.color.disabled
       }
     },
     '&:hover': {
-      color: 'white',
+      color: '#ffffff',
       backgroundColor: theme.color.blue,
       '& svg': {
-        fill: 'white',
+        fill: '#ffffff',
         '& g': {
-          stroke: 'white'
+          stroke: '#ffffff'
         },
         '& path': {
-          stroke: 'white'
+          stroke: '#ffffff'
         }
       }
     },
@@ -251,17 +250,17 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusRunning: {
     '&:before': {
-      backgroundColor: theme.color.green
+      backgroundColor: theme.palette.cmrIconColors.iGreen
     }
   },
   statusOffline: {
     '&:before': {
-      backgroundColor: theme.color.grey10
+      backgroundColor: theme.palette.cmrIconColors.iGrey
     }
   },
   statusOther: {
     '&:before': {
-      backgroundColor: theme.color.orange
+      backgroundColor: theme.palette.cmrIconColors.iOrange
     }
   },
   actionItemsOuter: {
@@ -477,13 +476,15 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   iconTextOuter: {
     flexBasis: '72%',
     minWidth: 115,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    color: theme.palette.cmrTextColors.tableStatic
   },
   ipContainer: {
     paddingLeft: '40px !important'
   },
   ipList: {
     marginTop: 4,
+    color: theme.palette.cmrTextColors.tableStatic,
     '& li': {
       padding: 0,
       fontSize: '0.875rem',
@@ -507,15 +508,15 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       overflowX: 'auto',
       maxWidth: '100%',
       whiteSpace: 'nowrap',
-      backgroundColor: theme.color.grey7,
-      borderBottom: '1px solid white'
+      backgroundColor: theme.palette.cmrBGColors.bgAccessRow,
+      borderBottom: `1px solid ${theme.palette.cmrBGColors.bgTableBody}`
     },
     '& th': {
-      backgroundColor: theme.color.grey5,
-      borderBottom: '1px solid white',
+      backgroundColor: theme.palette.cmrBGColors.bgAccessHeader,
+      borderBottom: `1px solid ${theme.palette.cmrBGColors.bgTableBody}`,
       fontWeight: 'bold',
       fontSize: '0.875rem',
-      color: '#606469',
+      color: theme.palette.cmrTextColors.textAccessTable,
       lineHeight: 1.1,
       width: '102px',
       whiteSpace: 'nowrap',
@@ -537,7 +538,8 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     }
   },
   code: {
-    fontFamily: '"SourceCodePro", monospace, sans-serif'
+    fontFamily: '"SourceCodePro", monospace, sans-serif',
+    color: theme.palette.cmrTextColors.textAccessCode
   },
   bodyWrapper: {
     [theme.breakpoints.up('lg')]: {
@@ -708,8 +710,8 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
   listItem: {
     padding: `0px 10px`,
-    borderRight: `1px solid ${theme.color.grey6}`,
-    color: theme.color.grey8
+    borderRight: `1px solid ${theme.palette.cmrBorderColors.borderTypography}`,
+    color: theme.palette.cmrTextColors.tableStatic
   },
   listItemLast: {
     [theme.breakpoints.only('xs')]: {
@@ -720,7 +722,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
     padding: `0px 10px`,
-    borderRight: `1px solid ${theme.color.grey6}`,
+    borderRight: `1px solid ${theme.palette.cmrBorderColors.borderTypography}`,
     fontWeight: 'bold',
     '&:hover': {
       textDecoration: 'none'
@@ -728,7 +730,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
   linodeCreated: {
     paddingLeft: 10,
-    color: theme.color.grey8,
+    color: theme.palette.cmrTextColors.tableStatic,
     [theme.breakpoints.down('sm')]: {
       textAlign: 'center'
     }

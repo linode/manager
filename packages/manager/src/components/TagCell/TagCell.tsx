@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 3,
     backgroundColor: theme.color.tagButton,
     border: 'none',
-    color: '#3683dc',
+    color: theme.palette.cmrTextColors.textTagButton,
     display: 'flex',
     fontSize: 14,
     fontWeight: 'bold',
