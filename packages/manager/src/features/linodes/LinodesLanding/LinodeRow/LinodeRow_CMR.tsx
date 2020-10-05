@@ -117,8 +117,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   const { updateLinode } = useLinodes();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [showCopy, setShowCopy] = React.useState<boolean>(false);
-
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
 
@@ -198,8 +196,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       data-qa-linode={label}
       rowLink={`/linodes/${id}`}
       ariaLabel={label}
-      onMouseEnter={() => setShowCopy(true)}
-      onMouseLeave={() => setShowCopy(false)}
     >
       {headCell}
       <TableCell
@@ -249,7 +245,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       <Hidden xsDown>
         <TableCell className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
-            <IPAddress ips={ipv4} copyRight={showCopy} />
+            <IPAddress ips={ipv4} copyRight />
           </div>
         </TableCell>
         <TableCell className={classes.regionCell} data-qa-region>

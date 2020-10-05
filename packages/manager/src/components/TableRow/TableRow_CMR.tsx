@@ -121,6 +121,8 @@ type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
 
 export interface Props {
   rowLink?: string | onClickFn;
+  onClick?: onClickFn;
+  onKeyUp?: any;
   className?: string;
   staticContext?: boolean;
   htmlFor?: string;
@@ -129,10 +131,6 @@ export interface Props {
   highlight?: boolean;
   disabled?: boolean;
   ariaLabel?: string;
-  onClick?: onClickFn;
-  onKeyUp?: any;
-  onMouseEnter?: any;
-  onMouseLeave?: any;
 }
 
 export type CombinedProps = Props & _TableRowProps & RouteComponentProps<{}>;
