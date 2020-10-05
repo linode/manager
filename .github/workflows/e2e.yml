@@ -20,7 +20,8 @@ jobs:
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - run: yarn up &
       - name: Run tests
-        uses: cypress-io/github-action@v2
+        # uses: cypress-io/github-action@v2
+        run: yarn cy:e2e
         with:
           # working-directory: packages/manager
           wait-on: 'http://localhost:3000'
