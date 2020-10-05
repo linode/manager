@@ -15,7 +15,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    '& a': {
+      color: theme.palette.cmrTextColors.linkActiveMedium
+    }
   },
   logo: {
     height: 30,
@@ -23,7 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing()
   },
   icon: {
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
+    color: theme.palette.cmrIconColors.iActiveMedium
   }
 }));
 

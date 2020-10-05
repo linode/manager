@@ -12,7 +12,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
-    backgroundColor: theme.bg.controlHeader,
     display: 'flex',
     justifyContent: 'flex-end'
   },

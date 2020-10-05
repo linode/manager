@@ -74,7 +74,6 @@ const styles = (theme: Theme) =>
       }
     },
     controlHeader: {
-      backgroundColor: theme.bg.controlHeader,
       marginBottom: 28,
       display: 'flex',
       justifyContent: 'flex-end'

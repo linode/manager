@@ -83,25 +83,41 @@ const cmrBGColors = {
   // notification center, add a tag, breadcrumb
   bgSecondaryButton: '#e5f1ff',
   bgTableHeader: '#f9fafa',
-  bgStatusChip: '#f9fafa',
+  bgTableBody: '#ffffff',
+  bgStatusChip: '#f7f7f8',
   bgBillingSummary: '#f5f9ff'
 };
 
 const cmrTextColors = {
   textAction: '#3683dc',
-  textBillingSummary: '#32363c'
+  textBillingSummary: '#32363c',
+  textTab: '#3683dc',
+  textTabActive: '#32363c',
+  textStatusChip: '#5d646f',
+  linkActiveMedium: '#2575d0',
+  linkActiveLight: '#2575d0',
+  headlineStatic: '#32363c',
+  tableStatic: '#55595d'
 };
 
 const cmrBorderColors = {
   borderNotificationCenter: '#cce4ff',
   borderTypography: '#e3e5e8',
   borderTabs: '#e3e5e8',
+  borderTabActive: '#3683dc',
   borderBillingSummary: '#cce2ff',
-  borderBalance: '#c2daff'
+  borderBalance: '#c2daff',
+  borderTable: '#f4f5f6'
 };
 
 const cmrIconColors = {
-  iStatic: '#5d646f'
+  iStatic: '#5d646f',
+  iActiveMedium: '#2575d0',
+  iActiveLight: '#3683dc',
+  iGreen: '#17cf73',
+  iOrange: '#ffb31a',
+  // Offline status
+  iGrey: '#dbdde1'
 };
 
 const primaryColors = {
@@ -162,8 +178,8 @@ const genericLinkStyle = {
 
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
-  backgroundColor: '#f7f7f8',
-  color: '#5d646f',
+  backgroundColor: cmrBGColors.bgStatusChip,
+  color: cmrTextColors.textStatusChip,
   fontFamily: primaryFonts.bold,
   fontSize: '1.1rem',
   padding: 10,

@@ -23,10 +23,11 @@ const styles = (theme: Theme) =>
       },
       '& thead': {
         '& th': {
-          borderTop: `2px solid ${theme.color.grey9}`,
-          borderRight: `1px solid ${theme.color.grey9}`,
-          borderBottom: `2px solid ${theme.color.grey9}`,
-          borderLeft: `1px solid ${theme.color.grey9}`,
+          backgroundColor: theme.palette.cmrBGColors.bgTableHeader,
+          borderTop: `2px solid ${theme.palette.cmrBorderColors.borderTable}`,
+          borderRight: `1px solid ${theme.palette.cmrBorderColors.borderTable}`,
+          borderBottom: `2px solid ${theme.palette.cmrBorderColors.borderTable}`,
+          borderLeft: `1px solid ${theme.palette.cmrBorderColors.borderTable}`,
           fontFamily: theme.font.bold,
           fontSize: '0.875em !important',
           color: theme.palette.text.primary,
@@ -41,7 +42,7 @@ const styles = (theme: Theme) =>
       }
     },
     border: {
-      border: `1px solid ${theme.palette.divider}`,
+      border: `1px solid ${theme.palette.cmrBorderColors.borderTable}`,
       borderBottom: 0
     }
   });

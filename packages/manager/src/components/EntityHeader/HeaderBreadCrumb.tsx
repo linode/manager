@@ -106,14 +106,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   parentTitleText: {
     paddingLeft: theme.spacing(),
-    paddingRight: theme.spacing(2) - 2
+    paddingRight: theme.spacing(2) - 2,
+    color: theme.palette.cmrTextColors.headlineStatic
   },
   titleText: {
     display: 'flex',
     alignItems: 'center',
     paddingRight: theme.spacing(2) - 2,
     paddingLeft: theme.spacing(2) - 2,
-    lineHeight: 1.2
+    lineHeight: 1.2,
+    color: theme.palette.cmrTextColors.headlineStatic
   }
 }));
 

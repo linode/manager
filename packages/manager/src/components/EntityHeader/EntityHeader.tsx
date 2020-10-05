@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexWrap: 'nowrap'
     },
     '& .MuiChip-root': {
+      ...theme.applyStatusPillStyles,
       height: 30,
       borderRadius: 15,
       marginTop: 1,

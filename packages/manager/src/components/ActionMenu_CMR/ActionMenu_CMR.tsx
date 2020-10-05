@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1rem',
       border: 'none',
       padding: '10px',
-      color: '#3683dc',
+      color: theme.palette.cmrIconColors.iActiveLight,
       cursor: 'pointer',
       '&:hover': {
         backgroundColor: '#3683dc',
