@@ -28,6 +28,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
     loading,
     error,
     readOnly,
+    currentLinode,
     ...actionHandlers
   } = props;
 
@@ -54,10 +55,17 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
   };
 
   const getLinodeLinks = (data: number[]): JSX.Element => {
-    // To-Do: make the current linode the first one listed and make it not a hyperlink
+    // Remove the Linode the user is currently on from the array of Linode IDs the VLAN is attached to, and render that Linode's label first in the list as a non-link.
+    const indexOfCurrentLinode = data.findIndex(
+      element => element === currentLinode
+    );
+    data.splice(indexOfCurrentLinode, 1);
+
     return (
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
+        {getLinodeLabel(currentLinode)}
+        {data.length > 0 && `, `}
         {data.map((linodeID, idx) => (
           <Link
             key={linodeID}

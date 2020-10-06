@@ -32,6 +32,7 @@ export interface ListProps extends BaseProps {
     orderBy: OrderByProps['orderBy'];
   };
   readOnly?: boolean;
+  currentLinode?: number;
 }
 
 export interface EntityTableRow<T> extends BaseProps {

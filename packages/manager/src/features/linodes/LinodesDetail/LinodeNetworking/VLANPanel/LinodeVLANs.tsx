@@ -60,7 +60,7 @@ const vlanHeaders = [
     label: 'Label',
     dataColumn: 'description',
     sortable: true,
-    widthPercent: 25
+    widthPercent: 20
   },
   {
     label: 'Address',
@@ -78,14 +78,14 @@ const vlanHeaders = [
     label: 'Linodes',
     dataColumn: 'linodes',
     sortable: false,
-    widthPercent: 25
+    widthPercent: 55
   },
   {
     label: 'Action Menu',
     visuallyHidden: true,
     dataColumn: '',
     sortable: false,
-    widthPercent: 35
+    widthPercent: 10
   }
 ];
 
@@ -227,6 +227,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         row={vlanRow}
         initialOrder={{ order: 'asc', orderBy: 'label' }}
         readOnly={readOnly}
+        currentLinode={linodeId}
       />
       <RemoveVlanDialog
         open={modalOpen}

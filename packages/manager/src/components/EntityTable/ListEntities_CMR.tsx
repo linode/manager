@@ -22,7 +22,8 @@ export const ListEntities: React.FC<CombinedProps> = props => {
     loading,
     lastUpdated,
     RowComponent,
-    readOnly
+    readOnly,
+    currentLinode
   } = props;
   return (
     <OrderBy
@@ -61,6 +62,7 @@ export const ListEntities: React.FC<CombinedProps> = props => {
                         <RowComponent
                           key={thisEntity.id}
                           readOnly={readOnly}
+                          currentLinode={currentLinode}
                           {...thisEntity}
                           {...handlers}
                         />
