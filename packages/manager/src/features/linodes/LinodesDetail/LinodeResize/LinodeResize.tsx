@@ -196,7 +196,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           selectedId: '',
           confirmationDialog: {
             ...this.state.confirmationDialog,
-            submitting: false
+            submitting: false,
+            isOpen: false
           }
         });
         resetEventsPolling();

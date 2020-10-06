@@ -1,10 +1,31 @@
-import { array, boolean, mixed, number, object, string } from 'yup';
+import { array, boolean, lazy, mixed, number, object, string } from 'yup';
 // import zxcvbn from 'zxcvbn';
 // import { MINIMUM_PASSWORD_STRENGTH } from 'src/constants';
 
 const stackscript_data = array()
   .of(object())
   .nullable(true);
+
+/**
+ * Interfaces are Record<string, InterfaceItem>
+ *
+ * {
+ *  "eth0": { "id": 10 },
+ *  "eth1": { "id": 12 }
+ * }
+ *
+ * .default() and .lazy() below are required to
+ * make this dynamic field naming work out
+ */
+export const linodeInterfaceItemSchema = object({
+  id: number().required('Interface ID is required.')
+}).default(undefined);
+
+export const linodeInterfaceSchema = lazy((obj?: Record<any, any>) =>
+  typeof obj === 'undefined'
+    ? object().notRequired()
+    : object(Object.keys(obj).map(_ => linodeInterfaceItemSchema))
+);
 
 // const rootPasswordValidation = string().test(
 //   'is-strong-password',
@@ -60,7 +81,8 @@ export const CreateLinodeSchema = object({
     ),
     // .concat(rootPasswordValidation),
     otherwise: string().notRequired()
-  })
+  }),
+  interfaces: linodeInterfaceSchema
 });
 
 const alerts = object({
@@ -198,7 +220,8 @@ export const CreateLinodeConfigSchema = object({
   run_level: mixed().oneOf(['default', 'single', 'binbash']),
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
-  root_device: string()
+  root_device: string(),
+  interfaces: linodeInterfaceSchema
 });
 
 export const UpdateLinodeConfigSchema = object({
@@ -212,7 +235,8 @@ export const UpdateLinodeConfigSchema = object({
   run_level: mixed().oneOf(['default', 'single', 'binbash']),
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
-  root_device: string()
+  root_device: string(),
+  interfaces: linodeInterfaceSchema
 });
 
 export const CreateLinodeDiskSchema = object({

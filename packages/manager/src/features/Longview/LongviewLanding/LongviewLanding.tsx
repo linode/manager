@@ -10,7 +10,7 @@ import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
-import TabPanel from 'src/components/core/ReachTabPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
@@ -49,6 +49,10 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
+  };
+
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -61,23 +65,29 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
           href={'https://www.linode.com/docs/platform/longview/longview/'}
         />
       </Box>
-      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+      <Tabs
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
+      >
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
-            <TabPanel>
+            <SafeTabPanel index={0}>
               <LongviewClients
                 activeSubscription={activeSubscriptionRequestHook.data}
                 {...props}
               />
-            </TabPanel>
+            </SafeTabPanel>
 
-            <TabPanel>
+            <SafeTabPanel index={1}>
               <LongviewPlans
                 subscriptionRequestHook={subscriptionsRequestHook}
               />
-            </TabPanel>
+            </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
       </Tabs>

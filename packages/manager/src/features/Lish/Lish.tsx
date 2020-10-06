@@ -103,7 +103,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
     getLinode(+linodeId)
       .then(response => {
-        const { data: linode } = response;
+        const linode = response;
         if (!this.mounted) {
           return;
         }
@@ -173,9 +173,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
     return getLinodeLishToken(+linodeId)
       .then(response => {
-        const {
-          data: { lish_token: token }
-        } = response;
+        const { lish_token: token } = response;
         if (!this.mounted) {
           return;
         }
@@ -211,6 +209,10 @@ class Lish extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { authenticated, loading, linode, token } = this.state;
 
+    const navToURL = (index: number) => {
+      this.props.history.push(this.tabs[index].routeName);
+    };
+
     // If the window.close() logic above fails, we render an error state as a fallback
     if (!authenticated) {
       return (
@@ -227,7 +229,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Tabs className={classes.tabs}>
+        <Tabs className={classes.tabs} onChange={navToURL}>
           <TabLinkList className={classes.lish} tabs={this.tabs} />
           <TabPanels>
             {linode && token && (

@@ -3,6 +3,7 @@ import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TabLinkList from 'src/components/TabLinkList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import H1Header from 'src/components/H1Header';
@@ -25,9 +26,18 @@ const AuthenticationSettings = React.lazy(() =>
 );
 const APITokens = React.lazy(() => import('./APITokens'));
 
+const useStyles = makeStyles((theme: Theme) => ({
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
+  }
+}));
+
 type Props = RouteComponentProps<{}>;
 
 const Profile: React.FC<Props> = props => {
+  const classes = useStyles();
   const flags = useFlags();
   const {
     match: { url }
@@ -73,12 +83,24 @@ const Profile: React.FC<Props> = props => {
     return Boolean(matchPath(p, { path: location.pathname }));
   };
 
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="My Profile " />
-      <H1Header title="My Profile" data-qa-profile-header />
+      <H1Header
+        title="My Profile"
+        className={flags.cmr ? classes.cmrSpacing : ''}
+        data-qa-profile-header
+      />
       <Tabs
-        defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
         data-qa-tabs
       >
         <TabLinkList tabs={tabs} />
