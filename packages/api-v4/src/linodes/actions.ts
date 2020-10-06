@@ -105,7 +105,7 @@ export const rebuildLinode = (linodeId: number, data: RebuildRequest) =>
     setURL(`${API_ROOT}/linode/instances/${linodeId}/rebuild`),
     setMethod('POST'),
     setData(data, RebuildLinodeSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * rescueLinode
@@ -150,7 +150,7 @@ export const cloneLinode = (sourceLinodeId: number, data: LinodeCloneData) => {
     setURL(`${API_ROOT}/linode/instances/${sourceLinodeId}/clone`),
     setMethod('POST'),
     setData(data)
-  ).then(response => response.data);
+  );
 };
 
 /**
@@ -168,7 +168,7 @@ export const startMutation = (linodeID: number) => {
   return Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeID}/mutate`),
     setMethod('POST')
-  ).then(response => response.data);
+  );
 };
 
 /**

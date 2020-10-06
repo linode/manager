@@ -3,6 +3,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import useFlags from 'src/hooks/useFlags';
 import { isToday as _isToday } from 'src/utilities/isToday';
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
@@ -27,6 +28,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: theme.spacing(1) + 2
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -39,8 +46,10 @@ interface Props {
 export type CombinedProps = Props;
 
 export const OverviewGraphs: React.FC<CombinedProps> = props => {
-  const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
+  const flags = useFlags();
+
+  const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
     end: 0
@@ -66,9 +75,14 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
     <Grid item>
       <Grid item className={classes.headerOuter}>
         <Grid item>
-          <Typography variant="h2">Resource Allocation History</Typography>
+          <Typography
+            variant="h2"
+            className={flags.cmr ? classes.cmrSpacing : ''}
+          >
+            Resource Allocation History
+          </Typography>
         </Grid>
-        <Grid item>
+        <Grid item className={flags.cmr ? classes.cmrSpacing : ''}>
           <TimeRangeSelect
             handleStatsChange={handleStatsChange}
             defaultValue={'Past 30 Minutes'}

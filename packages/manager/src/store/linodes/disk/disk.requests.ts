@@ -75,7 +75,5 @@ export const deleteLinodeDisk = createRequestThunk(
 export const resizeLinodeDisk = createRequestThunk(
   resizeLinodeDiskActions,
   ({ linodeId, diskId, size }) =>
-    _resizeLinodeDisk(linodeId, diskId, size)
-      .then(({ data }) => data)
-      .then(addLinodeIdToDisk(linodeId))
+    _resizeLinodeDisk(linodeId, diskId, size).then(addLinodeIdToDisk(linodeId))
 );

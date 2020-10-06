@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import Paper from 'src/components/core/Paper';
 
@@ -22,13 +23,16 @@ const Installation: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   return (
-    <Paper data-testid="longview-clients" className={classes.root}>
-      <Instructions
-        data-qa-instructions
-        APIKey={props.clientAPIKey}
-        installationKey={props.clientInstallationKey}
-      />
-    </Paper>
+    <>
+      <DocumentTitleSegment segment="Installation" />
+      <Paper data-testid="longview-clients" className={classes.root}>
+        <Instructions
+          data-qa-instructions
+          APIKey={props.clientAPIKey}
+          installationKey={props.clientInstallationKey}
+        />
+      </Paper>
+    </>
   );
 };
 

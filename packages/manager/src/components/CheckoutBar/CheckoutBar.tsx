@@ -13,6 +13,7 @@ interface Props {
   priceHelperText?: string;
   submitText?: string;
   children?: JSX.Element;
+  footer?: JSX.Element;
 }
 
 type CombinedProps = Props;
@@ -27,7 +28,8 @@ const CheckoutBar: React.FC<CombinedProps> = props => {
     disabled,
     isMakingRequest,
     priceHelperText,
-    submitText
+    submitText,
+    footer
   } = props;
 
   const price = calculatedPrice ?? 0;
@@ -66,6 +68,7 @@ const CheckoutBar: React.FC<CombinedProps> = props => {
           {submitText ?? 'Create'}
         </Button>
       </div>
+      {footer ? footer : null}
     </div>
   );
 };

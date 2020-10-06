@@ -14,4 +14,4 @@ export const getClusters = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/object-storage/clusters`)
-  ).then(response => response.data);
+  );

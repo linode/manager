@@ -114,12 +114,13 @@ export const NotificationDrawer: React.FC<Props> = props => {
         <ChronologicalView notifications={chronologicalNotificationList} />
       ) : (
         <div className={classes.notificationSectionContainer}>
-          <PendingActions pendingActions={pendingActions} />
+          <PendingActions pendingActions={pendingActions} onClose={onClose} />
           <Maintenance statusNotifications={statusNotifications} />
           <OpenSupportTickets
             loading={support.loading}
             error={Boolean(support.error)}
             openTickets={support.data}
+            onClose={onClose}
           />
           <Community
             communityEvents={community.events}

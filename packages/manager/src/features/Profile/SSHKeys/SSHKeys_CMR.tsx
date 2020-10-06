@@ -28,6 +28,7 @@ import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog'
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu_CMR';
 import fingerprint from 'src/utilities/ssh-fingerprint';
 import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 type ClassNames =
   | 'root'
@@ -119,6 +120,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.root}>
+        <DocumentTitleSegment segment="SSH Keys" />
         <Grid
           className={classes.sshKeysHeader}
           container

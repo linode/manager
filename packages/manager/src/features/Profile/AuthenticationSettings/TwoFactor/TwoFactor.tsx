@@ -141,7 +141,7 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
     setLoading(true);
     return getTFAToken()
       .then(response => {
-        setSecret(response.data.secret);
+        setSecret(response.secret);
         setLoading(false);
         setErrors(undefined);
       })

@@ -29,7 +29,7 @@ export const getNodeBalancers = (params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
-  ).then(response => response.data);
+  );
 
 /**
  * getNodeBalancer
@@ -42,7 +42,7 @@ export const getNodeBalancer = (nodeBalancerId: number) =>
   Request<NodeBalancer>(
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * updateNodeBalancer
@@ -61,7 +61,7 @@ export const updateNodeBalancer = (
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}`),
     setMethod('PUT'),
     setData(data, UpdateNodeBalancerSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * createNodeBalancer
@@ -77,7 +77,7 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
       NodeBalancerSchema,
       combineNodeBalancerConfigNodeAddressAndPort
     )
-  ).then(response => response.data);
+  );
 
 /**
  * deleteNodeBalancer
@@ -90,7 +90,7 @@ export const deleteNodeBalancer = (nodeBalancerId: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}`)
-  ).then(response => response.data);
+  );
 
 /**
  * getNodeBalancerStats
@@ -103,5 +103,5 @@ export const getNodeBalancerStats = (nodeBalancerId: number) => {
   return Request<NodeBalancerStats>(
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/stats`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 };

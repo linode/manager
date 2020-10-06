@@ -15,6 +15,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import AccessKeyMenu from './AccessKeyMenu_CMR';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import { OpenAccessDrawer } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   labelCell: {
-    width: '48%'
+    width: '35%'
   },
   copyIcon: {
     '& svg': {
@@ -55,8 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   isRestrictedUser: boolean;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
-  openDrawerForEditing: (objectStorageKey: ObjectStorageKey) => void;
-  openDrawerForCreating: () => void;
+  openDrawer: OpenAccessDrawer;
 }
 
 export type CombinedProps = Props & PaginationProps<ObjectStorageKey>;
@@ -68,8 +68,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
     error,
     isRestrictedUser,
     openRevokeDialog,
-    openDrawerForEditing,
-    openDrawerForCreating
+    openDrawer
   } = props;
 
   const classes = useStyles();
@@ -120,7 +119,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
           <AccessKeyMenu
             objectStorageKey={eachKey}
             openRevokeDialog={openRevokeDialog}
-            openDrawerForEditing={openDrawerForEditing}
+            openDrawer={openDrawer}
             label={eachKey.label}
           />
         </TableCell>
@@ -143,7 +142,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
-            onClick={openDrawerForCreating}
+            onClick={() => openDrawer('creating')}
             label="Add an Access Key..."
           />
         </Grid>

@@ -34,7 +34,7 @@ export const getFirewalls = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${BETA_API_ROOT}/networking/firewalls`)
-  ).then(response => response.data);
+  );
 
 /**
  * getFirewall
@@ -47,7 +47,7 @@ export const getFirewall = (firewallID: number) =>
   Request<Firewall>(
     setMethod('GET'),
     setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}`)
-  ).then(response => response.data);
+  );
 
 /**
  * createFirewall
@@ -65,7 +65,7 @@ export const createFirewall = (data: CreateFirewallPayload) =>
     setMethod('POST'),
     setData(data, CreateFirewallSchema),
     setURL(`${BETA_API_ROOT}/networking/firewalls`)
-  ).then(response => response.data);
+  );
 
 /**
  * updateFirewall
@@ -82,7 +82,7 @@ export const updateFirewall = (
     setMethod('PUT'),
     setData(data, UpdateFirewallSchema),
     setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}`)
-  ).then(response => response.data);
+  );
 
 /**
  * enableFirewall
@@ -114,7 +114,7 @@ export const deleteFirewall = (firewallID: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}`)
-  ).then(response => response.data);
+  );
 
 // FIREWALL RULES
 
@@ -133,7 +133,7 @@ export const getFirewallRules = (
     setParams(params),
     setXFilter(filters),
     setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}/rules`)
-  ).then(response => response.data);
+  );
 
 /**
  * updateFirewallRules
@@ -146,7 +146,7 @@ export const updateFirewallRules = (firewallID: number, data: FirewallRules) =>
     setMethod('PUT'),
     setData(data), // Validation is too complicated for these; leave it to the API.
     setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}/rules`)
-  ).then(response => response.data);
+  );
 
 // DEVICES
 
@@ -166,7 +166,7 @@ export const getFirewallDevices = (
     setParams(params),
     setXFilter(filters),
     setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}/devices`)
-  ).then(response => response.data);
+  );
 
 /**
  * getFirewallDevice
@@ -180,7 +180,7 @@ export const getFirewallDevice = (firewallID: number, deviceID: number) =>
     setURL(
       `${BETA_API_ROOT}/networking/firewalls/${firewallID}/devices/${deviceID}`
     )
-  ).then(response => response.data);
+  );
 
 /**
  * addFirewallDevice
@@ -202,7 +202,7 @@ export const addFirewallDevice = (
     setMethod('POST'),
     setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}/devices`),
     setData(data, FirewallDeviceSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteFirewallDevice
@@ -218,4 +218,4 @@ export const deleteFirewallDevice = (firewallID: number, deviceID: number) =>
     setURL(
       `${BETA_API_ROOT}/networking/firewalls/${firewallID}/devices/${deviceID}`
     )
-  ).then(response => response.data);
+  );
