@@ -159,7 +159,6 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                 <IconButton
                   aria-label="Toggle display"
                   aria-describedby={'displayViewDescription'}
-                  title={`Toggle display`}
                   onClick={toggleLinodeView}
                   disableRipple
                   className={classes.toggleButton}
@@ -177,7 +176,6 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                 <IconButton
                   aria-label={`Toggle group by tag`}
                   aria-describedby={'groupByDescription'}
-                  title={`Toggle group by tag`}
                   onClick={toggleGroupLinodes}
                   disableRipple
                   className={classes.toggleButton}
