@@ -6,8 +6,9 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
+import Tooltip from 'src/components/core/Tooltip';
+import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import TableView from 'src/assets/icons/table-view.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -107,32 +108,36 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
             <div id="displayViewDescription" className="visually-hidden">
               Currently in {linodeViewPreference} view
             </div>
-            <IconButton
-              aria-label="Toggle display"
-              aria-describedby={'displayViewDescription'}
-              title={`Toggle display`}
-              onClick={toggleLinodeView}
-              disableRipple
-              className={classes.toggleButton}
-            >
-              <TableView />
-            </IconButton>
-
+            <Tooltip placement="top" title="Summary view">
+              <IconButton
+                aria-label="Toggle display"
+                aria-describedby={'displayViewDescription'}
+                onClick={toggleLinodeView}
+                disableRipple
+                className={classes.toggleButton}
+              >
+                <GridView />
+              </IconButton>
+            </Tooltip>
             <div id="groupByDescription" className="visually-hidden">
               {linodesAreGrouped
                 ? 'group by tag is currently enabled'
                 : 'group by tag is currently disabled'}
             </div>
-            <IconButton
-              aria-label={`Toggle group by tag`}
-              aria-describedby={'groupByDescription'}
-              title={`Toggle group by tag`}
-              onClick={toggleGroupLinodes}
-              disableRipple
-              className={classes.toggleButton}
+            <Tooltip
+              placement="top-end"
+              title={`${linodesAreGrouped ? 'Ungroup' : 'Group'} by tag`}
             >
-              <GroupByTag />
-            </IconButton>
+              <IconButton
+                aria-label={`Toggle group by tag`}
+                aria-describedby={'groupByDescription'}
+                onClick={toggleGroupLinodes}
+                disableRipple
+                className={classes.toggleButton}
+              >
+                <GroupByTag />
+              </IconButton>
+            </Tooltip>
           </div>
         </TableCell>
       </TableRow>
