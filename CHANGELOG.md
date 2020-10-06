@@ -11,14 +11,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Notification for when an email to a user couldn’t be delivered
 - Warning about 24 hour wait period before disabling backups for a Linode
 - Warning about blocked SMTP ports for new accounts
-- "Message" column to the Activity Feed table
 - CMR:
-  - Hide status chip if there are no corresponding Linodes with that status
   - Apply animations and adjustments to Linode Summary view
   - Apply table styles for Longview tables
+  - Hide status chip if there are no corresponding Linodes with that status
+  - "Message" column to the Activity Feed table
   - Prevent overflow of resolvers in Linode Network tab
   - Prevent text from being flush to the screen
-- OBJ Storage:
+- Object Storage:
   - Add ability to upload an SSL/TLS certificate for a Bucket
   - Add access management for OBJ access keys
   - Add loading state in OBJ access key drawer if buckets are loading
