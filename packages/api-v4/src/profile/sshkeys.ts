@@ -22,7 +22,7 @@ export const getSSHKeys = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/profile/sshkeys`)
-  ).then(response => response.data);
+  );
 
 /**
  * getSSHKey
@@ -34,7 +34,7 @@ export const getSSHKey = (keyId: number) =>
   Request<SSHKey>(
     setMethod('GET'),
     setURL(`${API_ROOT}/profile/sshkeys/${keyId}`)
-  ).then(response => response.data);
+  );
 
 /**
  * createSSHKey
@@ -47,7 +47,7 @@ export const createSSHKey = (data: { label: string; ssh_key: string }) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/profile/sshkeys`),
     setData(data, createSSHKeySchema)
-  ).then(response => response.data);
+  );
 
 /**
  * updateSSHKey
@@ -62,7 +62,7 @@ export const updateSSHKey = (keyId: number, data: Partial<SSHKey>) =>
     setMethod('DELETE'),
     setURL(`${API_ROOT}/profile/sshkeys/${keyId}`),
     setData(data, createSSHKeySchema)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteSSHKey
@@ -76,4 +76,4 @@ export const deleteSSHKey = (keyId: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/profile/sshkeys/${keyId}`)
-  ).then(response => response.data);
+  );

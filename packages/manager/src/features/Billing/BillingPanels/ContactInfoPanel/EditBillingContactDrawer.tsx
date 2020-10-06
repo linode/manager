@@ -17,12 +17,13 @@ const useStyles = makeStyles(() => ({
 export interface Props {
   open: boolean;
   onClose: () => void;
+  focusEmail: boolean;
 }
 
 type CombinedProps = Props;
 
 export const BillingContactDrawer: React.FC<CombinedProps> = props => {
-  const { open, onClose } = props;
+  const { open, onClose, focusEmail } = props;
 
   const classes = useStyles();
 
@@ -33,7 +34,11 @@ export const BillingContactDrawer: React.FC<CombinedProps> = props => {
       open={open}
       onClose={onClose}
     >
-      <UpdateContactInformationForm open={open} onClose={onClose} />
+      <UpdateContactInformationForm
+        open={open}
+        onClose={onClose}
+        focusEmail={focusEmail}
+      />
     </Drawer>
   );
 };

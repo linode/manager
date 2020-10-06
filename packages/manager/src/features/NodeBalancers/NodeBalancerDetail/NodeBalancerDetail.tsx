@@ -280,6 +280,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       updateTags: this.updateTags
     };
 
+    const navToURL = (index: number) => {
+      this.props.history.push(this.tabs[index].routeName);
+    };
+
     return (
       <NodeBalancerProvider value={p}>
         <React.Fragment>
@@ -299,10 +303,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           </Grid>
           {errorMap.none && <Notice error text={errorMap.none} />}
           <Tabs
-            defaultIndex={Math.max(
+            index={Math.max(
               this.tabs.findIndex(tab => matches(tab.routeName)),
               0
             )}
+            onChange={navToURL}
           >
             <TabLinkList tabs={this.tabs} />
 

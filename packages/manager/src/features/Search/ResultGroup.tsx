@@ -4,12 +4,7 @@ import { compose, withStateHandlers } from 'recompose';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
@@ -18,38 +13,35 @@ import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
+import useFlags from 'src/hooks/useFlags';
 import capitalize from 'src/utilities/capitalize';
 
 import ResultRow from './ResultRow';
 
-type ClassNames =
-  | 'root'
-  | 'entityHeadingWrapper'
-  | 'entityHeading'
-  | 'button'
-  | 'emptyCell'
-  | 'headerCell';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginBottom: theme.spacing(2) + theme.spacing(1) / 2
-    },
-    entityHeadingWrapper: {},
-    entityHeading: {
-      marginBottom: theme.spacing(1) + 2
-    },
-    button: {
-      marginTop: theme.spacing(1),
-      width: '10%'
-    },
-    emptyCell: {
-      padding: 0
-    },
-    headerCell: {
-      padding: `${theme.spacing(1) + 2}px ${theme.spacing(1) / 2}px`
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginBottom: theme.spacing(2) + theme.spacing(1) / 2
+  },
+  entityHeadingWrapper: {},
+  entityHeading: {
+    marginBottom: theme.spacing(1) + 2
+  },
+  button: {
+    marginTop: theme.spacing(1),
+    width: '10%'
+  },
+  emptyCell: {
+    padding: 0
+  },
+  headerCell: {
+    padding: `${theme.spacing(1) + 2}px ${theme.spacing(1) / 2}px`
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
     }
-  });
+  }
+}));
 
 interface Props {
   entity: string;
@@ -61,10 +53,13 @@ interface HandlerProps {
   toggle: () => void;
 }
 
-type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
+type CombinedProps = Props & HandlerProps;
 
 export const ResultGroup: React.FC<CombinedProps> = props => {
-  const { entity, classes, groupSize, results, toggle, showMore } = props;
+  const classes = useStyles();
+  const flags = useFlags();
+
+  const { entity, groupSize, results, toggle, showMore } = props;
 
   if (isEmpty(results)) {
     return null;
@@ -79,7 +74,8 @@ export const ResultGroup: React.FC<CombinedProps> = props => {
         <Typography
           variant="h2"
           data-qa-entity-header={entity}
-          className={classes.entityHeading}
+          className={`${classes.entityHeading} ${flags.cmr &&
+            classes.cmrSpacing}`}
         >
           {capitalize(entity)}
         </Typography>
@@ -130,7 +126,6 @@ export const ResultGroup: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
 const handlers = withStateHandlers(
   { showMore: false },
   {
@@ -138,6 +133,6 @@ const handlers = withStateHandlers(
   }
 );
 
-const enhanced = compose<CombinedProps, Props>(styled, handlers)(ResultGroup);
+const enhanced = compose<CombinedProps, Props>(handlers)(ResultGroup);
 
 export default enhanced;

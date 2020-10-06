@@ -20,7 +20,10 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(1)
+      }
     }
   });
 

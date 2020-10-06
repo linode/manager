@@ -3,10 +3,20 @@ export interface ObjectStorageKey {
   id: number;
   label: string;
   secret_key: string;
+  limited: boolean;
+  bucket_access: Scope[] | null;
+}
+
+export type AccessType = 'read_only' | 'read_write' | 'none';
+export interface Scope {
+  bucket_name: string;
+  cluster: string;
+  permissions: AccessType;
 }
 
 export interface ObjectStorageKeyRequest {
   label: string;
+  bucket_access: Scope[] | null;
 }
 
 export interface ObjectStorageBucketRequestPayload {
@@ -76,4 +86,13 @@ export interface ObjectStorageObjectListResponse {
   data: ObjectStorageObject[];
   next_marker: string | null;
   is_truncated: boolean;
+}
+
+export interface ObjectStorageBucketSSLRequest {
+  certificate: string;
+  private_key: string;
+}
+
+export interface ObjectStorageBucketSSLResponse {
+  ssl: boolean;
 }
