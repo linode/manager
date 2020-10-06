@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   tab: {
     '&[data-reach-tab]': {
       // This was copied over from our MuiTab styling in themeFactory. Some of this could probably be cleaned up.
-      color: theme.color.tableHeaderText,
+      color: theme.color.blue,
       minWidth: 50,
       textTransform: 'inherit',
       fontSize: '0.93rem',
@@ -68,6 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-tab-list]': {
       background: 'none !important',
       boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
+      marginTop: 22,
       marginBottom: theme.spacing(3),
       [theme.breakpoints.down('md')]: {
         overflowX: 'scroll',

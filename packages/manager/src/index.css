@@ -115,7 +115,7 @@ body.searchOverlay #main-content {
 
 @media (min-width: 1600px) {
   #main-content {
-    padding-top: 40px;
+    padding-top: 20px;
   }
 }
 

@@ -16,7 +16,7 @@ import PaymentDrawer from './PaymentDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(3),
+    marginBottom: 20,
     padding: theme.spacing(3) + 1,
     border: `solid 1px ${theme.color.borderBilling}`,
     borderRadius: 8,

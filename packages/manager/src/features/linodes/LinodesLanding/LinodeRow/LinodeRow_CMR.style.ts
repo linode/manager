@@ -48,7 +48,12 @@ const styles = (theme: Theme) =>
       }
     },
     bodyRow: {
-      height: 'auto'
+      height: 'auto',
+      '&:hover': {
+        '& [data-qa-copy-ip]': {
+          opacity: 1
+        }
+      }
     },
     progressDisplay: {
       display: 'inline-block'
@@ -100,6 +105,9 @@ const styles = (theme: Theme) =>
       '& *': {
         fontSize: '.875rem',
         paddingBottom: 0
+      },
+      '& [data-qa-copy-ip]': {
+        opacity: 0
       }
     },
     regionCell: {
