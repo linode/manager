@@ -20,6 +20,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      borderTop: 'none',
       borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
     },
     noWrap: {

@@ -22,7 +22,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
     marginBottom: 28,
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    backgroundColor: theme.cmrBGColors.bgTableHeader
   },
   toggleButton: {
     padding: 10,
