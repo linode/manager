@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       appearance: 'none',
       borderBottom: '2px solid transparent',
       boxSizing: 'border-box',
-      color: theme.palette.cmrTextColors.textTab,
+      color: theme.cmrTextColors.textTab,
       fontSize: '0.93rem',
       lineHeight: 1.3,
       maxWidth: 264,
@@ -35,15 +35,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&[data-reach-tab][data-selected]': {
       fontFamily: theme.font.bold,
-      color: theme.palette.cmrTextColors.textTabActive,
-      borderBottom: `2px solid ${theme.palette.cmrBorderColors.borderTabActive}`
+      color: theme.cmrTextColors.textTabActive,
+      borderBottom: `2px solid ${theme.cmrBorderColors.borderTabActive}`
     }
   },
   tabList: {
     color: theme.color.tableHeaderText,
     '&[data-reach-tab-list]': {
       background: 'none !important',
-      boxShadow: `inset 0 -1px 0 ${theme.palette.cmrBorderColors.borderTabs}`,
+      boxShadow: `inset 0 -1px 0 ${theme.cmrBorderColors.borderTabs}`,
       marginBottom: theme.spacing(3),
       [theme.breakpoints.down('md')]: {
         overflowX: 'scroll',

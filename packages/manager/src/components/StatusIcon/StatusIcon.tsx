@@ -47,13 +47,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: 2
   },
   statusIconRunning: {
-    backgroundColor: theme.palette.cmrIconColors.iGreen
+    backgroundColor: theme.cmrIconColors.iGreen
   },
   statusIconOther: {
-    backgroundColor: theme.palette.cmrIconColors.iOrange
+    backgroundColor: theme.cmrIconColors.iOrange
   },
   statusIconOffline: {
-    backgroundColor: theme.palette.cmrIconColors.iGrey
+    backgroundColor: theme.cmrIconColors.iGrey
   },
   statusIconError: {
     backgroundColor: theme.color.red

@@ -10,9 +10,9 @@ import _TableRow, {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderLeft: `1px solid ${theme.palette.cmrBorderColors.borderTable}`,
-    borderRight: `1px solid ${theme.palette.cmrBorderColors.borderTable}`,
-    backgroundColor: theme.palette.cmrBGColors.bgTableBody,
+    borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    backgroundColor: theme.cmrBGColors.bgTableBody,
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.up('md')]: {
       boxShadow: `inset 3px 0 0 transparent`
@@ -44,22 +44,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:before': {
       transition: 'none',
       backgroundColor: theme.bg.lightBlue,
-      borderColor: theme.palette.cmrBorderColors.borderTable
+      borderColor: theme.cmrBorderColors.borderTable
     },
     '& td': {
-      borderTopColor: theme.palette.cmrBorderColors.borderTable,
-      borderBottomColor: theme.palette.cmrBorderColors.borderTable,
+      borderTopColor: theme.cmrBorderColors.borderTable,
+      borderBottomColor: theme.cmrBorderColors.borderTable,
       '&:not(:last-child)': {
-        borderTop: `1px solid ${theme.palette.cmrBorderColors.borderTable}`
+        borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`
       },
       position: 'relative',
       '&:first-child': {
-        borderLeft: `1px solid ${theme.palette.cmrBorderColors.borderTable}`
+        borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`
       },
       [theme.breakpoints.down('md')]: {
         '&:last-child': {
-          borderTop: `1px solid ${theme.palette.cmrBorderColors.borderTable}`,
-          borderRight: `1px solid ${theme.palette.cmrBorderColors.borderTable}`
+          borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
+          borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`
         }
       }
     }

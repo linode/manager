@@ -185,7 +185,7 @@ export interface HeaderProps {
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.palette.cmrBGColors.bgSecondaryActions
+    backgroundColor: theme.cmrBGColors.bgSecondaryActions
   },
   linodeLabelWithDistro: {
     display: 'flex',
@@ -193,7 +193,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   linodeLabel: {
     marginLeft: 7,
-    color: theme.palette.cmrTextColors.headlineActive
+    color: theme.cmrTextColors.headlineActive
   },
   distroIcon: {
     fontSize: 25,
@@ -250,17 +250,17 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusRunning: {
     '&:before': {
-      backgroundColor: theme.palette.cmrIconColors.iGreen
+      backgroundColor: theme.cmrIconColors.iGreen
     }
   },
   statusOffline: {
     '&:before': {
-      backgroundColor: theme.palette.cmrIconColors.iGrey
+      backgroundColor: theme.cmrIconColors.iGrey
     }
   },
   statusOther: {
     '&:before': {
-      backgroundColor: theme.palette.cmrIconColors.iOrange
+      backgroundColor: theme.cmrIconColors.iOrange
     }
   },
   actionItemsOuter: {
@@ -477,14 +477,14 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     flexBasis: '72%',
     minWidth: 115,
     alignSelf: 'center',
-    color: theme.palette.cmrTextColors.tableStatic
+    color: theme.cmrTextColors.tableStatic
   },
   ipContainer: {
     paddingLeft: '40px !important'
   },
   ipList: {
     marginTop: 4,
-    color: theme.palette.cmrTextColors.tableStatic,
+    color: theme.cmrTextColors.tableStatic,
     '& li': {
       padding: 0,
       fontSize: '0.875rem',
@@ -508,15 +508,15 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       overflowX: 'auto',
       maxWidth: '100%',
       whiteSpace: 'nowrap',
-      backgroundColor: theme.palette.cmrBGColors.bgAccessRow,
-      borderBottom: `1px solid ${theme.palette.cmrBGColors.bgTableBody}`
+      backgroundColor: theme.cmrBGColors.bgAccessRow,
+      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`
     },
     '& th': {
-      backgroundColor: theme.palette.cmrBGColors.bgAccessHeader,
-      borderBottom: `1px solid ${theme.palette.cmrBGColors.bgTableBody}`,
+      backgroundColor: theme.cmrBGColors.bgAccessHeader,
+      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
       fontWeight: 'bold',
       fontSize: '0.875rem',
-      color: theme.palette.cmrTextColors.textAccessTable,
+      color: theme.cmrTextColors.textAccessTable,
       lineHeight: 1.1,
       width: '102px',
       whiteSpace: 'nowrap',
@@ -539,7 +539,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
   code: {
     fontFamily: '"SourceCodePro", monospace, sans-serif',
-    color: theme.palette.cmrTextColors.textAccessCode
+    color: theme.cmrTextColors.textAccessCode
   },
   bodyWrapper: {
     [theme.breakpoints.up('lg')]: {
@@ -710,8 +710,8 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
   listItem: {
     padding: `0px 10px`,
-    borderRight: `1px solid ${theme.palette.cmrBorderColors.borderTypography}`,
-    color: theme.palette.cmrTextColors.tableStatic
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
+    color: theme.cmrTextColors.tableStatic
   },
   listItemLast: {
     [theme.breakpoints.only('xs')]: {
@@ -722,7 +722,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
     padding: `0px 10px`,
-    borderRight: `1px solid ${theme.palette.cmrBorderColors.borderTypography}`,
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
     fontWeight: 'bold',
     '&:hover': {
       textDecoration: 'none'
@@ -730,7 +730,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
   linodeCreated: {
     paddingLeft: 10,
-    color: theme.palette.cmrTextColors.tableStatic,
+    color: theme.cmrTextColors.tableStatic,
     [theme.breakpoints.down('sm')]: {
       textAlign: 'center'
     }

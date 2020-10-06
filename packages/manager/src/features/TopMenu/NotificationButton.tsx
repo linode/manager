@@ -10,8 +10,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 74,
     height: 34,
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.cmrBGColors.bgSecondaryButton,
-    border: `1px solid ${theme.palette.cmrBorderColors.borderNotificationCenter}`,
+    backgroundColor: theme.cmrBGColors.bgSecondaryButton,
+    border: `1px solid ${theme.cmrBorderColors.borderNotificationCenter}`,
     borderRadius: 3,
     display: 'flex',
     flexFlow: 'row nowrap',
@@ -19,11 +19,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-around',
     cursor: 'pointer',
     '& svg': {
-      color: theme.palette.cmrTextColors.textAction
+      color: theme.cmrTextColors.textAction
     }
   },
   text: {
-    color: theme.palette.cmrTextColors.textAction,
+    color: theme.cmrTextColors.textAction,
     fontSize: 16,
     lineHeight: 1.25
   }

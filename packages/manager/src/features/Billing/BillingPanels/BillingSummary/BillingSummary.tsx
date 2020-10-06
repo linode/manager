@@ -18,9 +18,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
     padding: theme.spacing(3) + 1,
-    border: `solid 1px ${theme.palette.cmrBorderColors.borderBillingSummary}`,
+    border: `solid 1px ${theme.cmrBorderColors.borderBillingSummary}`,
     borderRadius: 8,
-    backgroundColor: theme.palette.cmrBGColors.bgBillingSummary
+    backgroundColor: theme.cmrBGColors.bgBillingSummary
   },
   header: {
     marginBottom: theme.spacing(2) - 1
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&:nth-of-type(2)': {
       [theme.breakpoints.up('md')]: {
-        borderLeft: `1px solid ${theme.palette.cmrBorderColors.borderBillingSummary}`
+        borderLeft: `1px solid ${theme.cmrBorderColors.borderBillingSummary}`
       }
     },
     '&:last-of-type': {
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   balanceOuter: {
     paddingTop: theme.spacing(1) - 3,
-    borderTop: `1px dashed ${theme.palette.cmrBorderColors.borderBalance}`
+    borderTop: `1px dashed ${theme.cmrBorderColors.borderBalance}`
   },
   label: {
     margin: `${theme.spacing(1) - 3}px 0`,

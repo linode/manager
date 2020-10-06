@@ -20,7 +20,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      borderBottom: `1px solid ${theme.palette.cmrBorderColors.borderTable}`
+      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
     },
     noWrap: {
       whiteSpace: 'nowrap'

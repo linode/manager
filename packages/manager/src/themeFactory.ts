@@ -42,6 +42,10 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes rotate': any;
     '@keyframes dash': any;
     bg: any;
+    cmrBGColors: any;
+    cmrTextColors: any;
+    cmrBorderColors: any;
+    cmrIconColors: any;
     color: any;
     graphs: any;
     visually: any;
@@ -344,6 +348,10 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       tagIcon: '#7daee8',
       tagBorder: '#fff'
     },
+    cmrBGColors: cmrBGColors,
+    cmrTextColors: cmrTextColors,
+    cmrBorderColors: cmrBorderColors,
+    cmrIconColors: cmrIconColors,
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
       requests: `rgba(34, 206, 182, ${graphTransparency})`,
@@ -434,10 +442,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     palette: {
       divider: primaryColors.divider,
-      cmrBGColors: cmrBGColors,
-      cmrTextColors: cmrTextColors,
-      cmrBorderColors: cmrBorderColors,
-      cmrIconColors: cmrIconColors,
       primary: primaryColors,
       text: {
         primary: primaryColors.text

@@ -33,7 +33,7 @@ const styles = (theme: Theme) =>
       fontSize: '.875rem',
       lineHeight: '1.125rem',
       textDecoration: 'underline',
-      color: theme.palette.cmrTextColors.linkActiveLight
+      color: theme.cmrTextColors.linkActiveLight
     },
     labelStatusWrapper: {
       display: 'flex',

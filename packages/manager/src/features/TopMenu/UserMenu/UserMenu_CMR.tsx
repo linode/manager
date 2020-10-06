@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: 1,
     paddingLeft: 15,
     '&[data-reach-menu-button]': {
-      backgroundColor: theme.palette.cmrBGColors.bgPrimaryNav,
+      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
       border: 'none',
       borderRadius: 0,
       color: theme.color.primaryNavText,

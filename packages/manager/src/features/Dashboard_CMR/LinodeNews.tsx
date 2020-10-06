@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     '& a': {
-      color: theme.palette.cmrTextColors.linkActiveMedium
+      color: theme.cmrTextColors.linkActiveMedium
     }
   },
   logo: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     ...theme.applyLinkStyles,
-    color: theme.palette.cmrIconColors.iActiveMedium
+    color: theme.cmrIconColors.iActiveMedium
   }
 }));
 

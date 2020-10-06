@@ -4,7 +4,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuGrid: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.palette.cmrBGColors.bgPrimaryNav,
+    backgroundColor: theme.cmrBGColors.bgPrimaryNav,
     borderColor: theme.bg.primaryNavBorder,
     boxShadow: 'none',
     height: '100%',
@@ -182,7 +182,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: 1,
     padding: 0,
     '&[data-reach-menu-button]': {
-      backgroundColor: theme.palette.cmrBGColors.bgPrimaryNav,
+      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
       border: 'none',
       borderRadius: 0,
       color: theme.color.primaryNavText,
@@ -224,7 +224,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menuItemList: {
     '&[data-reach-menu-items]': {
-      backgroundColor: theme.palette.cmrBGColors.bgPrimaryNav,
+      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
       border: 'none',
       padding: 0,
       whiteSpace: 'normal'
@@ -234,7 +234,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item]': {
       display: 'flex',
       alignItems: 'center',
-      backgroundColor: theme.palette.cmrBGColors.bgPrimaryNav,
+      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
       color: theme.color.primaryNavText,
       fontSize: '1rem',
       paddingTop: 12,

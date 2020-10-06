@@ -204,6 +204,10 @@ const darkThemeOptions = {
     tagIcon: '#9caec9',
     tagBorder: '#2e3238'
   },
+  cmrBGColors,
+  cmrBorderColors,
+  cmrTextColors,
+  cmrIconColors,
   animateCircleIcon: {
     ...iconCircleAnimation
   },
@@ -215,10 +219,6 @@ const darkThemeOptions = {
   },
   palette: {
     divider: primaryColors.divider,
-    cmrBGColors: cmrBGColors,
-    cmrTextColors: cmrTextColors,
-    cmrBorderColors: cmrBorderColors,
-    cmrIconColors: cmrIconColors,
     primary: primaryColors,
     text: {
       primary: primaryColors.text
