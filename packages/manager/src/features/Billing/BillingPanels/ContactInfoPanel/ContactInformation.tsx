@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -91,13 +91,28 @@ const ContactInformation: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
+  const history = useHistory();
+
   const [editContactDrawerOpen, setEditContactDrawerOpen] = React.useState<
     boolean
   >(false);
 
+  const [focusEmail, setFocusEmail] = React.useState(false);
+
   const handleEditDrawerOpen = () => {
     setEditContactDrawerOpen(true);
   };
+
+  // Listen for changes to history state and open the drawer if necessary.
+  // This is currently in use by the EmailBounceNotification, which navigates
+  // the user to the Account page and opens the drawer to prompt them to change
+  // their billing email address.
+  React.useEffect(() => {
+    if (!editContactDrawerOpen && history.location.state?.contactDrawerOpen) {
+      setEditContactDrawerOpen(true);
+      setFocusEmail(true);
+    }
+  }, [editContactDrawerOpen, history.location.state]);
 
   return (
     <Grid item xs={12} md={6}>
@@ -190,7 +205,12 @@ const ContactInformation: React.FC<CombinedProps> = props => {
       </Paper>
       <BillingContactDrawer
         open={editContactDrawerOpen}
-        onClose={() => setEditContactDrawerOpen(false)}
+        onClose={() => {
+          history.replace('/account', { contactDrawerOpen: false });
+          setEditContactDrawerOpen(false);
+          setFocusEmail(false);
+        }}
+        focusEmail={focusEmail}
       />
     </Grid>
   );

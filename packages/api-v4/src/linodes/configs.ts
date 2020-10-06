@@ -31,7 +31,7 @@ export const getLinodeConfigs = (
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
-  ).then(response => response.data);
+  );
 
 /**
  * getLinodeConfig
@@ -45,7 +45,7 @@ export const getLinodeConfig = (linodeId: number, configId: number) =>
   Request<Config>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * createLinodeConfig
@@ -62,7 +62,7 @@ export const createLinodeConfig = (
     setURL(`${API_ROOT}/linode/instances/${linodeId}/configs`),
     setMethod('POST'),
     setData(data, CreateLinodeConfigSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteLinodeConfig
@@ -76,7 +76,7 @@ export const deleteLinodeConfig = (linodeId: number, configId: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`)
-  ).then(response => response.data);
+  );
 
 /**
  * updateLinodeConfig
@@ -95,4 +95,4 @@ export const updateLinodeConfig = (
     setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
     setMethod('PUT'),
     setData(data, UpdateLinodeConfigSchema)
-  ).then(response => response.data);
+  );

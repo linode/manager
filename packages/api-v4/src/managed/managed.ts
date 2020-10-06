@@ -58,7 +58,7 @@ export const getServices = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/services`)
-  ).then(response => response.data);
+  );
 
 /**
  * disableServiceMonitor
@@ -69,7 +69,7 @@ export const disableServiceMonitor = (serviceID: number) =>
   Request<ManagedServiceMonitor>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/services/${serviceID}/disable`)
-  ).then(response => response.data);
+  );
 
 /**
  * enableServiceMonitor
@@ -80,7 +80,7 @@ export const enableServiceMonitor = (serviceID: number) =>
   Request<ManagedServiceMonitor>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/services/${serviceID}/enable`)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteServiceMonitor
@@ -91,7 +91,7 @@ export const deleteServiceMonitor = (serviceID: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/managed/services/${serviceID}`)
-  ).then(response => response.data);
+  );
 
 /**
  * getLinodeSettings
@@ -104,7 +104,7 @@ export const getLinodeSettings = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/linode-settings`)
-  ).then(response => response.data);
+  );
 
 /**
  * createServiceMonitor
@@ -116,7 +116,7 @@ export const createServiceMonitor = (data: ManagedServicePayload) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/services`),
     setData(data, createServiceMonitorSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * updateServiceMonitor
@@ -131,7 +131,7 @@ export const updateServiceMonitor = (
     setMethod('PUT'),
     setURL(`${API_ROOT}/managed/services/${monitorID}`),
     setData(data, createServiceMonitorSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * getCredentials
@@ -144,7 +144,7 @@ export const getCredentials = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/credentials`)
-  ).then(response => response.data);
+  );
 
 /**
  * updateCredential
@@ -160,7 +160,7 @@ export const updateCredential = (
     setMethod('PUT'),
     setData(data, updateCredentialSchema),
     setURL(`${API_ROOT}/managed/credentials/${credentialID}`)
-  ).then(response => response.data);
+  );
 
 /**
  * updatePassword
@@ -175,7 +175,7 @@ export const updatePassword = (
     setMethod('POST'),
     setData(data, updatePasswordSchema),
     setURL(`${API_ROOT}/managed/credentials/${credentialID}/update`)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteCredential
@@ -186,7 +186,7 @@ export const deleteCredential = (credentialID: number) =>
   Request<{}>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/credentials/${credentialID}/revoke`)
-  ).then(response => response.data);
+  );
 
 /*
  * createCredential
@@ -198,7 +198,7 @@ export const createCredential = (data: CredentialPayload) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/credentials`),
     setData(data, createCredentialSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * getSSHKey
@@ -211,7 +211,7 @@ export const getSSHPubKey = () =>
   Request<ManagedSSHPubKey>(
     setMethod('GET'),
     setURL(`${API_ROOT}/managed/credentials/sshkey`)
-  ).then(response => response.data);
+  );
 
 /**
  * updateLinodeSettings
@@ -227,7 +227,7 @@ export const updateLinodeSettings = (
     setURL(`${API_ROOT}/managed/linode-settings/${linodeId}`),
     setMethod('PUT'),
     setData(data, updateManagedLinodeSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * getManagedContacts
@@ -240,7 +240,7 @@ export const getManagedContacts = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/contacts`)
-  ).then(response => response.data);
+  );
 
 /**
  * createContact
@@ -252,7 +252,7 @@ export const createContact = (data: ContactPayload) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/contacts`),
     setData(data, createContactSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * updateContact
@@ -267,7 +267,7 @@ export const updateContact = (
     setMethod('PUT'),
     setURL(`${API_ROOT}/managed/contacts/${contactId}`),
     setData(data, createContactSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteContact
@@ -278,7 +278,7 @@ export const deleteContact = (contactId: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/managed/contacts/${contactId}`)
-  ).then(response => response.data);
+  );
 
 /**
  * getManagedIssues
@@ -289,7 +289,7 @@ export const getManagedIssues = () =>
   Request<Page<ManagedIssue>>(
     setMethod('GET'),
     setURL(`${API_ROOT}/managed/issues`)
-  ).then(response => response.data);
+  );
 
 /**
  * getManagedStats
@@ -297,7 +297,4 @@ export const getManagedIssues = () =>
  * Returns usage data for all of the Linodes on a Managed customer's account.
  */
 export const getManagedStats = () =>
-  Request<ManagedStats>(
-    setMethod('GET'),
-    setURL(`${API_ROOT}/managed/stats`)
-  ).then(response => response.data);
+  Request<ManagedStats>(setMethod('GET'), setURL(`${API_ROOT}/managed/stats`));

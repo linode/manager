@@ -4,17 +4,86 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-10-05] - v1.22.0
+
+### Added:
+
+- Notification for when an email to a user couldn’t be delivered
+- Warning about 24 hour wait period before disabling backups for a Linode
+- Warning about blocked SMTP ports for new accounts
+- CMR:
+  - Apply animations and adjustments to Linode Summary view
+  - Apply table styles for Longview tables
+  - Hide status chip if there are no corresponding Linodes with that status
+  - "Message" column to the Activity Feed table
+  - Prevent overflow of resolvers in Linode Network tab
+  - Prevent text from being flush to the screen
+- Object Storage:
+  - Add ability to upload an SSL/TLS certificate for a Bucket
+  - Add access management for OBJ access keys
+  - Add loading state in OBJ access key drawer if buckets are loading
+  - Add view mode to OBJ access key drawer
+- VLANs:
+  - Create modal
+  - Add VLAN attachment option to Linode Create flow
+  - Add VLAN table to Linode Network tab
+  - Add VLAN column to Linode Configuration table
+
+### Changed:
+
+- Improve handling of Managed accounts when backing up Linodes
+
+### Fixed:
+
+- Cloning a Domain leads to “Not Found” page
+- Navigation bug in Longview
+- Tab-based navigation
+
+## JS Client
+
+### Added:
+
+- UploadCertificateSchema endpoint
+- uploadSSLCert endpoint
+- getSSLCert endpoint
+- deleteSSLCert endpoint
+- ObjectStorageBucketSSLRequest endpoint
+- ObjectStorageBucketSSLResponse endpoint
+- CreateVLANPayload endpoint
+- createVlanSchema endpoint
+- getVlans endpoint
+- getVlan endpoint
+- createVlan endpoint
+- deleteVlan endpoint
+- connectVlan endpoint
+- disconnectVlan endpoint
+- getInterfaces endpoint
+- getInterface endpoint
+- createInterface endpoint
+- deleteInterface endpoint
+- linodeInterfaceItemSchema endpoint
+- linodeInterfaceSchema endpoint
+- LinodeInterfacePayload endpoint
+- LinodeInterface endpoint
+
+### Fixed:
+
+- getLinode method now returns Promise<Linode> instead of Axios response
+- getLinodeLishToken method now returns Promise<{ lish_token: string}> instead of Axios response
+- deleteLinode method now returns Promise<{}> instead of Axios response
+
 ## [2020-09-29] - v1.21.0
 
 ### Added:
 
 One-Click Apps:
-  - Jitsi
-  - Webmin
-  - Virtualmin
-  - Plex
-  - phpMyAdmin
-  - Azuracast
+
+- Jitsi
+- Webmin
+- Virtualmin
+- Plex
+- phpMyAdmin
+- Azuracast
 
 ## [2020-09-21] - v1.20.0
 

@@ -20,8 +20,10 @@ export const useAccount = () => {
     (state: ApplicationState) => state.__resources.account
   );
   const requestAccount = () => dispatch(_request());
+  const updateAccount = (payload: Partial<Account>) =>
+    dispatch(_update(payload));
 
-  return { account, requestAccount };
+  return { account, requestAccount, updateAccount };
 };
 
 export default useAccount;

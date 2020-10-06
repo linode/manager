@@ -22,7 +22,7 @@ export const getUsers = (params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
-  ).then(response => response.data);
+  );
 
 /**
  * getUser
@@ -37,7 +37,7 @@ export const getUser = (username: string) =>
   Request<User>(
     setURL(`${API_ROOT}/account/users/${username}`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * createUser
@@ -52,7 +52,7 @@ export const createUser = (data: Partial<User>) =>
     setURL(`${API_ROOT}/account/users`),
     setMethod('POST'),
     setData(data, CreateUserSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * updateUser
@@ -69,7 +69,7 @@ export const updateUser = (username: string, data: Partial<User>) =>
     setURL(`${API_ROOT}/account/users/${username}`),
     setMethod('PUT'),
     setData(data, UpdateUserSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteUser
@@ -84,7 +84,7 @@ export const deleteUser = (username: string) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/users/${username}`),
     setMethod('DELETE')
-  ).then(response => response.data);
+  );
 
 /**
  * getGrants
@@ -101,7 +101,7 @@ export const getGrants = (username: string) =>
   Request<Grants>(
     setURL(`${API_ROOT}/account/users/${username}/grants`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * updateGrants
@@ -120,4 +120,4 @@ export const updateGrants = (username: string, data: Partial<Grants>) =>
     setURL(`${API_ROOT}/account/users/${username}/grants`),
     setMethod('PUT'),
     setData(data)
-  ).then(response => response.data);
+  );

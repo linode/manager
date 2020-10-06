@@ -46,6 +46,7 @@ const styles = (theme: Theme) =>
       minWidth: '105px',
       paddingLeft: theme.spacing(3) + 4,
       paddingRight: theme.spacing(3) + 4,
+      transition: 'none',
       '&.cancel': {
         border: `1px solid transparent`,
         transition: theme.transitions.create(['color', 'border-color']),

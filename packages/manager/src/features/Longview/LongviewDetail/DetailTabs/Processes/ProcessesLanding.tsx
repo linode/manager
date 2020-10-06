@@ -2,7 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import {
@@ -19,12 +19,18 @@ import ProcessesTable, { ExtendedProcess } from './ProcessesTable';
 import { Process } from './types';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   filterInput: {
     width: 300
   },
   selectTimeRange: {
     width: 200
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -123,7 +129,11 @@ const ProcessesLanding: React.FC<Props> = props => {
       <DocumentTitleSegment segment="Processes" />
       <Grid container spacing={4}>
         <Grid item xs={12} lg={7}>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            className={classes.cmrSpacing}
+          >
             <TextField
               className={classes.filterInput}
               small

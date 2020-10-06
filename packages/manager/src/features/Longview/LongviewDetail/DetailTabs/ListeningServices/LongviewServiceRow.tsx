@@ -1,14 +1,21 @@
 import * as React from 'react';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import TableCell_PreCMR from 'src/components/TableCell';
+import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
+import TableRow_PreCMR from 'src/components/TableRow';
+import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import { LongviewService } from 'src/features/Longview/request.types';
 
 interface Props {
   service: LongviewService;
+  cmrFlag?: boolean;
 }
 
 export const LongviewServiceRow: React.FC<Props> = props => {
-  const { service } = props;
+  const { service, cmrFlag } = props;
+
+  const TableCell = cmrFlag ? TableCell_CMR : TableCell_PreCMR;
+  const TableRow = cmrFlag ? TableRow_CMR : TableRow_PreCMR;
+
   return (
     <TableRow ariaLabel={service.name} data-testid="longview-service-row">
       <TableCell parentColumn="Process" data-qa-service-process>

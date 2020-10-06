@@ -18,9 +18,7 @@ import { Profile, TrustedDevice, UserPreferences, ProfileLogin } from './types';
  *
  */
 export const getProfile = () =>
-  Request<Profile>(setURL(`${API_ROOT}/profile`), setMethod('GET')).then(
-    response => response.data
-  );
+  Request<Profile>(setURL(`${API_ROOT}/profile`), setMethod('GET'));
 
 /**
  * updateProfile
@@ -35,7 +33,7 @@ export const updateProfile = (data: any) =>
     setURL(`${API_ROOT}/profile`),
     setMethod('PUT'),
     setData(data, updateProfileSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * listGrants
@@ -49,9 +47,7 @@ export const updateProfile = (data: any) =>
  * This endpoint is unauthenticated.
  */
 export const listGrants = () =>
-  Request<Grants>(setURL(`${API_ROOT}/profile/grants`)).then(
-    response => response.data
-  );
+  Request<Grants>(setURL(`${API_ROOT}/profile/grants`));
 
 /**
  * getMyGrants
@@ -64,9 +60,7 @@ export const listGrants = () =>
  *
  */
 export const getMyGrants = () =>
-  Request<Grants>(setURL(`${API_ROOT}/profile/grants`), setMethod('GET')).then(
-    response => response.data
-  );
+  Request<Grants>(setURL(`${API_ROOT}/profile/grants`), setMethod('GET'));
 
 /**
  * getTrustedDevices
@@ -79,7 +73,7 @@ export const getTrustedDevices = (params: any, filter: any) =>
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteTrustedDevice
@@ -87,10 +81,7 @@ export const getTrustedDevices = (params: any, filter: any) =>
  * Deletes a trusted device from a user's profile
  */
 export const deleteTrustedDevice = (id: number) =>
-  Request<{}>(
-    setURL(`${API_ROOT}/profile/devices/${id}`),
-    setMethod('DELETE')
-  ).then(response => response.data);
+  Request<{}>(setURL(`${API_ROOT}/profile/devices/${id}`), setMethod('DELETE'));
 
 /**
  * getUserPreferences
@@ -101,7 +92,7 @@ export const deleteTrustedDevice = (id: number) =>
 export const getUserPreferences = () => {
   return Request<Record<string, any>>(
     setURL(`${API_ROOT}/profile/preferences`)
-  ).then(response => response.data);
+  );
 };
 
 /**
@@ -115,7 +106,7 @@ export const updateUserPreferences = (payload: UserPreferences) => {
     setURL(`${API_ROOT}/profile/preferences`),
     setData(payload),
     setMethod('PUT')
-  ).then(response => response.data);
+  );
 };
 
 export const getLogins = (params: any, filter: any) => {
@@ -124,5 +115,5 @@ export const getLogins = (params: any, filter: any) => {
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
-  ).then(response => response.data);
+  );
 };

@@ -47,4 +47,4 @@ export const confirmTwoFactor = (tfa_code: string) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/profile/tfa-enable-confirm`),
     setData({ tfa_code }, enableTwoFactorSchema)
-  ).then(response => response.data);
+  );

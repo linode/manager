@@ -15,7 +15,7 @@ export const getInvoices = (params?: any, filter?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
-  ).then(response => response.data);
+  );
 
 /**
  * getInvoice
@@ -29,7 +29,7 @@ export const getInvoice = (invoiceId: number) =>
   Request<Invoice>(
     setURL(`${API_ROOT}/account/invoices/${invoiceId}`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * getInvoiceItems
@@ -50,4 +50,4 @@ export const getInvoiceItems = (
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
-  ).then(response => response.data);
+  );

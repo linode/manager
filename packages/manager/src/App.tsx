@@ -290,7 +290,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
   featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
-  euuid: state.__resources.account.data?.euuid
+  euuid: state.__resources.profile.data?._euuidFromHttpHeader
 });
 
 export const connected = connect(mapStateToProps);

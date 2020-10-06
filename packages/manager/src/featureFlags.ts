@@ -26,6 +26,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   passwordValidation: PasswordValidationType;
   changelog: Changelog;
+  vlans: boolean;
 }
 
 type PromotionalOfferFeature =

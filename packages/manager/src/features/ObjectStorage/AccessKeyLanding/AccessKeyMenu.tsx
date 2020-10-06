@@ -2,6 +2,7 @@ import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import { OpenAccessDrawer } from './types';
 
 interface Props {
   // prop-drilled from parent
@@ -10,7 +11,8 @@ interface Props {
   // prop-drilled from grandparent:
   // ObjectStorageKeys --> ObjectStorageKeyTable --> HERE
   openRevokeDialog: (key: ObjectStorageKey) => void;
-  openDrawerForEditing: (key: ObjectStorageKey) => void;
+  openDrawer: OpenAccessDrawer;
+
   label: string;
 }
 
@@ -18,14 +20,21 @@ type CombinedProps = Props;
 
 const AccessKeyMenu: React.FC<CombinedProps> = props => {
   const createActions = () => {
-    const { openRevokeDialog, objectStorageKey, openDrawerForEditing } = props;
+    const { openRevokeDialog, objectStorageKey, openDrawer } = props;
 
     return (closeMenu: Function): Action[] => {
       return [
         {
           title: 'Rename Access Key',
           onClick: () => {
-            openDrawerForEditing(objectStorageKey);
+            openDrawer('editing', objectStorageKey);
+            closeMenu();
+          }
+        },
+        {
+          title: 'View Permissions',
+          onClick: () => {
+            openDrawer('viewing', objectStorageKey);
             closeMenu();
           }
         },

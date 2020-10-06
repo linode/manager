@@ -7,7 +7,4 @@ import Request, { setMethod, setURL } from '../request';
  * Cancels Object Storage service
  */
 export const cancelObjectStorage = () =>
-  Request<{}>(
-    setMethod('POST'),
-    setURL(`${API_ROOT}/object-storage/cancel`)
-  ).then(response => response.data);
+  Request<{}>(setMethod('POST'), setURL(`${API_ROOT}/object-storage/cancel`));

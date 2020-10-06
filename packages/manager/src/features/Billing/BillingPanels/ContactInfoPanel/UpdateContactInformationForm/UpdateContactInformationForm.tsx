@@ -1,6 +1,6 @@
-import countryData from 'country-region-data';
 import { Account } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import countryData from 'country-region-data';
 import { defaultTo, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -19,10 +19,12 @@ import TextField from 'src/components/TextField';
 import AccountContainer, {
   Props as AccountProps
 } from 'src/containers/account.container';
+import withNotifications, {
+  WithNotifications
+} from 'src/store/notification/notification.containers';
 import composeState from 'src/utilities/composeState';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import { Country } from './types';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
@@ -43,6 +45,7 @@ const styles = (theme: Theme) =>
 interface Props {
   onClose: () => void;
   open: boolean;
+  focusEmail: boolean;
 }
 
 interface State {
@@ -65,7 +68,10 @@ interface State {
   errResponse: APIError[] | undefined;
 }
 
-type CombinedProps = AccountProps & Props & WithStyles<ClassNames>;
+type CombinedProps = AccountProps &
+  Props &
+  WithStyles<ClassNames> &
+  WithNotifications;
 
 const field = (path: string[]) => lensPath(['fields', ...path]);
 
@@ -98,10 +104,25 @@ class UpdateContactInformationForm extends React.Component<
 
   composeState = composeState;
 
+  emailRef = React.createRef<HTMLInputElement>();
+
   componentDidMount() {
     const { accountData: account } = this.props;
     if (account) {
       this.setState({ fields: { state: account.state } });
+    }
+
+    // Auto-focus the "Email" field if appropriate (if the user is here via
+    // "billing_bounce_notification"). We also have to set field state so that
+    // if the user clicks "Submit" without changing anything, we include the
+    // "email" field in the PUT request (this is the same as "Confirming" the
+    // email address is correct).
+    if (this.props.focusEmail && this.emailRef.current) {
+      this.emailRef.current.focus();
+      this.emailRef.current.scrollIntoView();
+      this.setState({
+        fields: { ...this.state.fields, email: account?.email }
+      });
     }
   }
 
@@ -430,6 +451,7 @@ class UpdateContactInformationForm extends React.Component<
           updateFor={[account.email, fields.email, errorMap.email, classes]}
         >
           <TextField
+            inputRef={this.emailRef}
             label="Email"
             required
             type="email"
@@ -567,6 +589,16 @@ class UpdateContactInformationForm extends React.Component<
     this.props
       .updateAccount(this.state.fields)
       .then(_ => {
+        // If there's a "billing_email_bounce" notification on the account, and
+        // the user has just updated their email, re-request notifications to
+        // potentially clear the email bounce notification.
+        const hasBillingEmailBounceNotification = this.props.notifications.find(
+          thisNotification => thisNotification.type === 'billing_email_bounce'
+        );
+        if (this.state.fields.email && hasBillingEmailBounceNotification) {
+          this.props.requestNotifications();
+        }
+
         this.setState({
           success: 'Account information updated.',
           submitting: false,
@@ -589,6 +621,10 @@ const styled = withStyles(styles);
 
 const withAccount = AccountContainer();
 
-const enhanced = compose<CombinedProps, Props>(styled, withAccount);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withAccount,
+  withNotifications()
+);
 
 export default enhanced(UpdateContactInformationForm);
