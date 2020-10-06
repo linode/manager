@@ -94,7 +94,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
-  const [modalOpen, toggleModal] = React.useState<boolean>(false);
+  const [removeModalOpen, toggleRemoveModal] = React.useState<boolean>(false);
   const [selectedVlanID, setSelectedVlanID] = React.useState<
     number | undefined
   >(undefined);
@@ -179,7 +179,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
   const handleOpenRemoveVlanModal = (id: number, label: string) => {
     setSelectedVlanID(id);
     setSelectedVlanLabel(label);
-    toggleModal(true);
+    toggleRemoveModal(true);
   };
 
   const handlers: VlanHandlers = {
@@ -230,12 +230,12 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         currentLinode={linodeId}
       />
       <RemoveVlanDialog
-        open={modalOpen}
+        open={removeModalOpen}
         removeVlan={disconnectVlan}
         selectedVlanID={selectedVlanID}
         selectedVlanLabel={selectedVlanLabel}
         linodeId={linodeId}
-        closeDialog={() => toggleModal(false)}
+        closeDialog={() => toggleRemoveModal(false)}
         resetInterfaces={requestInterfaces}
       />
     </div>
