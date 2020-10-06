@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
       color: 'white'
     }
   },
@@ -96,17 +96,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 50,
       textTransform: 'inherit',
       '&[aria-expanded="true"]': {
-        backgroundColor: theme.bg.primaryNavActiveBG,
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
         '& $caret': {
           transform: 'rotate(180deg)'
         }
       }
     },
     '&:hover': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     },
     '&:focus': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     },
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 7.5
@@ -122,14 +122,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1rem',
       padding: '12px 40px 12px 15px',
       '&:hover': {
-        backgroundColor: theme.bg.primaryNavActiveBG
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
       },
       '&:focus': {
-        backgroundColor: theme.bg.primaryNavActiveBG
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
       }
     },
     '&[data-reach-menu-item][data-selected]': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     },
     [theme.breakpoints.down('sm')]: {
       padding: '10px 7.5px'
@@ -137,7 +137,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menuItemList: {
     '&[data-reach-menu-items]': {
-      backgroundColor: theme.bg.primaryNavPaper,
+      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
       border: 'none',
       padding: 0
     }

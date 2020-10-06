@@ -80,6 +80,7 @@ const breakpoints = createBreakpoints({});
 const cmrBGColors = {
   bgApp: '#f4f5f6',
   bgPrimaryNav: '#3a3f46',
+  bgPrimaryNavActive: '#515861',
   bgSecondaryActions: '#ffffff',
   bgSearchBar: '#f7f7f8',
   bgPaper: '#ffffff',

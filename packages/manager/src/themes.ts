@@ -16,6 +16,7 @@ export const light = (spacingOverride?: number) => {
 const cmrBGColors = {
   bgApp: '#3a3f46',
   bgPrimaryNav: '#23262a',
+  bgPrimaryNavActive: '#0C0D0E',
   bgSecondaryActions: '#2e3238',
   bgSearchBar: '#515862',
   bgPaper: '#2e3238',

@@ -75,10 +75,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
       },
       '&:hover': {
-        backgroundColor: theme.bg.primaryNavActiveBG
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
       },
       '&:focus': {
-        backgroundColor: theme.bg.primaryNavActiveBG
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
       }
     }
   },
@@ -104,14 +104,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'flex-start',
-      backgroundColor: '#434951',
+      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
       border: 'none',
       padding: 0,
       whiteSpace: 'normal',
       width: '100%'
     },
     '&[data-reach-menu-items][data-selected]': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     }
   },
   menuItemLink: {
@@ -124,14 +124,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: 40,
       paddingRight: 40,
       '&:hover': {
-        backgroundColor: theme.bg.primaryNavActiveBG
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
       },
       '&:focus': {
-        backgroundColor: theme.bg.primaryNavActiveBG
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
       }
     },
     '&[data-reach-menu-item][data-selected]': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     }
   },
   menuItemLinkNoGroup: {
@@ -140,10 +140,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: 20,
       paddingRight: 14,
       '&:hover': {
-        backgroundColor: theme.bg.primaryNavActiveBG
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
       },
       '&:focus': {
-        backgroundColor: theme.bg.primaryNavActiveBG
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
       }
     }
   },
