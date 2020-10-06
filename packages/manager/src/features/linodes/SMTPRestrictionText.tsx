@@ -25,7 +25,7 @@ const SMTPRestrictionText: React.FC<Props> = props => {
       <strong>25, 465, and 587</strong> blocked by default. To have these
       restrictions removed, please review{' '}
       <ExternalLink
-        link="https://www.linode.com/docs/email/"
+        link="https://www.linode.com/docs/email/best-practices/running-a-mail-server/"
         text="this guide"
         hideIcon
       />
