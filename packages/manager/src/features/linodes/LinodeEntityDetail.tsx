@@ -723,6 +723,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     ...theme.applyLinkStyles,
     padding: `0px 10px`,
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
+    fontSize: '.875rem',
     fontWeight: 'bold',
     '&:hover': {
       textDecoration: 'none'
