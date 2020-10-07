@@ -18,6 +18,7 @@ import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import ExternalLink from 'src/components/ExternalLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -32,6 +33,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   textArea: {
     minWidth: '100%'
+  },
+  wrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    flexFlow: 'row wrap',
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-start'
+    }
+  },
+  certWrapper: {
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      padding: 0
+    }
+  },
+  keyWrapper: {
+    paddingLeft: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      padding: 0
+    }
   }
 }));
 
@@ -51,7 +73,14 @@ export const BucketSSL: React.FC<Props> = props => {
         Object Storage buckets are automatically served with a default TLS
         certificate that is valid for subdomains of linodeobjects.com. You can
         upload a custom certificate that will be used for the TLS portion of the
-        HTTPS request instead.
+        HTTPS request instead. For more information, please see our guide on
+        using{' '}
+        <ExternalLink
+          link="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/"
+          hideIcon
+          text="custom certificates for Object Storage buckets"
+        />
+        .
       </Typography>
       <SSLBody bucketName={bucketName} clusterId={clusterId} />
     </Paper>
@@ -124,15 +153,9 @@ export const AddCertForm: React.FC<FormProps> = props => {
       {errorMap.none && (
         <Notice error text={errorMap.none} spacingTop={8} spacingBottom={0} />
       )}
-      <Grid container>
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justify="center"
-          spacing={4}
-        >
-          <Grid item xs={6}>
+      <div>
+        <div className={classes.wrapper}>
+          <Grid item xs={12} md={6} className={classes.certWrapper}>
             <TextField
               label="Certificate"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -147,7 +170,7 @@ export const AddCertForm: React.FC<FormProps> = props => {
               errorText={errorMap.certificate}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6} className={classes.keyWrapper}>
             <TextField
               label="Private Key"
               fullWidth
@@ -162,7 +185,7 @@ export const AddCertForm: React.FC<FormProps> = props => {
               errorText={errorMap.private_key}
             />
           </Grid>
-        </Grid>
+        </div>
         <Grid item>
           <ActionsPanel>
             <Button
@@ -174,7 +197,7 @@ export const AddCertForm: React.FC<FormProps> = props => {
             </Button>
           </ActionsPanel>
         </Grid>
-      </Grid>
+      </div>
     </>
   );
 };
