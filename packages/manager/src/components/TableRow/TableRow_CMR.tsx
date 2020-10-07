@@ -47,19 +47,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderColor: theme.cmrBorderColors.borderTable
     },
     '& td': {
-      borderTopColor: theme.cmrBorderColors.borderTable,
-      borderBottomColor: theme.cmrBorderColors.borderTable,
-      '&:not(:last-child)': {
-        borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`
-      },
+      borderTop: `1px solid ${theme.palette.primary.light}`,
+      borderBottomColor: theme.palette.primary.light,
       position: 'relative',
       '&:first-child': {
-        borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`
+        borderLeft: `1px solid ${theme.palette.primary.light}`
+      },
+      '&:last-child': {
+        borderTop: 'none'
       },
       [theme.breakpoints.down('md')]: {
         '&:last-child': {
-          borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
-          borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`
+          borderRight: `1px solid ${theme.palette.primary.light}`
         }
       }
     }
