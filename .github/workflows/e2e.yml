@@ -19,6 +19,13 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - run: yarn up &
+        env:
+          REACT_APP_LOGIN_ROOT: https://login.linode.com
+          REACT_APP_API_ROOT: https://api.linode.com/v4
+          REACT_APP_APP_ROOT: http://localhost:3000
+          REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
+          REACT_APP_CLIENT_ID: d2cd3ba62e7315bd791e
+          MANAGER_OAUTH: 87ccfed589d2006972a91d43ff8af21a4c83a817c33b5730aedbbe45f309b319
       - name: Run tests
         uses: cypress-io/github-action@v2
         with:
@@ -29,15 +36,6 @@ jobs:
         
           # install: false
           # working-directory: packages/manager
-          
-        env:
-          REACT_APP_LOGIN_ROOT: https://login.linode.com
-          REACT_APP_API_ROOT: https://api.linode.com/v4
-          REACT_APP_APP_ROOT: http://localhost:3000
-          REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
-          REACT_APP_CLIENT_ID: d2cd3ba62e7315bd791e
-          MANAGER_OAUTH: 87ccfed589d2006972a91d43ff8af21a4c83a817c33b5730aedbbe45f309b319
-
           # browser: chrome
           # headless: true
 
