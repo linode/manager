@@ -21,6 +21,7 @@ import useFlags from 'src/hooks/useFlags';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { APIError } from '@linode/api-v4/lib/types';
+// import { VLAN } from '@linode/api-v4/lib/vlans/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -166,14 +167,16 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
             return {
               ...thisVlan,
               ip_address: thisInterface.ip_address,
-              interfaceName: getInterfaceName(thisInterface.id, configs)
+              interfaceName: getInterfaceName(thisInterface.id, configs),
+              currentLinode: linodeId,
+              readOnly
             };
           } else {
             return undefined;
           }
         })
         .filter(Boolean),
-    [interfaceData, vlans.itemsById, configs]
+    [interfaceData, vlans.itemsById, configs, linodeId, readOnly]
   );
 
   const handleOpenRemoveVlanModal = (id: number, label: string) => {
@@ -226,8 +229,6 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         groupByTag={false}
         row={vlanRow}
         initialOrder={{ order: 'asc', orderBy: 'label' }}
-        readOnly={readOnly}
-        currentLinode={linodeId}
       />
       <RemoveVlanDialog
         open={removeModalOpen}
@@ -273,3 +274,10 @@ export const getInterfaceName = (
   }
   return null;
 };
+
+// interface VlanData extends VLAN {
+//   ip_address: string;
+//   interfaceName: string | null;
+//   currentLinode: number;
+//   readOnly: boolean;
+// }
