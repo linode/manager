@@ -100,7 +100,7 @@ export const NotificationDrawer: React.FC<Props> = props => {
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
       {balance > 0 ? <PastDue balance={balance} /> : null}
       <div id="viewToggle" className={classes.actionHeader}>
-        <Tooltip title="Sort chronologically" placement="left">
+        <Tooltip title="Toggle chronological display" placement="left">
           <IconButton
             aria-label="Toggle chronological display"
             aria-describedby={'viewToggle'}
