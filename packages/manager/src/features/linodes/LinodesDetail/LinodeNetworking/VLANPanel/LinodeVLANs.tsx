@@ -21,7 +21,7 @@ import useFlags from 'src/hooks/useFlags';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { APIError } from '@linode/api-v4/lib/types';
-// import { VLAN } from '@linode/api-v4/lib/vlans/types';
+import { VLAN } from '@linode/api-v4/lib/vlans/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -157,7 +157,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     }
   }, [vlansEnabled, interfacesLastUpdated, requestInterfaces, linodeId]);
 
-  const vlanData = React.useMemo(
+  const vlanData = React.useMemo<(VlanData | undefined)[]>(
     () =>
       interfaceData
         .map(thisInterface => {
@@ -275,9 +275,9 @@ export const getInterfaceName = (
   return null;
 };
 
-// interface VlanData extends VLAN {
-//   ip_address: string;
-//   interfaceName: string | null;
-//   currentLinode: number;
-//   readOnly: boolean;
-// }
+interface VlanData extends VLAN {
+  ip_address: string;
+  interfaceName: string | null;
+  currentLinode: number;
+  readOnly: boolean;
+}
