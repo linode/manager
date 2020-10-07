@@ -826,8 +826,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   <FormHelperText>
                     Proxy Protocol preserves initial TCP connection information.
                     Please consult{' '}
-                    <Link to="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/">
-                      our NodeBalancer guide
+                    <Link to="https://www.linode.com/docs/platform/nodebalancer/nodebalancer-proxypass-configuration/">
+                      our Proxy Protocol guide
                     </Link>
                     {` `}
                     for information on the differences between each option.
