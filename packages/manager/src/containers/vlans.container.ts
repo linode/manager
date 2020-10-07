@@ -58,7 +58,7 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
     },
     (dispatch: ThunkDispatch) => ({
       createVlan: (payload: CreateVLANPayload) => dispatch(_create(payload)),
-      deleteDomain: (vlanId: { vlanID: number }) => dispatch(_delete(vlanId)),
+      deleteVlan: (vlanId: { vlanID: number }) => dispatch(_delete(vlanId)),
       getAllVlans: () => dispatch(_getVLANs({}))
     })
   );

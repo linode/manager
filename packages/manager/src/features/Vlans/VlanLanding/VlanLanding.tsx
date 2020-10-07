@@ -3,12 +3,13 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
-import { Props as VLANProps } from 'src/containers/vlans.container';
+import withVLANs, { Props as VLANProps } from 'src/containers/vlans.container';
 import { vlanContext } from 'src/context';
-import VLanRow from './VLanRow';
+import VlanRow from './VlanRow';
 import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
 import VlanDialog from './VlanDialog';
 import useVlans from 'src/hooks/useVlans';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 
 type CombinedProps = RouteComponentProps<{}> & VLANProps;
 
@@ -16,6 +17,8 @@ const VlanLanding: React.FC<CombinedProps> = props => {
   const { deleteVlan } = props;
   const { vlans } = useVlans();
   const context = React.useContext(vlanContext);
+
+  useReduxLoad(['vlans']);
 
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
   const [selectedVlanID, setSelectedVlanID] = React.useState<
@@ -67,7 +70,7 @@ const VlanLanding: React.FC<CombinedProps> = props => {
 
   const vLanRow = {
     handlers,
-    Component: VLanRow,
+    Component: VlanRow,
     data: Object.values(vlans.itemsById) ?? [],
     loading: vlans.loading,
     lastUpdated: vlans.lastUpdated,
@@ -102,4 +105,7 @@ const VlanLanding: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, {}>(React.memo)(VlanLanding);
+export default compose<CombinedProps, {}>(
+  React.memo,
+  withVLANs<{}, CombinedProps>()
+)(VlanLanding);

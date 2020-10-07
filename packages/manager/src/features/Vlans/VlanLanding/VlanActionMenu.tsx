@@ -79,7 +79,7 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
 
   const { vlanID, vlanLabel, triggerDeleteVlan } = props;
 
-  const inlineActions: Action[] = [
+  const actions: Action[] = [
     {
       title: 'Details',
       onClick: () => {
@@ -94,16 +94,10 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
     }
   ];
 
-  const createActions = () => {
-    return (): Action[] => {
-      return inlineActions;
-    };
-  };
-
   return (
     <div className={classes.root}>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        actions.map(action => {
           return (
             <InlineMenuAction
               key={action.title}
@@ -114,7 +108,7 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
         })}
       {matchesSmDown && (
         <ActionMenu
-          createActions={createActions()}
+          createActions={() => actions}
           ariaLabel={`Action menu for Virtual LAN ${props.vlanLabel}`}
         />
       )}
