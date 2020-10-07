@@ -55,34 +55,30 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
   };
 
   const getLinodeLinks = (data: number[]): JSX.Element => {
-    // Remove the Linode the user is currently on from the array of Linode IDs the VLAN is attached to, and render that Linode's label first in the list as a non-link.
+    // Remove the Linode the user is currently on from the array of Linode IDs the VLAN is attached to, and render that linode's label first in the list as a non-link.
     const indexOfCurrentLinode = data.findIndex(
       element => element === currentLinode
     );
     data.splice(indexOfCurrentLinode, 1);
+
+    const generatedLinks = data.map(linodeID => (
+      <Link
+        key={linodeID}
+        to={`/linodes/${linodeID}/networking`}
+        data-testid="vlan-row-link"
+      >
+        {getLinodeLabel(linodeID)}
+      </Link>
+    ));
 
     return (
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
         {getLinodeLabel(currentLinode)}
         {data.length > 0 && `, `}
-        {data.map((linodeID, idx) => (
-          <Link
-            key={linodeID}
-            to={`/linodes/${linodeID}/networking`}
-            data-testid="vlan-row-link"
-          >
-            {getLinodeLabel(linodeID)}
-            {(idx !== data.length - 1 &&
-              data.length <= MAX_LINODES_VLANATTACHED_DISPLAY &&
-              `, `) ||
-              (data.length > MAX_LINODES_VLANATTACHED_DISPLAY && `, `)}
-          </Link>
-        ))}
-        {data.length > MAX_LINODES_VLANATTACHED_DISPLAY && (
-          <span>
-            {` `}plus {data.length - MAX_LINODES_VLANATTACHED_DISPLAY} more
-          </span>
+        {truncateAndJoinJSXList(
+          generatedLinks,
+          MAX_LINODES_VLANATTACHED_DISPLAY
         )}
       </>
     );
@@ -118,6 +114,35 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
         />
       </TableCell>
     </TableRow>
+  );
+};
+
+export const truncateAndJoinJSXList = (
+  JSXList: JSX.Element[],
+  max = 100
+): JSX.Element => {
+  const count = JSXList.length;
+
+  /*
+  1. If the JSX element is not the last one in the list and the length of the list is less than the max, OR the length of the list is greater than the max,
+  add a comma after the JSX element.
+  2. If the length of the list is greater than the max, add truncation text at the end.
+  */
+
+  return (
+    <>
+      {JSXList.map((item, idx) => (
+        <span key={idx}>
+          {item}
+          {(idx !== count - 1 && count <= max && `, `) || (count > max && `, `)}
+        </span>
+      ))}
+      {count > max && (
+        <span data-testid="truncated-text">
+          {` `}plus {count - max} more
+        </span>
+      )}
+    </>
   );
 };
 
