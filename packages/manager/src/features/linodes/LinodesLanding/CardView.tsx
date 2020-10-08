@@ -26,13 +26,16 @@ import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 
 const useStyles = makeStyles(() => ({
   '@keyframes blink': {
-    '0%': {
-      opacity: 1
-    },
-    '50%': {
+    '0%, 100%': {
       opacity: 0.25
     },
-    '100%': {
+    '35%, 65%': {
+      opacity: 0.45
+    },
+    '45%, 55%': {
+      opacity: 0.95
+    },
+    '50%': {
       opacity: 1
     }
   },
