@@ -1,4 +1,3 @@
-import { VLAN } from '@linode/api-v4/lib/vlans';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -9,14 +8,11 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import VlanActionMenu, { ActionHandlers } from './VlanActionMenu';
 import { getLinodeLabel } from 'src/features/Dashboard/VolumesDashboardCard/VolumeDashboardRow';
+import { VlanData } from './LinodeVLANs';
 
 export const MAX_LINODES_VLANATTACHED_DISPLAY = 50;
 
-interface Props {
-  readOnly: boolean;
-}
-
-export type CombinedProps = Props & VLAN & ActionHandlers;
+export type CombinedProps = VlanData & ActionHandlers;
 
 export const VlanTableRow: React.FC<CombinedProps> = props => {
   const {
@@ -28,7 +24,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
     loading,
     error,
     readOnly,
-    currentLinode,
+    currentLinodeId,
     ...actionHandlers
   } = props;
 
@@ -56,10 +52,10 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
 
   const getLinodeLinks = (data: number[]): JSX.Element => {
     // Remove the Linode the user is currently on from the array of Linode IDs the VLAN is attached to, and render that linode's label first in the list as a non-link.
-    const indexOfCurrentLinode = data.findIndex(
-      element => element === currentLinode
+    const indexOfCurrentLinodeId = data.findIndex(
+      element => element === currentLinodeId
     );
-    data.splice(indexOfCurrentLinode, 1);
+    data.splice(indexOfCurrentLinodeId, 1);
 
     const generatedLinks = data.map(linodeID => (
       <Link
@@ -74,7 +70,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
     return (
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
-        {getLinodeLabel(currentLinode)}
+        {getLinodeLabel(currentLinodeId)}
         {data.length > 0 && `, `}
         {truncateAndJoinJSXList(
           generatedLinks,
@@ -122,30 +118,47 @@ export const truncateAndJoinJSXList = (
   max = 100
 ): JSX.Element => {
   const count = JSXList.length;
+  const countLessThanOrEqualToMax = count <= max;
+
+  const remainingItemCount = count - max;
 
   /*
-  1. If the JSX element is not the last one in the list and the length of the list is less than the max, OR the length of the list is greater than the max,
-  add a comma after the JSX element.
-  2. If the length of the list is greater than the max, add truncation text at the end.
+  - If the list length is less than the max, add a comma after every item unless it is the last one in the list.
+  - If the list length is greater than the max, slice the list and add truncation text at the end.
   */
 
-  return (
-    <>
-      {JSXList.map((item, idx) => (
-        <span key={idx}>
-          {item}
-          {(idx !== count - 1 && count <= max && `, `) || (count > max && `, `)}
-        </span>
-      ))}
-      {count > max && (
+  if (countLessThanOrEqualToMax) {
+    return (
+      // eslint-disable-next-line react/jsx-no-useless-fragment
+      <>
+        {JSXList.map((item, idx) => (
+          <span key={idx}>
+            {item}
+            {idx !== count - 1 && `, `}
+          </span>
+        ))}
+      </>
+    );
+  } else {
+    // count is greater than max
+    const slicedList = JSXList.slice(0, max - 1);
+
+    return (
+      <>
+        {slicedList.map((item, idx) => (
+          <span key={idx}>
+            {item}
+            {`, `}
+          </span>
+        ))}
         <span data-testid="truncated-text">
-          {` `}plus {count - max} more
+          {` `}plus {remainingItemCount} more
         </span>
-      )}
-    </>
-  );
+      </>
+    );
+  }
 };
 
-export default compose<CombinedProps, ActionHandlers & VLAN>(React.memo)(
+export default compose<CombinedProps, VlanData & ActionHandlers>(React.memo)(
   VlanTableRow
 );

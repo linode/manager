@@ -168,7 +168,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
               ...thisVlan,
               ip_address: thisInterface.ip_address,
               interfaceName: getInterfaceName(thisInterface.id, configs),
-              currentLinode: linodeId,
+              currentLinodeId: linodeId,
               readOnly
             };
           } else {
@@ -275,9 +275,9 @@ export const getInterfaceName = (
   return null;
 };
 
-interface VlanData extends VLAN {
+export interface VlanData extends VLAN {
   ip_address: string;
   interfaceName: string | null;
-  currentLinode: number;
+  currentLinodeId: number;
   readOnly: boolean;
 }

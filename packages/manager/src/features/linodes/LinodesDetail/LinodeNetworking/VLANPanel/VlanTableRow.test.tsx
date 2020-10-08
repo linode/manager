@@ -1,23 +1,34 @@
 import * as React from 'react';
 import { truncateAndJoinJSXList } from './VlanTableRow';
-import { Link } from 'react-router-dom';
 
 describe('truncateAndJoinJSXList utility function', () => {
-  const list = [0, 1, 2, 3];
-  const jsxList = list.map(item => {
-    return (
-      <Link key={item} to={`/test`}>
-        {item}
-      </Link>
-    );
+  const shortList = [1, 2, 3];
+  const longList = [1, 2, 3, 4, 5, 6, 7, 8, 8, 10, 11, 12];
+  const max = longList.length;
+
+  const shortJSXList = shortList.map(item => {
+    return <span key={item}>{item}</span>;
+  });
+  const longJSXList = longList.map(item => {
+    return <span key={item}>{item}</span>;
   });
 
-  const truncatedList = truncateAndJoinJSXList(jsxList, 3);
-  const truncatedText = [' ', 'plus ', 1, ' more'];
+  it('should not have truncated text if the list count is less than or equal to the max', () => {
+    const noTruncatedTextList = truncateAndJoinJSXList(shortJSXList, max);
+    expect(noTruncatedTextList.props.children.length).toEqual(3);
 
-  it('should have truncated text that reads " plus 1 more"', () => {
-    expect(truncatedList.props.children[1].props['children']).toEqual(
-      expect.arrayContaining(truncatedText)
+    const noTruncatedTextListWhenEqual = truncateAndJoinJSXList(
+      longJSXList,
+      max
+    );
+    expect(noTruncatedTextListWhenEqual.props.children.length).toEqual(max);
+  });
+
+  it('should have truncated text that reads " plus [X] more" if the max is 5', () => {
+    const truncatedListOfFive = truncateAndJoinJSXList(longJSXList, 5);
+    const remainingItemCount = longJSXList.length - 5;
+    expect(truncatedListOfFive.props.children[1].props['children']).toEqual(
+      expect.arrayContaining([' ', 'plus ', remainingItemCount, ' more'])
     );
   });
 });
