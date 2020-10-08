@@ -56,7 +56,9 @@ const styles = (theme: Theme) =>
       }
     },
     progressDisplay: {
-      display: 'inline-block'
+      display: 'flex',
+      whiteSpace: 'pre-wrap',
+      textAlign: 'left'
     },
     statusCell: {
       whiteSpace: 'nowrap',
