@@ -141,7 +141,7 @@ export const truncateAndJoinJSXList = (
     );
   } else {
     // count is greater than max
-    const slicedList = JSXList.slice(0, max - 1);
+    const slicedList = JSXList.slice(0, max);
 
     return (
       <>
