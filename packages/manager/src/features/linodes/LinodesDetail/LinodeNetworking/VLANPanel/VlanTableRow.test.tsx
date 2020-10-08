@@ -14,14 +14,19 @@ describe('truncateAndJoinJSXList utility function', () => {
   });
 
   it('should not have truncated text if the list count is less than or equal to the max', () => {
-    const noTruncatedTextList = truncateAndJoinJSXList(shortJSXList, max);
-    expect(noTruncatedTextList.props.children.length).toEqual(3);
+    const noTruncatedTextListLessThanMax = truncateAndJoinJSXList(
+      shortJSXList,
+      max
+    );
+    expect(noTruncatedTextListLessThanMax.props.children.length).toEqual(
+      shortList.length
+    );
 
-    const noTruncatedTextListWhenEqual = truncateAndJoinJSXList(
+    const noTruncatedTextListEqualsMax = truncateAndJoinJSXList(
       longJSXList,
       max
     );
-    expect(noTruncatedTextListWhenEqual.props.children.length).toEqual(max);
+    expect(noTruncatedTextListEqualsMax.props.children.length).toEqual(max);
   });
 
   it('should have truncated text that reads " plus [X] more" if the max is 5', () => {
