@@ -4,6 +4,118 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-10-05] - v1.22.0
+
+### Added:
+
+- Notification for when an email to a user couldn’t be delivered
+- Warning about 24 hour wait period before disabling backups for a Linode
+- Warning about blocked SMTP ports for new accounts
+- CMR:
+  - Apply animations and adjustments to Linode Summary view
+  - Apply table styles for Longview tables
+  - Hide status chip if there are no corresponding Linodes with that status
+  - "Message" column to the Activity Feed table
+  - Prevent overflow of resolvers in Linode Network tab
+  - Prevent text from being flush to the screen
+- Object Storage:
+  - Add ability to upload an SSL/TLS certificate for a Bucket
+  - Add access management for OBJ access keys
+  - Add loading state in OBJ access key drawer if buckets are loading
+  - Add view mode to OBJ access key drawer
+- VLANs:
+  - Create modal
+  - Add VLAN attachment option to Linode Create flow
+  - Add VLAN table to Linode Network tab
+  - Add VLAN column to Linode Configuration table
+
+### Changed:
+
+- Improve handling of Managed accounts when backing up Linodes
+
+### Fixed:
+
+- Cloning a Domain leads to “Not Found” page
+- Navigation bug in Longview
+- Tab-based navigation
+
+## JS Client
+
+### Added:
+
+- UploadCertificateSchema endpoint
+- uploadSSLCert endpoint
+- getSSLCert endpoint
+- deleteSSLCert endpoint
+- ObjectStorageBucketSSLRequest endpoint
+- ObjectStorageBucketSSLResponse endpoint
+- CreateVLANPayload endpoint
+- createVlanSchema endpoint
+- getVlans endpoint
+- getVlan endpoint
+- createVlan endpoint
+- deleteVlan endpoint
+- connectVlan endpoint
+- disconnectVlan endpoint
+- getInterfaces endpoint
+- getInterface endpoint
+- createInterface endpoint
+- deleteInterface endpoint
+- linodeInterfaceItemSchema endpoint
+- linodeInterfaceSchema endpoint
+- LinodeInterfacePayload endpoint
+- LinodeInterface endpoint
+
+### Fixed:
+
+- getLinode method now returns Promise<Linode> instead of Axios response
+- getLinodeLishToken method now returns Promise<{ lish_token: string}> instead of Axios response
+- deleteLinode method now returns Promise<{}> instead of Axios response
+
+## [2020-09-29] - v1.21.0
+
+### Added:
+
+One-Click Apps:
+
+- Jitsi
+- Webmin
+- Virtualmin
+- Plex
+- phpMyAdmin
+- Azuracast
+
+## [2020-09-21] - v1.20.0
+
+### Added:
+
+- Object Details Drawer
+- Proxy Protocol field in NodeBalancer settings
+- Add link to NotificationDrawer from Linode busy status
+- Prevent text and other components from being flushed to the edge when <1280px
+
+### Changed:
+
+- Improve handling for unknown Linode types
+- List allowed regions when creating or adding Linodes to Firewalls
+- Prevent migration of a Linode with attached Firewalls to an unsupported Data Center
+- CMR:
+- Close notification drawer on internal links
+- Style updates for:
+- Object Storage > Buckets & Object Storage > Access Key headers
+- OBJ Bucket Detail table
+
+### Fixed:
+
+- Change "Create Kubernetes" to "Create Kubernetes Cluster"
+- Calculations for large LKE clusters (total CPU/memory) were incorrect
+- Missing/duplicate page titles throughout app
+- OrderBy lifecycle bug
+- Typos: consecutive occurrences of 'the'
+- MigrateLanding routing bug
+- Add units (GB) to RAM in Linode Detail view
+- Various CMR menu issues
+
 ## [2020-09-14] - 1.19.1
 
 ### Fixed:
@@ -14,22 +126,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2020-09-09] - 1.19.0
 
 ### Added:
+
 CMR:
+
 - Managed Dashboard card to CMR dashboard
 - System Status section in Notification drawer
 
 - Environment switcher for dev tools
 - Controls for mock service worker in dev tools
 
-
 ### Changed:
+
 CMR:
+
 - Change URL on Linode modal close
 - Make OAuth apps table sortable
 - Linode status icons should blink for in-progress actions
 - Adding CMR header to the config/disk clone landing
-- Table style updates for:
-	- Account > Users
+- Table style updates for: - Account > Users
 - Managed
 - Billing
 - SelectPlanPanel
@@ -39,6 +153,7 @@ CMR:
 - Graph labels hidden for mobile
 
 Cloud Firewalls:
+
 - All IPv6 for Firewalls should be read as ::/0
 - Disable port range in Firewalls drawer when selecting ICMP protocol
 - Update Firewall doc URL
@@ -53,10 +168,10 @@ Cloud Firewalls:
 - Change Minecraft OCA to Minecraft: Java Edition
 - Display general errors at top of VolumeAttachmentDrawer
 
-
-
 ### Fixed:
+
 CMR:
+
 - Hide hidden links from mobile nav
 - Close action menu after action is selected
 - Move domains banner above table
@@ -71,7 +186,6 @@ CMR:
 - Managed Issue Drawer was crashing for users with empty timezones
 - Longview: MySQL tab not rendering if NGINX is not installed
 - Firewalls: handling of empty IPv6 responses
-
 
 ## [2020-08-25] - v1.18.0
 

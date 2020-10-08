@@ -27,8 +27,7 @@ export const requestImages = createRequestThunk(requestImagesActions, () =>
 
 export const createImage = createRequestThunk(
   createImageActions,
-  ({ diskID, label, description }) =>
-    _create(diskID, label, description).then(response => response.data)
+  ({ diskID, label, description }) => _create(diskID, label, description)
 );
 
 export const requestImageForStore = createRequestThunk(
@@ -38,8 +37,7 @@ export const requestImageForStore = createRequestThunk(
 
 export const updateImage = createRequestThunk(
   updateImageActions,
-  ({ label, description, imageID }) =>
-    _update(imageID, label, description).then(response => response.data)
+  ({ label, description, imageID }) => _update(imageID, label, description)
 );
 
 export const deleteImage = createRequestThunk(

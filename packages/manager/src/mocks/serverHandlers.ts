@@ -23,6 +23,7 @@ import {
   monitorFactory,
   nodeBalancerFactory,
   notificationFactory,
+  objectStorageBucketFactory,
   profileFactory,
   supportReplyFactory,
   supportTicketFactory,
@@ -55,6 +56,9 @@ export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build();
     return res(ctx.json(profile));
+  }),
+  rest.put('*/profile', (req, res, ctx) => {
+    return res(ctx.json({ ...profileFactory.build(), ...(req.body as any) }));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(ctx.json(cachedRegions));
@@ -189,6 +193,10 @@ export const handlers = [
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
+  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
+    const buckets = objectStorageBucketFactory.buildList(20);
+    return res(ctx.json(makeResourcePage(buckets)));
+  }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(25);
     return res(ctx.json(makeResourcePage(domains)));
@@ -219,8 +227,14 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(items, { page: 1, pages: 4 })));
   }),
   rest.get('*/account', (req, res, ctx) => {
-    const account = accountFactory.build({ balance: 50 });
+    const account = accountFactory.build({
+      balance: 50,
+      active_since: '2019-11-05'
+    });
     return res(ctx.json(account));
+  }),
+  rest.put('*/account', (req, res, ctx) => {
+    return res(ctx.json({ ...accountFactory.build(), ...(req.body as any) }));
   }),
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();
@@ -289,7 +303,27 @@ export const handlers = [
     return res(ctx.json(makeResourcePage([])));
   }),
   rest.get('*/notifications', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(notificationFactory.buildList(1))));
+    // const emailBounce = notificationFactory.build({
+    //   type: 'billing_email_bounce',
+    //   entity: null,
+    //   when: null,
+    //   message: 'We are unable to send emails to your billing email address!',
+    //   label: 'We are unable to send emails to your billing email address!',
+    //   severity: 'major',
+    //   until: null,
+    //   body: null
+    // });
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...notificationFactory.buildList(1)
+          // emailBounce
+        ])
+      )
+    );
+  }),
+  rest.post('*/networking/vlans', (req, res, ctx) => {
+    return res(ctx.json({}));
   })
 ];
 

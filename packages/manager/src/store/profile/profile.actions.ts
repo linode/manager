@@ -5,6 +5,11 @@ import { actionCreatorFactory } from 'typescript-fsa';
 
 export interface ExtendedProfile extends Profile {
   grants?: Grants;
+  // A user's external UUID can be found on the response to /account.
+  // Since that endpoint is not available to restricted users, the API also
+  // returns it as an HTTP header ("X-Customer-Uuid"). This header is injected
+  // in the response to `/profile` so that it's available in Redux.
+  _euuidFromHttpHeader?: string;
 }
 
 const actionCreator = actionCreatorFactory(`@@manager/profile`);

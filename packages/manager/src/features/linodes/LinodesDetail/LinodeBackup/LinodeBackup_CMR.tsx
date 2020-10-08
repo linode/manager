@@ -78,7 +78,8 @@ type ClassNames =
   | 'scheduleAction'
   | 'chooseTime'
   | 'chooseDay'
-  | 'cancelButton';
+  | 'cancelButton'
+  | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -88,7 +89,10 @@ const styles = (theme: Theme) =>
     },
     title: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(1)
+      }
     },
     subTitle: {
       marginBottom: theme.spacing(1)
@@ -120,13 +124,23 @@ const styles = (theme: Theme) =>
       minWidth: 150
     },
     cancelButton: {
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(),
+        marginRight: theme.spacing()
+      }
     },
     snapshotNameField: {
       minWidth: 275
     },
     snapshotGeneralError: {
       minWidth: '100%'
+    },
+    cmrSpacing: {
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(),
+        marginRight: theme.spacing()
+      }
     }
   });
 
@@ -742,7 +756,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         >
           Cancel Backups
         </Button>
-        <Typography variant="body2" data-qa-cancel-desc>
+        <Typography
+          className={classes.cmrSpacing}
+          variant="body2"
+          data-qa-cancel-desc
+        >
           Please note that when you cancel backups associated with this Linode,
           this will remove all existing backups.
         </Typography>
@@ -764,6 +782,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           <Typography>
             Cancelling backups associated with this Linode will delete all
             existing backups. Are you sure?
+          </Typography>
+          <Typography style={{ marginTop: 12 }}>
+            <strong>Note: </strong>
+            Once backups for this Linode have been cancelled, you cannot
+            re-enable them for 24 hours.
           </Typography>
         </ConfirmationDialog>
       </React.Fragment>

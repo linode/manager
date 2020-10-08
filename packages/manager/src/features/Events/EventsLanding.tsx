@@ -7,12 +7,7 @@ import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -32,27 +27,24 @@ import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import EventRow from './EventRow';
 
-type ClassNames = 'root' | 'header' | 'labelCell' | 'timeCell' | 'noMoreEvents';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    header: {
-      marginBottom: theme.spacing(1)
-    },
-    noMoreEvents: {
-      padding: theme.spacing(4),
-      textAlign: 'center'
-    },
-    labelCell: {
-      width: '60%',
-      minWidth: 200,
-      paddingLeft: 10
-    },
-    timeCell: {
-      paddingLeft: theme.spacing(1) / 2
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  header: {
+    marginBottom: theme.spacing(1)
+  },
+  noMoreEvents: {
+    padding: theme.spacing(4),
+    textAlign: 'center'
+  },
+  labelCell: {
+    width: '40%',
+    minWidth: 200,
+    paddingLeft: 10
+  },
+  messageCell: {
+    width: '30%'
+  }
+}));
 
 interface Props {
   getEventsRequest?: typeof getEvents;
@@ -62,10 +54,7 @@ interface Props {
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
 }
 
-type CombinedProps = Props &
-  StateProps &
-  WithSnackbarProps &
-  WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps & WithSnackbarProps;
 
 const appendToEvents = (oldEvents: Event[], newEvents: Event[]) =>
   rCompose<Event[], Event[], Event[], Event[]>(
@@ -176,6 +165,8 @@ export const reducer: EventsReducer = (state, action) => {
 };
 
 export const EventsLanding: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const [loading, setLoading] = React.useState<boolean>(false);
   const [loadMoreEvents, setLoadMoreEvents] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
@@ -266,13 +257,7 @@ export const EventsLanding: React.FC<CombinedProps> = props => {
     });
   }, [props.eventsFromRedux, props.inProgressEvents]);
 
-  const {
-    classes,
-    entitiesLoading,
-    errorMessage,
-    entityId,
-    emptyMessage
-  } = props;
+  const { entitiesLoading, errorMessage, entityId, emptyMessage } = props;
   const isLoading = loading || entitiesLoading;
 
   return (
@@ -291,18 +276,9 @@ export const EventsLanding: React.FC<CombinedProps> = props => {
               >
                 Event
               </TableCell>
-              <TableCell
-                data-qa-events-duration-header
-                className={classes.timeCell}
-              >
-                Duration
-              </TableCell>
-              <TableCell
-                data-qa-events-time-header
-                className={classes.timeCell}
-              >
-                When
-              </TableCell>
+              <TableCell data-qa-events-duration-header>Duration</TableCell>
+              <TableCell data-qa-events-time-header>When</TableCell>
+              <TableCell className={classes.messageCell}>Message</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -349,12 +325,11 @@ export const renderTableBody = (
   if (loading) {
     return (
       <TableRowLoading
-        colSpan={4}
+        colSpan={5}
         numberOfRows={10}
-        numberOfColumns={3}
+        numberOfColumns={4}
         oneLine
         data-qa-events-table-loading
-        firstColWidth={60}
         compact
       />
     );
@@ -386,12 +361,11 @@ export const renderTableBody = (
         ))}
         {isRequesting && (
           <TableRowLoading
-            colSpan={4}
-            numberOfColumns={3}
+            colSpan={5}
+            numberOfColumns={4}
             numberOfRows={4}
             oneLine
             compact
-            firstColWidth={60}
             transparent
           />
         )}
@@ -399,8 +373,6 @@ export const renderTableBody = (
     );
   }
 };
-
-const styled = withStyles(styles);
 
 interface StateProps {
   entitiesLoading: boolean;
@@ -418,6 +390,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(styled, connected, withSnackbar);
+const enhanced = compose<CombinedProps, Props>(connected, withSnackbar);
 
 export default enhanced(EventsLanding);
