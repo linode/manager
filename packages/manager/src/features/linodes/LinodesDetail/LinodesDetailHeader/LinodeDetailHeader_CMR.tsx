@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
   },
   root: {
     '& .statusOther:before': {
-      animation: '$blink 2.5s linear infinite'
+      animation: '$blink 1.25s ease-in-out infinite'
     }
   }
 }));
