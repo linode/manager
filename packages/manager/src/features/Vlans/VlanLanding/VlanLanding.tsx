@@ -26,14 +26,10 @@ const VlanLanding: React.FC<CombinedProps> = props => {
   >(undefined);
   const [selectedVlanLabel, setSelectedVlanLabel] = React.useState<string>('');
 
-  const openModal = (id: number, label: string) => {
+  const handleOpenDeleteVlanModal = (id: number, label: string) => {
     setSelectedVlanID(id);
     setSelectedVlanLabel(label);
     toggleModal(true);
-  };
-
-  const handleOpenDeleteVlanModal = (id: number, label: string) => {
-    openModal(id, label);
   };
 
   const headers = [
