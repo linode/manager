@@ -64,8 +64,9 @@ export const VlanRow: React.FC<CombinedProps> = props => {
 
   const getLinodeLinks = (data: number[]): JSX.Element => {
     return (
+      // eslint-disable-next-line
       <>
-        {data.map((linodeID, idx) => (
+        {data.map(linodeID => (
           <Link
             className={classes.link}
             key={linodeID}
