@@ -6,7 +6,7 @@ import { useReduxLoad } from 'src/hooks/useReduxLoad';
 interface Props {
   isDashboard?: boolean;
   isVLAN?: boolean;
-  filterLinodes?: (linode: Linode) => boolean;
+  filterLinodesFn?: (linode: Linode) => boolean;
 }
 
 const LinodesLanding: React.FC<Props> = props => {
@@ -17,7 +17,7 @@ const LinodesLanding: React.FC<Props> = props => {
     <_LinodesLanding
       isDashboard={props.isDashboard}
       isVLAN={props.isVLAN}
-      filterLinodes={props.filterLinodes}
+      filterLinodesFn={props.filterLinodesFn}
     />
   );
 };

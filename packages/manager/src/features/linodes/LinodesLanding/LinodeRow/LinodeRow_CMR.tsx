@@ -58,7 +58,7 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
-  isVLAN: boolean;
+  isVLAN?: boolean;
   openTagDrawer: (
     linodeID: number,
     linodeLabel: string,

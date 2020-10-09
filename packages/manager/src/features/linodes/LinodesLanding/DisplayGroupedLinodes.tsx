@@ -30,6 +30,7 @@ import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
+import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
 
 type ClassNames =
   | 'root'
@@ -189,6 +190,11 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
             </div>
           )}
         </Grid>
+        {orderedGroupedLinodes.length === 0 ? (
+          <Typography style={{ textAlign: 'center' }}>
+            No items to display.
+          </Typography>
+        ) : null}
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
             <div
@@ -279,6 +285,11 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
             toggleLinodeView={toggleLinodeView}
             toggleGroupLinodes={toggleGroupLinodes}
           >
+            {orderedGroupedLinodes.length === 0 ? (
+              <TableBody>
+                <TableRowEmptyState_CMR colSpan={12} />
+              </TableBody>
+            ) : null}
             {orderedGroupedLinodes.map(([tag, linodes]) => {
               return (
                 <React.Fragment key={tag}>

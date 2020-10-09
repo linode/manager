@@ -23,6 +23,7 @@ import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 import useLinodes from 'src/hooks/useLinodes';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
+import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles(() => ({
   '@keyframes blink': {
@@ -127,6 +128,14 @@ const CardView: React.FC<CombinedProps> = props => {
 
   if (_loading) {
     return <CircleProgress />;
+  }
+
+  if (data.length === 0) {
+    return (
+      <Typography style={{ textAlign: 'center' }}>
+        No items to display.
+      </Typography>
+    );
   }
 
   const getVolumesByLinode = (linodeId: number) =>

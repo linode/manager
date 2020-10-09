@@ -89,8 +89,8 @@ export const ListView: React.FC<CombinedProps> = props => {
   const Row = flags.cmr ? LinodeRow_CMR : LinodeRow;
 
   // This won't happen in the normal Linodes Landing context (a custom empty
-  // is shown higher up in the tree). This is specifically for the case of VLAN
-  // Details, where we want to show the table even if there's nothing attached.
+  // state is shown higher up in the tree). This is specifically for the case of
+  // VLAN Details, where we want to show the table even if there's nothing attached.
   if (data.length === 0) {
     return <TableRowEmptyState_CMR colSpan={12} />;
   }

@@ -22,21 +22,21 @@ const VlanDetail: React.FC<CombinedProps> = props => {
   // Find the VLAN in the store.
   const thisVlan = vlans.itemsById[thisVlanID];
 
-  if (vlans.lastUpdated === 0 && vlans.loading === true && !thisVlan) {
-    return <CircleProgress />;
-  }
-
   if (vlans.error.read) {
     return (
       <ErrorState errorText="There was a problem retrieving your VLAN. Please try again." />
     );
   }
 
+  if (vlans.lastUpdated === 0 && !thisVlan) {
+    return <CircleProgress />;
+  }
+
   if (!thisVlan) {
     return <NotFound />;
   }
 
-  const filterLinodes = (linode: Linode) => {
+  const filterLinodesFn = (linode: Linode) => {
     return thisVlan.linodes.includes(linode.id);
   };
 
@@ -44,7 +44,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <VlanEntityDetail openTagDrawer={() => {}} />
       <div style={{ marginTop: 20 }}>
-        <LinodesLanding isVLAN filterLinodes={filterLinodes} />
+        <LinodesLanding isVLAN filterLinodesFn={filterLinodesFn} />
       </div>
     </React.Fragment>
   );

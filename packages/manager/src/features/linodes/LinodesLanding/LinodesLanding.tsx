@@ -101,7 +101,7 @@ type RouteProps = RouteComponentProps<Params>;
 interface Props {
   isDashboard?: boolean;
   isVLAN?: boolean;
-  filterLinodes?: (linode: Linode) => boolean;
+  filterLinodesFn?: (linode: Linode) => boolean;
 }
 
 type CombinedProps = Props &
@@ -254,8 +254,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesData
     );
 
-    const linodesFilteredByPredicate = this.props.filterLinodes
-      ? linodesFilteredByStatus.filter(this.props.filterLinodes)
+    // Filter the Linodes according to the `filterLinodesFn` prop (if it exists).
+    // This is used in the VLAN Details view to only show Linodes belonging to
+    // a given VLAN.
+    const filteredLinodes = this.props.filterLinodesFn
+      ? linodesFilteredByStatus.filter(this.props.filterLinodesFn)
       : linodesFilteredByStatus;
 
     const componentProps = {
@@ -301,10 +304,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     if (this.props.linodesCount === 0) {
       return <ListLinodesEmptyState />;
     }
-
-    // if (linodesFilteredByPredicate.length === 0) {
-    //   return <TableRowEmptyState_CMR />;
-    // }
 
     const headers = [
       { label: 'Label', key: 'linodeDescription' },
@@ -429,9 +428,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               )}
                               <Grid item xs={12}>
                                 <LandingHeader
-                                  displayIcon={!this.props.isVLAN}
                                   title="Linodes"
                                   entity="Linode"
+                                  displayIcon={!this.props.isVLAN}
                                   onAddNew={() =>
                                     this.props.history.push('/linodes/create')
                                   }
@@ -559,7 +558,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                           )}
                           <Grid item xs={12}>
                             <OrderBy
-                              data={linodesFilteredByPredicate.map(linode => {
+                              data={filteredLinodes.map(linode => {
                                 // Determine the priority of this Linode's status.
                                 // We have to check for "Maintenance" and "Busy" since these are
                                 // not actual Linode statuses (we derive them client-side).
