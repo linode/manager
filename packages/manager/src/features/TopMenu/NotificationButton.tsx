@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     order: 3,
     width: 74,
     height: 34,
-    padding: theme.spacing(2),
+    padding: `0px theme.spacing(2)`,
     backgroundColor: theme.bg.lightBlue, // '#e5f1ff',
     border: 'none',
     borderRadius: 3,

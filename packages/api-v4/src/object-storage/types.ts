@@ -87,3 +87,12 @@ export interface ObjectStorageObjectListResponse {
   next_marker: string | null;
   is_truncated: boolean;
 }
+
+export interface ObjectStorageBucketSSLRequest {
+  certificate: string;
+  private_key: string;
+}
+
+export interface ObjectStorageBucketSSLResponse {
+  ssl: boolean;
+}

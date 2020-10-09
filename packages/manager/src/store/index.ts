@@ -167,6 +167,10 @@ import preferences, {
   State as PreferencesState
 } from './preferences/preferences.reducer';
 import { initReselectDevtools } from './selectors';
+import vlans, {
+  defaultState as defaultVLANState,
+  State as VlanState
+} from './vlans/vlans.reducer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 initReselectDevtools();
@@ -194,7 +198,8 @@ const __resourcesDefaultState = {
   types: defaultTypesState,
   volumes: defaultVolumesState,
   buckets: defaultBucketsState,
-  clusters: defaultClustersState
+  clusters: defaultClustersState,
+  vlans: defaultVLANState
 };
 
 export interface ResourcesState {
@@ -218,6 +223,7 @@ export interface ResourcesState {
   volumes: VolumesState;
   buckets: BucketsState;
   clusters: ClustersState;
+  vlans: VlanState;
 }
 
 export interface ApplicationState {
@@ -241,6 +247,7 @@ export interface ApplicationState {
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
   mockFeatureFlags: MockFeatureFlagState;
+  vlans: VlanState;
 }
 
 export const defaultState: ApplicationState = {
@@ -263,7 +270,8 @@ export const defaultState: ApplicationState = {
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
-  mockFeatureFlags: defaultMockFeatureFlagState
+  mockFeatureFlags: defaultMockFeatureFlagState,
+  vlans: defaultVLANState
 };
 
 /**
@@ -289,7 +297,8 @@ const __resources = combineReducers({
   types,
   volumes,
   buckets,
-  clusters
+  clusters,
+  vlans
 });
 
 const reducers = combineReducers<ApplicationState>({
@@ -312,7 +321,8 @@ const reducers = combineReducers<ApplicationState>({
   globalErrors,
   longviewClients: longview,
   longviewStats,
-  mockFeatureFlags
+  mockFeatureFlags,
+  vlans
 });
 
 const enhancers = compose(
