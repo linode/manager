@@ -27,13 +27,13 @@ const renderTableHead = (
 storiesOf('Skeleton', module)
   .add('Default Table ', () => (
     <Table>
-      {renderTableHead()}
+      {renderTableHead(40, 20, 20, 20)}
       <TableBody>
         <TableRowLoading colSpan={4} widths={[40, 20, 20, 20]} />
       </TableBody>
     </Table>
   ))
-  .add('Table with first col width defined', () => (
+  .add('Table with widths defined for all columns', () => (
     <Table>
       {renderTableHead(40, 20, 20, 20)}
       <TableBody>
@@ -41,7 +41,15 @@ storiesOf('Skeleton', module)
       </TableBody>
     </Table>
   ))
-  .add('Table with first col width defined, one line skeleton', () => (
+  .add('Table with no widths defined', () => (
+    <Table>
+      {renderTableHead()}
+      <TableBody>
+        <TableRowLoading colSpan={4} />
+      </TableBody>
+    </Table>
+  ))
+  .add('Table with widths defined for all columns, one line skeleton', () => (
     <Table>
       {renderTableHead(40, 20, 20, 20)}
       <TableBody>
@@ -50,7 +58,7 @@ storiesOf('Skeleton', module)
     </Table>
   ))
   .add(
-    'Table with first col width defined, one line skeleton and entity icon',
+    'Table with widths defined for all columns, one line skeleton and entity icon',
     () => (
       <Table>
         {renderTableHead(40, 20, 20, 20)}

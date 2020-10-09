@@ -31,7 +31,7 @@ export interface Props {
   colSpan: Columns;
   numberOfRows?: number;
   numberOfColumns?: Columns;
-  widths: number[];
+  widths?: number[];
   transparent?: any;
   oneLine?: boolean;
   compact?: boolean;

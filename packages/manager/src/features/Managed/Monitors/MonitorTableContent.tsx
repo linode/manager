@@ -33,7 +33,12 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
   } = props;
   if (loading) {
     return (
-      <TableRowLoading colSpan={3} firstColWidth={45} oneLine hasEntityIcon />
+      <TableRowLoading
+        colSpan={3}
+        widths={[45, 27.5, 27.5]}
+        oneLine
+        hasEntityIcon
+      />
     );
   }
 

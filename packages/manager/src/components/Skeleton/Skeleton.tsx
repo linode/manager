@@ -76,9 +76,8 @@ const _Skeleton: React.FC<combinedProps> = props => {
       <Grid
         item
         style={{
-          flexBasis: `${calcColumns(colCount)}%`,
-          width: `${widths && widths[colCount]}%`,
-          border: '1px solid red'
+          flexBasis: widths ? 'auto' : `${calcColumns(colCount)}%`,
+          width: `${widths && widths[colCount]}%`
         }}
         key={`ske-${colCount}`}
         data-testid={'skeletonCol'}
