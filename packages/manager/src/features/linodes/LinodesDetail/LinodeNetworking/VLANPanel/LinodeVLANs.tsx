@@ -2,6 +2,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import { clone } from 'ramda';
 import Loading from 'src/components/LandingLoading';
 import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
@@ -161,19 +162,21 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     () =>
       interfaceData
         .map(thisInterface => {
+          // The interface is tied to the linode. If the interface has a vlan_id, we want to grab that VLAN from Redux
           const thisVlan = vlans.itemsById[thisInterface.vlan_id];
-
-          if (thisVlan) {
-            return {
-              ...thisVlan,
-              ip_address: thisInterface.ip_address,
-              interfaceName: getInterfaceName(thisInterface.id, configs),
-              currentLinodeId: linodeId,
-              readOnly
-            };
-          } else {
+          if (!thisVlan) {
             return undefined;
           }
+
+          // Create a deep copy so it isn't being directly modified later in VLanTableRow.tsx
+          const thisVlanClone = clone(thisVlan);
+          return {
+            ...thisVlanClone,
+            ip_address: thisInterface.ip_address,
+            interfaceName: getInterfaceName(thisInterface.id, configs),
+            currentLinodeId: linodeId,
+            readOnly
+          };
         })
         .filter(Boolean),
     [interfaceData, vlans.itemsById, configs, linodeId, readOnly]
