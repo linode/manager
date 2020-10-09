@@ -29,7 +29,7 @@ describe('truncateAndJoinJSXList utility function', () => {
     expect(noTruncatedTextListEqualsMax.props.children.length).toEqual(max);
   });
 
-  it('should have truncated text that reads " plus [X] more" if the max is 5', () => {
+  it('should have truncated text that reads " plus [X] more" if the max is less than the length of the list', () => {
     const truncatedListOfFive = truncateAndJoinJSXList(longJSXList, 5);
     const remainingItemCount = longJSXList.length - 5;
     expect(truncatedListOfFive.props.children[1].props['children']).toEqual(
