@@ -217,6 +217,7 @@ export const MobileNav: React.FC<Props> = props => {
 
             return (
               <ListItem
+                data-testid={`menu-item-${link.display}`}
                 className={classes.menuItemLinkNoGroup}
                 style={{
                   borderTop: `${link.display === 'Dashboard' ? 'none' : ''}`
@@ -249,6 +250,7 @@ export const MobileNav: React.FC<Props> = props => {
                 <List component="div" disablePadding>
                   {filteredLinks.map((thisLink: any) => (
                     <ListItem
+                      data-testid={`menu-item-${thisLink.display}`}
                       key={thisLink.group}
                       className={classes.nestedLink}
                     >
