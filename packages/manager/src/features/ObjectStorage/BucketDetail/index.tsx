@@ -45,7 +45,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
     //   routeName: `${props.match.url}/access`
     // },
     {
-      title: 'SSL',
+      title: 'SSL/TLS',
       routeName: `${props.match.url}/ssl`
     }
   ];
