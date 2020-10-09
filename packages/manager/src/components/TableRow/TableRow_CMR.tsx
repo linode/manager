@@ -54,7 +54,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderLeft: `1px solid ${theme.palette.primary.light}`
       },
       '&:last-child': {
-        borderTop: 'none'
+        borderTop: 'none',
+        backgroundColor: theme.cmrBGColors.bgApp
       },
       [theme.breakpoints.down('md')]: {
         '&:last-child': {

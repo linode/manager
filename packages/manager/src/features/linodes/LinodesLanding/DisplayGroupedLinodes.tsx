@@ -54,13 +54,15 @@ const styles = (theme: Theme) =>
       '& td': {
         // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
         padding: `${theme.spacing(2) + 4}px 0 ${theme.spacing(1) + 2}px`,
-        borderBottom: 'none'
+        borderBottom: 'none',
+        borderTop: 'none'
       }
     },
     groupContainer: {
       [theme.breakpoints.up('md')]: {
         '& $tagHeaderRow > td': {
-          padding: '10px 0'
+          padding: '10px 0',
+          borderTop: 'none'
         }
       }
     },
