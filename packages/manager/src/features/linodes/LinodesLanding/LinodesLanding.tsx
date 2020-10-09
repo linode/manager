@@ -632,7 +632,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                 );
                               }}
                             </OrderBy>
-                            {!this.props.isVLAN ? (
+                            {this.props.isVLAN ? null : (
                               <Grid container justify="flex-end">
                                 <Grid item className={classes.CSVlinkContainer}>
                                   <CSVLink
@@ -682,7 +682,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   </CSVLink>
                                 </Grid>
                               </Grid>
-                            ) : null}
+                            )}
                           </Grid>
                         </React.Fragment>
                       );
