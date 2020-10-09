@@ -4,7 +4,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
 import * as React from 'react';
@@ -16,140 +17,6 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  navIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    border: 'none',
-    color: '#fff',
-    cursor: 'pointer',
-    fontSize: '1.125rem',
-    height: 50,
-    lineHeight: '20px',
-    '& svg': {
-      marginTop: -2,
-      marginRight: 10
-    },
-    [theme.breakpoints.up(750)]: {
-      display: 'none'
-    }
-  },
-  navDropdown: {
-    backgroundColor: '#434951',
-    left: '0 !important',
-    width: '100%',
-    zIndex: 3000
-  },
-  menuWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    '& > *': {
-      borderBottom: '1px solid #59626d !important'
-    }
-  },
-  menuButton: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    lineHeight: 1,
-    '&[data-reach-menu-button]': {
-      backgroundColor: '#434951',
-      border: 'none',
-      borderRadius: 0,
-      color: theme.color.primaryNavText,
-      cursor: 'pointer',
-      fontSize: '1rem',
-      height: 50,
-      paddingTop: 15,
-      paddingBottom: 15,
-      paddingLeft: 20,
-      paddingRight: 14,
-      textTransform: 'inherit',
-      width: '100%',
-      '&[aria-expanded="true"]': {
-        '& $caret': {
-          transform: 'rotate(180deg)'
-        }
-      },
-      '&:hover': {
-        backgroundColor: theme.bg.primaryNavActiveBG
-      },
-      '&:focus': {
-        backgroundColor: theme.bg.primaryNavActiveBG
-      }
-    }
-  },
-  caret: {
-    color: '#9ea4ae',
-    marginTop: 2
-  },
-  linkItem: {
-    fontFamily: theme.font.normal,
-    opacity: 1,
-    transition: theme.transitions.create(['color']),
-    whiteSpace: 'nowrap'
-  },
-  menuPopover: {
-    '&[data-reach-menu], &[data-reach-menu-popover]': {
-      display: 'flex',
-      position: 'relative',
-      width: '100%'
-    }
-  },
-  menuItemList: {
-    '&[data-reach-menu-items]': {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'flex-start',
-      backgroundColor: '#434951',
-      border: 'none',
-      padding: 0,
-      whiteSpace: 'normal',
-      width: '100%'
-    },
-    '&[data-reach-menu-items][data-selected]': {
-      backgroundColor: theme.bg.primaryNavActiveBG
-    }
-  },
-  menuItemLink: {
-    '&[data-reach-menu-item]': {
-      display: 'flex',
-      color: theme.color.primaryNavText,
-      fontSize: '1rem',
-      paddingTop: 15,
-      paddingBottom: 15,
-      paddingLeft: 40,
-      paddingRight: 40,
-      '&:hover': {
-        backgroundColor: theme.bg.primaryNavActiveBG
-      },
-      '&:focus': {
-        backgroundColor: theme.bg.primaryNavActiveBG
-      }
-    },
-    '&[data-reach-menu-item][data-selected]': {
-      backgroundColor: theme.bg.primaryNavActiveBG
-    }
-  },
-  menuItemLinkNoGroup: {
-    '&[data-reach-menu-item]': {
-      paddingLeft: 20,
-      paddingRight: 14,
-      '&:hover': {
-        backgroundColor: theme.bg.primaryNavActiveBG
-      },
-      '&:focus': {
-        backgroundColor: theme.bg.primaryNavActiveBG
-      }
-    }
-  },
-  settingsBackdrop: {
-    backgroundColor: 'rgba(50, 54, 60, 0.5)',
-    top: 50,
-    left: 0,
-    zIndex: 6
-  },
   menuIcon: {
     color: 'white',
     fontSize: '1.125rem',
@@ -171,39 +38,70 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 1200,
     '& span': {
       color: 'white'
-    },
-    '& .MuiListItem-root': {
-      backgroundColor: '#434951'
     }
   },
   showMenu: {
     display: 'block'
   },
-  primaryLink: {
+  menuItemLinkNoGroup: {
+    borderTop: '1px solid #59626d',
+    padding: 0,
+    '&:hover': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    },
+    '& a': {
+      padding: '15px 20px',
+      width: '100%',
+      '&:focus': {
+        backgroundColor: theme.bg.primaryNavActiveBG,
+        outline: '1px dotted #999'
+      }
+    },
+    '& span': {
+      fontSize: '1rem'
+    }
+  },
+  menuItemLink: {
     borderTop: '1px solid #59626d',
     padding: '15px 20px',
     paddingRight: 14,
-    '& span': {
-      fontSize: '1rem'
-    },
     '&:hover': {
       backgroundColor: theme.bg.primaryNavActiveBG
     },
     '&:focus': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.bg.primaryNavActiveBG,
+      outline: '1px dotted #999'
     },
-    '&.Mui-focusVisable': {
-      backgroundColor: theme.bg.primaryNavActiveBG
-    }
-  },
-  nestedLink: {
-    padding: '10px 40px',
     '& span': {
       fontSize: '1rem'
-    },
-    '&.Mui-focusVisable': {
-      backgroundColor: theme.bg.primaryNavActiveBG
     }
+  },
+  caret: {
+    color: '#9ea4ae',
+    marginTop: 2
+  },
+  nestedLink: {
+    padding: 0,
+    '&:hover': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    },
+    '& a': {
+      padding: '7.5px 40px',
+      width: '100%',
+      '&:focus': {
+        backgroundColor: theme.bg.primaryNavActiveBG,
+        outline: '1px dotted #999'
+      }
+    },
+    '& span': {
+      fontSize: '1rem'
+    }
+  },
+  settingsBackdrop: {
+    backgroundColor: 'rgba(50, 54, 60, 0.5)',
+    top: 50,
+    left: 0,
+    zIndex: 6
   }
 }));
 
@@ -271,6 +169,21 @@ export const MobileNav: React.FC<Props> = props => {
     }
   };
 
+  const isGroupOpen = (group: NavGroup) => {
+    switch (group) {
+      case 'Compute':
+        return openCompute;
+      case 'Network':
+        return openNetwork;
+      case 'Storage':
+        return openStorage;
+      case 'Monitors':
+        return openMonitors;
+      default:
+        return;
+    }
+  };
+
   // TODO: fix hover/focus state and expanding/collapsing arrow
 
   return (
@@ -304,8 +217,7 @@ export const MobileNav: React.FC<Props> = props => {
 
             return (
               <ListItem
-                button
-                className={classes.primaryLink}
+                className={classes.menuItemLinkNoGroup}
                 style={{
                   borderTop: `${link.display === 'Dashboard' ? 'none' : ''}`
                 }}
@@ -323,18 +235,21 @@ export const MobileNav: React.FC<Props> = props => {
               <ListItem
                 key={thisGroup.group}
                 button
-                className={classes.primaryLink}
+                className={classes.menuItemLink}
                 onClick={() => handleClick(thisGroup.group)}
               >
                 <ListItemText primary={thisGroup.group} />
-                <KeyboardArrowDown className={classes.caret} />
+                {isGroupOpen(thisGroup.group) ? (
+                  <ExpandLess className={classes.caret} />
+                ) : (
+                  <ExpandMore className={classes.caret} />
+                )}
               </ListItem>
               <Collapse in={groupMap[thisGroup.group]}>
                 <List component="div" disablePadding>
                   {filteredLinks.map((thisLink: any) => (
                     <ListItem
                       key={thisLink.group}
-                      button
                       className={classes.nestedLink}
                     >
                       <Link to={thisLink.href} onClick={() => setOpen(false)}>
