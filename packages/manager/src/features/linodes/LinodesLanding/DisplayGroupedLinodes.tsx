@@ -105,6 +105,7 @@ interface Props {
   toggleGroupLinodes: () => boolean;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
+  isVLAN?: boolean;
 }
 
 type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
@@ -122,6 +123,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
     toggleGroupLinodes,
     linodeViewPreference,
     linodesAreGrouped,
+    isVLAN,
     ...rest
   } = props;
 
@@ -135,7 +137,8 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
     order,
     orderBy,
     someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
-    dataLength
+    dataLength,
+    isVLAN
   };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -236,7 +239,8 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                     handlePageChange,
                     handleOrderChange,
                     order,
-                    orderBy
+                    orderBy,
+                    isVLAN
                   };
                   return (
                     <React.Fragment>
@@ -300,7 +304,8 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                         handlePageChange,
                         handleOrderChange,
                         order,
-                        orderBy
+                        orderBy,
+                        isVLAN
                       };
                       return (
                         <TableBody
@@ -375,7 +380,8 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                         handlePageChange,
                         handleOrderChange,
                         order,
-                        orderBy
+                        orderBy,
+                        isVLAN
                       };
                       return (
                         <TableBody

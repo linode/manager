@@ -71,6 +71,7 @@ class StoryTable extends React.Component {
                     openDialog={this.handleDialog}
                     openPowerActionDialog={this.handlePowerActionDialog}
                     openNotificationDrawer={() => null}
+                    isVLAN={false}
                   ></LinodeRow_CMR>
                 ))}
               </TableBody>

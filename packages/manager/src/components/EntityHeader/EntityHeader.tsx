@@ -82,7 +82,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     bodyClassName,
     isSecondary,
     isDetailLanding,
-    headerOnly
+    headerOnly,
+    displayIcon
   } = props;
   const classes = useStyles();
 
@@ -100,6 +101,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
       >
         <HeaderBreadCrumb
           iconType={iconType}
+          displayIcon={displayIcon}
           title={title}
           parentLink={parentLink}
           parentText={parentText}

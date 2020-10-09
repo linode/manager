@@ -174,7 +174,7 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
       <Grid item>
         <Typography
           variant="h2"
-          className={iconType ? classes.titleText : 'p0'}
+          className={iconType && _displayIcon ? classes.titleText : 'p0'}
         >
           {title}
         </Typography>
