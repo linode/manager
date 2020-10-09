@@ -1,35 +1,18 @@
-import { VLAN } from '@linode/api-v4/lib/vlans';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import VlanActionMenu, { ActionHandlers } from './VlanActionMenu';
 import { getLinodeLabel } from 'src/features/Dashboard/VolumesDashboardCard/VolumeDashboardRow';
+import { VlanData } from './LinodeVLANs';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  link: {
-    display: 'block',
-    fontFamily: theme.font.bold,
-    fontSize: '.875rem',
-    lineHeight: '1.14rem'
-  },
-  linodesWrapper: {
-    padding: '8px 0'
-  },
-  labelWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    whiteSpace: 'nowrap'
-  }
-}));
+export const MAX_LINODES_VLANATTACHED_DISPLAY = 50;
 
-export type CombinedProps = VLAN & ActionHandlers;
+export type CombinedProps = VlanData & ActionHandlers;
 
 export const VlanTableRow: React.FC<CombinedProps> = props => {
   const {
@@ -40,12 +23,12 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
     linodes,
     loading,
     error,
+    readOnly,
+    currentLinodeId,
     ...actionHandlers
   } = props;
 
   const vlanLabel = description.length > 32 ? `vlan-${id}` : description;
-
-  const classes = useStyles();
 
   const getLinodesCellString = (
     data: number[],
@@ -68,26 +51,30 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
   };
 
   const getLinodeLinks = (data: number[]): JSX.Element => {
-    const firstFour = data.slice(0, 4);
+    // Remove the Linode the user is currently on from the array of Linode IDs the VLAN is attached to, and render that linode's label first in the list as a non-link.
+    const indexOfCurrentLinodeId = data.findIndex(
+      element => element === currentLinodeId
+    );
+    data.splice(indexOfCurrentLinodeId, 1);
+
+    const generatedLinks = data.map(linodeID => (
+      <Link
+        key={linodeID}
+        to={`/linodes/${linodeID}/networking`}
+        data-testid="vlan-row-link"
+      >
+        {getLinodeLabel(linodeID)}
+      </Link>
+    ));
+
     return (
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
-        {firstFour.map((linodeID, idx) => (
-          <Link
-            className={classes.link}
-            key={linodeID}
-            to={`/linodes/${linodeID}/networking`}
-            data-testid="vlan-row-link"
-          >
-            {getLinodeLabel(linodeID)}
-            {(idx !== firstFour.length - 1 && data.length <= 4 && `, `) ||
-              (data.length > 4 && `, `)}
-          </Link>
-        ))}
-        {data.length > 4 && (
-          <span>
-            {` `}plus {data.length - 4} more.
-          </span>
+        {getLinodeLabel(currentLinodeId)}
+        {data.length > 0 && `, `}
+        {truncateAndJoinJSXList(
+          generatedLinks,
+          MAX_LINODES_VLANATTACHED_DISPLAY
         )}
       </>
     );
@@ -104,10 +91,9 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
       <TableCell data-qa-vlan-cell-label={vlanLabel}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
-            {/* Make this bolder later */}
-            <Typography variant="body2" component="h3" data-qa-label>
+            <Typography style={{ fontWeight: 700 }} data-qa-label>
               {' '}
-              <Link to={`/vlans/${id}`}>{vlanLabel} </Link>
+              <Link to={`/vlans/${id}`}>{vlanLabel}</Link>
             </Typography>
           </Grid>
         </Grid>
@@ -119,6 +105,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
         <VlanActionMenu
           vlanID={id}
           vlanLabel={description}
+          readOnly={readOnly}
           {...actionHandlers}
         />
       </TableCell>
@@ -126,6 +113,52 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, ActionHandlers & VLAN>(React.memo)(
+export const truncateAndJoinJSXList = (
+  JSXList: JSX.Element[],
+  max = 100
+): JSX.Element => {
+  const count = JSXList.length;
+  const countLessThanOrEqualToMax = count <= max;
+
+  const remainingItemCount = count - max;
+
+  /*
+  - If the list length is less than the max, add a comma after every item unless it is the last one in the list.
+  - If the list length is greater than the max, slice the list and add truncation text at the end.
+  */
+
+  if (countLessThanOrEqualToMax) {
+    return (
+      // eslint-disable-next-line react/jsx-no-useless-fragment
+      <>
+        {JSXList.map((item, idx) => (
+          <span key={idx}>
+            {item}
+            {idx !== count - 1 && `, `}
+          </span>
+        ))}
+      </>
+    );
+  } else {
+    // count is greater than max
+    const slicedList = JSXList.slice(0, max);
+
+    return (
+      <>
+        {slicedList.map((item, idx) => (
+          <span key={idx}>
+            {item}
+            {`, `}
+          </span>
+        ))}
+        <span data-testid="truncated-text">
+          {` `}plus {remainingItemCount} more
+        </span>
+      </>
+    );
+  }
+};
+
+export default compose<CombinedProps, VlanData & ActionHandlers>(React.memo)(
   VlanTableRow
 );
