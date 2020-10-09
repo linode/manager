@@ -234,9 +234,12 @@ export const MobileNav: React.FC<Props> = props => {
           return (
             <>
               <ListItem
-                key={thisGroup.group}
+                aria-controls={`menu-${thisGroup.group}`}
+                aria-haspopup="true"
                 button
                 className={classes.menuItemLink}
+                id={`button-${thisGroup.group}`}
+                key={thisGroup.group}
                 onClick={() => handleClick(thisGroup.group)}
               >
                 <ListItemText primary={thisGroup.group} />
@@ -247,12 +250,19 @@ export const MobileNav: React.FC<Props> = props => {
                 )}
               </ListItem>
               <Collapse in={groupMap[thisGroup.group]}>
-                <List component="div" disablePadding>
+                <List
+                  aria-labelledby={`button-${thisGroup.group}`}
+                  component="div"
+                  disablePadding
+                  id={`menu-${thisGroup.group}`}
+                  role="menu"
+                >
                   {filteredLinks.map((thisLink: any) => (
                     <ListItem
+                      className={classes.nestedLink}
                       data-testid={`menu-item-${thisLink.display}`}
                       key={thisLink.group}
-                      className={classes.nestedLink}
+                      role="menuitem"
                     >
                       <Link to={thisLink.href} onClick={() => setOpen(false)}>
                         <ListItemText primary={thisLink.display} />
