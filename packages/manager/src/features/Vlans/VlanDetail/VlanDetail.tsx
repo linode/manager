@@ -6,6 +6,7 @@ import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import { makeStyles } from 'src/components/core/styles';
 import EntityHeader from 'src/components/EntityHeader';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
+// import { vlanFactory } from 'src/factories/vlans';
 import AttachVLANDrawer from '../AttachVLANDrawer';
 import VlanDetailRow from './VlanDetailRow';
 import VlanEntityDetail from './VlanEntityDetail';
@@ -88,7 +89,13 @@ const VlanDetail: React.FC<CombinedProps> = props => {
           initialOrder={{ order: 'asc', orderBy: 'label' }}
         />
       </div>
-      <AttachVLANDrawer onClose={() => null} isOpen={true} vlanID={1071} />
+      <AttachVLANDrawer
+        onClose={() => null}
+        isOpen={true}
+        vlanID={1071}
+        linodes={[]}
+        region={'us-east'}
+      />
     </React.Fragment>
   );
 };

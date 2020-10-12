@@ -11,10 +11,12 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   vlanID: number;
+  region: string;
+  linodes: number[];
 }
 
 export const AttachVLANDrawer: React.FC<Props> = props => {
-  const { isOpen, onClose, vlanID } = props;
+  const { isOpen, linodes, onClose, region, vlanID } = props;
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
@@ -39,7 +41,9 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
     <Drawer title="Attach a Linode" open={isOpen}>
       {error && <Notice error text={error} />}
       <LinodeMultiSelect
+        filteredLinodes={linodes}
         handleChange={(selected: number[]) => setSelectedLinodes(selected)}
+        allowedRegions={[region]}
       />
       <ActionsPanel>
         <Button
