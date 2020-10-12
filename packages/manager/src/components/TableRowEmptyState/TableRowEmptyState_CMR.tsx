@@ -13,7 +13,8 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      textAlign: 'center'
+      textAlign: 'center',
+      borderColor: theme.cmrBorderColors.borderTable
     }
   });
 

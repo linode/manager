@@ -54,6 +54,12 @@ const styles = (theme: Theme) =>
     searchBar: {
       marginTop: 0,
       backgroundColor: theme.color.white,
+      '& .input': {
+        backgroundColor: theme.cmrBGColors.bgSearchBar,
+        border: 'none',
+        borderRadius: 3
+      },
+
       '& > div': {
         marginRight: 0
       }
