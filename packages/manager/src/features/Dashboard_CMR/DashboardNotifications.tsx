@@ -17,6 +17,7 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import LinodeNews from './LinodeNews';
 import ManagedDashboardCard from '../Dashboard/ManagedDashboardCard/ManagedDashboardCard_CMR';
+import AbuseTicketBanner from 'src/components/AbuseTicketBanner/AbuseTicketBanner_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -57,6 +58,7 @@ export const Notifications: React.FC<{}> = _ => {
 
   return (
     <>
+      <AbuseTicketBanner />
       <Hidden smDown>
         <BillingSummary
           balance={balance}
