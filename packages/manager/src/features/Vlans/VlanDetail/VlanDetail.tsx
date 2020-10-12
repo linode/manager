@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
 import NotFound from 'src/components/NotFound';
 import LinodesLanding from 'src/features/linodes/LinodesLanding';
 import useReduxLoad from 'src/hooks/useReduxLoad';
@@ -44,7 +45,20 @@ const VlanDetail: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <VlanEntityDetail openTagDrawer={() => {}} />
       <div style={{ marginTop: 20 }}>
-        <LinodesLanding isVLAN filterLinodesFn={filterLinodesFn} />
+        <LinodesLanding
+          isVLAN
+          filterLinodesFn={filterLinodesFn}
+          LandingHeader={
+            <LandingHeader
+              title="Linodes"
+              entity="Linode"
+              // @todo: This should open the Attach modal.
+              onAddNew={() => null}
+              displayIcon={false}
+              createButtonText="Add a Linode..."
+            />
+          }
+        />
       </div>
     </React.Fragment>
   );

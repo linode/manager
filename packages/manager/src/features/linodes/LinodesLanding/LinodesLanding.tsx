@@ -98,10 +98,11 @@ interface Params {
 
 type RouteProps = RouteComponentProps<Params>;
 
-interface Props {
+export interface Props {
   isDashboard?: boolean;
   isVLAN?: boolean;
   filterLinodesFn?: (linode: Linode) => boolean;
+  LandingHeader?: React.ReactElement;
 }
 
 type CombinedProps = Props &
@@ -427,23 +428,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                 <BackupsCTA_CMR dismissed={this.dismissCTA} />
                               )}
                               <Grid item xs={12}>
-                                <LandingHeader
-                                  title="Linodes"
-                                  entity="Linode"
-                                  displayIcon={!this.props.isVLAN}
-                                  onAddNew={() =>
-                                    this.props.history.push('/linodes/create')
-                                  }
-                                  iconType="linode"
-                                  docsLink={
-                                    this.props.isVLAN
-                                      ? ''
-                                      : 'https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/'
-                                  }
-                                  body={
-                                    this.props.isVLAN ? (
-                                      undefined
-                                    ) : (
+                                {this.props.LandingHeader ? (
+                                  this.props.LandingHeader
+                                ) : (
+                                  <LandingHeader
+                                    title="Linodes"
+                                    entity="Linode"
+                                    onAddNew={() =>
+                                      this.props.history.push('/linodes/create')
+                                    }
+                                    iconType="linode"
+                                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/'"
+                                    body={
                                       <>
                                         {linodesRunningCount !== 0 && (
                                           <Chip
@@ -502,9 +498,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                           />
                                         )}
                                       </>
-                                    )
-                                  }
-                                />
+                                    }
+                                  />
+                                )}
                               </Grid>
                             </React.Fragment>
                           ) : (
