@@ -64,22 +64,23 @@ const _Skeleton: React.FC<combinedProps> = props => {
   } = props;
 
   const totalColumns = numColumns ?? 1;
+  let totalWidth = 100;
 
-  // Map each width from arr to the column arr
-  // if widths are not provided, just default to the calculation below (based on col count)
-  const calcColumns = (colCount: number) => {
-    return 100 / totalColumns;
-  };
   const columns: JSX.Element[] = [];
-  for (let colCount = 0; colCount <= totalColumns - 1; colCount++) {
+  for (let columnIdx = 0; columnIdx <= totalColumns - 1; columnIdx++) {
+    if (widths?.[columnIdx]) {
+      totalWidth -= widths[columnIdx];
+    }
     columns.push(
       <Grid
         item
         style={{
-          flexBasis: widths ? 'auto' : `${calcColumns(colCount)}%`,
-          width: `${widths && widths[colCount]}%`
+          flexBasis: widths ? 'auto' : `${100 / totalColumns}%`,
+          width: `${widths &&
+            (widths[columnIdx] ||
+              totalWidth / (totalColumns - widths.length))}%`
         }}
-        key={`ske-${colCount}`}
+        key={`ske-${columnIdx}`}
         data-testid={'skeletonCol'}
         className={compact ? 'py0' : undefined}
       >

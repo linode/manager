@@ -41,6 +41,14 @@ storiesOf('Skeleton', module)
       </TableBody>
     </Table>
   ))
+  .add('Table with some widths defined (table header is fully defined)', () => (
+    <Table>
+      {renderTableHead(40, 35, 12.5, 12.5)}
+      <TableBody>
+        <TableRowLoading colSpan={4} widths={[40, 35]} />
+      </TableBody>
+    </Table>
+  ))
   .add('Table with no widths defined', () => (
     <Table>
       {renderTableHead()}
