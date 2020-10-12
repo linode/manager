@@ -69,7 +69,6 @@ const styles = (theme: Theme) =>
       }
     },
     cells: {
-      whiteSpace: 'nowrap',
       [theme.breakpoints.up('md')]: {
         maxWidth: 300,
         wordBreak: 'break-all'
