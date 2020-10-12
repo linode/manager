@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 12
     },
     marginLeft: theme.spacing(1)
+  },
+  label: {
+    color: theme.cmrTextColors.linkActiveLight
   }
 }));
 
@@ -102,7 +105,12 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
     return objectStorageKeys.map((eachKey: ObjectStorageKey) => (
       <TableRow key={eachKey.id} data-qa-table-row={eachKey.label}>
         <TableCell parentColumn="Label">
-          <Typography variant="body2" component="h3" data-qa-key-label>
+          <Typography
+            variant="body2"
+            className={classes.label}
+            component="h3"
+            data-qa-key-label
+          >
             {eachKey.label}
           </Typography>
         </TableCell>

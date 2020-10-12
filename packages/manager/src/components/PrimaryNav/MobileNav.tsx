@@ -1,4 +1,5 @@
 import Backdrop from '@material-ui/core/Backdrop';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -134,11 +135,8 @@ export const MobileNav: React.FC<Props> = props => {
   };
 
   const toggleMenu = () => {
-    if (open) {
-      setOpen(false);
-    } else {
-      setOpen(true);
-    }
+    closeNestedMenus();
+    setOpen(isOpen => !isOpen);
   };
 
   const closeNestedMenus = () => {
@@ -169,6 +167,10 @@ export const MobileNav: React.FC<Props> = props => {
     }
   };
 
+  const handleClickAway = () => {
+    setOpen(false);
+  };
+
   const isGroupOpen = (group: NavGroup) => {
     switch (group) {
       case 'Compute':
@@ -192,8 +194,6 @@ export const MobileNav: React.FC<Props> = props => {
       {open
         ? document.body.classList.add('overflow-hidden')
         : document.body.classList.remove('overflow-hidden')}
-
-      <Backdrop className={classes.settingsBackdrop} open={open} />
       <IconButton
         className={classes.menuIcon}
         onClick={toggleMenu}
@@ -201,80 +201,83 @@ export const MobileNav: React.FC<Props> = props => {
       >
         {open ? <CloseIcon /> : <MenuIcon />} Menu
       </IconButton>
-      <List className={`${classes.menu} ${open && classes.showMenu}`}>
-        {groups.map((thisGroup: any) => {
-          // For each group, filter out hidden links
-          const filteredLinks = thisGroup.links.filter(
-            (thisLink: any) => !thisLink.hide
-          );
-          if (filteredLinks.length === 0) {
-            return null;
-          }
-
-          // Render a singular PrimaryNavLink for links without a group
-          if (thisGroup.group === 'None' && filteredLinks.length === 1) {
-            const link = filteredLinks[0];
-
-            return (
-              <ListItem
-                data-testid={`menu-item-${link.display}`}
-                className={classes.menuItemLinkNoGroup}
-                style={{
-                  borderTop: `${link.display === 'Dashboard' ? 'none' : ''}`
-                }}
-              >
-                <Link to={link.href} onClick={() => setOpen(false)}>
-                  <ListItemText primary={link.display} />
-                </Link>
-              </ListItem>
+      <ClickAwayListener onClickAway={handleClickAway}>
+        <List className={`${classes.menu} ${open && classes.showMenu}`}>
+          {groups.map((thisGroup: any) => {
+            // For each group, filter out hidden links
+            const filteredLinks = thisGroup.links.filter(
+              (thisLink: any) => !thisLink.hide
             );
-          }
+            if (filteredLinks.length === 0) {
+              return null;
+            }
 
-          // Otherwise return a NavGroup (dropdown menu)
-          return (
-            <>
-              <ListItem
-                aria-controls={`menu-${thisGroup.group}`}
-                aria-haspopup="true"
-                button
-                className={classes.menuItemLink}
-                id={`button-${thisGroup.group}`}
-                key={thisGroup.group}
-                onClick={() => handleClick(thisGroup.group)}
-              >
-                <ListItemText primary={thisGroup.group} />
-                {isGroupOpen(thisGroup.group) ? (
-                  <ExpandLess className={classes.caret} />
-                ) : (
-                  <ExpandMore className={classes.caret} />
-                )}
-              </ListItem>
-              <Collapse in={groupMap[thisGroup.group]}>
-                <List
-                  aria-labelledby={`button-${thisGroup.group}`}
-                  component="div"
-                  disablePadding
-                  id={`menu-${thisGroup.group}`}
-                  role="menu"
+            // Render a singular PrimaryNavLink for links without a group
+            if (thisGroup.group === 'None' && filteredLinks.length === 1) {
+              const link = filteredLinks[0];
+
+              return (
+                <ListItem
+                  data-testid={`menu-item-${link.display}`}
+                  className={classes.menuItemLinkNoGroup}
+                  style={{
+                    borderTop: `${link.display === 'Dashboard' ? 'none' : ''}`
+                  }}
                 >
-                  {filteredLinks.map((thisLink: any) => (
-                    <ListItem
-                      className={classes.nestedLink}
-                      data-testid={`menu-item-${thisLink.display}`}
-                      key={thisLink.group}
-                      role="menuitem"
-                    >
-                      <Link to={thisLink.href} onClick={() => setOpen(false)}>
-                        <ListItemText primary={thisLink.display} />
-                      </Link>
-                    </ListItem>
-                  ))}
-                </List>
-              </Collapse>
-            </>
-          );
-        })}
-      </List>
+                  <Link to={link.href} onClick={() => setOpen(false)}>
+                    <ListItemText primary={link.display} />
+                  </Link>
+                </ListItem>
+              );
+            }
+
+            // Otherwise return a NavGroup (dropdown menu)
+            return (
+              <>
+                <ListItem
+                  aria-controls={`menu-${thisGroup.group}`}
+                  aria-haspopup="true"
+                  button
+                  className={classes.menuItemLink}
+                  id={`button-${thisGroup.group}`}
+                  key={thisGroup.group}
+                  onClick={() => handleClick(thisGroup.group)}
+                >
+                  <ListItemText primary={thisGroup.group} />
+                  {isGroupOpen(thisGroup.group) ? (
+                    <ExpandLess className={classes.caret} />
+                  ) : (
+                    <ExpandMore className={classes.caret} />
+                  )}
+                </ListItem>
+                <Collapse in={groupMap[thisGroup.group]}>
+                  <List
+                    aria-labelledby={`button-${thisGroup.group}`}
+                    component="div"
+                    disablePadding
+                    id={`menu-${thisGroup.group}`}
+                    role="menu"
+                  >
+                    {filteredLinks.map((thisLink: any) => (
+                      <ListItem
+                        className={classes.nestedLink}
+                        data-testid={`menu-item-${thisLink.display}`}
+                        key={thisLink.group}
+                        role="menuitem"
+                      >
+                        <Link to={thisLink.href} onClick={() => setOpen(false)}>
+                          <ListItemText primary={thisLink.display} />
+                        </Link>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Collapse>
+              </>
+            );
+          })}
+        </List>
+      </ClickAwayListener>
+      <Backdrop className={classes.settingsBackdrop} open={open} />
     </>
   );
 };
