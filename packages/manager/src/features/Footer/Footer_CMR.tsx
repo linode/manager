@@ -27,7 +27,6 @@ type CSSClasses =
 const styles = (theme: Theme) =>
   createStyles({
     container: {
-      backgroundColor: theme.bg.main,
       margin: `0 auto`,
       maxWidth: 1280,
       width: '100%',

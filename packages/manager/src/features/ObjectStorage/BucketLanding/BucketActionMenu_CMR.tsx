@@ -13,13 +13,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight,
     height: '100%',
     minWidth: 'auto',
     padding: '12px 10px',
     whiteSpace: 'nowrap',
     '&:hover': {
       backgroundColor: '#3683dc',
-      color: theme.color.white
+      color: '#ffffff'
     },
     '&[disabled]': {
       color: '#cdd0d5',

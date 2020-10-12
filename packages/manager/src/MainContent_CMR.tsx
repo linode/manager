@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     minHeight: '100vh',
     flexDirection: 'column',
-    backgroundColor: theme.bg.main,
+    backgroundColor: theme.cmrBGColors.bgApp,
     zIndex: 1
   },
   wrapper: {
