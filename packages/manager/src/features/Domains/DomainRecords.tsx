@@ -292,7 +292,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         },
         {
           title: 'Email',
-          render: (d: Domain) => d.soa_email
+          render: (d: Domain) => truncateEnd(d.soa_email, 50)
         },
         {
           title: 'Default TTL',
@@ -598,7 +598,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       columns: [
         { title: 'Name', render: (r: DomainRecord) => r.name },
         { title: 'Tag', render: (r: DomainRecord) => r.tag },
-        { title: 'Value', render: (r: DomainRecord) => r.target },
+        {
+          title: 'Value',
+          render: (r: DomainRecord) => truncateEnd(r.target, 100)
+        },
         { title: 'TTL', render: getTTL },
         {
           title: '',
