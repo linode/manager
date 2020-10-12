@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-10-12] - v1.22.1
+
+### Changed:
+
+- Make CVV required when adding a credit card.
+
 ## [2020-10-05] - v1.22.0
 
 ### Added:
