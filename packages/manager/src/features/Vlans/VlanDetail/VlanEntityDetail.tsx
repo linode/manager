@@ -1,90 +1,30 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-empty-interface */
-// import { Linode } from '@linode/api-v4/lib/linodes/types';
-// import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as React from 'react';
 import * as classnames from 'classnames';
 // import { useSnackbar } from 'notistack';
 import DeleteIcon from 'src/assets/icons/delete.svg';
-import EditIcon from 'src/assets/icons/edit.svg';
+// import EditIcon from 'src/assets/icons/edit.svg';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
-import {
-  makeStyles,
-  Theme
-  // useTheme,
-  // useMediaQuery
-} from 'src/components/core/styles';
-import TagCell from 'src/components/TagCell';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
-// import { distroIcons } from 'src/components/ImageSelect/icons';
+// import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
-// import { OpenDialog } from 'src/features/linodes/types';
-// import useImages from 'src/hooks/useImages';
-// import useLinodes from 'src/hooks/useLinodes';
-import useReduxLoad from 'src/hooks/useReduxLoad';
-// import { useTypes } from 'src/hooks/useTypes';
 // import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 // import formatDate from 'src/utilities/formatDate';
-// import { pluralize } from 'src/utilities/pluralize';
-// import { lishLink, sshLink } from './LinodesDetail/utilities';
-// import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-// import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
-// import { lishLaunch } from 'src/features/Lish/lishUtils';
 import Hidden from 'src/components/core/Hidden';
 
-// type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
-
 interface VlanEntityDetailProps {
-  // variant: LinodeEntityDetailVariant;
   vlan: VLAN;
-  // username?: string;
   // openDialog: OpenDialog;
-  // openPowerActionDialog: (
-  //   bootAction: BootAction,
-  //   linodeID: number,
-  //   linodeLabel: string,
-  //   linodeConfigs: Config[]
-  // ) => void;
-  // backups: LinodeBackups;
-  // linodeConfigs: Config[];
-  // numVolumes: number;
   openTagDrawer: (tags: string[]) => void;
 }
 
 const VlanEntityDetail: React.FC<VlanEntityDetailProps> = props => {
-  const {
-    // variant,
-    vlan,
-    // username,
-    // openDialog,
-    // openPowerActionDialog,
-    // backups,
-    // linodeConfigs,
-    // numVolumes,
-    openTagDrawer
-  } = props;
-
-  useReduxLoad(['images', 'types']);
-  // const { images } = useImages();
-  // const { types } = useTypes();
-
-  // const imageSlug = linode.image;
-
-  // const imageVendor =
-  //   imageSlug && images.itemsById[imageSlug]
-  //     ? images.itemsById[imageSlug].vendor
-  //     : null;
-
-  // const linodeType = Boolean(linode.type)
-  //   ? types.entities.find(thisType => thisType.id === linode.type) ?? null
-  //   : null;
-
-  // const linodePlan = linodeType?.label ?? null;
+  const { vlan } = props;
 
   const regionDisplay = dcDisplayNames[vlan.region] ?? null;
 
@@ -92,30 +32,18 @@ const VlanEntityDetail: React.FC<VlanEntityDetailProps> = props => {
     <EntityDetail
       header={
         <Header
-          // variant={variant}
-          // imageVendor={imageVendor}
           label={vlan.description}
-          id={vlan.id}
-          // linodeStatus={linode.status}
           // openDialog={openDialog}
-          // openPowerActionDialog={openPowerActionDialog}
-          regionDisplay={regionDisplay}
-          // backups={backups}
-          // linodeConfigs={linodeConfigs}
-          // type={'something'}
-          // image={'something'}
         />
       }
       footer={
         <Footer
-          // linodePlan={linodePlan}
           regionDisplay={regionDisplay}
+          cidr={vlan.cidr_block}
           id={vlan.id}
-          // linodeCreated={linode.created}
-          tags={[]}
-          // linodeLabel={linode.label}
-          openTagDrawer={openTagDrawer}
-          // openDialog={openDialog}
+          // created={}
+          // tags={[]}
+          // openTagDrawer={openTagDrawer}
         />
       }
     />
@@ -128,32 +56,13 @@ export default React.memo(VlanEntityDetail);
 // Header
 // =============================================================================
 export interface HeaderProps {
-  // variant: LinodeEntityDetailVariant;
-  // imageVendor: string | null;
   label: string;
-  id: number;
-  // linodeStatus: Linode['status'];
   // openDialog: OpenDialog;
-  // openPowerActionDialog: (
-  //   bootAction: BootAction,
-  //   linodeID: number,
-  //   linodeLabel: string,
-  //   linodeConfigs: Config[]
-  // ) => void;
-  regionDisplay: string;
-  // backups: LinodeBackups;
-  // type: string;
-  // image: string;
-  // linodeConfigs: Config[];
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.bg.white
-  },
-  distroIcon: {
-    fontSize: 25,
-    marginRight: 10
   },
   body: {
     display: 'flex',
@@ -193,26 +102,11 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
 
 const Header: React.FC<HeaderProps> = props => {
   const {
-    // variant,
-    // imageVendor,
-    label,
-    id,
-    // linodeStatus,
-    regionDisplay
+    label
     // openDialog,
-    // openPowerActionDialog,
-    // backups,
-    // type,
-    // image,
-    // linodeConfigs
   } = props;
 
   const classes = useHeaderStyles();
-  // const theme = useTheme<Theme>();
-  // const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
-
-  // const distroIconClassName =
-  //   imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
 
   return (
     <EntityHeader
@@ -229,14 +123,14 @@ const Header: React.FC<HeaderProps> = props => {
       body={
         <>
           <div className={classes.actionItemsOuter}>
-            <IconTextLink
+            {/* Not implemented by API yet */}
+            {/* <IconTextLink
               className={classes.actionItem}
               SideIcon={EditIcon}
               text="Edit"
               title="Edit"
               to={`/`}
-            />
-
+            /> */}
             <IconTextLink
               className={classes.actionItem}
               SideIcon={DeleteIcon}
@@ -259,14 +153,12 @@ const Header: React.FC<HeaderProps> = props => {
 // =============================================================================
 
 interface FooterProps {
-  // linodePlan: string | null;
   regionDisplay: string | null;
+  cidr: string;
   id: number;
-  // linodeCreated: string;
-  tags: string[];
-  // linodeLabel: string;
-  openTagDrawer: (tags: string[]) => void;
-  // openDialog: OpenDialog;
+  // created: string;
+  // tags: string[];
+  // openTagDrawer: (tags: string[]) => void;
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
@@ -301,7 +193,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'none'
     }
   },
-  linodeCreated: {
+  created: {
     paddingLeft: 10,
     color: theme.color.grey8,
     [theme.breakpoints.down('sm')]: {
@@ -320,19 +212,10 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
-  const {
-    // linodePlan,
-    regionDisplay,
-    id,
-    // linodeCreated,
-    tags,
-    openTagDrawer
-    // openDialog
-  } = props;
+  const { regionDisplay, cidr, id } = props;
 
   const classes = useFooterStyles();
 
-  // const { updateLinode } = useLinodes();
   // const { enqueueSnackbar } = useSnackbar();
 
   // const addTag = React.useCallback(
@@ -367,16 +250,14 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Grid item xs={12} sm={7}>
         <div className={classes.detailsSection}>
           {regionDisplay && (
-            <button onClick={() => {}} className={classes.button}>
-              {regionDisplay}
-            </button>
+            <button className={classes.button}>{regionDisplay}</button>
           )}
           <Typography
             className={classnames({
               [classes.listItem]: true
             })}
           >
-            Insert IP
+            {cidr}
           </Typography>
           <Typography
             className={classnames({
@@ -386,23 +267,21 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           >
             {id}
           </Typography>
-          <Hidden xsDown>
-            <Typography className={classes.linodeCreated}>
-              Created{' '}
-              {/* {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })} */}
+          {/* <Hidden xsDown>
+            <Typography className={classes.created}>
+              Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
             </Typography>
-          </Hidden>
+          </Hidden> */}
         </div>
       </Grid>
-      <Hidden smUp>
+      {/* <Hidden smUp>
         <Grid item xs={12}>
-          <Typography className={classes.linodeCreated}>
-            Created{' '}
-            {/* {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })} */}
+          <Typography className={classes.created}>
+            Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
           </Typography>
         </Grid>
-      </Hidden>
-      <Grid item xs={12} sm={5} className={classes.tags}>
+      </Hidden> */}
+      {/* <Grid item xs={12} sm={5} className={classes.tags}>
         <TagCell
           width={500}
           tags={tags}
@@ -410,7 +289,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           deleteTag={() => {}}
           listAllTags={openTagDrawer}
         />
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 });
