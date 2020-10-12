@@ -69,6 +69,7 @@ const styles = (theme: Theme) =>
       }
     },
     cells: {
+      whiteSpace: 'nowrap',
       [theme.breakpoints.up('md')]: {
         maxWidth: 300,
         wordBreak: 'break-all'
@@ -506,7 +507,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Hostname', render: (r: DomainRecord) => r.name },
         {
           title: 'Value',
-          render: (r: DomainRecord) => truncateEnd(r.target, 255)
+          render: (r: DomainRecord) => truncateEnd(r.target, 100)
         },
         { title: 'TTL', render: getTTL },
         {
