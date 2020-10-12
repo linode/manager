@@ -17,7 +17,7 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import LinodeNews from './LinodeNews';
 import ManagedDashboardCard from '../Dashboard/ManagedDashboardCard/ManagedDashboardCard_CMR';
-import AbuseTicketBanner from 'src/components/AbuseTicketBanner/AbuseTicketBanner_CMR';
+import AbuseTicketBanner from 'src/components/AbuseTicketBanner/AbuseTicketBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

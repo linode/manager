@@ -14,7 +14,11 @@ describe('Abuse ticket banner', () => {
   it('should render a banner for an abuse ticket', () => {
     const { queryAllByText } = render(
       wrapWithTheme(
-        <AbuseTicketBanner abuseTickets={[abuseTicketNotification]} />
+        <AbuseTicketBanner
+          ldClient={{} as any}
+          flags={{}}
+          abuseTickets={[abuseTicketNotification]}
+        />
       )
     );
     expect(queryAllByText(/an open abuse ticket/)).toHaveLength(1);
@@ -24,6 +28,8 @@ describe('Abuse ticket banner', () => {
     const { queryAllByText } = render(
       wrapWithTheme(
         <AbuseTicketBanner
+          ldClient={{} as any}
+          flags={{}}
           abuseTickets={[abuseTicketNotification, abuseTicketNotification]}
         />
       )
@@ -34,7 +40,11 @@ describe('Abuse ticket banner', () => {
   it('should link to the ticket', () => {
     const { getByTestId } = render(
       wrapWithTheme(
-        <AbuseTicketBanner abuseTickets={[abuseTicketNotification]} />
+        <AbuseTicketBanner
+          ldClient={{} as any}
+          flags={{}}
+          abuseTickets={[abuseTicketNotification]}
+        />
       )
     );
     const link = getByTestId('abuse-ticket-link');
@@ -43,7 +53,9 @@ describe('Abuse ticket banner', () => {
 
   it('should return null if there are no abuse tickets', () => {
     const { queryByTestId } = render(
-      wrapWithTheme(<AbuseTicketBanner abuseTickets={[]} />)
+      wrapWithTheme(
+        <AbuseTicketBanner ldClient={{} as any} flags={{}} abuseTickets={[]} />
+      )
     );
 
     expect(queryByTestId('abuse-ticket-link')).toBeNull();
