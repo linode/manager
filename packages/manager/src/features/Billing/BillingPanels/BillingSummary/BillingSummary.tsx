@@ -16,11 +16,11 @@ import PaymentDrawer from './PaymentDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(3),
+    marginBottom: 20,
     padding: theme.spacing(3) + 1,
-    border: `solid 1px ${theme.color.borderBilling}`,
+    border: `solid 1px ${theme.cmrBorderColors.borderBillingSummary}`,
     borderRadius: 8,
-    backgroundColor: theme.bg.billingHeader
+    backgroundColor: theme.cmrBGColors.bgBillingSummary
   },
   header: {
     marginBottom: theme.spacing(2) - 1
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&:nth-of-type(2)': {
       [theme.breakpoints.up('md')]: {
-        borderLeft: `1px solid ${theme.color.borderBilling}`
+        borderLeft: `1px solid ${theme.cmrBorderColors.borderBillingSummary}`
       }
     },
     '&:last-of-type': {
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   balanceOuter: {
     paddingTop: theme.spacing(1) - 3,
-    borderTop: `1px dashed ${theme.color.borderBilling}`
+    borderTop: `1px dashed ${theme.cmrBorderColors.borderBalance}`
   },
   label: {
     margin: `${theme.spacing(1) - 3}px 0`,

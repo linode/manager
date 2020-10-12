@@ -44,6 +44,8 @@ const styles = (theme: Theme) =>
     },
     chip: {
       ...theme.applyStatusPillStyles,
+      paddingTop: '0px !important',
+      paddingBottom: '0px !important',
       '&:hover, &:focus, &:active': {
         backgroundColor: theme.bg.chipActive
       }

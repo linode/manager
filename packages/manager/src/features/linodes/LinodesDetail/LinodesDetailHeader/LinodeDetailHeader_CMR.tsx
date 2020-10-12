@@ -1,4 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account';
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
@@ -10,7 +9,6 @@ import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import PowerDialogOrDrawer, {
   Action as BootAction
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { linodeInTransition } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
 import { NotificationDrawer } from 'src/features/NotificationCenter';
 import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
@@ -30,26 +28,28 @@ import {
 import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue/RescueDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
-import LinodeBusyStatus from '../LinodeSummary/LinodeBusyStatus';
 
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 
 const useStyles = makeStyles(() => ({
   '@keyframes blink': {
-    '0%': {
-      opacity: 1
-    },
-    '50%': {
+    '0%, 100%': {
       opacity: 0.25
     },
-    '100%': {
+    '35%, 65%': {
+      opacity: 0.45
+    },
+    '45%, 55%': {
+      opacity: 0.95
+    },
+    '50%': {
       opacity: 1
     }
   },
   root: {
     '& .statusOther:before': {
-      animation: '$blink 2.5s linear infinite'
+      animation: '$blink 1.25s ease-in-out infinite'
     }
   }
 }));
@@ -94,13 +94,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const notificationData = useNotificationData();
 
-  const {
-    linode,
-    linodeEvents,
-    linodeStatus,
-    linodeDisks,
-    linodeConfigs
-  } = props;
+  const { linode, linodeStatus, linodeDisks, linodeConfigs } = props;
 
   const [powerDialog, setPowerDialog] = React.useState<PowerDialogProps>({
     open: false,
@@ -262,9 +256,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
       setTagDrawer(tagDrawer => ({ ...tagDrawer, tags: _tags }));
     });
   };
-  const firstEventWithProgress = (linodeEvents || []).find(
-    eachEvent => typeof eachEvent.percent_complete === 'number'
-  );
   const { profile } = useProfile();
   const { _loading } = useReduxLoad(['volumes']);
   const { volumes } = useVolumes();
@@ -305,9 +296,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         openPowerActionDialog={openPowerActionDialog}
         openNotificationDrawer={openNotificationDrawer}
       />
-      {linodeInTransition(linodeStatus, firstEventWithProgress) && (
-        <LinodeBusyStatus />
-      )}
       <PowerDialogOrDrawer
         isOpen={powerDialog.open}
         action={powerDialog.bootAction}
@@ -367,7 +355,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
 
 interface LinodeContext {
   linodeStatus: LinodeStatus;
-  linodeEvents: Event[];
   linodeDisks: Disk[];
 }
 
@@ -375,7 +362,6 @@ export default compose<CombinedProps, {}>(
   withLinodeDetailContext<LinodeContext>(({ linode }) => ({
     linode,
     linodeStatus: linode.status,
-    linodeEvents: linode._events,
     linodeDisks: linode._disks,
     configs: linode._configs
   }))
