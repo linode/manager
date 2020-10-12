@@ -86,7 +86,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
       {Object.keys(config.interfaces).map(interfaceName => {
         const linodeInterface = linodeInterfaces.find(
           thisInterface =>
-            thisInterface.id === config.interfaces[interfaceName].id
+            thisInterface.id === config.interfaces[interfaceName]?.id
         );
 
         // Just a failsafe.
