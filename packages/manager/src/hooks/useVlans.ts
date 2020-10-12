@@ -4,14 +4,14 @@ import { ApplicationState } from 'src/store';
 import { State } from 'src/store/vlans/vlans.reducer';
 import {
   getAllVlans as _request,
-  disconnectVlan as _disconnect
+  detachVlan as _detach
 } from 'src/store/vlans/vlans.requests';
 import { Dispatch } from './types';
 
 export interface NodeBalancersProps {
   vlans: State;
   requestVLANs: () => Promise<VLAN[]>;
-  disconnectVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
+  detachVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
 }
 
 export const useVlans = () => {
@@ -20,10 +20,10 @@ export const useVlans = () => {
     (state: ApplicationState) => state.__resources.vlans
   );
   const requestVLANs = () => dispatch(_request({}));
-  const disconnectVlan = (vlanID: number, linodes: number[]) =>
-    dispatch(_disconnect({ vlanID, linodes }));
+  const detachVlan = (vlanID: number, linodes: number[]) =>
+    dispatch(_detach({ vlanID, linodes }));
 
-  return { vlans, requestVLANs, disconnectVlan };
+  return { vlans, requestVLANs, detachVlan };
 };
 
 export default useVlans;

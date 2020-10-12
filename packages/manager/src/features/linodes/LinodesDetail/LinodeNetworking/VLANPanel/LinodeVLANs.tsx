@@ -116,7 +116,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     number
   >(0);
 
-  const { vlans, disconnectVlan } = useVlans();
+  const { vlans, detachVlan } = useVlans();
 
   const { account } = useAccountManagement();
   const flags = useFlags();
@@ -235,7 +235,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
       />
       <RemoveVlanDialog
         open={removeModalOpen}
-        removeVlan={disconnectVlan}
+        removeVlan={detachVlan}
         selectedVlanID={selectedVlanID}
         selectedVlanLabel={selectedVlanLabel}
         linodeId={linodeId}
