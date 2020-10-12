@@ -13,6 +13,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { getInterfaces } from '@linode/api-v4/lib/linodes/interfaces';
 import VlanTableRow from './VlanTableRow';
+import { AttachVlanDrawer } from './AttachVlanDrawer';
 import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
 import RemoveVlanDialog from './RemoveVlanDialog';
 import useReduxLoad from 'src/hooks/useReduxLoad';
@@ -92,7 +93,7 @@ const vlanHeaders = [
 ];
 
 export const LinodeVLANs: React.FC<CombinedProps> = props => {
-  const { configs, linodeId, readOnly } = props;
+  const { configs, linodeId, linodeLabel, readOnly } = props;
 
   const classes = useStyles();
 
@@ -150,6 +151,17 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         setInterfaceDataLoading(false);
       });
   }, [linodeId]);
+
+  // Local state to manage drawer for attaching VLANs.
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [drawerError, setDrawerError] = React.useState<string | null>(null);
+  const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
+
+  const handleOpenDrawer = () => {
+    setDrawerError(null);
+    setDrawerLoading(true);
+    setDrawerOpen(true);
+  };
 
   React.useEffect(() => {
     // Request interfaces upon page first loading.
@@ -220,7 +232,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
-            onClick={() => null}
+            onClick={handleOpenDrawer}
             label="Attach a VLAN..."
             disabled={readOnly}
           />
@@ -242,18 +254,27 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         closeDialog={() => toggleRemoveModal(false)}
         resetInterfaces={requestInterfaces}
       />
+      <AttachVlanDrawer
+        open={drawerOpen}
+        closeDrawer={() => setDrawerOpen(false)}
+        error={drawerError}
+        loading={drawerLoading}
+        linodeLabel={linodeLabel}
+      />
     </div>
   ) : null;
 };
 
 interface LinodeContextProps {
   linodeId: number;
+  linodeLabel: string;
   configs: Config[];
   readOnly: boolean;
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
+  linodeLabel: linode.label,
   configs: linode._configs,
   readOnly: linode._permissions === 'read_only'
 }));
