@@ -88,7 +88,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
           initialOrder={{ order: 'asc', orderBy: 'label' }}
         />
       </div>
-      <AttachVLANDrawer />
+      <AttachVLANDrawer onClose={() => null} isOpen={true} vlanID={1071} />
     </React.Fragment>
   );
 };
