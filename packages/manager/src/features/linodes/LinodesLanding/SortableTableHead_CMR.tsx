@@ -13,9 +13,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
-    backgroundColor: theme.bg.controlHeader,
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    backgroundColor: theme.cmrBGColors.bgTableHeader
   },
   toggleButton: {
     padding: '0 10px',

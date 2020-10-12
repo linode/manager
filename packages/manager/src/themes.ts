@@ -13,6 +13,62 @@ export const light = (spacingOverride?: number) => {
   return createTheme(options);
 };
 
+const cmrBGColors = {
+  bgApp: '#3a3f46',
+  bgPrimaryNav: '#23262a',
+  bgPrimaryNavActive: '#0C0D0E',
+  bgSecondaryActions: '#2e3238',
+  bgSearchBar: '#515862',
+  bgPaper: '#2e3238',
+  bgPrimaryButton: '#3683dc',
+  // notification center, add a tag, breadcrumb
+  bgSecondaryButton: '#364863',
+  bgTableHeader: '#33373e',
+  bgTableBody: '#2e3238',
+  bgStatusChip: '#454b54',
+  bgBillingSummary: '#2d3d53',
+  bgBreadcrumbParent: '#364863',
+  bgAccessRow: '#454b54',
+  bgAccessHeader: '#3a3f46'
+};
+
+const cmrTextColors = {
+  textAction: '#74aae6',
+  textBillingSummary: '#f2f2f2',
+  textTab: '#74aae6',
+  textTabActive: '#74aae6',
+  textStatusChip: '#e6e6e6',
+  linkActiveMedium: '#2575d0',
+  linkActiveLight: '#74aae6',
+  headlineStatic: '#e6e6e6',
+  headlineActive: '#abb1ba',
+  tableStatic: '#e6e6e6',
+  textTagButton: '#9caec9',
+  textAccessTable: '#acb0b4',
+  textAccessCode: '#e4e5e7',
+  textBreadcrumbParent: '#ffffff'
+};
+
+const cmrBorderColors = {
+  borderNotificationCenter: '#486084',
+  borderTypography: '#454b54',
+  borderTabs: '#5c6470',
+  borderTabActive: '#74aae6',
+  borderBillingSummary: '#243142',
+  borderBalance: '#4d79b2',
+  borderTable: '#3a3f46'
+};
+
+const cmrIconColors = {
+  iStatic: '#abb1ba',
+  iActiveMedium: '#2575d0',
+  iActiveLight: '#74aae6',
+  iGreen: '#17cf73',
+  iOrange: '#ffb31a',
+  // Offline status
+  iGrey: '#dbdde1'
+};
+
 const primaryColors = {
   main: '#3683dc',
   light: '#4d99f1',
@@ -22,11 +78,6 @@ const primaryColors = {
   divider: '#222222',
   offBlack: '#fff',
   white: '#222'
-};
-
-const genericStatusPillStyle = {
-  backgroundColor: 'rgba(0, 0, 0, 0.2)',
-  color: '#fff'
 };
 
 const iconCircleAnimation = {
@@ -43,6 +94,29 @@ const iconCircleAnimation = {
   '& .insidePath *': {
     transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
     stroke: 'white'
+  }
+};
+
+// Used for styling status pills as seen on Linodes
+const genericStatusPillStyle = {
+  backgroundColor: cmrBGColors.bgStatusChip,
+  color: cmrTextColors.textStatusChip,
+
+  fontSize: '1.1rem',
+  padding: 10,
+  '&:before': {
+    display: 'inline-block',
+    borderRadius: '50%',
+    content: '""',
+    height: 16,
+    width: 16,
+    minWidth: 16,
+    marginRight: 8
+  },
+  [breakpoints.down('sm')]: {
+    fontSize: 14,
+    padding: '15px 12px',
+    borderRadius: 15
   }
 };
 
@@ -131,11 +205,12 @@ const darkThemeOptions = {
     tagIcon: '#9caec9',
     tagBorder: '#2e3238'
   },
+  cmrBGColors,
+  cmrBorderColors,
+  cmrTextColors,
+  cmrIconColors,
   animateCircleIcon: {
     ...iconCircleAnimation
-  },
-  applyStatusPillStyles: {
-    ...genericStatusPillStyle
   },
   notificationList: {
     borderBottom: '1px solid #f4f4f4',
@@ -175,6 +250,9 @@ const darkThemeOptions = {
     subtitle1: {
       color: primaryColors.text
     }
+  },
+  applyStatusPillStyles: {
+    ...genericStatusPillStyle
   },
   overrides: {
     MuiAppBar: {
@@ -452,7 +530,8 @@ const darkThemeOptions = {
     },
     MuiPaper: {
       root: {
-        backgroundColor: '#32363c'
+        // originally '#32363c'
+        backgroundColor: cmrBGColors.bgPaper
       }
     },
     MuiPopover: {

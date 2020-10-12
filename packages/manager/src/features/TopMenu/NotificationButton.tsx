@@ -9,18 +9,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     order: 3,
     width: 74,
     height: 34,
-    padding: `0px theme.spacing(2)`,
-    backgroundColor: theme.bg.lightBlue, // '#e5f1ff',
-    border: 'none',
+    padding: `0px ${theme.spacing(2)}`,
+    backgroundColor: theme.cmrBGColors.bgSecondaryButton,
+    border: `1px solid ${theme.cmrBorderColors.borderNotificationCenter}`,
     borderRadius: 3,
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
     justifyContent: 'space-around',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    '& svg': {
+      color: theme.cmrTextColors.textAction
+    }
   },
   text: {
-    color: '#3683dc',
+    color: theme.cmrTextColors.textAction,
     fontSize: 16,
     lineHeight: 1.25
   }

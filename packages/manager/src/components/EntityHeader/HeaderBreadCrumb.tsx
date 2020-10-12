@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 50,
     position: 'relative',
     alignItems: 'center',
-    backgroundColor: theme.bg.lightBlue,
+    backgroundColor: theme.cmrBGColors.bgBreadcrumbParent,
     marginRight: theme.spacing(2),
 
     '&:before': {
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: 0,
       width: 15,
       height: '50%',
-      background: `linear-gradient(to right top, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 50%, transparent 46.1%)`,
+      background: `linear-gradient(to right top, ${theme.cmrBGColors.bgBreadcrumbParent} 0%, ${theme.cmrBGColors.bgBreadcrumbParent} 50%, transparent 46.1%)`,
       zIndex: 1
     },
     '&:after': {
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       bottom: 0,
       width: 15,
       height: '50%',
-      background: `linear-gradient(to right bottom, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 50%, transparent 46.1%)`,
+      background: `linear-gradient(to right bottom, ${theme.cmrBGColors.bgBreadcrumbParent} 0%, ${theme.cmrBGColors.bgBreadcrumbParent} 50%, transparent 46.1%)`,
       zIndex: 1
     }
   },
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: 0,
       width: 1,
       height: '100%',
-      backgroundColor: theme.bg.lightBlue,
+      backgroundColor: theme.cmrBGColors.bgBreadcrumbParent,
       zIndex: 2
     }
   },
@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: 0,
       width: 15,
       height: '50%',
-      background: `linear-gradient(to right top, #f4f5f6 0%, #f4f5f6 50%, transparent 46.1%)`,
+      background: `linear-gradient(to right top, ${theme.cmrBorderColors.borderTable} 0%, ${theme.cmrBorderColors.borderTable} 50%, transparent 46.1%)`,
       zIndex: 0
     },
     '&:after': {
@@ -97,23 +97,25 @@ const useStyles = makeStyles((theme: Theme) => ({
       bottom: 0,
       width: 15,
       height: '50%',
-      background: `linear-gradient(to right bottom, #f4f5f6 0%, #f4f5f6 50%, transparent 46.1%)`,
+      background: `linear-gradient(to right bottom, ${theme.cmrBorderColors.borderTable} 0%, ${theme.cmrBorderColors.borderTable} 50%, transparent 46.1%)`,
       zIndex: 0
     }
   },
   parentLinkText: {
-    color: theme.color.blue
+    color: theme.cmrTextColors.textBreadcrumbParent
   },
   parentTitleText: {
     paddingLeft: theme.spacing(),
-    paddingRight: theme.spacing(2) - 2
+    paddingRight: theme.spacing(2) - 2,
+    color: theme.cmrTextColors.headlineStatic
   },
   titleText: {
     display: 'flex',
     alignItems: 'center',
     paddingRight: theme.spacing(2) - 2,
     paddingLeft: theme.spacing(2) - 2,
-    lineHeight: 1.2
+    lineHeight: 1.2,
+    color: theme.cmrTextColors.headlineStatic
   }
 }));
 

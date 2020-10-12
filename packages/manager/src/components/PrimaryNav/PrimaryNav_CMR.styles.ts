@@ -4,7 +4,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuGrid: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.bg.primaryNavPaper,
+    backgroundColor: theme.cmrBGColors.bgPrimaryNav,
     borderColor: theme.bg.primaryNavBorder,
     boxShadow: 'none',
     height: '100%',
@@ -106,10 +106,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: 15,
     position: 'relative',
     '&:hover': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     },
     '&:focus': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     },
     '& .icon': {
       [theme.breakpoints.down('md')]: {
@@ -136,7 +136,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderRadius: 0
     },
     '&:hover': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     },
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 7.5,
@@ -170,10 +170,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     '&:hover': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     },
     '&:focus': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     }
   },
   menuButton: {
@@ -182,7 +182,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: 1,
     padding: 0,
     '&[data-reach-menu-button]': {
-      backgroundColor: theme.bg.primaryNavPaper,
+      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
       border: 'none',
       borderRadius: 0,
       color: theme.color.primaryNavText,
@@ -193,7 +193,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: 6,
       textTransform: 'inherit',
       '&[aria-expanded="true"]': {
-        backgroundColor: theme.bg.primaryNavActiveBG,
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
         '& $caret': {
           transform: 'rotate(180deg)'
         }
@@ -204,10 +204,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     '&:hover': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     },
     '&:focus': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     }
   },
   caret: {
@@ -224,7 +224,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menuItemList: {
     '&[data-reach-menu-items]': {
-      backgroundColor: theme.bg.primaryNavPaper,
+      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
       border: 'none',
       padding: 0,
       whiteSpace: 'normal'
@@ -234,7 +234,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item]': {
       display: 'flex',
       alignItems: 'center',
-      backgroundColor: theme.bg.primaryNavPaper,
+      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
       color: theme.color.primaryNavText,
       fontSize: '1rem',
       paddingTop: 12,
@@ -242,10 +242,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: 15,
       paddingRight: 40,
       '&:hover': {
-        backgroundColor: theme.bg.primaryNavActiveBG
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
       },
       '&:focus': {
-        backgroundColor: theme.bg.primaryNavActiveBG
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
       },
       [theme.breakpoints.down('sm')]: {
         paddingTop: 10,
@@ -254,7 +254,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     '&[data-reach-menu-item][data-selected]': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     }
   }
 }));
