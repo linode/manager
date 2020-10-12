@@ -19,23 +19,21 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - run: |
-            echo "pluginsFile=false" >> $GITHUB_ENV
-            echo "REACT_APP_LOGIN_ROOT=https://login.linode.com" >> $GITHUB_ENV
-            echo "REACT_APP_API_ROOT=https://api.linode.com/v4" >> $GITHUB_ENV
-            echo "REACT_APP_APP_ROOT=http://localhost:3000" >> $GITHUB_ENV
-            echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> $GITHUB_ENV
-            echo "REACT_APP_CLIENT_ID=d2cd3ba62e7315bd791e" >> $GITHUB_ENV
-            echo "MANAGER_OAUTH=87ccfed589d2006972a91d43ff8af21a4c83a817c33b5730aedbbe45f309b319" >> $GITHUB_ENV
+            echo "pluginsFile=false" >> ./packages/manager/.env
+            echo "REACT_APP_LOGIN_ROOT=https://login.linode.com" >> ./packages/manager/.env
+            echo "REACT_APP_API_ROOT=https://api.linode.com/v4" >> ./packages/manager/.env
+            echo "REACT_APP_APP_ROOT=http://localhost:3000" >> ./packages/manager/.env
+            echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
+            echo "REACT_APP_CLIENT_ID=d2cd3ba62e7315bd791e" >> ./packages/manager/.env
+            echo "MANAGER_OAUTH=87ccfed589d2006972a91d43ff8af21a4c83a817c33b5730aedbbe45f309b319" >> ./packages/manager/.env
             yarn up &
        
       - name: Run tests
         uses: cypress-io/github-action@v2
         with:
           working-directory: packages/manager
-          config-file: false
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 1000
-          install: false
         # env:
         #   REACT_APP_LOGIN_ROOT: https://login.linode.com
         #   REACT_APP_API_ROOT: https://api.linode.com/v4
@@ -48,4 +46,3 @@ jobs:
           # working-directory: packages/manager
           # browser: chrome
           # headless: true
-
