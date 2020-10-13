@@ -6,7 +6,7 @@ import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import { makeStyles } from 'src/components/core/styles';
 import EntityHeader from 'src/components/EntityHeader';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
-// import { vlanFactory } from 'src/factories/vlans';
+import useVlans from 'src/hooks/useVlans';
 import AttachVLANDrawer from '../AttachVLANDrawer';
 import VlanDetailRow from './VlanDetailRow';
 import VlanEntityDetail from './VlanEntityDetail';
@@ -21,6 +21,16 @@ type CombinedProps = RouteComponentProps<{}>;
 
 const VlanDetail: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { vlans, requestVLANs } = useVlans();
+  const randomVlan = Object.values(vlans.itemsById)[0];
+
+  React.useEffect(() => {
+    requestVLANs();
+  }, []);
+
+  if (vlans.lastUpdated === 0) {
+    return null;
+  }
 
   const headers = [
     {
@@ -92,9 +102,9 @@ const VlanDetail: React.FC<CombinedProps> = props => {
       <AttachVLANDrawer
         onClose={() => null}
         isOpen={true}
-        vlanID={1071}
-        linodes={[]}
-        region={'us-east'}
+        vlanID={randomVlan.id}
+        linodes={randomVlan.linodes}
+        region={randomVlan.region}
       />
     </React.Fragment>
   );
