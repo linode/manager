@@ -30,7 +30,7 @@ jobs:
             echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
             echo "REACT_APP_CLIENT_ID=d2cd3ba62e7315bd791e" >> ./packages/manager/.env
             echo "MANAGER_OAUTH=87ccfed589d2006972a91d43ff8af21a4c83a817c33b5730aedbbe45f309b319" >> ./packages/manager/.env
-            echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> ./packages/manager/.env
+            echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
             yarn up &
        
       - name: Run tests
