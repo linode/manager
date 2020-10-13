@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -24,6 +23,15 @@ const useStyles = makeStyles(() => ({
 
 const VlanDetail: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+
+  const { vlans } = useVlans();
+  useReduxLoad(['vlans']);
+
+  // Source the VLAN's ID from the /:id path param.
+  const thisVlanID = props.match.params.id;
+
+  // Find the VLAN in the store.
+  const thisVlan = vlans.itemsById[thisVlanID];
 
   const headers = [
     {
@@ -69,15 +77,6 @@ const VlanDetail: React.FC<CombinedProps> = props => {
     error: undefined
   };
 
-  const { vlans } = useVlans();
-  useReduxLoad(['vlans']);
-
-  // Source the VLAN's ID from the /:id path param.
-  const thisVlanID = props.match.params.id;
-
-  // Find the VLAN in the store.
-  const thisVlan = vlans.itemsById[thisVlanID];
-
   if (vlans.error.read) {
     return (
       <ErrorState errorText="There was a problem retrieving your VLAN. Please try again." />
@@ -94,7 +93,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <VlanEntityDetail vlan={thisVlan} openTagDrawer={() => {}} />
+      <VlanEntityDetail vlan={thisVlan} />
       <div style={{ marginTop: 20 }}>
         <EntityHeader
           title="Linodes"

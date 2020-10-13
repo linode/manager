@@ -1,7 +1,8 @@
 import { VLAN } from '@linode/api-v4/lib/vlans';
-import * as React from 'react';
 import * as classnames from 'classnames';
 // import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { compose } from 'recompose';
 import DeleteIcon from 'src/assets/icons/delete.svg';
 // import EditIcon from 'src/assets/icons/edit.svg';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
@@ -10,31 +11,31 @@ import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
+import Hidden from 'src/components/core/Hidden';
 import IconTextLink from 'src/components/IconTextLink';
 // import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
+import withVLANs, { Props as VLANProps } from 'src/containers/vlans.container';
+import VlanDialog from 'src/features/Vlans/VlanLanding/VlanDialog';
 // import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 // import formatDate from 'src/utilities/formatDate';
-import Hidden from 'src/components/core/Hidden';
 
 interface VlanEntityDetailProps {
   vlan: VLAN;
-  // openDialog: OpenDialog;
-  openTagDrawer: (tags: string[]) => void;
+  // openTagDrawer: (tags: string[]) => void;
 }
 
-const VlanEntityDetail: React.FC<VlanEntityDetailProps> = props => {
-  const { vlan } = props;
+export type CombinedProps = VlanEntityDetailProps & VLANProps;
+
+const VlanEntityDetail: React.FC<CombinedProps> = props => {
+  const { vlan, deleteVlan } = props;
 
   const regionDisplay = dcDisplayNames[vlan.region] ?? null;
 
   return (
     <EntityDetail
       header={
-        <Header
-          label={vlan.description}
-          // openDialog={openDialog}
-        />
+        <Header id={vlan.id} label={vlan.description} deleteVlan={deleteVlan} />
       }
       footer={
         <Footer
@@ -50,14 +51,20 @@ const VlanEntityDetail: React.FC<VlanEntityDetailProps> = props => {
   );
 };
 
-export default React.memo(VlanEntityDetail);
+// export default React.memo(VlanEntityDetail);
+
+export default compose<CombinedProps, {}>(
+  React.memo,
+  withVLANs<{}, CombinedProps>()
+)(VlanEntityDetail);
 
 // =============================================================================
 // Header
 // =============================================================================
 export interface HeaderProps {
+  id: number;
   label: string;
-  // openDialog: OpenDialog;
+  deleteVlan: any;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -101,50 +108,70 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Header: React.FC<HeaderProps> = props => {
-  const {
-    label
-    // openDialog,
-  } = props;
-
   const classes = useHeaderStyles();
 
+  const { id, label, deleteVlan } = props;
+
+  const [modalOpen, toggleModal] = React.useState<boolean>(false);
+  const [selectedVlanID, setSelectedVlanID] = React.useState<
+    number | undefined
+  >(undefined);
+  const [selectedVlanLabel, setSelectedVlanLabel] = React.useState<string>('');
+
+  const handleOpenDeleteVlanModal = (id: number, label: string) => {
+    setSelectedVlanID(id);
+    setSelectedVlanLabel(label);
+    toggleModal(true);
+  };
+
   return (
-    <EntityHeader
-      parentLink="/vlans"
-      parentText="Virtual LANs"
-      iconType="linode"
-      actions={
-        <Hidden mdUp>
-          <DocumentationButton hideText href="https://www.linode.com/" />
-        </Hidden>
-      }
-      title={label}
-      bodyClassName={classes.body}
-      body={
-        <>
-          <div className={classes.actionItemsOuter}>
-            {/* Not implemented by API yet */}
-            {/* <IconTextLink
+    <>
+      <EntityHeader
+        parentLink="/vlans"
+        parentText="Virtual LANs"
+        iconType="linode"
+        actions={
+          <Hidden mdUp>
+            <DocumentationButton hideText href="https://www.linode.com/" />
+          </Hidden>
+        }
+        title={label}
+        bodyClassName={classes.body}
+        body={
+          <>
+            <div className={classes.actionItemsOuter}>
+              {/* Not implemented by API yet */}
+              {/* <IconTextLink
               className={classes.actionItem}
               SideIcon={EditIcon}
               text="Edit"
               title="Edit"
               to={`/`}
             /> */}
-            <IconTextLink
-              className={classes.actionItem}
-              SideIcon={DeleteIcon}
-              text="Delete"
-              title="Delete"
-              to={`/`}
-            />
-          </div>
-          <Hidden smDown>
-            <DocumentationButton href="https://www.linode.com/" />
-          </Hidden>
-        </>
-      }
-    />
+              <IconTextLink
+                className={classes.actionItem}
+                SideIcon={DeleteIcon}
+                text="Delete"
+                title="Delete"
+                onClick={() => {
+                  handleOpenDeleteVlanModal(id, label);
+                }}
+              />
+            </div>
+            <Hidden smDown>
+              <DocumentationButton href="https://www.linode.com/" />
+            </Hidden>
+          </>
+        }
+      />
+      <VlanDialog
+        open={modalOpen}
+        deleteVlan={deleteVlan}
+        selectedVlanID={selectedVlanID}
+        selectedVlanLabel={selectedVlanLabel}
+        closeDialog={() => toggleModal(false)}
+      />
+    </>
   );
 };
 
