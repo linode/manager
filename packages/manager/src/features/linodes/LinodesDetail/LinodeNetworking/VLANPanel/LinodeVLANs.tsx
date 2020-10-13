@@ -155,12 +155,14 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
   // Local state to manage drawer for attaching VLANs.
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
-  const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
 
   const handleOpenDrawer = () => {
     setDrawerError(null);
-    setDrawerLoading(true);
     setDrawerOpen(true);
+  };
+
+  const onClose = () => {
+    setDrawerOpen(false);
   };
 
   React.useEffect(() => {
@@ -192,6 +194,11 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         })
         .filter(Boolean),
     [interfaceData, vlans.itemsById, configs, linodeId, readOnly]
+  );
+
+  const vlansAvailableForAttaching = getVlansAvailableForAttaching(
+    vlans,
+    vlanData
   );
 
   const handleOpenRemoveVlanModal = (id: number, label: string) => {
@@ -258,8 +265,12 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         open={drawerOpen}
         closeDrawer={() => setDrawerOpen(false)}
         error={drawerError}
-        loading={drawerLoading}
         linodeLabel={linodeLabel}
+        linodeId={linodeId}
+        vlans={vlansAvailableForAttaching}
+        onClose={onClose}
+        readOnly={readOnly}
+        resetInterfaces={requestInterfaces}
       />
     </div>
   ) : null;
@@ -297,6 +308,22 @@ export const getInterfaceName = (
     }
   }
   return null;
+};
+
+const getVlansAvailableForAttaching = (vlans: any, vlanData: any) => {
+  const vlanItems = clone(vlans.itemsById);
+
+  vlanData.forEach((vlanDatum: { id: string | number }) => {
+    const alreadyAttached = vlanItems[vlanDatum.id];
+
+    if (alreadyAttached) {
+      delete vlanItems[vlanDatum.id];
+    } else {
+      return;
+    }
+  });
+
+  return vlanItems;
 };
 
 export interface VlanData extends VLAN {
