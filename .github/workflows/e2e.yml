@@ -6,6 +6,11 @@ on:
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # run 3 copies of the current job in parallel
+        containers: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -36,3 +41,5 @@ jobs:
           install: false
           browser: chrome
           headless: true
+          record: true
+          parallel: true
