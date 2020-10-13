@@ -49,13 +49,13 @@ export const AttachVlanDrawer: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const [selected, setSelected] = React.useState<number | null>(null);
+  const [selected, setSelected] = React.useState<number>(0);
   const [submitting, setSubmitting] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState(error);
 
   React.useEffect(() => {
     if (open) {
-      setSelected(null);
+      setSelected(0);
       setErrorMessage('');
     }
   }, [open]);
