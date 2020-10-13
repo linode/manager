@@ -6,6 +6,7 @@ import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import { makeStyles } from 'src/components/core/styles';
 import EntityHeader from 'src/components/EntityHeader';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
+import { useOpenClose } from 'src/hooks/useOpenClose';
 import useVlans from 'src/hooks/useVlans';
 import AttachVLANDrawer from '../AttachVLANDrawer';
 import VlanDetailRow from './VlanDetailRow';
@@ -23,6 +24,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { vlans, requestVLANs } = useVlans();
   const randomVlan = Object.values(vlans.itemsById)[0];
+  const dialog = useOpenClose();
 
   React.useEffect(() => {
     requestVLANs();
@@ -87,7 +89,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
             <AddNewLink
               className={classes.link}
               label="Add a Linode..."
-              onClick={() => {}}
+              onClick={dialog.open}
             />
           }
         />
@@ -100,8 +102,8 @@ const VlanDetail: React.FC<CombinedProps> = props => {
         />
       </div>
       <AttachVLANDrawer
-        onClose={() => null}
-        isOpen={true}
+        onClose={dialog.close}
+        isOpen={dialog.isOpen}
         vlanID={randomVlan.id}
         linodes={randomVlan.linodes}
         region={randomVlan.region}
