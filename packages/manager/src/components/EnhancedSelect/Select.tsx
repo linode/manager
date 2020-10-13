@@ -21,7 +21,6 @@ import MenuList from './components/MenuList';
 import MultiValueLabel from './components/MultiValueLabel';
 import MultiValueRemove from './components/MultiValueRemove';
 import NoOptionsMessage from './components/NoOptionsMessage';
-// import Option from './components/Option';
 import Control from './components/SelectControl';
 import Placeholder from './components/SelectPlaceholder';
 import { ClassNames, styles, reactSelectStyles } from './Select.styles';
