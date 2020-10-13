@@ -78,8 +78,8 @@ export const initSentry = () => {
         /localhost:3000{1}/g
       ],
       blacklistUrls: [
-        // Newrelic script
-        /newrelic\.js/i,
+        // New Relic script
+        /new-relic\.js/i,
         // Chrome extensions
         /extensions\//i,
         /^chrome:\/\//i
