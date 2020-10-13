@@ -34,7 +34,9 @@ export const ContactsTableContent: React.FC<CombinedProps> = props => {
   } = props;
 
   if (loading && lastUpdated === 0) {
-    return <TableRowLoading colSpan={6} firstColWidth={15} oneLine />;
+    return (
+      <TableRowLoading colSpan={6} widths={[15, 17, 17, 17, 17, 17]} oneLine />
+    );
   }
 
   if (error) {

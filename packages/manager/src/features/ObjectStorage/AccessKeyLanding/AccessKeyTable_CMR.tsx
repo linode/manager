@@ -82,7 +82,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
     }
 
     if (loading) {
-      return <TableRowLoading colSpan={3} firstColWidth={50} oneLine />;
+      return <TableRowLoading colSpan={3} widths={[50]} oneLine />;
     }
 
     if (error) {
