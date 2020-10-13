@@ -2,6 +2,7 @@ import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as classnames from 'classnames';
 // import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import DeleteIcon from 'src/assets/icons/delete.svg';
 // import EditIcon from 'src/assets/icons/edit.svg';
@@ -107,6 +108,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
 
 const Header: React.FC<HeaderProps> = props => {
   const classes = useHeaderStyles();
+  const history = useHistory();
 
   const { id, label, deleteVlan } = props;
 
@@ -120,6 +122,13 @@ const Header: React.FC<HeaderProps> = props => {
     setSelectedVlanID(id);
     setSelectedVlanLabel(label);
     toggleModal(true);
+  };
+
+  const handleCloseDeleteVlanModal = () => {
+    history.push({
+      pathname: `/vlans/`
+    });
+    toggleModal(false);
   };
 
   return (
@@ -167,7 +176,7 @@ const Header: React.FC<HeaderProps> = props => {
         deleteVlan={deleteVlan}
         selectedVlanID={selectedVlanID}
         selectedVlanLabel={selectedVlanLabel}
-        closeDialog={() => toggleModal(false)}
+        closeDialog={handleCloseDeleteVlanModal}
       />
     </>
   );
