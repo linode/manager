@@ -7,7 +7,6 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import getAbuseTicket from 'src/store/selectors/getAbuseTicket';
 import { MapState } from 'src/store/types';
-import { abuseTicketNotificationFactory } from 'src/factories/notification';
 import { compose } from 'recompose';
 
 interface ReduxStateProps {
@@ -18,8 +17,7 @@ type CombinedProps = ReduxStateProps;
 
 export class AbuseTicketBanner extends React.Component<CombinedProps> {
   render() {
-    const abuseTickets = abuseTicketNotificationFactory.buildList(1);
-    // const { abuseTickets } = this.props;
+    const { abuseTickets } = this.props;
 
     if (!abuseTickets || abuseTickets.length === 0) {
       return null;
