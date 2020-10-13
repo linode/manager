@@ -22,6 +22,14 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const { connectVlan } = useVlans();
 
+  React.useEffect(() => {
+    if (isOpen) {
+      setSelectedLinodes([]);
+      setError(undefined);
+      setSubmitting(false);
+    }
+  }, [isOpen]);
+
   const handleSubmit = () => {
     setSubmitting(true);
     connectVlan(vlanID, selectedLinodes)
@@ -32,13 +40,14 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
       .catch(error => {
         setSubmitting(false);
         setError(
-          getAPIErrorOrDefault(error, 'Unable to attach to VLAN')[0].reason
+          getAPIErrorOrDefault(error, 'Error attaching Linode to VLAN')[0]
+            .reason
         );
       });
   };
 
   return (
-    <Drawer title="Attach a Linode" open={isOpen}>
+    <Drawer title="Attach a Linode" open={isOpen} onClose={onClose}>
       {error && <Notice error text={error} />}
       <LinodeMultiSelect
         filteredLinodes={linodes}
