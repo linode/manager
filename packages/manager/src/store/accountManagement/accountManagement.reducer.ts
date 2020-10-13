@@ -19,11 +19,6 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
     return {
       ...state,
       isLargeAccount: action.payload
-      /**
-       * intentionally not resetting error state here because it will cause
-       * the PreferenceToggle.tsx component to re-render, causing the entire app
-       * to re-render unnecessarily
-       */
     };
   })
   .default(state => state);
