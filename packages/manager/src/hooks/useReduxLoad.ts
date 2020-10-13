@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
@@ -80,6 +81,15 @@ export const useReduxLoad = (
   const [_loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const state = useStore<ApplicationState>().getState();
+  /**
+   * Restricted users get a 403 from /lke/clusters,
+   * which gums up the works. We want to prevent that particular
+   * request for a restricted user.
+   */
+  const { _isRestrictedUser } = useAccountManagement();
+  if (_isRestrictedUser) {
+    requestMap.kubernetes = () => Promise.resolve([]);
+  }
 
   const mountedRef = useRef<boolean>(true);
 
