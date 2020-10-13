@@ -33,9 +33,7 @@ export const SSHAccessTableContent: React.FC<CombinedProps> = props => {
   const flags = useFlags();
 
   if (loading && lastUpdated === 0) {
-    return (
-      <TableRowLoading colSpan={6} widths={[30, 14, 14, 14, 14, 14]} oneLine />
-    );
+    return <TableRowLoading colSpan={6} widths={[30]} oneLine />;
   }
 
   if (error) {

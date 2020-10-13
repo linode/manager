@@ -760,7 +760,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             </TableHead>
             <TableBody>
               {this.state.ipv6Loading ? (
-                <TableRowLoading colSpan={4} widths={[30, 23, 23, 23]} />
+                <TableRowLoading colSpan={4} widths={[30]} />
               ) : this.state.ipv6Error ? (
                 <TableRowError colSpan={12} message={this.state.ipv6Error} />
               ) : (

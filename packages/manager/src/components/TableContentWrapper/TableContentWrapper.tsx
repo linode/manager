@@ -20,9 +20,7 @@ const TableContentWrapper: React.FC<CombinedProps> = props => {
   const { length, loading, emptyMessage, error, lastUpdated } = props;
 
   if (loading) {
-    return (
-      <TableRowLoading colSpan={6} widths={[25, 15, 15, 15, 15, 15]} oneLine />
-    );
+    return <TableRowLoading colSpan={6} widths={[25]} oneLine />;
   }
 
   if (error && error.length > 0) {
