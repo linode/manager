@@ -13,11 +13,9 @@ export const deepStringTransform = (
   }
 
   if (typeof value === 'object' && value !== null) {
-    const transformed = {};
-    Object.keys(value).forEach(key => {
-      transformed[key] = deepStringTransform(value[key], fn);
-    });
-    return transformed;
+    return Object.entries(value).reduce((acc, [key, _value]) => {
+      return { ...acc, [key]: deepStringTransform(_value, fn) };
+    }, {});
   }
 
   return value;
