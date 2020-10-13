@@ -23,6 +23,8 @@ import Toggle from 'src/components/Toggle';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import NodeBalancerConfigNode from './NodeBalancerConfigNode';
 import { NodeBalancerConfigNodeFields } from './types';
+import { NodeBalancerProxyProtocol } from '@linode/api-v4/lib/nodebalancers/types';
+import Link from 'src/components/Link';
 
 type ClassNames =
   | 'divider'
@@ -137,6 +139,9 @@ interface Props {
   protocol: 'http' | 'https' | 'tcp';
   onProtocolChange: (v: string) => void;
 
+  proxyProtocol: NodeBalancerProxyProtocol;
+  onProxyProtocolChange: (v: string) => void;
+
   healthCheckType: 'none' | 'connection' | 'http' | 'http_body';
   onHealthCheckTypeChange: (v: string) => void;
 
@@ -234,6 +239,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     if (protocol === 'https' && healthCheckType === 'connection') {
       this.props.onHealthCheckTypeChange('http');
     }
+  };
+
+  onProxyProtocolChange = (e: Item<string>) => {
+    this.props.onProxyProtocolChange(e.value);
   };
 
   onSessionStickinessChange = (e: Item<string>) =>
@@ -588,6 +597,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       port,
       privateKey,
       protocol,
+      proxyProtocol,
       sessionStickiness,
       sslCertificate,
       submitting,
@@ -614,6 +624,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         'configs',
         'port',
         'protocol',
+        'proxy_protocol',
         'ssl_cert',
         'ssl_key',
         'stickiness',
@@ -630,9 +641,21 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       { label: 'HTTPS', value: 'https' }
     ];
 
+    const proxyProtocolOptions = [
+      { label: 'None', value: 'none' },
+      { label: 'v1', value: 'v1' },
+      { label: 'v2', value: 'v2' }
+    ];
+
     const defaultProtocol = protocolOptions.find(eachProtocol => {
       return eachProtocol.value === protocol;
     });
+
+    const selectedProxyProtocol = proxyProtocolOptions.find(
+      eachProxyProtocol => {
+        return eachProxyProtocol.value === proxyProtocol;
+      }
+    );
 
     const algOptions = [
       { label: 'Round Robin', value: 'roundrobin' },
@@ -654,6 +677,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       return eachSession.value === sessionStickiness;
     });
 
+    const tcpSelected = protocol === 'tcp';
+
     return (
       <Grid item xs={12}>
         <Paper data-qa-label-header>
@@ -672,6 +697,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 errorMap.configs,
                 protocol,
                 errorMap.protocol,
+                proxyProtocol,
+                errorMap.proxy_protocol,
                 algorithm,
                 errorMap.algorithm,
                 sessionStickiness,
@@ -776,7 +803,39 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 </Grid>
               )}
 
-              <Grid item xs={6} md={3}>
+              {tcpSelected && (
+                <Grid item xs={6} md={3}>
+                  <Select
+                    options={proxyProtocolOptions}
+                    label="Proxy Protocol"
+                    inputId={`proxy-protocol-${configIdx}`}
+                    value={selectedProxyProtocol || proxyProtocolOptions[0]}
+                    onChange={this.onProxyProtocolChange}
+                    errorText={errorMap.proxy_protocol}
+                    errorGroup={forEdit ? `${configIdx}` : undefined}
+                    textFieldProps={{
+                      dataAttrs: {
+                        'data-qa-proxy-protocol-select': true
+                      }
+                    }}
+                    disabled={disabled}
+                    noMarginTop
+                    small
+                    isClearable={false}
+                  />
+                  <FormHelperText>
+                    Proxy Protocol preserves initial TCP connection information.
+                    Please consult{' '}
+                    <Link to="https://www.linode.com/docs/platform/nodebalancer/nodebalancer-proxypass-configuration/">
+                      our Proxy Protocol guide
+                    </Link>
+                    {` `}
+                    for information on the differences between each option.
+                  </FormHelperText>
+                </Grid>
+              )}
+
+              <Grid item xs={6} md={tcpSelected ? 6 : 3}>
                 <Select
                   options={algOptions}
                   label="Algorithm"

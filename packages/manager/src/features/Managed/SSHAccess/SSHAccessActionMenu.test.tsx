@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 import {
@@ -19,8 +19,6 @@ const props: CombinedProps = {
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn()
 };
-
-afterEach(cleanup);
 
 describe('SSH Access Action Menu', () => {
   it('should include basic actions', () => {

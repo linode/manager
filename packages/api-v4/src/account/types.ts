@@ -33,7 +33,9 @@ export type AccountCapability =
   | 'NodeBalancers'
   | 'Block Storage'
   | 'Object Storage'
-  | 'Kubernetes';
+  | 'Kubernetes'
+  | 'Cloud Firewall'
+  | 'Vlans';
 
 export interface AccountSettings {
   managed: boolean;
@@ -125,6 +127,12 @@ export interface NetworkUtilization {
   quota: number;
 }
 
+export interface NetworkTransfer {
+  bytes_in: number;
+  bytes_out: number;
+  bytes_total: number;
+}
+
 export interface CancelAccount {
   survey_link: string;
 }
@@ -134,6 +142,7 @@ export interface CancelAccountPayload {
 }
 
 export type NotificationType =
+  | 'billing_email_bounce'
   | 'migration_scheduled'
   | 'migration_pending'
   | 'reboot_scheduled'
@@ -143,7 +152,8 @@ export type NotificationType =
   | 'ticket_important'
   | 'ticket_abuse'
   | 'notice'
-  | 'promotion';
+  | 'promotion'
+  | 'user_email_bounce';
 
 export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
@@ -172,6 +182,7 @@ export type EventAction =
   | 'backups_enable'
   | 'backups_restore'
   | 'community_like'
+  | 'community_mention'
   | 'community_question_reply'
   | 'credit_card_updated'
   | 'disk_create'
@@ -269,10 +280,11 @@ export interface Event {
   read: boolean;
   seen: boolean;
   status: EventStatus;
-  time_remaining: null | number;
+  time_remaining: null | string;
   username: string;
   secondary_entity: Entity | null;
   _initial?: boolean;
+  message: string | null;
 }
 /**
  * Represents an event which has an entity. For use with type guards.

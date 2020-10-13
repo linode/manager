@@ -9,7 +9,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -29,11 +28,10 @@ import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import SelectPlanPanel, {
-  ExtendedType
-} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
+import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
@@ -43,9 +41,9 @@ import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissio
 import { EntityError } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { GetAllData } from 'src/utilities/getAll';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames =
   | 'root'
@@ -113,7 +111,6 @@ interface State {
 
 type CombinedProps = Props &
   WithTypesProps &
-  RouteComponentProps &
   WithStyles<ClassNames> &
   DispatchProps &
   WithSnackbarProps &
@@ -127,35 +124,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     submitting: false
   };
 
-  static extendType = (type: LinodeType): ExtendedType => {
-    const {
-      label,
-      memory,
-      vcpus,
-      disk,
-      price: { monthly, hourly }
-    } = type;
-
-    const isGPU = type.class === 'gpu';
-
-    return {
-      ...type,
-      heading: label,
-      subHeadings: [
-        `$${monthly}/mo ($${isGPU ? hourly.toFixed(2) : hourly}/hr)`,
-        typeLabelDetails(memory, disk, vcpus)
-      ]
-    };
-  };
-
   onSubmit = () => {
     const {
       linodeId,
       linodeType,
       enqueueSnackbar,
-      history,
       updateLinode,
-      currentTypesData
+      typesData
     } = this.props;
     const { selectedId } = this.state;
 
@@ -166,7 +141,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const isSmaller = isSmallerThanCurrentPlan(
       selectedId,
       linodeType || '',
-      currentTypesData
+      typesData
     );
 
     this.setState({
@@ -196,7 +171,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         // go away.
         updateLinode(linodeId);
 
-        history.push(`/linodes/${linodeId}/summary`);
+        this.props.onClose();
       })
       .catch(errorResponse => {
         const error = getAPIErrorOrDefault(
@@ -244,8 +219,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      currentTypesData,
-      deprecatedTypesData,
+      typesData,
       linodeType,
       permissions,
       classes,
@@ -255,9 +229,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeLabel
     } = this.props;
     const { confirmationText, submissionError } = this.state;
-    const type = [...currentTypesData, ...deprecatedTypesData].find(
-      t => t.id === linodeType
-    );
+    const type = typesData.find(t => t.id === linodeType);
 
     const hostMaintenance = linodeStatus === 'stopped';
     const unauthorized = permissions === 'read_only';
@@ -282,7 +254,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const isSmaller = isSmallerThanCurrentPlan(
       this.state.selectedId,
       linodeType || '',
-      currentTypesData
+      typesData
     );
 
     return (
@@ -293,6 +265,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         open={this.props.open}
         onClose={this.props.onClose}
         fullWidth
+        fullHeight
         maxWidth="md"
       >
         {unauthorized && <LinodePermissionsError />}
@@ -318,7 +291,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         <div className={classes.selectPlanPanel}>
           <SelectPlanPanel
             currentPlanHeading={currentPlanHeading}
-            types={this.props.currentTypesData}
+            types={typesData.filter(
+              thisType => !thisType.isDeprecated && !thisType.isShadowPlan
+            )}
             onSelect={this.handleSelectPlan}
             selectedID={this.state.selectedId}
             disabled={tableDisabled}
@@ -406,21 +381,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-interface WithTypesProps {
-  currentTypesData: ExtendedType[];
-  deprecatedTypesData: ExtendedType[];
-}
-
-const withTypes = connect((state: ApplicationState) => ({
-  currentTypesData: state.__resources.types.entities
-    .filter(eachType => eachType.successor === null)
-    .map(LinodeResize.extendType),
-
-  deprecatedTypesData: state.__resources.types.entities
-    .filter(eachType => eachType.successor !== null)
-    .map(LinodeResize.extendType)
-}));
-
 interface DispatchProps {
   updateLinode: (id: number) => void;
   getLinodeDisks: (linodeId: number) => Promise<GetAllData<Disk>>;
@@ -459,6 +419,10 @@ const mapStateToProps: MapStateToProps<StateProps, Props> = (
   const linode = state.__resources.linodes.itemsById[linodeId];
   const linodeDisks = state.__resources.linodeDisks;
   const profile = state.__resources.profile;
+
+  if (!linode) {
+    return {};
+  }
 
   return {
     linodeId: linode.id,
@@ -531,6 +495,5 @@ export default compose<CombinedProps, Props>(
   withTypes,
   styled,
   withSnackbar,
-  withRouter,
   connected
 )(LinodeResize);

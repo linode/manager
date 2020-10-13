@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.13.1",
+  "version": "1.22.1",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -16,15 +16,18 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@linode/api-v4": "^0.28.0",
+    "@linode/api-v4": "^0.35.0",
     "@material-ui/core": "^4.4.2",
     "@material-ui/icons": "^4.4.1",
     "@material-ui/lab": "^4.0.0-alpha.29",
     "@material-ui/styles": "^4.4.1",
-    "@reach/listbox": "^0.10.4",
-    "@reach/menu-button": "^0.9.1",
+    "@reach/combobox": "^0.11.2",
+    "@reach/listbox": "^0.11.2",
+    "@reach/menu-button": "^0.11.2",
+    "@reach/popover": "^0.10.5",
     "@reach/router": "^1.3.3",
-    "@sentry/browser": "~5.10.2",
+    "@reach/tabs": "^0.10.5",
+    "@sentry/browser": "~5.20.1",
     "algoliasearch": "^3.30.0",
     "axios": "~0.19.0",
     "axios-mock-adapter": "^1.15.0",
@@ -71,7 +74,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "rxjs": "^5.5.6",
-    "sanitize-html": "~1.22.1",
+    "sanitize-html": "~1.27.4",
     "search-string": "^3.1.0",
     "showdown": "^1.9.1",
     "throttle-debounce": "^2.0.0",
@@ -101,10 +104,10 @@
     "storyshots:update": "export UPDATE=-u && docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && unset UPDATE && docker-compose -f storyshots.yml down -v",
     "storyshots:test": "npx jest --config ./.storybook/storyshots.jest.config.js src/components/Storyshots.test.tsx --env=jsdom",
     "build-storybook": "build-storybook",
+    "cy:run": "cypress run -b chrome",
     "cy:e2e": "cypress run --headless -b chrome",
     "cy:debug": "cypress open",
-    "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.js",
-    "serve": "node testServer.js",
+    "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "selenium:install": "yarn run selenium-standalone install --config=./e2e/config/selenium-config.js",
     "selenium": "yarn selenium:install && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
     "e2e": "npx wdio ./e2e/config/wdio.conf.js",
@@ -126,8 +129,6 @@
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-typescript": "^7.10.1",
     "@babel/register": "^7.10.1",
-    "@hapi/hapi": "^18.4.0",
-    "@hapi/inert": "^6.0.1",
     "@storybook/addon-actions": "~5.3.7",
     "@storybook/addon-knobs": "~5.3.7",
     "@storybook/addon-links": "~5.3.7",
@@ -135,10 +136,11 @@
     "@storybook/addons": "~5.3.7",
     "@storybook/react": "~5.3.7",
     "@svgr/webpack": "^4.3.3",
-    "@testing-library/cypress": "^6.0.0",
-    "@testing-library/jest-dom": "^4.2.3",
-    "@testing-library/react": "^8.0.7",
-    "@testing-library/react-hooks": "^3.2.1",
+    "@testing-library/cypress": "~6.0.0",
+    "@testing-library/jest-dom": "~5.11.3",
+    "@testing-library/react": "~10.4.9",
+    "@testing-library/react-hooks": "~3.4.1",
+    "@testing-library/user-event": "^12.1.1",
     "@types/algoliasearch": "^3.27.5",
     "@types/bluebird": "^3.5.20",
     "@types/chart.js": "^2.9.21",
@@ -146,7 +148,7 @@
     "@types/enzyme": "^3.9.3",
     "@types/he": "^1.1.0",
     "@types/highlight.js": "^9.12.3",
-    "@types/jest": "^24.0.23",
+    "@types/jest": "^26.0.13",
     "@types/jest-axe": "^3.2.1",
     "@types/js-cookie": "^2.2.0",
     "@types/jspdf": "^1.2.2",
@@ -187,10 +189,9 @@
     "autoprefixer": "^9.4.8",
     "axe-core": "^3.5.1",
     "babel-core": "^7.0.0-bridge",
-    "babel-jest": "^26.0.1",
     "babel-loader": "^8.1.0",
     "babel-preset-react-app": "^9.1.2",
-    "browserslist": "~4.8.5",
+    "browserslist": "^4.13.0",
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
     "chai-string": "^1.5.0",
     "chalk": "^2.4.2",
@@ -199,14 +200,14 @@
     "coveralls": "^3.0.2",
     "css-loader": "^3.5.2",
     "csstype": "^2.5.5",
-    "cypress": "~4.9.0",
+    "cypress": "^5.0.0",
     "cypress-axe": "^0.8.1",
     "dotenv": "^6.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-cypress": "^2.10.3",
+    "eslint-plugin-cypress": "^2.11.1",
     "eslint-plugin-jest": "^23.8.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-node": "^11.0.0",
@@ -224,7 +225,7 @@
     "fs-extra": "^8.0.1",
     "html-webpack-plugin": "^4.3.0",
     "inquirer": "^6.2.0",
-    "jest": "^24.9.0",
+    "jest": "~26.4.2",
     "jest-axe": "^3.3.0",
     "jest-junit": "^10.0.0",
     "jest-sonar-reporter": "^2.0.0",
@@ -235,7 +236,7 @@
     "mixin-deep": "^2.0.1",
     "mongodb": "^3.1.13",
     "mountebank": "^1.14.1",
-    "msw": "^0.19.3",
+    "msw": "~0.20.5",
     "otplib": "^10.0.1",
     "postcss-flexbugs-fixes": "^4.1.0",
     "postcss-loader": "^3.0.0",
@@ -285,15 +286,14 @@
     "testPathIgnorePatterns": [
       "<rootDir>/src/components/Storyshots.test.tsx"
     ],
-    "testURL": "http://localhost",
+    "testURL": "https://api.linode.com",
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js",
-      "^.+\\.mjs$": "babel-jest"
+      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
     ],
     "moduleNameMapper": {
       "\\.svg$": "<rootDir>/src/components/NullComponent",
@@ -320,7 +320,10 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.test.json"
+        "tsConfig": "tsconfig.test.json",
+        "diagnostics": {
+          "warnOnly": true
+        }
       }
     }
   },

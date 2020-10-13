@@ -1,11 +1,13 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+
+import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 
 interface Props {
   onEdit: (config: Config) => void;
@@ -17,7 +19,7 @@ interface Props {
   label: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   actionInner: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -31,36 +33,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     padding: '12.5px 15px',
-    width: '6.5em',
-    textAlign: 'center',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      '& span': {
-        color: theme.color.white
-      }
-    },
-    '& span': {
-      color: '#3683dc'
-    }
+    width: '6.5em'
   },
   action: {
     marginLeft: 10
-  },
-  powerOnOrOff: {
-    ...theme.applyLinkStyles,
-    padding: '12px 10px',
-
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      color: theme.color.white
-    },
-    '&[disabled]': {
-      color: '#cdd0d5',
-      cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit'
-      }
-    }
   }
 }));
 
@@ -99,8 +75,7 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
     return [
       {
         title: 'Clone',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
+        onClick: () => {
           history.push(
             `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
           );
@@ -109,8 +84,7 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
       },
       {
         title: 'Delete',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
+        onClick: () => {
           handleDelete();
         },
         disabled: readOnly,
@@ -119,27 +93,33 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
     ];
   }, [props]);
 
+  const inlineActions = [
+    {
+      actionText: 'Boot',
+      onClick: () => {
+        handleBoot();
+      }
+    },
+    {
+      actionText: 'Edit',
+      onClick: () => {
+        handleEdit();
+      }
+    }
+  ];
+
   return (
     <div className={classes.actionInner}>
       <div className={classes.inlineActions}>
-        <button
-          className={classes.powerOnOrOff}
-          onClick={(e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            handleBoot();
-          }}
-        >
-          Boot
-        </button>
-        <button
-          className={classes.powerOnOrOff}
-          onClick={(e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            handleEdit();
-          }}
-        >
-          Edit
-        </button>
+        {inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              onClick={action.onClick}
+            />
+          );
+        })}
       </div>
       <ActionMenu
         className={classes.action}

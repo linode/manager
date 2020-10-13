@@ -4,6 +4,7 @@ import {
   isSecondaryEntity
 } from 'src/store/events/event.selectors';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
+import { isInProgressEvent } from 'src/store/events/event.helpers';
 
 export const transitionStatus = [
   'booting',
@@ -49,7 +50,8 @@ export const linodeInTransition = (
 export const transitionText = (
   status: string,
   linodeId: number,
-  recentEvent?: Event
+  recentEvent?: Event,
+  cmr?: boolean
 ): string => {
   // `linode_mutate` is a special case, because we want to display
   // "Upgrading" instead of "Mutate".
@@ -60,7 +62,11 @@ export const transitionText = (
   }
 
   if (recentEvent?.action === 'linode_clone') {
-    return buildLinodeCloneTransitionText(recentEvent, linodeId);
+    if (cmr === true) {
+      return buildLinodeCloneTransitionText(recentEvent, linodeId, true);
+    } else {
+      return buildLinodeCloneTransitionText(recentEvent, linodeId);
+    }
   }
 
   if (recentEvent?.action === 'linode_migrate_datacenter') {
@@ -85,23 +91,44 @@ export const transitionText = (
 // secondary entities, and the Linode ID.
 export const buildLinodeCloneTransitionText = (
   event: Event,
-  linodeId: number
+  linodeId: number,
+  cmr?: boolean
 ) => {
   let text = 'Cloning';
 
-  if (isPrimaryEntity(event, linodeId)) {
-    const secondaryEntityLabel = event?.secondary_entity?.label;
-    if (secondaryEntityLabel) {
-      text += ` to: ${secondaryEntityLabel}`;
+  if (cmr !== true) {
+    if (isPrimaryEntity(event, linodeId)) {
+      const secondaryEntityLabel = event?.secondary_entity?.label;
+      if (secondaryEntityLabel) {
+        text += ` to: ${secondaryEntityLabel}`;
+      }
     }
-  }
 
-  if (isSecondaryEntity(event, linodeId)) {
-    const primaryEntityLabel = event?.entity?.label;
-    if (primaryEntityLabel) {
-      text += ` from: ${primaryEntityLabel}`;
+    if (isSecondaryEntity(event, linodeId)) {
+      const primaryEntityLabel = event?.entity?.label;
+      if (primaryEntityLabel) {
+        text += ` from: ${primaryEntityLabel}`;
+      }
     }
   }
 
   return text;
+};
+
+// Given a list of Events, returns a set of all Linode IDs that are involved in an in-progress event.
+export const linodesInTransition = (events: Event[]) => {
+  const set = new Set<number>();
+
+  events.forEach(thisEvent => {
+    const { entity, secondary_entity } = thisEvent;
+    if (isInProgressEvent(thisEvent)) {
+      if (entity?.type === 'linode') {
+        set.add(entity.id);
+      } else if (secondary_entity?.type === 'linode') {
+        set.add(secondary_entity.id);
+      }
+    }
+  });
+
+  return set;
 };

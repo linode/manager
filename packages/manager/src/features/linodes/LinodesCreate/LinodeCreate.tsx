@@ -1,55 +1,181 @@
+import { restoreBackup } from '@linode/api-v4/lib/linodes';
+import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
+import { compose as recompose } from 'recompose';
+import AccessPanel from 'src/components/AccessPanel';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
-import AppBar from 'src/components/core/AppBar';
-import MUITab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
+import DocsSidebar from 'src/components/DocsSidebar';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import Paper from 'src/components/core/Paper';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import SelectRegionPanel from 'src/components/SelectRegionPanel';
+import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { WithImages } from 'src/containers/withImages.container';
+import { AppsDocs } from 'src/documentation';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
+import { ApplicationState } from 'src/store';
 import {
   CreateTypes,
   handleChangeCreateType
 } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
-import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
-import SubTabs, { Tab } from './LinodeCreateSubTabs';
+import AddonsPanel from './AddonsPanel';
+import SelectPlanPanel from './SelectPlanPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import {
   AllFormStateAndHandlers,
   AppsData,
+  ReduxStateProps,
   ReduxStatePropsAndSSHKeys,
+  StackScriptFormStateHandlers,
   WithDisplayData,
   WithLinodesProps,
   WithRegionsProps,
-  WithTypesProps
+  WithTypesProps,
+  WithTypesRegionsAndImages,
+  Info,
+  HandleSubmit
 } from './types';
+import { Tag } from '@linode/api-v4/lib/tags/types';
+import Notice from 'src/components/Notice';
+import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 
+type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      '& .mlMain': {
+        maxWidth: '100%',
+        flexBasis: '100%',
+        [theme.breakpoints.up('md')]: {
+          maxWidth: '78.8%',
+          flexBasis: '78.8%'
+        }
+      },
+      '& .mlSidebar': {
+        position: 'static',
+        width: '100%',
+        flexBasis: '100%',
+        maxWidth: '100%',
+        [theme.breakpoints.up('md')]: {
+          position: 'sticky',
+          maxWidth: '21.2%',
+          flexBasis: '21.2%'
+        }
+      }
+    },
+    form: {
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        display: 'flex'
+      }
+    },
+    stackScriptWrapper: {
+      padding: theme.spacing(3),
+      '& [role="tablist"]': {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing()
+      }
+    },
+    imageSelect: {
+      '& .MuiPaper-root': {
+        padding: 0
+      }
+    }
+  });
 interface Props {
   history: any;
+  createType: CreateTypes;
+  updatePassword: (password: string) => void;
+  regionDisplayInfo: Info;
+  imageDisplayInfo: Info;
+  typeDisplayInfo: Info;
+  backupsMonthlyPrice?: number | null;
+  updateLinodeID: (id: number, diskSize?: number | undefined) => void;
+  updateDiskSize: (size: number) => void;
+  label: string;
+  updateLabel: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => void;
+  toggleBackupsEnabled: () => void;
+  togglePrivateIPEnabled: () => void;
+  updateTags: (tags: Tag[]) => void;
+  handleSubmitForm: HandleSubmit;
+  resetCreationState: () => void;
+  setBackupID: (id: number) => void;
+  showGeneralError?: boolean;
+  setVlanID: (id: number | null) => void;
 }
 
+const errorMap = [
+  'backup_id',
+  'image',
+  'label',
+  'linode_id',
+  'region',
+  'root_pass',
+  'stackscript_id',
+  'type',
+  'interfaces'
+];
+
+type InnerProps = WithTypesRegionsAndImages &
+  ReduxStateProps &
+  StackScriptFormStateHandlers &
+  Props;
+
 type CombinedProps = Props &
+  InnerProps &
+  AllFormStateAndHandlers &
+  AppsData &
+  ReduxStatePropsAndSSHKeys &
+  SetDocsProps &
+  StateProps &
+  WithDisplayData &
   WithImages &
   WithLinodesProps &
   WithRegionsProps &
+  WithStyles<ClassNames> &
   WithTypesProps &
-  WithDisplayData &
-  AppsData &
-  ReduxStatePropsAndSSHKeys &
-  AllFormStateAndHandlers;
+  RouteComponentProps<{}>;
 
 interface State {
   selectedTab: number;
+  stackScriptSelectedTab: number;
+}
+
+interface CreateTab extends Tab {
+  type: CreateTypes;
 }
 
 export class LinodeCreate extends React.PureComponent<
@@ -59,12 +185,22 @@ export class LinodeCreate extends React.PureComponent<
   constructor(props: CombinedProps & DispatchProps) {
     super(props);
 
-    /** get the query params as an object, excluding the "?" */
+    /** Get the query params as an object, excluding the "?" */
     const queryParams = getParamsFromUrl(location.search);
 
-    /** will be -1 if the query param is not found */
-    const preSelectedTab = this.tabs.findIndex((eachTab, index) => {
-      return eachTab.title === queryParams.type;
+    const _tabs = [
+      'Distributions',
+      'One-Click',
+      'StackScripts',
+      'Images',
+      'Backups',
+      'Clone Linode'
+    ];
+
+    /** Will be -1 if the query param is not found */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const preSelectedTab = _tabs.findIndex((eachTab, index) => {
+      return eachTab === queryParams.type;
     });
 
     // If there is no specified "type" in the query params, update the Redux state
@@ -74,7 +210,9 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     this.state = {
-      selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0
+      selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
+      stackScriptSelectedTab:
+        preSelectedTab === 2 && location.search.search('Account') > -1 ? 1 : 0
     };
   }
 
@@ -85,359 +223,60 @@ export class LinodeCreate extends React.PureComponent<
     this.props.setTab(getInitialType());
   }
 
-  handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
+  handleTabChange = (index: number) => {
     this.props.resetCreationState();
 
     /** set the tab in redux state */
-    this.props.setTab(this.tabs[value].type);
+    this.props.setTab(this.tabs[index].type);
 
-    this.props.history.push({
-      search: `?type=${event.target.textContent}`
-    });
     this.setState({
-      selectedTab: value
+      selectedTab: index
     });
   };
 
-  tabs: Tab[] = [
+  tabs: CreateTab[] = [
     {
       title: 'Distributions',
-      name: 'distro-create',
       type: 'fromImage',
-      render: () => {
-        /** ...rest being all the form state props and display data */
-        const {
-          history,
-          handleSelectUDFs,
-          selectedUDFs,
-          updateStackScript,
-          availableStackScriptImages,
-          availableUserDefinedFields,
-          selectedStackScriptID,
-          selectedDiskSize,
-          selectedStackScriptUsername,
-          selectedStackScriptLabel,
-          selectedLinodeID,
-          appInstances,
-          appInstancesError,
-          appInstancesLoading,
-          linodesData,
-          linodesError,
-          linodesLoading,
-          typesData,
-          typesError,
-          typesLoading,
-          regionsData,
-          regionsError,
-          regionsLoading,
-          imagesData,
-          imagesError,
-          imagesLoading,
-          ...rest
-        } = this.props;
-        return (
-          <FromImageContent
-            variant="public"
-            imagePanelTitle="Choose a Distribution"
-            showGeneralError={true}
-            imagesData={imagesData!}
-            regionsData={regionsData!}
-            typesData={typesData!}
-            {...rest}
-          />
-        );
-      }
+      routeName: `${this.props.match.url}?type=Distributions`
     },
     {
-      title: 'One-Click',
+      title: 'Marketplace',
       type: 'fromApp',
-      name: 'parent-one-click',
-      render: () => {
-        return (
-          <SubTabs
-            history={this.props.history}
-            name="parent-one-click"
-            reset={this.props.resetCreationState}
-            tabs={this.oneClickTabs()}
-            handleClick={this.props.setTab}
-            errors={this.props.errors}
-          />
-        );
-      }
+      routeName: `${this.props.match.url}?type=One-Click`
     },
     {
-      title: 'My Images',
-      type: 'fromImage',
-      name: 'images-create',
-      render: () => {
-        return (
-          <SubTabs
-            reset={this.props.resetCreationState}
-            name="images-create"
-            history={this.props.history}
-            tabs={this.myImagesTabs()}
-            handleClick={this.props.setTab}
-            errors={this.props.errors}
-          />
-        );
-      }
-    }
-  ];
-
-  myImagesTabs = (): Tab[] => [
+      title: 'StackScripts',
+      type: 'fromStackScript',
+      routeName: `${this.props.match.url}?type=StackScripts`
+    },
     {
       title: 'Images',
       type: 'fromImage',
-      name: 'image-private-create',
-      render: () => {
-        const {
-          history,
-          linodesData,
-          linodesError,
-          linodesLoading,
-          typesData,
-          typesError,
-          typesLoading,
-          regionsData,
-          regionsError,
-          regionsLoading,
-          imagesData,
-          imagesError,
-          imagesLoading,
-          handleSelectUDFs,
-          selectedUDFs,
-          updateStackScript,
-          availableStackScriptImages,
-          availableUserDefinedFields,
-          selectedStackScriptID,
-          selectedDiskSize,
-          selectedStackScriptUsername,
-          selectedStackScriptLabel,
-          selectedLinodeID,
-          appInstances,
-          appInstancesError,
-          appInstancesLoading,
-          ...rest
-        } = this.props;
-
-        return (
-          <FromImageContent
-            variant={'private'}
-            imagePanelTitle="Choose an Image"
-            imagesData={imagesData}
-            regionsData={regionsData!}
-            typesData={typesData!}
-            {...rest}
-          />
-        );
-      }
+      routeName: `${this.props.match.url}?type=Images`
     },
     {
       title: 'Backups',
       type: 'fromBackup',
-      name: 'backup-create',
-      render: () => {
-        const {
-          history,
-          handleSelectUDFs,
-          selectedUDFs,
-          updateStackScript,
-          availableStackScriptImages,
-          availableUserDefinedFields,
-          selectedStackScriptID,
-          selectedStackScriptUsername,
-          selectedStackScriptLabel,
-          linodesData,
-          linodesError,
-          linodesLoading,
-          typesData,
-          typesError,
-          typesLoading,
-          regionsData,
-          regionsError,
-          regionsLoading,
-          imagesData,
-          imagesError,
-          imagesLoading,
-          ...rest
-        } = this.props;
-        return (
-          <FromBackupsContent
-            imagesData={imagesData!}
-            regionsData={regionsData!}
-            typesData={typesData!}
-            linodesData={linodesData!}
-            {...rest}
-          />
-        );
-      }
+      routeName: `${this.props.match.url}?type=Backups`
     },
     {
       title: 'Clone Linode',
       type: 'fromLinode',
-      name: 'clone-create',
-      render: () => {
-        /**
-         * rest being just the props that FromLinodeContent needs
-         * AKA CloneFormStateHandlers, WithLinodesImagesTypesAndRegions,
-         * and WithDisplayData
-         */
-        const {
-          handleSelectUDFs,
-          selectedUDFs,
-          selectedStackScriptID,
-          updateStackScript,
-          appInstances,
-          appInstancesError,
-          appInstancesLoading,
-          linodesData,
-          linodesError,
-          linodesLoading,
-          typesData,
-          typesError,
-          typesLoading,
-          regionsData,
-          regionsError,
-          regionsLoading,
-          imagesData,
-          imagesError,
-          imagesLoading,
-          ...rest
-        } = this.props;
-        return (
-          <FromLinodeContent
-            imagesData={imagesData!}
-            regionsData={regionsData!}
-            typesData={typesData!}
-            linodesData={linodesData!}
-            {...rest}
-          />
-        );
-      }
-    },
-    {
-      title: 'Account StackScripts',
-      type: 'fromStackScript',
-      name: 'account-stackscript-create',
-      render: () => {
-        const {
-          accountBackupsEnabled,
-          userCannotCreateLinode,
-          selectedLinodeID,
-          updateLinodeID,
-          selectedBackupID,
-          setBackupID,
-          appInstances,
-          appInstancesError,
-          appInstancesLoading,
-          linodesData,
-          linodesError,
-          linodesLoading,
-          typesData,
-          typesError,
-          typesLoading,
-          regionsData,
-          regionsError,
-          regionsLoading,
-          imagesData,
-          imagesError,
-          imagesLoading,
-          ...rest
-        } = this.props;
-        return (
-          <FromStackScriptContent
-            category="account"
-            accountBackupsEnabled={this.props.accountBackupsEnabled}
-            userCannotCreateLinode={this.props.userCannotCreateLinode}
-            request={getMineAndAccountStackScripts}
-            header={'Select a StackScript'}
-            imagesData={imagesData!}
-            regionsData={regionsData!}
-            typesData={typesData!}
-            {...rest}
-          />
-        );
-      }
+      routeName: `${this.props.match.url}?type=Clone%20Linode`
     }
   ];
 
-  oneClickTabs = (): Tab[] => [
+  stackScriptTabs: CreateTab[] = [
     {
-      title: (
-        <div style={{ display: 'flex', alignItems: 'center' }}>Marketplace</div>
-      ),
-      type: 'fromApp',
-      name: 'one-click-apps-create',
-      render: () => {
-        const {
-          setTab,
-          linodesData,
-          linodesError,
-          linodesLoading,
-          typesData,
-          typesError,
-          typesLoading,
-          regionsData,
-          regionsError,
-          regionsLoading,
-          imagesData,
-          imagesError,
-          imagesLoading,
-          ...rest
-        } = this.props;
-        return (
-          <FromAppsContent
-            imagesData={imagesData!}
-            regionsData={regionsData!}
-            typesData={typesData!}
-            {...rest}
-          />
-        );
-      }
+      title: 'Account StackScripts',
+      type: 'fromStackScript',
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`
     },
     {
       title: 'Community StackScripts',
       type: 'fromStackScript',
-      name: 'community-stackscript-create',
-      render: () => {
-        const {
-          accountBackupsEnabled,
-          userCannotCreateLinode,
-          selectedLinodeID,
-          updateLinodeID,
-          selectedBackupID,
-          setBackupID,
-          linodesData,
-          linodesError,
-          linodesLoading,
-          typesData,
-          typesError,
-          typesLoading,
-          regionsData,
-          regionsError,
-          regionsLoading,
-          imagesData,
-          imagesError,
-          imagesLoading,
-          ...rest
-        } = this.props;
-        return (
-          <FromStackScriptContent
-            category="community"
-            accountBackupsEnabled={this.props.accountBackupsEnabled}
-            userCannotCreateLinode={this.props.userCannotCreateLinode}
-            request={getCommunityStackscripts}
-            header={'Select a StackScript'}
-            imagesData={imagesData!}
-            regionsData={regionsData!}
-            typesData={typesData!}
-            {...rest}
-          />
-        );
-      }
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`
     }
   ];
 
@@ -445,19 +284,72 @@ export class LinodeCreate extends React.PureComponent<
     this.mounted = false;
   }
 
+  createLinode = () => {
+    this.props.handleSubmitForm(
+      {
+        image: this.props.selectedImageID,
+        region: this.props.selectedRegionID,
+        type: this.props.selectedTypeID,
+        label: this.props.label,
+        tags: this.props.tags
+          ? this.props.tags.map(eachTag => eachTag.label)
+          : [],
+        root_pass: this.props.password,
+        authorized_users: this.props.userSSHKeys
+          .filter(u => u.selected)
+          .map(u => u.username),
+        booted: true,
+        backups_enabled: this.props.backupsEnabled,
+        backup_id: this.props.selectedBackupID,
+        private_ip: this.props.privateIPEnabled,
+
+        // StackScripts
+        stackscript_id: this.props.selectedStackScriptID,
+        stackscript_data: this.props.selectedUDFs
+      },
+      this.props.selectedLinodeID
+    );
+  };
+
   render() {
-    const { selectedTab } = this.state;
+    const { selectedTab, stackScriptSelectedTab } = this.state;
 
     const {
-      regionsLoading,
-      imagesLoading,
+      classes,
+      linodesData,
       linodesLoading,
-      imagesError,
-      regionsError,
       linodesError,
+      imagesData,
+      imageDisplayInfo,
+      imagesError,
+      imagesLoading,
+      regionsError,
+      regionsData,
+      regionDisplayInfo,
+      regionsLoading,
+      typesData,
+      typeDisplayInfo,
       typesError,
-      typesLoading
+      typesLoading,
+      label,
+      updateLabel,
+      tags,
+      updateTags,
+      updatePassword,
+      errors,
+      sshError,
+      userSSHKeys,
+      requestKeys,
+      backupsMonthlyPrice,
+      userCannotCreateLinode,
+      accountBackupsEnabled,
+      showGeneralError,
+      ...rest
     } = this.props;
+
+    const hasErrorFor = getErrorMap(errorMap, errors);
+
+    const generalError = getErrorMap(errorMap, errors).none;
 
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
       return <CircleProgress />;
@@ -469,44 +361,275 @@ export class LinodeCreate extends React.PureComponent<
       );
     }
 
-    if (
-      !this.props.regionsData ||
-      !this.props.imagesData ||
-      !this.props.linodesData ||
-      !this.props.typesData
-    ) {
+    if (!linodesData || !imagesData || !regionsData || !typesData) {
       return null;
     }
-    // if this bombs the app shouldn't crash
-    const tabRender = safeGetTabRender(this.tabs, selectedTab);
+
+    const tagsInputProps = {
+      value: tags || [],
+      onChange: updateTags,
+      tagError: hasErrorFor.tags,
+      disabled: userCannotCreateLinode
+    };
+
+    const hasBackups = Boolean(
+      this.props.backupsEnabled || accountBackupsEnabled
+    );
+
+    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      calculatedPrice += typeDisplayInfo.backupsMonthly;
+    }
+
+    const displaySections = [];
+    if (imageDisplayInfo) {
+      displaySections.push(imageDisplayInfo);
+    }
+
+    if (regionDisplayInfo) {
+      displaySections.push({
+        title: regionDisplayInfo.title,
+        details: regionDisplayInfo.details
+      });
+    }
+
+    if (typeDisplayInfo) {
+      displaySections.push(typeDisplayInfo);
+    }
+
+    if (label) {
+      displaySections.push({
+        title: 'Linode Label',
+        details: label
+      });
+    }
+
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      displaySections.push(
+        renderBackupsDisplaySection(
+          accountBackupsEnabled,
+          typeDisplayInfo.backupsMonthly
+        )
+      );
+    }
 
     return (
-      <React.Fragment>
+      <form className={classes.form}>
         <Grid item className={`mlMain py0`}>
-          <AppBar position="static" color="default" role="tablist">
-            <Tabs
-              value={selectedTab}
-              onChange={this.handleTabChange}
-              indicatorColor="primary"
-              textColor="primary"
-              variant="scrollable"
-              scrollButtons="on"
-            >
-              {this.tabs.map((tab, idx) => (
-                <MUITab
-                  key={idx}
-                  label={tab.title}
-                  data-qa-create-from={tab.title}
-                  role="tab"
-                  aria-controls={`tabpanel-${tab.name}`}
-                  id={`tab-${tab.name}`}
+          {hasErrorFor.none && !!showGeneralError && (
+            <Notice error spacingTop={8} text={hasErrorFor.none} />
+          )}
+          {generalError && <Notice error spacingTop={8} text={generalError} />}
+          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
+          <Tabs defaultIndex={selectedTab} onChange={this.handleTabChange}>
+            <TabLinkList tabs={this.tabs} />
+            <TabPanels>
+              <SafeTabPanel index={0}>
+                <FromImageContent
+                  variant="public"
+                  imagePanelTitle="Choose a Distribution"
+                  imagesData={imagesData!}
+                  regionsData={regionsData!}
+                  typesData={typesData!}
+                  error={hasErrorFor.image}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
+                  {...rest}
                 />
-              ))}
-            </Tabs>
-          </AppBar>
+              </SafeTabPanel>
+              <SafeTabPanel index={1}>
+                <FromAppsContent
+                  imagesData={imagesData!}
+                  regionsData={regionsData!}
+                  typesData={typesData!}
+                  //error={hasErrorFor.image}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
+                  {...rest}
+                />
+              </SafeTabPanel>
+              <SafeTabPanel index={2}>
+                <Tabs defaultIndex={stackScriptSelectedTab}>
+                  <Paper className={classes.stackScriptWrapper}>
+                    <Typography variant="h2">Create From:</Typography>
+                    <TabLinkList tabs={this.stackScriptTabs} />
+                    <TabPanels className={classes.imageSelect}>
+                      <SafeTabPanel index={0}>
+                        <FromStackScriptContent
+                          category="account"
+                          accountBackupsEnabled={accountBackupsEnabled}
+                          userCannotCreateLinode={userCannotCreateLinode}
+                          request={getMineAndAccountStackScripts}
+                          header={'Select a StackScript'}
+                          imagesData={imagesData!}
+                          regionsData={regionsData!}
+                          typesData={typesData!}
+                          {...rest}
+                        />
+                      </SafeTabPanel>
+                      <SafeTabPanel index={1}>
+                        <FromStackScriptContent
+                          category="community"
+                          accountBackupsEnabled={accountBackupsEnabled}
+                          userCannotCreateLinode={userCannotCreateLinode}
+                          request={getCommunityStackscripts}
+                          header={'Select a StackScript'}
+                          imagesData={imagesData!}
+                          regionsData={regionsData!}
+                          typesData={typesData!}
+                          {...rest}
+                        />
+                      </SafeTabPanel>
+                    </TabPanels>
+                  </Paper>
+                </Tabs>
+              </SafeTabPanel>
+              <SafeTabPanel index={3}>
+                <FromImageContent
+                  variant={'private'}
+                  imagePanelTitle="Choose an Image"
+                  imagesData={imagesData}
+                  regionsData={regionsData!}
+                  typesData={typesData!}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
+                  {...rest}
+                />
+              </SafeTabPanel>
+              <SafeTabPanel index={4}>
+                <FromBackupsContent
+                  errors={errors}
+                  imagesData={imagesData!}
+                  regionsData={regionsData!}
+                  typesData={typesData!}
+                  linodesData={linodesData!}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
+                  {...restoreBackup}
+                  {...rest}
+                />
+              </SafeTabPanel>
+              <SafeTabPanel index={5}>
+                <FromLinodeContent
+                  errors={errors}
+                  imagesData={imagesData!}
+                  regionsData={regionsData!}
+                  typesData={typesData!}
+                  linodesData={linodesData!}
+                  accountBackupsEnabled={accountBackupsEnabled}
+                  userCannotCreateLinode={userCannotCreateLinode}
+                  {...rest}
+                />
+              </SafeTabPanel>
+            </TabPanels>
+          </Tabs>
+
+          {this.props.createType !== 'fromBackup' && (
+            <SelectRegionPanel
+              data-qa-select-region-panel
+              error={hasErrorFor.region}
+              regions={regionsData!}
+              handleSelection={this.props.updateRegionID}
+              selectedID={this.props.selectedRegionID}
+              copy="Determine the best location for your Linode."
+              updateFor={[this.props.selectedRegionID, regionsData, errors]}
+              disabled={userCannotCreateLinode}
+              helperText={this.props.regionHelperText}
+            />
+          )}
+          <SelectPlanPanel
+            data-qa-select-plan
+            error={hasErrorFor.type}
+            types={filterCurrentTypes(typesData)!}
+            onSelect={this.props.updateTypeID}
+            selectedID={this.props.selectedTypeID}
+            updateFor={[
+              this.props.selectedTypeID,
+              this.props.disabledClasses,
+              errors
+            ]}
+            disabled={userCannotCreateLinode}
+            disabledClasses={this.props.disabledClasses}
+          />
+          <LabelAndTagsPanel
+            data-qa-label-and-tags-panel
+            labelFieldProps={{
+              label: 'Linode Label',
+              value: label || '',
+              onChange: updateLabel,
+              errorText: hasErrorFor.label,
+              disabled: userCannotCreateLinode
+            }}
+            tagsInputProps={
+              this.props.createType !== 'fromLinode'
+                ? tagsInputProps
+                : undefined
+            }
+            updateFor={[tags, label, errors]}
+          />
+          {/* Hide for backups and clone */}
+          {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (
+            <AccessPanel
+              data-qa-access-panel
+              disabled={!this.props.selectedImageID}
+              disabledReason={
+                !this.props.selectedImageID
+                  ? 'You must select an image to set a root password'
+                  : ''
+              }
+              error={hasErrorFor.root_pass}
+              sshKeyError={sshError}
+              password={this.props.password}
+              handleChange={this.props.updatePassword}
+              updateFor={[
+                this.props.password,
+                errors,
+                sshError,
+                userSSHKeys,
+                this.props.selectedImageID
+              ]}
+              users={userSSHKeys}
+              requestKeys={requestKeys}
+            />
+          )}
+          <AddonsPanel
+            data-qa-addons-panel
+            backups={this.props.backupsEnabled}
+            accountBackups={accountBackupsEnabled}
+            backupsMonthly={backupsMonthlyPrice}
+            privateIP={this.props.privateIPEnabled}
+            changeBackups={this.props.toggleBackupsEnabled}
+            changePrivateIP={this.props.togglePrivateIPEnabled}
+            disabled={userCannotCreateLinode}
+            hidePrivateIP={this.props.createType === 'fromLinode'}
+            changeSelectedVLAN={this.props.setVlanID}
+            selectedVlanID={this.props.selectedVlanID}
+            selectedRegionID={this.props.selectedRegionID}
+            vlanError={hasErrorFor.interfaces}
+          />
         </Grid>
-        {tabRender()}
-      </React.Fragment>
+        <Grid item className="mlSidebar">
+          <CheckoutBar
+            data-qa-checkout-bar
+            heading="Linode Summary"
+            calculatedPrice={calculatedPrice}
+            isMakingRequest={this.props.formIsSubmitting}
+            disabled={this.props.formIsSubmitting || userCannotCreateLinode}
+            onDeploy={this.createLinode}
+            footer={
+              <SMTPRestrictionText>
+                {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
+              </SMTPRestrictionText>
+            }
+          >
+            <DisplaySectionList displaySections={displaySections} />
+          </CheckoutBar>
+          {this.props.createType === 'fromApp' &&
+            this.props.documentation.length > 0 && (
+              <DocsSidebar docs={this.props.documentation} />
+            )}
+        </Grid>
+      </form>
     );
   }
 }
@@ -522,6 +645,50 @@ const mapDispatchToProps: MapDispatchToProps<
   setTab: value => dispatch(handleChangeCreateType(value))
 });
 
-const connected = connect(undefined, mapDispatchToProps);
+interface StateProps {
+  documentation: Linode.Doc[];
+}
 
-export default connected(LinodeCreate);
+const mapStateToProps: MapStateToProps<
+  StateProps,
+  CombinedProps,
+  ApplicationState
+> = state => ({
+  documentation: state.documentation
+});
+
+const generateDocs = (ownProps: InnerProps & StateProps) => {
+  const { selectedStackScriptLabel } = ownProps;
+  if (!!selectedStackScriptLabel) {
+    const foundDocs = AppsDocs.filter(eachDoc => {
+      return eachDoc.title
+        .toLowerCase()
+        .includes(
+          selectedStackScriptLabel
+            .substr(0, selectedStackScriptLabel.indexOf(' '))
+            .toLowerCase()
+        );
+    });
+    return foundDocs.length ? foundDocs : [];
+  }
+  return [];
+};
+
+const updateCond = (
+  prevProps: InnerProps & StateProps,
+  nextProps: InnerProps & StateProps
+) => {
+  return prevProps.selectedStackScriptID !== nextProps.selectedStackScriptID;
+};
+
+const styled = withStyles(styles);
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
+const enhanced = recompose<CombinedProps, InnerProps>(
+  connected,
+  styled,
+  setDocs(generateDocs, updateCond)
+);
+
+export default enhanced(LinodeCreate);

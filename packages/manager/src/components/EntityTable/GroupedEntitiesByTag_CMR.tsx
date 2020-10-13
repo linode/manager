@@ -2,9 +2,9 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
+import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter, {
   MIN_PAGE_SIZE
@@ -13,6 +13,7 @@ import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
+import EntityTableHeader from './EntityTableHeader';
 import { ListProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,12 +29,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: `${theme.spacing(2) + theme.spacing(1) / 2}px 0 ${theme.spacing(
         1
       ) + 2}px`,
-      borderBottom: 'none'
+      borderBottom: 'none',
+      borderTop: 'none'
     }
   },
   groupContainer: {
     [theme.breakpoints.up('md')]: {
       '& $tagHeaderRow > td': {
+        borderTop: 'none',
         padding: `${theme.spacing(1) + 2}px 0`
       }
     }
@@ -53,81 +56,97 @@ const useStyles = makeStyles((theme: Theme) => ({
 export type CombinedProps = ListProps;
 
 export const GroupedEntitiesByTag: React.FC<CombinedProps> = props => {
-  const { data, entity, handlers, headerCells, RowComponent } = props;
-  const groupedEntities = compose(sortGroups, groupByTags)(data);
+  const { data, entity, handlers, headers, initialOrder, RowComponent } = props;
   const classes = useStyles();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
   return (
-    <Table aria-label={`List of ${entity}`}>
-      <TableHead>
-        <TableRow>{headerCells}</TableRow>
-      </TableHead>
-      {groupedEntities.map(([tag, domains]: [string, any[]]) => {
+    <OrderBy
+      data={data}
+      orderBy={initialOrder?.orderBy}
+      order={initialOrder?.order}
+    >
+      {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+        const groupedEntities = compose(sortGroups, groupByTags)(orderedData);
         return (
-          <React.Fragment key={tag}>
-            <Paginate
-              data={domains}
-              pageSize={infinitePageSize}
-              pageSizeSetter={setInfinitePageSize}
-            >
-              {({
-                data: paginatedData,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize,
-                count
-              }) => {
-                return (
-                  <TableBody
-                    className={classes.groupContainer}
-                    data-qa-tag-header={tag}
+          <Table aria-label={`List of ${entity}`}>
+            <EntityTableHeader
+              headers={headers}
+              handleOrderChange={handleOrderChange}
+              order={order}
+              orderBy={orderBy}
+            />
+            {groupedEntities.map(([tag, domains]: [string, any[]]) => {
+              return (
+                <React.Fragment key={tag}>
+                  <Paginate
+                    data={domains}
+                    pageSize={infinitePageSize}
+                    pageSizeSetter={setInfinitePageSize}
                   >
-                    <TableRow className={classes.tagHeaderRow} role="cell">
-                      <TableCell colSpan={7}>
-                        <Typography
-                          variant="h2"
-                          component="h3"
-                          className={classes.tagHeader}
+                    {({
+                      data: paginatedData,
+                      handlePageChange,
+                      handlePageSizeChange,
+                      page,
+                      pageSize,
+                      count
+                    }) => {
+                      return (
+                        <TableBody
+                          className={classes.groupContainer}
+                          data-qa-tag-header={tag}
                         >
-                          {tag}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                    {paginatedData.map(thisEntity => (
-                      <RowComponent
-                        key={thisEntity.id}
-                        {...thisEntity}
-                        {...handlers}
-                      />
-                    ))}
-                    {count > MIN_PAGE_SIZE && (
-                      <TableRow>
-                        <TableCell
-                          colSpan={7}
-                          className={classes.paginationCell}
-                        >
-                          <PaginationFooter
-                            count={count}
-                            handlePageChange={handlePageChange}
-                            handleSizeChange={handlePageSizeChange}
-                            pageSize={pageSize}
-                            page={page}
-                            eventCategory={'domains landing'}
-                            showAll
-                          />
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                );
-              }}
-            </Paginate>
-          </React.Fragment>
+                          <TableRow
+                            className={classes.tagHeaderRow}
+                            role="cell"
+                          >
+                            <TableCell colSpan={7}>
+                              <Typography
+                                variant="h2"
+                                component="h3"
+                                className={classes.tagHeader}
+                              >
+                                {tag}
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                          {paginatedData.map(thisEntity => (
+                            <RowComponent
+                              key={thisEntity.id}
+                              {...thisEntity}
+                              {...handlers}
+                            />
+                          ))}
+                          {count > MIN_PAGE_SIZE && (
+                            <TableRow>
+                              <TableCell
+                                colSpan={7}
+                                className={classes.paginationCell}
+                              >
+                                <PaginationFooter
+                                  count={count}
+                                  handlePageChange={handlePageChange}
+                                  handleSizeChange={handlePageSizeChange}
+                                  pageSize={pageSize}
+                                  page={page}
+                                  eventCategory={'domains landing'}
+                                  showAll
+                                />
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      );
+                    }}
+                  </Paginate>
+                </React.Fragment>
+              );
+            })}
+          </Table>
         );
-      })}
-    </Table>
+      }}
+    </OrderBy>
   );
 };
 

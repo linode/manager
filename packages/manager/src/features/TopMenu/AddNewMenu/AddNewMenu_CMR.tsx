@@ -1,5 +1,4 @@
 import { AccountCapability } from '@linode/api-v4/lib/account';
-
 import {
   Menu,
   MenuButton,
@@ -11,8 +10,7 @@ import {
 import '@reach/menu-button/styles.css';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
@@ -27,11 +25,10 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { vlanContext } from 'src/context';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { MapState } from 'src/store/types';
 import AddNewMenuItem from './AddNewMenuItem';
-
-import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 
 type CSSClasses =
   | 'wrapper'
@@ -192,9 +189,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
               <MenuLink
                 as={Link}
                 to="/linodes/create?type=One-Click"
-                onClick={() => {
-                  sendOneClickNavigationEvent('Add New Menu');
-                }}
                 className={classes.menuItemLink}
               >
                 <AddNewMenuItem
@@ -210,11 +204,21 @@ class AddNewMenu extends React.Component<CombinedProps> {
                 className={classes.menuItemLink}
               >
                 <AddNewMenuItem
-                  title="Kubernetes"
+                  title="Kubernetes Cluster"
                   body="Create and manage Kubernetes Clusters for highly available container workloads"
                   ItemIcon={KubernetesIcon}
                 />
               </MenuLink>
+              <MenuItem
+                onSelect={this.context.open}
+                className={classes.menuItemLink}
+              >
+                <AddNewMenuItem
+                  title="Virtual LAN"
+                  body="Create private Local Area Networks (LANs) for secure communication between Linodes."
+                  ItemIcon={LinodeIcon}
+                />
+              </MenuItem>
             </MenuItems>
           </MenuPopover>
         </Menu>
@@ -222,6 +226,8 @@ class AddNewMenu extends React.Component<CombinedProps> {
     );
   }
 }
+
+AddNewMenu.contextType = vlanContext;
 
 export const styledComponent = styled(AddNewMenu);
 
@@ -245,8 +251,10 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, {}>(
   connected,
   withRouter,
   styled
 )(AddNewMenu);
+
+export default enhanced;

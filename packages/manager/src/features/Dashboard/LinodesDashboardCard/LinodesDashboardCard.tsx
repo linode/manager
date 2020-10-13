@@ -28,7 +28,7 @@ import {
 import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
-import { formatNotifications } from 'src/utilities/formatNotifications';
+import formatDate from 'src/utilities/formatDate';
 import DashboardCard from '../DashboardCard';
 
 interface EntityEvent extends Omit<Event, 'entity'> {
@@ -47,7 +47,7 @@ const useStyles = makeStyles(() => ({
     width: '60%'
   },
   moreCol: {
-    width: '30%'
+    width: '20%'
   },
   actionsCol: {
     width: '10%'
@@ -153,7 +153,11 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
             type={linode.type}
             image={linode.image}
             width={75}
-            maintenance={linode.maintenance ? linode.maintenance.when : ''}
+            maintenance={
+              linode.maintenance?.when
+                ? formatDate(linode.maintenance.when)
+                : ''
+            }
             isDashboard
           />
           <Hidden xsDown>
@@ -206,7 +210,7 @@ const withUpdatingLinodes = connect((state: ApplicationState) => {
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
-    formatNotifications(notifications),
+    notifications,
     linodes
   );
 

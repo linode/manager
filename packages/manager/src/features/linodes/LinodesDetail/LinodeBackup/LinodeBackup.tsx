@@ -209,6 +209,7 @@ export const aggregateBackups = (
 };
 
 /* tslint:disable-next-line */
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 class _LinodeBackup extends React.Component<CombinedProps, State> {
   state: State = {
     backups: this.props.backups.response,
@@ -514,7 +515,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     const { history, linodeID } = this.props;
     history.push(
       '/linodes/create' +
-        `?type=My%20Images&subtype=Backups&backupID=${backup.id}&linodeID=${linodeID}`
+        `?type=Backups&backupID=${backup.id}&linodeID=${linodeID}`
     );
   };
 
@@ -849,6 +850,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             Cancelling backups associated with this Linode will delete all
             existing backups. Are you sure?
           </Typography>
+          <Typography style={{ marginTop: 12 }}>
+            <strong>Note: </strong>
+            Once backups for this Linode have been cancelled, you cannot
+            re-enable them for 24 hours.
+          </Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );
@@ -888,11 +894,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <div
-          id="tabpanel-backups"
-          role="tabpanel"
-          aria-labelledby="tab-backups"
-        >
+        <div>
           <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
           {backupsEnabled ? <this.Management /> : <this.Placeholder />}
         </div>

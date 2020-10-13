@@ -45,7 +45,7 @@ export const ImageOption: React.FC<CombinedProps> = props => {
       {...props}
     >
       <Grid container direction="row" alignItems="center" justify="flex-start">
-        <Grid item className="py0">
+        <Grid item className="py0" aria-hidden>
           <span className={`${props.data.className} ${classes.icon}`} />
         </Grid>
         <Grid item>{label}</Grid>

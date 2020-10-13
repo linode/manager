@@ -2,16 +2,19 @@ import {
   PoolNodeRequest,
   PoolNodeResponse
 } from '@linode/api-v4/lib/kubernetes/types';
+import classnames from 'classnames';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
+import { Waypoint } from 'react-waypoint';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { useDialog } from 'src/hooks/useDialog';
+import useFlags from 'src/hooks/useFlags';
 import useLinodes from 'src/hooks/useLinodes';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -21,6 +24,7 @@ import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
 import NodeDialog from './NodeDialog';
 import NodePool from './NodePool';
 import NodePoolDialog from './NodePoolDialog';
+import RecycleAllNodesDialog from './RecycleAllNodesDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -55,6 +59,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   nodePool: {
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(4)
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -68,6 +78,7 @@ export interface Props {
   ) => Promise<PoolNodeWithPrice>;
   deletePool: (poolID: number) => Promise<any>;
   addNodePool: (newPool: PoolNodeRequest) => Promise<PoolNodeResponse>;
+  recycleAllNodes: (poolID: number) => Promise<any>;
 }
 
 export const NodePoolsDisplay: React.FC<Props> = props => {
@@ -77,15 +88,25 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     types,
     addNodePool,
     updatePool,
-    deletePool
+    deletePool,
+    recycleAllNodes
   } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
 
   const { deleteLinode } = useLinodes();
 
   const deletePoolDialog = useDialog<number>(deletePool);
+  const recycleAllNodesDialog = useDialog<number>(recycleAllNodes);
   const recycleNodeDialog = useDialog<number>(deleteLinode);
+
+  const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(25);
+  const handleShowMore = () => {
+    if (numPoolsToDisplay < pools.length) {
+      setNumPoolsToDisplay(Math.min(numPoolsToDisplay + 25, pools.length));
+    }
+  };
 
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const [resizeDrawerOpen, setResizeDrawerOpen] = React.useState<boolean>(
@@ -170,6 +191,18 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     });
   };
 
+  const handleRecycleAllNodes = () => {
+    const { dialog, submitDialog, handleError } = recycleAllNodesDialog;
+    if (!dialog.entityID) {
+      return;
+    }
+    return submitDialog(dialog.entityID).catch(err => {
+      handleError(getAPIErrorOrDefault(err, 'Error recycling nodes')[0].reason);
+    });
+  };
+
+  const _pools = pools.slice(0, numPoolsToDisplay);
+
   /**
    * If the API returns an error when fetching node pools,
    * we want to display this error to the user from the
@@ -199,12 +232,23 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
         style={{ paddingBottom: 0 }}
       >
         <Grid item>
-          <Typography variant="h2" className={classes.nodePoolHeader}>
+          <Typography
+            variant="h2"
+            className={classnames({
+              [classes.nodePoolHeader]: true,
+              [classes.cmrSpacing]: flags.cmr
+            })}
+          >
             Node Pools
           </Typography>
         </Grid>
         <Grid item>
-          <div className={classes.addNodePoolLink}>
+          <div
+            className={classnames({
+              [classes.addNodePoolLink]: true,
+              [classes.cmrSpacing]: flags.cmr
+            })}
+          >
             <AddNewLink
               onClick={() => {
                 handleOpenAddDrawer();
@@ -220,7 +264,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
         ) : (
           <Grid container direction="column">
             <Grid item xs={12} className={classes.displayTable}>
-              {pools.map(thisPool => {
+              {_pools.map(thisPool => {
                 const { id, nodes } = thisPool;
 
                 const thisPoolType = types.find(
@@ -237,12 +281,21 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                       nodes={nodes ?? []}
                       handleClickResize={handleOpenResizeDrawer}
                       openDeletePoolDialog={deletePoolDialog.openDialog}
+                      openRecycleAllNodesDialog={
+                        recycleAllNodesDialog.openDialog
+                      }
                       openRecycleNodeDialog={recycleNodeDialog.openDialog}
                     />
                   </div>
                 );
               })}
+              {pools.length > numPoolsToDisplay && (
+                <Waypoint onEnter={handleShowMore} scrollableAncestor="window">
+                  <div style={{ minHeight: 50 }} />
+                </Waypoint>
+              )}
             </Grid>
+
             <AddNodePoolDrawer
               clusterLabel={clusterLabel}
               open={addDrawerOpen}
@@ -278,6 +331,13 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
               error={recycleNodeDialog.dialog.error}
               loading={recycleNodeDialog.dialog.isLoading}
               label={recycleNodeDialog.dialog.entityLabel}
+            />
+            <RecycleAllNodesDialog
+              open={recycleAllNodesDialog.dialog.isOpen}
+              loading={recycleAllNodesDialog.dialog.isLoading}
+              error={recycleAllNodesDialog.dialog.error}
+              onClose={recycleAllNodesDialog.closeDialog}
+              onSubmit={handleRecycleAllNodes}
             />
           </Grid>
         )}

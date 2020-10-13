@@ -36,8 +36,8 @@ interface Props {
   maintenanceStart?: string | null;
   maintenanceEnd?: string | null;
   userTimezone?: string;
-  userTimezoneLoading: boolean;
-  userTimezoneError?: APIError[];
+  userProfileLoading: boolean;
+  userProfileError?: APIError[];
   type?: 'migration' | 'reboot';
 }
 
@@ -49,16 +49,16 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
     maintenanceEnd,
     maintenanceStart,
     userTimezone,
-    userTimezoneError,
-    userTimezoneLoading
+    userProfileError,
+    userProfileLoading
   } = props;
 
   const timezoneMsg = () => {
-    if (userTimezoneLoading) {
+    if (userProfileLoading) {
       return 'Fetching timezone...';
     }
 
-    if (userTimezoneError) {
+    if (userProfileError) {
       return 'Error retrieving timezone.';
     }
 
@@ -98,17 +98,8 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
         </Typography>
       )}
       <Typography>
-        Please see
-        <a
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-          href="https://status.linode.com"
-        >
-          {' '}
-          the Linode status page{' '}
-        </a>
-        for additional information.
+        For more information, please see your{' '}
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </Typography>
     </Notice>
   );
@@ -135,7 +126,7 @@ const generateIntroText = (
     if (maintenanceInProgress) {
       return (
         <React.Fragment>
-          This Linode's physical host is currently undergoing maintenance.
+          This Linode&apos;s physical host is currently undergoing maintenance.
           During the maintenance, your Linode will be shut down
           {type === 'migration'
             ? ', cold migrated to a new host, '
@@ -159,7 +150,7 @@ const generateIntroText = (
 
       return (
         <React.Fragment>
-          This Linode's physical host will be undergoing maintenance on{' '}
+          This Linode&apos;s physical host will be undergoing maintenance on{' '}
           {rawDate}
           {rawDate !== humanizedDate && ` (${humanizedDate})`}
           {'. '}
@@ -186,8 +177,9 @@ const generateIntroText = (
   /** We are on the Dashboard or Linode Landing page. */
   return (
     <React.Fragment>
-      Maintenance is required for one or more of your Linodes' physical hosts.
-      Your maintenance times will be listed under the "Status" column
+      Maintenance is required for one or more of your Linodes&apos; physical
+      hosts. Your maintenance times will be listed under the &quot;Status&quot;
+      column
       {!location.pathname.includes('/linodes') && (
         <Link to="/linodes?view=list"> here</Link>
       )}

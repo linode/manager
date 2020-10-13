@@ -2,53 +2,48 @@ import { Image } from '@linode/api-v4/lib/images';
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
-import TagDrawer from 'src/components/TagCell/TagDrawer';
+import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { DialogType } from 'src/features/linodes/types';
+import { NotificationDrawer } from 'src/features/NotificationCenter';
+import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import useFlags from 'src/hooks/useFlags';
 import useLinodes from 'src/hooks/useLinodes';
+import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
+import formatDate from 'src/utilities/formatDate';
 import LinodeRow from './LinodeRow/LinodeRow';
 import LinodeRow_CMR from './LinodeRow/LinodeRow_CMR';
-
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import useFlags from 'src/hooks/useFlags';
-import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 
 interface Props {
   data: LinodeWithMaintenanceAndDisplayStatus[];
   images: Image[];
   showHead?: boolean;
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  openLinodeResize: (linodeID: number) => void;
-}
-
-interface TagDrawerProps {
-  label: string;
-  tags: string[];
-  open: boolean;
-  linodeID: number;
 }
 
 type CombinedProps = Props & PaginationProps;
 
 export const ListView: React.FC<CombinedProps> = props => {
-  const {
-    data,
-    openDeleteDialog,
-    openPowerActionDialog,
-    openLinodeResize
-  } = props;
+  const { data, openDialog, openPowerActionDialog } = props;
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: [],
     label: '',
     linodeID: 0
   });
+  const [notificationDrawerOpen, setNotificationDrawerOpen] = React.useState(
+    false
+  );
 
   const { updateLinode } = useLinodes();
+  const flags = useFlags();
+  const notificationData = useNotificationData();
 
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
@@ -81,7 +76,13 @@ export const ListView: React.FC<CombinedProps> = props => {
     });
   };
 
-  const flags = useFlags();
+  // @todo delete after CMR
+  const openDeleteDialog = (linodeID: number, linodeLabel: string) => {
+    props.openDialog('delete', linodeID, linodeLabel);
+  };
+
+  const openNotificationDrawer = () => setNotificationDrawerOpen(true);
+  const closeNotificationDrawer = () => setNotificationDrawerOpen(false);
 
   const Row = flags.cmr ? LinodeRow_CMR : LinodeRow;
 
@@ -94,7 +95,7 @@ export const ListView: React.FC<CombinedProps> = props => {
           id={linode.id}
           ipv4={linode.ipv4}
           maintenanceStartTime={
-            linode.maintenance ? linode.maintenance.when : ''
+            linode.maintenance?.when ? formatDate(linode.maintenance.when) : ''
           }
           ipv6={linode.ipv6 || ''}
           label={linode.label}
@@ -110,9 +111,11 @@ export const ListView: React.FC<CombinedProps> = props => {
           image={linode.image}
           key={`linode-row-${idx}`}
           openTagDrawer={openTagDrawer}
+          openDialog={openDialog}
+          openNotificationDrawer={openNotificationDrawer}
+          // @todo delete after CMR
           openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
-          openLinodeResize={openLinodeResize}
         />
       ))}
       <TagDrawer
@@ -122,6 +125,11 @@ export const ListView: React.FC<CombinedProps> = props => {
         addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
         deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
         onClose={closeTagDrawer}
+      />
+      <NotificationDrawer
+        open={notificationDrawerOpen}
+        onClose={closeNotificationDrawer}
+        data={notificationData}
       />
     </>
   );

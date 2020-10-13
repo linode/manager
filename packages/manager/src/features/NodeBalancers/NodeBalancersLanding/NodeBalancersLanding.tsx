@@ -24,11 +24,20 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import EntityTable, {
+  EntityTableRow,
+  HeaderCell
+} from 'src/components/EntityTable';
+import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import OrderBy from 'src/components/OrderBy';
+import LandingHeader from 'src/components/LandingHeader';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Toggle from 'src/components/Toggle';
+import withFeatureFlagConsumerContainer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import {
   NodeBalancerGettingStarted,
   NodeBalancerReference
@@ -42,11 +51,9 @@ import { nodeBalancersWithConfigs } from 'src/store/nodeBalancer/nodeBalancer.se
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import ListGroupedNodeBalancers from './ListGroupedNodeBalancers';
-import ListNodeBalancers from './ListNodeBalancers';
 import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
-
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import NodeBalancerTableRow from './NodeBalancerTableRow';
+import NodeBalancerTableRow_CMR from './NodeBalancerTableRow_CMR';
 
 type ClassNames =
   | 'root'
@@ -111,7 +118,58 @@ type CombinedProps = WithNodeBalancerActions &
   WithNodeBalancers &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
-  SetDocsProps;
+  SetDocsProps &
+  FeatureFlagConsumerProps;
+
+const headers: HeaderCell[] = [
+  {
+    label: 'Name',
+    dataColumn: 'label',
+    sortable: true,
+    widthPercent: 20
+  },
+  {
+    label: 'Backend Status',
+    dataColumn: 'status',
+    sortable: false,
+    widthPercent: 15,
+    hideOnMobile: true
+  },
+  {
+    label: 'Transferred',
+    dataColumn: 'transfer:total',
+    sortable: true,
+    widthPercent: 5,
+    hideOnMobile: true
+  },
+  {
+    label: 'Ports',
+    dataColumn: 'updated',
+    sortable: true,
+    widthPercent: 5,
+    hideOnMobile: true
+  },
+  {
+    label: 'IP Address',
+    dataColumn: 'ip',
+    sortable: false,
+    widthPercent: 5
+  },
+  {
+    label: 'Region',
+    dataColumn: 'region',
+    sortable: true,
+    widthPercent: 5,
+    hideOnMobile: true
+  },
+  {
+    label: 'Action Menu',
+    visuallyHidden: true,
+    dataColumn: '',
+    sortable: false,
+    widthPercent: 5
+  }
+];
 
 export class NodeBalancersLanding extends React.Component<
   CombinedProps,
@@ -218,8 +276,10 @@ export class NodeBalancersLanding extends React.Component<
       nodeBalancersCount,
       nodeBalancersLoading,
       nodeBalancersData,
+      nodeBalancersLastUpdated,
       nodeBalancersError,
-      location
+      location,
+      flags
     } = this.props;
 
     const {
@@ -238,6 +298,17 @@ export class NodeBalancersLanding extends React.Component<
       return <NodeBalancersLandingEmptyState />;
     }
 
+    const Table = flags.cmr ? EntityTable_CMR : EntityTable;
+
+    const nodeBalancerRow: EntityTableRow<NodeBalancer> = {
+      Component: flags.cmr ? NodeBalancerTableRow_CMR : NodeBalancerTableRow,
+      data: Object.values(nodeBalancersData),
+      handlers: { toggleDialog: this.toggleDialog },
+      loading: nodeBalancersLoading,
+      error: nodeBalancersError,
+      lastUpdated: nodeBalancersLastUpdated
+    };
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="NodeBalancers" />
@@ -253,75 +324,74 @@ export class NodeBalancersLanding extends React.Component<
           }: ToggleProps<boolean>) => {
             return (
               <React.Fragment>
-                <Grid
-                  container
-                  justify="space-between"
-                  alignItems="flex-end"
-                  style={{ paddingBottom: 0 }}
-                >
-                  <Grid item className={classes.titleWrapper}>
-                    <Breadcrumb
-                      pathname={location.pathname}
-                      data-qa-title
-                      labelTitle="NodeBalancers"
-                      className={classes.title}
-                    />
-                  </Grid>
-                  <Grid item className="p0">
-                    <FormControlLabel
-                      className={classes.tagGroup}
-                      label="Group by Tag:"
-                      control={
-                        <Toggle
-                          className={
-                            nodeBalancersAreGrouped ? ' checked' : ' unchecked'
-                          }
-                          onChange={toggleNodeBalancerGroupByTag}
-                          checked={nodeBalancersAreGrouped}
-                        />
-                      }
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Grid
-                      container
-                      alignItems="flex-end"
-                      style={{ width: 'auto' }}
-                    >
-                      <Grid item className="pt0">
-                        <AddNewLink
-                          onClick={() => history.push('/nodebalancers/create')}
-                          label="Add a NodeBalancer"
-                        />
+                {this.props.flags.cmr ? (
+                  <LandingHeader
+                    title="NodeBalancers"
+                    entity="NodeBalancer"
+                    onAddNew={() =>
+                      this.props.history.push('/nodebalancers/create')
+                    }
+                    createButtonWidth={190}
+                    iconType="nodebalancer"
+                    docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
+                  />
+                ) : (
+                  <Grid
+                    container
+                    justify="space-between"
+                    alignItems="flex-end"
+                    style={{ paddingBottom: 0 }}
+                  >
+                    <Grid item className={classes.titleWrapper}>
+                      <Breadcrumb
+                        pathname={location.pathname}
+                        data-qa-title
+                        labelTitle="NodeBalancers"
+                        className={classes.title}
+                      />
+                    </Grid>
+                    <Grid item className="p0">
+                      <FormControlLabel
+                        className={classes.tagGroup}
+                        label="Group by Tag:"
+                        control={
+                          <Toggle
+                            className={
+                              nodeBalancersAreGrouped
+                                ? ' checked'
+                                : ' unchecked'
+                            }
+                            onChange={toggleNodeBalancerGroupByTag}
+                            checked={nodeBalancersAreGrouped}
+                          />
+                        }
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Grid
+                        container
+                        alignItems="flex-end"
+                        style={{ width: 'auto' }}
+                      >
+                        <Grid item className="pt0">
+                          <AddNewLink
+                            onClick={() =>
+                              history.push('/nodebalancers/create')
+                            }
+                            label="Add a NodeBalancer"
+                          />
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-                <OrderBy
-                  data={Object.values(nodeBalancersData)}
-                  order={'desc'}
-                  orderBy={`label`}
-                >
-                  {({
-                    data: orderedData,
-                    handleOrderChange,
-                    order,
-                    orderBy
-                  }) => {
-                    const props = {
-                      data: orderedData,
-                      handleOrderChange,
-                      order,
-                      orderBy,
-                      toggleDialog: this.toggleDialog
-                    };
-                    return nodeBalancersAreGrouped ? (
-                      <ListGroupedNodeBalancers {...props} />
-                    ) : (
-                      <ListNodeBalancers {...props} />
-                    );
-                  }}
-                </OrderBy>
+                )}
+                <Table
+                  entity="nodebalancer"
+                  groupByTag={nodeBalancersAreGrouped}
+                  row={nodeBalancerRow}
+                  headers={headers}
+                  initialOrder={{ order: 'desc', orderBy: 'label' }}
+                />
               </React.Fragment>
             );
           }}
@@ -388,6 +458,7 @@ interface WithNodeBalancers {
   nodeBalancersData: NodeBalancerWithConfigs[];
   nodeBalancersError?: APIError[];
   nodeBalancersLoading: boolean;
+  nodeBalancersLastUpdated: number;
 }
 
 export const enhanced = compose<CombinedProps, {}>(
@@ -406,9 +477,11 @@ export const enhanced = compose<CombinedProps, {}>(
       nodeBalancersData: nodeBalancersWithConfigs(__resources),
       nodeBalancersError: path(['read'], error),
       // In this component we only want to show loading state on initial load
-      nodeBalancersLoading: nodeBalancersLoading && lastUpdated === 0
+      nodeBalancersLoading: nodeBalancersLoading && lastUpdated === 0,
+      nodeBalancersLastUpdated: lastUpdated
     };
   }),
+  withFeatureFlagConsumerContainer,
   withRouter,
   withNodeBalancerActions,
   SectionErrorBoundary,

@@ -99,6 +99,9 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
   }
   addLine(`${city}, ${state}, ${zip}`);
   addLine(`${country}`);
+  if (account.tax_id) {
+    addLine(`Tax ID: ${account.tax_id}`);
+  }
 
   return currentLine;
 };
@@ -187,29 +190,9 @@ export const printInvoice = (
       );
       const rightHeaderYPosition = addRightHeader(doc, account);
 
-      /** only show tax ID if there is one provided */
-      const strings =
-        account.tax_id && hasTax
-          ? [
-              {
-                text: `Invoice: #${invoiceId}`
-              },
-              {
-                /*
-          300px left margin is a hacky way of aligning the text to the right
-          because this library stinks
-         */
-                text: `Tax ID: ${account.tax_id}`,
-                leftMargin: 300
-              }
-            ]
-          : [{ text: `Invoice: #${invoiceId}` }];
-
-      addTitle(
-        doc,
-        Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4,
-        ...strings
-      );
+      addTitle(doc, Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4, {
+        text: `Invoice: #${invoiceId}`
+      });
 
       createInvoiceItemsTable(doc, itemsChunk);
       createFooter(doc, baseFont);

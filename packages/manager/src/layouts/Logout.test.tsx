@@ -3,12 +3,6 @@ import * as React from 'react';
 
 import { Logout } from './Logout';
 
-/**
- * prevent console errors in Jest tests
- * see: https://github.com/jsdom/jsdom/issues/2112
- */
-window.location.assign = jest.fn();
-
 describe('layouts/Logout', () => {
   const component = shallow<Logout>(
     <Logout token="" dispatchLogout={jest.fn()} />

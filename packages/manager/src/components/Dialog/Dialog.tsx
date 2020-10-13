@@ -11,12 +11,13 @@ import { convertForAria } from 'src/components/TabLink/TabLink';
 
 export interface DialogProps extends _DialogProps {
   title: string;
+  fullHeight?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
-      padding: theme.spacing(4),
+      padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
       paddingTop: 0,
       maxHeight: '100%',
       '& .actionPanel': {
@@ -27,15 +28,21 @@ const useStyles = makeStyles((theme: Theme) =>
         flexBasis: '100%'
       }
     },
+    fullHeight: {
+      '& .MuiDialog-paper': {
+        height: '100vh'
+      }
+    },
     settingsBackdrop: {
       backgroundColor: 'rgba(0,0,0,.3)'
     },
     drawerHeader: {
       padding: theme.spacing(2)
     },
-    drawerContent: {
+    dialogContent: {
       padding: theme.spacing(2),
-      paddingTop: 0
+      paddingTop: 0,
+      margin: 'auto'
     },
     button: {
       minWidth: 'auto',
@@ -55,20 +62,20 @@ const useStyles = makeStyles((theme: Theme) =>
     sticky: {
       position: 'sticky',
       top: 0,
-      padding: theme.spacing(2),
-      paddingRight: theme.spacing(),
-      margin: '8px -8px',
-      background: theme.color.white,
+      padding: theme.spacing(),
+      paddingTop: theme.spacing(4),
+      marginBottom: 20,
       zIndex: 1,
       width: '100%',
       display: 'flex',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      alignItems: 'center'
     }
   })
 );
 
 const Dialog: React.FC<DialogProps> = props => {
-  const { title, children, ...rest } = props;
+  const { title, fullHeight, children, ...rest } = props;
 
   const classes = useStyles();
 
@@ -87,11 +94,12 @@ const Dialog: React.FC<DialogProps> = props => {
       BackdropProps={{
         className: classes.settingsBackdrop
       }}
+      className={fullHeight ? classes.fullHeight : undefined}
     >
       <Grid
         container
-        justify="space-between"
         alignItems="center"
+        justify="center"
         updateFor={[title, props.children]}
       >
         <div className={classes.sticky}>
@@ -113,7 +121,7 @@ const Dialog: React.FC<DialogProps> = props => {
           </Grid>
         </div>
         <Grid container>
-          <div className={classes.drawerContent}>{children}</div>
+          <div className={classes.dialogContent}>{children}</div>
         </Grid>
       </Grid>
     </MUIDialog>

@@ -1,17 +1,17 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     borderTop: 'none',
+    borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    color: theme.cmrTextColors.tableStatic,
     fontSize: '.875rem',
     lineHeight: '1rem',
     padding: '0px 15px',
     '&.emptyCell': {
-      borderTop: `1px solid ${theme.palette.divider}`,
       height: 40
     },
     '&:last-child': {
@@ -35,18 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       left: 10,
       color: theme.palette.primary.main
     }
-  },
-  data: {
-    [theme.breakpoints.down('sm')]: {
-      textAlign: 'right',
-      marginLeft: theme.spacing(3)
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
-  },
-  parentColSpan: {
-    width: '100%'
   },
   compact: {
     padding: 6
@@ -84,16 +72,7 @@ export const WrappedTableCell: React.FC<CombinedProps> = props => {
       })}
       {...rest}
     >
-      {!!parentColumn ? (
-        <React.Fragment>
-          <Hidden mdUp>
-            <span className={classes.parentColSpan}>{parentColumn}</span>
-          </Hidden>
-          <div className={`${classes.data} data`}>{props.children}</div>
-        </React.Fragment>
-      ) : (
-        props.children
-      )}
+      {props.children}
     </TableCell>
   );
 };

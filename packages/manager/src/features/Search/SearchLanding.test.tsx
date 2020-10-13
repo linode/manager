@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
@@ -36,8 +36,6 @@ const propsWithResults: Props = {
 jest.mock('src/hooks/useReduxLoad', () => ({
   useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false })
 }));
-
-afterEach(cleanup);
 
 describe('Component', () => {
   it('should render', () => {

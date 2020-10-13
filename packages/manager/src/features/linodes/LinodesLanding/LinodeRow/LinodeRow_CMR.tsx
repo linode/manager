@@ -23,9 +23,11 @@ import {
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
+import { DialogType } from 'src/features/linodes/types';
 import useLinodes from 'src/hooks/useLinodes';
-import { capitalize } from 'src/utilities/capitalize';
+import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
@@ -61,14 +63,18 @@ interface Props {
     linodeLabel: string,
     tags: string[]
   ) => void;
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: (
+    type: DialogType,
+    linodeID: number,
+    linodeLabel?: string
+  ) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  openLinodeResize: (linodeID: number) => void;
+  openNotificationDrawer: () => void;
 }
 
 export type CombinedProps = Props &
@@ -100,20 +106,19 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     classes,
     linodeNotifications,
     openTagDrawer,
-    openDeleteDialog,
+    openDialog,
     openPowerActionDialog,
-    openLinodeResize,
+    openNotificationDrawer,
     // displayType, @todo use for M3-2059
     recentEvent,
     mutationAvailable
   } = props;
 
   const { updateLinode } = useLinodes();
+  const { enqueueSnackbar } = useSnackbar();
 
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const addTag = React.useCallback(
     (tag: string) => {
@@ -145,9 +150,10 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   const MaintenanceText = () => {
     return (
       <>
-        Please consult your{' '}
-        <Link to="/support/tickets?type=open">support tickets</Link> for
-        details.
+        Maintenance is scheduled for{' '}
+        {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}. For more
+        information, please see your{' '}
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
   };
@@ -193,7 +199,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     >
       {headCell}
       <TableCell
-        parentColumn="Status"
         className={classNames({
           [classes.statusCell]: true,
           [classes.statusCellMaintenance]: maintenanceStartTime
@@ -205,59 +210,53 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             recentEvent && (
               <>
                 <StatusIcon status={iconStatus} />
-                <ProgressDisplay
-                  className={classes.progressDisplay}
-                  progress={recentEvent.percent_complete}
-                  text={transitionText(status, id, recentEvent)}
-                />
+                <button
+                  className={classes.statusLink}
+                  onClick={() => openNotificationDrawer()}
+                >
+                  <ProgressDisplay
+                    className={classes.progressDisplay}
+                    progress={recentEvent.percent_complete}
+                    text={transitionText(status, id, recentEvent)}
+                  />
+                </button>
               </>
             )
           ) : (
             <>
               <StatusIcon status={iconStatus} />
-              {capitalize(displayStatus)}
+              {displayStatus.includes('_')
+                ? capitalizeAllWords(displayStatus.replace('_', ' '))
+                : capitalize(displayStatus)}
             </>
           )
         ) : (
-          <>
-            <div>
-              <div>
-                <strong>Maintenance Scheduled</strong>
-              </div>
-              <div>
-                {dateTime[0]} at {dateTime[1]}
-              </div>
-            </div>
+          <div className={classes.maintenanceOuter}>
+            <strong>Maintenance Scheduled</strong>
             <HelpIcon
               text={<MaintenanceText />}
               className={classes.statusHelpIcon}
               tooltipPosition="top"
               interactive
             />
-          </>
+          </div>
         )}
       </TableCell>
-      <TableCell
-        parentColumn="IP Address"
-        className={classes.ipCell}
-        data-qa-ips
-      >
-        <div className={classes.ipCellWrapper}>
-          <IPAddress ips={ipv4} copyRight showCopyOnHover />
-        </div>
-      </TableCell>
-      <TableCell
-        parentColumn="Region"
-        className={classes.regionCell}
-        data-qa-region
-      >
-        <RegionIndicator region={region} />
-      </TableCell>
-      <LinodeRowBackupCell
-        linodeId={id}
-        backupsEnabled={backups.enabled || false}
-        mostRecentBackup={mostRecentBackup || ''}
-      />
+      <Hidden xsDown>
+        <TableCell className={classes.ipCell} data-qa-ips>
+          <div className={classes.ipCellWrapper}>
+            <IPAddress ips={ipv4} copyRight />
+          </div>
+        </TableCell>
+        <TableCell className={classes.regionCell} data-qa-region>
+          <RegionIndicator region={region} />
+        </TableCell>
+        <LinodeRowBackupCell
+          linodeId={id}
+          backupsEnabled={backups.enabled || false}
+          mostRecentBackup={mostRecentBackup || ''}
+        />
+      </Hidden>
       <Hidden mdDown>
         <TagCell
           tags={tags}
@@ -283,9 +282,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             linodeType={type}
             linodeStatus={status}
             linodeBackups={backups}
-            openDeleteDialog={openDeleteDialog}
+            openDialog={openDialog}
             openPowerActionDialog={openPowerActionDialog}
-            openLinodeResize={openLinodeResize}
             noImage={!image}
             inTableContext
           />
@@ -351,8 +349,7 @@ const ProgressDisplay: React.FC<{
 
   return (
     <Typography variant="body2" className={className}>
-      {text}:{' '}
-      {displayProgress === 'scheduled' ? '(0%)' : `(${displayProgress})`}
+      {text} {displayProgress === 'scheduled' ? '(0%)' : `(${displayProgress})`}
     </Typography>
   );
 };

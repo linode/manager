@@ -17,7 +17,6 @@ import useFlags from 'src/hooks/useFlags';
 import { handleOpen } from 'src/store/backupDrawer';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
 import { MapState } from 'src/store/types';
-import { formatNotifications } from 'src/utilities/formatNotifications';
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
 import DashboardCard from './DashboardCard';
@@ -28,6 +27,7 @@ import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 
 interface StateProps {
   accountBackups: boolean;
@@ -36,8 +36,8 @@ interface StateProps {
   backupError?: Error;
   notifications: Notification[];
   userTimezone: string;
-  userTimezoneLoading: boolean;
-  userTimezoneError?: APIError[];
+  userProfileLoading: boolean;
+  userProfileError?: APIError[];
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
@@ -47,7 +47,9 @@ interface DispatchProps {
   };
 }
 
-type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
+export type CombinedProps = StateProps &
+  DispatchProps &
+  RouteComponentProps<{}>;
 
 export const Dashboard: React.FC<CombinedProps> = props => {
   const {
@@ -71,8 +73,8 @@ export const Dashboard: React.FC<CombinedProps> = props => {
       {props.someLinodesHaveScheduledMaintenance && (
         <MaintenanceBanner
           userTimezone={props.userTimezone}
-          userTimezoneError={props.userTimezoneError}
-          userTimezoneLoading={props.userTimezoneLoading}
+          userProfileError={props.userProfileError}
+          userProfileLoading={props.userProfileLoading}
         />
       )}
       <Grid container spacing={3}>
@@ -128,7 +130,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
-    formatNotifications(notifications),
+    notifications,
     linodes
   );
 
@@ -139,9 +141,9 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
       state
     ),
     notifications: pathOr([], ['data'], state.__resources.notifications),
-    userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
-    userTimezoneLoading: state.__resources.profile.loading,
-    userTimezoneError: path(['read'], state.__resources.profile.error),
+    userTimezone: getUserTimezone(state),
+    userProfileLoading: state.__resources.profile.loading,
+    userProfileError: path(['read'], state.__resources.profile.error),
     someLinodesHaveScheduledMaintenance: linodesWithMaintenance
       ? linodesWithMaintenance.some(eachLinode => !!eachLinode.maintenance)
       : false,

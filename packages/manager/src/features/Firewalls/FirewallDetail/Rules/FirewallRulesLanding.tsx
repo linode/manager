@@ -14,6 +14,7 @@ import Prompt from 'src/components/Prompt';
 import withFirewalls, {
   DispatchProps
 } from 'src/containers/firewalls.container';
+import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
 import curriedFirewallRuleEditorReducer, {
@@ -25,12 +26,13 @@ import curriedFirewallRuleEditorReducer, {
   stripExtendedFields
 } from './firewallRuleEditor';
 import FirewallRuleTable from './FirewallRuleTable';
+import FirewallRuleTable_CMR from './FirewallRuleTable_CMR';
 import { Category, parseFirewallRuleError } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     fontSize: '1em',
-    paddingTop: theme.spacing(2),
+    lineHeight: 1.5,
     paddingBottom: theme.spacing(1)
   },
   table: {
@@ -39,6 +41,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actions: {
     alignSelf: 'flex-end'
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -54,12 +62,15 @@ interface Drawer {
   ruleIdx?: number;
 }
 
-type CombinedProps = Props & RouteComponentProps & DispatchProps;
+type CombinedProps = Props & DispatchProps & RouteComponentProps;
 
 const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const { firewallID, rules } = props;
+
+  const Table = flags.cmr ? FirewallRuleTable_CMR : FirewallRuleTable;
 
   /**
    * Component state and handlers
@@ -249,8 +260,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
               )}
             >
               <Typography variant="subtitle1">
-                The changes you made to this Firewall haven't been applied. If
-                you navigate away from this page, your changes will be
+                The changes you made to this Firewall haven&apos;t been applied.
+                If you navigate away from this page, your changes will be
                 discarded.
               </Typography>
             </ConfirmationDialog>
@@ -259,9 +270,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       </Prompt>
 
       <Typography variant="body1" className={classes.copy}>
-        Firewall rules act as a whitelist, allowing network traffic that meets
-        the rules’ parameters to pass through. Any traffic not explicitly
-        permitted by a rule is blocked.
+        Firewall rules act as an allowlist, permitting only network traffic that
+        matches the rules&apos; parameters to pass through. If there are no
+        outbound rules set, all outbound traffic will be permitted.
       </Typography>
 
       {generalErrors?.length === 1 && (
@@ -269,7 +280,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       )}
 
       <div className={classes.table}>
-        <FirewallRuleTable
+        <Table
           category="inbound"
           rulesWithStatus={inboundRules}
           openRuleDrawer={openRuleDrawer}
@@ -281,7 +292,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         />
       </div>
       <div className={classes.table}>
-        <FirewallRuleTable
+        <Table
           category="outbound"
           rulesWithStatus={outboundRules}
           openRuleDrawer={openRuleDrawer}
@@ -360,7 +371,7 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
           </Button>
         </ActionsPanel>
       ),
-      []
+      [handleDiscard, handleClose]
     );
 
     return (

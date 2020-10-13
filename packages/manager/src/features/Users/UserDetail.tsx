@@ -4,28 +4,23 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { clone, compose, path as pathRamda } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
 import Breadcrumb from 'src/components/Breadcrumb';
-import AppBar from 'src/components/core/AppBar';
+
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import TabLink from 'src/components/TabLink';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
@@ -154,15 +149,6 @@ class UserDetail extends React.Component<CombinedProps> {
     }
   }
 
-  handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = this.props;
-    const routeName = this.tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
-
   clearNewUser = () => {
     this.setState({ createdUsername: undefined });
   };
@@ -290,49 +276,6 @@ class UserDetail extends React.Component<CombinedProps> {
       });
   };
 
-  renderUserProfile = () => {
-    const {
-      username,
-      email,
-      profileSaving,
-      profileSuccess,
-      profileErrors,
-      accountSaving,
-      accountSuccess,
-      accountErrors,
-      originalUsername
-    } = this.state;
-    return (
-      <UserProfile
-        username={username}
-        email={email}
-        changeUsername={this.onChangeUsername}
-        changeEmail={this.onChangeEmail}
-        saveAccount={this.onSaveAccount}
-        accountSaving={accountSaving}
-        accountSuccess={accountSuccess || false}
-        accountErrors={accountErrors}
-        saveProfile={this.onSaveProfile}
-        profileSaving={profileSaving}
-        profileSuccess={profileSuccess || false}
-        profileErrors={profileErrors}
-        originalUsername={originalUsername}
-      />
-    );
-  };
-
-  renderUserPermissions = () => {
-    const { username } = this.state;
-    const { profileUsername } = this.props;
-    return (
-      <UserPermissions
-        currentUser={profileUsername}
-        username={username}
-        clearNewUser={this.clearNewUser}
-      />
-    );
-  };
-
   matches = (p: string) => {
     return Boolean(matchPath(p, { path: this.props.location.pathname }));
   };
@@ -343,15 +286,21 @@ class UserDetail extends React.Component<CombinedProps> {
   };
 
   render() {
+    const { classes, location, profileUsername } = this.props;
     const {
-      classes,
-      match: {
-        url,
-        params: { username }
-      },
-      location
-    } = this.props;
-    const { error, gravatarUrl, createdUsername } = this.state;
+      error,
+      gravatarUrl,
+      createdUsername,
+      username,
+      email,
+      profileSaving,
+      profileSuccess,
+      profileErrors,
+      accountSaving,
+      accountSuccess,
+      accountErrors,
+      originalUsername
+    } = this.state;
 
     if (error) {
       return (
@@ -382,6 +331,10 @@ class UserDetail extends React.Component<CombinedProps> {
         />
       );
 
+    const navToURL = (index: number) => {
+      this.props.history.push(this.tabs[index].routeName);
+    };
+
     return (
       <React.Fragment>
         <Grid container justify="space-between">
@@ -398,50 +351,42 @@ class UserDetail extends React.Component<CombinedProps> {
             />
           </Grid>
         </Grid>
-        <AppBar position="static" color="default" role="tablist">
-          <Tabs
-            value={this.clampTabChoice()}
-            onChange={this.handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="on"
-          >
-            {this.tabs.map(tab => (
-              <Tab
-                key={tab.title}
-                data-qa-tab={tab.title}
-                component={React.forwardRef((props, ref) => (
-                  <TabLink
-                    to={tab.routeName}
-                    title={tab.title}
-                    {...props}
-                    ref={ref}
-                  />
-                ))}
+        <Tabs defaultIndex={this.clampTabChoice()} onChange={navToURL}>
+          <TabLinkList tabs={this.tabs} />
+
+          {createdUsername && (
+            <Notice
+              success
+              text={`User ${createdUsername} created successfully`}
+            />
+          )}
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <UserProfile
+                username={username}
+                email={email}
+                changeUsername={this.onChangeUsername}
+                changeEmail={this.onChangeEmail}
+                saveAccount={this.onSaveAccount}
+                accountSaving={accountSaving}
+                accountSuccess={accountSuccess || false}
+                accountErrors={accountErrors}
+                saveProfile={this.onSaveProfile}
+                profileSaving={profileSaving}
+                profileSuccess={profileSuccess || false}
+                profileErrors={profileErrors}
+                originalUsername={originalUsername}
               />
-            ))}
-          </Tabs>
-        </AppBar>
-        {createdUsername && (
-          <Notice
-            success
-            text={`User ${createdUsername} created successfully`}
-          />
-        )}
-        <Switch>
-          <Route
-            exact
-            path={`${url}/permissions`}
-            component={this.renderUserPermissions}
-          />
-          <Route
-            path={`${url}/profile`}
-            render={this.renderUserProfile}
-            exact
-          />
-          <Redirect to={`${url}/profile`} />
-        </Switch>
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <UserPermissions
+                currentUser={profileUsername}
+                username={username}
+                clearNewUser={this.clearNewUser}
+              />
+            </SafeTabPanel>
+          </TabPanels>
+        </Tabs>
       </React.Fragment>
     );
   }
@@ -474,10 +419,7 @@ const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
 
 const styled = withStyles(styles);
 
-export const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+export const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<any, any, any, any>(
   connected,

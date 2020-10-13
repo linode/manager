@@ -19,7 +19,7 @@ import TableWrapper_CMR from './Table';
 const linodes = linodeFactory.buildList(10);
 
 class StoryTable extends React.Component {
-  handleDeleteDialog = (id: number, label: string) => {
+  handleDialog = (type: string, id: number, label: string) => {
     return;
   };
 
@@ -42,7 +42,12 @@ class StoryTable extends React.Component {
                 order={order}
                 orderBy={orderBy}
                 handleOrderChange={handleOrderChange}
+                toggleLinodeView={() => 'grid'}
+                linodesAreGrouped={false}
+                toggleGroupLinodes={() => true}
+                linodeViewPreference={'list'}
               />
+
               <TableBody>
                 {orderedData.map(linode => (
                   <LinodeRow_CMR
@@ -63,9 +68,9 @@ class StoryTable extends React.Component {
                     openTagDrawer={() => null}
                     type={linode.type}
                     vcpus={linode.specs.vcpus}
-                    openDeleteDialog={this.handleDeleteDialog}
+                    openDialog={this.handleDialog}
                     openPowerActionDialog={this.handlePowerActionDialog}
-                    openLinodeResize={() => null as any}
+                    openNotificationDrawer={() => null}
                   ></LinodeRow_CMR>
                 ))}
               </TableBody>

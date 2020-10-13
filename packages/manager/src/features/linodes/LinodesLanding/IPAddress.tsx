@@ -75,7 +75,7 @@ const styles = (theme: Theme) =>
       }
     },
     ip: {
-      color: theme.palette.text.primary,
+      // color: theme.palette.text.primary,
       fontSize: '.9rem'
     },
     ipLink: {
@@ -144,7 +144,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     );
   };
 
-  renderIP = (ip: string, copyRight?: Boolean, key?: number) => {
+  renderIP = (ip: string, copyRight?: boolean, key?: number) => {
     const { classes, showAll } = this.props;
     return (
       <div

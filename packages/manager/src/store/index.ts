@@ -141,17 +141,21 @@ import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState
 } from 'src/store/volumeForm';
-import initialLoad, {
-  defaultState as initialLoadState,
-  State as InitialLoadState
-} from './initialLoad/initialLoad.reducer';
 import featureFlagsLoad, {
   defaultState as featureFlagsLoadState,
   State as FeatureFlagsLoadState
 } from './featureFlagsLoad/featureFlagsLoad.reducer';
+import initialLoad, {
+  defaultState as initialLoadState,
+  State as InitialLoadState
+} from './initialLoad/initialLoad.reducer';
 import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
+import mockFeatureFlags, {
+  defaultMockFeatureFlagState,
+  MockFeatureFlagState
+} from './mockFeatureFlags';
 import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
 import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
 import notifications, {
@@ -163,6 +167,10 @@ import preferences, {
   State as PreferencesState
 } from './preferences/preferences.reducer';
 import { initReselectDevtools } from './selectors';
+import vlans, {
+  defaultState as defaultVLANState,
+  State as VlanState
+} from './vlans/vlans.reducer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 initReselectDevtools();
@@ -190,7 +198,8 @@ const __resourcesDefaultState = {
   types: defaultTypesState,
   volumes: defaultVolumesState,
   buckets: defaultBucketsState,
-  clusters: defaultClustersState
+  clusters: defaultClustersState,
+  vlans: defaultVLANState
 };
 
 export interface ResourcesState {
@@ -214,6 +223,7 @@ export interface ResourcesState {
   volumes: VolumesState;
   buckets: BucketsState;
   clusters: ClustersState;
+  vlans: VlanState;
 }
 
 export interface ApplicationState {
@@ -236,6 +246,8 @@ export interface ApplicationState {
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
+  mockFeatureFlags: MockFeatureFlagState;
+  vlans: VlanState;
 }
 
 export const defaultState: ApplicationState = {
@@ -257,7 +269,9 @@ export const defaultState: ApplicationState = {
   firewallDevices: defaultFirewallDevicesState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
-  longviewStats: defaultLongviewStatsState
+  longviewStats: defaultLongviewStatsState,
+  mockFeatureFlags: defaultMockFeatureFlagState,
+  vlans: defaultVLANState
 };
 
 /**
@@ -283,7 +297,8 @@ const __resources = combineReducers({
   types,
   volumes,
   buckets,
-  clusters
+  clusters,
+  vlans
 });
 
 const reducers = combineReducers<ApplicationState>({
@@ -305,7 +320,9 @@ const reducers = combineReducers<ApplicationState>({
   firewallDevices,
   globalErrors,
   longviewClients: longview,
-  longviewStats
+  longviewStats,
+  mockFeatureFlags,
+  vlans
 });
 
 const enhancers = compose(

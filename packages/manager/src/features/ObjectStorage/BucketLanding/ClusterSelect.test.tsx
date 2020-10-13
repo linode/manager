@@ -22,13 +22,13 @@ describe('ClusterSelect', () => {
 
   it('should pass down error messages to <Select />', () => {
     wrapper.setProps({ clustersError: 'error' });
-    expect(wrapper.find('WithStyles(Select)').prop('errorText')).toBe(
-      'Error loading Regions'
-    );
+    expect(
+      wrapper.find('WithStyles(WithTheme(Select))').prop('errorText')
+    ).toBe('Error loading Regions');
 
     wrapper.setProps({ error: 'Field Error', clustersError: undefined });
-    expect(wrapper.find('WithStyles(Select)').prop('errorText')).toBe(
-      'Field Error'
-    );
+    expect(
+      wrapper.find('WithStyles(WithTheme(Select))').prop('errorText')
+    ).toBe('Field Error');
   });
 });

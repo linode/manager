@@ -419,16 +419,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       cancel_account: 'Can cancel the entire account'
     };
     return (
-      <Grid
-        item
-        key={perm}
-        xs={12}
-        sm={6}
-        className="py0"
-        id="tabpanel-userPermissions"
-        role="tabpanel"
-        aria-labelledby="tab-userPermissions"
-      >
+      <Grid item key={perm} xs={12} sm={6} className="py0">
         <FormControlLabel
           className={classes.globalRow}
           label={permDescriptionMap[perm]}
@@ -634,9 +625,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -35 }}
+                  htmlFor={`#${entity}-none`}
                 >
                   None
                   <Radio
+                    id={`#${entity}-none`}
                     name={`${entity}-select-all`}
                     checked={this.entityIsAll(entity, null)}
                     value="null"
@@ -649,10 +642,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -65 }}
+                  htmlFor={`#${entity}-read-only`}
                 >
                   Read Only
                   <Radio
                     name={`${entity}-select-all`}
+                    id={`#${entity}-read-only`}
                     checked={this.entityIsAll(entity, 'read_only')}
                     value="read_only"
                     onChange={this.entitySetAllTo(entity, 'read_only')}
@@ -664,10 +659,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -73 }}
+                  htmlFor={`#${entity}-read-write`}
                 >
                   Read-Write
                   <Radio
                     name={`${entity}-select-all`}
+                    id={`#${entity}-read-write`}
                     checked={this.entityIsAll(entity, 'read_write')}
                     value="read_write"
                     onChange={this.entitySetAllTo(entity, 'read_write')}

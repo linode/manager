@@ -6,6 +6,8 @@ import withLinodes, {
 } from 'src/containers/withLinodes.container';
 
 export interface Props extends Partial<BaseSelectProps> {
+  selectedLinodes?: number[];
+  allowedRegions?: string[];
   filteredLinodes?: number[];
   helperText?: string;
   showAllOption?: boolean;
@@ -16,8 +18,10 @@ export type CombinedProps = Props & LinodeProps;
 
 export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
   const {
+    allowedRegions,
     errorText,
     filteredLinodes,
+    selectedLinodes,
     helperText,
     linodesData,
     linodesError,
@@ -32,9 +36,12 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
   const filteredLinodesData = React.useMemo(
     () =>
       linodesData.filter(
-        thisLinode => !_filteredLinodes.includes(thisLinode.id)
+        thisLinode =>
+          !_filteredLinodes.includes(thisLinode.id) &&
+          // If allowedRegions wasn't passed, don't use region as a filter.
+          (!allowedRegions || allowedRegions.includes(thisLinode.region))
       ),
-    [filteredLinodes, linodesData]
+    [allowedRegions, _filteredLinodes, linodesData]
   );
 
   const linodeError = linodesError && linodesError[0]?.reason;
@@ -68,10 +75,23 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
     handleChange(newSelectedLinodes);
   };
 
+  const value = selectedLinodes
+    ? selectedLinodes.map(thisLinodeID => {
+        const thisLinode = linodesData.find(
+          eachLinode => eachLinode.id === thisLinodeID
+        );
+        return {
+          value: thisLinodeID,
+          label: thisLinode?.label ?? thisLinodeID
+        };
+      })
+    : undefined;
+
   return (
     <Select
       label="Linodes"
       name="linodes"
+      value={value}
       isLoading={linodesLoading}
       errorText={linodeError || errorText}
       isMulti
@@ -107,6 +127,10 @@ export const generateOptions = (
 ): Item<any>[] => {
   /** if there's an error, don't show any options */
   if (linodeError) {
+    return [];
+  }
+
+  if (linodesData.length === 0) {
     return [];
   }
 

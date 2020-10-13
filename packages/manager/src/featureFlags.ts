@@ -8,7 +8,12 @@ interface TaxBanner {
 
 type OneClickApp = Record<string, string>;
 
-interface Flags {
+interface Changelog {
+  version: string;
+  message: string;
+}
+
+export interface Flags {
   promos: boolean;
   vatBanner: TaxBanner;
   taxBanner: TaxBanner;
@@ -20,6 +25,9 @@ interface Flags {
   cmr: boolean;
   mainContentBanner: MainContentBanner;
   passwordValidation: PasswordValidationType;
+  changelog: Changelog;
+  vlans: boolean;
+  cvvRequired: boolean;
 }
 
 type PromotionalOfferFeature =

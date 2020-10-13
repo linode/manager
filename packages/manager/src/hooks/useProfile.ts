@@ -2,7 +2,10 @@ import { Profile } from '@linode/api-v4/lib/profile/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/profile/profile.reducer';
-import { requestProfile as _request } from 'src/store/profile/profile.requests';
+import {
+  requestProfile as _request,
+  updateProfile as _update
+} from 'src/store/profile/profile.requests';
 import { Dispatch } from './types';
 
 export interface ProfileProps {
@@ -17,8 +20,10 @@ export const useProfile = () => {
     (state: ApplicationState) => state.__resources.profile
   );
   const requestProfile = () => dispatch(_request());
+  const updateProfile = (payload: Partial<Profile>) =>
+    dispatch(_update(payload));
 
-  return { profile, requestProfile };
+  return { profile, requestProfile, updateProfile };
 };
 
 export default useProfile;

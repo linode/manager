@@ -22,3 +22,5 @@ export const Link: React.FC<LinkProps> = props => {
     <RouterLink {...props} />
   );
 };
+
+export default Link;

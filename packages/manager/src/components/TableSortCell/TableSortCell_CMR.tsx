@@ -9,17 +9,21 @@ import TableSortLabel from 'src/components/core/TableSortLabel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    '& svg': {
+      marginLeft: 4,
+      width: 20
+    },
     '&:hover': {
       backgroundColor: '#3683dc',
       cursor: 'pointer',
       '& span': {
-        color: theme.color.white
+        color: '#ffffff'
       },
       '& .MuiTableSortLabel-icon': {
-        color: `${theme.color.white} !important`
+        color: '#ffffff !important'
       },
       '& svg g': {
-        fill: theme.color.white
+        fill: '#ffffff'
       }
     }
   },
@@ -58,6 +62,8 @@ export const TableSortCell: React.FC<CombinedProps> = props => {
     active,
     isLoading,
     noWrap,
+    // eslint-disable-next-line
+    handleClick,
     ...rest
   } = props;
 

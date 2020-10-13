@@ -1,19 +1,23 @@
 import * as React from 'react';
-
 import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
-import { makeStyles } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import EntityHeader, {
   HeaderProps
 } from 'src/components/EntityHeader/EntityHeader';
+import Hidden from '../core/Hidden';
 
 const useStyles = makeStyles(() => ({
   button: {
     borderRadius: 3,
-    height: 40,
-    padding: 0,
-    width: 152
+    height: 34,
+    padding: 0
   }
 }));
 
@@ -23,6 +27,7 @@ interface Props extends Omit<HeaderProps, 'actions'> {
   docsLink: string;
   onAddNew?: () => void;
   entity: string;
+  createButtonWidth?: number;
 }
 
 /**
@@ -33,33 +38,56 @@ interface Props extends Omit<HeaderProps, 'actions'> {
 
 export const LandingHeader: React.FC<Props> = props => {
   const classes = useStyles();
-  const { docsLink, onAddNew, entity, extraActions } = props;
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const { docsLink, onAddNew, entity, extraActions, createButtonWidth } = props;
+
+  const defaultCreateButtonWidth = 152;
+
+  const startsWithVowel = /^[aeiou]/i.test(entity);
 
   const actions = React.useMemo(
     () => (
       <Grid
-        item
         container
         direction="row"
+        item
         alignItems="center"
         justify="flex-end"
       >
-        {extraActions && <Grid item>{extraActions}</Grid>}
+        {extraActions && (
+          <Hidden smDown>
+            <Grid item>{extraActions}</Grid>
+          </Hidden>
+        )}
+
         {onAddNew && (
           <Grid item>
             <Button
               buttonType="primary"
               className={classes.button}
               onClick={onAddNew}
+              style={{ width: createButtonWidth ?? defaultCreateButtonWidth }}
             >
-              Create a {entity}
+              Create {startsWithVowel ? `an` : `a`} {entity}...
             </Button>
           </Grid>
         )}
-        {docsLink && <DocumentationButton href={docsLink} />}
+        {docsLink && (
+          <DocumentationButton href={docsLink} hideText={matchesSmDown} />
+        )}
       </Grid>
     ),
-    [docsLink, entity, onAddNew, classes.button, extraActions]
+    [
+      docsLink,
+      entity,
+      onAddNew,
+      classes.button,
+      extraActions,
+      matchesSmDown,
+      createButtonWidth
+    ]
   );
 
   return <EntityHeader isLanding actions={actions} {...props} />;

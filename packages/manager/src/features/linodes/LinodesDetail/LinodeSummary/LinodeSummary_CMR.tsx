@@ -21,7 +21,6 @@ import {
   withTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
@@ -42,7 +41,7 @@ import StatsPanel from './StatsPanel';
 import { ChartProps } from './types';
 import { parseAPIDate } from 'src/utilities/date';
 import Paper from 'src/components/core/Paper';
-
+import getUserTimezone from 'src/utilities/getUserTimezone';
 setUpCharts();
 
 type ClassNames =
@@ -200,7 +199,9 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       const optionDisplay =
         testYear === currentYear && testMonth === currentMonth
           ? 'Last 30 Days'
-          : currentTime.set({ month: testMonth }).toFormat('LLL yyyy');
+          : currentTime
+              .set({ month: testMonth, year: testYear })
+              .toFormat('LLL yyyy');
       options.push([
         `${testYear} ${testMonth.toString().padStart(2, '0')}`,
         optionDisplay
@@ -415,8 +416,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <Paper>
-        <DocumentTitleSegment segment={`${linode.label} - Summary`} />
-
         <Grid item className={classes.main}>
           <Grid item className="py0">
             <div className={classes.graphControls}>
@@ -483,11 +482,7 @@ interface WithTypesProps {
 
 const withTypes = connect((state: ApplicationState, _ownProps) => ({
   typesData: state.__resources.types.entities,
-  timezone: pathOr(
-    'UTC',
-    ['__resources', 'profile', 'data', 'timezone'],
-    state
-  ),
+  timezone: getUserTimezone(state),
   inProgressEvents: state.events.inProgressEvents,
   events: state.events.events,
   mostRecentEventTime: state.events.mostRecentEventTime

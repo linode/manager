@@ -1,7 +1,7 @@
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter, useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -10,6 +10,7 @@ import { reportException } from 'src/exceptionReporting';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import Button from 'src/components/Button';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
@@ -63,23 +64,34 @@ type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 
 export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props => {
   const classes = useStyles();
+  const history = useHistory();
 
   const { clusterId, clusterLabel, enqueueSnackbar, openDialog } = props;
 
   const createActions = () => {
     return (): Action[] => {
-      const actions = [
+      return [
+        {
+          title: 'Details',
+          onClick: () => {
+            history.push({
+              pathname: `/kubernetes/clusters/${clusterId}`
+            });
+          }
+        },
+        {
+          title: 'Download kubeconfig',
+          onClick: () => {
+            downloadKubeConfig();
+          }
+        },
         {
           title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             openDialog();
-
-            e.preventDefault();
           }
         }
       ];
-
-      return actions;
     };
   };
 
@@ -111,24 +123,36 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
 
   return (
     <div className={classes.inlineActions}>
-      <Link className={classes.link} to={`/kubernetes/clusters/${clusterId}`}>
-        <span>Edit</span>
-      </Link>
-      <Button
-        className={classes.button}
-        onClick={(e: React.MouseEvent<HTMLElement>) => {
-          downloadKubeConfig();
+      <Hidden smDown>
+        <Link className={classes.link} to={`/kubernetes/clusters/${clusterId}`}>
+          <span>Details</span>
+        </Link>
+        <Button
+          className={classes.button}
+          onClick={(e: React.MouseEvent<HTMLElement>) => {
+            downloadKubeConfig();
 
-          e.preventDefault();
-        }}
-      >
-        Download kubeconfig
-      </Button>
+            e.preventDefault();
+          }}
+        >
+          Download kubeconfig
+        </Button>
+        <Button
+          className={classes.button}
+          onClick={() => {
+            openDialog();
+          }}
+        >
+          Delete
+        </Button>
+      </Hidden>
 
-      <ActionMenu
-        createActions={createActions()}
-        ariaLabel={`Action menu for Cluster ${props.clusterLabel}`}
-      />
+      <Hidden mdUp>
+        <ActionMenu
+          createActions={createActions()}
+          ariaLabel={`Action menu for Cluster ${props.clusterLabel}`}
+        />
+      </Hidden>
     </div>
   );
 };

@@ -4,7 +4,12 @@ import ReactSelect, { Props as SelectProps } from 'react-select';
 import CreatableSelect, {
   Props as CreatableSelectProps
 } from 'react-select/creatable';
-import { withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  withStyles,
+  WithStyles,
+  withTheme,
+  WithTheme
+} from 'src/components/core/styles';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 /* TODO will be refactoring enhanced select to be an abstraction.
@@ -16,10 +21,12 @@ import MenuList from './components/MenuList';
 import MultiValueLabel from './components/MultiValueLabel';
 import MultiValueRemove from './components/MultiValueRemove';
 import NoOptionsMessage from './components/NoOptionsMessage';
-import Option from './components/Option';
+// import Option from './components/Option';
 import Control from './components/SelectControl';
 import Placeholder from './components/SelectPlaceholder';
-import { ClassNames, styles } from './Select.styles';
+import { ClassNames, styles, reactSelectStyles } from './Select.styles';
+import { ComboboxOption } from '@reach/combobox';
+import '@reach/combobox/styles.css';
 
 export interface Item<T = string | number, L = string> {
   value: T;
@@ -57,12 +64,22 @@ const _components = {
   MultiValueLabel,
   MultiValueRemove,
   MenuList,
-  Option,
+  ComboboxOption,
   LoadingIndicator,
   Input
 };
 
-type CombinedProps = WithStyles<ClassNames> & BaseSelectProps & CreatableProps;
+interface OwnProps {
+  // Set this prop to `true` when using a <Select /> on a modal. It attaches the <Select /> to the
+  // document body directly, so the overflow is visible over the edge of the modal.
+  overflowPortal?: boolean;
+}
+
+type CombinedProps = OwnProps &
+  WithStyles<ClassNames> &
+  BaseSelectProps &
+  CreatableProps &
+  WithTheme;
 
 // We extend TexFieldProps to still be able to pass
 // the required label to Select and not duplicated it to TextFieldProps
@@ -163,6 +180,8 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       errorGroup,
       onFocus,
       inputId,
+      overflowPortal,
+      theme,
       ...restOfProps
     } = this.props;
 
@@ -185,6 +204,13 @@ class Select extends React.PureComponent<CombinedProps, {}> {
     type PossibleProps = BaseSelectProps | CreatableProps;
     const BaseSelect: React.ComponentClass<PossibleProps> =
       variant === 'creatable' ? CreatableSelect : ReactSelect;
+
+    if (overflowPortal) {
+      restOfProps.menuPortalTarget = document.body;
+      // Since we're attaching the <Select /> to the document body directly, none of our CSS
+      // targeting will work, so we have to supply the styles as a prop.
+      restOfProps.styles = reactSelectStyles(theme);
+    }
 
     return (
       <BaseSelect
@@ -232,7 +258,8 @@ class Select extends React.PureComponent<CombinedProps, {}> {
          * react-select wants you to pass "null" to clear out the value
          * so we need to allow the parent to pass that if it wants
          */
-        value={typeof value === 'undefined' ? undefined : value}
+        value={typeof value === 'undefined' ? 'undefined' : value}
+        aria-label={label}
         onBlur={onBlur}
         options={options}
         components={combinedComponents}
@@ -251,4 +278,4 @@ class Select extends React.PureComponent<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-export default styled(Select);
+export default styled(withTheme(Select));

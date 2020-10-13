@@ -22,6 +22,7 @@ import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
+import { getAllVlans } from 'src/store/vlans/vlans.requests';
 
 interface UseReduxPreload {
   _loading: boolean;
@@ -45,7 +46,8 @@ export type ReduxEntity =
   | 'events'
   | 'longview'
   | 'firewalls'
-  | 'clusters';
+  | 'clusters'
+  | 'vlans';
 
 type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
@@ -65,8 +67,9 @@ const requestMap: RequestMap = {
   managedIssues: requestManagedIssues,
   kubernetes: requestKubernetesClusters,
   longview: getAllLongviewClients,
-  firewalls: getAllFirewalls,
-  clusters: requestClusters
+  firewalls: () => getAllFirewalls({}),
+  clusters: requestClusters,
+  vlans: () => getAllVlans({})
 };
 
 export const useReduxLoad = (

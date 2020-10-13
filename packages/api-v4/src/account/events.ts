@@ -15,7 +15,7 @@ export const getEvents = (params: any = {}, filter: any = {}) =>
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
-  ).then(response => response.data);
+  );
 
 /**
  * getEvent
@@ -62,8 +62,10 @@ export const markEventRead = (eventId: number) =>
  * Retrieve a list of active notifications on your account.
  *
  */
-export const getNotifications = () =>
+export const getNotifications = (params?: any, filter?: any) =>
   Request<ResourcePage<Notification>>(
     setURL(`${API_ROOT}/account/notifications`),
-    setMethod('GET')
-  ).then(response => response.data);
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
+  );

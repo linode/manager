@@ -7,21 +7,8 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
-import Breadcrumb from 'src/components/Breadcrumb';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import setDocs from 'src/components/DocsSidebar/setDocs';
-import Grid from 'src/components/Grid';
 import Loading from 'src/components/LandingLoading';
-import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
-import { REFRESH_INTERVAL } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withRegions, {
   DefaultProps as RegionProps
@@ -35,10 +22,7 @@ import withVolumesRequests, {
 import withLinodes, {
   Props as WithLinodesProps
 } from 'src/containers/withLinodes.container';
-import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/eventsPolling';
-import LinodeDisks from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDisks_CMR';
-import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
 import {
   LinodeOptions,
   openForClone,
@@ -48,46 +32,19 @@ import {
   openForResize,
   Origin as VolumeDrawerOrigin
 } from 'src/store/volumeForm';
-import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
-import ListVolumes from './ListVolumes_CMR';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import { ExtendedVolume } from './types';
-
-type ClassNames = 'root' | 'headline' | 'addNewWrapper';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      backgroundColor: theme.color.white,
-      margin: 0,
-      marginTop: 20,
-      width: '100%'
-    },
-    headline: {
-      marginTop: 8,
-      marginBottom: 8,
-      marginLeft: 15,
-      lineHeight: '1.5rem',
-      [theme.breakpoints.down('xs')]: {
-        marginBottom: 0,
-        marginTop: theme.spacing(2)
-      }
-    },
-    addNewWrapper: {
-      [theme.breakpoints.down('xs')]: {
-        width: '100%',
-        marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-        marginTop: -theme.spacing(1)
-      },
-      '&.MuiGrid-item': {
-        padding: 5
-      }
-    }
-  });
+import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
+import LandingHeader from 'src/components/LandingHeader';
+import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu_CMR';
+import VolumeTableRow from './VolumeTableRow_CMR';
+import useReduxLoad from 'src/hooks/useReduxLoad';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 interface Props {
+  isVolumesLanding?: boolean;
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
@@ -126,24 +83,6 @@ interface DispatchProps {
   openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
 
-interface State {
-  attachmentDrawer: {
-    open: boolean;
-    volumeId?: number;
-    volumeLabel?: string;
-    linodeRegion?: string;
-  };
-  destructiveDialog: {
-    open: boolean;
-    mode: 'detach' | 'delete';
-    volumeLabel: string;
-    volumeId?: number;
-    linodeLabel: string;
-    poweredOff?: boolean;
-    error?: string;
-  };
-}
-
 type RouteProps = RouteComponentProps<{ linodeId: string }>;
 
 type CombinedProps = Props &
@@ -156,273 +95,145 @@ type CombinedProps = Props &
   RouteProps &
   WithSnackbarProps &
   WithMappedVolumesProps &
-  WithStyles<ClassNames> &
   RegionProps;
 
-class VolumesLanding extends React.Component<CombinedProps, State> {
-  state: State = {
-    attachmentDrawer: {
+const volumeHeaders = [
+  {
+    label: 'Label',
+    dataColumn: 'label',
+    sortable: true,
+    widthPercent: 25
+  },
+  {
+    label: 'Region',
+    dataColumn: 'region',
+    sortable: true,
+    widthPercent: 15
+  },
+  {
+    label: 'Size',
+    dataColumn: 'size',
+    sortable: true,
+    widthPercent: 20
+  },
+  {
+    label: 'File System Path',
+    dataColumn: 'File System Path',
+    sortable: false,
+    widthPercent: 25,
+    hideOnMobile: true
+  },
+  {
+    label: 'Attached To',
+    dataColumn: 'Attached To',
+    sortable: false,
+    widthPercent: 5
+  },
+  {
+    label: 'Action Menu',
+    visuallyHidden: true,
+    dataColumn: '',
+    sortable: false,
+    widthPercent: 5
+  }
+];
+
+export const VolumesLanding: React.FC<CombinedProps> = props => {
+  const {
+    volumesLoading,
+    mappedVolumesDataWithLinodes,
+    volumesLastUpdated,
+    volumesError,
+    openForConfig,
+    openForClone,
+    openForEdit,
+    openForResize
+  } = props;
+
+  const [attachmentDrawer, setAttachmentDrawer] = React.useState({
+    open: false,
+    volumeId: 0,
+    volumeLabel: '',
+    linodeRegion: ''
+  });
+
+  const [destructiveDialog, setDestructiveDialog] = React.useState<{
+    open: boolean;
+    mode: 'detach' | 'delete';
+    volumeId?: number;
+    volumeLabel: string;
+    linodeLabel: string;
+    error?: string;
+    poweredOff?: boolean;
+  }>({
+    open: false,
+    mode: 'detach',
+    volumeId: 0,
+    volumeLabel: '',
+    linodeLabel: '',
+    error: '',
+    poweredOff: false
+  });
+
+  const { _loading } = useReduxLoad(['volumes']);
+
+  const handleCloseAttachDrawer = () => {
+    setAttachmentDrawer(attachmentDrawer => ({
+      ...attachmentDrawer,
       open: false
-    },
-    destructiveDialog: {
-      open: false,
-      mode: 'detach',
-      volumeLabel: '',
-      linodeLabel: ''
-    }
+    }));
   };
 
-  mounted: boolean = false;
-
-  static docs: Linode.Doc[] = [
-    BlockStorage,
-    {
-      title: 'Boot a Linode from a Block Storage Volume',
-      src: `https://www.linode.com/docs/platform/block-storage/boot-from-block-storage-volume/`,
-      body: `This guide shows how to boot a Linode from a Block Storage Volume.`
-    }
-  ];
-
-  componentDidMount() {
-    const { getAllVolumes, volumesLastUpdated } = this.props;
-    this.mounted = true;
-    // If we haven't requested Volumes, or it's been a while, request them
-    if (Date.now() - volumesLastUpdated > REFRESH_INTERVAL) {
-      getAllVolumes().catch(_ => null); // Errors through Redux
-    }
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  handleCloseAttachDrawer = () => {
-    this.setState({ attachmentDrawer: { open: false } });
+  const handleAttach = (volumeId: number, label: string, regionID: string) => {
+    setAttachmentDrawer(attachmentDrawer => ({
+      ...attachmentDrawer,
+      open: true,
+      volumeId,
+      volumeLabel: label,
+      linodeRegion: regionID
+    }));
   };
 
-  handleAttach = (volumeId: number, label: string, regionID: string) => {
-    this.setState({
-      attachmentDrawer: {
-        open: true,
-        volumeId,
-        volumeLabel: label,
-        linodeRegion: regionID
-      }
-    });
-  };
-
-  handleDetach = (
+  const handleDetach = (
     volumeId: number,
     volumeLabel: string,
     linodeLabel: string,
     poweredOff: boolean
   ) => {
-    this.setState({
-      destructiveDialog: {
-        open: true,
-        mode: 'detach',
-        volumeId,
-        volumeLabel,
-        linodeLabel,
-        poweredOff,
-        error: undefined
-      }
-    });
+    setDestructiveDialog(destructiveDialog => ({
+      ...destructiveDialog,
+      open: true,
+      mode: 'detach',
+      volumeId,
+      volumeLabel,
+      linodeLabel,
+      poweredOff,
+      error: ''
+    }));
   };
 
-  handleDelete = (volumeId: number, volumeLabel: string) => {
-    this.setState({
-      destructiveDialog: {
-        open: true,
-        mode: 'delete',
-        volumeId,
-        volumeLabel,
-        linodeLabel: '',
-        error: undefined
-      }
-    });
+  const handleDelete = (volumeId: number, volumeLabel: string) => {
+    setDestructiveDialog(destructiveDialog => ({
+      ...destructiveDialog,
+      open: true,
+      mode: 'delete',
+      volumeId,
+      volumeLabel,
+      linodeLabel: '',
+      error: ''
+    }));
   };
 
-  render() {
-    const {
-      classes,
-      volumesLoading,
-      mappedVolumesDataWithLinodes,
-      readOnly,
-      removeBreadCrumb,
-      fromLinodes,
-      linodeRegion,
-      regionsData
-    } = this.props;
-
-    if (volumesLoading) {
-      return <Loading shouldDelay />;
-    }
-
-    // If this is the Volumes tab on a Linode, we want ONLY the Volumes attached to this Linode.
-    const data =
-      mappedVolumesDataWithLinodes && this.props.linodeId
-        ? mappedVolumesDataWithLinodes.filter(
-            vol => vol.linode_id === this.props.linodeId
-          )
-        : mappedVolumesDataWithLinodes;
-
-    return (
-      <React.Fragment>
-        {readOnly && <LinodePermissionsError />}
-        <LinodeDisks />
-        <Grid
-          className={classes.root}
-          container
-          alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
-          justify="space-between"
-        >
-          <Grid item className="p0">
-            {removeBreadCrumb ? (
-              <Typography variant="h3" className={classes.headline}>
-                Volumes
-              </Typography>
-            ) : (
-              <Breadcrumb
-                labelTitle="Volumes"
-                pathname={this.props.location.pathname}
-              />
-            )}
-          </Grid>
-          <Grid item className={classes.addNewWrapper}>
-            <AddNewLink
-              label="Add a Volume..."
-              onClick={
-                fromLinodes
-                  ? this.openCreateVolumeDrawer
-                  : () => {
-                      this.props.history.push('/volumes/create');
-                    }
-              }
-              disabled={
-                readOnly ||
-                (linodeRegion &&
-                  !doesRegionSupportBlockStorage(linodeRegion, regionsData)) ||
-                data.length >= 10
-              }
-            />
-          </Grid>
-        </Grid>
-        {this.renderData(data)}
-
-        <VolumeAttachmentDrawer
-          open={this.state.attachmentDrawer.open}
-          volumeId={this.state.attachmentDrawer.volumeId || 0}
-          volumeLabel={this.state.attachmentDrawer.volumeLabel || ''}
-          linodeRegion={this.state.attachmentDrawer.linodeRegion || ''}
-          onClose={this.handleCloseAttachDrawer}
-        />
-        <DestructiveVolumeDialog
-          open={this.state.destructiveDialog.open}
-          error={this.state.destructiveDialog.error}
-          volumeLabel={this.state.destructiveDialog.volumeLabel}
-          linodeLabel={this.state.destructiveDialog.linodeLabel}
-          poweredOff={this.state.destructiveDialog.poweredOff || false}
-          mode={this.state.destructiveDialog.mode}
-          onClose={this.closeDestructiveDialog}
-          onDetach={this.detachVolume}
-          onDelete={this.deleteVolume}
-        />
-      </React.Fragment>
-    );
-  }
-
-  goToSettings = () => {
-    const { history, linodeId } = this.props;
-    history.push(`/linodes/${linodeId}/settings`);
+  const closeDestructiveDialog = () => {
+    setDestructiveDialog(destructiveDialog => ({
+      ...destructiveDialog,
+      open: false
+    }));
   };
 
-  renderData = (volumes: ExtendedVolume[]) => {
-    const {
-      linodeConfigs,
-      linodeRegion,
-      regionsData,
-      volumesError
-    } = this.props;
-
-    let error = '';
-
-    const isVolumesLanding = this.props.match.params.linodeId === undefined;
-
-    const renderProps = {
-      isVolumesLanding,
-      handleAttach: this.handleAttach,
-      handleDelete: this.handleDelete,
-      handleDetach: this.handleDetach,
-      openForEdit: this.props.openForEdit,
-      openForClone: this.props.openForClone,
-      openForConfig: this.props.openForConfig,
-      openForResize: this.props.openForResize
-    };
-
-    if (
-      linodeRegion &&
-      !doesRegionSupportBlockStorage(linodeRegion, regionsData)
-    ) {
-      error = 'Volumes are not available in this region.';
-    }
-
-    if (linodeConfigs && linodeConfigs.length === 0) {
-      error = 'No configs available.';
-    }
-
-    return (
-      <OrderBy data={volumes} order={'asc'} orderBy={'label'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-          const orderProps = {
-            data: orderedData,
-            handleOrderChange,
-            order,
-            orderBy
-          };
-
-          return (
-            <ListVolumes
-              {...orderProps}
-              renderProps={{ ...renderProps }}
-              error={error}
-              volumesError={volumesError}
-            />
-          );
-        }}
-      </OrderBy>
-    );
-  };
-
-  closeDestructiveDialog = () => {
-    this.setState({
-      destructiveDialog: {
-        ...this.state.destructiveDialog,
-        open: false
-      }
-    });
-  };
-
-  openCreateVolumeDrawer = (e: any) => {
-    const { linodeId, linodeLabel, linodeRegion } = this.props;
-    if (linodeId && linodeLabel && linodeRegion) {
-      return this.props.openForCreating('Created from Linode Details', {
-        linodeId,
-        linodeLabel,
-        linodeRegion
-      });
-    }
-
-    this.props.openForCreating('Created from Volumes Landing');
-
-    e.preventDefault();
-  };
-
-  detachVolume = () => {
-    const {
-      destructiveDialog: { volumeId }
-    } = this.state;
-    const { detachVolume } = this.props;
+  const detachVolume = () => {
+    const { volumeId } = destructiveDialog;
+    const { detachVolume } = props;
     if (!volumeId) {
       return;
     }
@@ -430,28 +241,24 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     detachVolume({ volumeId })
       .then(_ => {
         /* @todo: show a progress bar for volume detachment */
-        this.props.enqueueSnackbar('Volume detachment started', {
+        props.enqueueSnackbar('Volume detachment started', {
           variant: 'info'
         });
-        this.closeDestructiveDialog();
+        closeDestructiveDialog();
         resetEventsPolling();
       })
       .catch(error => {
-        this.setState({
-          destructiveDialog: {
-            ...this.state.destructiveDialog,
-            error: getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0]
-              .reason
-          }
-        });
+        setDestructiveDialog(destructiveDialog => ({
+          ...destructiveDialog,
+          error: getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0]
+            .reason
+        }));
       });
   };
 
-  deleteVolume = () => {
-    const {
-      destructiveDialog: { volumeId }
-    } = this.state;
-    const { deleteVolume } = this.props;
+  const deleteVolume = () => {
+    const { volumeId } = destructiveDialog;
+    const { deleteVolume } = props;
 
     if (!volumeId) {
       return;
@@ -459,20 +266,79 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
     deleteVolume({ volumeId })
       .then(() => {
-        this.closeDestructiveDialog();
+        closeDestructiveDialog();
         resetEventsPolling();
       })
       .catch(error => {
-        this.setState({
-          destructiveDialog: {
-            ...this.state.destructiveDialog,
-            error: getAPIErrorOrDefault(error, 'Unable to delete Volume.')[0]
-              .reason
-          }
-        });
+        setDestructiveDialog(destructiveDialog => ({
+          ...destructiveDialog,
+          error: getAPIErrorOrDefault(error, 'Unable to delete Volume.')[0]
+            .reason
+        }));
       });
   };
-}
+
+  if (_loading) {
+    return <Loading shouldDelay />;
+  }
+
+  const handlers: VolumeHandlers = {
+    openForConfig,
+    openForEdit,
+    openForResize,
+    openForClone,
+    handleAttach,
+    handleDetach,
+    handleDelete
+  };
+
+  const volumeRow = {
+    handlers,
+    Component: VolumeTableRow,
+    data: mappedVolumesDataWithLinodes ?? [], // [],
+    loading: volumesLoading,
+    lastUpdated: volumesLastUpdated,
+    error: volumesError.read
+  };
+
+  return (
+    <React.Fragment>
+      <DocumentTitleSegment segment="Volumes" />
+      <LandingHeader
+        title="Volumes"
+        entity="Volume"
+        onAddNew={() => props.history.push('/volumes/create')}
+        iconType="volume"
+        docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
+      />
+      <EntityTable_CMR
+        entity="volume"
+        headers={volumeHeaders}
+        groupByTag={false}
+        row={volumeRow}
+        initialOrder={{ order: 'asc', orderBy: 'label' }}
+      />
+      <VolumeAttachmentDrawer
+        open={attachmentDrawer.open}
+        volumeId={attachmentDrawer.volumeId || 0}
+        volumeLabel={attachmentDrawer.volumeLabel || ''}
+        linodeRegion={attachmentDrawer.linodeRegion || ''}
+        onClose={handleCloseAttachDrawer}
+      />
+      <DestructiveVolumeDialog
+        open={destructiveDialog.open}
+        error={destructiveDialog.error}
+        volumeLabel={destructiveDialog.volumeLabel}
+        linodeLabel={destructiveDialog.linodeLabel}
+        poweredOff={destructiveDialog.poweredOff || false}
+        mode={destructiveDialog.mode}
+        onClose={closeDestructiveDialog}
+        onDetach={detachVolume}
+        onDelete={deleteVolume}
+      />
+    </React.Fragment>
+  );
+};
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
@@ -487,10 +353,6 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
   );
 
 const connected = connect(undefined, mapDispatchToProps);
-
-const documented = setDocs(VolumesLanding.docs);
-
-const styled = withStyles(styles);
 
 const addAttachedLinodeInfoToVolume = (
   volume: Volume,
@@ -530,7 +392,6 @@ const filterVolumeEvents = (event: Event): boolean => {
 
 export default compose<CombinedProps, Props>(
   connected,
-  documented,
   withVolumesRequests,
   _withEvents((ownProps: CombinedProps, eventsData) => ({
     ...ownProps,
@@ -567,6 +428,5 @@ export default compose<CombinedProps, Props>(
     }
   ),
   withRegions(),
-  withSnackbar,
-  styled
+  withSnackbar
 )(VolumesLanding);

@@ -20,10 +20,10 @@ import {
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
-import withDisplayType, { WithDisplayType } from '../withDisplayType';
-
 import { filterImagesByType } from 'src/store/image/image.helpers';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { linodeMaintenanceWindowString } from '../../utilities';
+import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
 type ClassNames =
   | 'root'
@@ -166,9 +166,8 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   const MaintenanceText = () => {
     return (
       <>
-        Please consult your{' '}
-        <Link to="/support/tickets?type=open">support tickets</Link> for
-        details.
+        For more information, please see your{' '}
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
   };
@@ -215,7 +214,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
                 className={classes.maintenanceNotice}
               >
                 Maintenance: <br />
-                {dateTime[0]} at {dateTime[1]}
+                {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}
                 <HelpIcon
                   text={<MaintenanceText />}
                   tooltipPosition="top"

@@ -1,12 +1,19 @@
 import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight,
     height: '100%',
     minWidth: '70px',
     padding: '12px 10px',
@@ -14,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       textDecoration: 'none',
       backgroundColor: '#3683dc',
-      color: theme.color.white
+      color: '#ffffff'
     }
   }
 }));
@@ -54,6 +61,9 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
 
   const history = useHistory();
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   const goToDomain = () => {
     history.push(`/domains/${id}`);
@@ -75,27 +85,51 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
     const baseActions = [
       {
         title: 'Clone',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
+        onClick: () => {
           handleClone();
-          e.preventDefault();
         }
       },
       {
         title: 'Delete',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
+        onClick: () => {
           handleRemove();
-          e.preventDefault();
         }
       }
     ];
 
-    if (type === 'master') {
+    if (matchesSmDown) {
+      if (type === 'master') {
+        baseActions.unshift({
+          title: 'Edit',
+          onClick: () => {
+            handleEdit();
+          }
+        });
+      }
+      baseActions.unshift({
+        title: status === 'active' ? 'Disable' : 'Enable',
+        onClick: () => {
+          onDisableOrEnable(
+            status === 'active' ? 'disable' : 'enable',
+            domain,
+            id
+          );
+        }
+      });
+      baseActions.unshift({
+        title: 'Details',
+        onClick: () => {
+          type === 'master' ? goToDomain() : handleEdit();
+        }
+      });
+    }
+
+    if (type === 'master' && matchesMdUp) {
       return [
         {
-          title: 'Edit DNS Records',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            goToDomain();
-            e.preventDefault();
+          title: 'Edit',
+          onClick: () => {
+            handleEdit();
           }
         },
         ...baseActions
@@ -107,23 +141,28 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <div className="flex-center">
-        <button className={classes.button} onClick={handleEdit}>
-          Edit
-        </button>
-        <button
-          className={classes.button}
-          onClick={() =>
-            onDisableOrEnable(
-              status === 'active' ? 'disable' : 'enable',
-              domain,
-              id
-            )
-          }
-        >
-          {status === 'active' ? 'Disable' : 'Enable'}
-        </button>
-      </div>
+      <Hidden smDown>
+        <div className="flexCenter">
+          <button
+            className={classes.button}
+            onClick={type === 'master' ? goToDomain : handleEdit}
+          >
+            Details
+          </button>
+          <button
+            className={classes.button}
+            onClick={() =>
+              onDisableOrEnable(
+                status === 'active' ? 'disable' : 'enable',
+                domain,
+                id
+              )
+            }
+          >
+            {status === 'active' ? 'Disable' : 'Enable'}
+          </button>
+        </div>
+      </Hidden>
       <ActionMenu
         createActions={createActions()}
         ariaLabel={`Action menu for Domain ${domain}`}

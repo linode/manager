@@ -1,47 +1,25 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Placeholder from 'src/components/Placeholder';
-import SelectRegionPanel from 'src/components/SelectRegionPanel';
-
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import AddonsPanel from '../AddonsPanel';
 import SelectLinodePanel from '../SelectLinodePanel';
-import SelectPlanPanel from '../SelectPlanPanel';
-import { renderBackupsDisplaySection } from './utils';
-
-import { extendLinodes } from '../utilities';
-
 import {
   CloneFormStateHandlers,
-  ReduxStatePropsAndSSHKeys,
-  WithDisplayData,
+  ReduxStateProps,
   WithLinodesTypesRegionsAndImages
 } from '../types';
+import { extendLinodes } from '../utilities';
 
-type ClassNames = 'root' | 'main' | 'sidebar';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    main: {},
-    sidebar: {
-      [theme.breakpoints.up('md')]: {
-        marginTop: '-130px !important'
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  main: {
+    [theme.breakpoints.up('md')]: {
+      maxWidth: '100%'
     }
-  });
+  }
+}));
 
 const errorResources = {
   type: 'A plan selection',
@@ -50,212 +28,70 @@ const errorResources = {
   root_pass: 'A root password'
 };
 
-export type CombinedProps = WithStyles<ClassNames> &
-  WithDisplayData &
-  CloneFormStateHandlers &
-  WithLinodesTypesRegionsAndImages &
-  ReduxStatePropsAndSSHKeys;
+export type CombinedProps = CloneFormStateHandlers &
+  ReduxStateProps &
+  WithLinodesTypesRegionsAndImages;
 
-export class FromLinodeContent extends React.PureComponent<CombinedProps> {
-  /** set the Linode ID and the disk size and reset the plan selection */
-  handleSelectLinode = (linodeID: number) => {
-    const linode = this.props.linodesData.find(
+export const FromLinodeContent: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
+  const {
+    errors,
+    imagesData,
+    linodesData,
+    selectedLinodeID,
+    typesData,
+    userCannotCreateLinode
+  } = props;
+
+  const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+
+  /** Set the Linode ID and the disk size and reset the plan selection */
+  const handleSelectLinode = (linodeID: number) => {
+    const linode = props.linodesData.find(
       eachLinode => eachLinode.id === linodeID
     );
+
     if (linode) {
-      this.props.updateLinodeID(linode.id, linode.specs.disk);
+      props.updateLinodeID(linode.id, linode.specs.disk);
     }
   };
 
-  cloneLinode = () => {
-    return this.props.handleSubmitForm(
-      {
-        region: this.props.selectedRegionID,
-        type: this.props.selectedTypeID,
-        label: this.props.label,
-        private_ip: this.props.privateIPEnabled,
-        backups_enabled: this.props.backupsEnabled,
-        tags: this.props.tags ? this.props.tags.map(item => item.value) : []
-      },
-      this.props.selectedLinodeID
-    );
-  };
+  return (
+    // eslint-disable-next-line
+    <React.Fragment>
+      {linodesData && linodesData.length === 0 ? (
+        <Grid item className={`${classes.main} mlMain py0`}>
+          <Paper>
+            <Placeholder
+              data-qa-placeholder
+              icon={VolumeIcon}
+              renderAsSecondary
+              copy="You do not have any existing Linodes to clone from. Please first create a Linode from either an Image or StackScript."
+              title="Clone from Existing Linode"
+            />
+          </Paper>
+        </Grid>
+      ) : (
+        <Grid item className={`${classes.main} mlMain py0`}>
+          <SelectLinodePanel
+            data-qa-linode-panel
+            error={hasErrorFor('linode_id')}
+            linodes={extendLinodes(linodesData, imagesData, typesData)}
+            selectedLinodeID={selectedLinodeID}
+            header={'Select Linode to Clone From'}
+            handleSelection={handleSelectLinode}
+            updateFor={[selectedLinodeID, errors]}
+            disabled={userCannotCreateLinode}
+            notice={{
+              level: 'warning',
+              text: `This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.`
+            }}
+          />
+        </Grid>
+      )}
+    </React.Fragment>
+  );
+};
 
-  render() {
-    const {
-      classes,
-      errors,
-      accountBackupsEnabled,
-      backupsEnabled,
-      backupsMonthlyPrice,
-      userCannotCreateLinode,
-      linodesData: linodes,
-      imagesData: images,
-      typesData: types,
-      regionsData: regions,
-      regionDisplayInfo: regionInfo,
-      typeDisplayInfo: typeInfo,
-      selectedTypeID,
-      privateIPEnabled,
-      selectedRegionID,
-      selectedLinodeID,
-      selectedDiskSize,
-      label
-    } = this.props;
-
-    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-
-    const hasBackups = backupsEnabled || accountBackupsEnabled;
-
-    const displaySections = [];
-    if (regionInfo) {
-      displaySections.push({
-        title: regionInfo.title,
-        details: regionInfo.details
-      });
-    }
-
-    if (typeInfo) {
-      displaySections.push(typeInfo);
-    }
-
-    if (label) {
-      displaySections.push({
-        title: 'Linode Label',
-        details: label
-      });
-    }
-
-    if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
-      displaySections.push(
-        renderBackupsDisplaySection(
-          accountBackupsEnabled,
-          typeInfo.backupsMonthly
-        )
-      );
-    }
-
-    let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-    if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
-      calculatedPrice += typeInfo.backupsMonthly;
-    }
-
-    return (
-      // eslint-disable-next-line
-      <React.Fragment>
-        {linodes && linodes.length === 0 ? (
-          <Grid
-            item
-            className={`${classes.main} mlMain py0`}
-            id="tabpanel-clone-create"
-            role="tabpanel"
-            aria-labelledby="tab-clone-create"
-          >
-            <Paper>
-              <Placeholder
-                data-qa-placeholder
-                icon={VolumeIcon}
-                renderAsSecondary
-                copy="You do not have any existing Linodes to clone from.
-                    Please first create a Linode from either an Image or StackScript."
-                title="Clone from Existing Linode"
-              />
-            </Paper>
-          </Grid>
-        ) : (
-          <React.Fragment>
-            <Grid
-              item
-              className={`${classes.main} mlMain py0`}
-              id="tabpanel-clone-create"
-              role="tabpanel"
-              aria-labelledby="tab-clone-create"
-            >
-              <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-              <SelectLinodePanel
-                data-qa-linode-panel
-                error={hasErrorFor('linode_id')}
-                linodes={extendLinodes(linodes, images, types)}
-                selectedLinodeID={selectedLinodeID}
-                header={'Select Linode to Clone From'}
-                handleSelection={this.handleSelectLinode}
-                updateFor={[selectedLinodeID, errors]}
-                disabled={userCannotCreateLinode}
-                notice={{
-                  level: 'warning',
-                  text: `This newly created Linode will be created with
-                          the same password and SSH Keys (if any) as the original Linode.`
-                }}
-              />
-              <SelectRegionPanel
-                data-qa-region-panel
-                error={hasErrorFor('region')}
-                regions={regions}
-                handleSelection={this.props.updateRegionID}
-                selectedID={selectedRegionID}
-                copy="Determine the best location for your Linode."
-                updateFor={[selectedRegionID, errors, regions]}
-                helperText={this.props.regionHelperText}
-                disabled={userCannotCreateLinode}
-              />
-              <SelectPlanPanel
-                data-qa-select-plan-panel
-                error={hasErrorFor('type')}
-                types={types}
-                onSelect={this.props.updateTypeID}
-                selectedID={selectedTypeID}
-                selectedDiskSize={selectedDiskSize}
-                updateFor={[
-                  selectedDiskSize,
-                  selectedTypeID,
-                  errors,
-                  this.props.disabledClasses
-                ]}
-                disabled={userCannotCreateLinode}
-                disabledClasses={this.props.disabledClasses}
-              />
-              <LabelAndTagsPanel
-                data-qa-label-panel
-                labelFieldProps={{
-                  label: 'Linode Label',
-                  value: label || '',
-                  onChange: this.props.updateLabel,
-                  errorText: hasErrorFor('label'),
-                  disabled: userCannotCreateLinode
-                }}
-                updateFor={[label, errors]}
-              />
-              <AddonsPanel
-                data-qa-addons-panel
-                backups={backupsEnabled}
-                accountBackups={accountBackupsEnabled}
-                backupsMonthly={backupsMonthlyPrice}
-                privateIP={privateIPEnabled}
-                changeBackups={this.props.toggleBackupsEnabled}
-                changePrivateIP={this.props.togglePrivateIPEnabled}
-                updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
-                disabled={userCannotCreateLinode}
-                hidePrivateIP
-              />
-            </Grid>
-            <Grid item className={`${classes.sidebar} mlSidebar`}>
-              <CheckoutBar
-                heading="Linode Summary"
-                calculatedPrice={calculatedPrice}
-                isMakingRequest={this.props.formIsSubmitting}
-                disabled={this.props.formIsSubmitting || userCannotCreateLinode}
-                onDeploy={this.cloneLinode}
-              >
-                <DisplaySectionList displaySections={displaySections} />
-              </CheckoutBar>
-            </Grid>
-          </React.Fragment>
-        )}
-      </React.Fragment>
-    );
-  }
-}
-
-const styled = withStyles(styles);
-
-export default styled(FromLinodeContent);
+export default FromLinodeContent;

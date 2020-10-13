@@ -16,18 +16,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: -8,
       '& svg': {
         height: 20,
-        width: 20
+        width: 20,
+        color: theme.cmrTextColors.linkActiveLight
       }
     }
   },
   button: {
     ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight,
     height: '100%',
     padding: '12px 15px',
     minWidth: 'auto',
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
-      color: theme.color.white
+      color: '#ffffff'
     }
   }
 }));
@@ -71,16 +73,14 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
     return [
       {
         title: 'Imagize',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
+        onClick: () => {
           props.onImagize();
         },
         ...(readOnly ? disabledProps : {})
       },
       {
         title: 'Clone',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
+        onClick: () => {
           history.push(
             `/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`
           );
@@ -89,8 +89,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
       },
       {
         title: 'Delete',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
+        onClick: () => {
           props.onDelete();
         },
         ...(readOnly ? disabledProps : {})

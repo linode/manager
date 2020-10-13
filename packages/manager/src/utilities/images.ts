@@ -58,12 +58,13 @@ interface GroupedImages {
 }
 
 export let groupImages: (i: Image[]) => GroupedImages;
+// eslint-disable-next-line
 groupImages = groupBy(
   cond([
     [isRecentlyDeleted, always('deleted')],
     [isRecommended, always('recommended')],
     [isOlderImage, always('older')],
-    [(i: Image) => true, always('images')]
+    [_ => true, always('images')]
   ])
 );
 

@@ -19,12 +19,13 @@ export default ({
   label,
   onChange,
   errorText,
+  placeholder,
   isMulti
 }: any) => {
   const handleChange = (event: any) => {
     const option = _options.find(
       /* tslint:disable-next-line */
-      (thisOption: any) => thisOption.value == event.currentTarget.value
+      (thisOption: any) => thisOption.value == event.target.value
     );
     isMulti ? onChange([option]) : onChange(option);
   };
@@ -32,12 +33,18 @@ export default ({
   const _options = groupsToItems(options);
   return (
     <>
-      <div>{label}</div>
+      <label htmlFor={label} id={`${label}-label`}>
+        {label}
+      </label>
       <select
+        placeholder={placeholder}
+        name={label}
         data-testid="select"
+        aria-labelledby={`${label}-label`}
         value={value ?? ''}
         onBlur={handleChange}
         onChange={handleChange}
+        multiple={isMulti}
       >
         {_options.map((thisOption: any) => (
           <option

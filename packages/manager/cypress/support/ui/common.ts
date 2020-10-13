@@ -56,7 +56,7 @@ export const waitForAppLoad = (path = '/', withLogin = true) => {
 
   cy.route({
     method: 'GET',
-    url: '*/account/notifications'
+    url: '*/account/notifications**'
   }).as('getNotifications');
 
   withLogin ? cy.visitWithLogin(path) : cy.visit(path);

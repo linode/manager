@@ -30,3 +30,9 @@ options: {
   }
 }
 ```
+
+## Changing user preferences
+
+Since [user preferences are tied to OAuth clients](https://developers.linode.com/api/v4/profile-preferences), to change Cloud Manager preferences you must grab the short-lived token from the app and use that to curl.
+
+As a convenience, there is a preference editor in Cloud accessible by going to `/profile/settings?preferenceEditor=true`. It allows you to enter arbitrary JSON and submit it (validating that it's valid JSON first). This makes it easier to quickly edit preferences when developing features that depend on it.

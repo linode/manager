@@ -5,10 +5,13 @@ import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel, {
   ExpansionPanelProps
 } from 'src/components/ExpansionPanel';
+import { useFlags } from 'src/hooks/useFlags';
+import ExpansionPanelCMR from '../ExpansionPanel/ExpansionPanelCMR';
 
 interface Props extends ExpansionPanelProps {
   height?: number;
   renderMainContent: () => JSX.Element;
+  headingNumberCount?: number;
 }
 
 /*
@@ -56,12 +59,37 @@ const ExtendedExpansionPanel: React.FC<Props> = props => {
     height,
     loading,
     onChange,
-    renderMainContent
+    renderMainContent,
+    headingNumberCount
   } = props;
+  const flags = useFlags();
+
   return (
-    <ExpansionPanel heading={heading} onChange={onChange}>
-      {renderContent(error, Boolean(loading), height || 300, renderMainContent)}
-    </ExpansionPanel>
+    <React.Fragment>
+      {flags.cmr ? (
+        <ExpansionPanelCMR
+          heading={heading}
+          onChange={onChange}
+          headingNumberCount={headingNumberCount}
+        >
+          {renderContent(
+            error,
+            Boolean(loading),
+            height || 300,
+            renderMainContent
+          )}
+        </ExpansionPanelCMR>
+      ) : (
+        <ExpansionPanel heading={heading} onChange={onChange}>
+          {renderContent(
+            error,
+            Boolean(loading),
+            height || 300,
+            renderMainContent
+          )}
+        </ExpansionPanel>
+      )}
+    </React.Fragment>
   );
 };
 

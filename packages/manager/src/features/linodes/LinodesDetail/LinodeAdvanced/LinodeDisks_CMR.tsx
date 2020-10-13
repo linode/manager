@@ -15,18 +15,18 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import Typography from 'src/components/core/Typography';
 import OrderBy from 'src/components/OrderBy';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { resetEventsPolling } from 'src/eventsPolling';
 import ImagesDrawer, { DrawerMode } from 'src/features/Images/ImagesDrawer';
 import {
@@ -66,15 +66,10 @@ const styles = (theme: Theme) =>
       marginTop: 8,
       marginBottom: 8,
       marginLeft: 15,
-      lineHeight: '1.5rem',
-      [theme.breakpoints.down('xs')]: {
-        marginBottom: 0,
-        marginTop: theme.spacing(2)
-      }
+      lineHeight: '1.5rem'
     },
     addNewWrapper: {
       [theme.breakpoints.down('xs')]: {
-        width: '100%',
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
       },
@@ -173,7 +168,19 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, disks, linodeStatus, readOnly } = this.props;
+    const {
+      classes,
+      disks,
+      linodeStatus,
+      linodeTotalDisk,
+      readOnly
+    } = this.props;
+
+    const usedDiskSpace = addUsedDiskSpace(disks);
+
+    const freeDiskSpace = linodeTotalDisk && linodeTotalDisk > usedDiskSpace;
+    const noFreeDiskSpaceWarning =
+      'You do not have enough unallocated storage to create a Disk. Please choose a different plan with more storage or delete an existing Disk.';
 
     return (
       <React.Fragment>
@@ -194,7 +201,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             <AddNewLink
               onClick={this.openDrawerForCreation}
               label="Add a Disk..."
-              disabled={readOnly}
+              disabled={readOnly || !freeDiskSpace}
+              disabledReason={
+                !freeDiskSpace ? noFreeDiskSpaceWarning : undefined
+              }
             />
           </Grid>
         </Grid>
@@ -213,7 +223,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                   <React.Fragment>
                     <Grid container>
                       <Grid item xs={12}>
-                        <Table isResponsive={false} aria-label="List of Disks">
+                        <Table aria-label="List of Disks">
                           <TableHead>
                             <TableRow>
                               <TableSortCell
@@ -591,6 +601,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles);
+
+export const addUsedDiskSpace = (disks: Disk[]) => {
+  return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);
+};
 
 interface LinodeContextProps {
   linodeId?: number;

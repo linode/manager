@@ -115,7 +115,7 @@ const GlobalSettings: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <div id="tabpanel-settings" role="tabpanel" aria-labelledby="tab-settings">
+    <div>
       <AutoBackups
         isManagedCustomer={isManaged}
         backups_enabled={backups_enabled}
@@ -134,7 +134,6 @@ const GlobalSettings: React.FC<CombinedProps> = props => {
       <EnableManaged
         isManaged={isManaged}
         update={props.actions.updateAccountSettingsInStore}
-        push={props.history.push}
       />
       {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
         <ImportGroupsAsTags openDrawer={openImportDrawer} />

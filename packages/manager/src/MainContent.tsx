@@ -13,11 +13,11 @@ import {
   withTheme,
   WithTheme
 } from 'src/components/core/styles';
-import RegionStatusBanner from 'src/components/RegionStatusBanner';
 
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
+import GlobalNotifications from 'src/features/GlobalNotifications';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
@@ -35,6 +35,8 @@ import withGlobalErrors, {
 import withPreferences, {
   Props as PreferencesProps
 } from 'src/containers/preferences.container';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 
 import Logo from 'src/assets/logo/logo-text.svg';
 import { FlagSet } from './featureFlags';
@@ -158,6 +160,14 @@ const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
 
+  const { account } = useAccountManagement();
+
+  const showFirewalls = isFeatureEnabled(
+    'Cloud Firewall',
+    Boolean(flags.firewalls),
+    account.data?.capabilities ?? []
+  );
+
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
 
   const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
@@ -273,7 +283,7 @@ const MainContent: React.FC<CombinedProps> = props => {
               <main className={classes.wrapper} id="main-content" role="main">
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
-                    <RegionStatusBanner />
+                    <GlobalNotifications />
                     <React.Suspense fallback={<SuspenseLoader />}>
                       <Switch>
                         <Route path="/linodes" component={LinodesRoutes} />
@@ -318,7 +328,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                           component={SupportSearchLanding}
                         />
                         <Route path="/events" component={EventsLanding} />
-                        {flags.firewalls && (
+                        {showFirewalls && (
                           <Route path="/firewalls" component={Firewalls} />
                         )}
                         <Redirect exact from="/" to="/dashboard" />

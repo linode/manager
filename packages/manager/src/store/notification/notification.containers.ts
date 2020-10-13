@@ -5,9 +5,10 @@ import { ApplicationState } from '..';
 import { ThunkActionCreator } from '../types';
 import { State } from './notification.reducer';
 import { requestNotifications } from './notification.requests';
+import { GetAllData } from 'src/utilities/getAll';
 
 interface Actions {
-  requestNotifications: ThunkActionCreator<Promise<Notification[]>>;
+  requestNotifications: ThunkActionCreator<Promise<GetAllData<Notification>>>;
 }
 
 const actions: Actions = {
@@ -19,6 +20,7 @@ export interface WithNotifications {
   notificationsError: APIError[];
   notificationsLastUpdated: number;
   notificationsLoading: boolean;
+  requestNotifications: () => Promise<GetAllData<Notification>>;
 }
 
 const defaultMapState = ({ data, error, lastUpdated, loading }: State) => ({
@@ -28,7 +30,9 @@ const defaultMapState = ({ data, error, lastUpdated, loading }: State) => ({
   notificationsLoading: loading
 });
 
-const defaultMapDispatch = () => ({});
+const defaultMapDispatch = () => ({
+  requestNotifications
+});
 
 export const withNotifications = (
   mapState: (s: State) => any = defaultMapState,
@@ -38,3 +42,5 @@ export const withNotifications = (
     (state: ApplicationState) => mapState(state.__resources.notifications),
     mapDispatch(actions)
   );
+
+export default withNotifications;

@@ -1,16 +1,14 @@
 import { Notification } from '@linode/api-v4/lib/account';
 import { LinodeStatus } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { path } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import ProductNotification from 'src/components/ProductNotification';
-import { withNotifications } from 'src/store/notification/notification.containers';
-import { withLinodeDetailContext } from '../linodeDetailContext';
-
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
+import ProductNotification from 'src/components/ProductNotification';
 import withProfile from 'src/containers/profile.container';
 import { Maintenance } from 'src/store/linodes/linodes.helpers';
+import { withNotifications } from 'src/store/notification/notification.containers';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 import MigrationNotification from './MigrationNotification';
 
 type CombinedProps = ProfileProps &
@@ -23,8 +21,8 @@ const Notifications: React.FC<CombinedProps> = props => {
     requestNotifications,
     linodeNotifications,
     userTimezone,
-    userTimezoneError,
-    userTimezoneLoading,
+    userProfileError,
+    userProfileLoading,
     linodeId,
     linodeStatus
   } = props;
@@ -35,8 +33,8 @@ const Notifications: React.FC<CombinedProps> = props => {
         return (
           <MaintenanceBanner
             userTimezone={userTimezone}
-            userTimezoneLoading={userTimezoneLoading}
-            userTimezoneError={userTimezoneError}
+            userProfileLoading={userProfileLoading}
+            userProfileError={userProfileError}
             maintenanceStart={notification.when}
             maintenanceEnd={notification.until}
             type={
@@ -90,8 +88,8 @@ interface ContextProps {
 }
 
 interface ProfileProps {
-  userTimezoneLoading: boolean;
-  userTimezoneError?: APIError[];
+  userProfileLoading: boolean;
+  userProfileError?: APIError[];
   userTimezone?: string;
 }
 
@@ -106,11 +104,13 @@ const enhanced = compose<CombinedProps, {}>(
     requestNotifications
   })),
   withProfile<ProfileProps, {}>(
-    (undefined, { profileData: profile, profileLoading, profileError }) => ({
-      userTimezone: path(['data', 'timezone'], profile),
-      userTimezoneError: path(['read'], profileError),
-      userTimezoneLoading: profileLoading
-    })
+    (undefined, { profileData: profile, profileLoading, profileError }) => {
+      return {
+        userTimezone: profile?.timezone,
+        userProfileError: profileError?.read,
+        userProfileLoading: profileLoading
+      };
+    }
   )
 );
 

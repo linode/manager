@@ -10,10 +10,12 @@ import Grid from 'src/components/Grid';
 import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { useAccount } from 'src/hooks/useAccount';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import BillingActivityPanel from './BillingPanels/BillingActivityPanel';
+import BillingActivityPanel_PreCMR from './BillingPanels/BillingActivityPanel';
+import BillingActivityPanel_CMR from './BillingPanels/BillingActivityPanel/BillingActivityPanel_CMR';
 import BillingSummary from './BillingPanels/BillingSummary';
 import ContactInfo from './BillingPanels/ContactInfoPanel';
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -34,6 +36,7 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
   const { account, requestAccount } = useAccount();
 
   const classes = useStyles();
+  const flags = useFlags();
 
   const [mostRecentInvoiceId, setMostRecentInvoiceId] = React.useState<
     number | undefined
@@ -63,15 +66,14 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
     return null;
   }
 
+  const BillingActivityPanel = flags.cmr
+    ? BillingActivityPanel_CMR
+    : BillingActivityPanel_PreCMR;
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Account & Billing`} />
-      <div
-        id="tabpanel-billingInfo"
-        role="tabpanel"
-        aria-labelledby="tab-billingInfo"
-        data-testid="billing-detail"
-      >
+      <div data-testid="billing-detail">
         <Grid container>
           <Grid item xs={12} md={12} lg={12} className={classes.main}>
             <BillingSummary

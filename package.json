@@ -36,6 +36,7 @@
     "e2e": "yarn workspace linode-manager e2e --color",
     "e2e:all": "yarn workspace linode-manager e2e:all --color",
     "e2e:modified": "yarn workspace linode-manager e2e:modified --color",
+    "cy:run": "yarn workspace linode-manager cy:run",
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
     "cy:debug": "yarn workspace linode-manager cy:debug",
     "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap",
@@ -49,7 +50,9 @@
     "handlebars": "^4.4.3",
     "minimist": "^1.2.3",
     "yargs-parser": "^18.1.3",
-    "kind-of": "^6.0.3"
+    "kind-of": "^6.0.3",
+    "dot-prop": "^5.2.0",
+    "property-expr": "^2.0.3"
   },
   "workspaces": {
     "packages": [

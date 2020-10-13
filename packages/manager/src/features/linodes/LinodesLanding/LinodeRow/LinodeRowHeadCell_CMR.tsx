@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.bold,
     fontSize: '.875rem',
     lineHeight: '1.125rem',
-    textDecoration: 'underline'
+    textDecoration: 'underline',
+    color: theme.cmrTextColors.linkActiveLight
   },
   root: {
     '& h3': {
@@ -32,31 +33,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '35%'
     }
   },
-  dashboard: {
-    width: '70%'
-  },
-  status: {
-    marginLeft: theme.spacing(1) / 2,
-    position: 'relative',
-    top: 0,
-    lineHeight: '0.8rem'
-  },
-  labelRow: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  },
-  loadingStatus: {
-    marginBottom: theme.spacing(1) / 2
-  },
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
     whiteSpace: 'nowrap'
-  },
-  wrapHeader: {
-    wordBreak: 'break-all'
   },
   maintenanceContainer: {},
   maintenanceNotice: {
@@ -120,9 +101,8 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   const MaintenanceText = () => {
     return (
       <>
-        Please consult your{' '}
-        <Link to="/support/tickets?type=open">support tickets</Link> for
-        details.
+        For more information, please see your{' '}
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
   };

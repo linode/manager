@@ -10,6 +10,7 @@ import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { ApplicationState } from 'src/store';
 import {
@@ -88,7 +89,6 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
   componentDidUpdate() {
     const { close, dismissSuccess } = this.props.actions;
     const { autoEnroll, enableSuccess, updatedCount } = this.props;
-
     if (enableSuccess) {
       const pluralizedLinodes =
         updatedCount > 1 ? 'Linodes have' : 'Linode has';
@@ -137,9 +137,18 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
           <Grid item>
             <Typography variant="body1">
               Three backup slots are executed and rotated automatically: a daily
-              backup, a 2-7 day old backup, and an 8-14 day old backup. Confirm
-              to add backups to{' '}
-              <strong data-qa-backup-count>{linodeCount}</strong>{' '}
+              backup, a 2-7 day old backup, and an 8-14 day old backup. See our
+              {` `}
+              <Link
+                to={
+                  'https://www.linode.com/docs/platform' +
+                  '/disk-images/linode-backup-service/'
+                }
+              >
+                guide on Backups
+              </Link>{' '}
+              for more information on features and limitations. Confirm to add
+              backups to <strong data-qa-backup-count>{linodeCount}</strong>{' '}
               {linodeCount > 1 ? 'Linodes' : 'Linode'}.
             </Typography>
           </Grid>

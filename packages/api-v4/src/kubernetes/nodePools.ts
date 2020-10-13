@@ -21,7 +21,7 @@ export const getNodePools = (clusterID: number, params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools`)
-  ).then(response => response.data);
+  );
 
 /**
  * getNodePool
@@ -32,7 +32,7 @@ export const getNodePool = (clusterID: number, nodePoolID: number) =>
   Request<KubeNodePoolResponse>(
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
-  ).then(response => response.data);
+  );
 
 /**
  * createNodePool
@@ -44,7 +44,7 @@ export const createNodePool = (clusterID: number, data: PoolNodeRequest) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools`),
     setData(data, nodePoolSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * updateNodePool
@@ -60,7 +60,7 @@ export const updateNodePool = (
     setMethod('PUT'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`),
     setData(data, nodePoolSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteNodePool
@@ -71,4 +71,15 @@ export const deleteNodePool = (clusterID: number, nodePoolID: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
-  ).then(response => response.data);
+  );
+
+/**
+ * recycleAllNodes
+ *
+ * Recycles all nodes from the specified Cluster.
+ */
+export const recycleAllNodes = (clusterID: number, nodePoolID: number) =>
+  Request<{}>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}/recycle`)
+  );

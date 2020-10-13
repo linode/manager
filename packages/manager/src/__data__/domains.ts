@@ -67,7 +67,9 @@ export const domainRecord1: DomainRecord = {
   target: 'www.example.com',
   ttl_sec: 0,
   type: 'CNAME',
-  weight: 0
+  weight: 0,
+  updated: '2020-05-03 00:00:00',
+  created: '2020-05-03 00:00:00'
 };
 
 export const domainRecord2: DomainRecord = {
@@ -81,7 +83,9 @@ export const domainRecord2: DomainRecord = {
   target: 'www.example.com',
   ttl_sec: 0,
   type: 'CNAME',
-  weight: 0
+  weight: 0,
+  updated: '2020-05-03 00:00:00',
+  created: '2020-05-03 00:00:00'
 };
 
 export const domainRecord3: DomainRecord = {
@@ -95,7 +99,9 @@ export const domainRecord3: DomainRecord = {
   target: 'www.example.com',
   ttl_sec: 0,
   type: 'AAAA',
-  weight: 0
+  weight: 0,
+  updated: '2020-05-03 00:00:00',
+  created: '2020-05-03 00:00:00'
 };
 
 export const domainRecords = [domainRecord1, domainRecord2, domainRecord3];

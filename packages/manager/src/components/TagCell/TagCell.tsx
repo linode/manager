@@ -13,15 +13,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     position: 'relative'
   },
+  rootDetails: {
+    justifyContent: 'center',
+    [theme.breakpoints.up('sm')]: {
+      justifyContent: 'flex-end'
+    }
+  },
   menuItem: {
     width: '30px',
     height: '30px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.bg.lightBlue,
+    backgroundColor: theme.color.tagButton,
     '& svg': {
-      color: theme.palette.primary.main
+      color: theme.color.tagIcon
     },
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
@@ -49,7 +55,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     marginLeft: theme.spacing(),
     width: '40px',
-    backgroundColor: theme.bg.lightBlue,
+    backgroundColor: theme.color.tagButton,
+    color: theme.color.tagIcon,
     borderRadius: 0,
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
@@ -64,17 +71,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 3,
     backgroundColor: theme.color.tagButton,
     border: 'none',
-    color: '#3683dc',
+    color: theme.cmrTextColors.textTagButton,
     display: 'flex',
     fontSize: 14,
     fontWeight: 'bold',
     alignItems: 'center',
     cursor: 'pointer',
+    whiteSpace: 'nowrap',
     '& svg': {
       marginLeft: 10,
       width: 10,
       height: 10,
-      color: '#7daee8'
+      color: theme.color.tagIcon
     }
   }
 }));
@@ -187,11 +195,13 @@ export const TagCell: React.FC<Props> = props => {
     </TableCell>
   ) : (
     <Grid
-      className={classes.root}
+      className={classNames({
+        [classes.root]: true,
+        [classes.rootDetails]: true
+      })}
       container
       direction="row"
       alignItems="center"
-      justify="flex-end"
       wrap="nowrap"
     >
       {addingTag ? (
@@ -199,13 +209,15 @@ export const TagCell: React.FC<Props> = props => {
           tags={tags}
           onClose={() => setAddingTag(false)}
           addTag={addTag}
+          inDetailsContext
         />
       ) : (
         <>
           <div
             ref={overflowRef}
             className={classNames({
-              [classes.tagList]: true
+              [classes.tagList]: true,
+              [classes.tagListOverflow]: hasOverflow
             })}
           >
             {tags.map(thisTag => (

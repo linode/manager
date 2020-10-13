@@ -67,7 +67,7 @@ export const cleanCSVData = (data: any): any => {
   /**
    * fairly confident this should be typecast as a string by now
    * basically, prefix the cell with : if the first character is a
-   * blacklisted math operator
+   * blocklisted math operator
    */
   if (`${data}`.charAt(0).match(/[-|+|=|*]/g)) {
     return `:${data}`;

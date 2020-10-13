@@ -47,13 +47,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: 2
   },
   statusIconRunning: {
-    backgroundColor: theme.color.green
+    backgroundColor: theme.cmrIconColors.iGreen
   },
   statusIconOther: {
-    backgroundColor: '#ffb31a'
+    backgroundColor: theme.cmrIconColors.iOrange
   },
   statusIconOffline: {
-    backgroundColor: theme.color.grey6
+    backgroundColor: theme.cmrIconColors.iGrey
   },
   statusIconError: {
     backgroundColor: theme.color.red
@@ -84,7 +84,8 @@ export const StatusIcon: React.FC<StatusProps> = props => {
         [classes.statusIconError]: status === 'error',
         [classes.statusIconOther]: !['inactive', 'active', 'error'].includes(
           status
-        )
+        ),
+        statusOther: !['inactive', 'active', 'error'].includes(status)
       })}
     />
   );

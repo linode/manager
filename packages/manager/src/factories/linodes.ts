@@ -1,4 +1,4 @@
-import * as Factory from 'factory.ts';
+import { NetworkUtilization } from '@linode/api-v4/lib/account';
 import {
   Linode,
   LinodeAlerts,
@@ -9,6 +9,7 @@ import {
   Stats,
   StatsData
 } from '@linode/api-v4/lib/linodes/types';
+import * as Factory from 'factory.ts';
 
 export const linodeAlertsFactory = Factory.Sync.makeFactory<LinodeAlerts>({
   cpu: 10,
@@ -112,7 +113,9 @@ export const linodeBackupsFactory = Factory.Sync.makeFactory<LinodeBackups>({
   last_successful: '2020-01-01'
 });
 
-export const linodeTransferFactory = Factory.Sync.makeFactory<any>({
+export const linodeTransferFactory = Factory.Sync.makeFactory<
+  NetworkUtilization
+>({
   used: 13956637,
   quota: 1950,
   billable: 0

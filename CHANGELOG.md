@@ -4,6 +4,362 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-10-13] - v1.22.1
+
+### Changed:
+
+- Make CVV required when adding a credit card.
+
+## [2020-10-05] - v1.22.0
+
+### Added:
+
+- Notification for when an email to a user couldn’t be delivered
+- Warning about 24 hour wait period before disabling backups for a Linode
+- Warning about blocked SMTP ports for new accounts
+- CMR:
+  - Apply animations and adjustments to Linode Summary view
+  - Apply table styles for Longview tables
+  - Hide status chip if there are no corresponding Linodes with that status
+  - "Message" column to the Activity Feed table
+  - Prevent overflow of resolvers in Linode Network tab
+  - Prevent text from being flush to the screen
+- Object Storage:
+  - Add ability to upload an SSL/TLS certificate for a Bucket
+  - Add access management for OBJ access keys
+  - Add loading state in OBJ access key drawer if buckets are loading
+  - Add view mode to OBJ access key drawer
+- VLANs:
+  - Create modal
+  - Add VLAN attachment option to Linode Create flow
+  - Add VLAN table to Linode Network tab
+  - Add VLAN column to Linode Configuration table
+
+### Changed:
+
+- Improve handling of Managed accounts when backing up Linodes
+
+### Fixed:
+
+- Cloning a Domain leads to “Not Found” page
+- Navigation bug in Longview
+- Tab-based navigation
+
+## JS Client
+
+### Added:
+
+- UploadCertificateSchema endpoint
+- uploadSSLCert endpoint
+- getSSLCert endpoint
+- deleteSSLCert endpoint
+- ObjectStorageBucketSSLRequest endpoint
+- ObjectStorageBucketSSLResponse endpoint
+- CreateVLANPayload endpoint
+- createVlanSchema endpoint
+- getVlans endpoint
+- getVlan endpoint
+- createVlan endpoint
+- deleteVlan endpoint
+- connectVlan endpoint
+- disconnectVlan endpoint
+- getInterfaces endpoint
+- getInterface endpoint
+- createInterface endpoint
+- deleteInterface endpoint
+- linodeInterfaceItemSchema endpoint
+- linodeInterfaceSchema endpoint
+- LinodeInterfacePayload endpoint
+- LinodeInterface endpoint
+
+### Fixed:
+
+- getLinode method now returns Promise<Linode> instead of Axios response
+- getLinodeLishToken method now returns Promise<{ lish_token: string}> instead of Axios response
+- deleteLinode method now returns Promise<{}> instead of Axios response
+
+## [2020-09-29] - v1.21.0
+
+### Added:
+
+One-Click Apps:
+
+- Jitsi
+- Webmin
+- Virtualmin
+- Plex
+- phpMyAdmin
+- Azuracast
+
+## [2020-09-21] - v1.20.0
+
+### Added:
+
+- Object Details Drawer
+- Proxy Protocol field in NodeBalancer settings
+- Add link to NotificationDrawer from Linode busy status
+- Prevent text and other components from being flushed to the edge when <1280px
+
+### Changed:
+
+- Improve handling for unknown Linode types
+- List allowed regions when creating or adding Linodes to Firewalls
+- Prevent migration of a Linode with attached Firewalls to an unsupported Data Center
+- CMR:
+- Close notification drawer on internal links
+- Style updates for:
+- Object Storage > Buckets & Object Storage > Access Key headers
+- OBJ Bucket Detail table
+
+### Fixed:
+
+- Change "Create Kubernetes" to "Create Kubernetes Cluster"
+- Calculations for large LKE clusters (total CPU/memory) were incorrect
+- Missing/duplicate page titles throughout app
+- OrderBy lifecycle bug
+- Typos: consecutive occurrences of 'the'
+- MigrateLanding routing bug
+- Add units (GB) to RAM in Linode Detail view
+- Various CMR menu issues
+
+## [2020-09-14] - 1.19.1
+
+### Fixed:
+
+- Cloud Firewalls could be attached to Linodes in unsupported regions
+- Duplicate rows when editing Firewall rules
+
+## [2020-09-09] - 1.19.0
+
+### Added:
+
+CMR:
+
+- Managed Dashboard card to CMR dashboard
+- System Status section in Notification drawer
+
+- Environment switcher for dev tools
+- Controls for mock service worker in dev tools
+
+### Changed:
+
+CMR:
+
+- Change URL on Linode modal close
+- Make OAuth apps table sortable
+- Linode status icons should blink for in-progress actions
+- Adding CMR header to the config/disk clone landing
+- Table style updates for: - Account > Users
+- Managed
+- Billing
+- SelectPlanPanel
+- Make API tokens table sortable
+- Make Rescue dialog full height
+- Routing for Linode Modals
+- Graph labels hidden for mobile
+
+Cloud Firewalls:
+
+- All IPv6 for Firewalls should be read as ::/0
+- Disable port range in Firewalls drawer when selecting ICMP protocol
+- Update Firewall doc URL
+- Don't set outbound rules for firewall presets
+- Firewall labels are not required; remove required annotation from textfield
+
+- Fix tab change handler
+- Improve error handling for API token drawer
+- Always honor Linodes "group by tag” setting
+- Stabilize table sort
+- Update MySQL info to clarify that we install MariaDB
+- Change Minecraft OCA to Minecraft: Java Edition
+- Display general errors at top of VolumeAttachmentDrawer
+
+### Fixed:
+
+CMR:
+
+- Hide hidden links from mobile nav
+- Close action menu after action is selected
+- Move domains banner above table
+
+- Prevent error message overlap on Firewalls detail
+- getLinode errors blocking landing page display
+- Console error (isResponsive prop not recognized)
+- Casing of NodeBalancer breadcrumb was incorrect
+- NodeBalancer Config form submission
+- Firewall detail breadcrumb
+- The search bar sometimes returned no results for restricted users
+- Managed Issue Drawer was crashing for users with empty timezones
+- Longview: MySQL tab not rendering if NGINX is not installed
+- Firewalls: handling of empty IPv6 responses
+
+## [2020-08-25] - v1.18.0
+
+### Changed:
+
+- Disable Atlanta region for most customers, add messaging regarding the datacenter upgrade
+
+## [2020-08-25] - v1.17.0
+
+### Added:
+
+- CMR:
+- Primary Nav responsive scaffold + styles
+- Use CMR action menu for Longview client rows
+- Plan link in Linode detail header should open the resize dialog
+- Table Styles:
+  Managed: SSH Access, Credentials
+  Profile: SSH Keys, API Tokens, OAuth Apps
+  Support Tickets
+- Linode Table Adjustments
+- Notification drawer: chronological display
+- Linode Storage Tab
+- Linode Rebuild Dialog
+- Flavor text in LinodeNews banner
+- Backups enable from Linode action menu
+- Mark events as seen when requesting in the notificationContext
+- Completed progress events
+- Longview processes tables to preferences sortKeys
+- Enforced 64 character limit on text input
+- Confirm enabling backups
+- Handling strange timezone cases for summary graphs
+
+### Changed:
+
+- Longview installation instructions
+- Clear UDF data on tab change in Linode Create
+- Language to “allowlist” and “blocklist”
+
+### Fixed:
+
+- Interoperability issues
+- Linode creation preselection params for from Clone, from Image, from Backup
+- Loading spinner in Notification drawer
+- Missing yup types dependency
+- SSH fingerprint display issues for various key types
+- Issue where loading a Domain’s Detail page directly wasn’t working on large accounts
+
+## [2020-08-14] - v1.16.2
+
+### Fixed:
+
+- Clear UDF data on tab change
+- Form fields issue on One-click Apps and StackScripts creation flows
+
+## [2020-08-13] - v1.16.1
+
+### Fixed:
+
+- Add withRouter to LinodeRescue
+- Update NodeBalancer details routing
+
+## [2020-08-11] - v.1.16.0
+
+### Added:
+
+- CMR
+- Table styles for Profile > Trusted Devices
+- Table styles for Volumes landing table
+- Table styles for Images landing table
+- Table styles for NodeBalancer landing table
+- Table styles for Firewall > Rules
+- Table styles for Firewall > Linodes
+- Responsive table styles for Firewall Landing and K8 Cluster landing
+- Responsive styling for entity header (all variants)
+- Responsive styling for Dashboard
+- Dashboard Notifications: Add Community Updates, Pending Actions, and “Show more” button to Drawer
+- Dialog full height
+- Rescue Linode dialog
+- Migration dialog
+- Static banner for Linode changelog
+- Tag styles
+- Support Tickets and loading state
+- Notification context
+- Notification drawer
+
+### Changed:
+
+- Refactor tabbable content to be accessible by keyboard
+- Update Popular Posts on /help page
+- Use API Pagination for Domains when account size is large
+- Display tax id of customer in invoice if available
+- Use longview/plan endpoint to get active plan
+
+### Fixed:
+
+- Default zone if no user timezone
+- Dates in several places displayed as “Invalid DateTime”
+- OAuth tokens with expiry of null were crashing the app
+
+## [2020-07-27] - v1.15.0
+
+### Added:
+
+- Ability to recycle all LKE pool nodes
+- CMR: Dashboard
+- Notifications
+- View for single Linodes
+- View for multiple Linodes
+- CMR: Linode Details - Filter Linodes by status - Implement LinodeEntityDetail component
+- Networking tab:
+- Add Linode Monthly Transfer graph
+- Add Historic Network Data graph - Add IP actions
+- CMR: Responsiveness
+- Linodes Landing
+- Domains Landing
+- Add reusable InlineMenuActions component - Apply updated table styles and action menu to Firewalls
+- Custom dev tools
+- User preferences editor
+
+### Changed:
+
+- CMR: Update Linode status pill designs
+- Use API search and hide search tips for large accounts
+
+- Use base 10 for network graphs
+
+### Fixed:
+
+- CMR: Adjust grid sizes to prevent EntityHeader elements from wrapping
+- Brasilia timezone offset should be GMT-3
+- Correct years in Linode Summary graph options
+- Create Object Storage Bucket types
+- Per-Linode network transfer total
+
+## JS Client
+
+### Added
+
+- getLinodeTransferByDate endpoint
+- recycleAllNodes endpoint (LKE)
+
+### Changed
+
+- Add access control and CORS fields to ObjectStorageBucketRequestPayload interface
+
+## [2020-07-13] - v1.14.0
+
+### Added:
+
+- Color palette component in Storybook
+
+### Changed:
+
+- CMR: Linode Detail - Storage tab - Analytics tab - Network tab
+- CMR: Linodes Landing - Add tag cell to Linode row - Summary view (replaces Grid view)
+- CMR: Move Linode Resize action from tab to new modal component
+- CMR: Apply updated table styles and action menus to LKE and Domains
+- CMR: Secondary nav width
+- Linode maintenance improvements
+- Show maintenance time in UTC in downloaded CSV
+
+### Fixed:
+
+- Consistent Notices for restricted users when creating a Volume
+- Longview CPU formatting
+- Handle null dates in invoice details logic
+- Expiry date check
+
 ## [2020-07-02] - v1.13.1
 
 ### Changed:

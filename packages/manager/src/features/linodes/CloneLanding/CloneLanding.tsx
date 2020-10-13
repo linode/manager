@@ -13,7 +13,6 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import {
   matchPath,
-  Route,
   RouteComponentProps,
   Switch,
   withRouter
@@ -21,16 +20,16 @@ import {
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLink from 'src/components/TabLink';
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { ApplicationState } from 'src/store';
@@ -49,17 +48,20 @@ import {
   curriedCloneLandingReducer,
   defaultState
 } from './utilities';
+import useFlags from 'src/hooks/useFlags';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
+const LinodesDetailHeader_CMR = React.lazy(() =>
+  import('../LinodesDetail/LinodesDetailHeader/LinodeDetailHeader_CMR')
+);
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(1)
   },
   paper: {
-    paddingTop: theme.spacing(3),
-    paddingLeft: theme.spacing(3)
+    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0`
   },
   appBar: {
     '& > div': {
@@ -95,7 +97,6 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     configs,
     disks,
     history,
-    match: { url },
     region,
     label,
     linodeId,
@@ -106,6 +107,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
 
   /**
    * ROUTING
@@ -122,18 +124,13 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     }
   ];
 
-  // Update browser URL with tab change
-  const handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const routeName = tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
-
   // Helper function for the <Tabs /> component
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
+  };
+
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
   };
 
   /**
@@ -284,7 +281,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         resetEventsPolling();
         requestDisks(linodeId);
-        history.push(`/linodes/${linodeId}/advanced`);
+        flags.cmr
+          ? history.push(`/linodes/${linodeId}/configurations`)
+          : history.push(`/linodes/${linodeId}/advanced`);
       })
       .catch(errors => {
         setSubmitting(false);
@@ -311,24 +310,30 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       */}
       <MutationNotification disks={props.disks} />
       <Notifications />
-      <LinodeControls
-        breadcrumbProps={{
-          removeCrumbX: 4,
-          crumbOverrides: [
-            {
-              label,
-              position: 2,
-              linkTo: {
-                pathname: `/linodes/${linodeId}/summary`
-              },
-              noCap: true
-            }
-          ],
-          onEditHandlers: undefined
-        }}
-      />
-      {linodeInTransition(linodeStatus, firstEventWithProgress) && (
-        <LinodeBusyStatus />
+      {flags.cmr ? (
+        <LinodesDetailHeader_CMR />
+      ) : (
+        <>
+          <LinodeControls
+            breadcrumbProps={{
+              removeCrumbX: 4,
+              crumbOverrides: [
+                {
+                  label,
+                  position: 2,
+                  linkTo: {
+                    pathname: `/linodes/${linodeId}/summary`
+                  },
+                  noCap: true
+                }
+              ],
+              onEditHandlers: undefined
+            }}
+          />
+          {linodeInTransition(linodeStatus, firstEventWithProgress) && (
+            <LinodeBusyStatus />
+          )}
+        </>
       )}
       <Grid container className={classes.root}>
         <Grid item xs={12} md={8} lg={9}>
@@ -342,66 +347,46 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
             >
               Clone
             </Typography>
-            <AppBar
-              className={classes.appBar}
-              position="static"
-              color="default"
-              role="tablist"
-            >
-              <Tabs
-                value={tabs.findIndex(tab => matches(tab.routeName))}
-                onChange={handleTabChange}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="scrollable"
-                scrollButtons="on"
-              >
-                {tabs.map(tab => (
-                  <Tab
-                    key={tab.title}
-                    data-qa-tab={tab.title}
-                    component={React.forwardRef((forwardedProps, ref) => (
-                      <TabLink to={tab.routeName} title={tab.title} />
-                    ))}
-                  />
-                ))}
-              </Tabs>
-            </AppBar>
-            <Route
-              exact
-              path={`${url}(/configs)?`}
-              render={() => (
-                <div className={classes.outerContainer}>
-                  <Configs
-                    configs={configsInState}
-                    configSelection={state.configSelection}
-                    handleSelect={toggleConfig}
-                  />
-                </div>
+
+            <Tabs
+              index={Math.max(
+                tabs.findIndex(tab => matches(tab.routeName)),
+                0
               )}
-            />
-            <Route
-              exact
-              path={`${url}/disks`}
-              render={() => (
-                <div className={classes.outerContainer}>
-                  <Typography>
-                    You can make a copy of a disk to the same or different
-                    Linode. We recommend you power off your Linode first, and
-                    keep it powered off until the disk has finished being
-                    cloned.
-                  </Typography>
-                  <div className={classes.diskContainer}>
-                    <Disks
-                      disks={disksInState}
-                      diskSelection={state.diskSelection}
-                      selectedConfigIds={selectedConfigIds}
-                      handleSelect={toggleDisk}
+              onChange={navToURL}
+            >
+              <TabLinkList tabs={tabs} />
+              <TabPanels>
+                <SafeTabPanel index={0}>
+                  <div className={classes.outerContainer}>
+                    <Configs
+                      configs={configsInState}
+                      configSelection={state.configSelection}
+                      handleSelect={toggleConfig}
                     />
                   </div>
-                </div>
-              )}
-            />
+                </SafeTabPanel>
+
+                <SafeTabPanel index={1}>
+                  <div className={classes.outerContainer}>
+                    <Typography>
+                      You can make a copy of a disk to the same or different
+                      Linode. We recommend you power off your Linode first, and
+                      keep it powered off until the disk has finished being
+                      cloned.
+                    </Typography>
+                    <div className={classes.diskContainer}>
+                      <Disks
+                        disks={disksInState}
+                        diskSelection={state.diskSelection}
+                        selectedConfigIds={selectedConfigIds}
+                        handleSelect={toggleDisk}
+                      />
+                    </div>
+                  </div>
+                </SafeTabPanel>
+              </TabPanels>
+            </Tabs>
           </Paper>
         </Grid>
         <Grid item xs={12} md={4} lg={3}>

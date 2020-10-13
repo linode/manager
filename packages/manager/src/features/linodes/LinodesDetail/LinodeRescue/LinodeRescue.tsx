@@ -5,7 +5,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -223,11 +223,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
 
     if (diskError) {
       return (
-        <div
-          id="tabpanel-linode-detail-rescue"
-          role="tabpanel"
-          aria-labelledby="tab-linode-detail-rescue"
-        >
+        <div>
           <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
           <ErrorState errorText="There was an error retrieving Disks information." />
         </div>
@@ -236,11 +232,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
 
     if (volumesError) {
       return (
-        <div
-          id="tabpanel-linode-detail-rescue"
-          role="tabpanel"
-          aria-labelledby="tab-linode-detail-rescue"
-        >
+        <div>
           <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
           <ErrorState errorText="There was an error retrieving Volumes information." />
         </div>
@@ -248,7 +240,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <div id="tabpanel-rescue" role="tabpanel" aria-labelledby="tab-rescue">
+      <div>
         <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
         <Paper className={classes.root}>
           {unauthorized && <LinodePermissionsError />}
@@ -286,12 +278,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             left
           />
           <ActionsPanel>
-            <Button
-              onClick={this.onSubmit}
-              buttonType="primary"
-              data-qa-submit
-              disabled={disabled}
-            >
+            <Button onClick={this.onSubmit} buttonType="primary" data-qa-submit>
               Reboot into Rescue Mode
             </Button>
           </ActionsPanel>
@@ -326,6 +313,7 @@ export default compose<CombinedProps, {}>(
   SectionErrorBoundary,
   styled,
   withSnackbar,
+  withRouter,
   withVolumes(
     (
       ownProps,

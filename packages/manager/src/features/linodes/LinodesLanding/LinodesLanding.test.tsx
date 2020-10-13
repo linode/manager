@@ -1,11 +1,9 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { clearDocs, setDocs } from 'src/store/documentation';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { ListLinodes } from './LinodesLanding';
-
-afterEach(cleanup);
 
 describe('ListLinodes', () => {
   const classes = {
@@ -15,11 +13,15 @@ describe('ListLinodes', () => {
     CSVlink: '',
     addNewLink: '',
     chip: '',
+    chipActive: '',
     chipRunning: '',
     chipPending: '',
     chipOffline: '',
     controlHeader: '',
-    toggleButton: ''
+    toggleButton: '',
+    clearFilters: '',
+    cmrSpacing: '',
+    cmrCSVlink: ''
   };
 
   it('renders without error', () => {
@@ -31,7 +33,7 @@ describe('ListLinodes', () => {
           imagesData={{}}
           imagesLastUpdated={100}
           userTimezone="GMT"
-          userTimezoneLoading={false}
+          userProfileLoading={false}
           someLinodesHaveScheduledMaintenance={true}
           linodesData={[]}
           classes={classes}
@@ -48,6 +50,7 @@ describe('ListLinodes', () => {
           {...reactRouterProps}
           ldClient={{} as any}
           flags={{}}
+          linodesInTransition={new Set<number>()}
         />
       )
     );

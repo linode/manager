@@ -4,6 +4,7 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import useFlags from 'src/hooks/useFlags';
 import { isToday as _isToday } from 'src/utilities/isToday';
 import {
   LongviewNetworkInterface,
@@ -16,6 +17,11 @@ import NetworkGraphs from './NetworkGraphs';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: 250
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -27,8 +33,10 @@ interface Props {
 }
 
 export const NetworkLanding: React.FC<Props> = props => {
-  const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
+  const flags = useFlags();
+
+  const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
@@ -55,13 +63,7 @@ export const NetworkLanding: React.FC<Props> = props => {
   const isToday = _isToday(time.start, time.end);
 
   return (
-    <Grid
-      container
-      id="tabpanel-processes"
-      role="tabpanel"
-      aria-labelledby="tab-processes"
-      direction="column"
-    >
+    <Grid container direction="column">
       <DocumentTitleSegment segment={'Network'} />
       <Grid item xs={12}>
         <Box
@@ -69,6 +71,7 @@ export const NetworkLanding: React.FC<Props> = props => {
           flexDirection="row"
           justifyContent="flex-end"
           alignItems="center"
+          className={flags.cmr ? classes.cmrSpacing : ''}
         >
           <TimeRangeSelect
             small

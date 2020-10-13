@@ -1,4 +1,4 @@
-import { Domain } from '@linode/api-v4/lib/domains';
+import { Domain, getDomains } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { equals, pathOr } from 'ramda';
@@ -14,6 +14,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
   Theme,
@@ -30,17 +31,18 @@ import EntityTable, {
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
+import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
 import domainsContainer, {
   Props as DomainProps
 } from 'src/containers/domains.container';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { Domains } from 'src/documentation';
 import { ApplicationState } from 'src/store';
 import {
@@ -49,10 +51,11 @@ import {
   openForEditing as _openForEditing,
   Origin as DomainDrawerOrigin
 } from 'src/store/domainDrawer';
+import { upsertMultipleDomains } from 'src/store/domains/domains.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
-import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DisableDomainDialog from './DisableDomainDialog';
+import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DomainRow from './DomainTableRow';
 import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
@@ -65,20 +68,11 @@ type ClassNames =
   | 'domain'
   | 'dnsWarning'
   | 'tagWrapper'
-  | 'tagGroup';
+  | 'tagGroup'
+  | 'importButton';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      '& td': {
-        borderBottom: 0,
-        paddingLeft: '15px',
-        paddingRight: '15px'
-      },
-      '& .MuiTableCell-head': {
-        borderBottom: 0
-      }
-    },
     titleWrapper: {
       flex: 1
     },
@@ -105,6 +99,10 @@ const styles = (theme: Theme) =>
     tagGroup: {
       flexDirection: 'row-reverse',
       marginBottom: theme.spacing(2) - 8
+    },
+    importButton: {
+      paddingTop: 5,
+      paddingBottom: 5
     }
   });
 
@@ -132,6 +130,8 @@ interface Props {
   };
 }
 
+const initialOrder = { order: 'asc' as Order, orderBy: 'domain' };
+
 export type CombinedProps = DomainProps &
   WithStyles<ClassNames> &
   Props &
@@ -152,19 +152,21 @@ const headers: HeaderCell[] = [
     label: 'Status',
     dataColumn: 'status',
     sortable: true,
-    widthPercent: 25
+    widthPercent: 10
   },
   {
     label: 'Type',
     dataColumn: 'type',
     sortable: true,
-    widthPercent: 15
+    widthPercent: 10,
+    hideOnMobile: true
   },
   {
     label: 'Last Modified',
     dataColumn: 'updated',
     sortable: true,
-    widthPercent: 25
+    widthPercent: 20,
+    hideOnMobile: true
   },
   {
     label: 'Action Menu',
@@ -191,11 +193,21 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   static docs: Linode.Doc[] = [Domains];
 
   componentDidMount = () => {
-    const { domainForEditing, openForEditing } = this.props;
+    const {
+      domainForEditing,
+      domainsLastUpdated,
+      isLargeAccount,
+      openForEditing,
+      getAllDomains
+    } = this.props;
     // Open the "Edit Domain" drawer if so specified by this component's props.
     if (domainForEditing) {
       const { domainId, domainLabel } = domainForEditing;
       openForEditing(domainLabel, domainId);
+    }
+
+    if (!isLargeAccount && domainsLastUpdated === 0) {
+      getAllDomains();
     }
   };
 
@@ -334,8 +346,10 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       domainsError,
       domainsData,
       domainsLoading,
+      domainsLastUpdated,
       flags,
       howManyLinodesOnAccount,
+      isLargeAccount,
       isRestrictedUser,
       linodesLoading
     } = this.props;
@@ -352,7 +366,11 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     const domainRow: EntityTableRow<Domain> = {
       Component: flags.cmr ? DomainRow_CMR : DomainRow,
       data: domainsData ?? [],
-      handlers
+      request: isLargeAccount ? getDomains : undefined,
+      handlers,
+      loading: domainsLoading,
+      error: domainsError.read,
+      lastUpdated: domainsLastUpdated
     };
 
     if (domainsLoading) {
@@ -363,7 +381,19 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return <RenderError />;
     }
 
-    if (!domainsData || domainsData.length === 0) {
+    if (!isLargeAccount && domainsData?.length === 0) {
+      /**
+       * We don't know whether or not a large account is empty or not
+       * until Pagey has made its first request, and putting this
+       * empty state inside of Pagey would be weird/difficult.
+       *
+       * The other option is to make an initial request when this
+       * component mounts, which Pagey would ignore.
+       *
+       * I think a slightly different empty state for large accounts is
+       * the best trade-off until we have the thing-count endpoint,
+       * but open to persuasion on this.
+       */
       return (
         <React.Fragment>
           <RenderEmpty
@@ -394,11 +424,27 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       !isRestrictedUser &&
       !linodesLoading &&
       howManyLinodesOnAccount === 0 &&
+      domainsData &&
       domainsData.length > 0;
 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Domains" />
+        {shouldShowBanner && (
+          <Notice warning important className={classes.dnsWarning}>
+            <Typography variant="h3">
+              Your DNS zones are not being served.
+            </Typography>
+            <Typography>
+              Your domains will not be served by Linode&#39;s nameservers unless
+              you have at least one active Linode on your account.
+              <Link to="/linodes/create"> You can create one here.</Link>
+            </Typography>
+          </Notice>
+        )}
+        {this.props.location.state?.recordError && (
+          <Notice error text={this.props.location.state.recordError} />
+        )}
         <PreferenceToggle<boolean>
           preferenceKey="domains_group_by_tag"
           preferenceOptions={[false, true]}
@@ -416,6 +462,16 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                 {flags.cmr ? (
                   <LandingHeader
                     title="Domains"
+                    body={
+                      <Hidden mdUp>
+                        <Button
+                          className={classes.importButton}
+                          onClick={this.openImportZoneDrawer}
+                        >
+                          Import a Zone
+                        </Button>
+                      </Hidden>
+                    }
                     extraActions={
                       <Button onClick={this.openImportZoneDrawer}>
                         Import a Zone
@@ -454,6 +510,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                             }
                             onChange={toggleGroupDomains}
                             checked={domainsAreGrouped}
+                            disabled={isLargeAccount}
                           />
                         }
                         label="Group by Tag:"
@@ -482,38 +539,24 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     </Grid>
                   </Grid>
                 )}
-                {shouldShowBanner && (
-                  <Notice warning important className={classes.dnsWarning}>
-                    <Typography variant="h3">
-                      Your DNS zones are not being served.
-                    </Typography>
-                    <Typography>
-                      Your domains will not be served by Linode&#39;s
-                      nameservers unless you have at least one active Linode on
-                      your account.
-                      <Link to="/linodes/create">
-                        {' '}
-                        You can create one here.
-                      </Link>
-                    </Typography>
-                  </Notice>
-                )}
-                {this.props.location.state &&
-                  this.props.location.state.recordError && (
-                    <Notice
-                      error
-                      text={this.props.location.state.recordError}
-                    />
-                  )}
-                <div className={classes.root}>
-                  <Table
-                    entity="domain"
-                    groupByTag={domainsAreGrouped}
-                    row={domainRow}
-                    headers={headers}
-                    initialOrder={{ order: 'asc', orderBy: 'domain' }}
-                  />
-                </div>
+                <Table
+                  entity="domain"
+                  groupByTag={domainsAreGrouped}
+                  row={domainRow}
+                  headers={headers}
+                  initialOrder={initialOrder}
+                  normalizeData={(pageyData: Domain[]) => {
+                    // Use Redux copies of each Domain, since Redux is more up-to-date.
+                    return getReduxCopyOfDomains(
+                      pageyData,
+                      this.props.domainsByID
+                    );
+                  }}
+                  // Persist Pagey data to Redux.
+                  persistData={(data: Domain[]) => {
+                    this.props.upsertMultipleDomains(data);
+                  }}
+                />
               </React.Fragment>
             );
           }}
@@ -619,12 +662,15 @@ interface DispatchProps {
   openForCloning: (domain: string, id: number) => void;
   openForEditing: (domain: string, id: number) => void;
   openForCreating: (origin: DomainDrawerOrigin) => void;
+  upsertMultipleDomains: (domains: Domain[]) => void;
 }
 
 interface StateProps {
   howManyLinodesOnAccount: number;
   linodesLoading: boolean;
   isRestrictedUser: boolean;
+  isLargeAccount: boolean;
+  domainsByID: Record<string, Domain>;
 }
 
 const mapStateToProps: MapStateToProps<
@@ -632,23 +678,23 @@ const mapStateToProps: MapStateToProps<
   {},
   ApplicationState
 > = state => ({
-  howManyLinodesOnAccount: pathOr(
-    [],
-    ['__resources', 'linodes', 'results'],
-    state
-  ).length,
+  howManyLinodesOnAccount: state.__resources.linodes.results,
   linodesLoading: pathOr(false, ['linodes', 'loading'], state.__resources),
   isRestrictedUser: pathOr(
     true,
     ['__resources', 'profile', 'data', 'restricted'],
     state
-  )
+  ),
+  // @todo remove this when ARB-2091 is merged
+  isLargeAccount: state.preferences.data?.is_large_account ?? false,
+  domainsByID: state.__resources.domains.itemsById
 });
 
 export const connected = connect(mapStateToProps, {
   openForCreating,
   openForCloning,
-  openForEditing: _openForEditing
+  openForEditing: _openForEditing,
+  upsertMultipleDomains
 });
 
 export default compose<CombinedProps, Props>(
@@ -659,3 +705,19 @@ export default compose<CombinedProps, Props>(
   withFeatureFlags,
   styled
 )(DomainsLanding);
+
+// Given a list of "baseDomains" (requested from the API via Pagey) and a record of Domains
+// from Redux, return the Redux copy of each base Domain. This is useful because the Redux
+// copy of the Domain may have updates the original data from Pagey doesn't.
+export const getReduxCopyOfDomains = (
+  baseDomains: Domain[],
+  reduxDomains: Record<string, Domain>
+) => {
+  return baseDomains.reduce((acc, thisDomain) => {
+    const thisReduxDomain = reduxDomains[thisDomain.id];
+    if (thisReduxDomain) {
+      return [...acc, thisReduxDomain];
+    }
+    return acc;
+  }, []);
+};
