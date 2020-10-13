@@ -1,21 +1,17 @@
 import { BrowserOptions, Event as SentryEvent, init } from '@sentry/browser';
-import { lensPath, over } from 'ramda';
 import { SENTRY_URL } from 'src/constants';
-import redactAccessTokenFromUrl from 'src/utilities/redactAccessTokenFromUrl';
+import redactAccessToken from 'src/utilities/redactAccessToken';
+import deepStringTransform from 'src/utilities/deepStringTransform';
 
-const updateRequestUrl = over(
-  lensPath(['request', 'url']),
-  redactAccessTokenFromUrl
-);
-
-const beforeSend: BrowserOptions['beforeSend'] = (event, hint) => {
-  /** remove the user's access token from the URL if one exists */
-  const eventWithoutSensitiveInfo = updateRequestUrl(event);
-  /** maybe add a custom fingerprint if this error is relevant */
-  const eventWithCustomFingerprint = maybeAddCustomFingerprint(
-    eventWithoutSensitiveInfo
+const beforeSend: BrowserOptions['beforeSend'] = sentryEvent => {
+  /** remove the user's access token from the event if one exists */
+  const eventWithoutSensitiveInfo = deepStringTransform(
+    sentryEvent,
+    redactAccessToken
   );
-  return eventWithCustomFingerprint;
+
+  /** maybe add a custom fingerprint if this error is relevant */
+  return maybeAddCustomFingerprint(eventWithoutSensitiveInfo);
 };
 
 export const initSentry = () => {
