@@ -7,21 +7,18 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import getAbuseTicket from 'src/store/selectors/getAbuseTicket';
 import { MapState } from 'src/store/types';
-import { abuseTicketFactory } from 'src/factories/abuseTicket';
-import withFeatureFlagConsumerContainer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
+import { abuseTicketNotificationFactory } from 'src/factories/notification';
 import { compose } from 'recompose';
 
 interface ReduxStateProps {
   abuseTickets: Notification[];
 }
 
-type CombinedProps = ReduxStateProps & FeatureFlagConsumerProps;
+type CombinedProps = ReduxStateProps;
 
 export class AbuseTicketBanner extends React.Component<CombinedProps> {
   render() {
-    const abuseTickets = abuseTicketFactory.buildList(1);
+    const abuseTickets = abuseTicketNotificationFactory.buildList(1);
     // const { abuseTickets } = this.props;
 
     if (!abuseTickets || abuseTickets.length === 0) {
@@ -43,7 +40,7 @@ export class AbuseTicketBanner extends React.Component<CombinedProps> {
 
     return (
       <Grid item xs={12}>
-        <Notice important error dismissible={!this.props.flags.cmr}>
+        <Notice important error dismissible={false}>
           {message} Please{' '}
           <Link data-testid="abuse-ticket-link" to={href}>
             click here
@@ -61,7 +58,4 @@ const mapStateToProps: MapState<ReduxStateProps, {}> = (state, ownProps) => ({
 
 const connected = connect<ReduxStateProps, any, {}>(mapStateToProps, undefined);
 
-export default compose(
-  connected,
-  withFeatureFlagConsumerContainer
-)(AbuseTicketBanner) as React.ComponentType<{}>;
+export default compose(connected)(AbuseTicketBanner) as React.ComponentType<{}>;
