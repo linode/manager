@@ -51,9 +51,7 @@ const VlanEntityDetail: React.FC<CombinedProps> = props => {
   );
 };
 
-// export default React.memo(VlanEntityDetail);
-
-export default compose<CombinedProps, {}>(
+export default compose<CombinedProps, VlanEntityDetailProps>(
   React.memo,
   withVLANs<{}, CombinedProps>()
 )(VlanEntityDetail);
@@ -140,7 +138,7 @@ const Header: React.FC<HeaderProps> = props => {
         body={
           <>
             <div className={classes.actionItemsOuter}>
-              {/* Not implemented by API yet */}
+              {/* @todo: Not implemented by API yet */}
               {/* <IconTextLink
               className={classes.actionItem}
               SideIcon={EditIcon}
@@ -243,6 +241,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const classes = useFooterStyles();
 
+  // @todo: Not implemented by API yet
   // const { enqueueSnackbar } = useSnackbar();
 
   // const addTag = React.useCallback(
