@@ -127,7 +127,9 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
         if (rebootOnCreate) {
           // If we've been asked to do this, reboot every Linode we just
           // attached to the VLAN.
-          response.linodes.forEach(thisLinode => linodeReboot(thisLinode));
+          response.linodes.forEach(thisVLANLinode =>
+            linodeReboot(thisVLANLinode.id)
+          );
         }
         context.close();
         history.push('/vlans');
@@ -184,7 +186,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
           <TextField
             label="IP Range / Netmask"
             name="cidr_block"
-            helperText={`You can specify the IP range with a netmask (10.0.0.0/16) 
+            helperText={`You can specify the IP range with a netmask (10.0.0.0/16)
           or starting and ending IPs (10.0.0.0-10.0.0.20).`}
             helperTextPosition="top"
             value={formik.values.cidr_block}

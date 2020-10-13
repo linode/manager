@@ -9,6 +9,7 @@ import Grid from 'src/components/Grid';
 import VlanActionMenu, { ActionHandlers } from './VlanActionMenu';
 import { getLinodeLabel } from 'src/features/Dashboard/VolumesDashboardCard/VolumeDashboardRow';
 import { VlanData } from './LinodeVLANs';
+import { VLAN } from '@linode/api-v4/lib/vlans';
 
 export const MAX_LINODES_VLANATTACHED_DISPLAY = 50;
 
@@ -31,7 +32,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
   const vlanLabel = description.length > 32 ? `vlan-${id}` : description;
 
   const getLinodesCellString = (
-    data: number[],
+    data: VLAN['linodes'],
     loading: boolean,
     error?: APIError[]
   ): string | JSX.Element => {
@@ -50,20 +51,20 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
     return getLinodeLinks(data);
   };
 
-  const getLinodeLinks = (data: number[]): JSX.Element => {
+  const getLinodeLinks = (vlanLinodes: VLAN['linodes']): JSX.Element => {
     // Remove the Linode the user is currently on from the array of Linode IDs the VLAN is attached to, and render that linode's label first in the list as a non-link.
-    const indexOfCurrentLinodeId = data.findIndex(
-      element => element === currentLinodeId
+    const indexOfCurrentLinodeId = vlanLinodes.findIndex(
+      thisVLANLinode => thisVLANLinode.id === currentLinodeId
     );
-    data.splice(indexOfCurrentLinodeId, 1);
+    vlanLinodes.splice(indexOfCurrentLinodeId, 1);
 
-    const generatedLinks = data.map(linodeID => (
+    const generatedLinks = vlanLinodes.map(thisVLANLinode => (
       <Link
-        key={linodeID}
-        to={`/linodes/${linodeID}/networking`}
+        key={thisVLANLinode.id}
+        to={`/linodes/${thisVLANLinode.id}/networking`}
         data-testid="vlan-row-link"
       >
-        {getLinodeLabel(linodeID)}
+        {getLinodeLabel(thisVLANLinode.id)}
       </Link>
     ));
 
@@ -71,7 +72,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
         {getLinodeLabel(currentLinodeId)}
-        {data.length > 0 && `, `}
+        {vlanLinodes.length > 0 && `, `}
         {truncateAndJoinJSXList(
           generatedLinks,
           MAX_LINODES_VLANATTACHED_DISPLAY

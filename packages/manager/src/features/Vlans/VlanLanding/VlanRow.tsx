@@ -43,7 +43,7 @@ export const VlanRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const getLinodesCellString = (
-    data: number[],
+    vlanLinodes: VLAN['linodes'],
     loading: boolean,
     error?: APIError[]
   ): string | JSX.Element => {
@@ -55,25 +55,25 @@ export const VlanRow: React.FC<CombinedProps> = props => {
       return 'Error retrieving Linodes';
     }
 
-    if (data.length === 0) {
+    if (vlanLinodes.length === 0) {
       return 'None assigned';
     }
 
-    return getLinodeLinks(data);
+    return getLinodeLinks(vlanLinodes);
   };
 
-  const getLinodeLinks = (data: number[]): JSX.Element => {
+  const getLinodeLinks = (vlanLinodes: VLAN['linodes']): JSX.Element => {
     return (
       // eslint-disable-next-line
       <>
-        {data.map(linodeID => (
+        {vlanLinodes.map(thisVLANLinode => (
           <Link
             className={classes.link}
-            key={linodeID}
-            to={`/linodes/${linodeID}`}
+            key={thisVLANLinode.id}
+            to={`/linodes/${thisVLANLinode.id}`}
             data-testid="vlan-row-link"
           >
-            {getLinodeLabel(linodeID)}
+            {getLinodeLabel(thisVLANLinode.id)}
           </Link>
         ))}
       </>
