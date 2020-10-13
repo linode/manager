@@ -11,10 +11,10 @@ import {
   withTheme,
   WithTheme
 } from 'src/components/core/styles';
-import RegionStatusBanner from 'src/components/RegionStatusBanner';
 
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
+import GlobalNotifications from 'src/features/GlobalNotifications';
 import Footer from 'src/features/Footer/Footer_CMR';
 import {
   notificationContext,
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     minHeight: '100vh',
     flexDirection: 'column',
-    backgroundColor: theme.bg.main,
+    backgroundColor: theme.cmrBGColors.bgApp,
     zIndex: 1
   },
   wrapper: {
@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cmrWrapper: {
     padding: `${theme.spacing(3)}px 0`,
+    paddingTop: 20,
     transition: theme.transitions.create('opacity'),
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing(2),
@@ -269,7 +270,7 @@ const MainContent: React.FC<CombinedProps> = props => {
             <main className={classes.cmrWrapper} id="main-content" role="main">
               <Grid container spacing={0} className={classes.grid}>
                 <Grid item className={classes.switchWrapper}>
-                  <RegionStatusBanner />
+                  <GlobalNotifications />
                   <React.Suspense fallback={<SuspenseLoader />}>
                     <Switch>
                       <Route path="/linodes" component={LinodesRoutes} />

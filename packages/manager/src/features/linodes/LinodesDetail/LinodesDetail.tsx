@@ -7,18 +7,17 @@ import {
   withRouter
 } from 'react-router-dom';
 import { compose } from 'recompose';
+import NotFound from 'src/components/NotFound';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import useFlags from 'src/hooks/useFlags';
-import NotFound from 'src/components/NotFound';
+import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import {
   LinodeDetailContext,
   linodeDetailContextFactory as createLinodeDetailContext,
   LinodeDetailContextProvider
 } from './linodeDetailContext';
 
-const CloneLanding = React.lazy(() => import('../CloneLanding'));
 const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
 const LinodesDetailHeader_CMR = React.lazy(() =>
   import('./LinodesDetailHeader/LinodeDetailHeader_CMR')
@@ -32,6 +31,7 @@ const LinodesDetailNavigation_CMR = React.lazy(() =>
 const LinodesDashboardNavigation = React.lazy(() =>
   import('./LinodesDashboardNavigation')
 );
+const CloneLanding = React.lazy(() => import('../CloneLanding'));
 const MigrateLanding = React.lazy(() => import('../MigrateLanding'));
 
 interface Props {
@@ -47,6 +47,7 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
     linodeId,
     match: { path }
   } = props;
+
   const dispatch = useDispatch();
   const linode = useExtendedLinode(+linodeId);
   const flags = useFlags();
