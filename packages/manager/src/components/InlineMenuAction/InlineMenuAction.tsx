@@ -8,10 +8,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.applyLinkStyles,
     padding: '12px 10px',
     minWidth: 0,
-
+    color: theme.cmrTextColors.linkActiveLight,
     '&:hover': {
       backgroundColor: '#3683dc',
-      color: theme.color.white
+      color: '#ffffff'
     },
     '&[disabled]': {
       color: '#cdd0d5',
@@ -23,14 +23,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   linkRoot: {
     textAlign: 'center',
+    color: theme.cmrTextColors.linkActiveLight,
     '&:hover': {
       backgroundColor: '#3683dc',
-      '& span': {
-        color: theme.color.white
-      }
-    },
-    '& span': {
-      color: '#3683dc'
+      color: '#ffffff'
     }
   }
 }));

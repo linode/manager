@@ -17,7 +17,7 @@ import BucketActionMenu from './BucketActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
 import { Link } from 'react-router-dom';
 
-type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link';
+type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link' | 'bucketLabel';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -34,6 +34,9 @@ const styles = (theme: Theme) =>
       '&:hover': {
         textDecoration: 'underline'
       }
+    },
+    bucketLabel: {
+      color: theme.cmrTextColors.linkActiveLight
     }
   });
 
@@ -58,7 +61,10 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
           <Grid item>
             <div className={classes.bucketNameWrapper}>
               <Typography variant="body2" component="h3" data-qa-label>
-                <Link to={`/object-storage/buckets/${cluster}/${label}`}>
+                <Link
+                  className={classes.bucketLabel}
+                  to={`/object-storage/buckets/${cluster}/${label}`}
+                >
                   {label}{' '}
                 </Link>
               </Typography>

@@ -6,7 +6,7 @@ import {
   useTheme,
   useMediaQuery
 } from 'src/components/core/styles';
-import ActionMenu from 'src/components/ActionMenu_CMR';
+import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -60,14 +60,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface ActionHandlers {
-  triggerRemoveVlan: (vlanID: number, vlanLabel: string) => void;
+  triggerDeleteVlan: (vlanID: number, vlanLabel: string) => void;
   [index: string]: any;
 }
 
 interface Props extends ActionHandlers {
   vlanID: number;
   vlanLabel: string;
-  readOnly: boolean;
 }
 
 type CombinedProps = Props;
@@ -78,24 +77,20 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const history = useHistory();
 
-  const { vlanID, vlanLabel, triggerRemoveVlan, readOnly } = props;
+  const { vlanID, vlanLabel, triggerDeleteVlan } = props;
 
-  const actions = [
+  const actions: Action[] = [
     {
       title: 'Details',
-      className: classes.link,
       onClick: () => {
-        history.push({
-          pathname: `/vlans/${vlanID}`
-        });
+        history.push({ pathname: `/vlans/${vlanID}` });
       }
     },
     {
-      title: 'Remove',
+      title: 'Delete',
       onClick: () => {
-        triggerRemoveVlan(vlanID, vlanLabel);
-      },
-      disabled: readOnly
+        triggerDeleteVlan(vlanID, vlanLabel);
+      }
     }
   ];
 
@@ -107,9 +102,7 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
             <InlineMenuAction
               key={action.title}
               actionText={action.title}
-              className={action.className}
               onClick={action.onClick}
-              disabled={action.disabled}
             />
           );
         })}

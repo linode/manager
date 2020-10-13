@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.bold,
     fontSize: '.875rem',
     lineHeight: '1.125rem',
-    textDecoration: 'underline'
+    textDecoration: 'underline',
+    color: theme.cmrTextColors.linkActiveLight
   },
   root: {
     '& h3': {

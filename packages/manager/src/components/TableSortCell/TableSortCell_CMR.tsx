@@ -17,13 +17,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: '#3683dc',
       cursor: 'pointer',
       '& span': {
-        color: theme.color.white
+        color: '#ffffff'
       },
       '& .MuiTableSortLabel-icon': {
-        color: `${theme.color.white} !important`
+        color: '#ffffff !important'
       },
       '& svg g': {
-        fill: theme.color.white
+        fill: '#ffffff'
       }
     }
   },
