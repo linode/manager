@@ -2,7 +2,7 @@ export interface VLAN {
   id: number;
   description: string;
   region: string;
-  linodes: { id: number; ip: string }[];
+  linodes: { id: number; ipv4_address: string; mac_address: string }[];
   cidr_block: string;
   created: string;
 }
