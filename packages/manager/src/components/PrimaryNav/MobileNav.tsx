@@ -5,10 +5,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
 import CloseIcon from '@material-ui/icons/Close';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import MenuIcon from '@material-ui/icons/Menu';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -79,7 +79,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   caret: {
     color: '#9ea4ae',
-    marginTop: 2
+    height: 20
+  },
+  rotate: {
+    transform: 'rotate(180deg)',
+    transition:
+      'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
   },
   nestedLink: {
     padding: 0,
@@ -87,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.bg.primaryNavActiveBG
     },
     '& a': {
-      padding: '7.5px 40px',
+      padding: '15px 40px',
       width: '100%',
       '&:focus': {
         backgroundColor: theme.bg.primaryNavActiveBG,
@@ -168,6 +173,7 @@ export const MobileNav: React.FC<Props> = props => {
   };
 
   const handleClickAway = () => {
+    closeNestedMenus();
     setOpen(false);
   };
 
@@ -204,7 +210,12 @@ export const MobileNav: React.FC<Props> = props => {
             {open ? <CloseIcon /> : <MenuIcon />} Menu
           </IconButton>
 
-          <List className={`${classes.menu} ${open && classes.showMenu}`}>
+          <List
+            className={classnames({
+              [classes.menu]: true,
+              [classes.showMenu]: open
+            })}
+          >
             {groups.map((thisGroup: any) => {
               // For each group, filter out hidden links
               const filteredLinks = thisGroup.links.filter(
@@ -246,11 +257,12 @@ export const MobileNav: React.FC<Props> = props => {
                     onClick={() => handleClick(thisGroup.group)}
                   >
                     <ListItemText primary={thisGroup.group} />
-                    {isGroupOpen(thisGroup.group) ? (
-                      <ExpandLess className={classes.caret} />
-                    ) : (
-                      <ExpandMore className={classes.caret} />
-                    )}
+                    <KeyboardArrowDown
+                      className={classnames({
+                        [classes.caret]: true,
+                        [classes.rotate]: isGroupOpen(thisGroup.group)
+                      })}
+                    />
                   </ListItem>
                   <Collapse in={groupMap[thisGroup.group]}>
                     <List
@@ -283,7 +295,11 @@ export const MobileNav: React.FC<Props> = props => {
           </List>
         </>
       </ClickAwayListener>
-      <Backdrop className={classes.settingsBackdrop} open={open} />
+      <Backdrop
+        className={classes.settingsBackdrop}
+        open={open}
+        onClick={handleClickAway}
+      />
     </>
   );
 };
