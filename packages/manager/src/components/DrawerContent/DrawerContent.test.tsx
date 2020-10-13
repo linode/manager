@@ -10,14 +10,14 @@ describe('DrawerContent', () => {
   );
 
   it('should show loading component while loading is in progress', () => {
-    expect(component.name()).toEqual('WithStyles(CircleProgressComponent)');
+    expect(component.name()).toEqual('WithTheme(CircleProgressComponent)');
     expect(component.find('table')).toHaveLength(0);
   });
 
   it('should show error if loading is finished but the error persists', () => {
     component.setProps({ loading: false });
 
-    expect(component.name()).toEqual('WithStyles(Notice)');
+    expect(component.name()).toEqual('WithTheme(Notice)');
     expect(component.find('table')).toHaveLength(0);
   });
   it('should display content if there is no error nor loading', () => {
