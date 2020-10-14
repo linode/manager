@@ -178,10 +178,8 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
             return undefined;
           }
 
-          // Create a deep copy so it isn't being directly modified later in VLanTableRow.tsx
-          const thisVlanClone = clone(thisVlan);
           return {
-            ...thisVlanClone,
+            ...thisVlan,
             ip_address: thisInterface.ip_address,
             interfaceName: getInterfaceName(thisInterface.id, configs),
             currentLinodeId: linodeId,
@@ -194,7 +192,8 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
 
   const vlansAvailableForAttaching = getVlansAvailableForAttaching(
     vlans,
-    vlanData
+    vlanData,
+    linodeRegion
   );
 
   const handleOpenRemoveVlanModal = (id: number, label: string) => {
@@ -307,13 +306,18 @@ export const getInterfaceName = (
   return null;
 };
 
-const getVlansAvailableForAttaching = (vlans: any, vlanData: any) => {
+const getVlansAvailableForAttaching = (
+  vlans: any,
+  vlanData: any,
+  linodeRegion: string
+) => {
   const vlanItems = clone(vlans.itemsById);
 
   vlanData.forEach((vlanDatum: { id: string | number }) => {
     const alreadyAttached = vlanItems[vlanDatum.id];
+    const notInRegion = vlanItems[vlanDatum.id].region !== linodeRegion;
 
-    if (alreadyAttached) {
+    if (alreadyAttached || notInRegion) {
       delete vlanItems[vlanDatum.id];
     } else {
       return;
