@@ -22,7 +22,8 @@ type ClassNames =
   | 'progressDisplay'
   | 'regionCell'
   | 'tagCell'
-  | 'maintenanceOuter';
+  | 'maintenanceOuter'
+  | 'vlan_Status';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -119,6 +120,11 @@ const styles = (theme: Theme) =>
     maintenanceOuter: {
       display: 'flex',
       alignItems: 'center'
+    },
+
+    // The "Status" cell in the VLAN Detail context.
+    vlan_Status: {
+      width: '14%'
     }
   });
 

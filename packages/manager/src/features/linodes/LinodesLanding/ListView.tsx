@@ -2,6 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
+import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
@@ -25,6 +26,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  isVLAN: boolean;
 }
 
 type CombinedProps = Props & PaginationProps;
@@ -86,6 +88,13 @@ export const ListView: React.FC<CombinedProps> = props => {
 
   const Row = flags.cmr ? LinodeRow_CMR : LinodeRow;
 
+  // This won't happen in the normal Linodes Landing context (a custom empty
+  // state is shown higher up in the tree). This is specifically for the case of
+  // VLAN Details, where we want to show the table even if there's nothing attached.
+  if (data.length === 0) {
+    return <TableRowEmptyState_CMR colSpan={12} />;
+  }
+
   return (
     // eslint-disable-next-line
     <>
@@ -116,6 +125,7 @@ export const ListView: React.FC<CombinedProps> = props => {
           // @todo delete after CMR
           openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
+          isVLAN={props.isVLAN}
         />
       ))}
       <TagDrawer

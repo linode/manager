@@ -37,6 +37,7 @@ interface Props {
   linodeViewPreference: 'list' | 'grid';
   toggleGroupLinodes: () => boolean;
   linodesAreGrouped: boolean;
+  isVLAN?: boolean;
 }
 
 type CombinedProps = Omit<OrderByProps, 'data'> & Props;
@@ -52,7 +53,8 @@ const TableWrapper: React.FC<CombinedProps> = props => {
     toggleLinodeView,
     linodeViewPreference,
     toggleGroupLinodes,
-    linodesAreGrouped
+    linodesAreGrouped,
+    isVLAN
   } = props;
 
   return (
@@ -73,6 +75,7 @@ const TableWrapper: React.FC<CombinedProps> = props => {
               linodeViewPreference={linodeViewPreference}
               toggleLinodeView={toggleLinodeView}
               linodesAreGrouped={linodesAreGrouped}
+              isVLAN={isVLAN}
             />
             {props.children}
           </Table>
