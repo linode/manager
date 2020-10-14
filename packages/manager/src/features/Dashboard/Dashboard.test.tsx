@@ -10,11 +10,9 @@ const props: CombinedProps = {
   notifications: [],
   userTimezone: 'GMT',
   userProfileLoading: false,
-  someLinodesHaveScheduledMaintenance: true,
   actions: {
     openBackupDrawer: jest.fn()
   },
-  linodesWithoutBackups: [],
   backupError: undefined,
   managed: false,
   ...reactRouterProps

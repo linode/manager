@@ -7,13 +7,14 @@ import { ApplicationState } from 'src/store';
 import { eventsForLinode } from 'src/store/events/event.selectors';
 import { getLinodeConfigsForLinode } from 'src/store/linodes/config/config.selectors';
 import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { shallowExtendLinodes } from 'src/store/linodes/linodes.helpers';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
+import { ShallowExtendedLinode } from 'src/store/linodes/types';
 import { getTypeById } from 'src/store/linodeType/linodeType.selector';
 import { getNotificationsForLinode } from 'src/store/notification/notification.selector';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 
-export interface ExtendedLinode extends LinodeWithMaintenance {
+export interface DeepExtendedLinode extends ShallowExtendedLinode {
   _configs: Config[];
   _disks: Disk[];
   _events: Event[];
@@ -24,7 +25,9 @@ export interface ExtendedLinode extends LinodeWithMaintenance {
   _permissions: GrantLevel;
 }
 
-export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
+export const useExtendedLinode = (
+  linodeId: number
+): DeepExtendedLinode | null => {
   return useSelector((state: ApplicationState) => {
     const { events, __resources } = state;
     const {
@@ -42,8 +45,15 @@ export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
 
     const { type } = linode;
 
+    // @todo: clean up the helper function so we don't have to deal with arrays.
+    const shallowExtendedLinode = shallowExtendLinodes(
+      [linode],
+      notifications.data ?? [],
+      events.events
+    )[0];
+
     return {
-      ...linode,
+      ...shallowExtendedLinode,
       _volumes: getVolumesForLinode(volumes.itemsById, linodeId),
       _volumesError: volumes.error.read,
       _notifications: getNotificationsForLinode(notifications, linodeId),

@@ -16,7 +16,6 @@ import useFlags from 'src/hooks/useFlags';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import formatDate from 'src/utilities/formatDate';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
@@ -24,6 +23,7 @@ import LinodeCard from './LinodeCard';
 import useLinodes from 'src/hooks/useLinodes';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import Typography from 'src/components/core/Typography';
+import { ShallowExtendedLinode } from 'src/store/linodes/types';
 
 const useStyles = makeStyles(() => ({
   '@keyframes blink': {
@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  data: LinodeWithMaintenance[];
+  data: ShallowExtendedLinode[];
   images: Image[];
   showHead?: boolean;
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
