@@ -1,90 +1,65 @@
+import { Linode } from '@linode/api-v4/lib/linodes';
 /* eslint-disable @typescript-eslint/no-empty-function */
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
-import { makeStyles } from 'src/components/core/styles';
-import EntityHeader from 'src/components/EntityHeader';
-import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
-import VlanDetailRow from './VlanDetailRow';
+import CircleProgress from 'src/components/CircleProgress';
+import ErrorState from 'src/components/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
+import NotFound from 'src/components/NotFound';
+import LinodesLanding from 'src/features/linodes/LinodesLanding';
+import useReduxLoad from 'src/hooks/useReduxLoad';
+import useVlans from 'src/hooks/useVlans';
 import VlanEntityDetail from './VlanEntityDetail';
-
-const useStyles = makeStyles(() => ({
-  link: {
-    marginRight: -11
-  }
-}));
-
-type CombinedProps = RouteComponentProps<{}>;
+type CombinedProps = RouteComponentProps<{ id: string }>;
 
 const VlanDetail: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
+  const { vlans } = useVlans();
+  useReduxLoad(['vlans']);
 
-  const headers = [
-    {
-      label: 'Label',
-      dataColumn: 'label',
-      sortable: true,
-      widthPercent: 15
-    },
-    {
-      label: 'Status',
-      dataColumn: 'status',
-      sortable: true,
-      widthPercent: 15
-    },
-    {
-      label: 'VLAN IP',
-      dataColumn: 'ip',
-      sortable: true,
-      widthPercent: 15,
-      hideOnMobile: true
-    },
-    {
-      label: 'Tags',
-      dataColumn: 'tags',
-      sortable: false,
-      widthPercent: 40,
-      hideOnMobile: true
-    },
-    {
-      label: 'Action Menu',
-      visuallyHidden: true,
-      dataColumn: '',
-      sortable: false,
-      widthPercent: 15
-    }
-  ];
+  // Source the VLAN's ID from the /:id path param.
+  const thisVlanID = props.match.params.id;
 
-  const vLanRow = {
-    Component: VlanDetailRow,
-    data: [],
-    loading: false,
-    lastUpdated: 1234,
-    error: undefined
+  // Find the VLAN in the store.
+  const thisVlan = vlans.itemsById[thisVlanID];
+
+  if (vlans.error.read) {
+    return (
+      <ErrorState errorText="There was a problem retrieving your VLAN. Please try again." />
+    );
+  }
+
+  if (vlans.lastUpdated === 0 && !thisVlan) {
+    return <CircleProgress />;
+  }
+
+  if (!thisVlan) {
+    return <NotFound />;
+  }
+
+  const thisVlanIPs = thisVlan.linodes.map(thisVLANLinode => thisVLANLinode.id);
+
+  const filterLinodesFn = (linode: Linode) => {
+    return thisVlanIPs.includes(linode.id);
   };
 
   return (
     <React.Fragment>
       <VlanEntityDetail openTagDrawer={() => {}} />
       <div style={{ marginTop: 20 }}>
-        <EntityHeader
-          title="Linodes"
-          isSecondary
-          actions={
-            <AddNewLink
-              className={classes.link}
-              label="Add a Linode..."
-              onClick={() => {}}
+        <LinodesLanding
+          isVLAN
+          filterLinodesFn={filterLinodesFn}
+          LandingHeader={
+            <LandingHeader
+              title="Linodes"
+              entity="Linode"
+              // @todo: This should open the Attach modal.
+              onAddNew={() => null}
+              displayIcon={false}
+              createButtonText="Add a Linode..."
             />
           }
-        />
-        <EntityTable
-          entity="linodes"
-          groupByTag={false}
-          row={vLanRow}
-          headers={headers}
-          initialOrder={{ order: 'asc', orderBy: 'label' }}
         />
       </div>
     </React.Fragment>
