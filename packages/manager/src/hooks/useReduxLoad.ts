@@ -1,5 +1,4 @@
-import * as Bluebird from 'bluebird';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
@@ -80,16 +79,19 @@ export const useReduxLoad = (
 ): UseReduxPreload => {
   const [_loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const state = useStore<ApplicationState>().getState();
+  const store = useStore<ApplicationState>();
   /**
    * Restricted users get a 403 from /lke/clusters,
    * which gums up the works. We want to prevent that particular
    * request for a restricted user.
    */
   const { _isRestrictedUser } = useAccountManagement();
-  if (_isRestrictedUser) {
-    requestMap.kubernetes = () => Promise.resolve([]);
-  }
+  const _deps = useMemo(() => {
+    if (!_isRestrictedUser) {
+      return deps;
+    }
+    return deps.filter(thisDep => thisDep !== 'kubernetes');
+  }, [deps, _isRestrictedUser]);
 
   const mountedRef = useRef<boolean>(true);
 
@@ -101,9 +103,15 @@ export const useReduxLoad = (
 
   useEffect(() => {
     if (predicate && mountedRef.current) {
-      requestDeps(state, dispatch, deps, refreshInterval, _setLoading);
+      requestDeps(
+        store.getState(),
+        dispatch,
+        _deps,
+        refreshInterval,
+        _setLoading
+      );
     }
-  }, [predicate, refreshInterval]);
+  }, [predicate, refreshInterval, _deps, dispatch, store]);
 
   useEffect(() => {
     return () => {
@@ -147,9 +155,7 @@ export const requestDeps = (
     loadingCb(true);
   }
 
-  return Bluebird.map(requests, thisRequest => {
-    return dispatch(thisRequest());
-  })
+  return Promise.all(requests.map(thisRequest => dispatch(thisRequest())))
     .then(_ => loadingCb(false))
     .catch(_ => loadingCb(false));
 };
