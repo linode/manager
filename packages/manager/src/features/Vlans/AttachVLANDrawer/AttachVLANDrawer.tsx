@@ -1,3 +1,4 @@
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -5,7 +6,7 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import useVlans from 'src/hooks/useVlans';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
   isOpen: boolean;
@@ -19,13 +20,13 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
   const { isOpen, linodes, onClose, region, vlanID } = props;
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
   const [isSubmitting, setSubmitting] = React.useState(false);
-  const [error, setError] = React.useState<string | undefined>(undefined);
+  const [error, setError] = React.useState<APIError[]>([]);
   const { connectVlan } = useVlans();
 
   React.useEffect(() => {
     if (isOpen) {
       setSelectedLinodes([]);
-      setError(undefined);
+      setError([]);
       setSubmitting(false);
     }
   }, [isOpen]);
@@ -39,20 +40,20 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
       })
       .catch(error => {
         setSubmitting(false);
-        setError(
-          getAPIErrorOrDefault(error, 'Error attaching Linode to VLAN')[0]
-            .reason
-        );
+        setError(getAPIErrorOrDefault(error, 'Error attaching Linode to VLAN'));
       });
   };
 
+  const errorMap = getErrorMap(['linodes'], error);
+
   return (
-    <Drawer title="Attach a Linode" open={isOpen} onClose={onClose}>
-      {error && <Notice error text={error} />}
+    <Drawer title="Add a Linode" open={isOpen} onClose={onClose}>
+      {errorMap.none && <Notice error text={errorMap.none} />}
       <LinodeMultiSelect
         filteredLinodes={linodes}
         handleChange={(selected: number[]) => setSelectedLinodes(selected)}
         allowedRegions={[region]}
+        errorText={errorMap.linodes}
       />
       <ActionsPanel>
         <Button
