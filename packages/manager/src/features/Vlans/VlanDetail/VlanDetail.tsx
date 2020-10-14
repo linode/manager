@@ -37,11 +37,27 @@ const VlanDetail: React.FC<CombinedProps> = props => {
     return <NotFound />;
   }
 
-  const thisVlanIPs = thisVlan.linodes.map(thisVLANLinode => thisVLANLinode.id);
+  const thisVlanLinodeIDs = thisVlan.linodes.map(
+    thisVLANLinode => thisVLANLinode.id
+  );
+
+  const linodeIDToVLANIP = thisVlan.linodes.reduce<Record<number, string>>(
+    (acc, thisVLANLinode) => ({
+      ...acc,
+      [thisVLANLinode.id]: thisVLANLinode.ipv4_address
+    }),
+    {}
+  );
 
   const filterLinodesFn = (linode: Linode) => {
-    return thisVlanIPs.includes(linode.id);
+    return thisVlanLinodeIDs.includes(linode.id);
   };
+
+  // @todo: Rework the typing here once https://github.com/linode/manager/pull/6999 is merged.
+  const extendLinodesFn = (linode: Linode): any => ({
+    ...linode,
+    _vlanIP: linodeIDToVLANIP[linode.id]
+  });
 
   return (
     <React.Fragment>
@@ -50,6 +66,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
         <LinodesLanding
           isVLAN
           filterLinodesFn={filterLinodesFn}
+          extendLinodesFn={extendLinodesFn}
           LandingHeader={
             <LandingHeader
               title="Linodes"
