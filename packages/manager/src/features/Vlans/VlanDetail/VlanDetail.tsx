@@ -39,10 +39,10 @@ const VlanDetail: React.FC<CombinedProps> = props => {
     return <NotFound />;
   }
 
-  const thisVlanIPs = thisVlan.linodes.map(thisVLANLinode => thisVLANLinode.id);
+  const thisVlanIDs = thisVlan.linodes.map(thisVLANLinode => thisVLANLinode.id);
 
   const filterLinodesFn = (linode: Linode) => {
-    return thisVlanIPs.includes(linode.id);
+    return thisVlanIDs.includes(linode.id);
   };
 
   return (
@@ -67,7 +67,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
         onClose={dialog.close}
         isOpen={dialog.isOpen}
         vlanID={thisVlan.id}
-        linodes={thisVlan.linodes.map(linode => linode.id)}
+        linodes={thisVlanIDs}
         region={thisVlan.region}
       />
     </React.Fragment>
