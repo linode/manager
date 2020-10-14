@@ -93,7 +93,7 @@ const vlanHeaders = [
 ];
 
 export const LinodeVLANs: React.FC<CombinedProps> = props => {
-  const { configs, linodeId, linodeLabel, readOnly } = props;
+  const { configs, linodeId, linodeLabel, linodeRegion, readOnly } = props;
 
   const classes = useStyles();
 
@@ -159,10 +159,6 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
   const handleOpenDrawer = () => {
     setDrawerError(null);
     setDrawerOpen(true);
-  };
-
-  const onClose = () => {
-    setDrawerOpen(false);
   };
 
   React.useEffect(() => {
@@ -268,9 +264,8 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         linodeLabel={linodeLabel}
         linodeId={linodeId}
         vlans={vlansAvailableForAttaching}
-        onClose={onClose}
         readOnly={readOnly}
-        resetInterfaces={requestInterfaces}
+        refreshInterfaces={requestInterfaces}
       />
     </div>
   ) : null;
@@ -279,6 +274,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
 interface LinodeContextProps {
   linodeId: number;
   linodeLabel: string;
+  linodeRegion: string;
   configs: Config[];
   readOnly: boolean;
 }
@@ -286,6 +282,7 @@ interface LinodeContextProps {
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
   linodeLabel: linode.label,
+  linodeRegion: linode.region,
   configs: linode._configs,
   readOnly: linode._permissions === 'read_only'
 }));

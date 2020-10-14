@@ -26,9 +26,8 @@ interface Props {
   linodeLabel: string;
   linodeId: number;
   vlans: any;
-  onClose: () => void;
   readOnly: boolean;
-  resetInterfaces: () => void;
+  refreshInterfaces: () => void;
 }
 
 export type CombinedProps = Props;
@@ -41,9 +40,8 @@ export const AttachVlanDrawer: React.FC<CombinedProps> = props => {
     linodeLabel,
     linodeId,
     vlans,
-    onClose,
     readOnly,
-    resetInterfaces
+    refreshInterfaces
   } = props;
 
   const classes = useStyles();
@@ -60,18 +58,13 @@ export const AttachVlanDrawer: React.FC<CombinedProps> = props => {
     }
   }, [open]);
 
-  const vlansValues: VlanData[] = Object.values(vlans);
-  const vlanOptions: { value: number; label: string }[] = [];
-
-  vlansValues.forEach(vlanValue => {
-    vlanOptions.push({
-      value: vlanValue.id,
-      label:
-        vlanValue.description.length > 0
-          ? vlanValue.description
-          : `vlan-${vlanValue.id}`
-    });
-  });
+  const vlanOptions = Object.values(vlans).map((thisVlan: VlanData) => ({
+    value: thisVlan.id,
+    label:
+      thisVlan.description.length > 0
+        ? thisVlan.description
+        : `vlan-${thisVlan.id}`
+  }));
 
   const disabled = !selected || readOnly;
 
@@ -82,8 +75,8 @@ export const AttachVlanDrawer: React.FC<CombinedProps> = props => {
       .then(_ => {
         setSubmitting(false);
         dispatch(getLinodeConfigs({ linodeId }));
-        resetInterfaces();
-        onClose();
+        refreshInterfaces();
+        closeDrawer();
       })
       .catch(errResponse => {
         setSubmitting(false);
@@ -116,7 +109,7 @@ export const AttachVlanDrawer: React.FC<CombinedProps> = props => {
         >
           Attach
         </Button>
-        <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+        <Button buttonType="secondary" onClick={closeDrawer} data-qa-cancel>
           Close
         </Button>
       </ActionsPanel>
