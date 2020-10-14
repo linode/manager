@@ -22,10 +22,7 @@ import {
   createLinodeInterfaceActions,
   deleteLinodeInterfaceActions
 } from './interfaces.actions';
-import {
-  LinodeInterface,
-  LinodeInterfacePayload
-} from '@linode/api-v4/lib/linodes';
+import { LinodeInterface } from '@linode/api-v4/lib/linodes';
 
 export type State = Record<
   number,
@@ -42,12 +39,95 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
       isType(action, getLinodeInterfacesActions.started) ||
       isType(action, getAllLinodeInterfacesActions.started)
     ) {
+      const { linodeId } = action.payload;
+      draft = ensureInitializedNestedState(draft, linodeId);
+
+      draft[linodeId] = onStart(draft[linodeId]);
     }
 
     if (isType(action, getLinodeInterfacesActions.done)) {
+      const { result } = action.payload;
+      const { linodeId } = action.payload.params;
+      draft = ensureInitializedNestedState(draft, linodeId);
+
+      draft[linodeId].loading = false;
+      draft[linodeId] = addMany(result.data, draft[linodeId], result.results);
     }
 
     if (isType(action, getAllLinodeInterfacesActions.done)) {
+      const { result } = action.payload;
+      const { linodeId } = action.payload.params;
+      draft = ensureInitializedNestedState(draft, linodeId);
+
+      draft[linodeId] = onGetAllSuccess(
+        result.data,
+        draft[linodeId],
+        result.results
+      );
+    }
+
+    if (isType(action, getAllLinodeInterfacesActions.failed)) {
+      const { error } = action.payload;
+      const { linodeId } = action.payload.params;
+
+      draft = ensureInitializedNestedState(draft, linodeId);
+
+      draft[linodeId] = onError<
+        MappedEntityState<LinodeInterface, EntityError>,
+        EntityError
+      >(
+        {
+          read: error
+        },
+        draft[linodeId]
+      );
+    }
+
+    // getLinodeInterfaceActions
+    // createLinodeInterfaceActions
+    if (
+      isType(action, getLinodeInterfaceActions.done) ||
+      isType(action, createLinodeInterfaceActions.done)
+    ) {
+      const { result } = action.payload;
+      const { linodeId } = action.payload.params;
+      draft = ensureInitializedNestedState(draft, linodeId);
+
+      draft[linodeId].loading = false;
+      draft[linodeId] = onCreateOrUpdate(result, draft[linodeId]);
+    }
+
+    // deleteLinodeInterfaceActions
+    if (isType(action, deleteLinodeInterfaceActions.started)) {
+      const { linodeId } = action.payload;
+      draft = ensureInitializedNestedState(draft, linodeId);
+      draft[linodeId].error = { ...draft[linodeId].error, delete: undefined };
+    }
+
+    if (isType(action, deleteLinodeInterfaceActions.done)) {
+      const {
+        params: { interfaceId: InterfaceId, linodeId }
+      } = action.payload;
+      draft = ensureInitializedNestedState(draft, linodeId);
+      draft[linodeId] = onDeleteSuccess(InterfaceId, draft[linodeId]);
+    }
+
+    // deleteLinode (sync – used to respond to events)
+    // deleteLinodeActions (async – used when a delete Linode request is made)
+    //
+    // The reducer result is the same, but these need to be two code blocks
+    // because the linodeId is located in different places between the actions.
+    if (isType(action, deleteLinode)) {
+      const linodeId = action.payload;
+      delete draft[linodeId];
+    }
+
+    if (isType(action, deleteLinodeActions.done)) {
+      const {
+        params: { linodeId }
+      } = action.payload;
+
+      delete draft[linodeId];
     }
   });
 
