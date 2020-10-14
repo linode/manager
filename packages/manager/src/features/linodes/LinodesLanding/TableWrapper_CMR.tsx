@@ -1,3 +1,4 @@
+import sync from 'css-animation-sync';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'src/components/core/styles';
@@ -54,6 +55,11 @@ const TableWrapper: React.FC<CombinedProps> = props => {
     toggleGroupLinodes,
     linodesAreGrouped
   } = props;
+
+  sync('blink');
+
+  // const animation = new sync('blink');
+  // animation.start();
 
   return (
     <Paper className={classes.paperWrapper}>
