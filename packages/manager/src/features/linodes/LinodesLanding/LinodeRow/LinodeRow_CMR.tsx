@@ -248,7 +248,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       </TableCell>
       {props.isVLAN ? (
         <TableCell className={classes.ipCell} data-qa-ips>
-          <div className={classes.ipCellWrapper}>VLAN IP GOES HERE</div>
+          <div className={classes.ipCellWrapper}></div>
         </TableCell>
       ) : null}
       {props.isVLAN ? null : (
