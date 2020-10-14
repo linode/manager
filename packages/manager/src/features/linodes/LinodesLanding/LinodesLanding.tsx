@@ -367,13 +367,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             />
           </>
         )}
-        {this.props.someLinodesHaveScheduledMaintenance && (
-          <MaintenanceBanner
-            userTimezone={this.props.userTimezone}
-            userProfileError={this.props.userProfileError}
-            userProfileLoading={this.props.userProfileLoading}
-          />
-        )}
+        {!this.props.isVLAN &&
+          this.props.someLinodesHaveScheduledMaintenance && (
+            <MaintenanceBanner
+              userTimezone={this.props.userTimezone}
+              userProfileError={this.props.userProfileError}
+              userProfileLoading={this.props.userProfileLoading}
+            />
+          )}
         <Grid
           container
           className={this.props.flags.cmr ? classes.cmrSpacing : ''}

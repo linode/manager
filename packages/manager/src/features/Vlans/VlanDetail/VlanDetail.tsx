@@ -37,8 +37,10 @@ const VlanDetail: React.FC<CombinedProps> = props => {
     return <NotFound />;
   }
 
+  const thisVlanIPs = thisVlan.linodes.map(thisVLANLinode => thisVLANLinode.id);
+
   const filterLinodesFn = (linode: Linode) => {
-    return thisVlan.linodes.includes(linode.id);
+    return thisVlanIPs.includes(linode.id);
   };
 
   return (
