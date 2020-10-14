@@ -27,6 +27,7 @@ export interface Flags {
   passwordValidation: PasswordValidationType;
   changelog: Changelog;
   vlans: boolean;
+  cvvRequired: boolean;
 }
 
 type PromotionalOfferFeature =
