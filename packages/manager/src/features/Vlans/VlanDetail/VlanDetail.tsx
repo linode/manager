@@ -31,7 +31,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
     );
   }
 
-  if (vlans.lastUpdated === 0 && vlans.loading) {
+  if (vlans.lastUpdated === 0 && !thisVlan) {
     return <CircleProgress />;
   }
 
