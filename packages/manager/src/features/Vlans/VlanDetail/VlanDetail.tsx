@@ -1,81 +1,29 @@
+import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
-import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'src/components/core/styles';
-import EntityHeader from 'src/components/EntityHeader';
-import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
-import ErrorState from 'src/components/ErrorState';
-import NotFound from 'src/components/NotFound';
-import useReduxLoad from 'src/hooks/useReduxLoad';
+import { useOpenClose } from 'src/hooks/useOpenClose';
 import useVlans from 'src/hooks/useVlans';
-import VlanDetailRow from './VlanDetailRow';
+import AttachVLANDrawer from '../AttachVLANDrawer';
+import CircleProgress from 'src/components/CircleProgress';
+import ErrorState from 'src/components/ErrorState';
+import LandingHeader from 'src/components/LandingHeader';
+import NotFound from 'src/components/NotFound';
+import LinodesLanding from 'src/features/linodes/LinodesLanding';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 import VlanEntityDetail from './VlanEntityDetail';
-
 type CombinedProps = RouteComponentProps<{ id: string }>;
 
-const useStyles = makeStyles(() => ({
-  link: {
-    marginRight: -11
-  }
-}));
-
 const VlanDetail: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
-
   const { vlans } = useVlans();
   useReduxLoad(['vlans']);
+  const dialog = useOpenClose();
 
   // Source the VLAN's ID from the /:id path param.
   const thisVlanID = props.match.params.id;
 
   // Find the VLAN in the store.
   const thisVlan = vlans.itemsById[thisVlanID];
-
-  const headers = [
-    {
-      label: 'Label',
-      dataColumn: 'label',
-      sortable: true,
-      widthPercent: 15
-    },
-    {
-      label: 'Status',
-      dataColumn: 'status',
-      sortable: true,
-      widthPercent: 15
-    },
-    {
-      label: 'VLAN IP',
-      dataColumn: 'ip',
-      sortable: true,
-      widthPercent: 15,
-      hideOnMobile: true
-    },
-    {
-      label: 'Tags',
-      dataColumn: 'tags',
-      sortable: false,
-      widthPercent: 40,
-      hideOnMobile: true
-    },
-    {
-      label: 'Action Menu',
-      visuallyHidden: true,
-      dataColumn: '',
-      sortable: false,
-      widthPercent: 15
-    }
-  ];
-
-  const vLanRow = {
-    Component: VlanDetailRow,
-    data: [],
-    loading: false,
-    lastUpdated: 1234,
-    error: undefined
-  };
 
   if (vlans.error.read) {
     return (
@@ -91,29 +39,37 @@ const VlanDetail: React.FC<CombinedProps> = props => {
     return <NotFound />;
   }
 
+  const thisVlanIDs = thisVlan.linodes.map(thisVLANLinode => thisVLANLinode.id);
+
+  const filterLinodesFn = (linode: Linode) => {
+    return thisVlanIDs.includes(linode.id);
+  };
+
   return (
     <React.Fragment>
       <VlanEntityDetail vlan={thisVlan} />
       <div style={{ marginTop: 20 }}>
-        <EntityHeader
-          title="Linodes"
-          isSecondary
-          actions={
-            <AddNewLink
-              className={classes.link}
-              label="Add a Linode..."
-              onClick={() => {}}
+        <LinodesLanding
+          isVLAN
+          filterLinodesFn={filterLinodesFn}
+          LandingHeader={
+            <LandingHeader
+              title="Linodes"
+              entity="Linode"
+              onAddNew={dialog.open}
+              displayIcon={false}
+              createButtonText="Add a Linode..."
             />
           }
         />
-        <EntityTable
-          entity="linodes"
-          groupByTag={false}
-          row={vLanRow}
-          headers={headers}
-          initialOrder={{ order: 'asc', orderBy: 'label' }}
-        />
       </div>
+      <AttachVLANDrawer
+        onClose={dialog.close}
+        isOpen={dialog.isOpen}
+        vlanID={thisVlan.id}
+        linodes={thisVlanIDs}
+        region={thisVlan.region}
+      />
     </React.Fragment>
   );
 };

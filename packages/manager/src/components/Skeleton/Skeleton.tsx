@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   table?: boolean;
   numColumns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  firstColWidth?: number;
+  widths?: number[];
   textHeight?: number;
   subtextHeight?: number;
   oneLine?: boolean;
@@ -54,7 +54,7 @@ const _Skeleton: React.FC<combinedProps> = props => {
   const {
     table,
     numColumns,
-    firstColWidth,
+    widths,
     variant,
     textHeight,
     subtextHeight,
@@ -64,22 +64,23 @@ const _Skeleton: React.FC<combinedProps> = props => {
   } = props;
 
   const totalColumns = numColumns ?? 1;
-  const calcColumns = (colCount: number) => {
-    if (colCount === 0) {
-      return firstColWidth ? firstColWidth : 100 / totalColumns;
-    } else {
-      return firstColWidth
-        ? (100 - firstColWidth) / (totalColumns - 1)
-        : 100 / totalColumns;
-    }
-  };
+  let totalWidth = 100;
+
   const columns: JSX.Element[] = [];
-  for (let colCount = 0; colCount <= totalColumns - 1; colCount++) {
+  for (let columnIdx = 0; columnIdx <= totalColumns - 1; columnIdx++) {
+    if (widths?.[columnIdx]) {
+      totalWidth -= widths[columnIdx];
+    }
     columns.push(
       <Grid
         item
-        style={{ flexBasis: `${calcColumns(colCount)}%` }}
-        key={`ske-${colCount}`}
+        style={{
+          flexBasis: widths ? 'auto' : `${100 / totalColumns}%`,
+          width: `${widths &&
+            (widths[columnIdx] ||
+              totalWidth / (totalColumns - widths.length))}%`
+        }}
+        key={`ske-${columnIdx}`}
         data-testid={'skeletonCol'}
         className={compact ? 'py0' : undefined}
       >

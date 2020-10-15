@@ -18,8 +18,9 @@ import IconTextLink from 'src/components/IconTextLink';
 import { dcDisplayNames } from 'src/constants';
 import withVLANs, { Props as VLANProps } from 'src/containers/vlans.container';
 import VlanDialog from 'src/features/Vlans/VlanLanding/VlanDialog';
+import { vlanContext } from 'src/context';
 // import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-// import formatDate from 'src/utilities/formatDate';
+import formatDate from 'src/utilities/formatDate';
 
 interface VlanEntityDetailProps {
   vlan: VLAN;
@@ -43,7 +44,7 @@ const VlanEntityDetail: React.FC<CombinedProps> = props => {
           regionDisplay={regionDisplay}
           cidr={vlan.cidr_block}
           id={vlan.id}
-          // created={}
+          created={vlan.created}
           // tags={[]}
           // openTagDrawer={openTagDrawer}
         />
@@ -113,14 +114,8 @@ const Header: React.FC<HeaderProps> = props => {
   const { id, label, deleteVlan } = props;
 
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
-  const [selectedVlanID, setSelectedVlanID] = React.useState<
-    number | undefined
-  >(undefined);
-  const [selectedVlanLabel, setSelectedVlanLabel] = React.useState<string>('');
 
-  const handleOpenDeleteVlanModal = (id: number, label: string) => {
-    setSelectedVlanID(id);
-    setSelectedVlanLabel(label);
+  const handleOpenDeleteVlanModal = () => {
     toggleModal(true);
   };
 
@@ -160,9 +155,7 @@ const Header: React.FC<HeaderProps> = props => {
                 SideIcon={DeleteIcon}
                 text="Delete"
                 title="Delete"
-                onClick={() => {
-                  handleOpenDeleteVlanModal(id, label);
-                }}
+                onClick={handleOpenDeleteVlanModal}
               />
             </div>
             <Hidden smDown>
@@ -174,8 +167,8 @@ const Header: React.FC<HeaderProps> = props => {
       <VlanDialog
         open={modalOpen}
         deleteVlan={deleteVlan}
-        selectedVlanID={selectedVlanID}
-        selectedVlanLabel={selectedVlanLabel}
+        selectedVlanID={id}
+        selectedVlanLabel={label}
         closeDialog={handleCloseDeleteVlanModal}
       />
     </>
@@ -190,7 +183,7 @@ interface FooterProps {
   regionDisplay: string | null;
   cidr: string;
   id: number;
-  // created: string;
+  created: string;
   // tags: string[];
   // openTagDrawer: (tags: string[]) => void;
 }
@@ -246,7 +239,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
-  const { regionDisplay, cidr, id } = props;
+  const { regionDisplay, cidr, id, created } = props;
 
   const classes = useFooterStyles();
 
@@ -302,11 +295,12 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           >
             {id}
           </Typography>
-          {/* <Hidden xsDown>
+          <Hidden xsDown>
             <Typography className={classes.created}>
-              Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+              {/* Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })} */}
+              Created {created}
             </Typography>
-          </Hidden> */}
+          </Hidden>
         </div>
       </Grid>
       {/* <Hidden smUp>
