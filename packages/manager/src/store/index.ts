@@ -4,6 +4,10 @@ import account, {
   defaultState as defaultAccountState,
   State as AccountState
 } from 'src/store/account/account.reducer';
+import accountManagement, {
+  defaultState as defaultAccountManagementState,
+  State as AccountManagementState
+} from 'src/store/accountManagement/accountManagement.reducer';
 import accountSettings, {
   defaultState as defaultAccountSettingsState,
   State as AccountSettingsState
@@ -180,6 +184,7 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   account: defaultAccountState,
+  accountManagement: defaultAccountManagementState,
   accountSettings: defaultAccountSettingsState,
   domains: defaultDomainsState,
   images: defaultImagesState,
@@ -204,6 +209,7 @@ const __resourcesDefaultState = {
 
 export interface ResourcesState {
   account: AccountState;
+  accountManagement: AccountManagementState;
   accountSettings: AccountSettingsState;
   domains: DomainsState;
   images: ImagesState;
@@ -279,6 +285,7 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   account,
+  accountManagement,
   accountSettings,
   domains,
   images,
