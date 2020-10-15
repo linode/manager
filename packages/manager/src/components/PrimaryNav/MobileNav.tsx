@@ -192,8 +192,6 @@ export const MobileNav: React.FC<Props> = props => {
     }
   };
 
-  // TODO: fix hover/focus state and expanding/collapsing arrow
-
   return (
     <>
       {/* How we are preventing scroll on the body */}
@@ -202,6 +200,10 @@ export const MobileNav: React.FC<Props> = props => {
         : document.body.classList.remove('overflow-hidden')}
       <ClickAwayListener onClickAway={handleClickAway}>
         <>
+          <div id="menu-description" className="visually-hidden">
+            Press tab to navigate the menu and enter to open the grouped links
+            or activate the link.
+          </div>
           <IconButton
             className={classes.menuIcon}
             onClick={toggleMenu}
@@ -209,12 +211,12 @@ export const MobileNav: React.FC<Props> = props => {
           >
             {open ? <CloseIcon /> : <MenuIcon />} Menu
           </IconButton>
-
           <List
             className={classnames({
               [classes.menu]: true,
               [classes.showMenu]: open
             })}
+            aria-describedby="menu-description"
           >
             {groups.map((thisGroup: any) => {
               // For each group, filter out hidden links
