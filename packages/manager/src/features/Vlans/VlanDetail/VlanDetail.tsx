@@ -1,21 +1,23 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
-/* eslint-disable @typescript-eslint/no-empty-function */
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import { useOpenClose } from 'src/hooks/useOpenClose';
+import useVlans from 'src/hooks/useVlans';
+import AttachVLANDrawer from '../AttachVLANDrawer';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import NotFound from 'src/components/NotFound';
 import LinodesLanding from 'src/features/linodes/LinodesLanding';
 import useReduxLoad from 'src/hooks/useReduxLoad';
-import useVlans from 'src/hooks/useVlans';
 import VlanEntityDetail from './VlanEntityDetail';
 type CombinedProps = RouteComponentProps<{ id: string }>;
 
 const VlanDetail: React.FC<CombinedProps> = props => {
   const { vlans } = useVlans();
   useReduxLoad(['vlans']);
+  const dialog = useOpenClose();
 
   // Source the VLAN's ID from the /:id path param.
   const thisVlanID = props.match.params.id;
@@ -37,15 +39,15 @@ const VlanDetail: React.FC<CombinedProps> = props => {
     return <NotFound />;
   }
 
-  const thisVlanIPs = thisVlan.linodes.map(thisVLANLinode => thisVLANLinode.id);
+  const thisVlanIDs = thisVlan.linodes.map(thisVLANLinode => thisVLANLinode.id);
 
   const filterLinodesFn = (linode: Linode) => {
-    return thisVlanIPs.includes(linode.id);
+    return thisVlanIDs.includes(linode.id);
   };
 
   return (
     <React.Fragment>
-      <VlanEntityDetail openTagDrawer={() => {}} />
+      <VlanEntityDetail openTagDrawer={() => null} />
       <div style={{ marginTop: 20 }}>
         <LinodesLanding
           isVLAN
@@ -54,14 +56,20 @@ const VlanDetail: React.FC<CombinedProps> = props => {
             <LandingHeader
               title="Linodes"
               entity="Linode"
-              // @todo: This should open the Attach modal.
-              onAddNew={() => null}
+              onAddNew={dialog.open}
               displayIcon={false}
               createButtonText="Add a Linode..."
             />
           }
         />
       </div>
+      <AttachVLANDrawer
+        onClose={dialog.close}
+        isOpen={dialog.isOpen}
+        vlanID={thisVlan.id}
+        linodes={thisVlanIDs}
+        region={thisVlan.region}
+      />
     </React.Fragment>
   );
 };
