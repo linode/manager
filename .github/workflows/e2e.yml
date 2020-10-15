@@ -23,6 +23,8 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - run: |
+            npx cypress cache path
+            npx cypress cache list
             echo "REACT_APP_LOGIN_ROOT=https://login.linode.com" >> ./packages/manager/.env
             echo "REACT_APP_API_ROOT=https://api.linode.com/v4" >> ./packages/manager/.env
             echo "REACT_APP_APP_ROOT=http://localhost:3000" >> ./packages/manager/.env
@@ -39,7 +41,7 @@ jobs:
           working-directory: packages/manager
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 1000
-          install: true
+          install: false
           browser: chrome
           headless: true
           record: true
