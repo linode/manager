@@ -615,7 +615,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           />
         )}
 
-        <LinodeVLANs />
+        <LinodeVLANs key={this.props.linode.id} />
       </div>
     );
   }

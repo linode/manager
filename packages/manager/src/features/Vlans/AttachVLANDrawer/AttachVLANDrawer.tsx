@@ -21,7 +21,7 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState<APIError[]>([]);
-  const { connectVlan } = useVlans();
+  const { attachVlan } = useVlans();
 
   React.useEffect(() => {
     if (isOpen) {
@@ -34,7 +34,7 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
   const handleSubmit = () => {
     setError([]);
     setSubmitting(true);
-    connectVlan(vlanID, selectedLinodes)
+    attachVlan(vlanID, selectedLinodes)
       .then(() => {
         setSubmitting(false);
         onClose();
