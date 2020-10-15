@@ -5,7 +5,7 @@ on:
       - M3-4577-github-actions-e2e
 jobs:
   run-cypress-e2e:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -20,9 +20,9 @@ jobs:
           path: |
             node_modules
             */*/node_modules
-            /Users/runner/Library/Caches/Cypress
+            ~/.cache/Cypress
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      # - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+      - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - run: |
             echo "REACT_APP_LOGIN_ROOT=https://login.linode.com" >> ./packages/manager/.env
             echo "REACT_APP_API_ROOT=https://api.linode.com/v4" >> ./packages/manager/.env
@@ -32,8 +32,6 @@ jobs:
             echo "MANAGER_OAUTH=87ccfed589d2006972a91d43ff8af21a4c83a817c33b5730aedbbe45f309b319" >> ./packages/manager/.env
             echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
             echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-            cd packages/manager
-            yarn add cypress --dev
             yarn up &
        
       - name: Run tests
