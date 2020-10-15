@@ -20,7 +20,7 @@ jobs:
           path: |
             node_modules
             */*/node_modules
-            /Users/runner/.cache/Cypress
+            /Users/runner/Library/Caches/Cypress
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       # - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - run: |
@@ -32,6 +32,7 @@ jobs:
             echo "MANAGER_OAUTH=87ccfed589d2006972a91d43ff8af21a4c83a817c33b5730aedbbe45f309b319" >> ./packages/manager/.env
             echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
             echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+            yarn add cypress --dev
             yarn up &
        
       - name: Run tests
