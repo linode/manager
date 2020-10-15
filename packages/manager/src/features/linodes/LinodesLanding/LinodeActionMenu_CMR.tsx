@@ -247,13 +247,11 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (
-        (linodeStatus === 'running' && inTableContext) ||
-        (linodeStatus === 'running' && !inTableContext && matchesSmDown)
-      ) {
+      if (matchesSmDown || inTableContext) {
         actions.unshift({
           title: 'Reboot',
           disabled:
+            linodeStatus !== 'running' ||
             !hasMadeConfigsRequest ||
             readOnly ||
             Boolean(configsError?.[0]?.reason),
