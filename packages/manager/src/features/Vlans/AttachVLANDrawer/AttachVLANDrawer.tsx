@@ -32,6 +32,7 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
   }, [isOpen]);
 
   const handleSubmit = () => {
+    setError([]);
     setSubmitting(true);
     connectVlan(vlanID, selectedLinodes)
       .then(() => {
