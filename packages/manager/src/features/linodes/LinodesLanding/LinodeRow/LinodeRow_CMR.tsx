@@ -299,6 +299,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             openPowerActionDialog={openPowerActionDialog}
             noImage={!image}
             inTableContext
+            inVLANContext={isVLAN}
           />
         </div>
       </TableCell>
