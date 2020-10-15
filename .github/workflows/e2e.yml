@@ -5,7 +5,7 @@ on:
       - M3-4577-github-actions-e2e
 jobs:
   run-cypress-e2e:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
