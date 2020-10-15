@@ -2,7 +2,6 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import { clone } from 'ramda';
 import Loading from 'src/components/LandingLoading';
 import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
@@ -131,7 +130,6 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
   const { _loading } = useReduxLoad(['vlans'], undefined, vlansEnabled);
 
   const requestInterfaces = React.useCallback(() => {
-    setInterfaceDataLoading(true);
     setInterfaceRequestError(undefined);
 
     getInterfaces(linodeId)
@@ -164,6 +162,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     // Request interfaces upon page first loading.
     if (vlansEnabled && interfacesLastUpdated === 0) {
+      setInterfaceDataLoading(true);
       requestInterfaces();
     }
   }, [vlansEnabled, interfacesLastUpdated, requestInterfaces, linodeId]);
@@ -311,7 +310,7 @@ const getVlansAvailableForAttaching = (
   vlanData: any,
   linodeRegion: string
 ) => {
-  const vlanItems = Object.values(clone(vlans.itemsById));
+  const vlanItems = Object.values(vlans.itemsById);
 
   const thisLinodeVlanIds = vlanData.map((vlanDatum: VlanData) => vlanDatum.id); // Get array of IDs of VLANs attached to this linode.
 
