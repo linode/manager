@@ -102,6 +102,7 @@ export interface Props {
   isDashboard?: boolean;
   isVLAN?: boolean;
   filterLinodesFn?: (linode: Linode) => boolean;
+  extendLinodesFn?: (linode: Linode) => any;
   LandingHeader?: React.ReactElement;
 }
 
@@ -261,6 +262,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     const filteredLinodes = this.props.filterLinodesFn
       ? linodesFilteredByStatus.filter(this.props.filterLinodesFn)
       : linodesFilteredByStatus;
+
+    const extendedLinodes = this.props.extendLinodesFn
+      ? filteredLinodes.map(this.props.extendLinodesFn)
+      : filteredLinodes;
 
     const componentProps = {
       count: linodesCount,
@@ -555,7 +560,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                           )}
                           <Grid item xs={12}>
                             <OrderBy
-                              data={filteredLinodes.map(linode => {
+                              data={extendedLinodes.map(linode => {
                                 // Determine the priority of this Linode's status.
                                 // We have to check for "Maintenance" and "Busy" since these are
                                 // not actual Linode statuses (we derive them client-side).

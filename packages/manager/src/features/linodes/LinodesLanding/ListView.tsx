@@ -98,7 +98,8 @@ export const ListView: React.FC<CombinedProps> = props => {
   return (
     // eslint-disable-next-line
     <>
-      {data.map((linode, idx: number) => (
+      {/* @todo: fix this "any" typing once https://github.com/linode/manager/pull/6999 is merged. */}
+      {data.map((linode: any, idx: number) => (
         <Row
           backups={linode.backups}
           id={linode.id}
@@ -118,6 +119,7 @@ export const ListView: React.FC<CombinedProps> = props => {
           memory={linode.specs.memory}
           type={linode.type}
           image={linode.image}
+          vlanIP={linode._vlanIP}
           key={`linode-row-${idx}`}
           openTagDrawer={openTagDrawer}
           openDialog={openDialog}
