@@ -51,20 +51,17 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
     return getLinodeLinks(data);
   };
 
-  const getLinodeLinks = (vlanLinodes: VLAN['linodes']): JSX.Element => {
-    // Remove the Linode the user is currently on from the array of Linode IDs the VLAN is attached to, and render that linode's label first in the list as a non-link.
-    const indexOfCurrentLinodeId = vlanLinodes.findIndex(
-      thisVLANLinode => thisVLANLinode.id === currentLinodeId
-    );
-    vlanLinodes.splice(indexOfCurrentLinodeId, 1);
+  const getLinodeLinks = (data: VLAN['linodes']): JSX.Element => {
+    // Filter out the linode the user is currently on from the array of Linode IDs the VLAN is attached to, and render that linode's label first in the list as a non-link.
+    const _data = data.filter(element => element.id !== currentLinodeId);
 
-    const generatedLinks = vlanLinodes.map(thisVLANLinode => (
+    const generatedLinks = _data.map(linode => (
       <Link
-        key={thisVLANLinode.id}
-        to={`/linodes/${thisVLANLinode.id}/networking`}
+        key={linode.id}
+        to={`/linodes/${linode.id}/networking`}
         data-testid="vlan-row-link"
       >
-        {getLinodeLabel(thisVLANLinode.id)}
+        {getLinodeLabel(linode.id)}
       </Link>
     ));
 
@@ -72,7 +69,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
         {getLinodeLabel(currentLinodeId)}
-        {vlanLinodes.length > 0 && `, `}
+        {_data.length >= 1 && `, `}
         {truncateAndJoinJSXList(
           generatedLinks,
           MAX_LINODES_VLANATTACHED_DISPLAY
