@@ -54,7 +54,7 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
   const generalError = interceptGeneralError(errorMap.none, linodesData);
 
   return (
-    <Drawer title="Add a Linode" open={isOpen} onClose={onClose}>
+    <Drawer title="Attach a Linode" open={isOpen} onClose={onClose}>
       {generalError && <Notice error text={generalError} />}
       <LinodeMultiSelect
         filteredLinodes={linodes}
@@ -84,6 +84,22 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
   );
 };
 
+/**
+ * If a Linode is over its interface limit
+ * (3 by default, including the public interface),
+ * the API message is unhelpful; it includes the Linode
+ * ID but not its label.
+ *
+ * If we end up with that string as a general error,
+ * we want to intercept it and display something more helpful.
+ * This method attempts to pull a Linode ID out of the error
+ * message via a regex. If that works, it returns an appropriate
+ * message including the Linode's label.
+ *
+ * If anything fails, return a general message or the original
+ * error.
+ *
+ */
 export const interceptGeneralError = (
   error: string | undefined,
   linodesData: Record<string, Linode>
