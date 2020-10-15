@@ -311,20 +311,15 @@ const getVlansAvailableForAttaching = (
   vlanData: any,
   linodeRegion: string
 ) => {
-  const vlanItems = clone(vlans.itemsById);
+  const vlanItems = Object.values(clone(vlans.itemsById));
 
-  vlanData.forEach((vlanDatum: { id: string | number }) => {
-    const alreadyAttached = vlanItems[vlanDatum.id];
-    const notInRegion = vlanItems[vlanDatum.id].region !== linodeRegion;
+  const thisLinodeVlanIds = vlanData.map((vlanDatum: VlanData) => vlanDatum.id); // Get array of IDs of VLANs attached to this linode.
 
-    if (alreadyAttached || notInRegion) {
-      delete vlanItems[vlanDatum.id];
-    } else {
-      return;
-    }
-  });
-
-  return vlanItems;
+  return vlanItems.filter(
+    (vlanItem: VLAN) =>
+      !thisLinodeVlanIds.includes(vlanItem.id) &&
+      vlanItem.region === linodeRegion
+  );
 };
 
 export interface VlanData extends VLAN {
