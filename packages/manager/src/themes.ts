@@ -65,6 +65,7 @@ const cmrIconColors = {
   iActiveLight: '#74aae6',
   iGreen: '#17cf73',
   iOrange: '#ffb31a',
+  iRed: '#cf1e1e',
   // Offline status
   iGrey: '#dbdde1'
 };
