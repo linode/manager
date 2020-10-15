@@ -30,7 +30,6 @@ export interface UserPreferences {
   desktop_sidebar_open?: boolean;
   sortKeys?: Partial<Record<SortKey, OrderSet>>;
   main_content_banner_dismissal?: Record<string, boolean>;
-  is_large_account?: boolean;
   linode_news_banner_dismissed?: boolean;
   notification_drawer_view?: 'list' | 'grouped';
 }
