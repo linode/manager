@@ -94,10 +94,12 @@ export const interceptGeneralError = (
   const match = error.match(/linode with id ([0-9]+)/i);
   const linodeId = match ? match[1] : null;
   if (linodeId) {
-    return `Linode ${linodesData[linodeId]?.label ??
-      ''} has reached its interface limit.`;
+    const linodeLabel = linodesData[linodeId]?.label;
+    return `Linode ${
+      linodeLabel ? linodeLabel + ' ' : ''
+    }has reached its interface limit.`;
   }
-  return 'Unable to attach Linodes.';
+  return error;
 };
 
 export default React.memo(AttachVLANDrawer);
