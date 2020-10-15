@@ -34,7 +34,7 @@ export type GetAllLinodeInterfacesRequest = (
 
 export const getAllLinodeInterfacesActions = actionCreator.async<
   GetAllLinodeInterfacesParams,
-  GetAllData<LinodeInterface>,
+  GetAllLinodeInterfacesResponse,
   APIError[]
 >(`get-all`);
 
