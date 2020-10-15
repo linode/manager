@@ -62,8 +62,14 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
           loading={isSubmitting}
           data-testid="submit-attach-vlan-form"
         >
-          {' '}
           Attach
+        </Button>
+        <Button
+          buttonType="secondary"
+          onClick={onClose}
+          data-testid="cancel-attach-vlan-form"
+        >
+          Cancel
         </Button>
       </ActionsPanel>
     </Drawer>
