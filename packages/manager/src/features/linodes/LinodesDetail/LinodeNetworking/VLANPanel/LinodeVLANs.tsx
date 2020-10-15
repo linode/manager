@@ -167,7 +167,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     }
   }, [vlansEnabled, interfacesLastUpdated, requestInterfaces, linodeId]);
 
-  const vlanData = React.useMemo<(VlanData | undefined)[]>(
+  const vlanData = React.useMemo(
     () =>
       interfaceData
         .map(thisInterface => {
@@ -185,12 +185,12 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
             readOnly
           };
         })
-        .filter(Boolean),
+        .filter(Boolean) as VlanData[],
     [interfaceData, vlans.itemsById, configs, linodeId, readOnly]
   );
 
   const vlansAvailableForAttaching = getVlansAvailableForAttaching(
-    vlans,
+    Object.values(vlans.itemsById),
     vlanData,
     linodeRegion
   );
@@ -306,15 +306,13 @@ export const getInterfaceName = (
 };
 
 const getVlansAvailableForAttaching = (
-  vlans: any,
-  vlanData: any,
+  vlans: VLAN[],
+  vlanData: VlanData[],
   linodeRegion: string
 ) => {
-  const vlanItems = Object.values(vlans.itemsById);
-
   const thisLinodeVlanIds = vlanData.map((vlanDatum: VlanData) => vlanDatum.id); // Get array of IDs of VLANs attached to this linode.
 
-  return vlanItems.filter(
+  return vlans.filter(
     (vlanItem: VLAN) =>
       !thisLinodeVlanIds.includes(vlanItem.id) &&
       vlanItem.region === linodeRegion
