@@ -48,6 +48,7 @@ interface Props {
   vcpus: number;
   status: LinodeStatus;
   displayStatus: string;
+  vlanIP?: string;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
