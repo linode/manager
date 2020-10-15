@@ -94,6 +94,10 @@ import linodeDisks, {
   defaultState as defaultLinodeDisksState,
   State as LinodeDisksState
 } from 'src/store/linodes/disk/disk.reducer';
+import interfaces, {
+  defaultState as defaultInterfacesState,
+  State as InterfacesState
+} from 'src/store/linodes/interfaces/interfaces.reducer';
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, {
   defaultState as defaultLinodesState,
@@ -198,6 +202,7 @@ const __resourcesDefaultState = {
   databaseTypes: defaultDatabaseTypesState,
   domains: defaultDomainsState,
   images: defaultImagesState,
+  interfaces: defaultInterfacesState,
   kubernetes: defaultKubernetesState,
   managed: defaultManagedState,
   managedIssues: defaultManagedIssuesState,
@@ -225,6 +230,7 @@ export interface ResourcesState {
   databaseTypes: DatabaseTypesState;
   domains: DomainsState;
   images: ImagesState;
+  interfaces: InterfacesState;
   kubernetes: KubernetesState;
   managed: ManagedState;
   managedIssues: ManagedIssuesState;
@@ -265,7 +271,6 @@ export interface ApplicationState {
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
   mockFeatureFlags: MockFeatureFlagState;
-  vlans: VlanState;
 }
 
 export const defaultState: ApplicationState = {
@@ -288,8 +293,7 @@ export const defaultState: ApplicationState = {
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
-  mockFeatureFlags: defaultMockFeatureFlagState,
-  vlans: defaultVLANState
+  mockFeatureFlags: defaultMockFeatureFlagState
 };
 
 /**
@@ -303,6 +307,7 @@ const __resources = combineReducers({
   databaseTypes,
   domains,
   images,
+  interfaces,
   kubernetes,
   nodePools,
   linodes,
@@ -342,8 +347,7 @@ const reducers = combineReducers<ApplicationState>({
   globalErrors,
   longviewClients: longview,
   longviewStats,
-  mockFeatureFlags,
-  vlans
+  mockFeatureFlags
 });
 
 const enhancers = compose(

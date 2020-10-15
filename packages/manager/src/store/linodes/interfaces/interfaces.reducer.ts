@@ -1,7 +1,7 @@
+import { LinodeInterface } from '@linode/api-v4/lib/linodes';
 import produce from 'immer';
 import { Reducer } from 'redux';
 import {
-  addMany,
   ensureInitializedNestedState,
   onCreateOrUpdate,
   onDeleteSuccess,
@@ -16,13 +16,11 @@ import {
 import { isType } from 'typescript-fsa';
 import { deleteLinode, deleteLinodeActions } from '../linodes.actions';
 import {
-  getLinodeInterfacesActions,
-  getAllLinodeInterfacesActions,
-  getLinodeInterfaceActions,
   createLinodeInterfaceActions,
-  deleteLinodeInterfaceActions
+  deleteLinodeInterfaceActions,
+  getAllLinodeInterfacesActions,
+  getLinodeInterfaceActions
 } from './interfaces.actions';
-import { LinodeInterface } from '@linode/api-v4/lib/linodes';
 
 export type State = Record<
   number,
@@ -33,25 +31,12 @@ export const defaultState: State = {};
 
 const reducer: Reducer<State> = (state = defaultState, action) =>
   produce(state, draft => {
-    // getLinodeInterfacesActions
     // getAllLinodeInterfacesActions
-    if (
-      isType(action, getLinodeInterfacesActions.started) ||
-      isType(action, getAllLinodeInterfacesActions.started)
-    ) {
+    if (isType(action, getAllLinodeInterfacesActions.started)) {
       const { linodeId } = action.payload;
       draft = ensureInitializedNestedState(draft, linodeId);
 
       draft[linodeId] = onStart(draft[linodeId]);
-    }
-
-    if (isType(action, getLinodeInterfacesActions.done)) {
-      const { result } = action.payload;
-      const { linodeId } = action.payload.params;
-      draft = ensureInitializedNestedState(draft, linodeId);
-
-      draft[linodeId].loading = false;
-      draft[linodeId] = addMany(result.data, draft[linodeId], result.results);
     }
 
     if (isType(action, getAllLinodeInterfacesActions.done)) {

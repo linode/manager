@@ -3,8 +3,8 @@ import {
   LinodeInterfacePayload
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { actionCreatorFactory } from 'typescript-fsa';
 import { GetAllData } from 'src/utilities/getAll';
+import { actionCreatorFactory } from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory(`@@manager/linodeInterfaces`);
 
@@ -23,12 +23,6 @@ export type GetLinodeInterfacesResponse = Promise<GetAllData<LinodeInterface>>;
 export type GetLinodeInterfacesRequest = (
   params: GetLinodeInterfacesParams
 ) => GetLinodeInterfacesResponse;
-
-export const getLinodeInterfacesActions = actionCreator.async<
-  GetLinodeInterfacesParams,
-  GetAllData<LinodeInterface>,
-  APIError[]
->(`get-page`);
 
 /** Get Linode Interfaces (all) */
 export type GetAllLinodeInterfacesParams = GetLinodeInterfacesParams;
