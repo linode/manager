@@ -1,4 +1,3 @@
-// @todo use beta api root once API bug is fixed
 import { BETA_API_ROOT as API_ROOT } from 'src/constants';
 import Request, {
   setData,
