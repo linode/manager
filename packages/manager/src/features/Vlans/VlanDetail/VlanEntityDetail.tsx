@@ -2,7 +2,6 @@ import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as classnames from 'classnames';
 // import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import DeleteIcon from 'src/assets/icons/delete.svg';
 // import EditIcon from 'src/assets/icons/edit.svg';
@@ -18,7 +17,6 @@ import IconTextLink from 'src/components/IconTextLink';
 import { dcDisplayNames } from 'src/constants';
 import withVLANs, { Props as VLANProps } from 'src/containers/vlans.container';
 import VlanDialog from 'src/features/Vlans/VlanLanding/VlanDialog';
-import { vlanContext } from 'src/context';
 // import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 
@@ -109,7 +107,6 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
 
 const Header: React.FC<HeaderProps> = props => {
   const classes = useHeaderStyles();
-  const history = useHistory();
 
   const { id, label, deleteVlan } = props;
 
@@ -120,9 +117,6 @@ const Header: React.FC<HeaderProps> = props => {
   };
 
   const handleCloseDeleteVlanModal = () => {
-    history.push({
-      pathname: `/vlans/`
-    });
     toggleModal(false);
   };
 
@@ -170,6 +164,7 @@ const Header: React.FC<HeaderProps> = props => {
         selectedVlanID={id}
         selectedVlanLabel={label}
         closeDialog={handleCloseDeleteVlanModal}
+        redirectToLanding={true}
       />
     </>
   );
@@ -297,19 +292,18 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
           <Hidden xsDown>
             <Typography className={classes.created}>
-              {/* Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })} */}
-              Created {created}
+              Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
             </Typography>
           </Hidden>
         </div>
       </Grid>
-      {/* <Hidden smUp>
+      <Hidden smUp>
         <Grid item xs={12}>
           <Typography className={classes.created}>
             Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
           </Typography>
         </Grid>
-      </Hidden> */}
+      </Hidden>
       {/* <Grid item xs={12} sm={5} className={classes.tags}>
         <TagCell
           width={500}

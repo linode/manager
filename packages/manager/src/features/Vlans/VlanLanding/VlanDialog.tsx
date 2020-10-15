@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
@@ -10,11 +11,14 @@ interface Props extends Pick<VlanActionsProps, 'deleteVlan'> {
   closeDialog: () => void;
   selectedVlanID?: number;
   selectedVlanLabel: string;
+  redirectToLanding?: boolean;
 }
 
 type CombinedProps = Props;
 
 const VlanDialog: React.FC<CombinedProps> = props => {
+  const history = useHistory();
+
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
 
@@ -23,7 +27,8 @@ const VlanDialog: React.FC<CombinedProps> = props => {
     closeDialog,
     deleteVlan,
     selectedVlanID,
-    selectedVlanLabel: label
+    selectedVlanLabel: label,
+    redirectToLanding
   } = props;
 
   /** reset error on open */
@@ -51,6 +56,12 @@ const VlanDialog: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
       });
+
+    if (redirectToLanding) {
+      history.push({
+        pathname: `/vlans/`
+      });
+    }
   };
 
   const _label = label ? label : 'this Virtual LAN';
