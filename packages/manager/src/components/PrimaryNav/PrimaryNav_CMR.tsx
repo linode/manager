@@ -266,7 +266,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             </div>
           </Grid>
           {matchesMobile && (
-            <Grid item>
+            <Grid item className={classes.mobileNav}>
               <MobileNav groups={primaryLinkGroups} />
             </Grid>
           )}

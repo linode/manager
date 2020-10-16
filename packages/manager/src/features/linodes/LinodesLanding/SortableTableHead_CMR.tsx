@@ -76,8 +76,8 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
         </TableSortCell>
         {isVLAN ? (
           <TableSortCell
-            label="vlanIP" // @todo: make this work
-            active={isActive('vlanIP')} // @todo: make this work
+            label="_vlanIP"
+            active={isActive('_vlanIP')}
             handleClick={handleOrderChange}
             direction={order}
           >
