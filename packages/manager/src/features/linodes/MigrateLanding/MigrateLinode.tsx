@@ -85,7 +85,9 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
 
   const region = {
     region: linode.region,
-    countryCode: getCountryCodeFromSlug(linode.region)
+    countryCode:
+      regions.entities.find(thisRegion => thisRegion.id === linode.region)
+        ?.country ?? 'us'
   };
 
   const handleMigrate = () => {
@@ -269,36 +271,4 @@ const getDisabledReason = (
   // }
 
   return '';
-};
-
-export const getCountryCodeFromSlug = (regionSlug: string) => {
-  if (regionSlug.match(/ap-north/i)) {
-    return 'jp';
-  }
-
-  if (regionSlug.match(/ap-south/i)) {
-    return 'sg';
-  }
-
-  if (regionSlug.match(/eu-cent/i)) {
-    return 'de';
-  }
-
-  if (regionSlug.match(/eu/i)) {
-    return 'uk';
-  }
-
-  if (regionSlug.match(/ap-west/i)) {
-    return 'in';
-  }
-
-  if (regionSlug.match(/ap-southeast/i)) {
-    return 'au';
-  }
-
-  if (regionSlug.match(/ca-cent/i)) {
-    return 'ca';
-  }
-
-  return 'us';
 };
