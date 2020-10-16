@@ -272,7 +272,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesSmDown && inTableContext) {
+      if ((matchesSmDown && inTableContext) || inVLANContext) {
         actions.unshift({
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           onClick: handlePowerAction,
