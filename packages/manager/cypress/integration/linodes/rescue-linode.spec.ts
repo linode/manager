@@ -10,7 +10,7 @@ const rebootInRescueMode = () => {
 };
 
 describe('rescue linode', () => {
-  it('rescue a linode', () => {
+  it.skip('rescue a linode', () => {
     cy.visitWithLogin('/support');
     createLinode().then(linode => {
       cy.server();
