@@ -83,12 +83,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     return null;
   }
 
-  const region = {
-    region: linode.region,
-    countryCode:
-      regions.entities.find(thisRegion => thisRegion.id === linode.region)
-        ?.country ?? 'us'
-  };
+  const region = linode.region;
 
   const handleMigrate = () => {
     setRegionError('');
@@ -117,7 +112,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
         resetEventsPolling();
         setLoading(false);
         sendMigrationInitiatedEvent(
-          region.region,
+          region,
           selectedRegion,
           +formatDate(new Date().toISOString(), {
             format: 'H'
