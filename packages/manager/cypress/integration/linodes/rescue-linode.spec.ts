@@ -10,7 +10,7 @@ const rebootInRescueMode = () => {
 };
 
 describe('rescue linode', () => {
-  it.skip('rescue a linode', () => {
+  it('rescue a linode', () => {
     cy.visitWithLogin('/support');
     createLinode().then(linode => {
       cy.server();
@@ -63,10 +63,7 @@ describe('rescue linode', () => {
       }).as('postRebootInRescueMode');
       const rescueUrl = `/linodes/${linode.id}/rescue`;
       cy.visit(rescueUrl);
-      clickLinodeActionMenu(linode.label);
-      cy.get('[data-qa-action-menu-item="Rescue"]:visible')
-        .should('be.visible')
-        .click();
+      cy.findAllByText(`Rescue ${linode.label}`).should('be.visible');
       rebootInRescueMode();
       // check response, verify bad request and UI response (toast)
       cy.wait('@postRebootInRescueMode')
