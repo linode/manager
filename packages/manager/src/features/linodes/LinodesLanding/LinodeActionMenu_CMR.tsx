@@ -77,6 +77,7 @@ export interface Props {
   inlineLabel?: string;
   inTableContext?: boolean;
   inLandingDetailContext?: boolean;
+  inVLANContext?: boolean;
 }
 
 export type CombinedProps = Props & StateProps;
@@ -158,7 +159,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       openDialog,
       openPowerActionDialog,
       readOnly,
-      inLandingDetailContext
+      inLandingDetailContext,
+      inVLANContext
     } = props;
 
     const readOnlyProps = readOnly
@@ -270,11 +272,18 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesSmDown && inTableContext) {
+      if ((matchesSmDown && inTableContext) || inVLANContext) {
         actions.unshift({
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           onClick: handlePowerAction,
           disabled: !['running', 'offline'].includes(linodeStatus)
+        });
+      }
+
+      if (matchesSmDown && inVLANContext) {
+        actions.unshift({
+          title: 'Detach',
+          onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)
         });
       }
 
@@ -302,7 +311,9 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     linodeStatus,
     openPowerActionDialog,
     inlineLabel,
-    inTableContext
+    inTableContext,
+    inVLANContext,
+    openDialog
   } = props;
 
   const inlineActions = [
@@ -311,12 +322,17 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       className: classes.link,
       href: `/linodes/${linodeId}`
     },
-    {
-      actionText: linodeStatus === 'running' ? 'Power Off' : 'Power On',
-      disabled: !['running', 'offline'].includes(linodeStatus),
-      className: classes.powerOnOrOff,
-      onClick: handlePowerAction
-    }
+    inVLANContext
+      ? {
+          actionText: 'Detach',
+          onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)
+        }
+      : {
+          actionText: linodeStatus === 'running' ? 'Power Off' : 'Power On',
+          disabled: !['running', 'offline'].includes(linodeStatus),
+          className: classes.powerOnOrOff,
+          onClick: handlePowerAction
+        }
   ];
 
   return (
