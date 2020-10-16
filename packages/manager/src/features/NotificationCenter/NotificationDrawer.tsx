@@ -73,19 +73,11 @@ export const NotificationDrawer: React.FC<Props> = props => {
   );
 
   const handleToggleView = () => {
+    updatePreferences({
+      notification_drawer_view: chronologicalView ? 'grouped' : 'list'
+    });
     setChronologicalView(currentView => !currentView);
   };
-
-  React.useEffect(() => {
-    const newPreference = chronologicalView ? 'list' : 'grouped';
-    if (newPreference !== currentView) {
-      updatePreferences({
-        notification_drawer_view: newPreference
-      });
-    }
-
-    // eslint-disable-next-line
-  }, [chronologicalView, currentView]);
 
   const chronologicalNotificationList = React.useMemo(() => {
     return [
