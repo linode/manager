@@ -22,7 +22,7 @@ export const DrawerContent: React.FC<Props> = props => {
       </Notice>
     );
   }
-
+  // eslint-disable-next-line
   return <React.Fragment>{children}</React.Fragment>;
 };
 
