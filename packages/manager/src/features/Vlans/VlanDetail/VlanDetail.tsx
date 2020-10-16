@@ -67,6 +67,8 @@ const VlanDetail: React.FC<CombinedProps> = props => {
       <div style={{ marginTop: 20 }}>
         <LinodesLanding
           isVLAN
+          vlanID={thisVlan.id}
+          vlanLabel={thisVlan.description}
           filterLinodesFn={filterLinodesFn}
           extendLinodesFn={extendLinodesFn}
           LandingHeader={
