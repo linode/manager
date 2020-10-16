@@ -17,7 +17,7 @@ interface Props {
 type CombinedProps = Props;
 
 const DetachLinodeDialog: React.FC<CombinedProps> = props => {
-  const { disconnectVlan } = useVlans();
+  const { detachVlan } = useVlans();
 
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
@@ -40,7 +40,7 @@ const DetachLinodeDialog: React.FC<CombinedProps> = props => {
     setSubmitting(true);
     setError(undefined);
 
-    disconnectVlan(vlanID, [linodeID])
+    detachVlan(vlanID, [linodeID])
       .then(_ => {
         setSubmitting(false);
         closeDialog();
