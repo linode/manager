@@ -14,7 +14,6 @@ import {
   MappedEntityState2 as MappedEntityState
 } from 'src/store/types';
 import { isType } from 'typescript-fsa';
-import { deleteLinode, deleteLinodeActions } from '../linodes.actions';
 import {
   createLinodeInterfaceActions,
   deleteLinodeInterfaceActions,
@@ -95,24 +94,6 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
       } = action.payload;
       draft = ensureInitializedNestedState(draft, linodeId);
       draft[linodeId] = onDeleteSuccess(InterfaceId, draft[linodeId]);
-    }
-
-    // deleteLinode (sync – used to respond to events)
-    // deleteLinodeActions (async – used when a delete Linode request is made)
-    //
-    // The reducer result is the same, but these need to be two code blocks
-    // because the linodeId is located in different places between the actions.
-    if (isType(action, deleteLinode)) {
-      const linodeId = action.payload;
-      delete draft[linodeId];
-    }
-
-    if (isType(action, deleteLinodeActions.done)) {
-      const {
-        params: { linodeId }
-      } = action.payload;
-
-      delete draft[linodeId];
     }
   });
 
