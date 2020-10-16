@@ -77,6 +77,32 @@ const makeLinodeCreateReq = linode => {
   });
 };
 
+const makeLinodeCreateReqSpecifyRegion = (region, linode) => {
+  const linodeData = linode
+    ? linode
+    : {
+        root_pass: strings.randomPass(),
+        label: makeLinodeLabel(),
+        type: 'g6-standard-2',
+        region,
+        image: 'linode/debian10',
+        tags: [testLinodeTag],
+        backups_enabled: false,
+        booted: true,
+        private_ip: true,
+        authorized_users: []
+      };
+
+  return cy.request({
+    method: 'POST',
+    url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
+    body: linodeData,
+    auth: {
+      bearer: oauthtoken
+    }
+  });
+};
+
 const makeLinodeCreateReqWithBackupsEnabled = linode => {
   const linodeData = linode
     ? linode
@@ -110,6 +136,16 @@ const makeLinodeCreateReqWithBackupsEnabled = linode => {
  */
 export const createLinode = (linode = undefined) => {
   return makeLinodeCreateReq(linode).then(resp => {
+    apiCheckErrors(resp);
+    console.log(`Created Linode ${resp.body.label} successfully`, resp);
+    return resp.body;
+  });
+};
+export const createLinodeSpecifyRegion = (
+  region: string,
+  linode = undefined
+) => {
+  return makeLinodeCreateReqSpecifyRegion(region, linode).then(resp => {
     apiCheckErrors(resp);
     console.log(`Created Linode ${resp.body.label} successfully`, resp);
     return resp.body;
