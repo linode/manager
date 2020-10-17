@@ -1,4 +1,4 @@
-import { Config } from '@linode/api-v4/lib/linodes';
+import { Config, LinodeInterface } from '@linode/api-v4/lib/linodes';
 import { VLAN } from '@linode/api-v4/lib/vlans/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -88,7 +88,14 @@ const vlanHeaders = [
 ];
 
 export const LinodeVLANs: React.FC<CombinedProps> = props => {
-  const { configs, linodeId, linodeLabel, linodeRegion, readOnly } = props;
+  const {
+    configs,
+    linodeId,
+    linodeLabel,
+    linodeRegion,
+    interfacesList,
+    readOnly
+  } = props;
 
   const classes = useStyles();
 
@@ -99,8 +106,12 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
   const [selectedVlanLabel, setSelectedVlanLabel] = React.useState<string>('');
 
   const { vlans, detachVlan } = useVlans();
-  const { interfaces, requestInterfaces } = useInterfaces();
-  const thisLinodeInterfaces = interfaces[linodeId] ?? {};
+
+  const {
+    interfaces: reduxInterfacesObject,
+    requestInterfaces
+  } = useInterfaces();
+  const thisLinodeInterfaces = reduxInterfacesObject[linodeId];
 
   const { _loading } = useReduxLoad(['vlans']);
 
@@ -113,14 +124,9 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     setDrawerOpen(true);
   };
 
-  React.useEffect(() => {
-    // Request interfaces upon page first loading.
-    requestInterfaces(linodeId);
-  }, [linodeId]);
-
   const vlanData = React.useMemo(
     () =>
-      Object.values(thisLinodeInterfaces.itemsById ?? {})
+      Object.values(interfacesList ?? {})
         .map(thisInterface => {
           // The interface is tied to the linode. If the interface has a vlan_id, we want to grab that VLAN from Redux
           const thisVlan = vlans.itemsById[thisInterface.vlan_id];
@@ -137,13 +143,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
           };
         })
         .filter(Boolean) as VlanData[],
-    [
-      thisLinodeInterfaces.itemsById,
-      vlans.itemsById,
-      configs,
-      linodeId,
-      readOnly
-    ]
+    [interfacesList, vlans.itemsById, configs, linodeId, readOnly]
   );
 
   const vlansAvailableForAttaching = getVlansAvailableForAttaching(
@@ -152,7 +152,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     linodeRegion
   );
 
-  if (thisLinodeInterfaces?.loading || _loading) {
+  if (_loading) {
     return <Loading shouldDelay />;
   }
 
@@ -170,8 +170,8 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     handlers,
     Component: VlanTableRow,
     data: vlanData ?? [],
-    loading: thisLinodeInterfaces.loading,
-    lastUpdated: thisLinodeInterfaces.lastUpdated,
+    loading: thisLinodeInterfaces?.loading || _loading,
+    lastUpdated: thisLinodeInterfaces?.lastUpdated,
     error: thisLinodeInterfaces?.error?.read || vlans.error.read
   };
 
@@ -231,6 +231,7 @@ interface LinodeContextProps {
   linodeLabel: string;
   linodeRegion: string;
   configs: Config[];
+  interfacesList: LinodeInterface[];
   readOnly: boolean;
 }
 
@@ -239,6 +240,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeLabel: linode.label,
   linodeRegion: linode.region,
   configs: linode._configs,
+  interfacesList: linode._interfaces,
   readOnly: linode._permissions === 'read_only'
 }));
 

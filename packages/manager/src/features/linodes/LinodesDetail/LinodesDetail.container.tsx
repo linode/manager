@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { useLinodes } from 'src/hooks/useLinodes';
 import CircleProgress from 'src/components/CircleProgress';
-import LinodesDetail from './LinodesDetail';
+import { useLinodes } from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
-import { getLinode as _getLinode } from 'src/store/linodes/linode.requests';
 import { ApplicationState } from 'src/store';
-import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
+import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
+import { getAllLinodeInterfaces } from 'src/store/linodes/interfaces/interfaces.requests';
+import { getLinode as _getLinode } from 'src/store/linodes/linode.requests';
 import { shouldRequestEntity } from 'src/utilities/shouldRequestEntity';
+import LinodesDetail from './LinodesDetail';
 
 interface Props {
   linodeId?: string;
@@ -29,11 +30,14 @@ export const LinodesDetailContainer: React.FC<Props> = props => {
   const linodeId = props.linodeId ? props.linodeId : params.linodeId;
 
   const { _loading } = useReduxLoad(['images', 'volumes']);
-  const { configs, disks } = useSelector((state: ApplicationState) => {
-    const disks = state.__resources.linodeDisks[linodeId];
-    const configs = state.__resources.linodeConfigs[linodeId];
-    return { disks, configs };
-  });
+  const { configs, disks, interfaces } = useSelector(
+    (state: ApplicationState) => {
+      const disks = state.__resources.linodeDisks[linodeId];
+      const configs = state.__resources.linodeConfigs[linodeId];
+      const interfaces = state.__resources.interfaces[linodeId];
+      return { disks, configs, interfaces };
+    }
+  );
 
   React.useEffect(() => {
     // Unconditionally request data for the Linode being viewed
@@ -46,12 +50,12 @@ export const LinodesDetailContainer: React.FC<Props> = props => {
       return;
     }
 
-    if (configs?.error.read || disks?.error.read) {
+    if (configs?.error.read || disks?.error.read || interfaces?.error.read) {
       // We don't want an infinite loop.
       return;
     }
 
-    // Make sure we've requested config and disk information for this Linode
+    // Make sure we've requested config, disk, and interface information for this Linode
     if (shouldRequestEntity(configs)) {
       dispatch(getAllLinodeConfigs({ linodeId: +linodeId }));
     }
@@ -59,7 +63,11 @@ export const LinodesDetailContainer: React.FC<Props> = props => {
     if (shouldRequestEntity(disks)) {
       dispatch(getAllLinodeDisks({ linodeId: +linodeId }));
     }
-  }, [dispatch, configs, disks, linodeId, linodes]);
+
+    if (shouldRequestEntity(interfaces)) {
+      dispatch(getAllLinodeInterfaces({ linodeId: +linodeId }));
+    }
+  }, [dispatch, configs, disks, interfaces, linodeId, linodes]);
 
   if ((linodes.lastUpdated === 0 && linodes.loading) || _loading) {
     return <CircleProgress />;
