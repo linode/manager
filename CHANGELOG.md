@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-10-20] - v1.23.0
+
+### Added:
+
+VLAN:
+- Landing table
+- Details table
+- Linode Networking panel
+- Attach and detach Linode to VLAN drawer
+CMR:
+- Banner for open abuse tickets
+
+### Changed:
+
+- Request Domains on load to determine account size
+- Update dark theme styling
+- Add helper text for NodeBalancer Proxy Protocol field
+- Add tooltip for sort in Notifications drawer
+
+### Fixed:
+
+VLAN:
+- Attach Linode drawer fixes
+CMR:
+- Wide table width with overflow when cloning Linodes
+- Fix Lish link
+- Sync animations for pending actions
+- Remove underscores in Linode statuses in LinodeEntityDetail
+
+- Long Domain records overflowing table rows
+- Incorrect flag shown for Sydney in Linode Migrate
+- Search results not displaying for some restricted users
+
+## JS Client
+
+### Changed:
+
+- Update VLAN Linodes typing
+
 ## [2020-10-13] - v1.22.1
 
 ### Changed:
