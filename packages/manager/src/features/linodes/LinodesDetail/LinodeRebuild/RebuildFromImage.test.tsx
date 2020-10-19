@@ -26,7 +26,6 @@ const props: CombinedProps = {
   enqueueSnackbar: jest.fn(),
   permissions: 'read_write',
   passwordHelperText: '',
-  passwordValidation: 'complexity',
   requestKeys: jest.fn(),
   disabled: false,
   ...reactRouterProps
