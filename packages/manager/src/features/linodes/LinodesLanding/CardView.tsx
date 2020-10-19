@@ -4,15 +4,17 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
+import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import withImages from 'src/containers/withImages.container';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
-import { NotificationDrawer } from 'src/features/NotificationCenter';
-import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
+import useLinodes from 'src/hooks/useLinodes';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
@@ -21,9 +23,6 @@ import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import formatDate from 'src/utilities/formatDate';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
-import useLinodes from 'src/hooks/useLinodes';
-import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
-import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles(() => ({
   '@keyframes blink': {
@@ -69,7 +68,7 @@ type CombinedProps = WithImagesProps & PaginationProps & Props;
 const CardView: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
-  const notificationData = useNotificationData();
+  const notificationContext = React.useContext(_notificationContext);
 
   const { updateLinode } = useLinodes();
   const { profile } = useProfile();
@@ -81,12 +80,6 @@ const CardView: React.FC<CombinedProps> = props => {
     label: '',
     linodeID: 0
   });
-  const [notificationDrawerOpen, setNotificationDrawerOpen] = React.useState(
-    false
-  );
-
-  const openNotificationDrawer = () => setNotificationDrawerOpen(true);
-  const closeNotificationDrawer = () => setNotificationDrawerOpen(false);
 
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
@@ -162,7 +155,7 @@ const CardView: React.FC<CombinedProps> = props => {
                     openTagDrawer={openTagDrawer}
                     openDialog={openDialog}
                     openPowerActionDialog={openPowerActionDialog}
-                    openNotificationDrawer={openNotificationDrawer}
+                    openNotificationDrawer={notificationContext.openDrawer}
                   />
                 </Grid>
               </React.Fragment>
@@ -201,11 +194,6 @@ const CardView: React.FC<CombinedProps> = props => {
         addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
         deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
         onClose={closeTagDrawer}
-      />
-      <NotificationDrawer
-        open={notificationDrawerOpen}
-        onClose={closeNotificationDrawer}
-        data={notificationData}
       />
     </React.Fragment>
   );

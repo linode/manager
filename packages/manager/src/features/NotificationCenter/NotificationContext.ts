@@ -1,5 +1,5 @@
+import { Event, getEvents, markEventSeen } from '@linode/api-v4/lib/account';
 import { getLogins } from '@linode/api-v4/lib/profile';
-import { getEvents, Event, markEventSeen } from '@linode/api-v4/lib/account';
 import { createContext, useCallback, useEffect, useState } from 'react';
 
 export interface NotificationContextProps {
@@ -7,12 +7,18 @@ export interface NotificationContextProps {
   loading: boolean;
   error?: string;
   requestEvents: () => void;
+  drawerOpen: boolean;
+  openDrawer: () => void;
+  closeDrawer: () => void;
 }
 
 const defaultContext = {
   events: [],
   loading: false,
-  requestEvents: () => null
+  requestEvents: () => null,
+  drawerOpen: false,
+  openDrawer: () => null,
+  closeDrawer: () => null
 };
 
 export const notificationContext = createContext<NotificationContextProps>(
@@ -20,9 +26,14 @@ export const notificationContext = createContext<NotificationContextProps>(
 );
 
 export const useNotificationContext = (): NotificationContextProps => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [events, setEvents] = useState<Event[]>([]);
+
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
   const [mostRecentLogin, setRecentLogin] = useState<string | undefined>();
 
@@ -94,6 +105,9 @@ export const useNotificationContext = (): NotificationContextProps => {
     events,
     loading,
     error,
-    requestEvents: request
+    requestEvents: request,
+    drawerOpen,
+    openDrawer,
+    closeDrawer
   };
 };

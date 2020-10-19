@@ -3,6 +3,7 @@ import Bell from 'src/assets/icons/bell_new.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { NotificationDrawer } from 'src/features/NotificationCenter';
 import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import { notificationContext as _notificationContext } from '../NotificationCenter/NotificationContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -30,12 +31,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const NotificationButton: React.FC<{}> = _ => {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const notificationContext = React.useContext(_notificationContext);
 
   const classes = useStyles();
-
-  const openDrawer = () => setDrawerOpen(true);
-  const closeDrawer = () => setDrawerOpen(false);
 
   const notificationData = useNotificationData();
 
@@ -48,7 +46,7 @@ export const NotificationButton: React.FC<{}> = _ => {
   return (
     <>
       <button
-        onClick={openDrawer}
+        onClick={notificationContext.openDrawer}
         className={classes.root}
         aria-label="Click to view notifications drawer"
       >
@@ -56,8 +54,8 @@ export const NotificationButton: React.FC<{}> = _ => {
         <strong className={classes.text}>{numEvents}</strong>
       </button>
       <NotificationDrawer
-        open={drawerOpen}
-        onClose={closeDrawer}
+        open={notificationContext.drawerOpen}
+        onClose={notificationContext.closeDrawer}
         data={notificationData}
       />
     </>
