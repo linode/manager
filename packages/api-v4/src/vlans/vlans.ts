@@ -55,7 +55,7 @@ export const createVlan = (data: CreateVLANPayload) =>
  * Delete a single VLAN
  */
 export const deleteVlan = (vlanID: number) =>
-  Request<VLAN>(
+  Request<{}>(
     setURL(`${API_ROOT}/networking/vlans/${vlanID}`),
     setMethod('DELETE')
   );
