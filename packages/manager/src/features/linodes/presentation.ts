@@ -1,14 +1,7 @@
 import { LinodeType } from '@linode/api-v4/lib/linodes';
-import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 
 export const titlecase = (string: string): string => {
   return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
-};
-
-export const formatRegion = (region: string) => {
-  const country = dcDisplayCountry[region];
-  const city = dcDisplayNames[region];
-  return `${country || ''} ${city || ''}`;
 };
 
 export const typeLabelLong = (
