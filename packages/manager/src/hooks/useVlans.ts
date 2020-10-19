@@ -4,16 +4,16 @@ import { ApplicationState } from 'src/store';
 import { State } from 'src/store/vlans/vlans.reducer';
 import {
   getAllVlans as _request,
-  connectVlan as _connect,
-  disconnectVlan as _disconnect
+  attachVlan as _attach,
+  detachVlan as _detach
 } from 'src/store/vlans/vlans.requests';
 import { Dispatch } from './types';
 
-export interface NodeBalancersProps {
+export interface VlansProps {
   vlans: State;
   requestVLANs: () => Promise<VLAN[]>;
-  disconnectVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
-  connectVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
+  attachVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
+  detachVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
 }
 
 export const useVlans = () => {
@@ -22,13 +22,12 @@ export const useVlans = () => {
     (state: ApplicationState) => state.__resources.vlans
   );
   const requestVLANs = () => dispatch(_request({}));
-  const disconnectVlan = (vlanID: number, linodes: number[]) =>
-    dispatch(_disconnect({ vlanID, linodes }));
+  const attachVlan = (vlanID: number, linodes: number[]) =>
+    dispatch(_attach({ vlanID, linodes }));
+  const detachVlan = (vlanID: number, linodes: number[]) =>
+    dispatch(_detach({ vlanID, linodes }));
 
-  const connectVlan = (vlanID: number, linodes: number[]) =>
-    dispatch(_connect({ vlanID, linodes }));
-
-  return { vlans, requestVLANs, connectVlan, disconnectVlan };
+  return { vlans, requestVLANs, attachVlan, detachVlan };
 };
 
 export default useVlans;

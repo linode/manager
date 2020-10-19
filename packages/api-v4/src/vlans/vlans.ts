@@ -1,5 +1,4 @@
-// @todo use beta api root once API bug is fixed
-import { API_ROOT } from 'src/constants';
+import { BETA_API_ROOT as API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
@@ -62,13 +61,13 @@ export const deleteVlan = (vlanID: number) =>
   );
 
 /**
- * connectVlan
+ * attachVlan
  *
- * Connect one or more Linodes from a VLAN. The VLAN
+ * Attach one or more Linodes from a VLAN. The VLAN
  * will be attached to an interface on every config
  * on each target Linode.
  */
-export const connectVlan = (vlanID: number, linodes: number[]) =>
+export const attachVlan = (vlanID: number, linodes: number[]) =>
   Request<VLAN>(
     setURL(`${API_ROOT}/networking/vlans/${vlanID}/attach`),
     setMethod('POST'),
@@ -76,13 +75,13 @@ export const connectVlan = (vlanID: number, linodes: number[]) =>
   );
 
 /**
- * disconnectVlan
+ * detachVlan
  *
- * Disconnect one or more Linodes from a VLAN. The VLAN
+ * Detach one or more Linodes from a VLAN. The VLAN
  * will be detached from every config
  * on each target Linode.
  */
-export const disconnectVlan = (vlanID: number, linodes: number[]) =>
+export const detachVlan = (vlanID: number, linodes: number[]) =>
   Request<VLAN>(
     setURL(`${API_ROOT}/networking/vlans/${vlanID}/detach`),
     setMethod('POST'),

@@ -67,6 +67,8 @@ const VlanDetail: React.FC<CombinedProps> = props => {
       <div style={{ marginTop: 20 }}>
         <LinodesLanding
           isVLAN
+          vlanID={thisVlan.id}
+          vlanLabel={thisVlan.description}
           filterLinodesFn={filterLinodesFn}
           extendLinodesFn={extendLinodesFn}
           LandingHeader={
@@ -75,7 +77,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
               entity="Linode"
               onAddNew={dialog.open}
               displayIcon={false}
-              createButtonText="Add a Linode..."
+              createButtonText="Attach a Linode..."
             />
           }
         />
