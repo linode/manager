@@ -344,7 +344,7 @@ const Header: React.FC<HeaderProps> = props => {
               [classes.statusRunning]: isRunning,
               [classes.statusOffline]: isOffline,
               [classes.statusOther]: isOther,
-              statusOther: isOther
+              statusOtherDetail: isOther
             })}
             label={linodeStatus.toUpperCase()}
             component="span"

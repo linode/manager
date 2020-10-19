@@ -342,6 +342,28 @@ button::-moz-focus-inner {
   animation: fadeIn 0.3s ease-in-out;
 }
 
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  5% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.15;
+  }
+}
+
+/* Animate Linode Landing pending action status icons */
+.statusOther {
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+/* Animate Linode Details pending action status icon */
+.statusOtherDetail::before {
+  animation: blink 1.5s ease-in-out infinite;
+}
+
 .no-transition *,
 .no-transition *::before,
 .no-transition *::after {
