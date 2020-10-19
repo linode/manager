@@ -9,7 +9,7 @@ import {
 } from 'src/store/vlans/vlans.requests';
 import { Dispatch } from './types';
 
-export interface NodeBalancersProps {
+export interface VlansProps {
   vlans: State;
   requestVLANs: () => Promise<VLAN[]>;
   attachVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
