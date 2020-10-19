@@ -1,3 +1,17 @@
+export interface DatabaseType {
+  id: string;
+  label: string;
+  price: {
+    hourly: number;
+    monthly: number;
+  };
+  memory: number;
+  disk: number;
+  transfer: number | null;
+  vcpus: number;
+  availability: 'standard' | 'high';
+}
+
 export type DatabaseAvailability = 'standard' | 'high';
 
 export type DatabaseStatus = 'initializing' | 'ready' | 'error' | 'unknown';
@@ -18,7 +32,19 @@ export interface DatabaseMaintenanceSchedule {
     | 'Thursday'
     | 'Friday'
     | 'Saturday';
-  window: string;
+  window:
+    | 'W0'
+    | 'W2'
+    | 'W4'
+    | 'W6'
+    | 'W8'
+    | 'W10'
+    | 'W12'
+    | 'W14'
+    | 'W16'
+    | 'W18'
+    | 'W20'
+    | 'W22';
 }
 
 export interface DatabaseConnection {

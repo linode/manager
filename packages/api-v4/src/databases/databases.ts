@@ -12,6 +12,7 @@ import {
   CreateDatabasePayload,
   Database,
   DatabaseConnection,
+  DatabaseType,
   UpdateDatabasePayload
 } from './types';
 
@@ -50,6 +51,18 @@ export const getDatabase = (databaseID: number) =>
 export const getDatabaseConnection = (databaseID: number) =>
   Request<DatabaseConnection>(
     setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/connection`),
+    setMethod('GET')
+  );
+
+/**
+ * getMySQLTypes
+ *
+ * Return a paginated list of available plans/types for MySQL databases
+ *
+ */
+export const getMySQLTypes = () =>
+  Request<Page<DatabaseType>>(
+    setURL(`${API_ROOT}/databases/mysql/types`),
     setMethod('GET')
   );
 
