@@ -1,5 +1,5 @@
 export interface DatabaseType {
-  id: number;
+  id: string;
   label: string;
   price: {
     hourly: number;
