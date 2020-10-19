@@ -204,9 +204,10 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
       paddingRight: 0
     }
   },
-  button: {
+  region: {
     ...theme.applyLinkStyles,
     borderRight: `1px solid ${theme.color.grey6}`,
+    cursor: 'auto',
     fontSize: '.875rem',
     fontWeight: 'bold',
     paddingLeft: 4,
@@ -273,7 +274,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Grid item xs={12} sm={7}>
         <div className={classes.detailsSection}>
           {regionDisplay && (
-            <button className={classes.button}>{regionDisplay}</button>
+            <span className={classes.region}>{regionDisplay}</span>
           )}
           <Typography
             className={classnames({

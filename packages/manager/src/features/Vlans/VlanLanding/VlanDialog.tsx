@@ -4,6 +4,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import { VlanActionsProps } from 'src/containers/vlans.container';
+import useVlans from 'src/hooks/useVlans';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props extends Pick<VlanActionsProps, 'deleteVlan'> {
@@ -17,6 +18,8 @@ interface Props extends Pick<VlanActionsProps, 'deleteVlan'> {
 type CombinedProps = Props;
 
 const VlanDialog: React.FC<CombinedProps> = props => {
+  const { deleteVlan } = useVlans();
+
   const history = useHistory();
 
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
@@ -25,7 +28,6 @@ const VlanDialog: React.FC<CombinedProps> = props => {
   const {
     open,
     closeDialog,
-    deleteVlan,
     selectedVlanID,
     selectedVlanLabel: label,
     redirectToLanding
@@ -51,17 +53,17 @@ const VlanDialog: React.FC<CombinedProps> = props => {
       .then(_ => {
         setSubmitting(false);
         closeDialog();
+
+        if (redirectToLanding) {
+          history.push({
+            pathname: `/vlans/`
+          });
+        }
       })
       .catch(e => {
         setSubmitting(false);
         setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
       });
-
-    if (redirectToLanding) {
-      history.push({
-        pathname: `/vlans/`
-      });
-    }
   };
 
   const _label = label ? label : 'this Virtual LAN';
