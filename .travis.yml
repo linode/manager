@@ -17,7 +17,7 @@ install:
 
 script:
   - yarn build
-  - yarn test
+  - yarn test --runInBand
 #- 'pkill -f selenium-standalone || :'
 #- pkill -f storybook
 env:
