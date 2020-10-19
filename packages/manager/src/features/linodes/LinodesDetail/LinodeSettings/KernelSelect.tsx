@@ -6,7 +6,7 @@ import Select, { Item, GroupType } from 'src/components/EnhancedSelect/Select';
 export interface Props {
   kernels: Kernel[];
   selectedKernel?: string;
-  readOnly: boolean;
+  readOnly?: boolean;
   errorText?: string;
   onChange: (selected: Item<string> | void) => void;
 }
@@ -31,7 +31,7 @@ export const KernelSelect: React.FC<Props> = props => {
       onChange={onChange}
       errorText={errorText}
       errorGroup="linode-config-drawer"
-      disabled={readOnly}
+      disabled={Boolean(readOnly)}
       isClearable={false}
     />
   );
@@ -69,6 +69,7 @@ export const groupKernels = (kernel: Kernel) => {
   } else if (kernel.architecture === 'i386') {
     return '32 bit';
   }
+  // Fallback; this should never happen.
   return 'Current';
 };
 
