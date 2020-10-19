@@ -43,6 +43,13 @@ export interface Database {
 export interface CreateDatabasePayload {
   label?: string;
   tags?: string[];
+  maintenance_schedule?: DatabaseMaintenanceSchedule;
   type: string;
   root_password: string;
+}
+
+export interface UpdateDatabasePayload {
+  label?: string;
+  tags?: string[];
+  maintenance_schedule?: DatabaseMaintenanceSchedule;
 }
