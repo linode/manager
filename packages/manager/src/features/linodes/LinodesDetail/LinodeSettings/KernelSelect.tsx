@@ -11,6 +11,13 @@ export interface Props {
   onChange: (selected: Item<string> | void) => void;
 }
 
+/**
+ * This component's main purpose is to take an
+ * API /kernels response, which returns a sorted but
+ * undifferentiated list, and organize it into a dropdown
+ * menu that makes more sense.
+ */
+
 export const KernelSelect: React.FC<Props> = props => {
   const { selectedKernel, kernels, onChange, readOnly, errorText } = props;
 
@@ -67,6 +74,7 @@ export const groupKernels = (kernel: Kernel) => {
 
 export const kernelsToGroupedItems = (kernels: Kernel[]) => {
   const groupedKernels = groupBy(groupKernels, kernels);
+  groupedKernels.Current = sortCurrentKernels(groupedKernels.Current);
 
   return Object.keys(groupedKernels)
     .reduce((accum: GroupType<string>[], thisGroup) => {
@@ -103,6 +111,27 @@ const sortKernelGroups = (a: GroupType, b: GroupType) => {
     return 1;
   }
   return 0;
+};
+
+/**
+ * This is totally hard-coded and not ideal,
+ * but adding a display ordinal to the kernel
+ * envelope was judged to be outside of normal
+ * API patterns.
+ *
+ * The idea is that the details of the kernel named e.g. "Latest 64 bit"
+ * will change, but these five labels will always be present.
+ * If someday this assumption breaks, we filter out any
+ * missed matches as a failsafe.
+ */
+const sortCurrentKernels = (kernels: Kernel[]) => {
+  return [
+    kernels.find(thisKernel => thisKernel.label.match(/64 bit/i)),
+    kernels.find(thisKernel => thisKernel.label.match(/32 bit/i)),
+    kernels.find(thisKernel => thisKernel.label.match(/direct disk/i)),
+    kernels.find(thisKernel => thisKernel.label.match(/grub 2/i)),
+    kernels.find(thisKernel => thisKernel.label.match(/grub \(legacy\)/i))
+  ].filter(Boolean) as Kernel[];
 };
 
 export default React.memo(KernelSelect);
