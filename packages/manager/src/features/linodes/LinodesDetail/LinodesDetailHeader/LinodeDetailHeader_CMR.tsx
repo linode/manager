@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'src/components/core/styles';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import PowerDialogOrDrawer, {
@@ -29,28 +28,6 @@ import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
 import HostMaintenance from './HostMaintenance';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
-
-const useStyles = makeStyles(() => ({
-  '@keyframes blink': {
-    '0%, 100%': {
-      opacity: 0.25
-    },
-    '35%, 65%': {
-      opacity: 0.45
-    },
-    '45%, 55%': {
-      opacity: 0.95
-    },
-    '50%': {
-      opacity: 1
-    }
-  },
-  root: {
-    '& .statusOther:before': {
-      animation: '$blink 1.25s ease-in-out infinite'
-    }
-  }
-}));
 
 interface Props {
   numVolumes: number;
@@ -88,8 +65,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   });
   const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
-
-  const classes = useStyles();
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -272,7 +247,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <div className={classes.root}>
+    <>
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
@@ -336,7 +311,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         open={backupsDialog.open}
         onClose={closeDialogs}
       />
-    </div>
+    </>
   );
 };
 
