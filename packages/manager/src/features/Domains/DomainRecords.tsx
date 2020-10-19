@@ -70,14 +70,16 @@ const styles = (theme: Theme) =>
     cells: {
       whiteSpace: 'nowrap',
       [theme.breakpoints.up('md')]: {
-        maxWidth: 300,
-        wordBreak: 'break-all'
+        maxWidth: 300
       },
       '& .data': {
         maxWidth: 300,
         overflow: 'hidden',
         whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis'
+        textOverflow: 'ellipsis',
+        [theme.breakpoints.up('md')]: {
+          maxWidth: 750
+        }
       }
     },
     titles: {
