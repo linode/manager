@@ -1,7 +1,7 @@
-import { array, object, string } from 'yup';
+import { array, mixed, object, string } from 'yup';
 
 export const maintenanceScheduleSchema = object({
-  day: string()
+  day: mixed()
     .required('Day is required')
     .oneOf([
       'Sunday',
@@ -12,7 +12,7 @@ export const maintenanceScheduleSchema = object({
       'Friday',
       'Saturday'
     ]),
-  window: string()
+  window: mixed()
     .required('Maintenance window is required')
     .oneOf([
       'W0',
@@ -31,10 +31,24 @@ export const maintenanceScheduleSchema = object({
 });
 
 export const createDatabaseSchema = object({
+  label: string()
+    .notRequired()
+    .min(3, 'Label must be between 3 and 32 characters')
+    .max(32, 'Label must be between 3 and 32 characters'),
   region: string().required('Region is required'),
   type: string().required('Type is required'),
   root_password: string().required('Root password is required'),
-  tags: array().of(string())
+  tags: array().of(string()),
+  maintenance_schedule: maintenanceScheduleSchema.notRequired()
+});
+
+export const updateDatabaseSchema = object({
+  label: string()
+    .notRequired()
+    .min(3, 'Label must be between 3 and 32 characters')
+    .max(32, 'Label must be between 3 and 32 characters'),
+  tags: array().of(string()),
+  maintenance_schedule: maintenanceScheduleSchema.notRequired()
 });
 
 export const resetPasswordSchema = object({

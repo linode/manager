@@ -9,6 +9,12 @@ import Request, {
 import { ResourcePage as Page } from '../types';
 
 import {
+  createDatabaseSchema,
+  resetPasswordSchema,
+  updateDatabaseSchema
+} from './databases.schema';
+
+import {
   CreateDatabasePayload,
   Database,
   DatabaseConnection,
@@ -76,7 +82,7 @@ export const createDatabase = (data: CreateDatabasePayload) =>
   Request<Database>(
     setURL(`${API_ROOT}/databases/mysql/instances`),
     setMethod('POST'),
-    setData(data)
+    setData(data, createDatabaseSchema)
   );
 
 /**
@@ -93,7 +99,7 @@ export const updateDatabase = (
   Request<Database>(
     setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}`),
     setMethod('PUT'),
-    setData(data)
+    setData(data, updateDatabaseSchema)
   );
 
 /**
@@ -116,5 +122,5 @@ export const resetPassword = (databaseID: number, root_password: string) =>
   Request<{}>(
     setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/password`),
     setMethod('PUT'),
-    setData({ root_password })
+    setData({ root_password }, resetPasswordSchema)
   );
