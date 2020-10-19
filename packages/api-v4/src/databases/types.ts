@@ -9,7 +9,7 @@ export interface DatabaseType {
   disk: number;
   transfer: number | null;
   vcpus: number;
-  availability: 'standard' | 'high';
+  availability: DatabaseAvailability;
 }
 
 export type DatabaseAvailability = 'standard' | 'high';
