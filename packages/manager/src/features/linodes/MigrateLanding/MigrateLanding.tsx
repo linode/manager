@@ -121,7 +121,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
         resetEventsPolling();
         setLoading(false);
         sendMigrationInitiatedEvent(
-          region.region,
+          region,
           selectedRegion,
           +formatDate(new Date().toISOString(), {
             format: 'H'
@@ -240,7 +240,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
 
 interface LinodeContextProps {
   linodeId: number;
-  region: { region: string; countryCode: string };
+  region: string;
   label: string;
   linodeStatus: LinodeStatus;
   linodeSpecs: LinodeSpecs;
@@ -254,10 +254,7 @@ interface LinodeContextProps {
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
-  region: {
-    region: linode.region,
-    countryCode: getCountryCodeFromSlug(linode.region)
-  },
+  region: linode.region,
   type: linode.type,
   label: linode.label,
   image: linode.image,
@@ -325,36 +322,4 @@ const getDisabledReason = (
   // }
 
   return '';
-};
-
-export const getCountryCodeFromSlug = (regionSlug: string) => {
-  if (regionSlug.match(/ap-north/i)) {
-    return 'jp';
-  }
-
-  if (regionSlug.match(/ap-south/i)) {
-    return 'sg';
-  }
-
-  if (regionSlug.match(/eu-cent/i)) {
-    return 'de';
-  }
-
-  if (regionSlug.match(/eu/i)) {
-    return 'uk';
-  }
-
-  if (regionSlug.match(/ap-west/i)) {
-    return 'in';
-  }
-
-  if (regionSlug.match(/ap-southeast/i)) {
-    return 'au';
-  }
-
-  if (regionSlug.match(/ca-cent/i)) {
-    return 'ca';
-  }
-
-  return 'us';
 };
