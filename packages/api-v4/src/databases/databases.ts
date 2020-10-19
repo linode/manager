@@ -93,3 +93,15 @@ export const deleteDatabase = (databaseID: number) =>
     setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}`),
     setMethod('DELETE')
   );
+
+/**
+ * resetDatabasePassword
+ *
+ * Resets the root password for a database
+ */
+export const resetPassword = (databaseID: number, root_password: string) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/password`),
+    setMethod('PUT'),
+    setData({ root_password })
+  );
