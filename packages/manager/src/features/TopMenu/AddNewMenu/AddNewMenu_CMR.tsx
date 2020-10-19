@@ -25,9 +25,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import withAccount, {
-  StateProps as AccountStateProps
-} from 'src/containers/account.container';
 import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -131,18 +128,17 @@ type CombinedProps = Props &
   RouteComponentProps<{}> &
   DispatchProps &
   StateProps &
-  AccountStateProps &
   FeatureFlagConsumerProps;
 
 const styled = withStyles(styles);
 
 class AddNewMenu extends React.Component<CombinedProps> {
   render() {
-    const { accountData, classes, flags } = this.props;
+    const { accountCapabilities, classes, flags } = this.props;
     const showVlans = isFeatureEnabled(
       'Vlans',
       Boolean(flags.vlans),
-      accountData?.capabilities ?? []
+      accountCapabilities ?? []
     );
 
     return (
@@ -270,7 +266,6 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 const enhanced = compose<CombinedProps, {}>(
   connected,
   withRouter,
-  withAccount(),
   withFeatureFlags,
   styled
 )(AddNewMenu);
