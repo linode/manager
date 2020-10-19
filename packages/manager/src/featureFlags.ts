@@ -27,6 +27,7 @@ export interface Flags {
   changelog: Changelog;
   vlans: boolean;
   cvvRequired: boolean;
+  databases: boolean;
 }
 
 type PromotionalOfferFeature =

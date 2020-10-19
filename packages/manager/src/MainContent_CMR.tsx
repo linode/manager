@@ -172,6 +172,7 @@ const AccountActivationLanding = React.lazy(() =>
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const VLans = React.lazy(() => import('src/features/Vlans'));
+const Databases = React.lazy(() => import('src/features/Databases'));
 
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -194,6 +195,12 @@ const MainContent: React.FC<CombinedProps> = props => {
   const showVlans = isFeatureEnabled(
     'Vlans',
     Boolean(props.flags.vlans),
+    account?.data?.capabilities ?? []
+  );
+
+  const showDatabases = isFeatureEnabled(
+    'Databases',
+    Boolean(props.flags.databases),
     account?.data?.capabilities ?? []
   );
 
@@ -313,6 +320,9 @@ const MainContent: React.FC<CombinedProps> = props => {
                         <Route path="/firewalls" component={Firewalls} />
                       )}
                       {showVlans && <Route path="/vlans" component={VLans} />}
+                      {showDatabases && (
+                        <Route path="/databases" component={Databases} />
+                      )}
                       <Redirect exact from="/" to="/dashboard" />
                       <Route component={NotFound} />
                     </Switch>
