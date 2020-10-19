@@ -75,7 +75,6 @@ interface Props {
   disabled?: boolean;
   disabledReason?: string;
   hideStrengthLabel?: boolean;
-  hideHelperText?: boolean;
   className?: string;
   small?: boolean;
   isOptional?: boolean;
@@ -109,7 +108,6 @@ class AccessPanel extends React.Component<CombinedProps> {
       disabled,
       disabledReason,
       hideStrengthLabel,
-      hideHelperText,
       className,
       small,
       isOptional,
@@ -144,7 +142,6 @@ class AccessPanel extends React.Component<CombinedProps> {
               placeholder={placeholder || 'Enter a password.'}
               onChange={this.handleChange}
               hideStrengthLabel={hideStrengthLabel}
-              hideHelperText={hideHelperText}
               helperText={passwordHelperText}
             />
           </React.Suspense>

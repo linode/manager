@@ -36,7 +36,6 @@ import {
   getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { PasswordValidationType } from 'src/featureFlags';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -73,7 +72,6 @@ interface Props {
   type: 'community' | 'account';
   disabled: boolean;
   passwordHelperText: string;
-  passwordValidation: PasswordValidationType;
 }
 
 interface ContextProps {
@@ -110,23 +108,11 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     linodeId,
     enqueueSnackbar,
     history,
-    passwordHelperText,
-    passwordValidation
+    passwordHelperText
   } = props;
 
-  /**
-   * Dynamic validation schema, with password validation
-   * dependent on a value from a feature flag. Remove this
-   * once API password validation is stable.
-   */
-  const RebuildSchema = React.useMemo(
-    () =>
-      extendValidationSchema(
-        passwordValidation ?? 'none',
-        RebuildLinodeFromStackScriptSchema
-      ),
-    [passwordValidation]
-  );
+  const RebuildSchema = () =>
+    extendValidationSchema(RebuildLinodeFromStackScriptSchema);
 
   const [
     ss,
