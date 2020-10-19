@@ -17,7 +17,7 @@ install:
 
 script:
   - yarn build
-  - yarn test --runInBand
+  - yarn test --maxWorkers=4
 #- 'pkill -f selenium-standalone || :'
 #- pkill -f storybook
 env:
