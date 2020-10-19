@@ -15,7 +15,7 @@ export interface VlansProps {
   requestVLANs: () => Promise<VLAN[]>;
   attachVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
   detachVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
-  deleteVlan: (vlanID: number) => Promise<VLAN>;
+  deleteVlan: (vlanID: number) => {};
 }
 
 export const useVlans = () => {

@@ -108,7 +108,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
 const Header: React.FC<HeaderProps> = props => {
   const classes = useHeaderStyles();
 
-  const { id, label, deleteVlan } = props;
+  const { id, label } = props;
 
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
 
@@ -160,7 +160,6 @@ const Header: React.FC<HeaderProps> = props => {
       />
       <VlanDialog
         open={modalOpen}
-        deleteVlan={deleteVlan}
         selectedVlanID={id}
         selectedVlanLabel={label}
         closeDialog={handleCloseDeleteVlanModal}
@@ -205,11 +204,10 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     }
   },
   region: {
-    ...theme.applyLinkStyles,
     borderRight: `1px solid ${theme.color.grey6}`,
+    color: theme.color.grey8,
     cursor: 'auto',
     fontSize: '.875rem',
-    fontWeight: 'bold',
     paddingLeft: 4,
     paddingRight: 10,
     '&:hover': {
@@ -217,8 +215,8 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     }
   },
   created: {
-    paddingLeft: 10,
     color: theme.color.grey8,
+    paddingLeft: 10,
     [theme.breakpoints.down('sm')]: {
       textAlign: 'center'
     }
@@ -274,15 +272,9 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Grid item xs={12} sm={7}>
         <div className={classes.detailsSection}>
           {regionDisplay && (
-            <span className={classes.region}>{regionDisplay}</span>
+            <Typography className={classes.region}>{regionDisplay}</Typography>
           )}
-          <Typography
-            className={classnames({
-              [classes.listItem]: true
-            })}
-          >
-            {cidr}
-          </Typography>
+          <Typography className={classes.listItem}>{cidr}</Typography>
           <Typography
             className={classnames({
               [classes.listItem]: true,
