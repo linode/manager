@@ -25,9 +25,16 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import withAccount, {
+  StateProps as AccountStateProps
+} from 'src/containers/account.container';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { vlanContext } from 'src/context';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { MapState } from 'src/store/types';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem from './AddNewMenuItem';
 
 type CSSClasses =
@@ -123,13 +130,20 @@ type CombinedProps = Props &
   WithStyles<CSSClasses> &
   RouteComponentProps<{}> &
   DispatchProps &
-  StateProps;
+  StateProps &
+  AccountStateProps &
+  FeatureFlagConsumerProps;
 
 const styled = withStyles(styles);
 
 class AddNewMenu extends React.Component<CombinedProps> {
   render() {
-    const { classes } = this.props;
+    const { accountData, classes, flags } = this.props;
+    const showVlans = isFeatureEnabled(
+      'Vlans',
+      Boolean(flags.vlans),
+      accountData?.capabilities ?? []
+    );
 
     return (
       <div className={classes.wrapper}>
@@ -213,11 +227,13 @@ class AddNewMenu extends React.Component<CombinedProps> {
                 onSelect={this.context.open}
                 className={classes.menuItemLink}
               >
-                <AddNewMenuItem
-                  title="Virtual LAN"
-                  body="Create private Local Area Networks (LANs) for secure communication between Linodes."
-                  ItemIcon={LinodeIcon}
-                />
+                {showVlans && (
+                  <AddNewMenuItem
+                    title="Virtual LAN"
+                    body="Create private Local Area Networks (LANs) for secure communication between Linodes."
+                    ItemIcon={LinodeIcon}
+                  />
+                )}
               </MenuItem>
             </MenuItems>
           </MenuPopover>
@@ -254,6 +270,8 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 const enhanced = compose<CombinedProps, {}>(
   connected,
   withRouter,
+  withAccount(),
+  withFeatureFlags,
   styled
 )(AddNewMenu);
 
