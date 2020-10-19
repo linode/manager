@@ -43,7 +43,7 @@ export const getDatabases = (params?: any, filters?: any) =>
  *
  */
 export const getDatabase = (databaseID: number) =>
-  Request<Page<Database>>(
+  Request<Database>(
     setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}`),
     setMethod('GET')
   );
