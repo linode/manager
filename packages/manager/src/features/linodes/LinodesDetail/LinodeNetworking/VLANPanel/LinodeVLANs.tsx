@@ -1,4 +1,4 @@
-import { Config, LinodeInterface } from '@linode/api-v4/lib/linodes';
+import { Config } from '@linode/api-v4/lib/linodes';
 import { VLAN } from '@linode/api-v4/lib/vlans/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -97,9 +97,6 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     number | undefined
   >(undefined);
   const [selectedVlanLabel, setSelectedVlanLabel] = React.useState<string>('');
-  const [interfacesList, setInterfacesList] = React.useState<LinodeInterface[]>(
-    []
-  );
 
   const { vlans, detachVlan } = useVlans();
 
@@ -108,12 +105,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     requestInterfaces
   } = useInterfaces();
   const thisLinodeInterfaces = reduxInterfacesObject[linodeId];
-
-  React.useEffect(() => {
-    if (thisLinodeInterfaces) {
-      setInterfacesList(Object.values(thisLinodeInterfaces.itemsById));
-    }
-  }, [thisLinodeInterfaces]);
+  const interfacesList = Object.values(thisLinodeInterfaces?.itemsById ?? {});
 
   const { _loading } = useReduxLoad(['vlans']);
 
