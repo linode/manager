@@ -1,7 +1,6 @@
 import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as classnames from 'classnames';
 import * as React from 'react';
-import { compose } from 'recompose';
 import DeleteIcon from 'src/assets/icons/delete.svg';
 // import EditIcon from 'src/assets/icons/edit.svg';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
@@ -14,7 +13,6 @@ import Hidden from 'src/components/core/Hidden';
 import IconTextLink from 'src/components/IconTextLink';
 // import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
-import withVLANs, { Props as VLANProps } from 'src/containers/vlans.container';
 import VlanDialog from 'src/features/Vlans/VlanLanding/VlanDialog';
 import formatDate from 'src/utilities/formatDate';
 
@@ -23,7 +21,7 @@ interface VlanEntityDetailProps {
   // openTagDrawer: (tags: string[]) => void;
 }
 
-export type CombinedProps = VlanEntityDetailProps & VLANProps;
+export type CombinedProps = VlanEntityDetailProps;
 
 const VlanEntityDetail: React.FC<CombinedProps> = props => {
   const { vlan } = props;
@@ -47,10 +45,7 @@ const VlanEntityDetail: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, VlanEntityDetailProps>(
-  React.memo,
-  withVLANs<{}, CombinedProps>()
-)(VlanEntityDetail);
+export default React.memo(VlanEntityDetail);
 
 // =============================================================================
 // Header
