@@ -63,7 +63,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <VlanEntityDetail openTagDrawer={() => null} />
+      <VlanEntityDetail vlan={thisVlan} />
       <div style={{ marginTop: 20 }}>
         <LinodesLanding
           isVLAN
