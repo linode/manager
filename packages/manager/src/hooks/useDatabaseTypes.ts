@@ -13,7 +13,7 @@ export interface DatabaseTypesProps {
 export const useDatabaseTypes = () => {
   const dispatch: Dispatch = useDispatch();
   const databaseTypes = useSelector(
-    (state: ApplicationState) => state.__resources.vlans
+    (state: ApplicationState) => state.__resources.databaseTypes
   );
   const requestDatabaseTypes = (params?: any, filter?: any) =>
     dispatch(getAllMySQLTypes({ params, filter }));
