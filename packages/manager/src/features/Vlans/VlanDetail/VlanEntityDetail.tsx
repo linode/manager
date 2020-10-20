@@ -1,6 +1,5 @@
 import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as classnames from 'classnames';
-// import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import DeleteIcon from 'src/assets/icons/delete.svg';
@@ -17,7 +16,6 @@ import IconTextLink from 'src/components/IconTextLink';
 import { dcDisplayNames } from 'src/constants';
 import withVLANs, { Props as VLANProps } from 'src/containers/vlans.container';
 import VlanDialog from 'src/features/Vlans/VlanLanding/VlanDialog';
-// import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 
 interface VlanEntityDetailProps {
@@ -28,15 +26,13 @@ interface VlanEntityDetailProps {
 export type CombinedProps = VlanEntityDetailProps & VLANProps;
 
 const VlanEntityDetail: React.FC<CombinedProps> = props => {
-  const { vlan, deleteVlan } = props;
+  const { vlan } = props;
 
   const regionDisplay = dcDisplayNames[vlan.region] ?? null;
 
   return (
     <EntityDetail
-      header={
-        <Header id={vlan.id} label={vlan.description} deleteVlan={deleteVlan} />
-      }
+      header={<Header id={vlan.id} label={vlan.description} />}
       footer={
         <Footer
           regionDisplay={regionDisplay}
@@ -62,7 +58,6 @@ export default compose<CombinedProps, VlanEntityDetailProps>(
 export interface HeaderProps {
   id: number;
   label: string;
-  deleteVlan: any;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -136,7 +131,7 @@ const Header: React.FC<HeaderProps> = props => {
         body={
           <>
             <div className={classes.actionItemsOuter}>
-              {/* @todo: Not implemented by API yet */}
+              {/* @todo: Implement edit action */}
               {/* <IconTextLink
               className={classes.actionItem}
               SideIcon={EditIcon}
@@ -237,36 +232,6 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const classes = useFooterStyles();
 
-  // @todo: Not implemented by API yet
-  // const { enqueueSnackbar } = useSnackbar();
-
-  // const addTag = React.useCallback(
-  //   (tag: string) => {
-  //     const newTags = [...linodeTags, tag];
-  //     updateLinode({ linodeId, tags: newTags }).catch(e =>
-  //       enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-  //         variant: 'error'
-  //       })
-  //     );
-  //   },
-  //   [linodeTags, linodeId, updateLinode, enqueueSnackbar]
-  // );
-
-  // const deleteTag = React.useCallback(
-  //   (tag: string) => {
-  //     const newTags = linodeTags.filter(thisTag => thisTag !== tag);
-  //     updateLinode({ linodeId, tags: newTags }).catch(e =>
-  //       enqueueSnackbar(
-  //         getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
-  //         {
-  //           variant: 'error'
-  //         }
-  //       )
-  //     );
-  //   },
-  //   [linodeTags, linodeId, updateLinode, enqueueSnackbar]
-  // );
-
   return (
     <Grid container direction="row" justify="space-between" alignItems="center">
       <Grid item xs={12} sm={7}>
@@ -297,6 +262,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
         </Grid>
       </Hidden>
+      {/* @todo: Implement tags */}
       {/* <Grid item xs={12} sm={5} className={classes.tags}>
         <TagCell
           width={500}
