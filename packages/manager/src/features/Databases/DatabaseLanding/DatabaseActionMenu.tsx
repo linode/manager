@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -60,24 +54,28 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface ActionHandlers {
-  triggerDeleteDatabase: (databaseID: number, databaseLabel: string) => void;
+  triggerDeleteDatabase?: (databaseID: number, databaseLabel: string) => void;
   [index: string]: any;
 }
 
 interface Props extends ActionHandlers {
   databaseID: number;
   databaseLabel: string;
+  inlineLabel?: string;
 }
 
 type CombinedProps = Props;
 
 const DatabaseActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const history = useHistory();
 
-  const { databaseID, databaseLabel, triggerDeleteDatabase } = props;
+  const {
+    databaseID,
+    databaseLabel,
+    inlineLabel,
+    triggerDeleteDatabase
+  } = props;
 
   const actions: Action[] = [
     {
@@ -89,29 +87,20 @@ const DatabaseActionMenu: React.FC<CombinedProps> = props => {
     {
       title: 'Delete',
       onClick: () => {
-        triggerDeleteDatabase(databaseID, databaseLabel);
+        if (triggerDeleteDatabase !== undefined) {
+          triggerDeleteDatabase(databaseID, databaseLabel);
+        }
       }
     }
   ];
 
   return (
     <div className={classes.root}>
-      {!matchesSmDown &&
-        actions.map(action => {
-          return (
-            <InlineMenuAction
-              key={action.title}
-              actionText={action.title}
-              onClick={action.onClick}
-            />
-          );
-        })}
-      {matchesSmDown && (
-        <ActionMenu
-          createActions={() => actions}
-          ariaLabel={`Action menu for Database ${props.databaseLabel}`}
-        />
-      )}
+      <ActionMenu
+        createActions={() => actions}
+        inlineLabel={inlineLabel}
+        ariaLabel={`Action menu for Database ${props.databaseLabel}`}
+      />
     </div>
   );
 };

@@ -1,11 +1,24 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
-// import { useSnackbar } from 'notistack';
-import DeleteIcon from 'src/assets/icons/delete.svg';
-import EditIcon from 'src/assets/icons/edit.svg';
+import CPUIcon from 'src/assets/icons/cpu-icon.svg';
+import DiskIcon from 'src/assets/icons/disk.svg';
+import RamIcon from 'src/assets/icons/ram-sticks.svg';
+import ResizeIcon from 'src/assets/icons/resize.svg';
+import VolumeIcon from 'src/assets/icons/volume.svg';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import Chip from 'src/components/core/Chip';
+import Hidden from 'src/components/core/Hidden';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme
+} from 'src/components/core/styles';
 // import TagCell from 'src/components/TagCell';
+import Table from 'src/components/core/Table';
+import TableBody from 'src/components/core/TableBody';
+import TableCell from 'src/components/core/TableCell';
+import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
@@ -15,7 +28,7 @@ import IconTextLink from 'src/components/IconTextLink';
 // import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 // import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
-import Hidden from 'src/components/core/Hidden';
+import DatabaseActionMenu from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
 
 interface DatabaseEntityDetailProps {
   database: any;
@@ -28,8 +41,8 @@ const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = props => {
 
   return (
     <EntityDetail
-      header={<Header label="" id={1234} />}
-      body={<Body />}
+      header={<Header label="Label" status="running" />}
+      body={<Body numCPUs={0} gbRAM={0} gbStorage={0} numVolumes={0} />}
       footer={
         <Footer
           plan=""
@@ -50,8 +63,8 @@ export default React.memo(DatabaseEntityDetail);
 // Header
 // =============================================================================
 export interface HeaderProps {
-  id: number;
   label: string;
+  status: string;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -72,10 +85,33 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       padding: `0 !important`
     }
   },
+  statusChip: {
+    ...theme.applyStatusPillStyles
+  },
+  statusRunning: {
+    '&:before': {
+      backgroundColor: theme.cmrIconColors.iGreen
+    }
+  },
+  statusOffline: {
+    '&:before': {
+      backgroundColor: theme.cmrIconColors.iGrey
+    }
+  },
+  statusOther: {
+    '&:before': {
+      backgroundColor: theme.cmrIconColors.iOrange
+    }
+  },
+  actionItemsOuter: {
+    display: 'flex',
+    alignItems: 'center'
+  },
   actionItem: {
-    marginRight: 10,
+    marginRight: 0,
     marginBottom: 0,
-    padding: 10,
+    maxHeight: 'none',
+    padding: `15px 10px`,
     '& svg': {
       height: 20,
       width: 20,
@@ -90,20 +126,36 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       '& svg': {
         fill: theme.color.disabled
       }
+    },
+    '&:hover': {
+      color: '#ffffff',
+      backgroundColor: theme.color.blue,
+      '& svg': {
+        fill: '#ffffff',
+        '& g': {
+          stroke: '#ffffff'
+        },
+        '& path': {
+          stroke: '#ffffff'
+        }
+      }
+    },
+    '&:focus': {
+      outline: '1px dotted #999'
     }
-  },
-  actionItemsOuter: {
-    display: 'flex',
-    alignItems: 'center'
   }
 }));
 
 const Header: React.FC<HeaderProps> = props => {
-  const { id, label } = props;
+  const { label, status } = props;
 
   const classes = useHeaderStyles();
-  // const theme = useTheme<Theme>();
-  // const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const theme = useTheme<Theme>();
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
+
+  const isRunning = status === 'running';
+  const isOffline = status === 'stopped' || status === 'offline';
+  const isOther = !['running', 'stopped', 'offline'].includes(status);
 
   return (
     <EntityHeader
@@ -119,21 +171,37 @@ const Header: React.FC<HeaderProps> = props => {
       bodyClassName={classes.body}
       body={
         <>
+          <Chip
+            className={classnames({
+              [classes.statusChip]: true,
+              [classes.statusRunning]: isRunning,
+              [classes.statusOffline]: isOffline,
+              [classes.statusOther]: isOther,
+              statusOtherDetail: isOther
+            })}
+            label={status.replace('_', ' ').toUpperCase()}
+            component="span"
+            clickable={isOther ? true : false}
+            {...(isOther && {
+              onClick: () => {
+                return undefined;
+              }
+            })}
+          />
+
           <div className={classes.actionItemsOuter}>
             <IconTextLink
               className={classes.actionItem}
-              SideIcon={EditIcon}
-              text="Edit"
-              title="Edit"
+              SideIcon={ResizeIcon}
+              text="Resize"
+              title="Resize"
               to={`/`}
             />
 
-            <IconTextLink
-              className={classes.actionItem}
-              SideIcon={DeleteIcon}
-              text="Delete"
-              title="Delete"
-              to={`/`}
+            <DatabaseActionMenu
+              databaseID={1234}
+              databaseLabel=""
+              inlineLabel={matchesMdDown ? undefined : 'More Actions'}
             />
           </div>
           <Hidden smDown>
@@ -149,8 +217,10 @@ const Header: React.FC<HeaderProps> = props => {
 // Body
 // =============================================================================
 export interface BodyProps {
-  id: number;
-  label: string;
+  numCPUs: number;
+  gbRAM: number;
+  gbStorage: number;
+  numVolumes: number;
 }
 
 const useBodyStyles = makeStyles((theme: Theme) => ({
@@ -247,7 +317,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Body: React.FC<BodyProps> = props => {
-  const { id, label } = props;
+  const { numCPUs, gbRAM, gbStorage, numVolumes } = props;
 
   const classes = useBodyStyles();
 
@@ -329,39 +399,19 @@ const Body: React.FC<BodyProps> = props => {
         </Grid>
       </Grid>
       <Grid item>
-        <List className={classes.ipList}>
-          {ipv4.slice(0, 3).map(thisIP => {
-            return <ListItem key={thisIP}>{thisIP}</ListItem>;
-          })}
-          {ipv6 && <ListItem>{ipv6}</ListItem>}
-          {ipv4.length > 3 && (
-            <>
-              ... plus{' '}
-              <Link to={`linodes/${linodeId}/networking`}>
-                {ipv4.length - 3} more
-              </Link>{' '}
-            </>
-          )}
-        </List>
-      </Grid>
-      <Grid item>
         <div className={classes.accessTableContainer}>
           <Table className={classes.accessTable}>
             <TableBody>
               <TableRow>
-                <th scope="row">SSH Access</th>
+                <th scope="row">Connection String</th>
 
-                <TableCell className={classes.code}>
-                  {sshLink(ipv4[0])}
-                </TableCell>
+                <TableCell className={classes.code}>test</TableCell>
               </TableRow>
 
               <TableRow>
-                <th scope="row">LISH via SSH</th>
+                <th scope="row">Port</th>
 
-                <TableCell className={classes.code}>
-                  {lishLink(username, region, linodeLabel)}
-                </TableCell>
+                <TableCell className={classes.code}>test</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -405,10 +455,11 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
       paddingRight: 0
     }
   },
-  region: {
+  button: {
+    ...theme.applyLinkStyles,
     borderRight: `1px solid ${theme.color.grey6}`,
-    color: theme.color.grey8,
     fontSize: '.875rem',
+    fontWeight: 'bold',
     paddingLeft: 4,
     paddingRight: 10,
     '&:hover': {
@@ -435,8 +486,9 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
   const {
+    // plan,
     // regionDisplay,
-    // id,
+    id
     // created,
     // tags,
     // openTagDrawer
@@ -444,49 +496,23 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const classes = useFooterStyles();
 
-  // const { enqueueSnackbar } = useSnackbar();
-
-  // const addTag = React.useCallback(
-  //   (tag: string) => {
-  //     const newTags = [...linodeTags, tag];
-  //     updateLinode({ linodeId, tags: newTags }).catch(e =>
-  //       enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-  //         variant: 'error'
-  //       })
-  //     );
-  //   },
-  //   [linodeTags, linodeId, updateLinode, enqueueSnackbar]
-  // );
-
-  // const deleteTag = React.useCallback(
-  //   (tag: string) => {
-  //     const newTags = linodeTags.filter(thisTag => thisTag !== tag);
-  //     updateLinode({ linodeId, tags: newTags }).catch(e =>
-  //       enqueueSnackbar(
-  //         getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
-  //         {
-  //           variant: 'error'
-  //         }
-  //       )
-  //     );
-  //   },
-  //   [linodeTags, linodeId, updateLinode, enqueueSnackbar]
-  // );
-
   return (
     <Grid container direction="row" justify="space-between" alignItems="center">
       <Grid item xs={12} sm={7}>
         <div className={classes.detailsSection}>
-          {/* {regionDisplay && (
-            <Typography className={classes.region}>{regionDisplay}</Typography>
-          )} */}
+          {/* {plan && ( */}
+          <button className={classes.button}>Insert Plan</button>
+          {/* )} */}
+          {/* {regionDisplay && ( */}
+          <Typography className={classes.button}>Insert Region</Typography>
+          {/* )} */}
           <Typography
             className={classnames({
               [classes.listItem]: true,
               [classes.listItemLast]: true
             })}
           >
-            Insert ID
+            ID {id}
           </Typography>
           <Hidden xsDown>
             <Typography className={classes.created}>

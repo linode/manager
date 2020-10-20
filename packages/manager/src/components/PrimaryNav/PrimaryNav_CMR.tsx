@@ -50,7 +50,8 @@ type NavEntity =
   | 'StackScripts'
   | 'Help & Support'
   | 'Community'
-  | 'Virtual LANs';
+  | 'Virtual LANs'
+  | 'Databases';
 
 type NavGroup =
   | 'Compute'
@@ -114,6 +115,12 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const showVlans = isFeatureEnabled(
     'Vlans',
     Boolean(flags.vlans),
+    account?.data?.capabilities ?? []
+  );
+
+  const showDatabases = isFeatureEnabled(
+    'Databases',
+    Boolean(flags.databases),
     account?.data?.capabilities ?? []
   );
 
@@ -194,6 +201,11 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
               '/object-storage/buckets',
               '/object-storage/access-keys'
             ]
+          },
+          {
+            display: 'Databases',
+            href: '/databases',
+            hide: !showDatabases
           }
         ]
       },
@@ -230,6 +242,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       _isLargeAccount,
       showFirewalls,
       showVlans,
+      showDatabases,
       _isManagedAccount
     ]
   );
