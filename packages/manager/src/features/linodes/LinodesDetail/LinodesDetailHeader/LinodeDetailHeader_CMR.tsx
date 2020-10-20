@@ -9,16 +9,14 @@ import PowerDialogOrDrawer, {
   Action as BootAction
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
-import { NotificationDrawer } from 'src/features/NotificationCenter';
-import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import useLinodes from 'src/hooks/useLinodes';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
-import useLinodes from 'src/hooks/useLinodes';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
-import HostMaintenance from './HostMaintenance';
-import MutationNotification from './MutationNotification';
-import Notifications from './Notifications';
+import DeleteDialog from '../../LinodesLanding/DeleteDialog';
+import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
   LinodeDetailContext,
@@ -27,9 +25,9 @@ import {
 import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue/RescueDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
-
-import MigrateLinode from '../../MigrateLanding/MigrateLinode';
-import DeleteDialog from '../../LinodesLanding/DeleteDialog';
+import HostMaintenance from './HostMaintenance';
+import MutationNotification from './MutationNotification';
+import Notifications from './Notifications';
 
 interface Props {
   numVolumes: number;
@@ -68,7 +66,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const notificationData = useNotificationData();
+  const notificationContext = React.useContext(_notificationContext);
 
   const { linode, linodeStatus, linodeDisks, linodeConfigs } = props;
 
@@ -113,10 +111,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     open: false,
     tags: []
   });
-
-  const [notificationDrawerOpen, setNotificationDrawerOpen] = React.useState(
-    false
-  );
 
   const { updateLinode, deleteLinode } = useLinodes();
   const history = useHistory();
@@ -252,9 +246,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     return deleteLinode(linodeId);
   };
 
-  const openNotificationDrawer = () => setNotificationDrawerOpen(true);
-  const closeNotificationDrawer = () => setNotificationDrawerOpen(false);
-
   return (
     <>
       <HostMaintenance linodeStatus={linodeStatus} />
@@ -270,7 +261,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         openTagDrawer={openTagDrawer}
         openDialog={openDialog}
         openPowerActionDialog={openPowerActionDialog}
-        openNotificationDrawer={openNotificationDrawer}
+        openNotificationDrawer={notificationContext.openDrawer}
       />
       <PowerDialogOrDrawer
         isOpen={powerDialog.open}
@@ -319,11 +310,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         linodeId={backupsDialog.linodeID}
         open={backupsDialog.open}
         onClose={closeDialogs}
-      />
-      <NotificationDrawer
-        open={notificationDrawerOpen}
-        onClose={closeNotificationDrawer}
-        data={notificationData}
       />
     </>
   );
