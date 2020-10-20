@@ -125,7 +125,7 @@ const sortKernelGroups = (a: GroupType, b: GroupType) => {
  * If someday this assumption breaks, we filter out any
  * missed matches as a failsafe.
  */
-const sortCurrentKernels = (kernels: Kernel[]) => {
+export const sortCurrentKernels = (kernels: Kernel[] = []) => {
   return [
     kernels.find(thisKernel => thisKernel.label.match(/64 bit/i)),
     kernels.find(thisKernel => thisKernel.label.match(/32 bit/i)),
