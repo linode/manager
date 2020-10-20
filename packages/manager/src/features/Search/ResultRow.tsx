@@ -69,26 +69,13 @@ const styles = (theme: Theme) =>
         }
       },
       [theme.breakpoints.up('md')]: {
-        width: '35%',
-
+        width: '35%'
       }
     },
     labelCellCMR: {
       width: '60%',
-      // Overriding mobile version of TableCell's styles for the label cell only
-      [theme.breakpoints.between('xs', 'sm')]: {
-        '& > span:first-child': {
-          display: 'none'
-        },
-        '& > span:last-child': {
-          textAlign: 'left',
-          wordBreak: 'normal',
-          marginLeft: 0
-        }
-      },
       [theme.breakpoints.up('md')]: {
-        width: '35%',
-
+        width: '35%'
       }
     },
     iconTableCell: {
