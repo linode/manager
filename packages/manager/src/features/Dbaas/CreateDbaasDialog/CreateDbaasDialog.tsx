@@ -5,6 +5,12 @@ import { dbaasContext } from 'src/context';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
+import createDatabaseSchema from '@linode/api-v4/lib/databases/databases.schema';
+import {
+  DatabaseMaintenanceSchedule,
+  CreateDatabasePayload
+} from '@linode/api-v4/lib/databases/types';
+
 const useStyles = makeStyles((theme: Theme) => ({
   form: {},
   formSection: {
@@ -26,9 +32,15 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
     initialValues: {
       label: '',
       region: '',
-      root_pass: ''
+      type: '',
+      root_password: '',
+      tags: [''],
+      maintenance_schedule: {
+        day: '',
+        window: ''
+      }
     },
-    validationSchema: {},
+    validationSchema: createDatabaseSchema,
     validateOnChange: false,
     onSubmit: values => submitForm(values)
   });
@@ -40,8 +52,21 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
     }
   }, [context.isOpen, resetForm]);
 
-  const submitForm = (values: any) => {
+  const submitForm = (values: CreateDatabasePayload) => {
     const payload = { ...values };
+
+    // Set any potentially empty non-required fields to undefined.
+    if (payload.label === '') {
+      payload.label = undefined;
+    }
+
+    if (!payload.maintenance_schedule) {
+      payload.maintenance_schedule = undefined;
+    }
+
+    if (!payload.tags) {
+      payload.tags = undefined;
+    }
 
     // createDbaas(payload).then().catch(err => {});
   };
