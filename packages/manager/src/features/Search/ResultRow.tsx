@@ -1,5 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import * as classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
@@ -14,11 +15,14 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import TableCell_PreCMR from 'src/components/TableCell';
+import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
+import TableRow_PreCMR from 'src/components/TableRow';
+import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import Tags from 'src/components/Tags';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import useFlags from 'src/hooks/useFlags';
 
 type ClassNames =
   | 'root'
@@ -33,7 +37,10 @@ type ClassNames =
   | 'iconTableCell'
   | 'regionCell'
   | 'createdCell'
-  | 'tagCell';
+  | 'tagCell'
+  | 'linkCMR'
+  | 'preCMRCell'
+  | 'labelCellCMR';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -63,7 +70,25 @@ const styles = (theme: Theme) =>
       },
       [theme.breakpoints.up('md')]: {
         width: '35%',
-        padding: 4
+
+      }
+    },
+    labelCellCMR: {
+      width: '60%',
+      // Overriding mobile version of TableCell's styles for the label cell only
+      [theme.breakpoints.between('xs', 'sm')]: {
+        '& > span:first-child': {
+          display: 'none'
+        },
+        '& > span:last-child': {
+          textAlign: 'left',
+          wordBreak: 'normal',
+          marginLeft: 0
+        }
+      },
+      [theme.breakpoints.up('md')]: {
+        width: '35%',
+
       }
     },
     iconTableCell: {
@@ -76,21 +101,21 @@ const styles = (theme: Theme) =>
       width: '100%',
       [theme.breakpoints.up('md')]: {
         width: '15%',
-        padding: 4
+
       }
     },
     createdCell: {
       width: '100%',
       [theme.breakpoints.up('md')]: {
         width: '20%',
-        padding: 4
+
       }
     },
     tagCell: {
       width: '100%',
       [theme.breakpoints.up('md')]: {
         width: '30%',
-        padding: 4
+
       }
     },
     icon: {
@@ -106,9 +131,6 @@ const styles = (theme: Theme) =>
       }
     },
     labelRow: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center'
     },
     resultBody: {},
     iconGridCell: {
@@ -121,6 +143,17 @@ const styles = (theme: Theme) =>
     },
     link: {
       display: 'block'
+    },
+    linkCMR: {
+      display: 'block',
+      fontFamily: theme.font.bold,
+      fontSize: '.875rem',
+      lineHeight: '1.125rem',
+      textDecoration: 'underline',
+      color: theme.cmrTextColors.linkActiveLight
+    },
+    preCMRCell: {
+      padding: 4
     }
   });
 
@@ -132,8 +165,13 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const ResultRow: React.FC<CombinedProps> = props => {
   const { classes, result } = props;
+  const flags = useFlags();
   const icon = pathOr<string>('default', ['data', 'icon'], result);
   const status = result.data.status;
+
+  const TableRow = flags.cmr ? TableRow_CMR : TableRow_PreCMR;
+  const TableCell = flags.cmr ? TableCell_CMR : TableCell_PreCMR;
+
   return (
     <TableRow
       className={classes.root}
@@ -141,49 +179,72 @@ export const ResultRow: React.FC<CombinedProps> = props => {
       data-qa-result-row={result.label}
       ariaLabel={result.label}
     >
-      <Hidden smDown>
-        <TableCell className={classes.iconTableCell}>
-          <Grid item className={classes.iconGridCell}>
-            <EntityIcon
-              variant={icon}
-              status={status && status}
-              marginTop={3}
-              loading={status && linodeInTransition(status)}
-            />
-          </Grid>
-        </TableCell>
-      </Hidden>
-      <TableCell className={classes.labelCell} parentColumn="Label">
+      {!flags.cmr && <Hidden smDown>
+          <TableCell className={classes.iconTableCell}>
+            <Grid item className={classes.iconGridCell}>
+              <EntityIcon
+                variant={icon}
+                status={status && status}
+                marginTop={3}
+                loading={status && linodeInTransition(status)}
+              />
+            </Grid>
+          </TableCell>
+        </Hidden>}
+      <TableCell className={classNames({
+        [classes.labelCell]: true,
+        [classes.labelCellCMR]: flags.cmr,
+        [classes.preCMRCell]: !flags.cmr
+        })}
+        parentColumn="Label"
+      >
         <div className={classes.labelRow}>
           <Link
             to={result.data.path}
-            className={classes.link}
+            className={classNames({
+              [classes.link]: !flags.cmr,
+              [classes.linkCMR]: flags.cmr
+            })}
             title={result.label}
           >
-            <div className={classes.labelRow}>
-              <Typography variant="h3" className={classes.label}>
-                {result.label}
-              </Typography>
-            </div>
-            <Typography variant="body1">{result.data.description}</Typography>
+           {result.label}
           </Link>
+          <Typography variant="body1">{result.data.description}</Typography>
         </div>
       </TableCell>
-      <TableCell className={classes.regionCell} parentColumn="Region">
+      <TableCell className={classNames({
+        [classes.regionCell]: true,
+        [classes.preCMRCell]: !flags.cmr
+        })}
+        parentColumn="Region"
+      >
         {result.data.region && <RegionIndicator region={result.data.region} />}
       </TableCell>
-      <TableCell className={classes.createdCell} parentColumn="Created">
-        {result.data.created && (
-          <React.Fragment>
-            <Typography>
-              <DateTimeDisplay value={result.data.created} />
-            </Typography>
-          </React.Fragment>
-        )}
-      </TableCell>
-      <TableCell className={classes.tagCell} parentColumn="Tags">
-        <Tags tags={result.data.tags} />
-      </TableCell>
+      <Hidden smDown>
+        <TableCell className={classNames({
+          [classes.createdCell]: true,
+          [classes.preCMRCell]: !flags.cmr
+          })}
+          parentColumn="Created"
+        >
+          {result.data.created && (
+            <React.Fragment>
+              <Typography>
+                <DateTimeDisplay value={result.data.created} />
+              </Typography>
+            </React.Fragment>
+          )}
+        </TableCell>
+
+        <TableCell className={classNames({
+        [classes.tagCell]: true,
+        [classes.preCMRCell]: !flags.cmr
+        })}
+        parentColumn="Tags"
+      >
+          <Tags tags={result.data.tags} />
+        </TableCell>
+      </Hidden>
     </TableRow>
   );
 };

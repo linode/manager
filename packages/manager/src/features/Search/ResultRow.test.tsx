@@ -21,7 +21,10 @@ const classes = {
   iconGridCell: '',
   regionCell: '',
   createdCell: '',
-  tagCell: ''
+  tagCell: '',
+  linkCMR: '',
+  preCMRCell: '',
+  labelCellCMR: ''
 };
 
 const props = {
