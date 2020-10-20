@@ -5,7 +5,8 @@ import { State } from 'src/store/vlans/vlans.reducer';
 import {
   getAllVlans as _request,
   attachVlan as _attach,
-  detachVlan as _detach
+  detachVlan as _detach,
+  deleteVlan as _delete
 } from 'src/store/vlans/vlans.requests';
 import { Dispatch } from './types';
 
@@ -14,6 +15,7 @@ export interface VlansProps {
   requestVLANs: () => Promise<VLAN[]>;
   attachVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
   detachVlan: (vlanID: number, linodes: number[]) => Promise<VLAN>;
+  deleteVlan: (vlanID: number) => {};
 }
 
 export const useVlans = () => {
@@ -26,8 +28,9 @@ export const useVlans = () => {
     dispatch(_attach({ vlanID, linodes }));
   const detachVlan = (vlanID: number, linodes: number[]) =>
     dispatch(_detach({ vlanID, linodes }));
+  const deleteVlan = (vlanID: number) => dispatch(_delete({ vlanID }));
 
-  return { vlans, requestVLANs, attachVlan, detachVlan };
+  return { vlans, requestVLANs, attachVlan, detachVlan, deleteVlan };
 };
 
 export default useVlans;
