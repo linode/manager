@@ -14,19 +14,18 @@ const DatabaseDetailNavigation: React.FC<{}> = props => {
   const label = 'Test';
   const history = useHistory();
   const match = useRouteMatch<{ id: string; subpath: string }>({
-    path: '/databases/:id/:subpath'
+    path: '/databases/:id/'
   });
-  const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
+  const URL = match?.url;
 
   const tabs = [
     {
       title: 'Backups',
-      // routeName: `databases/${match?.params.id}/backups`
-      routeName: `databases/detail/backups`
+      routeName: `${URL}/backups`
     },
     {
       title: 'Settings',
-      routeName: `databases/detail/settings`
+      routeName: `${URL}/settings`
     }
   ];
 
