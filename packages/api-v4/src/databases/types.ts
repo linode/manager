@@ -18,7 +18,7 @@ export type DatabaseStatus = 'initializing' | 'ready' | 'error' | 'unknown';
 
 export type DatabaseBackupStatus =
   | 'running'
-  | 'started'
+  | 'starting'
   | 'failed'
   | 'succeeded'
   | 'unknown';
@@ -76,6 +76,7 @@ export interface Database {
 export interface CreateDatabasePayload {
   label?: string;
   tags?: string[];
+  region: string;
   maintenance_schedule?: DatabaseMaintenanceSchedule;
   type: string;
   root_password: string;
