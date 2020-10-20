@@ -253,7 +253,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         selectedVlanLabel={selectedVlanLabel}
         linodeId={linodeId}
         closeDialog={() => toggleRemoveModal(false)}
-        resetInterfaces={requestInterfaces}
+        refreshInterfaces={requestInterfaces}
       />
       <AttachVlanDrawer
         open={drawerOpen}
