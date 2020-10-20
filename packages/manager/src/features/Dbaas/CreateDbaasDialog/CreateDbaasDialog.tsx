@@ -1,15 +1,25 @@
 import * as React from 'react';
 import { useFormik } from 'formik';
+import { useHistory } from 'react-router-dom';
+
 import Dialog from 'src/components/Dialog';
 import { dbaasContext } from 'src/context';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
+import TextField from 'src/components/TextField';
 
 import createDatabaseSchema from '@linode/api-v4/lib/databases/databases.schema';
 import {
   DatabaseMaintenanceSchedule,
   CreateDatabasePayload
 } from '@linode/api-v4/lib/databases/types';
+
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {},
@@ -27,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const CreateDbaasDialog: React.FC<{}> = _ => {
   const context = React.useContext(dbaasContext);
   const classes = useStyles();
+  const history = useHistory();
 
   const { resetForm, ...formik } = useFormik({
     initialValues: {
@@ -68,7 +79,24 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
       payload.tags = undefined;
     }
 
-    // createDbaas(payload).then().catch(err => {});
+    // createDbaas(payload)
+    //   .then(response => {
+    //     formik.setSubmitting(false);
+    //     context.close();
+    //     history.push('/databases');
+    //   })
+    //   .catch(err => {
+    //     const mapErrorToStatus = (generalError: string) =>
+    //       formik.setStatus({ generalError });
+
+    //     formik.setSubmitting(false);
+    //     handleFieldErrors(formik.setErrors, err);
+    //     handleGeneralErrors(
+    //       mapErrorToStatus,
+    //       err,
+    //       'An unexpected error occurred.'
+    //     );
+    //   });
   };
 
   return (
@@ -80,9 +108,20 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
       fullHeight
       maxWidth="md"
     >
-      {/*
-        Input for label
-
+      {!!formik.status && <Notice error text={formik.status.generalError} />}
+      <form className={classes.form} onSubmit={formik.handleSubmit}>
+        <div className={classes.formSection} data-testid="label-input">
+          <TextField
+            label="Label"
+            name="label"
+            value={formik.values.label}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            errorText={formik.touched.label ? formik.errors.label : undefined}
+            data-testid="label"
+          />
+        </div>
+        {/*
         Select dropdown for region
 
         Database plans
@@ -93,6 +132,15 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
 
         Select dropdown for adding tags
     */}
+        <Button
+          onClick={() => formik.handleSubmit()}
+          buttonType="primary"
+          loading={formik.isSubmitting}
+          data-testid="submit-vlan-form"
+        >
+          Create Database
+        </Button>
+      </form>
     </Dialog>
   );
 };
