@@ -88,14 +88,7 @@ const vlanHeaders = [
 ];
 
 export const LinodeVLANs: React.FC<CombinedProps> = props => {
-  const {
-    configs,
-    linodeId,
-    linodeLabel,
-    linodeRegion,
-    interfacesList,
-    readOnly
-  } = props;
+  const { configs, linodeId, linodeLabel, linodeRegion, readOnly } = props;
 
   const classes = useStyles();
 
@@ -104,6 +97,9 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     number | undefined
   >(undefined);
   const [selectedVlanLabel, setSelectedVlanLabel] = React.useState<string>('');
+  const [interfacesList, setInterfacesList] = React.useState<LinodeInterface[]>(
+    []
+  );
 
   const { vlans, detachVlan } = useVlans();
 
@@ -112,6 +108,12 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     requestInterfaces
   } = useInterfaces();
   const thisLinodeInterfaces = reduxInterfacesObject[linodeId];
+
+  React.useEffect(() => {
+    if (thisLinodeInterfaces) {
+      setInterfacesList(Object.values(thisLinodeInterfaces.itemsById));
+    }
+  }, [thisLinodeInterfaces]);
 
   const { _loading } = useReduxLoad(['vlans']);
 
@@ -126,7 +128,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
 
   const vlanData = React.useMemo(
     () =>
-      Object.values(interfacesList ?? {})
+      interfacesList
         .map(thisInterface => {
           // The interface is tied to the linode. If the interface has a vlan_id, we want to grab that VLAN from Redux
           const thisVlan = vlans.itemsById[thisInterface.vlan_id];
@@ -231,7 +233,6 @@ interface LinodeContextProps {
   linodeLabel: string;
   linodeRegion: string;
   configs: Config[];
-  interfacesList: LinodeInterface[];
   readOnly: boolean;
 }
 
@@ -240,7 +241,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeLabel: linode.label,
   linodeRegion: linode.region,
   configs: linode._configs,
-  interfacesList: linode._interfaces,
   readOnly: linode._permissions === 'read_only'
 }));
 
