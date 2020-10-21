@@ -13,8 +13,7 @@ import useReduxLoad from 'src/hooks/useReduxLoad';
 
 type CombinedProps = RouteComponentProps<{}> & VLANProps;
 
-const VlanLanding: React.FC<CombinedProps> = props => {
-  const { deleteVlan } = props;
+const VlanLanding: React.FC<CombinedProps> = () => {
   const { vlans } = useVlans();
   const context = React.useContext(vlanContext);
 
@@ -92,7 +91,6 @@ const VlanLanding: React.FC<CombinedProps> = props => {
       />
       <VlanDialog
         open={modalOpen}
-        deleteVlan={deleteVlan}
         selectedVlanID={selectedVlanID}
         selectedVlanLabel={selectedVlanLabel}
         closeDialog={() => toggleModal(false)}
