@@ -62,6 +62,7 @@ export interface Tab {
 interface Props {
   tabs: Tab[];
   [index: string]: any;
+  noLink?: boolean; // @todo: remove this prop if we use NavTab widely.
 }
 
 type CombinedProps = Props;
@@ -72,16 +73,23 @@ export const TabLinkList: React.FC<CombinedProps> = props => {
 
   return (
     <TabList className={classes.tabList}>
-      {tabs.map((tab, _index) => (
-        <Tab
-          className={classes.tab}
-          key={`tab-${_index}`}
-          as={Link}
-          to={tab.routeName}
-        >
-          {tab.title}
-        </Tab>
-      ))}
+      {tabs.map((tab, _index) => {
+        // @todo: remove this if we use NavTab widely.
+        const extraTemporaryProps: any = props.noLink
+          ? {}
+          : { as: Link, to: tab.routeName };
+
+        return (
+          <Tab
+            className={classes.tab}
+            key={`tab-${_index}`}
+            // @todo: remove this if we use NavTab widely.
+            {...extraTemporaryProps}
+          >
+            {tab.title}
+          </Tab>
+        );
+      })}
     </TabList>
   );
 };
