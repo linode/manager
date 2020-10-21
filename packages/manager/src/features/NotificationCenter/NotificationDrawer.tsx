@@ -13,6 +13,7 @@ import usePreferences from 'src/hooks/usePreferences';
 import IconButton from 'src/components/core/IconButton';
 import { NotificationData } from './NotificationData/useNotificationData';
 import { ContentRow, NotificationItem } from './NotificationSection';
+import Tooltip from 'src/components/core/Tooltip';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -72,19 +73,11 @@ export const NotificationDrawer: React.FC<Props> = props => {
   );
 
   const handleToggleView = () => {
+    updatePreferences({
+      notification_drawer_view: chronologicalView ? 'grouped' : 'list'
+    });
     setChronologicalView(currentView => !currentView);
   };
-
-  React.useEffect(() => {
-    const newPreference = chronologicalView ? 'list' : 'grouped';
-    if (newPreference !== currentView) {
-      updatePreferences({
-        notification_drawer_view: newPreference
-      });
-    }
-
-    // eslint-disable-next-line
-  }, [chronologicalView, currentView]);
 
   const chronologicalNotificationList = React.useMemo(() => {
     return [
@@ -99,15 +92,16 @@ export const NotificationDrawer: React.FC<Props> = props => {
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
       {balance > 0 ? <PastDue balance={balance} /> : null}
       <div id="viewToggle" className={classes.actionHeader}>
-        <IconButton
-          aria-label="Toggle chronological display"
-          aria-describedby={'viewToggle'}
-          title={`Toggle chronological display`}
-          onClick={handleToggleView}
-          disableRipple
-        >
-          <Clock />
-        </IconButton>
+        <Tooltip title="Toggle chronological display" placement="left">
+          <IconButton
+            aria-label="Toggle chronological display"
+            aria-describedby={'viewToggle'}
+            onClick={handleToggleView}
+            disableRipple
+          >
+            <Clock />
+          </IconButton>
+        </Tooltip>
       </div>
 
       {chronologicalView ? (

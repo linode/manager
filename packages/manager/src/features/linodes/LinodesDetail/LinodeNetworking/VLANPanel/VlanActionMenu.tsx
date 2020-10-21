@@ -67,6 +67,7 @@ export interface ActionHandlers {
 interface Props extends ActionHandlers {
   vlanID: number;
   vlanLabel: string;
+  readOnly: boolean;
 }
 
 type CombinedProps = Props;
@@ -77,7 +78,7 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const history = useHistory();
 
-  const { vlanID, vlanLabel, triggerRemoveVlan } = props;
+  const { vlanID, vlanLabel, triggerRemoveVlan, readOnly } = props;
 
   const actions = [
     {
@@ -93,7 +94,8 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
       title: 'Remove',
       onClick: () => {
         triggerRemoveVlan(vlanID, vlanLabel);
-      }
+      },
+      disabled: readOnly
     }
   ];
 
@@ -107,6 +109,7 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
               actionText={action.title}
               className={action.className}
               onClick={action.onClick}
+              disabled={action.disabled}
             />
           );
         })}

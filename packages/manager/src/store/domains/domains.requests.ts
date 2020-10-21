@@ -7,15 +7,12 @@ import {
   getDomains,
   updateDomain as _updateDomain
 } from '@linode/api-v4/lib/domains';
-import { getUserPreferences } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Dispatch } from 'redux';
-import { LARGE_ACCOUNT_THRESHOLD } from 'src/constants';
-import { updateUserPreferences } from 'src/store/preferences/preferences.requests';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
-import { ThunkActionCreator, ThunkDispatch } from '../types';
+import { ThunkActionCreator } from '../types';
 import {
   createDomainActions,
   deleteDomainActions,
@@ -47,14 +44,11 @@ export const updateDomain = createRequestThunk<
 );
 
 export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
-  dispatch: Dispatch<any>,
-  getState
+  dispatch: Dispatch<any>
 ) => {
   dispatch(getDomainsActions.started());
 
-  return getAll<Domain>(getDomains, undefined, (results: number) =>
-    markAccountAsLarge(results, dispatch, getState)
-  )({}, {})
+  return getAll<Domain>(getDomains, undefined)({}, {})
     .then(domains => {
       dispatch(getDomainsActions.done({ result: domains }));
       return domains.data;
@@ -83,39 +77,3 @@ export const getDomainsPage = createRequestThunk(
   getDomainsPageActions,
   ({ params, filters }) => getDomains(params, filters)
 );
-
-// @todo export and use in linodes.requests if necessary
-const markAccountAsLarge = (
-  results: number,
-  dispatch: ThunkDispatch,
-  getState: () => any
-) => {
-  const isMarkedAsLargeAccount =
-    getState().preferences?.data?.is_large_account ?? false;
-
-  if (results >= LARGE_ACCOUNT_THRESHOLD) {
-    // If we haven't already marked this account as large, do that here.
-    // Conversely, if it's a large account that has become small, update
-    // preferences to reflect that.
-    // @todo remove all this logic once ARB-2091 is merged.
-    if (!isMarkedAsLargeAccount) {
-      getUserPreferences().then(response => {
-        const updatedPreferences = {
-          ...response,
-          is_large_account: true
-        };
-        dispatch(updateUserPreferences(updatedPreferences));
-      });
-    }
-  } else {
-    if (isMarkedAsLargeAccount) {
-      getUserPreferences().then(response => {
-        const updatedPreferences = {
-          ...response,
-          is_large_account: false
-        };
-        dispatch(updateUserPreferences(updatedPreferences));
-      });
-    }
-  }
-};

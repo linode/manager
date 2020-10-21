@@ -12,6 +12,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { getInterfaces } from '@linode/api-v4/lib/linodes/interfaces';
 import VlanTableRow from './VlanTableRow';
+import { AttachVlanDrawer } from './AttachVlanDrawer';
 import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
 import RemoveVlanDialog from './RemoveVlanDialog';
 import useReduxLoad from 'src/hooks/useReduxLoad';
@@ -21,6 +22,7 @@ import useFlags from 'src/hooks/useFlags';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { APIError } from '@linode/api-v4/lib/types';
+import { VLAN } from '@linode/api-v4/lib/vlans/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -60,7 +62,7 @@ const vlanHeaders = [
     label: 'Label',
     dataColumn: 'description',
     sortable: true,
-    widthPercent: 25
+    widthPercent: 20
   },
   {
     label: 'Address',
@@ -78,23 +80,23 @@ const vlanHeaders = [
     label: 'Linodes',
     dataColumn: 'linodes',
     sortable: false,
-    widthPercent: 25
+    widthPercent: 55
   },
   {
     label: 'Action Menu',
     visuallyHidden: true,
     dataColumn: '',
     sortable: false,
-    widthPercent: 35
+    widthPercent: 10
   }
 ];
 
 export const LinodeVLANs: React.FC<CombinedProps> = props => {
-  const { configs, linodeId, readOnly } = props;
+  const { configs, linodeId, linodeLabel, linodeRegion, readOnly } = props;
 
   const classes = useStyles();
 
-  const [modalOpen, toggleModal] = React.useState<boolean>(false);
+  const [removeModalOpen, toggleRemoveModal] = React.useState<boolean>(false);
   const [selectedVlanID, setSelectedVlanID] = React.useState<
     number | undefined
   >(undefined);
@@ -114,7 +116,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     number
   >(0);
 
-  const { vlans, disconnectVlan } = useVlans();
+  const { vlans, detachVlan } = useVlans();
 
   const { account } = useAccountManagement();
   const flags = useFlags();
@@ -128,7 +130,6 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
   const { _loading } = useReduxLoad(['vlans'], undefined, vlansEnabled);
 
   const requestInterfaces = React.useCallback(() => {
-    setInterfaceDataLoading(true);
     setInterfaceRequestError(undefined);
 
     getInterfaces(linodeId)
@@ -149,9 +150,19 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
       });
   }, [linodeId]);
 
+  // Local state to manage drawer for attaching VLANs.
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [drawerError, setDrawerError] = React.useState<string | null>(null);
+
+  const handleOpenDrawer = () => {
+    setDrawerError(null);
+    setDrawerOpen(true);
+  };
+
   React.useEffect(() => {
     // Request interfaces upon page first loading.
     if (vlansEnabled && interfacesLastUpdated === 0) {
+      setInterfaceDataLoading(true);
       requestInterfaces();
     }
   }, [vlansEnabled, interfacesLastUpdated, requestInterfaces, linodeId]);
@@ -160,26 +171,34 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     () =>
       interfaceData
         .map(thisInterface => {
+          // The interface is tied to the linode. If the interface has a vlan_id, we want to grab that VLAN from Redux
           const thisVlan = vlans.itemsById[thisInterface.vlan_id];
-
-          if (thisVlan) {
-            return {
-              ...thisVlan,
-              ip_address: thisInterface.ip_address,
-              interfaceName: getInterfaceName(thisInterface.id, configs)
-            };
-          } else {
+          if (!thisVlan) {
             return undefined;
           }
+
+          return {
+            ...thisVlan,
+            ip_address: thisInterface.ip_address,
+            interfaceName: getInterfaceName(thisInterface.id, configs),
+            currentLinodeId: linodeId,
+            readOnly
+          };
         })
-        .filter(Boolean),
-    [interfaceData, vlans.itemsById, configs]
+        .filter(Boolean) as VlanData[],
+    [interfaceData, vlans.itemsById, configs, linodeId, readOnly]
+  );
+
+  const vlansAvailableForAttaching = getVlansAvailableForAttaching(
+    Object.values(vlans.itemsById),
+    vlanData,
+    linodeRegion
   );
 
   const handleOpenRemoveVlanModal = (id: number, label: string) => {
     setSelectedVlanID(id);
     setSelectedVlanLabel(label);
-    toggleModal(true);
+    toggleRemoveModal(true);
   };
 
   const handlers: VlanHandlers = {
@@ -214,7 +233,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
-            onClick={() => null}
+            onClick={handleOpenDrawer}
             label="Attach a VLAN..."
             disabled={readOnly}
           />
@@ -228,13 +247,23 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         initialOrder={{ order: 'asc', orderBy: 'label' }}
       />
       <RemoveVlanDialog
-        open={modalOpen}
-        removeVlan={disconnectVlan}
+        open={removeModalOpen}
+        removeVlan={detachVlan}
         selectedVlanID={selectedVlanID}
         selectedVlanLabel={selectedVlanLabel}
         linodeId={linodeId}
-        closeDialog={() => toggleModal(false)}
-        resetInterfaces={requestInterfaces}
+        closeDialog={() => toggleRemoveModal(false)}
+        refreshInterfaces={requestInterfaces}
+      />
+      <AttachVlanDrawer
+        open={drawerOpen}
+        closeDrawer={() => setDrawerOpen(false)}
+        error={drawerError}
+        linodeLabel={linodeLabel}
+        linodeId={linodeId}
+        vlans={vlansAvailableForAttaching}
+        readOnly={readOnly}
+        refreshInterfaces={requestInterfaces}
       />
     </div>
   ) : null;
@@ -242,12 +271,16 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
 
 interface LinodeContextProps {
   linodeId: number;
+  linodeLabel: string;
+  linodeRegion: string;
   configs: Config[];
   readOnly: boolean;
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
+  linodeLabel: linode.label,
+  linodeRegion: linode.region,
   configs: linode._configs,
   readOnly: linode._permissions === 'read_only'
 }));
@@ -271,3 +304,24 @@ export const getInterfaceName = (
   }
   return null;
 };
+
+const getVlansAvailableForAttaching = (
+  vlans: VLAN[],
+  vlanData: VlanData[],
+  linodeRegion: string
+) => {
+  const thisLinodeVlanIds = vlanData.map((vlanDatum: VlanData) => vlanDatum.id); // Get array of IDs of VLANs attached to this linode.
+
+  return vlans.filter(
+    (vlanItem: VLAN) =>
+      !thisLinodeVlanIds.includes(vlanItem.id) &&
+      vlanItem.region === linodeRegion
+  );
+};
+
+export interface VlanData extends VLAN {
+  ip_address: string;
+  interfaceName: string | null;
+  currentLinodeId: number;
+  readOnly: boolean;
+}

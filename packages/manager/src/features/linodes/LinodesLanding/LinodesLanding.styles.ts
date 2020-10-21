@@ -55,17 +55,17 @@ const styles = (theme: Theme) =>
     },
     chipRunning: {
       '&:before': {
-        backgroundColor: theme.color.green
+        backgroundColor: theme.cmrIconColors.iGreen
       }
     },
     chipPending: {
       '&:before': {
-        backgroundColor: theme.color.orange
+        backgroundColor: theme.cmrIconColors.iOrange
       }
     },
     chipOffline: {
       '&:before': {
-        backgroundColor: theme.color.grey10
+        backgroundColor: theme.cmrIconColors.iGrey
       }
     },
     clearFilters: {

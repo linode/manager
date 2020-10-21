@@ -50,8 +50,7 @@ export const linodeInTransition = (
 export const transitionText = (
   status: string,
   linodeId: number,
-  recentEvent?: Event,
-  cmr?: boolean
+  recentEvent?: Event
 ): string => {
   // `linode_mutate` is a special case, because we want to display
   // "Upgrading" instead of "Mutate".
@@ -62,10 +61,11 @@ export const transitionText = (
   }
 
   if (recentEvent?.action === 'linode_clone') {
-    if (cmr === true) {
-      return buildLinodeCloneTransitionText(recentEvent, linodeId, true);
-    } else {
-      return buildLinodeCloneTransitionText(recentEvent, linodeId);
+    if (isPrimaryEntity(recentEvent, linodeId)) {
+      return 'Cloning';
+    }
+    if (isSecondaryEntity(recentEvent, linodeId)) {
+      return 'Creating';
     }
   }
 

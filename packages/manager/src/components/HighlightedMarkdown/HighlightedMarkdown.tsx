@@ -8,11 +8,11 @@ import nginx from 'highlight.js/lib/languages/nginx';
 import yaml from 'highlight.js/lib/languages/yaml';
 import 'highlight.js/styles/lightfair.css';
 import * as React from 'react';
-import { Converter } from 'showdown';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 
 // Register all languages we intend to use
 hljs.registerLanguage('apache', apache);
@@ -59,14 +59,9 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => 
     }
   }, [language]);
 
-  const html = React.useMemo(() => {
-    return new Converter({
-      simplifiedAutoLink: true,
-      openLinksInNewWindow: true
-    }).makeHtml(textOrMarkdown);
-  }, [textOrMarkdown]);
+  const unsafe_parsedMarkdown = unsafe_MarkdownIt.render(textOrMarkdown);
 
-  const sanitizedHtml = sanitizeHTML(html);
+  const sanitizedHtml = sanitizeHTML(unsafe_parsedMarkdown);
 
   // Adapted from https://stackblitz.com/edit/react-highlighted-markdown?file=highlighted-markdown.tsx
   // All the safety checking is due to a reported error from certain versions of FireFox.

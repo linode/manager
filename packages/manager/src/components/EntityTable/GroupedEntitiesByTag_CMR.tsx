@@ -29,12 +29,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: `${theme.spacing(2) + theme.spacing(1) / 2}px 0 ${theme.spacing(
         1
       ) + 2}px`,
-      borderBottom: 'none'
+      borderBottom: 'none',
+      borderTop: 'none'
     }
   },
   groupContainer: {
     [theme.breakpoints.up('md')]: {
       '& $tagHeaderRow > td': {
+        borderTop: 'none',
         padding: `${theme.spacing(1) + 2}px 0`
       }
     }

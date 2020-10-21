@@ -2,11 +2,11 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import TabLinkList from 'src/components/TabLinkList';
 import { withLinodeDetailContext } from './linodeDetailContext';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 const LinodeSummary_CMR = React.lazy(() =>
