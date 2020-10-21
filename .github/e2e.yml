@@ -1,0 +1,47 @@
+name: Run Cypress E2E Tests
+on:
+  push:
+    branches:
+      - M3-4577-github-actions-e2e
+jobs:
+  run-cypress-e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4, 5, 6, 7, 8]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+      - run: |
+            echo "REACT_APP_LOGIN_ROOT=https://login.linode.com" >> ./packages/manager/.env
+            echo "REACT_APP_API_ROOT=https://api.linode.com/v4" >> ./packages/manager/.env
+            echo "REACT_APP_APP_ROOT=http://localhost:3000" >> ./packages/manager/.env
+            echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
+            echo "REACT_APP_CLIENT_ID=${{ secrets.REACT_APP_ClIENT_ID }}e" >> ./packages/manager/.env
+            echo "MANAGER_OAUTH=${{ secrets.MANAGER_OAUTH }}" >> ./packages/manager/.env
+            echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
+            echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+            yarn up &
+       
+      - name: Run tests
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: packages/manager
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 1000
+          install: false
+          browser: chrome
+          headless: true
+          record: true
+          parallel: true
