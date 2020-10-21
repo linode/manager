@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       backgroundColor: '#3683dc',
       '& span': {
-        color: theme.color.white
+        color: '#fff'
       }
     },
     '& span': {
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     '&:hover': {
       backgroundColor: '#3683dc',
-      color: theme.color.white
+      color: '#fff'
     },
     '&[disabled]': {
       color: '#cdd0d5',

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import DatabaseDetailNavigation from './DatabaseDetailNavigation';
 import DatabaseEntityDetail from './DatabaseEntityDetail';
 
@@ -15,4 +14,4 @@ const DatabaseDetail: React.FC<CombinedProps> = () => {
   );
 };
 
-export default compose<CombinedProps, {}>(React.memo)(DatabaseDetail);
+export default DatabaseDetail;
