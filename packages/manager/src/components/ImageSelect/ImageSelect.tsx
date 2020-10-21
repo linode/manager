@@ -16,6 +16,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
+import TextField from '../core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -37,7 +39,7 @@ interface Props {
   error?: string;
   variant?: Variant;
   disabled?: boolean;
-  handleSelectImage: (selection?: string) => void;
+  handleSelectImage: (selection?: any) => void;
   classNames?: string;
 }
 
@@ -45,7 +47,7 @@ export interface ImageProps
   extends Omit<BaseSelectProps, 'onChange' | 'variant'> {
   selectedImageID?: string;
   disabled: boolean;
-  handleSelectImage: (selection?: string) => void;
+  handleSelectImage: (selection?: any) => void;
   images: Image[];
   error?: string;
 }
@@ -149,12 +151,8 @@ export const ImageSelect: React.FC<Props> = props => {
 
   const options = imagesToGroupedItems(filteredImages);
 
-  const onChange = (selection: ImageItem | null) => {
-    if (selection === null) {
-      return handleSelectImage(undefined);
-    }
-
-    return handleSelectImage(selection.value);
+  const onChange = (event: React.ChangeEvent) => {
+    return handleSelectImage(event.target);
   };
 
   return (
@@ -167,7 +165,14 @@ export const ImageSelect: React.FC<Props> = props => {
           <Grid container item direction="column">
             <Grid container item direction="row">
               <Grid item xs={12}>
-                <Select
+              <Autocomplete
+                id='image-select-test'
+                options={options as any}
+                onChange={onChange}
+                getOptionLabel={(option: Image) => option.label}
+                renderInput={(params: any) => <TextField {...params} label="Images" placeholder="Select an Image" variant="outlined" />}
+              />
+                {/* <Select
                   disabled={disabled}
                   label="Images"
                   isLoading={_loading}
@@ -182,7 +187,7 @@ export const ImageSelect: React.FC<Props> = props => {
                   components={{ Option: ImageOption, SingleValue }}
                   {...reactSelectProps}
                   className={classNames}
-                />
+                /> */}
               </Grid>
             </Grid>
           </Grid>
