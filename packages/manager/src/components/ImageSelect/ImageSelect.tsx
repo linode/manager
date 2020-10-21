@@ -5,8 +5,8 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
-import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import { GroupType, Item } from 'src/components/EnhancedSelect';
+// import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import { useImages } from 'src/hooks/useImages';
@@ -15,8 +15,8 @@ import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { distroIcons } from './icons';
-import ImageOption from './ImageOption';
-import TextField from '../core/TextField';
+// import ImageOption from './ImageOption';
+import TextField from '../TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -117,14 +117,12 @@ export const imagesToGroupedItems = (images: Image[]) => {
 export const ImageSelect: React.FC<Props> = props => {
   const {
     disabled,
-    error,
     handleSelectImage,
-    images,
     selectedImageID,
+    images,
     title,
     variant,
-    classNames,
-    ...reactSelectProps
+    classNames
   } = props;
   const classes = useStyles();
 
@@ -132,10 +130,10 @@ export const ImageSelect: React.FC<Props> = props => {
 
   // Check for request errors in Redux
   const { images: _images } = useImages();
-  const imageError = _images?.error?.read
-    ? getAPIErrorOrDefault(_images.error.read, 'Unable to load Images')[0]
-        .reason
-    : undefined;
+  // const imageError = _images?.error?.read
+  //   ? getAPIErrorOrDefault(_images.error.read, 'Unable to load Images')[0]
+  //       .reason
+  //   : undefined;
 
   const filteredImages = images.filter(thisImage => {
     switch (variant) {
@@ -166,28 +164,17 @@ export const ImageSelect: React.FC<Props> = props => {
             <Grid container item direction="row">
               <Grid item xs={12}>
               <Autocomplete
-                id='image-select-test'
-                options={options as any}
+                id='image-select'
+                options={filteredImages as any}
+                groupBy={imagesToGroupedItems => imagesToGroupedItems.vendor}
                 onChange={onChange}
                 getOptionLabel={(option: Image) => option.label}
                 renderInput={(params: any) => <TextField {...params} label="Images" placeholder="Select an Image" variant="outlined" />}
+                style={{width: 415}}
+                disabled={disabled}
+                loading={_loading}
+                className={classNames}
               />
-                {/* <Select
-                  disabled={disabled}
-                  label="Images"
-                  isLoading={_loading}
-                  placeholder="Choose an image"
-                  options={options}
-                  onChange={onChange}
-                  value={getSelectedOptionFromGroupedOptions(
-                    selectedImageID || '',
-                    options
-                  )}
-                  errorText={error || imageError}
-                  components={{ Option: ImageOption, SingleValue }}
-                  {...reactSelectProps}
-                  className={classNames}
-                /> */}
               </Grid>
             </Grid>
           </Grid>
