@@ -1,29 +1,35 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
-import { VlanActionsProps } from 'src/containers/vlans.container';
+import useVlans from 'src/hooks/useVlans';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-interface Props extends Pick<VlanActionsProps, 'deleteVlan'> {
+interface Props {
   open: boolean;
   closeDialog: () => void;
   selectedVlanID?: number;
   selectedVlanLabel: string;
+  redirectToLanding?: boolean;
 }
 
 type CombinedProps = Props;
 
 const VlanDialog: React.FC<CombinedProps> = props => {
+  const { deleteVlan } = useVlans();
+
+  const history = useHistory();
+
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
 
   const {
     open,
     closeDialog,
-    deleteVlan,
     selectedVlanID,
-    selectedVlanLabel: label
+    selectedVlanLabel: label,
+    redirectToLanding
   } = props;
 
   /** reset error on open */
@@ -46,6 +52,12 @@ const VlanDialog: React.FC<CombinedProps> = props => {
       .then(_ => {
         setSubmitting(false);
         closeDialog();
+
+        if (redirectToLanding) {
+          history.push({
+            pathname: `/vlans/`
+          });
+        }
       })
       .catch(e => {
         setSubmitting(false);
