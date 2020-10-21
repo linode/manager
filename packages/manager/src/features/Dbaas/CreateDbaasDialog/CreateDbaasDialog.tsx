@@ -1,36 +1,30 @@
-import * as React from 'react';
-import { useFormik } from 'formik';
-import { useHistory } from 'react-router-dom';
-
-import Dialog from 'src/components/Dialog';
-import { dbaasContext } from 'src/context';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
-import TextField from 'src/components/TextField';
-
 import createDatabaseSchema from '@linode/api-v4/lib/databases/databases.schema';
-import {
-  DatabaseMaintenanceSchedule,
-  CreateDatabasePayload
-} from '@linode/api-v4/lib/databases/types';
+import { CreateDatabasePayload } from '@linode/api-v4/lib/databases/types';
+import { useFormik } from 'formik';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
+import Button from 'src/components/Button';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Dialog from 'src/components/Dialog';
+import RegionSelect, {
+  ExtendedRegion
+} from 'src/components/EnhancedSelect/variants/RegionSelect';
+import Notice from 'src/components/Notice';
+import TagsInput from 'src/components/TagsInput';
+import TextField from 'src/components/TextField';
+import { dcDisplayNames } from 'src/constants';
+import { dbaasContext } from 'src/context';
+import useRegions from 'src/hooks/useRegions';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Typography from 'src/components/core/Typography';
 
-import {
-  handleFieldErrors,
-  handleGeneralErrors
-} from 'src/utilities/formikErrorUtils';
+const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {},
   formSection: {
     marginBottom: theme.spacing(3)
-  },
-  helperText: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(),
-    lineHeight: 1.5,
-    fontSize: '1rem'
   }
 }));
 
@@ -38,6 +32,19 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
   const context = React.useContext(dbaasContext);
   const classes = useStyles();
   const history = useHistory();
+  const regions = useRegions();
+
+  const regionsWithDbaas: ExtendedRegion[] = regions.entities
+    //   .filter(thisRegion => thisRegion.capabilities.includes('Databases')) // temporarily commented out until Capabilities is squared away
+    .map(r => ({ ...r, display: dcDisplayNames[r.id] }));
+
+  const handleRegionSelect = (regionID: string) => {
+    formik.setFieldValue('region', regionID);
+  };
+
+  const maintenanceWindowSelectOptions: Item[] = [];
+  const maintenanceWindowHelperText =
+    'Select the time of day you’d prefer maintenance to occur. On Standard Availability plans, there may be downtime during this window.';
 
   const { resetForm, ...formik } = useFormik({
     initialValues: {
@@ -55,6 +62,10 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
     validateOnChange: false,
     onSubmit: values => submitForm(values)
   });
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    formik.setFieldValue('root_password', e.target.value);
+  };
 
   /** Reset errors and state when the modal opens */
   React.useEffect(() => {
@@ -109,6 +120,9 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
       maxWidth="md"
     >
       {!!formik.status && <Notice error text={formik.status.generalError} />}
+      <Typography variant="subtitle2" style={{ fontWeight: 600 }}>
+        Create a cloud-based MySQL database.
+      </Typography>
       <form className={classes.form} onSubmit={formik.handleSubmit}>
         <div className={classes.formSection} data-testid="label-input">
           <TextField
@@ -121,17 +135,69 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
             data-testid="label"
           />
         </div>
+        <div className={classes.formSection} data-testid="region-select">
+          <RegionSelect
+            label={'Region'}
+            placeholder={'Regions'}
+            errorText={formik.errors.region}
+            handleSelection={handleRegionSelect}
+            regions={regionsWithDbaas}
+            selectedID={formik.values.region}
+          />
+        </div>
         {/*
-        Select dropdown for region
-
         Database plans
-
-        Password field
-
-        Select dropdown for maintenance window
-
-        Select dropdown for adding tags
-    */}
+        */}
+        <PasswordInput
+          name="password"
+          label="Root Password"
+          type="password"
+          data-qa-add-password
+          value={formik.values.root_password}
+          error={!!formik.errors.root_password}
+          errorText={formik.errors.root_password}
+          onChange={handlePasswordChange}
+          hideValidation
+          required
+        />
+        <div
+          className={classes.formSection}
+          data-testid="maintenance-window-select"
+        >
+          <Select
+            options={maintenanceWindowSelectOptions}
+            defaultValue={maintenanceWindowSelectOptions[0]}
+            onChange={}
+            name="maintenanceWindow"
+            id="maintenanceWindow"
+            small
+            label="Maintenance Window"
+            isClearable={false}
+            textFieldProps={{
+              helperTextPosition: 'top',
+              helperText: maintenanceWindowHelperText
+            }}
+            data-qa-item="maintenanceWindow"
+          />
+        </div>
+        <div className={classes.formSection} data-testid="label-input">
+          <TagsInput
+            tagError={
+              formik.touched.tags
+                ? formik.errors.tags
+                  ? getErrorStringOrDefault(
+                      formik.errors.tags,
+                      'Unable to tag database.'
+                    )
+                  : undefined
+                : undefined
+            }
+            name="tags"
+            label="Tags"
+            onChange={selected => formik.setFieldValue('tags', selected)}
+            value={formik.values.tags}
+          />
+        </div>
         <Button
           onClick={() => formik.handleSubmit()}
           buttonType="primary"
