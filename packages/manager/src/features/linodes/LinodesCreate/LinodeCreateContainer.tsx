@@ -432,10 +432,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }
 
     if (payload.root_pass) {
-      const passwordError = validatePassword(
-        this.props.flags.passwordValidation ?? 'none',
-        payload.root_pass
-      );
+      const passwordError = validatePassword(payload.root_pass);
 
       if (passwordError) {
         this.setState({

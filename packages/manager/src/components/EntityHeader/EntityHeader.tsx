@@ -18,7 +18,7 @@ export interface HeaderProps extends BreadCrumbProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.bg.white
+    backgroundColor: theme.cmrBGColors.bgSecondaryActions
   },
   breadcrumbOuter: {
     display: 'flex',
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     padding: '4px 15px',
     [theme.breakpoints.down('sm')]: {
-      borderBottom: `1px solid ${theme.palette.divider}`
+      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
     }
   },
   breadCrumbDetail: {
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   breadCrumbDetailLanding: {
     padding: '0 15px',
     justifyContent: 'space-between',
-    borderTop: `1px solid ${theme.palette.divider}`
+    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`
   },
   contentOuter: {
     display: 'flex',
@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexWrap: 'nowrap'
     },
     '& .MuiChip-root': {
+      ...theme.applyStatusPillStyles,
       height: 30,
       borderRadius: 15,
       marginTop: 1,
@@ -82,7 +83,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     bodyClassName,
     isSecondary,
     isDetailLanding,
-    headerOnly
+    headerOnly,
+    displayIcon
   } = props;
   const classes = useStyles();
 
@@ -100,6 +102,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
       >
         <HeaderBreadCrumb
           iconType={iconType}
+          displayIcon={displayIcon}
           title={title}
           parentLink={parentLink}
           parentText={parentText}

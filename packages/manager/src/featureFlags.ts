@@ -24,9 +24,10 @@ export interface Flags {
   thirdPartyAuth: boolean;
   cmr: boolean;
   mainContentBanner: MainContentBanner;
-  passwordValidation: PasswordValidationType;
   changelog: Changelog;
   vlans: boolean;
+  cvvRequired: boolean;
+  databases: boolean;
 }
 
 type PromotionalOfferFeature =
@@ -67,5 +68,3 @@ export interface MainContentBanner {
   text: string;
   key: string;
 }
-
-export type PasswordValidationType = 'none' | 'length' | 'complexity';

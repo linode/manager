@@ -29,15 +29,11 @@ export const useAccountManagement = () => {
     (state: ApplicationState) => state.__resources.accountSettings
   );
 
-  /**
-   * @todo After ARB-2091 is merged, update this to something like:
-   * Object.values(state.accountSummary)
-   *   .some(thisEntity => thisEntity > LARGE_ACCOUNT_THRESHOLD)
-   */
   const _isLargeAccount = useSelector(
     (state: ApplicationState) =>
-      state.preferences.data?.is_large_account ?? false
+      state.__resources.accountManagement.isLargeAccount
   );
+
   const _isRestrictedUser = profile.data?.restricted ?? false;
 
   const _hasGrant = (grant: GlobalGrantTypes) =>
