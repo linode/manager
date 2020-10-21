@@ -18,6 +18,7 @@ import useRegions from 'src/hooks/useRegions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Typography from 'src/components/core/Typography';
+import SelectDBPlanPanel from './SelectDBPlanPanel';
 
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
@@ -145,9 +146,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
             selectedID={formik.values.region}
           />
         </div>
-        {/*
-        Database plans
-        */}
+        <SelectDBPlanPanel />
         <PasswordInput
           name="password"
           label="Root Password"
@@ -193,7 +192,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
                 : undefined
             }
             name="tags"
-            label="Tags"
+            label="Add Tags"
             onChange={selected => formik.setFieldValue('tags', selected)}
             value={formik.values.tags}
           />
