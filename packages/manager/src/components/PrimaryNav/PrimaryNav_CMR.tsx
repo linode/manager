@@ -118,12 +118,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
     account?.data?.capabilities ?? []
   );
 
-  const showDatabases = isFeatureEnabled(
-    'Databases',
-    Boolean(flags.databases),
-    account?.data?.capabilities ?? []
-  );
-
   const primaryLinkGroups: {
     group: NavGroup;
     links: PrimaryLink[];
@@ -205,7 +199,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
           {
             display: 'Databases',
             href: '/databases',
-            hide: !showDatabases
+            hide: !flags.databases
           }
         ]
       },
@@ -242,7 +236,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       _isLargeAccount,
       showFirewalls,
       showVlans,
-      showDatabases,
+      flags.databases,
       _isManagedAccount
     ]
   );

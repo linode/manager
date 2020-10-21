@@ -198,12 +198,6 @@ const MainContent: React.FC<CombinedProps> = props => {
     account?.data?.capabilities ?? []
   );
 
-  const showDatabases = isFeatureEnabled(
-    'Databases',
-    Boolean(props.flags.databases),
-    account?.data?.capabilities ?? []
-  );
-
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -320,7 +314,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                         <Route path="/firewalls" component={Firewalls} />
                       )}
                       {showVlans && <Route path="/vlans" component={VLans} />}
-                      {showDatabases && (
+                      {props.flags.databases && (
                         <Route path="/databases" component={Databases} />
                       )}
                       <Redirect exact from="/" to="/dashboard" />
