@@ -66,10 +66,12 @@ export const getDatabaseConnection = (databaseID: number) =>
  * Return a paginated list of available plans/types for MySQL databases
  *
  */
-export const getMySQLTypes = () =>
+export const getMySQLTypes = (params?: any, filters?: any) =>
   Request<Page<DatabaseType>>(
     setURL(`${API_ROOT}/databases/mysql/types`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
   );
 
 /**
