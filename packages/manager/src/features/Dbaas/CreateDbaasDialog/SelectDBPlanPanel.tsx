@@ -16,6 +16,7 @@ import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Chip from 'src/components/core/Chip';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
+import { DatabaseType } from '@linode/api-v4/lib/databases/index';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headingCellContainer: {
@@ -44,7 +45,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const SelectDBPlanPanel: React.FC<{}> = _ => {
+interface Props {
+  databasePlans: DatabaseType[];
+}
+
+type CombinedProps = Props;
+
+export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
+  const { databasePlans } = props;
   const classes = useStyles();
 
   //   const createTabs = (): [Tab[]] => {

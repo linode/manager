@@ -17,8 +17,12 @@ import { dbaasContext } from 'src/context';
 import useRegions from 'src/hooks/useRegions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import FormHelperText from 'src/components/core/FormHelperText';
+import FormControl from 'src/components/core/FormControl';
 import Typography from 'src/components/core/Typography';
 import SelectDBPlanPanel from './SelectDBPlanPanel';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { useDatabaseTypes } from 'src/hooks/useDatabaseTypes';
 
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
@@ -26,6 +30,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   form: {},
   formSection: {
     marginBottom: theme.spacing(3)
+  },
+  chooseDay: {
+    marginRight: theme.spacing(2),
+    midWidth: 150
+  },
+  chooseTime: {
+    marginRight: theme.spacing(2),
+    midWidth: 150
   }
 }));
 
@@ -43,9 +55,31 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
     formik.setFieldValue('region', regionID);
   };
 
+  const maintenanceDayOptions = [
+    ['Sunday', 'Sunday'],
+    ['Monday', 'Monday'],
+    ['Tuesday', 'Tuesday'],
+    ['Wednesday', 'Wednesday'],
+    ['Thursday', 'Thursday'],
+    ['Friday', 'Friday'],
+    ['Saturday', 'Saturday']
+  ];
   const maintenanceWindowSelectOptions: Item[] = [];
   const maintenanceWindowHelperText =
     'Select the time of day you’d prefer maintenance to occur. On Standard Availability plans, there may be downtime during this window.';
+
+  const { databaseTypes, requestDatabaseTypes } = useDatabaseTypes();
+  const { _loading } = useReduxLoad(
+    ['databaseTypes'],
+    undefined,
+    context.isOpen
+  );
+
+  React.useEffect(() => {
+    if (!_loading && databaseTypes.lastUpdated === 0) {
+      requestDatabaseTypes();
+    }
+  });
 
   const { resetForm, ...formik } = useFormik({
     initialValues: {
@@ -146,7 +180,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
             selectedID={formik.values.region}
           />
         </div>
-        <SelectDBPlanPanel />
+        <SelectDBPlanPanel databasePlans={databaseTypes.data ?? []} />
         <PasswordInput
           name="password"
           label="Root Password"
@@ -161,23 +195,36 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
         />
         <div
           className={classes.formSection}
-          data-testid="maintenance-window-select"
+          data-testid="maintenance-window-selects"
         >
-          <Select
-            options={maintenanceWindowSelectOptions}
-            defaultValue={maintenanceWindowSelectOptions[0]}
-            onChange={}
-            name="maintenanceWindow"
-            id="maintenanceWindow"
-            small
-            label="Maintenance Window"
-            isClearable={false}
-            textFieldProps={{
-              helperTextPosition: 'top',
-              helperText: maintenanceWindowHelperText
-            }}
-            data-qa-item="maintenanceWindow"
-          />
+          <Typography variant="h3">Maintenance Window</Typography>
+          <FormHelperText>{maintenanceWindowHelperText}</FormHelperText>
+          <FormControl className={classes.chooseDay}>
+            <Select
+              options={maintenanceDayOptions}
+              defaultValue={maintenanceWindowSelectOptions[0]}
+              onChange={}
+              name="maintenanceDay"
+              id="maintenanceDay"
+              label="Day of Week"
+              placeholder="Choose a day"
+              isClearable={false}
+              data-qa-item="maintenanceDay"
+            />
+          </FormControl>
+          <FormControl className={classes.chooseTime}>
+            <Select
+              options={maintenanceWindowSelectOptions}
+              defaultValue={maintenanceWindowSelectOptions[0]}
+              onChange={}
+              name="maintenanceWindow"
+              id="maintenanceWindow"
+              label="Time of Day"
+              placeholder="Choose a time"
+              isClearable={false}
+              data-qa-item="maintenanceWindow"
+            />
+          </FormControl>
         </div>
         <div className={classes.formSection} data-testid="label-input">
           <TagsInput
