@@ -3,7 +3,7 @@ import * as Factory from 'factory.ts';
 
 export const databaseFactory = Factory.Sync.makeFactory<Database>({
   id: Factory.each(i => i),
-  label: Factory.each(i => `vlan-${i}`),
+  label: Factory.each(i => `database-${i}`),
   status: 'ready',
   // region: 'us-east', @todo add this in when the API supports it
   maintenance_schedule: {
