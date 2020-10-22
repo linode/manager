@@ -212,6 +212,9 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
               {convertMegabytesTo(type.memory, true)}
             </TableCell_CMR>
             <TableCell_CMR data-qa-storage>{type.disk} GB</TableCell_CMR>
+            <TableCell_CMR data-qa-backup>
+              Daily — Included in Plan
+            </TableCell_CMR>
           </TableRow_CMR>
         </Hidden>
         {/* Displays SelectionCard for small screens */}

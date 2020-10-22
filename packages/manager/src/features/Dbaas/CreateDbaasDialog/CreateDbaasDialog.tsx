@@ -64,7 +64,17 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
     ['Friday', 'Friday'],
     ['Saturday', 'Saturday']
   ];
+  const daySelection = maintenanceDayOptions.map((day: string[]) => {
+    const label = day[0];
+    return { label, value: day[1] };
+  });
+
+  const handleDaySelection = (e: Item) => {
+    formik.setFieldValue('day', e.value);
+  };
+
   const maintenanceWindowSelectOptions: Item[] = [];
+
   const maintenanceWindowHelperText =
     'Select the time of day you’d prefer maintenance to occur. On Standard Availability plans, there may be downtime during this window.';
 
@@ -180,7 +190,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
         <div className={classes.formSection} data-testid="region-select">
           <RegionSelect
             label={'Region'}
-            placeholder={''}
+            placeholder={' '}
             errorText={formik.errors.region}
             handleSelection={handleRegionSelect}
             regions={regionsWithDbaas}
@@ -212,9 +222,9 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
           <FormHelperText>{maintenanceWindowHelperText}</FormHelperText>
           <FormControl className={classes.chooseDay}>
             <Select
-              options={maintenanceDayOptions}
-              defaultValue={maintenanceWindowSelectOptions[0]}
-              onChange={}
+              options={daySelection}
+              defaultValue={daySelection[0]}
+              onChange={handleDaySelection}
               name="maintenanceDay"
               id="maintenanceDay"
               label="Day of Week"
