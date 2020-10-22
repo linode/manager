@@ -17,6 +17,7 @@ import accountContainer, {
 import { cleanCVV } from 'src/features/Billing/billingUtils';
 import { getErrorMap, getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import useFlags from 'src/hooks/useFlags';
+import { InputBaseComponentProps } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -222,9 +223,9 @@ export interface CreditCardFormProps extends NumberFormatProps {
   onChange: any;
 }
 
-const creditCardField = (props: CreditCardFormProps) => {
-  const { inputRef, onChange, ...other } = props;
+type CombinedCreditCardFormProps = CreditCardFormProps & InputBaseComponentProps;
 
+const creditCardField: React.FC<CombinedCreditCardFormProps> = ({ inputRef, onChange, ...other }) => {
   return (
     <NumberFormat
       {...other}
@@ -240,6 +241,25 @@ const creditCardField = (props: CreditCardFormProps) => {
     />
   );
 };
+
+// const creditCardField = (props: CreditCardFormProps) => {
+//   const { inputRef, onChange, ...other } = props;
+
+//   return (
+//     <NumberFormat
+//       {...other}
+//       getInputRef={inputRef}
+//       onValueChange={values => {
+//         onChange({
+//           target: {
+//             value: values.value
+//           }
+//         });
+//       }}
+//       format="#### #### #### #######"
+//     />
+//   );
+// };
 
 const enhanced = compose<CombinedProps, Props>(accountContainer());
 

@@ -1,9 +1,7 @@
 import { Image } from '@linode/api-v4/lib/images';
-import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
 import { propOr } from 'ramda';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import TextField from 'src/components/core/TextField';
+import { makeStyles, Theme } from 'src/components/core/styles'
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
@@ -83,15 +81,7 @@ export const ImageSelect: React.FC<CombinedProps> = props => {
       alignItems="flex-start"
     >
       <Grid item className={classes.selectContainer}>
-
-      <Autocomplete
-        id='image-select-test'
-        options={renderedImages as any}
-        getOptionLabel={(option: Image) => option.label}
-        renderInput={(params: any) => <TextField {...params} label="Select an Image" />}
-      />
-
-        {/* <Select
+        <Select
           id={'image-select'}
           isLoading={_loading}
           value={value}
@@ -105,7 +95,7 @@ export const ImageSelect: React.FC<CombinedProps> = props => {
             required
           }}
           label={label || 'Image'}
-        /> */}
+        />
       </Grid>
       <Grid item xs={1}>
         <HelpIcon

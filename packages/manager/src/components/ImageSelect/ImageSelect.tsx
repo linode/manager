@@ -9,11 +9,11 @@ import { GroupType, Item } from 'src/components/EnhancedSelect';
 // import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import { useImages } from 'src/hooks/useImages';
+// import { useImages } from 'src/hooks/useImages';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+// import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+// import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { distroIcons } from './icons';
 // import ImageOption from './ImageOption';
 import TextField from '../TextField';
@@ -118,7 +118,7 @@ export const ImageSelect: React.FC<Props> = props => {
   const {
     disabled,
     handleSelectImage,
-    selectedImageID,
+    // selectedImageID,
     images,
     title,
     variant,
@@ -129,7 +129,7 @@ export const ImageSelect: React.FC<Props> = props => {
   const { _loading } = useReduxLoad(['images']);
 
   // Check for request errors in Redux
-  const { images: _images } = useImages();
+  // const { images: _images } = useImages();
   // const imageError = _images?.error?.read
   //   ? getAPIErrorOrDefault(_images.error.read, 'Unable to load Images')[0]
   //       .reason
@@ -147,7 +147,7 @@ export const ImageSelect: React.FC<Props> = props => {
     }
   });
 
-  const options = imagesToGroupedItems(filteredImages);
+  // const options = imagesToGroupedItems(filteredImages);
 
   const onChange = (event: React.ChangeEvent) => {
     return handleSelectImage(event.target);
