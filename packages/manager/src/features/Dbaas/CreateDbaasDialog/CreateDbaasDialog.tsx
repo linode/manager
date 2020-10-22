@@ -75,6 +75,8 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
     context.isOpen
   );
 
+  const [selectedPlanId, setSelectedPlanId] = React.useState<string>('');
+
   React.useEffect(() => {
     if (!_loading && databaseTypes.lastUpdated === 0) {
       requestDatabaseTypes();
@@ -100,6 +102,12 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     formik.setFieldValue('root_password', e.target.value);
+  };
+
+  const handlePlanChange = (id: string) => {
+    console.log(id);
+    setSelectedPlanId(id);
+    formik.setFieldValue('type', id);
   };
 
   /** Reset errors and state when the modal opens */
@@ -180,7 +188,11 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
             selectedID={formik.values.region}
           />
         </div>
-        <SelectDBPlanPanel databasePlans={databaseTypes.data ?? []} />
+        <SelectDBPlanPanel
+          databasePlans={databaseTypes.data ?? []}
+          onPlanSelect={handlePlanChange}
+          selectedPlanId={selectedPlanId}
+        />
         <PasswordInput
           name="password"
           label="Root Password"

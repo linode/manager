@@ -58,12 +58,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   databasePlans: DatabaseType[];
+  onPlanSelect: (id: string) => void;
+  selectedPlanId: string;
 }
 
 type CombinedProps = Props;
 
 export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
-  const { databasePlans } = props;
+  const { databasePlans, onPlanSelect, selectedPlanId } = props;
+  const selectPlan = (id: string) => () => onPlanSelect(id);
 
   const classes = useStyles();
 
@@ -137,11 +140,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
 
     return (
       <Grid container>
-        <Hidden mdUp>
-          {plans.map((plan, idx) => {
-            renderSelection(plan, idx);
-          })}
-        </Hidden>
+        <Hidden mdUp>{plans.map(renderSelection)}</Hidden>
         <Hidden smDown>
           <Grid item xs={12} lg={10}>
             <Table_CMR
@@ -151,9 +150,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
             >
               {tableHeader}
               <TableBody role="radiogroup">
-                {plans.map((plan, idx) => {
-                  renderSelection(plan, idx);
-                })}
+                {plans.map(renderSelection)}
               </TableBody>
             </Table_CMR>
           </Grid>
@@ -171,7 +168,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
         <Hidden smDown>
           <TableRow_CMR
             data-qa-plan-row={type.label}
-            aria-label={}
+            aria-label={type.label}
             key={type.id}
             onClick={}
             rowLink={}
@@ -185,7 +182,12 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
                   aria-label={type.label}
                   className={'label-visually-hidden'}
                   control={
-                    <Radio checked={} onChange={} disabled={} id={type.id} />
+                    <Radio
+                      checked={type.id === selectedPlanId}
+                      onChange={selectPlan(type.id)}
+                      disabled={false}
+                      id={type.id}
+                    />
                   }
                 />
               )}
@@ -209,9 +211,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
             <TableCell_CMR data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
             </TableCell_CMR>
-            <TableCell_CMR data-qa-storage>
-              {convertMegabytesTo(type.disk, true)}
-            </TableCell_CMR>
+            <TableCell_CMR data-qa-storage>{type.disk} GB</TableCell_CMR>
           </TableRow_CMR>
         </Hidden>
         {/* Displays SelectionCard for small screens */}
