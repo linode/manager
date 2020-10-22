@@ -5,19 +5,17 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { GroupType, Item } from 'src/components/EnhancedSelect';
-// import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
+import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-// import { useImages } from 'src/hooks/useImages';
+import { useImages } from 'src/hooks/useImages';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
-// import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-// import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { distroIcons } from './icons';
-// import ImageOption from './ImageOption';
-import TextField from '../TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import ImageOption from './ImageOption';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -39,7 +37,7 @@ interface Props {
   error?: string;
   variant?: Variant;
   disabled?: boolean;
-  handleSelectImage: (selection?: any) => void;
+  handleSelectImage: (selection?: string) => void;
   classNames?: string;
 }
 
@@ -47,7 +45,7 @@ export interface ImageProps
   extends Omit<BaseSelectProps, 'onChange' | 'variant'> {
   selectedImageID?: string;
   disabled: boolean;
-  handleSelectImage: (selection?: any) => void;
+  handleSelectImage: (selection?: string) => void;
   images: Image[];
   error?: string;
 }
@@ -117,23 +115,25 @@ export const imagesToGroupedItems = (images: Image[]) => {
 export const ImageSelect: React.FC<Props> = props => {
   const {
     disabled,
+    error,
     handleSelectImage,
-    // selectedImageID,
     images,
+    selectedImageID,
     title,
     variant,
-    classNames
+    classNames,
+    ...reactSelectProps
   } = props;
   const classes = useStyles();
 
   const { _loading } = useReduxLoad(['images']);
 
   // Check for request errors in Redux
-  // const { images: _images } = useImages();
-  // const imageError = _images?.error?.read
-  //   ? getAPIErrorOrDefault(_images.error.read, 'Unable to load Images')[0]
-  //       .reason
-  //   : undefined;
+  const { images: _images } = useImages();
+  const imageError = _images?.error?.read
+    ? getAPIErrorOrDefault(_images.error.read, 'Unable to load Images')[0]
+        .reason
+    : undefined;
 
   const filteredImages = images.filter(thisImage => {
     switch (variant) {
@@ -147,10 +147,14 @@ export const ImageSelect: React.FC<Props> = props => {
     }
   });
 
-  // const options = imagesToGroupedItems(filteredImages);
+  const options = imagesToGroupedItems(filteredImages);
 
-  const onChange = (event: React.ChangeEvent) => {
-    return handleSelectImage(event.target);
+  const onChange = (selection: ImageItem | null) => {
+    if (selection === null) {
+      return handleSelectImage(undefined);
+    }
+
+    return handleSelectImage(selection.value);
   };
 
   return (
@@ -163,18 +167,22 @@ export const ImageSelect: React.FC<Props> = props => {
           <Grid container item direction="column">
             <Grid container item direction="row">
               <Grid item xs={12}>
-              <Autocomplete
-                id='image-select'
-                options={filteredImages as any}
-                groupBy={imagesToGroupedItems => imagesToGroupedItems.vendor}
-                onChange={onChange}
-                getOptionLabel={(option: Image) => option.label}
-                renderInput={(params: any) => <TextField {...params} label="Images" placeholder="Select an Image" variant="outlined" />}
-                style={{width: 415}}
-                disabled={disabled}
-                loading={_loading}
-                className={classNames}
-              />
+                <Select
+                  disabled={disabled}
+                  label="Images"
+                  isLoading={_loading}
+                  placeholder="Choose an image"
+                  options={options}
+                  onChange={onChange}
+                  value={getSelectedOptionFromGroupedOptions(
+                    selectedImageID || '',
+                    options
+                  )}
+                  errorText={error || imageError}
+                  components={{ Option: ImageOption, SingleValue }}
+                  {...reactSelectProps}
+                  className={classNames}
+                />
               </Grid>
             </Grid>
           </Grid>
