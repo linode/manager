@@ -23,6 +23,7 @@ import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { getAllVlans } from 'src/store/vlans/vlans.requests';
+import { getAllDatabases } from 'src/store/databases/databases.requests';
 
 interface UseReduxPreload {
   _loading: boolean;
@@ -47,7 +48,8 @@ export type ReduxEntity =
   | 'longview'
   | 'firewalls'
   | 'clusters'
-  | 'vlans';
+  | 'vlans'
+  | 'databases';
 
 type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
@@ -69,7 +71,8 @@ const requestMap: RequestMap = {
   longview: getAllLongviewClients,
   firewalls: () => getAllFirewalls({}),
   clusters: requestClusters,
-  vlans: () => getAllVlans({})
+  vlans: () => getAllVlans({}),
+  databases: () => getAllDatabases({})
 };
 
 export const useReduxLoad = (
