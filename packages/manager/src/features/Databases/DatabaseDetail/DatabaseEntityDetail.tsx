@@ -8,6 +8,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DeleteIcon from 'src/assets/icons/delete.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
@@ -23,6 +24,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
+import DeletionDialog from 'src/components/DeletionDialog';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
@@ -32,6 +34,7 @@ import TagCell from 'src/components/TagCell';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useDatabases from 'src/hooks/useDatabases';
+import { useDialog } from 'src/hooks/useDialog';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
@@ -44,37 +47,64 @@ interface DatabaseEntityDetailProps {
 const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = props => {
   const { database } = props;
 
+  const { deleteDatabase } = useDatabases();
+  const history = useHistory();
+
+  const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
+    deleteDatabase
+  );
+
   const connectionDetails = useAPIRequest<DatabaseConnection | null>(
     () => getDatabaseConnection(database.id),
     null
   );
 
   return (
-    <EntityDetail
-      header={<Header label={database.label} status={database.status} />}
-      body={
-        <Body
-          numCPUs={database.vcpus}
-          // Memory is returned by the API in MB.
-          gbRAM={database.memory / 1024}
-          gbStorage={database.disk}
-          typeLabel="MySQL" // @todo: How to make this dynamic?
-          connectionDetailsLoading={connectionDetails.loading}
-          connectionDetailsData={connectionDetails.data}
-          connectionDetailsError={connectionDetails.error}
-        />
-      }
-      footer={
-        <Footer
-          plan=""
-          regionDisplay=""
-          id={database.id}
-          created={database.created}
-          tags={database.tags}
-          label={database.label}
-        />
-      }
-    />
+    <>
+      <EntityDetail
+        header={
+          <Header
+            label={database.label}
+            status={database.status}
+            handleClickDelete={() => openDialog(database.id, database.label)}
+          />
+        }
+        body={
+          <Body
+            numCPUs={database.vcpus}
+            // Memory is returned by the API in MB.
+            gbRAM={database.memory / 1024}
+            gbStorage={database.disk}
+            typeLabel="MySQL" // @todo: How to make this dynamic?
+            connectionDetailsLoading={connectionDetails.loading}
+            connectionDetailsData={connectionDetails.data}
+            connectionDetailsError={connectionDetails.error}
+          />
+        }
+        footer={
+          <Footer
+            plan=""
+            regionDisplay=""
+            id={database.id}
+            created={database.created}
+            tags={database.tags}
+            label={database.label}
+          />
+        }
+      />
+      <DeletionDialog
+        label={dialog.entityLabel ?? ''}
+        error={dialog.error}
+        open={dialog.isOpen}
+        loading={dialog.isLoading}
+        onClose={closeDialog}
+        onDelete={() => {
+          submitDialog(dialog.entityID).then(() => {
+            history.push('/databases');
+          });
+        }}
+      />
+    </>
   );
 };
 
@@ -86,6 +116,7 @@ export default React.memo(DatabaseEntityDetail);
 export interface HeaderProps {
   label: string;
   status: string;
+  handleClickDelete: () => void;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -173,7 +204,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Header: React.FC<HeaderProps> = props => {
-  const { label, status } = props;
+  const { label, status, handleClickDelete } = props;
 
   const classes = useHeaderStyles();
 
@@ -223,6 +254,7 @@ const Header: React.FC<HeaderProps> = props => {
               SideIcon={DeleteIcon}
               text="Delete"
               title="Delete"
+              onClick={handleClickDelete}
             />
           </div>
           <Hidden smDown>
