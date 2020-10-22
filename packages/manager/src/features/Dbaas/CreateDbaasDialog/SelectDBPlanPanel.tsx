@@ -170,7 +170,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
             data-qa-plan-row={type.label}
             aria-label={type.label}
             key={type.id}
-            onClick={}
+            onClick={selectPlan(type.id)}
             rowLink={}
             aria-disabled={}
             className={}

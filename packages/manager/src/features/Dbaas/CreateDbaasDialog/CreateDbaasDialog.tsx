@@ -105,7 +105,6 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
   };
 
   const handlePlanChange = (id: string) => {
-    console.log(id);
     setSelectedPlanId(id);
     formik.setFieldValue('type', id);
   };
@@ -181,7 +180,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
         <div className={classes.formSection} data-testid="region-select">
           <RegionSelect
             label={'Region'}
-            placeholder={'Regions'}
+            placeholder={''}
             errorText={formik.errors.region}
             handleSelection={handleRegionSelect}
             regions={regionsWithDbaas}
