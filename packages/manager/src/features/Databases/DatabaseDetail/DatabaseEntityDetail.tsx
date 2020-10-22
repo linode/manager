@@ -248,7 +248,6 @@ const Header: React.FC<HeaderProps> = props => {
               title="Resize"
             />
 
-            {/* @todo: Make the "Delete" button functional. */}
             <IconTextLink
               className={classes.actionItem}
               SideIcon={DeleteIcon}
