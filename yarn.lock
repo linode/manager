@@ -6985,6 +6985,11 @@ crypto-random-string@^1.0.0:
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-1.0.0.tgz#a230f64f568310e1498009940790ec99545bca7e"
   integrity sha1-ojD2T1aDEOFJgAmUB5DsmVRbyn4=
 
+css-animation-sync@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/css-animation-sync/-/css-animation-sync-0.2.0.tgz#0c0526ac1595fb6d14c23dd44a10982fa696035c"
+  integrity sha512-5Dy9/pzDm17HAI5x2ANg9c9u66MuTO9UDzrs4AFgq4fGB97N/xj0MxdEZbhtzTbAfi4x5ILeMMTQtxXMnGU0rw==
+
 css-line-break@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/css-line-break/-/css-line-break-1.0.1.tgz#19f2063a33e95fb2831b86446c0b80c188af450a"
