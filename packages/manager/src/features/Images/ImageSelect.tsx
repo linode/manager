@@ -1,7 +1,7 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { propOr } from 'ramda';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles'
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
