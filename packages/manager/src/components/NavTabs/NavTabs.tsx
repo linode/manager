@@ -14,7 +14,8 @@ export interface NavTab {
     | React.ComponentType
     | React.LazyExoticComponent<React.ComponentType>;
   // Whether or not this tab should be rendered in the background (even when
-  // not on screen).
+  // not on screen). Consumers should consider performance implications,
+  // especially when a component behind a tab performs network requests.
   backgroundRendering?: boolean;
 }
 
