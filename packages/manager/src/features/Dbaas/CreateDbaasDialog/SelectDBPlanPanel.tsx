@@ -16,9 +16,17 @@ import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Chip from 'src/components/core/Chip';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-import { DatabaseType } from '@linode/api-v4/lib/databases/index';
+import {
+  DatabaseType,
+  DatabaseAvailability
+} from '@linode/api-v4/lib/databases/index';
+import TabbedPanel from 'src/components/TabbedPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    // marginTop: theme.spacing(3),
+    width: '100%'
+  },
   headingCellContainer: {
     display: 'flex',
     alignItems: 'center'
@@ -42,6 +50,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#fff',
     textTransform: 'uppercase',
     marginLeft: theme.spacing(2)
+  },
+  tabbedPanelInnerClass: {
+    padding: 0
   }
 }));
 
@@ -53,30 +64,48 @@ type CombinedProps = Props;
 
 export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
   const { databasePlans } = props;
+
   const classes = useStyles();
 
-  //   const createTabs = (): [Tab[]] => {
-  //     const tabs: Tab[] = [];
+  const getStandardAvails = (types: DatabaseType[]) =>
+    types.filter(type => /standard/.test(type.availability));
+  const getHighAvails = (types: DatabaseType[]) =>
+    types.filter(type => /high/.test(type.availability));
 
-  //     const standardAvailability = [];
-  //     const highAvailability = [];
+  const createTabs = (): [Tab[], DatabaseAvailability[]] => {
+    const tabs: Tab[] = [];
 
-  //     const shared = [...standardAvailability, ...highAvailability];
+    const standardAvailability = getStandardAvails(databasePlans);
+    const highAvailability = getHighAvails(databasePlans);
 
-  //     if (!isEmpty(shared)) {
-  //       tabs.push({
-  //           render: () => {
-  //               return (
-  //                   <></>
-  //               );
-  //           };
-  //         },
-  //         title: 'Standard Availability'
-  //       });
-  //     }
-  //   };
+    const tabOrder: DatabaseAvailability[] = [];
 
-  const renderPlanContainer = plans => {
+    if (!isEmpty(standardAvailability)) {
+      tabs.push({
+        render: () => {
+          // eslint-disable-next-line react/jsx-no-useless-fragment
+          return <>{renderPlanContainer(standardAvailability)}</>;
+        },
+        title: 'Standard Availability'
+      });
+      tabOrder.push('standard');
+    }
+
+    if (!isEmpty(highAvailability)) {
+      tabs.push({
+        render: () => {
+          // eslint-disable-next-line react/jsx-no-useless-fragment
+          return <>{renderPlanContainer(highAvailability)}</>;
+        },
+        title: 'High Availability'
+      });
+      tabOrder.push('high');
+    }
+
+    return [tabs, tabOrder];
+  };
+
+  const renderPlanContainer = (plans: DatabaseType[]) => {
     const tableHeader = (
       <TableHead>
         <TableRow_CMR>
@@ -109,7 +138,9 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
     return (
       <Grid container>
         <Hidden mdUp>
-          Placeholder {/* {plans.map(this.renderSelection)} */}
+          {plans.map((plan, idx) => {
+            renderSelection(plan, idx);
+          })}
         </Hidden>
         <Hidden smDown>
           <Grid item xs={12} lg={10}>
@@ -120,7 +151,9 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
             >
               {tableHeader}
               <TableBody role="radiogroup">
-                Placeholder {/* {plans.map(this.renderSelection)} */}
+                {plans.map((plan, idx) => {
+                  renderSelection(plan, idx);
+                })}
               </TableBody>
             </Table_CMR>
           </Grid>
@@ -129,7 +162,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
     );
   };
 
-  const renderSelection = (type: any, idx: number) => {
+  const renderSelection = (type: DatabaseType, idx: number) => {
     const isSamePlan = false; // type.heading === currentPlanHeading;
 
     return (
@@ -148,8 +181,8 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
             <TableCell_CMR className={classes.radioCell}>
               {!isSamePlan && (
                 <FormControlLabel
-                  label={type.heading}
-                  aria-label={type.heading}
+                  label={type.label}
+                  aria-label={type.label}
                   className={'label-visually-hidden'}
                   control={
                     <Radio checked={} onChange={} disabled={} id={type.id} />
@@ -159,7 +192,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
             </TableCell_CMR>
             <TableCell_CMR data-qa-plan-name>
               <div className={classes.headingCellContainer}>
-                {type.heading}{' '}
+                {type.label}{' '}
                 {isSamePlan && (
                   <Chip
                     data-qa-current-plan
@@ -187,8 +220,8 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
             key={type.id}
             checked={}
             onClick={() => console.log('Clicked')}
-            heading={type.heading}
-            subheadings={type.subHeadings}
+            heading={type.label}
+            subheadings={type.label || undefined}
             disabled={false}
             // tooltip={tooltip}
             variant={'check'}
@@ -198,18 +231,24 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
     );
   };
 
+  const [tabs, tabOrder] = createTabs();
+
+  const dbPlansCopy =
+    'Standard Availabilty allocates a single node to your database cluster. High Availability allocates 3 nodes for increased reliability and fault tolerance and has no downtime during maintenance.';
+
   return (
-    <>
-      <Typography variant="h3">Database Plans</Typography>
-      <Typography variant="body2">
-        Standard Availabilty allocates a single node to your database cluster.
-        High Availability allocates 3 nodes for increased reliability and fault
-        tolerance and has no downtime during maintenance.
-      </Typography>
-      <Table_CMR border spacingBottom={16} aria-label="List of Database Plans">
-        {renderPlanContainer}
-      </Table_CMR>
-    </>
+    <Table_CMR spacingBottom={16} aria-label="List of Database Plans">
+      <TabbedPanel
+        rootClass={`${classes.root} tabbedPanel`}
+        innerClass={classes.tabbedPanelInnerClass}
+        header={'Database Plans'}
+        // error={}
+        copy={dbPlansCopy}
+        tabs={tabs}
+        initTab={0}
+        data-qa-select-plan
+      />
+    </Table_CMR>
   );
 };
 
