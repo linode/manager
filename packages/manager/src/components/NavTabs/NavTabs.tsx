@@ -10,7 +10,9 @@ import TabPanel from 'src/components/core/ReachTabPanel';
 export interface NavTab {
   title: string;
   routeName: string;
-  component: React.ComponentType;
+  component:
+    | React.ComponentType
+    | React.LazyExoticComponent<React.ComponentType>;
   // Whether or not this tab should be rendered in the background (even when
   // not on screen).
   backgroundRendering?: boolean;
