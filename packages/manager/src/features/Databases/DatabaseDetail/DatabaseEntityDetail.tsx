@@ -6,6 +6,7 @@ import {
 } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DeleteIcon from 'src/assets/icons/delete.svg';
@@ -28,7 +29,11 @@ import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 import InlineTextLoader from 'src/components/InlineTextLoader';
 import TagCell from 'src/components/TagCell';
+import TagDrawer from 'src/components/TagCell/TagDrawer';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useDatabases from 'src/hooks/useDatabases';
+import useOpenClose from 'src/hooks/useOpenClose';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 
@@ -66,6 +71,7 @@ const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = props => {
           id={database.id}
           created={database.created}
           tags={database.tags}
+          label={database.label}
         />
       }
     />
@@ -471,7 +477,7 @@ interface FooterProps {
   id: number;
   created: string;
   tags: string[];
-  // openTagDrawer: (tags: string[]) => void;
+  label: string;
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
@@ -525,50 +531,92 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
-  const {
-    id,
-    created,
-    tags
-    // openTagDrawer
-  } = props;
+  const { id, created, tags, label } = props;
 
   const classes = useFooterStyles();
 
+  const { open, close, isOpen } = useOpenClose();
+
+  const { updateDatabase } = useDatabases();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const addTag = React.useCallback(
+    (tag: string) => {
+      const newTags = [...tags, tag];
+      return updateDatabase(id, { tags: newTags }).catch(e =>
+        enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
+          variant: 'error'
+        })
+      );
+    },
+    [tags, id, updateDatabase, enqueueSnackbar]
+  );
+
+  const deleteTag = React.useCallback(
+    (tag: string) => {
+      const newTags = tags.filter(thisTag => thisTag !== tag);
+      return updateDatabase(id, { tags: newTags }).catch(e =>
+        enqueueSnackbar(
+          getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
+          {
+            variant: 'error'
+          }
+        )
+      );
+    },
+    [tags, id, updateDatabase, enqueueSnackbar]
+  );
+
   return (
-    <Grid container direction="row" justify="space-between" alignItems="center">
-      <Grid item xs={12} sm={7}>
-        <div className={classes.detailsSection}>
-          <Typography
-            className={classnames({
-              [classes.listItem]: true,
-              [classes.listItemLast]: true
-            })}
-          >
-            ID {id}
-          </Typography>
-          <Hidden xsDown>
+    <>
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+      >
+        <Grid item xs={12} sm={7}>
+          <div className={classes.detailsSection}>
+            <Typography
+              className={classnames({
+                [classes.listItem]: true,
+                [classes.listItemLast]: true
+              })}
+            >
+              ID {id}
+            </Typography>
+            <Hidden xsDown>
+              <Typography className={classes.created}>
+                Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+              </Typography>
+            </Hidden>
+          </div>
+        </Grid>
+        <Hidden smUp>
+          <Grid item xs={12}>
             <Typography className={classes.created}>
               Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
             </Typography>
-          </Hidden>
-        </div>
-      </Grid>
-      <Hidden smUp>
-        <Grid item xs={12}>
-          <Typography className={classes.created}>
-            Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
-          </Typography>
+          </Grid>
+        </Hidden>
+        <Grid item xs={12} sm={5} className={classes.tags}>
+          <TagCell
+            width={500}
+            tags={tags}
+            addTag={addTag}
+            deleteTag={deleteTag}
+            listAllTags={open}
+          />
         </Grid>
-      </Hidden>
-      <Grid item xs={12} sm={5} className={classes.tags}>
-        <TagCell
-          width={500}
-          tags={tags}
-          addTag={() => null}
-          deleteTag={() => null}
-          listAllTags={() => null}
-        />
       </Grid>
-    </Grid>
+      <TagDrawer
+        open={isOpen}
+        onClose={close}
+        addTag={addTag}
+        deleteTag={deleteTag}
+        entityLabel={label}
+        tags={tags}
+      />
+    </>
   );
 });

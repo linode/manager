@@ -2,7 +2,7 @@ import { array, mixed, object, string } from 'yup';
 
 export const maintenanceScheduleSchema = object({
   day: mixed()
-    .required('Day is required')
+    // .required('Day is required')
     .oneOf([
       'Sunday',
       'Monday',
@@ -13,7 +13,7 @@ export const maintenanceScheduleSchema = object({
       'Saturday'
     ]),
   window: mixed()
-    .required('Maintenance window is required')
+    // .required('Maintenance window is required')
     .oneOf([
       'W0',
       'W2',
@@ -39,7 +39,7 @@ export const createDatabaseSchema = object({
   type: string().required('Type is required'),
   root_password: string().required('Root password is required'),
   tags: array().of(string()),
-  maintenance_schedule: maintenanceScheduleSchema.notRequired()
+  maintenance_schedule: maintenanceScheduleSchema
 });
 
 export const updateDatabaseSchema = object({
