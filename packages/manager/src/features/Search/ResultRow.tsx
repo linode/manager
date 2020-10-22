@@ -218,7 +218,7 @@ export const ResultRow: React.FC<CombinedProps> = props => {
         })}
         parentColumn="Tags"
       >
-          <Tags tags={result.data.tags} />
+          <Tags tags={result.data.tags} data-testid={'result-tags'} />
         </TableCell>
       </Hidden>
     </TableRow>
