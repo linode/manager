@@ -28,7 +28,7 @@ describe('getTabMatch', () => {
     });
   });
 
-  it('returns an index of `0` if there is no match', () => {
+  it('returns an index of `-1` if there is no match', () => {
     expect(getTabMatch(tabs, '/databases/1234/unknown-path').idx).toBe(-1);
   });
 });
