@@ -25,24 +25,15 @@ import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 
 const useStyles = makeStyles(() => ({
-  '@keyframes blink': {
-    '0%, 100%': {
-      opacity: 0.25
-    },
-    '35%, 65%': {
-      opacity: 0.45
-    },
-    '45%, 55%': {
-      opacity: 0.95
-    },
-    '50%': {
-      opacity: 1
+  '@keyframes pulse': {
+    to: {
+      backgroundColor: `hsla(40, 100%, 55%, 0)`
     }
   },
   summaryOuter: {
     marginBottom: 20,
     '& .statusOther:before': {
-      animation: '$blink 1.25s ease-in-out infinite'
+      animation: '$pulse 1.5s ease-in-out infinite'
     }
   }
 }));
