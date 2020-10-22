@@ -36,7 +36,7 @@ export const ListView: React.FC<CombinedProps> = props => {
     open: false,
     tags: [],
     label: '',
-    linodeID: 0
+    entityID: 0
   });
 
   const { updateLinode } = useLinodes();
@@ -57,7 +57,7 @@ export const ListView: React.FC<CombinedProps> = props => {
       open: true,
       label: linodeLabel,
       tags,
-      linodeID
+      entityID: linodeID
     });
   };
 
@@ -128,8 +128,8 @@ export const ListView: React.FC<CombinedProps> = props => {
         entityLabel={tagDrawer.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
-        deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
+        addTag={(newTag: string) => addTag(tagDrawer.entityID, newTag)}
+        deleteTag={(tag: string) => deleteTag(tagDrawer.entityID, tag)}
         onClose={closeTagDrawer}
       />
     </>

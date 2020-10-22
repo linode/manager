@@ -2,6 +2,7 @@ import { rest, RequestHandler } from 'msw';
 
 import {
   accountFactory,
+  databaseFactory,
   domainFactory,
   domainRecordFactory,
   imageFactory,
@@ -73,7 +74,7 @@ export const handlers = [
     const images = [...privateImages, ...publicImages];
     return res(ctx.json(makeResourcePage(images)));
   }),
-  rest.get('*/instances', async (req, res, ctx) => {
+  rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(3, {
       backups: { enabled: false }
     });
@@ -329,6 +330,14 @@ export const handlers = [
   }),
   rest.post('*/networking/vlans', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.get('*/databases/mysql/instances', (req, res, ctx) => {
+    const online = databaseFactory.build({ status: 'ready' });
+    const initializing = databaseFactory.build({ status: 'initializing' });
+    const error = databaseFactory.build({ status: 'error' });
+    const unknown = databaseFactory.build({ status: 'unknown' });
+    const databases = [online, initializing, error, unknown];
+    return res(ctx.json(makeResourcePage(databases)));
   })
 ];
 
@@ -338,7 +347,7 @@ export const mockDataHandlers: Record<
   (count: number) => RequestHandler
 > = {
   linode: count =>
-    rest.get('*/instances', async (req, res, ctx) => {
+    rest.get('*/linode/instances', async (req, res, ctx) => {
       const linodes = linodeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(linodes)));
     })
