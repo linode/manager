@@ -242,25 +242,6 @@ const creditCardField: React.FC<CombinedCreditCardFormProps> = ({ inputRef, onCh
   );
 };
 
-// const creditCardField = (props: CreditCardFormProps) => {
-//   const { inputRef, onChange, ...other } = props;
-
-//   return (
-//     <NumberFormat
-//       {...other}
-//       getInputRef={inputRef}
-//       onValueChange={values => {
-//         onChange({
-//           target: {
-//             value: values.value
-//           }
-//         });
-//       }}
-//       format="#### #### #### #######"
-//     />
-//   );
-// };
-
 const enhanced = compose<CombinedProps, Props>(accountContainer());
 
 export default enhanced(UpdateCreditCardDrawer);
