@@ -39,14 +39,14 @@ export type ReduxEntity =
   | 'managed'
   | 'managedIssues'
   | 'nodeBalancers'
-  | 'notifications'
+  | 'notifications' // has APIError[]
   | 'profile'
-  | 'regions'
+  | 'regions' // has APIError[]
   | 'types'
-  | 'events'
+  | 'events' // has no error
   | 'longview'
   | 'firewalls'
-  | 'clusters'
+  | 'clusters' // has APIError[]
   | 'vlans';
 
 type RequestMap = Record<ReduxEntity, any>;
@@ -134,13 +134,20 @@ export const requestDeps = (
   const requests = [];
   for (i; i < deps.length; i++) {
     const currentResource = state.__resources[deps[i]] || state[deps[i]];
+
     if (currentResource) {
-      if (currentResource.lastUpdated === 0 && !currentResource.loading) {
+      const currentResourceHasReadError = hasReadError(currentResource.error);
+      if (
+        currentResource.lastUpdated === 0 &&
+        !currentResource.loading &&
+        !currentResourceHasReadError
+      ) {
         needsToLoad = true;
         requests.push(requestMap[deps[i]]);
       } else if (
         Date.now() - currentResource.lastUpdated > refreshInterval &&
-        !currentResource.loading
+        !currentResource.loading &&
+        !currentResourceHasReadError
       ) {
         requests.push(requestMap[deps[i]]);
       }
@@ -161,3 +168,7 @@ export const requestDeps = (
 };
 
 export default useReduxLoad;
+
+export const hasReadError = (resourceError: any) => {
+  return resourceError?.read !== undefined;
+};
