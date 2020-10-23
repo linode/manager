@@ -97,17 +97,12 @@ const handleLinodeRebuild = (
   percent_complete: number | null,
   prevStatus?: EventStatus
 ) => {
+  updateLinodeOnFirstScheduledEvent(dispatch, id, status, prevStatus);
+
   /**
    * Rebuilding is a special case, because the rebuilt Linode
    * has new disks, which need to be updated in our store.
    */
-
-  // If this is the first "scheduled" event coming through for the Linode,
-  // request it to update its status.
-  if (status === 'scheduled' && !prevStatus) {
-    return dispatch(requestLinodeForStore(id, true));
-  }
-
   if (status === 'started' && percent_complete === 100) {
     // Get the new disks and update the store.
     dispatch(getAllLinodeDisks({ linodeId: id }));
@@ -134,11 +129,7 @@ const handleLinodeMigrate = (
   id: number,
   prevStatus?: EventStatus
 ) => {
-  // If this is the first "scheduled" event coming through for the Linode,
-  // request it to update its status.
-  if (status === 'scheduled' && !prevStatus) {
-    return dispatch(requestLinodeForStore(id, true));
-  }
+  updateLinodeOnFirstScheduledEvent(dispatch, id, status, prevStatus);
 
   switch (status) {
     case 'failed':
@@ -171,11 +162,7 @@ const handleLinodeUpdate = (
   id: number,
   prevStatus?: EventStatus
 ) => {
-  // If this is the first "scheduled" event coming through for the Linode,
-  // request it to update its status.
-  if (status === 'scheduled' && !prevStatus) {
-    return dispatch(requestLinodeForStore(id, true));
-  }
+  updateLinodeOnFirstScheduledEvent(dispatch, id, status, prevStatus);
 
   switch (status) {
     case 'failed':
@@ -218,11 +205,7 @@ const handleLinodeCreation = (
   id: number,
   prevStatus?: EventStatus
 ) => {
-  // If this is the first "scheduled" event coming through for the Linode,
-  // request it to update its status.
-  if (status === 'scheduled' && !prevStatus) {
-    return dispatch(requestLinodeForStore(id, true));
-  }
+  updateLinodeOnFirstScheduledEvent(dispatch, id, status, prevStatus);
 
   switch (status) {
     case 'failed':
@@ -296,3 +279,16 @@ const eventsWithRelevantNotifications: EventAction[] = [
   'linode_migrate_datacenter_create',
   'linode_migrate_datacenter'
 ];
+
+// If this is the first "scheduled" event coming through for the Linode,
+// request it from the API to update its status.
+export const updateLinodeOnFirstScheduledEvent = (
+  dispatch: Dispatch<any>,
+  linodeID: number,
+  status: EventStatus,
+  prevStatus?: EventStatus
+) => {
+  if (status === 'scheduled' && !prevStatus) {
+    dispatch(requestLinodeForStore(linodeID, true));
+  }
+};
