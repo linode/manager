@@ -39,14 +39,14 @@ export type ReduxEntity =
   | 'managed'
   | 'managedIssues'
   | 'nodeBalancers'
-  | 'notifications' // has APIError[]
+  | 'notifications'
   | 'profile'
-  | 'regions' // has APIError[]
+  | 'regions'
   | 'types'
-  | 'events' // has no error
+  | 'events'
   | 'longview'
   | 'firewalls'
-  | 'clusters' // has APIError[]
+  | 'clusters'
   | 'vlans';
 
 type RequestMap = Record<ReduxEntity, any>;
