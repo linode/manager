@@ -76,38 +76,39 @@ const headers = [
     sortable: true,
     widthPercent: 10
   },
-  {
-    label: 'Region',
-    dataColumn: 'region',
-    sortable: true,
-    widthPercent: 10
-  },
-  {
-    label: 'Hostname',
-    dataColumn: 'hostname',
-    sortable: true,
-    widthPercent: 15,
-    hideOnMobile: true
-  },
-  {
-    label: 'Port',
-    dataColumn: 'port',
-    sortable: true,
-    widthPercent: 5,
-    hideOnMobile: true
-  },
-  {
-    label: 'Last Backup',
-    dataColumn: 'backup',
-    sortable: true,
-    widthPercent: 10,
-    hideOnMobile: true
-  },
+  // @todo Pending API work
+  // {
+  //   label: 'Region',
+  //   dataColumn: 'region',
+  //   sortable: true,
+  //   widthPercent: 10
+  // },
+  // {
+  //   label: 'Hostname',
+  //   dataColumn: 'hostname',
+  //   sortable: true,
+  //   widthPercent: 15,
+  //   hideOnMobile: true
+  // },
+  // {
+  //   label: 'Port',
+  //   dataColumn: 'port',
+  //   sortable: true,
+  //   widthPercent: 5,
+  //   hideOnMobile: true
+  // },
+  // {
+  //   label: 'Last Backup',
+  //   dataColumn: 'backup',
+  //   sortable: true,
+  //   widthPercent: 10,
+  //   hideOnMobile: true
+  // },
   {
     label: 'Tags',
     dataColumn: 'tags',
     sortable: false,
-    widthPercent: 15,
+    widthPercent: 30,
     hideOnMobile: true
   },
   {

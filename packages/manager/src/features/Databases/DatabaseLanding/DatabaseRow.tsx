@@ -34,7 +34,6 @@ const getDisplayStatus = (status: DatabaseStatus) => {
 };
 
 export const DatabaseRow: React.FC<Props> = props => {
-  // const classes = useStyles();
   const { id, label, status, tags, openTagDrawer, ...actionHandlers } = props;
   const _tags = tags ?? [];
 
@@ -82,11 +81,11 @@ export const DatabaseRow: React.FC<Props> = props => {
         <StatusIcon status={displayStatus} />
         {capitalize(status)}
       </TableCell>
-      <TableCell>Newark, NJ</TableCell>
-      <Hidden smDown>
-        <TableCell>Hostname</TableCell>
+      <Hidden xsDown>
+        {/** Pending API work */}
+        {/* <TableCell>Hostname</TableCell>
         <TableCell>Port</TableCell>
-        <TableCell>Last Backup</TableCell>
+        <TableCell>Last Backup</TableCell> */}
         <TagCell
           tags={_tags}
           width={250}
