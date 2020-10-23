@@ -96,7 +96,9 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell data-qa-vlan-address>{ipAddress}</TableCell>
+      <TableCell data-qa-vlan-address>
+        {ipAddress !== '' ? ipAddress : 'None'}
+      </TableCell>
       <TableCell data-qa-vlan-interface>{interfaceName}</TableCell>
       <TableCell data-qa-vlan-linodes>{linodesList}</TableCell>
       <TableCell>
