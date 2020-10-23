@@ -8,7 +8,7 @@ import ExpansionPanel, {
 import { useFlags } from 'src/hooks/useFlags';
 import ExpansionPanelCMR from '../ExpansionPanel/ExpansionPanelCMR';
 
-interface Props extends Pick<ExpansionPanelProps, 'heading' | 'error' | 'loading' | 'onChange'> {
+interface Props extends Omit<ExpansionPanelProps, 'children'> {
   height?: number;
   renderMainContent: () => JSX.Element;
   headingNumberCount?: number;
