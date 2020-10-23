@@ -16,18 +16,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: -8,
       '& svg': {
         height: 20,
-        width: 20
+        width: 20,
+        color: theme.cmrTextColors.linkActiveLight
       }
     }
   },
   button: {
     ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight,
     height: '100%',
     padding: '12px 15px',
     minWidth: 'auto',
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
-      color: theme.color.white
+      color: '#ffffff'
     }
   }
 }));

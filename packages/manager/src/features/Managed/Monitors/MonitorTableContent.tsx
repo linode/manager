@@ -32,9 +32,7 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
     openMonitorDrawer
   } = props;
   if (loading) {
-    return (
-      <TableRowLoading colSpan={3} firstColWidth={45} oneLine hasEntityIcon />
-    );
+    return <TableRowLoading colSpan={3} widths={[45]} oneLine hasEntityIcon />;
   }
 
   if (error) {

@@ -23,7 +23,7 @@ const handleError = err => {
 
 const handleRequest = async (endpoint, filename) => {
   return axios
-    .get(API_ROOT + endpoint)
+    .get(API_ROOT + endpoint + '?page_size=500')
     .then(response => {
       /**
        * If this starts beeping, we need to update our
@@ -60,6 +60,11 @@ const cachedRequests = [
   {
     endpoint: 'linode/types',
     filename: 'types.json'
+  },
+  // Only used for testing purposes, never for displaying data to users
+  {
+    endpoint: 'linode/kernels',
+    filename: 'kernels.json'
   }
 ];
 

@@ -3,7 +3,6 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import useFlags from 'src/hooks/useFlags';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import RebuildFromImage from './RebuildFromImage_CMR';
@@ -71,9 +70,6 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
   const disabled = hostMaintenance || unauthorized;
 
   const classes = useStyles();
-  const flags = useFlags();
-
-  const passwordValidation = flags.passwordValidation ?? 'none';
 
   const [mode, setMode] = React.useState<MODES>('fromImage');
   const [rebuildError, setRebuildError] = React.useState<string>('');
@@ -127,7 +123,6 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
       {mode === 'fromImage' && (
         <RebuildFromImage
           passwordHelperText={passwordHelperText}
-          passwordValidation={passwordValidation}
           disabled={disabled}
           linodeId={linodeId}
           linodeLabel={linodeLabel}
@@ -139,7 +134,6 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
         <RebuildFromStackScript
           type="community"
           passwordHelperText={passwordHelperText}
-          passwordValidation={passwordValidation}
           disabled={disabled}
           linodeId={linodeId}
           linodeLabel={linodeLabel}
@@ -151,7 +145,6 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
         <RebuildFromStackScript
           type="account"
           passwordHelperText={passwordHelperText}
-          passwordValidation={passwordValidation}
           disabled={disabled}
           linodeId={linodeId}
           linodeLabel={linodeLabel}

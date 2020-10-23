@@ -6,7 +6,7 @@ import IconTextLink from '../IconTextLink';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'center',
-    borderLeft: `1px solid ${theme.palette.divider}`,
+    borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
     fontFamily: `${theme.font.normal} !important`,
     height: 50,
     lineHeight: 'normal',

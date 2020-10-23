@@ -8,6 +8,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
+import { REFRESH_INTERVAL } from 'src/constants';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -120,14 +121,11 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
     queryError = true;
   }
 
-  const { _loading } = useReduxLoad([
-    'linodes',
-    'volumes',
-    'nodeBalancers',
-    'images',
-    'domains',
-    'kubernetes'
-  ]);
+  const { _loading } = useReduxLoad(
+    ['linodes', 'volumes', 'nodeBalancers', 'images', 'domains', 'kubernetes'],
+    REFRESH_INTERVAL,
+    !_isLargeAccount
+  );
 
   const { searchAPI } = useAPISearch();
 
@@ -210,14 +208,14 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
       )}
       {!_loading && (
         <Grid item>
-          {Object.keys(finalResults).map((entityType, idx: number) => (
+         {Object.keys(finalResults).map((entityType, idx: number) => (
             <ResultGroup
-              key={idx}
-              entity={displayMap[entityType]}
-              results={finalResults[entityType]}
-              groupSize={100}
-            />
-          ))}
+             key={idx}
+             entity={displayMap[entityType]}
+             results={finalResults[entityType]}
+             groupSize={100}
+           />
+         ))}
         </Grid>
       )}
     </Grid>

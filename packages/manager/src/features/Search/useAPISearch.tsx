@@ -9,6 +9,7 @@ import { getVolumes } from '@linode/api-v4/lib/volumes';
 import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useTypes } from 'src/hooks/useTypes';
 import { useImages } from 'src/hooks/useImages';
 import {
@@ -27,6 +28,7 @@ interface Search {
 }
 
 export const useAPISearch = (): Search => {
+  const { _isRestrictedUser } = useAccountManagement();
   const { images } = useImages('public');
   const { types } = useTypes();
   const searchAPI = useCallback(
@@ -38,17 +40,20 @@ export const useAPISearch = (): Search => {
         });
       }
 
-      return requestEntities(searchText, types.entities, images.itemsById).then(
-        results => {
-          const combinedResults = refinedSearch(searchText, results);
-          return {
-            combinedResults,
-            searchResultsByEntity: separateResultsByEntity(combinedResults)
-          };
-        }
-      );
+      return requestEntities(
+        searchText,
+        types.entities,
+        images.itemsById,
+        _isRestrictedUser
+      ).then(results => {
+        const combinedResults = refinedSearch(searchText, results);
+        return {
+          combinedResults,
+          searchResultsByEntity: separateResultsByEntity(combinedResults)
+        };
+      });
     },
-    [images.itemsById, types.entities]
+    [images.itemsById, types.entities, _isRestrictedUser]
   );
 
   return { searchAPI };
@@ -72,7 +77,8 @@ const params = { page_size: API_MAX_PAGE_SIZE };
 const requestEntities = (
   searchText: string,
   types: LinodeType[],
-  images: Record<string, Image>
+  images: Record<string, Image>,
+  isRestricted: boolean = false
 ) => {
   return Promise.all([
     getDomains(params, generateFilter(searchText, 'domain')).then(results =>
@@ -95,12 +101,15 @@ const requestEntities = (
     getNodeBalancers(params, generateFilter(searchText)).then(results =>
       results.data.map(nodeBalToSearchableItem)
     ),
-    getKubernetesClusters().then(results =>
-      // Can't filter LKE by label (or anything maybe?)
-      // But no one has more than 500, so this is fine for the short term.
-      // @todo replace with generateFilter() when LKE-1889 is complete
-      results.data.map(kubernetesClusterToSearchableItem)
-    )
+    // Restricted users always get a 403 when requesting clusters
+    !isRestricted
+      ? getKubernetesClusters().then(results =>
+          // Can't filter LKE by label (or anything maybe?)
+          // But no one has more than 500, so this is fine for the short term.
+          // @todo replace with generateFilter() when LKE-1889 is complete
+          results.data.map(kubernetesClusterToSearchableItem)
+        )
+      : Promise.resolve([])
   ]).then(results => (flatten(results) as unknown) as SearchableItem[]);
 };
 
