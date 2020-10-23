@@ -241,6 +241,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
           databasePlans={databaseTypes.data ?? []}
           onPlanSelect={handlePlanChange}
           selectedPlanId={selectedPlanId}
+          errorText={formik.errors.type}
         />
         <PasswordInput
           name="password"

@@ -60,12 +60,13 @@ interface Props {
   databasePlans: DatabaseType[];
   onPlanSelect: (id: string) => void;
   selectedPlanId: string;
+  errorText?: string;
 }
 
 type CombinedProps = Props;
 
 export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
-  const { databasePlans, onPlanSelect, selectedPlanId } = props;
+  const { databasePlans, onPlanSelect, selectedPlanId, errorText } = props;
   const selectPlan = (id: string) => () => onPlanSelect(id);
 
   const classes = useStyles();
@@ -245,7 +246,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
         rootClass={`${classes.root} tabbedPanel`}
         innerClass={classes.tabbedPanelInnerClass}
         header={'Database Plans'}
-        // error={}
+        error={errorText}
         copy={dbPlansCopy}
         tabs={tabs}
         initTab={0}
