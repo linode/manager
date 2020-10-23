@@ -136,18 +136,18 @@ export const requestDeps = (
     const currentResource = state.__resources[deps[i]] || state[deps[i]];
 
     if (currentResource) {
-      const currentResourceHasReadError = hasReadError(currentResource?.error);
+      const currentResourcehasError = hasError(currentResource?.error);
       if (
         currentResource.lastUpdated === 0 &&
         !currentResource.loading &&
-        !currentResourceHasReadError
+        !currentResourcehasError
       ) {
         needsToLoad = true;
         requests.push(requestMap[deps[i]]);
       } else if (
         Date.now() - currentResource.lastUpdated > refreshInterval &&
         !currentResource.loading &&
-        !currentResourceHasReadError
+        !currentResourcehasError
       ) {
         requests.push(requestMap[deps[i]]);
       }
@@ -169,6 +169,10 @@ export const requestDeps = (
 
 export default useReduxLoad;
 
-export const hasReadError = (resourceError: any) => {
+export const hasError = (resourceError: any) => {
+  if (Array.isArray(resourceError) && resourceError.length > 0) {
+    return true;
+  }
+
   return resourceError?.read !== undefined;
 };
