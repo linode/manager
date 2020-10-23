@@ -2,6 +2,8 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import useFlags from 'src/hooks/useFlags';
 import { useLinodes } from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
@@ -9,6 +11,7 @@ import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getAllLinodeInterfaces } from 'src/store/linodes/interfaces/interfaces.requests';
 import { getLinode as _getLinode } from 'src/store/linodes/linode.requests';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { shouldRequestEntity } from 'src/utilities/shouldRequestEntity';
 import LinodesDetail from './LinodesDetail';
 
@@ -26,6 +29,9 @@ export const LinodesDetailContainer: React.FC<Props> = props => {
   const { isDashboard } = props;
   const { linodes } = useLinodes();
   const dispatch = useDispatch();
+  const flags = useFlags();
+  const { account } = useAccountManagement();
+
   const params = useParams<{ linodeId: string }>();
   const linodeId = props.linodeId ? props.linodeId : params.linodeId;
 
@@ -37,6 +43,12 @@ export const LinodesDetailContainer: React.FC<Props> = props => {
       const interfaces = state.__resources.interfaces[linodeId];
       return { disks, configs, interfaces };
     }
+  );
+
+  const vlansEnabled = isFeatureEnabled(
+    'Vlans',
+    Boolean(flags.vlans),
+    account.data?.capabilities ?? []
   );
 
   React.useEffect(() => {
@@ -64,10 +76,10 @@ export const LinodesDetailContainer: React.FC<Props> = props => {
       dispatch(getAllLinodeDisks({ linodeId: +linodeId }));
     }
 
-    if (shouldRequestEntity(interfaces)) {
+    if (vlansEnabled && shouldRequestEntity(interfaces)) {
       dispatch(getAllLinodeInterfaces({ linodeId: +linodeId }));
     }
-  }, [dispatch, configs, disks, interfaces, linodeId, linodes]);
+  }, [dispatch, configs, disks, vlansEnabled, interfaces, linodeId, linodes]);
 
   if ((linodes.lastUpdated === 0 && linodes.loading) || _loading) {
     return <CircleProgress />;
