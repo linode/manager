@@ -35,15 +35,15 @@ export const linodeInTransition = (
   status: string,
   recentEvent?: Event
 ): boolean => {
-  if (!recentEvent) {
-    return false;
+  if (transitionStatus.includes(status)) {
+    return true;
   }
 
   return (
-    transitionStatus.includes(status) ||
-    (transitionAction.includes(recentEvent.action || '') &&
-      recentEvent.percent_complete !== null &&
-      recentEvent.percent_complete < 100)
+    recentEvent !== undefined &&
+    transitionAction.includes(recentEvent?.action || '') &&
+    recentEvent?.percent_complete !== null &&
+    recentEvent?.percent_complete < 100
   );
 };
 

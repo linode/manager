@@ -288,7 +288,7 @@ export const updateLinodeOnFirstScheduledEvent = (
   status: EventStatus,
   prevStatus?: EventStatus
 ) => {
-  if (status === 'scheduled' && !prevStatus) {
+  if ((status === 'scheduled' || status === 'started') && !prevStatus) {
     dispatch(requestLinodeForStore(linodeID, true));
   }
 };

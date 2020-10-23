@@ -213,21 +213,19 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       >
         {!maintenanceStartTime ? (
           loading ? (
-            recentEvent && (
-              <>
-                <StatusIcon status={iconStatus} />
-                <button
-                  className={classes.statusLink}
-                  onClick={() => openNotificationDrawer()}
-                >
-                  <ProgressDisplay
-                    className={classes.progressDisplay}
-                    progress={recentEvent.percent_complete}
-                    text={transitionText(status, id, recentEvent)}
-                  />
-                </button>
-              </>
-            )
+            <>
+              <StatusIcon status={iconStatus} />
+              <button
+                className={classes.statusLink}
+                onClick={() => openNotificationDrawer()}
+              >
+                <ProgressDisplay
+                  className={classes.progressDisplay}
+                  progress={recentEvent?.percent_complete ?? 100}
+                  text={transitionText(status, id, recentEvent)}
+                />
+              </button>
+            </>
           ) : (
             <>
               <StatusIcon status={iconStatus} />

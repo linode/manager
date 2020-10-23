@@ -185,11 +185,11 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item>
           <div className={loading ? classes.labelWrapper : ''}>
-            {recentEvent && linodeInTransition(status, recentEvent) && (
+            {linodeInTransition(status, recentEvent) && (
               <ProgressDisplay
                 className={classes.loadingStatus}
                 text={transitionText(status, id, recentEvent)}
-                progress={recentEvent.percent_complete}
+                progress={recentEvent?.percent_complete ?? 100}
               />
             )}
             <div className={classes.labelStatusWrapper}>

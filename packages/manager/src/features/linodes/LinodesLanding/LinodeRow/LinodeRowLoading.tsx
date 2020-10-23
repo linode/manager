@@ -60,10 +60,11 @@ const LinodeRowLoading: React.FC<CombinedProps> = props => {
     >
       {children}
       <TableCell colSpan={5} className={classes.bodyCell}>
-        {linodeRecentEvent &&
-          linodeInTransition(linodeStatus, linodeRecentEvent) && (
-            <ProgressDisplay progress={linodeRecentEvent.percent_complete} />
-          )}
+        {linodeInTransition(linodeStatus, linodeRecentEvent) && (
+          <ProgressDisplay
+            progress={linodeRecentEvent?.percent_complete ?? 100}
+          />
+        )}
       </TableCell>
     </TableRow>
   );

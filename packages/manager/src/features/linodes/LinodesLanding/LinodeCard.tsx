@@ -238,10 +238,10 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
           <CardContent
             className={`${classes.cardContent} ${classes.customeMQ}`}
           >
-            {recentEvent && linodeInTransition(status, recentEvent) && (
+            {linodeInTransition(status, recentEvent) && (
               <ProgressDisplay
                 text={transitionText(status, id, recentEvent)}
-                progress={recentEvent.percent_complete}
+                progress={recentEvent?.percent_complete ?? 100}
                 classes={{
                   statusProgress: classes.statusProgress,
                   cardSection: classes.cardSection
@@ -394,9 +394,7 @@ export const RenderTitle: React.FC<{
           <EntityIcon
             variant="linode"
             status={linodeStatus}
-            loading={
-              recentEvent && linodeInTransition(linodeStatus, recentEvent)
-            }
+            loading={linodeInTransition(linodeStatus, recentEvent)}
             size={38}
           />
         </Grid>
