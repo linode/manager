@@ -1,4 +1,4 @@
-import { defensiveDo } from '../support/ui/common';
+import { defensiveDo } from '../../support/ui/common';
 
 describe('Test', () => {
   it('check  Defensive do retries 3 times and calls wait', () => {
