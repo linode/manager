@@ -75,7 +75,7 @@ const styles = (theme: Theme) =>
       }
     },
     ip: {
-      color: theme.palette.text.primary,
+      // color: theme.palette.text.primary,
       fontSize: '.9rem'
     },
     ipLink: {

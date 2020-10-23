@@ -15,8 +15,8 @@ import {
   createVlanActions,
   deleteVlanActions,
   getVlansActions,
-  connectVlanActions,
-  disconnectVlanActions
+  attachVlanActions,
+  detachVlanActions
 } from './vlans.actions';
 
 export type State = MappedEntityState<VLAN>;
@@ -58,23 +58,23 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (
-    isType(action, connectVlanActions.started) ||
-    isType(action, disconnectVlanActions.started)
+    isType(action, attachVlanActions.started) ||
+    isType(action, detachVlanActions.started)
   ) {
     return setError({ update: undefined }, state);
   }
 
   if (
-    isType(action, connectVlanActions.done) ||
-    isType(action, disconnectVlanActions.done)
+    isType(action, attachVlanActions.done) ||
+    isType(action, detachVlanActions.done)
   ) {
     const { result } = action.payload;
     return onCreateOrUpdate(result, state);
   }
 
   if (
-    isType(action, connectVlanActions.failed) ||
-    isType(action, disconnectVlanActions.failed)
+    isType(action, attachVlanActions.failed) ||
+    isType(action, detachVlanActions.failed)
   ) {
     const { error } = action.payload;
 

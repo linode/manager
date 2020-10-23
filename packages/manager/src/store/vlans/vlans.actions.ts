@@ -30,14 +30,14 @@ export interface VLANConnectionParams {
   vlanID: number;
   linodes: number[];
 }
-export const connectVlanActions = actionCreator.async<
+export const attachVlanActions = actionCreator.async<
   VLANConnectionParams,
   VLAN,
   APIError[]
->(`connect`);
+>(`attach`);
 
-export const disconnectVlanActions = actionCreator.async<
+export const detachVlanActions = actionCreator.async<
   VLANConnectionParams,
   VLAN,
   APIError[]
->(`disconnect`);
+>(`detach`);
