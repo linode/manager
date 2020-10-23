@@ -38,7 +38,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const AccessKeyMenu: React.FC<CombinedProps> = props => {
+const DatabaseBackupActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   // @todo add actions functionality when API work is finalized
@@ -78,4 +78,4 @@ const AccessKeyMenu: React.FC<CombinedProps> = props => {
   );
 };
 
-export default AccessKeyMenu;
+export default DatabaseBackupActionMenu;
