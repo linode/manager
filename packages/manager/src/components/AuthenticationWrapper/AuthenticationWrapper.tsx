@@ -53,7 +53,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
    */
   makeInitialRequests = async () => {
     // When loading Lish we avoid all this extra data loading
-    if (window.location?.pathname?.includes('/lish/')) {
+    if (window.location?.pathname?.match(/weblish|glish/)) {
       return;
     }
 
