@@ -23,6 +23,10 @@ import Typography from 'src/components/core/Typography';
 import SelectDBPlanPanel from './SelectDBPlanPanel';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { useDatabaseTypes } from 'src/hooks/useDatabaseTypes';
+import { DateTime } from 'luxon';
+import { evenizeNumber } from 'src/utilities/evenizeNumber';
+import { sortBy } from 'ramda';
+import useProfile from 'src/hooks/useProfile';
 
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
@@ -46,6 +50,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
   const classes = useStyles();
   const history = useHistory();
   const regions = useRegions();
+  const { profile } = useProfile();
 
   const regionsWithDbaas: ExtendedRegion[] = regions.entities
     //   .filter(thisRegion => thisRegion.capabilities.includes('Databases')) // temporarily commented out until Capabilities is squared away
@@ -55,6 +60,14 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
     formik.setFieldValue('region', regionID);
   };
 
+  const structureOptionsForSelect = (optionsData: string[][]) => {
+    return optionsData.map((option: string[]) => {
+      const label = option[0];
+      return { label, value: option[1] };
+    });
+  };
+
+  // Maintenance Day
   const maintenanceDayOptions = [
     ['Sunday', 'Sunday'],
     ['Monday', 'Monday'],
@@ -64,19 +77,41 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
     ['Friday', 'Friday'],
     ['Saturday', 'Saturday']
   ];
-  const daySelection = maintenanceDayOptions.map((day: string[]) => {
-    const label = day[0];
-    return { label, value: day[1] };
-  });
+  const daySelection = structureOptionsForSelect(maintenanceDayOptions);
 
   const handleDaySelection = (e: Item) => {
     formik.setFieldValue('day', e.value);
   };
 
-  const maintenanceWindowSelectOptions: Item[] = [];
+  // Maintenance Window
+  const userTimezone = profile.data?.timezone ?? 'GMT';
+  const initWindows = (timezone: string) => {
+    let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
+      const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(
+        timezone
+      );
+      const finish = start.plus({ hours: 2 });
+      return [
+        `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,
+        `W${evenizeNumber(start.setZone('utc').hour)}`
+      ];
+    });
 
+    windows = sortBy<string[]>(window => window[0], windows);
+
+    return windows;
+  };
+
+  const maintenanceWindowSelectOptions = initWindows(userTimezone);
   const maintenanceWindowHelperText =
     'Select the time of day you’d prefer maintenance to occur. On Standard Availability plans, there may be downtime during this window.';
+  const windowSelection = structureOptionsForSelect(
+    maintenanceWindowSelectOptions
+  );
+
+  const handleWindowSelection = (e: Item) => {
+    formik.setFieldValue('window', e.value);
+  };
 
   const { databaseTypes, requestDatabaseTypes } = useDatabaseTypes();
   const { _loading } = useReduxLoad(
@@ -100,10 +135,8 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
       type: '',
       root_password: '',
       tags: [''],
-      maintenance_schedule: {
-        day: '',
-        window: ''
-      }
+      day: '',
+      window: ''
     },
     validationSchema: createDatabaseSchema,
     validateOnChange: false,
@@ -219,11 +252,12 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
           data-testid="maintenance-window-selects"
         >
           <Typography variant="h3">Maintenance Window</Typography>
-          <FormHelperText>{maintenanceWindowHelperText}</FormHelperText>
-          <FormControl className={classes.chooseDay}>
+          <FormHelperText style={{ maxWidth: 'none' }}>
+            {maintenanceWindowHelperText}
+          </FormHelperText>
+          <FormControl fullWidth className={classes.chooseDay}>
             <Select
               options={daySelection}
-              defaultValue={daySelection[0]}
               onChange={handleDaySelection}
               name="maintenanceDay"
               id="maintenanceDay"
@@ -233,11 +267,10 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
               data-qa-item="maintenanceDay"
             />
           </FormControl>
-          <FormControl className={classes.chooseTime}>
+          <FormControl fullWidth className={classes.chooseTime}>
             <Select
-              options={maintenanceWindowSelectOptions}
-              defaultValue={maintenanceWindowSelectOptions[0]}
-              onChange={}
+              options={windowSelection}
+              onChange={handleWindowSelection}
               name="maintenanceWindow"
               id="maintenanceWindow"
               label="Time of Day"
