@@ -4,7 +4,7 @@ import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
-import Table from 'src/components/Table';
+import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import BackupTableRow from './DatabaseBackupTableRow';
 import { DatabaseBackupFactory } from 'src/factories/databaseBackups';
