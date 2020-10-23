@@ -20,7 +20,7 @@ export type CombinedProps = Props;
 export const CredentialTableContent: React.FC<CombinedProps> = props => {
   const { error, loading, credentials, openDialog, openForEdit } = props;
   if (loading) {
-    return <TableRowLoading firstColWidth={35} colSpan={2} oneLine />;
+    return <TableRowLoading widths={[35]} colSpan={2} oneLine />;
   }
 
   if (error) {

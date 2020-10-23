@@ -1,10 +1,12 @@
 import { Config, Disk, LinodeInterface } from '@linode/api-v4/lib/linodes';
 import { VLAN } from '@linode/api-v4/lib/vlans';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'src/components/core/styles';
 import { Link } from 'src/components/Link';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
+import { privateIPRegex } from 'src/utilities/ipUtils';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu_CMR';
 
 const useStyles = makeStyles(() => ({
@@ -33,6 +35,7 @@ interface Props {
   linodeDisks: Disk[];
   linodeKernel: string;
   linodeInterfaces: LinodeInterface[];
+  linodeIPs: string[];
   vlans: Record<string, VLAN>;
   vlansEnabled: boolean;
 }
@@ -51,6 +54,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     linodeId,
     linodeDisks,
     linodeKernel,
+    linodeIPs,
     onBoot,
     onEdit,
     onDelete,
@@ -75,22 +79,37 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     setRootDeviceLabel(`${rootDevice}${label}`);
   }, [config, linodeDisks]);
 
-  const InterfaceList = Object.keys(config.interfaces).map(interfaceName => {
-    const linodeInterface = linodeInterfaces.find(
-      thisInterface => thisInterface.id === config.interfaces[interfaceName].id
-    );
+  const hasPrivateIP = linodeIPs.some(thisIP => privateIPRegex.test(thisIP));
 
-    // Just a failsafe.
-    if (!linodeInterface) {
-      return null;
-    }
+  const InterfaceList = (
+    <ul className={classes.interfaceList}>
+      {Object.keys(config.interfaces).map(interfaceName => {
+        const linodeInterface = linodeInterfaces.find(
+          thisInterface =>
+            thisInterface.id === config.interfaces[interfaceName]?.id
+        );
 
-    return (
-      <li key={config.id + interfaceName} className={classes.interfaceListItem}>
-        {interfaceName} – {getInterfaceLabel(linodeInterface, vlans)}
-      </li>
-    );
-  });
+        // Just a failsafe.
+        if (!linodeInterface) {
+          return null;
+        }
+
+        return (
+          <li
+            key={config.id + interfaceName}
+            className={classes.interfaceListItem}
+          >
+            {interfaceName} –{' '}
+            {getInterfaceLabel(linodeInterface, vlans, hasPrivateIP)}
+          </li>
+        );
+      })}
+    </ul>
+  );
+
+  const defaultInterfaceLabel = hasPrivateIP
+    ? 'eth0 – Public, Private'
+    : 'eth0 – Public';
 
   return (
     <TableRow key={config.id} data-qa-config={config.label}>
@@ -104,9 +123,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
       <TableCell>{rootDeviceLabel}</TableCell>
       {vlansEnabled ? (
         <TableCell>
-          {InterfaceList.length > 0 ? (
-            <ul className={classes.interfaceList}>{InterfaceList}</ul>
-          ) : null}
+          {!isEmpty(config.interfaces) ? InterfaceList : defaultInterfaceLabel}
         </TableCell>
       ) : null}
       <TableCell className={classes.actionInner}>
@@ -128,10 +145,12 @@ export default React.memo(ConfigRow);
 
 export const getInterfaceLabel = (
   linodeInterface: LinodeInterface,
-  vlans: Record<string, VLAN>
+  vlans: Record<string, VLAN>,
+  hasPrivateIP: boolean
 ) => {
   if (linodeInterface.type === 'default') {
-    return 'Public';
+    // @todo: Use the linodeInterface.description if and when it accounts for Private IPs
+    return hasPrivateIP ? 'Public, Private' : 'Public';
   }
 
   const vlan = vlans[linodeInterface.vlan_id];

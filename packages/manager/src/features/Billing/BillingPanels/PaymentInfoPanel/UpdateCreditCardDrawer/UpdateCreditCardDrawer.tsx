@@ -16,6 +16,7 @@ import accountContainer, {
 } from 'src/containers/account.container';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
 import { getErrorMap, getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -57,6 +58,8 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   const [cardNumber, setCardNumber] = React.useState<string>('');
   const [expDate, setExpDate] = React.useState<string>('');
   const [cvv, setCVV] = React.useState<string>('');
+
+  const flags = useFlags();
 
   React.useEffect(() => {
     if (open) {
@@ -123,6 +126,11 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
         onClose();
       })
       .catch(error => {
+        // Manually handle "CVV required" errors until the API change is made.
+        // Once that happens, update account.schema to make it a required field.
+        if (flags.cvvRequired && !cvv && Array.isArray(error)) {
+          error.push({ reason: 'CVV is required.', field: 'cvv' });
+        }
         setSubmitting(false);
         setErrors(getAPIErrorOrDefault(error, 'Unable to update credit card.'));
       });
@@ -141,6 +149,8 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
     errors
   );
   const generalError = hasErrorFor.none;
+
+  const cvvLabel = flags.cvvRequired ? 'CVV' : 'CVV (optional)';
 
   return (
     <Drawer title="Edit Credit Card" open={open} onClose={onClose}>
@@ -180,7 +190,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
             </Grid>
             <Grid item className={classes.fullWidthMobile}>
               <TextField
-                label="CVV (optional)"
+                label={cvvLabel}
                 value={cvv}
                 onChange={handleCVVChange}
                 errorText={hasErrorFor.cvv}

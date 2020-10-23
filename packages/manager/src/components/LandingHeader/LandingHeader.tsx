@@ -24,10 +24,11 @@ const useStyles = makeStyles(() => ({
 interface Props extends Omit<HeaderProps, 'actions'> {
   extraActions?: JSX.Element;
   body?: JSX.Element;
-  docsLink: string;
+  docsLink?: string;
   onAddNew?: () => void;
   entity: string;
   createButtonWidth?: number;
+  createButtonText?: string;
 }
 
 /**
@@ -41,7 +42,14 @@ export const LandingHeader: React.FC<Props> = props => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { docsLink, onAddNew, entity, extraActions, createButtonWidth } = props;
+  const {
+    docsLink,
+    onAddNew,
+    entity,
+    extraActions,
+    createButtonWidth,
+    createButtonText
+  } = props;
 
   const defaultCreateButtonWidth = 152;
 
@@ -63,14 +71,16 @@ export const LandingHeader: React.FC<Props> = props => {
         )}
 
         {onAddNew && (
-          <Grid item>
+          <Grid item className={!docsLink ? 'px0' : undefined}>
             <Button
               buttonType="primary"
               className={classes.button}
               onClick={onAddNew}
               style={{ width: createButtonWidth ?? defaultCreateButtonWidth }}
             >
-              Create {startsWithVowel ? `an` : `a`} {entity}...
+              {createButtonText
+                ? createButtonText
+                : `Create ${startsWithVowel ? 'an' : 'a'} ${entity}...`}
             </Button>
           </Grid>
         )}
@@ -86,7 +96,9 @@ export const LandingHeader: React.FC<Props> = props => {
       classes.button,
       extraActions,
       matchesSmDown,
-      createButtonWidth
+      createButtonWidth,
+      startsWithVowel,
+      createButtonText
     ]
   );
 

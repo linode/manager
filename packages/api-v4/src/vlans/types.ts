@@ -2,8 +2,9 @@ export interface VLAN {
   id: number;
   description: string;
   region: string;
-  linodes: number[];
+  linodes: { id: number; ipv4_address: string; mac_address: string }[];
   cidr_block: string;
+  created: string;
 }
 
 export interface CreateVLANPayload {
