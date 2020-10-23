@@ -8,18 +8,13 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import BackupTableRow from './DatabaseBackupTableRow';
 
-interface Props {
-  backups: DatabaseBackup[];
-}
-
-type CombinedProps = Props;
-
-export const DatabaseBackups: React.FC<CombinedProps> = props => {
-  const { backups } = props;
+export const DatabaseBackups: React.FC<{}> = () => {
+  // @todo replace with actual db info
+  const backups: DatabaseBackup[] = [];
 
   return (
     <Paper style={{ padding: 0 }}>
-      <Table aria-label="List of Backups">
+      <Table aria-label="List of database backups">
         <TableHead>
           <TableRow>
             <TableCell>Backup ID</TableCell>
