@@ -109,6 +109,16 @@ jobs:
         with:
           token: ${{ secrets.NPM_AUTH_TOKEN }}
           package: ./packages/api-v4/package.json
+      - name: slack-notify
+        uses: rtCamp/action-slack-notify@master
+        if: steps.publish.outputs.type != 'none'
+        env:
+          SLACK_CHANNEL: api-js-client
+          SLACK_TITLE: "Linode JS Client v${{ steps.publish.outputs.version}}"
+          SLACK_MESSAGE: ":rocket: Linode JS Client has been published to NPM: ${{ steps.publish.outputs.old-version }} => ${{ steps.publish.outputs.version }}. View the changelog at https://github.com/linode/manager/blob/develop/packages/api-v4/CHANGELOG.md" 
+          SLACK_USERNAME: npm-bot
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
 
   publish-manager:
     runs-on: ubuntu-latest
