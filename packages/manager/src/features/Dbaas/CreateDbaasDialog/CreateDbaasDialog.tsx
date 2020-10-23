@@ -27,6 +27,11 @@ import { DateTime } from 'luxon';
 import { evenizeNumber } from 'src/utilities/evenizeNumber';
 import { sortBy } from 'ramda';
 import useProfile from 'src/hooks/useProfile';
+import { createDatabase } from '@linode/api-v4/lib/databases';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
@@ -80,7 +85,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
   const daySelection = structureOptionsForSelect(maintenanceDayOptions);
 
   const handleDaySelection = (e: Item) => {
-    formik.setFieldValue('day', e.value);
+    formik.setFieldValue('maintenance_schedule.day', e.value);
   };
 
   // Maintenance Window
@@ -110,7 +115,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
   );
 
   const handleWindowSelection = (e: Item) => {
-    formik.setFieldValue('window', e.value);
+    formik.setFieldValue('maintenance_schedule.window', e.value);
   };
 
   const { databaseTypes, requestDatabaseTypes } = useDatabaseTypes();
@@ -135,8 +140,10 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
       type: '',
       root_password: '',
       tags: [''],
-      day: '',
-      window: ''
+      maintenance_schedule: {
+        day: '',
+        window: ''
+      }
     },
     validationSchema: createDatabaseSchema,
     validateOnChange: false,
@@ -175,24 +182,24 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
       payload.tags = undefined;
     }
 
-    // createDbaas(payload)
-    //   .then(response => {
-    //     formik.setSubmitting(false);
-    //     context.close();
-    //     history.push('/databases');
-    //   })
-    //   .catch(err => {
-    //     const mapErrorToStatus = (generalError: string) =>
-    //       formik.setStatus({ generalError });
+    createDatabase(payload)
+      .then(_ => {
+        formik.setSubmitting(false);
+        context.close();
+        history.push('/databases');
+      })
+      .catch(err => {
+        const mapErrorToStatus = (generalError: string) =>
+          formik.setStatus({ generalError });
 
-    //     formik.setSubmitting(false);
-    //     handleFieldErrors(formik.setErrors, err);
-    //     handleGeneralErrors(
-    //       mapErrorToStatus,
-    //       err,
-    //       'An unexpected error occurred.'
-    //     );
-    //   });
+        formik.setSubmitting(false);
+        handleFieldErrors(formik.setErrors, err);
+        handleGeneralErrors(
+          mapErrorToStatus,
+          err,
+          'An unexpected error occurred.'
+        );
+      });
   };
 
   return (
@@ -263,6 +270,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
               id="maintenanceDay"
               label="Day of Week"
               placeholder="Choose a day"
+              errorText={formik.errors.maintenance_schedule?.day}
               isClearable={false}
               data-qa-item="maintenanceDay"
             />
@@ -275,6 +283,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
               id="maintenanceWindow"
               label="Time of Day"
               placeholder="Choose a time"
+              errorText={formik.errors.maintenance_schedule?.window}
               isClearable={false}
               data-qa-item="maintenanceWindow"
             />
