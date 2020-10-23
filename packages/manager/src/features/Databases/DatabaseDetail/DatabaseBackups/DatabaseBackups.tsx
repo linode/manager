@@ -5,12 +5,13 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
 import BackupTableRow from './DatabaseBackupTableRow';
+import { DatabaseBackupFactory } from 'src/factories/databaseBackups';
 
 export const DatabaseBackups: React.FC<{}> = () => {
   // @todo replace with actual db info
-  const backups: DatabaseBackup[] = [];
+  const backups = DatabaseBackupFactory.buildList(3);
 
   return (
     <Paper style={{ padding: 0 }}>
