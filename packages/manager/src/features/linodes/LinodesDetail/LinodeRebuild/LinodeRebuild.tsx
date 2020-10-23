@@ -12,7 +12,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import useFlags from 'src/hooks/useFlags';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
@@ -59,10 +58,6 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
   const unauthorized = permissions === 'read_only';
   const disabled = hostMaintenance || unauthorized;
 
-  const flags = useFlags();
-
-  const passwordValidation = flags.passwordValidation ?? 'none';
-
   const [mode, setMode] = React.useState<MODES>('fromImage');
 
   return (
@@ -103,7 +98,6 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
       {mode === 'fromImage' && (
         <RebuildFromImage
           passwordHelperText={passwordHelperText}
-          passwordValidation={passwordValidation}
           disabled={disabled}
         />
       )}
@@ -111,7 +105,6 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
         <RebuildFromStackScript
           type="community"
           passwordHelperText={passwordHelperText}
-          passwordValidation={passwordValidation}
           disabled={disabled}
         />
       )}
@@ -119,7 +112,6 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
         <RebuildFromStackScript
           type="account"
           passwordHelperText={passwordHelperText}
-          passwordValidation={passwordValidation}
           disabled={disabled}
         />
       )}

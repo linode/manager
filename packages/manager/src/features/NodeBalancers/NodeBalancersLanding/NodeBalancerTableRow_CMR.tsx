@@ -23,9 +23,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   statusWrapper: {
     whiteSpace: 'nowrap'
   },
+  portLink: {
+    color: theme.cmrTextColors.linkActiveLight
+  },
   link: {
     display: 'block',
     fontFamily: theme.font.bold,
+    color: theme.cmrTextColors.linkActiveLight,
     lineHeight: '1.125rem',
     textDecoration: 'underline'
   },
@@ -97,7 +101,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = props => {
             <React.Fragment key={id}>
               <Link
                 to={`/nodebalancers/${id}/configurations/${configId}`}
-                className="secondaryLink"
+                className={classes.portLink}
               >
                 {port}
               </Link>

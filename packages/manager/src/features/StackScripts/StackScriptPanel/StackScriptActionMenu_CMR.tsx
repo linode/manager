@@ -19,6 +19,7 @@ import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight,
     fontSize: 14,
     height: '100%',
     minWidth: '70px',
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       textDecoration: 'none',
       backgroundColor: '#3683dc',
-      color: theme.color.white
+      color: '#ffffff'
     },
     '&:disabled': {
       color: '#bbb'

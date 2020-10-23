@@ -50,7 +50,8 @@ type NavEntity =
   | 'StackScripts'
   | 'Help & Support'
   | 'Community'
-  | 'Virtual LANs';
+  | 'Virtual LANs'
+  | 'Databases';
 
 type NavGroup =
   | 'Compute'
@@ -194,6 +195,11 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
               '/object-storage/buckets',
               '/object-storage/access-keys'
             ]
+          },
+          {
+            display: 'Databases',
+            href: '/databases',
+            hide: !flags.databases
           }
         ]
       },
@@ -230,6 +236,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       _isLargeAccount,
       showFirewalls,
       showVlans,
+      flags.databases,
       _isManagedAccount
     ]
   );
@@ -266,7 +273,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             </div>
           </Grid>
           {matchesMobile && (
-            <Grid item>
+            <Grid item className={classes.mobileNav}>
               <MobileNav groups={primaryLinkGroups} />
             </Grid>
           )}

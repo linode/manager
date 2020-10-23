@@ -27,8 +27,10 @@ import useFlags from 'src/hooks/useFlags';
 import TableWrapper from './TableWrapper';
 import TableWrapper_CMR from './TableWrapper_CMR';
 import IconButton from 'src/components/core/IconButton';
+import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
+import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
 
 type ClassNames =
   | 'root'
@@ -53,13 +55,15 @@ const styles = (theme: Theme) =>
       '& td': {
         // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
         padding: `${theme.spacing(2) + 4}px 0 ${theme.spacing(1) + 2}px`,
-        borderBottom: 'none'
+        borderBottom: 'none',
+        borderTop: 'none'
       }
     },
     groupContainer: {
       [theme.breakpoints.up('md')]: {
         '& $tagHeaderRow > td': {
-          padding: '10px 0'
+          padding: '10px 0',
+          borderTop: 'none'
         }
       }
     },
@@ -74,10 +78,10 @@ const styles = (theme: Theme) =>
       }
     },
     controlHeader: {
-      backgroundColor: theme.bg.controlHeader,
       marginBottom: 28,
       display: 'flex',
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-end',
+      backgroundColor: theme.cmrBGColors.bgTableHeader
     },
     toggleButton: {
       padding: 10,
@@ -104,6 +108,7 @@ interface Props {
   toggleGroupLinodes: () => boolean;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
+  isVLAN?: boolean;
 }
 
 type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
@@ -121,6 +126,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
     toggleGroupLinodes,
     linodeViewPreference,
     linodesAreGrouped,
+    isVLAN,
     ...rest
   } = props;
 
@@ -134,7 +140,8 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
     order,
     orderBy,
     someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
-    dataLength
+    dataLength,
+    isVLAN
   };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -154,35 +161,42 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
               <div id="displayViewDescription" className="visually-hidden">
                 Currently in {linodeViewPreference} view
               </div>
-              <IconButton
-                aria-label="Toggle display"
-                aria-describedby={'displayViewDescription'}
-                title={`Toggle display`}
-                onClick={toggleLinodeView}
-                disableRipple
-                className={classes.toggleButton}
-              >
-                <TableView />
-              </IconButton>
+              <Tooltip placement="top" title="List view">
+                <IconButton
+                  aria-label="Toggle display"
+                  aria-describedby={'displayViewDescription'}
+                  onClick={toggleLinodeView}
+                  disableRipple
+                  className={classes.toggleButton}
+                >
+                  <TableView />
+                </IconButton>
+              </Tooltip>
 
               <div id="groupByDescription" className="visually-hidden">
                 {linodesAreGrouped
                   ? 'group by tag is currently enabled'
                   : 'group by tag is currently disabled'}
               </div>
-              <IconButton
-                aria-label={`Toggle group by tag`}
-                aria-describedby={'groupByDescription'}
-                title={`Toggle group by tag`}
-                onClick={toggleGroupLinodes}
-                disableRipple
-                className={classes.toggleButton}
-              >
-                <GroupByTag />
-              </IconButton>
+              <Tooltip placement="top-end" title="Ungroup by tag">
+                <IconButton
+                  aria-label={`Toggle group by tag`}
+                  aria-describedby={'groupByDescription'}
+                  onClick={toggleGroupLinodes}
+                  disableRipple
+                  className={classes.toggleButton}
+                >
+                  <GroupByTag />
+                </IconButton>
+              </Tooltip>
             </div>
           )}
         </Grid>
+        {orderedGroupedLinodes.length === 0 ? (
+          <Typography style={{ textAlign: 'center' }}>
+            No items to display.
+          </Typography>
+        ) : null}
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
             <div
@@ -233,7 +247,8 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                     handlePageChange,
                     handleOrderChange,
                     order,
-                    orderBy
+                    orderBy,
+                    isVLAN
                   };
                   return (
                     <React.Fragment>
@@ -272,6 +287,11 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
             toggleLinodeView={toggleLinodeView}
             toggleGroupLinodes={toggleGroupLinodes}
           >
+            {orderedGroupedLinodes.length === 0 ? (
+              <TableBody>
+                <TableRowEmptyState_CMR colSpan={12} />
+              </TableBody>
+            ) : null}
             {orderedGroupedLinodes.map(([tag, linodes]) => {
               return (
                 <React.Fragment key={tag}>
@@ -297,7 +317,8 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                         handlePageChange,
                         handleOrderChange,
                         order,
-                        orderBy
+                        orderBy,
+                        isVLAN
                       };
                       return (
                         <TableBody
@@ -372,7 +393,8 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                         handlePageChange,
                         handleOrderChange,
                         order,
-                        orderBy
+                        orderBy,
+                        isVLAN
                       };
                       return (
                         <TableBody
