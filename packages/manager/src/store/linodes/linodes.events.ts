@@ -11,7 +11,7 @@ import { deleteLinode } from './linodes.actions';
 import { parseAPIDate } from 'src/utilities/date';
 
 const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
-  const { action, entity, percent_complete, status } = event;
+  const { action, entity, percent_complete, status, id: eventID } = event;
   const { id } = entity;
 
   // We may want to request notifications here, depending on the event
@@ -22,11 +22,18 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     dispatch(requestNotifications() as any);
   }
 
+  const eventFromStore = getState().events.events.find(
+    thisEvent => thisEvent.id === eventID
+  );
+
+  const prevStatus = eventFromStore?.status;
+
   switch (action) {
     /** Update Linode */
     case 'linode_migrate':
+    case 'linode_migrate_datacenter':
     case 'linode_resize':
-      return handleLinodeMigrate(dispatch, status, id);
+      return handleLinodeMigrate(dispatch, status, id, prevStatus);
     case 'linode_reboot':
     case 'linode_shutdown':
     case 'linode_snapshot':
@@ -36,11 +43,17 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'backups_cancel':
     case 'disk_imagize':
     case 'linode_clone':
-      return handleLinodeUpdate(dispatch, status, id);
+      return handleLinodeUpdate(dispatch, status, id, prevStatus);
 
     case 'linode_rebuild':
     case 'backups_restore':
-      return handleLinodeRebuild(dispatch, status, id, percent_complete);
+      return handleLinodeRebuild(
+        dispatch,
+        status,
+        id,
+        percent_complete,
+        prevStatus
+      );
 
     /** Remove Linode */
     case 'linode_delete':
@@ -48,7 +61,7 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
 
     /** Create Linode */
     case 'linode_create':
-      return handleLinodeCreation(dispatch, status, id, getState());
+      return handleLinodeCreation(dispatch, status, id, prevStatus);
 
     /**
      * Config actions
@@ -81,25 +94,29 @@ const handleLinodeRebuild = (
   dispatch: Dispatch<any>,
   status: EventStatus,
   id: number,
-  percent_complete: number | null
+  percent_complete: number | null,
+  prevStatus?: EventStatus
 ) => {
   /**
    * Rebuilding is a special case, because the rebuilt Linode
    * has new disks, which need to be updated in our store.
    */
 
+  // If this is the first "scheduled" event coming through for the Linode,
+  // request it to update its status.
+  if (status === 'scheduled' && !prevStatus) {
+    return dispatch(requestLinodeForStore(id, true));
+  }
+
+  if (status === 'started' && percent_complete === 100) {
+    // Get the new disks and update the store.
+    dispatch(getAllLinodeDisks({ linodeId: id }));
+    dispatch(getAllLinodeConfigs({ linodeId: id }));
+    return dispatch(requestLinodeForStore(id));
+  }
+
   switch (status) {
     case 'notification':
-    case 'scheduled':
-    case 'started':
-      if (percent_complete === 100) {
-        // Get the new disks and update the store
-        // This is a safety hatch in case the 'finished'
-        // event doesn't come through.
-        dispatch(getAllLinodeDisks({ linodeId: id }));
-        dispatch(getAllLinodeConfigs({ linodeId: id }));
-      }
-      return dispatch(requestLinodeForStore(id));
     case 'finished':
     case 'failed':
       // Get the new disks and update the store.
@@ -114,16 +131,19 @@ const handleLinodeRebuild = (
 const handleLinodeMigrate = (
   dispatch: Dispatch<any>,
   status: EventStatus,
-  id: number
+  id: number,
+  prevStatus?: EventStatus
 ) => {
-  switch (status) {
-    case 'notification':
-    case 'scheduled':
-    case 'started':
-      return dispatch(requestLinodeForStore(id));
+  // If this is the first "scheduled" event coming through for the Linode,
+  // request it to update its status.
+  if (status === 'scheduled' && !prevStatus) {
+    return dispatch(requestLinodeForStore(id, true));
+  }
 
-    case 'finished':
+  switch (status) {
     case 'failed':
+    case 'finished':
+    case 'notification':
       // Once the migration/resize is done, we request notifications in order
       // to clear the Migration Imminent notification
       dispatch(requestNotifications());
@@ -148,16 +168,20 @@ const handleLinodeMigrate = (
 const handleLinodeUpdate = (
   dispatch: Dispatch<any>,
   status: EventStatus,
-  id: number
+  id: number,
+  prevStatus?: EventStatus
 ) => {
+  // If this is the first "scheduled" event coming through for the Linode,
+  // request it to update its status.
+  if (status === 'scheduled' && !prevStatus) {
+    return dispatch(requestLinodeForStore(id, true));
+  }
+
   switch (status) {
     case 'failed':
     case 'finished':
     case 'notification':
-    case 'scheduled':
-    case 'started':
       return dispatch(requestLinodeForStore(id, true));
-
     default:
       return;
   }
@@ -192,14 +216,19 @@ const handleLinodeCreation = (
   dispatch: Dispatch<any>,
   status: EventStatus,
   id: number,
-  state: ApplicationState
+  prevStatus?: EventStatus
 ) => {
+  // If this is the first "scheduled" event coming through for the Linode,
+  // request it to update its status.
+  if (status === 'scheduled' && !prevStatus) {
+    return dispatch(requestLinodeForStore(id, true));
+  }
+
   switch (status) {
     case 'failed':
     case 'finished':
     case 'notification':
     case 'scheduled':
-    case 'started':
       return dispatch(requestLinodeForStore(id, true));
 
     default:
