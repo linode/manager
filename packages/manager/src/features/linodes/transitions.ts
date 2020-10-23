@@ -5,6 +5,7 @@ import {
 } from 'src/store/events/event.selectors';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
 
 export const transitionStatus = [
   'booting',
@@ -132,3 +133,13 @@ export const linodesInTransition = (events: Event[]) => {
 
   return set;
 };
+
+// Return the progress of an event if one is given, otherwise return a default
+// of 100. This is useful in the situation where a Linode has recently completed
+// an in-progress event, but we don't have the updated status from the API  yet.
+// In this cause it doesn't have a recentEvent attached (since it has completed),
+// but its status is still briefly in transition, so give it a progress of 100.
+export const getProgressOrDefault = (
+  event?: ExtendedEvent,
+  defaultProgress = 100
+) => event?.percent_complete ?? defaultProgress;

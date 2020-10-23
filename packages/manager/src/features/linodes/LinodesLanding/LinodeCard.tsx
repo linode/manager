@@ -30,6 +30,7 @@ import withFeatureFlagConsumerContainer, {
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import {
+  getProgressOrDefault,
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
@@ -241,7 +242,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
             {linodeInTransition(status, recentEvent) && (
               <ProgressDisplay
                 text={transitionText(status, id, recentEvent)}
-                progress={recentEvent?.percent_complete ?? 100}
+                progress={getProgressOrDefault(recentEvent)}
                 classes={{
                   statusProgress: classes.statusProgress,
                   cardSection: classes.cardSection

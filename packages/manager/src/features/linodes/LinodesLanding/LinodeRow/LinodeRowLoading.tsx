@@ -10,7 +10,10 @@ import {
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { linodeInTransition } from 'src/features/linodes/transitions';
+import {
+  getProgressOrDefault,
+  linodeInTransition
+} from 'src/features/linodes/transitions';
 
 type ClassNames = 'bodyRow' | 'status' | 'bodyCell';
 
@@ -61,9 +64,7 @@ const LinodeRowLoading: React.FC<CombinedProps> = props => {
       {children}
       <TableCell colSpan={5} className={classes.bodyCell}>
         {linodeInTransition(linodeStatus, linodeRecentEvent) && (
-          <ProgressDisplay
-            progress={linodeRecentEvent?.percent_complete ?? 100}
-          />
+          <ProgressDisplay progress={getProgressOrDefault(linodeRecentEvent)} />
         )}
       </TableCell>
     </TableRow>
