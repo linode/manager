@@ -136,7 +136,7 @@ export const requestDeps = (
     const currentResource = state.__resources[deps[i]] || state[deps[i]];
 
     if (currentResource) {
-      const currentResourceHasReadError = hasReadError(currentResource.error);
+      const currentResourceHasReadError = hasReadError(currentResource?.error);
       if (
         currentResource.lastUpdated === 0 &&
         !currentResource.loading &&
