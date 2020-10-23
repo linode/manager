@@ -280,8 +280,8 @@ const eventsWithRelevantNotifications: EventAction[] = [
   'linode_migrate_datacenter'
 ];
 
-// If this is the first "scheduled" event coming through for the Linode,
-// request it from the API to update its status.
+// If this is the first event coming in for the Linode, request the Linode from
+// the API to update its status.
 export const updateLinodeOnFirstScheduledEvent = (
   dispatch: Dispatch<any>,
   linodeID: number,
