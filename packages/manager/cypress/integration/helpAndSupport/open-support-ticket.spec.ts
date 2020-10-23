@@ -8,7 +8,7 @@ describe('help & support', () => {
     const imagePath = `images/${image}`;
     const ticketDescription = 'this is a test ticket';
     const ticketLabel = 'cy-test ticket';
-    const ticketId = 11111111;
+    const ticketId = Math.floor(Math.random() * 99999999 + 10000000);
     const ts = new Date();
 
     cy.server();
