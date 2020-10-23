@@ -1,9 +1,11 @@
+import { makeTestLabel } from '../../support/api/common';
 import {
   createBucket,
   deleteAllTestAccessKeys,
   deleteBucketByLabel
 } from '../../support/api/objectStorage';
 import {
+  containsVisible,
   fbtClick,
   fbtVisible,
   getClick,
@@ -12,14 +14,14 @@ import {
 
 describe('access keys', () => {
   it('create access key', () => {
-    const bucketLabel = 'cy-test-bucket';
+    const bucketLabel = 'cy-test-' + makeTestLabel();
     const accessKeyLabel = 'cy-test-key';
     const clusterId = 'us-east-1';
 
     createBucket(bucketLabel, clusterId).then(() => {
       cy.visitWithLogin('/object-storage/access-keys');
-      fbtClick('Add an Access Key...');
-      fbtVisible('Create an Access Key');
+      fbtClick('Create an Access Key');
+      containsVisible('Generate an Access Key ');
       getVisible('[data-testid="textfield-input"]').type(accessKeyLabel);
       getClick('[data-qa-toggle="false"]');
       getVisible('[data-qa-toggle="true"]');
