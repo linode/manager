@@ -54,7 +54,7 @@ const eventsMiddlewareFactory = (
        */
       if (isInProgressEvent(event)) {
         // If the event is in_progress, we poll more aggressively
-        resetEventsPolling();
+        resetEventsPolling(1.5);
       }
     }
   }
