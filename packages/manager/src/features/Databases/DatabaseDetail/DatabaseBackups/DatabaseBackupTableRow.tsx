@@ -3,15 +3,16 @@ import { Duration } from 'luxon';
 import * as React from 'react';
 import TableRow from 'src/components/core/TableRow';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-// import LinodeBackupActionMenu from './LinodeBackupActionMenu';
+import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
 import { formatDuration } from 'src/utilities/formatDuration';
 import { parseAPIDate } from 'src/utilities/date';
 
 interface Props {
   backup: DatabaseBackup;
-  // disabled: boolean;
+  // TBD As of 10/23/20, Restore and Delete are the only documented actions that can be taken for db backups.
+  // @todo add in when API work is finalized
   // handleRestore: (backup: DatabaseBackup) => void;
-  // handleDeploy: (backup: DatabaseBackup) => void;
+  // handleDelete: (backup: DatabaseBackup) => void;
 }
 
 const BackupTableRow: React.FC<Props> = props => {
@@ -30,12 +31,7 @@ const BackupTableRow: React.FC<Props> = props => {
         )}
       </TableCell>
       <TableCell>
-        {/* <LinodeBackupActionMenu
-          backup={backup}
-          disabled={disabled}
-          onRestore={handleRestore}
-          onDeploy={onDeploy}
-        /> */}
+        <DatabaseBackupActionMenu backup={backup} />
       </TableCell>
     </TableRow>
   );
