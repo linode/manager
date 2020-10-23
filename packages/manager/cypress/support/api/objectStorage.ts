@@ -1,21 +1,23 @@
 import { apiCheckErrors, deleteById, getAll, isTestEntity } from './common';
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
-const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
+const apiroot = Cypress.env('REACT_APP_API_ROOT');
 
 export const getAccessKeys = () => getAll('/object-storage/keys');
 export const getBuckets = () => getAll('/object-storage/buckets');
 
-const makeBucketCreateReq = (label, cluster, bucket) => {
-  const bucketData = bucket
-    ? bucket
-    : {
-        cluster,
-        label
-      };
+const makeBucketCreateReq = (
+  label: string,
+  cluster: string,
+  bucket: undefined
+) => {
+  const bucketData = bucket ?? {
+    cluster,
+    label
+  };
 
   return cy.request({
     method: 'POST',
-    url: Cypress.env('REACT_APP_API_ROOT') + '/object-storage/buckets',
+    url: apiroot + '/object-storage/buckets',
     body: bucketData,
     auth: {
       bearer: oauthtoken
