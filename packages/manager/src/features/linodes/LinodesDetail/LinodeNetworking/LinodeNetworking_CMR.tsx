@@ -12,6 +12,7 @@ import { compose as recompose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -29,7 +30,12 @@ import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import withAccount, { StateProps } from 'src/containers/account.container';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { withLinodeDetailContext } from '../linodeDetailContext';
@@ -45,7 +51,6 @@ import { IPTypes } from './types';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
-import Hidden from 'src/components/core/Hidden';
 import LinodeVLANs from './VLANPanel/LinodeVLANs';
 
 type ClassNames =
@@ -155,7 +160,11 @@ interface State {
   sharingDialogOpen: boolean;
 }
 
-type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
+type CombinedProps = ContextProps &
+  WithStyles<ClassNames> &
+  DispatchProps &
+  FeatureFlagConsumerProps &
+  StateProps;
 
 // Save some typing below
 export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
@@ -513,6 +522,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: IPAddress) => i.address)
     );
 
+    const vlansEnabled = isFeatureEnabled(
+      'Vlans',
+      Boolean(this.props.flags.vlans),
+      this.props.accountData?.capabilities ?? []
+    );
+
     return (
       <div>
         {readOnly && <LinodePermissionsError />}
@@ -615,7 +630,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           />
         )}
 
-        <LinodeVLANs key={this.props.linode.id} />
+        {vlansEnabled && <LinodeVLANs />}
       </div>
     );
   }
@@ -733,7 +748,13 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
+const enhanced = recompose<CombinedProps, {}>(
+  connected,
+  withFeatureFlags,
+  withAccount(),
+  linodeContext,
+  styled
+);
 
 export default enhanced(LinodeNetworking);
 
