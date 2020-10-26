@@ -82,13 +82,13 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
                 linodeDisks.find(
                   thisDisk =>
                     thisDisk.id === config.devices[thisDevice]?.disk_id
-                )?.label ?? device.disk_id;
+                )?.label ?? `disk-${device.disk_id}`;
             } else if (device?.volume_id) {
               label =
                 linodeVolumes.find(
                   thisVolume =>
                     thisVolume.id === config.devices[thisDevice]?.volume_id
-                )?.label ?? device.volume_id;
+                )?.label ?? `volume-${device.volume_id}`;
             }
 
             if (!label) {
