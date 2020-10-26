@@ -128,7 +128,7 @@ const handleLinodeMigrate = (
   id: number,
   prevStatus?: EventStatus
 ) => {
-  updateLinodeOnFirstScheduledAndStartedEvent(dispatch, id, status, prevStatus);
+  updateLinodeOnFirstRelevantEvent(dispatch, id, status, prevStatus);
 
   switch (status) {
     case 'failed':
@@ -161,7 +161,7 @@ const handleLinodeUpdate = (
   id: number,
   prevStatus?: EventStatus
 ) => {
-  updateLinodeOnFirstScheduledAndStartedEvent(dispatch, id, status, prevStatus);
+  updateLinodeOnFirstRelevantEvent(dispatch, id, status, prevStatus);
 
   switch (status) {
     case 'failed':
@@ -204,7 +204,7 @@ const handleLinodeCreation = (
   id: number,
   prevStatus?: EventStatus
 ) => {
-  updateLinodeOnFirstScheduledAndStartedEvent(dispatch, id, status, prevStatus);
+  updateLinodeOnFirstRelevantEvent(dispatch, id, status, prevStatus);
 
   switch (status) {
     case 'failed':
@@ -278,18 +278,15 @@ const eventsWithRelevantNotifications: EventAction[] = [
   'linode_migrate_datacenter'
 ];
 
-// If this is the first "scheduled" or "started" event coming in for the Linode,
-// request the Linode from the API to update its status.
-export const updateLinodeOnFirstScheduledAndStartedEvent = (
+// If this is the first event coming in for the Linode, or if it's the first
+// "started" event, request the Linode from the API to update its status.
+export const updateLinodeOnFirstRelevantEvent = (
   dispatch: Dispatch<any>,
   linodeID: number,
   status: EventStatus,
   prevStatus?: EventStatus
 ) => {
-  if (
-    (status === 'scheduled' && !prevStatus) ||
-    (status === 'started' && prevStatus === 'scheduled')
-  ) {
+  if (!prevStatus || (status === 'started' && prevStatus === 'scheduled')) {
     dispatch(requestLinodeForStore(linodeID, true));
   }
 };

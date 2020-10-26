@@ -42,9 +42,9 @@ export const linodeInTransition = (
 
   return (
     recentEvent !== undefined &&
-    transitionAction.includes(recentEvent?.action || '') &&
-    recentEvent?.percent_complete !== null &&
-    recentEvent?.percent_complete < 100
+    transitionAction.includes(recentEvent.action || '') &&
+    recentEvent.percent_complete !== null &&
+    recentEvent.percent_complete < 100
   );
 };
 
