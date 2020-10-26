@@ -23,6 +23,7 @@ import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { getAllVlans } from 'src/store/vlans/vlans.requests';
+import { getAllDatabases } from 'src/store/databases/databases.requests';
 
 interface UseReduxPreload {
   _loading: boolean;
@@ -33,6 +34,7 @@ export type ReduxEntity =
   | 'volumes'
   | 'account'
   | 'accountSettings'
+  | 'databases'
   | 'domains'
   | 'images'
   | 'kubernetes'
@@ -55,6 +57,7 @@ const requestMap: RequestMap = {
   volumes: getAllVolumes,
   account: requestAccount,
   accountSettings: requestAccountSettings,
+  databases: () => getAllDatabases({}),
   domains: requestDomains,
   nodeBalancers: getAllNodeBalancers,
   images: requestImages,

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 
 const DatabaseLanding = React.lazy(() => import('./DatabaseLanding'));
 const DatabaseDetail = React.lazy(() => import('./DatabaseDetail'));
@@ -14,6 +15,8 @@ const Database: React.FC<CombinedProps> = props => {
   const {
     match: { path }
   } = props;
+
+  useReduxLoad(['databases']);
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
