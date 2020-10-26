@@ -1,7 +1,8 @@
 import {
   CreateDatabasePayload,
   Database,
-  UpdateDatabasePayload
+  UpdateDatabasePayload,
+  ResetPasswordPayload
 } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';
@@ -35,6 +36,16 @@ export interface UpdateDatabaseParams extends UpdateDatabasePayload {
 }
 export const updateDatabaseActions = actionCreator.async<
   UpdateDatabaseParams,
+  Database,
+  APIError[]
+>(`update`);
+
+export interface ResetPasswordParams extends ResetPasswordPayload {
+  databaseID: number;
+  root_password: string;
+}
+export const resetPasswordActions = actionCreator.async<
+  ResetPasswordParams,
   Database,
   APIError[]
 >(`update`);

@@ -16,10 +16,7 @@ export const DatabaseSettings: React.FC<Props> = props => {
         databaseID={databaseID}
         databaseLabel={databaseLabel}
       />
-      <DatabaseSettingsPasswordPanel
-        databaseID={databaseID}
-        databaseLabel={databaseLabel}
-      />
+      <DatabaseSettingsPasswordPanel databaseID={databaseID} />
       <DatabaseSettingsMaintenancePanel
         databaseID={databaseID}
         databaseLabel={databaseLabel}

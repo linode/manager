@@ -37,8 +37,6 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
     !labelError &&
     pathOr('An error occured while updating label', [0, 'reason'], errors);
 
-  const disabled = false;
-
   const changeLabel = () => {
     setSubmitting(true);
     setSuccess(undefined);
@@ -57,6 +55,10 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
       });
   };
 
+  const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUpdatedLabel(e.target.value);
+  };
+
   return (
     <ExpansionPanel
       heading="Edit Database Label"
@@ -66,7 +68,7 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
           <Button
             onClick={changeLabel}
             buttonType="primary"
-            disabled={disabled || (submitting && !labelError)}
+            disabled={submitting && !labelError}
             loading={submitting && !labelError}
             data-qa-label-save
           >
@@ -79,14 +81,11 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
       <TextField
         label="Label"
         value={updatedLabel}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setUpdatedLabel(e.target.value)
-        }
+        onChange={handleLabelChange}
         errorText={labelError}
         errorGroup="database-settings-label"
         error={Boolean(labelError)}
         data-qa-label
-        disabled={disabled}
       />
     </ExpansionPanel>
   );
