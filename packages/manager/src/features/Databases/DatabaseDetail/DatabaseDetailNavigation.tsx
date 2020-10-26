@@ -10,8 +10,14 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
 
-const DatabaseDetailNavigation: React.FC<{}> = props => {
-  const label = 'Test';
+interface Props {
+  databaseID: number;
+  databaseLabel: string;
+}
+
+const DatabaseDetailNavigation: React.FC<Props> = props => {
+  const { databaseID, databaseLabel } = props;
+
   const history = useHistory();
   const match = useRouteMatch<{ id: string; subpath: string }>({
     path: '/databases/:id/'
@@ -47,7 +53,8 @@ const DatabaseDetailNavigation: React.FC<{}> = props => {
   return (
     <>
       <DocumentTitleSegment
-        segment={`${label} - ${tabs[getIndex()]?.title ?? 'Detail View'}`}
+        segment={`${databaseLabel} - ${tabs[getIndex()]?.title ??
+          'Detail View'}`}
       />
       <Tabs index={getIndex()} onChange={navToURL}>
         <TabLinkList tabs={tabs} />
@@ -58,7 +65,10 @@ const DatabaseDetailNavigation: React.FC<{}> = props => {
               <DatabaseBackups />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
-              <DatabaseSettings />
+              <DatabaseSettings
+                databaseID={databaseID}
+                databaseLabel={databaseLabel}
+              />
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>

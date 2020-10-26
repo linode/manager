@@ -49,7 +49,8 @@ export type ReduxEntity =
   | 'longview'
   | 'firewalls'
   | 'clusters'
-  | 'vlans';
+  | 'vlans'
+  | 'databases';
 
 type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
@@ -72,7 +73,8 @@ const requestMap: RequestMap = {
   longview: getAllLongviewClients,
   firewalls: () => getAllFirewalls({}),
   clusters: requestClusters,
-  vlans: () => getAllVlans({})
+  vlans: () => getAllVlans({}),
+  databases: () => getAllDatabases({})
 };
 
 export const useReduxLoad = (
