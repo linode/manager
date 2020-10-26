@@ -1,26 +1,27 @@
-import * as React from 'react';
+import {
+  DatabaseAvailability,
+  DatabaseType
+} from '@linode/api-v4/lib/databases/index';
 import { isEmpty } from 'ramda';
-import Radio from 'src/components/Radio';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import * as React from 'react';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
-import SelectionCard from 'src/components/SelectionCard';
-
+import { makeStyles, Theme } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
+import Grid from 'src/components/Grid';
+import Radio from 'src/components/Radio';
+import SelectionCard from 'src/components/SelectionCard';
+import TabbedPanel from 'src/components/TabbedPanel';
+import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table_CMR from 'src/components/Table/Table_CMR';
 import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
 import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
-import TableBody from 'src/components/core/TableBody';
-import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import Chip from 'src/components/core/Chip';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import {
-  DatabaseType,
-  DatabaseAvailability
-} from '@linode/api-v4/lib/databases/index';
-import TabbedPanel from 'src/components/TabbedPanel';
+  ExtendedType,
+  extendType
+} from 'src/store/databases/databases.reducer';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -69,6 +70,10 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
   const { databasePlans, onPlanSelect, selectedPlanId, errorText } = props;
   const selectPlan = (id: string) => () => onPlanSelect(id);
 
+  const databasePlansExtended = databasePlans.map(databasePlan =>
+    extendType(databasePlan)
+  );
+
   const classes = useStyles();
 
   const getStandardAvails = (types: DatabaseType[]) =>
@@ -79,8 +84,8 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
   const createTabs = (): [Tab[], DatabaseAvailability[]] => {
     const tabs: Tab[] = [];
 
-    const standardAvailability = getStandardAvails(databasePlans);
-    const highAvailability = getHighAvails(databasePlans);
+    const standardAvailability = getStandardAvails(databasePlansExtended);
+    const highAvailability = getHighAvails(databasePlansExtended);
 
     const tabOrder: DatabaseAvailability[] = [];
 
@@ -160,9 +165,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
     );
   };
 
-  const renderSelection = (type: DatabaseType, idx: number) => {
-    const isSamePlan = false; // type.heading === currentPlanHeading;
-
+  const renderSelection = (type: ExtendedType, idx: number) => {
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
@@ -172,39 +175,25 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
             aria-label={type.label}
             key={type.id}
             onClick={selectPlan(type.id)}
-            rowLink={}
-            aria-disabled={}
-            className={}
+            rowLink={selectPlan(type.id)}
           >
             <TableCell_CMR className={classes.radioCell}>
-              {!isSamePlan && (
-                <FormControlLabel
-                  label={type.label}
-                  aria-label={type.label}
-                  className={'label-visually-hidden'}
-                  control={
-                    <Radio
-                      checked={type.id === selectedPlanId}
-                      onChange={selectPlan(type.id)}
-                      disabled={false}
-                      id={type.id}
-                    />
-                  }
-                />
-              )}
+              <FormControlLabel
+                label={type.label}
+                aria-label={type.label}
+                className={'label-visually-hidden'}
+                control={
+                  <Radio
+                    checked={type.id === selectedPlanId}
+                    onChange={selectPlan(type.id)}
+                    disabled={false}
+                    id={type.id}
+                  />
+                }
+              />
             </TableCell_CMR>
             <TableCell_CMR data-qa-plan-name>
-              <div className={classes.headingCellContainer}>
-                {type.label}{' '}
-                {isSamePlan && (
-                  <Chip
-                    data-qa-current-plan
-                    label="Current Plan"
-                    aria-label="This is your current plan"
-                    className={classes.chip}
-                  />
-                )}
-              </div>
+              <div className={classes.headingCellContainer}>{type.label} </div>
             </TableCell_CMR>
             <TableCell_CMR data-qa-monthly>${type.price.monthly}</TableCell_CMR>
             <TableCell_CMR data-qa-hourly> ${type.price.hourly}</TableCell_CMR>
@@ -222,12 +211,10 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
         <Hidden mdUp>
           <SelectionCard
             key={type.id}
-            checked={}
-            onClick={() => console.log('Clicked')}
+            checked={type.id === selectedPlanId}
+            onClick={selectPlan(type.id)}
             heading={type.label}
-            subheadings={type.label || undefined}
-            disabled={false}
-            // tooltip={tooltip}
+            subheadings={type.subHeadings}
             variant={'check'}
           />
         </Hidden>

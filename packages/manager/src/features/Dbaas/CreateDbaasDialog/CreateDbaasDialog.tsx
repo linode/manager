@@ -1,11 +1,22 @@
+import { createDatabase } from '@linode/api-v4/lib/databases';
 import createDatabaseSchema from '@linode/api-v4/lib/databases/databases.schema';
-import { CreateDatabasePayload } from '@linode/api-v4/lib/databases/types';
+import {
+  CreateDatabasePayload,
+  DatabaseMaintenanceSchedule
+} from '@linode/api-v4/lib/databases/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { useFormik } from 'formik';
+import { DateTime } from 'luxon';
+import { sortBy } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
+import FormControl from 'src/components/core/FormControl';
+import FormHelperText from 'src/components/core/FormHelperText';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect, {
   ExtendedRegion
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -14,24 +25,17 @@ import TagsInput from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import { dbaasContext } from 'src/context';
+import { useDatabaseTypes } from 'src/hooks/useDatabaseTypes';
+import useProfile from 'src/hooks/useProfile';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import useRegions from 'src/hooks/useRegions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import FormHelperText from 'src/components/core/FormHelperText';
-import FormControl from 'src/components/core/FormControl';
-import Typography from 'src/components/core/Typography';
-import SelectDBPlanPanel from './SelectDBPlanPanel';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import { useDatabaseTypes } from 'src/hooks/useDatabaseTypes';
-import { DateTime } from 'luxon';
 import { evenizeNumber } from 'src/utilities/evenizeNumber';
-import { sortBy } from 'ramda';
-import useProfile from 'src/hooks/useProfile';
-import { createDatabase } from '@linode/api-v4/lib/databases';
 import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
+import SelectDBPlanPanel from './SelectDBPlanPanel';
 
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
@@ -141,8 +145,8 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
       root_password: '',
       tags: [''],
       maintenance_schedule: {
-        day: '',
-        window: ''
+        day: '' as DatabaseMaintenanceSchedule['day'],
+        window: '' as DatabaseMaintenanceSchedule['window']
       }
     },
     validationSchema: createDatabaseSchema,
@@ -159,6 +163,12 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
     formik.setFieldValue('type', id);
   };
 
+  const handleTagChange = (tag: any) => {
+    if (typeof tag === 'object') {
+      formik.setFieldValue('tags', tag.value);
+    }
+  };
+
   /** Reset errors and state when the modal opens */
   React.useEffect(() => {
     if (context.isOpen) {
@@ -170,17 +180,17 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
     const payload = { ...values };
 
     // Set any potentially empty non-required fields to undefined.
-    if (payload.label === '') {
-      payload.label = undefined;
-    }
+    // if (payload.label === '') {
+    //   payload.label = undefined;
+    // }
 
     if (!payload.maintenance_schedule) {
       payload.maintenance_schedule = undefined;
     }
 
-    if (!payload.tags) {
-      payload.tags = undefined;
-    }
+    // if (isEmpty(payload.tags)) {
+    //   payload.tags = undefined;
+    // }
 
     createDatabase(payload)
       .then(_ => {
@@ -243,18 +253,18 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
           selectedPlanId={selectedPlanId}
           errorText={formik.errors.type}
         />
-        <PasswordInput
-          name="password"
-          label="Root Password"
-          type="password"
-          data-qa-add-password
-          value={formik.values.root_password}
-          error={!!formik.errors.root_password}
-          errorText={formik.errors.root_password}
-          onChange={handlePasswordChange}
-          hideValidation
-          required
-        />
+        <div className={classes.formSection}>
+          <PasswordInput
+            name="password"
+            label="Root Password"
+            type="password"
+            data-qa-add-password
+            value={formik.values.root_password}
+            error={!!formik.errors.root_password}
+            errorText={formik.errors.root_password}
+            onChange={handlePasswordChange}
+          />
+        </div>
         <div
           className={classes.formSection}
           data-testid="maintenance-window-selects"
@@ -296,7 +306,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
               formik.touched.tags
                 ? formik.errors.tags
                   ? getErrorStringOrDefault(
-                      formik.errors.tags,
+                      formik.errors.tags as string | APIError[],
                       'Unable to tag database.'
                     )
                   : undefined
@@ -304,7 +314,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
             }
             name="tags"
             label="Add Tags"
-            onChange={selected => formik.setFieldValue('tags', selected)}
+            onChange={handleTagChange}
             value={formik.values.tags}
           />
         </div>
