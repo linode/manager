@@ -454,7 +454,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                       this.props.history.push('/linodes/create')
                                     }
                                     iconType="linode"
-                                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/'"
+                                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                                     body={
                                       <>
                                         {linodesRunningCount !== 0 && (
