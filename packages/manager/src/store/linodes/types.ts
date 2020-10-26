@@ -1,16 +1,16 @@
 import { LinodeStatus, Linode } from '@linode/api-v4/lib/linodes';
 import { ExtendedEvent } from 'src/store/events/event.types';
 
-export interface LinodeWithMaintenance extends Linode {
+interface LinodeWithMaintenance extends Linode {
   _maintenance?: Maintenance | null;
 }
 
-export interface LinodeWithDisplayStatus extends Linode {
+interface LinodeWithDisplayStatus extends Linode {
   _displayStatus?: ExtendedStatus;
   _statusPriority?: number;
 }
 
-export interface LinodeWithRecentEvent extends Linode {
+interface LinodeWithRecentEvent extends Linode {
   _recentEvent?: ExtendedEvent;
 }
 
