@@ -1,5 +1,6 @@
 import { Config, Disk, LinodeInterface } from '@linode/api-v4/lib/linodes';
 import { VLAN } from '@linode/api-v4/lib/vlans';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'src/components/core/styles';
@@ -18,12 +19,11 @@ const useStyles = makeStyles(() => ({
   },
   interfaceList: {
     listStyleType: 'none',
-    padding: `4px 0 4px 0`,
-    margin: 0
+    margin: 0,
+    paddingLeft: 0
   },
   interfaceListItem: {
-    paddingTop: 2,
-    paddingBottom: 2
+    paddingBottom: 3
   }
 }));
 
@@ -33,6 +33,7 @@ interface Props {
   linodeMemory: number;
   readOnly: boolean;
   linodeDisks: Disk[];
+  linodeVolumes: Volume[];
   linodeKernel: string;
   linodeInterfaces: LinodeInterface[];
   linodeIPs: string[];
@@ -55,6 +56,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     linodeDisks,
     linodeKernel,
     linodeIPs,
+    linodeVolumes,
     onBoot,
     onEdit,
     onDelete,
@@ -65,19 +67,38 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
   } = props;
 
   const classes = useStyles();
-
-  const [rootDeviceLabel, setRootDeviceLabel] = React.useState<string>('');
-
-  React.useEffect(() => {
-    const rootDevice = config.root_device;
-    const device = rootDevice.slice(-3); // Isolate the 'sda', 'sdc', etc. piece
-
-    const deviceId = config.devices[device]?.disk_id;
-
-    const matchingDisk = linodeDisks.find(disk => disk.id === deviceId);
-    const label = matchingDisk ? ` – ${matchingDisk.label}` : '';
-    setRootDeviceLabel(`${rootDevice}${label}`);
-  }, [config, linodeDisks]);
+  const deviceLabels = React.useMemo(
+    () => (
+      <ul className={classes.interfaceList}>
+        {Object.keys(config.devices)
+          .map(thisDevice => {
+            const diskId = linodeDisks.find(
+              thisDisk => thisDisk.id === config.devices[thisDevice]?.disk_id
+            );
+            const volume = linodeVolumes.find(
+              thisVolume =>
+                thisVolume.id === config.devices[thisDevice]?.volume_id
+            );
+            if (!diskId && !volume) {
+              return undefined;
+            }
+            return (
+              <li key={thisDevice} className={classes.interfaceListItem}>
+                /dev/{thisDevice} - {diskId ? diskId.label : volume!.label}
+              </li>
+            );
+          })
+          .filter(Boolean)}
+      </ul>
+    ),
+    [
+      linodeVolumes,
+      linodeDisks,
+      config,
+      classes.interfaceList,
+      classes.interfaceListItem
+    ]
+  );
 
   const hasPrivateIP = linodeIPs.some(thisIP => privateIPRegex.test(thisIP));
 
@@ -120,7 +141,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
           : 'Paravirtualization'}
       </TableCell>
       <TableCell>{linodeKernel}</TableCell>
-      <TableCell>{rootDeviceLabel}</TableCell>
+      <TableCell>{deviceLabels}</TableCell>
       {vlansEnabled ? (
         <TableCell>
           {!isEmpty(config.interfaces) ? InterfaceList : defaultInterfaceLabel}

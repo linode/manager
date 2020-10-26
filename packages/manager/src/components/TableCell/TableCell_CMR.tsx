@@ -10,7 +10,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.tableStatic,
     fontSize: '.875rem',
     lineHeight: '1rem',
-    padding: '0px 15px',
+    padding: '10px 15px',
+    verticalAlign: 'top',
     '&.emptyCell': {
       height: 40
     },

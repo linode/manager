@@ -9,6 +9,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { VLAN } from '@linode/api-v4/lib/vlans';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -548,7 +549,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                         <TableCell
                           className={`${classes.tableCell} ${classes.rootDeviceColumn}`}
                         >
-                          Root Device
+                          Disks
                         </TableCell>
                         {this.vlansEnabled() ? (
                           <TableCell
@@ -595,6 +596,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               onDelete={this.confirmDelete}
                               readOnly={readOnly}
                               linodeInterfaces={this.state.interfaces}
+                              linodeVolumes={this.props.linodeVolumes}
                               vlans={this.props.vlansData}
                               vlansEnabled={this.vlansEnabled()}
                             />
@@ -641,6 +643,7 @@ interface LinodeContext {
   configs: Config[];
   getLinodeConfigs: () => void;
   linodeDisks: Disk[];
+  linodeVolumes: Volume[];
 }
 
 const linodeContext = withLinodeDetailContext<LinodeContext>(
@@ -657,7 +660,8 @@ const linodeContext = withLinodeDetailContext<LinodeContext>(
     deleteLinodeConfig,
     configs: linode._configs,
     getLinodeConfigs,
-    linodeDisks: linode._disks
+    linodeDisks: linode._disks,
+    linodeVolumes: linode._volumes
   })
 );
 
