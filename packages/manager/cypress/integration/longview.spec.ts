@@ -23,7 +23,7 @@ describe('longview', () => {
             const curlCommand = $code.text();
             cy.exec('./cypress/support/longview.sh', {
               failOnNonZeroExit: false,
-              timeout: 10000000,
+              timeout: 1000000000,
               env: {
                 LINODEIP: `${linodeIp}`,
                 LINODEPASSWORD: `${linodePassword}`,
