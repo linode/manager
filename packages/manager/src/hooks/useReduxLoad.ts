@@ -136,18 +136,18 @@ export const requestDeps = (
     const currentResource = state.__resources[deps[i]] || state[deps[i]];
 
     if (currentResource) {
-      const currentResourcehasError = hasError(currentResource?.error);
+      const currentResourceHasError = hasError(currentResource?.error);
       if (
         currentResource.lastUpdated === 0 &&
         !currentResource.loading &&
-        !currentResourcehasError
+        !currentResourceHasError
       ) {
         needsToLoad = true;
         requests.push(requestMap[deps[i]]);
       } else if (
         Date.now() - currentResource.lastUpdated > refreshInterval &&
         !currentResource.loading &&
-        !currentResourcehasError
+        !currentResourceHasError
       ) {
         requests.push(requestMap[deps[i]]);
       }
