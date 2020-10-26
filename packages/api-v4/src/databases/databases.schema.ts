@@ -1,5 +1,7 @@
 import { array, mixed, object, string } from 'yup';
 
+const LABEL_MESSAGE = 'Label must be between 3 and 32 characters';
+
 export const maintenanceScheduleSchema = object({
   day: mixed()
     .required('Day is required')
@@ -28,13 +30,15 @@ export const maintenanceScheduleSchema = object({
       'W20',
       'W22'
     ])
-});
+})
+  .notRequired()
+  .default(undefined);
 
 export const createDatabaseSchema = object({
   label: string()
     .notRequired()
-    .min(3, 'Label must be between 3 and 32 characters')
-    .max(32, 'Label must be between 3 and 32 characters'),
+    .min(3, LABEL_MESSAGE)
+    .max(32, LABEL_MESSAGE),
   region: string().required('Region is required'),
   type: string().required('Type is required'),
   root_password: string().required('Root password is required'),
@@ -45,9 +49,11 @@ export const createDatabaseSchema = object({
 export const updateDatabaseSchema = object({
   label: string()
     .notRequired()
-    .min(3, 'Label must be between 3 and 32 characters')
-    .max(32, 'Label must be between 3 and 32 characters'),
-  tags: array().of(string()),
+    .min(3, LABEL_MESSAGE)
+    .max(32, LABEL_MESSAGE),
+  tags: array()
+    .of(string())
+    .notRequired(),
   maintenance_schedule: maintenanceScheduleSchema.notRequired()
 });
 

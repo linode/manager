@@ -32,12 +32,8 @@ export const useDatabases = () => {
     dispatch(_create(payload));
   const deleteDatabase = (databaseID: number) =>
     dispatch(_delete({ databaseID }));
-  const updateDatabase = (
-    databaseID: number,
-    payload: UpdateDatabasePayload
-  ) => {
+  const updateDatabase = (databaseID: number, payload: UpdateDatabasePayload) =>
     dispatch(_update({ databaseID, ...payload }));
-  };
 
   return {
     databases,

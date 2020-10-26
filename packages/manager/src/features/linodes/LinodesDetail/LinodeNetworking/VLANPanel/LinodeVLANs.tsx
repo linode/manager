@@ -135,9 +135,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     getInterfaces(linodeId)
       .then(interfaces => {
         const privateInterfaces = interfaces.data.filter(
-          individualInterface =>
-            individualInterface.type !== 'default' &&
-            individualInterface.ip_address !== ''
+          individualInterface => individualInterface.type !== 'default'
         );
 
         setInterfaceData(privateInterfaces);
