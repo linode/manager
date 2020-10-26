@@ -43,6 +43,7 @@ import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import BackupsCTA_CMR from 'src/features/Backups/BackupsCTA_CMR';
 import { DialogType } from 'src/features/linodes/types';
+import DetachLinodeDialog from 'src/features/Vlans/DetachLinodeDialog/DetachLinodeDialog';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import { ShallowExtendedLinode } from 'src/store/linodes/types';
@@ -86,6 +87,7 @@ interface State {
   CtaDismissed: boolean;
   linodeResizeOpen: boolean;
   linodeMigrateOpen: boolean;
+  detachLinodeFromVlanDialogOpen: boolean;
   filterStatus: FilterStatus;
 }
 
@@ -99,7 +101,10 @@ type RouteProps = RouteComponentProps<Params>;
 export interface Props {
   isDashboard?: boolean;
   isVLAN?: boolean;
+  vlanID?: number;
+  vlanLabel?: string;
   filterLinodesFn?: (linode: Linode) => boolean;
+  extendLinodesFn?: (linode: Linode) => any;
   LandingHeader?: React.ReactElement;
 }
 
@@ -126,6 +131,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     CtaDismissed: BackupsCtaDismissed.get(),
     linodeResizeOpen: false,
     linodeMigrateOpen: false,
+    detachLinodeFromVlanDialogOpen: false,
     filterStatus: 'all'
   };
 
@@ -199,6 +205,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           enableBackupsDialogOpen: true
         });
         break;
+      case 'detach_vlan':
+        this.setState({
+          detachLinodeFromVlanDialogOpen: true
+        });
     }
     this.setState({
       selectedLinodeID: linodeID,
@@ -214,7 +224,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       rescueDialogOpen: false,
       linodeResizeOpen: false,
       linodeMigrateOpen: false,
-      enableBackupsDialogOpen: false
+      enableBackupsDialogOpen: false,
+      detachLinodeFromVlanDialogOpen: false
     });
   };
 
@@ -259,7 +270,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       ? linodesFilteredByStatus.filter(this.props.filterLinodesFn)
       : linodesFilteredByStatus;
 
-    const someLinodesHaveMaintenance = filteredLinodes.some(
+    const extendedLinodes = this.props.extendLinodesFn
+      ? filteredLinodes.map(this.props.extendLinodesFn)
+      : filteredLinodes;
+
+    const someLinodesHaveMaintenance = extendedLinodes.some(
       thisLinode => !!thisLinode._maintenance
     );
 
@@ -438,7 +453,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                       this.props.history.push('/linodes/create')
                                     }
                                     iconType="linode"
-                                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/'"
+                                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                                     body={
                                       <>
                                         {linodesRunningCount !== 0 && (
@@ -554,7 +569,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                           )}
                           <Grid item xs={12}>
                             <OrderBy
-                              data={filteredLinodes}
+                              data={extendedLinodes}
                               // If there are Linodes with scheduled maintenance, default to
                               // sorting by status priority so they are more visible.
                               order="asc"
@@ -693,6 +708,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               linodeLabel={this.state.selectedLinodeLabel}
               handleDelete={this.props.deleteLinode}
             />
+            {this.props.isVLAN &&
+            !!this.props.vlanID &&
+            !!this.props.vlanLabel ? (
+              <DetachLinodeDialog
+                open={this.state.detachLinodeFromVlanDialogOpen}
+                closeDialog={this.closeDialogs}
+                vlanID={this.props.vlanID}
+                vlanLabel={this.props.vlanLabel}
+                linodeID={this.state.selectedLinodeID}
+                linodeLabel={this.state.selectedLinodeLabel}
+              />
+            ) : null}
           </React.Fragment>
         )}
       </React.Fragment>

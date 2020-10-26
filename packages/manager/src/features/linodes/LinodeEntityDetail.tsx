@@ -344,9 +344,9 @@ const Header: React.FC<HeaderProps> = props => {
               [classes.statusRunning]: isRunning,
               [classes.statusOffline]: isOffline,
               [classes.statusOther]: isOther,
-              statusOther: isOther
+              statusOtherDetail: isOther
             })}
-            label={linodeStatus.toUpperCase()}
+            label={linodeStatus.replace('_', ' ').toUpperCase()}
             component="span"
             clickable={isOther ? true : false}
             {...(isOther && { onClick: openNotificationDrawer })}

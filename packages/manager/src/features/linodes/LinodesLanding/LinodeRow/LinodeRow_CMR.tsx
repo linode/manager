@@ -58,6 +58,7 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
+  vlanIP?: string;
   isVLAN?: boolean;
   openTagDrawer: (
     linodeID: number,
@@ -103,6 +104,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     type,
     tags,
     image,
+    vlanIP,
     // other props
     classes,
     linodeNotifications,
@@ -248,7 +250,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       </TableCell>
       {props.isVLAN ? (
         <TableCell className={classes.ipCell} data-qa-ips>
-          <div className={classes.ipCellWrapper}></div>
+          <div className={classes.ipCellWrapper}>{vlanIP}</div>
         </TableCell>
       ) : null}
       {props.isVLAN ? null : (
@@ -297,6 +299,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             openPowerActionDialog={openPowerActionDialog}
             noImage={!image}
             inTableContext
+            inVLANContext={isVLAN}
           />
         </div>
       </TableCell>

@@ -3,23 +3,20 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'src/components/core/styles';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import PowerDialogOrDrawer, {
   Action as BootAction
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
-import { NotificationDrawer } from 'src/features/NotificationCenter';
-import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import useLinodes from 'src/hooks/useLinodes';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
-import useLinodes from 'src/hooks/useLinodes';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
-import HostMaintenance from './HostMaintenance';
-import MutationNotification from './MutationNotification';
-import Notifications from './Notifications';
+import DeleteDialog from '../../LinodesLanding/DeleteDialog';
+import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
   LinodeDetailContext,
@@ -28,31 +25,9 @@ import {
 import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue/RescueDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
-
-import MigrateLinode from '../../MigrateLanding/MigrateLinode';
-import DeleteDialog from '../../LinodesLanding/DeleteDialog';
-
-const useStyles = makeStyles(() => ({
-  '@keyframes blink': {
-    '0%, 100%': {
-      opacity: 0.25
-    },
-    '35%, 65%': {
-      opacity: 0.45
-    },
-    '45%, 55%': {
-      opacity: 0.95
-    },
-    '50%': {
-      opacity: 1
-    }
-  },
-  root: {
-    '& .statusOther:before': {
-      animation: '$blink 1.25s ease-in-out infinite'
-    }
-  }
-}));
+import HostMaintenance from './HostMaintenance';
+import MutationNotification from './MutationNotification';
+import Notifications from './Notifications';
 
 interface Props {
   numVolumes: number;
@@ -91,8 +66,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const classes = useStyles();
-  const notificationData = useNotificationData();
+  const notificationContext = React.useContext(_notificationContext);
 
   const { linode, linodeStatus, linodeDisks, linodeConfigs } = props;
 
@@ -137,10 +111,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     open: false,
     tags: []
   });
-
-  const [notificationDrawerOpen, setNotificationDrawerOpen] = React.useState(
-    false
-  );
 
   const { updateLinode, deleteLinode } = useLinodes();
   const history = useHistory();
@@ -276,11 +246,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     return deleteLinode(linodeId);
   };
 
-  const openNotificationDrawer = () => setNotificationDrawerOpen(true);
-  const closeNotificationDrawer = () => setNotificationDrawerOpen(false);
-
   return (
-    <div className={classes.root}>
+    <>
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
@@ -294,7 +261,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         openTagDrawer={openTagDrawer}
         openDialog={openDialog}
         openPowerActionDialog={openPowerActionDialog}
-        openNotificationDrawer={openNotificationDrawer}
+        openNotificationDrawer={notificationContext.openDrawer}
       />
       <PowerDialogOrDrawer
         isOpen={powerDialog.open}
@@ -344,12 +311,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         open={backupsDialog.open}
         onClose={closeDialogs}
       />
-      <NotificationDrawer
-        open={notificationDrawerOpen}
-        onClose={closeNotificationDrawer}
-        data={notificationData}
-      />
-    </div>
+    </>
   );
 };
 
