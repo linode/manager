@@ -24,6 +24,9 @@ const useStyles = makeStyles(() => ({
   },
   interfaceListItem: {
     paddingBottom: 3
+  },
+  tableCell: {
+    verticalAlign: 'top'
   }
 }));
 
@@ -134,20 +137,20 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
 
   return (
     <TableRow key={config.id} data-qa-config={config.label}>
-      <TableCell>{config.label}</TableCell>
-      <TableCell>
+      <TableCell className={classes.tableCell}>{config.label}</TableCell>
+      <TableCell className={classes.tableCell}>
         {config.virt_mode === 'fullvirt'
           ? 'Full virtualization'
           : 'Paravirtualization'}
       </TableCell>
-      <TableCell>{linodeKernel}</TableCell>
-      <TableCell>{deviceLabels}</TableCell>
+      <TableCell className={classes.tableCell}>{linodeKernel}</TableCell>
+      <TableCell className={classes.tableCell}>{deviceLabels}</TableCell>
       {vlansEnabled ? (
-        <TableCell>
+        <TableCell className={classes.tableCell}>
           {!isEmpty(config.interfaces) ? InterfaceList : defaultInterfaceLabel}
         </TableCell>
       ) : null}
-      <TableCell className={classes.actionInner}>
+      <TableCell className={`${classes.actionInner} ${classes.tableCell}`}>
         <LinodeConfigActionMenu
           config={config}
           linodeId={linodeId}

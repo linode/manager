@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '.875rem',
     lineHeight: '1rem',
     padding: '10px 15px',
-    verticalAlign: 'top',
     '&.emptyCell': {
       height: 40
     },
