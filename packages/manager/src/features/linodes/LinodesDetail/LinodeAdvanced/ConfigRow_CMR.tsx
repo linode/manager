@@ -75,19 +75,28 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
       <ul className={classes.interfaceList}>
         {Object.keys(config.devices)
           .map(thisDevice => {
-            const diskId = linodeDisks.find(
-              thisDisk => thisDisk.id === config.devices[thisDevice]?.disk_id
-            );
-            const volume = linodeVolumes.find(
-              thisVolume =>
-                thisVolume.id === config.devices[thisDevice]?.volume_id
-            );
-            if (!diskId && !volume) {
+            const device = config.devices[thisDevice];
+            let label: string | null = null;
+            if (device?.disk_id) {
+              label =
+                linodeDisks.find(
+                  thisDisk =>
+                    thisDisk.id === config.devices[thisDevice]?.disk_id
+                )?.label ?? device.disk_id;
+            } else if (device?.volume_id) {
+              label =
+                linodeVolumes.find(
+                  thisVolume =>
+                    thisVolume.id === config.devices[thisDevice]?.volume_id
+                )?.label ?? device.volume_id;
+            }
+
+            if (!label) {
               return undefined;
             }
             return (
               <li key={thisDevice} className={classes.interfaceListItem}>
-                /dev/{thisDevice} - {diskId ? diskId.label : volume!.label}
+                /dev/{thisDevice} - {label}
               </li>
             );
           })
