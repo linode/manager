@@ -1,25 +1,30 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { lensPath, pathOr, set } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
+import useDatabases from 'src/hooks/useDatabases';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 interface Props {
   databaseID: number;
-  databaseLabel: string;
 }
 
 type CombinedProps = Props;
 
 export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props => {
-  const { databaseID, databaseLabel } = props;
+  const { databaseID } = props;
 
-  const [updatedValue, setUpdatedValue] = React.useState<string>(databaseLabel);
+  const { updateDatabase } = useDatabases();
+
+  const [updatedLabel, setUpdatedLabel] = React.useState<string>('');
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
 
@@ -31,9 +36,27 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
     !labelError &&
     pathOr('An error occured while updating label', [0, 'reason'], errors);
 
-  // const disabled = permissions === 'read_only';
+  const changeLabel = () => {
+    setSubmitting(true);
+    setSuccess(undefined);
+    setErrors(undefined);
 
-  const changePassword = () => {};
+    updateDatabase(databaseID, { label: updatedLabel })
+      .then(() => {
+        setSubmitting(false);
+        setSuccess('Database label changed successfully.');
+      })
+      .catch(error => {
+        setSubmitting(false);
+        setErrors(
+          getAPIErrorOrDefault(error, 'An error occured while updating label')
+        );
+      });
+  };
+
+  const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUpdatedLabel(e.target.value);
+  };
 
   return (
     <ExpansionPanel
@@ -42,10 +65,10 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
       actions={() => (
         <ActionsPanel>
           <Button
-            onClick={changePassword}
+            onClick={changeLabel}
             buttonType="primary"
-            disabled={}
-            loading={}
+            disabled={submitting && !labelError}
+            loading={submitting && !labelError}
             data-qa-label-save
           >
             Save
@@ -56,18 +79,19 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
       {genericError && <Notice error text={genericError} />}
       <TextField
         label="Label"
-        value={updatedValue}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setUpdatedValue(set(lensPath(['updatedValue']), e.target.value))
-        }
+        value={updatedLabel}
+        onChange={handleLabelChange}
         errorText={labelError}
-        errorGroup="linode-settings-label"
+        errorGroup="database-settings-label"
         error={Boolean(labelError)}
         data-qa-label
-        // disabled={disabled}
       />
     </ExpansionPanel>
   );
 };
 
-export default DatabaseSettingsMaintenancePanel;
+const errorBoundary = PanelErrorBoundary({ heading: 'Database Label' });
+
+export default recompose<CombinedProps, Props>(errorBoundary)(
+  DatabaseSettingsMaintenancePanel
+);

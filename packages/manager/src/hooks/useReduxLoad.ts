@@ -73,8 +73,7 @@ const requestMap: RequestMap = {
   longview: getAllLongviewClients,
   firewalls: () => getAllFirewalls({}),
   clusters: requestClusters,
-  vlans: () => getAllVlans({}),
-  databases: () => getAllDatabases({})
+  vlans: () => getAllVlans({})
 };
 
 export const useReduxLoad = (
