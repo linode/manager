@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme
+} from 'src/components/core/styles';
+import InlineAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -54,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface ActionHandlers {
-  triggerDeleteDatabase?: (databaseID: number, databaseLabel: string) => void;
+  triggerDeleteDatabase: (databaseID: number, databaseLabel: string) => void;
   [index: string]: any;
 }
 
@@ -69,19 +75,22 @@ type CombinedProps = Props;
 const DatabaseActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const history = useHistory();
+  const theme = useTheme<Theme>();
 
-  const {
-    databaseID,
-    databaseLabel,
-    inlineLabel,
-    triggerDeleteDatabase
-  } = props;
+  const { databaseID, databaseLabel, triggerDeleteDatabase } = props;
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const actions: Action[] = [
     {
       title: 'Details',
       onClick: () => {
         history.push({ pathname: `/databases/${databaseID}` });
+      }
+    },
+    {
+      title: 'Resize',
+      onClick: () => {
+        alert('Resize not yet implemented');
       }
     },
     {
@@ -96,11 +105,22 @@ const DatabaseActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <div className={classes.root}>
-      <ActionMenu
-        createActions={() => actions}
-        inlineLabel={inlineLabel}
-        ariaLabel={`Action menu for Database ${props.databaseLabel}`}
-      />
+      {!matchesSmDown &&
+        actions.map(thisAction => {
+          return (
+            <InlineAction
+              key={thisAction.title}
+              actionText={thisAction.title}
+              onClick={thisAction.onClick}
+            />
+          );
+        })}
+      {matchesSmDown && (
+        <ActionMenu
+          createActions={() => actions}
+          ariaLabel={`Action menu for Database ${props.databaseLabel}`}
+        />
+      )}
     </div>
   );
 };
