@@ -11,7 +11,7 @@ function randomPass() {
 
 function randomTitle(count) {
   let text = '';
-  const chars = 'abcdefghijklmnopqrstuvwxyz12343567890.-';
+  const chars = 'abcdefghijklmnopqrstuvwxyz12343567890';
 
   for (let i = 0; i < count; i++) {
     text += chars.charAt(Math.floor(Math.random() * chars.length));
