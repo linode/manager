@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -110,14 +109,14 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
       )}
       data-qa-dash-managed
     >
-      <Paper>
+
         <LoadingErrorOrContent
           {...props}
           data={data}
           statsError={statsError}
           statsLoading={statsLoading}
         />
-      </Paper>
+
     </DashboardCard>
   );
 };

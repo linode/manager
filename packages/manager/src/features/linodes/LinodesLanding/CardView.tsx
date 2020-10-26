@@ -25,24 +25,15 @@ import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 
 const useStyles = makeStyles(() => ({
-  '@keyframes blink': {
-    '0%, 100%': {
-      opacity: 0.25
-    },
-    '35%, 65%': {
-      opacity: 0.45
-    },
-    '45%, 55%': {
-      opacity: 0.95
-    },
-    '50%': {
-      opacity: 1
+  '@keyframes pulse': {
+    to: {
+      backgroundColor: `hsla(40, 100%, 55%, 0)`
     }
   },
   summaryOuter: {
     marginBottom: 20,
     '& .statusOther:before': {
-      animation: '$blink 1.25s ease-in-out infinite'
+      animation: '$pulse 1.5s ease-in-out infinite'
     }
   }
 }));
@@ -78,7 +69,7 @@ const CardView: React.FC<CombinedProps> = props => {
     open: false,
     tags: [],
     label: '',
-    linodeID: 0
+    entityID: 0
   });
 
   const closeTagDrawer = () => {
@@ -90,13 +81,13 @@ const CardView: React.FC<CombinedProps> = props => {
       open: true,
       label: linodeLabel,
       tags,
-      linodeID
+      entityID: linodeID
     });
   };
 
-  const addTag = (linodeID: number, newTag: string) => {
+  const addTag = (linodeId: number, newTag: string) => {
     const _tags = [...tagDrawer.tags, newTag];
-    return updateLinode({ linodeId: linodeID, tags: _tags }).then(_ => {
+    return updateLinode({ linodeId, tags: _tags }).then(_ => {
       setTagDrawer({ ...tagDrawer, tags: _tags });
     });
   };
@@ -191,8 +182,8 @@ const CardView: React.FC<CombinedProps> = props => {
         entityLabel={tagDrawer.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
-        deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
+        addTag={(newTag: string) => addTag(tagDrawer.entityID, newTag)}
+        deleteTag={(tag: string) => deleteTag(tagDrawer.entityID, tag)}
         onClose={closeTagDrawer}
       />
     </React.Fragment>

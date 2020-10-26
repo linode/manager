@@ -13,6 +13,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   tag: {}
 }));
 
+export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;
+
 interface Props {
   entityLabel: string;
   tags: string[];
@@ -26,7 +28,7 @@ export interface TagDrawerProps {
   label: string;
   tags: string[];
   open: boolean;
-  linodeID: number;
+  entityID: number;
 }
 
 export type CombinedProps = Props;

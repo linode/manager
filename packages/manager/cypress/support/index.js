@@ -35,5 +35,4 @@ it('Delete All Test Entities before anything happens', () => {
   deleteAllTestVolumes();
   deleteAllTestImages();
   deleteAllTestBuckets();
-  deleteAllTestAccessKeys();
 });

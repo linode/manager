@@ -202,6 +202,7 @@ const Header: React.FC<HeaderProps> = props => {
               databaseID={1234}
               databaseLabel=""
               inlineLabel={matchesMdDown ? undefined : 'More Actions'}
+              triggerDeleteDatabase={() => null}
             />
           </div>
           <Hidden smDown>
