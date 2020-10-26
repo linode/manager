@@ -10,6 +10,7 @@ import VlanActionMenu, { ActionHandlers } from './VlanActionMenu';
 import { getLinodeLabel } from 'src/features/Dashboard/VolumesDashboardCard/VolumeDashboardRow';
 import { VlanData } from './LinodeVLANs';
 import { VLAN } from '@linode/api-v4/lib/vlans';
+import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 
 export const MAX_LINODES_VLANATTACHED_DISPLAY = 50;
 
@@ -52,10 +53,25 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
   };
 
   const getLinodeLinks = (data: VLAN['linodes']): JSX.Element => {
-    // Filter out the linode the user is currently on from the array of Linode IDs the VLAN is attached to, and render that linode's label first in the list as a non-link.
-    const _data = data.filter(element => element.id !== currentLinodeId);
+    // To render the label of the linode the user is currently on first in the list as  non-link, exclude it from the list of linodes the VLAN is attached to.
+    const filterData = (data: VLAN['linodes']) => {
+      const _data: VLAN['linodes'] = [];
 
-    const generatedLinks = _data.map(linode => (
+      // If the element is the current linode's ID, or the linode ID is not found in the store, do not add it to the _data array. The additional linodeExists check avoids an edge case where deleted linodes still attached to VLANs cause a manifestation of the comma display bug.
+      for (let i = data.length - 1; i >= 0; i--) {
+        const linodeExists = getEntityByIDFromStore('linode', data[i].id);
+
+        if (data[i].id !== currentLinodeId && linodeExists) {
+          _data.push(data[i]);
+        }
+      }
+
+      return _data;
+    };
+
+    const filteredData = filterData(data);
+
+    const generatedLinks = filteredData.map(linode => (
       <Link
         key={linode.id}
         to={`/linodes/${linode.id}/networking`}
@@ -69,7 +85,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
         {getLinodeLabel(currentLinodeId)}
-        {_data.length >= 1 && `, `}
+        {filteredData.length >= 1 && `, `}
         {truncateAndJoinJSXList(
           generatedLinks,
           MAX_LINODES_VLANATTACHED_DISPLAY
