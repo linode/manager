@@ -50,6 +50,7 @@ const DeletionDialog: React.FC<CombinedProps> = props => {
   );
 
   React.useEffect(() => {
+    /** Reset confirmation text when the modal opens */
     if (open) {
       setConfirmationText('');
     }
