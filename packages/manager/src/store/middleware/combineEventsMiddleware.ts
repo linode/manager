@@ -3,7 +3,8 @@ import { Middleware } from 'redux';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   isEntityEvent,
-  isInProgressEvent
+  isInProgressEvent,
+  isLongRunningProgressEventAction
 } from 'src/store/events/event.helpers';
 import { EventHandler } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -52,8 +53,11 @@ const eventsMiddlewareFactory = (
        * Finally, if any of these events were in-progress we want to reset the events polling
        * interval to keep things moving quickly.
        */
-      if (isInProgressEvent(event)) {
-        // If the event is in_progress, we poll more aggressively
+      if (
+        isInProgressEvent(event) &&
+        // Don't poll aggressively on long-running progress events (like migration).
+        !isLongRunningProgressEventAction(event.action)
+      ) {
         resetEventsPolling(1.5);
       }
     }
