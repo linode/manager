@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
     paddingLeft: 0
   },
   interfaceListItem: {
-    paddingBottom: 3
+    paddingBottom: 4
   },
   tableCell: {
     verticalAlign: 'top'
