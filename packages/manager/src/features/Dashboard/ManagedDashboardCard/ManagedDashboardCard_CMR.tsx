@@ -109,14 +109,12 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
       )}
       data-qa-dash-managed
     >
-
-        <LoadingErrorOrContent
-          {...props}
-          data={data}
-          statsError={statsError}
-          statsLoading={statsLoading}
-        />
-
+      <LoadingErrorOrContent
+        {...props}
+        data={data}
+        statsError={statsError}
+        statsLoading={statsLoading}
+      />
     </DashboardCard>
   );
 };
