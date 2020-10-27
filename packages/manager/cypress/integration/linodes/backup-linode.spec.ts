@@ -73,8 +73,8 @@ describe('linode backups', () => {
       }).as('enableBackups');
       cy.get('[data-qa-manual-name="true"]').type(`${linode.label} backup`);
       if (
-        cy.contains('Provisioning').should('not.be.visible') &&
-        cy.contains('Booting').should('not.be.visible')
+        cy.contains('PROVISIONING').should('not.be.visible') &&
+        cy.contains('BOOTING').should('not.be.visible')
       ) {
         cy.findByText('Take Snapshot')
           .should('be.visible')
