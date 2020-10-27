@@ -2,11 +2,11 @@ import { Image } from '@linode/api-v4/lib/images';
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
+import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
-import { NotificationDrawer } from 'src/features/NotificationCenter';
-import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
 import useLinodes from 'src/hooks/useLinodes';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
@@ -25,6 +25,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  isVLAN: boolean;
 }
 
 type CombinedProps = Props & PaginationProps;
@@ -37,13 +38,11 @@ export const ListView: React.FC<CombinedProps> = props => {
     label: '',
     linodeID: 0
   });
-  const [notificationDrawerOpen, setNotificationDrawerOpen] = React.useState(
-    false
-  );
 
   const { updateLinode } = useLinodes();
   const flags = useFlags();
-  const notificationData = useNotificationData();
+
+  const notificationContext = React.useContext(_notificationContext);
 
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
@@ -81,15 +80,20 @@ export const ListView: React.FC<CombinedProps> = props => {
     props.openDialog('delete', linodeID, linodeLabel);
   };
 
-  const openNotificationDrawer = () => setNotificationDrawerOpen(true);
-  const closeNotificationDrawer = () => setNotificationDrawerOpen(false);
-
   const Row = flags.cmr ? LinodeRow_CMR : LinodeRow;
+
+  // This won't happen in the normal Linodes Landing context (a custom empty
+  // state is shown higher up in the tree). This is specifically for the case of
+  // VLAN Details, where we want to show the table even if there's nothing attached.
+  if (data.length === 0) {
+    return <TableRowEmptyState_CMR colSpan={12} />;
+  }
 
   return (
     // eslint-disable-next-line
     <>
-      {data.map((linode, idx: number) => (
+      {/* @todo: fix this "any" typing once https://github.com/linode/manager/pull/6999 is merged. */}
+      {data.map((linode: any, idx: number) => (
         <Row
           backups={linode.backups}
           id={linode.id}
@@ -109,13 +113,15 @@ export const ListView: React.FC<CombinedProps> = props => {
           memory={linode.specs.memory}
           type={linode.type}
           image={linode.image}
+          vlanIP={linode._vlanIP}
           key={`linode-row-${idx}`}
           openTagDrawer={openTagDrawer}
           openDialog={openDialog}
-          openNotificationDrawer={openNotificationDrawer}
+          openNotificationDrawer={notificationContext.openDrawer}
           // @todo delete after CMR
           openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
+          isVLAN={props.isVLAN}
         />
       ))}
       <TagDrawer
@@ -125,11 +131,6 @@ export const ListView: React.FC<CombinedProps> = props => {
         addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
         deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
         onClose={closeTagDrawer}
-      />
-      <NotificationDrawer
-        open={notificationDrawerOpen}
-        onClose={closeNotificationDrawer}
-        data={notificationData}
       />
     </>
   );

@@ -14,7 +14,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'block',
     fontFamily: theme.font.bold,
     lineHeight: '1.125rem',
-    textDecoration: 'underline'
+    textDecoration: 'underline',
+    color: theme.cmrTextColors.linkActiveLight
   },
   button: {
     ...theme.applyLinkStyles,

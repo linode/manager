@@ -157,7 +157,6 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                   onBlur={handleBlur}
                   // This credential could be anything so might be counterproductive to validate strength
                   hideValidation
-                  hideHelperText
                 />
               </React.Suspense>
               <ActionsPanel>

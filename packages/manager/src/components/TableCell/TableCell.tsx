@@ -19,7 +19,10 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      borderTop: 'none',
+      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
+    },
     noWrap: {
       whiteSpace: 'nowrap'
     },

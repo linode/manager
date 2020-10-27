@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight,
     height: '100%',
     minWidth: 'auto',
     padding: '12px 10px',
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       textDecoration: 'none',
       backgroundColor: '#3683dc',
-      color: theme.color.white
+      color: '#ffffff'
     }
   },
   disabled: {

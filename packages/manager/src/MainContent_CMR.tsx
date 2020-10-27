@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     minHeight: '100vh',
     flexDirection: 'column',
-    backgroundColor: theme.bg.main,
+    backgroundColor: theme.cmrBGColors.bgApp,
     zIndex: 1
   },
   wrapper: {
@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cmrWrapper: {
     padding: `${theme.spacing(3)}px 0`,
+    paddingTop: 20,
     transition: theme.transitions.create('opacity'),
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing(2),
@@ -171,6 +172,7 @@ const AccountActivationLanding = React.lazy(() =>
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const VLans = React.lazy(() => import('src/features/Vlans'));
+const Databases = React.lazy(() => import('src/features/Databases'));
 
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -312,6 +314,9 @@ const MainContent: React.FC<CombinedProps> = props => {
                         <Route path="/firewalls" component={Firewalls} />
                       )}
                       {showVlans && <Route path="/vlans" component={VLans} />}
+                      {props.flags.databases && (
+                        <Route path="/databases" component={Databases} />
+                      )}
                       <Redirect exact from="/" to="/dashboard" />
                       <Route component={NotFound} />
                     </Switch>

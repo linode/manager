@@ -1,3 +1,4 @@
+import * as classnames from 'classnames';
 import { Event } from '@linode/api-v4/lib/account';
 import { LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
@@ -19,7 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.bold,
     fontSize: '.875rem',
     lineHeight: '1.125rem',
-    textDecoration: 'underline'
+    textDecoration: 'underline',
+    color: theme.cmrTextColors.linkActiveLight
   },
   root: {
     '& h3': {
@@ -54,6 +56,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   helpIcon: {
     paddingTop: 0,
     paddingBottom: 0
+  },
+  // The head cell in the VLAN Detail context.
+  vlanContext: {
+    width: '14%'
   }
 }));
 
@@ -78,6 +84,7 @@ interface Props {
   recentEvent?: Event;
   maintenance?: string | null;
   isDashboard?: boolean;
+  isVLAN?: boolean;
 }
 
 type CombinedProps = Props & WithDisplayType & Pick<WithImages, 'imagesData'>;
@@ -92,7 +99,8 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
     // other props
     width,
     maintenance,
-    isDashboard
+    isDashboard,
+    isVLAN
   } = props;
 
   const style = width ? { width: `${width}%` } : {};
@@ -107,7 +115,13 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <TableCell className={classes.root} style={style}>
+    <TableCell
+      className={classnames({
+        [classes.root]: true,
+        [classes.vlanContext]: isVLAN
+      })}
+      style={style}
+    >
       <Grid container wrap="nowrap" alignItems="center">
         <Grid item>
           <div className={classes.labelStatusWrapper}>

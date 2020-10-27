@@ -38,8 +38,8 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, requestImagesActions.done)) {
     const { result } = action.payload;
     const images = result.filter(thisImage => {
-      // NOTE: Temporarily hide public Kubernetes images until ImageSelect redesign.
-      return !thisImage.label.match(/kube/i);
+      // NOTE: Temporarily hide public Kubernetes images.
+      return !thisImage.is_public || !thisImage.label.match(/kube/i);
     });
     return onGetAllSuccess(images, state, Object.keys(images).length);
   }
