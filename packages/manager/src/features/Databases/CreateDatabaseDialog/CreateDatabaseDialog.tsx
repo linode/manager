@@ -26,7 +26,6 @@ import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import { dbaasContext } from 'src/context';
 import { useDatabaseTypes } from 'src/hooks/useDatabaseTypes';
-import useProfile from 'src/hooks/useProfile';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import useRegions from 'src/hooks/useRegions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -60,7 +59,6 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   const classes = useStyles();
   const history = useHistory();
   const regions = useRegions();
-  const { profile } = useProfile();
   const timezone = useTimezone();
 
   const regionsWithDatabases: ExtendedRegion[] = regions.entities

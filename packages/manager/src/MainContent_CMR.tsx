@@ -202,6 +202,7 @@ const MainContent: React.FC<CombinedProps> = props => {
     account?.data?.capabilities ?? []
   );
 
+  // Clean up and use the below once we know what the Databases piece will look like for Capabilities. Until then, the feature-based display logic for Databases will rely only on the flag.
   // const showDbaas = isFeatureEnabled(
   //   'Dbaas',
   //   Boolean(props.flags.dbaas),
@@ -335,7 +336,9 @@ const MainContent: React.FC<CombinedProps> = props => {
                           <Route path="/firewalls" component={Firewalls} />
                         )}
                         {showVlans && <Route path="/vlans" component={VLans} />}
-                        {/* showDbaas && <Route path="/dbaas" component={} /> */}
+                        {props.flags.vlans && (
+                          <Route path="/databases" component={Databases} />
+                        )}
                         <Redirect exact from="/" to="/dashboard" />
                         <Route component={NotFound} />
                       </Switch>
