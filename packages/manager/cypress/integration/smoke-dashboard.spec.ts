@@ -31,7 +31,7 @@ describe('dashboard', () => {
     });
   });
 
-  it('caps page load time and GET requests', () => {
+  it.skip('caps page load time and GET requests', () => {
     const MAX_GET_REQ_TO_API = 4;
     const xhrData: any = [];
     cy.wrap(xhrData).as('xhrData');
@@ -54,7 +54,7 @@ describe('dashboard', () => {
       .should('be.lte', MAX_GET_REQ_TO_API);
   });
 
-  it('Verify correct error message when unable to get linodes', () => {
+  it.skip('Verify correct error message when unable to get linodes', () => {
     Route.getLinodes({
       response: 'error'
     });
