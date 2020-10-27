@@ -137,7 +137,7 @@ export const linodesInTransition = (events: Event[]) => {
 // Return the progress of an event if one is given, otherwise return a default
 // of 100. This is useful in the situation where a Linode has recently completed
 // an in-progress event, but we don't have the updated status from the API  yet.
-// In this cause it doesn't have a recentEvent attached (since it has completed),
+// In this case it doesn't have a recentEvent attached (since it has completed),
 // but its status is still briefly in transition, so give it a progress of 100.
 export const getProgressOrDefault = (
   event?: ExtendedEvent,
