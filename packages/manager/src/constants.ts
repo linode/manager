@@ -21,7 +21,8 @@ export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
 /** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
-export const DOCS_SEARCH_URL = 'https://linode.com/docs/search/?q=';
+export const DOCS_SEARCH_URL =
+  'https://linode.com/docs/search/?sections=guides&q=';
 export const COMMUNITY_SEARCH_URL =
   'https://linode.com/community/questions/search?query=';
 export const ALGOLIA_APPLICATION_ID =
