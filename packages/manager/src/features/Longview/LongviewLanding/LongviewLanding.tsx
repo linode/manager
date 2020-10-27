@@ -49,6 +49,10 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
+  };
+
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -61,7 +65,13 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
           href={'https://www.linode.com/docs/platform/longview/longview/'}
         />
       </Box>
-      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+      <Tabs
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
+      >
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>

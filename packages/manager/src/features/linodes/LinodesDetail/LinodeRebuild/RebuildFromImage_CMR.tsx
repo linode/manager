@@ -20,7 +20,6 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
-import { PasswordValidationType } from 'src/featureFlags';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -42,7 +41,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   disabled: boolean;
   passwordHelperText: string;
-  passwordValidation: PasswordValidationType;
   linodeId: number;
   linodeLabel?: string;
   handleRebuildError: (status: string) => void;
@@ -78,22 +76,12 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     handleRebuildError,
     onClose,
     enqueueSnackbar,
-    passwordHelperText,
-    passwordValidation
+    passwordHelperText
   } = props;
 
   const classes = useStyles();
 
-  /**
-   * Dynamic validation schema, with password validation
-   * dependent on a value from a feature flag. Remove this
-   * once API password validation is stable.
-   */
-  const RebuildSchema = React.useMemo(
-    () =>
-      extendValidationSchema(passwordValidation ?? 'none', RebuildLinodeSchema),
-    [passwordValidation]
-  );
+  const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
   const submitButtonDisabled = confirmationText !== linodeLabel;

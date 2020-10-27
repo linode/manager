@@ -1,5 +1,4 @@
-// @todo use beta api root once API bug is fixed
-import { API_ROOT } from 'src/constants';
+import { BETA_API_ROOT as API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
@@ -9,7 +8,7 @@ import Request, {
 } from 'src/request';
 import { ResourcePage as Page } from '../types';
 
-import { VLAN } from './types';
+import { CreateVLANPayload, VLAN } from './types';
 
 /**
  * getVlans
@@ -43,7 +42,7 @@ export const getVlan = (vlanID: number) =>
  * Create a Virtual LAN (VLAN) in the specified region.
  *
  */
-export const createVlan = (data: VLAN) =>
+export const createVlan = (data: CreateVLANPayload) =>
   Request<VLAN>(
     setURL(`${API_ROOT}/networking/vlans`),
     setMethod('POST'),
@@ -56,35 +55,35 @@ export const createVlan = (data: VLAN) =>
  * Delete a single VLAN
  */
 export const deleteVlan = (vlanID: number) =>
-  Request<VLAN>(
+  Request<{}>(
     setURL(`${API_ROOT}/networking/vlans/${vlanID}`),
     setMethod('DELETE')
   );
 
 /**
- * connectVlan
+ * attachVlan
  *
- * Connect one or more Linodes from a VLAN. The VLAN
+ * Attach one or more Linodes from a VLAN. The VLAN
  * will be attached to an interface on every config
  * on each target Linode.
  */
-export const connectVlan = (vlanID: number, linodes: number[]) =>
+export const attachVlan = (vlanID: number, linodes: number[]) =>
   Request<VLAN>(
-    setURL(`${API_ROOT}/networking/vlans/${vlanID}/connect`),
+    setURL(`${API_ROOT}/networking/vlans/${vlanID}/attach`),
     setMethod('POST'),
     setData({ linodes })
   );
 
 /**
- * disconnectVlan
+ * detachVlan
  *
- * Disconnect one or more Linodes from a VLAN. The VLAN
+ * Detach one or more Linodes from a VLAN. The VLAN
  * will be detached from every config
  * on each target Linode.
  */
-export const disconnectVlan = (vlanID: number, linodes: number[]) =>
+export const detachVlan = (vlanID: number, linodes: number[]) =>
   Request<VLAN>(
-    setURL(`${API_ROOT}/networking/vlans/${vlanID}/disconnect`),
+    setURL(`${API_ROOT}/networking/vlans/${vlanID}/detach`),
     setMethod('POST'),
     setData({ linodes })
   );

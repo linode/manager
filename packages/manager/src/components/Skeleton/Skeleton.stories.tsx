@@ -27,37 +27,53 @@ const renderTableHead = (
 storiesOf('Skeleton', module)
   .add('Default Table ', () => (
     <Table>
+      {renderTableHead(40, 20, 20, 20)}
+      <TableBody>
+        <TableRowLoading colSpan={4} widths={[40, 20, 20, 20]} />
+      </TableBody>
+    </Table>
+  ))
+  .add('Table with widths defined for all columns', () => (
+    <Table>
+      {renderTableHead(40, 20, 20, 20)}
+      <TableBody>
+        <TableRowLoading colSpan={4} widths={[40, 20, 20, 20]} />
+      </TableBody>
+    </Table>
+  ))
+  .add('Table with some widths defined (table header is fully defined)', () => (
+    <Table>
+      {renderTableHead(40, 35, 12.5, 12.5)}
+      <TableBody>
+        <TableRowLoading colSpan={4} widths={[40, 35]} />
+      </TableBody>
+    </Table>
+  ))
+  .add('Table with no widths defined', () => (
+    <Table>
       {renderTableHead()}
       <TableBody>
         <TableRowLoading colSpan={4} />
       </TableBody>
     </Table>
   ))
-  .add('Table with first col width defined', () => (
+  .add('Table with widths defined for all columns, one line skeleton', () => (
     <Table>
       {renderTableHead(40, 20, 20, 20)}
       <TableBody>
-        <TableRowLoading colSpan={4} firstColWidth={40} />
-      </TableBody>
-    </Table>
-  ))
-  .add('Table with first col width defined, one line skeleton', () => (
-    <Table>
-      {renderTableHead(40, 20, 20, 20)}
-      <TableBody>
-        <TableRowLoading colSpan={4} firstColWidth={40} oneLine />
+        <TableRowLoading colSpan={4} widths={[40, 20, 20, 20]} oneLine />
       </TableBody>
     </Table>
   ))
   .add(
-    'Table with first col width defined, one line skeleton and entity icon',
+    'Table with widths defined for all columns, one line skeleton and entity icon',
     () => (
       <Table>
         {renderTableHead(40, 20, 20, 20)}
         <TableBody>
           <TableRowLoading
             colSpan={4}
-            firstColWidth={40}
+            widths={[40, 20, 20, 20]}
             oneLine
             hasEntityIcon
           />

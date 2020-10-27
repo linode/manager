@@ -15,15 +15,16 @@ import { ExtendedLinode } from '../LinodesDetail/types';
 import TableWrapper from './TableWrapper';
 import TableWrapper_CMR from './TableWrapper_CMR';
 import IconButton from 'src/components/core/IconButton';
+import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
-    backgroundColor: theme.bg.controlHeader,
     marginBottom: 28,
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    backgroundColor: theme.cmrBGColors.bgTableHeader
   },
   toggleButton: {
     padding: 10,
@@ -50,6 +51,7 @@ interface Props {
   toggleGroupLinodes: () => boolean;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
+  isVLAN?: boolean;
 }
 
 type CombinedProps = Props & OrderByProps;
@@ -67,6 +69,7 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
     toggleGroupLinodes,
     linodeViewPreference,
     linodesAreGrouped,
+    isVLAN,
     ...rest
   } = props;
 
@@ -106,14 +109,16 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
           pageSize,
           page,
           handlePageSizeChange,
-          handlePageChange
+          handlePageChange,
+          isVLAN
         };
         const tableWrapperProps = {
           handleOrderChange,
           order,
           orderBy,
           someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
-          dataLength: paginatedData.length
+          dataLength: paginatedData.length,
+          isVLAN
         };
         return (
           <React.Fragment>
@@ -148,32 +153,34 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
                       >
                         Currently in {linodeViewPreference} view
                       </div>
-                      <IconButton
-                        aria-label="Toggle display"
-                        aria-describedby={'displayViewDescription'}
-                        title={`Toggle display`}
-                        onClick={toggleLinodeView}
-                        disableRipple
-                        className={classes.toggleButton}
-                      >
-                        <TableView />
-                      </IconButton>
+                      <Tooltip placement="top" title="List view">
+                        <IconButton
+                          aria-label="Toggle display"
+                          aria-describedby={'displayViewDescription'}
+                          onClick={toggleLinodeView}
+                          disableRipple
+                          className={classes.toggleButton}
+                        >
+                          <TableView />
+                        </IconButton>
+                      </Tooltip>
 
                       <div id="groupByDescription" className="visually-hidden">
                         {linodesAreGrouped
                           ? 'group by tag is currently enabled'
                           : 'group by tag is currently disabled'}
                       </div>
-                      <IconButton
-                        aria-label={`Toggle group by tag`}
-                        aria-describedby={'groupByDescription'}
-                        title={`Toggle group by tag`}
-                        onClick={toggleGroupLinodes}
-                        disableRipple
-                        className={classes.toggleButton}
-                      >
-                        <GroupByTag />
-                      </IconButton>
+                      <Tooltip placement="top-end" title="Group by tag">
+                        <IconButton
+                          aria-label={`Toggle group by tag`}
+                          aria-describedby={'groupByDescription'}
+                          onClick={toggleGroupLinodes}
+                          disableRipple
+                          className={classes.toggleButton}
+                        >
+                          <GroupByTag />
+                        </IconButton>
+                      </Tooltip>
                     </div>
                   )}
                 </Grid>

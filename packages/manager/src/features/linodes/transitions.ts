@@ -61,7 +61,12 @@ export const transitionText = (
   }
 
   if (recentEvent?.action === 'linode_clone') {
-    return buildLinodeCloneTransitionText(recentEvent, linodeId);
+    if (isPrimaryEntity(recentEvent, linodeId)) {
+      return 'Cloning';
+    }
+    if (isSecondaryEntity(recentEvent, linodeId)) {
+      return 'Creating';
+    }
   }
 
   if (recentEvent?.action === 'linode_migrate_datacenter') {
@@ -86,21 +91,24 @@ export const transitionText = (
 // secondary entities, and the Linode ID.
 export const buildLinodeCloneTransitionText = (
   event: Event,
-  linodeId: number
+  linodeId: number,
+  cmr?: boolean
 ) => {
   let text = 'Cloning';
 
-  if (isPrimaryEntity(event, linodeId)) {
-    const secondaryEntityLabel = event?.secondary_entity?.label;
-    if (secondaryEntityLabel) {
-      text += ` to: ${secondaryEntityLabel}`;
+  if (cmr !== true) {
+    if (isPrimaryEntity(event, linodeId)) {
+      const secondaryEntityLabel = event?.secondary_entity?.label;
+      if (secondaryEntityLabel) {
+        text += ` to: ${secondaryEntityLabel}`;
+      }
     }
-  }
 
-  if (isSecondaryEntity(event, linodeId)) {
-    const primaryEntityLabel = event?.entity?.label;
-    if (primaryEntityLabel) {
-      text += ` from: ${primaryEntityLabel}`;
+    if (isSecondaryEntity(event, linodeId)) {
+      const primaryEntityLabel = event?.entity?.label;
+      if (primaryEntityLabel) {
+        text += ` from: ${primaryEntityLabel}`;
+      }
     }
   }
 

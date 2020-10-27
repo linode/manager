@@ -3,8 +3,8 @@ import {
   deleteVlan as _delete,
   VLAN,
   getVlans,
-  connectVlan as _connect,
-  disconnectVlan as _disconnect
+  attachVlan as _attach,
+  detachVlan as _detach
 } from '@linode/api-v4/lib/vlans';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers.tmp';
@@ -12,14 +12,14 @@ import {
   createVlanActions,
   deleteVlanActions,
   getVlansActions,
-  connectVlanActions,
-  disconnectVlanActions
+  attachVlanActions,
+  detachVlanActions
 } from './vlans.actions';
 
-const getAllVlansRequest = (payload: { params?: any; filter?: any }) =>
+const getAllVlansRequest = (payload?: { params?: any; filter?: any }) =>
   getAll<VLAN>((passedParams, passedFilter) =>
     getVlans(passedParams, passedFilter)
-  )(payload.params, payload.filter);
+  )(payload?.params, payload?.filter);
 
 export const getAllVlans = createRequestThunk(
   getVlansActions,
@@ -31,12 +31,12 @@ export const deleteVlan = createRequestThunk(deleteVlanActions, ({ vlanID }) =>
   _delete(vlanID)
 );
 
-export const connectVlan = createRequestThunk(
-  connectVlanActions,
-  ({ vlanID, linodes }) => _connect(vlanID, linodes)
+export const attachVlan = createRequestThunk(
+  attachVlanActions,
+  ({ vlanID, linodes }) => _attach(vlanID, linodes)
 );
 
-export const disconnectVlan = createRequestThunk(
-  disconnectVlanActions,
-  ({ vlanID, linodes }) => _disconnect(vlanID, linodes)
+export const detachVlan = createRequestThunk(
+  detachVlanActions,
+  ({ vlanID, linodes }) => _detach(vlanID, linodes)
 );

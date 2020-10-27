@@ -4,13 +4,17 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
+import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import withImages from 'src/containers/withImages.container';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
+import useLinodes from 'src/hooks/useLinodes';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
@@ -19,12 +23,18 @@ import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import formatDate from 'src/utilities/formatDate';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
-import useLinodes from 'src/hooks/useLinodes';
-import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 
 const useStyles = makeStyles(() => ({
+  '@keyframes pulse': {
+    to: {
+      backgroundColor: `hsla(40, 100%, 55%, 0)`
+    }
+  },
   summaryOuter: {
-    marginBottom: 20
+    marginBottom: 20,
+    '& .statusOther:before': {
+      animation: '$pulse 1.5s ease-in-out infinite'
+    }
   }
 }));
 
@@ -49,6 +59,9 @@ type CombinedProps = WithImagesProps & PaginationProps & Props;
 const CardView: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
+  const notificationContext = React.useContext(_notificationContext);
+
+  const { updateLinode } = useLinodes();
   const { profile } = useProfile();
   const { _loading } = useReduxLoad(['volumes']);
   const { volumes } = useVolumes();
@@ -56,10 +69,8 @@ const CardView: React.FC<CombinedProps> = props => {
     open: false,
     tags: [],
     label: '',
-    linodeID: 0
+    entityID: 0
   });
-
-  const { updateLinode } = useLinodes();
 
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
@@ -70,13 +81,13 @@ const CardView: React.FC<CombinedProps> = props => {
       open: true,
       label: linodeLabel,
       tags,
-      linodeID
+      entityID: linodeID
     });
   };
 
-  const addTag = (linodeID: number, newTag: string) => {
+  const addTag = (linodeId: number, newTag: string) => {
     const _tags = [...tagDrawer.tags, newTag];
-    return updateLinode({ linodeId: linodeID, tags: _tags }).then(_ => {
+    return updateLinode({ linodeId, tags: _tags }).then(_ => {
       setTagDrawer({ ...tagDrawer, tags: _tags });
     });
   };
@@ -106,6 +117,14 @@ const CardView: React.FC<CombinedProps> = props => {
     return <CircleProgress />;
   }
 
+  if (data.length === 0) {
+    return (
+      <Typography style={{ textAlign: 'center' }}>
+        No items to display.
+      </Typography>
+    );
+  }
+
   const getVolumesByLinode = (linodeId: number) =>
     getVolumesForLinode(volumes.itemsById, linodeId).length;
 
@@ -127,6 +146,7 @@ const CardView: React.FC<CombinedProps> = props => {
                     openTagDrawer={openTagDrawer}
                     openDialog={openDialog}
                     openPowerActionDialog={openPowerActionDialog}
+                    openNotificationDrawer={notificationContext.openDrawer}
                   />
                 </Grid>
               </React.Fragment>
@@ -162,8 +182,8 @@ const CardView: React.FC<CombinedProps> = props => {
         entityLabel={tagDrawer.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
-        deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
+        addTag={(newTag: string) => addTag(tagDrawer.entityID, newTag)}
+        deleteTag={(tag: string) => deleteTag(tagDrawer.entityID, tag)}
         onClose={closeTagDrawer}
       />
     </React.Fragment>
