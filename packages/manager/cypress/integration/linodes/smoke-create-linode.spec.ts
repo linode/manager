@@ -23,7 +23,7 @@ describe('create linode', () => {
     cy.contains('Regions')
       .click()
       .type('new {enter}');
-    fbtClick('Nanode 1GB');
+    cy.get('[id="g6-nanode-1"]').click();
     cy.get('#linode-label')
       .click()
       .clear()
@@ -34,7 +34,7 @@ describe('create linode', () => {
       .its('status')
       .should('eq', 200);
     assertToast(`Your Linode ${linodeLabel} is being created.`);
-    cy.contains('Provisioning').should('be.visible');
+    cy.contains('PROVISIONING').should('be.visible');
     deleteAllTestLinodes();
   });
 });
