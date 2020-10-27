@@ -110,6 +110,7 @@ jobs:
           token: ${{ secrets.NPM_AUTH_TOKEN }}
           package: ./packages/api-v4/package.json
           dry-run: true
+      - run: echo ${{ steps.publish.outputs.type }}
       - name: slack-notify
         uses: rtCamp/action-slack-notify@master
         if: steps.publish.outputs.type == 'none'
