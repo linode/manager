@@ -4,6 +4,7 @@ import {
   deleteAllTestLinodes
 } from '../../support/api/linodes';
 import { assertToast } from '../../support/ui/events';
+import { fbtClick } from '../../support/helpers';
 
 describe('create linode', () => {
   beforeEach(() => {
@@ -22,7 +23,7 @@ describe('create linode', () => {
     cy.contains('Regions')
       .click()
       .type('new {enter}');
-    cy.get('[data-qa-plan-row="Nanode 1GB"]').click();
+    fbtClick('Nanode 1GB');
     cy.get('#linode-label')
       .click()
       .clear()
