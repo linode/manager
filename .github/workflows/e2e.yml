@@ -2,7 +2,7 @@ name: Run Cypress E2E Tests
 on:
   push:
     branches:
-      - M3-4577-github-actions-e2e
+      - M3-4577-e2e-actions
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
