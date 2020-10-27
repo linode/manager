@@ -24,6 +24,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import NodeBalancerConfigNode from './NodeBalancerConfigNode';
 import { NodeBalancerConfigNodeFields } from './types';
 import { NodeBalancerProxyProtocol } from '@linode/api-v4/lib/nodebalancers/types';
+import Link from 'src/components/Link';
 
 type ClassNames =
   | 'divider'
@@ -822,6 +823,15 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     small
                     isClearable={false}
                   />
+                  <FormHelperText>
+                    Proxy Protocol preserves initial TCP connection information.
+                    Please consult{' '}
+                    <Link to="https://www.linode.com/docs/platform/nodebalancer/nodebalancer-proxypass-configuration/">
+                      our Proxy Protocol guide
+                    </Link>
+                    {` `}
+                    for information on the differences between each option.
+                  </FormHelperText>
                 </Grid>
               )}
 

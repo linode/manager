@@ -28,3 +28,4 @@ export * from './regions';
 export * from './support';
 export * from './tags';
 export * from './volume';
+export * from './vlans';

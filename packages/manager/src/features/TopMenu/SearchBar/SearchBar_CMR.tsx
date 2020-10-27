@@ -15,7 +15,7 @@ import withStoreSearch, {
 } from 'src/features/Search/withStoreSearch';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { ReduxEntity, useReduxLoad } from 'src/hooks/useReduxLoad';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
 import { debounce } from 'throttle-debounce';
@@ -62,6 +62,15 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
 
+const searchDeps: ReduxEntity[] = [
+  'linodes',
+  'nodeBalancers',
+  'images',
+  'domains',
+  'volumes',
+  'kubernetes'
+];
+
 export const SearchBar: React.FC<CombinedProps> = props => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
@@ -76,7 +85,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const { _isLargeAccount } = useAccountManagement();
 
   const { _loading } = useReduxLoad(
-    ['linodes', 'nodeBalancers', 'images', 'domains', 'volumes', 'kubernetes'],
+    searchDeps,
     REFRESH_INTERVAL,
     searchActive && !_isLargeAccount // Only request things if the search bar is open/active.
   );
@@ -114,7 +123,6 @@ export const SearchBar: React.FC<CombinedProps> = props => {
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
-    props.search(_searchText);
   };
 
   const toggleSearch = () => {

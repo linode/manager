@@ -47,6 +47,7 @@ import {
   UpdateLinodeConfig,
   withLinodeDetailContext
 } from '../linodeDetailContext';
+import KernelSelect from './KernelSelect';
 
 type ClassNames = 'section' | 'divider' | 'formControlToggle';
 
@@ -155,14 +156,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       }
 
       /**
-       * Get all the kernels for usage in the Kernel selection menu.
-       * @todo We could (should?) put this back into Redux.
-       */
-      // if (prevState.kernels.length === 0) {
-      //   this.requestKernels(linodeHypervisor);
-      // }
-
-      /**
        * If config is defined, we're editing. Set the state
        * to the values of the config.
        */
@@ -269,10 +262,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       disks: this.props.disks,
       volumes: this.props.volumes
     };
-
-    const kernelList = kernels.map(eachKernel => {
-      return { label: eachKernel.label, value: eachKernel.id };
-    });
 
     const pathsOptions = [
       { label: '/dev/sda', value: '/dev/sda' },
@@ -389,15 +378,12 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         >
           <Typography variant="h3">Boot Settings</Typography>
           {kernels && (
-            <Select
-              options={kernelList}
-              label="Select a Kernel"
-              value={kernelList.find(thisKernel => thisKernel.value === kernel)}
+            <KernelSelect
+              kernels={kernels}
+              selectedKernel={kernel}
               onChange={this.handleChangeKernel}
+              readOnly={readOnly}
               errorText={errorFor('kernel')}
-              errorGroup="linode-config-drawer"
-              disabled={readOnly}
-              isClearable={false}
             />
           )}
 
