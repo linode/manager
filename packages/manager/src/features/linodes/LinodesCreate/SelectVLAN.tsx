@@ -22,13 +22,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   selectedRegionID?: string;
-  selectedVlanID: number | null;
+  selectedVlanIDs: number[];
   error?: string;
-  handleSelectVLAN: (vlanID: number | null) => void;
+  handleSelectVLAN: (vlanIDs: number[]) => void;
 }
 
 export const SelectVLAN: React.FC<Props> = props => {
-  const { error, selectedRegionID, selectedVlanID, handleSelectVLAN } = props;
+  const { error, selectedRegionID, selectedVlanIDs, handleSelectVLAN } = props;
   useReduxLoad(['vlans']);
   const classes = useStyles();
 
@@ -39,7 +39,7 @@ export const SelectVLAN: React.FC<Props> = props => {
      * only be attached to Linodes in the same data
      * center.
      */
-    handleSelectVLAN(null);
+    handleSelectVLAN([]);
   }, [selectedRegionID, handleSelectVLAN]);
 
   const disabled = !Boolean(selectedRegionID);
@@ -59,9 +59,14 @@ export const SelectVLAN: React.FC<Props> = props => {
       }));
   }, [selectedRegionID, vlans]);
 
-  const onChange = (selected: Item<number> | null) => {
-    const value = selected === null ? selected : selected.value;
-    handleSelectVLAN(value);
+  const selected = selectedVlanIDs.map(thisID => ({
+    label: vlans.itemsById[thisID].description,
+    value: thisID
+  }));
+
+  const onChange = (selected: Item<number>[]) => {
+    const ids = selected.map(i => i.value);
+    handleSelectVLAN(ids);
   };
 
   const vlanError = vlans.error.read
@@ -78,11 +83,9 @@ export const SelectVLAN: React.FC<Props> = props => {
       </Typography>
       <Select
         options={options}
+        isMulti
         isClearable
-        value={
-          options.find(thisOption => thisOption.value === selectedVlanID) ??
-          null
-        }
+        value={selected}
         label={'Select a VLAN'}
         aria-describedby={helperText}
         hideLabel

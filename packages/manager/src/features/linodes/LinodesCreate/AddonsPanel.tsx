@@ -76,10 +76,10 @@ interface Props {
   privateIP: boolean;
   changeBackups: () => void;
   changePrivateIP: () => void;
-  changeSelectedVLAN: (vlanID: number | null) => void;
+  changeSelectedVLAN: (vlanID: number[]) => void;
   disabled?: boolean;
   hidePrivateIP?: boolean;
-  selectedVlanID: number | null;
+  selectedVlanIDs: number[];
   vlanError?: string;
   selectedRegionID?: string; // Used for filtering VLANs
 }
@@ -98,8 +98,8 @@ const AddonsPanel: React.FC<CombinedProps> = props => {
   const flags = useFlags();
 
   const handleVlanChange = React.useCallback(
-    (vlan: number | null) => {
-      changeSelectedVLAN(vlan);
+    (vlans: number[]) => {
+      changeSelectedVLAN(vlans);
     },
     [changeSelectedVLAN]
   );
@@ -196,7 +196,7 @@ const AddonsPanel: React.FC<CombinedProps> = props => {
             <div className={classes.vlanSelect}>
               <SelectVLAN
                 selectedRegionID={props.selectedRegionID}
-                selectedVlanID={props.selectedVlanID}
+                selectedVlanIDs={props.selectedVlanIDs}
                 handleSelectVLAN={handleVlanChange}
                 error={vlanError}
               />
