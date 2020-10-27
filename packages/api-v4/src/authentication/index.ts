@@ -1,6 +1,12 @@
 import { stringify } from 'querystring';
 import { LOGIN_ROOT } from 'src/constants';
-import Request, { setData, setHeaders, setMethod, setURL } from 'src/request';
+import Request, {
+  setBaseURL,
+  setData,
+  setHeaders,
+  setMethod,
+  setURL
+} from 'src/request';
 import { Success } from './types';
 
 /**
@@ -12,6 +18,7 @@ import { Success } from './types';
  */
 export const revokeToken = (client_id: string, token: string) =>
   Request<Success>(
+    setBaseURL(LOGIN_ROOT),
     setURL(`${LOGIN_ROOT}/oauth/revoke`),
     setMethod('POST'),
     setData(
