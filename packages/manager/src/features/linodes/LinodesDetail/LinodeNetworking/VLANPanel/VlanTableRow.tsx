@@ -1,16 +1,16 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import VlanActionMenu, { ActionHandlers } from './VlanActionMenu';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { getLinodeLabel } from 'src/features/Dashboard/VolumesDashboardCard/VolumeDashboardRow';
-import { VlanData } from './LinodeVLANs';
-import { VLAN } from '@linode/api-v4/lib/vlans';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
+import { VlanData } from './LinodeVLANs';
+import VlanActionMenu, { ActionHandlers } from './VlanActionMenu';
 
 export const MAX_LINODES_VLANATTACHED_DISPLAY = 50;
 
@@ -54,22 +54,14 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
 
   const getLinodeLinks = (data: VLAN['linodes']): JSX.Element => {
     // To render the label of the linode the user is currently on first in the list as  non-link, exclude it from the list of linodes the VLAN is attached to.
-    const filterData = (data: VLAN['linodes']) => {
-      const _data: VLAN['linodes'] = [];
 
-      // If the element is the current linode's ID, or the linode ID is not found in the store, do not add it to the _data array. The additional linodeExists check avoids an edge case where deleted linodes still attached to VLANs cause a manifestation of the comma display bug.
-      for (let i = data.length - 1; i >= 0; i--) {
-        const linodeExists = getEntityByIDFromStore('linode', data[i].id);
-
-        if (data[i].id !== currentLinodeId && linodeExists) {
-          _data.push(data[i]);
-        }
-      }
-
-      return _data;
-    };
-
-    const filteredData = filterData(data);
+    // If the element is the current linode's ID, or the linode ID is not found in the store, filter it out. The second check avoids an edge case where deleted linodes still attached to VLANs cause a manifestation of the comma display bug.
+    const filteredData = data.filter(datum => {
+      return (
+        datum.id !== currentLinodeId &&
+        getEntityByIDFromStore('linode', datum.id)
+      );
+    });
 
     const generatedLinks = filteredData.map(linode => (
       <Link
