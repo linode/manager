@@ -66,7 +66,7 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
 
-  https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions#comment102508135_58034787
+  # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions#comment102508135_58034787
   build-manager:
     runs-on: ubuntu-latest
     needs:
