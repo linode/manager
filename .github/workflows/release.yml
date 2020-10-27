@@ -116,10 +116,12 @@ jobs:
         if: steps.npm-publish.outputs.type == 'none'
         env:
           SLACK_CHANNEL: api-js-client
-          SLACK_TITLE: "Linode JS Client v${{ steps.publish.outputs.version}}"
-          SLACK_MESSAGE: ":rocket: Linode JS Client has been published to NPM: ${{ steps.publish.outputs.old-version }} => ${{ steps.publish.outputs.version }}. View the changelog at https://github.com/linode/manager/blob/develop/packages/api-v4/CHANGELOG.md" 
+          SLACK_TITLE: "Linode JS Client v${{ steps.npm-publish.outputs.version}}"
+          SLACK_MESSAGE: ":rocket: Linode JS Client has been published to NPM: ${{ steps.npm-publish.outputs.old-version }} => ${{ steps.npm-publish.outputs.version }}. View the changelog at https://github.com/linode/manager/blob/develop/packages/api-v4/CHANGELOG.md" 
           SLACK_USERNAME: npm-bot
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON_EMOJI: ":package:"
+          MSG_MINIMAL: true
 
 
   # publish-manager:
