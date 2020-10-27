@@ -266,10 +266,6 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   actionItemsOuter: {
     display: 'flex',
     alignItems: 'center'
-  },
-  progressDisplay: {
-    display: 'inline-block',
-    fontFamily: theme.font.bold
   }
 }));
 
