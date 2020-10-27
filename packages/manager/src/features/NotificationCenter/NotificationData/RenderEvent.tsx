@@ -46,8 +46,11 @@ export const RenderEvent: React.FC<Props> = props => {
   }
 
   const completed = event.percent_complete === 100;
-  const timeRemaining = event.time_remaining
-    ? ` (~${formatTimeRemaining(event.time_remaining)})`
+
+  const parsedTimeRemaining = formatTimeRemaining(event.time_remaining);
+
+  const formattedTimeRemaining = parsedTimeRemaining
+    ? ` (~${parsedTimeRemaining})`
     : null;
 
   const duration = formatEventSeconds(event.duration);
@@ -69,7 +72,7 @@ export const RenderEvent: React.FC<Props> = props => {
         {` `}
         {message}
         {/** duration and timeRemaining will never overlap, but check just in case */}
-        {!completed ? timeRemaining : null}
+        {!completed ? formattedTimeRemaining : null}
         {completed
           ? event.status === 'failed'
             ? ` (failed after ${duration})`
@@ -89,7 +92,11 @@ export const RenderEvent: React.FC<Props> = props => {
   );
 };
 
-export const formatTimeRemaining = (time: string) => {
+export const formatTimeRemaining = (time: string | null) => {
+  if (!time || time === null) {
+    return null;
+  }
+
   try {
     const [hours, minutes, seconds] = time.split(':').map(Number);
     if (
