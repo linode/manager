@@ -100,13 +100,13 @@ const styles = (theme: Theme) =>
       width: '20%'
     },
     vmColumn: {
-      width: '9%'
+      width: '10%'
     },
     kernelColumn: {
       width: '20%'
     },
     interfacesColumn: {
-      width: '30%'
+      width: '20%'
     },
     rootDeviceColumn: {
       width: '20%'
