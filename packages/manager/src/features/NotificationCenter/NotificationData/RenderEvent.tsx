@@ -93,7 +93,7 @@ export const RenderEvent: React.FC<Props> = props => {
 };
 
 export const formatTimeRemaining = (time: string | null) => {
-  if (!time || time === null) {
+  if (!time) {
     return null;
   }
 
