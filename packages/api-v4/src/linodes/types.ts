@@ -186,14 +186,17 @@ export interface Devices {
   sdh: null | DiskDevice | VolumeDevice;
 }
 
+export type KernelArchitecture = 'x86_64' | 'i386';
+
 export interface Kernel {
   id: string;
   label: string;
   version: string;
   kvm: boolean;
   xen: boolean;
-  architecture: string;
+  architecture: KernelArchitecture;
   pvops: boolean;
+  deprecated: boolean;
 }
 
 export interface NetStats {

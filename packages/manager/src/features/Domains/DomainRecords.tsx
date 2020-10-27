@@ -54,7 +54,6 @@ import {
 } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
-import { truncateEnd } from 'src/utilities/truncate';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
@@ -71,8 +70,16 @@ const styles = (theme: Theme) =>
     cells: {
       whiteSpace: 'nowrap',
       [theme.breakpoints.up('md')]: {
+        maxWidth: 300
+      },
+      '& .data': {
         maxWidth: 300,
-        wordBreak: 'break-all'
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        [theme.breakpoints.up('md')]: {
+          maxWidth: 750
+        }
       }
     },
     titles: {
@@ -507,7 +514,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Hostname', render: (r: DomainRecord) => r.name },
         {
           title: 'Value',
-          render: (r: DomainRecord) => truncateEnd(r.target, 255)
+          render: (r: DomainRecord) => r.target
         },
         { title: 'TTL', render: getTTL },
         {
@@ -598,7 +605,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       columns: [
         { title: 'Name', render: (r: DomainRecord) => r.name },
         { title: 'Tag', render: (r: DomainRecord) => r.tag },
-        { title: 'Value', render: (r: DomainRecord) => r.target },
+        {
+          title: 'Value',
+          render: (r: DomainRecord) => r.target
+        },
         { title: 'TTL', render: getTTL },
         {
           title: '',

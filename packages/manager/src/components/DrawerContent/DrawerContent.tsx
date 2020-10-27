@@ -9,23 +9,21 @@ export interface Props {
   errorMessage?: string;
 }
 
-export class DrawerContent extends React.PureComponent<Props> {
-  render() {
-    const { title, loading, error, errorMessage, children } = this.props;
-    if (loading) {
-      return <CircleProgress />;
-    }
-
-    if (error) {
-      return (
-        <Notice error spacingTop={8}>
-          {errorMessage ?? `Couldn't load ${title}`}
-        </Notice>
-      );
-    }
-
-    return <React.Fragment>{children}</React.Fragment>;
+export const DrawerContent: React.FC<Props> = props => {
+  const { title, loading, error, errorMessage, children } = props;
+  if (loading) {
+    return <CircleProgress />;
   }
-}
+
+  if (error) {
+    return (
+      <Notice error spacingTop={8}>
+        {errorMessage ?? `Couldn't load ${title}`}
+      </Notice>
+    );
+  }
+  // eslint-disable-next-line
+  return <React.Fragment>{children}</React.Fragment>;
+};
 
 export default DrawerContent;

@@ -31,7 +31,6 @@ import {
   getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { PasswordValidationType } from 'src/featureFlags';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -64,7 +63,6 @@ interface Props {
   type: 'community' | 'account';
   disabled: boolean;
   passwordHelperText: string;
-  passwordValidation: PasswordValidationType;
   linodeId: number;
   linodeLabel?: string;
   handleRebuildError: (status: string) => void;
@@ -100,8 +98,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     handleRebuildError,
     onClose,
     enqueueSnackbar,
-    passwordHelperText,
-    passwordValidation
+    passwordHelperText
   } = props;
 
   const classes = useStyles();
@@ -111,14 +108,8 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
    * dependent on a value from a feature flag. Remove this
    * once API password validation is stable.
    */
-  const RebuildSchema = React.useMemo(
-    () =>
-      extendValidationSchema(
-        passwordValidation ?? 'none',
-        RebuildLinodeFromStackScriptSchema
-      ),
-    [passwordValidation]
-  );
+  const RebuildSchema = () =>
+    extendValidationSchema(RebuildLinodeFromStackScriptSchema);
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
   const submitButtonDisabled = confirmationText !== linodeLabel;

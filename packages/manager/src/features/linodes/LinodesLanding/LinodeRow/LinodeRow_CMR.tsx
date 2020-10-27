@@ -58,6 +58,8 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
+  vlanIP?: string;
+  isVLAN?: boolean;
   openTagDrawer: (
     linodeID: number,
     linodeLabel: string,
@@ -102,6 +104,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     type,
     tags,
     image,
+    vlanIP,
     // other props
     classes,
     linodeNotifications,
@@ -111,7 +114,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     openNotificationDrawer,
     // displayType, @todo use for M3-2059
     recentEvent,
-    mutationAvailable
+    mutationAvailable,
+    isVLAN
   } = props;
 
   const { updateLinode } = useLinodes();
@@ -185,6 +189,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       memory={memory}
       image={image}
       maintenance={maintenanceStartTime}
+      isVLAN={isVLAN}
     />
   );
 
@@ -201,7 +206,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       <TableCell
         className={classNames({
           [classes.statusCell]: true,
-          [classes.statusCellMaintenance]: maintenanceStartTime
+          [classes.statusCellMaintenance]: maintenanceStartTime,
+          [classes.vlan_Status]: isVLAN
         })}
         data-qa-status
       >
@@ -242,21 +248,28 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           </div>
         )}
       </TableCell>
-      <Hidden xsDown>
+      {props.isVLAN ? (
         <TableCell className={classes.ipCell} data-qa-ips>
-          <div className={classes.ipCellWrapper}>
-            <IPAddress ips={ipv4} copyRight />
-          </div>
+          <div className={classes.ipCellWrapper}>{vlanIP}</div>
         </TableCell>
-        <TableCell className={classes.regionCell} data-qa-region>
-          <RegionIndicator region={region} />
-        </TableCell>
-        <LinodeRowBackupCell
-          linodeId={id}
-          backupsEnabled={backups.enabled || false}
-          mostRecentBackup={mostRecentBackup || ''}
-        />
-      </Hidden>
+      ) : null}
+      {props.isVLAN ? null : (
+        <Hidden xsDown>
+          <TableCell className={classes.ipCell} data-qa-ips>
+            <div className={classes.ipCellWrapper}>
+              <IPAddress ips={ipv4} copyRight />
+            </div>
+          </TableCell>
+          <TableCell className={classes.regionCell} data-qa-region>
+            <RegionIndicator region={region} />
+          </TableCell>
+          <LinodeRowBackupCell
+            linodeId={id}
+            backupsEnabled={backups.enabled || false}
+            mostRecentBackup={mostRecentBackup || ''}
+          />
+        </Hidden>
+      )}
       <Hidden mdDown>
         <TagCell
           tags={tags}
@@ -286,6 +299,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             openPowerActionDialog={openPowerActionDialog}
             noImage={!image}
             inTableContext
+            inVLANContext={isVLAN}
           />
         </div>
       </TableCell>

@@ -27,14 +27,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     padding: '12px 10px',
     textAlign: 'center',
+
     '&:hover': {
       backgroundColor: '#3683dc',
       '& span': {
-        color: theme.color.white
+        color: '#ffffff'
       }
     },
     '& span': {
-      color: '#3683dc'
+      color: theme.cmrTextColors.linkActiveLight
     }
   },
   action: {
@@ -43,12 +44,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     minWidth: 70,
     ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight,
     height: '100%',
     padding: '12px 10px',
     whiteSpace: 'nowrap',
     '&:hover': {
       backgroundColor: '#3683dc',
-      color: theme.color.white
+      color: '#ffffff'
     },
     '&[disabled]': {
       color: '#cdd0d5',

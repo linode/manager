@@ -6,6 +6,8 @@ import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     borderTop: 'none',
+    borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    color: theme.cmrTextColors.tableStatic,
     fontSize: '.875rem',
     lineHeight: '1rem',
     padding: '0px 15px',
