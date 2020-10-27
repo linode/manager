@@ -193,8 +193,8 @@ describe('Migrate Linode With Firewall', () => {
         );
         fbtVisibleClick('Newark, NJ');
         if (
-          cy.contains('Provisioning').should('not.be.visible') &&
-          cy.contains('Booting').should('not.be.visible')
+          cy.contains('PROVISIONING').should('not.be.visible') &&
+          cy.contains('BOOTING').should('not.be.visible')
         ) {
           fbtVisibleClick('Enter Migration Queue');
         }
