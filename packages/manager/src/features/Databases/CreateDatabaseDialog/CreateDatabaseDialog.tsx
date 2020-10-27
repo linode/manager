@@ -35,6 +35,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
+import useTimezone from 'src/utilities/useTimezone';
 import SelectDBPlanPanel from './SelectDBPlanPanel';
 
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
@@ -54,14 +55,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const CreateDbaasDialog: React.FC<{}> = _ => {
+export const CreateDatabaseDialog: React.FC<{}> = _ => {
   const context = React.useContext(dbaasContext);
   const classes = useStyles();
   const history = useHistory();
   const regions = useRegions();
   const { profile } = useProfile();
+  const timezone = useTimezone();
 
-  const regionsWithDbaas: ExtendedRegion[] = regions.entities
+  const regionsWithDatabases: ExtendedRegion[] = regions.entities
     //   .filter(thisRegion => thisRegion.capabilities.includes('Databases')) // temporarily commented out until Capabilities is squared away
     .map(r => ({ ...r, display: dcDisplayNames[r.id] }));
 
@@ -77,23 +79,24 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
   };
 
   // Maintenance Day
-  const maintenanceDayOptions = [
-    ['Sunday', 'Sunday'],
-    ['Monday', 'Monday'],
-    ['Tuesday', 'Tuesday'],
-    ['Wednesday', 'Wednesday'],
-    ['Thursday', 'Thursday'],
-    ['Friday', 'Friday'],
-    ['Saturday', 'Saturday']
-  ];
-  const daySelection = structureOptionsForSelect(maintenanceDayOptions);
+  const daySelection = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ].map(thisDay => ({
+    label: thisDay,
+    value: thisDay
+  }));
 
-  const handleDaySelection = (e: Item) => {
-    formik.setFieldValue('maintenance_schedule.day', e.value);
+  const handleDaySelection = (item: Item) => {
+    formik.setFieldValue('maintenance_schedule.day', item.value);
   };
 
   // Maintenance Window
-  const userTimezone = profile.data?.timezone ?? 'GMT';
   const initWindows = (timezone: string) => {
     let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
       const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(
@@ -111,15 +114,15 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
     return windows;
   };
 
-  const maintenanceWindowSelectOptions = initWindows(userTimezone);
+  const maintenanceWindowSelectOptions = initWindows(timezone);
   const maintenanceWindowHelperText =
     'Select the time of day you’d prefer maintenance to occur. On Standard Availability plans, there may be downtime during this window.';
   const windowSelection = structureOptionsForSelect(
     maintenanceWindowSelectOptions
   );
 
-  const handleWindowSelection = (e: Item) => {
-    formik.setFieldValue('maintenance_schedule.window', e.value);
+  const handleWindowSelection = (item: Item) => {
+    formik.setFieldValue('maintenance_schedule.window', item.value);
   };
 
   const { databaseTypes, requestDatabaseTypes } = useDatabaseTypes();
@@ -243,7 +246,7 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
             placeholder={' '}
             errorText={formik.errors.region}
             handleSelection={handleRegionSelect}
-            regions={regionsWithDbaas}
+            regions={regionsWithDatabases}
             selectedID={formik.values.region}
           />
         </div>
@@ -331,4 +334,4 @@ export const CreateDbaasDialog: React.FC<{}> = _ => {
   );
 };
 
-export default React.memo(CreateDbaasDialog);
+export default React.memo(CreateDatabaseDialog);

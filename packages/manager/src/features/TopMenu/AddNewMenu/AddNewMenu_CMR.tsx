@@ -238,16 +238,18 @@ class AddNewMenu extends React.Component<CombinedProps> {
                           />
                         )}
                       </MenuItem>
-                      <MenuItem
-                        onSelect={dbaas.open}
-                        className={classes.menuItemLink}
-                      >
-                        <AddNewMenuItem
-                          title="Database"
-                          body="Create cloud-based MySQL databases."
-                          ItemIcon={LinodeIcon} // to be replaced with database icon
-                        />
-                      </MenuItem>
+                      {flags.databases && (
+                        <MenuItem
+                          onSelect={dbaas.open}
+                          className={classes.menuItemLink}
+                        >
+                          <AddNewMenuItem
+                            title="Database"
+                            body="Create cloud-based MySQL databases."
+                            ItemIcon={LinodeIcon} // to be replaced with database icon
+                          />
+                        </MenuItem>
+                      )}
                     </MenuItems>
                   </MenuPopover>
                 </Menu>

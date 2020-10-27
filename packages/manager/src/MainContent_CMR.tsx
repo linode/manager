@@ -24,7 +24,7 @@ import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu/TopMenu_CMR';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import CreateVLANDialog from 'src/features/Vlans/CreateVLANDialog';
-import CreateDbaasDialog from 'src/features/Dbaas/CreateDbaasDialog';
+import CreateDatabaseDialog from 'src/features/Databases/CreateDatabaseDialog';
 import { useDialogContext, vlanContext, dbaasContext } from 'src/context';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 
@@ -351,7 +351,7 @@ const MainContent: React.FC<CombinedProps> = props => {
           <VolumeDrawer />
           <BackupDrawer />
           <CreateVLANDialog />
-          <CreateDbaasDialog />
+          <CreateDatabaseDialog />
         </VlanContextProvider>
       </DbaasContextProvider>
     </div>
