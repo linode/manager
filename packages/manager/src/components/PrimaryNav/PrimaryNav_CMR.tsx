@@ -31,7 +31,6 @@ import usePrefetch from 'src/hooks/usePreFetch';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import usePrimaryNavStyles from './PrimaryNav_CMR.styles';
 import MobileNav from './MobileNav';
-import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 
 type NavEntity =
@@ -51,7 +50,8 @@ type NavEntity =
   | 'StackScripts'
   | 'Help & Support'
   | 'Community'
-  | 'Virtual LANS';
+  | 'Virtual LANs'
+  | 'Databases';
 
 type NavGroup =
   | 'Compute'
@@ -82,7 +82,6 @@ export interface PrimaryNavProps {
   closeMenu: () => void;
   isCollapsed: boolean;
   toggleTheme: () => void;
-  toggleSpacing: () => void;
 }
 
 export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
@@ -92,7 +91,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const matchesMobile = useMediaQuery('(max-width:750px)');
   const matchesTablet = useMediaQuery('(max-width:1190px)');
 
-  const { closeMenu, isCollapsed, toggleTheme, toggleSpacing } = props;
+  const { closeMenu, isCollapsed, toggleTheme } = props;
 
   const [anchorEl, setAnchorEl] = React.useState<
     (EventTarget & HTMLElement) | undefined
@@ -143,10 +142,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             activeLinks: ['/linodes', '/linodes/create']
           },
           {
-            display: 'NodeBalancers',
-            href: '/nodebalancers'
-          },
-          {
             display: 'Kubernetes',
             href: '/kubernetes/clusters'
           },
@@ -176,7 +171,11 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             hide: !showFirewalls
           },
           {
-            display: 'Virtual LANS',
+            display: 'NodeBalancers',
+            href: '/nodebalancers'
+          },
+          {
+            display: 'Virtual LANs',
             href: '/vlans',
             hide: !showVlans
           }
@@ -196,6 +195,11 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
               '/object-storage/buckets',
               '/object-storage/access-keys'
             ]
+          },
+          {
+            display: 'Databases',
+            href: '/databases',
+            hide: !flags.databases
           }
         ]
       },
@@ -229,8 +233,10 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       requestDomains,
       domains.loading,
       domains.lastUpdated,
-      showFirewalls,
       _isLargeAccount,
+      showFirewalls,
+      showVlans,
+      flags.databases,
       _isManagedAccount
     ]
   );
@@ -267,7 +273,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             </div>
           </Grid>
           {matchesMobile && (
-            <Grid item>
+            <Grid item className={classes.mobileNav}>
               <MobileNav groups={primaryLinkGroups} />
             </Grid>
           )}
@@ -373,7 +379,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           >
             <ThemeToggle toggleTheme={toggleTheme} />
-            <SpacingToggle toggleSpacing={toggleSpacing} />
           </Menu>
           <UserMenu />
         </div>

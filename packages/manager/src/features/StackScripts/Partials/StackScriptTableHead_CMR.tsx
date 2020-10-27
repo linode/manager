@@ -14,14 +14,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& th': {
       cursor: 'pointer',
       fontFamily: theme.font.bold,
+      backgroundColor: theme.cmrBGColors.bgTableHeader,
+      border: `1px solid ${theme.cmrBorderColors.borderTable}`,
       height: 40,
       padding: '10px 15px',
+      '&:first-of-type': {
+        borderLeft: 'none'
+      },
+      '&:last-of-type': {
+        borderRight: 'none'
+      },
       '&:hover': {
         backgroundColor: '#3683dc',
         '& span': {
-          color: theme.color.white,
+          color: '#ffffff',
           '& svg': {
-            color: `${theme.color.white} !important`
+            color: '#ffffff !important'
           }
         }
       }
@@ -30,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   noHover: {
     width: 'calc(100% - 65px)',
     '&:hover': {
-      backgroundColor: `${theme.bg.offWhite} !important`,
+      backgroundColor: `${theme.cmrBGColors.bgTableHeader} !important`,
       cursor: 'default'
     }
   },

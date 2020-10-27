@@ -685,8 +685,7 @@ const mapStateToProps: MapStateToProps<
     ['__resources', 'profile', 'data', 'restricted'],
     state
   ),
-  // @todo remove this when ARB-2091 is merged
-  isLargeAccount: state.preferences.data?.is_large_account ?? false,
+  isLargeAccount: state.__resources.accountManagement.isLargeAccount,
   domainsByID: state.__resources.domains.itemsById
 });
 

@@ -12,7 +12,7 @@ import Grid from 'src/components/Grid';
 
 export interface EntityDetailProps {
   header: JSX.Element;
-  body: JSX.Element;
+  body?: JSX.Element;
   footer: JSX.Element;
 }
 
@@ -20,16 +20,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   header: {},
   body: {
     padding: `20px !important`,
-    backgroundColor: theme.color.white,
-    borderTop: `1px solid ${theme.color.grey9}`,
-    borderBottom: `1px solid ${theme.color.grey9}`
+    backgroundColor: theme.cmrBGColors.bgSecondaryActions,
+    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
   },
   footer: {
-    backgroundColor: theme.color.white,
+    backgroundColor: theme.cmrBGColors.bgSecondaryActions,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     padding: `11px 12px !important`
+  },
+  footerBorder: {
+    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`
   }
 }));
 
@@ -41,10 +44,17 @@ export const EntityDetail: React.FC<EntityDetailProps> = props => {
     <div>
       {header}
 
-      <Grid item xs={12} className={classes.body}>
-        {body}
-      </Grid>
-      <Grid item xs={12} className={classes.footer}>
+      {body !== undefined && (
+        <Grid item xs={12} className={classes.body}>
+          {body}
+        </Grid>
+      )}
+      <Grid
+        item
+        xs={12}
+        className={`${classes.footer} ${body === undefined &&
+          classes.footerBorder}`}
+      >
         {footer}
       </Grid>
     </div>

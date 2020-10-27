@@ -1,36 +1,33 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
-import { linodeInTransition } from 'src/features/linodes/transitions';
-import LinodeBusyStatus from '../LinodeSummary/LinodeBusyStatus';
-import HostMaintenance from './HostMaintenance';
-import MutationNotification from './MutationNotification';
-import Notifications from './Notifications';
+import CircleProgress from 'src/components/CircleProgress';
+import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
-import {
-  LinodeDetailContext,
-  withLinodeDetailContext
-} from '../linodeDetailContext';
-import { Config } from '@linode/api-v4/lib/linodes';
 import PowerDialogOrDrawer, {
   Action as BootAction
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import useLinodes from 'src/hooks/useLinodes';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
-import CircleProgress from 'src/components/CircleProgress';
-import useLinodes from 'src/hooks/useLinodes';
-import TagDrawer from 'src/components/TagCell/TagDrawer';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
+import MigrateLinode from '../../MigrateLanding/MigrateLinode';
+import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
+import {
+  LinodeDetailContext,
+  withLinodeDetailContext
+} from '../linodeDetailContext';
 import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue/RescueDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
-import MigrateLinode from '../../MigrateLanding/MigrateLinode';
-import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import HostMaintenance from './HostMaintenance';
+import MutationNotification from './MutationNotification';
+import Notifications from './Notifications';
 
 interface Props {
   numVolumes: number;
@@ -69,13 +66,9 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
-  const {
-    linode,
-    linodeEvents,
-    linodeStatus,
-    linodeDisks,
-    linodeConfigs
-  } = props;
+  const notificationContext = React.useContext(_notificationContext);
+
+  const { linode, linodeStatus, linodeDisks, linodeConfigs } = props;
 
   const [powerDialog, setPowerDialog] = React.useState<PowerDialogProps>({
     open: false,
@@ -233,9 +226,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
       setTagDrawer(tagDrawer => ({ ...tagDrawer, tags: _tags }));
     });
   };
-  const firstEventWithProgress = (linodeEvents || []).find(
-    eachEvent => typeof eachEvent.percent_complete === 'number'
-  );
   const { profile } = useProfile();
   const { _loading } = useReduxLoad(['volumes']);
   const { volumes } = useVolumes();
@@ -257,7 +247,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
@@ -271,10 +261,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         openTagDrawer={openTagDrawer}
         openDialog={openDialog}
         openPowerActionDialog={openPowerActionDialog}
+        openNotificationDrawer={notificationContext.openDrawer}
       />
-      {linodeInTransition(linodeStatus, firstEventWithProgress) && (
-        <LinodeBusyStatus />
-      )}
       <PowerDialogOrDrawer
         isOpen={powerDialog.open}
         action={powerDialog.bootAction}
@@ -323,13 +311,12 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         open={backupsDialog.open}
         onClose={closeDialogs}
       />
-    </React.Fragment>
+    </>
   );
 };
 
 interface LinodeContext {
   linodeStatus: LinodeStatus;
-  linodeEvents: Event[];
   linodeDisks: Disk[];
 }
 
@@ -337,7 +324,6 @@ export default compose<CombinedProps, {}>(
   withLinodeDetailContext<LinodeContext>(({ linode }) => ({
     linode,
     linodeStatus: linode.status,
-    linodeEvents: linode._events,
     linodeDisks: linode._disks,
     configs: linode._configs
   }))

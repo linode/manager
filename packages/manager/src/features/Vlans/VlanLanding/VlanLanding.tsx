@@ -3,37 +3,52 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
-import VLanRow from './VLanRow';
+import withVLANs, { Props as VLANProps } from 'src/containers/vlans.container';
+import { vlanContext } from 'src/context';
+import VlanRow from './VlanRow';
+import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
+import VlanDialog from './VlanDialog';
+import useVlans from 'src/hooks/useVlans';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 
-type CombinedProps = RouteComponentProps<{}>;
+type CombinedProps = RouteComponentProps<{}> & VLANProps;
 
-const VlanLanding: React.FC<CombinedProps> = props => {
+const VlanLanding: React.FC<CombinedProps> = () => {
+  const { vlans } = useVlans();
+  const context = React.useContext(vlanContext);
+
+  useReduxLoad(['vlans']);
+
+  const [modalOpen, toggleModal] = React.useState<boolean>(false);
+  const [selectedVlanID, setSelectedVlanID] = React.useState<
+    number | undefined
+  >(undefined);
+  const [selectedVlanLabel, setSelectedVlanLabel] = React.useState<string>('');
+
+  const handleOpenDeleteVlanModal = (id: number, label: string) => {
+    setSelectedVlanID(id);
+    setSelectedVlanLabel(label);
+    toggleModal(true);
+  };
+
   const headers = [
     {
       label: 'Label',
-      dataColumn: 'label',
+      dataColumn: 'description',
       sortable: true,
-      widthPercent: 15
+      widthPercent: 10
     },
     {
       label: 'Region',
       dataColumn: 'region',
       sortable: true,
-      widthPercent: 15
+      widthPercent: 10
     },
     {
       label: 'Linodes',
       dataColumn: 'linodes',
       sortable: false,
-      widthPercent: 25,
-      hideOnMobile: true
-    },
-    {
-      label: 'Tags',
-      dataColumn: 'tags',
-      sortable: false,
-      widthPercent: 40,
-      hideOnMobile: true
+      widthPercent: 15
     },
     {
       label: 'Action Menu',
@@ -44,22 +59,28 @@ const VlanLanding: React.FC<CombinedProps> = props => {
     }
   ];
 
+  const handlers: VlanHandlers = {
+    triggerDeleteVlan: handleOpenDeleteVlanModal
+  };
+
   const vLanRow = {
-    Component: VLanRow,
-    data: [],
-    loading: false,
-    lastUpdated: 1234,
-    error: undefined
+    handlers,
+    Component: VlanRow,
+    data: Object.values(vlans.itemsById) ?? [],
+    loading: vlans.loading,
+    lastUpdated: vlans.lastUpdated,
+    error: vlans.error.read
   };
 
   return (
     <React.Fragment>
       <LandingHeader
-        title="Virtual LANS"
+        title="Virtual LANs"
         entity="VLAN"
-        // TODO add vlan to type list
         iconType="linode"
         docsLink="http://google.com"
+        headerOnly
+        onAddNew={context.open}
       />
       <EntityTable
         entity="vlans"
@@ -68,8 +89,17 @@ const VlanLanding: React.FC<CombinedProps> = props => {
         headers={headers}
         initialOrder={{ order: 'asc', orderBy: 'label' }}
       />
+      <VlanDialog
+        open={modalOpen}
+        selectedVlanID={selectedVlanID}
+        selectedVlanLabel={selectedVlanLabel}
+        closeDialog={() => toggleModal(false)}
+      />
     </React.Fragment>
   );
 };
 
-export default compose<CombinedProps, {}>(React.memo)(VlanLanding);
+export default compose<CombinedProps, {}>(
+  React.memo,
+  withVLANs<{}, CombinedProps>()
+)(VlanLanding);

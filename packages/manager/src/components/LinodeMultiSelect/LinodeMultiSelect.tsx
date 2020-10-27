@@ -6,6 +6,7 @@ import withLinodes, {
 } from 'src/containers/withLinodes.container';
 
 export interface Props extends Partial<BaseSelectProps> {
+  selectedLinodes?: number[];
   allowedRegions?: string[];
   filteredLinodes?: number[];
   helperText?: string;
@@ -20,6 +21,7 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
     allowedRegions,
     errorText,
     filteredLinodes,
+    selectedLinodes,
     helperText,
     linodesData,
     linodesError,
@@ -73,10 +75,23 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
     handleChange(newSelectedLinodes);
   };
 
+  const value = selectedLinodes
+    ? selectedLinodes.map(thisLinodeID => {
+        const thisLinode = linodesData.find(
+          eachLinode => eachLinode.id === thisLinodeID
+        );
+        return {
+          value: thisLinodeID,
+          label: thisLinode?.label ?? thisLinodeID
+        };
+      })
+    : undefined;
+
   return (
     <Select
       label="Linodes"
       name="linodes"
+      value={value}
       isLoading={linodesLoading}
       errorText={linodeError || errorText}
       isMulti

@@ -83,6 +83,10 @@ const Profile: React.FC<Props> = props => {
     return Boolean(matchPath(p, { path: location.pathname }));
   };
 
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="My Profile " />
@@ -92,7 +96,11 @@ const Profile: React.FC<Props> = props => {
         data-qa-profile-header
       />
       <Tabs
-        defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
         data-qa-tabs
       >
         <TabLinkList tabs={tabs} />

@@ -2,6 +2,7 @@ import { rest, RequestHandler } from 'msw';
 
 import {
   accountFactory,
+  databaseFactory,
   domainFactory,
   domainRecordFactory,
   imageFactory,
@@ -32,7 +33,8 @@ import {
   eventFactory,
   tagFactory,
   nodeBalancerConfigFactory,
-  nodeBalancerConfigNodeFactory
+  nodeBalancerConfigNodeFactory,
+  VLANFactory
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -57,6 +59,9 @@ export const handlers = [
     const profile = profileFactory.build();
     return res(ctx.json(profile));
   }),
+  rest.put('*/profile', (req, res, ctx) => {
+    return res(ctx.json({ ...profileFactory.build(), ...(req.body as any) }));
+  }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(ctx.json(cachedRegions));
   }),
@@ -69,7 +74,7 @@ export const handlers = [
     const images = [...privateImages, ...publicImages];
     return res(ctx.json(makeResourcePage(images)));
   }),
-  rest.get('*/instances', async (req, res, ctx) => {
+  rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(3, {
       backups: { enabled: false }
     });
@@ -206,6 +211,10 @@ export const handlers = [
     const volumes = volumeFactory.buildList(10);
     return res(ctx.json(makeResourcePage(volumes)));
   }),
+  rest.get('*/vlans', (req, res, ctx) => {
+    const vlans = VLANFactory.buildList(4);
+    return res(ctx.json(makeResourcePage(vlans)));
+  }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
     return res(ctx.json({ display: 'compact' }));
   }),
@@ -229,6 +238,9 @@ export const handlers = [
       active_since: '2019-11-05'
     });
     return res(ctx.json(account));
+  }),
+  rest.put('*/account', (req, res, ctx) => {
+    return res(ctx.json({ ...accountFactory.build(), ...(req.body as any) }));
   }),
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();
@@ -297,7 +309,35 @@ export const handlers = [
     return res(ctx.json(makeResourcePage([])));
   }),
   rest.get('*/notifications', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(notificationFactory.buildList(1))));
+    // const emailBounce = notificationFactory.build({
+    //   type: 'billing_email_bounce',
+    //   entity: null,
+    //   when: null,
+    //   message: 'We are unable to send emails to your billing email address!',
+    //   label: 'We are unable to send emails to your billing email address!',
+    //   severity: 'major',
+    //   until: null,
+    //   body: null
+    // });
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...notificationFactory.buildList(1)
+          // emailBounce
+        ])
+      )
+    );
+  }),
+  rest.post('*/networking/vlans', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/databases/mysql/instances', (req, res, ctx) => {
+    const online = databaseFactory.build({ status: 'ready' });
+    const initializing = databaseFactory.build({ status: 'initializing' });
+    const error = databaseFactory.build({ status: 'error' });
+    const unknown = databaseFactory.build({ status: 'unknown' });
+    const databases = [online, initializing, error, unknown];
+    return res(ctx.json(makeResourcePage(databases)));
   })
 ];
 
@@ -307,7 +347,7 @@ export const mockDataHandlers: Record<
   (count: number) => RequestHandler
 > = {
   linode: count =>
-    rest.get('*/instances', async (req, res, ctx) => {
+    rest.get('*/linode/instances', async (req, res, ctx) => {
       const linodes = linodeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(linodes)));
     })

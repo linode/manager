@@ -110,8 +110,6 @@ export const styles = (theme: Theme) =>
       }
     },
     actionCell: {
-      display: 'flex',
-      justifyContent: 'flex-end',
       margin: 0
     }
   });

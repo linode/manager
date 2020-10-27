@@ -9,3 +9,8 @@ export const CreateBucketSchema = object({
     .max(63, 'Label must be between 3 and 63 characters.'),
   cluster: string().required('Cluster is required.')
 });
+
+export const UploadCertificateSchema = object({
+  certificate: string().required('Certificate is required.'),
+  private_key: string().required('Private key is required.')
+});

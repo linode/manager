@@ -1,4 +1,4 @@
-import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes/types';
+import { Config, Linode, LinodeStatus } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
@@ -71,6 +71,7 @@ import ToggleBox from './ToggleBox';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { ExtendedStatus, statusToPriority } from './utils';
 import getUserTimezone from 'src/utilities/getUserTimezone';
+import DetachLinodeDialog from 'src/features/Vlans/DetachLinodeDialog/DetachLinodeDialog';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 
@@ -88,6 +89,7 @@ interface State {
   CtaDismissed: boolean;
   linodeResizeOpen: boolean;
   linodeMigrateOpen: boolean;
+  detachLinodeFromVlanDialogOpen: boolean;
   filterStatus: FilterStatus;
 }
 
@@ -98,8 +100,14 @@ interface Params {
 
 type RouteProps = RouteComponentProps<Params>;
 
-interface Props {
+export interface Props {
   isDashboard?: boolean;
+  isVLAN?: boolean;
+  vlanID?: number;
+  vlanLabel?: string;
+  filterLinodesFn?: (linode: Linode) => boolean;
+  extendLinodesFn?: (linode: Linode) => any;
+  LandingHeader?: React.ReactElement;
 }
 
 type CombinedProps = Props &
@@ -124,6 +132,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     CtaDismissed: BackupsCtaDismissed.get(),
     linodeResizeOpen: false,
     linodeMigrateOpen: false,
+    detachLinodeFromVlanDialogOpen: false,
     filterStatus: 'all'
   };
 
@@ -197,6 +206,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           enableBackupsDialogOpen: true
         });
         break;
+      case 'detach_vlan':
+        this.setState({
+          detachLinodeFromVlanDialogOpen: true
+        });
     }
     this.setState({
       selectedLinodeID: linodeID,
@@ -212,7 +225,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       rescueDialogOpen: false,
       linodeResizeOpen: false,
       linodeMigrateOpen: false,
-      enableBackupsDialogOpen: false
+      enableBackupsDialogOpen: false,
+      detachLinodeFromVlanDialogOpen: false
     });
   };
 
@@ -247,7 +261,21 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       ignoreQueryPrefix: true
     });
 
-    const filteredLinodes = filterLinodesByStatus(filterStatus, linodesData);
+    const linodesFilteredByStatus = filterLinodesByStatus(
+      filterStatus,
+      linodesData
+    );
+
+    // Filter the Linodes according to the `filterLinodesFn` prop (if it exists).
+    // This is used in the VLAN Details view to only show Linodes belonging to
+    // a given VLAN.
+    const filteredLinodes = this.props.filterLinodesFn
+      ? linodesFilteredByStatus.filter(this.props.filterLinodesFn)
+      : linodesFilteredByStatus;
+
+    const extendedLinodes = this.props.extendLinodesFn
+      ? filteredLinodes.map(this.props.extendLinodesFn)
+      : filteredLinodes;
 
     const componentProps = {
       count: linodesCount,
@@ -277,7 +305,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       return (
         <React.Fragment>
           {/** Don't override the document title if we're rendering this on the Dashboard */}
-          {!this.props.isDashboard ? (
+          {!this.props.isDashboard && !this.props.isVLAN ? (
             <DocumentTitleSegment segment="Linodes" />
           ) : null}
           <ErrorState errorText={errorText} />
@@ -354,13 +382,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             />
           </>
         )}
-        {this.props.someLinodesHaveScheduledMaintenance && (
-          <MaintenanceBanner
-            userTimezone={this.props.userTimezone}
-            userProfileError={this.props.userProfileError}
-            userProfileLoading={this.props.userProfileLoading}
-          />
-        )}
+        {!this.props.isVLAN &&
+          this.props.someLinodesHaveScheduledMaintenance && (
+            <MaintenanceBanner
+              userTimezone={this.props.userTimezone}
+              userProfileError={this.props.userProfileError}
+              userProfileLoading={this.props.userProfileLoading}
+            />
+          )}
         <Grid
           container
           className={this.props.flags.cmr ? classes.cmrSpacing : ''}
@@ -373,7 +402,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             xs={this.props.flags.cmr || !displayBackupsCTA ? 12 : undefined}
           >
             {/** Don't override the document title if we're rendering this on the Dashboard */}
-            {!this.props.isDashboard ? (
+            {!this.props.isDashboard && !this.props.isVLAN ? (
               <DocumentTitleSegment segment="Linodes" />
             ) : null}
             <PreferenceToggle<boolean>
@@ -415,69 +444,79 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                 <BackupsCTA_CMR dismissed={this.dismissCTA} />
                               )}
                               <Grid item xs={12}>
-                                <LandingHeader
-                                  title="Linodes"
-                                  entity="Linode"
-                                  onAddNew={() =>
-                                    this.props.history.push('/linodes/create')
-                                  }
-                                  iconType="linode"
-                                  docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-                                  body={
-                                    <>
-                                      <Chip
-                                        className={classNames({
-                                          [classes.chip]: true,
-                                          [classes.chipRunning]: true,
-                                          [classes.chipActive]:
-                                            filterStatus === 'running'
-                                        })}
-                                        label={`${linodesRunningCount} RUNNING`}
-                                        onClick={() =>
-                                          this.setFilterStatus('running')
-                                        }
-                                        {...chipProps}
-                                      />
-                                      <Chip
-                                        className={classNames({
-                                          [classes.chip]: true,
-                                          [classes.chipPending]: true,
-                                          [classes.chipActive]:
-                                            filterStatus === 'busy'
-                                        })}
-                                        onClick={() =>
-                                          this.setFilterStatus('busy')
-                                        }
-                                        label={`${linodesBusyCount} BUSY`}
-                                        {...chipProps}
-                                      />
-                                      <Chip
-                                        className={classNames({
-                                          [classes.chip]: true,
-                                          [classes.chipOffline]: true,
-                                          [classes.chipActive]:
-                                            filterStatus === 'offline'
-                                        })}
-                                        onClick={() =>
-                                          this.setFilterStatus('offline')
-                                        }
-                                        label={`${linodesOfflineCount} OFFLINE`}
-                                        {...chipProps}
-                                      />
-                                      {filterStatus !== 'all' && (
-                                        <IconTextLink
-                                          SideIcon={Close}
-                                          text="CLEAR FILTERS"
-                                          title="CLEAR FILTERS"
-                                          className={`${classes.clearFilters}`}
-                                          onClick={() =>
-                                            this.setFilterStatus('all')
-                                          }
-                                        />
-                                      )}
-                                    </>
-                                  }
-                                />
+                                {this.props.LandingHeader ? (
+                                  this.props.LandingHeader
+                                ) : (
+                                  <LandingHeader
+                                    title="Linodes"
+                                    entity="Linode"
+                                    onAddNew={() =>
+                                      this.props.history.push('/linodes/create')
+                                    }
+                                    iconType="linode"
+                                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                                    body={
+                                      <>
+                                        {linodesRunningCount !== 0 && (
+                                          <Chip
+                                            className={classNames({
+                                              [classes.chip]: true,
+                                              [classes.chipRunning]: true,
+                                              [classes.chipActive]:
+                                                filterStatus === 'running'
+                                            })}
+                                            label={`${linodesRunningCount} RUNNING`}
+                                            onClick={() =>
+                                              this.setFilterStatus('running')
+                                            }
+                                            {...chipProps}
+                                          />
+                                        )}
+                                        {linodesBusyCount !== 0 && (
+                                          <Chip
+                                            className={classNames({
+                                              [classes.chip]: true,
+                                              [classes.chipPending]: true,
+                                              [classes.chipActive]:
+                                                filterStatus === 'busy'
+                                            })}
+                                            onClick={() =>
+                                              this.setFilterStatus('busy')
+                                            }
+                                            label={`${linodesBusyCount} BUSY`}
+                                            {...chipProps}
+                                          />
+                                        )}
+                                        {linodesOfflineCount !== 0 && (
+                                          <Chip
+                                            className={classNames({
+                                              [classes.chip]: true,
+                                              [classes.chipOffline]: true,
+                                              [classes.chipActive]:
+                                                filterStatus === 'offline'
+                                            })}
+                                            onClick={() =>
+                                              this.setFilterStatus('offline')
+                                            }
+                                            label={`${linodesOfflineCount} OFFLINE`}
+                                            {...chipProps}
+                                          />
+                                        )}
+                                        {filterStatus !== 'all' && (
+                                          <IconTextLink
+                                            SideIcon={Close}
+                                            text="CLEAR FILTERS"
+                                            title="CLEAR FILTERS"
+                                            className={`${classes.clearFilters}`}
+                                            onClick={() =>
+                                              this.setFilterStatus('all')
+                                            }
+                                          />
+                                        )}
+                                      </>
+                                    }
+                                  />
+                                )}
                               </Grid>
                             </React.Fragment>
                           ) : (
@@ -531,7 +570,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                           )}
                           <Grid item xs={12}>
                             <OrderBy
-                              data={filteredLinodes.map(linode => {
+                              data={extendedLinodes.map(linode => {
                                 // Determine the priority of this Linode's status.
                                 // We have to check for "Maintenance" and "Busy" since these are
                                 // not actual Linode statuses (we derive them client-side).
@@ -570,7 +609,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   data,
                                   handleOrderChange,
                                   order,
-                                  orderBy
+                                  orderBy,
+                                  isVLAN: this.props.isVLAN
                                 };
 
                                 return linodesAreGrouped ? (
@@ -604,55 +644,57 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                 );
                               }}
                             </OrderBy>
-                            <Grid container justify="flex-end">
-                              <Grid item className={classes.CSVlinkContainer}>
-                                <CSVLink
-                                  data={linodesData.map(e => {
-                                    const maintenance = e.maintenance?.when
-                                      ? {
-                                          ...e.maintenance,
-                                          when: formatDateISO(
-                                            e.maintenance?.when
-                                          )
-                                        }
-                                      : { when: null };
-
-                                    return {
-                                      ...e,
-                                      maintenance,
-                                      linodeDescription: getLinodeDescription(
-                                        e.label,
-                                        e.specs.memory,
-                                        e.specs.disk,
-                                        e.specs.vcpus,
-                                        '',
-                                        {}
-                                      )
-                                    };
-                                  })}
-                                  headers={
-                                    this.props
-                                      .someLinodesHaveScheduledMaintenance
-                                      ? [
-                                          ...headers,
-                                          /** only add maintenance window to CSV if one Linode has a window */
-                                          {
-                                            label: 'Maintenance Status',
-                                            key: 'maintenance.when'
+                            {this.props.isVLAN ? null : (
+                              <Grid container justify="flex-end">
+                                <Grid item className={classes.CSVlinkContainer}>
+                                  <CSVLink
+                                    data={linodesData.map(e => {
+                                      const maintenance = e.maintenance?.when
+                                        ? {
+                                            ...e.maintenance,
+                                            when: formatDateISO(
+                                              e.maintenance?.when
+                                            )
                                           }
-                                        ]
-                                      : headers
-                                  }
-                                  filename={`linodes-${formatDate(
-                                    DateTime.local().toISO()
-                                  )}.csv`}
-                                  className={`${classes.CSVlink} ${this.props
-                                    .flags.cmr && classes.cmrCSVlink}`}
-                                >
-                                  Download CSV
-                                </CSVLink>
+                                        : { when: null };
+
+                                      return {
+                                        ...e,
+                                        maintenance,
+                                        linodeDescription: getLinodeDescription(
+                                          e.label,
+                                          e.specs.memory,
+                                          e.specs.disk,
+                                          e.specs.vcpus,
+                                          '',
+                                          {}
+                                        )
+                                      };
+                                    })}
+                                    headers={
+                                      this.props
+                                        .someLinodesHaveScheduledMaintenance
+                                        ? [
+                                            ...headers,
+                                            /** only add maintenance window to CSV if one Linode has a window */
+                                            {
+                                              label: 'Maintenance Status',
+                                              key: 'maintenance.when'
+                                            }
+                                          ]
+                                        : headers
+                                    }
+                                    filename={`linodes-${formatDate(
+                                      DateTime.local().toISO()
+                                    )}.csv`}
+                                    className={`${classes.CSVlink} ${this.props
+                                      .flags.cmr && classes.cmrCSVlink}`}
+                                  >
+                                    Download CSV
+                                  </CSVLink>
+                                </Grid>
                               </Grid>
-                            </Grid>
+                            )}
                           </Grid>
                         </React.Fragment>
                       );
@@ -685,6 +727,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               linodeLabel={this.state.selectedLinodeLabel}
               handleDelete={this.props.deleteLinode}
             />
+            {this.props.isVLAN &&
+            !!this.props.vlanID &&
+            !!this.props.vlanLabel ? (
+              <DetachLinodeDialog
+                open={this.state.detachLinodeFromVlanDialogOpen}
+                closeDialog={this.closeDialogs}
+                vlanID={this.props.vlanID}
+                vlanLabel={this.props.vlanLabel}
+                linodeID={this.state.selectedLinodeID}
+                linodeLabel={this.state.selectedLinodeLabel}
+              />
+            ) : null}
           </React.Fragment>
         )}
       </React.Fragment>

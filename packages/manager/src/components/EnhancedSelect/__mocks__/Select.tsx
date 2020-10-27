@@ -33,14 +33,18 @@ export default ({
   const _options = groupsToItems(options);
   return (
     <>
-      <label htmlFor="select">{label}</label>
+      <label htmlFor={label} id={`${label}-label`}>
+        {label}
+      </label>
       <select
         placeholder={placeholder}
-        name="select"
+        name={label}
         data-testid="select"
+        aria-labelledby={`${label}-label`}
         value={value ?? ''}
         onBlur={handleChange}
         onChange={handleChange}
+        multiple={isMulti}
       >
         {_options.map((thisOption: any) => (
           <option

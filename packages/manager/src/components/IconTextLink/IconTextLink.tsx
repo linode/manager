@@ -27,8 +27,8 @@ const styles = (theme: Theme) =>
       alignItems: 'flex-start',
       cursor: 'pointer',
       padding: theme.spacing(1) + theme.spacing(1) / 2,
-      color: theme.palette.primary.main,
-      transition: theme.transitions.create(['color']),
+      color: theme.cmrTextColors.linkActiveLight,
+      transition: 'none',
       margin: `0 -${theme.spacing(1) + theme.spacing(1) / 2}px 2px 0`,
       minHeight: 'auto',
       '&:hover': {
@@ -41,7 +41,8 @@ const styles = (theme: Theme) =>
         '& .border': {
           color: theme.palette.primary.light
         }
-      }
+      },
+      '&:focus': { outline: '1px dotted #999' }
     },
     active: {
       color: '#1f64b6'
@@ -55,12 +56,12 @@ const styles = (theme: Theme) =>
       }
     },
     icon: {
-      transition: theme.transitions.create(['fill', 'color']),
+      transition: 'none',
       fontSize: 18,
       marginRight: theme.spacing(0.5),
-      color: theme.palette.primary.main,
+      color: theme.cmrIconColors.iActiveLight,
       '& .border': {
-        transition: theme.transitions.create(['color'])
+        transition: 'none'
       }
     },
     left: {
@@ -130,6 +131,7 @@ const IconTextLink: React.FC<FinalProps> = props => {
         title={title}
         onClick={onClick}
         data-qa-icon-text-link={title}
+        disableRipple
       >
         <SideIcon className={`${classes.icon} ${hideText === true && 'm0'}`} />
         <span

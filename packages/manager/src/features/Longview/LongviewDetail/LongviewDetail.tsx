@@ -166,6 +166,10 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
+  };
+
   if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
     return (
       <Paper>
@@ -221,7 +225,11 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
         />
       ))}
       <Tabs
-        defaultIndex={tabs.findIndex(tab => matches(tab.routeName)) || 0}
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
         className={classes.tabList}
       >
         <TabLinkList tabs={tabs} />

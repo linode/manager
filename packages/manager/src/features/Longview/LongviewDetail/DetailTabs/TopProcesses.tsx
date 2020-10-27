@@ -44,6 +44,7 @@ export interface Props {
   topProcessesError?: APIError[];
   lastUpdatedError?: APIError[];
   cmrFlag?: boolean;
+  clientID: number;
 }
 
 export const TopProcesses: React.FC<Props> = props => {
@@ -53,8 +54,10 @@ export const TopProcesses: React.FC<Props> = props => {
     topProcessesLoading,
     topProcessesError,
     lastUpdatedError,
-    cmrFlag
+    cmrFlag,
+    clientID
   } = props;
+
   const errorMessage = Boolean(topProcessesError || lastUpdatedError)
     ? 'There was an error getting Top Processes.'
     : undefined;
@@ -62,12 +65,14 @@ export const TopProcesses: React.FC<Props> = props => {
   const Table = cmrFlag ? Table_CMR : Table_PreCMR;
   const TableRow = cmrFlag ? TableRow_CMR : TableRow_PreCMR;
   const TableSortCell = cmrFlag ? TableSortCell_CMR : TableSortCell_PreCMR;
-
   return (
     <Grid item xs={12} lg={4}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
-        <Link to="processes" className={classes.detailsLink}>
+        <Link
+          to={`/longview/clients/${clientID}/processes`}
+          className={classes.detailsLink}
+        >
           View Details
         </Link>
       </Box>

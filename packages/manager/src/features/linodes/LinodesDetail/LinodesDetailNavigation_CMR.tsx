@@ -2,11 +2,11 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import TabLinkList from 'src/components/TabLinkList';
 import { withLinodeDetailContext } from './linodeDetailContext';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 const LinodeSummary_CMR = React.lazy(() =>
@@ -77,20 +77,23 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: location.pathname }));
   };
 
-  const defaultIndex = tabs.findIndex(tab => matches(tab.routeName));
+  const getIndex = () => {
+    return Math.max(
+      tabs.findIndex(tab => matches(tab.routeName)),
+      0
+    );
+  };
 
-  const [tabIndex, setTabIndex] = React.useState(Math.max(defaultIndex, 0));
-
-  const handleTabChange = (index: number) => {
-    setTabIndex(index);
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
   };
 
   return (
     <>
       <DocumentTitleSegment
-        segment={`${linodeLabel} - ${tabs[tabIndex]?.title ?? 'Detail View'}`}
+        segment={`${linodeLabel} - ${tabs[getIndex()]?.title ?? 'Detail View'}`}
       />
-      <Tabs index={tabIndex} onChange={handleTabChange}>
+      <Tabs index={getIndex()} onChange={navToURL}>
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
