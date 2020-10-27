@@ -3,6 +3,7 @@ import {
   cloneLinode,
   CreateLinodeRequest,
   Linode,
+  LinodeInterfacePayload,
   LinodeTypeClass
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -425,16 +426,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      */
 
     if (this.state.selectedVlanIDs.length > 0) {
-      payload.interfaces = this.state.selectedVlanIDs.reduce(
-        (acc, thisVLAN, currentIdx) => {
-          const slot = `eth${currentIdx + 1}`;
-          return {
-            ...acc,
-            [slot]: { type: 'additional', vlan_id: thisVLAN }
-          };
-        },
-        { eth0: { type: 'default' } }
-      );
+      payload.interfaces = getInterfacePayload(this.state.selectedVlanIDs);
     }
 
     if (payload.root_pass) {
@@ -795,3 +787,17 @@ const handleAnalytics = (
 
   sendCreateLinodeEvent(eventAction, eventLabel);
 };
+
+export const getInterfacePayload = (
+  vlanIDs: number[]
+): Record<string, LinodeInterfacePayload> =>
+  vlanIDs.reduce(
+    (acc, thisVLAN, currentIdx) => {
+      const slot = `eth${currentIdx + 1}`;
+      return {
+        ...acc,
+        [slot]: { type: 'additional', vlan_id: thisVLAN }
+      };
+    },
+    { eth0: { type: 'default' } }
+  );
