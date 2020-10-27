@@ -222,7 +222,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
     );
   };
 
-  const [tabs, tabOrder] = createTabs();
+  const [tabs] = createTabs();
 
   const dbPlansCopy =
     'Standard Availability allocates a single node to your database cluster. High Availability allocates 3 nodes for increased reliability and fault tolerance and has no downtime during maintenance.';

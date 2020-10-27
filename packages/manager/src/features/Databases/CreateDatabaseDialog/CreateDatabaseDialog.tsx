@@ -93,7 +93,11 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   }));
 
   const handleDaySelection = (item: Item) => {
-    formik.setFieldValue('maintenance_schedule.day', item.value);
+    if (item) {
+      formik.setFieldValue('maintenance_schedule.day', item.value);
+    } else {
+      formik.setFieldValue('maintenance_schedule.day', undefined);
+    }
   };
 
   // Maintenance Window
@@ -122,23 +126,17 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   );
 
   const handleWindowSelection = (item: Item) => {
-    formik.setFieldValue('maintenance_schedule.window', item.value);
+    if (item) {
+      formik.setFieldValue('maintenance_schedule.window', item.value);
+    } else {
+      formik.setFieldValue('maintenance_schedule.window', undefined);
+    }
   };
 
-  const { databaseTypes, requestDatabaseTypes } = useDatabaseTypes();
-  const { _loading } = useReduxLoad(
-    ['databaseTypes'],
-    undefined,
-    context.isOpen
-  );
+  const { databaseTypes } = useDatabaseTypes();
+  useReduxLoad(['databaseTypes'], undefined, context.isOpen);
 
   const [selectedPlanId, setSelectedPlanId] = React.useState<string>('');
-
-  React.useEffect(() => {
-    if (!_loading && databaseTypes.lastUpdated === 0) {
-      requestDatabaseTypes();
-    }
-  });
 
   const { resetForm, ...formik } = useFormik({
     initialValues: {
@@ -146,7 +144,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
       region: '',
       type: '',
       root_password: '',
-      tags: [''],
+      tags: [] as string[],
       maintenance_schedule: {
         day: '' as DatabaseMaintenanceSchedule['day'],
         window: '' as DatabaseMaintenanceSchedule['window']
@@ -166,10 +164,9 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     formik.setFieldValue('type', id);
   };
 
-  const handleTagChange = (tag: any) => {
-    if (typeof tag === 'object') {
-      formik.setFieldValue('tags', tag.value);
-    }
+  const handleTagChange = (selected: Item[]) => {
+    const tagStrings = selected.map(selectedItem => selectedItem.value);
+    formik.setFieldValue('tags', tagStrings);
   };
 
   /** Reset errors and state when the modal opens */
@@ -183,17 +180,9 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     const payload = { ...values };
 
     // Set any potentially empty non-required fields to undefined.
-    // if (payload.label === '') {
-    //   payload.label = undefined;
-    // }
-
-    if (!payload.maintenance_schedule) {
-      payload.maintenance_schedule = undefined;
+    if (payload.label === '') {
+      payload.label = undefined;
     }
-
-    // if (isEmpty(payload.tags)) {
-    //   payload.tags = undefined;
-    // }
 
     createDatabase(payload)
       .then(_ => {
@@ -284,8 +273,8 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
               id="maintenanceDay"
               label="Day of Week"
               placeholder="Choose a day"
-              errorText={formik.errors.maintenance_schedule?.day}
-              isClearable={false}
+              errorText={formik.errors['maintenance_schedule.day']}
+              isClearable={true}
               data-qa-item="maintenanceDay"
             />
           </FormControl>
@@ -297,8 +286,8 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
               id="maintenanceWindow"
               label="Time of Day"
               placeholder="Choose a time"
-              errorText={formik.errors.maintenance_schedule?.window}
-              isClearable={false}
+              errorText={formik.errors['maintenance_schedule.window']}
+              isClearable={true}
               data-qa-item="maintenanceWindow"
             />
           </FormControl>
@@ -318,7 +307,10 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
             name="tags"
             label="Add Tags"
             onChange={handleTagChange}
-            value={formik.values.tags}
+            value={formik.values.tags.map(tagString => ({
+              label: tagString,
+              value: tagString
+            }))}
           />
         </div>
         <Button
