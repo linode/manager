@@ -208,14 +208,14 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
       )}
       {!_loading && (
         <Grid item>
-         {Object.keys(finalResults).map((entityType, idx: number) => (
+          {Object.keys(finalResults).map((entityType, idx: number) => (
             <ResultGroup
-             key={idx}
-             entity={displayMap[entityType]}
-             results={finalResults[entityType]}
-             groupSize={100}
-           />
-         ))}
+              key={idx}
+              entity={displayMap[entityType]}
+              results={finalResults[entityType]}
+              groupSize={100}
+            />
+          ))}
         </Grid>
       )}
     </Grid>
