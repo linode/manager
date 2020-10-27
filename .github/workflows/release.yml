@@ -106,14 +106,14 @@ jobs:
           name: linode-api-v4
           path: packages/api-v4
       - uses: JS-DevTools/npm-publish@v1
+        id: npm-publish
         with:
           token: ${{ secrets.NPM_AUTH_TOKEN }}
           package: ./packages/api-v4/package.json
           dry-run: true
-      - run: echo ${{ steps.publish.outputs.type }}
       - name: slack-notify
         uses: rtCamp/action-slack-notify@master
-        if: steps.publish.outputs.type == 'none'
+        if: steps.npm-publish.outputs.type == 'none'
         env:
           SLACK_CHANNEL: api-js-client
           SLACK_TITLE: "Linode JS Client v${{ steps.publish.outputs.version}}"
