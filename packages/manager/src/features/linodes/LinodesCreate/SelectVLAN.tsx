@@ -79,20 +79,20 @@ export const SelectVLAN: React.FC<Props> = props => {
         <strong>Virtual LAN</strong>
       </Typography>
       <Typography className={classes.helperText}>
-        Attach the new Linode to a virtual LAN.
+        Attach the new Linode to one or more virtual LANs.
       </Typography>
       <Select
         options={options}
         isMulti
         isClearable
         value={selected}
-        label={'Select a VLAN'}
+        label={'Select VLANs'}
         aria-describedby={helperText}
         hideLabel
         disabled={disabled}
         errorText={error || vlanError}
         noOptionsMessage={() => 'No VLANs available in the selected region.'}
-        placeholder="Select a VLAN"
+        placeholder="Select one or more VLANs"
         onChange={onChange}
       />
     </>
