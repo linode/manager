@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import { Config, Disk, LinodeInterface } from '@linode/api-v4/lib/linodes';
 import { VLAN } from '@linode/api-v4/lib/vlans';
 import { Volume } from '@linode/api-v4/lib/volumes';
@@ -15,6 +16,9 @@ const useStyles = makeStyles(() => ({
     padding: 0,
     '&.MuiTableCell-root': {
       paddingRight: 0
+    },
+    '&.alignActionTop': {
+      verticalAlign: 'top'
     }
   },
   interfaceList: {
@@ -25,9 +29,9 @@ const useStyles = makeStyles(() => ({
   interfaceListItem: {
     paddingBottom: 4
   },
-  tableCell: {
-    verticalAlign: 'top',
-    paddingTop: '10px'
+  alignTop: {
+    padding: 8,
+    verticalAlign: 'top'
   }
 }));
 
@@ -145,22 +149,46 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     ? 'eth0 – Public, Private'
     : 'eth0 – Public';
 
+  const determineAlignment = (config: Config) =>
+    Object.keys(config.devices).length > 3;
+
   return (
     <TableRow key={config.id} data-qa-config={config.label}>
-      <TableCell className={classes.tableCell}>{config.label}</TableCell>
-      <TableCell className={classes.tableCell}>
+      <TableCell
+        className={determineAlignment(config) ? classes.alignTop : undefined}
+      >
+        {config.label}
+      </TableCell>
+      <TableCell
+        className={determineAlignment(config) ? classes.alignTop : undefined}
+      >
         {config.virt_mode === 'fullvirt'
           ? 'Full virtualization'
           : 'Paravirtualization'}
       </TableCell>
-      <TableCell className={classes.tableCell}>{linodeKernel}</TableCell>
-      <TableCell className={classes.tableCell}>{deviceLabels}</TableCell>
+      <TableCell
+        className={determineAlignment(config) ? classes.alignTop : undefined}
+      >
+        {linodeKernel}
+      </TableCell>
+      <TableCell
+        className={determineAlignment(config) ? classes.alignTop : undefined}
+      >
+        {deviceLabels}
+      </TableCell>
       {vlansEnabled ? (
-        <TableCell className={classes.tableCell}>
+        <TableCell
+          className={determineAlignment(config) ? classes.alignTop : undefined}
+        >
           {!isEmpty(config.interfaces) ? InterfaceList : defaultInterfaceLabel}
         </TableCell>
       ) : null}
-      <TableCell className={`${classes.actionInner} ${classes.tableCell}`}>
+      <TableCell
+        className={classNames({
+          [classes.actionInner]: true,
+          alignActionTop: determineAlignment(config)
+        })}
+      >
         <LinodeConfigActionMenu
           config={config}
           linodeId={linodeId}
