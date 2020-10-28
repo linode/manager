@@ -160,7 +160,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
           {!isEmpty(config.interfaces) ? InterfaceList : defaultInterfaceLabel}
         </TableCell>
       ) : null}
-      <TableCell className={`${classes.actionInner} ${classes.tableCell}`}>
+      <TableCell className={classes.actionInner}>
         <LinodeConfigActionMenu
           config={config}
           linodeId={linodeId}
