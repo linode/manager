@@ -20,6 +20,7 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TagCell from 'src/components/TagCell';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import {
+  getProgressOrDefault,
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
@@ -213,21 +214,19 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       >
         {!maintenanceStartTime ? (
           loading ? (
-            recentEvent && (
-              <>
-                <StatusIcon status={iconStatus} />
-                <button
-                  className={classes.statusLink}
-                  onClick={() => openNotificationDrawer()}
-                >
-                  <ProgressDisplay
-                    className={classes.progressDisplay}
-                    progress={recentEvent.percent_complete}
-                    text={transitionText(status, id, recentEvent)}
-                  />
-                </button>
-              </>
-            )
+            <>
+              <StatusIcon status={iconStatus} />
+              <button
+                className={classes.statusLink}
+                onClick={() => openNotificationDrawer()}
+              >
+                <ProgressDisplay
+                  className={classes.progressDisplay}
+                  progress={getProgressOrDefault(recentEvent)}
+                  text={transitionText(status, id, recentEvent)}
+                />
+              </button>
+            </>
           ) : (
             <>
               <StatusIcon status={iconStatus} />

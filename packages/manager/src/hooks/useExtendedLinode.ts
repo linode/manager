@@ -1,5 +1,10 @@
 import { Event, GrantLevel, Notification } from '@linode/api-v4/lib/account';
-import { Config, Disk, LinodeType } from '@linode/api-v4/lib/linodes';
+import {
+  Config,
+  Disk,
+  LinodeInterface,
+  LinodeType
+} from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { useSelector } from 'react-redux';
@@ -17,6 +22,7 @@ import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 export interface DeepExtendedLinode extends ShallowExtendedLinode {
   _configs: Config[];
   _disks: Disk[];
+  _interfaces: LinodeInterface[];
   _events: Event[];
   _notifications: Notification[];
   _volumes: Volume[];
@@ -36,6 +42,7 @@ export const useExtendedLinode = (
       types,
       linodeConfigs,
       linodeDisks,
+      interfaces,
       profile
     } = __resources;
     const linode = state.__resources.linodes.itemsById[linodeId];
@@ -61,6 +68,7 @@ export const useExtendedLinode = (
       _events: eventsForLinode(events, linodeId),
       _configs: getLinodeConfigsForLinode(linodeConfigs, linodeId),
       _disks: getLinodeDisksForLinode(linodeDisks, linodeId),
+      _interfaces: Object.values(interfaces[linodeId]?.itemsById ?? {}),
       _permissions: getPermissionsForLinode(profile.data ?? null, linodeId)
     };
   });
