@@ -646,7 +646,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
             return <ListItem key={thisIP}>{thisIP}</ListItem>;
           })}
           {ipv6 && <ListItem>{ipv6}</ListItem>}
-          {ipv4.length > 1 && (
+          {ipv4.length > 3 && (
             <>
               ... plus{' '}
               <Link
