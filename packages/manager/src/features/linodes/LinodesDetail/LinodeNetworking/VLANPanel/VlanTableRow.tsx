@@ -33,7 +33,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
   const vlanLabel = description.length > 32 ? `vlan-${id}` : description;
 
   const getLinodesCellString = (
-    data: VLAN['linodes'],
+    vlanLinodes: VLAN['linodes'],
     loading: boolean,
     error?: APIError[]
   ): string | JSX.Element => {
@@ -45,25 +45,25 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
       return 'Error retrieving Linodes';
     }
 
-    if (data.length === 0) {
+    if (vlanLinodes.length === 0) {
       return 'None assigned';
     }
 
-    return getLinodeLinks(data);
+    return getLinodeLinks(vlanLinodes);
   };
 
-  const getLinodeLinks = (data: VLAN['linodes']): JSX.Element => {
+  const getLinodeLinks = (vlanLinodes: VLAN['linodes']): JSX.Element => {
     // To render the label of the linode the user is currently on first in the list as  non-link, exclude it from the list of linodes the VLAN is attached to.
 
     // If the element is the current linode's ID, or the linode ID is not found in the store, filter it out. The second check avoids an edge case where deleted linodes still attached to VLANs cause a manifestation of the comma display bug.
-    const filteredData = data.filter(datum => {
+    const filteredLinodes = vlanLinodes.filter(vlanLinode => {
       return (
-        datum.id !== currentLinodeId &&
-        getEntityByIDFromStore('linode', datum.id)
+        vlanLinode.id !== currentLinodeId &&
+        getEntityByIDFromStore('linode', vlanLinode.id)
       );
     });
 
-    const generatedLinks = filteredData.map(linode => (
+    const generatedLinks = filteredLinodes.map(linode => (
       <Link
         key={linode.id}
         to={`/linodes/${linode.id}/networking`}
@@ -77,7 +77,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
         {getLinodeLabel(currentLinodeId)}
-        {filteredData.length >= 1 && `, `}
+        {filteredLinodes.length >= 1 && `, `}
         {truncateAndJoinJSXList(
           generatedLinks,
           MAX_LINODES_VLANATTACHED_DISPLAY
