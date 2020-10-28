@@ -26,13 +26,13 @@ jobs:
       - run: |
             echo "OAUTH_ROOT='MANAGER_OAUTH'" >> $GITHUB_ENV
             echo "ENV_NUMBER=${{ matrix.containers }}" >> $GITHUB_ENV
-            echo "OAUTH_SECRET_NAME=$OAUTH_ROOT + $ENV_NUMBER" >> $GITHUB_ENV
+            echo "OAUTH_SECRET_NAME=`$OAUTH_ROOT + $ENV_NUMBER`" >> $GITHUB_ENV
             echo "REACT_APP_LOGIN_ROOT=https://login.linode.com" >> ./packages/manager/.env
             echo "REACT_APP_API_ROOT=https://api.linode.com/v4" >> ./packages/manager/.env
             echo "REACT_APP_APP_ROOT=http://localhost:3000" >> ./packages/manager/.env
             echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
             echo "REACT_APP_CLIENT_ID=${{ secrets.REACT_APP_ClIENT_ID }}" >> ./packages/manager/.env
-            echo "$OAUTH_SECRET_NAME=${{ secrets.OAUTH_SECRET_NAME }}" >> ./packages/manager/.env
+            echo "$OAUTH_SECRET_NAME=${{ `secrets.$OAUTH_SECRET_NAME` }}" >> ./packages/manager/.env
             echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
             echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
             yarn up &
