@@ -7,9 +7,9 @@ jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
     strategy:
-      env: [ENVIRONMENT: 1, ENVIRONMENT: 2, ENVIRONMENT: 3, ENVIRONMENT: 4]
       fail-fast: false
       matrix:
+        env: [ENVIRONMENT: 1, ENVIRONMENT: 2, ENVIRONMENT: 3, ENVIRONMENT: 4]
         containers: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v2
