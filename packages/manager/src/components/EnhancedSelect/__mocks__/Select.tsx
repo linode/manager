@@ -31,16 +31,17 @@ export default ({
   };
 
   const _options = groupsToItems(options);
+  const _label = label.replace(/\W/g, '');
   return (
     <>
-      <label htmlFor={label} id={`${label}-label`}>
-        {label}
+      <label htmlFor={_label} id={`${_label}-label`}>
+        {_label}
       </label>
       <select
         placeholder={placeholder}
-        name={label}
+        name={_label}
         data-testid="select"
-        aria-labelledby={`${label}-label`}
+        aria-labelledby={`${_label}-label`}
         value={value ?? ''}
         onBlur={handleChange}
         onChange={handleChange}
