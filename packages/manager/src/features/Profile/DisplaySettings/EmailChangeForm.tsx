@@ -1,39 +1,33 @@
 import { Profile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { lensPath, set } from 'ramda';
 import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import useAccount from 'src/hooks/useAccount';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import useProfile from 'src/hooks/useProfile';
 import withNotifications, {
   WithNotifications
 } from 'src/store/notification/notification.containers';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 type ClassNames = 'root' | 'title';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(3),
-      paddingBottom: theme.spacing(3)
-    },
-    title: {
-      marginBottom: theme.spacing(2)
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: theme.spacing(3),
+    paddingBottom: theme.spacing(3)
+  },
+  title: {
+    marginBottom: theme.spacing(2)
+  }
+}));
 
 interface Props {
   username: string;
@@ -42,159 +36,109 @@ interface Props {
   errors?: APIError[];
 }
 
-interface State {
-  errors?: APIError[];
-  success?: string;
-  submitting: boolean;
-  updatedEmail: string;
-}
+type CombinedProps = Props & WithNotifications;
 
-type CombinedProps = Props &
-  WithStyles<ClassNames> &
-  RouteComponentProps &
-  WithNotifications;
+export const EmailChangeForm: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
 
-export class EmailChangeForm extends React.Component<CombinedProps, State> {
-  state: State = {
-    updatedEmail: this.props.email || '',
-    errors: this.props.errors,
-    success: undefined,
-    submitting: false
-  };
+  const { updateAccount } = useAccount();
+  const { updateProfile } = useProfile();
+  const { account, profile } = useAccountManagement();
 
-  emailRef = React.createRef<HTMLInputElement>();
+  const location = useLocation();
 
-  // Focus on Email field if coming from a "user_email_bounce" notification.
-  // cDM handles the case where the user is coming from a different page.
-  componentDidMount = () => {
-    if (this.props.location.state?.focusEmail && this.emailRef.current) {
-      this.emailRef.current.focus();
-      this.emailRef.current.scrollIntoView();
+  const [profileSubmitting, setProfileSubmitting] = React.useState(false);
+  const [profileErrors, setProfileErrors] = React.useState<
+    APIError[] | undefined
+  >();
+  const [profileSuccess, setProfileSuccess] = React.useState('');
+
+  const [accountSubmitting, setAccountSubmitting] = React.useState(false);
+  const [accountErrors, setAccountErrors] = React.useState<
+    APIError[] | undefined
+  >();
+  const [accountSuccess, setAccountSuccess] = React.useState('');
+
+  const [username, setUsername] = React.useState(profile.data?.username);
+  const [email, setEmail] = React.useState(profile.data?.email);
+
+  const emailRef = React.createRef<HTMLInputElement>();
+
+  React.useEffect(() => {
+    if (location.state?.focusEmail && emailRef.current) {
+      emailRef.current.focus();
+      emailRef.current.scrollIntoView();
     }
-  };
+  }, []);
 
-  // Focus on Email field if coming from a "user_email_bounce" notification.
-  // cDU handles the case where the user is already on this page when
-  // interacting with the notification.
-  componentDidUpdate = (prevProps: CombinedProps) => {
-    if (
-      !prevProps.location.state?.focusEmail &&
-      this.props.location.state?.focusEmail &&
-      this.emailRef.current
-    ) {
-      this.emailRef.current.focus();
-      this.emailRef.current.scrollIntoView();
-    }
-  };
+  const onSubmitEmail = () => {
+    setProfileSuccess('');
+    setProfileErrors(undefined);
+    setProfileSubmitting(true);
 
-  handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(set(lensPath(['updatedEmail']), e.target.value));
-  };
-
-  onCancel = () => {
-    this.setState({
-      submitting: false,
-      updatedEmail: this.props.email || '',
-      errors: undefined,
-      success: undefined
-    });
-  };
-
-  onSubmit = () => {
-    const { updatedEmail } = this.state;
-    this.setState({ errors: undefined, submitting: true });
-
-    this.props
-      .updateProfile({ email: updatedEmail })
+    updateProfile({ email })
       .then(() => {
         // If there's a "user_email_bounce" notification for this user, and
         // the user has just updated their email, re-request notifications to
         // potentially clear the email bounce notification.
-        const hasUserEmailBounceNotification = this.props.notifications.find(
+        const hasUserEmailBounceNotification = props.notifications.find(
           thisNotification => thisNotification.type === 'user_email_bounce'
         );
         if (hasUserEmailBounceNotification) {
-          this.props.requestNotifications();
+          props.requestNotifications();
         }
 
-        this.setState({
-          submitting: false,
-          success: 'Email address updated.',
-          errors: undefined
-        });
+        setProfileSubmitting(false);
+        setProfileSuccess('Email address updated.');
       })
       .catch(error => {
-        this.setState(
-          {
-            submitting: false,
-            errors: getAPIErrorOrDefault(
-              error,
-              'Error updating email address.'
-            ),
-            success: undefined
-          },
-          () => {
-            scrollErrorIntoView();
-          }
+        setProfileSuccess('');
+        setProfileSubmitting(false);
+        setProfileErrors(
+          getAPIErrorOrDefault(error, 'Error updating email address.')
         );
       });
   };
 
-  render() {
-    const { classes, username } = this.props;
-    const { errors, success, submitting, updatedEmail } = this.state;
-    const hasErrorFor = getAPIErrorFor(
-      {
-        email: 'email'
-      },
-      errors
-    );
-    const emailError = hasErrorFor('email');
-    const generalError = hasErrorFor('none');
+  const profileErrorMap = getErrorMap(['email'], profileErrors);
+  const emailError = profileErrorMap.email;
+  const generalProfileError = profileErrorMap.none;
 
-    return (
-      <Paper className={classes.root}>
-        {success && <Notice success text={success} />}
-        {generalError && <Notice error text={generalError} />}
-        <TextField
-          disabled
-          label="Username"
-          value={username}
-          errorGroup="display-settings-email"
-          data-qa-username
-        />
-        <TextField
-          inputRef={this.emailRef}
-          label="Email"
-          type="email"
-          value={updatedEmail}
-          onChange={this.handleEmailChange}
-          errorText={emailError}
-          errorGroup="display-settings-email"
-          data-qa-email
-        />
-        <ActionsPanel>
-          <Button
-            buttonType="primary"
-            onClick={this.onSubmit}
-            loading={submitting}
-            data-qa-submit
-          >
-            Save
-          </Button>
-          <Button buttonType="cancel" onClick={this.onCancel} data-qa-cancel>
-            Cancel
-          </Button>
-        </ActionsPanel>
-      </Paper>
-    );
-  }
-}
+  return (
+    <Paper className={classes.root}>
+      {profileSuccess && <Notice success text={profileSuccess} />}
+      {generalProfileError && <Notice error text={generalProfileError} />}
+      <TextField
+        disabled
+        label="Username"
+        value={username}
+        errorGroup="display-settings-email"
+        data-qa-username
+      />
+      <TextField
+        inputRef={emailRef}
+        label="Email"
+        type="email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        errorText={emailError}
+        errorGroup="display-settings-email"
+        data-qa-email
+      />
+      <ActionsPanel>
+        <Button
+          buttonType="primary"
+          onClick={onSubmitEmail}
+          loading={profileSubmitting}
+          data-qa-submit
+        >
+          Save
+        </Button>
+      </ActionsPanel>
+    </Paper>
+  );
+};
 
-const enhanced = compose<CombinedProps, Props>(
-  withStyles(styles),
-  withRouter,
-  withNotifications()
-);
+const enhanced = compose<CombinedProps, Props>(withNotifications());
 
 export default enhanced(EmailChangeForm);
