@@ -5,7 +5,7 @@ import ExpansionPanel, {
 } from 'src/components/ExpansionPanel';
 
 /* tslint:disable-next-line */
-export interface Props extends ExpansionPanelProps {}
+export interface Props extends Omit<ExpansionPanelProps, 'children'> {}
 
 export default (expansionPanelProps: Props) => <P extends {}>(
   Component: React.ComponentType<P>
