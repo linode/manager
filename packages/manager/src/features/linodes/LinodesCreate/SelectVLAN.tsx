@@ -46,7 +46,7 @@ export const SelectVLAN: React.FC<Props> = props => {
 
   const helperText = disabled
     ? 'You must select a region before choosing a VLAN.'
-    : undefined;
+    : '';
 
   const { vlans } = useVlans();
 

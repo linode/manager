@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     order: 3,
     width: 74,
     height: 34,
-    padding: `0px ${theme.spacing(2)}`,
+    padding: `0px ${theme.spacing(2)}px`,
     backgroundColor: theme.cmrBGColors.bgSecondaryButton,
     border: `1px solid ${theme.cmrBorderColors.borderNotificationCenter}`,
     borderRadius: 3,
