@@ -45,13 +45,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   formSection: {
     marginBottom: theme.spacing(3)
   },
+  maintenanceSelectsOuter: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    maxWidth: '415px',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block',
+      width: '100%'
+    }
+  },
+  maintenanceSelectsInner: {
+    display: 'inline-block',
+    minWidth: '200px',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block'
+    }
+  },
   chooseDay: {
-    marginRight: theme.spacing(2),
-    midWidth: 150
+    marginRight: theme.spacing(2)
   },
   chooseTime: {
-    marginRight: theme.spacing(2),
-    midWidth: 150
+    marginRight: theme.spacing(2)
   }
 }));
 
@@ -294,32 +308,38 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
           <FormHelperText style={{ maxWidth: 'none' }}>
             {maintenanceWindowHelperText}
           </FormHelperText>
-          <FormControl fullWidth className={classes.chooseDay}>
-            <Select
-              options={daySelection}
-              onChange={handleDaySelection}
-              name="maintenanceDay"
-              id="maintenanceDay"
-              label="Day of Week"
-              placeholder="Choose a day"
-              errorText={formik.errors['maintenance_schedule.day']}
-              isClearable={true}
-              data-qa-item="maintenanceDay"
-            />
-          </FormControl>
-          <FormControl fullWidth className={classes.chooseTime}>
-            <Select
-              options={windowSelection}
-              onChange={handleWindowSelection}
-              name="maintenanceWindow"
-              id="maintenanceWindow"
-              label="Time of Day"
-              placeholder="Choose a time"
-              errorText={formik.errors['maintenance_schedule.window']}
-              isClearable={true}
-              data-qa-item="maintenanceWindow"
-            />
-          </FormControl>
+          <div className={classes.maintenanceSelectsOuter}>
+            <div className={classes.maintenanceSelectsInner}>
+              <FormControl fullWidth className={classes.chooseDay}>
+                <Select
+                  options={daySelection}
+                  onChange={handleDaySelection}
+                  name="maintenanceDay"
+                  id="maintenanceDay"
+                  label="Day of Week"
+                  placeholder="Choose a day"
+                  errorText={formik.errors['maintenance_schedule.day']}
+                  isClearable={true}
+                  data-qa-item="maintenanceDay"
+                />
+              </FormControl>
+            </div>
+            <div className={classes.maintenanceSelectsInner}>
+              <FormControl fullWidth className={classes.chooseTime}>
+                <Select
+                  options={windowSelection}
+                  onChange={handleWindowSelection}
+                  name="maintenanceWindow"
+                  id="maintenanceWindow"
+                  label="Time of Day"
+                  placeholder="Choose a time"
+                  errorText={formik.errors['maintenance_schedule.window']}
+                  isClearable={true}
+                  data-qa-item="maintenanceWindow"
+                />
+              </FormControl>
+            </div>
+          </div>
         </div>
         <div className={classes.formSection} data-testid="label-input">
           <TagsInput
