@@ -11,7 +11,7 @@ import { deleteLinode } from './linodes.actions';
 import { parseAPIDate } from 'src/utilities/date';
 
 const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
-  const { action, entity, percent_complete, status } = event;
+  const { action, entity, percent_complete, status, id: eventID } = event;
   const { id } = entity;
 
   // We may want to request notifications here, depending on the event
@@ -22,11 +22,18 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     dispatch(requestNotifications() as any);
   }
 
+  const eventFromStore = getState().events.events.find(
+    thisEvent => thisEvent.id === eventID
+  );
+
+  const prevStatus = eventFromStore?.status;
+
   switch (action) {
     /** Update Linode */
     case 'linode_migrate':
+    case 'linode_migrate_datacenter':
     case 'linode_resize':
-      return handleLinodeMigrate(dispatch, status, id);
+      return handleLinodeMigrate(dispatch, status, id, prevStatus);
     case 'linode_reboot':
     case 'linode_shutdown':
     case 'linode_snapshot':
@@ -36,7 +43,7 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'backups_cancel':
     case 'disk_imagize':
     case 'linode_clone':
-      return handleLinodeUpdate(dispatch, status, id);
+      return handleLinodeUpdate(dispatch, status, id, prevStatus);
 
     case 'linode_rebuild':
     case 'backups_restore':
@@ -48,7 +55,7 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
 
     /** Create Linode */
     case 'linode_create':
-      return handleLinodeCreation(dispatch, status, id, getState());
+      return handleLinodeCreation(dispatch, status, id, prevStatus);
 
     /**
      * Config actions
@@ -99,6 +106,10 @@ const handleLinodeRebuild = (
         dispatch(getAllLinodeDisks({ linodeId: id }));
         dispatch(getAllLinodeConfigs({ linodeId: id }));
       }
+      // Re-request Linode every poll iteration when rebuilding. This is due to
+      // (buggy?) behavior in the API where a Linode's status isn't "rebuilding"
+      // until late in the event's progress.
+      // @todo: Make this handler like the others if/when the API bug is fixed.
       return dispatch(requestLinodeForStore(id));
     case 'finished':
     case 'failed':
@@ -114,16 +125,15 @@ const handleLinodeRebuild = (
 const handleLinodeMigrate = (
   dispatch: Dispatch<any>,
   status: EventStatus,
-  id: number
+  id: number,
+  prevStatus?: EventStatus
 ) => {
-  switch (status) {
-    case 'notification':
-    case 'scheduled':
-    case 'started':
-      return dispatch(requestLinodeForStore(id));
+  updateLinodeOnFirstRelevantEvent(dispatch, id, status, prevStatus);
 
-    case 'finished':
+  switch (status) {
     case 'failed':
+    case 'finished':
+    case 'notification':
       // Once the migration/resize is done, we request notifications in order
       // to clear the Migration Imminent notification
       dispatch(requestNotifications());
@@ -148,16 +158,16 @@ const handleLinodeMigrate = (
 const handleLinodeUpdate = (
   dispatch: Dispatch<any>,
   status: EventStatus,
-  id: number
+  id: number,
+  prevStatus?: EventStatus
 ) => {
+  updateLinodeOnFirstRelevantEvent(dispatch, id, status, prevStatus);
+
   switch (status) {
     case 'failed':
     case 'finished':
     case 'notification':
-    case 'scheduled':
-    case 'started':
       return dispatch(requestLinodeForStore(id, true));
-
     default:
       return;
   }
@@ -192,14 +202,14 @@ const handleLinodeCreation = (
   dispatch: Dispatch<any>,
   status: EventStatus,
   id: number,
-  state: ApplicationState
+  prevStatus?: EventStatus
 ) => {
+  updateLinodeOnFirstRelevantEvent(dispatch, id, status, prevStatus);
+
   switch (status) {
     case 'failed':
     case 'finished':
     case 'notification':
-    case 'scheduled':
-    case 'started':
       return dispatch(requestLinodeForStore(id, true));
 
     default:
@@ -267,3 +277,16 @@ const eventsWithRelevantNotifications: EventAction[] = [
   'linode_migrate_datacenter_create',
   'linode_migrate_datacenter'
 ];
+
+// If this is the first event coming in for the Linode, or if it's the first
+// "started" event, request the Linode from the API to update its status.
+export const updateLinodeOnFirstRelevantEvent = (
+  dispatch: Dispatch<any>,
+  linodeID: number,
+  status: EventStatus,
+  prevStatus?: EventStatus
+) => {
+  if (!prevStatus || (status === 'started' && prevStatus === 'scheduled')) {
+    dispatch(requestLinodeForStore(linodeID, true));
+  }
+};
