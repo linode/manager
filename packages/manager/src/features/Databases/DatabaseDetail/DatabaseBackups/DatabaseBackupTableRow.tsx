@@ -6,6 +6,7 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
 import { formatDuration } from 'src/utilities/formatDuration';
 import { parseAPIDate } from 'src/utilities/date';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 
 interface Props {
   backup: DatabaseBackup;
@@ -21,7 +22,9 @@ const BackupTableRow: React.FC<Props> = props => {
     <TableRow key={backup.id} data-qa-backup>
       <TableCell data-qa-backup-name={backup.id}>{backup.id}</TableCell>
       <TableCell>{backup.status}</TableCell>
-      <TableCell>{backup.created}</TableCell>
+      <TableCell>
+        <DateTimeDisplay value={backup.created} />
+      </TableCell>
       <TableCell>
         {formatDuration(
           Duration.fromMillis(
