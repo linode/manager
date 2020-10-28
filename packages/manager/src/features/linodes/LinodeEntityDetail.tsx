@@ -128,6 +128,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
       }
       body={
         <Body
+          variant={variant}
           linodeLabel={linode.label}
           numVolumes={numVolumes}
           numCPUs={linode.specs.vcpus}
@@ -449,6 +450,7 @@ export interface BodyProps {
   username: string;
   linodeLabel: string;
   numVolumes: number;
+  variant: LinodeEntityDetailVariant;
 }
 
 const useBodyStyles = makeStyles((theme: Theme) => ({
@@ -556,7 +558,8 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
     linodeId,
     username,
     linodeLabel,
-    numVolumes
+    numVolumes,
+    variant
   } = props;
 
   return (
@@ -643,10 +646,16 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
             return <ListItem key={thisIP}>{thisIP}</ListItem>;
           })}
           {ipv6 && <ListItem>{ipv6}</ListItem>}
-          {ipv4.length > 3 && (
+          {ipv4.length > 1 && (
             <>
               ... plus{' '}
-              <Link to={`linodes/${linodeId}/networking`}>
+              <Link
+                to={
+                  variant === 'details'
+                    ? `/networking`
+                    : `/linodes/${linodeId}/networking`
+                }
+              >
                 {ipv4.length - 3} more
               </Link>{' '}
             </>
