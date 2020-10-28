@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   databaseID: number;
+  databaseMaintenanceSchedule: DatabaseMaintenanceSchedule;
 }
 
 type CombinedProps = Props;
@@ -39,13 +40,13 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
   const timezone = useTimezone();
   const { updateDatabase } = useDatabases();
 
-  const { databaseID } = props;
+  const { databaseID, databaseMaintenanceSchedule } = props;
 
   const [maintenanceDay, setMaintenanceDay] = React.useState<string | number>(
-    ''
+    databaseMaintenanceSchedule.day
   );
   const [maintenanceTime, setMaintenanceTime] = React.useState<string | number>(
-    ''
+    databaseMaintenanceSchedule.window
   );
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
@@ -86,6 +87,10 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
     value: thisDay
   }));
 
+  const defaultDaySelection = daySelection.find(eachOption => {
+    return eachOption.value === maintenanceDay;
+  });
+
   const handleDaySelection = (item: Item) => {
     if (item) {
       setMaintenanceDay(item.value);
@@ -118,6 +123,10 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
     maintenanceWindowSelectOptions
   );
 
+  const defaultTimeSelection = windowSelection.find(eachOption => {
+    return eachOption.value === maintenanceTime;
+  });
+
   const handleWindowSelection = (item: Item) => {
     if (item) {
       setMaintenanceTime(item.value);
@@ -126,15 +135,15 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
     }
   };
 
-  const maintenanceSchedule = {
-    day: maintenanceDay as DatabaseMaintenanceSchedule['day'],
-    window: maintenanceTime as DatabaseMaintenanceSchedule['window']
-  };
-
   const changeMaintenanceWindow = () => {
     setSubmitting(true);
     setSuccess(undefined);
     setErrors(undefined);
+
+    const maintenanceSchedule = {
+      day: maintenanceDay as DatabaseMaintenanceSchedule['day'],
+      window: maintenanceTime as DatabaseMaintenanceSchedule['window']
+    };
 
     updateDatabase(databaseID, {
       maintenance_schedule: maintenanceSchedule
@@ -185,7 +194,7 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
           onChange={handleDaySelection}
           options={daySelection}
           placeholder="Choose a day"
-          isClearable
+          value={defaultDaySelection}
           data-qa-item="maintenanceDay"
         />
       </FormControl>
@@ -198,7 +207,7 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
           onChange={handleWindowSelection}
           options={windowSelection}
           placeholder="Choose a time"
-          isClearable
+          value={defaultTimeSelection}
           data-qa-item="maintenanceWindow"
         />
       </FormControl>

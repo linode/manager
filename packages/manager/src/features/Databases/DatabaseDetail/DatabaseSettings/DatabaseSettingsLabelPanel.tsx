@@ -24,7 +24,7 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
 
   const { updateDatabase } = useDatabases();
 
-  const [updatedLabel, setUpdatedLabel] = React.useState<string>(databaseLabel);
+  const [label, setLabel] = React.useState<string>(databaseLabel);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
@@ -42,7 +42,7 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
     setSuccess(undefined);
     setErrors(undefined);
 
-    updateDatabase(databaseID, { label: updatedLabel })
+    updateDatabase(databaseID, { label })
       .then(() => {
         setSubmitting(false);
         setSuccess('Database label changed successfully.');
@@ -59,7 +59,7 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
   };
 
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUpdatedLabel(e.target.value);
+    setLabel(e.target.value);
   };
 
   return (
@@ -83,7 +83,7 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
       {genericError && <Notice error text={genericError} />}
       <TextField
         label="Label"
-        value={updatedLabel}
+        value={label}
         onChange={handleLabelChange}
         errorText={labelError}
         errorGroup="database-settings-label"
