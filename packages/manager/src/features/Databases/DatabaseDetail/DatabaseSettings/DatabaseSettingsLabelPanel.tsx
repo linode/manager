@@ -50,7 +50,10 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
       .catch(error => {
         setSubmitting(false);
         setErrors(
-          getAPIErrorOrDefault(error, 'An error occured while updating label')
+          getAPIErrorOrDefault(
+            error,
+            'An error occurred while updating the label.'
+          )
         );
       });
   };
