@@ -13,7 +13,8 @@ import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
   heading: {
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(2)
   }
 }));
 
