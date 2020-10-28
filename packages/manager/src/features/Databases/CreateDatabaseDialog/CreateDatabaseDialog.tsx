@@ -215,10 +215,14 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
       onClose={context.close}
       fullWidth
       fullHeight
+      titleBottomBorder
       maxWidth="md"
     >
       {!!formik.status && <Notice error text={formik.status.generalError} />}
-      <Typography variant="subtitle2" style={{ fontWeight: 600 }}>
+      <Typography
+        variant="subtitle2"
+        style={{ fontWeight: 600, marginTop: '1em' }}
+      >
         Create a cloud-based MySQL database.
       </Typography>
       <form className={classes.form} onSubmit={formik.handleSubmit}>
