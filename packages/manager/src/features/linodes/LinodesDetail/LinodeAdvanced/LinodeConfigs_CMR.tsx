@@ -68,7 +68,7 @@ type ClassNames =
   | 'memoryColumn'
   | 'kernelColumn'
   | 'interfacesColumn'
-  | 'rootDeviceColumn'
+  | 'deviceColumn'
   | 'actionsColumn';
 
 const styles = (theme: Theme) =>
@@ -108,7 +108,7 @@ const styles = (theme: Theme) =>
     interfacesColumn: {
       width: '20%'
     },
-    rootDeviceColumn: {
+    deviceColumn: {
       width: '20%'
     },
     actionsColumn: {
@@ -547,7 +547,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                         </TableCell>
 
                         <TableCell
-                          className={`${classes.tableCell} ${classes.rootDeviceColumn}`}
+                          className={`${classes.tableCell} ${classes.deviceColumn}`}
                         >
                           Disks
                         </TableCell>

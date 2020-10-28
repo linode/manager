@@ -26,7 +26,8 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 4
   },
   tableCell: {
-    verticalAlign: 'top'
+    verticalAlign: 'top',
+    paddingTop: '10px'
   }
 }));
 
