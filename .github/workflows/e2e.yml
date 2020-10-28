@@ -9,7 +9,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env: [ENVIRONMENT: 1, ENVIRONMENT: 2, ENVIRONMENT: 3, ENVIRONMENT: 4]
         containers: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v2
@@ -25,12 +24,12 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - run: |
-            print $ENVIRONMENT
+            echo "ENV_NUMBER=$containers"
             echo "REACT_APP_LOGIN_ROOT=https://login.linode.com" >> ./packages/manager/.env
             echo "REACT_APP_API_ROOT=https://api.linode.com/v4" >> ./packages/manager/.env
             echo "REACT_APP_APP_ROOT=http://localhost:3000" >> ./packages/manager/.env
             echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
-            echo "REACT_APP_CLIENT_ID=${{ secrets.REACT_APP_ClIENT_ID }}e" >> ./packages/manager/.env
+            echo "REACT_APP_CLIENT_ID=${{ secrets.REACT_APP_ClIENT_ID }}" >> ./packages/manager/.env
             echo "MANAGER_OAUTH=${{ secrets.MANAGER_OAUTH }}" >> ./packages/manager/.env
             echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
             echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
