@@ -1,4 +1,3 @@
-import { createDatabase } from '@linode/api-v4/lib/databases';
 import createDatabaseSchema from '@linode/api-v4/lib/databases/databases.schema';
 import {
   CreateDatabasePayload,
@@ -11,6 +10,7 @@ import { sortBy } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -25,6 +25,7 @@ import TagsInput from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import { dbaasContext } from 'src/context';
+import useDatabases from 'src/hooks/useDatabases';
 import { useDatabaseTypes } from 'src/hooks/useDatabaseTypes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import useRegions from 'src/hooks/useRegions';
@@ -60,6 +61,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   const history = useHistory();
   const regions = useRegions();
   const timezone = useTimezone();
+  const { createDatabase } = useDatabases();
 
   const regionsWithDatabases: ExtendedRegion[] = regions.entities
     //   .filter(thisRegion => thisRegion.capabilities.includes('Databases')) // temporarily commented out until Capabilities is squared away
@@ -132,7 +134,11 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   };
 
   const { databaseTypes } = useDatabaseTypes();
-  useReduxLoad(['databaseTypes'], undefined, context.isOpen);
+  const { _loading } = useReduxLoad(
+    ['databaseTypes'],
+    undefined,
+    context.isOpen
+  );
 
   const [selectedPlanId, setSelectedPlanId] = React.useState<string>('');
 
@@ -237,12 +243,16 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
             selectedID={formik.values.region}
           />
         </div>
-        <SelectDBPlanPanel
-          databasePlans={databaseTypes.data ?? []}
-          onPlanSelect={handlePlanChange}
-          selectedPlanId={selectedPlanId}
-          errorText={formik.errors.type}
-        />
+        {_loading ? (
+          <CircleProgress />
+        ) : (
+          <SelectDBPlanPanel
+            databasePlans={databaseTypes.data ?? []}
+            onPlanSelect={handlePlanChange}
+            selectedPlanId={selectedPlanId}
+            errorText={formik.errors.type}
+          />
+        )}
         <div className={classes.formSection}>
           <PasswordInput
             name="password"
