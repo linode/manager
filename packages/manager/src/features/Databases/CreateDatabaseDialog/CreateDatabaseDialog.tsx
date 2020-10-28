@@ -6,7 +6,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
-import { sortBy, isEmpty } from 'ramda';
+import { sortBy } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
@@ -188,10 +188,6 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
       payload.label = undefined;
     }
 
-    if (isEmpty(payload.maintenance_schedule)) {
-      payload.maintenance_schedule = undefined;
-    }
-
     if (typeof payload.maintenance_schedule !== 'undefined') {
       // The "(undefined as unknown) as..." code is to avoid "Type 'undefined' is not assignable to type..." TypeScript error
       if (!payload.maintenance_schedule.day) {
@@ -200,6 +196,13 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
       if (!payload.maintenance_schedule.window) {
         payload.maintenance_schedule.window = (undefined as unknown) as DatabaseMaintenanceSchedule['window'];
       }
+    }
+
+    if (
+      !payload.maintenance_schedule?.day &&
+      !payload.maintenance_schedule?.window
+    ) {
+      payload.maintenance_schedule = undefined;
     }
 
     createDatabase(payload)
