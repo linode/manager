@@ -80,7 +80,7 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
       () => requestManagedIssues().catch(_ => null),
       update
     ],
-    1000
+    10000
   );
 
   React.useEffect(() => {
