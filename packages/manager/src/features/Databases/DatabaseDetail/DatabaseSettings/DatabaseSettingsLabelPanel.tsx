@@ -1,5 +1,4 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -9,8 +8,7 @@ import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
 import useDatabases from 'src/hooks/useDatabases';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
   databaseID: number;
@@ -29,13 +27,9 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
 
-  const hasErrorFor = getAPIErrorFor({}, errors);
-  const labelError = hasErrorFor('label');
-
-  const genericError =
-    errors &&
-    !labelError &&
-    pathOr('An error occured while updating label', [0, 'reason'], errors);
+  const errorMap = getErrorMap(['label'], errors);
+  const labelError = errorMap.label;
+  const genericError = errorMap.none;
 
   const changeLabel = () => {
     setSubmitting(true);
@@ -58,9 +52,12 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
       });
   };
 
-  const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLabel(e.target.value);
-  };
+  const handleLabelChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setLabel(e.target.value);
+    },
+    []
+  );
 
   return (
     <ExpansionPanel
