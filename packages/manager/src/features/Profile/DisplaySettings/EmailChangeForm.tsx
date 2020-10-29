@@ -1,3 +1,4 @@
+import { updateUser } from '@linode/api-v4/lib/account';
 import { Profile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -9,7 +10,6 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import useAccount from 'src/hooks/useAccount';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useProfile from 'src/hooks/useProfile';
 import withNotifications, {
@@ -40,9 +40,9 @@ type CombinedProps = Props & WithNotifications;
 export const EmailChangeForm: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { updateAccount } = useAccount();
-  const { updateProfile } = useProfile();
-  const { account, profile } = useAccountManagement();
+  const { updateProfile, requestProfile } = useProfile();
+
+  const { profile, _isRestrictedUser } = useAccountManagement();
 
   const location = useLocation();
 
@@ -69,6 +69,30 @@ export const EmailChangeForm: React.FC<CombinedProps> = props => {
       emailRef.current.scrollIntoView();
     }
   }, [emailRef, location.state]);
+
+  const onSubmitUsername = () => {
+    if (!profile.data?.username) {
+      return;
+    }
+
+    setAccountSuccess('');
+    setAccountErrors(undefined);
+    setAccountSubmitting(true);
+
+    updateUser(profile.data.username, { username })
+      .then(() => {
+        setAccountSubmitting(false);
+        setAccountSuccess('Username updated.');
+        requestProfile();
+      })
+      .catch(error => {
+        setAccountSuccess('');
+        setAccountSubmitting(false);
+        setAccountErrors(
+          getAPIErrorOrDefault(error, 'Error updating email address.')
+        );
+      });
+  };
 
   const onSubmitEmail = () => {
     setProfileSuccess('');
@@ -103,24 +127,33 @@ export const EmailChangeForm: React.FC<CombinedProps> = props => {
   const emailError = profileErrorMap.email;
   const generalProfileError = profileErrorMap.none;
 
+  const accountErrorMap = getErrorMap(['username'], accountErrors);
+  const usernameError = accountErrorMap.username;
+  const generalAccountError = accountErrorMap.none;
+
   return (
     <>
       <Paper className={classes.root}>
-        {profileSuccess && <Notice success text={profileSuccess} />}
-        {generalProfileError && <Notice error text={generalProfileError} />}
+        {accountSuccess && <Notice success text={accountSuccess} />}
+        {generalAccountError && <Notice error text={generalAccountError} />}
         <TextField
-          // disabled
+          disabled={_isRestrictedUser}
           label="Username"
           value={username}
-          errorGroup="display-settings-email"
-          data-qa-username
+          onChange={e => setUsername(e.target.value)}
+          errorText={usernameError}
         />
         <ActionsPanel>
           <Button
             buttonType="primary"
-            onClick={onSubmitEmail}
-            loading={profileSubmitting}
-            data-qa-submit
+            onClick={onSubmitUsername}
+            loading={accountSubmitting}
+            disabled={_isRestrictedUser}
+            tooltipText={
+              _isRestrictedUser
+                ? 'Restricted users cannot change their username. Please contact an account administrator.'
+                : ''
+            }
           >
             Save
           </Button>
@@ -138,14 +171,12 @@ export const EmailChangeForm: React.FC<CombinedProps> = props => {
           onChange={e => setEmail(e.target.value)}
           errorText={emailError}
           errorGroup="display-settings-email"
-          data-qa-email
         />
         <ActionsPanel>
           <Button
             buttonType="primary"
             onClick={onSubmitEmail}
             loading={profileSubmitting}
-            data-qa-submit
           >
             Save
           </Button>
