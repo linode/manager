@@ -17,12 +17,11 @@ import withNotifications, {
 } from 'src/store/notification/notification.containers';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
-type ClassNames = 'root' | 'title';
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(3)
+    paddingBottom: theme.spacing(3),
+    marginBottom: theme.spacing(3)
   },
   title: {
     marginBottom: theme.spacing(2)
@@ -69,7 +68,7 @@ export const EmailChangeForm: React.FC<CombinedProps> = props => {
       emailRef.current.focus();
       emailRef.current.scrollIntoView();
     }
-  }, []);
+  }, [emailRef, location.state]);
 
   const onSubmitEmail = () => {
     setProfileSuccess('');
@@ -105,37 +104,54 @@ export const EmailChangeForm: React.FC<CombinedProps> = props => {
   const generalProfileError = profileErrorMap.none;
 
   return (
-    <Paper className={classes.root}>
-      {profileSuccess && <Notice success text={profileSuccess} />}
-      {generalProfileError && <Notice error text={generalProfileError} />}
-      <TextField
-        disabled
-        label="Username"
-        value={username}
-        errorGroup="display-settings-email"
-        data-qa-username
-      />
-      <TextField
-        inputRef={emailRef}
-        label="Email"
-        type="email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        errorText={emailError}
-        errorGroup="display-settings-email"
-        data-qa-email
-      />
-      <ActionsPanel>
-        <Button
-          buttonType="primary"
-          onClick={onSubmitEmail}
-          loading={profileSubmitting}
-          data-qa-submit
-        >
-          Save
-        </Button>
-      </ActionsPanel>
-    </Paper>
+    <>
+      <Paper className={classes.root}>
+        {profileSuccess && <Notice success text={profileSuccess} />}
+        {generalProfileError && <Notice error text={generalProfileError} />}
+        <TextField
+          // disabled
+          label="Username"
+          value={username}
+          errorGroup="display-settings-email"
+          data-qa-username
+        />
+        <ActionsPanel>
+          <Button
+            buttonType="primary"
+            onClick={onSubmitEmail}
+            loading={profileSubmitting}
+            data-qa-submit
+          >
+            Save
+          </Button>
+        </ActionsPanel>
+      </Paper>
+
+      <Paper className={classes.root}>
+        {profileSuccess && <Notice success text={profileSuccess} />}
+        {generalProfileError && <Notice error text={generalProfileError} />}
+        <TextField
+          inputRef={emailRef}
+          label="Email"
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          errorText={emailError}
+          errorGroup="display-settings-email"
+          data-qa-email
+        />
+        <ActionsPanel>
+          <Button
+            buttonType="primary"
+            onClick={onSubmitEmail}
+            loading={profileSubmitting}
+            data-qa-submit
+          >
+            Save
+          </Button>
+        </ActionsPanel>
+      </Paper>
+    </>
   );
 };
 
