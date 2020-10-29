@@ -49,13 +49,10 @@ export const DisplaySettings: React.FC<WithNotifications> = props => {
   const [usernameResetToken, setUsernameResetToken] = React.useState(v4());
   const [timezoneResetToken, setTimezoneResetToken] = React.useState(v4());
 
-  if (!profile.data?.username) {
-    return null;
-  }
-
   const updateUsername = (newUsername: string) => {
     setEmailResetToken(v4());
     setTimezoneResetToken(v4());
+    // Default to empty string... but I don't believe this is possible.
     return updateUser(profile?.data?.username ?? '', {
       username: newUsername
     });
@@ -80,7 +77,7 @@ export const DisplaySettings: React.FC<WithNotifications> = props => {
           key={usernameResetToken}
           label="Username"
           submitForm={updateUsername}
-          initialValue={profile.data.username}
+          initialValue={profile?.data?.username}
           disabled={_isRestrictedUser}
           tooltipText={
             _isRestrictedUser
@@ -96,7 +93,7 @@ export const DisplaySettings: React.FC<WithNotifications> = props => {
           key={emailResetToken}
           label="Email"
           submitForm={updateEmail}
-          initialValue={profile.data.email}
+          initialValue={profile?.data?.email}
           cb={() => {
             // If there's a "user_email_bounce" notification for this user, and
             // the user has just updated their email, re-request notifications to
