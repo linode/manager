@@ -1,4 +1,3 @@
-import * as classNames from 'classnames';
 import { Config, Disk, LinodeInterface } from '@linode/api-v4/lib/linodes';
 import { VLAN } from '@linode/api-v4/lib/vlans';
 import { Volume } from '@linode/api-v4/lib/volumes';
@@ -13,12 +12,9 @@ import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu_CMR
 
 const useStyles = makeStyles(() => ({
   actionInner: {
-    padding: 0,
+    padding: '0 !important',
     '&.MuiTableCell-root': {
       paddingRight: 0
-    },
-    '&.alignActionTop': {
-      verticalAlign: 'top'
     }
   },
   interfaceList: {
@@ -30,8 +26,10 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 4
   },
   alignTop: {
-    padding: 8,
-    verticalAlign: 'top'
+    verticalAlign: 'top',
+    '& td': {
+      padding: 8
+    }
   }
 }));
 
@@ -149,46 +147,30 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     ? 'eth0 – Public, Private'
     : 'eth0 – Public';
 
+  // This should determine alignment based on device count associated w/ a config
   const determineAlignment = (config: Config) =>
     Object.keys(config.devices).length > 3;
 
   return (
-    <TableRow key={config.id} data-qa-config={config.label}>
-      <TableCell
-        className={determineAlignment(config) ? classes.alignTop : undefined}
-      >
-        {config.label}
-      </TableCell>
-      <TableCell
-        className={determineAlignment(config) ? classes.alignTop : undefined}
-      >
+    <TableRow
+      className={determineAlignment(config) ? classes.alignTop : undefined}
+      key={config.id}
+      data-qa-config={config.label}
+    >
+      <TableCell>{config.label}</TableCell>
+      <TableCell>
         {config.virt_mode === 'fullvirt'
           ? 'Full virtualization'
           : 'Paravirtualization'}
       </TableCell>
-      <TableCell
-        className={determineAlignment(config) ? classes.alignTop : undefined}
-      >
-        {linodeKernel}
-      </TableCell>
-      <TableCell
-        className={determineAlignment(config) ? classes.alignTop : undefined}
-      >
-        {deviceLabels}
-      </TableCell>
+      <TableCell>{linodeKernel}</TableCell>
+      <TableCell>{deviceLabels}</TableCell>
       {vlansEnabled ? (
-        <TableCell
-          className={determineAlignment(config) ? classes.alignTop : undefined}
-        >
+        <TableCell>
           {!isEmpty(config.interfaces) ? InterfaceList : defaultInterfaceLabel}
         </TableCell>
       ) : null}
-      <TableCell
-        className={classNames({
-          [classes.actionInner]: true,
-          alignActionTop: determineAlignment(config)
-        })}
-      >
+      <TableCell className={classes.actionInner}>
         <LinodeConfigActionMenu
           config={config}
           linodeId={linodeId}
