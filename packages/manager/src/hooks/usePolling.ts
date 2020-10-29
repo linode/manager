@@ -11,7 +11,6 @@ export const usePolling = (
   const interval = useRef(0);
   const prevRequests = usePrevious(requests);
   const [requestArray, setRequestArray] = useState(requests);
-
   /**
    * In order to avoid re-setting the interval on every render,
    * we keep a list of requests in local state and only update it
