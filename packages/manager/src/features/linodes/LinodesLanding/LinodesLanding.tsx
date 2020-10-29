@@ -344,7 +344,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       clickable: true
     };
 
-    const displayBackupsCTA = backupsCTA && !BackupsCtaDismissed.get();
+    const displayBackupsCTA =
+      !this.props.isVLAN && backupsCTA && !BackupsCtaDismissed.get();
 
     return (
       <React.Fragment>
@@ -454,7 +455,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                       this.props.history.push('/linodes/create')
                                     }
                                     iconType="linode"
-                                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/'"
+                                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                                     body={
                                       <>
                                         {linodesRunningCount !== 0 && (

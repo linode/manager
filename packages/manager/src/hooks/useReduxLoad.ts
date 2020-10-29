@@ -23,6 +23,7 @@ import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { getAllVlans } from 'src/store/vlans/vlans.requests';
+import { getAllDatabases } from 'src/store/databases/databases.requests';
 
 interface UseReduxPreload {
   _loading: boolean;
@@ -33,6 +34,7 @@ export type ReduxEntity =
   | 'volumes'
   | 'account'
   | 'accountSettings'
+  | 'databases'
   | 'domains'
   | 'images'
   | 'kubernetes'
@@ -55,6 +57,7 @@ const requestMap: RequestMap = {
   volumes: getAllVolumes,
   account: requestAccount,
   accountSettings: requestAccountSettings,
+  databases: () => getAllDatabases({}),
   domains: requestDomains,
   nodeBalancers: getAllNodeBalancers,
   images: requestImages,
@@ -134,13 +137,20 @@ export const requestDeps = (
   const requests = [];
   for (i; i < deps.length; i++) {
     const currentResource = state.__resources[deps[i]] || state[deps[i]];
+
     if (currentResource) {
-      if (currentResource.lastUpdated === 0 && !currentResource.loading) {
+      const currentResourceHasError = hasError(currentResource?.error);
+      if (
+        currentResource.lastUpdated === 0 &&
+        !currentResource.loading &&
+        !currentResourceHasError
+      ) {
         needsToLoad = true;
         requests.push(requestMap[deps[i]]);
       } else if (
         Date.now() - currentResource.lastUpdated > refreshInterval &&
-        !currentResource.loading
+        !currentResource.loading &&
+        !currentResourceHasError
       ) {
         requests.push(requestMap[deps[i]]);
       }
@@ -161,3 +171,11 @@ export const requestDeps = (
 };
 
 export default useReduxLoad;
+
+export const hasError = (resourceError: any) => {
+  if (Array.isArray(resourceError) && resourceError.length > 0) {
+    return true;
+  }
+
+  return resourceError?.read !== undefined;
+};

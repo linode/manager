@@ -1,6 +1,16 @@
-import * as React from 'react';
+import {
+  Database,
+  DatabaseConnection,
+  DatabaseStatus,
+  getDatabaseConnection
+} from '@linode/api-v4/lib/databases';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
+import DeleteIcon from 'src/assets/icons/delete.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import ResizeIcon from 'src/assets/icons/resize.svg';
@@ -8,52 +18,93 @@ import VolumeIcon from 'src/assets/icons/volume.svg';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
-import {
-  makeStyles,
-  Theme,
-  useMediaQuery,
-  useTheme
-} from 'src/components/core/styles';
-// import TagCell from 'src/components/TagCell';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
+import DeletionDialog from 'src/components/DeletionDialog';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
-// import { dcDisplayNames } from 'src/constants';
-// import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-// import formatDate from 'src/utilities/formatDate';
+import InlineTextLoader from 'src/components/InlineTextLoader';
+import TagCell from 'src/components/TagCell';
+import TagDrawer from 'src/components/TagCell/TagDrawer';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useDatabases from 'src/hooks/useDatabases';
+import { useDialog } from 'src/hooks/useDialog';
+import useOpenClose from 'src/hooks/useOpenClose';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
-import DatabaseActionMenu from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
 
 interface DatabaseEntityDetailProps {
-  database: any;
+  database: Database;
 }
 
 const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = props => {
-  const {} = props;
+  const { database } = props;
 
-  // const regionDisplay = dcDisplayNames[database.region] ?? null;
+  const { deleteDatabase } = useDatabases();
+  const history = useHistory();
+
+  const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
+    deleteDatabase
+  );
+
+  const connectionDetails = useAPIRequest<DatabaseConnection | null>(
+    () => getDatabaseConnection(database.id),
+    null
+  );
 
   return (
-    <EntityDetail
-      header={<Header label="Label" status="running" />}
-      body={<Body numCPUs={0} gbRAM={0} gbStorage={0} numVolumes={0} />}
-      footer={
-        <Footer
-          plan=""
-          regionDisplay=""
-          id={1234}
-          created=""
-          // tags={[]}
-          // openTagDrawer={openTagDrawer}
-        />
-      }
-    />
+    <>
+      <EntityDetail
+        header={
+          <Header
+            label={database.label}
+            status={database.status}
+            handleClickDelete={() => openDialog(database.id, database.label)}
+          />
+        }
+        body={
+          <Body
+            numCPUs={database.vcpus}
+            // Memory is returned by the API in MB.
+            gbRAM={database.memory / 1024}
+            gbStorage={database.disk}
+            typeLabel="MySQL" // @todo: How to make this dynamic?
+            connectionDetailsLoading={connectionDetails.loading}
+            connectionDetailsData={connectionDetails.data}
+            connectionDetailsError={connectionDetails.error}
+          />
+        }
+        footer={
+          <Footer
+            plan=""
+            regionDisplay=""
+            id={database.id}
+            created={database.created}
+            tags={database.tags}
+            label={database.label}
+          />
+        }
+      />
+      <DeletionDialog
+        label={dialog.entityLabel ?? ''}
+        error={dialog.error}
+        open={dialog.isOpen}
+        loading={dialog.isLoading}
+        onClose={closeDialog}
+        onDelete={() => {
+          submitDialog(dialog.entityID).then(() => {
+            history.push('/databases');
+          });
+        }}
+      />
+    </>
   );
 };
 
@@ -65,6 +116,7 @@ export default React.memo(DatabaseEntityDetail);
 export interface HeaderProps {
   label: string;
   status: string;
+  handleClickDelete: () => void;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -88,19 +140,24 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   statusChip: {
     ...theme.applyStatusPillStyles
   },
-  statusRunning: {
+  statusReady: {
     '&:before': {
       backgroundColor: theme.cmrIconColors.iGreen
     }
   },
-  statusOffline: {
-    '&:before': {
-      backgroundColor: theme.cmrIconColors.iGrey
-    }
-  },
-  statusOther: {
+  statusInitializing: {
     '&:before': {
       backgroundColor: theme.cmrIconColors.iOrange
+    }
+  },
+  statusError: {
+    '&:before': {
+      backgroundColor: theme.cmrIconColors.iRed
+    }
+  },
+  statusUnknown: {
+    '&:before': {
+      backgroundColor: theme.cmrIconColors.iGrey
     }
   },
   actionItemsOuter: {
@@ -147,20 +204,21 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Header: React.FC<HeaderProps> = props => {
-  const { label, status } = props;
+  const { label, status, handleClickDelete } = props;
 
   const classes = useHeaderStyles();
-  const theme = useTheme<Theme>();
-  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const isRunning = status === 'running';
-  const isOffline = status === 'stopped' || status === 'offline';
-  const isOther = !['running', 'stopped', 'offline'].includes(status);
+  const statusToClass: Record<DatabaseStatus, string> = {
+    initializing: classes.statusInitializing,
+    ready: classes.statusReady,
+    error: classes.statusError,
+    unknown: classes.statusUnknown
+  };
 
   return (
     <EntityHeader
       parentLink="/databases"
-      parentText="Virtual LANs"
+      parentText="Databases"
       iconType="linode"
       actions={
         <Hidden mdUp>
@@ -174,34 +232,28 @@ const Header: React.FC<HeaderProps> = props => {
           <Chip
             className={classnames({
               [classes.statusChip]: true,
-              [classes.statusRunning]: isRunning,
-              [classes.statusOffline]: isOffline,
-              [classes.statusOther]: isOther,
-              statusOtherDetail: isOther
+              [statusToClass[status]]: true,
+              statusOtherDetail: ['initializing'].includes(status)
             })}
-            label={status.replace('_', ' ').toUpperCase()}
+            label={status.toUpperCase()}
             component="span"
-            clickable={isOther ? true : false}
-            {...(isOther && {
-              onClick: () => {
-                return undefined;
-              }
-            })}
           />
 
           <div className={classes.actionItemsOuter}>
+            {/* @todo: Make the "Resize" button functional. */}
             <IconTextLink
               className={classes.actionItem}
               SideIcon={ResizeIcon}
               text="Resize"
               title="Resize"
-              to={`/`}
             />
 
-            <DatabaseActionMenu
-              databaseID={1234}
-              databaseLabel=""
-              inlineLabel={matchesMdDown ? undefined : 'More Actions'}
+            <IconTextLink
+              className={classes.actionItem}
+              SideIcon={DeleteIcon}
+              text="Delete"
+              title="Delete"
+              onClick={handleClickDelete}
             />
           </div>
           <Hidden smDown>
@@ -220,7 +272,10 @@ export interface BodyProps {
   numCPUs: number;
   gbRAM: number;
   gbStorage: number;
-  numVolumes: number;
+  typeLabel: string;
+  connectionDetailsData: DatabaseConnection | null;
+  connectionDetailsLoading: boolean;
+  connectionDetailsError?: APIError[];
 }
 
 const useBodyStyles = makeStyles((theme: Theme) => ({
@@ -297,16 +352,13 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
   accessTableContainer: {
     overflowX: 'auto',
-    maxWidth: 335,
-    [theme.breakpoints.up('md')]: {
-      maxWidth: 728
-    },
-    [theme.breakpoints.up('lg')]: {
-      maxWidth: 600
-    }
+    width: '100%'
   },
+
   code: {
-    fontFamily: '"SourceCodePro", monospace, sans-serif',
+    '& p': {
+      fontFamily: '"SourceCodePro", monospace, sans-serif'
+    },
     color: theme.cmrTextColors.textAccessCode
   },
   bodyWrapper: {
@@ -317,13 +369,21 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Body: React.FC<BodyProps> = props => {
-  const { numCPUs, gbRAM, gbStorage, numVolumes } = props;
+  const {
+    numCPUs,
+    gbRAM,
+    gbStorage,
+    typeLabel,
+    connectionDetailsData,
+    connectionDetailsLoading,
+    connectionDetailsError
+  } = props;
 
   const classes = useBodyStyles();
 
   return (
     <Grid container direction="row" className={classes.bodyWrapper}>
-      <Grid item>
+      <Grid item xs={12} md={5}>
         <Grid container>
           <Grid item>
             <Grid
@@ -390,28 +450,45 @@ const Body: React.FC<BodyProps> = props => {
               </Grid>
 
               <Grid item className={classes.iconTextOuter}>
-                <Typography>
-                  {pluralize('Volume', 'Volumes', numVolumes)}
-                </Typography>
+                <Typography>{typeLabel}</Typography>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      <Grid item>
+      <Grid item xs={12} md={7}>
         <div className={classes.accessTableContainer}>
           <Table className={classes.accessTable}>
             <TableBody>
               <TableRow>
                 <th scope="row">Connection String</th>
 
-                <TableCell className={classes.code}>test</TableCell>
+                <TableCell className={classes.code}>
+                  <InlineTextLoader
+                    loading={connectionDetailsLoading}
+                    error={
+                      connectionDetailsError
+                        ? 'There was an error loading the connection string.'
+                        : undefined
+                    }
+                    text={connectionDetailsData?.host}
+                  />
+                </TableCell>
               </TableRow>
 
               <TableRow>
                 <th scope="row">Port</th>
-
-                <TableCell className={classes.code}>test</TableCell>
+                <TableCell className={classes.code}>
+                  <InlineTextLoader
+                    loading={connectionDetailsLoading}
+                    error={
+                      connectionDetailsError
+                        ? 'There was an error loading the port.'
+                        : undefined
+                    }
+                    text={String(connectionDetailsData?.port)}
+                  />
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -430,8 +507,8 @@ interface FooterProps {
   regionDisplay: string | null;
   id: number;
   created: string;
-  // tags: string[];
-  // openTagDrawer: (tags: string[]) => void;
+  tags: string[];
+  label: string;
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
@@ -485,60 +562,92 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
-  const {
-    // plan,
-    // regionDisplay,
-    id
-    // created,
-    // tags,
-    // openTagDrawer
-  } = props;
+  const { id, created, tags, label } = props;
 
   const classes = useFooterStyles();
 
+  const { open, close, isOpen } = useOpenClose();
+
+  const { updateDatabase } = useDatabases();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const addTag = React.useCallback(
+    (tag: string) => {
+      const newTags = [...tags, tag];
+      return updateDatabase(id, { tags: newTags }).catch(e =>
+        enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
+          variant: 'error'
+        })
+      );
+    },
+    [tags, id, updateDatabase, enqueueSnackbar]
+  );
+
+  const deleteTag = React.useCallback(
+    (tag: string) => {
+      const newTags = tags.filter(thisTag => thisTag !== tag);
+      return updateDatabase(id, { tags: newTags }).catch(e =>
+        enqueueSnackbar(
+          getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
+          {
+            variant: 'error'
+          }
+        )
+      );
+    },
+    [tags, id, updateDatabase, enqueueSnackbar]
+  );
+
   return (
-    <Grid container direction="row" justify="space-between" alignItems="center">
-      <Grid item xs={12} sm={7}>
-        <div className={classes.detailsSection}>
-          {/* {plan && ( */}
-          <button className={classes.button}>Insert Plan</button>
-          {/* )} */}
-          {/* {regionDisplay && ( */}
-          <Typography className={classes.button}>Insert Region</Typography>
-          {/* )} */}
-          <Typography
-            className={classnames({
-              [classes.listItem]: true,
-              [classes.listItemLast]: true
-            })}
-          >
-            ID {id}
-          </Typography>
-          <Hidden xsDown>
-            <Typography className={classes.created}>
-              Created{' '}
-              {/* {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })} */}
+    <>
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+      >
+        <Grid item xs={12} sm={7}>
+          <div className={classes.detailsSection}>
+            <Typography
+              className={classnames({
+                [classes.listItem]: true,
+                [classes.listItemLast]: true
+              })}
+            >
+              ID {id}
             </Typography>
-          </Hidden>
-        </div>
-      </Grid>
-      <Hidden smUp>
-        <Grid item xs={12}>
-          <Typography className={classes.created}>
-            Created{' '}
-            {/* {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })} */}
-          </Typography>
+            <Hidden xsDown>
+              <Typography className={classes.created}>
+                Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+              </Typography>
+            </Hidden>
+          </div>
         </Grid>
-      </Hidden>
-      <Grid item xs={12} sm={5} className={classes.tags}>
-        {/* <TagCell
-          width={500}
-          tags={tags}
-          addTag={() => {}}
-          deleteTag={() => {}}
-          listAllTags={openTagDrawer}
-        /> */}
+        <Hidden smUp>
+          <Grid item xs={12}>
+            <Typography className={classes.created}>
+              Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+            </Typography>
+          </Grid>
+        </Hidden>
+        <Grid item xs={12} sm={5} className={classes.tags}>
+          <TagCell
+            width={500}
+            tags={tags}
+            addTag={addTag}
+            deleteTag={deleteTag}
+            listAllTags={open}
+          />
+        </Grid>
       </Grid>
-    </Grid>
+      <TagDrawer
+        open={isOpen}
+        onClose={close}
+        addTag={addTag}
+        deleteTag={deleteTag}
+        entityLabel={label}
+        tags={tags}
+      />
+    </>
   );
 });
