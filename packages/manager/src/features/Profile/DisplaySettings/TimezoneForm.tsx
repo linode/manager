@@ -5,7 +5,6 @@ import * as React from 'react';
 import timezones from 'src/assets/timezones/timezones';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -23,11 +22,8 @@ type ClassNames = 'root' | 'title';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(3),
-      paddingBottom: theme.spacing(3),
-      marginTop: theme.spacing(3)
+      paddingTop: theme.spacing(2)
     },
-    select: {},
     title: {
       marginBottom: theme.spacing(2)
     }
@@ -36,7 +32,7 @@ const styles = (theme: Theme) =>
 interface Props {
   timezone: string;
   loggedInAsCustomer: boolean;
-  updateProfile: (v: Partial<Profile>) => Promise<Profile>;
+  updateTimezone: (newTimezone: string) => Promise<Profile>;
   errors?: APIError[];
 }
 
@@ -104,7 +100,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true });
 
     this.props
-      .updateProfile({ timezone: updatedTimezone.value as string })
+      .updateTimezone(updatedTimezone.value as string)
       .then(() => {
         this.setState({
           submitting: false,
@@ -149,54 +145,50 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <React.Fragment>
-        <Paper className={classes.root}>
-          {loggedInAsCustomer && (
-            <div
-              style={{
-                backgroundColor: 'pink',
-                padding: '1em',
-                marginBottom: '0.5em',
-                textAlign: 'center'
-              }}
-              data-qa-admin-notice
-            >
-              <Typography style={{ fontSize: '1.2em', color: 'black' }}>
-                {`While you are logged in as a customer, all times, dates, and graphs will be displayed in your browser's timezone (${timezone}).`}
-              </Typography>
-            </div>
-          )}
-          {success && <Notice success text={success} />}
-          {generalError && <Notice error text={generalError} />}
-          <Typography variant="body1" data-qa-copy>
-            This setting converts the dates and times displayed in the Linode
-            Manager to a timezone of your choice.{' '}
-          </Typography>
-          <React.Fragment>
-            <Select
-              options={timezoneList}
-              placeholder={'Choose a Timezone'}
-              errorText={timezoneError}
-              onChange={this.handleTimezoneChange}
-              data-qa-tz-select
-              defaultValue={defaultTimeZone}
-              isClearable={false}
-              label="Choose a Timezone"
-              hideLabel
-            />
-            <ActionsPanel>
-              <Button
-                buttonType="primary"
-                onClick={this.onSubmit}
-                loading={submitting}
-                data-qa-tz-submit
-              >
-                Save
-              </Button>
-            </ActionsPanel>
-          </React.Fragment>
-        </Paper>
-      </React.Fragment>
+      <div className={classes.root}>
+        {loggedInAsCustomer && (
+          <div
+            style={{
+              backgroundColor: 'pink',
+              padding: '1em',
+              marginBottom: '0.5em',
+              textAlign: 'center'
+            }}
+            data-qa-admin-notice
+          >
+            <Typography style={{ fontSize: '1.2em', color: 'black' }}>
+              {`While you are logged in as a customer, all times, dates, and graphs will be displayed in your browser's timezone (${timezone}).`}
+            </Typography>
+          </div>
+        )}
+        {success && <Notice success text={success} />}
+        {generalError && <Notice error text={generalError} />}
+        <Typography variant="body1" data-qa-copy>
+          This setting converts the dates and times displayed in the Linode
+          Manager to a timezone of your choice.{' '}
+        </Typography>
+        <Select
+          options={timezoneList}
+          placeholder={'Choose a Timezone'}
+          errorText={timezoneError}
+          onChange={this.handleTimezoneChange}
+          data-qa-tz-select
+          defaultValue={defaultTimeZone}
+          isClearable={false}
+          label="Choose a Timezone"
+          hideLabel
+        />
+        <ActionsPanel>
+          <Button
+            buttonType="primary"
+            onClick={this.onSubmit}
+            loading={submitting}
+            data-qa-tz-submit
+          >
+            Save
+          </Button>
+        </ActionsPanel>
+      </div>
     );
   }
 }
