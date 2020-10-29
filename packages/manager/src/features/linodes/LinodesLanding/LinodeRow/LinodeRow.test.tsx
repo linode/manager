@@ -4,7 +4,7 @@ import { mockNotification } from 'src/__data__/notifications';
 import { RenderFlag } from './LinodeRow';
 
 describe('LinodeRow', () => {
-  describe('when Linode has notification', () => {
+  describe.skip('when Linode has notification', () => {
     it('should render a Flag', () => {
       const wrapper = shallow(
         <RenderFlag

@@ -58,7 +58,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
   const { resetForm, ...formik } = useFormik({
     initialValues: {
       description: '',
-      cidr_block: '10.0.0.0/24',
+      cidr_block: '',
       region: '',
       linodes: []
     },
@@ -161,12 +161,13 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
       <form className={classes.form} onSubmit={formik.handleSubmit}>
         <div className={classes.formSection}>
           <RegionSelect
-            label={'Region'}
+            label={'Region (required)'}
             placeholder={'Regions'}
             errorText={formik.errors.region}
             handleSelection={handleRegionSelect}
             regions={regionsWithVLANS}
             selectedID={formik.values.region}
+            required
           />
         </div>
         <div className={classes.formSection} data-testid="label-input">

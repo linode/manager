@@ -56,6 +56,10 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
   return (
     <Drawer title="Attach a Linode" open={isOpen} onClose={onClose}>
       {generalError && <Notice error text={generalError} />}
+      <Notice
+        warning
+        text="Please note that any newly attached Linode(s) must be rebooted for changes to take effect."
+      />
       <LinodeMultiSelect
         filteredLinodes={linodes}
         handleChange={(selected: number[]) => setSelectedLinodes(selected)}
