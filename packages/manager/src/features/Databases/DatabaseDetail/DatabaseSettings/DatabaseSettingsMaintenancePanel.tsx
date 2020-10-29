@@ -188,6 +188,7 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
           options={daySelection}
           placeholder="Choose a day"
           value={defaultDaySelection}
+          isClearable={false}
           data-qa-item="maintenanceDay"
         />
       </FormControl>
@@ -201,6 +202,7 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
           options={windowSelection}
           placeholder="Choose a time"
           value={defaultTimeSelection}
+          isClearable={false}
           data-qa-item="maintenanceWindow"
         />
       </FormControl>
