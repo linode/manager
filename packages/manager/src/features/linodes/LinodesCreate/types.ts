@@ -126,8 +126,8 @@ export interface BaseFormStateAndHandlers {
   updateTags: (tags: Tag[]) => void;
   resetCreationState: () => void;
   resetSSHKeys: () => void;
-  selectedVlanID: number | null;
-  setVlanID: (id: number | null) => void;
+  selectedVlanIDs: number[];
+  setVlanID: (ids: number[]) => void;
 }
 
 /**
