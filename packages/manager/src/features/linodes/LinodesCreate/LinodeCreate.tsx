@@ -134,7 +134,7 @@ interface Props {
   resetCreationState: () => void;
   setBackupID: (id: number) => void;
   showGeneralError?: boolean;
-  setVlanID: (id: number | null) => void;
+  setVlanID: (ids: number[]) => void;
 }
 
 const errorMap = [
@@ -603,7 +603,7 @@ export class LinodeCreate extends React.PureComponent<
             disabled={userCannotCreateLinode}
             hidePrivateIP={this.props.createType === 'fromLinode'}
             changeSelectedVLAN={this.props.setVlanID}
-            selectedVlanID={this.props.selectedVlanID}
+            selectedVlanIDs={this.props.selectedVlanIDs}
             selectedRegionID={this.props.selectedRegionID}
             vlanError={hasErrorFor.interfaces}
           />

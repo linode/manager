@@ -24,6 +24,7 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { getAllVlans } from 'src/store/vlans/vlans.requests';
 import { getAllDatabases } from 'src/store/databases/databases.requests';
+import { getAllMySQLTypes } from 'src/store/databases/types.requests';
 
 interface UseReduxPreload {
   _loading: boolean;
@@ -50,7 +51,8 @@ export type ReduxEntity =
   | 'firewalls'
   | 'clusters'
   | 'vlans'
-  | 'databases';
+  | 'databases'
+  | 'databaseTypes';
 
 type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
@@ -73,7 +75,8 @@ const requestMap: RequestMap = {
   longview: getAllLongviewClients,
   firewalls: () => getAllFirewalls({}),
   clusters: requestClusters,
-  vlans: () => getAllVlans({})
+  vlans: () => getAllVlans({}),
+  databaseTypes: () => getAllMySQLTypes({})
 };
 
 export const useReduxLoad = (

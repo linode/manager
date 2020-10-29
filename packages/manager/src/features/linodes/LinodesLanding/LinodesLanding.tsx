@@ -344,7 +344,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       clickable: true
     };
 
-    const displayBackupsCTA = backupsCTA && !BackupsCtaDismissed.get();
+    const displayBackupsCTA =
+      !this.props.isVLAN && backupsCTA && !BackupsCtaDismissed.get();
 
     return (
       <React.Fragment>
