@@ -20,10 +20,7 @@ export interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
-  requestManagedIssues: () => {
-    console.count('requesting-issues');
-    return dispatch(_requestManagedIssues());
-  }
+  requestManagedIssues: () => dispatch(_requestManagedIssues())
 });
 
 export default <TInner extends {}, TOuter extends {}>(

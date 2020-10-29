@@ -1,5 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { equals } from 'ramda';
+import { useEffect, useRef, useState } from 'react';
 import usePageVisibility from 'src/hooks/usePageVisibility';
+import usePrevious from 'src/hooks/usePrevious';
 
 export const usePolling = (
   requests: Function[],
@@ -7,10 +9,25 @@ export const usePolling = (
 ) => {
   const isVisible = usePageVisibility();
   const interval = useRef(0);
+  const prevRequests = usePrevious(requests);
+  const [requestArray, setRequestArray] = useState(requests);
+
+  /**
+   * In order to avoid re-setting the interval on every render,
+   * we keep a list of requests in local state and only update it
+   * when the functions change. We could also not add requests to the
+   * useEffect dependency array below, but that's bug-prone and strongly
+   * recommended against by the docs.
+   */
+  useEffect(() => {
+    if (equals(prevRequests, requests)) {
+      setRequestArray(requests);
+    }
+  }, [requests, prevRequests]);
 
   useEffect(() => {
     const _request = () => {
-      requests.forEach(thisRequest => thisRequest());
+      requestArray.forEach(thisRequest => thisRequest());
     };
     if (!isVisible) {
       // Page is not visible; clear any open intervals and don't make requests.
@@ -23,7 +40,7 @@ export const usePolling = (
     return () => {
       window.clearInterval(interval.current);
     };
-  }, [isVisible, requestInterval]);
+  }, [isVisible, requestArray, requestInterval]);
 };
 
 export default usePolling;
