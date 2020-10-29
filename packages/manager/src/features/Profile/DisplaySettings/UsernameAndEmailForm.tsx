@@ -75,7 +75,6 @@ export const UsernameAndEmailForm: React.FC<CombinedProps> = props => {
               : undefined
           }
           cb={requestProfile}
-          type="email"
         />
       </Paper>
 
@@ -95,6 +94,8 @@ export const UsernameAndEmailForm: React.FC<CombinedProps> = props => {
               props.requestNotifications();
             }
           }}
+          inputRef={emailRef}
+          type="email"
         />
       </Paper>
     </>

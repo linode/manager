@@ -29,7 +29,7 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = props => {
     errorMessage,
     cb,
     initialValue,
-    ...rest
+    ...textFieldProps
   } = props;
 
   const _fieldName = fieldName ?? label.toLowerCase();
@@ -69,12 +69,12 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = props => {
       {success && <Notice success text={_successMessage} />}
       {generalError && <Notice error text={generalError} />}
       <TextField
+        {...textFieldProps}
         label={label}
         value={value}
         onChange={e => setValue(e.target.value)}
         errorText={fieldError}
         disabled={disabled}
-        {...rest}
       />
       <ActionsPanel>
         <Button
