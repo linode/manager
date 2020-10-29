@@ -10,7 +10,8 @@ import {
   createDatabase as _create,
   deleteDatabase as _delete,
   getAllDatabases as _request,
-  updateDatabase as _update
+  updateDatabase as _update,
+  resetPassword as _reset
 } from 'src/store/databases/databases.requests';
 import { Dispatch } from './types';
 
@@ -20,6 +21,7 @@ export interface DatabasesProps {
   createDatabase: () => Promise<Database>;
   deleteDatabase: (databaseID: number) => Promise<{}>;
   updateDatabase: (databaseID: number) => Promise<Database>;
+  resetPassword: (databaseID: number, root_password: string) => Promise<{}>;
 }
 
 export const useDatabases = () => {
@@ -34,13 +36,16 @@ export const useDatabases = () => {
     dispatch(_delete({ databaseID }));
   const updateDatabase = (databaseID: number, payload: UpdateDatabasePayload) =>
     dispatch(_update({ databaseID, ...payload }));
+  const resetPassword = (databaseID: number, root_password: string) =>
+    dispatch(_reset({ databaseID, root_password }));
 
   return {
     databases,
     requestDatabases,
     createDatabase,
     deleteDatabase,
-    updateDatabase
+    updateDatabase,
+    resetPassword
   };
 };
 

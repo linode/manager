@@ -51,6 +51,7 @@ export type ReduxEntity =
   | 'firewalls'
   | 'clusters'
   | 'vlans'
+  | 'databases'
   | 'databaseTypes';
 
 type RequestMap = Record<ReduxEntity, any>;
