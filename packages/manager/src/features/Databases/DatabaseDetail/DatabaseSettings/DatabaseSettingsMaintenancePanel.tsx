@@ -3,7 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { DateTime } from 'luxon';
-import { pathOr, sortBy } from 'ramda';
+import { sortBy } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -12,9 +12,8 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import useDatabases from 'src/hooks/useDatabases';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { evenizeNumber } from 'src/utilities/evenizeNumber';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -52,19 +51,13 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
 
-  const hasErrorFor = getAPIErrorFor({}, errors);
-  const dayError = hasErrorFor('maintenance_schedule.day');
-  const windowError = hasErrorFor('maintenance_schedule.window');
-
-  const genericError =
-    errors &&
-    !dayError &&
-    !windowError &&
-    pathOr(
-      'An error occurred while updating the maintenance window',
-      [0, 'reason'],
-      errors
-    );
+  const errorMap = getErrorMap(
+    ['maintenance_schedule.day', 'maintenance_schedule.window'],
+    errors
+  );
+  const dayError = errorMap['maintenance_schedule.day'];
+  const windowError = errorMap['maintenance_schedule.window'];
+  const genericError = errorMap.none;
 
   const structureOptionsForSelect = (optionsData: string[][]) => {
     return optionsData.map((option: string[]) => {
