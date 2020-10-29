@@ -32,7 +32,7 @@ export const DatabaseBackups: React.FC<{}> = () => {
           <TableHead>
             <TableRow>
               <TableCell>Backup ID</TableCell>
-              <TableCell>Status</TableCell>
+              {/* <TableCell>Status</TableCell> */}
               <TableCell>Date Created</TableCell>
               <TableCell>Duration</TableCell>
               <TableCell />

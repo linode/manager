@@ -21,7 +21,7 @@ const BackupTableRow: React.FC<Props> = props => {
   return (
     <TableRow key={backup.id} data-qa-backup>
       <TableCell data-qa-backup-name={backup.id}>{backup.id}</TableCell>
-      <TableCell>{backup.status}</TableCell>
+      {/* <TableCell>{backup.status}</TableCell> */}
       <TableCell>
         <DateTimeDisplay value={backup.created} />
       </TableCell>
