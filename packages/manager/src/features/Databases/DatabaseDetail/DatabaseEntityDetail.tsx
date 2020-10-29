@@ -94,6 +94,7 @@ const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = props => {
       />
       <DeletionDialog
         label={dialog.entityLabel ?? ''}
+        entity="database"
         error={dialog.error}
         open={dialog.isOpen}
         loading={dialog.isLoading}
