@@ -56,13 +56,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   maintenanceSelectsInner: {
     display: 'inline-block',
-    minWidth: '200px',
     [theme.breakpoints.down('xs')]: {
       display: 'block'
     }
   },
   chooseDay: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(4.5)
   },
   chooseTime: {
     marginRight: theme.spacing(2)
@@ -337,6 +336,9 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
                   isClearable={true}
                   data-qa-item="maintenanceWindow"
                 />
+                <FormHelperText style={{ fontSize: '0.8em' }}>
+                  Time displayed in {timezone}
+                </FormHelperText>
               </FormControl>
             </div>
           </div>
