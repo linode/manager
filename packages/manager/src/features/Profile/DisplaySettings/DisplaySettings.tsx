@@ -14,7 +14,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { AccountsAndPasswords } from 'src/documentation';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
-import EmailChangeForm from './EmailChangeForm';
+import EmailChangeForm from './UsernameAndEmailForm';
 import TimezoneForm from './TimezoneForm';
 
 type ClassNames = 'root' | 'title';
