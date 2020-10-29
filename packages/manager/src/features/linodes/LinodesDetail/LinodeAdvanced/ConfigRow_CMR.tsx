@@ -26,7 +26,9 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 4
   },
   alignTop: {
-    verticalAlign: 'top',
+    verticalAlign: 'top'
+  },
+  cellBase: {
     '& td': {
       padding: 8
     }
@@ -73,46 +75,41 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
   } = props;
 
   const classes = useStyles();
-  const deviceLabels = React.useMemo(
-    () => (
-      <ul className={classes.interfaceList}>
-        {Object.keys(config.devices)
-          .map(thisDevice => {
-            const device = config.devices[thisDevice];
-            let label: string | null = null;
-            if (device?.disk_id) {
-              label =
-                linodeDisks.find(
-                  thisDisk =>
-                    thisDisk.id === config.devices[thisDevice]?.disk_id
-                )?.label ?? `disk-${device.disk_id}`;
-            } else if (device?.volume_id) {
-              label =
-                linodeVolumes.find(
-                  thisVolume =>
-                    thisVolume.id === config.devices[thisDevice]?.volume_id
-                )?.label ?? `volume-${device.volume_id}`;
-            }
+  const validDevices = React.useMemo(
+    () =>
+      Object.keys(config.devices)
+        .map(thisDevice => {
+          const device = config.devices[thisDevice];
+          let label: string | null = null;
+          if (device?.disk_id) {
+            label =
+              linodeDisks.find(
+                thisDisk => thisDisk.id === config.devices[thisDevice]?.disk_id
+              )?.label ?? `disk-${device.disk_id}`;
+          } else if (device?.volume_id) {
+            label =
+              linodeVolumes.find(
+                thisVolume =>
+                  thisVolume.id === config.devices[thisDevice]?.volume_id
+              )?.label ?? `volume-${device.volume_id}`;
+          }
 
-            if (!label) {
-              return undefined;
-            }
-            return (
-              <li key={thisDevice} className={classes.interfaceListItem}>
-                /dev/{thisDevice} - {label}
-              </li>
-            );
-          })
-          .filter(Boolean)}
-      </ul>
-    ),
-    [
-      linodeVolumes,
-      linodeDisks,
-      config,
-      classes.interfaceList,
-      classes.interfaceListItem
-    ]
+          if (!label) {
+            return undefined;
+          }
+          return (
+            <li key={thisDevice} className={classes.interfaceListItem}>
+              /dev/{thisDevice} - {label}
+            </li>
+          );
+        })
+        .filter(Boolean),
+    [linodeVolumes, linodeDisks, classes.interfaceListItem, config.devices]
+  );
+
+  const deviceLabels = React.useMemo(
+    () => <ul className={classes.interfaceList}>{validDevices}</ul>,
+    [classes.interfaceList, validDevices]
   );
 
   const hasPrivateIP = linodeIPs.some(thisIP => privateIPRegex.test(thisIP));
@@ -148,12 +145,15 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     : 'eth0 – Public';
 
   // This should determine alignment based on device count associated w/ a config
-  const determineAlignment = (config: Config) =>
-    Object.keys(config.devices).length > 3;
+  const hasManyConfigs = validDevices.length > 3;
 
   return (
     <TableRow
-      className={determineAlignment(config) ? classes.alignTop : undefined}
+      className={
+        hasManyConfigs
+          ? `${classes.alignTop} ${classes.cellBase}`
+          : classes.cellBase
+      }
       key={config.id}
       data-qa-config={config.label}
     >

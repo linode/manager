@@ -97,13 +97,13 @@ const styles = (theme: Theme) =>
       fontWeight: 'bold'
     },
     labelColumn: {
-      width: '20%'
+      width: '18%'
     },
     vmColumn: {
       width: '10%'
     },
     kernelColumn: {
-      width: '20%'
+      width: '23%'
     },
     interfacesColumn: {
       width: '20%'
