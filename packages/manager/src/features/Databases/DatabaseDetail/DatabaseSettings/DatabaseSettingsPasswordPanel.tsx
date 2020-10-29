@@ -9,7 +9,7 @@ import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import PasswordInput from 'src/components/PasswordInput';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useDatabases from 'src/hooks/useDatabases';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
   databaseID: number;
@@ -27,10 +27,9 @@ export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = props => {
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
 
-  const hasErrorFor = getAPIErrorFor({}, errors);
-  const passwordError = hasErrorFor('password');
-
-  const genericError = hasErrorFor('none');
+  const errorMap = getErrorMap(['root_password'], errors);
+  const passwordError = errorMap['root_password'];
+  const genericError = errorMap.none;
 
   const changePassword = () => {
     setSubmitting(true);
@@ -48,9 +47,12 @@ export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = props => {
       });
   };
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
+  const handlePasswordChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(e.target.value);
+    },
+    []
+  );
 
   return (
     <ExpansionPanel
@@ -79,7 +81,7 @@ export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = props => {
           onChange={handlePasswordChange}
           errorText={passwordError}
           errorGroup="database-settings-password"
-          error={Boolean(errors)}
+          error={Boolean(passwordError)}
           data-qa-password-input
         />
       </React.Suspense>
