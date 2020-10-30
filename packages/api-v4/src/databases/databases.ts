@@ -17,6 +17,7 @@ import {
 import {
   CreateDatabasePayload,
   Database,
+  DatabaseBackup,
   DatabaseConnection,
   DatabaseType,
   UpdateDatabasePayload
@@ -61,15 +62,29 @@ export const getDatabaseConnection = (databaseID: number) =>
   );
 
 /**
+ * getDatabaseBackups
+ *
+ * Return backups information for a database
+ *
+ */
+export const getDatabaseBackups = (databaseID: number) =>
+  Request<Page<DatabaseBackup>>(
+    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/backups`),
+    setMethod('GET')
+  );
+
+/**
  * getMySQLTypes
  *
  * Return a paginated list of available plans/types for MySQL databases
  *
  */
-export const getMySQLTypes = () =>
+export const getMySQLTypes = (params?: any, filters?: any) =>
   Request<Page<DatabaseType>>(
     setURL(`${API_ROOT}/databases/mysql/types`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
   );
 
 /**

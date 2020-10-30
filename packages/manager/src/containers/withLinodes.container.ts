@@ -4,8 +4,9 @@ import { path } from 'ramda';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
+import { shallowExtendLinodes } from 'src/store/linodes/linodes.helpers';
 import { State } from 'src/store/linodes/linodes.reducer';
-import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
+import { ShallowExtendedLinode } from 'src/store/linodes/types';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
@@ -17,7 +18,7 @@ export interface DispatchProps {
 export interface StateProps {
   linodesError?: APIError[];
   linodesLoading: State['loading'];
-  linodesData: LinodeWithMaintenanceAndDisplayStatus[];
+  linodesData: ShallowExtendedLinode[];
   linodesLastUpdated: State['lastUpdated'];
   linodesResults: State['results'];
 }
@@ -61,11 +62,21 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
         lastUpdated,
         results
       } = state.__resources.linodes;
+
       const linodes = Object.values(itemsById);
+      const notifications = state.__resources.notifications.data ?? [];
+      const { events } = state.events;
+
+      const shallowExtendedLinodes = shallowExtendLinodes(
+        linodes,
+        notifications,
+        events
+      );
+
       if (mapStateToProps) {
         return mapStateToProps(
           ownProps,
-          linodes,
+          shallowExtendedLinodes,
           loading,
           path(['read'], error)
         );
@@ -74,7 +85,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       return {
         linodesError: path(['read'], error),
         linodesLoading: loading,
-        linodesData: linodes,
+        linodesData: shallowExtendedLinodes,
         linodesResults: results,
         linodesLastUpdated: lastUpdated
       };

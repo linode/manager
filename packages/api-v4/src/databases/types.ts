@@ -1,5 +1,5 @@
 export interface DatabaseType {
-  id: number;
+  id: string;
   label: string;
   price: {
     hourly: number;
@@ -24,10 +24,10 @@ export type DatabaseBackupStatus =
   | 'unknown';
 
 export interface DatabaseBackup {
-  id: number;
+  id: string;
   status: DatabaseBackupStatus;
   created: string;
-  finished: string;
+  finished: string | null;
 }
 
 export interface DatabaseMaintenanceSchedule {

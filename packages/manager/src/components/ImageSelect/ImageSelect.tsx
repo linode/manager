@@ -5,21 +5,30 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
-import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import { GroupType, Item } from 'src/components/EnhancedSelect';
+// import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import { useImages } from 'src/hooks/useImages';
+// import { useImages } from 'src/hooks/useImages';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+// import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+// import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { distroIcons } from './icons';
-import ImageOption from './ImageOption';
+// import ImageOption from './ImageOption';
+import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
+import TextField from '../TextField';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(3)
+  },
+  dropdownIcon: {
+    color: '#aaa !important',
+    opacity: 0.5,
+    fontSize: '28px !important',
+    margin: '0 8px'
   }
 }));
 
@@ -115,25 +124,23 @@ export const imagesToGroupedItems = (images: Image[]) => {
 export const ImageSelect: React.FC<Props> = props => {
   const {
     disabled,
-    error,
+    // error,
     handleSelectImage,
     images,
-    selectedImageID,
     title,
-    variant,
-    classNames,
-    ...reactSelectProps
+    variant
+    //classNames
   } = props;
   const classes = useStyles();
 
   const { _loading } = useReduxLoad(['images']);
 
   // Check for request errors in Redux
-  const { images: _images } = useImages();
-  const imageError = _images?.error?.read
-    ? getAPIErrorOrDefault(_images.error.read, 'Unable to load Images')[0]
-        .reason
-    : undefined;
+  // const { images: _images } = useImages();
+  // const imageError = _images?.error?.read
+  //   ? getAPIErrorOrDefault(_images.error.read, 'Unable to load Images')[0]
+  //       .reason
+  //   : undefined;
 
   const filteredImages = images.filter(thisImage => {
     switch (variant) {
@@ -147,15 +154,15 @@ export const ImageSelect: React.FC<Props> = props => {
     }
   });
 
-  const options = imagesToGroupedItems(filteredImages);
+  // const options = imagesToGroupedItems(filteredImages);
 
-  const onChange = (selection: ImageItem | null) => {
-    if (selection === null) {
-      return handleSelectImage(undefined);
-    }
+  // const onChange = (event: React.ChangeEvent, value: string) => {
+  //   if (value === null) {
+  //     return handleSelectImage(undefined);
+  //   }
 
-    return handleSelectImage(selection.value);
-  };
+  //   return handleSelectImage(value);
+  // };
 
   return (
     <>
@@ -167,21 +174,27 @@ export const ImageSelect: React.FC<Props> = props => {
           <Grid container item direction="column">
             <Grid container item direction="row">
               <Grid item xs={12}>
-                <Select
-                  disabled={disabled}
-                  label="Images"
-                  isLoading={_loading}
-                  placeholder="Choose an image"
-                  options={options}
-                  onChange={onChange}
-                  value={getSelectedOptionFromGroupedOptions(
-                    selectedImageID || '',
-                    options
+                <Autocomplete
+                  id="image-select"
+                  options={filteredImages as any}
+                  groupBy={(imagesToGroupedItems: any) =>
+                    imagesToGroupedItems.vendor
+                  }
+                  onChange={(e, v) => handleSelectImage(v.id)}
+                  getOptionLabel={(option: Image) => option.label}
+                  renderInput={(params: any) => (
+                    <TextField
+                      {...params}
+                      label="Images"
+                      placeholder="Select an Image"
+                    />
                   )}
-                  errorText={error || imageError}
-                  components={{ Option: ImageOption, SingleValue }}
-                  {...reactSelectProps}
-                  className={classNames}
+                  style={{ width: 415 }}
+                  disabled={disabled}
+                  loading={_loading}
+                  popupIcon={
+                    <KeyboardArrowDown className={classes.dropdownIcon} />
+                  }
                 />
               </Grid>
             </Grid>

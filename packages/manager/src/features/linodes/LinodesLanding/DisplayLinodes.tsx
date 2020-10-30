@@ -11,13 +11,13 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import useFlags from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { ExtendedLinode } from '../LinodesDetail/types';
 import TableWrapper from './TableWrapper';
 import TableWrapper_CMR from './TableWrapper_CMR';
 import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
+import { ShallowExtendedLinode } from 'src/store/linodes/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
@@ -45,7 +45,7 @@ interface Props {
   ) => void;
   display: 'grid' | 'list';
   component: any;
-  data: ExtendedLinode[];
+  data: ShallowExtendedLinode[];
   someLinodesHaveMaintenance: boolean;
   toggleLinodeView: () => 'grid' | 'list';
   toggleGroupLinodes: () => boolean;
@@ -78,7 +78,7 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
   const numberOfLinodesWithMaintenance = data.reduce((acc, thisLinode) => {
-    if (thisLinode.maintenance) {
+    if (thisLinode._maintenance) {
       acc++;
     }
     return acc;

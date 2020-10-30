@@ -643,6 +643,20 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         }
       },
+      MuiAutocomplete: {
+        inputRoot: {
+          padding: '2px 8px',
+          cursor: 'pointer'
+        },
+        groupLabel: {
+          textTransform: 'initial',
+          fontSize: '1rem',
+          color: primaryColors.headline,
+          fontFamily: primaryFonts.bold,
+          paddingLeft: 10,
+          paddingRight: 10
+        }
+      },
       MuiButtonBase: {
         root: {
           fontSize: '1rem'

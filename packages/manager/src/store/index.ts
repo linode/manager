@@ -32,6 +32,14 @@ import clusters, {
   defaultState as defaultClustersState,
   State as ClustersState
 } from 'src/store/clusters/clusters.reducer';
+import databases, {
+  defaultState as defaultDatabasesState,
+  State as DatabasesState
+} from 'src/store/databases/databases.reducer';
+import databaseTypes, {
+  defaultState as defaultDatabaseTypesState,
+  State as DatabaseTypesState
+} from 'src/store/databases/types.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState
@@ -86,6 +94,10 @@ import linodeDisks, {
   defaultState as defaultLinodeDisksState,
   State as LinodeDisksState
 } from 'src/store/linodes/disk/disk.reducer';
+import interfaces, {
+  defaultState as defaultInterfacesState,
+  State as InterfacesState
+} from 'src/store/linodes/interfaces/interfaces.reducer';
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, {
   defaultState as defaultLinodesState,
@@ -186,8 +198,11 @@ const __resourcesDefaultState = {
   account: defaultAccountState,
   accountManagement: defaultAccountManagementState,
   accountSettings: defaultAccountSettingsState,
+  databases: defaultDatabasesState,
+  databaseTypes: defaultDatabaseTypesState,
   domains: defaultDomainsState,
   images: defaultImagesState,
+  interfaces: defaultInterfacesState,
   kubernetes: defaultKubernetesState,
   managed: defaultManagedState,
   managedIssues: defaultManagedIssuesState,
@@ -211,8 +226,11 @@ export interface ResourcesState {
   account: AccountState;
   accountManagement: AccountManagementState;
   accountSettings: AccountSettingsState;
+  databases: DatabasesState;
+  databaseTypes: DatabaseTypesState;
   domains: DomainsState;
   images: ImagesState;
+  interfaces: InterfacesState;
   kubernetes: KubernetesState;
   managed: ManagedState;
   managedIssues: ManagedIssuesState;
@@ -253,7 +271,6 @@ export interface ApplicationState {
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
   mockFeatureFlags: MockFeatureFlagState;
-  vlans: VlanState;
 }
 
 export const defaultState: ApplicationState = {
@@ -276,8 +293,7 @@ export const defaultState: ApplicationState = {
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
-  mockFeatureFlags: defaultMockFeatureFlagState,
-  vlans: defaultVLANState
+  mockFeatureFlags: defaultMockFeatureFlagState
 };
 
 /**
@@ -287,8 +303,11 @@ const __resources = combineReducers({
   account,
   accountManagement,
   accountSettings,
+  databases,
+  databaseTypes,
   domains,
   images,
+  interfaces,
   kubernetes,
   nodePools,
   linodes,
@@ -328,8 +347,7 @@ const reducers = combineReducers<ApplicationState>({
   globalErrors,
   longviewClients: longview,
   longviewStats,
-  mockFeatureFlags,
-  vlans
+  mockFeatureFlags
 });
 
 const enhancers = compose(

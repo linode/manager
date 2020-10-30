@@ -46,7 +46,7 @@ export const Notifications: React.FC<{}> = _ => {
     statusNotifications,
     support
   } = useNotificationData();
-  const { _isManagedAccount } = useAccountManagement();
+  const { _isManagedAccount, _hasAccountAccess } = useAccountManagement();
 
   const mostRecentInvoiceRequest = useAPIRequest<number | undefined>(
     () =>
@@ -59,13 +59,15 @@ export const Notifications: React.FC<{}> = _ => {
   return (
     <>
       <AbuseTicketBanner />
-      <Hidden smDown>
-        <BillingSummary
-          balance={balance}
-          balanceUninvoiced={balanceUninvoiced}
-          mostRecentInvoiceId={mostRecentInvoiceRequest.data}
-        />
-      </Hidden>
+      {_hasAccountAccess && (
+        <Hidden smDown>
+          <BillingSummary
+            balance={balance}
+            balanceUninvoiced={balanceUninvoiced}
+            mostRecentInvoiceId={mostRecentInvoiceRequest.data}
+          />
+        </Hidden>
+      )}
       {_isManagedAccount && <ManagedDashboardCard />}
       <Paper className={classes.root}>
         <Grid

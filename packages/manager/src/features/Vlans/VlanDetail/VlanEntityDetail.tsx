@@ -241,7 +241,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
               [classes.listItemLast]: true
             })}
           >
-            {id}
+            ID {id}
           </Typography>
           <Hidden xsDown>
             <Typography className={classes.created}>

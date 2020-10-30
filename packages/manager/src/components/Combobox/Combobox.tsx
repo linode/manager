@@ -8,10 +8,10 @@ interface Props {
   label: string;
   placeholder: string;
   options: any[];
-  groups?: () => string;
+  groupBy?: () => any;
   onChange?: () => void;
-  loading: boolean;
-  disabled: boolean;
+  loading?: boolean;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props;
@@ -22,7 +22,7 @@ export const Combobox: React.FC<CombinedProps> = props => {
     label,
     placeholder,
     options,
-    groups,
+    groupBy,
     onChange,
     disabled,
     loading
@@ -32,16 +32,11 @@ export const Combobox: React.FC<CombinedProps> = props => {
     <Autocomplete
       id={id}
       options={options}
-      groupBy={groups}
+      groupBy={groupBy}
       onChange={onChange}
       getOptionLabel={option => option.label}
       renderInput={(params: any) => (
-        <TextField
-          {...params}
-          label={label}
-          placeholder={placeholder}
-          variant="outlined"
-        />
+        <TextField {...params} label={label} placeholder={placeholder} />
       )}
       style={{ width: 415 }}
       disabled={disabled}
