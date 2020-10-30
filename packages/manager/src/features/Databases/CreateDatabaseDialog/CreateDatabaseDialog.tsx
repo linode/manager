@@ -186,6 +186,18 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     formik.setFieldValue('tags', tagStrings);
   };
 
+  // Preselect random maintenance window for users that they can choose to clear/change if desired (if maintenance window not specified, a random one is assigned on backend)
+  const generateRandomMaintenanceSelection = (
+    optionsList: SelectMenuOptions[],
+    formikFieldToSet?: string
+  ) => {
+    const randomSelection = Math.floor(Math.random() * optionsList.length - 1);
+
+    // @todo: Set the Formik value in here also.
+
+    return optionsList[randomSelection];
+  };
+
   /** Reset errors and state when the modal opens */
   React.useEffect(() => {
     if (context.isOpen) {
@@ -313,6 +325,9 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
               <FormControl fullWidth className={classes.chooseDay}>
                 <Select
                   options={daySelection}
+                  defaultValue={generateRandomMaintenanceSelection(
+                    daySelection
+                  )}
                   onChange={handleDaySelection}
                   name="maintenanceDay"
                   id="maintenanceDay"
@@ -328,6 +343,9 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
               <FormControl fullWidth className={classes.chooseTime}>
                 <Select
                   options={windowSelection}
+                  defaultValue={generateRandomMaintenanceSelection(
+                    windowSelection
+                  )}
                   onChange={handleWindowSelection}
                   name="maintenanceWindow"
                   id="maintenanceWindow"
@@ -379,3 +397,8 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
 };
 
 export default React.memo(CreateDatabaseDialog);
+
+interface SelectMenuOptions {
+  label: string;
+  value: string;
+}
