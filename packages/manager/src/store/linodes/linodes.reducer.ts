@@ -1,3 +1,4 @@
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { Reducer } from 'redux';
 import {
   addMany,
@@ -22,15 +23,10 @@ import {
   upsertLinode
 } from './linodes.actions';
 
-import { LinodeWithMaintenanceAndDisplayStatus } from './types';
-
 /**
  * State
  */
-export type State = MappedEntityState2<
-  LinodeWithMaintenanceAndDisplayStatus,
-  EntityError
->;
+export type State = MappedEntityState2<Linode, EntityError>;
 
 export const defaultState: State = createDefaultState();
 
