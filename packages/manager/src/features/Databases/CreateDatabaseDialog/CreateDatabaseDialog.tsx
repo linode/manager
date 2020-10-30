@@ -106,11 +106,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   }));
 
   const handleDaySelection = (item: Item) => {
-    if (item) {
-      formik.setFieldValue('maintenance_schedule.day', item.value);
-    } else {
-      formik.setFieldValue('maintenance_schedule.day', undefined);
-    }
+    formik.setFieldValue('maintenance_schedule.day', item?.value);
   };
 
   // Maintenance Window
@@ -139,11 +135,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   );
 
   const handleWindowSelection = (item: Item) => {
-    if (item) {
-      formik.setFieldValue('maintenance_schedule.window', item.value);
-    } else {
-      formik.setFieldValue('maintenance_schedule.window', undefined);
-    }
+    formik.setFieldValue('maintenance_schedule.window', item?.value);
   };
 
   const { databaseTypes } = useDatabaseTypes();
@@ -269,7 +261,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
         </div>
         <div className={classes.formSection} data-testid="region-select">
           <RegionSelect
-            label={'Region'}
+            label={'Region (required)'}
             placeholder={' '}
             errorText={formik.errors.region}
             handleSelection={handleRegionSelect}
@@ -290,13 +282,14 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
         <div className={classes.formSection}>
           <PasswordInput
             name="password"
-            label="Root Password"
+            label="MySQL Password"
             type="password"
             data-qa-add-password
             value={formik.values.root_password}
             error={!!formik.errors.root_password}
             errorText={formik.errors.root_password}
             onChange={handlePasswordChange}
+            required
           />
         </div>
         <div
