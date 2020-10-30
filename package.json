@@ -28,7 +28,7 @@
     "up": "yarn install:all && yarn build:sdk && yarn start:all",
     "start:all": "concurrently \"yarn workspace @linode/api-v4 start\" \"yarn workspace linode-manager start\"",
     "clean": "rm -rf node_modules && rm -rf packages/@linode/api-v4/node_modules && rm -rf packages/manager/node_modules",
-    "test": "yarn workspace linode-manager test",
+    "test": "yarn workspace linode-manager test --maxWorkers=4",
     "selenium:install": "yarn workspace linode-manager selenium:install",
     "storybook": "yarn workspace linode-manager storybook",
     "storybook:e2e": "yarn workspace linode-manager storybook:e2e",

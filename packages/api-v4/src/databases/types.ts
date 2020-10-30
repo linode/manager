@@ -24,7 +24,7 @@ export type DatabaseBackupStatus =
   | 'unknown';
 
 export interface DatabaseBackup {
-  id: number;
+  id: string;
   status: DatabaseBackupStatus;
   created: string;
   finished: string;
