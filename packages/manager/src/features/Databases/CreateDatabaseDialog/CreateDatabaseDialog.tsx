@@ -76,9 +76,13 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   const timezone = useTimezone();
   const { createDatabase } = useDatabases();
 
-  const regionsWithDatabases: ExtendedRegion[] = regions.entities
-    //   .filter(thisRegion => thisRegion.capabilities.includes('Databases')) // temporarily commented out until Capabilities is squared away
-    .map(r => ({ ...r, display: dcDisplayNames[r.id] }));
+  const regionsWithDatabases: ExtendedRegion[] = React.useMemo(() => {
+    return (
+      regions.entities
+        //   .filter(thisRegion => thisRegion.capabilities.includes('Databases')) // temporarily commented out until Capabilities is squared away
+        .map(r => ({ ...r, display: dcDisplayNames[r.id] }))
+    );
+  }, [regions]);
 
   const handleRegionSelect = (regionID: string) => {
     formik.setFieldValue('region', regionID);
@@ -127,11 +131,15 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     return windows;
   };
 
-  const maintenanceWindowSelectOptions = initWindows(timezone);
+  const maintenanceWindowSelectOptions = React.useMemo(
+    () => initWindows(timezone),
+    [timezone]
+  );
   const maintenanceWindowHelperText =
     'Select the time of day you’d prefer maintenance to occur. On Standard Availability plans, there may be downtime during this window.';
-  const windowSelection = structureOptionsForSelect(
-    maintenanceWindowSelectOptions
+  const windowSelection = React.useMemo(
+    () => structureOptionsForSelect(maintenanceWindowSelectOptions),
+    [maintenanceWindowSelectOptions]
   );
 
   const handleWindowSelection = (item: Item) => {
