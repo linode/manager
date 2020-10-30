@@ -286,6 +286,7 @@ const DatabaseLanding: React.FC<{}> = _ => {
       />
       <DeletionDialog
         label={dialog.entityLabel ?? ''}
+        entity="database"
         error={dialog.error}
         open={dialog.isOpen}
         loading={dialog.isLoading}

@@ -267,6 +267,7 @@ const Contacts: React.FC<CombinedProps> = props => {
         <DeletionDialog
           open={dialog.isOpen}
           label={dialog.entityLabel || ''}
+          entity="contact"
           loading={dialog.isLoading}
           error={dialog.error}
           onClose={closeDialog}
