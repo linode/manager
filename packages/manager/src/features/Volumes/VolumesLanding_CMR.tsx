@@ -114,7 +114,7 @@ const volumeHeaders = [
     label: 'Size',
     dataColumn: 'size',
     sortable: true,
-    widthPercent: 20
+    widthPercent: 5
   },
   {
     label: 'File System Path',
@@ -127,7 +127,7 @@ const volumeHeaders = [
     label: 'Attached To',
     dataColumn: 'Attached To',
     sortable: false,
-    widthPercent: 5
+    widthPercent: 20
   },
   {
     label: 'Action Menu',
