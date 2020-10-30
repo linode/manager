@@ -1,5 +1,6 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import { DeepExtendedLinode } from 'src/hooks/useExtendedLinode';
 import { createHOCForConsumer } from 'src/requestableContext';
 import {
   CreateLinodeConfigResponse,
@@ -37,7 +38,6 @@ import {
 } from 'src/store/linodes/disk/disk.requests';
 import { updateLinode as _updateLinode } from 'src/store/linodes/linode.requests';
 import { ThunkDispatch } from 'src/store/types';
-import { ExtendedLinode } from './types';
 
 export type CreateLinodeConfig = (
   data: LinodeConfigCreateFields
@@ -79,7 +79,7 @@ export type UpdateLinodeDisk = (
 export type UpdateLinode = (data: Partial<Linode>) => Promise<Linode>;
 
 export interface LinodeDetailContext {
-  linode: ExtendedLinode;
+  linode: DeepExtendedLinode;
 
   /** Linode Actions */
   updateLinode: (data: Partial<Linode>) => Promise<Linode>;
@@ -105,7 +105,7 @@ export interface LinodeDetailContext {
  * required Linode ID.
  */
 export const linodeDetailContextFactory = (
-  linode: ExtendedLinode,
+  linode: DeepExtendedLinode,
   dispatch: ThunkDispatch
 ): LinodeDetailContext => {
   const { id: linodeId } = linode;
