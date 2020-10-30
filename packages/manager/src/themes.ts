@@ -469,6 +469,7 @@ const darkThemeOptions = {
     MuiFormHelperText: {
       root: {
         color: '#c9cacb',
+        lineHeight: '1.2rem',
         '&$error': {
           color: '#ca0813'
         }
