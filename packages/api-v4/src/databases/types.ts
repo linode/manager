@@ -27,7 +27,7 @@ export interface DatabaseBackup {
   id: string;
   status: DatabaseBackupStatus;
   created: string;
-  finished: string;
+  finished: string | null;
 }
 
 export interface DatabaseMaintenanceSchedule {

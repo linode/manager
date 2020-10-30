@@ -26,12 +26,13 @@ const BackupTableRow: React.FC<Props> = props => {
         <DateTimeDisplay value={backup.created} />
       </TableCell>
       <TableCell>
-        {formatDuration(
-          Duration.fromMillis(
-            parseAPIDate(backup.finished).toMillis() -
-              parseAPIDate(backup.created).toMillis()
-          )
-        )}
+        {backup.finished &&
+          formatDuration(
+            Duration.fromMillis(
+              parseAPIDate(backup.finished).toMillis() -
+                parseAPIDate(backup.created).toMillis()
+            )
+          )}
       </TableCell>
       <TableCell>
         <DatabaseBackupActionMenu backup={backup} />
