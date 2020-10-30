@@ -84,7 +84,7 @@ export const DisplaySettings: React.FC<WithNotifications> = props => {
               ? 'Restricted users cannot update their username. Please contact an account administrator.'
               : undefined
           }
-          cb={requestProfile}
+          successCallback={requestProfile}
         />
       </Paper>
 
@@ -94,7 +94,7 @@ export const DisplaySettings: React.FC<WithNotifications> = props => {
           label="Email"
           submitForm={updateEmail}
           initialValue={profile?.data?.email}
-          cb={() => {
+          successCallback={() => {
             // If there's a "user_email_bounce" notification for this user, and
             // the user has just updated their email, re-request notifications to
             // potentially clear the email bounce notification.

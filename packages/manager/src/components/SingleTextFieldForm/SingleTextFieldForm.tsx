@@ -15,7 +15,7 @@ export interface Props {
   tooltipText?: string;
   successMessage?: string;
   errorMessage?: string;
-  cb?: () => void;
+  successCallback?: () => void;
 }
 
 export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = props => {
@@ -27,7 +27,7 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = props => {
     tooltipText,
     successMessage,
     errorMessage,
-    cb,
+    successCallback,
     initialValue,
     ...textFieldProps
   } = props;
@@ -50,8 +50,8 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = props => {
       .then(() => {
         setSubmitting(false);
         setSuccess(true);
-        if (cb) {
-          cb();
+        if (successCallback) {
+          successCallback();
         }
       })
       .catch(err => {
