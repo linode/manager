@@ -256,7 +256,16 @@ export const handlers = [
       percent_complete: 15,
       entity: { type: 'linode', id: 999, label: 'linode-1' }
     });
-    return res.once(ctx.json(makeResourcePage(events)));
+    const diskResize = eventFactory.build({
+      action: 'disk_resize',
+      percent_complete: 75,
+      secondary_entity: {
+        type: 'disk',
+        id: 1,
+        label: 'my-disk'
+      }
+    });
+    return res.once(ctx.json(makeResourcePage([...events, diskResize])));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });

@@ -4,6 +4,7 @@ import BarPercent from 'src/components/BarPercent/BarPercent_CMR';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
+import useEvents from 'src/hooks/useEvents';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -22,6 +23,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&.MuiTableCell-root': {
       paddingRight: 0
     }
+  },
+  progressBar: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center'
+  },
+  bar: {
+    paddingLeft: theme.spacing(),
+    width: 250
   }
 }));
 
@@ -38,6 +48,7 @@ interface Props {
 
 export const LinodeDiskRow: React.FC<Props> = props => {
   const classes = useStyles();
+  const { inProgressEvents } = useEvents();
   const {
     disk,
     linodeId,
@@ -48,7 +59,9 @@ export const LinodeDiskRow: React.FC<Props> = props => {
     readOnly
   } = props;
 
-  const isResizing = true;
+  const resizeEvent = inProgressEvents.find(
+    thisEvent => thisEvent.secondary_entity?.id === disk.id
+  );
 
   return (
     <TableRow data-qa-disk={disk.label}>
@@ -56,10 +69,16 @@ export const LinodeDiskRow: React.FC<Props> = props => {
       <TableCell className={classes.diskType}>{disk.filesystem}</TableCell>
 
       <TableCell className={classes.diskSize}>
-        {isResizing ? (
-          <div>
-            Resizing ({25}%)
-            <BarPercent max={100} value={100 ?? 0} rounded narrow />
+        {Boolean(resizeEvent) ? (
+          <div className={classes.progressBar}>
+            Resizing ({resizeEvent?.percent_complete}%)
+            <BarPercent
+              className={classes.bar}
+              max={100}
+              value={resizeEvent?.percent_complete ?? 0}
+              rounded
+              narrow
+            />
           </div>
         ) : (
           `${disk.size} MB`
