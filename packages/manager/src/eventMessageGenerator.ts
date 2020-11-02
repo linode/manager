@@ -2,6 +2,7 @@ import { Event } from '@linode/api-v4/lib/account';
 import { path } from 'ramda';
 import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -635,11 +636,21 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   }
 };
 
+export const formatEventWithAPIMessage = (e: Event) => {
+  return `${capitalizeAllWords(e.action.replace('_', ' '))}: ${e.message}`;
+};
+
 export default (e: Event): string => {
   const fn = path<EventMessageCreator>(
     [e.action, e.status],
     eventMessageCreators
   );
+
+  if (e.message) {
+    // If the API has specified a message for this event, rely on that instead of
+    // our custom logic.
+    return formatEventWithAPIMessage(e);
+  }
 
   /** we couldn't find the event in our list above */
   if (!fn) {
