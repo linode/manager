@@ -121,10 +121,10 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
     </Button>
   );
 
-  const _tooltipCopy = selected
+  const _tooltipCopy = disabled
     ? readOnly
       ? 'You do not have permission to modify this Linode.'
-      : tooltipCopy[selected]
+      : tooltipCopy[selected ?? '']
     : null;
 
   return (
