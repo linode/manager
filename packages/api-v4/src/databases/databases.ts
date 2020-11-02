@@ -17,6 +17,7 @@ import {
 import {
   CreateDatabasePayload,
   Database,
+  DatabaseBackup,
   DatabaseConnection,
   DatabaseType,
   UpdateDatabasePayload
@@ -57,6 +58,18 @@ export const getDatabase = (databaseID: number) =>
 export const getDatabaseConnection = (databaseID: number) =>
   Request<DatabaseConnection>(
     setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/connection`),
+    setMethod('GET')
+  );
+
+/**
+ * getDatabaseBackups
+ *
+ * Return backups information for a database
+ *
+ */
+export const getDatabaseBackups = (databaseID: number) =>
+  Request<Page<DatabaseBackup>>(
+    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/backups`),
     setMethod('GET')
   );
 

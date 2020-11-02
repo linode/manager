@@ -646,7 +646,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
           {ipv4.length > 3 && (
             <>
               ... plus{' '}
-              <Link to={`linodes/${linodeId}/networking`}>
+              <Link to={`/linodes/${linodeId}/networking`}>
                 {ipv4.length - 3} more
               </Link>{' '}
             </>

@@ -1,5 +1,6 @@
 import { Config, Disk, LinodeInterface } from '@linode/api-v4/lib/linodes';
 import { VLAN } from '@linode/api-v4/lib/vlans';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'src/components/core/styles';
@@ -11,19 +12,26 @@ import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu_CMR
 
 const useStyles = makeStyles(() => ({
   actionInner: {
-    padding: 0,
+    padding: '0 !important',
     '&.MuiTableCell-root': {
       paddingRight: 0
     }
   },
   interfaceList: {
     listStyleType: 'none',
-    padding: `4px 0 4px 0`,
-    margin: 0
+    margin: 0,
+    paddingLeft: 0
   },
   interfaceListItem: {
-    paddingTop: 2,
-    paddingBottom: 2
+    paddingBottom: 4
+  },
+  alignTop: {
+    verticalAlign: 'top'
+  },
+  cellBase: {
+    '& td': {
+      padding: 8
+    }
   }
 }));
 
@@ -33,6 +41,7 @@ interface Props {
   linodeMemory: number;
   readOnly: boolean;
   linodeDisks: Disk[];
+  linodeVolumes: Volume[];
   linodeKernel: string;
   linodeInterfaces: LinodeInterface[];
   linodeIPs: string[];
@@ -55,6 +64,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     linodeDisks,
     linodeKernel,
     linodeIPs,
+    linodeVolumes,
     onBoot,
     onEdit,
     onDelete,
@@ -65,19 +75,42 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
   } = props;
 
   const classes = useStyles();
+  const validDevices = React.useMemo(
+    () =>
+      Object.keys(config.devices)
+        .map(thisDevice => {
+          const device = config.devices[thisDevice];
+          let label: string | null = null;
+          if (device?.disk_id) {
+            label =
+              linodeDisks.find(
+                thisDisk => thisDisk.id === config.devices[thisDevice]?.disk_id
+              )?.label ?? `disk-${device.disk_id}`;
+          } else if (device?.volume_id) {
+            label =
+              linodeVolumes.find(
+                thisVolume =>
+                  thisVolume.id === config.devices[thisDevice]?.volume_id
+              )?.label ?? `volume-${device.volume_id}`;
+          }
 
-  const [rootDeviceLabel, setRootDeviceLabel] = React.useState<string>('');
+          if (!label) {
+            return undefined;
+          }
+          return (
+            <li key={thisDevice} className={classes.interfaceListItem}>
+              /dev/{thisDevice} - {label}
+            </li>
+          );
+        })
+        .filter(Boolean),
+    [linodeVolumes, linodeDisks, classes.interfaceListItem, config.devices]
+  );
 
-  React.useEffect(() => {
-    const rootDevice = config.root_device;
-    const device = rootDevice.slice(-3); // Isolate the 'sda', 'sdc', etc. piece
-
-    const deviceId = config.devices[device]?.disk_id;
-
-    const matchingDisk = linodeDisks.find(disk => disk.id === deviceId);
-    const label = matchingDisk ? ` – ${matchingDisk.label}` : '';
-    setRootDeviceLabel(`${rootDevice}${label}`);
-  }, [config, linodeDisks]);
+  const deviceLabels = React.useMemo(
+    () => <ul className={classes.interfaceList}>{validDevices}</ul>,
+    [classes.interfaceList, validDevices]
+  );
 
   const hasPrivateIP = linodeIPs.some(thisIP => privateIPRegex.test(thisIP));
 
@@ -111,8 +144,19 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
     ? 'eth0 – Public, Private'
     : 'eth0 – Public';
 
+  // This should determine alignment based on device count associated w/ a config
+  const hasManyConfigs = validDevices.length > 3;
+
   return (
-    <TableRow key={config.id} data-qa-config={config.label}>
+    <TableRow
+      className={
+        hasManyConfigs
+          ? `${classes.alignTop} ${classes.cellBase}`
+          : classes.cellBase
+      }
+      key={config.id}
+      data-qa-config={config.label}
+    >
       <TableCell>{config.label}</TableCell>
       <TableCell>
         {config.virt_mode === 'fullvirt'
@@ -120,7 +164,7 @@ export const ConfigRow: React.FC<CombinedProps> = props => {
           : 'Paravirtualization'}
       </TableCell>
       <TableCell>{linodeKernel}</TableCell>
-      <TableCell>{rootDeviceLabel}</TableCell>
+      <TableCell>{deviceLabels}</TableCell>
       {vlansEnabled ? (
         <TableCell>
           {!isEmpty(config.interfaces) ? InterfaceList : defaultInterfaceLabel}
