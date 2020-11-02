@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center'
   },
   labelCell: {
-    width: '40%',
+    width: '60%',
     minWidth: 200,
     paddingLeft: 10
   }
