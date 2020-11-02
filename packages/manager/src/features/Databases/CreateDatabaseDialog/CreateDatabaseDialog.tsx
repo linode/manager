@@ -95,6 +95,17 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     });
   };
 
+  // Function for selecting random maintenance window for users that they can choose to clear/change if desired (if maintenance window not specified, a random one is assigned on backend)
+  const generateRandomMaintenanceSelection = (
+    optionsList: SelectMenuOptions[]
+  ) => {
+    const randomSelection = Math.floor(Math.random() * optionsList.length - 1);
+
+    return randomSelection >= 0
+      ? optionsList[randomSelection].value
+      : optionsList[0].value;
+  };
+
   // Maintenance Day
   const daySelection = [
     'Sunday',
@@ -186,22 +197,38 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     formik.setFieldValue('tags', tagStrings);
   };
 
-  // Preselect random maintenance window for users that they can choose to clear/change if desired (if maintenance window not specified, a random one is assigned on backend)
-  const generateRandomMaintenanceSelection = (
-    optionsList: SelectMenuOptions[],
-    formikFieldToSet?: string
-  ) => {
-    const randomSelection = Math.floor(Math.random() * optionsList.length - 1);
+  const [randomMaintenanceDay, setRandomMaintenanceDay] = React.useState<
+    string | undefined
+  >(undefined);
+  const [randomMaintenanceWindow, setRandomMaintenanceWindow] = React.useState<
+    string | undefined
+  >(undefined);
 
-    // @todo: Set the Formik value in here also.
+  React.useEffect(() => {
+    if (!randomMaintenanceDay && !randomMaintenanceWindow) {
+      const randomDay = generateRandomMaintenanceSelection(daySelection);
+      const randomWindow = generateRandomMaintenanceSelection(windowSelection);
 
-    return optionsList[randomSelection];
-  };
+      setRandomMaintenanceDay(randomDay);
+      formik.setFieldValue('maintenance_schedule.day', randomDay);
+
+      setRandomMaintenanceWindow(randomWindow);
+      formik.setFieldValue('maintenance_schedule.window', randomWindow);
+    }
+  }, [
+    daySelection,
+    windowSelection,
+    randomMaintenanceDay,
+    randomMaintenanceWindow,
+    formik
+  ]);
 
   /** Reset errors and state when the modal opens */
   React.useEffect(() => {
     if (context.isOpen) {
       resetForm();
+      setRandomMaintenanceDay(undefined);
+      setRandomMaintenanceWindow(undefined);
     }
   }, [context.isOpen, resetForm]);
 
@@ -325,8 +352,8 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
               <FormControl fullWidth className={classes.chooseDay}>
                 <Select
                   options={daySelection}
-                  defaultValue={generateRandomMaintenanceSelection(
-                    daySelection
+                  defaultValue={daySelection.find(
+                    ({ value }) => value === randomMaintenanceDay
                   )}
                   onChange={handleDaySelection}
                   name="maintenanceDay"
@@ -343,8 +370,8 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
               <FormControl fullWidth className={classes.chooseTime}>
                 <Select
                   options={windowSelection}
-                  defaultValue={generateRandomMaintenanceSelection(
-                    windowSelection
+                  defaultValue={windowSelection.find(
+                    ({ value }) => value === randomMaintenanceWindow
                   )}
                   onChange={handleWindowSelection}
                   name="maintenanceWindow"
