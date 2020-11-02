@@ -67,11 +67,6 @@ export const LOG_PERFORMANCE_METRICS =
   !isProductionBuild &&
   process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
 
-// Features
-
-export const isKubernetesEnabledForEnvironment =
-  process.env.REACT_APP_KUBERNETES_ENABLED === 'true';
-
 export const DISABLE_EVENT_THROTTLE =
   Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
 
