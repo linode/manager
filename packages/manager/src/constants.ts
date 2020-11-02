@@ -68,8 +68,6 @@ export const LOG_PERFORMANCE_METRICS =
   process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
 
 // Features
-export const isObjectStorageEnabledForEnvironment =
-  process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED === 'true';
 
 export const isKubernetesEnabledForEnvironment =
   process.env.REACT_APP_KUBERNETES_ENABLED === 'true';
