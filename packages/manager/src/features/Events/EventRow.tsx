@@ -21,9 +21,7 @@ import { formatEventWithUsername } from './Event.helpers';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
 const useStyles = makeStyles(() => ({
-  message: {
-    wordBreak: 'break-all'
-  }
+  message: {}
 }));
 
 interface ExtendedEvent extends Event {
