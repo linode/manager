@@ -110,7 +110,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   UploadZoneActiveButton: {
     position: 'absolute',
     zIndex: 10,
-    backgroundColor: theme.palette.divider,
+    backgroundColor: 'transparent',
     bottom: -70,
     left: theme.spacing(2),
     width: `calc(100% - ${theme.spacing(4)}px)`,

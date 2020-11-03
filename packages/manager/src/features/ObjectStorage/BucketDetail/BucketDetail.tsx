@@ -99,7 +99,8 @@ const styles = (theme: Theme) =>
     },
     uploaderContainer: {
       [theme.breakpoints.up('lg')]: {
-        order: 2
+        order: 2,
+        minHeight: 300
       }
     }
   });
