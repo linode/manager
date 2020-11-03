@@ -94,9 +94,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   };
 
   // Function for selecting random maintenance window for users that they can choose to clear/change if desired (if maintenance window not specified, a random one is assigned on backend)
-  const generateRandomMaintenanceSelection = (
-    optionsList: SelectMenuOptions[]
-  ) => {
+  const generateRandomMaintenanceSelection = (optionsList: Item<string>[]) => {
     const randomSelection = Math.floor(Math.random() * optionsList.length - 1);
 
     return randomSelection >= 0
@@ -334,7 +332,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
                 <Select
                   options={daySelection}
                   defaultValue={daySelection.find(
-                    ({ value }) => value === randomMaintenanceDay
+                    day => day.value === randomMaintenanceDay
                   )}
                   onChange={handleDaySelection}
                   name="maintenanceDay"
@@ -352,7 +350,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
                 <Select
                   options={windowSelection}
                   defaultValue={windowSelection.find(
-                    ({ value }) => value === randomMaintenanceWindow
+                    window => window.value === randomMaintenanceWindow
                   )}
                   onChange={handleWindowSelection}
                   name="maintenanceWindow"
@@ -405,8 +403,3 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
 };
 
 export default React.memo(CreateDatabaseDialog);
-
-interface SelectMenuOptions {
-  label: string;
-  value: string;
-}
