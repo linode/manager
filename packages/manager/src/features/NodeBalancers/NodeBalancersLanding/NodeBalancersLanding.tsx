@@ -140,14 +140,16 @@ const headers: HeaderCell[] = [
     dataColumn: 'transfer:total',
     sortable: true,
     widthPercent: 5,
-    hideOnMobile: true
+    hideOnMobile: true,
+    hideOnTablet: true
   },
   {
     label: 'Ports',
     dataColumn: 'updated',
     sortable: true,
     widthPercent: 5,
-    hideOnMobile: true
+    hideOnMobile: true,
+    hideOnTablet: true
   },
   {
     label: 'IP Address',
