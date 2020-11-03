@@ -45,7 +45,20 @@ export const EntityTableHeader: React.FC<Props> = props => {
       <TableRow>
         {headers.map(thisCell =>
           thisCell.sortable ? (
-            thisCell.hideOnMobile ? (
+            thisCell.hideOnTablet ? (
+              <Hidden smDown key={thisCell.dataColumn}>
+                <SortCell
+                  active={orderBy === thisCell.dataColumn}
+                  label={thisCell.dataColumn}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  style={{ width: `${thisCell.widthPercent}%` }}
+                  data-testid={`${thisCell.label}-header-cell`}
+                >
+                  {thisCell.label}
+                </SortCell>
+              </Hidden>
+            ) : thisCell.hideOnMobile ? (
               <Hidden xsDown key={thisCell.dataColumn}>
                 <SortCell
                   active={orderBy === thisCell.dataColumn}
@@ -73,7 +86,25 @@ export const EntityTableHeader: React.FC<Props> = props => {
             )
           ) : (
             [
-              thisCell.hideOnMobile ? (
+              thisCell.hideOnTablet ? (
+                <Hidden smDown key={thisCell.dataColumn}>
+                  <TableCell
+                    data-testid={`${thisCell.label}-header-cell`}
+                    className={classes.thead}
+                    style={{ width: `${thisCell.widthPercent}%` }}
+                  >
+                    <span
+                      className={
+                        thisCell.visuallyHidden
+                          ? classes.hiddenHeaderCell
+                          : undefined
+                      }
+                    >
+                      {thisCell.label}
+                    </span>
+                  </TableCell>
+                </Hidden>
+              ) : thisCell.hideOnMobile ? (
                 <Hidden xsDown key={thisCell.dataColumn}>
                   <TableCell
                     data-testid={`${thisCell.label}-header-cell`}
