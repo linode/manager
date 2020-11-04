@@ -44,12 +44,6 @@ VLANS:
 - "null" progress on CMR Dashboard
 - Linodes Landing docs link (CMR)
 
-### JS Client
-
-### Added:
-
-- Methods and types for DBaaS
-
 ## [2020-10-20] - v1.23.0
 
 ### Added:
