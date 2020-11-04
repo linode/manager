@@ -60,7 +60,9 @@ export const LinodeDiskRow: React.FC<Props> = props => {
   } = props;
 
   const resizeEvent = inProgressEvents.find(
-    thisEvent => thisEvent.secondary_entity?.id === disk.id
+    thisEvent =>
+      thisEvent.secondary_entity?.id === disk.id &&
+      ['disk_create', 'disk_resize'].includes(thisEvent.action)
   );
 
   return (
