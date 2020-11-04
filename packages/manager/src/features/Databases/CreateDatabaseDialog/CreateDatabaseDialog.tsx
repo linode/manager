@@ -83,7 +83,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   }, [regions]);
 
   const handleRegionSelect = (regionID: string) => {
-    formik.setFieldValue('region', regionID);
+    setFieldValue('region', regionID);
   };
 
   const structureOptionsForSelect = (optionsData: string[][]) => {
@@ -94,7 +94,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   };
 
   const handleDaySelection = (item: Item) => {
-    formik.setFieldValue('maintenance_schedule.day', item?.value);
+    setFieldValue('maintenance_schedule.day', item?.value);
   };
 
   // Maintenance Window
@@ -110,7 +110,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   );
 
   const handleWindowSelection = (item: Item) => {
-    formik.setFieldValue('maintenance_schedule.window', item?.value);
+    setFieldValue('maintenance_schedule.window', item?.value);
   };
 
   const { databaseTypes } = useDatabaseTypes();
@@ -120,12 +120,12 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     context.isOpen
   );
 
-  const [selectedPlanId, setSelectedPlanId] = React.useState<string>('');
-
-  const randomNumberForDaySelection = Math.floor(Math.random() * 6);
+  const randomNumberForDaySelection = Math.floor(
+    Math.random() * (daySelection.length - 1)
+  );
   const randomNumberForWindowSelection = Math.floor(Math.random() * 12);
 
-  const { resetForm, ...formik } = useFormik({
+  const { resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: {
       label: '',
       region: '',
@@ -133,10 +133,10 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
       root_password: '',
       tags: [] as string[],
       maintenance_schedule: {
-        day: daySelection[randomNumberForDaySelection]
-          .value as DatabaseMaintenanceSchedule['day'],
-        window: windowSelection[randomNumberForWindowSelection]
-          .value as DatabaseMaintenanceSchedule['window']
+        day: (daySelection[randomNumberForDaySelection]?.value ??
+          '') as DatabaseMaintenanceSchedule['day'],
+        window: (windowSelection[randomNumberForWindowSelection]?.value ??
+          '') as DatabaseMaintenanceSchedule['window']
       }
     },
     validationSchema: createDatabaseSchema,
@@ -145,17 +145,19 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   });
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    formik.setFieldValue('root_password', e.target.value);
+    setFieldValue('root_password', e.target.value);
   };
 
-  const handlePlanChange = (id: string) => {
-    setSelectedPlanId(id);
-    formik.setFieldValue('type', id);
-  };
+  const handlePlanChange = React.useCallback(
+    (id: string) => {
+      setFieldValue('type', id);
+    },
+    [setFieldValue]
+  );
 
   const handleTagChange = (selected: Item[]) => {
     const tagStrings = selected.map(selectedItem => selectedItem.value);
-    formik.setFieldValue('tags', tagStrings);
+    setFieldValue('tags', tagStrings);
   };
 
   /** Reset errors and state when the modal opens */
@@ -255,7 +257,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
           <SelectDBPlanPanel
             databasePlans={databaseTypes.data ?? []}
             onPlanSelect={handlePlanChange}
-            selectedPlanId={selectedPlanId}
+            selectedPlanId={formik.values.type}
             errorText={formik.errors.type}
           />
         )}
