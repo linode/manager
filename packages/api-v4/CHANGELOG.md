@@ -1,3 +1,9 @@
+## [2020-11-02] - v0.37.0
+
+### Added:
+
+- Methods and types for DBaaS
+
 ## [2020-09-21] - v0.34.0
 
 Changed:
