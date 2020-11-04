@@ -135,14 +135,12 @@ export const getURL = ({ url, baseURL }: AxiosRequestConfig) => {
 
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
-  // If we have environment overrides in local storage, use those.
-  if (localStorageOverrides) {
-    return url.replace(baseURL, localStorageOverrides.apiRoot);
-  }
+  const apiRoot = localStorageOverrides?.apiRoot ?? API_ROOT;
 
-  // Override the baseURL (from @linode/api-v4) with the one we have defined
+  // If we have environment overrides in local storage, use those. Otherwise,
+  // override the baseURL (from @linode/api-v4) with the one we have defined
   // in the environment (via .env file).
-  return url.replace(baseURL, API_ROOT);
+  return url.replace(baseURL, apiRoot);
 };
 
 // A user's external UUID can be found on the response to /account.
