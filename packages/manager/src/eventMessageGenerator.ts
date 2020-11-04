@@ -635,11 +635,27 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   }
 };
 
+export const formatEventWithAPIMessage = (e: Event) => {
+  /**
+   * It would be great to format this better, but:
+   * 1. Action names include gotchas that prevent simple capitalization or trimming rules.
+   * 2. Provided API messages *should* make it clear what action they're referring to,
+   *    but we don't have such a guarantee.
+   */
+  return `${e.action}: ${e.message}`;
+};
+
 export default (e: Event): string => {
   const fn = path<EventMessageCreator>(
     [e.action, e.status],
     eventMessageCreators
   );
+
+  if (e.message) {
+    // If the API has specified a message for this event, rely on that instead of
+    // our custom logic.
+    return formatEventWithAPIMessage(e);
+  }
 
   /** we couldn't find the event in our list above */
   if (!fn) {
