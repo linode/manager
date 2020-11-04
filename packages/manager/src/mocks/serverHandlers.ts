@@ -252,9 +252,11 @@ export const handlers = [
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(1, {
-      action: 'linode_reboot',
+      action: 'lke_node_create',
       percent_complete: 15,
-      entity: { type: 'linode', id: 999, label: 'linode-1' }
+      entity: { type: 'linode', id: 999, label: 'linode-1' },
+      message:
+        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.'
     });
     return res.once(ctx.json(makeResourcePage(events)));
   }),

@@ -3,6 +3,7 @@ import { Event } from '@linode/api-v4/lib/account';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
 import Link from 'src/components/Link';
 import { dcDisplayNames } from 'src/constants';
+import { formatEventWithAPIMessage } from 'src/eventMessageGenerator';
 
 export const eventMessageGenerator = (
   e: Event,
@@ -12,6 +13,9 @@ export const eventMessageGenerator = (
   const eventLinode = linodes.find(
     thisLinode => thisLinode.id === e.entity?.id
   );
+  if (e.message) {
+    return formatEventWithAPIMessage(e);
+  }
   switch (e.action) {
     case 'linode_resize':
       const eventLinodeType = types.find(

@@ -63,11 +63,11 @@ interface Payload {
 export const shouldUpdateEvents = (prevProps: Payload, nextProps: Payload) => {
   return (
     !equals(prevProps.mostRecentEventTime, nextProps.mostRecentEventTime) ||
-    (!equals(prevProps.inProgressEvents, nextProps.inProgressEvents) ||
-      percentCompleteHasUpdated(
-        prevProps.inProgressEvents,
-        nextProps.inProgressEvents
-      ))
+    !equals(prevProps.inProgressEvents, nextProps.inProgressEvents) ||
+    percentCompleteHasUpdated(
+      prevProps.inProgressEvents,
+      nextProps.inProgressEvents
+    )
   );
 };
 
