@@ -8,39 +8,41 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added:
 
+- Ability to update username from Profile > Display
+
 DBaaS:
 
 - Landing
-  -Creation modal
-  -Details page
-  VLANs:
-- Warning notice to reboot Linodes attached to a VLAN
-- Hide backups CTA on Linodes Landing in VLAN context
-- Don't filter out VLANs without an IP address from the table in linode/networking
-- Add type-to-confirm to Deletion Dialog Modal
-- Hide billing section of dashboard for users without account access
-- Remove default value for IP range and mark Region as required
-- Display ‘None’ for IP for interfaces without an address
-- Applying CMR table components to search results landing
-- Group kernels in dropdown when selecting in Config drawer
-- Ability to update username from Profile > Display
+- Creation modal
+- Details page
 
 ### Changed:
 
+- Group kernels in dropdown when selecting in Config drawer
 - Show all devices (not just root) in Config rows
 - Allow multi-select when adding VLANs during Linode create
 - Polling improvements
+- Hide billing section of dashboard for users without account access
+- Apply CMR table components to search results landing
+
+VLANS:
+
+- Warning notice to reboot Linodes attached to a VLAN
+- Don't filter out VLANs without an IP address from the table in linode/networking
+- Use type-to-confirm in Deletion Dialog Modal
+- Remove default value for IP range and mark Region as required
+- Display ‘None’ for IP for interfaces without an address
+- Hide backups CTA on Linodes Landing in VLAN context
 
 ### Fixed:
 
 - Make sure we don't filter private images containing 'kube'
-- Fix documentation link on the Linodes Landing page
-- Fix code typo in Paginating Things example
-- Refine VlanTableRow logic to prevent comma visual display bug
-- Fix for IP addresses truncation link and Volumes landing
-- Fix "null" progress on CMR Dashboard
-- Fix re-request bug in useReduxLoad
-- Fix Linodes Landing docs link (CMR)
+- Documentation link on the Linodes Landing page
+- Code typo in "Paginating Things" example
+- Extraneous comma display in Linode > Networking > VLANs
+- IP addresses truncation link and Volumes landing
+- "null" progress on CMR Dashboard
+- Linodes Landing docs link (CMR)
 
 ### JS Client
 
