@@ -76,6 +76,18 @@ const CautionNotice: React.FC<CombinedProps> = props => {
             Configure Your Linode for Reverse DNS (rDNS).
           </a>
         </li>
+        <li>
+          Any attached VLAN will be inaccesible if the Destination Datacenter does not
+          support VLANs you can use the <Link to="/vlans">VLAN Manager</Link> or{' '}
+          <a
+            href="https://linode.com/docs/networking/vlans/configure-your-linode-for-vlans/"
+            target="_blank"
+            aria-describedby="external-site"
+            rel="noopener noreferrer"
+          >
+            Check VLAN Datacenter compatibility.
+          </a>
+        </li>
         <li>Your Linode will be powered off.</li>
         <li>
           Block Storage can't be migrated to other regions.{' '}
