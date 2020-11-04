@@ -1,5 +1,5 @@
-import { revokeToken, Success } from '@linode/api-v4/lib/authentication';
 import { LOGIN_ROOT } from 'src/constants';
+import { revokeToken, RevokeTokenSuccess } from 'src/session';
 import { ThunkActionCreator } from 'src/store/types';
 import { getEnvLocalStorageOverrides } from 'src/utilities/storage';
 import { handleLogout as _handleLogout } from './authentication.actions';
@@ -12,7 +12,7 @@ import { handleLogout as _handleLogout } from './authentication.actions';
  *
  */
 export const handleLogout: ThunkActionCreator<
-  Promise<Success>,
+  Promise<RevokeTokenSuccess>,
   {
     client_id: string;
     token: string;

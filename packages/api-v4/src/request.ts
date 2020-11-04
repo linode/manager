@@ -6,7 +6,7 @@ interface RequestConfig extends AxiosRequestConfig {
   validationErrors?: APIError[];
 }
 
-type ConfigField = 'headers' | 'data' | 'params' | 'method' | 'url' | 'baseURL';
+type ConfigField = 'headers' | 'data' | 'params' | 'method' | 'url';
 
 export const baseRequest = Axios.create({
   baseURL: 'https://api.linode.com/v4'
@@ -47,9 +47,6 @@ export const isEmpty = (v: any) =>
 /** URL */
 export const setURL = (url: string) => set('url', url);
 
-/** BASE URL */
-export const setBaseURL = (baseURL: string) => set('baseURL', baseURL);
-
 /** METHOD */
 export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') =>
   set('method', method);
@@ -57,7 +54,6 @@ export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') =>
 /** Param */
 export const setParams = (params: any = {}) => set('params', params);
 
-/** HEADERS */
 export const setHeaders = (newHeaders: any = {}) => (object: any) => {
   return !isEmpty(newHeaders)
     ? { ...object, headers: { ...object.headers, ...newHeaders } }
