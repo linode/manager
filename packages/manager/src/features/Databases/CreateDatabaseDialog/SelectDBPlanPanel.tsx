@@ -241,4 +241,4 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
   );
 };
 
-export default SelectDBPlanPanel;
+export default React.memo(SelectDBPlanPanel);
