@@ -2,7 +2,6 @@ import { Event } from '@linode/api-v4/lib/account';
 import { path } from 'ramda';
 import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -637,7 +636,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
 };
 
 export const formatEventWithAPIMessage = (e: Event) => {
-  return `${capitalizeAllWords(e.action.replace('_', ' '))}: ${e.message}`;
+  /**
+   * It would be great to format this better, but:
+   * 1. Action names include gotchas that prevent simple capitalization or trimming rules.
+   * 2. Provided API messages *should* make it clear what action they're referring to,
+   *    but we don't have such a guarantee.
+   */
+  return `${e.action}: ${e.message}`;
 };
 
 export default (e: Event): string => {

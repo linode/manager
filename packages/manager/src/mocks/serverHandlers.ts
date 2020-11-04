@@ -252,7 +252,7 @@ export const handlers = [
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(1, {
-      action: 'linode_reboot',
+      action: 'lke_node_create',
       percent_complete: 15,
       entity: { type: 'linode', id: 999, label: 'linode-1' },
       message:
