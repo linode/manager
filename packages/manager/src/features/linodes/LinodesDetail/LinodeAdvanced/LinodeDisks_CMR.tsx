@@ -483,7 +483,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       authorized_users: userSSHKeys
         ? userSSHKeys.filter(u => u.selected).map(u => u.username)
         : undefined
-    });
+    }).then(_ => resetEventsPolling());
   };
 
   renameDisk = (label: string) => {
