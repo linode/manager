@@ -258,7 +258,16 @@ export const handlers = [
       message:
         'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.'
     });
-    return res.once(ctx.json(makeResourcePage(events)));
+    const diskResize = eventFactory.build({
+      action: 'disk_resize',
+      percent_complete: 75,
+      secondary_entity: {
+        type: 'disk',
+        id: 1,
+        label: 'my-disk'
+      }
+    });
+    return res.once(ctx.json(makeResourcePage([...events, diskResize])));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
