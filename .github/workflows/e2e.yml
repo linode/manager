@@ -4,10 +4,7 @@ env:
   OAUTH_2: ${{ secrets.MANAGER_OAUTH_2 }}
   OAUTH_3: ${{ secrets.MANAGER_OAUTH_3 }}
   OAUTH_4: ${{ secrets.MANAGER_OAUTH_4 }}
-  CLIENT_ID_1: ${{ secrets.CLIENT_ID_1 }}
-  CLIENT_ID_2: ${{ secrets.CLIENT_ID_2 }}
-  CLIENT_ID_3: ${{ secrets.CLIENT_ID_3 }}
-  CLIENT_ID_4: ${{ secrets.CLIENT_ID_4 }}
+  CLIENT_ID: ${{ secrets.CLIENT_ID }}
 on:
   push:
     branches:
@@ -37,25 +34,22 @@ jobs:
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: |
           echo "MANAGER_OAUTH=$OAUTH_1" >> ./packages/manager/.env
-          echo "REACT_APP_CLIENT_ID=$CLIENT_ID_1" >> ./packages/manager/.env
         if: matrix['container'] == 'CONTAINER_1'
       - run: |
           echo "MANAGER_OAUTH=$OAUTH_2" >> ./packages/manager/.env
-          echo "REACT_APP_CLIENT_ID=$CLIENT_ID_2" >> ./packages/manager/.env
         if: matrix['container'] == 'CONTAINER_2'
       - run: |
           echo "MANAGER_OAUTH=$OAUTH_3" >> ./packages/manager/.env
-          echo "REACT_APP_CLIENT_ID=$CLIENT_ID_3" >> ./packages/manager/.env
         if: matrix['container'] == 'CONTAINER_3'
       - run: |
           echo "MANAGER_OAUTH=$OAUTH_4" >> ./packages/manager/.env
-          echo "REACT_APP_CLIENT_ID=$CLIENT_ID_4" >> ./packages/manager/.env
         if: matrix['container'] == 'CONTAINER_4'
       - run: |      
           echo "REACT_APP_LOGIN_ROOT=https://login.linode.com" >> ./packages/manager/.env
           echo "REACT_APP_API_ROOT=https://api.linode.com/v4" >> ./packages/manager/.env
           echo "REACT_APP_APP_ROOT=http://localhost:3000" >> ./packages/manager/.env
           echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
+          echo "REACT_APP_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
           yarn up &
       - name: Run tests
         uses: cypress-io/github-action@v2
