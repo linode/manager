@@ -266,10 +266,6 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   actionItemsOuter: {
     display: 'flex',
     alignItems: 'center'
-  },
-  progressDisplay: {
-    display: 'inline-block',
-    fontFamily: theme.font.bold
   }
 }));
 
@@ -650,7 +646,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
           {ipv4.length > 3 && (
             <>
               ... plus{' '}
-              <Link to={`linodes/${linodeId}/networking`}>
+              <Link to={`/linodes/${linodeId}/networking`}>
                 {ipv4.length - 3} more
               </Link>{' '}
             </>

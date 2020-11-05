@@ -24,6 +24,7 @@ import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { evenizeNumber } from 'src/utilities/evenizeNumber';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
@@ -192,13 +193,6 @@ type CombinedProps = PreloadedProps &
   ContextProps &
   WithSnackbarProps;
 
-const evenize = (n: number): number => {
-  if (n === 0) {
-    return n;
-  }
-  return n % 2 === 0 ? n : n - 1;
-};
-
 const isReadOnly = (permissions: GrantLevel) => {
   return permissions === 'read_only';
 };
@@ -283,7 +277,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
       const finish = start.plus({ hours: 2 });
       return [
         `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,
-        `W${evenize(start.setZone('utc').hour)}`
+        `W${evenizeNumber(start.setZone('utc').hour)}`
       ];
     });
 

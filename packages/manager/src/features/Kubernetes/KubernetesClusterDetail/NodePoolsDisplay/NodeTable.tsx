@@ -1,4 +1,5 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
@@ -20,7 +21,6 @@ import TableSortCell from 'src/components/TableSortCell';
 import { transitionText } from 'src/features/linodes/transitions';
 import useLinodes from 'src/hooks/useLinodes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 // Temporarily hidden; @todo reactivate
 // import NodeActionMenu from './NodeActionMenu';
@@ -256,7 +256,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
  */
 export const nodeToRow = (
   node: PoolNodeResponse,
-  linodes: LinodeWithMaintenanceAndDisplayStatus[]
+  linodes: Linode[]
 ): NodeRow => {
   const foundLinode = linodes.find(
     thisLinode => thisLinode.id === node.instance_id

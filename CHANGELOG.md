@@ -4,16 +4,57 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-11-02] - v1.24.0
+
+### Added:
+
+- Ability to update username from Profile > Display
+
+DBaaS:
+
+- Landing
+- Creation modal
+- Details page
+
+### Changed:
+
+- Group kernels in dropdown when selecting in Config drawer
+- Show all devices (not just root) in Config rows
+- Allow multi-select when adding VLANs during Linode create
+- Polling improvements
+- Hide billing section of dashboard for users without account access
+- Apply CMR table components to search results landing
+
+VLANS:
+
+- Warning notice to reboot Linodes attached to a VLAN
+- Don't filter out VLANs without an IP address from the table in linode/networking
+- Use type-to-confirm in Deletion Dialog Modal
+- Remove default value for IP range and mark Region as required
+- Display ‘None’ for IP for interfaces without an address
+- Hide backups CTA on Linodes Landing in VLAN context
+
+### Fixed:
+
+- Make sure we don't filter private images containing 'kube'
+- Documentation link on the Linodes Landing page
+- Code typo in "Paginating Things" example
+- Extraneous comma display in Linode > Networking > VLANs
+- IP addresses truncation link and Volumes landing
+- "null" progress on CMR Dashboard
+- Linodes Landing docs link (CMR)
+
 ## [2020-10-20] - v1.23.0
 
 ### Added:
 
 VLAN:
+
 - Landing table
 - Details table
 - Linode Networking panel
 - Attach and detach Linode to VLAN drawer
-CMR:
+  CMR:
 - Banner for open abuse tickets
 
 ### Changed:
@@ -26,8 +67,9 @@ CMR:
 ### Fixed:
 
 VLAN:
+
 - Attach Linode drawer fixes
-CMR:
+  CMR:
 - Wide table width with overflow when cloning Linodes
 - Fix Lish link
 - Sync animations for pending actions

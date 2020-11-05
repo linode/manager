@@ -106,9 +106,22 @@ jobs:
           name: linode-api-v4
           path: packages/api-v4
       - uses: JS-DevTools/npm-publish@v1
+        id: npm-publish
         with:
           token: ${{ secrets.NPM_AUTH_TOKEN }}
           package: ./packages/api-v4/package.json
+      - name: slack-notify
+        uses: rtCamp/action-slack-notify@master
+        if: steps.npm-publish.outputs.type != 'none'
+        env:
+          SLACK_CHANNEL: api-js-client
+          SLACK_TITLE: "Linode JS Client v${{ steps.npm-publish.outputs.version}}"
+          SLACK_MESSAGE: ":rocket: Linode JS Client has been published to NPM: ${{ steps.npm-publish.outputs.old-version }} => ${{ steps.npm-publish.outputs.version }}. View the changelog at https://github.com/linode/manager/blob/master/packages/api-v4/CHANGELOG.md" 
+          SLACK_USERNAME: npm-bot
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON_EMOJI: ":package:"
+          MSG_MINIMAL: true
+
 
   publish-manager:
     runs-on: ubuntu-latest

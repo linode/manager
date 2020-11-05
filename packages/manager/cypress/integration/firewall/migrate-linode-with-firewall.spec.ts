@@ -5,11 +5,7 @@ import {
   deleteAllTestLinodes
 } from '../../support/api/linodes';
 import { deleteFirewallByLabel } from '../../support/api/firewalls';
-import {
-  getVisibleClick,
-  containsVisibleClick,
-  fbtVisibleClick
-} from '../../support/helpers';
+import { getClick, containsClick, fbtClick } from '../../support/helpers';
 
 const fakeRegionsData = {
   data: [
@@ -166,38 +162,36 @@ describe('Migrate Linode With Firewall', () => {
       url: `*/networking/firewalls`
     }).as('createFirewall');
     cy.visitWithLogin('/firewalls');
-    createLinodeSpecifyRegion('ap-southeast').then(linode1 => {
-      createLinode().then(linode2 => {
-        cy.route({
-          method: 'POST',
-          url: `*/linode/instances/${linode1.id}/migrate`
-        }).as('migrateLinode');
-        fbtVisibleClick('Create a Firewall...');
-        cy.get('[data-testid="textfield-input"]').type(firewallLabel);
-        // getVisibleClick('[data-qa-multi-select="Select a value..."]');
-        // containsVisibleClick('HTTPS');
-        getVisibleClick(
-          '[data-qa-multi-select="Select a Linode or type to search..."]'
-        );
-        cy.findByText(linode2.label).should('not.be.visible');
-        fbtVisibleClick(linode1.label);
-        fbtVisibleClick('Create');
-        cy.wait('@createFirewall');
-        cy.visit(`/linodes/${linode1.id}`);
-        fbtVisibleClick('More Actions');
-        fbtVisibleClick('Migrate');
-        getVisibleClick('[data-qa-checked="false"]');
-        fbtVisibleClick('Regions');
-        cy.get('[data-qa-enhanced-select="Sydney, AU"]').should(
-          'not.be.visible'
-        );
-        fbtVisibleClick('Newark, NJ');
-        if (
-          cy.contains('PROVISIONING').should('not.be.visible') &&
-          cy.contains('BOOTING').should('not.be.visible')
-        ) {
-          fbtVisibleClick('Enter Migration Queue');
-        }
+    createLinode().then(linode => {
+      cy.route({
+        method: 'POST',
+        url: `*/linode/instances/${linode.id}/migrate`
+      }).as('migrateLinode');
+      fbtClick('Create a Firewall...');
+      cy.get('[data-testid="textfield-input"]').type(firewallLabel);
+      getClick('[data-qa-multi-select="Select a value..."]');
+      containsClick('HTTPS');
+      getClick('[data-qa-multi-select="Select a Linode or type to search..."]');
+      fbtClick(linode.label);
+      fbtClick('Create');
+      cy.wait('@createFirewall');
+      cy.visit(`/linodes/${linode.id}`);
+      fbtClick('More Actions');
+      fbtClick('Migrate');
+      getClick('[data-qa-checked="false"]');
+      fbtClick('Regions');
+      fbtClick('Dallas, TX');
+      if (
+        cy.contains('Provisioning').should('not.be.visible') &&
+        cy.contains('Booting').should('not.be.visible')
+      ) {
+        fbtClick('Enter Migration Queue');
+      }
+      cy.wait('@migrateLinode')
+        .its('status')
+        .should('eq', 400);
+      if (!cy.findByText('Linode busy.').should('not.be.visible')) {
+        fbtClick('Enter Migration Queue');
         cy.wait('@migrateLinode')
           .its('status')
           .should('eq', 400);

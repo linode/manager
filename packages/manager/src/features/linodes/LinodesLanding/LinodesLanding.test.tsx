@@ -34,14 +34,14 @@ describe('ListLinodes', () => {
           imagesLastUpdated={100}
           userTimezone="GMT"
           userProfileLoading={false}
-          someLinodesHaveScheduledMaintenance={true}
           linodesData={[]}
           classes={classes}
           clearDocs={clearDocs}
           enqueueSnackbar={jest.fn()}
-          linodesCount={0}
-          linodesRequestError={undefined}
-          linodesRequestLoading={false}
+          linodesError={undefined}
+          linodesLoading={false}
+          linodesLastUpdated={0}
+          linodesResults={0}
           managed={false}
           closeSnackbar={jest.fn()}
           setDocs={setDocs}
@@ -50,7 +50,6 @@ describe('ListLinodes', () => {
           {...reactRouterProps}
           ldClient={{} as any}
           flags={{}}
-          linodesInTransition={new Set<number>()}
         />
       )
     );

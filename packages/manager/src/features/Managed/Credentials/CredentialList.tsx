@@ -292,6 +292,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
       </OrderBy>
       <DeletionDialog
         open={dialog.isOpen}
+        entity="credential"
         label={dialog.entityLabel || ''}
         loading={dialog.isLoading}
         error={dialog.error}

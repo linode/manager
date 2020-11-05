@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.23.0",
+  "version": "1.24.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -16,11 +16,11 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@linode/api-v4": "^0.36.0",
-    "@material-ui/core": "^4.4.2",
-    "@material-ui/icons": "^4.4.1",
-    "@material-ui/lab": "^4.0.0-alpha.29",
-    "@material-ui/styles": "^4.4.1",
+    "@linode/api-v4": "^0.37.0",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@material-ui/styles": "^4.10.0",
     "@reach/listbox": "^0.10.4",
     "@reach/menu-button": "^0.11.2",
     "@reach/popover": "^0.10.5",
@@ -38,6 +38,7 @@
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
     "country-region-data": "^1.4.5",
+    "cypress-file-upload": "^4.1.1",
     "css-animation-sync": "^0.2.0",
     "flag-icon-css": "^3.3.0",
     "font-logos": "^0.10.0",

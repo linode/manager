@@ -2,6 +2,7 @@ export * from './account';
 export * from './accountSettings';
 export * from './billing';
 export * from './config';
+export * from './databases';
 export * from './disk';
 export * from './domain';
 export * from './events';

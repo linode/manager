@@ -1,5 +1,6 @@
-import { Database } from '@linode/api-v4/lib/databases';
+import { Database, DatabaseType } from '@linode/api-v4/lib/databases';
 import { Reducer } from 'redux';
+import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { isType } from 'typescript-fsa';
 import {
   createDefaultState,
@@ -87,6 +88,29 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   return state;
+};
+
+export interface ExtendedType extends DatabaseType {
+  heading: string;
+  subHeadings: [string, string];
+}
+
+export const extendType = (type: DatabaseType): ExtendedType => {
+  const {
+    label,
+    memory,
+    vcpus,
+    disk,
+    price: { monthly, hourly }
+  } = type;
+  return {
+    ...type,
+    heading: label,
+    subHeadings: [
+      `$${monthly}/mo ($${hourly}/hr)`,
+      typeLabelDetails(memory, disk, vcpus)
+    ] as [string, string]
+  };
 };
 
 export default reducer;

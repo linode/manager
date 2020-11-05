@@ -1,15 +1,16 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import VlanActionMenu, { ActionHandlers } from './VlanActionMenu';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { getLinodeLabel } from 'src/features/Dashboard/VolumesDashboardCard/VolumeDashboardRow';
+import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import { VlanData } from './LinodeVLANs';
-import { VLAN } from '@linode/api-v4/lib/vlans';
+import VlanActionMenu, { ActionHandlers } from './VlanActionMenu';
 
 export const MAX_LINODES_VLANATTACHED_DISPLAY = 50;
 
@@ -32,7 +33,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
   const vlanLabel = description.length > 32 ? `vlan-${id}` : description;
 
   const getLinodesCellString = (
-    data: VLAN['linodes'],
+    vlanLinodes: VLAN['linodes'],
     loading: boolean,
     error?: APIError[]
   ): string | JSX.Element => {
@@ -44,18 +45,25 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
       return 'Error retrieving Linodes';
     }
 
-    if (data.length === 0) {
+    if (vlanLinodes.length === 0) {
       return 'None assigned';
     }
 
-    return getLinodeLinks(data);
+    return getLinodeLinks(vlanLinodes);
   };
 
-  const getLinodeLinks = (data: VLAN['linodes']): JSX.Element => {
-    // Filter out the linode the user is currently on from the array of Linode IDs the VLAN is attached to, and render that linode's label first in the list as a non-link.
-    const _data = data.filter(element => element.id !== currentLinodeId);
+  const getLinodeLinks = (vlanLinodes: VLAN['linodes']): JSX.Element => {
+    // To render the label of the linode the user is currently on first in the list as  non-link, exclude it from the list of linodes the VLAN is attached to.
 
-    const generatedLinks = _data.map(linode => (
+    // If the element is the current linode's ID, or the linode ID is not found in the store, filter it out. The second check avoids an edge case where deleted linodes still attached to VLANs cause a manifestation of the comma display bug.
+    const filteredLinodes = vlanLinodes.filter(vlanLinode => {
+      return (
+        vlanLinode.id !== currentLinodeId &&
+        getEntityByIDFromStore('linode', vlanLinode.id)
+      );
+    });
+
+    const generatedLinks = filteredLinodes.map(linode => (
       <Link
         key={linode.id}
         to={`/linodes/${linode.id}/networking`}
@@ -69,7 +77,7 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
         {getLinodeLabel(currentLinodeId)}
-        {_data.length >= 1 && `, `}
+        {filteredLinodes.length >= 1 && `, `}
         {truncateAndJoinJSXList(
           generatedLinks,
           MAX_LINODES_VLANATTACHED_DISPLAY
@@ -96,7 +104,9 @@ export const VlanTableRow: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell data-qa-vlan-address>{ipAddress}</TableCell>
+      <TableCell data-qa-vlan-address>
+        {ipAddress !== '' ? ipAddress : 'None'}
+      </TableCell>
       <TableCell data-qa-vlan-interface>{interfaceName}</TableCell>
       <TableCell data-qa-vlan-linodes>{linodesList}</TableCell>
       <TableCell>

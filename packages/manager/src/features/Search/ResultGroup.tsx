@@ -6,13 +6,16 @@ import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
+import TableCell_PreCMR from 'src/components/TableCell';
+import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
+import TableRow_PreCMR from 'src/components/TableRow';
+import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import Table from 'src/components/Table';
+import Table_PreCMR from 'src/components/Table';
+import Table_CMR from 'src/components/Table/Table_CMR';
 import useFlags from 'src/hooks/useFlags';
 import capitalize from 'src/utilities/capitalize';
 
@@ -68,6 +71,10 @@ export const ResultGroup: React.FC<CombinedProps> = props => {
   const [initial, hidden] =
     results.length > groupSize ? splitAt(groupSize, results) : [results, []];
 
+  const Table = flags.cmr ? Table_CMR : Table_PreCMR;
+  const TableRow = flags.cmr ? TableRow_CMR : TableRow_PreCMR;
+  const TableCell = flags.cmr ? TableCell_CMR : TableCell_PreCMR;
+
   return (
     <Grid item className={classes.root}>
       <div className={classes.entityHeadingWrapper}>
@@ -84,13 +91,17 @@ export const ResultGroup: React.FC<CombinedProps> = props => {
         <Table aria-label="Search Results">
           <TableHead>
             <TableRow>
-              <Hidden smDown>
-                <TableCell className={classes.emptyCell} />
-              </Hidden>
+              {!flags.cmr && (
+                <Hidden smDown>
+                  <TableCell className={classes.emptyCell} />
+                </Hidden>
+              )}
               <TableCell className={classes.headerCell}>Label</TableCell>
               <TableCell className={classes.headerCell}>Region</TableCell>
-              <TableCell className={classes.headerCell}>Created</TableCell>
-              <TableCell className={classes.headerCell}>Tags</TableCell>
+              <Hidden smDown>
+                <TableCell className={classes.headerCell}>Created</TableCell>
+                <TableCell className={classes.headerCell}>Tags</TableCell>
+              </Hidden>
             </TableRow>
           </TableHead>
           <TableBody>
