@@ -54,11 +54,9 @@ const LoadGauge: React.FC<CombinedProps> = props => {
     return {
       innerText: `${(load || 0).toFixed(2)}`,
       subTitle: (
-        <React.Fragment>
-          <Typography>
-            <strong>Load</strong>
-          </Typography>
-        </React.Fragment>
+        <Typography>
+          <strong>Load</strong>
+        </Typography>
       )
     };
   };
