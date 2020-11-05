@@ -77,9 +77,9 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
         </Typography>
       ) : null}
 
-      {(hostname || formattedCreated || cluster) && (
+      {hostname || formattedCreated || cluster ? (
         <Divider className={classes.divider} />
-      )}
+      ) : null}
 
       {size ? (
         <Typography variant="subtitle2">
@@ -99,9 +99,9 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
         <Typography variant="subtitle2">{aclControl}</Typography>
       ) : null}
 
-      {corsControl ? (
-        <Typography variant="subtitle2">{corsControl}</Typography>
-      ) : null}
+      <Typography variant="subtitle2">
+        {corsControl ? 'CORS enabled' : 'CORS disabled'}
+      </Typography>
     </Drawer>
   );
 };

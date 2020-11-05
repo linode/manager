@@ -277,7 +277,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
         size={bucketForDetails?.size}
         objectsNumber={bucketForDetails?.objects}
         aclControl={'ACL Control'}
-        corsControl={'CORS Control'}
+        corsControl={false}
       />
     </React.Fragment>
   );
