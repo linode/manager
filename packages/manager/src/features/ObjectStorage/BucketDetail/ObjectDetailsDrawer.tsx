@@ -79,15 +79,20 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
 
   React.useEffect(() => {
     // When the drawer is opened, clear out all old state.
-    if (open && name) {
+    if (open) {
       setACLData(null);
       setSelectedACL(null);
-      setACLLoading(true);
       setUpdateACLError('');
       setACLError('');
       setUpdateACLSuccess(false);
 
+      // TS safety check.
+      if (!name) {
+        return;
+      }
+
       // Then, get the current Object's ACL information.
+      setACLLoading(true);
       getObjectACL(clusterId, bucketName, name)
         .then(({ acl }) => {
           setACLLoading(false);
@@ -194,6 +199,7 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
         value={_options.find(
           thisOption => thisOption.value === selectedACL ?? 'private'
         )}
+        data-testid="acl-select"
       />
 
       <Button

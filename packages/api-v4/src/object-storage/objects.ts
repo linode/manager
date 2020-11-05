@@ -8,7 +8,7 @@ import {
 } from './types';
 
 /**
- * Gets a URL to upload/download/delete objects from a bucket.
+ * Gets a URL to upload/download/delete Objects from a Bucket.
  */
 export const getObjectURL = (
   clusterId: string,
@@ -29,7 +29,7 @@ export const getObjectURL = (
  *
  * getObjectACL
  *
- * Gets the ACL for a given object
+ * Gets the ACL for a given Object.
  */
 export const getObjectACL = (
   clusterId: string,
@@ -47,7 +47,7 @@ export const getObjectACL = (
  *
  * updateObjectACL
  *
- * Gets the ACL for a given object
+ * Updates the ACL for a given Object.
  */
 export const updateObjectACL = (
   clusterId: string,
