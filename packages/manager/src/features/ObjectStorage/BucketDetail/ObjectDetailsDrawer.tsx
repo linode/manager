@@ -41,7 +41,6 @@ export interface Props {
   displayName?: string;
   size?: number | null;
   lastModified?: string | null;
-  // enablePublicURL: () => void;
   url?: string;
   bucketName: string;
   clusterId: string;
@@ -62,23 +61,33 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
     clusterId
   } = props;
 
+  // ACL data for this Object (from the API).
   const [aclData, setACLData] = React.useState<ACLType | null>(null);
   const [aclLoading, setACLLoading] = React.useState(false);
   const [aclError, setACLError] = React.useState('');
 
+  // The ACL Option currently selected in the <EnhancedSelect /> component.
   const [selectedACL, setSelectedACL] = React.useState<ACLType | null>(null);
+
+  // State for submitting the ACL option.
   const [updateACLLoading, setUpdateACLLoading] = React.useState(false);
   const [updateACLError, setUpdateACLError] = React.useState('');
   const [updateACLSuccess, setUpdateACLSuccess] = React.useState(false);
 
+  // State for dealing with the confirmation modal when selecting read/write.
   const { open: openDialog, isOpen, close } = useOpenClose();
 
   React.useEffect(() => {
+    // When the drawer is opened, clear out all old state.
     if (open && name) {
       setACLData(null);
       setSelectedACL(null);
       setACLLoading(true);
+      setUpdateACLError('');
+      setACLError('');
       setUpdateACLSuccess(false);
+
+      // Then, get the current Object's ACL information.
       getObjectACL(clusterId, bucketName, name)
         .then(({ acl }) => {
           setACLLoading(false);
@@ -100,6 +109,8 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
 
     setUpdateACLSuccess(false);
     setUpdateACLLoading(true);
+    setUpdateACLError('');
+    setACLError('');
 
     updateObjectACL(clusterId, bucketName, name, selectedACL)
       .then(() => {
@@ -113,21 +124,21 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
       });
   };
 
+  // An Object's ACL is "custom" is the user has done things with the s3 API
+  // directly (instead of using one of the canned ACLs). "Custom" s not a
+  // selectable option, but it is (potentially) returned by the API, so we
+  // present it here as a disabled option.
+  const _options =
+    aclData === 'custom'
+      ? [{ label: 'Custom', value: 'custom' }, ...aclOptions]
+      : aclOptions;
+
   let formattedLastModified;
   try {
     if (lastModified) {
       formattedLastModified = formatDate(lastModified);
     }
   } catch {}
-
-  // An Object's ACL is "custom" is the user has done some stuff with the
-  // S3 API directly (instead of using one of the canned ACLs). "Custom"
-  // is not a selectable option, but it is (potentially) returned by the
-  // API, so we present it as a disabled option here.
-  const _options =
-    aclData === 'custom'
-      ? [{ label: 'Custom', value: 'custom' }, ...aclOptions]
-      : aclOptions;
 
   return (
     <Drawer
