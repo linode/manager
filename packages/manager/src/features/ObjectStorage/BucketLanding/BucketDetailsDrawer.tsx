@@ -1,9 +1,13 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+import CopyTooltip from 'src/components/CopyTooltip';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
+import ExternalLink from 'src/components/ExternalLink';
 import formatDate from 'src/utilities/formatDate';
+import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -59,12 +63,6 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
       onClose={onClose}
       title={truncateMiddle(bucketLabel ?? 'Bucket Detail')}
     >
-      {hostname ? (
-        <Typography variant="subtitle2" data-testid="hostname">
-          {hostname}
-        </Typography>
-      ) : null}
-
       {formattedCreated ? (
         <Typography variant="subtitle2" data-testid="createdTime">
           Created: {formattedCreated}
@@ -73,27 +71,29 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
 
       {cluster ? (
         <Typography variant="subtitle2" data-testid="cluster">
-          Cluster: {cluster}
+          {formatObjectStorageCluster(cluster)}
         </Typography>
       ) : null}
 
-      {hostname || formattedCreated || cluster ? (
+      {formattedCreated || cluster ? (
         <Divider className={classes.divider} />
       ) : null}
 
-      {size ? (
+      {typeof size === 'number' ? (
         <Typography variant="subtitle2">
           {readableBytes(size).formatted}
         </Typography>
       ) : null}
 
       {objectsNumber ? (
-        <Typography variant="subtitle2">
-          Number of Objects: {objectsNumber}
-        </Typography>
+        <Link to={`/object-storage/buckets/${cluster}/${bucketLabel}`}>
+          {objectsNumber} objects
+        </Link>
       ) : null}
 
-      {size || objectsNumber ? <Divider className={classes.divider} /> : null}
+      {typeof size === 'number' || objectsNumber ? (
+        <Divider className={classes.divider} />
+      ) : null}
 
       {aclControl ? (
         <Typography variant="subtitle2">{aclControl}</Typography>
@@ -102,6 +102,19 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
       <Typography variant="subtitle2">
         {corsControl ? 'CORS enabled' : 'CORS disabled'}
       </Typography>
+
+      {hostname ? <Divider className={classes.divider} /> : null}
+
+      {hostname ? (
+        <>
+          <ExternalLink link={hostname} text={truncateMiddle(hostname, 50)} />
+          <CopyTooltip
+            className={classes.copy}
+            text={hostname}
+            displayText="Copy to clipboard"
+          />
+        </>
+      ) : null}
     </Drawer>
   );
 };
