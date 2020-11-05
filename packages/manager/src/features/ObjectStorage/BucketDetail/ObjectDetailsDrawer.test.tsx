@@ -8,7 +8,9 @@ const props: Props = {
   lastModified: '2019-12-31T23:59:59Z',
   name: 'my-image.png',
   size: 12345,
-  url: 'https://my-bucket.cluster-id.linodeobjects.com/my-image.png'
+  url: 'https://my-bucket.cluster-id.linodeobjects.com/my-image.png',
+  bucketName: 'my-bucket',
+  clusterId: 'cluster-id'
 };
 
 describe('ObjectDetailsDrawer', () => {

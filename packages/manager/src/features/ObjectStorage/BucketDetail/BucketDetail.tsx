@@ -584,7 +584,8 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
           onClose={this.closeObjectDetailsDrawer}
           bucketName={bucketName}
           clusterId={clusterId}
-          name={selectedObject?._displayName}
+          displayName={selectedObject?._displayName}
+          name={selectedObject?.name}
           lastModified={selectedObject?.last_modified}
           size={selectedObject?.size}
           url={
