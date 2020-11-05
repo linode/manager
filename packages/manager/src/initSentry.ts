@@ -73,7 +73,7 @@ export const initSentry = () => {
   }
 };
 
-const beforeSend: BrowserOptions['beforeSend'] = sentryEvent => {
+const beforeSend: BrowserOptions['beforeSend'] = (sentryEvent, hint) => {
   const normalizedErrorMessage = normalizeErrorMessage(sentryEvent.message);
 
   if (
@@ -114,24 +114,20 @@ export const errorsToIgnore: RegExp[] = [
 // actually be something like a (Linode) API Error instead of a string. We need
 // to ensure we're  dealing with strings so we can determine if we should ignore
 // the error, or appropriately report the message to Sentry (i.e. not "<unknown>").
-export const normalizeErrorMessage = (
-  sentryErrorMessage: SentryEvent['message']
-): string => {
-  const sentryErrorMessageCopy = sentryErrorMessage as any;
-
-  if (typeof sentryErrorMessageCopy === 'string') {
-    return sentryErrorMessageCopy;
+export const normalizeErrorMessage = (sentryErrorMessage: any): string => {
+  if (typeof sentryErrorMessage === 'string') {
+    return sentryErrorMessage;
   }
 
   if (
-    Array.isArray(sentryErrorMessageCopy) &&
-    sentryErrorMessageCopy!.length === 1 &&
-    sentryErrorMessageCopy[0]?.reason
+    Array.isArray(sentryErrorMessage) &&
+    sentryErrorMessage!.length === 1 &&
+    sentryErrorMessage[0]?.reason
   ) {
-    return sentryErrorMessageCopy[0].reason;
+    return sentryErrorMessage[0].reason;
   }
 
-  return JSON.stringify(sentryErrorMessageCopy);
+  return JSON.stringify(sentryErrorMessage);
 };
 
 const maybeAddCustomFingerprint = (event: SentryEvent): SentryEvent => {
