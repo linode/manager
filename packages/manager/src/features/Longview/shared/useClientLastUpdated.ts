@@ -1,6 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getLastUpdated } from '../request';
 import { LongviewNotification } from '../request.types';
 
@@ -8,8 +8,9 @@ export const useClientLastUpdated = (
   clientAPIKey?: string,
   callback?: (lastUpdated?: number) => void
 ) => {
-  let mounted = true;
-  let requestInterval: NodeJS.Timeout;
+  const mounted = useRef(true);
+  const requestInterval = useRef(0);
+  const _callback = useRef(callback);
 
   /*
    lastUpdated _might_ come back from the endpoint as 0, so it's important
@@ -25,67 +26,70 @@ export const useClientLastUpdated = (
   >();
   const [authed, setAuthed] = useState<boolean>(true);
 
-  const requestAndSetLastUpdated = (apiKey: string) => {
-    /*
+  const requestAndSetLastUpdated = useCallback(
+    (apiKey: string) => {
+      /*
      get the current last updated value
 
      This function is called as a closure inside the onMount useEffect
      so we need to use a ref to get the new value
     */
-    const { current: newLastUpdated } = currentLastUpdated;
+      const { current: newLastUpdated } = currentLastUpdated;
 
-    setLastUpdatedError(undefined);
+      setLastUpdatedError(undefined);
 
-    // Use a function argument for the API key instead `clientAPIKey` from the
-    // lexical scope, since it is a dependency in the effect that will call
-    // this function.
-    return getLastUpdated(apiKey)
-      .then(response => {
-        /**
-         * If there are any warnings in the response (found at response.NOTIFICATIONS)
-         * we want to set them to state here so that consumers of this component
-         * can handle them (usually by setting a banner). We choose to do this
-         * here as these are high-level requests, made most frequently, and
-         * notifications are not field-specific.
-         */
-        setNotifications(response.NOTIFICATIONS);
-        /*
+      // Use a function argument for the API key instead `clientAPIKey` from the
+      // lexical scope, since it is a dependency in the effect that will call
+      // this function.
+      return getLastUpdated(apiKey)
+        .then(response => {
+          /**
+           * If there are any warnings in the response (found at response.NOTIFICATIONS)
+           * we want to set them to state here so that consumers of this component
+           * can handle them (usually by setting a banner). We choose to do this
+           * here as these are high-level requests, made most frequently, and
+           * notifications are not field-specific.
+           */
+          setNotifications(response.NOTIFICATIONS);
+          /*
           only update _lastUpdated_ state if it hasn't already been set
           or the API response is in a time past what's already been set.
         */
 
-        const _lastUpdated = response.DATA?.updated ?? 0;
+          const _lastUpdated = response.DATA?.updated ?? 0;
 
-        if (
-          mounted &&
-          (typeof newLastUpdated === 'undefined' ||
-            _lastUpdated > newLastUpdated)
-        ) {
-          setLastUpdated(_lastUpdated);
-          if (callback) {
-            callback(_lastUpdated);
+          if (
+            mounted.current &&
+            (typeof newLastUpdated === 'undefined' ||
+              _lastUpdated > newLastUpdated)
+          ) {
+            setLastUpdated(_lastUpdated);
+            if (_callback.current) {
+              _callback.current(_lastUpdated);
+            }
           }
-        }
-      })
-      .catch(e => {
-        /**
-         * The first request we make after creating a new client will almost always
-         * return an authentication failed error.
-         */
-        const reason = pathOr('', [0, 'TEXT'], e);
+        })
+        .catch(e => {
+          /**
+           * The first request we make after creating a new client will almost always
+           * return an authentication failed error.
+           */
+          const reason = pathOr('', [0, 'TEXT'], e);
 
-        if (mounted) {
-          if (reason.match(/authentication/i)) {
-            setAuthed(false);
-          }
+          if (mounted.current) {
+            if (reason.match(/authentication/i)) {
+              setAuthed(false);
+            }
 
-          /* only set lastUpdated error if we haven't already gotten data before */
-          if (typeof newLastUpdated === 'undefined') {
-            setLastUpdatedError(e);
+            /* only set lastUpdated error if we haven't already gotten data before */
+            if (typeof newLastUpdated === 'undefined') {
+              setLastUpdatedError(e);
+            }
           }
-        }
-      });
-  };
+        });
+    },
+    [_callback]
+  );
 
   useEffect(() => {
     /*
@@ -110,16 +114,18 @@ export const useClientLastUpdated = (
       return;
     }
     requestAndSetLastUpdated(clientAPIKey).then(() => {
-      requestInterval = setInterval(() => {
-        requestAndSetLastUpdated(clientAPIKey);
+      requestInterval.current = window.setInterval(() => {
+        if (document.visibilityState === 'visible') {
+          requestAndSetLastUpdated(clientAPIKey);
+        }
       }, 10000);
     });
 
     return () => {
-      mounted = false;
-      clearInterval(requestInterval);
+      mounted.current = false;
+      clearInterval(requestInterval.current);
     };
-  }, [clientAPIKey]);
+  }, [clientAPIKey, requestAndSetLastUpdated]);
 
   return { lastUpdated, lastUpdatedError, authed, notifications };
 };
