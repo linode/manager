@@ -10,11 +10,7 @@ import {
 import { UpdateLinodeParams } from 'src/store/linodes/linodes.actions';
 import { shallowExtendLinodes } from 'src/store/linodes/linodes.helpers';
 import { ShallowExtendedLinode } from 'src/store/linodes/types';
-import {
-  EntityError,
-  MappedEntityState2,
-  ThunkDispatch
-} from 'src/store/types';
+import { EntityError, MappedEntityState2 } from 'src/store/types';
 import { Dispatch } from './types';
 import useEvents from './useEvents';
 import useNotifications from './useNotifications';
@@ -28,7 +24,7 @@ export interface LinodesProps {
 }
 
 export const useLinodes = (): LinodesProps => {
-  const dispatch: Dispatch = useDispatch<ThunkDispatch>();
+  const dispatch: Dispatch = useDispatch();
 
   const linodes = useSelector(
     (state: ApplicationState) => state.__resources.linodes
