@@ -66,6 +66,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       paddingLeft: '2.25em'
     }
+  },
+  timeHelperText: {
+    fontSize: '0.8em'
   }
 }));
 
@@ -321,7 +324,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
                   isClearable={true}
                   data-qa-item="maintenanceWindow"
                 />
-                <FormHelperText style={{ fontSize: '0.8em' }}>
+                <FormHelperText className={classes.timeHelperText}>
                   Time displayed in {timezone}
                 </FormHelperText>
               </FormControl>
