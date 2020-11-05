@@ -19,3 +19,21 @@ export const getObjectURL = (
     ),
     setData({ name, method, ...options })
   );
+
+/**
+ *
+ * getObjectACL
+ *
+ * Gets the ACL for a given object
+ */
+export const getObjectACL = (
+  clusterId: string,
+  bucketName: string,
+  name: string
+) =>
+  Request<ObjectStorageObjectURL>(
+    setMethod('GET'),
+    setURL(
+      `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-acl?name=${name}`
+    )
+  );

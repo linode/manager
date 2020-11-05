@@ -5,9 +5,14 @@ import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import formatDate from 'src/utilities/formatDate';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
+import {
+  getObjectACL,
+  ObjectStorageObjectACL
+} from '@linode/api-v4/lib/object-storage';
 
 const useStyles = makeStyles(() => ({
   divider: {
@@ -27,10 +32,27 @@ export interface Props {
   lastModified?: string | null;
   // enablePublicURL: () => void;
   url?: string;
+  bucketName: string;
+  clusterId: string;
 }
 
 const ObjectDetailsDrawer: React.FC<Props> = props => {
-  const { open, onClose, name, size, lastModified, url } = props;
+  const {
+    open,
+    onClose,
+    name,
+    size,
+    lastModified,
+    url,
+    bucketName,
+    clusterId
+  } = props;
+
+  const { data, loading, error } = useAPIRequest<ObjectStorageObjectACL | null>(
+    open ? () => getObjectACL(clusterId, bucketName, name) : null,
+    null,
+    [open]
+  );
 
   let formattedLastModified;
   try {
