@@ -62,7 +62,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(4.5)
   },
   chooseTime: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: '2.25em'
+    }
   }
 }));
 
