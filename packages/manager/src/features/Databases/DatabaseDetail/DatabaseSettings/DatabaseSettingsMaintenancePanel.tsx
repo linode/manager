@@ -2,8 +2,6 @@ import { DatabaseMaintenanceSchedule } from '@linode/api-v4/lib/databases/types'
 import { APIError } from '@linode/api-v4/lib/types';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import { DateTime } from 'luxon';
-import { sortBy } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -13,7 +11,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import useDatabases from 'src/hooks/useDatabases';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-import { evenizeNumber } from 'src/utilities/evenizeNumber';
+import { initWindows } from 'src/utilities/initWindows';
 import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -93,22 +91,6 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
   };
 
   // Maintenance Window
-  const initWindows = (timezone: string) => {
-    let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
-      const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(
-        timezone
-      );
-      const finish = start.plus({ hours: 2 });
-      return [
-        `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,
-        `W${evenizeNumber(start.setZone('utc').hour)}`
-      ];
-    });
-
-    windows = sortBy<string[]>(window => window[0], windows);
-    return windows;
-  };
-
   const maintenanceWindowSelectOptions = initWindows(timezone);
   const maintenanceWindowHelperText =
     'Select the time of day you’d prefer maintenance to occur. On Standard Availability plans, there may be downtime during this window.';
