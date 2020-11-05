@@ -15,6 +15,7 @@ export interface HeaderCell {
   widthPercent: number;
   visuallyHidden?: boolean;
   hideOnMobile?: boolean;
+  hideOnTablet?: boolean;
 }
 export interface BaseProps {
   error?: APIError[];
