@@ -15,8 +15,7 @@ const props: RowProps = {
   type: 'linode',
   created: '2018-01-01',
   username: null,
-  linkTarget: jest.fn(),
-  eventMessage: null
+  linkTarget: jest.fn()
 };
 
 describe('EventRow component', () => {

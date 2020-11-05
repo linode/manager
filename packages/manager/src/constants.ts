@@ -21,7 +21,8 @@ export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
 /** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
-export const DOCS_SEARCH_URL = 'https://linode.com/docs/search/?q=';
+export const DOCS_SEARCH_URL =
+  'https://linode.com/docs/search/?sections=guides&q=';
 export const COMMUNITY_SEARCH_URL =
   'https://linode.com/community/questions/search?query=';
 export const ALGOLIA_APPLICATION_ID =
@@ -65,13 +66,6 @@ export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
 export const LOG_PERFORMANCE_METRICS =
   !isProductionBuild &&
   process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
-
-// Features
-export const isObjectStorageEnabledForEnvironment =
-  process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED === 'true';
-
-export const isKubernetesEnabledForEnvironment =
-  process.env.REACT_APP_KUBERNETES_ENABLED === 'true';
 
 export const DISABLE_EVENT_THROTTLE =
   Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;

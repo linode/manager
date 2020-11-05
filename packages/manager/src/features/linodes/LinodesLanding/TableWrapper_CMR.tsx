@@ -40,7 +40,7 @@ const TableWrapper: React.FC<CombinedProps> = props => {
   } = props;
 
   React.useEffect(() => {
-    sync('blink');
+    sync('pulse');
   }, []);
 
   return (

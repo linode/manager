@@ -2,6 +2,7 @@ import { rest, RequestHandler } from 'msw';
 
 import {
   accountFactory,
+  databaseFactory,
   domainFactory,
   domainRecordFactory,
   imageFactory,
@@ -73,7 +74,7 @@ export const handlers = [
     const images = [...privateImages, ...publicImages];
     return res(ctx.json(makeResourcePage(images)));
   }),
-  rest.get('*/instances', async (req, res, ctx) => {
+  rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(3, {
       backups: { enabled: false }
     });
@@ -251,11 +252,22 @@ export const handlers = [
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(1, {
-      action: 'linode_reboot',
+      action: 'lke_node_create',
       percent_complete: 15,
-      entity: { type: 'linode', id: 999, label: 'linode-1' }
+      entity: { type: 'linode', id: 999, label: 'linode-1' },
+      message:
+        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.'
     });
-    return res.once(ctx.json(makeResourcePage(events)));
+    const diskResize = eventFactory.build({
+      action: 'disk_resize',
+      percent_complete: 75,
+      secondary_entity: {
+        type: 'disk',
+        id: 1,
+        label: 'my-disk'
+      }
+    });
+    return res.once(ctx.json(makeResourcePage([...events, diskResize])));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
@@ -329,6 +341,14 @@ export const handlers = [
   }),
   rest.post('*/networking/vlans', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.get('*/databases/mysql/instances', (req, res, ctx) => {
+    const online = databaseFactory.build({ status: 'ready' });
+    const initializing = databaseFactory.build({ status: 'initializing' });
+    const error = databaseFactory.build({ status: 'error' });
+    const unknown = databaseFactory.build({ status: 'unknown' });
+    const databases = [online, initializing, error, unknown];
+    return res(ctx.json(makeResourcePage(databases)));
   })
 ];
 
@@ -338,7 +358,7 @@ export const mockDataHandlers: Record<
   (count: number) => RequestHandler
 > = {
   linode: count =>
-    rest.get('*/instances', async (req, res, ctx) => {
+    rest.get('*/linode/instances', async (req, res, ctx) => {
       const linodes = linodeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(linodes)));
     })

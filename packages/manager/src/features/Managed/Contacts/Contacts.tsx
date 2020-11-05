@@ -248,6 +248,7 @@ const Contacts: React.FC<CombinedProps> = props => {
         </OrderBy>
         <DeletionDialog
           open={dialog.isOpen}
+          entity="contact"
           label={dialog.entityLabel || ''}
           loading={dialog.isLoading}
           error={dialog.error}

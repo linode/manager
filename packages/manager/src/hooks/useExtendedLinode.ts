@@ -1,5 +1,10 @@
 import { Event, GrantLevel, Notification } from '@linode/api-v4/lib/account';
-import { Config, Disk, LinodeType } from '@linode/api-v4/lib/linodes';
+import {
+  Config,
+  Disk,
+  LinodeInterface,
+  LinodeType
+} from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { useSelector } from 'react-redux';
@@ -7,15 +12,17 @@ import { ApplicationState } from 'src/store';
 import { eventsForLinode } from 'src/store/events/event.selectors';
 import { getLinodeConfigsForLinode } from 'src/store/linodes/config/config.selectors';
 import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { shallowExtendLinodes } from 'src/store/linodes/linodes.helpers';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
+import { ShallowExtendedLinode } from 'src/store/linodes/types';
 import { getTypeById } from 'src/store/linodeType/linodeType.selector';
 import { getNotificationsForLinode } from 'src/store/notification/notification.selector';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 
-export interface ExtendedLinode extends LinodeWithMaintenance {
+export interface DeepExtendedLinode extends ShallowExtendedLinode {
   _configs: Config[];
   _disks: Disk[];
+  _interfaces: LinodeInterface[];
   _events: Event[];
   _notifications: Notification[];
   _volumes: Volume[];
@@ -24,7 +31,9 @@ export interface ExtendedLinode extends LinodeWithMaintenance {
   _permissions: GrantLevel;
 }
 
-export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
+export const useExtendedLinode = (
+  linodeId: number
+): DeepExtendedLinode | null => {
   return useSelector((state: ApplicationState) => {
     const { events, __resources } = state;
     const {
@@ -33,6 +42,7 @@ export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
       types,
       linodeConfigs,
       linodeDisks,
+      interfaces,
       profile
     } = __resources;
     const linode = state.__resources.linodes.itemsById[linodeId];
@@ -42,8 +52,15 @@ export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
 
     const { type } = linode;
 
+    // @todo: clean up the helper function so we don't have to deal with arrays.
+    const shallowExtendedLinode = shallowExtendLinodes(
+      [linode],
+      notifications.data ?? [],
+      events.events
+    )[0];
+
     return {
-      ...linode,
+      ...shallowExtendedLinode,
       _volumes: getVolumesForLinode(volumes.itemsById, linodeId),
       _volumesError: volumes.error.read,
       _notifications: getNotificationsForLinode(notifications, linodeId),
@@ -51,6 +68,7 @@ export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
       _events: eventsForLinode(events, linodeId),
       _configs: getLinodeConfigsForLinode(linodeConfigs, linodeId),
       _disks: getLinodeDisksForLinode(linodeDisks, linodeId),
+      _interfaces: Object.values(interfaces[linodeId]?.itemsById ?? {}),
       _permissions: getPermissionsForLinode(profile.data ?? null, linodeId)
     };
   });

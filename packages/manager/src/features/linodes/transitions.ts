@@ -4,7 +4,7 @@ import {
   isSecondaryEntity
 } from 'src/store/events/event.selectors';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
-import { isInProgressEvent } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
 
 export const transitionStatus = [
   'booting',
@@ -35,15 +35,15 @@ export const linodeInTransition = (
   status: string,
   recentEvent?: Event
 ): boolean => {
-  if (!recentEvent) {
-    return false;
+  if (transitionStatus.includes(status)) {
+    return true;
   }
 
   return (
-    transitionStatus.includes(status) ||
-    (transitionAction.includes(recentEvent.action || '') &&
-      recentEvent.percent_complete !== null &&
-      recentEvent.percent_complete < 100)
+    recentEvent !== undefined &&
+    transitionAction.includes(recentEvent.action || '') &&
+    recentEvent.percent_complete !== null &&
+    recentEvent.percent_complete < 100
   );
 };
 
@@ -115,20 +115,12 @@ export const buildLinodeCloneTransitionText = (
   return text;
 };
 
-// Given a list of Events, returns a set of all Linode IDs that are involved in an in-progress event.
-export const linodesInTransition = (events: Event[]) => {
-  const set = new Set<number>();
-
-  events.forEach(thisEvent => {
-    const { entity, secondary_entity } = thisEvent;
-    if (isInProgressEvent(thisEvent)) {
-      if (entity?.type === 'linode') {
-        set.add(entity.id);
-      } else if (secondary_entity?.type === 'linode') {
-        set.add(secondary_entity.id);
-      }
-    }
-  });
-
-  return set;
-};
+// Return the progress of an event if one is given, otherwise return a default
+// of 100. This is useful in the situation where a Linode has recently completed
+// an in-progress event, but we don't have the updated status from the API  yet.
+// In this case it doesn't have a recentEvent attached (since it has completed),
+// but its status is still briefly in transition, so give it a progress of 100.
+export const getProgressOrDefault = (
+  event?: ExtendedEvent,
+  defaultProgress = 100
+) => event?.percent_complete ?? defaultProgress;
