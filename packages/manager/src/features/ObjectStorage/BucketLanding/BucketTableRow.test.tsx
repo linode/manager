@@ -21,6 +21,7 @@ describe('BucketTableRow', () => {
       created={bucket.created}
       size={bucket.size}
       onRemove={mockOnRemove}
+      objects={9}
     />
   );
 

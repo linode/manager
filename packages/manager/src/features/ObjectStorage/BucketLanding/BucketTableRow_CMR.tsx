@@ -47,7 +47,16 @@ interface BucketTableRowProps extends ObjectStorageBucket {
 type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;
 
 export const BucketTableRow: React.FC<CombinedProps> = props => {
-  const { classes, label, cluster, hostname, created, size, onRemove } = props;
+  const {
+    classes,
+    label,
+    cluster,
+    hostname,
+    created,
+    size,
+    onRemove,
+    objects
+  } = props;
 
   return (
     <TableRow
@@ -97,6 +106,14 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
           {readableBytes(size).formatted}
         </Typography>
       </TableCell>
+
+      <Hidden smDown>
+        <TableCell>
+          <Typography variant="body2" data-qa-size>
+            {objects}
+          </Typography>
+        </TableCell>
+      </Hidden>
 
       <TableCell>
         <BucketActionMenu
