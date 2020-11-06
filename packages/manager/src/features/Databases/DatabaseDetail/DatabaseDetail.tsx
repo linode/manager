@@ -19,7 +19,7 @@ const DatabaseDetail: React.FC<CombinedProps> = () => {
 
   const thisDatabase = databases.databases.itemsById[thisDatabaseID ?? '-1'];
 
-  if (!thisDatabase || !match) {
+  if (!thisDatabaseID || !thisDatabase || !match) {
     return null;
   }
 
@@ -29,13 +29,13 @@ const DatabaseDetail: React.FC<CombinedProps> = () => {
     {
       title: 'Backups',
       routeName: `${baseURL}/backups`,
-      component: DatabaseBackups,
+      render: <DatabaseBackups databaseID={Number(thisDatabaseID)} />,
       backgroundRendering: true
     },
     {
       title: 'Settings',
       routeName: `${baseURL}/settings`,
-      component: DatabaseSettings,
+      render: <DatabaseSettings databaseID={Number(thisDatabaseID)} />,
       backgroundRendering: true
     }
   ];
