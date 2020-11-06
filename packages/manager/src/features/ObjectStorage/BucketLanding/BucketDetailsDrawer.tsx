@@ -8,6 +8,7 @@ import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
 import formatDate from 'src/utilities/formatDate';
 import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
+import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -90,7 +91,7 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
 
       {typeof objectsNumber === 'number' ? (
         <Link to={`/object-storage/buckets/${cluster}/${bucketLabel}`}>
-          {objectsNumber} objects
+          {pluralize('object', 'objects', objectsNumber)}
         </Link>
       ) : null}
 
