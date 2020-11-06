@@ -18,7 +18,10 @@ const useStyles = makeStyles(() => ({
     height: 1,
     backgroundColor: '#EBEBEB'
   },
-  copy: { marginTop: 16, padding: 0 }
+  copy: {
+    marginTop: 16,
+    padding: 0
+  }
 }));
 
 export interface Props {
@@ -85,7 +88,7 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
         </Typography>
       ) : null}
 
-      {objectsNumber ? (
+      {typeof objectsNumber === 'number' ? (
         <Link to={`/object-storage/buckets/${cluster}/${bucketLabel}`}>
           {objectsNumber} objects
         </Link>
