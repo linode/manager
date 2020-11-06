@@ -23,9 +23,16 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
   const { updateDatabase } = useDatabases();
 
   const [label, setLabel] = React.useState<string>(databaseLabel);
+  const [open, setOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
+
+  React.useEffect(() => {
+    if (open) {
+      setSuccess('');
+    }
+  }, [open]);
 
   const errorMap = getErrorMap(['label'], errors);
   const labelError = errorMap.label;
@@ -62,6 +69,10 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
   return (
     <ExpansionPanel
       heading="Edit Database Label"
+      expanded={open}
+      onChange={() => {
+        setOpen(!open);
+      }}
       success={success}
       actions={() => (
         <ActionsPanel>
@@ -84,7 +95,6 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
         onChange={handleLabelChange}
         errorText={labelError}
         errorGroup="database-settings-label"
-        error={Boolean(labelError)}
         data-qa-label
       />
     </ExpansionPanel>
