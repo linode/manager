@@ -4,24 +4,16 @@ import {
   updateObjectACL
 } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import EnhancedSelect from 'src/components/EnhancedSelect';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import ExternalLink from 'src/components/ExternalLink';
-import Notice from 'src/components/Notice';
-import useOpenClose from 'src/hooks/useOpenClose';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { aclOptions } from '../utilities';
+import ACLSelect from './ACLSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
@@ -60,83 +52,6 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
     bucketName,
     clusterId
   } = props;
-
-  // ACL data for this Object (from the API).
-  const [aclData, setACLData] = React.useState<ACLType | null>(null);
-  const [aclLoading, setACLLoading] = React.useState(false);
-  const [aclError, setACLError] = React.useState('');
-
-  // The ACL Option currently selected in the <EnhancedSelect /> component.
-  const [selectedACL, setSelectedACL] = React.useState<ACLType | null>(null);
-
-  // State for submitting the ACL option.
-  const [updateACLLoading, setUpdateACLLoading] = React.useState(false);
-  const [updateACLError, setUpdateACLError] = React.useState('');
-  const [updateACLSuccess, setUpdateACLSuccess] = React.useState(false);
-
-  // State for dealing with the confirmation modal when selecting read/write.
-  const { open: openDialog, isOpen, close } = useOpenClose();
-
-  React.useEffect(() => {
-    // When the drawer is opened, clear out all old state.
-    if (open) {
-      setACLData(null);
-      setSelectedACL(null);
-      setUpdateACLError('');
-      setACLError('');
-      setUpdateACLSuccess(false);
-
-      // TS safety check.
-      if (!name) {
-        return;
-      }
-
-      // Then, get the current Object's ACL information.
-      setACLLoading(true);
-      getObjectACL(clusterId, bucketName, name)
-        .then(({ acl }) => {
-          setACLLoading(false);
-          setACLData(acl);
-          setSelectedACL(acl);
-        })
-        .catch(err => {
-          setACLLoading(false);
-          setACLError(getErrorStringOrDefault(err));
-        });
-    }
-  }, [open, clusterId, bucketName, name]);
-
-  const handleSubmit = () => {
-    // TS safety check.
-    if (!name || !selectedACL) {
-      return;
-    }
-
-    setUpdateACLSuccess(false);
-    setUpdateACLLoading(true);
-    setUpdateACLError('');
-    setACLError('');
-
-    updateObjectACL(clusterId, bucketName, name, selectedACL)
-      .then(() => {
-        setUpdateACLSuccess(true);
-        setACLData(selectedACL);
-        setUpdateACLLoading(false);
-      })
-      .catch(err => {
-        setUpdateACLLoading(false);
-        setUpdateACLError(getErrorStringOrDefault(err));
-      });
-  };
-
-  // An Object's ACL is "custom" is the user has done things with the s3 API
-  // directly (instead of using one of the canned ACLs). "Custom" s not a
-  // selectable option, but it is (potentially) returned by the API, so we
-  // present it here as a disabled option.
-  const _options =
-    aclData === 'custom'
-      ? [{ label: 'Custom', value: 'custom' }, ...aclOptions]
-      : aclOptions;
 
   let formattedLastModified;
   try {
@@ -177,65 +92,15 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
 
       <Divider className={classes.divider} />
 
-      {updateACLSuccess ? (
-        <Notice success text="Object access updated successfully." />
+      {open && name ? (
+        <ACLSelect
+          name={name}
+          getACL={() => getObjectACL(clusterId, bucketName, name)}
+          updateACL={(acl: ACLType) =>
+            updateObjectACL(clusterId, bucketName, name, acl)
+          }
+        />
       ) : null}
-
-      <EnhancedSelect
-        label="Access (Object ACL)"
-        placeholder="Loading access..."
-        isClearable={false}
-        options={_options}
-        isLoading={aclLoading}
-        disabled={aclLoading}
-        errorText={aclError || updateACLError}
-        onChange={(selected: Item<ACLType> | null) => {
-          if (selected) {
-            setUpdateACLSuccess(false);
-            setSelectedACL(selected.value);
-          }
-        }}
-        isOptionDisabled={(item: Item<ACLType>) => item.value === 'custom'}
-        value={_options.find(
-          thisOption => thisOption.value === selectedACL ?? 'private'
-        )}
-        data-testid="acl-select"
-      />
-
-      <Button
-        className={classes.submitButton}
-        buttonType="primary"
-        onClick={() => {
-          if (selectedACL === 'public-read-write') {
-            openDialog();
-          } else {
-            handleSubmit();
-          }
-        }}
-        disabled={aclData === selectedACL}
-        loading={updateACLLoading}
-      >
-        Save
-      </Button>
-
-      <ConfirmationDialog
-        title={`Confirm Object Access`}
-        open={isOpen}
-        onClose={close}
-        actions={() => (
-          <ActionsPanel style={{ padding: 0 }}>
-            <Button buttonType="cancel" onClick={close} data-qa-cancel>
-              Cancel
-            </Button>
-            <Button buttonType="secondary" destructive onClick={handleSubmit}>
-              Confirm
-            </Button>
-          </ActionsPanel>
-        )}
-      >
-        Are you sure want make {name} writable by everyone? This is not
-        recommended for most use cases.
-      </ConfirmationDialog>
     </Drawer>
   );
 };
