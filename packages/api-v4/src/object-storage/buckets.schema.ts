@@ -1,4 +1,4 @@
-import { object, string } from 'yup';
+import { boolean, object, string } from 'yup';
 
 export const CreateBucketSchema = object({
   label: string()
@@ -13,4 +13,16 @@ export const CreateBucketSchema = object({
 export const UploadCertificateSchema = object({
   certificate: string().required('Certificate is required.'),
   private_key: string().required('Private key is required.')
+});
+
+export const UpdateBucketAccessSchema = object({
+  acl: string()
+    .oneOf([
+      'private',
+      'public-read',
+      'authenticated-read',
+      'public-read-write'
+    ])
+    .notRequired(),
+  cors_xml: boolean().notRequired()
 });

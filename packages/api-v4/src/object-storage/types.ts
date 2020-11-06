@@ -108,3 +108,15 @@ export interface ObjectStorageBucketSSLRequest {
 export interface ObjectStorageBucketSSLResponse {
   ssl: boolean;
 }
+
+export interface ObjectStorageBucketAccessRequest {
+  acl?: Omit<ACLType, 'custom'>;
+  cors_enabled?: boolean;
+}
+
+export interface ObjectStorageBucketAccessResponse {
+  acl: ACLType;
+  acl_xml: string;
+  cors_enabled: true;
+  cors_xml: string;
+}
