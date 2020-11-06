@@ -52,6 +52,18 @@ export interface ObjectStorageObjectURL {
   url: string;
 }
 
+export type ACLType =
+  | 'private'
+  | 'public-read'
+  | 'authenticated-read'
+  | 'public-read-write'
+  | 'custom';
+
+export interface ObjectStorageObjectACL {
+  acl: ACLType;
+  acl_xml: string;
+}
+
 export interface ObjectStorageObjectURLOptions {
   expires_in?: number;
   // "Content-Type" is normally an HTTP header, but here it is used in the body
