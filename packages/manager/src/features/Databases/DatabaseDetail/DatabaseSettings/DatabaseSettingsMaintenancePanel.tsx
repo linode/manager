@@ -45,9 +45,16 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
   const [maintenanceTime, setMaintenanceTime] = React.useState<string | number>(
     databaseMaintenanceSchedule.window
   );
+  const [open, setOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
+
+  React.useEffect(() => {
+    if (open) {
+      setSuccess('');
+    }
+  }, [open]);
 
   const errorMap = getErrorMap(
     ['maintenance_schedule.day', 'maintenance_schedule.window'],
@@ -141,6 +148,10 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
   return (
     <ExpansionPanel
       heading="Change Maintenance Window"
+      expanded={open}
+      onChange={() => {
+        setOpen(!open);
+      }}
       success={success}
       actions={() => (
         <ActionsPanel>

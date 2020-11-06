@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import useDatabases from 'src/hooks/useDatabases';
-import useReduxLoad from 'src/hooks/useReduxLoad';
 import DatabaseSettingsLabelPanel from './DatabaseSettingsLabelPanel';
 import DatabaseSettingsMaintenancePanel from './DatabaseSettingsMaintenancePanel';
 import DatabaseSettingsPasswordPanel from './DatabaseSettingsPasswordPanel';
@@ -9,7 +8,6 @@ import DatabaseSettingsPasswordPanel from './DatabaseSettingsPasswordPanel';
 export const DatabaseSettings: React.FC<{}> = () => {
   const match = useRouteMatch<{ id: string }>('/databases/:id');
   const databases = useDatabases();
-  useReduxLoad(['databases']);
 
   const thisDatabaseID = match?.params?.id;
   const thisDatabase = databases.databases.itemsById[thisDatabaseID ?? '-1'];
