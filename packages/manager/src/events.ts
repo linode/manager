@@ -51,9 +51,6 @@ export const startEventsInterval = () =>
       const now = Date.now();
       const pollIteration = getPollingInterval();
       const eventRequestDeadline = getRequestDeadline();
-      // For PR review purposes; delete before merge
-      // console.count('iteration');
-      // console.table({ pollIteration, eventRequestDeadline });
 
       if (now > eventRequestDeadline) {
         /**
@@ -63,6 +60,11 @@ export const startEventsInterval = () =>
         if (inProgress) {
           /** leaving this commented out for now because I'm not sure if it'll break anything */
           // pollIteration = 1;
+          return;
+        }
+
+        if (document.visibilityState !== 'visible') {
+          // don't request events in an inactive/minimized tab.
           return;
         }
 
