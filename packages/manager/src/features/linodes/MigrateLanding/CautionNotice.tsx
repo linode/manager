@@ -1,13 +1,15 @@
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { Link } from 'src/components/Link';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
-
 import Checkbox from 'src/components/CheckBox';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import { useAccount } from 'src/hooks/useAccount';
+import useFlags from 'src/hooks/useFlags';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -46,6 +48,13 @@ type CombinedProps = Props;
 
 const CautionNotice: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { vlans } = useFlags();
+  const { account } = useAccount();
+  const vlansEnabled = isFeatureEnabled(
+    'Vlans',
+    Boolean(vlans),
+    account?.data?.capabilities ?? []
+  );
 
   const amountOfAttachedVolumes = props.linodeVolumes.length;
 
@@ -71,13 +80,15 @@ const CautionNotice: React.FC<CombinedProps> = props => {
             Configure Your Linode for Reverse DNS (rDNS).
           </Link>
         </li>
-        <li>
-          Any attached VLANs will be inaccessible if the destination region does
-          not support VLANs.{` `}
-          <Link to="https://linode.com/docs/networking/vlans/configure-your-linode-for-vlans/">
-            Check VLAN region compatibility.
-          </Link>
-        </li>
+        {vlansEnabled && (
+          <li>
+            Any attached VLANs will be inaccessible if the destination region
+            does not support VLANs.{` `}
+            <Link to="https://linode.com/docs/networking/vlans/configure-your-linode-for-vlans/">
+              Check VLAN region compatibility.
+            </Link>
+          </li>
+        )}
         <li>Your Linode will be powered off.</li>
         <li>
           Block Storage can&apos;t be migrated to other regions.{' '}
