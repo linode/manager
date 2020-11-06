@@ -12,9 +12,8 @@ import {
   Window
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr, sortBy } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -24,7 +23,6 @@ import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { evenizeNumber } from 'src/utilities/evenizeNumber';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
@@ -60,14 +58,14 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { sendBackupsDisabledEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { initWindows } from 'src/utilities/initWindows';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import BackupsPlaceholder from './BackupsPlaceholder';
 import BackupTableRow from './BackupTableRow';
-import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
-
 import DestructiveSnapshotDialog from './DestructiveSnapshotDialog';
+import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
 type ClassNames =
   | 'paper'
@@ -269,30 +267,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     this.eventSubscription.unsubscribe();
   }
 
-  initWindows(timezone: string) {
-    let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
-      const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(
-        timezone
-      );
-      const finish = start.plus({ hours: 2 });
-      return [
-        `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,
-        `W${evenizeNumber(start.setZone('utc').hour)}`
-      ];
-    });
-
-    windows = sortBy<string[]>(window => window[0], windows);
-
-    windows.unshift(['Choose a time', 'Scheduling']);
-
-    return windows;
-  }
-
   constructor(props: CombinedProps) {
     super(props);
 
     /* TODO: use the timezone from the user's profile */
-    this.windows = this.initWindows(this.props.timezone);
+    this.windows = initWindows(this.props.timezone, true);
 
     this.days = [
       ['Choose a day', 'Scheduling'],

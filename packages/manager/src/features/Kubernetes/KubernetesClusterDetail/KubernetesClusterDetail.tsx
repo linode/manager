@@ -29,6 +29,7 @@ import KubeContainer, {
   DispatchProps
 } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import usePolling from 'src/hooks/usePolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
@@ -176,6 +177,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   const endpointAvailabilityInterval = React.useRef<number>();
   const kubeconfigAvailabilityInterval = React.useRef<number>();
 
+  usePolling([() => props.requestNodePools(+props.match.params.clusterID)]);
+
   const getEndpointToDisplay = (endpoints: string[]) => {
     // Per discussions with the API team and UX, we should display only the endpoint with port 443, so we are matching on that.
     return endpoints.find(thisResponse =>
@@ -270,13 +273,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
       kubeconfigAvailabilityCheck(clusterID, true);
     }
 
-    const interval = setInterval(
-      () => props.requestNodePools(+props.match.params.clusterID),
-      10000
-    );
-
     return () => {
-      clearInterval(interval);
       clearInterval(endpointAvailabilityInterval.current);
       clearInterval(kubeconfigAvailabilityInterval.current);
     };

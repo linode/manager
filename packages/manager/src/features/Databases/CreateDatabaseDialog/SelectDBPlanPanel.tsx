@@ -25,7 +25,7 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    // marginTop: theme.spacing(3),
+    backgroundColor: 'transparent',
     width: '100%'
   },
   headingCellContainer: {
@@ -241,4 +241,4 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
   );
 };
 
-export default SelectDBPlanPanel;
+export default React.memo(SelectDBPlanPanel);

@@ -5,8 +5,6 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useFormik } from 'formik';
-import { DateTime } from 'luxon';
-import { sortBy } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
@@ -30,7 +28,7 @@ import { useDatabaseTypes } from 'src/hooks/useDatabaseTypes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import useRegions from 'src/hooks/useRegions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { evenizeNumber } from 'src/utilities/evenizeNumber';
+import { initWindows } from 'src/utilities/initWindows';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -56,16 +54,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   maintenanceSelectsInner: {
     display: 'inline-block',
-    minWidth: '200px',
     [theme.breakpoints.down('xs')]: {
       display: 'block'
     }
   },
   chooseDay: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(4.5)
   },
   chooseTime: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: '2.25em'
+    }
+  },
+  timeHelperText: {
+    fontSize: '0.8em'
   }
 }));
 
@@ -77,12 +80,16 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   const timezone = useTimezone();
   const { createDatabase } = useDatabases();
 
-  const regionsWithDatabases: ExtendedRegion[] = regions.entities
-    //   .filter(thisRegion => thisRegion.capabilities.includes('Databases')) // temporarily commented out until Capabilities is squared away
-    .map(r => ({ ...r, display: dcDisplayNames[r.id] }));
+  const regionsWithDatabases: ExtendedRegion[] = React.useMemo(() => {
+    return (
+      regions.entities
+        //   .filter(thisRegion => thisRegion.capabilities.includes('Databases')) // temporarily commented out until Capabilities is squared away
+        .map(r => ({ ...r, display: dcDisplayNames[r.id] }))
+    );
+  }, [regions]);
 
   const handleRegionSelect = (regionID: string) => {
-    formik.setFieldValue('region', regionID);
+    setFieldValue('region', regionID);
   };
 
   const structureOptionsForSelect = (optionsData: string[][]) => {
@@ -92,59 +99,24 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     });
   };
 
-  // Maintenance Day
-  const daySelection = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday'
-  ].map(thisDay => ({
-    label: thisDay,
-    value: thisDay
-  }));
-
   const handleDaySelection = (item: Item) => {
-    if (item) {
-      formik.setFieldValue('maintenance_schedule.day', item.value);
-    } else {
-      formik.setFieldValue('maintenance_schedule.day', undefined);
-    }
+    setFieldValue('maintenance_schedule.day', item?.value);
   };
 
   // Maintenance Window
-  const initWindows = (timezone: string) => {
-    let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
-      const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(
-        timezone
-      );
-      const finish = start.plus({ hours: 2 });
-      return [
-        `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,
-        `W${evenizeNumber(start.setZone('utc').hour)}`
-      ];
-    });
-
-    windows = sortBy<string[]>(window => window[0], windows);
-
-    return windows;
-  };
-
-  const maintenanceWindowSelectOptions = initWindows(timezone);
+  const maintenanceWindowSelectOptions = React.useMemo(
+    () => initWindows(timezone),
+    [timezone]
+  );
   const maintenanceWindowHelperText =
     'Select the time of day you’d prefer maintenance to occur. On Standard Availability plans, there may be downtime during this window.';
-  const windowSelection = structureOptionsForSelect(
-    maintenanceWindowSelectOptions
+  const windowSelection = React.useMemo(
+    () => structureOptionsForSelect(maintenanceWindowSelectOptions),
+    [maintenanceWindowSelectOptions]
   );
 
   const handleWindowSelection = (item: Item) => {
-    if (item) {
-      formik.setFieldValue('maintenance_schedule.window', item.value);
-    } else {
-      formik.setFieldValue('maintenance_schedule.window', undefined);
-    }
+    setFieldValue('maintenance_schedule.window', item?.value);
   };
 
   const { databaseTypes } = useDatabaseTypes();
@@ -154,9 +126,12 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     context.isOpen
   );
 
-  const [selectedPlanId, setSelectedPlanId] = React.useState<string>('');
+  const randomNumberForDaySelection = Math.floor(
+    Math.random() * (daySelection.length - 1)
+  );
+  const randomNumberForWindowSelection = Math.floor(Math.random() * 12);
 
-  const { resetForm, ...formik } = useFormik({
+  const { resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: {
       label: '',
       region: '',
@@ -164,8 +139,10 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
       root_password: '',
       tags: [] as string[],
       maintenance_schedule: {
-        day: '' as DatabaseMaintenanceSchedule['day'],
-        window: '' as DatabaseMaintenanceSchedule['window']
+        day: (daySelection[randomNumberForDaySelection]?.value ??
+          '') as DatabaseMaintenanceSchedule['day'],
+        window: (windowSelection[randomNumberForWindowSelection]?.value ??
+          '') as DatabaseMaintenanceSchedule['window']
       }
     },
     validationSchema: createDatabaseSchema,
@@ -174,17 +151,19 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   });
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    formik.setFieldValue('root_password', e.target.value);
+    setFieldValue('root_password', e.target.value);
   };
 
-  const handlePlanChange = (id: string) => {
-    setSelectedPlanId(id);
-    formik.setFieldValue('type', id);
-  };
+  const handlePlanChange = React.useCallback(
+    (id: string) => {
+      setFieldValue('type', id);
+    },
+    [setFieldValue]
+  );
 
   const handleTagChange = (selected: Item[]) => {
     const tagStrings = selected.map(selectedItem => selectedItem.value);
-    formik.setFieldValue('tags', tagStrings);
+    setFieldValue('tags', tagStrings);
   };
 
   /** Reset errors and state when the modal opens */
@@ -270,7 +249,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
         </div>
         <div className={classes.formSection} data-testid="region-select">
           <RegionSelect
-            label={'Region'}
+            label={'Region (required)'}
             placeholder={' '}
             errorText={formik.errors.region}
             handleSelection={handleRegionSelect}
@@ -284,20 +263,21 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
           <SelectDBPlanPanel
             databasePlans={databaseTypes.data ?? []}
             onPlanSelect={handlePlanChange}
-            selectedPlanId={selectedPlanId}
+            selectedPlanId={formik.values.type}
             errorText={formik.errors.type}
           />
         )}
         <div className={classes.formSection}>
           <PasswordInput
             name="password"
-            label="Root Password"
+            label="MySQL Password"
             type="password"
             data-qa-add-password
             value={formik.values.root_password}
             error={!!formik.errors.root_password}
             errorText={formik.errors.root_password}
             onChange={handlePasswordChange}
+            required
           />
         </div>
         <div
@@ -313,6 +293,9 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
               <FormControl fullWidth className={classes.chooseDay}>
                 <Select
                   options={daySelection}
+                  value={daySelection.find(
+                    day => day.value === formik.values.maintenance_schedule.day
+                  )}
                   onChange={handleDaySelection}
                   name="maintenanceDay"
                   id="maintenanceDay"
@@ -328,6 +311,10 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
               <FormControl fullWidth className={classes.chooseTime}>
                 <Select
                   options={windowSelection}
+                  value={windowSelection.find(
+                    window =>
+                      window.value === formik.values.maintenance_schedule.window
+                  )}
                   onChange={handleWindowSelection}
                   name="maintenanceWindow"
                   id="maintenanceWindow"
@@ -337,6 +324,9 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
                   isClearable={true}
                   data-qa-item="maintenanceWindow"
                 />
+                <FormHelperText className={classes.timeHelperText}>
+                  Time displayed in {timezone}
+                </FormHelperText>
               </FormControl>
             </div>
           </div>
@@ -376,3 +366,16 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
 };
 
 export default React.memo(CreateDatabaseDialog);
+
+const daySelection = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday'
+].map(thisDay => ({
+  label: thisDay,
+  value: thisDay
+}));

@@ -51,7 +51,7 @@ export default ({
           <option
             key={thisOption.value ?? ''}
             value={thisOption.value ?? ''}
-            aria-selected={thisOption.value === value}
+            aria-selected={thisOption.value === value?.value}
             data-testid={`mock-option`}
           >
             {thisOption.label}
