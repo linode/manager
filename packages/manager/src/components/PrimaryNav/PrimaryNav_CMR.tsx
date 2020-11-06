@@ -13,24 +13,26 @@ import { Link as ReactRouterLink } from 'react-router-dom';
 import Community from 'src/assets/community.svg';
 import Dashboard from 'src/assets/icons/dashboard_cmr.svg';
 import Gear from 'src/assets/icons/gear.svg';
-import Logo from 'src/assets/logo/new-logo.svg';
 import LogoIcon from 'src/assets/logo/logo.svg';
+import Logo from 'src/assets/logo/new-logo.svg';
 import Help from 'src/assets/primary-nav-help.svg';
 import Grid from 'src/components/core/Grid';
 import Hidden, { HiddenProps } from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
-import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import { Link } from 'src/components/Link';
 import UserMenu from 'src/features/TopMenu/UserMenu/UserMenu_CMR';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDomains from 'src/hooks/useDomains';
 import useFlags from 'src/hooks/useFlags';
+import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
+import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import usePrefetch from 'src/hooks/usePreFetch';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import usePrimaryNavStyles from './PrimaryNav_CMR.styles';
 import MobileNav from './MobileNav';
+import usePrimaryNavStyles from './PrimaryNav_CMR.styles';
 import ThemeToggle from './ThemeToggle';
 
 type NavEntity =
@@ -99,10 +101,19 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
 
   const flags = useFlags();
   const { domains, requestDomains } = useDomains();
+  const {
+    objectStorageClusters,
+    requestObjectStorageClusters
+  } = useObjectStorageClusters();
+  const {
+    objectStorageBuckets,
+    requestObjectStorageBuckets
+  } = useObjectStorageBuckets();
 
   const {
     _isManagedAccount,
     _isLargeAccount,
+    _isRestrictedUser,
     account
   } = useAccountManagement();
 
@@ -116,6 +127,18 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
     'Vlans',
     Boolean(flags.vlans),
     account?.data?.capabilities ?? []
+  );
+
+  const clustersLoaded = objectStorageClusters.lastUpdated > 0;
+
+  React.useEffect(() => {
+    if (!clustersLoaded && !_isRestrictedUser) {
+      requestObjectStorageClusters();
+    }
+  }, [_isRestrictedUser, clustersLoaded, requestObjectStorageClusters]);
+
+  const clusterIds = objectStorageClusters.entities.map(
+    thisCluster => thisCluster.id
   );
 
   const primaryLinkGroups: {
@@ -191,6 +214,10 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
           {
             display: 'Object Storage',
             href: '/object-storage/buckets',
+            prefetchRequestFn: () => requestObjectStorageBuckets(clusterIds),
+            prefetchRequestCondition:
+              !objectStorageBuckets.loading &&
+              objectStorageBuckets.lastUpdated === 0,
             activeLinks: [
               '/object-storage/buckets',
               '/object-storage/access-keys'
@@ -236,8 +263,12 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       _isLargeAccount,
       showFirewalls,
       showVlans,
+      objectStorageBuckets.loading,
+      objectStorageBuckets.lastUpdated,
       flags.databases,
-      _isManagedAccount
+      _isManagedAccount,
+      requestObjectStorageBuckets,
+      clusterIds
     ]
   );
 
