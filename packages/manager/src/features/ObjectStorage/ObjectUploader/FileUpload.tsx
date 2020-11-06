@@ -60,14 +60,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconLeft: {
     marginRight: theme.spacing(1),
-    '& g': {
-      stroke: theme.color.offBlack
-    }
+    color: theme.cmrIconColors.iCheckmark
   },
   iconRight: {
-    '& g': {
-      stroke: theme.color.offBlack
-    }
+    color: theme.cmrIconColors.iCheckmark
   },
   rotate: {
     animation: '$rotate 2s linear infinite'
@@ -158,7 +154,9 @@ const FileUpload: React.FC<Props> = props => {
       })}
       key={props.displayName}
       onClick={handleClickRow}
+      onKeyPress={handleClickRow}
       role="button"
+      tabIndex={0}
     >
       <LinearProgress
         variant="determinate"
