@@ -1,7 +1,7 @@
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'src/components/Link';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -56,7 +56,7 @@ const CautionNotice: React.FC<CombinedProps> = props => {
       </Typography>
       <ul>
         <li>
-          You'll be assigned new IPv4 and IPv6 addresses, which will be
+          You&apos;ll be assigned new IPv4 and IPv6 addresses, which will be
           accessible once your migration is complete.
         </li>
         <li>
@@ -67,30 +67,20 @@ const CautionNotice: React.FC<CombinedProps> = props => {
         <li>
           Any DNS records (including Reverse DNS) will need to be updated. You
           can use the <Link to="/domains">DNS Manager</Link> or{' '}
-          <a
-            href="https://linode.com/docs/networking/dns/configure-your-linode-for-reverse-dns/"
-            target="_blank"
-            aria-describedby="external-site"
-            rel="noopener noreferrer"
-          >
+          <Link to="https://linode.com/docs/networking/dns/configure-your-linode-for-reverse-dns/">
             Configure Your Linode for Reverse DNS (rDNS).
-          </a>
+          </Link>
         </li>
         <li>
-          Any attached VLAN will be inaccesible if the Destination Datacenter does not
-          support VLANs you can use the <Link to="/vlans">VLAN Manager</Link> or{' '}
-          <a
-            href="https://linode.com/docs/networking/vlans/configure-your-linode-for-vlans/"
-            target="_blank"
-            aria-describedby="external-site"
-            rel="noopener noreferrer"
-          >
-            Check VLAN Datacenter compatibility.
-          </a>
+          Any attached VLANs will be inaccessible if the destination region does
+          not support VLANs.{` `}
+          <Link to="https://linode.com/docs/networking/vlans/configure-your-linode-for-vlans/">
+            Check VLAN region compatibility.
+          </Link>
         </li>
         <li>Your Linode will be powered off.</li>
         <li>
-          Block Storage can't be migrated to other regions.{' '}
+          Block Storage can&apos;t be migrated to other regions.{' '}
           {amountOfAttachedVolumes > 0 && (
             <React.Fragment>
               The following
