@@ -33,6 +33,7 @@ import CancelNotice from '../CancelNotice';
 import BucketTable from './BucketTable';
 import BucketTable_CMR from './BucketTable_CMR';
 import useFlags from 'src/hooks/useFlags';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -206,6 +207,8 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
 
   const _BucketTable = flags.cmr ? BucketTable_CMR : BucketTable;
 
+  const totalUsage = sumBucketUsage(data);
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
@@ -232,6 +235,12 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
               return <_BucketTable {...bucketTableProps} />;
             }}
           </OrderBy>
+          {/* If there's more than one Bucket, display the total usage. */}
+          {data.length > 1 ? (
+            <Typography style={{ marginTop: 8 }} variant="body1">
+              Total usage: {readableBytes(totalUsage).formatted}
+            </Typography>
+          ) : null}
         </Grid>
         <ConfirmationDialog
           open={removeBucketConfirmationDialog.isOpen}
@@ -354,3 +363,10 @@ const Banner: React.FC<BannerProps> = React.memo(({ regionsAffected }) => {
     </Notice>
   );
 });
+
+export const sumBucketUsage = (buckets: ObjectStorageBucket[]) => {
+  return buckets.reduce((acc, thisBucket) => {
+    acc += thisBucket.size;
+    return acc;
+  }, 0);
+};
