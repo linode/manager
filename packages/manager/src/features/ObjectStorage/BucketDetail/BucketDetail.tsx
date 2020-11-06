@@ -99,7 +99,8 @@ const styles = (theme: Theme) =>
     },
     uploaderContainer: {
       [theme.breakpoints.up('lg')]: {
-        order: 2
+        order: 2,
+        minHeight: 300
       }
     }
   });
@@ -582,7 +583,10 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
         <ObjectDetailDrawer
           open={objectDetailDrawerOpen}
           onClose={this.closeObjectDetailsDrawer}
-          name={selectedObject?._displayName}
+          bucketName={bucketName}
+          clusterId={clusterId}
+          displayName={selectedObject?._displayName}
+          name={selectedObject?.name}
           lastModified={selectedObject?.last_modified}
           size={selectedObject?.size}
           url={
