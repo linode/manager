@@ -131,7 +131,8 @@ const cmrIconColors = {
   iOrange: '#ffb31a',
   iRed: '#cf1e1e',
   // Offline status
-  iGrey: '#dbdde1'
+  iGrey: '#dbdde1',
+  iCheckmark: '#444'
 };
 
 const primaryColors = {
