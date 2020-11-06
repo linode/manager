@@ -84,7 +84,7 @@ const CautionNotice: React.FC<CombinedProps> = props => {
           <li>
             Any attached VLANs will be inaccessible if the destination region
             does not support VLANs.{` `}
-            <Link to="https://linode.com/docs/networking/vlans/configure-your-linode-for-vlans/">
+            <Link to="https://linode.com/docs/products/networking/vlans/">
               Check VLAN region compatibility.
             </Link>
           </li>
