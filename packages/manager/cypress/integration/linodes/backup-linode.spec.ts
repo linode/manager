@@ -42,26 +42,6 @@ describe('linode backups', () => {
     });
   });
 
-  it('cant snapshot while booting linode', () => {
-    cy.visitWithLogin('/dashboard');
-    createLinodeWithBackupsEnabled().then(linode => {
-      cy.visit(`/linodes/${linode.id}/backup`);
-      cy.findByText('Take Snapshot')
-        .should('be.visible')
-        .click();
-      cy.findByText('Label is required.');
-      cy.get('[data-qa-manual-name="true"]').type(`${linode.label} backup`);
-      cy.findByText('Take Snapshot')
-        .should('be.visible')
-        .click();
-      cy.get('[data-qa-confirm="true"]')
-        .should('be.visible')
-        .click();
-      cy.contains('Linode busy.').should('be.visible');
-      deleteLinodeById(linode.id);
-    });
-  });
-
   it('create linode from snapshot', () => {
     cy.visitWithLogin('/dashboard');
     createLinodeWithBackupsEnabled().then(linode => {
@@ -92,6 +72,27 @@ describe('linode backups', () => {
         .its('status')
         .should('eq', 200);
       assertToast('A snapshot is being taken');
+      deleteLinodeById(linode.id);
+    });
+  });
+
+  // this test has become irrelevant for now
+  it.skip('cant snapshot while booting linode', () => {
+    cy.visitWithLogin('/dashboard');
+    createLinodeWithBackupsEnabled().then(linode => {
+      cy.visit(`/linodes/${linode.id}/backup`);
+      cy.findByText('Take Snapshot')
+        .should('be.visible')
+        .click();
+      cy.findByText('Label is required.');
+      cy.get('[data-qa-manual-name="true"]').type(`${linode.label} backup`);
+      cy.findByText('Take Snapshot')
+        .should('be.visible')
+        .click();
+      cy.get('[data-qa-confirm="true"]')
+        .should('be.visible')
+        .click();
+      cy.contains('Linode busy.').should('be.visible');
       deleteLinodeById(linode.id);
     });
   });
