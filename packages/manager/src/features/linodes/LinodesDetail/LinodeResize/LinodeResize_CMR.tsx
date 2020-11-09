@@ -55,8 +55,7 @@ type ClassNames =
   | 'checkbox'
   | 'currentHeaderEmptyCell'
   | 'tabbedPanelInnerClass'
-  | 'selectPlanPanel'
-  | 'error';
+  | 'selectPlanPanel';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -91,9 +90,6 @@ const styles = (theme: Theme) =>
     },
     selectPlanPanel: {
       marginTop: theme.spacing(5)
-    },
-    error: {
-      color: '#C44742'
     }
   });
 
@@ -181,7 +177,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         let error: string | JSX.Element = '';
         if (errorResponse[0].reason.match(/allocated more disk/i)) {
           error = (
-            <Typography className={this.props.classes.error}>
+            <Typography>
               The current disk size of your Linode is too large for the new
               service plan. Please resize your disk to accommodate the new plan.
               You can read our{' '}
