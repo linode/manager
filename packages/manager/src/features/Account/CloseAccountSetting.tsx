@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import ExpansionPanel from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import CloseAccountDialog from './CloseAccountDialog';
 

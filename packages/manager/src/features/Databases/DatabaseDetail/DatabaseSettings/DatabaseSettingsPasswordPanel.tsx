@@ -3,7 +3,7 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import ExpansionPanel from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import PasswordInput from 'src/components/PasswordInput';

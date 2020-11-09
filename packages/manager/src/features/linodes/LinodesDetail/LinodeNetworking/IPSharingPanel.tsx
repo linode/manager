@@ -16,7 +16,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import ExpansionPanel from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
@@ -408,9 +408,7 @@ const enhanced = recompose<CombinedProps, Props & RenderGuardProps>(
         })
         .map((linode: Linode) => {
           // side-effect of this mapping is saving the labels
-          linode.ipv4.map((ip: string) => {
-            choiceLabels[ip] = linode.label;
-          });
+          linode.ipv4.map((ip: string) => (choiceLabels[ip] = linode.label));
           return linode.ipv4;
         })
     );

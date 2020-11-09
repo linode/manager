@@ -13,7 +13,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import ExpansionPanel from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
