@@ -22,6 +22,7 @@ export * from './managed';
 export * from './networking';
 export * from './nodebalancer';
 export * from './notification';
+export * from './oauth';
 export * from './objectStorage';
 export * from './profile';
 export * from './promotionalOffer';
