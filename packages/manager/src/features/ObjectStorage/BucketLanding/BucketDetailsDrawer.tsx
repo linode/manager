@@ -95,7 +95,7 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
         </Link>
       ) : null}
 
-      {typeof size === 'number' || objectsNumber ? (
+      {typeof size === 'number' || typeof objectsNumber === 'number' ? (
         <Divider className={classes.divider} />
       ) : null}
 
