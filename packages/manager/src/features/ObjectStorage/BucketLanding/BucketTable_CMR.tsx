@@ -48,6 +48,7 @@ interface Props {
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
   openBucketDrawer: () => void;
   handleClickRemove: (bucket: ObjectStorageBucket) => void;
+  handleClickDetails: (bucket: ObjectStorageBucket) => void;
 }
 
 type CombinedProps = Props;
@@ -59,7 +60,8 @@ export const BucketTable: React.FC<CombinedProps> = props => {
     order,
     handleOrderChange,
     openBucketDrawer,
-    handleClickRemove
+    handleClickRemove,
+    handleClickDetails
   } = props;
 
   const classes = useStyles();
@@ -136,6 +138,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
                   <RenderData
                     data={paginatedData}
                     onRemove={handleClickRemove}
+                    onDetails={handleClickDetails}
                   />
                 </TableBody>
               </Table>
@@ -158,10 +161,11 @@ export const BucketTable: React.FC<CombinedProps> = props => {
 interface RenderDataProps {
   data: ObjectStorageBucket[];
   onRemove: (bucket: ObjectStorageBucket) => void;
+  onDetails: (bucket: ObjectStorageBucket) => void;
 }
 
 const RenderData: React.FC<RenderDataProps> = props => {
-  const { data, onRemove } = props;
+  const { data, onRemove, onDetails } = props;
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -171,6 +175,7 @@ const RenderData: React.FC<RenderDataProps> = props => {
           {...bucket}
           key={`${bucket.label}-${bucket.cluster}`}
           onRemove={() => onRemove(bucket)}
+          onDetails={() => onDetails(bucket)}
         />
       ))}
     </>
