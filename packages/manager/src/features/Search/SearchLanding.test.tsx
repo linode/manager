@@ -39,6 +39,10 @@ jest.mock('src/hooks/useReduxLoad', () => ({
   useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false })
 }));
 
+jest.mock('src/hooks/useObjectStorageBuckets', () => ({
+  useObjectStorage: () => jest.fn().mockReturnValue({ loading: false })
+}));
+
 describe('Component', () => {
   it('should render', () => {
     const { getByText } = renderWithTheme(<SearchLanding {...props} />);

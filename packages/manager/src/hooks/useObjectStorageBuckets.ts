@@ -53,9 +53,9 @@ export default useObjectStorageBuckets;
 export const useObjectStorage = (predicate?: boolean) => {
   const dispatch: Dispatch = useDispatch();
 
-  useReduxLoad(['clusters'], REFRESH_INTERVAL, predicate);
-
   const { _isRestrictedUser } = useAccountManagement();
+
+  useReduxLoad(['clusters'], REFRESH_INTERVAL, predicate || _isRestrictedUser);
 
   const objectStorageClusters = useSelector(
     (state: ApplicationState) => state.__resources.clusters
