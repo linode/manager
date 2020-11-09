@@ -9,7 +9,6 @@ import {
   ObjectStorageDeleteBucketRequestPayload
 } from '@linode/api-v4/lib/object-storage';
 import { GetAllData, getAllWithArguments } from 'src/utilities/getAll';
-import { requestClusters } from '../clusters/clusters.actions';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
@@ -49,7 +48,7 @@ const _getAllBucketsInCluster = getAllWithArguments<ObjectStorageBucket>(
  * Note: a slight oddity here is that in the case of failure, both the `done` and `failed` actions
  * will be dispatched. The reducer handles this and it should be OK, but proceed with caution.
  */
-export const getAllBucketsFromAllClusters: ThunkActionCreator<
+export const getAllBucketsFromClusters: ThunkActionCreator<
   Promise<ObjectStorageBucket[]>,
   ObjectStorageClusterID[]
 > = clusterIds => dispatch => {
@@ -74,31 +73,6 @@ export const getAllBucketsFromAllClusters: ThunkActionCreator<
     dispatch(getAllBucketsForAllClustersActions.done({ result: data }));
 
     return data;
-  });
-};
-
-export const getAllClustersAndAllBuckets: ThunkActionCreator<Promise<
-  ObjectStorageBucket[]
->> = () => (dispatch, getState) => {
-  const clustersFromState = getState().__resources.clusters.entities;
-
-  if (clustersFromState.length > 0) {
-    return dispatch(
-      getAllBucketsFromAllClusters(
-        clustersFromState.map(thisCluster => thisCluster.id)
-      )
-    );
-  }
-
-  dispatch(getAllBucketsForAllClustersActions.started());
-  return dispatch(requestClusters()).then(clusters => {
-    // In the event of a failure, `clusters` will be of type APIError[], so
-    // filter those out first.
-    const _clusters = clusters.filter(thisCluster => Boolean(thisCluster.id));
-
-    return dispatch(
-      getAllBucketsFromAllClusters(_clusters.map(thisCluster => thisCluster.id))
-    );
   });
 };
 

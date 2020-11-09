@@ -7,7 +7,6 @@ import usePageVisibility from 'src/hooks/usePageVisibility';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-import { getAllClustersAndAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { getAllDatabases } from 'src/store/databases/databases.requests';
 import { getAllMySQLTypes } from 'src/store/databases/types.requests';
@@ -54,8 +53,7 @@ export type ReduxEntity =
   | 'clusters'
   | 'vlans'
   | 'databases'
-  | 'databaseTypes'
-  | 'buckets';
+  | 'databaseTypes';
 
 // The Buckets request is a special case since it depends on Clusters.
 type RequestMap = Record<ReduxEntity, any>;
@@ -80,8 +78,7 @@ const requestMap: RequestMap = {
   firewalls: () => getAllFirewalls({}),
   clusters: requestClusters,
   vlans: () => getAllVlans({}),
-  databaseTypes: () => getAllMySQLTypes({}),
-  buckets: () => getAllClustersAndAllBuckets()
+  databaseTypes: () => getAllMySQLTypes({})
 };
 
 export const useReduxLoad = (
@@ -149,9 +146,7 @@ export const requestDeps = (
     const currentResource = state.__resources[deps[i]] || state[deps[i]];
 
     if (currentResource) {
-      const currentResourceHasError = hasError(
-        currentResource?.error || currentResource?.bucketErrors
-      );
+      const currentResourceHasError = hasError(currentResource?.error);
       if (
         currentResource.lastUpdated === 0 &&
         !currentResource.loading &&

@@ -22,7 +22,9 @@ const props: Props = {
     nodebalancers: false,
     images: false,
     volumes: false,
-    kubernetes: false
+    kubernetes: false,
+    objectStorageClusters: false,
+    objectStorageBuckets: false
   },
   ...reactRouterProps
 };
