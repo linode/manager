@@ -6,7 +6,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import ExpansionPanel from 'src/components/Accordion';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import SupportLink from 'src/components/SupportLink';

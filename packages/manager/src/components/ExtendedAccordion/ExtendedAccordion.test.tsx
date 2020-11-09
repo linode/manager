@@ -4,7 +4,7 @@ import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import { Provider } from 'react-redux';
-import ExtendedExpansionPanel from './ExtendedExpansionPanel';
+import ExtendedAccordion from './ExtendedAccordion';
 import store from 'src/store';
 
 const onChange = jest.fn();
@@ -17,11 +17,11 @@ const props = {
   renderMainContent
 };
 
-describe('ExtendedExpansionPanel', () => {
+describe('ExtendedAccordion', () => {
   afterEach(() => jest.resetAllMocks());
   const component = shallow(
     <Provider store={store}>
-      <ExtendedExpansionPanel {...props} />
+      <ExtendedAccordion {...props} />
     </Provider>
   );
   it.skip('should load its content when it is neither loading nor in an error state', () => {
