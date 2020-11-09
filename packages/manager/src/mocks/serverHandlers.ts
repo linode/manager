@@ -2,6 +2,7 @@ import { rest, RequestHandler } from 'msw';
 
 import {
   accountFactory,
+  appTokenFactory,
   databaseFactory,
   domainFactory,
   domainRecordFactory,
@@ -61,6 +62,10 @@ export const handlers = [
   }),
   rest.put('*/profile', (req, res, ctx) => {
     return res(ctx.json({ ...profileFactory.build(), ...(req.body as any) }));
+  }),
+  rest.get('*/profile/apps', (req, res, ctx) => {
+    const tokens = appTokenFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(tokens)));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(ctx.json(cachedRegions));

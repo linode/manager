@@ -37,6 +37,7 @@ export interface ObjectStorageBucket {
   cluster: string;
   hostname: string;
   size: number; // Size of bucket in bytes
+  objects: number;
 }
 
 export interface ObjectStorageObject {

@@ -7,13 +7,19 @@ import { CLIENT_ID } from 'src/constants';
 import { ApplicationState } from 'src/store';
 import { clearUserInput } from 'src/store/authentication/authentication.helpers';
 import { handleLogout } from 'src/store/authentication/authentication.requests';
+import { getEnvLocalStorageOverrides } from 'src/utilities/storage';
 
 export class Logout extends Component<DispatchProps & StateProps> {
   componentDidMount() {
     // Clear any user input (in the Support Drawer) since the user is manually logging out.
     clearUserInput();
+
+    const localStorageOverrides = getEnvLocalStorageOverrides();
+
+    const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
+
     // Split the token so we can get the token portion of the "<prefix> <token>" pair
-    this.props.dispatchLogout(CLIENT_ID || '', this.props.token.split(' ')[1]);
+    this.props.dispatchLogout(clientID || '', this.props.token.split(' ')[1]);
   }
 
   render() {

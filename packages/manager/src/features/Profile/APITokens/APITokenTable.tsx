@@ -114,9 +114,6 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   AccountStateProps;
 
-export const filterOutLinodeApps = (token: Token) =>
-  !token.website || !/.linode.com$/.test(token.website);
-
 export class APITokenTable extends React.Component<CombinedProps, State> {
   static defaultState: State = {
     form: {
@@ -458,10 +455,10 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     }
 
-    const filteredData = data ? data.filter(filterOutLinodeApps) : [];
+    const tokens = data ?? [];
 
-    return filteredData.length > 0 ? (
-      this.renderRows(filteredData)
+    return tokens.length > 0 ? (
+      this.renderRows(tokens)
     ) : (
       <TableRowEmptyState colSpan={6} />
     );
@@ -642,26 +639,24 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   renderRevokeConfirmationActions = () => {
     return (
-      <React.Fragment>
-        <ActionsPanel>
-          <Button
-            buttonType="cancel"
-            onClick={this.closeRevokeDialog}
-            data-qa-button-cancel
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="secondary"
-            loading={this.state.dialog.submittingDialog}
-            destructive
-            onClick={this.revokeAction}
-            data-qa-button-confirm
-          >
-            Revoke
-          </Button>
-        </ActionsPanel>
-      </React.Fragment>
+      <ActionsPanel>
+        <Button
+          buttonType="cancel"
+          onClick={this.closeRevokeDialog}
+          data-qa-button-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          buttonType="secondary"
+          loading={this.state.dialog.submittingDialog}
+          destructive
+          onClick={this.revokeAction}
+          data-qa-button-confirm
+        >
+          Revoke
+        </Button>
+      </ActionsPanel>
     );
   };
 
