@@ -2,9 +2,11 @@ import { FormikProps } from 'formik';
 import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   ObjectStorageClusterID,
-  ObjectStorageObject
+  ObjectStorageObject,
+  ACLType
 } from '@linode/api-v4/lib/object-storage';
 import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
+import { Item } from 'src/components/EnhancedSelect/Select';
 
 export const generateObjectUrl = (
   clusterId: ObjectStorageClusterID,
@@ -149,4 +151,19 @@ export const confirmObjectStorage = <T extends {}>(
   } else {
     formikProps.handleSubmit();
   }
+};
+
+export const aclOptions: Item<ACLType>[] = [
+  { label: 'Private', value: 'private' },
+  { label: 'Public Read', value: 'public-read' },
+  { label: 'Authenticated Read', value: 'authenticated-read' },
+  { label: 'Public Read/Write', value: 'public-read-write' }
+];
+
+export const objectACLHelperText: Record<ACLType, string> = {
+  private: 'Private ACL',
+  'public-read': 'Public Read ACL',
+  'authenticated-read': 'Authenticated Read ACL',
+  'public-read-write': 'Public Read/Write ACL',
+  custom: 'Custom ACL'
 };

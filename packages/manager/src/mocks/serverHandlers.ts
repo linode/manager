@@ -2,6 +2,7 @@ import { rest, RequestHandler } from 'msw';
 
 import {
   accountFactory,
+  appTokenFactory,
   databaseFactory,
   domainFactory,
   domainRecordFactory,
@@ -61,6 +62,10 @@ export const handlers = [
   }),
   rest.put('*/profile', (req, res, ctx) => {
     return res(ctx.json({ ...profileFactory.build(), ...(req.body as any) }));
+  }),
+  rest.get('*/profile/apps', (req, res, ctx) => {
+    const tokens = appTokenFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(tokens)));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(ctx.json(cachedRegions));
@@ -252,11 +257,22 @@ export const handlers = [
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(1, {
-      action: 'linode_reboot',
+      action: 'lke_node_create',
       percent_complete: 15,
-      entity: { type: 'linode', id: 999, label: 'linode-1' }
+      entity: { type: 'linode', id: 999, label: 'linode-1' },
+      message:
+        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.'
     });
-    return res.once(ctx.json(makeResourcePage(events)));
+    const diskResize = eventFactory.build({
+      action: 'disk_resize',
+      percent_complete: 75,
+      secondary_entity: {
+        type: 'disk',
+        id: 1,
+        label: 'my-disk'
+      }
+    });
+    return res.once(ctx.json(makeResourcePage([...events, diskResize])));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });

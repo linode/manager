@@ -110,18 +110,6 @@ describe('getURL', () => {
 
     expect(getURL(config)).toBe('https://api.linode.com/v4/profile');
   });
-
-  it('replaces the LOGIN baseURL with the one from the environment', () => {
-    // This is kind of bogus, but necessary since the logic looks for the substring "login".
-    const config = {
-      baseURL: 'http://login.localhost:6000',
-      url: 'http://login.localhost:6000/revoke'
-    };
-    process.env.LOGIN_ROOT = 'https://login.linode.com';
-
-    // eslint-disable-next-line
-    expect(getURL(config)).toBe('https://login.linode.com/revoke');
-  });
 });
 
 describe('injectEuuidToProfile', () => {

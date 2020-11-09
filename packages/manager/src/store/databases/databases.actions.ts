@@ -43,4 +43,4 @@ export const resetPasswordActions = actionCreator.async<
   { databaseID: number; root_password: string },
   Database,
   APIError[]
->(`reset`);
+>(`reset-password`);
