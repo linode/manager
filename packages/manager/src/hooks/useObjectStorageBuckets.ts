@@ -41,7 +41,7 @@ export const useObjectStorageBuckets = () => {
 
 export default useObjectStorageBuckets;
 
-// Object Storage Redux integration is slightly complicated in that to requests
+// Object Storage Redux integration is slightly complicated in that to request
 // a user's Buckets, we must first request Clusters. This hook neatly abstracts
 // that logic, so that `const { objectStorageBuckets } = useObjectStorage();`
 // is all you need to appropriately get Bucket data into your component.
