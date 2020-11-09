@@ -7,7 +7,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import ExpansionPanel from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import useDatabases from 'src/hooks/useDatabases';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';

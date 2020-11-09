@@ -2,7 +2,7 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import ActionsPanel from '../ActionsPanel';
-import ExpansionPanel from './ExpansionPanel';
+import Accordion from './Accordion';
 
 class AsyncContentExample extends React.Component {
   state = {
@@ -45,12 +45,12 @@ class AsyncContentExample extends React.Component {
           backgroundColor: '#f4f4f4'
         }}
       >
-        <ExpansionPanel
+        <Accordion
           heading="Open to Reveal Asynchronously Loaded Content"
           onChange={this.handleToggleExpand}
         >
           {this.renderContent()}
-        </ExpansionPanel>
+        </Accordion>
       </div>
     );
   }
@@ -59,42 +59,42 @@ class AsyncContentExample extends React.Component {
 storiesOf('ExpansionPanel', module)
   .add('Interactive', () => (
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-      <ExpansionPanel heading="The best Linode department is?">
+      <Accordion heading="The best Linode department is?">
         <p>Customer service!</p>
-      </ExpansionPanel>
+      </Accordion>
     </div>
   ))
   .add('Success!', () => (
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-      <ExpansionPanel
+      <Accordion
         success="You did it!"
         heading="Why is Linode the best?"
         actions={renderActions}
       >
         <p>Customer service!</p>
-      </ExpansionPanel>
+      </Accordion>
     </div>
   ))
   .add('Warning!', () => (
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-      <ExpansionPanel
+      <Accordion
         warning="Careful now..."
         heading="This is a warning"
         actions={renderActions}
       >
         <p>Customer service!</p>
-      </ExpansionPanel>
+      </Accordion>
     </div>
   ))
   .add('Error!', () => (
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-      <ExpansionPanel
+      <Accordion
         error="Oh no! Something broke!"
         heading="Creating a new linode"
         actions={renderActions}
       >
         <p>Customer service!</p>
-      </ExpansionPanel>
+      </Accordion>
     </div>
   ))
   .add('Asynchronous Content', () => <AsyncContentExample />);
