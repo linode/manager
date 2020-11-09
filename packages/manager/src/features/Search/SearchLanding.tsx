@@ -65,7 +65,8 @@ const displayMap = {
   volumes: 'Volumes',
   nodebalancers: 'NodeBalancers',
   images: 'Images',
-  kubernetesClusters: 'Kubernetes'
+  kubernetesClusters: 'Kubernetes',
+  buckets: 'Buckets'
 };
 
 export type CombinedProps = SearchProps & RouteComponentProps<{}>;
@@ -122,7 +123,15 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
   }
 
   const { _loading } = useReduxLoad(
-    ['linodes', 'volumes', 'nodeBalancers', 'images', 'domains', 'kubernetes'],
+    [
+      'linodes',
+      'volumes',
+      'nodeBalancers',
+      'images',
+      'domains',
+      'kubernetes',
+      'buckets'
+    ],
     REFRESH_INTERVAL,
     !_isLargeAccount
   );

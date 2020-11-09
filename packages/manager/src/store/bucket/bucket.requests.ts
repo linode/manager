@@ -90,6 +90,7 @@ export const getAllClustersAndAllBuckets: ThunkActionCreator<Promise<
     );
   }
 
+  dispatch(getAllBucketsForAllClustersActions.started());
   return dispatch(requestClusters()).then(clusters =>
     dispatch(
       getAllBucketsFromAllClusters(clusters.map(thisCluster => thisCluster.id))
