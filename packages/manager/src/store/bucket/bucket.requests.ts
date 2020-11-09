@@ -91,11 +91,15 @@ export const getAllClustersAndAllBuckets: ThunkActionCreator<Promise<
   }
 
   dispatch(getAllBucketsForAllClustersActions.started());
-  return dispatch(requestClusters()).then(clusters =>
-    dispatch(
-      getAllBucketsFromAllClusters(clusters.map(thisCluster => thisCluster.id))
-    )
-  );
+  return dispatch(requestClusters()).then(clusters => {
+    // In the event of a failure, `clusters` will be of type APIError[], so
+    // filter those out first.
+    const _clusters = clusters.filter(thisCluster => Boolean(thisCluster.id));
+
+    return dispatch(
+      getAllBucketsFromAllClusters(_clusters.map(thisCluster => thisCluster.id))
+    );
+  });
 };
 
 export const gatherDataAndErrors = (
