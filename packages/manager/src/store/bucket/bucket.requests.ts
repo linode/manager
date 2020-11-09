@@ -9,6 +9,7 @@ import {
   ObjectStorageDeleteBucketRequestPayload
 } from '@linode/api-v4/lib/object-storage';
 import { GetAllData, getAllWithArguments } from 'src/utilities/getAll';
+import { requestClusters } from '../clusters/clusters.actions';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
@@ -74,6 +75,26 @@ export const getAllBucketsFromAllClusters: ThunkActionCreator<
 
     return data;
   });
+};
+
+export const getAllClustersAndAllBuckets: ThunkActionCreator<Promise<
+  ObjectStorageBucket[]
+>> = () => (dispatch, getState) => {
+  const clustersFromState = getState().__resources.clusters.entities;
+
+  if (clustersFromState.length > 0) {
+    return dispatch(
+      getAllBucketsFromAllClusters(
+        clustersFromState.map(thisCluster => thisCluster.id)
+      )
+    );
+  }
+
+  return dispatch(requestClusters()).then(clusters =>
+    dispatch(
+      getAllBucketsFromAllClusters(clusters.map(thisCluster => thisCluster.id))
+    )
+  );
 };
 
 export const gatherDataAndErrors = (

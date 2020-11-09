@@ -7,6 +7,10 @@ import usePageVisibility from 'src/hooks/usePageVisibility';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
+import { getAllClustersAndAllBuckets } from 'src/store/bucket/bucket.requests';
+import { requestClusters } from 'src/store/clusters/clusters.actions';
+import { getAllDatabases } from 'src/store/databases/databases.requests';
+import { getAllMySQLTypes } from 'src/store/databases/types.requests';
 import { requestDomains } from 'src/store/domains/domains.requests';
 import { getEvents } from 'src/store/events/event.request';
 import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
@@ -21,11 +25,8 @@ import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.request
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
-import { getAllVolumes } from 'src/store/volume/volume.requests';
-import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { getAllVlans } from 'src/store/vlans/vlans.requests';
-import { getAllDatabases } from 'src/store/databases/databases.requests';
-import { getAllMySQLTypes } from 'src/store/databases/types.requests';
+import { getAllVolumes } from 'src/store/volume/volume.requests';
 
 interface UseReduxPreload {
   _loading: boolean;
@@ -53,8 +54,10 @@ export type ReduxEntity =
   | 'clusters'
   | 'vlans'
   | 'databases'
-  | 'databaseTypes';
+  | 'databaseTypes'
+  | 'buckets';
 
+// The Buckets request is a special case since it depends on Clusters.
 type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
   linodes: () => requestLinodes({}),
@@ -77,7 +80,8 @@ const requestMap: RequestMap = {
   firewalls: () => getAllFirewalls({}),
   clusters: requestClusters,
   vlans: () => getAllVlans({}),
-  databaseTypes: () => getAllMySQLTypes({})
+  databaseTypes: () => getAllMySQLTypes({}),
+  buckets: () => getAllClustersAndAllBuckets()
 };
 
 export const useReduxLoad = (
@@ -145,7 +149,9 @@ export const requestDeps = (
     const currentResource = state.__resources[deps[i]] || state[deps[i]];
 
     if (currentResource) {
-      const currentResourceHasError = hasError(currentResource?.error);
+      const currentResourceHasError = hasError(
+        currentResource?.error || currentResource?.bucketErrors
+      );
       if (
         currentResource.lastUpdated === 0 &&
         !currentResource.loading &&

@@ -68,7 +68,8 @@ const searchDeps: ReduxEntity[] = [
   'images',
   'domains',
   'volumes',
-  'kubernetes'
+  'kubernetes',
+  'buckets'
 ];
 
 export const SearchBar: React.FC<CombinedProps> = props => {
