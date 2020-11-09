@@ -1,16 +1,19 @@
 import * as React from 'react';
-import { useRouteMatch } from 'react-router-dom';
 import useDatabases from 'src/hooks/useDatabases';
 import DatabaseSettingsLabelPanel from './DatabaseSettingsLabelPanel';
 import DatabaseSettingsMaintenancePanel from './DatabaseSettingsMaintenancePanel';
 import DatabaseSettingsPasswordPanel from './DatabaseSettingsPasswordPanel';
 
-export const DatabaseSettings: React.FC<{}> = () => {
-  const match = useRouteMatch<{ id: string }>('/databases/:id');
+interface Props {
+  databaseID: number;
+}
+
+export const DatabaseSettings: React.FC<Props> = props => {
   const databases = useDatabases();
 
-  const thisDatabaseID = match?.params?.id;
-  const thisDatabase = databases.databases.itemsById[thisDatabaseID ?? '-1'];
+  const { databaseID } = props;
+
+  const thisDatabase = databases.databases.itemsById[databaseID];
 
   return (
     <>
