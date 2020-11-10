@@ -48,7 +48,8 @@ type ClassNames =
   | 'currentPlanContainer'
   | 'resizeTitle'
   | 'checkbox'
-  | 'currentHeaderEmptyCell';
+  | 'currentHeaderEmptyCell'
+  | 'errorLink';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -86,6 +87,10 @@ const styles = (theme: Theme) =>
     },
     currentHeaderEmptyCell: {
       width: '13%'
+    },
+    errorLink: {
+      color: '#c44742',
+      textDecoration: 'underline'
     }
   });
 
@@ -161,6 +166,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const {
+      classes,
       linodeId,
       linodeType,
       enqueueSnackbar,
@@ -221,6 +227,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               service plan. Please resize your disk to accommodate the new plan.
               You can read our{' '}
               <ExternalLink
+                className={classes.errorLink}
                 hideIcon
                 text="Resize Your Linode"
                 link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
