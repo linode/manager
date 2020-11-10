@@ -9,17 +9,16 @@ export const ServiceWorkerTool: React.FC<{}> = _ => {
   React.useEffect(() => {
     if (workerActive) {
       worker.start();
+    } else {
+      worker.stop();
     }
   }, [workerActive]);
 
   const handleToggleWorker = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
-    if (!checked) {
-      worker.stop();
-    }
     localStorage.setItem(
       'mock-service-worker-enabled',
-      e.target.checked ? 'enabled' : 'disabled'
+      checked ? 'enabled' : 'disabled'
     );
     window.location.reload();
   };
