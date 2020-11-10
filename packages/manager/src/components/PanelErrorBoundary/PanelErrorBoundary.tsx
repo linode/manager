@@ -1,13 +1,11 @@
 import * as React from 'react';
 import ErrorState from 'src/components/ErrorState';
-import ExpansionPanel, {
-  ExpansionPanelProps
-} from 'src/components/ExpansionPanel';
+import Accordion, { AccordionProps } from 'src/components/Accordion';
 
 /* tslint:disable-next-line */
-export interface Props extends Omit<ExpansionPanelProps, 'children'> {}
+export interface Props extends Omit<AccordionProps, 'children'> {}
 
-export default (expansionPanelProps: Props) => <P extends {}>(
+export default (AccordionProps: Props) => <P extends {}>(
   Component: React.ComponentType<P>
 ) => {
   interface State {
@@ -28,12 +26,12 @@ export default (expansionPanelProps: Props) => <P extends {}>(
 
       if (error) {
         return (
-          <ExpansionPanel defaultExpanded {...expansionPanelProps}>
+          <Accordion defaultExpanded {...AccordionProps}>
             <ErrorState
               compact
               errorText="An error has occured. Please reload and try again."
             />
-          </ExpansionPanel>
+          </Accordion>
         );
       }
 

@@ -772,7 +772,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         }
       },
-      MuiExpansionPanel: {
+      MuiAccordion: {
         root: {
           '& .actionPanel': {
             paddingLeft: spacingUnit * 2,
@@ -784,13 +784,13 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         }
       },
-      MuiExpansionPanelDetails: {
+      MuiAccordionDetails: {
         root: {
           padding: spacingUnit * 2,
           backgroundColor: 'white'
         }
       },
-      MuiExpansionPanelSummary: {
+      MuiAccordionSummary: {
         root: {
           '&$focused': {
             backgroundColor: '#fbfbfb'
