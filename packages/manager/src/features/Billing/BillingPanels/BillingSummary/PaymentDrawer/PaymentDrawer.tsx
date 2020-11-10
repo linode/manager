@@ -1,3 +1,4 @@
+import { APIWarning } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -7,6 +8,7 @@ import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps
@@ -15,6 +17,7 @@ import { v4 } from 'uuid';
 
 import CreditCard from './CreditCardPayment';
 import PayPal from './Paypal';
+import { SetSuccess } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -60,6 +63,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
   const [successMessage, setSuccessMessage] = React.useState<string | null>(
     null
   );
+  const [warning, setWarning] = React.useState<APIWarning | null>(null);
 
   const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
   const [payPalKey, setPayPalKey] = React.useState<string>(v4());
@@ -78,9 +82,10 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
     setUSD(e.target.value || '');
   };
 
-  const setSuccess = (
-    message: string | null,
-    paymentWasMade: boolean = false
+  const setSuccess: SetSuccess = (
+    message,
+    paymentWasMade = false,
+    warnings = undefined
   ) => {
     setSuccessMessage(message);
     if (paymentWasMade) {
@@ -89,6 +94,9 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
       setCreditCardKey(v4());
       setPayPalKey(v4());
       props.requestAccount();
+    }
+    if (warnings) {
+      setWarning(warnings[0]);
     }
   };
 
@@ -107,6 +115,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
       <Grid container>
         <Grid item xs={12}>
           {successMessage && <Notice success text={successMessage ?? ''} />}
+          {warning && <Warning warning={warning} />}
           {balance !== false && (
             <Grid item>
               <Typography variant="h3" className={classes.currentBalance}>
@@ -145,6 +154,35 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
       </Grid>
     </Drawer>
   );
+};
+
+interface WarningProps {
+  warning: APIWarning;
+}
+
+const Warning: React.FC<WarningProps> = props => {
+  const { warning } = props;
+  /** The most common API warning includes "please open a Support ticket",
+   * which we'd like to be a link.
+   */
+  const ticketLink = warning.detail.match(/open a support ticket/i) ? (
+    <>
+      {warning.detail.replace(/open a support ticket\./i, '')}
+      <SupportLink
+        text="open a Support ticket"
+        title={`Re: ${warning.detail}`}
+      />
+      .
+    </>
+  ) : (
+    warning.detail
+  );
+  const message = (
+    <>
+      {warning.title} {ticketLink}
+    </>
+  );
+  return <Notice warning text={message} />;
 };
 
 const withAccount = AccountContainer(
