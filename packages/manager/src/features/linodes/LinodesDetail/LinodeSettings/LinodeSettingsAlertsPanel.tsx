@@ -6,7 +6,7 @@ import * as React from 'react';
 import { compose as rCompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ExpansionPanel from 'src/components/Accordion';
+import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
@@ -276,7 +276,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <ExpansionPanel
+      <Accordion
         heading="Notification Thresholds"
         success={this.state.success}
         actions={this.renderExpansionActions}
@@ -290,7 +290,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             readOnly={permissions === 'read_only'}
           />
         ))}
-      </ExpansionPanel>
+      </Accordion>
     );
   }
 }

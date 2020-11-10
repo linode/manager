@@ -3,7 +3,7 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ExpansionPanel from 'src/components/Accordion';
+import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import PasswordInput from 'src/components/PasswordInput';
@@ -63,7 +63,7 @@ export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = props => {
   );
 
   return (
-    <ExpansionPanel
+    <Accordion
       heading="Reset Root Password"
       expanded={open}
       onChange={() => {
@@ -97,7 +97,7 @@ export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = props => {
           data-qa-password-input
         />
       </React.Suspense>
-    </ExpansionPanel>
+    </Accordion>
   );
 };
 

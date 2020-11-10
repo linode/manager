@@ -56,7 +56,7 @@ class AsyncContentExample extends React.Component {
   }
 }
 
-storiesOf('ExpansionPanel', module)
+storiesOf('Accordion', module)
   .add('Interactive', () => (
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
       <Accordion heading="The best Linode department is?">

@@ -13,7 +13,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import ExpansionPanel from 'src/components/Accordion';
+import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -166,12 +166,12 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
         />
       </Grid>
       <Grid item style={{ marginTop: 8 }}>
-        <ExpansionPanel
+        <Accordion
           heading="Formatting Tips"
           detailProps={{ className: classes.expPanelSummary }}
         >
           <Reference isReply rootClass={classes.referenceRoot} />
-        </ExpansionPanel>
+        </Accordion>
       </Grid>
       <Grid item>
         <AttachFileForm

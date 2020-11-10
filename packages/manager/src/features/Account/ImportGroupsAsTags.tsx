@@ -7,7 +7,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ExpansionPanel from 'src/components/Accordion';
+import Accordion from 'src/components/Accordion';
 
 type ClassNames = 'root' | 'helperText';
 
@@ -28,7 +28,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const ImportGroupsAsTags: React.FC<CombinedProps> = props => {
   const { classes, openDrawer } = props;
   return (
-    <ExpansionPanel
+    <Accordion
       className={classes.root}
       defaultExpanded={true}
       heading={'Import Display Groups as Tags'}
@@ -47,7 +47,7 @@ export const ImportGroupsAsTags: React.FC<CombinedProps> = props => {
       >
         Import Display Groups
       </Button>
-    </ExpansionPanel>
+    </Accordion>
   );
 };
 
