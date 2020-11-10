@@ -336,7 +336,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                           <Route path="/firewalls" component={Firewalls} />
                         )}
                         {showVlans && <Route path="/vlans" component={VLans} />}
-                        {props.flags.vlans && (
+                        {props.flags.databases && (
                           <Route path="/databases" component={Databases} />
                         )}
                         <Redirect exact from="/" to="/dashboard" />
