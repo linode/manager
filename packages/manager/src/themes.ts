@@ -395,19 +395,19 @@ const darkThemeOptions = {
         boxShadow: '0 0 5px #222'
       }
     },
-    MuiExpansionPanel: {
+    MuiAccordion: {
       root: {
         '& table': {
           border: `1px solid ${primaryColors.divider}`
         }
       }
     },
-    MuiExpansionPanelDetails: {
+    MuiAccordionDetails: {
       root: {
         backgroundColor: '#32363c'
       }
     },
-    MuiExpansionPanelSummary: {
+    MuiAccordionSummary: {
       root: {
         '&$focused': {
           backgroundColor: '#111111'
