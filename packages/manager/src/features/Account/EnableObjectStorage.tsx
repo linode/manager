@@ -7,7 +7,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import ExpansionPanel from 'src/components/Accordion';
+import Accordion from 'src/components/Accordion';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 
@@ -118,12 +118,12 @@ export const EnableObjectStorage: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <ExpansionPanel heading="Object Storage" defaultExpanded={true}>
+      <Accordion heading="Object Storage" defaultExpanded={true}>
         <ObjectStorageContent
           object_storage={object_storage}
           openConfirmationModal={() => setOpen(true)}
         />
-      </ExpansionPanel>
+      </Accordion>
       <ConfirmationDialog
         open={isOpen}
         error={error}

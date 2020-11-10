@@ -7,7 +7,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import ExpansionPanel from 'src/components/Accordion';
+import Accordion from 'src/components/Accordion';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
@@ -69,7 +69,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <ExpansionPanel heading="Delete Linode">
+        <Accordion heading="Delete Linode">
           <Button
             buttonType="secondary"
             destructive
@@ -83,7 +83,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
           <Typography variant="body1">
             Deleting a Linode will result in permanent data loss.
           </Typography>
-        </ExpansionPanel>
+        </Accordion>
         <ConfirmationDialog
           title={`Delete ${this.props.linodeLabel}?`}
           actions={this.renderConfirmationActions}

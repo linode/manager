@@ -7,7 +7,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ExpansionPanel from 'src/components/Accordion';
+import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 
@@ -42,7 +42,7 @@ const NetworkHelper: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <ExpansionPanel heading="Network Helper" defaultExpanded={true}>
+      <Accordion heading="Network Helper" defaultExpanded={true}>
         <Grid container direction="column" className={classes.root}>
           <Grid item>
             <Typography variant="body1">
@@ -70,7 +70,7 @@ const NetworkHelper: React.FC<CombinedProps> = props => {
             </Grid>
           </Grid>
         </Grid>
-      </ExpansionPanel>
+      </Accordion>
     </React.Fragment>
   );
 };

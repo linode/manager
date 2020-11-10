@@ -16,7 +16,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import ExpansionPanel from 'src/components/Accordion';
+import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
@@ -330,7 +330,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     const generalError = errorFor('none');
 
     return (
-      <ExpansionPanel
+      <Accordion
         heading="IP Sharing"
         error={generalError}
         success={successMessage}
@@ -378,7 +378,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             )}
           </Grid>
         </Grid>
-      </ExpansionPanel>
+      </Accordion>
     );
   }
 }

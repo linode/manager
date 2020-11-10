@@ -3,7 +3,7 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ExpansionPanel from 'src/components/Accordion';
+import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
@@ -67,7 +67,7 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
   );
 
   return (
-    <ExpansionPanel
+    <Accordion
       heading="Edit Database Label"
       expanded={open}
       onChange={() => {
@@ -97,7 +97,7 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
         errorGroup="database-settings-label"
         data-qa-label
       />
-    </ExpansionPanel>
+    </Accordion>
   );
 };
 
