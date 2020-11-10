@@ -5,7 +5,7 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ExpansionPanel from 'src/components/Accordion';
+import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
@@ -81,7 +81,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
       );
 
     return (
-      <ExpansionPanel
+      <Accordion
         heading="Linode Label"
         success={this.state.success}
         actions={() => (
@@ -111,7 +111,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
           data-qa-label
           disabled={disabled}
         />
-      </ExpansionPanel>
+      </Accordion>
     );
   }
 }
