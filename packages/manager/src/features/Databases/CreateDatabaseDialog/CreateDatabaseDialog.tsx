@@ -59,16 +59,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   chooseDay: {
-    marginRight: theme.spacing(4.5)
+    marginTop: 0,
+    marginRight: theme.spacing(2),
+    minWidth: 150
   },
   chooseTime: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: '2.25em'
-    }
+    marginTop: 0,
+    minWidth: 249
   },
   timeHelperText: {
-    fontSize: '0.8em'
+    fontSize: '0.875em'
   }
 }));
 
@@ -290,7 +290,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
           </FormHelperText>
           <div className={classes.maintenanceSelectsOuter}>
             <div className={classes.maintenanceSelectsInner}>
-              <FormControl fullWidth className={classes.chooseDay}>
+              <FormControl className={classes.chooseDay}>
                 <Select
                   options={daySelection}
                   value={daySelection.find(
@@ -308,7 +308,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
               </FormControl>
             </div>
             <div className={classes.maintenanceSelectsInner}>
-              <FormControl fullWidth className={classes.chooseTime}>
+              <FormControl className={classes.chooseTime}>
                 <Select
                   options={windowSelection}
                   value={windowSelection.find(
@@ -325,7 +325,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
                   data-qa-item="maintenanceWindow"
                 />
                 <FormHelperText className={classes.timeHelperText}>
-                  Time displayed in {timezone}
+                  Time displayed in {timezone.replace('_', ' ')}
                 </FormHelperText>
               </FormControl>
             </div>
