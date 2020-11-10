@@ -132,10 +132,19 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const clustersLoaded = objectStorageClusters.lastUpdated > 0;
 
   React.useEffect(() => {
-    if (!clustersLoaded && !_isRestrictedUser) {
+    if (
+      !clustersLoaded &&
+      !objectStorageClusters.loading &&
+      !_isRestrictedUser
+    ) {
       requestObjectStorageClusters();
     }
-  }, [_isRestrictedUser, clustersLoaded, requestObjectStorageClusters]);
+  }, [
+    _isRestrictedUser,
+    clustersLoaded,
+    objectStorageClusters.loading,
+    requestObjectStorageClusters
+  ]);
 
   const clusterIds = objectStorageClusters.entities.map(
     thisCluster => thisCluster.id
