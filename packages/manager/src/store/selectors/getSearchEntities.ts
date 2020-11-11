@@ -15,6 +15,9 @@ import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
 import { ExtendedNodePool } from 'src/store/kubernetes/nodePools.actions';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import { objectStorageClusterDisplay } from 'src/constants';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 type State = ApplicationState['__resources'];
 
@@ -149,6 +152,22 @@ export const kubernetesClusterToSearchableItem = (
   }
 });
 
+export const bucketToSearchableItem = (
+  bucket: ObjectStorageBucket
+): SearchableItem => ({
+  label: bucket.label,
+  value: `${bucket.cluster}/${bucket.label}`,
+  entityType: 'bucket',
+  data: {
+    icon: 'bucket',
+    path: `/object-storage/buckets/${bucket.cluster}/${bucket.label}`,
+    created: bucket.created,
+    label: bucket.label,
+    region: objectStorageClusterDisplay[bucket.cluster],
+    description: readableBytes(bucket.size).formatted
+  }
+});
+
 const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
 const volumeSelector = ({ volumes }: State) => Object.values(volumes.itemsById);
 const nodebalSelector = ({ nodeBalancers }: State) =>
@@ -160,6 +179,7 @@ const typesSelector = (state: State) => state.types.entities;
 const kubernetesClusterSelector = (state: State) =>
   Object.values(state.kubernetes.itemsById);
 const kubePoolSelector = (state: State) => state.nodePools.entities;
+const bucketSelector = (state: State) => state.buckets.data;
 
 export default createSelector<
   State,
@@ -171,6 +191,7 @@ export default createSelector<
   LinodeType[],
   KubernetesCluster[],
   ExtendedNodePool[],
+  ObjectStorageBucket[],
   SearchableItem[]
 >(
   linodeSelector,
@@ -181,6 +202,7 @@ export default createSelector<
   typesSelector,
   kubernetesClusterSelector,
   kubePoolSelector,
+  bucketSelector,
   (
     linodes,
     volumes,
@@ -189,7 +211,8 @@ export default createSelector<
     nodebalancers,
     types,
     kubernetesClusters,
-    nodePools
+    nodePools,
+    buckets
   ) => {
     const arrOfImages = Object.values(images);
     const searchableLinodes = linodes.map(linode =>
@@ -207,6 +230,7 @@ export default createSelector<
         return extendCluster(thisCluster, pools, types);
       })
       .map(kubernetesClusterToSearchableItem);
+    const searchableObjectStorageBuckets = buckets.map(bucketToSearchableItem);
 
     return [
       ...searchableLinodes,
@@ -214,7 +238,8 @@ export default createSelector<
       ...searchableImages,
       ...searchableDomains,
       ...searchableNodebalancers,
-      ...searchableKubernetesClusters
+      ...searchableKubernetesClusters,
+      ...searchableObjectStorageBuckets
     ];
   }
 );

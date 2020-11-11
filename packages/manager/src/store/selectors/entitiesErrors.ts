@@ -12,6 +12,8 @@ export interface ErrorObject {
   images: boolean;
   nodebalancers: boolean;
   kubernetes: boolean;
+  objectStorageClusters: boolean;
+  objectStorageBuckets: boolean;
 }
 
 export const linodesErrorSelector = (state: State) => {
@@ -28,9 +30,15 @@ export const typesErrorSelector = (state: State) =>
   Boolean(state.types.error && state.types.error.length > 0);
 export const kubernetesErrorSelector = (state: State) =>
   Object.values(state.kubernetes.error ?? {}).some(Boolean);
+export const objectStorageClustersSelector = (state: State) =>
+  Object.values(state.clusters.error ?? {}).some(Boolean);
+export const objectStorageBucketsSelector = (state: State) =>
+  Object.values(state.buckets.bucketErrors ?? {}).some(Boolean);
 
 export default createSelector<
   State,
+  boolean,
+  boolean,
   boolean,
   boolean,
   boolean,
@@ -45,14 +53,34 @@ export default createSelector<
   domainsErrorSelector,
   imagesErrorSelector,
   kubernetesErrorSelector,
-  (linodes, volumes, nodebalancers, domains, images, kubernetes) => ({
+  objectStorageClustersSelector,
+  objectStorageBucketsSelector,
+  (
     linodes,
     volumes,
     nodebalancers,
     domains,
     images,
     kubernetes,
+    objectStorageClusters,
+    objectStorageBuckets
+  ) => ({
+    linodes,
+    volumes,
+    nodebalancers,
+    domains,
+    images,
+    kubernetes,
+    objectStorageClusters,
+    objectStorageBuckets,
     hasErrors:
-      linodes || volumes || nodebalancers || domains || images || kubernetes
+      linodes ||
+      volumes ||
+      nodebalancers ||
+      domains ||
+      images ||
+      kubernetes ||
+      objectStorageClusters ||
+      objectStorageBuckets
   })
 );
