@@ -48,12 +48,6 @@ const DatabaseBackupActionMenu: React.FC<CombinedProps> = props => {
       onClick: () => {
         alert('Restore');
       }
-    },
-    {
-      title: 'Delete',
-      onClick: () => {
-        alert('Delete');
-      }
     }
   ];
 
