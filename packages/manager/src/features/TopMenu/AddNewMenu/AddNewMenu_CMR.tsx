@@ -189,12 +189,9 @@ class AddNewMenu extends React.Component<CombinedProps> {
                           ItemIcon={NodebalancerIcon}
                         />
                       </MenuLink>
-                      <MenuItem
-                        onSelect={() => {
-                          this.props.openDomainDrawerForCreating(
-                            'Created from Add New Menu'
-                          );
-                        }}
+                      <MenuLink
+                        as={Link}
+                        to="/domains/create"
                         className={classes.menuItemLink}
                       >
                         <AddNewMenuItem
@@ -202,7 +199,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                           body="Manage your DNS records using Linode’s high-availability name servers"
                           ItemIcon={DomainIcon}
                         />
-                      </MenuItem>
+                      </MenuLink>
                       <MenuLink
                         as={Link}
                         to="/linodes/create?type=One-Click"

@@ -16,6 +16,7 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from 'src/components/core/Grid';
+import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
   createStyles,
@@ -56,36 +57,17 @@ import {
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getInitialIPs } from '../domainUtils';
-import Paper from 'src/components/core/Paper';
 
-type ClassNames = 'root' | 'title' | 'inner' | 'radio' | 'helperText';
+type ClassNames = 'title' | 'main' | 'inner' | 'radio' | 'helperText';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      '& .mlMain': {
-        maxWidth: '100%',
-        flexBasis: '100%',
-        [theme.breakpoints.up('lg')]: {
-          maxWidth: '78.8%',
-          flexBasis: '78.8%'
-        }
-      },
-      '& .mlSidebar': {
-        position: 'static',
-        width: '100%',
-        flexBasis: '100%',
-        maxWidth: '100%',
-        [theme.breakpoints.up('lg')]: {
-          position: 'sticky',
-          maxWidth: '21.2%',
-          flexBasis: '21.2%'
-        }
-      }
-    },
     title: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(3)
+    },
+    main: {
+      width: '100%'
     },
     inner: {
       padding: theme.spacing(3),
@@ -280,7 +262,7 @@ class CreateDomain extends React.Component<CombinedProps, State> {
     const isCreatingSlaveDomain = type === 'slave';
 
     return (
-      <Grid container className={classes.root}>
+      <Grid container>
         <DocumentTitleSegment segment="Create a Domain" />
         <Grid
           container
@@ -304,7 +286,7 @@ class CreateDomain extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
 
-        <Grid item className={`mlMain py0`}>
+        <Grid item className={classes.main}>
           {generalError && !disabled && (
             <Notice error spacingTop={8}>
               {generalError}
@@ -465,7 +447,7 @@ class CreateDomain extends React.Component<CombinedProps, State> {
               <ActionsPanel>
                 <Button
                   buttonType="primary"
-                  onClick={this.submit}
+                  onClick={this.create}
                   data-qa-submit
                   data-testid="create-domain-submit"
                   loading={submitting}
@@ -656,10 +638,6 @@ class CreateDomain extends React.Component<CombinedProps, State> {
           }
         );
       });
-  };
-
-  submit = () => {
-    this.create();
   };
 
   updateLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
