@@ -3,7 +3,7 @@ import { worker } from '../mocks/testBrowser';
 
 export const ServiceWorkerTool: React.FC<{}> = _ => {
   const _workerActive =
-    localStorage.getItem('mock-service-worker-enabled') ?? 'disabled';
+    localStorage.getItem('devTools/mock-service-worker-enabled') ?? 'disabled';
   const workerActive = _workerActive === 'enabled';
 
   React.useEffect(() => {
@@ -17,7 +17,7 @@ export const ServiceWorkerTool: React.FC<{}> = _ => {
   const handleToggleWorker = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
     localStorage.setItem(
-      'mock-service-worker-enabled',
+      'devTools/mock-service-worker-enabled',
       checked ? 'enabled' : 'disabled'
     );
     window.location.reload();
