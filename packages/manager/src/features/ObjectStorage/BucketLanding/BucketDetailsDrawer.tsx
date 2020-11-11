@@ -11,6 +11,12 @@ import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
+import ACLSelect from '../BucketDetail/ACLSelect';
+import {
+  getBucketAccess,
+  updateBucketAccess,
+  ACLType
+} from '@linode/api-v4/lib/object-storage';
 
 const useStyles = makeStyles(() => ({
   divider: {
@@ -99,13 +105,19 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
         <Divider className={classes.divider} />
       ) : null}
 
-      {aclControl ? (
-        <Typography variant="subtitle2">{aclControl}</Typography>
+      {cluster && bucketLabel ? (
+        <ACLSelect
+          variant="bucket"
+          name={bucketLabel}
+          getACL={() => getBucketAccess(cluster, bucketLabel)}
+          updateACL={(acl: Omit<ACLType, 'custom'>, cors_enabled: boolean) => {
+            return updateBucketAccess(cluster, bucketLabel, {
+              acl,
+              cors_enabled
+            });
+          }}
+        />
       ) : null}
-
-      <Typography variant="subtitle2">
-        {corsControl ? 'CORS enabled' : 'CORS disabled'}
-      </Typography>
 
       {hostname ? <Divider className={classes.divider} /> : null}
 

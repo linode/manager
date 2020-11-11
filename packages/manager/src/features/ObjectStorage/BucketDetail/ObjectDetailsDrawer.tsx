@@ -94,6 +94,7 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
 
       {open && name ? (
         <ACLSelect
+          variant="object"
           name={name}
           getACL={() => getObjectACL(clusterId, bucketName, name)}
           updateACL={(acl: ACLType) =>
