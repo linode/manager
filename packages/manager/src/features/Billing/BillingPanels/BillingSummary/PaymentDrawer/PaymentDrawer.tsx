@@ -96,7 +96,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
       setPayPalKey(v4());
       props.requestAccount();
     }
-    if (warnings) {
+    if (warnings && warnings.length > 0) {
       setWarning(warnings[0]);
     }
   };
@@ -116,7 +116,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
       <Grid container>
         <Grid item xs={12}>
           {successMessage && <Notice success text={successMessage ?? ''} />}
-          {warning && <Warning warning={warning} />}
+          {warning ? <Warning warning={warning} /> : null}
           {balance !== false && (
             <Grid item>
               <Typography variant="h3" className={classes.currentBalance}>
@@ -166,7 +166,7 @@ const Warning: React.FC<WarningProps> = props => {
   /** The most common API warning includes "please open a Support ticket",
    * which we'd like to be a link.
    */
-  const ticketLink = warning.detail.match(/open a support ticket/i) ? (
+  const ticketLink = warning.detail.match(/open a support ticket\./i) ? (
     <>
       {warning.detail.replace(/open a support ticket\./i, '')}
       <SupportLink
