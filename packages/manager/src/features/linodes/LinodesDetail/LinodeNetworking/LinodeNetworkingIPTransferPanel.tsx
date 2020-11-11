@@ -25,7 +25,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -503,7 +503,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
     const { ips, error, successMessage } = this.state;
 
     return (
-      <ExpansionPanel
+      <Accordion
         heading="IP Transfer"
         actions={this.transferActions}
         success={successMessage}
@@ -549,7 +549,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             )}
           </Grid>
         </Grid>
-      </ExpansionPanel>
+      </Accordion>
     );
   }
 }
