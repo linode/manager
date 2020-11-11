@@ -133,7 +133,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
                         label="objects"
                         direction={order}
                         handleClick={handleOrderChange}
-                        data-qa-size
+                        data-qa-objects
                       >
                         Objects
                       </TableSortCell>
