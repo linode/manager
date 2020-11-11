@@ -7,7 +7,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import useDatabases from 'src/hooks/useDatabases';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -153,7 +153,7 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
   };
 
   return (
-    <ExpansionPanel
+    <Accordion
       heading="Change Maintenance Window"
       expanded={open}
       onChange={() => {
@@ -211,7 +211,7 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
           </FormHelperText>
         </FormControl>
       </div>
-    </ExpansionPanel>
+    </Accordion>
   );
 };
 
