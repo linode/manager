@@ -478,7 +478,9 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       </Button>
                     }
                     entity="Domain"
-                    onAddNew={this.openCreateDomainDrawer}
+                    onAddNew={() => {
+                      this.props.history.push('/domains/create');
+                    }}
                     iconType="domain"
                     docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
                   />
@@ -531,7 +533,9 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         <Grid item className="pt0">
                           <AddNewLink
                             data-testid="create-domain"
-                            onClick={this.openCreateDomainDrawer}
+                            onClick={() => {
+                              this.props.history.push('/domains/create');
+                            }}
                             label="Add a Domain"
                           />
                         </Grid>
