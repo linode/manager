@@ -39,7 +39,7 @@ interface AccountContextProps {
   expiry: string;
 }
 
-type CombinedProps = Props & AccountContextProps & AccountDispatchProps;
+export type CombinedProps = Props & AccountContextProps & AccountDispatchProps;
 
 export const getMinimumPayment = (balance: number | false) => {
   if (!balance || balance <= 0) {
