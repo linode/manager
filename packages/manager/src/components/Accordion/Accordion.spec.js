@@ -2,7 +2,7 @@ const { constants } = require('../../../e2e/constants');
 const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Expansion Panel Suite', () => {
-  const component = 'ExpansionPanel';
+  const component = 'Accordion';
   const childStories = [
     'Interactive',
     'Success!',

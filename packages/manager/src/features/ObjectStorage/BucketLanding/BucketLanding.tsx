@@ -34,6 +34,7 @@ import BucketTable from './BucketTable';
 import BucketTable_CMR from './BucketTable_CMR';
 import useFlags from 'src/hooks/useFlags';
 import { readableBytes } from 'src/utilities/unitConversions';
+import BucketDetailsDrawer from './BucketDetailsDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -68,6 +69,21 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
   const [confirmBucketName, setConfirmBucketName] = React.useState<string>('');
+  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] = React.useState<
+    boolean
+  >(false);
+  const [bucketForDetails, setBucketForDetails] = React.useState<
+    ObjectStorageBucket | undefined
+  >(undefined);
+
+  const handleClickDetails = (bucket: ObjectStorageBucket) => {
+    setBucketDetailDrawerOpen(true);
+    setBucketForDetails(bucket);
+  };
+
+  const closeBucketDetailDrawer = () => {
+    setBucketDetailDrawerOpen(false);
+  };
 
   const handleClickRemove = (bucket: ObjectStorageBucket) => {
     setBucketToRemove(bucket);
@@ -229,6 +245,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
                 order,
                 handleOrderChange,
                 handleClickRemove,
+                handleClickDetails,
                 openBucketDrawer,
                 data: orderedData
               };
@@ -262,6 +279,18 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
           />
         </ConfirmationDialog>
       </div>
+      <BucketDetailsDrawer
+        open={bucketDetailDrawerOpen}
+        onClose={closeBucketDetailDrawer}
+        bucketLabel={bucketForDetails?.label}
+        hostname={bucketForDetails?.hostname}
+        created={bucketForDetails?.created}
+        cluster={bucketForDetails?.cluster}
+        size={bucketForDetails?.size}
+        objectsNumber={bucketForDetails?.objects}
+        aclControl={'ACL Control'}
+        corsControl={false}
+      />
     </React.Fragment>
   );
 };

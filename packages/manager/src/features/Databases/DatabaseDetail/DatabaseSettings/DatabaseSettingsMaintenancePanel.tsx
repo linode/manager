@@ -7,7 +7,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import useDatabases from 'src/hooks/useDatabases';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -45,9 +45,16 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
   const [maintenanceTime, setMaintenanceTime] = React.useState<string | number>(
     databaseMaintenanceSchedule.window
   );
+  const [open, setOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
+
+  React.useEffect(() => {
+    if (open) {
+      setSuccess('');
+    }
+  }, [open]);
 
   const errorMap = getErrorMap(
     ['maintenance_schedule.day', 'maintenance_schedule.window'],
@@ -139,8 +146,12 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
   };
 
   return (
-    <ExpansionPanel
+    <Accordion
       heading="Change Maintenance Window"
+      expanded={open}
+      onChange={() => {
+        setOpen(!open);
+      }}
       success={success}
       actions={() => (
         <ActionsPanel>
@@ -188,7 +199,7 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
           data-qa-item="maintenanceWindow"
         />
       </FormControl>
-    </ExpansionPanel>
+    </Accordion>
   );
 };
 

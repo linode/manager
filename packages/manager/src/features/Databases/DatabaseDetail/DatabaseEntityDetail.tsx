@@ -93,6 +93,7 @@ const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = props => {
         }
       />
       <DeletionDialog
+        typeToConfirm
         label={dialog.entityLabel ?? ''}
         entity="database"
         error={dialog.error}

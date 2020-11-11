@@ -10,9 +10,10 @@ import TabPanel from 'src/components/core/ReachTabPanel';
 export interface NavTab {
   title: string;
   routeName: string;
-  component:
+  component?:
     | React.ComponentType
     | React.LazyExoticComponent<React.ComponentType>;
+  render?: JSX.Element;
   // Whether or not this tab should be rendered in the background (even when
   // not on screen). Consumers should consider performance implications,
   // especially when a component behind a tab performs network requests.
@@ -62,13 +63,21 @@ const NavTabs: React.FC<CombinedProps> = props => {
       <React.Suspense fallback={<SuspenseLoader />}>
         <TabPanels>
           {tabs.map((thisTab, i) => {
+            if (!thisTab.render && !thisTab.component) {
+              return null;
+            }
+
             const _TabPanelComponent = thisTab.backgroundRendering
               ? TabPanel
               : SafeTabPanel;
 
             return (
               <_TabPanelComponent key={thisTab.routeName} index={i}>
-                <thisTab.component />
+                {thisTab.component ? (
+                  <thisTab.component />
+                ) : thisTab.render ? (
+                  thisTab.render
+                ) : null}
               </_TabPanelComponent>
             );
           })}

@@ -3,7 +3,6 @@ import {
   getDatabaseBackups
 } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
-import { useRouteMatch } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -23,19 +22,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const DatabaseBackups: React.FC<{}> = () => {
+interface Props {
+  databaseID: number;
+}
+
+export const DatabaseBackups: React.FC<Props> = props => {
   const classes = useStyles();
 
-  // @todo: get this ID as a prop
-  const match = useRouteMatch<{ id: string }>('/databases/:id');
-
-  const thisDatabaseID = match?.params?.id;
+  const { databaseID } = props;
 
   const backups = useAPIRequest<DatabaseBackup[]>(
-    // @todo: clean up when ID is a required prop
-    thisDatabaseID
-      ? () => getDatabaseBackups(Number(thisDatabaseID)).then(res => res.data)
-      : null,
+    () => getDatabaseBackups(Number(databaseID)).then(res => res.data),
     []
   );
 

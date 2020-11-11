@@ -139,9 +139,6 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   AccountStateProps;
 
-export const filterOutLinodeApps = (token: Token) =>
-  !token.website || !/.linode.com$/.test(token.website);
-
 export class APITokenTable extends React.Component<CombinedProps, State> {
   static defaultState: State = {
     form: {
@@ -481,10 +478,10 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     }
 
-    const filteredData = data ? data.filter(filterOutLinodeApps) : [];
+    const tokens = data ?? [];
 
-    return filteredData.length > 0 ? (
-      this.renderRows(filteredData)
+    return tokens.length > 0 ? (
+      this.renderRows(tokens)
     ) : (
       <TableRowEmptyState colSpan={6} />
     );

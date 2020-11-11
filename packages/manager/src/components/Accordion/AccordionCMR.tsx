@@ -1,14 +1,12 @@
 import * as React from 'react';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import ExpansionPanel, {
-  ExpansionPanelProps
-} from 'src/components/core/ExpansionPanel';
-import ExpansionPanelDetails, {
-  ExpansionPanelDetailsProps
-} from 'src/components/core/ExpansionPanelDetails';
-import ExpansionPanelSummary, {
-  ExpansionPanelSummaryProps
-} from 'src/components/core/ExpansionPanelSummary';
+import Accordion, { AccordionProps } from 'src/components/core/Accordion';
+import AccordionDetails, {
+  AccordionDetailsProps
+} from 'src/components/core/AccordionDetails';
+import AccordionSummary, {
+  AccordionSummaryProps
+} from 'src/components/core/AccordionSummary';
 import {
   createStyles,
   Theme,
@@ -37,10 +35,10 @@ const styles = (theme: Theme) => {
           transform: 'rotate(180deg)'
         }
       },
-      '& .MuiExpansionPanelDetails-root': {
+      '& .MuiAccordionDetails-root': {
         padding: '0 18px 15px'
       },
-      '& .MuiExpansionPanelSummary-root': {
+      '& .MuiAccordionSummary-root': {
         justifyContent: 'space-between',
         backgroundColor: 'transparent',
         padding: '0 9px 0 18px',
@@ -58,11 +56,11 @@ const styles = (theme: Theme) => {
           }
         }
       },
-      '& .MuiExpansionPanelSummary-content': {
+      '& .MuiAccordionSummary-content': {
         order: 1,
         alignItems: 'center'
       },
-      '& .MuiExpansionPanelSummary-expandIcon': {
+      '& .MuiAccordionSummary-expandIcon': {
         order: 2,
         '& svg': {
           fill: '#2575d0',
@@ -88,22 +86,22 @@ const styles = (theme: Theme) => {
   });
 };
 
-export interface Props extends ExpansionPanelProps {
+export interface Props extends AccordionProps {
   heading: string | React.ReactNode;
   error?: string;
   warning?: string;
   success?: string;
   loading?: boolean;
-  actions?: (props: ExpansionPanelProps) => null | JSX.Element;
-  summaryProps?: ExpansionPanelSummaryProps;
+  actions?: (props: AccordionProps) => null | JSX.Element;
+  summaryProps?: AccordionSummaryProps;
   headingProps?: TypographyProps;
-  detailProps?: ExpansionPanelDetailsProps;
+  detailProps?: AccordionDetailsProps;
   headingNumberCount?: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class EExpansionPanel extends React.Component<CombinedProps> {
+class AAccordion extends React.Component<CombinedProps> {
   state = { open: this.props.defaultExpanded };
 
   handleClick = (e: React.MouseEvent<any>) => {
@@ -122,18 +120,14 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       error,
       loading,
       headingNumberCount,
-      ...expansionPanelProps
+      ...accordionProps
     } = this.props;
 
     const notice = success || warning || error || null;
 
     return (
-      <ExpansionPanel
-        {...expansionPanelProps}
-        className={classes.root}
-        data-qa-panel
-      >
-        <ExpansionPanelSummary
+      <Accordion {...accordionProps} className={classes.root} data-qa-panel>
+        <AccordionSummary
           onClick={this.handleClick}
           expandIcon={<KeyboardArrowDown className="caret" />}
           {...summaryProps}
@@ -148,8 +142,8 @@ class EExpansionPanel extends React.Component<CombinedProps> {
                 {this.props.headingNumberCount}
               </span>
             )}
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails {...detailProps} data-qa-panel-details>
+        </AccordionSummary>
+        <AccordionDetails {...detailProps} data-qa-panel-details>
           <Grid container>
             {notice && (
               <Grid item xs={12}>
@@ -167,13 +161,13 @@ class EExpansionPanel extends React.Component<CombinedProps> {
               {this.props.children}
             </Grid>
           </Grid>
-        </ExpansionPanelDetails>
-        {actions && actions(expansionPanelProps)}
-      </ExpansionPanel>
+        </AccordionDetails>
+        {actions && actions(accordionProps)}
+      </Accordion>
     );
   }
 }
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<Props>(EExpansionPanel));
+export default styled(RenderGuard<Props>(AAccordion));

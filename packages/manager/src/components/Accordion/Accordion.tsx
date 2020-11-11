@@ -1,15 +1,13 @@
 import * as React from 'react';
 import Minus from 'src/assets/icons/minus-square.svg';
 import Plus from 'src/assets/icons/plus-square.svg';
-import ExpansionPanel, {
-  ExpansionPanelProps
-} from 'src/components/core/ExpansionPanel';
-import ExpansionPanelDetails, {
-  ExpansionPanelDetailsProps
-} from 'src/components/core/ExpansionPanelDetails';
-import ExpansionPanelSummary, {
-  ExpansionPanelSummaryProps
-} from 'src/components/core/ExpansionPanelSummary';
+import Accordion, { AccordionProps } from 'src/components/core/Accordion';
+import AccordionDetails, {
+  AccordionDetailsProps
+} from 'src/components/core/AccordionDetails';
+import AccordionSummary, {
+  AccordionSummaryProps
+} from 'src/components/core/AccordionSummary';
 import {
   createStyles,
   Theme,
@@ -68,21 +66,21 @@ const styles = (theme: Theme) => {
   });
 };
 
-export interface Props extends ExpansionPanelProps {
+export interface Props extends AccordionProps {
   heading: string | React.ReactNode;
   error?: string;
   warning?: string;
   success?: string;
   loading?: boolean;
-  actions?: (props: ExpansionPanelProps) => null | JSX.Element;
-  summaryProps?: ExpansionPanelSummaryProps;
+  actions?: (props: AccordionProps) => null | JSX.Element;
+  summaryProps?: AccordionSummaryProps;
   headingProps?: TypographyProps;
-  detailProps?: ExpansionPanelDetailsProps;
+  detailProps?: AccordionDetailsProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class EExpansionPanel extends React.Component<CombinedProps> {
+class AAccordion extends React.Component<CombinedProps> {
   state = { open: this.props.defaultExpanded };
 
   handleClick = (e: React.MouseEvent<any>) => {
@@ -100,18 +98,14 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       warning,
       error,
       loading,
-      ...expansionPanelProps
+      ...accordionProps
     } = this.props;
 
     const notice = success || warning || error || null;
 
     return (
-      <ExpansionPanel
-        {...expansionPanelProps}
-        className={classes.root}
-        data-qa-panel
-      >
-        <ExpansionPanelSummary
+      <Accordion {...accordionProps} className={classes.root} data-qa-panel>
+        <AccordionSummary
           onClick={this.handleClick}
           expandIcon={this.state.open ? <Minus /> : <Plus />}
           {...summaryProps}
@@ -120,17 +114,17 @@ class EExpansionPanel extends React.Component<CombinedProps> {
           <Typography {...headingProps} variant="h3" data-qa-panel-subheading>
             {this.props.heading}
           </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails {...detailProps} data-qa-panel-details>
+        </AccordionSummary>
+        <AccordionDetails {...detailProps} data-qa-panel-details>
           <Grid container>
             {notice && (
               <Grid item xs={12}>
                 <Notice
                   data-qa-notice
                   text={notice}
-                  {...success && { success: true }}
-                  {...warning && { warning: true }}
-                  {...error && { error: true }}
+                  {...(success && { success: true })}
+                  {...(warning && { warning: true })}
+                  {...(error && { error: true })}
                   spacingBottom={0}
                 />
               </Grid>
@@ -139,13 +133,13 @@ class EExpansionPanel extends React.Component<CombinedProps> {
               {this.props.children}
             </Grid>
           </Grid>
-        </ExpansionPanelDetails>
-        {actions && actions(expansionPanelProps)}
-      </ExpansionPanel>
+        </AccordionDetails>
+        {actions && actions(accordionProps)}
+      </Accordion>
     );
   }
 }
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<Props>(EExpansionPanel));
+export default styled(RenderGuard<Props>(AAccordion));

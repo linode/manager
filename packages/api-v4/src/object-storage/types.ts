@@ -37,6 +37,7 @@ export interface ObjectStorageBucket {
   cluster: string;
   hostname: string;
   size: number; // Size of bucket in bytes
+  objects: number;
 }
 
 export interface ObjectStorageObject {
@@ -50,6 +51,18 @@ export interface ObjectStorageObject {
 export interface ObjectStorageObjectURL {
   exists: boolean;
   url: string;
+}
+
+export type ACLType =
+  | 'private'
+  | 'public-read'
+  | 'authenticated-read'
+  | 'public-read-write'
+  | 'custom';
+
+export interface ObjectStorageObjectACL {
+  acl: ACLType;
+  acl_xml: string;
 }
 
 export interface ObjectStorageObjectURLOptions {

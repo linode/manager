@@ -3,7 +3,7 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import PasswordInput from 'src/components/PasswordInput';
@@ -23,9 +23,16 @@ export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = props => {
   const { resetPassword } = useDatabases();
 
   const [value, setValue] = React.useState<string>('');
+  const [open, setOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
+
+  React.useEffect(() => {
+    if (open) {
+      setSuccess('');
+    }
+  }, [open]);
 
   const errorMap = getErrorMap(['root_password'], errors);
   const passwordError = errorMap['root_password'];
@@ -38,6 +45,7 @@ export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = props => {
 
     resetPassword(databaseID, value)
       .then(() => {
+        setValue('');
         setSubmitting(false);
         setSuccess('Database password changed successfully.');
       })
@@ -55,8 +63,12 @@ export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = props => {
   );
 
   return (
-    <ExpansionPanel
+    <Accordion
       heading="Reset Root Password"
+      expanded={open}
+      onChange={() => {
+        setOpen(!open);
+      }}
       success={success}
       actions={() => (
         <ActionsPanel>
@@ -85,7 +97,7 @@ export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = props => {
           data-qa-password-input
         />
       </React.Suspense>
-    </ExpansionPanel>
+    </Accordion>
   );
 };
 
