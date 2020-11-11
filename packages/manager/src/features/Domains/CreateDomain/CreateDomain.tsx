@@ -124,11 +124,11 @@ export const generateDefaultDomainRecords = (
   ipv6?: string | null
 ) => {
   /**
-   * at this point, the IPv6 is including the prefix and we need to strip that
+   * At this point, the IPv6 is including the prefix and we need to strip that
    *
    * BUT
    *
-   * this logic only applies to Linodes' ipv6, not nodebalancers. No stripping
+   * this logic only applies to Linodes' ipv6, not NodeBalancers. No stripping
    * needed for NodeBalancers.
    */
   const cleanedIPv6 =
