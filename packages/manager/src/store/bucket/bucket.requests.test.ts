@@ -7,7 +7,7 @@ import { isType } from 'typescript-fsa';
 import { getAllBucketsForAllClustersActions as actions } from './bucket.actions';
 import {
   gatherDataAndErrors,
-  getAllBucketsFromAllClusters
+  getAllBucketsFromClusters
 } from './bucket.requests';
 import { BucketError } from './types';
 
@@ -39,7 +39,7 @@ describe('getAllBucketsFromAllClusters', () => {
   it('handles successes', async () => {
     const store = mockStore();
     await store.dispatch(
-      getAllBucketsFromAllClusters([usEast1, euCentral1]) as any
+      getAllBucketsFromClusters([usEast1, euCentral1]) as any
     );
     const [firstAction, secondAction] = store.getActions();
     expect(isType(firstAction, actions.started)).toBe(true);
@@ -49,7 +49,7 @@ describe('getAllBucketsFromAllClusters', () => {
   it('handles errors', async () => {
     const store = mockStore();
     await store.dispatch(
-      getAllBucketsFromAllClusters([usEast1, euCentral1]) as any
+      getAllBucketsFromClusters([usEast1, euCentral1]) as any
     );
     const [, secondAction] = store.getActions();
     expect(isType(secondAction, actions.failed)).toBe(true);
