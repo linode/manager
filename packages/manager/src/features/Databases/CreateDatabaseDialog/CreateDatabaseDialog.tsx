@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   maintenanceSelectsOuter: {
     display: 'flex',
-    justifyContent: 'space-between',
     maxWidth: '415px',
     [theme.breakpoints.down('xs')]: {
       display: 'block',
@@ -61,11 +60,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   chooseDay: {
     marginTop: 0,
     marginRight: theme.spacing(2),
-    minWidth: 150
+    minWidth: 160
   },
   chooseTime: {
     marginTop: 0,
-    minWidth: 249
+    minWidth: 240
   },
   timeHelperText: {
     fontSize: '0.875em'
@@ -324,10 +323,11 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
                   isClearable={true}
                   data-qa-item="maintenanceWindow"
                 />
-                <FormHelperText className={classes.timeHelperText}>
-                  Time displayed in {timezone.replace('_', ' ')}
-                </FormHelperText>
               </FormControl>
+
+              <FormHelperText className={classes.timeHelperText}>
+                Time displayed in {timezone.replace('_', ' ')}
+              </FormHelperText>
             </div>
           </div>
         </div>
