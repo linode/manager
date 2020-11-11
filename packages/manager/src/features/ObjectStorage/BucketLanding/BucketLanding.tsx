@@ -237,7 +237,10 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
           </OrderBy>
           {/* If there's more than one Bucket, display the total usage. */}
           {data.length > 1 ? (
-            <Typography style={{ marginTop: 8 }} variant="body1">
+            <Typography
+              style={{ marginTop: 8, marginLeft: flags.cmr ? 15 : 0 }}
+              variant="body1"
+            >
               Total usage: {readableBytes(totalUsage).formatted}
             </Typography>
           ) : null}
