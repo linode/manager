@@ -4,10 +4,7 @@ import * as React from 'react';
 import { Order } from 'src/components/Pagey';
 import usePreferences from 'src/hooks/usePreferences';
 import usePrevious from 'src/hooks/usePrevious';
-import {
-  SortKey,
-  UserPreferences
-} from 'src/store/preferences/preferences.actions';
+import { UserPreferences } from 'src/store/preferences/preferences.actions';
 import {
   sortByArrayLength,
   sortByNumber,
@@ -15,6 +12,8 @@ import {
   sortByUTFDate
 } from 'src/utilities/sort-by';
 import { debounce } from 'throttle-debounce';
+import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { useLocation } from 'react-router-dom';
 
 export interface OrderByProps extends State {
   handleOrderChange: (orderBy: string, order: Order) => void;
@@ -31,7 +30,7 @@ interface Props {
   children: (p: OrderByProps) => React.ReactNode;
   order?: Order;
   orderBy?: string;
-  preferenceKey?: SortKey; // If provided, will store/read values from user preferences
+  preferenceKey?: string; // If provided, will store/read values from user preferences
 }
 
 export type CombinedProps = Props;
@@ -51,11 +50,28 @@ export type CombinedProps = Props;
  * @param defaultOrder
  */
 export const getInitialValuesFromUserPreferences = (
-  preferenceKey: SortKey | '',
+  preferenceKey: string,
   preferences: UserPreferences,
+  params: Record<string, string>,
   defaultOrderBy: string,
   defaultOrder: Order
 ) => {
+  /**
+   * Priority order is:
+   *
+   * 1. query params (if provided)
+   * 2. user preferences (if saved)
+   * 3. anything passed as props
+   * 4. default values
+   *
+   *
+   */
+  if (['asc', 'desc'].includes(params.order) && params.orderBy) {
+    return {
+      order: params.order,
+      orderBy: params.orderBy
+    };
+  }
   return (
     preferences?.sortKeys?.[preferenceKey] ?? {
       orderBy: defaultOrderBy,
@@ -123,16 +139,19 @@ export const sortData = (orderBy: string, order: Order) => {
 
 export const OrderBy: React.FC<CombinedProps> = props => {
   const { preferences, updatePreferences } = usePreferences();
+  const location = useLocation();
+  const params = getParamsFromUrl(location.search);
 
   const initialValues = getInitialValuesFromUserPreferences(
     props.preferenceKey ?? '',
     preferences ?? {},
+    params,
     props.orderBy ?? 'label',
     props.order ?? 'desc'
   );
 
   const [orderBy, setOrderBy] = React.useState<string>(initialValues.orderBy);
-  const [order, setOrder] = React.useState<Order>(initialValues.order);
+  const [order, setOrder] = React.useState<Order>(initialValues.order as Order);
 
   // Stash a copy of the previous data for equality check.
   const prevData = usePrevious(props.data);
