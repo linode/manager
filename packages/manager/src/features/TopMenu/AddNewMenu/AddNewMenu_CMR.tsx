@@ -12,7 +12,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators, Dispatch } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
@@ -29,7 +28,6 @@ import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { vlanContext, dbaasContext } from 'src/context';
-import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { MapState } from 'src/store/types';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem from './AddNewMenuItem';
@@ -118,13 +116,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
-  // openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
-  openDomainDrawerForCreating: typeof openDomainDrawerForCreating;
-}
-
-type CombinedProps = Props &
-  WithStyles<CSSClasses> &
+type CombinedProps = WithStyles<CSSClasses> &
   RouteComponentProps<{}> &
   DispatchProps &
   StateProps &
@@ -262,7 +254,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
 export const styledComponent = styled(AddNewMenu);
 
 interface DispatchProps {
-  openDomainDrawerForCreating: () => void;
   openVolumeDrawerForCreating: () => void;
 }
 
@@ -276,10 +267,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators({ openDomainDrawerForCreating }, dispatch);
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(mapStateToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   connected,
