@@ -2,13 +2,11 @@ import * as React from 'react';
 
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
-import ExpansionPanel, {
-  ExpansionPanelProps
-} from 'src/components/ExpansionPanel';
+import Accordion, { AccordionProps } from 'src/components/Accordion';
 import { useFlags } from 'src/hooks/useFlags';
-import ExpansionPanelCMR from '../ExpansionPanel/ExpansionPanelCMR';
+import AccordionCMR from '../Accordion/AccordionCMR';
 
-interface Props extends Omit<ExpansionPanelProps, 'children'> {
+interface Props extends Omit<AccordionProps, 'children'> {
   height?: number;
   renderMainContent: () => JSX.Element;
   headingNumberCount?: number;
@@ -52,7 +50,7 @@ const renderContent = (
   return renderMainContent();
 };
 
-const ExtendedExpansionPanel: React.FC<Props> = props => {
+const ExtendedAccordion: React.FC<Props> = props => {
   const {
     error,
     heading,
@@ -67,7 +65,7 @@ const ExtendedExpansionPanel: React.FC<Props> = props => {
   return (
     <React.Fragment>
       {flags.cmr ? (
-        <ExpansionPanelCMR
+        <AccordionCMR
           heading={heading}
           onChange={onChange}
           headingNumberCount={headingNumberCount}
@@ -78,19 +76,19 @@ const ExtendedExpansionPanel: React.FC<Props> = props => {
             height || 300,
             renderMainContent
           )}
-        </ExpansionPanelCMR>
+        </AccordionCMR>
       ) : (
-        <ExpansionPanel heading={heading} onChange={onChange}>
+        <Accordion heading={heading} onChange={onChange}>
           {renderContent(
             error,
             Boolean(loading),
             height || 300,
             renderMainContent
           )}
-        </ExpansionPanel>
+        </Accordion>
       )}
     </React.Fragment>
   );
 };
 
-export default ExtendedExpansionPanel;
+export default ExtendedAccordion;

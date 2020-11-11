@@ -12,7 +12,7 @@ import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
@@ -206,7 +206,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
     const generalError = hasErrorFor('none');
 
     return (
-      <ExpansionPanel
+      <Accordion
         heading="Reset Root Password"
         success={this.state.success}
         actions={this.renderExpansionActions}
@@ -246,7 +246,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
             />
           </React.Suspense>
         </form>
-      </ExpansionPanel>
+      </Accordion>
     );
   }
 }

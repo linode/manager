@@ -6,7 +6,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import SupportLink from 'src/components/SupportLink';
@@ -112,12 +112,12 @@ export const EnableManaged: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <ExpansionPanel heading="Linode Managed" defaultExpanded={true}>
+      <Accordion heading="Linode Managed" defaultExpanded={true}>
         <ManagedContent
           isManaged={isManaged}
           openConfirmationModal={() => setOpen(true)}
         />
-      </ExpansionPanel>
+      </Accordion>
       <ConfirmationDialog
         open={isOpen}
         error={error}
