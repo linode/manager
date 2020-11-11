@@ -75,6 +75,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     if (open) {
       setSuccessMessage(null);
+      setWarning(null);
     }
   }, [open]);
 
