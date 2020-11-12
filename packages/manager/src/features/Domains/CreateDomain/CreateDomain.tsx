@@ -58,7 +58,7 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getInitialIPs } from '../domainUtils';
 
-type ClassNames = 'title' | 'main' | 'inner' | 'radio' | 'helperText';
+type ClassNames = 'title' | 'main' | 'inner' | 'radio' | 'ip' | 'helperText';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -87,6 +87,9 @@ const styles = (theme: Theme) =>
       '& label:first-child .MuiButtonBase-root': {
         marginLeft: -10
       }
+    },
+    ip: {
+      maxWidth: 468
     },
     helperText: {
       maxWidth: 'none'
@@ -328,7 +331,7 @@ class CreateDomain extends React.Component<CombinedProps, State> {
                 />
               </RadioGroup>
               <TextField
-                errorText={'' && errorMap.domain}
+                errorText={errorMap.domain}
                 value={domain}
                 disabled={disabled}
                 label="Domain"
@@ -350,6 +353,7 @@ class CreateDomain extends React.Component<CombinedProps, State> {
               {isCreatingSlaveDomain && (
                 <MultipleIPInput
                   title="Master Nameserver IP Address"
+                  className={classes.ip}
                   ips={this.state.master_ips.map(stringToExtendedIP)}
                   onChange={this.updateMasterIPAddress}
                   error={masterIPsError}
@@ -407,6 +411,7 @@ class CreateDomain extends React.Component<CombinedProps, State> {
                           ? this.state.selectedDefaultLinode.id
                           : null
                       }
+                      disabled={disabled}
                     />
                     {!errorMap.defaultLinode && (
                       <FormHelperText>
@@ -663,7 +668,7 @@ class CreateDomain extends React.Component<CombinedProps, State> {
   updateType = (
     e: React.ChangeEvent<HTMLInputElement>,
     value: 'master' | 'slave'
-  ) => this.setState({ type: value });
+  ) => this.setState({ type: value, errors: [] });
 
   updateMasterIPAddress = (newIPs: ExtendedIP[]) => {
     const master_ips =
