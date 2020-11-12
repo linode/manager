@@ -101,6 +101,22 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
         <Divider className={classes.divider} />
       ) : null}
 
+      {hostname ? (
+        <>
+          <ExternalLink
+            link={`https://${hostname}`}
+            text={truncateMiddle(hostname, 50)}
+          />
+          <CopyTooltip
+            className={classes.copy}
+            text={hostname}
+            displayText="Copy to clipboard"
+          />
+        </>
+      ) : null}
+
+      {hostname ? <Divider className={classes.divider} /> : null}
+
       {cluster && bucketLabel ? (
         <AccessSelect
           variant="bucket"
@@ -116,19 +132,6 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
             });
           }}
         />
-      ) : null}
-
-      {hostname ? <Divider className={classes.divider} /> : null}
-
-      {hostname ? (
-        <>
-          <ExternalLink link={hostname} text={truncateMiddle(hostname, 50)} />
-          <CopyTooltip
-            className={classes.copy}
-            text={hostname}
-            displayText="Copy to clipboard"
-          />
-        </>
       ) : null}
     </Drawer>
   );
