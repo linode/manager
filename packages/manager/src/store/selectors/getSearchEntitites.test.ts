@@ -26,6 +26,9 @@ describe('getSearchEntities selector', () => {
     },
     nodePools: {
       entities: []
+    },
+    buckets: {
+      data: []
     }
   };
   it('should return an array of SearchableItems', () => {
