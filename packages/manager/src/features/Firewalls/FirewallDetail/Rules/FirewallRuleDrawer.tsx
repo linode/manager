@@ -342,6 +342,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         value={addressesValue}
         onChange={handleAddressesChange}
         onBlur={handleBlur}
+        isClearable={false}
       />
       {/* Show this field only if "IP / Netmask has been selected." */}
       {values.addresses === 'ip/netmask' && (
@@ -420,6 +421,8 @@ export const formValueToIPs = (
       return { ipv4: [allIPv4], ipv6: [] };
     case 'allIPv6':
       return { ipv4: [], ipv6: [allIPv6] };
+    case 'none':
+      return { ipv4: [], ipv6: [] };
     default:
       // The user has selected "IP / Netmask" and entered custom IPs, so we need
       // to separate those into v4 and v6 addresses.

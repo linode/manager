@@ -63,6 +63,7 @@ export const protocolOptions: Item<FirewallRuleProtocol>[] = [
 ];
 
 export const addressOptions = [
+  { label: 'None', value: 'none' },
   { label: 'All', value: 'all' },
   { label: 'All IPv4', value: 'allIPv4' },
   { label: 'All IPv6', value: 'allIPv6' },
