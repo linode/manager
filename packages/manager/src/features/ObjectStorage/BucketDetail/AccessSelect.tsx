@@ -143,7 +143,6 @@ const AccessSelect: React.FC<CombinedProps> = props => {
             setSelectedACL(selected.value);
           }
         }}
-        isOptionDisabled={(item: Item<ACLType>) => item.value === 'custom'}
         value={_options.find(
           thisOption => thisOption.value === selectedACL ?? 'private'
         )}
