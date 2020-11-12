@@ -118,6 +118,6 @@ export interface ObjectStorageBucketAccessRequest {
 export interface ObjectStorageBucketAccessResponse {
   acl: ACLType;
   acl_xml: string;
-  cors_enabled: true;
+  cors_enabled: boolean;
   cors_xml: string;
 }

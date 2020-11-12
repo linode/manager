@@ -7,7 +7,11 @@ import Request, {
   setXFilter
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { CreateBucketSchema, UploadCertificateSchema } from './buckets.schema';
+import {
+  CreateBucketSchema,
+  UpdateBucketAccessSchema,
+  UploadCertificateSchema
+} from './buckets.schema';
 import {
   ObjectStorageBucket,
   ObjectStorageBucketAccessRequest,
@@ -175,5 +179,5 @@ export const updateBucketAccess = (
     setURL(
       `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/access`
     ),
-    setData(data) // @todo: schema
+    setData(data, UpdateBucketAccessSchema)
   );

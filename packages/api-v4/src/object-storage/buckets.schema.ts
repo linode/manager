@@ -24,5 +24,5 @@ export const UpdateBucketAccessSchema = object({
       'public-read-write'
     ])
     .notRequired(),
-  cors_xml: boolean().notRequired()
+  cors_enabled: boolean().notRequired()
 });

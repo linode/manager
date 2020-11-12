@@ -51,6 +51,7 @@ const AccessSelect: React.FC<CombinedProps> = props => {
 
   // The ACL Option currently selected in the <EnhancedSelect /> component.
   const [selectedACL, setSelectedACL] = React.useState<ACLType | null>(null);
+  // The CORS Option currently selected in the <Toggle /> component.
   const [selectedCORSOption, setSelectedCORSOption] = React.useState(true);
 
   // State for submitting access options.
@@ -128,16 +129,16 @@ const AccessSelect: React.FC<CombinedProps> = props => {
       ? [{ label: 'Custom', value: 'custom' }, ...aclOptions]
       : aclOptions;
 
+  const aclLabel = _options.find(thisOption => thisOption.value === selectedACL)
+    ?.label;
+
+  const aclCopy = selectedACL ? copy[variant][selectedACL] : null;
+
   const CORSLabel = accessLoading
     ? 'Loading access...'
     : selectedCORSOption
     ? 'CORS Enabled'
     : 'CORS Disabled';
-
-  const aclLabel = _options.find(thisOption => thisOption.value === selectedACL)
-    ?.label;
-
-  const aclCopy = selectedACL ? copy[variant][selectedACL] : null;
 
   return (
     <>
@@ -190,30 +191,34 @@ const AccessSelect: React.FC<CombinedProps> = props => {
       {variant === 'bucket' ? (
         <Typography>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
-          more fine-grained control of CORS, please use{' '}
+          more fine-grained control of CORS, please use another{' '}
           <ExternalLink
-            text="another S3-compatible tool"
+            text="S3-compatible tool"
             hideIcon
             link="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
           />
           .
         </Typography>
       ) : null}
+
       <Button
         className={classes.submitButton}
         buttonType="primary"
         onClick={() => {
+          // This isn't really a sane option: open a dialog for confirmation.
           if (selectedACL === 'public-read-write') {
             openDialog();
           } else {
             handleSubmit();
           }
         }}
+        //  Disabled if nothing has changed.
         disabled={aclData === selectedACL && corsData === selectedCORSOption}
         loading={updateAccessLoading}
       >
         Save
       </Button>
+
       <ConfirmationDialog
         title={`Confirm ${label} Access`}
         open={isOpen}
@@ -258,12 +263,6 @@ const copy: Record<
     'public-read': (
       <>
         <strong>Everyone </strong> can download this Object.
-      </>
-    ),
-    'public-read-write': (
-      <>
-        <strong>Everyone </strong> can download this Object (equivalent to
-        Public Read).
       </>
     ),
     custom: (
