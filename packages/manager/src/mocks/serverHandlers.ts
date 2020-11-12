@@ -3,6 +3,7 @@ import { rest, RequestHandler } from 'msw';
 import {
   accountFactory,
   appTokenFactory,
+  creditPaymentResponseFactory,
   databaseFactory,
   domainFactory,
   domainRecordFactory,
@@ -346,6 +347,9 @@ export const handlers = [
   }),
   rest.post('*/networking/vlans', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.post('*/account/payments', (req, res, ctx) => {
+    return res(ctx.json(creditPaymentResponseFactory.build()));
   }),
   rest.get('*/databases/mysql/instances', (req, res, ctx) => {
     const online = databaseFactory.build({ status: 'ready' });
