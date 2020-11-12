@@ -191,12 +191,11 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     }
 
     if (
-      this.props.domainProps && // there are domain props for an update and ...
+      this.props.domainProps && // There are domain props for an update and ...
       (!prevProps.domainProps || // it just appeared
         prevProps.domainProps.id !== this.props.domainProps.id)
     ) {
       // or the domain for editing has changed
-
       // then put it props into state to populate fields
       const {
         axfr_ips,
@@ -451,7 +450,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     const tags = this.state.tags.map(tag => tag.value);
 
     if (!id) {
-      // weird case if the id was not passed
+      // Weird case if the id was not passed
       this.closeDrawer();
       return;
     }
@@ -474,7 +473,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
 
     const data =
       type === 'master'
-        ? // not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
+        ? // Not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
           { domain, tags, soa_email: soaEmail, domainId: id }
         : {
             domain,
@@ -580,7 +579,7 @@ const mapStateToProps = (state: ApplicationState) => {
     domain: path(['domainDrawer', 'domain'], state),
     domainProps,
     id,
-    // disabled if the profile is restricted and doesn't have add_domains grant
+    // Disabled if the profile is restricted and doesn't have add_domains grant
     disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains'),
     origin: state.domainDrawer.origin
   };
