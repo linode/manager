@@ -22,7 +22,9 @@ const props: Props = {
     nodebalancers: false,
     images: false,
     volumes: false,
-    kubernetes: false
+    kubernetes: false,
+    objectStorageClusters: false,
+    objectStorageBuckets: false
   },
   ...reactRouterProps
 };
@@ -35,6 +37,10 @@ const propsWithResults: Props = {
 
 jest.mock('src/hooks/useReduxLoad', () => ({
   useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false })
+}));
+
+jest.mock('src/hooks/useObjectStorageBuckets', () => ({
+  useObjectStorage: () => jest.fn().mockReturnValue({ loading: false })
 }));
 
 describe('Component', () => {

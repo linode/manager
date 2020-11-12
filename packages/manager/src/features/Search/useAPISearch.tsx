@@ -110,6 +110,7 @@ const requestEntities = (
           results.data.map(kubernetesClusterToSearchableItem)
         )
       : Promise.resolve([])
+    // API filtering on Object Storage buckets does not work.
   ]).then(results => (flatten(results) as unknown) as SearchableItem[]);
 };
 
