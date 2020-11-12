@@ -97,44 +97,44 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
     }
   ];
 
-  const cmrTextColors = {
-    textAction: '#3683dc',
-    textBillingSummary: '#32363c',
-    textTab: '#3683dc',
-    textTabActive: '#32363c',
-    textStatusChip: '#5d646f',
-    linkActiveMedium: '#2575d0',
-    linkActiveLight: '#2575d0',
-    headlineStatic: '#32363c',
-    headlineActive: '#32363c',
-    tableStatic: '#55595d',
-    textTagButton: '#3683dc',
-    textAccessTable: '#606469',
-    textAccessCode: '#606469',
-    textBreadcrumbParent: '#3683dc'
-  };
+  // const cmrTextColors = {
+  //   textAction: '#3683dc',
+  //   textBillingSummary: '#32363c',
+  //   textTab: '#3683dc',
+  //   textTabActive: '#32363c',
+  //   textStatusChip: '#5d646f',
+  //   linkActiveMedium: '#2575d0',
+  //   linkActiveLight: '#2575d0',
+  //   headlineStatic: '#32363c',
+  //   headlineActive: '#32363c',
+  //   tableStatic: '#55595d',
+  //   textTagButton: '#3683dc',
+  //   textAccessTable: '#606469',
+  //   textAccessCode: '#606469',
+  //   textBreadcrumbParent: '#3683dc'
+  // };
 
-  const cmrBorderColors = {
-    borderNotificationCenter: '#cce4ff',
-    borderTypography: '#e3e5e8',
-    borderTabs: '#e3e5e8',
-    borderTabActive: '#3683dc',
-    borderBillingSummary: '#cce2ff',
-    borderBalance: '#c2daff',
-    borderTable: '#f4f5f6'
-  };
+  // const cmrBorderColors = {
+  //   borderNotificationCenter: '#cce4ff',
+  //   borderTypography: '#e3e5e8',
+  //   borderTabs: '#e3e5e8',
+  //   borderTabActive: '#3683dc',
+  //   borderBillingSummary: '#cce2ff',
+  //   borderBalance: '#c2daff',
+  //   borderTable: '#f4f5f6'
+  // };
 
-  const cmrIconColors = {
-    iStatic: '#5d646f',
-    iActiveMedium: '#2575d0',
-    iActiveLight: '#3683dc',
-    iGreen: '#17cf73',
-    iOrange: '#ffb31a',
-    iRed: '#cf1e1e',
-    // Offline status
-    iGrey: '#dbdde1',
-    iCheckmark: '#444'
-  };
+  // const cmrIconColors = {
+  //   iStatic: '#5d646f',
+  //   iActiveMedium: '#2575d0',
+  //   iActiveLight: '#3683dc',
+  //   iGreen: '#17cf73',
+  //   iOrange: '#ffb31a',
+  //   iRed: '#cf1e1e',
+  //   // Offline status
+  //   iGrey: '#dbdde1',
+  //   iCheckmark: '#444'
+  // };
 
   const createSwatch = (idx: number, color: string, alias: string) => {
     return (
@@ -149,26 +149,6 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
           {alias}
         </Typography>
       </Grid>
-    );
-  };
-
-  const renderColors = () => {
-    return (
-      <>
-        <Grid item xs={12}>
-          <Typography variant="h2">Primary Colors</Typography>
-        </Grid>
-        {primaryColors.map((color, idx: number) =>
-          createSwatch(idx, color.color, color.alias)
-        )}
-
-        <Grid item xs={12}>
-          <Typography variant="h2">Etc.</Typography>
-        </Grid>
-        {etc.map((color, idx: number) =>
-          createSwatch(idx, color.color, color.alias)
-        )}
-      </>
     );
   };
 
@@ -187,7 +167,7 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
 
   return (
     <Grid container className={classes.root}>
-      {props.displayBackgrounds ? renderBackgrounds() : renderColors()}
+      {renderBackgrounds()}
     </Grid>
   );
 };

@@ -3,6 +3,8 @@ import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
 import Breadcrumb from './Breadcrumb';
+import { Provider } from 'react-redux';
+import store from 'src/store';
 
 interface Props {
   labelLink?: string;
@@ -45,90 +47,106 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
 
 storiesOf('Breadcrumb', module)
   .add('Basic Breadcrumb', () => (
-    <StaticRouter location="/" context={{}}>
-      <div style={{ padding: 24 }}>
-        <Breadcrumb pathname={customCrumbs} />
-      </div>
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter location="/" context={{}}>
+        <div style={{ padding: 24 }}>
+          <Breadcrumb pathname={customCrumbs} />
+        </div>
+      </StaticRouter>
+    </Provider>
   ))
   .add('Breadcrumb with custom label', () => (
-    <StaticRouter location="/" context={{}}>
-      <div style={{ padding: 24 }}>
-        <Breadcrumb pathname={customCrumbs} labelTitle="Custom label" />
-      </div>
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter location="/" context={{}}>
+        <div style={{ padding: 24 }}>
+          <Breadcrumb pathname={customCrumbs} labelTitle="Custom label" />
+        </div>
+      </StaticRouter>
+    </Provider>
   ))
   .add('Breadcrumb with subtitle', () => (
-    <StaticRouter location="/" context={{}}>
-      <div style={{ padding: 24 }}>
-        <Breadcrumb
-          pathname={customCrumbs}
-          labelTitle="Last crumb with subtitle"
-          labelOptions={{
-            subtitle: 'A label subtitle'
-          }}
-        />
-      </div>
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter location="/" context={{}}>
+        <div style={{ padding: 24 }}>
+          <Breadcrumb
+            pathname={customCrumbs}
+            labelTitle="Last crumb with subtitle"
+            labelOptions={{
+              subtitle: 'A label subtitle'
+            }}
+          />
+        </div>
+      </StaticRouter>
+    </Provider>
   ))
   .add('Breadcrumb with only first and last crumbs', () => (
-    <StaticRouter location="/" context={{}}>
-      <div style={{ padding: 24 }}>
-        <Breadcrumb pathname={customCrumbs} firstAndLastOnly />
-      </div>
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter location="/" context={{}}>
+        <div style={{ padding: 24 }}>
+          <Breadcrumb pathname={customCrumbs} firstAndLastOnly />
+        </div>
+      </StaticRouter>
+    </Provider>
   ))
   .add('Breadcrumb with a crumb removed', () => (
-    <StaticRouter location="/" context={{}}>
-      <div style={{ padding: 24 }}>
-        <Breadcrumb pathname={customCrumbs} removeCrumbX={2} />
-      </div>
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter location="/" context={{}}>
+        <div style={{ padding: 24 }}>
+          <Breadcrumb pathname={customCrumbs} removeCrumbX={2} />
+        </div>
+      </StaticRouter>
+    </Provider>
   ))
   .add('Breadcrumb with crumb override', () => (
-    <StaticRouter location="/" context={{}}>
-      <div style={{ padding: 24 }}>
-        <Breadcrumb
-          pathname={customCrumbs}
-          crumbOverrides={[
-            {
-              position: 2,
-              label: 'Link changed here',
-              linkTo: { pathname: `/new-location` }
-            }
-          ]}
-        />
-      </div>
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter location="/" context={{}}>
+        <div style={{ padding: 24 }}>
+          <Breadcrumb
+            pathname={customCrumbs}
+            crumbOverrides={[
+              {
+                position: 2,
+                label: 'Link changed here',
+                linkTo: { pathname: `/new-location` }
+              }
+            ]}
+          />
+        </div>
+      </StaticRouter>
+    </Provider>
   ))
   .add('Breadcrumb with prefix component', () => (
-    <StaticRouter location="/" context={{}}>
-      <div style={{ padding: 24 }}>
-        <Breadcrumb
-          pathname={customCrumbs}
-          labelTitle="Static text"
-          labelOptions={{
-            prefixComponent: (
-              <UserIcon
-                style={{
-                  margin: '2px 0 0 0',
-                  color: '#606469',
-                  borderRadius: '50%',
-                  width: 32,
-                  height: 32,
-                  animation: '$fadeIn 150ms linear forwards'
-                }}
-              />
-            )
-          }}
-        />
-      </div>
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter location="/" context={{}}>
+        <div style={{ padding: 24 }}>
+          <Breadcrumb
+            pathname={customCrumbs}
+            labelTitle="Static text"
+            labelOptions={{
+              prefixComponent: (
+                <UserIcon
+                  style={{
+                    margin: '2px 0 0 0',
+                    color: '#606469',
+                    borderRadius: '50%',
+                    width: 32,
+                    height: 32,
+                    animation: '$fadeIn 150ms linear forwards'
+                  }}
+                />
+              )
+            }}
+          />
+        </div>
+      </StaticRouter>
+    </Provider>
   ))
   .add('Breadcrumb with editable text', () => (
-    <StaticRouter location="/" context={{}}>
-      <div style={{ padding: 24 }}>
-        <InteractiveEditableBreadcrumb />
-      </div>
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter location="/" context={{}}>
+        <div style={{ padding: 24 }}>
+          <InteractiveEditableBreadcrumb />
+        </div>
+      </StaticRouter>
+    </Provider>
   ));
