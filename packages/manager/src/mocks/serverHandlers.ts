@@ -26,6 +26,7 @@ import {
   nodeBalancerFactory,
   notificationFactory,
   objectStorageBucketFactory,
+  objectStorageClusterFactory,
   profileFactory,
   supportReplyFactory,
   supportTicketFactory,
@@ -203,6 +204,10 @@ export const handlers = [
   rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
     const buckets = objectStorageBucketFactory.buildList(20);
     return res(ctx.json(makeResourcePage(buckets)));
+  }),
+  rest.get('*object-storage/clusters', (req, res, ctx) => {
+    const clusters = objectStorageClusterFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(clusters)));
   }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(25);
