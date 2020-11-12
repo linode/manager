@@ -521,6 +521,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                         'Insert default records from one of my NodeBalancers.'
                     }
                   ]}
+                  disabled={disabled}
                 />
                 <FormHelperText className={classes.helperText}>
                   If specified, we can automatically create some domain records
@@ -561,6 +562,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                         ? selectedDefaultNodeBalancer.id
                         : null
                     }
+                    disabled={disabled}
                   />
                   {!errorMap.defaultNodeBalancer && (
                     <FormHelperText>
