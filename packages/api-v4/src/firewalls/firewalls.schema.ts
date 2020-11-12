@@ -1,25 +1,69 @@
+import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import { array, mixed, number, object, string } from 'yup';
+
+export const IP_ERROR_MESSAGE =
+  'Must be a valid IPv4 or IPv6 address or range.';
+
+export const validateIP = (ipAddress: string) => {
+  // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
+  // methods for each, so we check for a netmask to decide the method to use.
+  const [, mask] = ipAddress.split('/');
+  try {
+    if (mask) {
+      parseCIDR(ipAddress);
+    } else {
+      parseIP(ipAddress);
+    }
+  } catch (err) {
+    // Empty addresses are OK for the sake of validating the form.
+    if (ipAddress !== '') {
+      return false;
+    }
+  }
+  return true;
+};
 
 export const CreateFirewallDeviceSchema = object({
   linodes: array().of(number()),
   nodebalancers: array().of(number())
 });
 
+export const ipAddress = string().test({
+  name: 'validateIP',
+  message: IP_ERROR_MESSAGE,
+  test: validateIP
+});
+
 const validFirewallRuleProtocol = ['ALL', 'TCP', 'UDP', 'ICMP'];
-const FirewallRuleTypeSchema = object().shape({
+export const FirewallRuleTypeSchema = object().shape({
   protocol: mixed()
     .oneOf(validFirewallRuleProtocol)
-    .required(),
-  ports: string().required(),
+    .required('Protocol is required.'),
+  ports: string().when('protocol', {
+    is: val => val !== 'ICMP',
+    then: string()
+      .required('Ports are required for TCP and UDP protocols.')
+      .matches(
+        /^([0-9\-]+,?)+$/,
+        'Ports must be an integer, range of integers, or a comma-separated list of integers.'
+      ),
+    // Workaround to get the test to fail if ports is defined when protocol === ICMP
+    otherwise: string().test({
+      name: 'protocol',
+      message: 'Ports are not allowed for ICMP protocols.',
+      test: value => typeof value === 'undefined'
+    })
+  }),
   addresses: object()
     .shape({
       ipv4: array()
-        .of(string())
+        .of(ipAddress)
         .nullable(true),
       ipv6: array()
-        .of(string())
+        .of(ipAddress)
         .nullable(true)
     })
+    .strict(true)
     .nullable(true)
 });
 
