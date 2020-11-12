@@ -36,6 +36,7 @@ import { PAYPAL_CLIENT_ENV } from 'src/constants';
 import PaypalDialog from './PaymentBits/PaypalDialog';
 import { reportException } from 'src/exceptionReporting';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { SetSuccess } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -73,7 +74,7 @@ interface PaypalScript {
 
 export interface Props {
   usd: string;
-  setSuccess: (message: string | null, paymentWasMade?: boolean) => void;
+  setSuccess: SetSuccess;
 }
 
 type CombinedProps = Props & PaypalScript;
@@ -149,10 +150,14 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
       payer_id: payerID,
       payment_id: paymentID
     })
-      .then(() => {
+      .then(response => {
         setExecuting(false);
         setDialogOpen(false);
-        setSuccess(`Payment for $${usd} successfully submitted`, true);
+        setSuccess(
+          `Payment for $${usd} successfully submitted`,
+          true,
+          response.warnings
+        );
       })
       .catch(_ => {
         setExecuting(false);
