@@ -1,7 +1,4 @@
-import {
-  ACLType,
-  ObjectStorageObjectACL
-} from '@linode/api-v4/lib/object-storage';
+import { ACLType } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -28,35 +25,36 @@ interface AccessPayload {
 
 export interface Props {
   variant: 'bucket' | 'object';
-  getACL: () => Promise<AccessPayload>;
-  updateACL: (
+  name: string;
+  getAccess: () => Promise<AccessPayload>;
+  updateAccess: (
     acl: ACLType,
     cors_enabled?: boolean
-  ) => Promise<ObjectStorageObjectACL>; // | ObjectStorageBucketACL type
-  name: string;
+  ) => Promise<AccessPayload>;
 }
 
 type CombinedProps = Props;
 
-const ACLSelect: React.FC<CombinedProps> = props => {
+const AccessSelect: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { getACL, updateACL, name, variant } = props;
+  const { getAccess, updateAccess, name, variant } = props;
 
-  // ACL data for this Object (from the API).
+  // Access data for this Object (from the API).
   const [aclData, setACLData] = React.useState<ACLType | null>(null);
   const [corsData, setCORSData] = React.useState(true);
-  const [aclLoading, setACLLoading] = React.useState(false);
-  const [aclError, setACLError] = React.useState('');
+
+  const [accessLoading, setAccessLoading] = React.useState(false);
+  const [accessError, setAccessError] = React.useState('');
 
   // The ACL Option currently selected in the <EnhancedSelect /> component.
   const [selectedACL, setSelectedACL] = React.useState<ACLType | null>(null);
-  const [corsEnabled, setCorsEnabled] = React.useState(true);
+  const [selectedCORSOption, setSelectedCORSOption] = React.useState(true);
 
-  // State for submitting the ACL option.
-  const [updateACLLoading, setUpdateACLLoading] = React.useState(false);
-  const [updateACLError, setUpdateACLError] = React.useState('');
-  const [updateACLSuccess, setUpdateACLSuccess] = React.useState(false);
+  // State for submitting access options.
+  const [updateAccessLoading, setUpdateAccessLoading] = React.useState(false);
+  const [updateAccessError, setUpdateAccessError] = React.useState('');
+  const [updateAccessSuccess, setUpdateAccessSuccess] = React.useState(false);
 
   // State for dealing with the confirmation modal when selecting read/write.
   const { open: openDialog, isOpen, close: closeDialog } = useOpenClose();
@@ -64,25 +62,25 @@ const ACLSelect: React.FC<CombinedProps> = props => {
   const label = capitalize(variant);
 
   React.useEffect(() => {
-    setUpdateACLError('');
-    setACLError('');
-    setUpdateACLSuccess(false);
-    setACLLoading(true);
-    getACL()
+    setUpdateAccessError('');
+    setAccessError('');
+    setUpdateAccessSuccess(false);
+    setAccessLoading(true);
+    getAccess()
       .then(({ acl, cors_enabled }) => {
-        setACLLoading(false);
+        setAccessLoading(false);
         setACLData(acl);
         setSelectedACL(acl);
         if (typeof cors_enabled !== 'undefined') {
-          setCorsEnabled(cors_enabled);
           setCORSData(cors_enabled);
+          setSelectedCORSOption(cors_enabled);
         }
       })
       .catch(err => {
-        setACLLoading(false);
-        setACLError(getErrorStringOrDefault(err));
+        setAccessLoading(false);
+        setAccessError(getErrorStringOrDefault(err));
       });
-  }, [getACL]);
+  }, [getAccess]);
 
   const handleSubmit = () => {
     // TS safety check.
@@ -90,21 +88,22 @@ const ACLSelect: React.FC<CombinedProps> = props => {
       return;
     }
 
-    setUpdateACLSuccess(false);
-    setUpdateACLLoading(true);
-    setUpdateACLError('');
-    setACLError('');
+    setUpdateAccessSuccess(false);
+    setUpdateAccessLoading(true);
+    setUpdateAccessError('');
+    setAccessError('');
     closeDialog();
 
-    updateACL(selectedACL, corsEnabled)
+    updateAccess(selectedACL, selectedCORSOption)
       .then(() => {
-        setUpdateACLSuccess(true);
+        setUpdateAccessSuccess(true);
         setACLData(selectedACL);
-        setUpdateACLLoading(false);
+        setCORSData(selectedCORSOption);
+        setUpdateAccessLoading(false);
       })
       .catch(err => {
-        setUpdateACLLoading(false);
-        setUpdateACLError(getErrorStringOrDefault(err));
+        setUpdateAccessLoading(false);
+        setUpdateAccessError(getErrorStringOrDefault(err));
       });
   };
 
@@ -117,24 +116,30 @@ const ACLSelect: React.FC<CombinedProps> = props => {
       ? [{ label: 'Custom', value: 'custom' }, ...aclOptions]
       : aclOptions;
 
+  const CORSLabel = accessLoading
+    ? 'Loading access...'
+    : selectedCORSOption
+    ? 'CORS Enabled'
+    : 'CORS Disabled';
+
   return (
     <>
-      {updateACLSuccess ? (
+      {updateAccessSuccess ? (
         <Notice success text={`${label} access updated successfully.`} />
       ) : null}
 
       <EnhancedSelect
         label={`Access (${label} ACL)`}
-        placeholder={aclLoading ? 'Loading access...' : 'Select an ACL...'}
+        placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
         isClearable={false}
         options={_options}
-        isLoading={aclLoading}
-        disabled={aclLoading || aclError}
-        errorText={aclError || updateACLError}
+        isLoading={accessLoading}
+        disabled={accessLoading || accessError}
+        errorText={accessError || updateAccessError}
         onChange={(selected: Item<ACLType> | null) => {
           if (selected) {
-            setUpdateACLSuccess(false);
-            setUpdateACLError('');
+            setUpdateAccessSuccess(false);
+            setUpdateAccessError('');
             setSelectedACL(selected.value);
           }
         }}
@@ -149,12 +154,12 @@ const ACLSelect: React.FC<CombinedProps> = props => {
           style={{ marginTop: 8, display: 'block' }}
           control={
             <Toggle
-              disabled={aclLoading}
-              onChange={() => setCorsEnabled(prev => !prev)}
-              checked={corsEnabled}
+              disabled={accessLoading}
+              onChange={() => setSelectedCORSOption(prev => !prev)}
+              checked={selectedCORSOption}
             />
           }
-          label={aclLoading ? 'Loading access...' : 'CORS Enabled'}
+          label={CORSLabel}
         />
       ) : null}
 
@@ -168,8 +173,8 @@ const ACLSelect: React.FC<CombinedProps> = props => {
             handleSubmit();
           }
         }}
-        disabled={aclData === selectedACL && corsData === corsEnabled}
-        loading={updateACLLoading}
+        disabled={aclData === selectedACL && corsData === selectedCORSOption}
+        loading={updateAccessLoading}
       >
         Save
       </Button>
@@ -196,4 +201,4 @@ const ACLSelect: React.FC<CombinedProps> = props => {
   );
 };
 
-export default ACLSelect;
+export default React.memo(AccessSelect);

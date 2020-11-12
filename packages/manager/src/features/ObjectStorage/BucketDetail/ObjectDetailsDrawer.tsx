@@ -13,7 +13,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import formatDate from 'src/utilities/formatDate';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
-import ACLSelect from './ACLSelect';
+import AccessSelect from './AccessSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
@@ -93,11 +93,11 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
       <Divider className={classes.divider} />
 
       {open && name ? (
-        <ACLSelect
+        <AccessSelect
           variant="object"
           name={name}
-          getACL={() => getObjectACL(clusterId, bucketName, name)}
-          updateACL={(acl: ACLType) =>
+          getAccess={() => getObjectACL(clusterId, bucketName, name)}
+          updateAccess={(acl: ACLType) =>
             updateObjectACL(clusterId, bucketName, name, acl)
           }
         />

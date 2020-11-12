@@ -11,7 +11,7 @@ import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
-import ACLSelect from '../BucketDetail/ACLSelect';
+import AccessSelect from '../BucketDetail/AccessSelect';
 import {
   getBucketAccess,
   updateBucketAccess,
@@ -40,8 +40,6 @@ export interface Props {
   cluster?: string;
   size?: number | null;
   objectsNumber?: number;
-  aclControl?: any;
-  corsControl?: any;
 }
 
 const BucketDetailsDrawer: React.FC<Props> = props => {
@@ -53,9 +51,7 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
     created,
     cluster,
     size,
-    objectsNumber,
-    aclControl,
-    corsControl
+    objectsNumber
   } = props;
 
   let formattedCreated;
@@ -106,11 +102,14 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
       ) : null}
 
       {cluster && bucketLabel ? (
-        <ACLSelect
+        <AccessSelect
           variant="bucket"
           name={bucketLabel}
-          getACL={() => getBucketAccess(cluster, bucketLabel)}
-          updateACL={(acl: Omit<ACLType, 'custom'>, cors_enabled: boolean) => {
+          getAccess={() => getBucketAccess(cluster, bucketLabel)}
+          updateAccess={(
+            acl: Omit<ACLType, 'custom'>,
+            cors_enabled: boolean
+          ) => {
             return updateBucketAccess(cluster, bucketLabel, {
               acl,
               cors_enabled
