@@ -21,7 +21,7 @@ describe('username', () => {
         .type(testText);
       cy.get('[data-testid="textfield-input"]')
         .first()
-        .should('have.value', `${username}${testText}`);
+        .should('have.value', testText);
     });
   });
 });
