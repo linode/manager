@@ -116,10 +116,9 @@ const styles = (theme: Theme) =>
         marginTop: theme.spacing(2)
       }
     },
-    chooseTime: {
-      marginRight: theme.spacing(2)
-    },
+    chooseTime: {},
     chooseDay: {
+      marginRight: theme.spacing(2),
       minWidth: 150
     },
     cancelButton: {
@@ -636,6 +635,22 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           the backup is promoted to the weekly slot. Up to two weekly backups
           are saved.
         </Typography>
+        <FormControl className={classes.chooseDay}>
+          <Select
+            textFieldProps={{
+              dataAttrs: {
+                'data-qa-weekday-select': true
+              }
+            }}
+            options={daySelection}
+            defaultValue={defaultDaySelection}
+            onChange={this.handleSelectBackupTime}
+            label="Day of Week"
+            placeholder="Choose a day"
+            isClearable={false}
+            noMarginTop
+          />
+        </FormControl>
         <FormControl className={classes.chooseTime}>
           <Select
             textFieldProps={{
@@ -653,25 +668,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             noMarginTop
           />
           <FormHelperText>
-            Windows displayed in {this.props.timezone}
+            Time displayed in {this.props.timezone.replace('_', ' ')}
           </FormHelperText>
-        </FormControl>
-
-        <FormControl className={classes.chooseDay}>
-          <Select
-            textFieldProps={{
-              dataAttrs: {
-                'data-qa-weekday-select': true
-              }
-            }}
-            options={daySelection}
-            defaultValue={defaultDaySelection}
-            onChange={this.handleSelectBackupTime}
-            label="Day of Week"
-            placeholder="Choose a day"
-            isClearable={false}
-            noMarginTop
-          />
         </FormControl>
         <ActionsPanel className={classes.scheduleAction}>
           <Button
