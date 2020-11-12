@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '15%'
+    width: '20%'
   },
   swatch: {
     content: '',
@@ -97,44 +97,125 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
     }
   ];
 
-  // const cmrTextColors = {
-  //   textAction: '#3683dc',
-  //   textBillingSummary: '#32363c',
-  //   textTab: '#3683dc',
-  //   textTabActive: '#32363c',
-  //   textStatusChip: '#5d646f',
-  //   linkActiveMedium: '#2575d0',
-  //   linkActiveLight: '#2575d0',
-  //   headlineStatic: '#32363c',
-  //   headlineActive: '#32363c',
-  //   tableStatic: '#55595d',
-  //   textTagButton: '#3683dc',
-  //   textAccessTable: '#606469',
-  //   textAccessCode: '#606469',
-  //   textBreadcrumbParent: '#3683dc'
-  // };
+  const cmrTextColors = [
+    {
+      color: theme.cmrTextColors.textAction,
+      alias: 'theme.cmrTextColors.textAction'
+    },
+    {
+      color: theme.cmrTextColors.textBillingSummary,
+      alias: 'theme.cmrTextColors.textBillingSummary'
+    },
+    {
+      color: theme.cmrTextColors.textTab,
+      alias: 'theme.cmrTextColors.textTab'
+    },
+    {
+      color: theme.cmrTextColors.textTabActive,
+      alias: 'theme.cmrTextColors.textTabActive'
+    },
+    {
+      color: theme.cmrTextColors.textStatusChip,
+      alias: 'theme.cmrTextColors.textStatusChip'
+    },
+    {
+      color: theme.cmrTextColors.linkActiveMedium,
+      alias: 'theme.cmrTextColors.linkActiveMedium'
+    },
+    {
+      color: theme.cmrTextColors.linkActiveLight,
+      alias: 'theme.cmrTextColors.linkActiveLight'
+    },
+    {
+      color: theme.cmrTextColors.headlineStatic,
+      alias: 'theme.cmrTextColors.headlineStatic'
+    },
+    {
+      color: theme.cmrTextColors.headlineActive,
+      alias: 'theme.cmrTextColors.headlineActive'
+    },
+    {
+      color: theme.cmrTextColors.tableStatic,
+      alias: 'theme.cmrTextColors.tableStatic'
+    },
+    {
+      color: theme.cmrTextColors.textTagButton,
+      alias: 'theme.cmrTextColors.textTagButton'
+    },
+    {
+      color: theme.cmrTextColors.textAccessTable,
+      alias: 'theme.cmrTextColors.textAccessTable'
+    },
+    {
+      color: theme.cmrTextColors.textAccessCode,
+      alias: 'theme.cmrTextColors.textAccessCode'
+    },
+    {
+      color: theme.cmrTextColors.textBreadcrumbParent,
+      alias: 'theme.cmrTextColors.textBreadcrumbParent'
+    }
+  ];
 
-  // const cmrBorderColors = {
-  //   borderNotificationCenter: '#cce4ff',
-  //   borderTypography: '#e3e5e8',
-  //   borderTabs: '#e3e5e8',
-  //   borderTabActive: '#3683dc',
-  //   borderBillingSummary: '#cce2ff',
-  //   borderBalance: '#c2daff',
-  //   borderTable: '#f4f5f6'
-  // };
+  const cmrBorderColors = [
+    {
+      color: theme.cmrBorderColors.borderNotificationCenter,
+      alias: 'theme.cmrBorderColors.borderNotificationCenter'
+    },
+    {
+      color: theme.cmrBorderColors.borderTypography,
+      alias: 'theme.cmrBorderColors.borderTypography'
+    },
+    {
+      color: theme.cmrBorderColors.borderTabs,
+      alias: 'theme.cmrBorderColors.borderTabs'
+    },
+    {
+      color: theme.cmrBorderColors.borderTabActive,
+      alias: 'theme.cmrBorderColors.borderTabActive'
+    },
+    {
+      color: theme.cmrBorderColors.borderBillingSummary,
+      alias: 'theme.cmrBorderColors.borderBillingSummary'
+    },
+    {
+      color: theme.cmrBorderColors.borderBillingSummary,
+      alias: 'theme.cmrBorderColors.borderBillingSummary'
+    },
+    {
+      color: theme.cmrBorderColors.borderBalance,
+      alias: 'theme.cmrBorderColors.borderBalance'
+    },
+    {
+      color: theme.cmrBorderColors.borderTable,
+      alias: 'theme.cmrBorderColors.borderTable'
+    }
+  ];
 
-  // const cmrIconColors = {
-  //   iStatic: '#5d646f',
-  //   iActiveMedium: '#2575d0',
-  //   iActiveLight: '#3683dc',
-  //   iGreen: '#17cf73',
-  //   iOrange: '#ffb31a',
-  //   iRed: '#cf1e1e',
-  //   // Offline status
-  //   iGrey: '#dbdde1',
-  //   iCheckmark: '#444'
-  // };
+  const cmrIconColors = [
+    {
+      color: theme.cmrIconColors.iStatic,
+      alias: 'theme.cmrIconColors.iStatic'
+    },
+    {
+      color: theme.cmrIconColors.iActiveMedium,
+      alias: 'theme.cmrIconColors.iActiveMedium'
+    },
+    {
+      color: theme.cmrIconColors.iActiveLight,
+      alias: 'theme.cmrIconColors.iActiveLight'
+    },
+    { color: theme.cmrIconColors.iGreen, alias: 'theme.cmrIconColors.iGreen' },
+    {
+      color: theme.cmrIconColors.iOrange,
+      alias: 'theme.cmrIconColors.iOrange'
+    },
+    { color: theme.cmrIconColors.iRed, alias: 'theme.cmrIconColors.iRed' },
+    { color: theme.cmrIconColors.iGrey, alias: 'theme.cmrIconColors.iGrey' },
+    {
+      color: theme.cmrIconColors.iCheckmark,
+      alias: 'theme.cmrIconColors.iCheckmark'
+    }
+  ];
 
   const createSwatch = (idx: number, color: string, alias: string) => {
     return (
@@ -165,9 +246,51 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
     );
   };
 
+  const renderTextColors = () => {
+    return (
+      <>
+        <Grid item xs={12}>
+          <Typography variant="h2">Typography Colors</Typography>
+        </Grid>
+        {cmrTextColors.map((color, idx: number) =>
+          createSwatch(idx, color.color, color.alias)
+        )}
+      </>
+    );
+  };
+
+  const renderBorderColors = () => {
+    return (
+      <>
+        <Grid item xs={12}>
+          <Typography variant="h2">Border Colors</Typography>
+        </Grid>
+        {cmrBorderColors.map((color, idx: number) =>
+          createSwatch(idx, color.color, color.alias)
+        )}
+      </>
+    );
+  };
+
+  const renderIconColors = () => {
+    return (
+      <>
+        <Grid item xs={12}>
+          <Typography variant="h2">Icon Colors</Typography>
+        </Grid>
+        {cmrIconColors.map((color, idx: number) =>
+          createSwatch(idx, color.color, color.alias)
+        )}
+      </>
+    );
+  };
+
   return (
     <Grid container className={classes.root}>
       {renderBackgrounds()}
+      {renderTextColors()}
+      {renderBorderColors()}
+      {renderIconColors()}
     </Grid>
   );
 };
