@@ -12,7 +12,9 @@ import Toggle from 'src/components/Toggle';
 import useOpenClose from 'src/hooks/useOpenClose';
 import capitalize from 'src/utilities/capitalize';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { aclOptions } from '../utilities';
+import { objectACLOptions, bucketACLOptions } from '../utilities';
+import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitButton: { marginTop: theme.spacing(2) }
@@ -69,8 +71,12 @@ const AccessSelect: React.FC<CombinedProps> = props => {
     getAccess()
       .then(({ acl, cors_enabled }) => {
         setAccessLoading(false);
-        setACLData(acl);
-        setSelectedACL(acl);
+        // Don't show "public-read-write" for Objects here; use "custom" instead
+        // since "public-read-write" Objects are basically the same as "public-read".
+        const _acl =
+          variant === 'object' && acl === 'public-read-write' ? 'custom' : acl;
+        setACLData(_acl);
+        setSelectedACL(_acl);
         if (typeof cors_enabled !== 'undefined') {
           setCORSData(cors_enabled);
           setSelectedCORSOption(cors_enabled);
@@ -80,7 +86,7 @@ const AccessSelect: React.FC<CombinedProps> = props => {
         setAccessLoading(false);
         setAccessError(getErrorStringOrDefault(err));
       });
-  }, [getAccess]);
+  }, [getAccess, variant]);
 
   const handleSubmit = () => {
     // TS safety check.
@@ -107,10 +113,16 @@ const AccessSelect: React.FC<CombinedProps> = props => {
       });
   };
 
-  // An Object/Bucket's ACL is "custom" is the user has done things with the s3
+  const aclOptions = variant === 'bucket' ? bucketACLOptions : objectACLOptions;
+
+  // An Object/Bucket's ACL is "custom" is the user has done things with the S3
   // API directly (instead of using one of the canned ACLs). "Custom" is not a
-  // selectable option, but it is (potentially) returned by the API, so we
-  // present it here as a disabled option.
+  // valid option, but it is (potentially) returned by the API, so we
+  // present it here (though the form cannot be submitted with it selected.)
+  //
+  // Another situation where this may happen is if the user has used the API to
+  // select "public-read-write" as an Object ACL, which is just equivalent to
+  // "public-read", so we don't present it as an option.
   const _options =
     aclData === 'custom'
       ? [{ label: 'Custom', value: 'custom' }, ...aclOptions]
@@ -122,19 +134,23 @@ const AccessSelect: React.FC<CombinedProps> = props => {
     ? 'CORS Enabled'
     : 'CORS Disabled';
 
+  const aclLabel = _options.find(thisOption => thisOption.value === selectedACL)
+    ?.label;
+
+  const aclCopy = selectedACL ? copy[variant][selectedACL] : null;
+
   return (
     <>
       {updateAccessSuccess ? (
         <Notice success text={`${label} access updated successfully.`} />
       ) : null}
-
       <EnhancedSelect
         label={`Access (${label} ACL)`}
         placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
         isClearable={false}
         options={_options}
         isLoading={accessLoading}
-        disabled={accessLoading || accessError}
+        disabled={accessLoading}
         errorText={accessError || updateAccessError}
         onChange={(selected: Item<ACLType> | null) => {
           if (selected) {
@@ -148,6 +164,15 @@ const AccessSelect: React.FC<CombinedProps> = props => {
         )}
         data-testid="acl-select"
       />
+
+      <div style={{ marginTop: 8 }}>
+        {aclLabel && aclCopy ? (
+          <Typography>
+            {aclLabel}: {aclCopy}
+          </Typography>
+        ) : null}
+      </div>
+
       {variant === 'bucket' ? (
         <FormControlLabel
           style={{ marginTop: 8, display: 'block' }}
@@ -162,6 +187,18 @@ const AccessSelect: React.FC<CombinedProps> = props => {
         />
       ) : null}
 
+      {variant === 'bucket' ? (
+        <Typography>
+          Whether Cross-Origin Resource Sharing is enabled for all origins. For
+          more fine-grained control of CORS, please use{' '}
+          <ExternalLink
+            text="another S3-compatible tool"
+            hideIcon
+            link="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
+          />
+          .
+        </Typography>
+      ) : null}
       <Button
         className={classes.submitButton}
         buttonType="primary"
@@ -177,7 +214,6 @@ const AccessSelect: React.FC<CombinedProps> = props => {
       >
         Save
       </Button>
-
       <ConfirmationDialog
         title={`Confirm ${label} Access`}
         open={isOpen}
@@ -193,11 +229,91 @@ const AccessSelect: React.FC<CombinedProps> = props => {
           </ActionsPanel>
         )}
       >
-        Are you sure want make {name} writable by everyone? This is not
-        recommended for most use cases.
+        Are you sure you want to set access for {name} to Public Read/Write?
+        Everyone will be able to list, create, overwrite, and delete Objects in
+        this Bucket. <strong>This is not recommended.</strong>
       </ConfirmationDialog>
     </>
   );
 };
 
 export default React.memo(AccessSelect);
+
+const copy: Record<
+  'bucket' | 'object',
+  Partial<Record<ACLType, JSX.Element>>
+> = {
+  object: {
+    private: (
+      <>
+        <strong>Only you</strong> can download this Object.
+      </>
+    ),
+    'authenticated-read': (
+      <>
+        <strong>All authenticated Object Storage users </strong> can download
+        this Object.
+      </>
+    ),
+    'public-read': (
+      <>
+        <strong>Everyone </strong> can download this Object.
+      </>
+    ),
+    'public-read-write': (
+      <>
+        <strong>Everyone </strong> can download this Object (equivalent to
+        Public Read).
+      </>
+    ),
+    custom: (
+      <>
+        This Object has a custom ACL. Use another{' '}
+        <ExternalLink
+          text="S3-compatible tool"
+          link="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
+          hideIcon
+        />{' '}
+        to edit the ACL, or select a predefined ACL.
+      </>
+    )
+  },
+  bucket: {
+    private: (
+      <>
+        <strong>Only you</strong> can list, create, overwrite, and delete
+        Objects in this Bucket.
+      </>
+    ),
+    'authenticated-read': (
+      <>
+        <strong>All authenticated Object Storage users </strong> can list
+        Objects in this Bucket, but only you can create, overwrite, and delete
+        them.
+      </>
+    ),
+    'public-read': (
+      <>
+        <strong>Everyone </strong> can list Objects in this Bucket, but only you
+        can create, overwrite, and delete them.
+      </>
+    ),
+    'public-read-write': (
+      <>
+        <strong>Everyone </strong> can list, create, overwrite, and delete
+        Objects in this Bucket. <strong>This is not recommended.</strong>
+      </>
+    ),
+    custom: (
+      <>
+        This Bucket has a custom ACL. Use{' '}
+        <ExternalLink
+          text="another S3-compatible tool"
+          link="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools"
+          hideIcon
+        />{' '}
+        to edit the ACL, or select a pre-defined ACL here.
+      </>
+    )
+  }
+};

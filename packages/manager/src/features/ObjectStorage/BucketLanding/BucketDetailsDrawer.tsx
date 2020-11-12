@@ -122,14 +122,13 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
           variant="bucket"
           name={bucketLabel}
           getAccess={() => getBucketAccess(cluster, bucketLabel)}
-          updateAccess={(
-            acl: Omit<ACLType, 'custom'>,
-            cors_enabled: boolean
-          ) => {
-            return updateBucketAccess(cluster, bucketLabel, {
-              acl,
-              cors_enabled
-            });
+          updateAccess={(acl: ACLType, cors_enabled: boolean) => {
+            // Don't send the ACL with the payload if it's "custom", since it's
+            // not valid (though it's a valid return type).
+            const payload =
+              acl === 'custom' ? { cors_enabled } : { acl, cors_enabled };
+
+            return updateBucketAccess(cluster, bucketLabel, payload);
           }}
         />
       ) : null}
