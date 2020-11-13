@@ -17,7 +17,7 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  submitButton: { marginTop: theme.spacing(2) }
+  submitButton: { marginTop: theme.spacing(3) }
 }));
 
 interface AccessPayload {
@@ -151,7 +151,7 @@ const AccessSelect: React.FC<CombinedProps> = props => {
       {errorText ? <Notice error text={errorText} /> : null}
 
       <EnhancedSelect
-        label={`Access (${label} ACL)`}
+        label="Access Control List (ACL)"
         placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
         isClearable={false}
         options={_options}
@@ -170,7 +170,7 @@ const AccessSelect: React.FC<CombinedProps> = props => {
         data-testid="acl-select"
       />
 
-      <div style={{ marginTop: 8 }}>
+      <div style={{ marginTop: 8, minHeight: 16 }}>
         {aclLabel && aclCopy ? (
           <Typography>
             {aclLabel}: {aclCopy}
@@ -180,7 +180,7 @@ const AccessSelect: React.FC<CombinedProps> = props => {
 
       {variant === 'bucket' ? (
         <FormControlLabel
-          style={{ marginTop: 8, display: 'block' }}
+          style={{ marginTop: 16, display: 'block' }}
           control={
             <Toggle
               disabled={accessLoading}
