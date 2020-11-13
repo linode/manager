@@ -11,6 +11,7 @@ import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getAllLinodeInterfaces } from 'src/store/linodes/interfaces/interfaces.requests';
 import { getLinode as _getLinode } from 'src/store/linodes/linode.requests';
+import { ThunkDispatch } from 'src/store/types';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { shouldRequestEntity } from 'src/utilities/shouldRequestEntity';
 import LinodesDetail from './LinodesDetail';
@@ -28,7 +29,7 @@ interface Props {
 export const LinodesDetailContainer: React.FC<Props> = props => {
   const { isDashboard } = props;
   const { linodes } = useLinodes();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch>();
   const flags = useFlags();
   const { account } = useAccountManagement();
 
@@ -53,7 +54,7 @@ export const LinodesDetailContainer: React.FC<Props> = props => {
 
   React.useEffect(() => {
     // Unconditionally request data for the Linode being viewed
-    dispatch(_getLinode({ linodeId: +linodeId }));
+    dispatch(_getLinode({ linodeId: +linodeId })).catch(_ => null);
   }, [linodeId, dispatch]);
 
   React.useEffect(() => {
