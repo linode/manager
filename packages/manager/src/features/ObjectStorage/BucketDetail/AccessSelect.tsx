@@ -116,7 +116,7 @@ const AccessSelect: React.FC<CombinedProps> = props => {
 
   const aclOptions = variant === 'bucket' ? bucketACLOptions : objectACLOptions;
 
-  // An Object/Bucket's ACL is "custom" is the user has done things with the S3
+  // An Object/Bucket's ACL is "custom" if the user has done things with the S3
   // API directly (instead of using one of the canned ACLs). "Custom" is not a
   // valid option, but it is (potentially) returned by the API, so we
   // present it here (though the form cannot be submitted with it selected.)
