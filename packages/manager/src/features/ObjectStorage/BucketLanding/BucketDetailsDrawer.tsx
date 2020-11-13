@@ -21,6 +21,7 @@ const useStyles = makeStyles(() => ({
   },
   copy: {
     marginTop: 16,
+    marginLeft: '1em',
     padding: 0
   }
 }));
@@ -111,12 +112,12 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
 
       {hostname ? (
         <>
-          <ExternalLink link={hostname} text={truncateMiddle(hostname, 50)} />
-          <CopyTooltip
-            className={classes.copy}
-            text={hostname}
-            displayText="Copy to clipboard"
+          <ExternalLink
+            hideIcon
+            link={hostname}
+            text={truncateMiddle(hostname, 50)}
           />
+          <CopyTooltip className={classes.copy} text={hostname} />
         </>
       ) : null}
     </Drawer>
