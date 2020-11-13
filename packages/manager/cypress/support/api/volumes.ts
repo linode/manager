@@ -75,6 +75,12 @@ export const deleteAllTestVolumes = () => {
         deleteVolumeById(vol.id);
       } else if (isTestEntity(vol) && vol.linode_id !== null) {
         deleteLinodeById(vol.linode_id).then(() => {
+          cy.server();
+          cy.route({
+            method: 'DELETE',
+            url: `linode/instances/${vol.linode_id}`
+          }).as('deleteLinode');
+          cy.wait('@deleteLinode');
           deleteVolumeById(vol.id);
         });
       }

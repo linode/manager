@@ -37,7 +37,12 @@ describe('linode backups', () => {
         }
       });
       cy.findByText(`${linode.label}`).should('be.visible');
-      cy.findByText('Automatic and manual backups will be listed here');
+      if (
+        cy.contains('PROVISIONING').should('not.be.visible') &&
+        cy.contains('BOOTING').should('not.be.visible')
+      ) {
+        cy.findByText('Automatic and manual backups will be listed here');
+      }
       deleteLinodeById(linode.id);
     });
   });
