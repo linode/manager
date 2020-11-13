@@ -16,6 +16,7 @@ interface Props {
   onDelete: () => void;
   label: string;
   loading: boolean;
+  typeToConfirm?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -29,7 +30,16 @@ type CombinedProps = Props;
 
 const DeletionDialog: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { entity, error, label, onClose, onDelete, open, loading } = props;
+  const {
+    entity,
+    error,
+    label,
+    onClose,
+    onDelete,
+    open,
+    loading,
+    typeToConfirm
+  } = props;
   const [confirmationText, setConfirmationText] = React.useState('');
   const renderActions = () => (
     <ActionsPanel style={{ padding: 0 }}>
@@ -41,7 +51,7 @@ const DeletionDialog: React.FC<CombinedProps> = props => {
         destructive
         onClick={onDelete}
         loading={loading}
-        disabled={confirmationText !== label}
+        disabled={typeToConfirm && confirmationText !== label}
         data-qa-confirm
       >
         Delete
@@ -67,18 +77,22 @@ const DeletionDialog: React.FC<CombinedProps> = props => {
       <Typography>
         Deleting this {entity} is permanent and can&apos;t be undone.
       </Typography>
-      <Typography className={classes.text}>
-        To confirm deletion, type the name of the {entity} (
-        <strong>{label}</strong>) in the field below:
-      </Typography>
-      <TextField
-        label={`${capitalize(entity)} Name:`}
-        value={confirmationText}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setConfirmationText(e.target.value)
-        }
-        placeholder={label}
-      />
+      {typeToConfirm && (
+        <>
+          <Typography className={classes.text}>
+            To confirm deletion, type the name of the {entity} (
+            <strong>{label}</strong>) in the field below:
+          </Typography>
+          <TextField
+            label={`${capitalize(entity)} Name:`}
+            value={confirmationText}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setConfirmationText(e.target.value)
+            }
+            placeholder={label}
+          />
+        </>
+      )}
     </ConfirmationDialog>
   );
 };

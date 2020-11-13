@@ -48,7 +48,7 @@ const _getAllBucketsInCluster = getAllWithArguments<ObjectStorageBucket>(
  * Note: a slight oddity here is that in the case of failure, both the `done` and `failed` actions
  * will be dispatched. The reducer handles this and it should be OK, but proceed with caution.
  */
-export const getAllBucketsFromAllClusters: ThunkActionCreator<
+export const getAllBucketsFromClusters: ThunkActionCreator<
   Promise<ObjectStorageBucket[]>,
   ObjectStorageClusterID[]
 > = clusterIds => dispatch => {

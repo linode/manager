@@ -8,7 +8,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 
@@ -57,7 +57,7 @@ const AutoBackups: React.FC<CombinedProps> = props => {
   } = props;
 
   return (
-    <ExpansionPanel heading="Backup Auto Enrollment" defaultExpanded={true}>
+    <Accordion heading="Backup Auto Enrollment" defaultExpanded={true}>
       <Grid container direction="column" className={classes.root}>
         <Grid item>
           <Typography variant="h2">
@@ -127,7 +127,7 @@ const AutoBackups: React.FC<CombinedProps> = props => {
           </Grid>
         )}
       </Grid>
-    </ExpansionPanel>
+    </Accordion>
   );
 };
 

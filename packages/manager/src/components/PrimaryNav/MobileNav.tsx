@@ -233,6 +233,7 @@ export const MobileNav: React.FC<Props> = props => {
 
                 return (
                   <ListItem
+                    key={`menu-item-${link.display}`}
                     data-testid={`menu-item-${link.display}`}
                     className={classes.menuItemLinkNoGroup}
                     style={{
@@ -248,14 +249,13 @@ export const MobileNav: React.FC<Props> = props => {
 
               // Otherwise return a NavGroup (dropdown menu)
               return (
-                <>
+                <React.Fragment key={thisGroup.group}>
                   <ListItem
                     aria-controls={`menu-${thisGroup.group}`}
                     aria-haspopup="true"
                     button
                     className={classes.menuItemLink}
                     id={`button-${thisGroup.group}`}
-                    key={thisGroup.group}
                     onClick={() => handleClick(thisGroup.group)}
                   >
                     <ListItemText primary={thisGroup.group} />
@@ -278,7 +278,7 @@ export const MobileNav: React.FC<Props> = props => {
                         <ListItem
                           className={classes.nestedLink}
                           data-testid={`menu-item-${thisLink.display}`}
-                          key={thisLink.group}
+                          key={`list-item-${thisLink.group}`}
                           role="menuitem"
                         >
                           <Link
@@ -291,7 +291,7 @@ export const MobileNav: React.FC<Props> = props => {
                       ))}
                     </List>
                   </Collapse>
-                </>
+                </React.Fragment>
               );
             })}
           </List>
