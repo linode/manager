@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-11-13] - v1.24.1
+
+### Fixed:
+
+- Overreporting Sentry errors
+
 ## [2020-11-02] - v1.24.0
 
 ### Added:
