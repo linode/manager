@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 1,
     backgroundColor: '#EBEBEB'
   },
-  copy: { marginTop: 16, padding: 0 },
+  copy: { marginLeft: '1em', padding: 0 },
   submitButton: { marginTop: theme.spacing(2) }
 }));
 
@@ -77,30 +77,25 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
         </Typography>
       ) : null}
 
-      <Divider className={classes.divider} />
-
       {url ? (
         <>
-          <ExternalLink link={url} text={truncateMiddle(url, 50)} />
-          <CopyTooltip
-            className={classes.copy}
-            text={url}
-            displayText="Copy to clipboard"
-          />
+          <ExternalLink hideIcon link={url} text={truncateMiddle(url, 50)} />
+          <CopyTooltip className={classes.copy} text={url} />
         </>
       ) : null}
 
-      <Divider className={classes.divider} />
-
       {open && name ? (
-        <AccessSelect
-          variant="object"
-          name={name}
-          getAccess={() => getObjectACL(clusterId, bucketName, name)}
-          updateAccess={(acl: ACLType) =>
-            updateObjectACL(clusterId, bucketName, name, acl)
-          }
-        />
+        <>
+          <Divider className={classes.divider} />
+          <AccessSelect
+            variant="object"
+            name={name}
+            getAccess={() => getObjectACL(clusterId, bucketName, name)}
+            updateAccess={(acl: ACLType) =>
+              updateObjectACL(clusterId, bucketName, name, acl)
+            }
+          />
+        </>
       ) : null}
     </Drawer>
   );

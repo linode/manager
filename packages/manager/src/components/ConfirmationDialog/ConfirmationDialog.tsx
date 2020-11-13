@@ -27,7 +27,7 @@ const styles = (theme: Theme) =>
 
 interface Props extends DialogProps {
   actions?: ((props: any) => JSX.Element) | JSX.Element;
-  error?: string;
+  error?: string | JSX.Element;
   onClose: () => void;
   title: string;
 }

@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#EBEBEB'
   },
   copy: {
-    marginTop: 16,
+    marginLeft: '1em',
     padding: 0
   }
 }));
@@ -81,6 +81,17 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
         </Typography>
       ) : null}
 
+      {hostname ? (
+        <span style={{ display: 'flex', alignItems: 'center' }}>
+          <ExternalLink
+            hideIcon
+            link={`https://${hostname}`}
+            text={truncateMiddle(hostname, 50)}
+          />
+          <CopyTooltip className={classes.copy} text={hostname} />
+        </span>
+      ) : null}
+
       {formattedCreated || cluster ? (
         <Divider className={classes.divider} />
       ) : null}
@@ -100,22 +111,6 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
       {typeof size === 'number' || typeof objectsNumber === 'number' ? (
         <Divider className={classes.divider} />
       ) : null}
-
-      {hostname ? (
-        <>
-          <ExternalLink
-            link={`https://${hostname}`}
-            text={truncateMiddle(hostname, 50)}
-          />
-          <CopyTooltip
-            className={classes.copy}
-            text={hostname}
-            displayText="Copy to clipboard"
-          />
-        </>
-      ) : null}
-
-      {hostname ? <Divider className={classes.divider} /> : null}
 
       {cluster && bucketLabel ? (
         <AccessSelect
