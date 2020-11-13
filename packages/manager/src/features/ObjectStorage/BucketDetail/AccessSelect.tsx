@@ -134,6 +134,8 @@ const AccessSelect: React.FC<CombinedProps> = props => {
 
   const aclCopy = selectedACL ? copy[variant][selectedACL] : null;
 
+  const errorText = accessError || updateAccessError;
+
   const CORSLabel = accessLoading
     ? 'Loading access...'
     : selectedCORSOption
@@ -145,6 +147,9 @@ const AccessSelect: React.FC<CombinedProps> = props => {
       {updateAccessSuccess ? (
         <Notice success text={`${label} access updated successfully.`} />
       ) : null}
+
+      {errorText ? <Notice error text={errorText} /> : null}
+
       <EnhancedSelect
         label={`Access (${label} ACL)`}
         placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
@@ -152,7 +157,6 @@ const AccessSelect: React.FC<CombinedProps> = props => {
         options={_options}
         isLoading={accessLoading}
         disabled={accessLoading}
-        errorText={accessError || updateAccessError}
         onChange={(selected: Item<ACLType> | null) => {
           if (selected) {
             setUpdateAccessSuccess(false);
