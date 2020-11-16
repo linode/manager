@@ -22,8 +22,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 1,
     backgroundColor: '#EBEBEB'
   },
-  copy: { marginLeft: '1em', padding: 0 },
-  submitButton: { marginTop: theme.spacing(2) }
+  copy: {
+    marginLeft: '1em',
+    padding: 0
+  },
+  link: {
+    display: 'flex'
+  },
+  submitButton: {
+    marginTop: theme.spacing(2)
+  }
 }));
 
 export interface Props {
@@ -78,10 +86,10 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
       ) : null}
 
       {url ? (
-        <>
+        <div className={classes.link}>
           <ExternalLink hideIcon link={url} text={truncateMiddle(url, 50)} />
           <CopyTooltip className={classes.copy} text={url} />
-        </>
+        </div>
       ) : null}
 
       {open && name ? (
