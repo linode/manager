@@ -3,17 +3,6 @@ import { SENTRY_URL } from 'src/constants';
 import redactAccessToken from 'src/utilities/redactAccessToken';
 import deepStringTransform from 'src/utilities/deepStringTransform';
 
-const beforeSend: BrowserOptions['beforeSend'] = sentryEvent => {
-  /** remove the user's access token from the event if one exists */
-  const eventWithoutSensitiveInfo = deepStringTransform(
-    sentryEvent,
-    redactAccessToken
-  );
-
-  /** maybe add a custom fingerprint if this error is relevant */
-  return maybeAddCustomFingerprint(eventWithoutSensitiveInfo);
-};
-
 export const initSentry = () => {
   if (SENTRY_URL) {
     init({
@@ -82,6 +71,67 @@ export const initSentry = () => {
       ]
     });
   }
+};
+
+const beforeSend: BrowserOptions['beforeSend'] = (sentryEvent, hint) => {
+  const normalizedErrorMessage = normalizeErrorMessage(sentryEvent.message);
+
+  if (
+    errorsToIgnore.some(eachRegex =>
+      Boolean(normalizedErrorMessage?.match(eachRegex))
+    )
+  ) {
+    return null;
+  }
+
+  sentryEvent.message = normalizedErrorMessage;
+
+  /** remove the user's access token from the event if one exists */
+  const eventWithoutSensitiveInfo = deepStringTransform(
+    sentryEvent,
+    redactAccessToken
+  );
+
+  /** maybe add a custom fingerprint if this error is relevant */
+  return maybeAddCustomFingerprint(eventWithoutSensitiveInfo);
+};
+
+export const errorsToIgnore: RegExp[] = [
+  /Invalid (OAuth )?Token/gi,
+  /Not Found/gi,
+  /You are not authorized/gi,
+  /Unauthorized/gi,
+  /This Linode has been suspended/gi,
+  /safari-extension/gi,
+  /chrome-extension/gi,
+  // We know this is a problem. @todo: implement flow control in Lish.
+  /write data discarded, use flow control to avoid losing data/gi,
+  // This is an error coming from the MUI Ripple effect.
+  /TouchRipple/gi
+];
+
+// We can't trust the type of the "message" on a Sentry event, since it may
+// actually be something like a (Linode) API Error instead of a string. We need
+// to ensure we're  dealing with strings so we can determine if we should ignore
+// the error, or appropriately report the message to Sentry (i.e. not "<unknown>").
+export const normalizeErrorMessage = (sentryErrorMessage: any): string => {
+  if (typeof sentryErrorMessage === 'string') {
+    return sentryErrorMessage;
+  }
+
+  if (
+    Array.isArray(sentryErrorMessage) &&
+    sentryErrorMessage!.length === 1 &&
+    sentryErrorMessage[0]?.reason
+  ) {
+    return sentryErrorMessage[0].reason;
+  }
+
+  if (['undefined', 'function'].includes(typeof sentryErrorMessage)) {
+    return 'Unknown error';
+  }
+
+  return JSON.stringify(sentryErrorMessage);
 };
 
 const maybeAddCustomFingerprint = (event: SentryEvent): SentryEvent => {

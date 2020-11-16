@@ -11,6 +11,12 @@ import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
+import AccessSelect from '../BucketDetail/AccessSelect';
+import {
+  getBucketAccess,
+  updateBucketAccess,
+  ACLType
+} from '@linode/api-v4/lib/object-storage';
 
 const useStyles = makeStyles(() => ({
   divider: {
@@ -20,8 +26,11 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#EBEBEB'
   },
   copy: {
-    marginTop: 16,
+    marginLeft: '1em',
     padding: 0
+  },
+  link: {
+    display: 'flex'
   }
 }));
 
@@ -34,8 +43,6 @@ export interface Props {
   cluster?: string;
   size?: number | null;
   objectsNumber?: number;
-  aclControl?: any;
-  corsControl?: any;
 }
 
 const BucketDetailsDrawer: React.FC<Props> = props => {
@@ -47,9 +54,7 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
     created,
     cluster,
     size,
-    objectsNumber,
-    aclControl,
-    corsControl
+    objectsNumber
   } = props;
 
   let formattedCreated;
@@ -79,6 +84,17 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
         </Typography>
       ) : null}
 
+      {hostname ? (
+        <span className={classes.link}>
+          <ExternalLink
+            hideIcon
+            link={`https://${hostname}`}
+            text={truncateMiddle(hostname, 50)}
+          />
+          <CopyTooltip className={classes.copy} text={hostname} />
+        </span>
+      ) : null}
+
       {formattedCreated || cluster ? (
         <Divider className={classes.divider} />
       ) : null}
@@ -99,25 +115,20 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
         <Divider className={classes.divider} />
       ) : null}
 
-      {aclControl ? (
-        <Typography variant="subtitle2">{aclControl}</Typography>
-      ) : null}
+      {cluster && bucketLabel ? (
+        <AccessSelect
+          variant="bucket"
+          name={bucketLabel}
+          getAccess={() => getBucketAccess(cluster, bucketLabel)}
+          updateAccess={(acl: ACLType, cors_enabled: boolean) => {
+            // Don't send the ACL with the payload if it's "custom", since it's
+            // not valid (though it's a valid return type).
+            const payload =
+              acl === 'custom' ? { cors_enabled } : { acl, cors_enabled };
 
-      <Typography variant="subtitle2">
-        {corsControl ? 'CORS enabled' : 'CORS disabled'}
-      </Typography>
-
-      {hostname ? <Divider className={classes.divider} /> : null}
-
-      {hostname ? (
-        <>
-          <ExternalLink link={hostname} text={truncateMiddle(hostname, 50)} />
-          <CopyTooltip
-            className={classes.copy}
-            text={hostname}
-            displayText="Copy to clipboard"
-          />
-        </>
+            return updateBucketAccess(cluster, bucketLabel, payload);
+          }}
+        />
       ) : null}
     </Drawer>
   );
