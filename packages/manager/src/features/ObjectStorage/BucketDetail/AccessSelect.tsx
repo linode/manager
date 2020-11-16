@@ -29,10 +29,7 @@ export interface Props {
   variant: 'bucket' | 'object';
   name: string;
   getAccess: () => Promise<AccessPayload>;
-  updateAccess: (
-    acl: ACLType,
-    cors_enabled?: boolean
-  ) => Promise<AccessPayload>;
+  updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
 }
 
 type CombinedProps = Props;

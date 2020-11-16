@@ -12,7 +12,6 @@ import AccessSelect from './AccessSelect';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(3)
-    // minHeight: 328
   }
 }));
 

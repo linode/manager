@@ -174,7 +174,7 @@ export const updateBucketAccess = (
   bucketName: string,
   data: ObjectStorageBucketAccessRequest
 ) =>
-  Request<ObjectStorageBucketAccessResponse>(
+  Request<{}>(
     setMethod('PUT'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/access`
