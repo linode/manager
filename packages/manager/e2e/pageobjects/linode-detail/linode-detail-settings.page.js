@@ -196,16 +196,12 @@ class Settings extends Page {
 
     expect(this.deleteDialogTitle.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.deleteDialogTitle.selector
-        } selector`
+        `${assertLog.incorrectText} for "${this.deleteDialogTitle.selector} selector`
       )
       .toBe(confirmTitle);
     expect(this.deleteDialogContent.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.deleteDialogContent.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.deleteDialogContent.selector}" selector`
       )
       .toMatch(confirmContent);
 
