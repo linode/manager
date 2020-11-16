@@ -1,3 +1,13 @@
+## [2020-11-17] - v0.38.0
+
+### Added:
+- Methods, types, and schemas for Object Storage Bucket-level ACL
+
+### Changed:
+- Better schema for validating Firewall rules
+- Add APIWarning type and include it in the payload for /payment endpoints
+
+
 ## [2020-11-02] - v0.37.0
 
 ### Added:
