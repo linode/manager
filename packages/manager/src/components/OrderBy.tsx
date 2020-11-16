@@ -13,7 +13,7 @@ import {
 } from 'src/utilities/sort-by';
 import { debounce } from 'throttle-debounce';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 export interface OrderByProps extends State {
   handleOrderChange: (orderBy: string, order: Order) => void;
@@ -63,7 +63,6 @@ export const getInitialValuesFromUserPreferences = (
    * 2. user preferences (if saved)
    * 3. anything passed as props
    * 4. default values
-   *
    *
    */
   if (['asc', 'desc'].includes(params.order) && params.orderBy) {
@@ -140,6 +139,7 @@ export const sortData = (orderBy: string, order: Order) => {
 export const OrderBy: React.FC<CombinedProps> = props => {
   const { preferences, updatePreferences } = usePreferences();
   const location = useLocation();
+  const history = useHistory();
   const params = getParamsFromUrl(location.search);
 
   const initialValues = getInitialValuesFromUserPreferences(
@@ -197,6 +197,9 @@ export const OrderBy: React.FC<CombinedProps> = props => {
   const handleOrderChange = (newOrderBy: string, newOrder: Order) => {
     setOrderBy(newOrderBy);
     setOrder(newOrder);
+
+    // Update the URL query params so that the current sort is bookmark-able
+    history.push({ search: `?order=${newOrder}&orderBy=${newOrderBy}` });
 
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
