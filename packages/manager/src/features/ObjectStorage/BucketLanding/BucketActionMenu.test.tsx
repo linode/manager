@@ -8,7 +8,8 @@ jest.mock('src/components/ActionMenu/ActionMenu');
 const mockOnRemove = jest.fn();
 
 const props = {
-  onRemove: mockOnRemove
+  onRemove: mockOnRemove,
+  onClickDetails: jest.fn()
 };
 
 describe('BucketActionMenu', () => {
