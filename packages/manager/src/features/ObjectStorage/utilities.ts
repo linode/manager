@@ -153,10 +153,14 @@ export const confirmObjectStorage = <T extends {}>(
   }
 };
 
-export const aclOptions: Item<ACLType>[] = [
+export const objectACLOptions: Item<ACLType>[] = [
   { label: 'Private', value: 'private' },
-  { label: 'Public Read', value: 'public-read' },
   { label: 'Authenticated Read', value: 'authenticated-read' },
+  { label: 'Public Read', value: 'public-read' }
+];
+
+export const bucketACLOptions: Item<ACLType>[] = [
+  ...objectACLOptions,
   { label: 'Public Read/Write', value: 'public-read-write' }
 ];
 
