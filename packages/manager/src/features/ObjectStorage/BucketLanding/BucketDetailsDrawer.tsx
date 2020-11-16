@@ -28,6 +28,9 @@ const useStyles = makeStyles(() => ({
   copy: {
     marginLeft: '1em',
     padding: 0
+  },
+  link: {
+    display: 'flex'
   }
 }));
 
@@ -82,7 +85,7 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
       ) : null}
 
       {hostname ? (
-        <span style={{ display: 'flex', alignItems: 'center' }}>
+        <span className={classes.link}>
           <ExternalLink
             hideIcon
             link={`https://${hostname}`}
