@@ -278,7 +278,7 @@ export const MobileNav: React.FC<Props> = props => {
                         <ListItem
                           className={classes.nestedLink}
                           data-testid={`menu-item-${thisLink.display}`}
-                          key={`list-item-${thisLink.group}`}
+                          key={`list-item-${thisLink.display}`}
                           role="menuitem"
                         >
                           <Link
