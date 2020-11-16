@@ -46,8 +46,8 @@ const tabs = [
     title: "Home"
   },
   {
-    routeName: `${url}/dashboard`,
-    title: "Dashboard"
+    routeName: `${url}/linodes`,
+    title: "Linodes"
   }
 ];
 
@@ -58,7 +58,7 @@ const tabs = [
       <h2>Home</h2>
     </TabPanel>
     <TabPanel>
-      <h2>This is a dashboard</h2>
+      <h2>This is a page</h2>
     </TabPanel>
   </TabPanels>
 </Tabs>;
