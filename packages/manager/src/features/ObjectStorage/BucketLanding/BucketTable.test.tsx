@@ -12,6 +12,7 @@ describe('BucketTable', () => {
       order="asc"
       handleOrderChange={jest.fn()}
       handleClickRemove={jest.fn()}
+      handleClickDetails={jest.fn()}
     />
   );
 

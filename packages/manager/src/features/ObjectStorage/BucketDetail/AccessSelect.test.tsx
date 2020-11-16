@@ -1,26 +1,27 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import ACLSelect, { Props } from './ACLSelect';
+import AccessSelect, { Props } from './AccessSelect';
 
 jest.mock('src/components/EnhancedSelect/Select');
 
-const mockGetACL = jest.fn();
-const mockUpdateACL = jest.fn();
+const mockGetAccess = jest.fn();
+const mockUpdateAccess = jest.fn();
 
 const props: Props = {
-  getACL: mockGetACL.mockResolvedValue({ acl: 'public-read' }),
-  updateACL: mockUpdateACL.mockResolvedValue({}),
+  variant: 'object',
+  getAccess: mockGetAccess.mockResolvedValue({ acl: 'public-read' }),
+  updateAccess: mockUpdateAccess.mockResolvedValue({}),
   name: 'my-object-name'
 };
 
-describe('ACLSelect', () => {
+describe('AccessSelect', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('shows the ACL', async () => {
-    renderWithTheme(<ACLSelect {...props} />);
+  it('shows the access', async () => {
+    renderWithTheme(<AccessSelect {...props} />);
     await waitFor(() => {
       expect(screen.getByText('Public Read')).toHaveAttribute(
         'aria-selected',
@@ -29,8 +30,8 @@ describe('ACLSelect', () => {
     });
   });
 
-  it('updates the ACL and submits the appropriate value', async () => {
-    renderWithTheme(<ACLSelect {...props} />);
+  it('updates the access and submits the appropriate value', async () => {
+    renderWithTheme(<AccessSelect {...props} />);
 
     await waitFor(() => {
       const aclSelect = screen.getByTestId('select');
@@ -46,7 +47,7 @@ describe('ACLSelect', () => {
       const saveButton = screen.getByText('Save');
       fireEvent.click(saveButton);
 
-      expect(mockUpdateACL).toHaveBeenCalledWith('private');
+      expect(mockUpdateAccess).toHaveBeenCalledWith('private', true);
     });
   });
 });

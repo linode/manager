@@ -34,7 +34,8 @@ describe('LinodeResize', () => {
         resizeTitle: '',
         toolTip: '',
         checkbox: '',
-        currentHeaderEmptyCell: ''
+        currentHeaderEmptyCell: '',
+        errorLink: ''
       }}
       linodeId={12}
       permissions={{} as any}

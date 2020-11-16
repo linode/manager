@@ -3,6 +3,7 @@ import { rest, RequestHandler } from 'msw';
 import {
   accountFactory,
   appTokenFactory,
+  creditPaymentResponseFactory,
   databaseFactory,
   domainFactory,
   domainRecordFactory,
@@ -26,6 +27,7 @@ import {
   nodeBalancerFactory,
   notificationFactory,
   objectStorageBucketFactory,
+  objectStorageClusterFactory,
   profileFactory,
   supportReplyFactory,
   supportTicketFactory,
@@ -204,6 +206,10 @@ export const handlers = [
     const buckets = objectStorageBucketFactory.buildList(20);
     return res(ctx.json(makeResourcePage(buckets)));
   }),
+  rest.get('*object-storage/clusters', (req, res, ctx) => {
+    const clusters = objectStorageClusterFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(clusters)));
+  }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(25);
     return res(ctx.json(makeResourcePage(domains)));
@@ -346,6 +352,9 @@ export const handlers = [
   }),
   rest.post('*/networking/vlans', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.post('*/account/payments', (req, res, ctx) => {
+    return res(ctx.json(creditPaymentResponseFactory.build()));
   }),
   rest.get('*/databases/mysql/instances', (req, res, ctx) => {
     const online = databaseFactory.build({ status: 'ready' });

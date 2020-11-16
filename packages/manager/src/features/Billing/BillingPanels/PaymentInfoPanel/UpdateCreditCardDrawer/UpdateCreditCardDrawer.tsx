@@ -1,13 +1,17 @@
 import { saveCreditCard } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+// eslint-disable-next-line no-restricted-imports
+import { InputBaseComponentProps } from '@material-ui/core';
 import { take, takeLast } from 'ramda';
 import * as React from 'react';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Drawer from 'src/components/Drawer';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -15,10 +19,8 @@ import accountContainer, {
   Props as AccountContainerProps
 } from 'src/containers/account.container';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
-import { getErrorMap, getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import useFlags from 'src/hooks/useFlags';
-// eslint-disable-next-line no-restricted-imports
-import { InputBaseComponentProps } from '@material-ui/core';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -198,6 +200,20 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
                 errorText={hasErrorFor.cvv}
               />
             </Grid>
+          </Grid>
+          <Grid item xs={12} style={{ marginTop: 16 }}>
+            <Typography>
+              The address affiliated with this credit card must match the{' '}
+              <Link
+                to={{
+                  pathname: '/account',
+                  state: { contactDrawerOpen: true }
+                }}
+              >
+                contact information
+              </Link>{' '}
+              active on this account.
+            </Typography>
           </Grid>
         </Grid>
       </Grid>

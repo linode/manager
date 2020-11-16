@@ -1,3 +1,5 @@
+import { APIWarning } from '../types';
+
 export interface User {
   username: string;
   email: string;
@@ -85,6 +87,14 @@ export interface Payment {
   id: number;
   date: string;
   usd: number;
+}
+
+export interface PaymentResponse extends Payment {
+  warnings?: APIWarning[];
+}
+
+export interface PaypalResponse {
+  warnings?: APIWarning[];
 }
 
 export type GrantLevel = null | 'read_only' | 'read_write';
