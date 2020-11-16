@@ -639,18 +639,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
       </Grid>
       <Grid item>
         <List className={classes.ipList}>
-          {ipv4.slice(0, 3).map(thisIP => {
-            return <ListItem key={thisIP}>{thisIP}</ListItem>;
-          })}
-          {ipv6 && <ListItem>{ipv6}</ListItem>}
-          {ipv4.length > 3 && (
-            <>
-              ... plus{' '}
-              <Link to={`/linodes/${linodeId}/networking`}>
-                {ipv4.length - 3} more
-              </Link>{' '}
-            </>
-          )}
+          {renderIPs(ipv4, ipv6, linodeId)}
         </List>
       </Grid>
       <Grid item>
@@ -844,3 +833,32 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     </Grid>
   );
 });
+
+export const renderIPs = (
+  ipv4: string[],
+  ipv6: string | null,
+  linodeId: number
+) => {
+  const ipv4ShouldTruncate = ipv4.length > 4;
+  const ipv4Slice = ipv4ShouldTruncate ? ipv4.slice(0, 3) : ipv4.slice(0);
+
+  return (
+    <>
+      {ipv4Slice.map(thisIP => {
+        return <ListItem key={thisIP}>{thisIP}</ListItem>;
+      })}
+      {ipv6 && <ListItem>{ipv6}</ListItem>}
+      {ipv4ShouldTruncate ? (
+        <>
+          ... plus{' '}
+          <Link
+            to={`/linodes/${linodeId}/networking`}
+            data-testid="truncated-ips"
+          >
+            {ipv4.length - 3} more
+          </Link>{' '}
+        </>
+      ) : null}
+    </>
+  );
+};
