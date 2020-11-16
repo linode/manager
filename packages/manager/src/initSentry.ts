@@ -78,7 +78,7 @@ const beforeSend: BrowserOptions['beforeSend'] = (sentryEvent, hint) => {
 
   if (
     errorsToIgnore.some(eachRegex =>
-      Boolean(normalizedErrorMessage.match(eachRegex))
+      Boolean(normalizedErrorMessage?.match(eachRegex))
     )
   ) {
     return null;
@@ -125,6 +125,10 @@ export const normalizeErrorMessage = (sentryErrorMessage: any): string => {
     sentryErrorMessage[0]?.reason
   ) {
     return sentryErrorMessage[0].reason;
+  }
+
+  if (['undefined', 'function'].includes(typeof sentryErrorMessage)) {
+    return 'Unknown error';
   }
 
   return JSON.stringify(sentryErrorMessage);
