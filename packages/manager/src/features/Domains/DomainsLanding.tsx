@@ -59,6 +59,8 @@ import DomainRow from './DomainTableRow';
 import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
+const DOMAIN_CREATE_ROUTE = '/domains/create';
+
 type ClassNames =
   | 'root'
   | 'titleWrapper'
@@ -382,7 +384,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return (
         <React.Fragment>
           <RenderEmpty
-            onCreateDomain={this.openCreateDomainDrawer}
+            onCreateDomain={() => this.props.history.push(DOMAIN_CREATE_ROUTE)}
             onImportZone={this.openImportZoneDrawer}
           />
           <DomainZoneImportDrawer
@@ -464,7 +466,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     }
                     entity="Domain"
                     onAddNew={() => {
-                      this.props.history.push('/domains/create');
+                      this.props.history.push(DOMAIN_CREATE_ROUTE);
                     }}
                     iconType="domain"
                     docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
@@ -519,7 +521,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                           <AddNewLink
                             data-testid="create-domain"
                             onClick={() => {
-                              this.props.history.push('/domains/create');
+                              this.props.history.push(DOMAIN_CREATE_ROUTE);
                             }}
                             label="Add a Domain"
                           />
