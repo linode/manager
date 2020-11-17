@@ -9,6 +9,9 @@ export interface Domain {
   ttl_sec: number;
   status: DomainStatus;
   tags: string[];
+  primary_ips: string[];
+  // This is deprecated and we don't use it, but it's included in
+  // the response for backward compatibility.
   master_ips: string[];
   axfr_ips: string[];
   group: string;

@@ -171,7 +171,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   const [tags, setTags] = React.useState<Tag[]>([]);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[]>([]);
-  const [master_ips, setMaster_IPS] = React.useState<string[]>([]);
+  const [primary_ips, setprimary_ips] = React.useState<string[]>([]);
   const [defaultRecordsSetting, setDefaultRecordsSetting] = React.useState<
     DefaultRecordsType
   >('none');
@@ -193,7 +193,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
 
   const errorMap = getErrorMap(
     [
-      'master_ips',
+      'primary_ips',
       'domain',
       'type',
       'soa_email',
@@ -205,7 +205,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   );
 
   const generalError = errorMap.none;
-  const primaryIPsError = errorMap.master_ips;
+  const primaryIPsError = errorMap.primary_ips;
 
   const isCreatingPrimaryDomain = type === 'primary';
   const isCreatingSecondaryDomain = type === 'secondary';
@@ -230,13 +230,13 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   const create = () => {
     const _tags = tags.map(tag => tag.value);
 
-    const primaryIPs = master_ips.filter(v => v !== '');
+    const primaryIPs = primary_ips.filter(v => v !== '');
 
     if (type === 'secondary' && primaryIPs.length === 0) {
       setSubmitting(false);
       setErrors([
         {
-          field: 'master_ips',
+          field: 'primary_ips',
           reason: 'You must provide at least one Primary Nameserver IP Address'
         }
       ]);
@@ -271,7 +271,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     const data =
       type === 'primary'
         ? { domain, type, _tags, soa_email: soaEmail }
-        : { domain, type, _tags, master_ips: primaryIPs };
+        : { domain, type, _tags, primary_ips: primaryIPs };
 
     setSubmitting(true);
     domainActions
@@ -382,10 +382,10 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   };
 
   const updatePrimaryIPAddress = (newIPs: ExtendedIP[]) => {
-    const master_ips =
+    const primary_ips =
       newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (mounted) {
-      setMaster_IPS(master_ips);
+      setprimary_ips(primary_ips);
     }
   };
 
@@ -479,7 +479,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
               <MultipleIPInput
                 title="Primary Nameserver IP Address"
                 className={classes.ip}
-                ips={master_ips.map(stringToExtendedIP)}
+                ips={primary_ips.map(stringToExtendedIP)}
                 onChange={updatePrimaryIPAddress}
                 error={primaryIPsError}
               />

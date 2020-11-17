@@ -27,7 +27,7 @@ export const getLinodeIps = (linode: Linode): string[] => {
 };
 
 export const getDomainIps = (domain: Domain): string[] => {
-  return domain.master_ips;
+  return domain.primary_ips;
 };
 
 export const getNodebalIps = (nodebal: NodeBalancer): string[] => {

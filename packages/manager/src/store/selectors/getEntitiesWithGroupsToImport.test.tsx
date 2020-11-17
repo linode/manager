@@ -58,6 +58,7 @@ describe('Entities that have groups to import', () => {
 
     it('ignores case', () => {
       const domain: Domain = {
+        primary_ips: [],
         master_ips: [],
         domain: 'testing.com',
         expire_sec: 0,
@@ -66,7 +67,7 @@ describe('Entities that have groups to import', () => {
         refresh_sec: 0,
         id: 9999999,
         description: '',
-        type: 'master',
+        type: 'primary',
         tags: ['production'],
         retry_sec: 0,
         soa_email: '',

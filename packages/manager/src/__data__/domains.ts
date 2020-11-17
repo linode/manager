@@ -1,6 +1,7 @@
 import { Domain, DomainRecord } from '@linode/api-v4/lib/domains';
 
 export const domain1: Domain = {
+  primary_ips: [],
   master_ips: [],
   domain: 'domain1.com',
   expire_sec: 0,
@@ -19,6 +20,7 @@ export const domain1: Domain = {
 };
 
 export const domain2: Domain = {
+  primary_ips: [],
   master_ips: [],
   domain: 'domain2.com',
   expire_sec: 0,
@@ -37,6 +39,7 @@ export const domain2: Domain = {
 };
 
 export const domain3: Domain = {
+  primary_ips: [],
   master_ips: [],
   domain: 'domain3.com',
   expire_sec: 0,

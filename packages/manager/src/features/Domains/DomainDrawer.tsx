@@ -81,7 +81,7 @@ interface State {
   tags: Tag[];
   errors?: APIError[];
   submitting: boolean;
-  master_ips: string[];
+  primary_ips: string[];
   axfr_ips: string[];
   defaultRecordsSetting: DefaultRecordsType;
   selectedDefaultLinode?: Linode;
@@ -168,7 +168,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     tags: [],
     submitting: false,
     errors: [],
-    master_ips: [''],
+    primary_ips: [''],
     axfr_ips: [''],
     defaultRecordsSetting: 'none',
     selectedDefaultLinode: undefined,
@@ -206,7 +206,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         axfr_ips,
         domain,
         tags,
-        master_ips,
+        primary_ips,
         type,
         soa_email
       } = this.props.domainProps;
@@ -214,7 +214,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         tags: tags.map(tag => ({ label: tag, value: tag })),
         type,
         domain,
-        master_ips: getInitialIPs(master_ips),
+        primary_ips: getInitialIPs(primary_ips),
         axfr_ips: getInitialIPs(axfr_ips),
         soaEmail: soa_email
       });
@@ -236,7 +236,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     const errorMap = getErrorMap(
       [
         'axfr_ips',
-        'master_ips',
+        'primary_ips',
         'domain',
         'type',
         'soa_email',
@@ -248,7 +248,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     );
 
     const generalError = errorMap.none;
-    const primaryIPsError = errorMap.master_ips;
+    const primaryIPsError = errorMap.primary_ips;
 
     const title = mode === EDITING ? 'Edit Domain' : 'Add a new Domain';
 
@@ -330,7 +330,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           <React.Fragment>
             <MultipleIPInput
               title="Primary Nameserver IP Address"
-              ips={this.state.master_ips.map(stringToExtendedIP)}
+              ips={this.state.primary_ips.map(stringToExtendedIP)}
               onChange={this.updatePrimaryIPAddress}
               error={primaryIPsError}
             />
@@ -454,7 +454,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 
   update = () => {
-    const { axfr_ips, domain, type, soaEmail, master_ips } = this.state;
+    const { axfr_ips, domain, type, soaEmail, primary_ips } = this.state;
     const { domainActions, id } = this.props;
     const tags = this.state.tags.map(tag => tag.value);
 
@@ -466,7 +466,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       return;
     }
 
-    const primaryIPs = master_ips.filter(v => v !== '');
+    const primaryIPs = primary_ips.filter(v => v !== '');
     const finalTransferIPs = axfr_ips.filter(v => v !== '');
 
     if (domainType === 'secondary' && primaryIPs.length === 0) {
@@ -474,7 +474,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         submitting: false,
         errors: [
           {
-            field: 'master_ips',
+            field: 'primary_ips',
             reason:
               'You must provide at least one Primary Nameserver IP Address'
           }
@@ -485,13 +485,13 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
 
     const data =
       domainType === 'primary'
-        ? // Not sending type for primary domains. There is a bug on server and it returns an error that `master_ips` is required
+        ? // Not sending type for primary domains. There is a bug on server and it returns an error that `primary_ips` is required
           { domain, tags, soa_email: soaEmail, domainId: id }
         : {
             domain,
             type,
             tags,
-            master_ips: primaryIPs,
+            primary_ips: primaryIPs,
             domainId: id,
             axfr_ips: finalTransferIPs
           };
@@ -551,10 +551,10 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     this.setState({ type: value });
 
   updatePrimaryIPAddress = (newIPs: ExtendedIP[]) => {
-    const master_ips =
+    const primary_ips =
       newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (this.mounted) {
-      this.setState({ master_ips });
+      this.setState({ primary_ips });
     }
   };
 }

@@ -11,6 +11,7 @@ export const domainFactory = Factory.Sync.makeFactory<Domain>({
   status: 'active',
   tags: [],
   group: '',
+  primary_ips: [],
   master_ips: [],
   type: 'master',
   refresh_sec: 100,
