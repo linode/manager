@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(1) + 2}px ${theme.spacing(1) / 2}px`
   },
   cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down(1100)]: {
       marginLeft: theme.spacing()
     }
   }
