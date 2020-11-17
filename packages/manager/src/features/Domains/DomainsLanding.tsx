@@ -123,7 +123,7 @@ interface State {
 interface Props {
   /** purely so we can force a preference to get the unit tests to pass */
   shouldGroupDomains?: boolean;
-  // Since Slave Domains do not have a Detail page, we allow the consumer to
+  // Since secondary Domains do not have a Detail page, we allow the consumer to
   // render this component with the "Edit Domain" drawer already opened.
   domainForEditing?: {
     domainId: number;
