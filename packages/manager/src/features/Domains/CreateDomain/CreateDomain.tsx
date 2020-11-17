@@ -1,8 +1,4 @@
-import {
-  createDomainRecord,
-  Domain,
-  DomainType
-} from '@linode/api-v4/lib/domains';
+import { createDomainRecord, Domain } from '@linode/api-v4/lib/domains';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -170,7 +166,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   const [mounted, setMounted] = React.useState<boolean>(false);
 
   const [domain, setDomain] = React.useState<string>('');
-  const [type, setType] = React.useState<DomainType>('master');
+  const [type, setType] = React.useState<'primary' | 'secondary'>('primary');
   const [soaEmail, setSOAEmail] = React.useState<string>('');
   const [tags, setTags] = React.useState<Tag[]>([]);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -211,8 +207,8 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   const generalError = errorMap.none;
   const primaryIPsError = errorMap.master_ips;
 
-  const isCreatingPrimaryDomain = type === 'master';
-  const isCreatingSecondaryDomain = type === 'slave';
+  const isCreatingPrimaryDomain = type === 'primary';
+  const isCreatingSecondaryDomain = type === 'secondary';
 
   const redirect = (id: number | '', state?: Record<string, string>) => {
     const returnPath = !!id ? `/domains/${id}` : '/domains';
@@ -220,11 +216,11 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   };
 
   const redirectToLandingOrDetail = (
-    type: 'master' | 'slave',
+    type: 'primary' | 'secondary',
     domainID: number,
     state: Record<string, string> = {}
   ) => {
-    if (type === 'master' && domainID) {
+    if (type === 'primary' && domainID) {
       redirect(domainID, state);
     } else {
       redirect('', state);
@@ -236,7 +232,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
 
     const primaryIPs = master_ips.filter(v => v !== '');
 
-    if (type === 'slave' && primaryIPs.length === 0) {
+    if (type === 'secondary' && primaryIPs.length === 0) {
       setSubmitting(false);
       setErrors([
         {
@@ -273,7 +269,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     }
 
     const data =
-      type === 'master'
+      type === 'primary'
         ? { domain, type, _tags, soa_email: soaEmail }
         : { domain, type, _tags, master_ips: primaryIPs };
 
@@ -291,9 +287,9 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
          * with the first IPv4 and IPv6 from the Linode or NodeBalancer they
          * selected.
          *
-         * This only applies to master domains.
+         * This only applies to primary domains.
          */
-        if (type === 'master') {
+        if (type === 'primary') {
           if (defaultRecordsSetting === 'linode') {
             return generateDefaultDomainRecords(
               domainData.domain,
@@ -379,7 +375,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
 
   const updateType = (
     e: React.ChangeEvent<HTMLInputElement>,
-    value: 'master' | 'slave'
+    value: 'primary' | 'secondary'
   ) => {
     setType(value);
     setErrors([]);
@@ -445,14 +441,14 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
               value={type}
             >
               <FormControlLabel
-                value="master"
+                value="primary"
                 label="Primary"
                 control={<Radio />}
                 data-qa-domain-radio="Primary"
                 disabled={disabled}
               />
               <FormControlLabel
-                value="slave"
+                value="secondary"
                 label="Secondary"
                 control={<Radio />}
                 data-qa-domain-radio="Secondary"

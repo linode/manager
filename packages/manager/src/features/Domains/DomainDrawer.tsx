@@ -1,7 +1,8 @@
 import {
   cloneDomain,
   createDomainRecord,
-  Domain
+  Domain,
+  DomainType
 } from '@linode/api-v4/lib/domains';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
@@ -54,7 +55,11 @@ import {
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DeleteDomain from './DeleteDomain';
-import { getInitialIPs, transferHelperText as helperText } from './domainUtils';
+import {
+  getDomainDisplayType,
+  getInitialIPs,
+  transferHelperText as helperText
+} from './domainUtils';
 
 type ClassNames = 'divider';
 
@@ -70,7 +75,7 @@ type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
 
 interface State {
   domain: string;
-  type: 'master' | 'slave';
+  type: DomainType;
   soaEmail: string;
   cloneName: string;
   tags: Tag[];
@@ -157,7 +162,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   defaultState: State = {
     domain: '',
-    type: 'master',
+    type: 'primary',
     soaEmail: '',
     cloneName: '',
     tags: [],
@@ -247,8 +252,11 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
 
     const title = mode === EDITING ? 'Edit Domain' : 'Add a new Domain';
 
-    const isEditingPrimaryDomain = mode === EDITING && type === 'master';
-    const isEditingSecondaryDomain = mode === EDITING && type === 'slave';
+    const domainType = getDomainDisplayType(type);
+
+    const isEditingPrimaryDomain = mode === EDITING && domainType === 'primary';
+    const isEditingSecondaryDomain =
+      mode === EDITING && domainType === 'secondary';
 
     return (
       <Drawer title={title} open={open} onClose={this.closeDrawer}>
@@ -274,14 +282,14 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           row
         >
           <FormControlLabel
-            value="master"
+            value="primary"
             label="Primary"
             control={<Radio />}
             data-qa-domain-radio="Primary"
             disabled={mode === EDITING || mode === CLONING || disabled}
           />
           <FormControlLabel
-            value="slave"
+            value="secondary"
             label="Secondary"
             control={<Radio />}
             data-qa-domain-radio="Secondary"
@@ -394,11 +402,12 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 
   redirectToLandingOrDetail = (
-    type: 'master' | 'slave',
+    type: DomainType,
     domainID: number,
     state: Record<string, string> = {}
   ) => {
-    if (type === 'master' && domainID) {
+    const domainType = getDomainDisplayType(type);
+    if (domainType === 'primary' && domainID) {
       this.redirect(domainID, state);
     } else {
       this.redirect('', state);
@@ -449,6 +458,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     const { domainActions, id } = this.props;
     const tags = this.state.tags.map(tag => tag.value);
 
+    const domainType = getDomainDisplayType(type);
+
     if (!id) {
       // Weird case if the id was not passed
       this.closeDrawer();
@@ -458,7 +469,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     const primaryIPs = master_ips.filter(v => v !== '');
     const finalTransferIPs = axfr_ips.filter(v => v !== '');
 
-    if (type === 'slave' && primaryIPs.length === 0) {
+    if (domainType === 'secondary' && primaryIPs.length === 0) {
       this.setState({
         submitting: false,
         errors: [
@@ -473,8 +484,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     }
 
     const data =
-      type === 'master'
-        ? // Not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
+      domainType === 'primary'
+        ? // Not sending type for primary domains. There is a bug on server and it returns an error that `master_ips` is required
           { domain, tags, soa_email: soaEmail, domainId: id }
         : {
             domain,
@@ -536,10 +547,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     this.setState({ tags: selected });
   };
 
-  updateType = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    value: 'master' | 'slave'
-  ) => this.setState({ type: value });
+  updateType = (e: React.ChangeEvent<HTMLInputElement>, value: DomainType) =>
+    this.setState({ type: value });
 
   updatePrimaryIPAddress = (newIPs: ExtendedIP[]) => {
     const master_ips =

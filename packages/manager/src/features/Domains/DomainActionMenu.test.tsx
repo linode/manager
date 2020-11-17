@@ -11,7 +11,7 @@ const props = {
   onClone: jest.fn(),
   onRemove: jest.fn(),
   onEdit: jest.fn(),
-  type: 'master' as 'master' | 'slave',
+  type: 'primary' as 'primary' | 'secondary',
   domain: '',
   id: 1234456,
   onDisableOrEnable: jest.fn(),
@@ -32,7 +32,7 @@ describe('Domain action menu', () => {
 
   it('secondary Domains should not include Edit DNS records action', () => {
     const { queryByText } = renderWithTheme(
-      <DomainActionMenu {...props} type={'slave'} />
+      <DomainActionMenu {...props} type={'secondary'} />
     );
     includesActions(['Edit DNS Records'], queryByText, false);
   });

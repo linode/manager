@@ -39,7 +39,7 @@ export interface Handlers {
 }
 
 interface Props extends Handlers {
-  type: 'master' | 'slave';
+  type: 'primary' | 'secondary';
   domain: string;
   id: number;
   status: DomainStatus;
@@ -98,7 +98,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
     ];
 
     if (matchesSmDown) {
-      if (type === 'master') {
+      if (type === 'primary') {
         baseActions.unshift({
           title: 'Edit',
           onClick: () => {
@@ -119,12 +119,12 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
       baseActions.unshift({
         title: 'Details',
         onClick: () => {
-          type === 'master' ? goToDomain() : handleEdit();
+          type === 'primary' ? goToDomain() : handleEdit();
         }
       });
     }
 
-    if (type === 'master' && matchesMdUp) {
+    if (type === 'primary' && matchesMdUp) {
       return [
         {
           title: 'Edit',
@@ -145,7 +145,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
         <div className="flexCenter">
           <button
             className={classes.button}
-            onClick={type === 'master' ? goToDomain : handleEdit}
+            onClick={type === 'primary' ? goToDomain : handleEdit}
           >
             Details
           </button>

@@ -492,7 +492,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     const { records, domain, type } = this.props;
 
     /** Appease TS ensuring we won't use it during Record create. */
-    if (type === 'master' || type === 'slave') {
+    if (['master', 'primary', 'secondary', 'slave'].includes(type)) {
       return;
     }
 
@@ -536,7 +536,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     const fields = this.state.fields as EditableRecordFields;
 
     /** Appease TS ensuring we won't use it during Record create. */
-    if (type === 'master' || type === 'slave' || !id) {
+    if (['master', 'primary', 'secondary', 'slave'].includes(type) || !id) {
       return;
     }
 
@@ -561,7 +561,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   ): Partial<EditableRecordFields | EditableDomainFields> =>
     cond([
       [
-        () => equals('master', t),
+        () => ['primary', 'master'].includes(t),
         () =>
           pick(
             [
@@ -576,10 +576,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
             fields
           )
       ],
-      // [
-      //   () => equals('slave', t),
-      //   () => pick([], fields),
-      // ],
       [() => equals('A', t), () => pick(['name', 'target', 'ttl_sec'], fields)],
       [
         () => equals('AAAA', t),
@@ -624,7 +620,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     ])();
 
   types = {
-    master: {
+    primary: {
       fields: [
         (idx: number) => (
           <this.TextField field="domain" label="Domain" key={idx} />
@@ -639,13 +635,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         (idx: number) => <this.ExpireField key={idx} />
       ]
     },
-    // slave: {
-    //   fields: [
-    //     (idx: number) => <this.NameField label="Hostname" key={idx} />,
-    //     (idx: number) => <this.TargetField label="IP Address" key={idx} />,
-    //     (idx: number) => <this.TTLField label="TTL" key={idx} />,
-    //   ],
-    // },
     AAAA: {
       fields: [
         (idx: number) => (
@@ -771,7 +760,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     const { open, mode, type, records } = this.props;
     const { fields } = this.types[type];
     const isCreating = mode === 'create';
-    const isDomain = type === 'master' || type === 'slave';
+    const isDomain = ['primary', 'secondary', 'master', 'slave'].includes(type);
 
     const hasARecords = records.find(thisRecord =>
       ['A', 'AAAA'].includes(thisRecord.type)
@@ -834,8 +823,8 @@ const modeMap = {
 };
 
 const typeMap = {
-  master: 'SOA',
-  slave: 'SOA',
+  primary: 'SOA',
+  secondary: 'SOA',
   A: 'A',
   AAAA: 'A/AAAA',
   CAA: 'CAA',

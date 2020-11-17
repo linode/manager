@@ -35,7 +35,7 @@ const makeDomainCreateReq = domain => {
     ? domain
     : {
         domain: makeDomainLabel(),
-        type: 'master',
+        type: 'primary',
         soa_email: 'admin@example.com'
       };
 

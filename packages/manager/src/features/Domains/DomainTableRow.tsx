@@ -52,9 +52,9 @@ class DomainTableRow extends React.Component<CombinedProps> {
       | React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     id: number,
     domain: string,
-    type: string
+    type: 'primary' | 'secondary'
   ) => {
-    if (type === 'slave') {
+    if (type === 'secondary') {
       e.preventDefault();
       this.props.onEdit(domain, id);
     }
@@ -73,6 +73,8 @@ class DomainTableRow extends React.Component<CombinedProps> {
       onEdit
     } = this.props;
 
+    const domainType = getDomainDisplayType(type);
+
     return (
       <TableRow
         key={id}
@@ -80,8 +82,8 @@ class DomainTableRow extends React.Component<CombinedProps> {
         className={`${classes.domainRow} ${'fade-in-table'}`}
         ariaLabel={`Domain ${domain}`}
         rowLink={
-          type === 'slave'
-            ? e => this.handleRowClick(e, id, domain, type)
+          domainType === 'secondary'
+            ? e => this.handleRowClick(e, id, domain, domainType)
             : `/domains/${id}`
         }
       >
@@ -97,7 +99,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
             </Grid>
             <Grid item className={classes.domainCellContainer}>
               <div className={classes.labelStatusWrapper}>
-                {type !== 'slave' ? (
+                {domainType === 'primary' ? (
                   <Link to={`/domains/${id}`} tabIndex={0}>
                     <Typography variant="h3" data-qa-label>
                       {domain}
@@ -113,7 +115,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
           </Grid>
         </TableCell>
         <TableCell parentColumn="Type" data-qa-domain-type>
-          {getDomainDisplayType(type)}
+          {domainType}
         </TableCell>
         <TableCell parentColumn="Status" data-qa-domain-status>
           {humanizeDomainStatus(status)}
@@ -126,7 +128,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
             domain={domain}
             onDisableOrEnable={this.props.onDisableOrEnable}
             id={id}
-            type={type}
+            type={domainType}
             onRemove={onRemove}
             onClone={onClone}
             status={status}

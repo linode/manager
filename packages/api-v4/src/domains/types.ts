@@ -18,7 +18,7 @@ export interface Domain {
 
 export type DomainStatus = 'active' | 'disabled' | 'edit_mode' | 'has_errors';
 
-export type DomainType = 'master' | 'slave';
+export type DomainType = 'master' | 'slave' | 'primary' | 'secondary';
 
 export type RecordType =
   | 'A'

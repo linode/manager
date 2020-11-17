@@ -1,5 +1,5 @@
 import { Entity, Event } from '@linode/api-v4/lib/account';
-import { Domain } from '@linode/api-v4/lib/domains';
+import { Domain, DomainType } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
@@ -81,7 +81,7 @@ const styles = (theme: Theme) =>
 interface Props {
   domain: string;
   id: number;
-  type: 'master' | 'slave';
+  type: DomainType;
   onEdit: (domain: string, id: number) => void;
 }
 
@@ -141,27 +141,37 @@ const DomainsDashboardCard: React.FC<CombinedProps> = props => {
 
   const renderData = (data: Domain[]) => {
     const { classes } = props;
-
-    return data.map(({ id, domain, type, status }) => (
-      <TableRow
-        key={domain}
-        ariaLabel={`Domain ${domain}`}
-        rowLink={`/domains/${id}`}
-      >
-        <TableCell className={classes.labelCol}>
-          <Grid container wrap="nowrap" alignItems="center">
-            <Grid item className="py0">
-              <EntityIcon
-                variant="domain"
-                status={status}
-                marginTop={1}
-                loading={status === 'edit_mode'}
-              />
-            </Grid>
-            <Grid item className={classes.labelGridWrapper}>
-              <div className={classes.labelStatusWrapper}>
-                {type !== 'slave' ? (
-                  <Link to={`/domains/${id}`} tabIndex={0}>
+    return data.map(({ id, domain, type, status }) => {
+      const domainType = getDomainDisplayType(type);
+      return (
+        <TableRow
+          key={domain}
+          ariaLabel={`Domain ${domain}`}
+          rowLink={`/domains/${id}`}
+        >
+          <TableCell className={classes.labelCol}>
+            <Grid container wrap="nowrap" alignItems="center">
+              <Grid item className="py0">
+                <EntityIcon
+                  variant="domain"
+                  status={status}
+                  marginTop={1}
+                  loading={status === 'edit_mode'}
+                />
+              </Grid>
+              <Grid item className={classes.labelGridWrapper}>
+                <div className={classes.labelStatusWrapper}>
+                  {domainType === 'primary' ? (
+                    <Link to={`/domains/${id}`} tabIndex={0}>
+                      <Typography
+                        variant="h3"
+                        className={classes.wrapHeader}
+                        data-qa-label
+                      >
+                        {domain}
+                      </Typography>
+                    </Link>
+                  ) : (
                     <Typography
                       variant="h3"
                       className={classes.wrapHeader}
@@ -169,26 +179,18 @@ const DomainsDashboardCard: React.FC<CombinedProps> = props => {
                     >
                       {domain}
                     </Typography>
-                  </Link>
-                ) : (
-                  <Typography
-                    variant="h3"
-                    className={classes.wrapHeader}
-                    data-qa-label
-                  >
-                    {domain}
-                  </Typography>
-                )}
-              </div>
-              <Typography className={classes.description}>
-                {getDomainDisplayType(type)}
-              </Typography>
+                  )}
+                </div>
+                <Typography className={classes.description}>
+                  {domainType}
+                </Typography>
+              </Grid>
             </Grid>
-          </Grid>
-        </TableCell>
-        <TableCell className={classes.actionsCol} />
-      </TableRow>
-    ));
+          </TableCell>
+          <TableCell className={classes.actionsCol} />
+        </TableRow>
+      );
+    });
   };
 
   return (

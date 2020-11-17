@@ -72,6 +72,8 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
+  const domainType = getDomainDisplayType(type);
+
   return (
     <TableRow
       key={id}
@@ -81,7 +83,7 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
     >
       <TableCell data-qa-domain-label>
         <div className={classes.labelStatusWrapper}>
-          {type !== 'slave' ? (
+          {domainType === 'primary' ? (
             <Link to={`/domains/${id}`} tabIndex={0} className={classes.link}>
               {domain}
             </Link>
@@ -100,7 +102,7 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
         {humanizeDomainStatus(status)}
       </TableCell>
       <Hidden xsDown>
-        <TableCell data-qa-domain-type>{getDomainDisplayType(type)}</TableCell>
+        <TableCell data-qa-domain-type>{domainType}</TableCell>
         <TableCell data-qa-domain-lastmodified>
           <DateTimeDisplay value={updated} />
         </TableCell>
@@ -111,7 +113,7 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
           domain={domain}
           onDisableOrEnable={onDisableOrEnable}
           id={id}
-          type={type}
+          type={domainType}
           onRemove={onRemove}
           onClone={onClone}
           status={status}

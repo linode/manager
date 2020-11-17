@@ -37,11 +37,5 @@ export const isEditableNameServer = (nameServerId: number) => {
   return nameServerDummyId !== nameServerId ? true : false;
 };
 
-/**
- * This is for Phase 1 of the conversion process, which
- * assumes the API is still returning either master or slave
- * for the Domain type. It can be adjusted to handle all
- * possible values once the API is confirmed to support them.
- */
 export const getDomainDisplayType = (domainType: DomainType) =>
-  domainType === 'master' ? 'primary' : 'secondary';
+  ['master', 'primary'].includes(domainType) ? 'primary' : 'secondary';

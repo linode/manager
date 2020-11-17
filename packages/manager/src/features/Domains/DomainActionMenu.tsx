@@ -17,7 +17,7 @@ export interface Handlers {
 }
 
 interface Props extends Handlers {
-  type: 'master' | 'slave';
+  type: 'primary' | 'secondary';
   domain: string;
   id: number;
   status: DomainStatus;
@@ -94,7 +94,7 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
       }
     ];
 
-    if (this.props.type === 'master') {
+    if (this.props.type === 'primary') {
       return [
         {
           title: 'Edit DNS Records',
