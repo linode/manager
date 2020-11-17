@@ -17,7 +17,7 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
-import Summary from './Summary';
+import ManagedDashboardCard_CMR from '../Dashboard/ManagedDashboardCard/ManagedDashboardCard_CMR';
 import SupportWidget from './SupportWidget';
 
 const Contacts = React.lazy(() => import('./Contacts'));
@@ -132,7 +132,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
     tabs.unshift({
       title: 'Summary',
       routeName: `${props.match.url}/summary`,
-      component: Summary
+      component: ManagedDashboardCard_CMR
     });
   }
 

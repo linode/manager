@@ -1,3 +1,3 @@
-// @todo: remove all files in this directory when we move to CMR.
+// @todo: move this directory to /managed when we move to CMR.
 
 export { default } from './ManagedDashboardCard';
