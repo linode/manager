@@ -79,7 +79,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const { _loading } = useReduxLoad(
     ['linodes', 'nodeBalancers', 'images', 'domains', 'volumes', 'kubernetes'],
     REFRESH_INTERVAL,
-    searchActive && !_isLargeAccount // Only request things if the search bar is open/active.
+    shouldMakeRequests
   );
 
   const { loading: objectStorageLoading } = useObjectStorage(
