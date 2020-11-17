@@ -24,7 +24,7 @@ import {
   executePaypalPayment,
   stagePaypalPayment
 } from '@linode/api-v4/lib/account';
-import scriptLoader from 'react-async-script-loader';
+import makeAsyncScriptLoader from 'react-async-script';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { compose } from 'recompose';
@@ -66,18 +66,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface PaypalScript {
-  isScriptLoadSucceed?: boolean;
-  isScriptLoaded?: boolean;
-  onScriptLoaded?: () => void;
-}
-
 export interface Props {
   usd: string;
   setSuccess: SetSuccess;
+  asyncScriptOnLoad?: () => void;
+  isScriptLoaded?: boolean;
 }
 
-type CombinedProps = Props & PaypalScript;
+type CombinedProps = Props;
 
 type PaypalButtonType = React.ComponentType<Paypal.PayButtonProps> | undefined;
 
@@ -324,5 +320,5 @@ export const shouldEnablePaypalButton = (value: number | undefined) => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  scriptLoader(paypalScriptSrc())
+  makeAsyncScriptLoader(paypalScriptSrc())
 )(PayPalDisplay);

@@ -67,6 +67,9 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
 
   const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
   const [payPalKey, setPayPalKey] = React.useState<string>(v4());
+  const [isPaypalScriptLoaded, setIsPaypalScriptLoaded] = React.useState<
+    boolean
+  >(false);
 
   React.useEffect(() => {
     setUSD(getMinimumPayment(balance));
@@ -111,6 +114,10 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
     );
   }
 
+  const onScriptLoad = () => {
+    setIsPaypalScriptLoaded(true);
+  };
+
   return (
     <Drawer title="Make a Payment" open={open} onClose={onClose}>
       <Grid container>
@@ -150,7 +157,13 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
             setSuccess={setSuccess}
           />
 
-          <PayPal key={payPalKey} usd={usd} setSuccess={setSuccess} />
+          <PayPal
+            key={payPalKey}
+            usd={usd}
+            setSuccess={setSuccess}
+            asyncScriptOnLoad={onScriptLoad}
+            isScriptLoaded={isPaypalScriptLoaded}
+          />
         </Grid>
       </Grid>
     </Drawer>
