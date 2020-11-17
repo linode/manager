@@ -202,12 +202,12 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   body: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    [theme.breakpoints.up('md')]: {
-      marginLeft: 'auto',
-      padding: `0 !important`
-    }
+    alignItems: 'center'
+    //justifyContent: 'flex-end',
+    // [theme.breakpoints.up('md')]: {
+    //   marginLeft: 'auto',
+    //   padding: `0 !important`
+    // }
   },
   actionItem: {
     marginRight: 10,
@@ -348,87 +348,89 @@ const Header: React.FC<HeaderProps> = props => {
             {...(isOther && { onClick: openNotificationDrawer })}
           />
 
-          <div className={classes.actionItemsOuter}>
-            {!isDetails && (
+          <div>
+            <div className={classes.actionItemsOuter}>
+              {!isDetails && (
+                <Hidden smDown>
+                  <IconTextLink
+                    className={classes.actionItem}
+                    SideIcon={ViewDetailsIcon}
+                    text="View Details"
+                    title="View Details"
+                    to={`linodes/${linodeId}`}
+                  />
+                </Hidden>
+              )}
+
+              <IconTextLink
+                className={classes.actionItem}
+                SideIcon={PowerOnIcon}
+                text={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+                title={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+                onClick={() => {
+                  const action =
+                    linodeStatus === 'running' ? 'Power Off' : 'Power On';
+                  sendLinodeActionMenuItemEvent(`${action} Linode`);
+
+                  openPowerActionDialog(
+                    `${action}` as BootAction,
+                    linodeId,
+                    linodeLabel,
+                    linodeStatus === 'running' ? linodeConfigs : []
+                  );
+                }}
+                disabled={!['running', 'offline'].includes(linodeStatus)}
+              />
+
               <Hidden smDown>
                 <IconTextLink
                   className={classes.actionItem}
-                  SideIcon={ViewDetailsIcon}
-                  text="View Details"
-                  title="View Details"
-                  to={`linodes/${linodeId}`}
+                  SideIcon={RebootIcon}
+                  disabled={linodeStatus === 'offline'}
+                  text="Reboot"
+                  title="Reboot"
+                  onClick={() => {
+                    sendLinodeActionMenuItemEvent('Reboot Linode');
+                    openPowerActionDialog(
+                      'Reboot',
+                      linodeId,
+                      linodeLabel,
+                      linodeConfigs
+                    );
+                  }}
+                />
+
+                <IconTextLink
+                  className={classes.actionItem}
+                  SideIcon={ConsoleIcon}
+                  text="Launch Console"
+                  title="Launch Console"
+                  onClick={() => {
+                    handleConsoleButtonClick(linodeId);
+                  }}
                 />
               </Hidden>
+
+              <LinodeActionMenu
+                linodeId={linodeId}
+                linodeLabel={linodeLabel}
+                linodeRegion={linodeRegionDisplay}
+                linodeType={type}
+                linodeStatus={linodeStatus}
+                linodeBackups={backups}
+                openDialog={openDialog}
+                openPowerActionDialog={openPowerActionDialog}
+                noImage={!image}
+                inlineLabel={matchesMdDown ? undefined : 'More Actions'}
+                inLandingDetailContext={isDetailLanding}
+              />
+            </div>
+            {isDetails && (
+              <Hidden smDown>
+                <DocumentationButton href="https://www.linode.com/" />
+              </Hidden>
             )}
-
-            <IconTextLink
-              className={classes.actionItem}
-              SideIcon={PowerOnIcon}
-              text={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-              title={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-              onClick={() => {
-                const action =
-                  linodeStatus === 'running' ? 'Power Off' : 'Power On';
-                sendLinodeActionMenuItemEvent(`${action} Linode`);
-
-                openPowerActionDialog(
-                  `${action}` as BootAction,
-                  linodeId,
-                  linodeLabel,
-                  linodeStatus === 'running' ? linodeConfigs : []
-                );
-              }}
-              disabled={!['running', 'offline'].includes(linodeStatus)}
-            />
-
-            <Hidden smDown>
-              <IconTextLink
-                className={classes.actionItem}
-                SideIcon={RebootIcon}
-                disabled={linodeStatus === 'offline'}
-                text="Reboot"
-                title="Reboot"
-                onClick={() => {
-                  sendLinodeActionMenuItemEvent('Reboot Linode');
-                  openPowerActionDialog(
-                    'Reboot',
-                    linodeId,
-                    linodeLabel,
-                    linodeConfigs
-                  );
-                }}
-              />
-
-              <IconTextLink
-                className={classes.actionItem}
-                SideIcon={ConsoleIcon}
-                text="Launch Console"
-                title="Launch Console"
-                onClick={() => {
-                  handleConsoleButtonClick(linodeId);
-                }}
-              />
-            </Hidden>
-
-            <LinodeActionMenu
-              linodeId={linodeId}
-              linodeLabel={linodeLabel}
-              linodeRegion={linodeRegionDisplay}
-              linodeType={type}
-              linodeStatus={linodeStatus}
-              linodeBackups={backups}
-              openDialog={openDialog}
-              openPowerActionDialog={openPowerActionDialog}
-              noImage={!image}
-              inlineLabel={matchesMdDown ? undefined : 'More Actions'}
-              inLandingDetailContext={isDetailLanding}
-            />
           </div>
-          {isDetails && (
-            <Hidden smDown>
-              <DocumentationButton href="https://www.linode.com/" />
-            </Hidden>
-          )}
         </>
       }
     />
@@ -525,13 +527,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
   accessTableContainer: {
     overflowX: 'auto',
-    maxWidth: 335,
-    [theme.breakpoints.up('md')]: {
-      maxWidth: 728
-    },
-    [theme.breakpoints.up('lg')]: {
-      maxWidth: 600
-    }
+    maxWidth: 490
   },
   code: {
     fontFamily: '"SourceCodePro", monospace, sans-serif',
