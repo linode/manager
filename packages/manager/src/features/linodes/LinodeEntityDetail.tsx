@@ -17,7 +17,6 @@ import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import List from 'src/components/core/List';
-import ListItem from 'src/components/core/ListItem';
 import {
   makeStyles,
   Theme,
@@ -48,6 +47,7 @@ import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import RenderIPs from './RenderIPs';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -639,7 +639,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
       </Grid>
       <Grid item>
         <List className={classes.ipList}>
-          {renderIPs(ipv4, ipv6, linodeId)}
+          <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
         </List>
       </Grid>
       <Grid item>
@@ -833,32 +833,3 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     </Grid>
   );
 });
-
-export const renderIPs = (
-  ipv4: string[],
-  ipv6: string | null,
-  linodeId: number
-) => {
-  const ipv4ShouldTruncate = ipv4.length > 4;
-  const ipv4Slice = ipv4ShouldTruncate ? ipv4.slice(0, 3) : ipv4.slice(0);
-
-  return (
-    <>
-      {ipv4Slice.map(thisIP => {
-        return <ListItem key={thisIP}>{thisIP}</ListItem>;
-      })}
-      {ipv6 && <ListItem>{ipv6}</ListItem>}
-      {ipv4ShouldTruncate ? (
-        <>
-          ... plus{' '}
-          <Link
-            to={`/linodes/${linodeId}/networking`}
-            data-testid="truncated-ips"
-          >
-            {ipv4.length - 3} more
-          </Link>{' '}
-        </>
-      ) : null}
-    </>
-  );
-};
