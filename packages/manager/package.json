@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.24.1",
+  "version": "1.25.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -16,7 +16,7 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@linode/api-v4": "^0.37.0",
+    "@linode/api-v4": "^0.38.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
@@ -33,7 +33,7 @@
     "axios-mock-adapter": "^1.15.0",
     "bluebird": "^3.5.1",
     "browser-detect": "^0.2.28",
-    "chart.js": "^2.9.3",
+    "chart.js": "~2.9.4",
     "chartjs-adapter-luxon": "^0.2.1",
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
@@ -97,7 +97,6 @@
     "build": "node scripts/build.js",
     "precommit": "lint-staged && yarn typecheck",
     "prepush": "./scripts/pre-push.sh",
-    "mock": "./scripts/mb.js",
     "test": "jest --color",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "yarn run start-storybook -p 6006 --ci",
@@ -117,7 +116,6 @@
     "e2e:all": "npx wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
     "e2e:modified": "./scripts/e2e-modified.sh",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
-    "mb": "npx mb",
     "release": "./scripts/release_changelog.sh",
     "typecheck": "tsc --noEmit"
   },
@@ -237,7 +235,6 @@
     "mini-css-extract-plugin": "^0.7.0",
     "mixin-deep": "^2.0.1",
     "mongodb": "^3.1.13",
-    "mountebank": "^1.14.1",
     "msw": "~0.20.5",
     "otplib": "^10.0.1",
     "postcss-flexbugs-fixes": "^4.1.0",

@@ -13,7 +13,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import formatDate from 'src/utilities/formatDate';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
-import ACLSelect from './ACLSelect';
+import AccessSelect from './AccessSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
@@ -22,8 +22,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 1,
     backgroundColor: '#EBEBEB'
   },
-  copy: { marginLeft: '1em', padding: 0 },
-  submitButton: { marginTop: theme.spacing(2) }
+  copy: {
+    marginLeft: '1em',
+    padding: 0
+  },
+  link: {
+    display: 'flex'
+  },
+  submitButton: {
+    marginTop: theme.spacing(2)
+  }
 }));
 
 export interface Props {
@@ -77,22 +85,21 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
         </Typography>
       ) : null}
 
-      <Divider className={classes.divider} />
-
       {url ? (
-        <>
+        <div className={classes.link}>
           <ExternalLink hideIcon link={url} text={truncateMiddle(url, 50)} />
           <CopyTooltip className={classes.copy} text={url} />
-        </>
+        </div>
       ) : null}
 
       {open && name ? (
         <>
           <Divider className={classes.divider} />
-          <ACLSelect
+          <AccessSelect
+            variant="object"
             name={name}
-            getACL={() => getObjectACL(clusterId, bucketName, name)}
-            updateACL={(acl: ACLType) =>
+            getAccess={() => getObjectACL(clusterId, bucketName, name)}
+            updateAccess={(acl: ACLType) =>
               updateObjectACL(clusterId, bucketName, name, acl)
             }
           />
