@@ -199,7 +199,7 @@ export const OrderBy: React.FC<CombinedProps> = props => {
     setOrder(newOrder);
 
     // Update the URL query params so that the current sort is bookmark-able
-    history.push({ search: `?order=${newOrder}&orderBy=${newOrderBy}` });
+    history.replace({ search: `?order=${newOrder}&orderBy=${newOrderBy}` });
 
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
