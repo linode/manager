@@ -10,11 +10,12 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
+import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
-import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
@@ -72,10 +73,17 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const { searchAPI } = useAPISearch();
   const { _isLargeAccount } = useAccountManagement();
 
+  // Only request things if the search bar is open/active.
+  const shouldMakeRequests = searchActive && !_isLargeAccount;
+
   const { _loading } = useReduxLoad(
     ['linodes', 'nodeBalancers', 'images', 'domains', 'volumes', 'kubernetes'],
     REFRESH_INTERVAL,
     searchActive && !_isLargeAccount // Only request things if the search bar is open/active.
+  );
+
+  const { loading: objectStorageLoading } = useObjectStorage(
+    shouldMakeRequests
   );
 
   const [apiResults, setAPIResults] = React.useState<any[]>([]);
@@ -109,7 +117,14 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     } else {
       search(searchText);
     }
-  }, [_loading, search, searchText, _searchAPI, _isLargeAccount]);
+  }, [
+    _loading,
+    objectStorageLoading,
+    search,
+    searchText,
+    _searchAPI,
+    _isLargeAccount
+  ]);
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
@@ -193,7 +208,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const finalOptions = createFinalOptions(
     _isLargeAccount ? apiResults : combinedResults,
     searchText,
-    _loading || apiSearchLoading,
+    _loading || apiSearchLoading || objectStorageLoading,
     // Ignore "Unauthorized" errors, since these will always happen on LKE
     // endpoints for restricted users. It's not really an "error" in this case.
     // We still want these users to be able to use the search feature.
