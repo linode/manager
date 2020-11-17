@@ -535,23 +535,32 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         root: {
           textTransform: 'inherit',
-          borderRadius: 0,
+          borderRadius: '3px',
           fontSize: '1rem',
           lineHeight: 1,
           fontFamily:
             spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
-          color: primaryColors.main,
-          padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2}px`,
-          maxHeight: 48,
+          // // backgroundColor: primaryColors.main,
+          // color: '#fff',
+          // padding: `2px 20px`,
+          // maxHeight: 34,
+          // position: 'relative',
+          // minHeight: `34px`,
+          cursor: 'pointer',
+          border: 'none',
+          [breakpoints.down('sm')]: {
+            marginLeft: spacingUnit,
+            maxHeight: 34,
+            minWidth: 100
+          },
           '&:hover': {
-            backgroundColor: '#fff'
+            backgroundColor: primaryColors.light
           },
           '&:focus': {
-            backgroundColor: 'transparent'
+            backgroundColor: primaryColors.light
           },
           '&[aria-expanded="true"]': {
-            backgroundColor: primaryColors.dark
+            backgroundColor: primaryColors.light
           },
           '&$disabled': {
             color: '#bbb'
@@ -568,6 +577,12 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         },
         containedPrimary: {
+          backgroundColor: primaryColors.main,
+          color: '#fff',
+          padding: `2px 20px`,
+          maxHeight: 34,
+          position: 'relative',
+          minHeight: 34,
           '&:hover, &:focus': {
             backgroundColor: primaryColors.light
           },
@@ -590,9 +605,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           backgroundColor: 'transparent',
           color: primaryColors.main,
           border: `1px solid ${primaryColors.main}`,
-          padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
-          transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
+          // padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
+          //   spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
+          // transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
             color: primaryColors.light,
@@ -1511,29 +1526,34 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiTypography: {
         button: {
           textTransform: 'inherit',
-          borderRadius: 0,
+          borderRadius: '3px',
           fontSize: '1rem',
           lineHeight: 1,
           fontFamily:
             spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
-          color: '#fff',
           backgroundColor: primaryColors.main,
-          padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2}px`,
-          maxHeight: 48,
+          color: '#fff',
+          padding: `8px 20px`,
+          maxHeight: 34,
+          position: 'relative',
+          minHeight: `34px`,
           cursor: 'pointer',
+          border: 'none',
+          [breakpoints.down('sm')]: {
+            marginLeft: spacingUnit,
+            maxHeight: 34,
+            minWidth: 100
+          },
           '&:hover, &:focus': {
             backgroundColor: primaryColors.light
           },
           '&:active': {
-            backgroundColor: primaryColors.dark
+            backgroundColor: primaryColors.light
           },
           '&$colorSecondary': {
             backgroundColor: 'transparent',
             color: primaryColors.main,
             border: `1px solid ${primaryColors.main}`,
-            padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
-              spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
             transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
             '&:hover, &:focus': {
               backgroundColor: 'transparent !important',
@@ -1542,8 +1562,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             },
             '&:active': {
               backgroundColor: 'transparent',
-              color: primaryColors.dark,
-              borderColor: primaryColors.dark
+              color: primaryColors.light,
+              borderColor: primaryColors.light
             }
           }
         }
