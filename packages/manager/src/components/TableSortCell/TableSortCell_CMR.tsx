@@ -11,8 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& svg': {
       marginLeft: 4,
-      width: 20,
-      color: '#ffffff !important'
+      width: 20
     },
     '&:hover': {
       backgroundColor: '#3683dc',

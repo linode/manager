@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-11-17] - 1.25.1
+
+### Fixed:
+
+- Users with no Domains were unable to create a Domain
+- Table cell arrow icons had an incorrect color
+
 ## [2020-11-17] - 1.25.0
 
 ### Added:
