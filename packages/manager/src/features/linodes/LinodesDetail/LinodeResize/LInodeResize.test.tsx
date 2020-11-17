@@ -35,6 +35,7 @@ describe('LinodeResize', () => {
         toolTip: '',
         checkbox: '',
         currentHeaderEmptyCell: '',
+        actions: '',
         errorLink: ''
       }}
       linodeId={12}
