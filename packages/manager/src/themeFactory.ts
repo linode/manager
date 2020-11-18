@@ -1497,6 +1497,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         icon: {
           opacity: 1,
+          color: 'inherit !important',
           marginTop: 2
         },
         iconDirectionDesc: {
