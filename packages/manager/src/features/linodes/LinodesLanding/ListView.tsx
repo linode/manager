@@ -9,13 +9,13 @@ import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
 import useLinodes from 'src/hooks/useLinodes';
-import { ShallowExtendedLinode } from 'src/store/linodes/types';
+import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import formatDate from 'src/utilities/formatDate';
 import LinodeRow from './LinodeRow/LinodeRow';
 import LinodeRow_CMR from './LinodeRow/LinodeRow_CMR';
 
 interface Props {
-  data: ShallowExtendedLinode[];
+  data: LinodeWithMaintenanceAndDisplayStatus[];
   images: Image[];
   showHead?: boolean;
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
@@ -99,15 +99,13 @@ export const ListView: React.FC<CombinedProps> = props => {
           id={linode.id}
           ipv4={linode.ipv4}
           maintenanceStartTime={
-            linode._maintenance?.when
-              ? formatDate(linode._maintenance.when)
-              : ''
+            linode.maintenance?.when ? formatDate(linode.maintenance.when) : ''
           }
           ipv6={linode.ipv6 || ''}
           label={linode.label}
           region={linode.region}
           status={linode.status}
-          displayStatus={linode._displayStatus || ''}
+          displayStatus={linode.displayStatus || ''}
           tags={linode.tags}
           mostRecentBackup={linode.backups.last_successful}
           disk={linode.specs.disk}
