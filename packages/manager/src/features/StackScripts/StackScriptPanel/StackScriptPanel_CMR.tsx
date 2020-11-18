@@ -31,7 +31,7 @@ export interface ExtendedLinode extends Linode {
   subHeadings: string[];
 }
 
-type ClassNames = 'root' | 'cmrSpacing';
+type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
