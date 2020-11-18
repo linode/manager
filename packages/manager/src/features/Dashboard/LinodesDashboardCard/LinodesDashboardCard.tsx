@@ -79,7 +79,7 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
     }
 
     if (linodesData.length > 0) {
-      return renderData(linodesData);
+      return renderData(linodesData.slice(0, 5));
     }
 
     return renderEmpty();
