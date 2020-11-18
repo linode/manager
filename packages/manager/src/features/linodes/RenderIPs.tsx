@@ -14,7 +14,7 @@ export const RenderIPs: React.FC<CombinedProps> = props => {
   const { ipv4, ipv6, linodeId } = props;
 
   const ipv4ShouldTruncate = ipv4.length > 4;
-  const ipv4Slice = ipv4ShouldTruncate ? ipv4.slice(0, 3) : ipv4.slice(0);
+  const ipv4Slice = ipv4ShouldTruncate ? ipv4.slice(0, 3) : ipv4;
 
   return (
     <>
