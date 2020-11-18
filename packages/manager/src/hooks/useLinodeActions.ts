@@ -16,7 +16,7 @@ export interface LinodesProps {
   updateLinode: (params: UpdateLinodeParams) => Promise<Linode>;
 }
 
-export const useLinodes = (): LinodesProps => {
+export const useLinodeActions = (): LinodesProps => {
   const dispatch: Dispatch = useDispatch();
 
   const requestLinodes = () =>
@@ -38,4 +38,4 @@ export const useLinodes = (): LinodesProps => {
   };
 };
 
-export default useLinodes;
+export default useLinodeActions;
