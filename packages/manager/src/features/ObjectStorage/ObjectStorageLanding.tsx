@@ -125,9 +125,8 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
           labelTitle="Object Storage"
           removeCrumbX={1}
         />
-        {!flags.cmr && (
-          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
-        )}
+
+        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
       </Box>
       <Tabs
         index={Math.max(

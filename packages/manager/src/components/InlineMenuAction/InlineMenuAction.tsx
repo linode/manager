@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '12px 10px',
     minWidth: 0,
     color: theme.cmrTextColors.linkActiveLight,
-    '&:hover': {
+    '&:hover, &:focus': {
       backgroundColor: '#3683dc',
       color: '#ffffff'
     },
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkRoot: {
     textAlign: 'center',
     color: theme.cmrTextColors.linkActiveLight,
-    '&:hover': {
+    '&:hover, &:focus': {
       backgroundColor: '#3683dc',
       color: '#ffffff'
     }

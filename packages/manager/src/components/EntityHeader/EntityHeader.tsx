@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as classnames from 'classnames';
 import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { BreadCrumbProps } from './HeaderBreadCrumb';
+import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 import Hidden from '../core/Hidden';
 import Breadcrumb from '../Breadcrumb';
 
@@ -77,16 +77,16 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
   const {
     actions,
     body,
-    //iconType,
+    iconType,
     parentLink,
-    //parentText,
-    // title,
+    parentText,
+    title,
     isLanding,
     bodyClassName,
     isSecondary,
-    isDetailLanding
-    // headerOnly,
-    // displayIcon
+    isDetailLanding,
+    headerOnly,
+    displayIcon
   } = props;
   const classes = useStyles();
 
@@ -94,14 +94,16 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     <>
       {isLanding && <Breadcrumb pathname={location.pathname} data-qa-title />}
       <Grid item className={classes.root}>
-        {/* <HeaderBreadCrumb
-          iconType={iconType}
-          displayIcon={displayIcon}
-          title={title}
-          parentLink={parentLink}
-          parentText={parentText}
-          headerOnly={headerOnly}
-        /> */}
+        {isDetailLanding && (
+          <HeaderBreadCrumb
+            iconType={iconType}
+            displayIcon={displayIcon}
+            title={title}
+            parentLink={parentLink}
+            parentText={parentText}
+            headerOnly={headerOnly}
+          />
+        )}
         <Grid
           item
           xs={12}
