@@ -5,10 +5,12 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { BreadCrumbProps } from './HeaderBreadCrumb';
 import Hidden from '../core/Hidden';
 import Breadcrumb from '../Breadcrumb';
+import DocumentationButton from '../CMR_DocumentationButton';
 
 export interface HeaderProps extends BreadCrumbProps {
   actions?: JSX.Element;
   body?: JSX.Element;
+  docsLink?: string;
   title: string | JSX.Element;
   bodyClassName?: string;
   isLanding?: boolean;
@@ -19,12 +21,15 @@ export interface HeaderProps extends BreadCrumbProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBGColors.bgSecondaryActions
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   breadcrumbOuter: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: theme.cmrBGColors.bgSecondaryActions,
     padding: '4px 15px',
     [theme.breakpoints.down('sm')]: {
       borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
@@ -74,77 +79,65 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const EntityHeader: React.FC<HeaderProps> = props => {
+  const classes = useStyles();
+
   const {
     actions,
     body,
-    //iconType,
+    docsLink,
     parentLink,
-    //parentText,
-    // title,
     isLanding,
     bodyClassName,
     isSecondary,
     isDetailLanding
-    // headerOnly,
-    // displayIcon
   } = props;
-  const classes = useStyles();
 
   return (
     <>
-      {isLanding && <Breadcrumb pathname={location.pathname} data-qa-title />}
       <Grid item className={classes.root}>
-        {/* <HeaderBreadCrumb
-          iconType={iconType}
-          displayIcon={displayIcon}
-          title={title}
-          parentLink={parentLink}
-          parentText={parentText}
-          headerOnly={headerOnly}
-        /> */}
-        <Grid
-          item
-          xs={12}
-          className={classnames({
-            [classes.breadcrumbOuter]: true,
-            [classes.breadCrumbDetail]: Boolean(parentLink),
-            [classes.breadCrumbSecondary]: Boolean(isSecondary),
-            [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
-          })}
-        >
-          <Hidden smDown>
-            {body ? (
-              <Grid
-                className={classnames({
-                  [classes.contentOuter]: true,
-                  [bodyClassName ?? '']: Boolean(bodyClassName)
-                })}
-                item
-              >
-                {body}
-              </Grid>
-            ) : null}
-          </Hidden>
-
-          {/* I think only Landing variant uses this? */}
-          {actions}
-        </Grid>
-        <Hidden mdUp>
+        {isLanding && <Breadcrumb pathname={location.pathname} data-qa-title />}
+        {docsLink && <DocumentationButton href={docsLink} />}
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        className={classnames({
+          [classes.breadcrumbOuter]: true,
+          [classes.breadCrumbDetail]: Boolean(parentLink),
+          [classes.breadCrumbSecondary]: Boolean(isSecondary),
+          [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
+        })}
+      >
+        <Hidden smDown>
           {body ? (
             <Grid
-              item
-              xs={12}
               className={classnames({
                 [classes.contentOuter]: true,
-                [classes.bodyDetailVariant]:
-                  Boolean(parentLink) || Boolean(isDetailLanding)
+                [bodyClassName ?? '']: Boolean(bodyClassName)
               })}
+              item
             >
               {body}
             </Grid>
           ) : null}
         </Hidden>
+        {actions}
       </Grid>
+      <Hidden mdUp>
+        {body ? (
+          <Grid
+            item
+            xs={12}
+            className={classnames({
+              [classes.contentOuter]: true,
+              [classes.bodyDetailVariant]:
+                Boolean(parentLink) || Boolean(isDetailLanding)
+            })}
+          >
+            {body}
+          </Grid>
+        ) : null}
+      </Hidden>
     </>
   );
 };
