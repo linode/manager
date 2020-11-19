@@ -1,5 +1,6 @@
 import { APIWarning } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import makeAsyncScriptLoader from 'react-async-script';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -14,9 +15,8 @@ import AccountContainer, {
   DispatchProps as AccountDispatchProps
 } from 'src/containers/account.container';
 import { v4 } from 'uuid';
-
 import CreditCard from './CreditCardPayment';
-import PayPal from './Paypal';
+import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -70,6 +70,8 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
   const [isPaypalScriptLoaded, setIsPaypalScriptLoaded] = React.useState<
     boolean
   >(false);
+
+  const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
   React.useEffect(() => {
     setUSD(getMinimumPayment(balance));
@@ -157,7 +159,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
             setSuccess={setSuccess}
           />
 
-          <PayPal
+          <AsyncPaypal
             key={payPalKey}
             usd={usd}
             setSuccess={setSuccess}
