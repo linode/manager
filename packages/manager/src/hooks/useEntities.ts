@@ -2,6 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import useDomains from './useDomains';
 import useImages from './useImages';
 import useKubernetesClusters from './useKubernetesClusters';
+import useLinodeActions from './useLinodeActions';
 import useLinodes from './useLinodes';
 import useNodeBalancers from './useNodeBalancers';
 import useVolumes from './useVolumes';
@@ -24,7 +25,8 @@ export interface Entity<T> {
  * if (linodes.lastUpdated === 0) { linodes.request(); }
  */
 export const useEntities = () => {
-  const { linodes: _linodes, requestLinodes } = useLinodes();
+  const { linodes: _linodes } = useLinodes();
+  const { requestLinodes } = useLinodeActions();
   const { domains: _domains, requestDomains } = useDomains();
   const { images: _images, requestImages } = useImages();
   const { volumes: _volumes, requestVolumes } = useVolumes();
