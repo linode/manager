@@ -116,7 +116,7 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
 
                 /*
                  * Now add our new volume, include the newly attached
-                 * Linode data to the master list
+                 * Linode data to the list
                  */
                 clonedVolumes[targetIndex] = {
                   ...volume,
@@ -125,20 +125,20 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
                   linodeStatus: linode.status
                 };
 
-                // finally update the master list of volumes in state
+                // finally update the list of volumes in state
                 this.setState({
                   volumes: clonedVolumes
                 });
               });
             }
 
-            // now add our new volume with the event data to the master list of volumes
+            // now add our new volume with the event data to the list of volumes
             clonedVolumes[targetIndex] = {
               ...volume,
               ...maybeAddEvent(event, volume)
             };
 
-            // finally update the master list of volumes
+            // finally update the list of volumes
             this.setState({
               volumes: clonedVolumes
             });
