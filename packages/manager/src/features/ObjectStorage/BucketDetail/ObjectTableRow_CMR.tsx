@@ -104,7 +104,6 @@ const ObjectTableRow: React.FC<Props> = props => {
         <ObjectActionMenu
           handleClickDownload={handleClickDownload}
           handleClickDelete={handleClickDelete}
-          handleClickDetails={handleClickDetails}
           objectName={fullName}
         />
       </TableCell>

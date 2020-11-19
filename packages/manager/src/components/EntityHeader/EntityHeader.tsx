@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as classnames from 'classnames';
 import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { BreadCrumbProps } from './HeaderBreadCrumb';
+import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 import Hidden from '../core/Hidden';
 import Breadcrumb from '../Breadcrumb';
 import DocumentationButton from '../CMR_DocumentationButton';
@@ -85,11 +85,16 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     actions,
     body,
     docsLink,
+    iconType,
     parentLink,
+    parentText,
+    title,
     isLanding,
     bodyClassName,
     isSecondary,
-    isDetailLanding
+    isDetailLanding,
+    headerOnly,
+    displayIcon
   } = props;
 
   return (
@@ -98,46 +103,60 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
         {isLanding && <Breadcrumb pathname={location.pathname} data-qa-title />}
         {docsLink && <DocumentationButton href={docsLink} />}
       </Grid>
-      <Grid
-        item
-        xs={12}
-        className={classnames({
-          [classes.breadcrumbOuter]: true,
-          [classes.breadCrumbDetail]: Boolean(parentLink),
-          [classes.breadCrumbSecondary]: Boolean(isSecondary),
-          [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
-        })}
-      >
-        <Hidden smDown>
+      <Grid item className={classes.root}>
+        {isDetailLanding && (
+          <HeaderBreadCrumb
+            iconType={iconType}
+            displayIcon={displayIcon}
+            title={title}
+            parentLink={parentLink}
+            parentText={parentText}
+            headerOnly={headerOnly}
+          />
+        )}
+        <Grid
+          item
+          xs={12}
+          className={classnames({
+            [classes.breadcrumbOuter]: true,
+            [classes.breadCrumbDetail]: Boolean(parentLink),
+            [classes.breadCrumbSecondary]: Boolean(isSecondary),
+            [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
+          })}
+        >
+          <Hidden smDown>
+            {body ? (
+              <Grid
+                className={classnames({
+                  [classes.contentOuter]: true,
+                  [bodyClassName ?? '']: Boolean(bodyClassName)
+                })}
+                item
+              >
+                {body}
+              </Grid>
+            ) : null}
+          </Hidden>
+
+          {/* I think only Landing variant uses this? */}
+          {actions}
+        </Grid>
+        <Hidden mdUp>
           {body ? (
             <Grid
+              item
+              xs={12}
               className={classnames({
                 [classes.contentOuter]: true,
-                [bodyClassName ?? '']: Boolean(bodyClassName)
+                [classes.bodyDetailVariant]:
+                  Boolean(parentLink) || Boolean(isDetailLanding)
               })}
-              item
             >
               {body}
             </Grid>
           ) : null}
         </Hidden>
-        {actions}
       </Grid>
-      <Hidden mdUp>
-        {body ? (
-          <Grid
-            item
-            xs={12}
-            className={classnames({
-              [classes.contentOuter]: true,
-              [classes.bodyDetailVariant]:
-                Boolean(parentLink) || Boolean(isDetailLanding)
-            })}
-          >
-            {body}
-          </Grid>
-        ) : null}
-      </Hidden>
     </>
   );
 };

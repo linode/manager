@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 'auto',
     padding: '12px 10px',
     whiteSpace: 'nowrap',
-    '&:hover': {
+    '&:hover, &:focus': {
       backgroundColor: '#3683dc',
       color: '#ffffff'
     },
@@ -45,12 +45,6 @@ export const BucketActionMenu: React.FC<Props> = props => {
     return (): Action[] => {
       return [
         {
-          title: 'Details',
-          onClick: () => {
-            props.onDetails();
-          }
-        },
-        {
           title: 'Delete',
           onClick: () => {
             props.onRemove();
@@ -63,14 +57,6 @@ export const BucketActionMenu: React.FC<Props> = props => {
   return (
     <div className={classes.inlineActions}>
       <Hidden smDown>
-        <Button
-          className={classes.button}
-          onClick={() => {
-            props.onDetails();
-          }}
-        >
-          Details
-        </Button>
         <Button
           className={classes.button}
           onClick={() => {

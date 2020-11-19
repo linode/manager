@@ -137,17 +137,12 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
 
   return (
     <div className={classes.root}>
-      <Grid
-        container
-        justify="space-between"
-        alignItems="flex-end"
-        className={classes.accessKeyHeader}
-      >
-        <Grid item className="p0">
+      <Grid container justify="flex-end" className={classes.accessKeyHeader}>
+        {/* <Grid item className="p0">
           <Typography variant="h3" data-qa-title className={classes.headline}>
             Access Keys
           </Typography>
-        </Grid>
+        </Grid> */}
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
             onClick={() => openDrawer('creating')}

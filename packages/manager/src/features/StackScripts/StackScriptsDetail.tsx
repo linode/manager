@@ -27,8 +27,8 @@ import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
 import {
   getStackScriptUrl,
-  StackScriptCategory,
-  canUserModifyAccountStackScript
+  StackScriptCategory
+  // canUserModifyAccountStackScript
 } from './stackScriptUtils';
 import withFeatureFlagConsumerContainer, {
   FeatureFlagConsumerProps
@@ -37,7 +37,7 @@ import {
   hasGrant,
   isRestrictedUser as _isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
-import StackScriptDetailsHeader from './StackScriptDetailsHeader';
+// import StackScriptDetailsHeader from './StackScriptDetailsHeader';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Grant } from '@linode/api-v4/lib/account/types';
@@ -394,12 +394,12 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 
   render() {
     const {
-      classes,
-      username,
-      flags,
-      isRestrictedUser,
-      stackScriptGrants,
-      userCannotAddLinodes
+      classes
+      // username,
+      // flags,
+      // isRestrictedUser,
+      // stackScriptGrants,
+      // userCannotAddLinodes
     } = this.props;
     const { loading, stackScript } = this.state;
 
@@ -419,7 +419,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        {flags.cmr ? (
+        {/* {flags.cmr ? (
           <>
             <StackScriptDetailsHeader
               isPublic={stackScript.is_public}
@@ -441,33 +441,33 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             {this.renderDeleteStackScriptDialog()}
             {this.renderMakePublicDialog()}
           </>
-        ) : (
-          <Grid container justify="space-between" alignItems="center">
-            <Grid item>
-              <Breadcrumb
-                pathname={this.props.location.pathname}
-                labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
-                labelTitle={stackScript.label}
-                crumbOverrides={[
-                  {
-                    position: 1,
-                    label: 'StackScripts'
-                  }
-                ]}
-              />
-            </Grid>
-            <Grid item className={classes.cta}>
-              <Button
-                buttonType="primary"
-                className={classes.button}
-                onClick={this.handleCreateClick}
-                data-qa-stack-deploy
-              >
-                Deploy New Linode
-              </Button>
-            </Grid>
+        ) : ( */}
+        <Grid container justify="space-between" alignItems="center">
+          <Grid item>
+            <Breadcrumb
+              pathname={this.props.location.pathname}
+              labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
+              labelTitle={stackScript.label}
+              crumbOverrides={[
+                {
+                  position: 1,
+                  label: 'StackScripts'
+                }
+              ]}
+            />
           </Grid>
-        )}
+          <Grid item className={classes.cta}>
+            <Button
+              buttonType="primary"
+              className={classes.button}
+              onClick={this.handleCreateClick}
+              data-qa-stack-deploy
+            >
+              Deploy New Linode
+            </Button>
+          </Grid>
+        </Grid>
+        {/* )} */}
         <div className="detailsWrapper">
           <_StackScript data={stackScript} />
         </div>
