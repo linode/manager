@@ -15,7 +15,7 @@ jest.mock('src/hooks/useImages', () => ({
 }));
 
 const props: CombinedProps = {
-  classes: { root: '', error: '' },
+  classes: { root: '', error: '', actions: '' },
   linodeId: 1234,
   imagesData: images,
   imagesError: {},
