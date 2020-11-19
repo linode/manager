@@ -1,6 +1,5 @@
 import { getManagedStats, ManagedStatsData } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -99,17 +98,9 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
 
   return (
     <DashboardCard
-      title="Linode Managed"
-      alignHeader="space-between"
       alignItems="center"
       className={classes.root}
       noHeaderActionStyles
-      headerAction={() => (
-        <Link to="/managed" className={classes.detailsLink}>
-          View details
-        </Link>
-      )}
-      data-qa-dash-managed
     >
       <LoadingErrorOrContent
         {...props}
