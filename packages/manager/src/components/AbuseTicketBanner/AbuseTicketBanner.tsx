@@ -50,7 +50,7 @@ export class AbuseTicketBanner extends React.Component<CombinedProps> {
   }
 }
 
-const mapStateToProps: MapState<ReduxStateProps, {}> = (state, ownProps) => ({
+const mapStateToProps: MapState<ReduxStateProps, {}> = state => ({
   abuseTickets: getAbuseTicket(state.__resources)
 });
 
