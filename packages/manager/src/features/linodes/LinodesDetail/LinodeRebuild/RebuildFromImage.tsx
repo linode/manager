@@ -36,7 +36,7 @@ import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
 
-type ClassNames = 'root' | 'error';
+type ClassNames = 'root' | 'error' | 'actions';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -45,6 +45,10 @@ const styles = (theme: Theme) =>
     },
     error: {
       marginTop: theme.spacing(2)
+    },
+    actions: {
+      marginBottom: '16px !important',
+      marginLeft: theme.spacing(3)
     }
   });
 
@@ -208,7 +212,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
             <ActionsPanel>
               <Button
                 buttonType="secondary"
-                className="destructive"
+                className={`destructive ${classes.actions}`}
                 onClick={handleRebuildButtonClick}
                 data-testid="rebuild-button"
                 disabled={disabled}
