@@ -40,7 +40,7 @@ import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrD
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useImages from 'src/hooks/useImages';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -764,7 +764,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const classes = useFooterStyles();
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
 
   const addTag = React.useCallback(

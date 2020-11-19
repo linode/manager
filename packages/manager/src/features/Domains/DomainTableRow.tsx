@@ -8,12 +8,13 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu, { Handlers } from './DomainActionMenu';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import { getDomainDisplayType } from './domainUtils';
 
 type ClassNames =
   | 'domain'
@@ -112,7 +113,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
           </Grid>
         </TableCell>
         <TableCell parentColumn="Type" data-qa-domain-type>
-          {type}
+          {getDomainDisplayType(type)}
         </TableCell>
         <TableCell parentColumn="Status" data-qa-domain-status>
           {humanizeDomainStatus(status)}
