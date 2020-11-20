@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '12px 10px',
     textAlign: 'center',
 
-    '&:hover': {
+    '&:hover, &:focus': {
       backgroundColor: '#3683dc',
       '& span': {
         color: '#ffffff'
@@ -48,9 +48,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     padding: '12px 10px',
     whiteSpace: 'nowrap',
-    '&:hover': {
+    '&:hover, &:focus': {
       backgroundColor: '#3683dc',
-      color: '#ffffff'
+      color: '#ffffff',
+      textDecoration: 'none'
     },
     '&[disabled]': {
       color: '#cdd0d5',

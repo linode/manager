@@ -21,8 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     padding: '12px 10px',
     textAlign: 'center',
-    '&:hover': {
+    '&:hover, &:focus': {
       backgroundColor: '#3683dc',
+      textDecoration: 'none',
       '& span': {
         color: theme.color.white
       }
@@ -40,15 +41,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 'auto',
     padding: '12px 10px',
     whiteSpace: 'nowrap',
-    '&:hover': {
+    borderRadius: 0,
+    '&:hover, &:focus': {
       backgroundColor: '#3683dc',
-      color: theme.color.white
+      color: theme.color.white,
+      textDecoration: 'none'
     },
     '&[disabled]': {
       color: '#cdd0d5',
       cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit'
+      '&:hover, &:focus': {
+        backgroundColor: 'inherit',
+        textDecoration: 'none'
       }
     }
   }

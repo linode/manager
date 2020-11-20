@@ -32,9 +32,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     padding: '12px 15px',
     minWidth: 'auto',
-    '&:hover': {
+    borderRadius: 0,
+    '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
-      color: theme.color.white
+      color: theme.color.white,
+      textDecoration: 'none'
     }
   }
 }));

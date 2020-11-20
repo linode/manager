@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 'auto',
     padding: '12px 10px',
     whiteSpace: 'nowrap',
+    borderRadius: 0,
     '&:hover, &:focus': {
       backgroundColor: '#3683dc',
       color: '#ffffff'

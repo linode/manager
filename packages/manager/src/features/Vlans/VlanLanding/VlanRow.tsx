@@ -14,7 +14,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'block',
     fontFamily: theme.font.bold,
     fontSize: '.875rem',
-    lineHeight: '1.14rem'
+    lineHeight: '1.14rem',
+    '&:hover, &:focus': {
+      textDecoration: 'underline'
+    }
   },
   linodesWrapper: {
     padding: '8px 0'
