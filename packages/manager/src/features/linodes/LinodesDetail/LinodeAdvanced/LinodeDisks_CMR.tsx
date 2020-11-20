@@ -327,7 +327,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           loading={submitting}
           onClick={this.deleteDisk}

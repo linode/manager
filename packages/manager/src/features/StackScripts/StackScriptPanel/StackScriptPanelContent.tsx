@@ -239,7 +239,7 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.handleMakePublic}
         >
@@ -256,7 +256,7 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.handleDeleteStackScript}
           loading={this.state.dialog.delete.submitting}

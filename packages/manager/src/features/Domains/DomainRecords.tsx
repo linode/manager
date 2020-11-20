@@ -671,7 +671,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.deleteDomainRecord}
         >

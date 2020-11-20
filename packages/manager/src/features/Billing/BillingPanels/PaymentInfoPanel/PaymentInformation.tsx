@@ -32,7 +32,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(1),
     minWidth: 'auto',
-    padding: 0
+    padding: 0,
+    '&:hover, &:focus': {
+      backgroundColor: 'transparent',
+      color: 'inherit',
+      textDecoration: 'underline'
+    }
   }
 }));
 

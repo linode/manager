@@ -287,11 +287,11 @@ const darkThemeOptions = {
           color: primaryColors.text
         }
       },
-      text: {
-        '&:hover': {
-          backgroundColor: 'transparent'
-        }
-      },
+      // text: {
+      //   '&:hover': {
+      //     backgroundColor: 'transparent'
+      //   }
+      // },
       containedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: primaryColors.light
@@ -332,19 +332,19 @@ const darkThemeOptions = {
             borderColor: primaryColors.light
           }
         },
-        '&.destructive': {
-          borderColor: '#c44742',
-          color: '#c44742',
-          '&:hover, &:focus': {
-            color: '#df6560',
-            borderColor: '#df6560',
-            backgroundColor: 'transparent'
-          },
-          '&:active': {
-            color: '#963530',
-            borderColor: '#963530'
-          }
-        },
+        // '&.destructive': {
+        //   borderColor: '#c44742',
+        //   color: '#c44742',
+        //   '&:hover, &:focus': {
+        //     color: '#df6560',
+        //     borderColor: '#df6560',
+        //     backgroundColor: 'transparent'
+        //   },
+        //   '&:active': {
+        //     color: '#963530',
+        //     borderColor: '#963530'
+        //   }
+        // },
         '&.loading': {
           borderColor: primaryColors.text,
           color: primaryColors.text,

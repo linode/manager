@@ -697,7 +697,10 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     lineHeight: 1,
     '& a': {
       color: theme.color.blue,
-      fontFamily: theme.font.bold
+      fontFamily: theme.font.bold,
+      '&:hover, &:focus': {
+        textDecoration: 'underline'
+      }
     }
   },
   listItem: {
@@ -716,10 +719,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     padding: `0px 10px`,
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
     fontSize: '.875rem',
-    fontWeight: 'bold',
-    '&:hover': {
-      textDecoration: 'none'
-    }
+    fontWeight: 'bold'
   },
   linodeCreated: {
     paddingLeft: 10,

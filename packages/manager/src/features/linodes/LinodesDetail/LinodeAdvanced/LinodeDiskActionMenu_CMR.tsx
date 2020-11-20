@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     padding: '12px 15px',
     minWidth: 'auto',
+    borderRadius: 0,
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: '#ffffff'
