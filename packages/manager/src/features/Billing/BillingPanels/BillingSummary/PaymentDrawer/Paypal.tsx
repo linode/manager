@@ -119,9 +119,10 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
   const [shouldRenderButton, setShouldRenderButton] = React.useState<boolean>(
     false
   );
-  const [paypalScriptLoadError, setPaypalScriptLoadError] = React.useState<
-    boolean | undefined
-  >();
+  const [
+    errorLoadingPaypalScript,
+    setErrorLoadingPaypalScript
+  ] = React.useState<boolean | undefined>();
 
   React.useEffect(() => {
     const isPayPalInitialized = window.hasOwnProperty('paypal');
@@ -137,7 +138,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
         React,
         ReactDOM
       });
-      setPaypalScriptLoadError(false);
+      setErrorLoadingPaypalScript(false);
       setShouldRenderButton(true);
     }
   }, [isScriptLoaded, shouldRenderButton]);
@@ -147,7 +148,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
 
     if ('paypal' in window === false) {
       timeout = setTimeout(() => {
-        setPaypalScriptLoadError(true);
+        setErrorLoadingPaypalScript(true);
       }, 2000);
     }
 
@@ -257,7 +258,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
 
   const enabled = shouldEnablePaypalButton(+usd);
 
-  if (typeof paypalScriptLoadError === 'undefined') {
+  if (typeof errorLoadingPaypalScript === 'undefined') {
     return (
       <Grid container direction="column" className={classes.root}>
         <CircleProgress mini />
@@ -265,7 +266,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
     );
   }
 
-  if (paypalScriptLoadError) {
+  if (errorLoadingPaypalScript) {
     return (
       <Grid container direction="column" className={classes.root}>
         <Notice error text="There was an error connecting with PayPal." />
