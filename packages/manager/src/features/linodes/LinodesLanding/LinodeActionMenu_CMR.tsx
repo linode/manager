@@ -32,16 +32,9 @@ import {
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent
 } from 'src/utilities/ga';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  inlineActions: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
+const useStyles = makeStyles(() => ({
   link: {
     padding: '12px 10px'
   },
@@ -49,9 +42,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 10
   },
   powerOnOrOff: {
+    borderRadius: 0,
     height: '100%',
     minWidth: 'auto',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    '&:hover': {
+      textDecoration: 'none'
+    }
   }
 }));
 
@@ -249,7 +246,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesSmDown || inTableContext) {
+      if (matchesSmDown) {
         actions.unshift({
           title: 'Reboot',
           disabled:
@@ -311,15 +308,18 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     inlineLabel,
     inTableContext,
     inVLANContext,
-    openDialog
+    openDialog,
+    readOnly
   } = props;
 
+  const readOnlyProps = readOnly
+    ? {
+        disabled: true,
+        tooltip: "You don't have permission to modify this Linode"
+      }
+    : {};
+
   const inlineActions = [
-    {
-      actionText: 'Details',
-      className: classes.link,
-      href: `/linodes/${linodeId}`
-    },
     inVLANContext
       ? {
           actionText: 'Detach',
@@ -330,7 +330,25 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           disabled: !['running', 'offline'].includes(linodeStatus),
           className: classes.powerOnOrOff,
           onClick: handlePowerAction
-        }
+        },
+    {
+      actionText: 'Reboot',
+      className: classes.link,
+      disabled:
+        linodeStatus !== 'running' ||
+        readOnly ||
+        Boolean(configsError?.[0]?.reason),
+      tooltip: readOnly
+        ? "You don't have permission to modify this Linode."
+        : configsError
+        ? 'Could not load configs for this Linode.'
+        : undefined,
+      onClick: () => {
+        sendLinodeActionMenuItemEvent('Reboot Linode');
+        openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
+      },
+      ...readOnlyProps
+    }
   ];
 
   return (
@@ -343,7 +361,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               key={action.actionText}
               actionText={action.actionText}
               className={action.className}
-              href={action.href}
+              // href={action.href}
               disabled={action.disabled}
               onClick={action.onClick}
             />

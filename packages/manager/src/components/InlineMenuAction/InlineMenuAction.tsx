@@ -11,7 +11,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.linkActiveLight,
     '&:hover, &:focus': {
       backgroundColor: '#3683dc',
-      color: '#ffffff'
+      borderRadius: 0,
+      color: '#ffffff',
+      textDecoration: 'none'
     },
     '&[disabled]': {
       color: '#cdd0d5',

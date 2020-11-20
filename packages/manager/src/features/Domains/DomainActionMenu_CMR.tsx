@@ -1,30 +1,9 @@
 import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
-} from 'src/components/core/styles';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
-import Hidden from 'src/components/core/Hidden';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
-    ...theme.applyLinkStyles,
-    color: theme.cmrTextColors.linkActiveLight,
-    height: '100%',
-    minWidth: '70px',
-    padding: '12px 10px',
-    whiteSpace: 'nowrap',
-    '&:hover': {
-      textDecoration: 'none',
-      backgroundColor: '#3683dc',
-      color: '#ffffff'
-    }
-  }
-}));
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface Handlers {
   onRemove: (domain: string, id: number) => void;
@@ -60,10 +39,8 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
   } = props;
 
   const history = useHistory();
-  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const matchesMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   const goToDomain = () => {
     history.push(`/domains/${id}`);
@@ -80,6 +57,25 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
   const handleClone = () => {
     onClone(domain, id);
   };
+
+  const inlineActions = [
+    {
+      actionText: 'Edit',
+      onClick: () => {
+        type === 'master' ? goToDomain : handleEdit;
+      }
+    },
+    {
+      actionText: status === 'active' ? 'Disable' : 'Enable',
+      onClick: () => {
+        onDisableOrEnable(
+          status === 'active' ? 'disable' : 'enable',
+          domain,
+          id
+        );
+      }
+    }
+  ];
 
   const createActions = () => (): Action[] => {
     const baseActions = [
@@ -98,14 +94,6 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
     ];
 
     if (matchesSmDown) {
-      if (type === 'master') {
-        baseActions.unshift({
-          title: 'Edit',
-          onClick: () => {
-            handleEdit();
-          }
-        });
-      }
       baseActions.unshift({
         title: status === 'active' ? 'Disable' : 'Enable',
         onClick: () => {
@@ -117,52 +105,27 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
         }
       });
       baseActions.unshift({
-        title: 'Details',
+        title: 'Edit',
         onClick: () => {
           type === 'master' ? goToDomain() : handleEdit();
         }
       });
     }
-
-    if (type === 'master' && matchesMdUp) {
-      return [
-        {
-          title: 'Edit',
-          onClick: () => {
-            handleEdit();
-          }
-        },
-        ...baseActions
-      ];
-    } else {
-      return [...baseActions];
-    }
+    return [...baseActions];
   };
 
   return (
     <>
-      <Hidden smDown>
-        <div className="flexCenter">
-          <button
-            className={classes.button}
-            onClick={type === 'master' ? goToDomain : handleEdit}
-          >
-            Details
-          </button>
-          <button
-            className={classes.button}
-            onClick={() =>
-              onDisableOrEnable(
-                status === 'active' ? 'disable' : 'enable',
-                domain,
-                id
-              )
-            }
-          >
-            {status === 'active' ? 'Disable' : 'Enable'}
-          </button>
-        </div>
-      </Hidden>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              onClick={action.onClick}
+            />
+          );
+        })}
       <ActionMenu
         createActions={createActions()}
         ariaLabel={`Action menu for Domain ${domain}`}

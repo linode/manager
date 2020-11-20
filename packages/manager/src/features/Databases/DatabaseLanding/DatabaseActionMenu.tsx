@@ -9,53 +9,12 @@ import {
 } from 'src/components/core/styles';
 import InlineAction from 'src/components/InlineMenuAction';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     padding: '0px !important',
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center'
-  },
-  inlineActions: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
-  link: {
-    padding: '12px 10px',
-    textAlign: 'center',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      '& span': {
-        color: '#fff'
-      }
-    },
-    '& span': {
-      color: '#3683dc'
-    }
-  },
-  action: {
-    marginLeft: 10
-  },
-  button: {
-    minWidth: 70,
-    ...theme.applyLinkStyles,
-    height: '100%',
-    padding: '12px 10px',
-    whiteSpace: 'nowrap',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      color: '#fff'
-    },
-    '&[disabled]': {
-      color: '#cdd0d5',
-      cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit'
-      }
-    }
   }
 }));
 
