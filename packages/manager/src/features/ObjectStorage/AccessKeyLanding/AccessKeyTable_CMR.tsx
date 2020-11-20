@@ -51,9 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     marginLeft: theme.spacing(1)
   },
-  label: {
-    color: theme.cmrTextColors.linkActiveLight
-  }
+  label: {}
 }));
 
 interface Props {
