@@ -361,7 +361,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               key={action.actionText}
               actionText={action.actionText}
               className={action.className}
-              // href={action.href}
               disabled={action.disabled}
               onClick={action.onClick}
             />
