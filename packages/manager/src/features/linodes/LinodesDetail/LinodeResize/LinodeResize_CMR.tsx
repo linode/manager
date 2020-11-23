@@ -399,6 +399,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               tableDisabled ||
               submitButtonDisabled
             }
+            loading={this.state.submitting}
             buttonType="primary"
             onClick={this.onSubmit}
             data-qa-resize
