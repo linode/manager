@@ -18,9 +18,7 @@ const getVolumeLabelInput = () => {
   return cy.findAllByLabelText('Label (required)');
 };
 const clickDetach = () => {
-  cy.findByText('Detach')
-    .should('be.visible')
-    .click();
+  cy.get('[data-qa-action-menu-item="Detach"]:visible').click();
 };
 
 const createBasicVolume = (linodeLabel?: string) => {

@@ -8,6 +8,8 @@ import {
   makeTestLabel
 } from './common';
 
+// import { getAll } from '../../../src/utilities/getAll';
+
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const testLinodeTag = testTag;
 export const makeRandomId = () => Math.floor(Math.random() * 99999999);
@@ -160,7 +162,8 @@ export const createLinodeWithBackupsEnabled = (linode = undefined) => {
   });
 };
 
-export const getLinodes = () => getAll('linode/instances');
+export const getLinodes = (page: number = 1) =>
+  getAll(`linode/instances?page=${page}`);
 
 export const deleteLinodeById = (linodeId: number) =>
   deleteById('linode/instances', linodeId);
@@ -174,11 +177,16 @@ export const deleteLinodeByLabel = (label = undefined) => {
 
 export const deleteAllTestLinodes = () => {
   getLinodes().then(resp => {
-    resp.body.data.forEach(linode => {
-      if (isTestEntity(linode)) {
-        deleteLinodeById(linode.id);
-      }
-    });
+    const pages = resp.body.pages;
+    for (let page = 1; page <= pages; page++) {
+      getLinodes(page).then(resp => {
+        resp.body.data.forEach(linode => {
+          if (isTestEntity(linode)) {
+            deleteLinodeById(linode.id);
+          }
+        });
+      });
+    }
   });
 };
 
