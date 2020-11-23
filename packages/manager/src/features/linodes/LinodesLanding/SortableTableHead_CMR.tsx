@@ -114,9 +114,9 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
             </TableSortCell>
           </Hidden>
         )}
-        <Hidden mdDown>
+        {/* <Hidden mdDown>
           <TableCell>Tags</TableCell>
-        </Hidden>
+        </Hidden> */}
         <TableCell>
           <div className={classes.controlHeader}>
             <div id="displayViewDescription" className="visually-hidden">

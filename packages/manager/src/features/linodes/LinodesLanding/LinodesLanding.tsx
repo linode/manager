@@ -1,6 +1,5 @@
 import { Config, Linode, LinodeStatus } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
-import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -23,7 +22,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import CSVLink from 'src/components/DownloadCSV';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import IconTextLink from 'src/components/IconTextLink';
 import LandingHeader from 'src/components/LandingHeader';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
@@ -327,8 +325,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Image', key: 'image' },
       { label: 'Region', key: 'region' },
       { label: 'Created', key: 'created' },
-      { label: 'Most Recent Backup', key: 'backups.last_successful' },
-      { label: 'Tags', key: 'tags' }
+      { label: 'Most Recent Backup', key: 'backups.last_successful' }
+      // { label: 'Tags', key: 'tags' }
     ];
 
     const linodesRunningCount = filterLinodesByStatus('running', linodesData)
@@ -338,11 +336,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     const linodesOfflineCount = filterLinodesByStatus('offline', linodesData)
       .length;
-
-    const chipProps = {
-      component: 'button',
-      clickable: true
-    };
 
     const displayBackupsCTA =
       !this.props.isVLAN && backupsCTA && !BackupsCtaDismissed.get();
@@ -466,10 +459,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                                 filterStatus === 'running'
                                             })}
                                             label={`${linodesRunningCount} RUNNING`}
-                                            onClick={() =>
-                                              this.setFilterStatus('running')
-                                            }
-                                            {...chipProps}
                                           />
                                         )}
                                         {linodesBusyCount !== 0 && (
@@ -480,11 +469,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                               [classes.chipActive]:
                                                 filterStatus === 'busy'
                                             })}
-                                            onClick={() =>
-                                              this.setFilterStatus('busy')
-                                            }
                                             label={`${linodesBusyCount} BUSY`}
-                                            {...chipProps}
                                           />
                                         )}
                                         {linodesOfflineCount !== 0 && (
@@ -495,14 +480,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                               [classes.chipActive]:
                                                 filterStatus === 'offline'
                                             })}
-                                            onClick={() =>
-                                              this.setFilterStatus('offline')
-                                            }
                                             label={`${linodesOfflineCount} OFFLINE`}
-                                            {...chipProps}
                                           />
                                         )}
-                                        {filterStatus !== 'all' && (
+                                        {/* {filterStatus !== 'all' && (
                                           <IconTextLink
                                             SideIcon={Close}
                                             text="CLEAR FILTERS"
@@ -512,7 +493,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                               this.setFilterStatus('all')
                                             }
                                           />
-                                        )}
+                                        )} */}
                                       </>
                                     }
                                   />
