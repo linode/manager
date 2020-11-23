@@ -45,7 +45,8 @@ const styles = (theme: Theme) =>
     dismiss: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
-      minWidth: 'auto'
+      minWidth: 'auto',
+      marginTop: 10
     }
   });
 
