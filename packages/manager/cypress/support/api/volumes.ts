@@ -81,6 +81,9 @@ export const deleteAllTestVolumes = () => {
             url: `linode/instances/${vol.linode_id}`
           }).as('deleteLinode');
           cy.wait('@deleteLinode');
+          // this wait is necessary to allow time for attached linode to be deleted before deleting volume
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(10000);
           deleteVolumeById(vol.id);
         });
       }
