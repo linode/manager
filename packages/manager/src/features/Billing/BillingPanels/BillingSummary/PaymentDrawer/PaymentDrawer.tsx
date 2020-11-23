@@ -55,6 +55,8 @@ export const getMinimumPayment = (balance: number | false) => {
   return Math.min(5, balance).toFixed(2);
 };
 
+const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
+
 export const PaymentDrawer: React.FC<CombinedProps> = props => {
   const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
   const classes = useStyles();
@@ -70,8 +72,6 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
   const [isPaypalScriptLoaded, setIsPaypalScriptLoaded] = React.useState<
     boolean
   >(false);
-
-  const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
   React.useEffect(() => {
     setUSD(getMinimumPayment(balance));
