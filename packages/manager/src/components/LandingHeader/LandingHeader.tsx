@@ -1,13 +1,7 @@
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
-} from 'src/components/core/styles';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import { makeStyles } from 'src/components/core/styles';
 import EntityHeader, {
   HeaderProps
 } from 'src/components/EntityHeader/EntityHeader';
@@ -39,8 +33,6 @@ interface Props extends Omit<HeaderProps, 'actions'> {
 
 export const LandingHeader: React.FC<Props> = props => {
   const classes = useStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const {
     docsLink,
@@ -84,9 +76,6 @@ export const LandingHeader: React.FC<Props> = props => {
             </Button>
           </Grid>
         )}
-        {docsLink && (
-          <DocumentationButton href={docsLink} hideText={matchesSmDown} />
-        )}
       </Grid>
     ),
     [
@@ -95,14 +84,15 @@ export const LandingHeader: React.FC<Props> = props => {
       onAddNew,
       classes.button,
       extraActions,
-      matchesSmDown,
       createButtonWidth,
       startsWithVowel,
       createButtonText
     ]
   );
 
-  return <EntityHeader isLanding actions={actions} {...props} />;
+  return (
+    <EntityHeader isLanding actions={actions} docsLink={docsLink} {...props} />
+  );
 };
 
 export default LandingHeader;
