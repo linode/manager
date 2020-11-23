@@ -211,7 +211,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           )[0].reason;
         }
         this.setState({
-          submissionError: error
+          submissionError: error,
+          submitting: false
         });
         // Set to "block: end" since the sticky header would otherwise interfere.
         scrollErrorIntoView(undefined, { block: 'end' });
