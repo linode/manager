@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import TicketIcon from 'src/assets/icons/ticket.svg';
+import TicketIcon from 'src/assets/icons/docs.svg';
 import {
   createStyles,
   Theme,
@@ -19,8 +19,9 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: `0 ${theme.spacing(1) + 4}px`,
       color: '#3683DC',
+      margin: 0,
+      padding: 0,
       /**
        * @bailly @kayla
        * I had to ask Kayla how to override the
@@ -28,9 +29,13 @@ const styles = (theme: Theme) =>
        * a better way.
        */
       '&:hover': {
+        textDecoration: 'underline',
         '& svg': {
-          color: '#3683DC !important'
+          color: `${theme.palette.primary.light} !important`
         }
+      },
+      '& svg': {
+        marginRight: theme.spacing()
       }
     }
   });
@@ -68,9 +73,5 @@ export const SupportWidget: React.FC<CombinedProps> = props => {
 };
 
 const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  React.memo,
-  withRouter
-);
+const enhanced = compose<CombinedProps, {}>(styled, React.memo, withRouter);
 export default enhanced(SupportWidget);

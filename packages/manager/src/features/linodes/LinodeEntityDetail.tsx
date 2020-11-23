@@ -13,7 +13,6 @@ import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
 import PowerOnIcon from 'src/assets/icons/power-button.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import List from 'src/components/core/List';
@@ -311,11 +310,6 @@ const Header: React.FC<HeaderProps> = props => {
       parentText={isDetails ? 'Linodes' : undefined}
       isDetailLanding={isDetailLanding}
       iconType="linode"
-      actions={
-        <Hidden mdUp>
-          <DocumentationButton hideText href="https://www.linode.com/" />
-        </Hidden>
-      }
       title={
         isDetails ? (
           <div className={classes.linodeLabelWithDistro}>
@@ -425,11 +419,6 @@ const Header: React.FC<HeaderProps> = props => {
                 inLandingDetailContext={isDetailLanding}
               />
             </div>
-            {isDetails && (
-              <Hidden smDown>
-                <DocumentationButton href="https://www.linode.com/" />
-              </Hidden>
-            )}
           </div>
         </>
       }

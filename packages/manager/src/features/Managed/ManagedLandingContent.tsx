@@ -15,6 +15,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
+import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import Grid from 'src/components/Grid';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
@@ -120,17 +121,20 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
         />
         <Grid
           container
-          item
           direction="row"
           justify="flex-end"
           alignItems="center"
           xs={8}
         >
-          <Grid item className={flags.cmr ? classes.cmrSpacing : ''}>
+          <Grid item>
             <SupportWidget />
           </Grid>
-          <Grid item>
-            <DocumentationButton href="https://www.linode.com/docs/platform/linode-managed/" />
+          <Grid item className={flags.cmr ? classes.cmrSpacing : ''}>
+            {flags.cmr ? (
+              <DocumentationButton_CMR href="https://www.linode.com/docs/platform/linode-managed/" />
+            ) : (
+              <DocumentationButton href="https://www.linode.com/docs/platform/linode-managed/" />
+            )}
           </Grid>
         </Grid>
       </Box>
