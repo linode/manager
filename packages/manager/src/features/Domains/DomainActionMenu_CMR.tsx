@@ -1,6 +1,5 @@
 import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -34,17 +33,11 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
     onDisableOrEnable,
     onEdit,
     onRemove,
-    status,
-    type
+    status
   } = props;
 
-  const history = useHistory();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const goToDomain = () => {
-    history.push(`/domains/${id}`);
-  };
 
   const handleRemove = () => {
     onRemove(domain, id);
@@ -62,7 +55,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
     {
       actionText: 'Edit',
       onClick: () => {
-        type === 'master' ? goToDomain : handleEdit;
+        handleEdit();
       }
     },
     {
@@ -107,7 +100,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
       baseActions.unshift({
         title: 'Edit',
         onClick: () => {
-          type === 'master' ? goToDomain() : handleEdit();
+          handleEdit();
         }
       });
     }

@@ -93,7 +93,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
 
   const inlineActions = [
     {
-      actionText: 'Details',
+      actionText: 'Show Config',
       onClick: () => {
         handleShowConfig();
       }
@@ -133,7 +133,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
           }
         });
         actions.unshift({
-          title: 'Details',
+          title: 'Show Config',
           onClick: () => {
             handleShowConfig();
           }

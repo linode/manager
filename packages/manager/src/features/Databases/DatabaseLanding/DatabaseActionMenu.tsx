@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import {
   makeStyles,
@@ -33,19 +32,12 @@ type CombinedProps = Props;
 
 const DatabaseActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const history = useHistory();
   const theme = useTheme<Theme>();
-
-  const { databaseID, databaseLabel, triggerDeleteDatabase } = props;
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const { databaseID, databaseLabel, triggerDeleteDatabase } = props;
+
   const actions: Action[] = [
-    {
-      title: 'Details',
-      onClick: () => {
-        history.push({ pathname: `/databases/${databaseID}` });
-      }
-    },
     {
       title: 'Resize',
       onClick: () => {

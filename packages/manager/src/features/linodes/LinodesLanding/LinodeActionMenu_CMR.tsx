@@ -73,7 +73,6 @@ export interface Props {
   ) => void;
   inlineLabel?: string;
   inTableContext?: boolean;
-  inLandingDetailContext?: boolean;
   inVLANContext?: boolean;
 }
 
@@ -156,7 +155,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       openDialog,
       openPowerActionDialog,
       readOnly,
-      inLandingDetailContext,
       inVLANContext
     } = props;
 
@@ -279,20 +277,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         actions.unshift({
           title: 'Detach',
           onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)
-        });
-      }
-
-      if (
-        (matchesSmDown && inLandingDetailContext) ||
-        (matchesSmDown && inTableContext)
-      ) {
-        actions.unshift({
-          title: 'Details',
-          onClick: () => {
-            history.push({
-              pathname: `/linodes/${linodeId}`
-            });
-          }
         });
       }
 
