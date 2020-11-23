@@ -5,6 +5,8 @@ import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
 import Box from 'src/components/core/Box';
+import SideMenu from 'src/components/SideMenu';
+
 import {
   makeStyles,
   Theme,
@@ -32,7 +34,7 @@ import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 // @cmr
-import PrimaryNav_CMR from 'src/components/PrimaryNav/PrimaryNav_CMR';
+// import PrimaryNav_CMR from 'src/components/PrimaryNav/PrimaryNav_CMR';
 
 import withGlobalErrors, {
   Props as GlobalErrorProps
@@ -268,10 +270,17 @@ const MainContent: React.FC<CombinedProps> = props => {
       <DbaasContextProvider value={dbaasContextValue}>
         <VlanContextProvider value={vlanContextValue}>
           {/* @cmr */}
-          <PrimaryNav_CMR
+          {/* <PrimaryNav_CMR
             closeMenu={() => toggleMenu(false)}
             isCollapsed={false}
             toggleTheme={props.toggleTheme}
+          /> */}
+          <SideMenu
+            open={true}
+            desktopOpen={true}
+            closeMenu={() => toggleMenu(false)}
+            toggleTheme={props.toggleTheme}
+            toggleSpacing={props.toggleSpacing}
           />
           <NotificationProvider value={contextValue}>
             <div className={classes.content}>
