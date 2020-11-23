@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.applyLinkStyles,
     display: 'block',
     fontFamily: theme.font.bold,
+    color: theme.cmrTextColors.linkActiveLight,
     lineHeight: '1.125rem',
     '&:hover, &:focus': {
       textDecoration: 'underline'

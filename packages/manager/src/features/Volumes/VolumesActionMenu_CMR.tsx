@@ -29,13 +29,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight,
     height: '100%',
     padding: '12px 15px',
     minWidth: 'auto',
     borderRadius: 0,
     '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
-      color: theme.color.white,
+      color: '#fff',
       textDecoration: 'none'
     }
   }

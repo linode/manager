@@ -1551,17 +1551,13 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           '&$colorSecondary': {
             backgroundColor: 'transparent',
             color: primaryColors.main,
-            border: `1px solid ${primaryColors.main}`,
-            transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
             '&:hover, &:focus': {
               backgroundColor: 'transparent !important',
-              color: primaryColors.light,
-              borderColor: primaryColors.light
+              color: primaryColors.light
             },
             '&:active': {
               backgroundColor: 'transparent',
-              color: primaryColors.light,
-              borderColor: primaryColors.light
+              color: primaryColors.light
             }
           }
         }

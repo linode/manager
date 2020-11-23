@@ -25,11 +25,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: '#3683dc',
       textDecoration: 'none',
       '& span': {
-        color: theme.color.white
+        color: '#fff'
       }
     },
     '& span': {
-      color: '#3683dc'
+      color: theme.cmrTextColors.linkActiveLight
     }
   },
   action: {
@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight,
     height: '100%',
     minWidth: 'auto',
     padding: '12px 10px',
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 0,
     '&:hover, &:focus': {
       backgroundColor: '#3683dc',
-      color: theme.color.white,
+      color: '#fff',
       textDecoration: 'none'
     },
     '&[disabled]': {

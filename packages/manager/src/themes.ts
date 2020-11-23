@@ -313,17 +313,14 @@ const darkThemeOptions = {
       },
       containedSecondary: {
         color: primaryColors.main,
-        border: `1px solid ${primaryColors.main}`,
         '&:hover, &:focus': {
-          color: primaryColors.light,
-          borderColor: primaryColors.light
+          color: primaryColors.light
         },
         '&:active': {
           color: primaryColors.dark,
           borderColor: primaryColors.dark
         },
         '&$disabled': {
-          borderColor: '#c9cacb',
           color: '#c9cacb'
         },
         '&.cancel': {
@@ -346,7 +343,6 @@ const darkThemeOptions = {
         //   }
         // },
         '&.loading': {
-          borderColor: primaryColors.text,
           color: primaryColors.text,
           minWidth: 100,
           '& svg': {

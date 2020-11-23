@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     '&:hover, &:focus': {
       backgroundColor: 'transparent',
-      color: 'inherit',
+      color: theme.palette.primary.main,
       textDecoration: 'underline'
     }
   }
