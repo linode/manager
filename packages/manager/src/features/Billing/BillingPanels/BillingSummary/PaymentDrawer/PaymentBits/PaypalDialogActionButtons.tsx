@@ -51,7 +51,7 @@ const PaypalDialogActionButtons: React.SFC<CombinedProps> = props => {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           loading={isExecutingPayment}
           onClick={initExecutePayment}
           data-qa-submit
