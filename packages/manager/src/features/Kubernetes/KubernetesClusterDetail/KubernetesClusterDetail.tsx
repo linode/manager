@@ -11,24 +11,21 @@ import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
-import {
-  createStyles,
-  Theme,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import Tab from 'src/components/core/ReachTab';
 import TabList from 'src/components/core/ReachTabList';
 import DocumentationButton from 'src/components/DocumentationButton';
+import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import KubeContainer, {
   DispatchProps
 } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import useFlags from 'src/hooks/useFlags';
 import usePolling from 'src/hooks/usePolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAllWithArguments } from 'src/utilities/getAll';
@@ -36,100 +33,74 @@ import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
 
-type ClassNames =
-  | 'root'
-  | 'title'
-  | 'tabBar'
-  | 'backButton'
-  | 'section'
-  | 'button'
-  | 'titleGridWrapper'
-  | 'tagHeading'
-  | 'tabList'
-  | 'tab';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    title: {},
-    tabBar: {
-      marginTop: 0,
-      position: 'relative'
+const useStyles = makeStyles((theme: Theme) => ({
+  tabBar: {
+    marginTop: 0,
+    position: 'relative'
+  },
+  section: {
+    alignItems: 'flex-start'
+  },
+  button: {
+    marginBottom: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      order: 2
     },
-    backButton: {
-      margin: '-6px 0 0 -16px',
-      '& svg': {
-        width: 34,
-        height: 34
-      },
-      padding: 0
-    },
-    section: {
-      alignItems: 'flex-start'
-    },
-    button: {
-      marginBottom: theme.spacing(3),
-      [theme.breakpoints.down('sm')]: {
-        order: 2
-      },
-      '& button': {
-        [theme.breakpoints.only('md')]: {
-          padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`
-        }
-      }
-    },
-    titleGridWrapper: {
-      marginBottom: theme.spacing(1)
-    },
-    tagHeading: {
-      marginBottom: theme.spacing(1) + 4
-    },
-    tab: {
-      '&[data-reach-tab]': {
-        // This was copied over from our MuiTab styling in themeFactory. Some of this could probably be cleaned up.
-        color: theme.color.tableHeaderText,
-        minWidth: 50,
-        textTransform: 'inherit',
-        fontSize: '0.93rem',
-        padding: '6px 16px',
-        position: 'relative',
-        overflow: 'hidden',
-        maxWidth: 264,
-        boxSizing: 'border-box',
-        borderBottom: '2px solid transparent',
-        minHeight: theme.spacing(1) * 6,
-        flexShrink: 0,
-        display: 'inline-flex',
-        alignItems: 'center',
-        verticalAlign: 'middle',
-        justifyContent: 'center',
-        appearance: 'none',
-        lineHeight: 1.3,
-        [theme.breakpoints.up('md')]: {
-          minWidth: 75
-        },
-        '&:hover': {
-          color: theme.color.blue
-        }
-      },
-      '&[data-reach-tab][data-selected]': {
-        fontFamily: theme.font.bold,
-        color: theme.color.headline,
-        borderBottom: `2px solid ${theme.color.blue}`
-      }
-    },
-    tabList: {
-      '&[data-reach-tab-list]': {
-        background: 'none !important',
-        boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
-        marginBottom: theme.spacing(3),
-        [theme.breakpoints.down('md')]: {
-          overflowX: 'scroll',
-          padding: 1
-        }
+    '& button': {
+      [theme.breakpoints.only('md')]: {
+        padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`
       }
     }
-  });
+  },
+  titleGridWrapper: {
+    marginBottom: theme.spacing(1)
+  },
+  tab: {
+    '&[data-reach-tab]': {
+      // This was copied over from our MuiTab styling in themeFactory. Some of this could probably be cleaned up.
+      color: theme.color.tableHeaderText,
+      minWidth: 50,
+      textTransform: 'inherit',
+      fontSize: '0.93rem',
+      padding: '6px 16px',
+      position: 'relative',
+      overflow: 'hidden',
+      maxWidth: 264,
+      boxSizing: 'border-box',
+      borderBottom: '2px solid transparent',
+      minHeight: theme.spacing(1) * 6,
+      flexShrink: 0,
+      display: 'inline-flex',
+      alignItems: 'center',
+      verticalAlign: 'middle',
+      justifyContent: 'center',
+      appearance: 'none',
+      lineHeight: 1.3,
+      [theme.breakpoints.up('md')]: {
+        minWidth: 75
+      },
+      '&:hover': {
+        color: theme.color.blue
+      }
+    },
+    '&[data-reach-tab][data-selected]': {
+      fontFamily: theme.font.bold,
+      color: theme.color.headline,
+      borderBottom: `2px solid ${theme.color.blue}`
+    }
+  },
+  tabList: {
+    '&[data-reach-tab-list]': {
+      background: 'none !important',
+      boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
+      marginBottom: theme.spacing(3),
+      [theme.breakpoints.down('md')]: {
+        overflowX: 'scroll',
+        padding: 1
+      }
+    }
+  }
+}));
 interface KubernetesContainerProps {
   cluster: ExtendedCluster | null;
   clustersLoading: boolean;
@@ -142,16 +113,17 @@ interface KubernetesContainerProps {
 type CombinedProps = WithTypesProps &
   RouteComponentProps<{ clusterID: string }> &
   KubernetesContainerProps &
-  DispatchProps &
-  WithStyles<ClassNames>;
+  DispatchProps;
 
 const getAllEndpoints = getAllWithArguments<KubernetesEndpointResponse>(
   getKubernetesClusterEndpoints
 );
 
 export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = props => {
+  const classes = useStyles();
+  const flags = useFlags();
+
   const {
-    classes,
     cluster,
     clustersLoadError,
     clustersLoading,
@@ -349,7 +321,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
           />
         </Grid>
         <Grid item className="pt0">
-          <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
+          {flags.cmr ? (
+            <DocumentationButton_CMR href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
+          ) : (
+            <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
+          )}
         </Grid>
       </Grid>
 
@@ -418,8 +394,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   );
 };
 
-const styled = withStyles(styles);
-
 const withCluster = KubeContainer<
   {},
   WithTypesProps & RouteComponentProps<{ clusterID: string }>
@@ -448,7 +422,6 @@ const withCluster = KubeContainer<
 );
 
 const enhanced = compose<CombinedProps, RouteComponentProps>(
-  styled,
   withTypes,
   withCluster
 );
