@@ -43,8 +43,6 @@ const styles = (theme: Theme) =>
     },
     root: {
       minWidth: '105px',
-      paddingLeft: theme.spacing(3) + 4,
-      paddingRight: theme.spacing(3) + 4,
       transition: 'none'
       // '&.cancel': {
       //   border: `1px solid transparent`,

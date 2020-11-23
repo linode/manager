@@ -81,6 +81,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down(1100)]: {
       marginRight: theme.spacing(2)
     }
+  },
+  addNewButton: {
+    '&:hover': {
+      '& svg': {
+        color: '#fff'
+      }
+    }
   }
 }));
 
@@ -307,6 +314,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         >
           <AddNewLink
             onClick={handleAddClient}
+            className={classes.addNewButton}
             label={newClientLoading ? 'Loading...' : 'Add a Client'}
             disabled={!userCanCreateClient}
             disabledReason={

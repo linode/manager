@@ -106,7 +106,7 @@ const BackupsCTA: React.FC<CombinedProps> = props => {
           </Button>
           <Button
             data-qa-backup-existing
-            variant="text"
+            buttonType="secondary"
             className={classes.dismiss}
             onClick={dismissed}
           >
