@@ -144,13 +144,11 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
   }, [isScriptLoaded, shouldRenderButton]);
 
   React.useEffect(() => {
-    let timeout: NodeJS.Timeout;
-
-    if ('paypal' in window === false) {
-      timeout = setTimeout(() => {
+    const timeout: NodeJS.Timeout = setTimeout(() => {
+      if ('paypal' in window === false) {
         setErrorLoadingPaypalScript(true);
-      }, 2000);
-    }
+      }
+    }, 2000);
 
     return () => clearTimeout(timeout);
   }, []);
