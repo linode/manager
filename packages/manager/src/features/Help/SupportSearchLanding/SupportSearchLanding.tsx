@@ -90,20 +90,17 @@ export class SupportSearchLanding extends React.Component<
     this.props.searchAlgolia(query);
   }
 
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+  componentDidUpdate(prevProps: CombinedProps) {
     if (!prevProps.searchEnabled && this.props.searchEnabled) {
       this.searchFromParams();
     }
   }
 
   onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ query: e.target.value });
-    this.props.searchAlgolia(e.target.value);
-  };
-
-  onBackButtonClick = () => {
-    const { history } = this.props;
-    history.push('/support');
+    const newQuery = e.target.value ?? '';
+    this.setState({ query: newQuery });
+    this.props.history.replace({ search: `?query=${newQuery}` });
+    this.props.searchAlgolia(newQuery);
   };
 
   render() {
