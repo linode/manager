@@ -23,7 +23,8 @@ const props: CombinedProps = {
     root: '',
     error: '',
     emptyImagePanel: '',
-    emptyImagePanelText: ''
+    emptyImagePanelText: '',
+    actions: ''
   },
   linodeId: 1234,
   imagesData: images,

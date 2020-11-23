@@ -11,7 +11,6 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import Community from 'src/assets/community.svg';
-import Dashboard from 'src/assets/icons/dashboard_cmr.svg';
 import Gear from 'src/assets/icons/gear.svg';
 import LogoIcon from 'src/assets/logo/logo.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
@@ -21,7 +20,7 @@ import Hidden, { HiddenProps } from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
-import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import { useMediaQuery } from 'src/components/core/styles';
 import { Link } from 'src/components/Link';
 import UserMenu from 'src/features/TopMenu/UserMenu/UserMenu_CMR';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -48,7 +47,6 @@ type NavEntity =
   | 'Images'
   | 'Firewalls'
   | 'Account'
-  | 'Dashboard'
   | 'StackScripts'
   | 'Help & Support'
   | 'Community'
@@ -88,8 +86,6 @@ export interface PrimaryNavProps {
 
 export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const classes = usePrimaryNavStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesMobile = useMediaQuery('(max-width:750px)');
   const matchesTablet = useMediaQuery('(max-width:1190px)');
 
@@ -153,16 +149,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
     links: PrimaryLink[];
   }[] = React.useMemo(
     () => [
-      {
-        group: 'None',
-        links: [
-          {
-            display: 'Dashboard',
-            href: '/dashboard',
-            hide: !matchesMobile
-          }
-        ]
-      },
       {
         group: 'Compute',
         links: [
@@ -263,7 +249,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       }
     ],
     [
-      matchesMobile,
       requestDomains,
       domains.loading,
       domains.lastUpdated,
@@ -301,7 +286,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
                 [classes.logoCollapsed]: matchesTablet
               })}
             >
-              <Link to={`/dashboard`} title="Dashboard">
+              <Link to={`/linodes`} title="Linodes">
                 {matchesTablet ? (
                   <LogoIcon width={25} height={29} />
                 ) : (
@@ -316,30 +301,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             </Grid>
           )}
           <div className={classes.hideOnMobile}>
-            <Grid item>
-              <div
-                className={classNames({
-                  [classes.logoItem]: true,
-                  [classes.logoCollapsed]: matchesSmDown
-                })}
-              >
-                {matchesSmDown ? (
-                  <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
-                    <Dashboard
-                      width={20}
-                      height={16}
-                      style={{ marginRight: 6 }}
-                    />
-                  </Link>
-                ) : (
-                  <PrimaryNavLink
-                    display="Dashboard"
-                    href="/dashboard"
-                    closeMenu={closeMenu}
-                  />
-                )}
-              </div>
-            </Grid>
             {primaryLinkGroups.map(thisGroup => {
               // For each group, filter out hidden links.
               const filteredLinks = thisGroup.links.filter(
