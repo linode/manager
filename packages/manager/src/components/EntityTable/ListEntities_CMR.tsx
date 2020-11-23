@@ -23,11 +23,13 @@ export const ListEntities: React.FC<CombinedProps> = props => {
     lastUpdated,
     RowComponent
   } = props;
+
   return (
     <OrderBy
       data={data}
       orderBy={initialOrder?.orderBy}
       order={initialOrder?.order}
+      preferenceKey={entity}
     >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>

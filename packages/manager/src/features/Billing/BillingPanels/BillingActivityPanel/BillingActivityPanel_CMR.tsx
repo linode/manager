@@ -15,6 +15,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
+import Link from 'src/components/Link';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import OrderBy from 'src/components/OrderBy';
@@ -551,7 +552,13 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
 
     return (
       <TableRow {...rowProps} data-testid={`${type}-${id}`}>
-        <TableCell>{label}</TableCell>
+        <TableCell>
+          {type === 'invoice' ? (
+            <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
+          ) : (
+            label
+          )}
+        </TableCell>
         <TableCell>
           <DateTimeDisplay format={ISO_DATE_FORMAT} value={date} />
         </TableCell>

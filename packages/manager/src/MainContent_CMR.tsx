@@ -159,7 +159,6 @@ const SupportTicketDetail = React.lazy(() =>
 );
 const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed'));
-const Dashboard = React.lazy(() => import('src/features/Dashboard_CMR'));
 const Help = React.lazy(() => import('src/features/Help'));
 const SupportSearchLanding = React.lazy(() =>
   import('src/features/Help/SupportSearchLanding')
@@ -323,7 +322,6 @@ const MainContent: React.FC<CombinedProps> = props => {
                         />
                         <Route path="/profile" component={Profile} />
                         <Route exact path="/support" component={Help} />
-                        <Route path="/dashboard" component={Dashboard} />
                         <Route path="/search" component={SearchLanding} />
                         <Route
                           exact
@@ -339,7 +337,9 @@ const MainContent: React.FC<CombinedProps> = props => {
                         {props.flags.databases && (
                           <Route path="/databases" component={Databases} />
                         )}
-                        <Redirect exact from="/" to="/dashboard" />
+                        <Redirect exact from="/" to="/linodes" />
+                        {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                        <Redirect from="/dashboard" to="/linodes" />
                         <Route component={NotFound} />
                       </Switch>
                     </React.Suspense>
