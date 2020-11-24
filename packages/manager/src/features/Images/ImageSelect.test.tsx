@@ -77,7 +77,7 @@ describe('ImageSelect', () => {
   describe('ImageSelect component', () => {
     it('should render', () => {
       const { getByText } = renderWithTheme(<ImageSelect {...props} />);
-      getByText(/image/i);
+      getByText(/image-0/i);
     });
     it('should display an error', () => {
       const imageError = 'An error';
