@@ -115,7 +115,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
   return (
     // Don't use the value from local storage for this case,
     // since displaying a large number of client rows has performance impacts.
-    <Paginate data={filteredData} pageSize={25}>
+    <Paginate data={filteredData} pageSize={5}>
       {({
         data: paginatedAndOrderedData,
         count,
@@ -139,6 +139,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
             page={page}
             pageSize={pageSize}
             eventCategory="Longview Table"
+            fixedSize
           />
         </>
       )}
