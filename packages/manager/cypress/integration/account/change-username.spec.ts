@@ -17,11 +17,12 @@ describe('username', () => {
       cy.wait('@textAvailable');
       cy.get('[data-testid="textfield-input"]')
         .first()
+        .click()
         .clear()
         .type(testText);
       cy.get('[data-testid="textfield-input"]')
         .first()
-        .should('have.value', username + testText);
+        .should('have.value', testText);
     });
   });
 });
