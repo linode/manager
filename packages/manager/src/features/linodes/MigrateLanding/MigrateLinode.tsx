@@ -186,6 +186,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
   const shouldWarnAboutVlans =
     vlansEnabled &&
     selectedRegion !== null &&
+    linode._interfaces.some(thisInterface => Boolean(thisInterface.vlan_id)) &&
     !regions.entities[selectedRegion ?? '']?.capabilities.includes('Vlans');
 
   return (

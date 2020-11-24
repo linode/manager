@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 3,
     marginTop: 24,
     marginBottom: theme.spacing(2),
-    padding: theme.spacing(),
+    padding: '4px 16px',
     backgroundColor: theme.bg.white,
     borderLeft: `5px solid ${theme.palette.status.warningDark}`,
     '& ul:first-of-type': {
