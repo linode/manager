@@ -55,7 +55,8 @@
     "property-expr": "^2.0.3",
     "csv-parse": "^4.6.3",
     "node-fetch": "^2.6.1",
-    "bl": "^3.0.1"
+    "bl": "^3.0.1",
+    "y18n": "^4.0.0"
   },
   "workspaces": {
     "packages": [
