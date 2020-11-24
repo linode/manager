@@ -6,7 +6,7 @@ export const imageFactory = Factory.Sync.makeFactory<Image>({
   label: Factory.each(i => `event-entity-${i}`),
   description: 'An image',
   deprecated: false,
-  created: new Date().toString(),
+  created: new Date().toISOString(),
   created_by: 'prod-test-004',
   is_public: false,
   size: 1500,

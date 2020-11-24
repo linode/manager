@@ -25,7 +25,7 @@ import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import Table from 'src/components/Table/Table_CMR';
 import { MapState } from 'src/store/types';
-import { formatDate } from 'src/utilities/format-date-iso8601';
+import { formatDate } from 'src/utilities/formatDate';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
@@ -186,7 +186,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   description={truncateText(stackScript.description, 100)}
                   images={stripImageName(stackScript.images)}
                   deploymentsActive={stackScript.deployments_active}
-                  updated={formatDate(stackScript.updated, false)}
+                  updated={formatDate(stackScript.updated, { showTime: false })}
                   checked={selectedId === stackScript.id}
                   updateFor={[selectedId === stackScript.id]}
                   stackScriptID={stackScript.id}

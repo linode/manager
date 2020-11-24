@@ -1,6 +1,6 @@
 import { DateTime, Duration } from 'luxon';
 import { reportException } from 'src/exceptionReporting';
-import { DATETIME_DISPLAY_FORMAT } from 'src/constants';
+import { DATETIME_DISPLAY_FORMAT, ISO_DATE_FORMAT } from 'src/constants';
 import { parseAPIDate } from 'src/utilities/date';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 import store from '../store';
@@ -37,6 +37,7 @@ export const shouldHumanize = (
 interface FormatDateOptions {
   humanizeCutoff?: TimeInterval;
   format?: string;
+  showTime?: boolean;
 }
 /**
  *
@@ -50,8 +51,10 @@ export const formatDate = (
   /** get the timezone from redux and use it as the timezone */
   const userTimezone = getUserTimezone(store.getState());
   const time = parseAPIDate(date).setZone(userTimezone);
-
-  const expectedFormat = options.format || DATETIME_DISPLAY_FORMAT;
+  const defaultFormat = options.showTime
+    ? DATETIME_DISPLAY_FORMAT
+    : ISO_DATE_FORMAT;
+  const expectedFormat = options.format || defaultFormat;
   const now = DateTime.local();
   const isFewSecondsAgo = time.plus({ seconds: 30 }) > now && time <= now;
   const formattedTime = shouldHumanize(time, options.humanizeCutoff)

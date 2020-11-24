@@ -4,21 +4,20 @@ import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
-import { formatDate } from 'src/utilities/format-date-iso8601';
+import { formatDate } from 'src/utilities/formatDate';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {},
     loadingWrapper: {
@@ -50,7 +49,7 @@ const SelectStackScriptsSection: React.FC<CombinedProps> = props => {
       description={truncateText(s.description, 100)}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
-      updated={formatDate(s.updated, false)}
+      updated={formatDate(s.updated, { showTime: false })}
       onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
       updateFor={[selectedId === s.id, classes]}

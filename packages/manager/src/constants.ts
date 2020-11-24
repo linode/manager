@@ -72,7 +72,7 @@ export const DISABLE_EVENT_THROTTLE =
 
 // read about luxon formats https://moment.github.io/luxon/docs/manual/formatting.html
 // this format is not ISO
-export const DATETIME_DISPLAY_FORMAT = 'yyyy-MM-dd HH:mm:ss';
+export const DATETIME_DISPLAY_FORMAT = 'yyyy-MM-dd; HH:mm:ss';
 // ISO 8601 formats
 export const ISO_DATE_FORMAT = 'yyyy-MM-dd';
 export const ISO_DATETIME_NO_TZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";

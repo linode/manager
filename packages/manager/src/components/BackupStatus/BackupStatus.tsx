@@ -60,7 +60,7 @@ const BackupStatus: React.FC<CombinedProps> = props => {
   if (mostRecentBackup) {
     return (
       <Typography variant="body1" className={classes.backupText}>
-        <DateTimeDisplay value={mostRecentBackup} humanizeCutoff={'never'} />
+        <DateTimeDisplay value={mostRecentBackup} />
       </Typography>
     );
   }
