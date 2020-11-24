@@ -1,9 +1,6 @@
-name: release
+name: ci
 
-on:
-  push:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   test-sdk:
@@ -66,9 +63,9 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
 
-  # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions#comment102508135_58034787
   build-manager:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
     needs:
       - build-sdk
     steps:
@@ -96,6 +93,7 @@ jobs:
 
   publish-sdk:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
     needs:
       - test-sdk
       - build-sdk
@@ -125,6 +123,7 @@ jobs:
 
   publish-manager:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
     needs:
       - test-manager
       - build-manager
