@@ -273,7 +273,6 @@ const DatabaseLanding: React.FC<{}> = _ => {
       <LandingHeader
         title="Databases"
         entity="Database"
-        iconType="linode"
         docsLink="http://google.com"
         body={chips}
       />

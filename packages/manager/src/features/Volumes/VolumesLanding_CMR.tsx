@@ -308,7 +308,6 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
         title="Volumes"
         entity="Volume"
         onAddNew={() => props.history.push('/volumes/create')}
-        iconType="volume"
         docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
       />
       <EntityTable_CMR

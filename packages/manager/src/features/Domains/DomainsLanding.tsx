@@ -470,7 +470,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     }
                     entity="Domain"
                     onAddNew={this.navigateToCreate}
-                    iconType="domain"
                     docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
                   />
                 ) : (

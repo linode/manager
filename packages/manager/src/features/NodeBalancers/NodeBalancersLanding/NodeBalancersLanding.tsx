@@ -335,7 +335,6 @@ export class NodeBalancersLanding extends React.Component<
                       this.props.history.push('/nodebalancers/create')
                     }
                     createButtonWidth={190}
-                    iconType="nodebalancer"
                     docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
                   />
                 ) : (

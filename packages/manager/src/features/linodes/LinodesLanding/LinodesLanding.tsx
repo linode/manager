@@ -325,8 +325,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Image', key: 'image' },
       { label: 'Region', key: 'region' },
       { label: 'Created', key: 'created' },
-      { label: 'Most Recent Backup', key: 'backups.last_successful' },
-      { label: 'Tags', key: 'tags' }
+      { label: 'Most Recent Backup', key: 'backups.last_successful' }
     ];
 
     const linodesRunningCount = filterLinodesByStatus('running', linodesData)
@@ -446,7 +445,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                     onAddNew={() =>
                                       this.props.history.push('/linodes/create')
                                     }
-                                    iconType="linode"
                                     docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                                     body={
                                       <div className={classes.chipContainer}>

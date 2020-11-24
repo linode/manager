@@ -16,7 +16,6 @@ import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
-import { distroIcons } from 'src/components/ImageSelect/icons';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
@@ -171,17 +170,13 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.cmrBGColors.bgSecondaryActions
   },
-  linodeLabelWithDistro: {
-    display: 'flex',
-    alignItems: 'center'
-  },
   linodeLabel: {
-    marginLeft: 7,
-    color: theme.cmrTextColors.headlineActive
-  },
-  distroIcon: {
-    fontSize: 25,
-    marginRight: 10
+    color: theme.cmrTextColors.linkActiveLight,
+    marginLeft: theme.spacing(),
+    '&:hover': {
+      color: theme.palette.primary.light,
+      textDecoration: 'underline'
+    }
   },
   body: {
     display: 'flex',
@@ -254,9 +249,10 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Header: React.FC<HeaderProps> = props => {
+  const classes = useHeaderStyles();
+
   const {
     variant,
-    imageVendor,
     linodeLabel,
     linodeId,
     linodeStatus,
@@ -267,14 +263,8 @@ const Header: React.FC<HeaderProps> = props => {
     type,
     image,
     linodeConfigs,
-    isDetailLanding,
-    openNotificationDrawer
+    isDetailLanding
   } = props;
-
-  const classes = useHeaderStyles();
-
-  const distroIconClassName =
-    imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
 
   const isDetails = variant === 'details';
 
@@ -292,21 +282,10 @@ const Header: React.FC<HeaderProps> = props => {
       parentLink={isDetails ? '/linodes' : undefined}
       parentText={isDetails ? 'Linodes' : undefined}
       isDetailLanding={isDetailLanding}
-      iconType="linode"
       title={
-        isDetails ? (
-          <div className={classes.linodeLabelWithDistro}>
-            <span
-              title={imageVendor ?? 'Custom image'}
-              className={`${classes.distroIcon} ${distroIconClassName}`}
-            />
-            {linodeLabel}
-          </div>
-        ) : (
-          <Link to={`linodes/${linodeId}`} className={classes.linodeLabel}>
-            {linodeLabel}
-          </Link>
-        )
+        <Link to={`linodes/${linodeId}`} className={classes.linodeLabel}>
+          {linodeLabel}
+        </Link>
       }
       bodyClassName={classes.body}
       body={
@@ -327,8 +306,7 @@ const Header: React.FC<HeaderProps> = props => {
               })}
               label={linodeStatus.replace('_', ' ').toUpperCase()}
               component="span"
-              clickable={isOther ? true : false}
-              {...(isOther && { onClick: openNotificationDrawer })}
+              {...isOther}
             />
           </Grid>
           <Grid item className={`${classes.actionItemsOuter} py0`}>

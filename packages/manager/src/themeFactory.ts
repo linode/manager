@@ -193,7 +193,7 @@ const genericLinkStyle = {
 
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
-  backgroundColor: cmrBGColors.bgSecondaryActions,
+  backgroundColor: 'transparent',
   color: cmrTextColors.textStatusChip,
   fontFamily: primaryFonts.bold,
   fontSize: '1rem',

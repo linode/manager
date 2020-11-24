@@ -56,9 +56,6 @@ const styles = (theme: Theme) =>
       '& .MuiChip-label': {
         marginBottom: 2
       }
-      // '&:hover, &:focus, &:active': {
-      //   backgroundColor: theme.bg.chipActive
-      // }
     },
     chipActive: {
       backgroundColor: theme.bg.chipActive

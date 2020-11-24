@@ -115,7 +115,6 @@ const Header: React.FC<HeaderProps> = props => {
       <EntityHeader
         parentLink="/vlans"
         parentText="Virtual LANs"
-        iconType="linode"
         actions={
           <Hidden mdUp>
             <DocumentationButton hideText href="https://www.linode.com/" />

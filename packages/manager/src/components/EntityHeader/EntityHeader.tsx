@@ -44,16 +44,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   breadCrumbDetailLanding: {
     borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
     margin: 0,
-    padding: '0 15px',
+    padding: 0,
+    paddingLeft: theme.spacing(),
     justifyContent: 'space-between'
   },
   contentOuter: {
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
-    padding: theme.spacing(),
-    // Needed for the 'clear filters' button on smaller screens, removed for medium+
     flexWrap: 'wrap',
+    padding: theme.spacing(),
     [theme.breakpoints.up('md')]: {
       justifyContent: 'center',
       padding: 0,
@@ -82,7 +82,6 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     actions,
     body,
     docsLink,
-    iconType,
     parentLink,
     parentText,
     title,
@@ -90,8 +89,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     bodyClassName,
     isSecondary,
     isDetailLanding,
-    headerOnly,
-    displayIcon
+    headerOnly
   } = props;
 
   return (
@@ -103,8 +101,6 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
       <Grid item className={classes.root}>
         {isDetailLanding && (
           <HeaderBreadCrumb
-            iconType={iconType}
-            displayIcon={displayIcon}
             title={title}
             parentLink={parentLink}
             parentText={parentText}
@@ -124,6 +120,24 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
           {body ? (
             <Grid
               className={classnames({
+                [classes.contentOuter]: true,
+                [bodyClassName ?? '']: Boolean(bodyClassName)
+              })}
+              item
+            >
+              {body}
+            </Grid>
+          ) : null}
+
+          {/* I think only Landing variant uses this? */}
+          {actions}
+        </Grid>
+        {/*
+        Keeping this for now as this may still be needed for details variant
+        <Hidden mdUp>
+          {body ? (
+            <Grid
+              className={classnames({
                 // [classes.contentOuter]: true,
                 [bodyClassName ?? '']: Boolean(bodyClassName)
               })}
@@ -132,11 +146,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
               {body}
             </Grid>
           ) : null}
-          {/* </Hidden> */}
-
-          {/* I think only Landing variant uses this? */}
-          {actions}
-        </Grid>
+        </Hidden> */}
       </Grid>
     </>
   );
