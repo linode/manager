@@ -2,6 +2,9 @@ import { Event, Notification } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
+import { useAccount } from 'src/hooks/useAccount';
+import { useFlags } from 'src/hooks/useFlags';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -36,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   actionWrapper: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2)
+  },
+  vlanHelperText: {
+    marginTop: theme.spacing() / 2
   }
 }));
 
@@ -56,6 +62,13 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
   const { types } = useTypes();
   const linode = useExtendedLinode(linodeID);
   const { images } = useImages();
+  const { vlans } = useFlags();
+  const { account } = useAccount();
+  const vlansEnabled = isFeatureEnabled(
+    'Vlans',
+    Boolean(vlans),
+    account?.data?.capabilities ?? []
+  );
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
     null
@@ -165,6 +178,16 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     addUsedDiskSpace(linode._disks) / MBpsInterDC / 60
   );
 
+  /**
+   * If this user has access to VLANs, the current Linode has a VLAN attached,
+   * the user has selected a region to migrate to, AND the target region does NOT
+   * support VLANs, we want to show a warning.
+   */
+  const shouldWarnAboutVlans =
+    vlansEnabled &&
+    selectedRegion !== null &&
+    !regions.entities[selectedRegion ?? '']?.capabilities.includes('Vlans');
+
   return (
     <Dialog
       title={`Migrate ${linode.label ?? ''}`}
@@ -200,10 +223,15 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
         handleSelectRegion={handleSelectRegion}
         selectedRegion={selectedRegion}
         errorText={regionError}
+        helperText={
+          shouldWarnAboutVlans
+            ? 'Note: this region does not support VLANs.'
+            : undefined
+        }
       />
       <div className={classes.actionWrapper}>
         <Button
-          disabled={!!disabledText}
+          disabled={!!disabledText || !hasConfirmed}
           buttonType="primary"
           onClick={handleMigrate}
           loading={isLoading}
