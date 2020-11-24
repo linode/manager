@@ -193,7 +193,7 @@ const genericLinkStyle = {
 
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
-  backgroundColor: cmrBGColors.bgStatusChip,
+  backgroundColor: 'transparent',
   color: cmrTextColors.textStatusChip,
   fontFamily: primaryFonts.bold,
   fontSize: '1.1rem',
@@ -205,7 +205,7 @@ const genericStatusPillStyle = {
     height: 16,
     width: 16,
     minWidth: 16,
-    marginRight: 8
+    marginRight: 4
   },
   [breakpoints.down('sm')]: {
     fontSize: 14,
