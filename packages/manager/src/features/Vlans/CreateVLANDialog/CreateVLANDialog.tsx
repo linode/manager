@@ -162,7 +162,6 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
         <div className={classes.formSection}>
           <RegionSelect
             label={'Region (required)'}
-            placeholder={'Regions'}
             errorText={formik.errors.region}
             handleSelection={handleRegionSelect}
             regions={regionsWithVLANS}

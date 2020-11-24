@@ -1,34 +1,17 @@
-import { shallow } from 'enzyme';
-import * as React from 'react';
-import { ClusterSelect } from './ClusterSelect';
+import { objectStorageClusters } from 'src/__data__/objectStorageClusters';
+import { regions } from 'src/__data__/regionsData';
+import { objectStorageClusterToExtendedRegion } from './ClusterSelect';
 
-describe('ClusterSelect', () => {
-  const onChangeMock = jest.fn();
-  const onBlurMock = jest.fn();
-
-  const wrapper = shallow(
-    <ClusterSelect
-      selectedCluster="a-cluster"
-      onChange={onChangeMock}
-      onBlur={onBlurMock}
-      clustersData={[]}
-      clustersLoading={false}
-    />
-  );
-
-  it('should render without crashing', () => {
-    expect(wrapper).toHaveLength(1);
-  });
-
-  it('should pass down error messages to <Select />', () => {
-    wrapper.setProps({ clustersError: 'error' });
-    expect(
-      wrapper.find('WithStyles(WithTheme(Select))').prop('errorText')
-    ).toBe('Error loading Regions');
-
-    wrapper.setProps({ error: 'Field Error', clustersError: undefined });
-    expect(
-      wrapper.find('WithStyles(WithTheme(Select))').prop('errorText')
-    ).toBe('Field Error');
+describe('objectStorageClusterToExtendedRegion', () => {
+  it('transforms a list of OBJ clusters to a list of extended regions', () => {
+    const result = objectStorageClusterToExtendedRegion(
+      objectStorageClusters,
+      regions
+    );
+    expect(result.length).toBe(objectStorageClusters.length);
+    result.forEach(thisExtendedRegion => {
+      expect(thisExtendedRegion).toHaveProperty('country');
+      expect(thisExtendedRegion).toHaveProperty('display');
+    });
   });
 });
