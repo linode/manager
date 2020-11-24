@@ -1,5 +1,5 @@
 import { SupportTicket } from '@linode/api-v4/lib/support';
-import { compose } from 'ramda';
+import { compose } from 'recompose';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
@@ -23,7 +23,7 @@ import TicketRow from './TicketRow_CMR';
 import { getTicketsPage } from './ticketUtils';
 import Hidden from 'src/components/core/Hidden';
 
-interface Props extends PaginationProps<SupportTicket> {
+interface Props {
   filterStatus: 'open' | 'closed';
   newTicket?: SupportTicket;
 }
@@ -35,7 +35,8 @@ const styles = () =>
     root: {}
   });
 
-type CombinedProps = Props &
+export type CombinedProps = Props &
+  PaginationProps<SupportTicket> &
   Omit<OrderByProps, 'data'> &
   WithStyles<ClassNames>;
 
@@ -101,85 +102,81 @@ export class TicketList extends React.Component<CombinedProps, {}> {
     const isActive = (label: string) => label === orderBy;
 
     return (
-      <React.Fragment>
-        <Paper>
-          <Table aria-label="List of Tickets">
-            <TableHead>
-              <TableRow>
+      <Paper>
+        <Table aria-label="List of Tickets">
+          <TableHead>
+            <TableRow>
+              <TableSortCell
+                label="summary"
+                direction={order}
+                handleClick={handleOrderChange}
+                active={isActive('summary')}
+                data-qa-support-subject-header
+                noWrap
+              >
+                Subject
+              </TableSortCell>
+              <Hidden smDown>
                 <TableSortCell
-                  label="summary"
+                  label="id"
                   direction={order}
                   handleClick={handleOrderChange}
-                  active={isActive('summary')}
-                  data-qa-support-subject-header
+                  active={isActive('id')}
+                  data-qa-support-id-header
                   noWrap
                 >
-                  Subject
+                  Ticket ID
                 </TableSortCell>
-                <Hidden smDown>
-                  <TableSortCell
-                    label="id"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    active={isActive('id')}
-                    data-qa-support-id-header
-                    noWrap
-                  >
-                    Ticket ID
-                  </TableSortCell>
-                </Hidden>
-                <TableCell data-qa-support-regarding-header>
-                  Regarding
-                </TableCell>
-                <Hidden xsDown>
-                  <TableSortCell
-                    label="opened"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    active={isActive('opened')}
-                    data-qa-support-date-header
-                    noWrap
-                  >
-                    Date Created
-                  </TableSortCell>
-                  <TableSortCell
-                    label="updated"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    active={isActive('updated')}
-                    data-qa-support-updated-header
-                    noWrap
-                  >
-                    Last Updated
-                  </TableSortCell>
-                </Hidden>
-                <Hidden smDown>
-                  <TableSortCell
-                    label="updated_by"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    active={isActive('updated_by')}
-                    data-qa-support-updated-by-header
-                    noWrap
-                  >
-                    Updated By
-                  </TableSortCell>
-                </Hidden>
-              </TableRow>
-            </TableHead>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-          <PaginationFooter
-            count={count}
-            page={page}
-            pageSize={pageSize}
-            handlePageChange={this.props.handlePageChange}
-            handleSizeChange={this.props.handlePageSizeChange}
-            eventCategory="ticket list"
-            padded
-          />
-        </Paper>
-      </React.Fragment>
+              </Hidden>
+              <TableCell data-qa-support-regarding-header>Regarding</TableCell>
+              <Hidden xsDown>
+                <TableSortCell
+                  label="opened"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  active={isActive('opened')}
+                  data-qa-support-date-header
+                  noWrap
+                >
+                  Date Created
+                </TableSortCell>
+                <TableSortCell
+                  label="updated"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  active={isActive('updated')}
+                  data-qa-support-updated-header
+                  noWrap
+                >
+                  Last Updated
+                </TableSortCell>
+              </Hidden>
+              <Hidden smDown>
+                <TableSortCell
+                  label="updated_by"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  active={isActive('updated_by')}
+                  data-qa-support-updated-by-header
+                  noWrap
+                >
+                  Updated By
+                </TableSortCell>
+              </Hidden>
+            </TableRow>
+          </TableHead>
+          <TableBody>{this.renderContent()}</TableBody>
+        </Table>
+        <PaginationFooter
+          count={count}
+          page={page}
+          pageSize={pageSize}
+          handlePageChange={this.props.handlePageChange}
+          handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="ticket list"
+          padded
+        />
+      </Paper>
     );
   }
 }
@@ -192,4 +189,4 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
-export default compose(paginated, styled)(TicketList);
+export default compose<CombinedProps, Props>(paginated, styled)(TicketList);
