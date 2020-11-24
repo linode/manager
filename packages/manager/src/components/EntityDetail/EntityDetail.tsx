@@ -19,7 +19,7 @@ export interface EntityDetailProps {
 const useStyles = makeStyles((theme: Theme) => ({
   header: {},
   body: {
-    padding: `20px !important`,
+    padding: `${theme.spacing(2)} !important`,
     backgroundColor: theme.cmrBGColors.bgSecondaryActions,
     borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
     borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: `11px 12px !important`
+    padding: `11px 16px !important`
   },
   footerBorder: {
     borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`

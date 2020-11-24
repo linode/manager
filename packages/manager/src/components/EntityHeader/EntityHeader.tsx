@@ -3,7 +3,6 @@ import * as classnames from 'classnames';
 import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
-import Hidden from '../core/Hidden';
 import Breadcrumb from '../Breadcrumb';
 import DocumentationButton from '../CMR_DocumentationButton';
 
@@ -30,7 +29,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.cmrBGColors.bgSecondaryActions,
-    padding: '4px 15px',
+    padding: '4px 16px',
+    paddingRight: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
       borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
     }
@@ -42,20 +42,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between'
   },
   breadCrumbDetailLanding: {
+    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    margin: 0,
     padding: '0 15px',
-    justifyContent: 'space-between',
-    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`
+    justifyContent: 'space-between'
   },
   contentOuter: {
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
-    padding: '10px 0',
+    padding: theme.spacing(),
     // Needed for the 'clear filters' button on smaller screens, removed for medium+
     flexWrap: 'wrap',
-    [theme.breakpoints.up('sm')]: {
-      padding: 10
-    },
     [theme.breakpoints.up('md')]: {
       justifyContent: 'center',
       padding: 0,
@@ -64,17 +62,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiChip-root': {
       ...theme.applyStatusPillStyles,
       height: 30,
-      borderRadius: 15,
       marginTop: 1,
-      marginRight: 10,
       fontSize: '.875rem',
       letterSpacing: '.5px'
     }
   },
   bodyDetailVariant: {
-    padding: '4px 15px',
+    flexWrap: 'nowrap',
     justifyContent: 'space-between',
-    flexWrap: 'nowrap'
+    backgroundColor: theme.cmrBGColors.bgPaper,
+    padding: 0
   }
 }));
 
@@ -124,38 +121,22 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
           })}
         >
-          <Hidden smDown>
-            {body ? (
-              <Grid
-                className={classnames({
-                  [classes.contentOuter]: true,
-                  [bodyClassName ?? '']: Boolean(bodyClassName)
-                })}
-                item
-              >
-                {body}
-              </Grid>
-            ) : null}
-          </Hidden>
-
-          {/* I think only Landing variant uses this? */}
-          {actions}
-        </Grid>
-        <Hidden mdUp>
           {body ? (
             <Grid
-              item
-              xs={12}
               className={classnames({
-                [classes.contentOuter]: true,
-                [classes.bodyDetailVariant]:
-                  Boolean(parentLink) || Boolean(isDetailLanding)
+                // [classes.contentOuter]: true,
+                [bodyClassName ?? '']: Boolean(bodyClassName)
               })}
+              item
             >
               {body}
             </Grid>
           ) : null}
-        </Hidden>
+          {/* </Hidden> */}
+
+          {/* I think only Landing variant uses this? */}
+          {actions}
+        </Grid>
       </Grid>
     </>
   );

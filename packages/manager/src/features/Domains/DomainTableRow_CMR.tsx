@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     whiteSpace: 'nowrap'
   },
+  statusCell: {
+    whiteSpace: 'nowrap'
+  },
   actionCell: {
     display: 'flex',
     alignItems: 'center',
@@ -94,7 +97,7 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
           )}
         </div>
       </TableCell>
-      <TableCell data-qa-domain-status>
+      <TableCell className={classes.statusCell} data-qa-domain-status>
         <StatusIcon status={domainStatusToIconStatus(status)} />
         {humanizeDomainStatus(status)}
       </TableCell>
