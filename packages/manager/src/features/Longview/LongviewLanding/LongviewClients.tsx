@@ -100,6 +100,7 @@ export type CombinedProps = Props &
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
+  const { getLongviewClients } = props;
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
     false
   );
@@ -158,17 +159,14 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   const flags = useFlags();
 
   React.useEffect(() => {
-    props.getLongviewClients();
-  }, []);
+    getLongviewClients();
+  }, [getLongviewClients]);
 
-  const openDeleteDialog = React.useCallback(
-    (id: number, label: string) => {
-      toggleDeleteDialog(true);
-      setClientID(id);
-      setClientLabel(label);
-    },
-    [selectedClientID, selectedClientLabel]
-  );
+  const openDeleteDialog = React.useCallback((id: number, label: string) => {
+    toggleDeleteDialog(true);
+    setClientID(id);
+    setClientLabel(label);
+  }, []);
 
   const handleSubmit = () => {
     const {
@@ -207,8 +205,8 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
               'Error creating Longview client.'
             )[0].reason,
             { variant: 'error' }
-          ),
-            setNewClientLoading(false);
+          );
+          setNewClientLoading(false);
         }
       });
   };
@@ -219,14 +217,11 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
    */
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
-  const handleDrawerOpen = React.useCallback(
-    (id: number, label: string) => {
-      setClientID(id);
-      setClientLabel(label);
-      setDrawerOpen(true);
-    },
-    [selectedClientID, selectedClientLabel]
-  );
+  const handleDrawerOpen = React.useCallback((id: number, label: string) => {
+    setClientID(id);
+    setClientLabel(label);
+    setDrawerOpen(true);
+  }, []);
 
   const {
     longviewClientsData,
