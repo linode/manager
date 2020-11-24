@@ -1,5 +1,5 @@
 import * as React from 'react';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
   id: number;

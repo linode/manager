@@ -19,13 +19,16 @@ const useStyles = makeStyles(() => ({
     width: '35%',
     wordBreak: 'break-all'
   },
-  actionMenu: {
+  actionCell: {
     display: 'flex',
+    alignItems: 'center',
     justifyContent: 'flex-end',
     padding: 0,
-    '&.MuiTableCell-root': {
-      paddingRight: 0
-    }
+    /*
+      Explicitly stating this as the theme file is automatically adding padding to the last cell
+      We can remove once we make the full switch to CMR styling
+      */
+    paddingRight: '0 !important'
   }
 }));
 
@@ -119,7 +122,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
           )}
         </TableCell>
       )}
-      <TableCell className={classes.actionMenu}>
+      <TableCell className={classes.actionCell}>
         <VolumesActionMenu
           onShowConfig={openForConfig}
           filesystemPath={filesystemPath}

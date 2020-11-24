@@ -9,9 +9,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '12px 10px',
     minWidth: 0,
     color: theme.cmrTextColors.linkActiveLight,
+    whiteSpace: 'nowrap',
     '&:hover, &:focus': {
       backgroundColor: '#3683dc',
-      color: '#ffffff'
+      borderRadius: 0,
+      color: '#ffffff',
+      textDecoration: 'none'
     },
     '&[disabled]': {
       color: '#cdd0d5',

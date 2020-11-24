@@ -1,13 +1,18 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { makeStyles } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme
+} from 'src/components/core/styles';
 
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
   onEdit: (config: Config) => void;
@@ -20,23 +25,10 @@ interface Props {
 }
 
 const useStyles = makeStyles(() => ({
-  actionInner: {
+  root: {
     display: 'flex',
     justifyContent: 'flex-end',
-    '& a': {
-      lineHeight: '1rem'
-    }
-  },
-  inlineActions: {
-    display: 'flex',
     alignItems: 'center'
-  },
-  link: {
-    padding: '12.5px 15px',
-    width: '6.5em'
-  },
-  action: {
-    marginLeft: 10
   }
 }));
 
@@ -44,21 +36,38 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 const ConfigActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleEdit = () => {
+  const handleEdit = React.useCallback(() => {
     const { config, onEdit } = props;
     onEdit(config);
-  };
+  }, [props]);
 
-  const handleBoot = () => {
+  const handleBoot = React.useCallback(() => {
     const {
       config: { id, label },
       onBoot
     } = props;
     onBoot(id, label);
-  };
+  }, [props]);
 
-  const createConfigActions = React.useCallback((): Action[] => {
+  const inlineActions = [
+    {
+      actionText: 'Boot',
+      onClick: () => {
+        handleBoot();
+      }
+    },
+    {
+      actionText: 'Edit',
+      onClick: () => {
+        handleEdit();
+      }
+    }
+  ];
+
+  const createActions = React.useCallback((): Action[] => {
     const { readOnly, history, linodeId, config } = props;
     const tooltip = readOnly
       ? "You don't have permission to perform this action"
@@ -72,7 +81,7 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
       onDelete(id, label);
     };
 
-    return [
+    const actions: Action[] = [
       {
         title: 'Clone',
         onClick: () => {
@@ -91,27 +100,31 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
         tooltip
       }
     ];
-  }, [props]);
 
-  const inlineActions = [
-    {
-      actionText: 'Boot',
-      onClick: () => {
-        handleBoot();
-      }
-    },
-    {
-      actionText: 'Edit',
-      onClick: () => {
-        handleEdit();
-      }
+    if (matchesSmDown) {
+      actions.unshift(
+        {
+          title: 'Boot',
+          onClick: () => {
+            handleBoot();
+          }
+        },
+        {
+          title: 'Edit',
+          onClick: () => {
+            handleEdit();
+          }
+        }
+      );
     }
-  ];
+
+    return actions;
+  }, [handleBoot, handleEdit, matchesSmDown, props]);
 
   return (
-    <div className={classes.actionInner}>
-      <div className={classes.inlineActions}>
-        {inlineActions.map(action => {
+    <div className={classes.root}>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
           return (
             <InlineMenuAction
               key={action.actionText}
@@ -120,10 +133,8 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
             />
           );
         })}
-      </div>
       <ActionMenu
-        className={classes.action}
-        createActions={createConfigActions}
+        createActions={createActions}
         ariaLabel={`Action menu for Linode Config ${props.label}`}
       />
     </div>
