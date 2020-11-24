@@ -17,7 +17,12 @@ import BucketActionMenu from './BucketActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
 import { Link } from 'react-router-dom';
 
-type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link' | 'bucketLabel';
+type ClassNames =
+  | 'bucketNameWrapper'
+  | 'bucketRow'
+  | 'link'
+  | 'bucketLabel'
+  | 'actionCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -37,6 +42,17 @@ const styles = (theme: Theme) =>
     },
     bucketLabel: {
       color: theme.cmrTextColors.linkActiveLight
+    },
+    actionCell: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: 0,
+      /*
+      Explicitly stating this as the theme file is automatically adding padding to the last cell
+      We can remove once we make the full switch to CMR styling
+      */
+      paddingRight: '0 !important'
     }
   });
 
@@ -117,7 +133,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
         </TableCell>
       </Hidden>
 
-      <TableCell>
+      <TableCell className={classes.actionCell}>
         <BucketActionMenu
           onRemove={onRemove}
           onDetails={onDetails}

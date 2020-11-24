@@ -390,7 +390,6 @@ const Header: React.FC<HeaderProps> = props => {
               openDialog={openDialog}
               openPowerActionDialog={openPowerActionDialog}
               noImage={!image}
-              inLandingDetailContext={isDetailLanding}
             />
           </Grid>
         </Grid>
