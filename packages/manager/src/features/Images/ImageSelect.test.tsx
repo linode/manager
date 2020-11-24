@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { images } from 'src/__data__/images';
+import { imageFactory } from 'src/factories/images';
 
 jest.mock('src/hooks/useReduxLoad', () => ({
   useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false })
@@ -10,70 +10,40 @@ jest.mock('src/components/EnhancedSelect/Select');
 
 import { getImagesOptions, groupNameMap, ImageSelect } from './ImageSelect';
 
+const images = imageFactory.buildList(10);
+
 const props = {
   images,
   onSelect: jest.fn()
 };
 
-const privateImage1 = {
+const privateImage1 = imageFactory.build({
   deprecated: false,
   type: 'manual',
-  id: 'private/0001',
-  created_by: 'somefella',
+  is_public: false
+});
 
-  description: '',
-  vendor: null,
-  size: 0,
-  label: '',
-  is_public: false,
-  created: '',
-  expiry: null
-};
-
-const recommendedImage1 = {
+const recommendedImage1 = imageFactory.build({
   deprecated: false,
   type: 'manual',
   id: 'linode/0001',
-  created_by: 'linode',
+  created_by: 'linode'
+});
 
-  description: '',
-  vendor: null,
-  size: 0,
-  label: '',
-  is_public: false,
-  created: '',
-  expiry: null
-};
-
-const recommendedImage2 = {
+const recommendedImage2 = imageFactory.build({
   deprecated: false,
   type: 'manual',
   id: 'linode/0002',
-  created_by: 'linode',
+  created_by: 'linode'
+});
 
-  description: '',
-  vendor: null,
-  size: 0,
-  label: '',
-  is_public: false,
-  created: '',
-  expiry: null
-};
-
-const deletedImage1 = {
+const deletedImage1 = imageFactory.build({
   deprecated: false,
   type: 'automatic',
   id: 'private/0001',
   created_by: null,
-
-  description: '',
-  vendor: null,
-  size: 0,
-  label: '',
-  is_public: false,
-  created: '',
   expiry: '2019-04-09T04:13:37'
-};
+});
 
 describe('ImageSelect', () => {
   describe('getImagesOptions function', () => {
