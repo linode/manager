@@ -14,7 +14,7 @@ const props: CombinedProps = {
   classes: { root: '' },
   ...pageyProps,
   filterStatus: 'open',
-  orderBy: 'subject',
+  orderBy: '',
   data: supportTickets,
   handlePageChange: mockPageChange,
   request: mockRequest
