@@ -27,6 +27,7 @@ const privateImage1 = {
   label: '',
   is_public: false,
   created: '',
+  updated: '',
   expiry: null
 };
 
@@ -42,6 +43,7 @@ const recommendedImage1 = {
   label: '',
   is_public: false,
   created: '',
+  updated: '',
   expiry: null
 };
 
@@ -57,6 +59,7 @@ const recommendedImage2 = {
   label: '',
   is_public: false,
   created: '',
+  updated: '',
   expiry: null
 };
 
@@ -72,6 +75,7 @@ const deletedImage1 = {
   label: '',
   is_public: false,
   created: '',
+  updated: '',
   expiry: '2019-04-09T04:13:37'
 };
 
