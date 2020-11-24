@@ -51,7 +51,6 @@ const DayDisplay: React.FC<DisplayProps> = props => {
       <Grid item>
         <DateTimeDisplay
           value={day}
-          format={'d-LLL-yyyy'}
           className={`${ticketUrl ? classes.failureText : ''}`}
         />
       </Grid>

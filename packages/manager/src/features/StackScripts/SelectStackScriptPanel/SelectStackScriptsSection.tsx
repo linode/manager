@@ -49,7 +49,7 @@ const SelectStackScriptsSection: React.FC<CombinedProps> = props => {
       description={truncateText(s.description, 100)}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
-      updated={formatDate(s.updated, { showTime: false })}
+      updated={formatDate(s.updated, { displayTime: false })}
       onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
       updateFor={[selectedId === s.id, classes]}

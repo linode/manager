@@ -186,7 +186,9 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   description={truncateText(stackScript.description, 100)}
                   images={stripImageName(stackScript.images)}
                   deploymentsActive={stackScript.deployments_active}
-                  updated={formatDate(stackScript.updated, { showTime: false })}
+                  updated={formatDate(stackScript.updated, {
+                    displayTime: false
+                  })}
                   checked={selectedId === stackScript.id}
                   updateFor={[selectedId === stackScript.id]}
                   stackScriptID={stackScript.id}

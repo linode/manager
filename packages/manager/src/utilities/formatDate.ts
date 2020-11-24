@@ -37,7 +37,7 @@ export const shouldHumanize = (
 interface FormatDateOptions {
   humanizeCutoff?: TimeInterval;
   format?: string;
-  showTime?: boolean;
+  displayTime?: boolean;
 }
 /**
  *
@@ -51,9 +51,9 @@ export const formatDate = (
   /** get the timezone from redux and use it as the timezone */
   const userTimezone = getUserTimezone(store.getState());
   const time = parseAPIDate(date).setZone(userTimezone);
-  const defaultFormat = options.showTime
-    ? DATETIME_DISPLAY_FORMAT
-    : ISO_DATE_FORMAT;
+  // Default to including time in the output. Hide the time if options.displayTime === false
+  const defaultFormat =
+    options.displayTime !== false ? DATETIME_DISPLAY_FORMAT : ISO_DATE_FORMAT;
   const expectedFormat = options.format || defaultFormat;
   const now = DateTime.local();
   const isFewSecondsAgo = time.plus({ seconds: 30 }) > now && time <= now;

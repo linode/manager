@@ -101,7 +101,7 @@ export const PastDue: React.FC<Props> = props => {
             <>
               Your payment was due on{' '}
               {formatDate(mostRecentInvoiceRequest.data.date, {
-                showTime: false
+                displayTime: false
               })}
               {`. `}
             </>

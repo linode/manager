@@ -32,7 +32,7 @@ import {
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import { ISO_DATE_FORMAT, ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { useSet } from 'src/hooks/useSet';
 import { isAfter } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -374,7 +374,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
               <Typography variant="body1" className={classes.activeSince}>
                 Account active since{' '}
                 {formatDate(accountActiveSince, {
-                  showTime: true
+                  displayTime: true
                 })}
               </Typography>
             </div>
@@ -544,7 +544,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       <TableRow {...rowProps} data-testid={`${type}-${id}`}>
         <TableCell parentColumn="Description">{label}</TableCell>
         <TableCell parentColumn="Date">
-          <DateTimeDisplay format={ISO_DATE_FORMAT} value={date} />
+          <DateTimeDisplay value={date} />
         </TableCell>
         <TableCell parentColumn="Amount" className={classes.totalColumn}>
           <Currency quantity={total} wrapInParentheses={total < 0} />

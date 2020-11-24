@@ -70,7 +70,7 @@ const StackScriptsSection: React.FC<CombinedProps> = props => {
       isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsTotal={s.deployments_total}
-      updated={formatDate(s.updated, { showTime: false })}
+      updated={formatDate(s.updated, { displayTime: false })}
       stackScriptID={s.id}
       triggerDelete={triggerDelete}
       triggerMakePublic={triggerMakePublic}

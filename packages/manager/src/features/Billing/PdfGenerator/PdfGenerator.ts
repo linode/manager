@@ -138,7 +138,7 @@ export const printInvoice = (
 ): PdfResult => {
   try {
     const itemsPerPage = 12;
-    const date = formatDate(invoice.date, { showTime: true });
+    const date = formatDate(invoice.date, { displayTime: true });
     const invoiceId = invoice.id;
 
     /**
@@ -222,7 +222,7 @@ export const printPayment = (
   taxID?: string
 ): PdfResult => {
   try {
-    const date = formatDate(payment.date, { showTime: true });
+    const date = formatDate(payment.date, { displayTime: true });
     const doc = new jsPDF({
       unit: 'px'
     });

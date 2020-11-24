@@ -33,7 +33,7 @@ export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
     body: [
       [
         { content: 'Payment: Thank You' },
-        { content: formatDate(payment.date, { showTime: true }) },
+        { content: formatDate(payment.date, { displayTime: true }) },
         { content: `$${Number(payment.usd).toFixed(2)}` }
       ]
     ]
