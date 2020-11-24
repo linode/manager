@@ -105,7 +105,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     // other props
     classes,
     linodeNotifications,
-    // openTagDrawer,
     openDialog,
     openPowerActionDialog,
     openNotificationDrawer,
@@ -117,33 +116,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
 
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
-
-  // const addTag = React.useCallback(
-  //   (tag: string) => {
-  //     const newTags = [...tags, tag];
-  //     updateLinode({ linodeId: id, tags: newTags }).catch(e =>
-  //       enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-  //         variant: 'error'
-  //       })
-  //     );
-  //   },
-  //   [tags, id, updateLinode, enqueueSnackbar]
-  // );
-
-  // const deleteTag = React.useCallback(
-  //   (tag: string) => {
-  //     const newTags = tags.filter(thisTag => thisTag !== tag);
-  //     updateLinode({ linodeId: id, tags: newTags }).catch(e =>
-  //       enqueueSnackbar(
-  //         getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
-  //         {
-  //           variant: 'error'
-  //         }
-  //       )
-  //     );
-  //   },
-  //   [tags, id, updateLinode, enqueueSnackbar]
-  // );
 
   const MaintenanceText = () => {
     return (
@@ -262,16 +234,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           />
         </Hidden>
       )}
-      {/* <Hidden mdDown>
-        <TagCell
-          tags={tags}
-          addTag={addTag}
-          deleteTag={deleteTag}
-          listAllTags={() => openTagDrawer(id, label, tags)}
-          width={300}
-          inTableContext
-        />
-      </Hidden> */}
 
       <TableCell className={classes.actionCell} data-qa-notifications>
         <div className={classes.actionInner}>

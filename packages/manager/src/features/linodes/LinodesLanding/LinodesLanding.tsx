@@ -326,7 +326,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Region', key: 'region' },
       { label: 'Created', key: 'created' },
       { label: 'Most Recent Backup', key: 'backups.last_successful' }
-      // { label: 'Tags', key: 'tags' }
     ];
 
     const linodesRunningCount = filterLinodesByStatus('running', linodesData)
@@ -483,17 +482,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                             label={`${linodesOfflineCount} OFFLINE`}
                                           />
                                         )}
-                                        {/* {filterStatus !== 'all' && (
-                                          <IconTextLink
-                                            SideIcon={Close}
-                                            text="CLEAR FILTERS"
-                                            title="CLEAR FILTERS"
-                                            className={`${classes.clearFilters}`}
-                                            onClick={() =>
-                                              this.setFilterStatus('all')
-                                            }
-                                          />
-                                        )} */}
                                       </>
                                     }
                                   />
