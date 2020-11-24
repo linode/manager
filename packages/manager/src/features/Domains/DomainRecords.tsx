@@ -57,7 +57,13 @@ import { storage } from 'src/utilities/storage';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
-type ClassNames = 'root' | 'cells' | 'titles' | 'linkContainer' | 'cmrSpacing';
+type ClassNames =
+  | 'root'
+  | 'cells'
+  | 'titles'
+  | 'linkContainer'
+  | 'cmrSpacing'
+  | 'addNewLink';
 
 const styles = (theme: Theme) =>
   createStyles({

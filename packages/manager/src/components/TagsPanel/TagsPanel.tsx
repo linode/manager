@@ -72,8 +72,10 @@ const styles = (theme: Theme) =>
       '& svg': {
         marginRight: theme.spacing(1)
       },
-      '&:hover p': {
-        color: theme.palette.primary.main
+      '&:hover': {
+        '& p': {
+          color: theme.palette.primary.main
+        }
       }
     },
     tagsPanelItemWrapper: {

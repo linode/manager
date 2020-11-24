@@ -35,10 +35,6 @@ const styles = (theme: Theme) =>
       '&:hover': {
         color: theme.palette.primary.light,
         backgroundColor: 'transparent',
-        '& svg': {
-          fill: theme.palette.primary.light,
-          color: 'currentColor'
-        },
         '& .border': {
           color: theme.palette.primary.light
         }
