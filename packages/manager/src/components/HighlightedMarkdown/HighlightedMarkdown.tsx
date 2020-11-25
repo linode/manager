@@ -1,5 +1,5 @@
 import * as classNames from 'classnames';
-import hljs from 'highlight.js/lib/highlight';
+import * as hljs from 'highlight.js/lib/core';
 // Import languages as we need them to keep bundle size down
 import apache from 'highlight.js/lib/languages/apache';
 import bash from 'highlight.js/lib/languages/bash';
