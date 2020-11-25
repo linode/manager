@@ -146,7 +146,7 @@ const generateIntroText = (
        * to the user here.
        */
       const rawDate = formatDate(start);
-      const humanizedDate = formatDate(start, { humanizeCutoff: 'month' });
+      const humanizedDate = formatDate(start);
 
       return (
         <React.Fragment>

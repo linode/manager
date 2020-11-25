@@ -8,7 +8,7 @@ import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import useFlags from 'src/hooks/useFlags';
-import { formatDate } from 'src/utilities/format-date-iso8601';
+import { formatDate } from 'src/utilities/formatDate';
 import ActionMenu, { Handlers } from './ImagesActionMenu';
 import ActionMenu_CMR from './ImagesActionMenu_CMR';
 

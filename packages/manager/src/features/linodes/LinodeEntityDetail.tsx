@@ -807,8 +807,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
           <Hidden xsDown>
             <Typography className={classes.linodeCreated}>
-              Created{' '}
-              {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+              Created {formatDate(linodeCreated)}
             </Typography>
           </Hidden>
         </div>
@@ -816,8 +815,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Hidden smUp>
         <Grid item xs={12}>
           <Typography className={classes.linodeCreated}>
-            Created{' '}
-            {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+            Created {formatDate(linodeCreated)}
           </Typography>
         </Grid>
       </Hidden>

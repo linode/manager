@@ -95,11 +95,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
 
       <Hidden smDown>
         <TableCell>
-          <DateTimeDisplay
-            value={created}
-            humanizeCutoff="month"
-            data-qa-created
-          />
+          <DateTimeDisplay value={created} data-qa-created />
         </TableCell>
       </Hidden>
 

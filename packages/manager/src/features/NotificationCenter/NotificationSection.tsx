@@ -218,11 +218,7 @@ export const ContentRow: React.FC<{
   return (
     <div className={classes.notificationItem}>
       <div style={{ width: item.timeStamp ? '70%' : '100%' }}>{item.body}</div>
-      {item.timeStamp && (
-        <Typography>
-          {formatDate(item.timeStamp, { humanizeCutoff: 'week' })}
-        </Typography>
-      )}
+      {item.timeStamp && <Typography>{formatDate(item.timeStamp)}</Typography>}
     </div>
   );
 });

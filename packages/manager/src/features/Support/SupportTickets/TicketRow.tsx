@@ -10,7 +10,6 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { DATETIME_DISPLAY_FORMAT } from 'src/constants';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
 interface Props {
@@ -77,16 +76,10 @@ const TicketRow: React.FC<CombinedProps> = props => {
         {renderEntityLink(ticket)}
       </TableCell>
       <TableCell parentColumn="Date Created" data-qa-support-date>
-        <DateTimeDisplay
-          value={ticket.opened}
-          format={DATETIME_DISPLAY_FORMAT}
-        />
+        <DateTimeDisplay value={ticket.opened} />
       </TableCell>
       <TableCell parentColumn="Last Updated" data-qa-support-updated>
-        <DateTimeDisplay
-          value={ticket.updated}
-          format={DATETIME_DISPLAY_FORMAT}
-        />
+        <DateTimeDisplay value={ticket.updated} />
       </TableCell>
       <TableCell parentColumn="Updated By" data-qa-support-updated-by>
         {ticket.updated_by}
