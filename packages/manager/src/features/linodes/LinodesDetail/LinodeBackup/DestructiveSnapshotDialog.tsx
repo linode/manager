@@ -38,7 +38,7 @@ class DestructiveSnapshotDialog extends React.PureComponent<CombinedProps, {}> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.props.onSnapshot}
           data-qa-confirm

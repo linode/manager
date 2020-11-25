@@ -490,7 +490,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       <Button
         data-qa-confirm-cancel
         onClick={this.onRemoveConfig}
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         loading={this.state.deleteConfigConfirmDialog.submitting}
       >

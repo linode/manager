@@ -9,24 +9,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '12px 10px',
     minWidth: 0,
     color: theme.cmrTextColors.linkActiveLight,
+    whiteSpace: 'nowrap',
+    borderRadius: 0,
     '&:hover, &:focus': {
       backgroundColor: '#3683dc',
-      color: '#ffffff'
+      color: '#ffffff',
+      textDecoration: 'none'
     },
     '&[disabled]': {
       color: '#cdd0d5',
       cursor: 'default',
       '&:hover': {
-        backgroundColor: 'inherit'
+        backgroundColor: 'inherit',
+        textDecoration: 'none'
       }
     }
   },
   linkRoot: {
     textAlign: 'center',
     color: theme.cmrTextColors.linkActiveLight,
+    borderRadius: 0,
     '&:hover, &:focus': {
       backgroundColor: '#3683dc',
-      color: '#ffffff'
+      color: '#ffffff',
+      textDecoration: 'none'
     }
   }
 }));

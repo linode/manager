@@ -357,7 +357,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
             </form>
             <ActionsPanel>
               <Button
-                buttonType="secondary"
+                buttonType="primary"
                 className="destructive"
                 onClick={handleRebuildButtonClick}
                 data-qa-rebuild

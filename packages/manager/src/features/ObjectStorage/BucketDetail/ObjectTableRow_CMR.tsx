@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0
   },
   objectNameButton: {
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight
   }
 }));
 

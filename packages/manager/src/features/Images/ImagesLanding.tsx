@@ -278,7 +278,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           loading={dialog.submitting}
           onClick={handleRemoveImage}

@@ -98,7 +98,7 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           loading={this.props.loading}
           onClick={this.handleSubmit}

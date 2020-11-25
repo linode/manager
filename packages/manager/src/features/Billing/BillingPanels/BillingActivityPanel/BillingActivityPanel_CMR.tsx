@@ -37,7 +37,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getAll, getAllWithArguments } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerContainer: {

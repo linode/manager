@@ -3,7 +3,6 @@ import * as classnames from 'classnames';
 import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
-import Hidden from '../core/Hidden';
 import Breadcrumb from '../Breadcrumb';
 import DocumentationButton from '../CMR_DocumentationButton';
 
@@ -51,11 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'row',
     padding: '10px 0',
-    // Needed for the 'clear filters' button on smaller screens, removed for medium+
     flexWrap: 'wrap',
-    [theme.breakpoints.up('sm')]: {
-      padding: 10
-    },
     [theme.breakpoints.up('md')]: {
       justifyContent: 'center',
       padding: 0,
@@ -124,23 +119,23 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
           })}
         >
-          <Hidden smDown>
-            {body ? (
-              <Grid
-                className={classnames({
-                  [classes.contentOuter]: true,
-                  [bodyClassName ?? '']: Boolean(bodyClassName)
-                })}
-                item
-              >
-                {body}
-              </Grid>
-            ) : null}
-          </Hidden>
+          {body ? (
+            <Grid
+              className={classnames({
+                [classes.contentOuter]: true,
+                [bodyClassName ?? '']: Boolean(bodyClassName)
+              })}
+              item
+            >
+              {body}
+            </Grid>
+          ) : null}
 
           {/* I think only Landing variant uses this? */}
           {actions}
         </Grid>
+        {/*
+        Keeping this for now as this may still be needed for details variant
         <Hidden mdUp>
           {body ? (
             <Grid
@@ -155,7 +150,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
               {body}
             </Grid>
           ) : null}
-        </Hidden>
+        </Hidden> */}
       </Grid>
     </>
   );

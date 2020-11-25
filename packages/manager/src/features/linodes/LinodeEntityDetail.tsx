@@ -9,7 +9,6 @@ import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import RebootIcon from 'src/assets/icons/reboot.svg';
-import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
 import PowerOnIcon from 'src/assets/icons/power-button.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
@@ -344,18 +343,6 @@ const Header: React.FC<HeaderProps> = props => {
 
           <div>
             <div className={classes.actionItemsOuter}>
-              {!isDetails && (
-                <Hidden smDown>
-                  <IconTextLink
-                    className={classes.actionItem}
-                    SideIcon={ViewDetailsIcon}
-                    text="View Details"
-                    title="View Details"
-                    to={`linodes/${linodeId}`}
-                  />
-                </Hidden>
-              )}
-
               <IconTextLink
                 className={classes.actionItem}
                 SideIcon={PowerOnIcon}
@@ -416,7 +403,6 @@ const Header: React.FC<HeaderProps> = props => {
                 openPowerActionDialog={openPowerActionDialog}
                 noImage={!image}
                 inlineLabel={matchesMdDown ? undefined : 'More Actions'}
-                inLandingDetailContext={isDetailLanding}
               />
             </div>
           </div>
@@ -686,7 +672,10 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     lineHeight: 1,
     '& a': {
       color: theme.color.blue,
-      fontFamily: theme.font.bold
+      fontFamily: theme.font.bold,
+      '&:hover, &:focus': {
+        textDecoration: 'underline'
+      }
     }
   },
   listItem: {
@@ -705,10 +694,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     padding: `0px 10px`,
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
     fontSize: '.875rem',
-    fontWeight: 'bold',
-    '&:hover': {
-      textDecoration: 'none'
-    }
+    fontWeight: 'bold'
   },
   linodeCreated: {
     paddingLeft: 10,

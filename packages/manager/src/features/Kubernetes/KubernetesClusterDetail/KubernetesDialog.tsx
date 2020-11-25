@@ -36,7 +36,7 @@ const renderActions = (
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         disabled={disabled}
         destructive
         loading={loading}
