@@ -107,7 +107,14 @@ export const errorsToIgnore: RegExp[] = [
   // We know this is a problem. @todo: implement flow control in Lish.
   /write data discarded, use flow control to avoid losing data/gi,
   // This is an error coming from the MUI Ripple effect.
-  /TouchRipple/gi
+  /TouchRipple/gi,
+  // The theory is that these come from network interruptions.
+  /Unexpected end of input/gi,
+  /Unexpected end of script/gi,
+  // Local storage errors:
+  /Failed to read the 'localStorage' property from 'Window'/gi,
+  /Cannot read property 'getItem' of null/gi,
+  /NS_ERROR_FILE_CORRUPTED/gi
 ];
 
 // We can't trust the type of the "message" on a Sentry event, since it may
