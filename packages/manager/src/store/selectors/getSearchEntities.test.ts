@@ -1,11 +1,12 @@
 import { assocPath } from 'ramda';
-import { domains, images, linodes, types, volumes } from 'src/__data__';
-import { kubernetesClusterFactory } from 'src/factories/kubernetesCluster';
+import { domains, linodes, types, volumes } from 'src/__data__';
+import { imageFactory, kubernetesClusterFactory } from 'src/factories';
 import { nodeBalancerFactory } from 'src/factories/nodebalancer';
 import { apiResponseToMappedState } from 'src/store/store.helpers.tmp';
 import getSearchEntities from './getSearchEntities';
 
 const nodeBalancers = nodeBalancerFactory.buildList(5);
+const images = imageFactory.buildList(5);
 
 describe('getSearchEntities selector', () => {
   const mockState: any = {
