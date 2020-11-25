@@ -193,36 +193,6 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     }
   },
   actionItem: {
-    margin: 0,
-    marginRight: 10,
-    transition: 'none',
-    '& svg': {
-      height: 20,
-      width: 20,
-      marginRight: 10
-    },
-    '& span': {
-      fontFamily: `${theme.font.normal} !important`
-    },
-    '&:disabled': {
-      color: theme.color.disabled,
-      '& svg': {
-        fill: theme.color.disabled
-      }
-    },
-    '&:hover': {
-      color: '#ffffff',
-      backgroundColor: theme.color.blue,
-      '& svg': {
-        fill: '#ffffff',
-        '& g': {
-          stroke: '#ffffff'
-        },
-        '& path': {
-          stroke: '#ffffff'
-        }
-      }
-    },
     '&:focus': {
       outline: '1px dotted #999'
     }
@@ -330,7 +300,7 @@ const Header: React.FC<HeaderProps> = props => {
               {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
             </Button>
 
-            <Hidden smDown>
+            <Hidden xsDown>
               <Button
                 buttonType="secondary"
                 className={classes.actionItem}

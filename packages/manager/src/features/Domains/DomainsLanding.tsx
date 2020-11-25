@@ -458,13 +458,17 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         <Button
                           className={classes.importButton}
                           onClick={this.openImportZoneDrawer}
+                          buttonType="secondary"
                         >
                           Import a Zone
                         </Button>
                       </Hidden>
                     }
                     extraActions={
-                      <Button onClick={this.openImportZoneDrawer}>
+                      <Button
+                        onClick={this.openImportZoneDrawer}
+                        buttonType="secondary"
+                      >
                         Import a Zone
                       </Button>
                     }

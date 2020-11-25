@@ -530,7 +530,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         root: {
           textTransform: 'inherit',
-          borderRadius: '3px',
           fontSize: '1rem',
           lineHeight: 1,
           fontFamily:
@@ -549,10 +548,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             minWidth: 100
           },
           '&:hover': {
-            backgroundColor: primaryColors.light
-          },
-          '&:focus': {
-            backgroundColor: primaryColors.light
+            backgroundColor: primaryColors.light,
+            color: '#fff'
           },
           '&[aria-expanded="true"]': {
             backgroundColor: primaryColors.light
@@ -564,15 +561,16 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             color: primaryColors.text
           }
         },
-        text: {
-          padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2}px`,
-          '&:hover': {
-            color: primaryColors.light
-          }
-        },
+        // text: {
+        //   padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
+        //     spacingUnit / 2}px ${spacingUnit * 2}px`,
+        //   '&:hover': {
+        //     color: primaryColors.light
+        //   }
+        // },
         containedPrimary: {
           backgroundColor: primaryColors.main,
+          borderRadius: '3px',
           color: '#fff',
           padding: `2px 20px`,
           maxHeight: 34,
@@ -599,7 +597,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         containedSecondary: {
           backgroundColor: 'transparent',
           color: primaryColors.main,
-          border: `1px solid ${primaryColors.main}`,
+          //border: `1px solid ${primaryColors.main}`,
           // padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
           //   spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
           // transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
@@ -618,31 +616,30 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             backgroundColor: 'transparent',
             color: '#c9cacb'
           },
-          '&.cancel': {
-            borderColor: 'transparent',
-            '&:hover, &:focus': {
-              borderColor: primaryColors.light,
-              backgroundColor: 'transparent'
-            }
-          },
-          '&.destructive': {
-            borderColor: '#c44742',
-            color: '#c44742',
-            '&:hover, &:focus': {
-              color: '#df6560',
-              borderColor: '#df6560',
-              backgroundColor: 'transparent'
-            },
-            '&:active': {
-              color: '#963530',
-              borderColor: '#963530'
-            },
-            '&$disabled': {
-              borderColor: '#c9cacb',
-              backgroundColor: 'transparent',
-              color: '#c9cacb'
-            }
-          },
+          // '&.cancel': {
+          //   borderColor: 'transparent',
+          //   '&:hover, &:focus': {
+          //     borderColor: primaryColors.light,
+          //     backgroundColor: 'transparent'
+          //   }
+          // },
+          // '&.destructive': {
+          //   backgroundColor: primaryColors.main,
+          //   color: '#fff',
+          //   '&:hover, &:focus': {
+          //     color: '#fff',
+          //     backgroundColor: primaryColors.light
+          //   },
+          //   '&:active': {
+          //     color: '#963530',
+          //     borderColor: '#963530'
+          //   },
+          //   '&$disabled': {
+          //     borderColor: '#c9cacb',
+          //     backgroundColor: 'transparent',
+          //     color: '#c9cacb'
+          //   }
+          // },
           '&.loading': {
             borderColor: primaryColors.text,
             color: primaryColors.text,
@@ -1549,17 +1546,13 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           '&$colorSecondary': {
             backgroundColor: 'transparent',
             color: primaryColors.main,
-            border: `1px solid ${primaryColors.main}`,
-            transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
             '&:hover, &:focus': {
               backgroundColor: 'transparent !important',
-              color: primaryColors.light,
-              borderColor: primaryColors.light
+              color: primaryColors.light
             },
             '&:active': {
               backgroundColor: 'transparent',
-              color: primaryColors.light,
-              borderColor: primaryColors.light
+              color: primaryColors.light
             }
           }
         }

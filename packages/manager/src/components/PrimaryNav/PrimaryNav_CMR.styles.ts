@@ -106,10 +106,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: 15,
     position: 'relative',
     '&:hover': {
-      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
+      textDecoration: 'none'
     },
     '&:focus': {
-      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
+      textDecoration: 'none'
     },
     '& .icon': {
       [theme.breakpoints.down('md')]: {
@@ -242,10 +244,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: 15,
       paddingRight: 40,
       '&:hover': {
-        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
+        textDecoration: 'none'
       },
       '&:focus': {
-        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
+        textDecoration: 'none'
       },
       [theme.breakpoints.down('sm')]: {
         paddingTop: 10,

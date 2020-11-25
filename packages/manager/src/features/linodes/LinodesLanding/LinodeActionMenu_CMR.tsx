@@ -81,6 +81,7 @@ export type CombinedProps = Props & StateProps;
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
+  const matchesXsDown = useMediaQuery(theme.breakpoints.down('xs'));
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { types } = useTypes();
@@ -233,7 +234,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         }
       ];
 
-      if (matchesSmDown || inTableContext) {
+      if (matchesXsDown || inTableContext) {
         actions.unshift({
           title: 'Launch Console',
           onClick: () => {
@@ -244,7 +245,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesSmDown) {
+      if (matchesXsDown) {
         actions.unshift({
           title: 'Reboot',
           disabled:

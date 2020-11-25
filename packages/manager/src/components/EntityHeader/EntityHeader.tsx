@@ -52,13 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding: theme.spacing(),
-    [theme.breakpoints.up('md')]: {
-      justifyContent: 'center',
-      padding: 0,
-      flexWrap: 'nowrap'
-    },
+    flexWrap: 'nowrap',
+    padding: 0,
     '& .MuiChip-root': {
       ...theme.applyStatusPillStyles,
       height: 30,
@@ -68,9 +63,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   bodyDetailVariant: {
+    backgroundColor: theme.cmrBGColors.bgPaper,
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
-    backgroundColor: theme.cmrBGColors.bgPaper,
     padding: 0
   }
 }));

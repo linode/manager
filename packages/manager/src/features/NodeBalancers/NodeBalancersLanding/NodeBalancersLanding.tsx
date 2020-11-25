@@ -428,7 +428,7 @@ export class NodeBalancersLanding extends React.Component<
         <Button
           data-qa-confirm-cancel
           onClick={this.onSubmitDelete}
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           loading={this.state.deleteConfirmDialog.submitting}
         >
