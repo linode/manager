@@ -18,7 +18,10 @@ describe('username', () => {
       cy.get('[data-testid="textfield-input"]')
         .first()
         .click()
-        .clear()
+        .clear();
+      cy.get('[data-testid="textfield-input"]')
+        .first()
+        .click()
         .type(testText);
       cy.get('[data-testid="textfield-input"]')
         .first()
