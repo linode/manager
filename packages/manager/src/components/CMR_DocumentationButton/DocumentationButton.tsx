@@ -1,27 +1,54 @@
 import * as React from 'react';
-import TicketIcon from 'src/assets/icons/ticket.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import ArrowIcon from 'src/assets/icons/diagonalArrow.svg';
+import DocsIcon from 'src/assets/icons/docs.svg';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme
+} from 'src/components/core/styles';
+import Grid from 'src/components/Grid';
 import IconTextLink from '../IconTextLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    display: 'flex',
     alignItems: 'center',
-    borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
-    fontFamily: `${theme.font.normal} !important`,
+    flexFlow: 'row nowrap',
+    position: 'relative'
+  },
+  docs: {
+    alignItems: 'center',
     height: 50,
     lineHeight: 'normal',
-    marginBottom: 0,
-    marginRight: theme.spacing(2),
+    margin: 0,
     minWidth: 'auto',
-    paddingLeft: theme.spacing(2),
     padding: 0,
     '& svg': {
-      marginRight: theme.spacing(1.5),
-      width: 24
+      marginRight: theme.spacing()
     },
-    '&:hover svg': {
-      color: theme.palette.primary.main
+    '&:focus': {
+      backgroundColor: 'transparent'
+    },
+    '&:hover': {
+      textDecoration: 'underline',
+      '& svg': {
+        color: theme.palette.primary.light
+      },
+      '& + $externalLinkIcon': {
+        opacity: 1
+      }
+    },
+    [theme.breakpoints.down(1100)]: {
+      marginRight: theme.spacing()
     }
+  },
+  externalLinkIcon: {
+    color: theme.palette.primary.main,
+    marginTop: 3,
+    opacity: 0,
+    position: 'absolute',
+    right: -20
   }
 }));
 
@@ -34,19 +61,27 @@ type CombinedProps = Props;
 
 export const DocumentationButton: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  // Only show external link arrow if there's enough space for
+  // max content width (1100px), arrow icon width on the left and
+  // right side (22px * 2), and whitespace
+  const matchesMdUp = useMediaQuery(theme.breakpoints.up(1155));
+
   const { href, hideText } = props;
+
   return (
-    <IconTextLink
-      className={classes.root}
-      SideIcon={TicketIcon}
-      hideText={hideText}
-      text="Docs"
-      title="Docs"
-      onClick={() => window.open(href, '_blank', 'noopener')}
-      aria-describedby="external-site"
-    >
-      Docs
-    </IconTextLink>
+    <Grid item className={classes.root}>
+      <IconTextLink
+        className={classes.docs}
+        SideIcon={DocsIcon}
+        hideText={hideText}
+        text="Docs"
+        title="Docs"
+        onClick={() => window.open(href, '_blank', 'noopener')}
+        aria-describedby="external-site"
+      />
+      {matchesMdUp && <ArrowIcon className={classes.externalLinkIcon} />}
+    </Grid>
   );
 };
 

@@ -4,43 +4,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import Button from 'src/components/Button';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
-} from 'src/components/core/styles';
-import Hidden from 'src/components/core/Hidden';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  inlineActions: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    '& .MuiIconButton-root': {
-      padding: '15px 10px 15px 0',
-      marginLeft: -8,
-      '& svg': {
-        height: 20,
-        width: 20
-      }
-    }
-  },
-  button: {
-    ...theme.applyLinkStyles,
-    color: theme.cmrTextColors.linkActiveLight,
-    height: '100%',
-    padding: '12px 15px',
-    minWidth: 'auto',
-    borderRadius: 0,
-    '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.main,
-      color: '#fff',
-      textDecoration: 'none'
-    }
-  }
-}));
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface ActionHandlers {
   openForConfig: (volumeLabel: string, volumePath: string) => void;
@@ -88,7 +53,6 @@ interface Props extends ActionHandlers {
 export type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const VolumesActionMenu: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -127,6 +91,21 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
     onDelete(volumeId, volumeLabel);
   };
 
+  const inlineActions = [
+    {
+      actionText: 'Show Config',
+      onClick: () => {
+        handleShowConfig();
+      }
+    },
+    {
+      actionText: 'Edit',
+      onClick: () => {
+        handleOpenEdit();
+      }
+    }
+  ];
+
   const createActions = () => {
     const { attached, poweredOff, isVolumesLanding } = props;
 
@@ -154,7 +133,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
           }
         });
         actions.unshift({
-          title: 'Details',
+          title: 'Show Config',
           onClick: () => {
             handleShowConfig();
           }
@@ -191,32 +170,22 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <div className={classes.inlineActions}>
-      <Hidden smDown>
-        <Button
-          className={classes.button}
-          onClick={e => {
-            e.preventDefault();
-            handleShowConfig();
-          }}
-        >
-          Details
-        </Button>
-        <Button
-          className={classes.button}
-          onClick={e => {
-            e.preventDefault();
-            handleOpenEdit();
-          }}
-        >
-          Edit
-        </Button>
-      </Hidden>
+    <>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              onClick={action.onClick}
+            />
+          );
+        })}
       <ActionMenu
         createActions={createActions()}
         ariaLabel={`Action menu for Volume ${props.volumeLabel}`}
       />
-    </div>
+    </>
   );
 };
 

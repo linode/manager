@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
   createStyles({
     container: {
       margin: `0 auto`,
-      maxWidth: 1280,
+      maxWidth: 1100,
       width: '100%',
       [theme.breakpoints.down('xs')]: {
         flexDirection: 'column',
@@ -37,7 +37,7 @@ const styles = (theme: Theme) =>
     },
     desktopMenuIsOpen: {
       paddingLeft: 0,
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up(1100)]: {
         paddingLeft: theme.spacing(7) + 36
       }
     },
