@@ -380,7 +380,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
               <Typography variant="body1" className={classes.activeSince}>
                 Account active since{' '}
                 {formatDate(accountActiveSince, {
-                  displayTime: true
+                  displayTime: false
                 })}
               </Typography>
             </div>
