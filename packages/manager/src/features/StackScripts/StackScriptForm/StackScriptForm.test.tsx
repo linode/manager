@@ -1,13 +1,11 @@
 import * as React from 'react';
 
 import { StackScriptForm } from './StackScriptForm';
-
-import { images } from 'src/__data__/images';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const props = {
   images: {
-    available: images,
+    available: [],
     selected: []
   },
   currentUser: 'mmckenna',
