@@ -31,3 +31,10 @@ export * from './support';
 export * from './tags';
 export * from './volume';
 export * from './vlans';
+
+// Convert factory output to our itemsById pattern
+export const normalizeEntities = (entities: any[]) => {
+  return entities.reduce((acc, thisThing) => {
+    return { ...acc, [thisThing.id]: thisThing };
+  }, {});
+};

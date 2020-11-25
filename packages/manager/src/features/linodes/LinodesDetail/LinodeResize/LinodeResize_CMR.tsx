@@ -175,7 +175,22 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       })
       .catch(errorResponse => {
         let error: string | JSX.Element = '';
-        if (errorResponse[0].reason.match(/allocated more disk/i)) {
+        const reason = errorResponse[0]?.reason ?? '';
+        /**
+         * The logic below is to manually intercept a certain
+         * error and add some JSX with a hyperlink to it.
+         *
+         * Unfortunately, we have global error interceptors that
+         * do the same thing, as is the case when your reputation
+         * score is too low to do what you're trying to do.
+         *
+         * If one of those already-intercepted errors comes through here,
+         * it will break the logic (since error[0].reason is not a string).
+         */
+        if (
+          typeof reason === 'string' &&
+          reason.match(/allocated more disk/i)
+        ) {
           error = (
             <Typography>
               The current disk size of your Linode is too large for the new
@@ -196,7 +211,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           )[0].reason;
         }
         this.setState({
-          submissionError: error
+          submissionError: error,
+          submitting: false
         });
         // Set to "block: end" since the sticky header would otherwise interfere.
         scrollErrorIntoView(undefined, { block: 'end' });
@@ -384,6 +400,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               tableDisabled ||
               submitButtonDisabled
             }
+            loading={this.state.submitting}
             buttonType="primary"
             onClick={this.onSubmit}
             data-qa-resize

@@ -3,7 +3,7 @@ import { Image } from '@linode/api-v4/lib/images/types';
 
 export const imageFactory = Factory.Sync.makeFactory<Image>({
   id: Factory.each(id => `private/${id}`),
-  label: Factory.each(i => `event-entity-${i}`),
+  label: Factory.each(i => `image-${i}`),
   description: 'An image',
   deprecated: false,
   created: new Date().toISOString(),
