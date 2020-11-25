@@ -229,7 +229,7 @@ const AccessSelect: React.FC<CombinedProps> = props => {
             <Button buttonType="cancel" onClick={closeDialog} data-qa-cancel>
               Cancel
             </Button>
-            <Button buttonType="secondary" destructive onClick={handleSubmit}>
+            <Button buttonType="primary" destructive onClick={handleSubmit}>
               Confirm
             </Button>
           </ActionsPanel>

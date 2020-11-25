@@ -168,7 +168,6 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
           to={`/longview/clients/${clientID}`}
           linkText="View details"
           className={classes.link}
-          secondary
         />
         {!loading && (
           <div className={classes.lastUpdatedOuter}>

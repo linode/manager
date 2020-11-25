@@ -327,7 +327,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.handleMakePublic}
         >
@@ -344,7 +344,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.handleDeleteStackScript}
           loading={this.state.dialog.delete.submitting}

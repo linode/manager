@@ -699,7 +699,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           loading={this.state.dialog.submittingDialog}
           destructive
           onClick={this.revokeAction}

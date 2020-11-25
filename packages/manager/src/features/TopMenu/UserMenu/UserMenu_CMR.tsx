@@ -122,10 +122,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1rem',
       padding: '12px 40px 12px 15px',
       '&:hover': {
-        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
+        textDecoration: 'none'
       },
       '&:focus': {
-        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
+        textDecoration: 'none'
       }
     },
     '&[data-reach-menu-item][data-selected]': {

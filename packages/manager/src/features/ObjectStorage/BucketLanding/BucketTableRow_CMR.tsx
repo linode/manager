@@ -41,7 +41,11 @@ const styles = (theme: Theme) =>
       }
     },
     bucketLabel: {
-      color: theme.cmrTextColors.linkActiveLight
+      color: theme.cmrTextColors.linkActiveLight,
+      fontFamily: theme.font.bold,
+      '&:hover, &:focus': {
+        textDecoration: 'underline'
+      }
     },
     actionCell: {
       display: 'flex',

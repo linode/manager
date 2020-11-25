@@ -20,8 +20,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.bold,
     fontSize: '.875rem',
     lineHeight: '1.125rem',
-    textDecoration: 'underline',
-    color: theme.cmrTextColors.linkActiveLight
+    color: theme.cmrTextColors.linkActiveLight,
+    '&:hover, &:focus': {
+      textDecoration: 'underline'
+    }
   },
   root: {
     '& h3': {

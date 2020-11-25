@@ -287,11 +287,11 @@ const darkThemeOptions = {
           color: primaryColors.text
         }
       },
-      text: {
-        '&:hover': {
-          backgroundColor: 'transparent'
-        }
-      },
+      // text: {
+      //   '&:hover': {
+      //     backgroundColor: 'transparent'
+      //   }
+      // },
       containedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: primaryColors.light
@@ -313,17 +313,14 @@ const darkThemeOptions = {
       },
       containedSecondary: {
         color: primaryColors.main,
-        border: `1px solid ${primaryColors.main}`,
         '&:hover, &:focus': {
-          color: primaryColors.light,
-          borderColor: primaryColors.light
+          color: primaryColors.light
         },
         '&:active': {
           color: primaryColors.dark,
           borderColor: primaryColors.dark
         },
         '&$disabled': {
-          borderColor: '#c9cacb',
           color: '#c9cacb'
         },
         '&.cancel': {
@@ -332,21 +329,20 @@ const darkThemeOptions = {
             borderColor: primaryColors.light
           }
         },
-        '&.destructive': {
-          borderColor: '#c44742',
-          color: '#c44742',
-          '&:hover, &:focus': {
-            color: '#df6560',
-            borderColor: '#df6560',
-            backgroundColor: 'transparent'
-          },
-          '&:active': {
-            color: '#963530',
-            borderColor: '#963530'
-          }
-        },
+        // '&.destructive': {
+        //   borderColor: '#c44742',
+        //   color: '#c44742',
+        //   '&:hover, &:focus': {
+        //     color: '#df6560',
+        //     borderColor: '#df6560',
+        //     backgroundColor: 'transparent'
+        //   },
+        //   '&:active': {
+        //     color: '#963530',
+        //     borderColor: '#963530'
+        //   }
+        // },
         '&.loading': {
-          borderColor: primaryColors.text,
           color: primaryColors.text,
           minWidth: 100,
           '& svg': {
