@@ -7,6 +7,7 @@ export const imageFactory = Factory.Sync.makeFactory<Image>({
   description: 'An image',
   deprecated: false,
   created: new Date().toISOString(),
+  updated: new Date().toISOString(),
   created_by: 'prod-test-004',
   is_public: false,
   size: 1500,
