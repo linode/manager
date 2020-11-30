@@ -2,7 +2,6 @@ import JSPDF from 'jspdf';
 import { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
-import { ISO_DATE_FORMAT } from 'src/constants';
 
 const formatDateForTable = (date: string): [string, string] => {
   if (!date) {
@@ -34,7 +33,7 @@ export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
     body: [
       [
         { content: 'Payment: Thank You' },
-        { content: formatDate(payment.date, { format: ISO_DATE_FORMAT }) },
+        { content: formatDate(payment.date, { displayTime: true }) },
         { content: `$${Number(payment.usd).toFixed(2)}` }
       ]
     ]

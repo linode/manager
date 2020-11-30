@@ -93,11 +93,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
         </Typography>
       </TableCell>
       <TableCell parentColumn="Created">
-        <DateTimeDisplay
-          value={created}
-          humanizeCutoff="month"
-          data-qa-created
-        />
+        <DateTimeDisplay value={created} data-qa-created />
       </TableCell>
       <TableCell parentColumn="Size">
         <Typography variant="body2" data-qa-size>

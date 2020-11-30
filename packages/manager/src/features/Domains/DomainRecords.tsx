@@ -195,10 +195,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       fields
     }));
 
-  openForEditMasterDomain = (f: Partial<Domain>) =>
+  openForEditPrimaryDomain = (f: Partial<Domain>) =>
     this.openForEditing('master', f);
 
-  openForEditSlaveDomain = (f: Partial<Domain>) =>
+  openForEditSecondaryDomain = (f: Partial<Domain>) =>
     this.openForEditing('slave', f);
 
   openForCreateNSRecord = () => this.openForCreation('NS');
@@ -287,8 +287,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 
   handleOpenSOADrawer = (d: Domain) => {
     return d.type === 'master'
-      ? this.openForEditMasterDomain(d)
-      : this.openForEditSlaveDomain(d);
+      ? this.openForEditPrimaryDomain(d)
+      : this.openForEditSecondaryDomain(d);
   };
 
   generateTypes = (): IType[] => [

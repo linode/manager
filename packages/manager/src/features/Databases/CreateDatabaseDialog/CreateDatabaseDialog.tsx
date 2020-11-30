@@ -249,7 +249,6 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
         <div className={classes.formSection} data-testid="region-select">
           <RegionSelect
             label={'Region (required)'}
-            placeholder={' '}
             errorText={formik.errors.region}
             handleSelection={handleRegionSelect}
             regions={regionsWithDatabases}

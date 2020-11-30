@@ -4,7 +4,7 @@ import { Volume } from '@linode/api-v4/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
@@ -706,6 +706,7 @@ export default compose<CombinedProps, Props>(
   connected,
   documented,
   withVolumesRequests,
+  withRouter,
   _withEvents((ownProps: CombinedProps, eventsData) => ({
     ...ownProps,
     eventsData: eventsData.filter(filterVolumeEvents)
