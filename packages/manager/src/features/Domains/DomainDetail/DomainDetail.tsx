@@ -32,18 +32,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   cta: {
     display: 'flex',
     alignItems: 'center',
-    [theme.breakpoints.down(1100)]: {
-      marginRight: theme.spacing()
-    }
+    marginLeft: theme.spacing()
   },
   tagsButton: {
     height: 34,
     minWidth: 80,
-    marginLeft: theme.spacing(4),
-    padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`,
-    [theme.breakpoints.down(1100)]: {
-      marginLeft: theme.spacing(1.5)
-    }
+    marginLeft: theme.spacing(),
+    padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`
   },
   editIcon: {
     width: 20,
