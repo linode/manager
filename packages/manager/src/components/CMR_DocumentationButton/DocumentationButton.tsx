@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       '& svg': {
         color: theme.palette.primary.light
       }
+    },
+    [theme.breakpoints.down(1100)]: {
+      marginRight: theme.spacing()
     }
   },
   externalLinkIcon: {
