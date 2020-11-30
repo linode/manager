@@ -94,7 +94,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     const { imagesData } = this.props;
     /**
      * based on the list of images we get back from the API, compare those
-     * to our list of master images supported by Linode and filter out the ones
+     * to our list of public images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
     const compatibleImages = Object.keys(imagesData).reduce((acc, eachKey) => {

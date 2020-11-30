@@ -8,7 +8,7 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import { ShallowExtendedLinode } from 'src/store/linodes/types';
 import formatDate from 'src/utilities/formatDate';
 import LinodeRow from './LinodeRow/LinodeRow';
@@ -39,7 +39,7 @@ export const ListView: React.FC<CombinedProps> = props => {
     entityID: 0
   });
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
   const flags = useFlags();
 
   const notificationContext = React.useContext(_notificationContext);

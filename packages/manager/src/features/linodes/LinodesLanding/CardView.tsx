@@ -14,7 +14,7 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
@@ -62,7 +62,7 @@ const CardView: React.FC<CombinedProps> = props => {
   const flags = useFlags();
   const notificationContext = React.useContext(_notificationContext);
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
   const { profile } = useProfile();
   const { _loading } = useReduxLoad(['volumes']);
   const { volumes } = useVolumes();

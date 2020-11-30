@@ -1,6 +1,7 @@
 import { rest, RequestHandler } from 'msw';
 
 import {
+  abuseTicketNotificationFactory,
   accountFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
@@ -310,9 +311,6 @@ export const handlers = [
     const tags = tagFactory.buildList(5);
     return res(ctx.json(makeResourcePage(tags)));
   }),
-  rest.get('*/account/notifications*', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage([])));
-  }),
   rest.get('*gravatar*', (req, res, ctx) => {
     return res(ctx.status(400), ctx.json({}));
   }),
@@ -341,10 +339,13 @@ export const handlers = [
     //   until: null,
     //   body: null
     // });
+    const abuseTicket = abuseTicketNotificationFactory.build();
+
     return res(
       ctx.json(
         makeResourcePage([
-          ...notificationFactory.buildList(1)
+          ...notificationFactory.buildList(1),
+          abuseTicket
           // emailBounce
         ])
       )

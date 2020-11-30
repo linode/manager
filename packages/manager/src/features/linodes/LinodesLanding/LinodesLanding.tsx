@@ -325,7 +325,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Image', key: 'image' },
       { label: 'Region', key: 'region' },
       { label: 'Created', key: 'created' },
-      { label: 'Most Recent Backup', key: 'backups.last_successful' }
+      { label: 'Last Backup', key: 'lastBackup' }
     ];
 
     const linodesRunningCount = filterLinodesByStatus('running', linodesData)
@@ -445,7 +445,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                     onAddNew={() =>
                                       this.props.history.push('/linodes/create')
                                     }
-                                    iconType="linode"
                                     docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                                     body={
                                       <>
@@ -610,8 +609,17 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                           }
                                         : { when: null };
 
+                                      const lastBackup =
+                                        thisLinode.backups.last_successful ===
+                                        null
+                                          ? thisLinode.backups.enabled
+                                            ? 'Scheduled'
+                                            : 'Never'
+                                          : thisLinode.backups.last_successful;
+
                                       return {
                                         ...thisLinode,
+                                        lastBackup,
                                         maintenance,
                                         linodeDescription: getLinodeDescription(
                                           thisLinode.label,
