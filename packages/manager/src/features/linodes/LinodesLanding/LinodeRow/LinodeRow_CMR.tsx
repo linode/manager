@@ -23,7 +23,6 @@ import {
   transitionText
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
-import useLinodeActions from 'src/hooks/useLinodeActions';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
 import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
