@@ -1,11 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import * as classNames from 'classnames';
 import * as hljs from 'highlight.js/lib/core';
-// Import languages as we need them to keep bundle size down
-import apache from 'highlight.js/lib/languages/apache';
-import bash from 'highlight.js/lib/languages/bash';
-import javascript from 'highlight.js/lib/languages/javascript';
-import nginx from 'highlight.js/lib/languages/nginx';
-import yaml from 'highlight.js/lib/languages/yaml';
 import 'highlight.js/styles/lightfair.css';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -13,13 +8,15 @@ import Typography from 'src/components/core/Typography';
 import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { unsafe_MarkdownIt } from 'src/utilities/markdown';
-
 // Register all languages we intend to use
-hljs.registerLanguage('apache', apache);
-hljs.registerLanguage('bash', bash);
-hljs.registerLanguage('javascript', javascript);
-hljs.registerLanguage('nginx', nginx);
-hljs.registerLanguage('yaml', yaml);
+hljs.registerLanguage('apache', require('highlight.js/lib/languages/apache'));
+hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
+hljs.registerLanguage(
+  'javascript',
+  require('highlight.js/lib/languages/javascript')
+);
+hljs.registerLanguage('nginx', require('highlight.js/lib/languages/nginx'));
+hljs.registerLanguage('yaml', require('highlight.js/lib/languages/yaml'));
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
