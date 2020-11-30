@@ -150,6 +150,17 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     };
   }
 
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (!prevProps.linodeDisks && this.props.linodeDisks) {
+      this.setState({
+        devices: {
+          ...this.state.devices,
+          disks: this.props.linodeDisks as ExtendedDisk[]
+        }
+      });
+    }
+  }
+
   getFilteredVolumes = () => {
     const { linodeId, linodeRegion, volumesData } = this.props;
     return volumesData
