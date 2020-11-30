@@ -228,7 +228,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
         errorText={regionError}
         helperText={
           shouldWarnAboutVlans
-            ? 'Note: this region does not support VLANs.'
+            ? 'Note: This region does not support VLANs.'
             : undefined
         }
       />
