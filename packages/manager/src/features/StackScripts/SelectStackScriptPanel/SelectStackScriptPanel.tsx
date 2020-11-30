@@ -25,7 +25,7 @@ import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import Table from 'src/components/Table';
 import { MapState } from 'src/store/types';
-import { formatDate } from 'src/utilities/format-date-iso8601';
+import { formatDate } from 'src/utilities/formatDate';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
@@ -108,6 +108,7 @@ interface Props extends RenderGuardProps {
   ) => Promise<ResourcePage<any>>;
   category: string;
   header: string;
+  isOnCreate?: boolean;
 }
 
 type CombinedProps = Props &
@@ -192,7 +193,9 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   description={truncateText(stackScript.description, 100)}
                   images={stripImageName(stackScript.images)}
                   deploymentsActive={stackScript.deployments_active}
-                  updated={formatDate(stackScript.updated, false)}
+                  updated={formatDate(stackScript.updated, {
+                    displayTime: false
+                  })}
                   checked={selectedId === stackScript.id}
                   updateFor={[selectedId === stackScript.id]}
                   stackScriptID={stackScript.id}
@@ -230,6 +233,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               key={category + '-tab'}
               category={category}
               disabled={this.props.disabled}
+              isOnCreate={this.props.isOnCreate}
             />
           </Paper>
         </div>

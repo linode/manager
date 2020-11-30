@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -8,48 +8,46 @@ import {
   CombinedProps
 } from './AuthenticationSettings';
 
-afterEach(cleanup);
-
-const WHITELIST = 'whitelisting-form';
+const ALLOWLIST = 'allowlisting-form';
 
 const props: CombinedProps = {
   loading: false,
   authType: 'password',
-  ipWhitelisting: true,
+  ipAllowlisting: true,
   twoFactor: true,
   username: 'username',
   updateProfile: jest.fn()
 };
 
 describe('Authentication settings profile tab', () => {
-  it('should render', () => {
-    const { getByTestId } = render(
+  it('should render', async () => {
+    const { findByTestId } = render(
       wrapWithTheme(<AuthenticationSettings {...props} />)
     );
-    expect(getByTestId('authSettings'));
+    expect(await findByTestId('authSettings')).toBeInTheDocument();
   });
 
-  it('should not render the whitelisting form when loading', () => {
+  it('should not render the allowlisting form when loading', () => {
     const { getByTestId, queryAllByTestId, rerender } = render(
       wrapWithTheme(<AuthenticationSettings {...props} />)
     );
-    getByTestId(WHITELIST);
+    getByTestId(ALLOWLIST);
     rerender(
       wrapWithTheme(<AuthenticationSettings {...props} loading={true} />)
     );
-    expect(queryAllByTestId(WHITELIST)).toHaveLength(0);
+    expect(queryAllByTestId(ALLOWLIST)).toHaveLength(0);
   });
 
-  it('should not render the whitelisting form if the user does not have this setting enabled', () => {
-    const { getByTestId, queryAllByTestId, rerender } = render(
+  it('should not render the allowlisting form if the user does not have this setting enabled', async () => {
+    const { findByTestId, queryAllByTestId, rerender } = render(
       wrapWithTheme(<AuthenticationSettings {...props} />)
     );
-    getByTestId(WHITELIST);
+    await findByTestId(ALLOWLIST);
     rerender(
       wrapWithTheme(
-        <AuthenticationSettings {...props} ipWhitelisting={false} />
+        <AuthenticationSettings {...props} ipAllowlisting={false} />
       )
     );
-    expect(queryAllByTestId(WHITELIST)).toHaveLength(0);
+    expect(queryAllByTestId(ALLOWLIST)).toHaveLength(0);
   });
 });

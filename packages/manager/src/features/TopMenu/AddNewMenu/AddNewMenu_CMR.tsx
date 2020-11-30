@@ -1,5 +1,4 @@
 import { AccountCapability } from '@linode/api-v4/lib/account';
-
 import {
   Menu,
   MenuButton,
@@ -11,10 +10,8 @@ import {
 import '@reach/menu-button/styles.css';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators, Dispatch } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
@@ -27,11 +24,13 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
+import { vlanContext, dbaasContext } from 'src/context';
 import { MapState } from 'src/store/types';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem from './AddNewMenuItem';
-
-import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 
 type CSSClasses =
   | 'wrapper'
@@ -117,108 +116,137 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
-  // openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
-  openDomainDrawerForCreating: typeof openDomainDrawerForCreating;
-}
-
-type CombinedProps = Props &
-  WithStyles<CSSClasses> &
+type CombinedProps = WithStyles<CSSClasses> &
   RouteComponentProps<{}> &
   DispatchProps &
-  StateProps;
+  StateProps &
+  FeatureFlagConsumerProps;
 
 const styled = withStyles(styles);
 
 class AddNewMenu extends React.Component<CombinedProps> {
   render() {
-    const { classes } = this.props;
+    const { accountCapabilities, classes, flags } = this.props;
+    const showVlans = isFeatureEnabled(
+      'Vlans',
+      Boolean(flags.vlans),
+      accountCapabilities ?? []
+    );
 
     return (
-      <div className={classes.wrapper}>
-        <Menu>
-          <MenuButton className={classes.button} data-qa-add-new-menu-button>
-            Create...
-          </MenuButton>
-          <MenuPopover className={classes.menuPopover} portal={false}>
-            <MenuItems className={classes.menuItemList}>
-              <MenuLink
-                as={Link}
-                to="/linodes/create"
-                className={classes.menuItemLink}
-              >
-                <AddNewMenuItem
-                  title="Linode"
-                  body="High performance SSD Linux servers for all of your infrastructure needs"
-                  ItemIcon={LinodeIcon}
-                />
-              </MenuLink>
-              <MenuLink
-                as={Link}
-                to="/volumes/create"
-                className={classes.menuItemLink}
-              >
-                <AddNewMenuItem
-                  title="Volume"
-                  body="Block Storage service allows you to attach additional storage to your Linode"
-                  ItemIcon={VolumeIcon}
-                />
-              </MenuLink>
-              <MenuLink
-                as={Link}
-                to="/nodebalancers/create"
-                className={classes.menuItemLink}
-              >
-                <AddNewMenuItem
-                  title="NodeBalancer"
-                  body="Ensure your valuable applications and services are highly-available"
-                  ItemIcon={NodebalancerIcon}
-                />
-              </MenuLink>
-              <MenuItem
-                onSelect={() => {
-                  this.props.openDomainDrawerForCreating(
-                    'Created from Add New Menu'
-                  );
-                }}
-                className={classes.menuItemLink}
-              >
-                <AddNewMenuItem
-                  title="Domain"
-                  body="Manage your DNS records using Linode’s high-availability name servers"
-                  ItemIcon={DomainIcon}
-                />
-              </MenuItem>
-              <MenuLink
-                as={Link}
-                to="/linodes/create?type=One-Click"
-                onClick={() => {
-                  sendOneClickNavigationEvent('Add New Menu');
-                }}
-                className={classes.menuItemLink}
-              >
-                <AddNewMenuItem
-                  title="Marketplace"
-                  body="Deploy blogs, game servers, and other web apps with ease."
-                  ItemIcon={OneClickIcon}
-                  attr={{ 'data-qa-one-click-add-new': true }}
-                />
-              </MenuLink>
-              <MenuLink
-                as={Link}
-                to="/kubernetes/create"
-                className={classes.menuItemLink}
-              >
-                <AddNewMenuItem
-                  title="Kubernetes"
-                  body="Create and manage Kubernetes Clusters for highly available container workloads"
-                  ItemIcon={KubernetesIcon}
-                />
-              </MenuLink>
-            </MenuItems>
-          </MenuPopover>
-        </Menu>
-      </div>
+      <dbaasContext.Consumer>
+        {dbaas => (
+          <vlanContext.Consumer>
+            {vlan => (
+              <div className={classes.wrapper}>
+                <Menu>
+                  <MenuButton
+                    className={classes.button}
+                    data-qa-add-new-menu-button
+                  >
+                    Create...
+                  </MenuButton>
+                  <MenuPopover className={classes.menuPopover} portal={false}>
+                    <MenuItems className={classes.menuItemList}>
+                      <MenuLink
+                        as={Link}
+                        to="/linodes/create"
+                        className={classes.menuItemLink}
+                      >
+                        <AddNewMenuItem
+                          title="Linode"
+                          body="High performance SSD Linux servers for all of your infrastructure needs"
+                          ItemIcon={LinodeIcon}
+                        />
+                      </MenuLink>
+                      <MenuLink
+                        as={Link}
+                        to="/volumes/create"
+                        className={classes.menuItemLink}
+                      >
+                        <AddNewMenuItem
+                          title="Volume"
+                          body="Block Storage service allows you to attach additional storage to your Linode"
+                          ItemIcon={VolumeIcon}
+                        />
+                      </MenuLink>
+                      <MenuLink
+                        as={Link}
+                        to="/nodebalancers/create"
+                        className={classes.menuItemLink}
+                      >
+                        <AddNewMenuItem
+                          title="NodeBalancer"
+                          body="Ensure your valuable applications and services are highly-available"
+                          ItemIcon={NodebalancerIcon}
+                        />
+                      </MenuLink>
+                      <MenuLink
+                        as={Link}
+                        to="/domains/create"
+                        className={classes.menuItemLink}
+                      >
+                        <AddNewMenuItem
+                          title="Domain"
+                          body="Manage your DNS records using Linode’s high-availability name servers"
+                          ItemIcon={DomainIcon}
+                        />
+                      </MenuLink>
+                      <MenuLink
+                        as={Link}
+                        to="/linodes/create?type=One-Click"
+                        className={classes.menuItemLink}
+                      >
+                        <AddNewMenuItem
+                          title="Marketplace"
+                          body="Deploy blogs, game servers, and other web apps with ease."
+                          ItemIcon={OneClickIcon}
+                          attr={{ 'data-qa-one-click-add-new': true }}
+                        />
+                      </MenuLink>
+                      <MenuLink
+                        as={Link}
+                        to="/kubernetes/create"
+                        className={classes.menuItemLink}
+                      >
+                        <AddNewMenuItem
+                          title="Kubernetes Cluster"
+                          body="Create and manage Kubernetes Clusters for highly available container workloads"
+                          ItemIcon={KubernetesIcon}
+                        />
+                      </MenuLink>
+                      <MenuItem
+                        onSelect={vlan.open}
+                        className={classes.menuItemLink}
+                      >
+                        {showVlans && (
+                          <AddNewMenuItem
+                            title="Virtual LAN"
+                            body="Create private Local Area Networks (LANs) for secure communication between Linodes."
+                            ItemIcon={LinodeIcon}
+                          />
+                        )}
+                      </MenuItem>
+                      {flags.databases && (
+                        <MenuItem
+                          onSelect={dbaas.open}
+                          className={classes.menuItemLink}
+                        >
+                          <AddNewMenuItem
+                            title="Database"
+                            body="Create cloud-based MySQL databases."
+                            ItemIcon={LinodeIcon} // to be replaced with database icon
+                          />
+                        </MenuItem>
+                      )}
+                    </MenuItems>
+                  </MenuPopover>
+                </Menu>
+              </div>
+            )}
+          </vlanContext.Consumer>
+        )}
+      </dbaasContext.Consumer>
     );
   }
 }
@@ -226,7 +254,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
 export const styledComponent = styled(AddNewMenu);
 
 interface DispatchProps {
-  openDomainDrawerForCreating: () => void;
   openVolumeDrawerForCreating: () => void;
 }
 
@@ -240,13 +267,13 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators({ openDomainDrawerForCreating }, dispatch);
+const connected = connect(mapStateToProps);
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
-
-export default compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, {}>(
   connected,
   withRouter,
+  withFeatureFlags,
   styled
 )(AddNewMenu);
+
+export default enhanced;

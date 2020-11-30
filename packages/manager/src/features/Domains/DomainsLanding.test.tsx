@@ -1,11 +1,14 @@
-import { render, cleanup } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { domains } from 'src/__data__/domains';
+import { domainFactory } from 'src/factories/domain';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme, assertOrder } from 'src/utilities/testHelpers';
-import { CombinedProps, DomainsLanding } from './DomainsLanding';
-
-afterEach(cleanup);
+import {
+  CombinedProps,
+  DomainsLanding,
+  getReduxCopyOfDomains
+} from './DomainsLanding';
+const domains = domainFactory.buildList(5);
 
 const props: CombinedProps = {
   domainsData: domains,
@@ -14,6 +17,7 @@ const props: CombinedProps = {
   domainsLastUpdated: 0,
   domainsResults: domains.length,
   isRestrictedUser: false,
+  isLargeAccount: false,
   howManyLinodesOnAccount: 0,
   shouldGroupDomains: false,
   createDomain: jest.fn(),
@@ -28,6 +32,8 @@ const props: CombinedProps = {
   openForEditing: jest.fn(),
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
+  ldClient: {} as any,
+  flags: {},
   classes: {
     domain: '',
     dnsWarning: '',
@@ -36,8 +42,11 @@ const props: CombinedProps = {
     tagWrapper: '',
     tagGroup: '',
     title: '',
-    breadcrumbs: ''
+    breadcrumbs: '',
+    importButton: ''
   },
+  domainsByID: {},
+  upsertMultipleDomains: jest.fn(),
   ...reactRouterProps
 };
 
@@ -57,13 +66,33 @@ describe('Domains Landing', () => {
     expect(getByText(/not being served/));
   });
 
-  it('should sort by Domain name ascending by default', () => {
+  it('should sort by Domain name ascending by default', async () => {
     const { container } = render(wrapWithTheme(<DomainsLanding {...props} />));
 
-    assertOrder(container, '[data-qa-label]', [
-      'domain1.com',
-      'domain2.com',
-      'domain3.com'
-    ]);
+    await waitFor(() =>
+      assertOrder(container, '[data-qa-label]', [
+        'domain-0',
+        'domain-1',
+        'domain-2',
+        'domain-3',
+        'domain-4'
+      ])
+    );
+  });
+});
+
+describe('getReduxCopyOfDomains fn', () => {
+  it('returns corresponding domains', () => {
+    const domain1 = domainFactory.build({ id: 1 });
+    const domain2 = domainFactory.build({ id: 2 });
+    const domain3 = domainFactory.build({ id: 3 });
+
+    expect(
+      getReduxCopyOfDomains([domain1, domain2], {
+        1: domain1,
+        2: domain2,
+        3: domain3
+      })
+    ).toEqual([domain1, domain2]);
   });
 });

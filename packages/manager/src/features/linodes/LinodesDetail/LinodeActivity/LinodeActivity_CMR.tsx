@@ -17,7 +17,10 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(1)
+      }
     }
   });
 
@@ -27,7 +30,7 @@ export const LinodeActivity: React.FC<CombinedProps> = props => {
   const { classes, linodeID } = props;
 
   return (
-    <div id="tabpanel-activity" role="tabpanel" aria-labelledby="tab-activity">
+    <div>
       <Typography
         variant="h2"
         className={classes.title}

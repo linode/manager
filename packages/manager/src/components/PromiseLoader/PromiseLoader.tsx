@@ -3,7 +3,7 @@ import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 
 interface State {
-  loading: Boolean;
+  loading: boolean;
   [name: string]: any;
 }
 
@@ -26,6 +26,14 @@ export default function preload<P>(requests: RequestMap<P>) {
 
       static displayName = `PromiseLoader(${Component.displayName ||
         Component.name})`;
+
+      handleDone = () => {
+        if (!this.mounted) {
+          return;
+        }
+
+        this.setState(prevState => ({ ...prevState, loading: false }));
+      };
 
       componentWillUnmount() {
         this.mounted = false;
@@ -58,20 +66,8 @@ export default function preload<P>(requests: RequestMap<P>) {
         );
 
         Promise.all(promises)
-          .then(responses => {
-            if (!this.mounted) {
-              return;
-            }
-
-            this.setState(prevState => ({ ...prevState, loading: false }));
-          })
-          .catch(([key, error]) => {
-            if (!this.mounted) {
-              return;
-            }
-
-            this.setState(prevState => ({ ...prevState, loading: false }));
-          });
+          .then(this.handleDone)
+          .catch(this.handleDone);
       }
 
       render() {

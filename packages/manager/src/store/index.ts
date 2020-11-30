@@ -4,6 +4,10 @@ import account, {
   defaultState as defaultAccountState,
   State as AccountState
 } from 'src/store/account/account.reducer';
+import accountManagement, {
+  defaultState as defaultAccountManagementState,
+  State as AccountManagementState
+} from 'src/store/accountManagement/accountManagement.reducer';
 import accountSettings, {
   defaultState as defaultAccountSettingsState,
   State as AccountSettingsState
@@ -28,6 +32,14 @@ import clusters, {
   defaultState as defaultClustersState,
   State as ClustersState
 } from 'src/store/clusters/clusters.reducer';
+import databases, {
+  defaultState as defaultDatabasesState,
+  State as DatabasesState
+} from 'src/store/databases/databases.reducer';
+import databaseTypes, {
+  defaultState as defaultDatabaseTypesState,
+  State as DatabaseTypesState
+} from 'src/store/databases/types.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState
@@ -82,6 +94,10 @@ import linodeDisks, {
   defaultState as defaultLinodeDisksState,
   State as LinodeDisksState
 } from 'src/store/linodes/disk/disk.reducer';
+import interfaces, {
+  defaultState as defaultInterfacesState,
+  State as InterfacesState
+} from 'src/store/linodes/interfaces/interfaces.reducer';
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, {
   defaultState as defaultLinodesState,
@@ -141,17 +157,21 @@ import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState
 } from 'src/store/volumeForm';
-import initialLoad, {
-  defaultState as initialLoadState,
-  State as InitialLoadState
-} from './initialLoad/initialLoad.reducer';
 import featureFlagsLoad, {
   defaultState as featureFlagsLoadState,
   State as FeatureFlagsLoadState
 } from './featureFlagsLoad/featureFlagsLoad.reducer';
+import initialLoad, {
+  defaultState as initialLoadState,
+  State as InitialLoadState
+} from './initialLoad/initialLoad.reducer';
 import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
+import mockFeatureFlags, {
+  defaultMockFeatureFlagState,
+  MockFeatureFlagState
+} from './mockFeatureFlags';
 import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
 import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
 import notifications, {
@@ -163,6 +183,10 @@ import preferences, {
   State as PreferencesState
 } from './preferences/preferences.reducer';
 import { initReselectDevtools } from './selectors';
+import vlans, {
+  defaultState as defaultVLANState,
+  State as VlanState
+} from './vlans/vlans.reducer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 initReselectDevtools();
@@ -172,9 +196,13 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   account: defaultAccountState,
+  accountManagement: defaultAccountManagementState,
   accountSettings: defaultAccountSettingsState,
+  databases: defaultDatabasesState,
+  databaseTypes: defaultDatabaseTypesState,
   domains: defaultDomainsState,
   images: defaultImagesState,
+  interfaces: defaultInterfacesState,
   kubernetes: defaultKubernetesState,
   managed: defaultManagedState,
   managedIssues: defaultManagedIssuesState,
@@ -190,14 +218,19 @@ const __resourcesDefaultState = {
   types: defaultTypesState,
   volumes: defaultVolumesState,
   buckets: defaultBucketsState,
-  clusters: defaultClustersState
+  clusters: defaultClustersState,
+  vlans: defaultVLANState
 };
 
 export interface ResourcesState {
   account: AccountState;
+  accountManagement: AccountManagementState;
   accountSettings: AccountSettingsState;
+  databases: DatabasesState;
+  databaseTypes: DatabaseTypesState;
   domains: DomainsState;
   images: ImagesState;
+  interfaces: InterfacesState;
   kubernetes: KubernetesState;
   managed: ManagedState;
   managedIssues: ManagedIssuesState;
@@ -214,6 +247,7 @@ export interface ResourcesState {
   volumes: VolumesState;
   buckets: BucketsState;
   clusters: ClustersState;
+  vlans: VlanState;
 }
 
 export interface ApplicationState {
@@ -236,6 +270,7 @@ export interface ApplicationState {
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
+  mockFeatureFlags: MockFeatureFlagState;
 }
 
 export const defaultState: ApplicationState = {
@@ -257,7 +292,8 @@ export const defaultState: ApplicationState = {
   firewallDevices: defaultFirewallDevicesState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
-  longviewStats: defaultLongviewStatsState
+  longviewStats: defaultLongviewStatsState,
+  mockFeatureFlags: defaultMockFeatureFlagState
 };
 
 /**
@@ -265,9 +301,13 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   account,
+  accountManagement,
   accountSettings,
+  databases,
+  databaseTypes,
   domains,
   images,
+  interfaces,
   kubernetes,
   nodePools,
   linodes,
@@ -283,7 +323,8 @@ const __resources = combineReducers({
   types,
   volumes,
   buckets,
-  clusters
+  clusters,
+  vlans
 });
 
 const reducers = combineReducers<ApplicationState>({
@@ -305,7 +346,8 @@ const reducers = combineReducers<ApplicationState>({
   firewallDevices,
   globalErrors,
   longviewClients: longview,
-  longviewStats
+  longviewStats,
+  mockFeatureFlags
 });
 
 const enhancers = compose(

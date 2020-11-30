@@ -5,31 +5,37 @@ import {
   ManagedCredential
 } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
-import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
-import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLink from 'src/components/TabLink';
+import NavTabs from 'src/components/NavTabs';
+import { NavTab } from 'src/components/NavTabs/NavTabs';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
+import ManagedDashboardCard_CMR from '../Dashboard/ManagedDashboardCard/ManagedDashboardCard_CMR';
 import SupportWidget from './SupportWidget';
 
+const Contacts = React.lazy(() => import('./Contacts'));
+const Contacts_CMR = React.lazy(() => import('./Contacts/Contacts_CMR'));
 const Monitors = React.lazy(() => import('./Monitors'));
 const SSHAccess = React.lazy(() => import('./SSHAccess'));
-const Credentials = React.lazy(() => import('./Credentials'));
-const Contacts = React.lazy(() => import('./Contacts'));
+const CredentialList = React.lazy(() => import('./Credentials'));
+const CredentialList_CMR = React.lazy(() =>
+  import('./Credentials/CredentialList_CMR')
+);
+
+const useStyles = makeStyles((theme: Theme) => ({
+  cmrSpacing: {
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing()
+    }
+  }
+}));
 
 export type CombinedProps = {} & RouteComponentProps<{}>;
 
@@ -42,6 +48,9 @@ const getAllContacts = () =>
   getAll<ManagedContact>(getManagedContacts)().then(res => res.data);
 
 export const ManagedLandingContent: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+  const flags = useFlags();
+
   const credentials = useAPIRequest<ManagedCredential[]>(getAllCredentials, []);
 
   const contacts = useAPIRequest<ManagedContact[]>(getAllContacts, []);
@@ -60,26 +69,6 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
     return _groups;
   }, [contacts.data]);
 
-  const tabs = [
-    /* NB: These must correspond to the routes inside the Switch */
-    {
-      title: 'Monitors',
-      routeName: `${props.match.url}/monitors`
-    },
-    {
-      title: 'SSH Access',
-      routeName: `${props.match.url}/ssh-access`
-    },
-    {
-      title: 'Credentials',
-      routeName: `${props.match.url}/credentials`
-    },
-    {
-      title: 'Contacts',
-      routeName: `${props.match.url}/contacts`
-    }
-  ];
-
   const credentialsError = credentials.error
     ? getAPIErrorOrDefault(
         credentials.error,
@@ -87,18 +76,65 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
       )
     : undefined;
 
-  const handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = props;
-    const routeName = tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
+  const ContactsTable = flags.cmr ? Contacts_CMR : Contacts;
+  const Credentials = flags.cmr ? CredentialList_CMR : CredentialList;
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
+  const tabs: NavTab[] = [
+    {
+      title: 'Monitors',
+      routeName: `${props.match.url}/monitors`,
+      render: (
+        <Monitors
+          credentials={credentials.data}
+          loading={
+            (credentials.loading && contacts.lastUpdated === 0) ||
+            (contacts.loading && contacts.lastUpdated === 0)
+          }
+          groups={groups}
+          errorFromProps={credentials.error || contacts.error || undefined}
+        />
+      )
+    },
+    {
+      title: 'SSH Access',
+      routeName: `${props.match.url}/ssh-access`,
+      component: SSHAccess
+    },
+    {
+      title: 'Credentials',
+      routeName: `${props.match.url}/credentials`,
+      render: (
+        <Credentials
+          loading={credentials.loading && credentials.lastUpdated === 0}
+          error={credentialsError}
+          credentials={credentials.data}
+          update={credentials.update}
+        />
+      )
+    },
+    {
+      title: 'Contacts',
+      routeName: `${props.match.url}/contacts`,
+      render: (
+        <ContactsTable
+          contacts={contacts.data}
+          loading={contacts.loading && contacts.lastUpdated === 0}
+          error={contacts.error}
+          lastUpdated={contacts.lastUpdated}
+          transformData={contacts.transformData}
+          update={contacts.update}
+        />
+      )
+    }
+  ];
+
+  if (flags.cmr) {
+    tabs.unshift({
+      title: 'Summary',
+      routeName: `${props.match.url}/summary`,
+      component: ManagedDashboardCard_CMR
+    });
+  }
 
   return (
     <React.Fragment>
@@ -116,7 +152,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           alignItems="center"
           xs={8}
         >
-          <Grid item>
+          <Grid item className={flags.cmr ? classes.cmrSpacing : ''}>
             <SupportWidget />
           </Grid>
           <Grid item>
@@ -124,88 +160,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Box>
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-        >
-          {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((forwardedProps, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...forwardedProps}
-                  ref={ref}
-                />
-              ))}
-            />
-          ))}
-        </Tabs>
-      </AppBar>
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <Switch>
-          <Route
-            exact
-            strict
-            path={`${props.match.path}/monitors`}
-            render={() => (
-              <Monitors
-                credentials={credentials.data}
-                loading={
-                  (credentials.loading && contacts.lastUpdated === 0) ||
-                  (contacts.loading && contacts.lastUpdated === 0)
-                }
-                groups={groups}
-                errorFromProps={
-                  credentials.error || contacts.error || undefined
-                }
-              />
-            )}
-          />
-          <Route
-            exact
-            strict
-            path={`${props.match.path}/ssh-access`}
-            component={SSHAccess}
-          />
-          <Route
-            exact
-            strict
-            path={`${props.match.path}/credentials`}
-            render={() => (
-              <Credentials
-                loading={credentials.loading && credentials.lastUpdated === 0}
-                error={credentialsError}
-                credentials={credentials.data}
-                update={credentials.update}
-              />
-            )}
-          />
-          <Route
-            exact
-            strict
-            path={`${props.match.path}/contacts`}
-            render={() => (
-              <Contacts
-                contacts={contacts.data}
-                loading={contacts.loading && contacts.lastUpdated === 0}
-                error={contacts.error}
-                lastUpdated={contacts.lastUpdated}
-                transformData={contacts.transformData}
-                update={contacts.update}
-              />
-            )}
-          />
-          <Redirect to={`${props.match.path}/monitors`} />
-        </Switch>
-      </React.Suspense>
+      <NavTabs tabs={tabs} />
     </React.Fragment>
   );
 };

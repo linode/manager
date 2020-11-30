@@ -3,11 +3,12 @@ import KebabIcon from 'src/assets/icons/kebab.svg';
 import {
   Menu,
   MenuButton,
+  MenuItem,
   MenuItems,
-  MenuLink,
   MenuPopover
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
+import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import HelpIcon from 'src/components/HelpIcon';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -16,14 +17,11 @@ export interface Action {
   title: string;
   disabled?: boolean;
   tooltip?: string;
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  onClick: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  wrapper: {
-    display: 'inline-block',
-    position: 'relative'
-  },
+  wrapper: {},
   button: {
     '&[data-reach-menu-button]': {
       display: 'flex',
@@ -31,19 +29,22 @@ const useStyles = makeStyles((theme: Theme) => ({
       background: 'none',
       fontSize: '1rem',
       border: 'none',
-      padding: '12.5px',
-      color: '#3683dc',
+      padding: '10px',
+      color: theme.cmrIconColors.iActiveLight,
       cursor: 'pointer',
       '&:hover': {
         backgroundColor: '#3683dc',
-        color: theme.color.white
+        color: '#fff'
       },
       '&[aria-expanded="true"]': {
         backgroundColor: '#3683dc',
-        color: theme.color.white,
+        color: '#fff',
         width: '100%'
       }
     }
+  },
+  buttonWithLabel: {
+    padding: '15px 10px !important'
   },
   buttonLabel: {
     margin: `0 0 0 ${theme.spacing() + 2}px`,
@@ -56,33 +57,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   popover: {
-    '&[data-reach-menu-popover]': {
-      right: 0,
-      // Need this to merge the button and items wrapper due to the borderRadius on the wrapper
-      marginTop: -3,
-      zIndex: 1
-    }
+    zIndex: 1
   },
   itemsOuter: {
     '&[data-reach-menu-items]': {
       padding: 0,
       width: 200,
       background: '#3683dc',
-      borderRadius: 3,
       border: 'none',
       fontSize: 14,
-      color: theme.color.white,
+      color: '#fff',
       textAlign: 'left'
     }
   },
   item: {
     '&[data-reach-menu-item]': {
+      display: 'flex',
+      justifyContent: 'space-between',
       padding: theme.spacing(1) + 2,
       paddingLeft: '16px',
       borderBottom: '1px solid #5294e0',
       background: '#3683dc',
-      color: theme.color.white,
-      borderRadius: 3
+      color: '#fff'
     },
     '&[data-reach-menu-item][data-selected]': {
       background: '#226dc3'
@@ -100,7 +96,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tooltip: {
     color: theme.color.white,
-    padding: '0 12px'
+    padding: '0 0 0 8px',
+    '& svg': {
+      height: 20,
+      width: 20
+    }
   }
 }));
 
@@ -150,7 +150,10 @@ const ActionMenu: React.FC<CombinedProps> = props => {
     <div className={classes.wrapper}>
       <Menu>
         <MenuButton
-          className={classes.button}
+          className={classNames({
+            [classes.button]: true,
+            [classes.buttonWithLabel]: Boolean(inlineLabel)
+          })}
           aria-label={ariaLabel}
           onMouseDown={handleClick}
           onKeyDown={handleKeyPress}
@@ -158,20 +161,19 @@ const ActionMenu: React.FC<CombinedProps> = props => {
           <KebabIcon aria-hidden className={classes.icon} type="primary" />
           {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
         </MenuButton>
-        <MenuPopover className={classes.popover} portal={true}>
+        <MenuPopover className={classes.popover} position={positionRight}>
           <MenuItems className={classes.itemsOuter}>
             {(actions as Action[]).map((a, idx) => (
-              <MenuLink
+              <MenuItem
                 key={idx}
                 className={classNames({
                   [classes.item]: true,
                   [classes.disabled]: a.disabled
                 })}
-                onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                onSelect={() => {
                   if (!a.disabled) {
-                    return a.onClick(e);
+                    return a.onClick();
                   }
-                  e.preventDefault();
                 }}
                 data-qa-action-menu-item={a.title}
                 disabled={a.disabled}
@@ -185,7 +187,7 @@ const ActionMenu: React.FC<CombinedProps> = props => {
                     className={classes.tooltip}
                   />
                 )}
-              </MenuLink>
+              </MenuItem>
             ))}
           </MenuItems>
         </MenuPopover>

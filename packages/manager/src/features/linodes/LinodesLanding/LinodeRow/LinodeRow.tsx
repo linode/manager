@@ -1,10 +1,10 @@
-import * as classNames from 'classnames';
 import { Notification } from '@linode/api-v4/lib/account';
 import {
   Config,
   LinodeBackups,
   LinodeStatus
 } from '@linode/api-v4/lib/linodes';
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -13,7 +13,12 @@ import Tooltip from 'src/components/core/Tooltip';
 import HelpIcon from 'src/components/HelpIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import { DialogType } from 'src/features/linodes/types';
+import useFlags from 'src/hooks/useFlags';
+import { capitalize } from 'src/utilities/capitalize';
+import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
@@ -21,17 +26,13 @@ import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
 import LinodeActionMenu_CMR from '../LinodeActionMenu_CMR';
 import RegionIndicator from '../RegionIndicator';
+import { parseMaintenanceStartTime } from '../utils';
 import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
 import styled, { StyleProps } from './LinodeRow.style';
 import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
 import LinodeRowLoading from './LinodeRowLoading';
-
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { capitalize } from 'src/utilities/capitalize';
-import { parseMaintenanceStartTime } from '../utils';
-import useFlags from 'src/hooks/useFlags';
 
 interface Props {
   backups: LinodeBackups;
@@ -47,6 +48,7 @@ interface Props {
   vcpus: number;
   status: LinodeStatus;
   displayStatus: string;
+  vlanIP?: string;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
@@ -56,6 +58,11 @@ interface Props {
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
+  ) => void;
+  openDialog: (
+    type: DialogType,
+    linodeID: number,
+    linodeLabel?: string
   ) => void;
   // Including for type matching with CMR; not used.
   openTagDrawer?: any;
@@ -89,6 +96,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     // other props
     classes,
     linodeNotifications,
+    openDialog,
     openDeleteDialog,
     openPowerActionDialog,
     // displayType, @todo use for M3-2059
@@ -104,9 +112,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   const MaintenanceText = () => {
     return (
       <>
-        Please consult your{' '}
-        <Link to="/support/tickets?type=open">support tickets</Link> for
-        details.
+        For more information, please see your{' '}
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
   };
@@ -177,7 +184,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
                   <strong>Maintenance Scheduled</strong>
                 </div>
                 <div>
-                  {dateTime[0]} at {dateTime[1]}
+                  {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}
                 </div>
               </div>
               <HelpIcon
@@ -226,6 +233,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
               linodeBackups={backups}
               openDeleteDialog={openDeleteDialog}
               openPowerActionDialog={openPowerActionDialog}
+              openDialog={openDialog}
               noImage={!image}
             />
           </div>

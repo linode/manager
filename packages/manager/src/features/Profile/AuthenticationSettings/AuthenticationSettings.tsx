@@ -17,6 +17,7 @@ import SecuritySettings from './SecuritySettings';
 import ThirdParty from './ThirdParty';
 import ThirdPartyContent from './ThirdPartyContent';
 import TrustedDevices from './TrustedDevices';
+import TrustedDevices_CMR from './TrustedDevices_CMR';
 import TwoFactor from './TwoFactor';
 
 const useStyles = makeStyles(() => ({
@@ -32,7 +33,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const {
     loading,
     authType,
-    ipWhitelisting,
+    ipAllowlisting,
     twoFactor,
     username,
     updateProfile
@@ -47,8 +48,8 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const clearState = () => {
     setSuccess(undefined);
   };
-  const onWhitelistingDisable = () => {
-    setSuccess('IP whitelisting disabled. This feature cannot be re-enabled.');
+  const onAllowlistingDisable = () => {
+    setSuccess('IP allowlisting disabled. This feature cannot be re-enabled.');
   };
 
   const tabs = [
@@ -65,14 +66,18 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
             updateProfile={updateProfile}
             disabled={thirdPartyEnabled}
           />
-          <TrustedDevices disabled={thirdPartyEnabled} />
-          {ipWhitelisting && (
+          {flags.cmr ? (
+            <TrustedDevices_CMR disabled={thirdPartyEnabled} />
+          ) : (
+            <TrustedDevices disabled={thirdPartyEnabled} />
+          )}
+          {ipAllowlisting && (
             <SecuritySettings
               updateProfile={updateProfile}
-              onSuccess={onWhitelistingDisable}
+              onSuccess={onAllowlistingDisable}
               updateProfileError={props.profileUpdateError}
-              ipWhitelistingEnabled={ipWhitelisting}
-              data-qa-whitelisting-form
+              ipAllowlistingEnabled={ipAllowlisting}
+              data-qa-allowlisting-form
             />
           )}
         </React.Fragment>
@@ -90,12 +95,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const initialTab = 0;
 
   return (
-    <div
-      id="tabpanel-passwordAuthentication"
-      role="tabpanel"
-      aria-labelledby="tab-passwordAuthentication"
-      data-testid="authSettings"
-    >
+    <div data-testid="authSettings">
       <DocumentTitleSegment segment={`Password & Authentication`} />
       {/* Remove when logic above is cleared */}
       {success && <Notice success text={success} />}
@@ -117,7 +117,7 @@ const docs = [AccountsAndPasswords, SecurityControls];
 interface StateProps {
   loading: boolean;
   authType: TPAProvider;
-  ipWhitelisting: boolean;
+  ipAllowlisting: boolean;
   twoFactor?: boolean;
   username?: string;
   profileUpdateError?: APIError[];
@@ -129,7 +129,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   return {
     loading: profile.loading,
     authType: profile?.data?.authentication_type ?? 'password',
-    ipWhitelisting: profile?.data?.ip_whitelist_enabled ?? false,
+    ipAllowlisting: profile?.data?.ip_whitelist_enabled ?? false,
     twoFactor: profile?.data?.two_factor_auth,
     username: profile?.data?.username,
     profileUpdateError: profile.error?.update

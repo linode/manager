@@ -9,7 +9,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Tag } from 'src/components/TagsInput';
 import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
-import { ExtendedType } from './SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -63,7 +63,7 @@ export interface WithTypesProps {
  */
 export interface WithTypesRegionsAndImages {
   regionsData: ExtendedRegion[];
-  typesData: ExtendedType[];
+  typesData?: ExtendedType[];
   imagesData: Record<string, Image>;
 }
 
@@ -81,6 +81,18 @@ export type HandleSubmit = (
   payload: CreateLinodeRequest,
   linodeID?: number
 ) => void;
+
+export interface BasicFromContentProps {
+  errors?: APIError[];
+  selectedImageID?: string;
+  updateImageID: (id: string) => void;
+  selectedRegionID?: string;
+  disabledClasses?: LinodeTypeClass[];
+  regionHelperText?: string;
+  updateRegionID: (id: string) => void;
+  selectedTypeID?: string;
+  updateTypeID: (id: string) => void;
+}
 
 /**
  * minimum number of state and handlers needed for
@@ -114,13 +126,15 @@ export interface BaseFormStateAndHandlers {
   updateTags: (tags: Tag[]) => void;
   resetCreationState: () => void;
   resetSSHKeys: () => void;
+  selectedVlanIDs: number[];
+  setVlanID: (ids: number[]) => void;
 }
 
 /**
  * additional form fields needed when creating a Linode from a Linode
  * AKA cloning a Linode
  */
-export interface CloneFormStateHandlers extends BaseFormStateAndHandlers {
+export interface CloneFormStateHandlers extends BasicFromContentProps {
   selectedDiskSize?: number;
   updateDiskSize: (id: number) => void;
   selectedLinodeID?: number;
@@ -130,7 +144,7 @@ export interface CloneFormStateHandlers extends BaseFormStateAndHandlers {
 /**
  * additional form fields needed when creating a Linode from a StackScript
  */
-export interface StackScriptFormStateHandlers extends BaseFormStateAndHandlers {
+export interface StackScriptFormStateHandlers extends BasicFromContentProps {
   selectedStackScriptID?: number;
   selectedStackScriptUsername?: string;
   selectedStackScriptLabel?: string;
@@ -145,7 +159,7 @@ export interface StackScriptFormStateHandlers extends BaseFormStateAndHandlers {
     defaultData?: any
   ) => void;
   selectedUDFs?: any;
-  handleSelectUDFs: (stackScripts: any[]) => void;
+  handleSelectUDFs: (stackScripts: any) => void;
 }
 
 /**

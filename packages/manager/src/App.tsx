@@ -1,4 +1,5 @@
 import '@reach/menu-button/styles.css';
+import '@reach/tabs/styles.css';
 import { Account, AccountCapability } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { Linode } from '@linode/api-v4/lib/linodes';
@@ -66,7 +67,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     /**
-     * Send pageviews unless blacklisted.
+     * Send pageviews unless blocklisted.
      */
     this.props.history.listen(({ pathname }) => {
       if ((window as any).ga) {
@@ -160,7 +161,11 @@ export class App extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {/** Accessibility helpers */}
-        <a href="#main-content" hidden>
+        {/* TODO these should become visible on focus as per: https://www.w3.org/TR/WCAG20-TECHS/G1 */}
+        <a href="#main-navigation" className="visually-hidden">
+          Skip to main navigation
+        </a>
+        <a href="#main-content" className="visually-hidden">
           Skip to main content
         </a>
         <div hidden>
@@ -285,7 +290,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
   featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
-  euuid: state.__resources.account.data?.euuid
+  euuid: state.__resources.profile.data?._euuidFromHttpHeader
 });
 
 export const connected = connect(mapStateToProps);

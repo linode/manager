@@ -5,7 +5,7 @@ import { reducer, ReducerActions, ReducerState } from './EventsLanding';
 const someEvent: Event[] = [
   {
     id: 1234,
-    time_remaining: 50,
+    time_remaining: null,
     secondary_entity: null,
     seen: true,
     created: '2018-12-02T20:23:43',
@@ -21,7 +21,8 @@ const someEvent: Event[] = [
       url: '/v4/linode/instances/11440645'
     },
     status: 'finished',
-    duration: 0
+    duration: 0,
+    message: null
   }
 ];
 

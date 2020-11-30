@@ -101,7 +101,7 @@ describe('event.helpers', () => {
       const events: Event[] = [
         {
           id: 17957944,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:15:45',
@@ -117,11 +117,12 @@ describe('event.helpers', () => {
             url: '/v4/linode/instances/11440645'
           },
           status: 'finished',
-          duration: 0
+          duration: 0,
+          message: null
         },
         {
           id: 17957108,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',
@@ -137,14 +138,15 @@ describe('event.helpers', () => {
             url: '/v4/linode/instances/11440645'
           },
           status: 'finished',
-          duration: 0
+          duration: 0,
+          message: null
         }
       ];
 
       const expected: ExtendedEvent[] = [
         {
           id: 17957944,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:15:45',
@@ -161,11 +163,12 @@ describe('event.helpers', () => {
           },
           status: 'finished',
           _deleted: '2018-12-02T23:15:45',
-          duration: 0
+          duration: 0,
+          message: null
         },
         {
           id: 17957108,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',
@@ -182,7 +185,8 @@ describe('event.helpers', () => {
           },
           status: 'finished',
           _deleted: '2018-12-02T23:15:45',
-          duration: 0
+          duration: 0,
+          message: null
         }
       ];
 
@@ -196,7 +200,7 @@ describe('event.helpers', () => {
       const prevEvents: Event[] = [
         {
           id: 17957944,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:15:45',
@@ -207,11 +211,12 @@ describe('event.helpers', () => {
           rate: null,
           entity: null,
           status: 'finished',
-          duration: 0
+          duration: 0,
+          message: null
         },
         {
           id: 17957718,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:08:38',
@@ -222,11 +227,12 @@ describe('event.helpers', () => {
           rate: null,
           entity: null,
           status: 'started',
-          duration: 0
+          duration: 0,
+          message: null
         },
         {
           id: 17957108,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',
@@ -237,13 +243,14 @@ describe('event.helpers', () => {
           rate: null,
           entity: null,
           status: 'finished',
-          duration: 0
+          duration: 0,
+          message: null
         }
       ];
       const events: Event[] = [
         {
           id: 17957718,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:08:38',
@@ -254,7 +261,8 @@ describe('event.helpers', () => {
           rate: null,
           entity: null,
           status: 'started',
-          duration: 0
+          duration: 0,
+          message: null
         }
       ];
       const result = addToEvents(prevEvents, events);
@@ -262,7 +270,7 @@ describe('event.helpers', () => {
       expect(result).toEqual([
         {
           id: 17957944,
-          time_remaining: 0,
+          time_remaining: null,
           seen: true,
           created: '2018-12-02T23:15:45',
           action: 'linode_delete',
@@ -273,11 +281,12 @@ describe('event.helpers', () => {
           rate: null,
           entity: null,
           status: 'finished',
-          duration: 0
+          duration: 0,
+          message: null
         },
         {
           id: 17957718,
-          time_remaining: 0,
+          time_remaining: null,
           seen: true,
           created: '2018-12-02T23:08:38',
           action: 'linode_shutdown',
@@ -288,11 +297,12 @@ describe('event.helpers', () => {
           rate: null,
           entity: null,
           status: 'started',
-          duration: 0
+          duration: 0,
+          message: null
         },
         {
           id: 17957108,
-          time_remaining: 0,
+          time_remaining: null,
           secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',
@@ -303,7 +313,8 @@ describe('event.helpers', () => {
           rate: null,
           entity: null,
           status: 'finished',
-          duration: 0
+          duration: 0,
+          message: null
         }
       ]);
     });

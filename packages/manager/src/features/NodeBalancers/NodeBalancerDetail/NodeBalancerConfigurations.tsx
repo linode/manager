@@ -35,11 +35,14 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import PromiseLoader, {
   PromiseLoaderResponse
 } from 'src/components/PromiseLoader/PromiseLoader';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import {
   withNodeBalancerConfigActions,
   WithNodeBalancerConfigActions
@@ -60,7 +63,7 @@ import {
   transformConfigsForRequest
 } from '../utils';
 
-type ClassNames = 'root' | 'title' | 'port' | 'nbStatuses';
+type ClassNames = 'root' | 'title' | 'port' | 'nbStatuses' | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -76,6 +79,11 @@ const styles = (theme: Theme) =>
       display: 'block',
       [theme.breakpoints.up('sm')]: {
         display: 'inline'
+      }
+    },
+    cmrSpacing: {
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing()
       }
     }
   });
@@ -121,7 +129,8 @@ type CombinedProps = Props &
   WithNodeBalancerConfigActions &
   RouteProps &
   WithStyles<ClassNames> &
-  PreloadedProps;
+  PreloadedProps &
+  FeatureFlagConsumerProps;
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then(configs => {
@@ -967,6 +976,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       checkPathLens: lensTo(['check_path']),
       portLens: lensTo(['port']),
       protocolLens: lensTo(['protocol']),
+      proxyProtocolLens: lensTo(['proxy_protocol']),
       healthCheckTypeLens: lensTo(['check']),
       healthCheckAttemptsLens: lensTo(['check_attempts']),
       healthCheckIntervalLens: lensTo(['check_interval']),
@@ -977,7 +987,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     };
 
     return (
-      <ExpansionPanel
+      <Accordion
         key={`nb-config-${idx}`}
         updateFor={[
           idx,
@@ -1021,11 +1031,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           port={view(L.portLens, this.state)}
           onPortChange={this.updateState(L.portLens)}
           protocol={view(L.protocolLens, this.state)}
+          proxyProtocol={view(L.proxyProtocolLens, this.state)}
           onProtocolChange={this.updateState(
             L.protocolLens,
             L,
             this.afterProtocolUpdate
           )}
+          onProxyProtocolChange={this.updateState(L.proxyProtocolLens)}
           healthCheckType={view(L.healthCheckTypeLens, this.state)}
           onHealthCheckTypeChange={this.updateState(
             L.healthCheckTypeLens,
@@ -1059,7 +1071,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           onNodeWeightChange={this.onNodeWeightChange(idx)}
           onNodeModeChange={this.onNodeModeChange(idx)}
         />
-      </ExpansionPanel>
+      </Accordion>
     );
   };
 
@@ -1086,7 +1098,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { nodeBalancerLabel } = this.props;
+    const { classes, nodeBalancerLabel, flags } = this.props;
     const {
       configs,
       configErrors,
@@ -1096,11 +1108,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     } = this.state;
 
     return (
-      <div
-        role="tabpanel"
-        id="tabpanel--configurations"
-        aria-labelledby="tab-configurations"
-      >
+      <div>
         <DocumentTitleSegment
           segment={`${nodeBalancerLabel} - Configurations`}
         />
@@ -1114,6 +1122,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             <Button
               buttonType="secondary"
               onClick={() => this.addNodeBalancerConfig()}
+              className={flags.cmr ? classes.cmrSpacing : ''}
               data-qa-add-config
             >
               {configs.length === 0
@@ -1161,7 +1170,8 @@ const enhanced = composeC<CombinedProps, Props>(
   styled,
   withRouter,
   preloaded,
-  withNodeBalancerConfigActions
+  withNodeBalancerConfigActions,
+  withFeatureFlags
 );
 
 export default enhanced(NodeBalancerConfigurations);

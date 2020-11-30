@@ -10,12 +10,7 @@ import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Form from 'src/components/core/Form';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import Grid from 'src/components/Grid';
@@ -50,33 +45,30 @@ import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
 import { ApplicationState } from 'src/store';
 
-type ClassNames = 'form' | 'container' | 'sidebar' | 'copy';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    form: {
-      display: 'flex',
-      flexWrap: 'wrap'
+const useStyles = makeStyles((theme: Theme) => ({
+  form: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
+  container: {
+    padding: theme.spacing(3),
+    paddingBottom: theme.spacing(4)
+  },
+  sidebar: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: `0 !important`
     },
-    container: {
-      padding: theme.spacing(3),
-      paddingBottom: theme.spacing(4)
-    },
-    sidebar: {
-      [theme.breakpoints.down('sm')]: {
-        marginTop: `0 !important`
-      },
-      '& > div': {
-        [theme.breakpoints.up('md')]: {
-          padding: `${theme.spacing(1)}px 0`
-        }
+    '& > div': {
+      [theme.breakpoints.up('md')]: {
+        padding: `${theme.spacing(1)}px`
       }
-    },
-    copy: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(3)
     }
-  });
+  },
+  copy: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(3)
+  }
+}));
 
 interface Props {
   regions: Region[];
@@ -88,13 +80,11 @@ interface Props {
   ) => void;
 }
 
-type CombinedProps = Props &
-  VolumesRequests &
-  WithStyles<ClassNames> &
-  StateProps;
+type CombinedProps = Props & VolumesRequests & StateProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = props => {
-  const { onSuccess, classes, createVolume, disabled, origin, history } = props;
+  const classes = useStyles();
+  const { onSuccess, createVolume, disabled, origin, history } = props;
 
   const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
 
@@ -164,19 +154,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             );
           });
       }}
-      render={formikProps => {
-        const {
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-          status,
-          values,
-          touched
-        } = formikProps;
-
+    >
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        setFieldValue,
+        status,
+        values,
+        touched
+      }) => {
         const { region, linode_id, tags, config_id } = values;
 
         const linodeError = touched.linode_id ? errors.linode_id : undefined;
@@ -228,14 +217,13 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
               />
             )}
             <Grid container>
-              <Grid item className={` mlMain`}>
+              <Grid item className="mlMain">
                 <Paper className={classes.container}>
                   <Typography variant="body1" data-qa-volume-size-help>
                     A single Volume can range from 10 to {MAX_VOLUME_SIZE}{' '}
                     gibibytes in size and costs $0.10/GiB per month. Up to eight
                     volumes can be attached to a single Linode.
                   </Typography>
-
                   <Typography
                     variant="body1"
                     className={classes.copy}
@@ -247,7 +235,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     field below, the Volume will be automatically created in
                     that Linode’s region and attached upon creation.
                   </Typography>
-
                   <LabelField
                     error={touched.label ? errors.label : undefined}
                     name="label"
@@ -256,7 +243,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     value={values.label}
                     disabled={disabled}
                   />
-
                   <SizeField
                     error={touched.size ? errors.size : undefined}
                     name="size"
@@ -265,7 +251,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     value={values.size}
                     disabled={disabled}
                   />
-
                   <RegionSelect
                     errorText={touched.region ? errors.region : undefined}
                     regions={props.regions
@@ -296,7 +281,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     The datacenter where the new volume should be created. Only
                     regions supporting block storage are displayed.
                   </FormHelperText>
-
                   <LinodeSelect
                     error={linodeError || configErrorMessage}
                     name="linodeId"
@@ -309,7 +293,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     shouldOnlyDisplayRegionsWithBlockStorage={true}
                     disabled={disabled}
                   />
-
                   <ConfigSelect
                     error={touched.config_id ? errors.config_id : undefined}
                     linodeId={linode_id}
@@ -319,7 +302,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     value={config_id}
                     disabled={disabled}
                   />
-
                   <TagsInput
                     tagError={
                       touched.tags
@@ -355,7 +337,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           </Form>
         );
       }}
-    />
+    </Formik>
   );
 };
 
@@ -389,12 +371,9 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
   withVolumesRequests,
-  connected,
-  styled
+  connected
 )(CreateVolumeForm);
 
 export default enhanced;

@@ -10,10 +10,14 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
+import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
@@ -31,7 +35,7 @@ const Control = (props: any) => <components.Control {...props} />;
  * This doesn't share the same shape as the rest of the results, so should use
  * the default styling. */
 const Option = (props: any) => {
-  return ['redirect', 'info'].includes(props.value) ? (
+  return ['redirect', 'info', 'error'].includes(props.value) ? (
     <components.Option {...props} />
   ) : (
     <SearchSuggestion {...props} />
@@ -59,9 +63,6 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
 
-// Timeout of 1sec in debounce to avoid sending too many events to GA
-const debouncedSearchAutoEvent = debounce(1000, false, sendSearchBarUsedEvent);
-
 export const SearchBar: React.FC<CombinedProps> = props => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
@@ -69,22 +70,64 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
 
+  const { searchAPI } = useAPISearch();
+  const { _isLargeAccount } = useAccountManagement();
+
+  // Only request things if the search bar is open/active.
+  const shouldMakeRequests = searchActive && !_isLargeAccount;
+
   const { _loading } = useReduxLoad(
     ['linodes', 'nodeBalancers', 'images', 'domains', 'volumes', 'kubernetes'],
     REFRESH_INTERVAL,
-    searchActive // Only request things if the search bar is open/active.
+    shouldMakeRequests
   );
 
+  const { loading: objectStorageLoading } = useObjectStorage(
+    shouldMakeRequests
+  );
+
+  const [apiResults, setAPIResults] = React.useState<any[]>([]);
+  const [apiError, setAPIError] = React.useState<string | null>(null);
+  const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
+
+  const _searchAPI = React.useRef(
+    debounce(500, false, (_searchText: string) => {
+      setAPILoading(true);
+      searchAPI(_searchText)
+        .then(searchResults => {
+          setAPIResults(searchResults.combinedResults);
+          setAPILoading(false);
+          setAPIError(null);
+        })
+        .catch(error => {
+          setAPIError(
+            getAPIErrorOrDefault(error, 'Error loading search results')[0]
+              .reason
+          );
+          setAPILoading(false);
+        });
+    })
+  ).current;
+
   React.useEffect(() => {
-    search(searchText);
-  }, [_loading, search, searchText]);
+    // We can't store all data for large accounts for client side search,
+    // so use the API's filtering instead.
+    if (_isLargeAccount) {
+      _searchAPI(searchText);
+    } else {
+      search(searchText);
+    }
+  }, [
+    _loading,
+    objectStorageLoading,
+    search,
+    searchText,
+    _searchAPI,
+    _isLargeAccount
+  ]);
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
-    // do not trigger debounce for empty text
-    if (searchText !== '') {
-      debouncedSearchAutoEvent('Search Auto', searchText);
-    }
     props.search(_searchText);
   };
 
@@ -109,23 +152,21 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     if (!item || item.label === '') {
       return;
     }
-    const text = item.data.searchText;
 
-    if (item.value === 'info') {
+    if (item.value === 'info' || item.value === 'error') {
       return;
     }
+
+    const text = item?.data?.searchText ?? '';
 
     if (item.value === 'redirect') {
       props.history.push({
         pathname: `/search`,
         search: `?query=${encodeURIComponent(text)}`
       });
-      // we are selecting the View all option sending the user to the landing,
-      // this is like key down enter
-      sendSearchBarUsedEvent('Search Landing', text);
       return;
     }
-    sendSearchBarUsedEvent('Search Select', text);
+    sendSearchBarUsedEvent();
     props.history.push(item.data.path);
   };
 
@@ -139,12 +180,16 @@ export const SearchBar: React.FC<CombinedProps> = props => {
         pathname: `/search`,
         search: `?query=${encodeURIComponent(searchText)}`
       });
-      sendSearchBarUsedEvent('Search Landing', searchText);
       onClose();
     }
   };
 
   const guidanceText = () => {
+    if (_isLargeAccount) {
+      // This fancy stuff won't work if we're using API
+      // based search; don't confuse users by displaying this.
+      return undefined;
+    }
     return (
       <>
         <b>By field:</b> “tag:my-app” “label:my-linode” &nbsp;&nbsp;
@@ -161,9 +206,13 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   };
 
   const finalOptions = createFinalOptions(
-    combinedResults,
+    _isLargeAccount ? apiResults : combinedResults,
     searchText,
-    _loading
+    _loading || apiSearchLoading || objectStorageLoading,
+    // Ignore "Unauthorized" errors, since these will always happen on LKE
+    // endpoints for restricted users. It's not really an "error" in this case.
+    // We still want these users to be able to use the search feature.
+    Boolean(apiError) && apiError !== 'Unauthorized'
   );
 
   return (
@@ -237,7 +286,8 @@ export default compose<CombinedProps, {}>(
 export const createFinalOptions = (
   results: Item[],
   searchText: string = '',
-  loading: boolean = false
+  loading: boolean = false,
+  error: boolean = false
 ) => {
   const redirectOption = {
     value: 'redirect',
@@ -252,10 +302,19 @@ export const createFinalOptions = (
     label: 'Loading results...'
   };
 
+  const searchError = {
+    value: 'error',
+    label: 'Error retrieving search results'
+  };
+
   // Results aren't final as we're loading data
 
   if (loading) {
     return [redirectOption, loadingResults];
+  }
+
+  if (error) {
+    return [searchError];
   }
 
   // NO RESULTS:

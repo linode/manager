@@ -3,12 +3,6 @@ import * as React from 'react';
 
 import { AuthenticationWrapper } from 'src/components/AuthenticationWrapper/AuthenticationWrapper';
 
-/**
- * prevent console errors in Jest tests
- * see: https://github.com/jsdom/jsdom/issues/2112
- */
-window.location.assign = jest.fn();
-
 const component = shallow<AuthenticationWrapper>(
   <AuthenticationWrapper
     isAuthenticated={false}
@@ -23,6 +17,11 @@ const component = shallow<AuthenticationWrapper>(
     requestRegions={jest.fn()}
     requestSettings={jest.fn()}
     markAppAsDoneLoading={jest.fn()}
+    requestLinodeType={jest.fn()}
+    checkAccountSize={jest.fn()}
+    linodes={[]}
+    typesLastUpdated={0}
+    types={[]}
   >
     <div />
   </AuthenticationWrapper>

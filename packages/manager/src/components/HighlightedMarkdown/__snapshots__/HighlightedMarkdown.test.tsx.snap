@@ -12,7 +12,7 @@ exports[`HighlightedMarkdown component should highlight text consistently 1`] = 
 
   <pre>
     <code>
-       const x = function() { return true; }
+      const x = function() { return true; }
 
     </code>
   </pre>

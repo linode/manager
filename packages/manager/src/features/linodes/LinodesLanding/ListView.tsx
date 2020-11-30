@@ -2,47 +2,47 @@ import { Image } from '@linode/api-v4/lib/images';
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
-import TagDrawer from 'src/components/TagCell/TagDrawer';
-import useLinodes from 'src/hooks/useLinodes';
+import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
+import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { DialogType } from 'src/features/linodes/types';
+import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import useFlags from 'src/hooks/useFlags';
+import useLinodeActions from 'src/hooks/useLinodeActions';
+import { ShallowExtendedLinode } from 'src/store/linodes/types';
+import formatDate from 'src/utilities/formatDate';
 import LinodeRow from './LinodeRow/LinodeRow';
 import LinodeRow_CMR from './LinodeRow/LinodeRow_CMR';
 
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import useFlags from 'src/hooks/useFlags';
-import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
-
 interface Props {
-  data: LinodeWithMaintenanceAndDisplayStatus[];
+  data: ShallowExtendedLinode[];
   images: Image[];
   showHead?: boolean;
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-}
-
-interface TagDrawerProps {
-  label: string;
-  tags: string[];
-  open: boolean;
-  linodeID: number;
+  isVLAN: boolean;
 }
 
 type CombinedProps = Props & PaginationProps;
 
 export const ListView: React.FC<CombinedProps> = props => {
-  const { data, openDeleteDialog, openPowerActionDialog } = props;
+  const { data, openDialog, openPowerActionDialog } = props;
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: [],
     label: '',
-    linodeID: 0
+    entityID: 0
   });
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
+  const flags = useFlags();
+
+  const notificationContext = React.useContext(_notificationContext);
 
   const closeTagDrawer = () => {
     setTagDrawer({ ...tagDrawer, open: false });
@@ -57,7 +57,7 @@ export const ListView: React.FC<CombinedProps> = props => {
       open: true,
       label: linodeLabel,
       tags,
-      linodeID
+      entityID: linodeID
     });
   };
 
@@ -75,26 +75,39 @@ export const ListView: React.FC<CombinedProps> = props => {
     });
   };
 
-  const flags = useFlags();
+  // @todo delete after CMR
+  const openDeleteDialog = (linodeID: number, linodeLabel: string) => {
+    props.openDialog('delete', linodeID, linodeLabel);
+  };
 
   const Row = flags.cmr ? LinodeRow_CMR : LinodeRow;
+
+  // This won't happen in the normal Linodes Landing context (a custom empty
+  // state is shown higher up in the tree). This is specifically for the case of
+  // VLAN Details, where we want to show the table even if there's nothing attached.
+  if (data.length === 0) {
+    return <TableRowEmptyState_CMR colSpan={12} />;
+  }
 
   return (
     // eslint-disable-next-line
     <>
-      {data.map((linode, idx: number) => (
+      {/* @todo: fix this "any" typing once https://github.com/linode/manager/pull/6999 is merged. */}
+      {data.map((linode: any, idx: number) => (
         <Row
           backups={linode.backups}
           id={linode.id}
           ipv4={linode.ipv4}
           maintenanceStartTime={
-            linode.maintenance ? linode.maintenance.when : ''
+            linode._maintenance?.when
+              ? formatDate(linode._maintenance.when)
+              : ''
           }
           ipv6={linode.ipv6 || ''}
           label={linode.label}
           region={linode.region}
           status={linode.status}
-          displayStatus={linode.displayStatus || ''}
+          displayStatus={linode._displayStatus || ''}
           tags={linode.tags}
           mostRecentBackup={linode.backups.last_successful}
           disk={linode.specs.disk}
@@ -102,18 +115,23 @@ export const ListView: React.FC<CombinedProps> = props => {
           memory={linode.specs.memory}
           type={linode.type}
           image={linode.image}
+          vlanIP={linode._vlanIP}
           key={`linode-row-${idx}`}
           openTagDrawer={openTagDrawer}
+          openDialog={openDialog}
+          openNotificationDrawer={notificationContext.openDrawer}
+          // @todo delete after CMR
           openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
+          isVLAN={props.isVLAN}
         />
       ))}
       <TagDrawer
         entityLabel={tagDrawer.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
-        deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
+        addTag={(newTag: string) => addTag(tagDrawer.entityID, newTag)}
+        deleteTag={(tag: string) => deleteTag(tagDrawer.entityID, tag)}
         onClose={closeTagDrawer}
       />
     </>

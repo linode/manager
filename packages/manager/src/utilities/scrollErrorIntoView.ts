@@ -1,13 +1,16 @@
-const scrollErrorIntoView = (errorGroup?: string) => {
+const scrollErrorIntoView = (
+  errorGroup?: string,
+  options?: ScrollIntoViewOptions
+) => {
   const errorScrollClassSelector = errorGroup
     ? `.error-for-scroll-${errorGroup}`
     : `.error-for-scroll`;
   const element = document.querySelectorAll(errorScrollClassSelector)[0];
   if (element) {
     element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'nearest'
+      behavior: options?.behavior ?? 'smooth',
+      block: options?.block ?? 'start',
+      inline: options?.inline ?? 'nearest'
     });
   }
 };

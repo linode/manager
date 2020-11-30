@@ -1,16 +1,11 @@
-import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 
 import { StackScriptForm } from './StackScriptForm';
-
-import { images } from 'src/__data__/images';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-
-afterEach(cleanup);
 
 const props = {
   images: {
-    available: images,
+    available: [],
     selected: []
   },
   currentUser: 'mmckenna',

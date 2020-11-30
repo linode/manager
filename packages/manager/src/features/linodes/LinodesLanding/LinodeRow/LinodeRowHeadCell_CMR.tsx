@@ -1,3 +1,4 @@
+import * as classnames from 'classnames';
 import { Event } from '@linode/api-v4/lib/account';
 import { LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
@@ -19,7 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.bold,
     fontSize: '.875rem',
     lineHeight: '1.125rem',
-    textDecoration: 'underline'
+    textDecoration: 'underline',
+    color: theme.cmrTextColors.linkActiveLight
   },
   root: {
     '& h3': {
@@ -32,30 +34,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '35%'
     }
   },
-  dashboard: {
-    width: '70%'
-  },
-  status: {
-    marginLeft: theme.spacing(1) / 2,
-    position: 'relative',
-    top: 0,
-    lineHeight: '0.8rem'
-  },
-  labelRow: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  },
-  loadingStatus: {
-    marginBottom: theme.spacing(1) / 2
-  },
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center'
-  },
-  wrapHeader: {
-    wordBreak: 'break-all'
+    alignItems: 'center',
+    whiteSpace: 'nowrap'
   },
   maintenanceContainer: {},
   maintenanceNotice: {
@@ -73,6 +56,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   helpIcon: {
     paddingTop: 0,
     paddingBottom: 0
+  },
+  // The head cell in the VLAN Detail context.
+  vlanContext: {
+    width: '14%'
   }
 }));
 
@@ -97,6 +84,7 @@ interface Props {
   recentEvent?: Event;
   maintenance?: string | null;
   isDashboard?: boolean;
+  isVLAN?: boolean;
 }
 
 type CombinedProps = Props & WithDisplayType & Pick<WithImages, 'imagesData'>;
@@ -111,7 +99,8 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
     // other props
     width,
     maintenance,
-    isDashboard
+    isDashboard,
+    isVLAN
   } = props;
 
   const style = width ? { width: `${width}%` } : {};
@@ -119,15 +108,20 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   const MaintenanceText = () => {
     return (
       <>
-        Please consult your{' '}
-        <Link to="/support/tickets?type=open">support tickets</Link> for
-        details.
+        For more information, please see your{' '}
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
   };
 
   return (
-    <TableCell className={classes.root} style={style}>
+    <TableCell
+      className={classnames({
+        [classes.root]: true,
+        [classes.vlanContext]: isVLAN
+      })}
+      style={style}
+    >
       <Grid container wrap="nowrap" alignItems="center">
         <Grid item>
           <div className={classes.labelStatusWrapper}>

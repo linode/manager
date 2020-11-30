@@ -8,7 +8,7 @@
  *
  * These things must happen in this order or the paypal payment will not
  * process correctly. It is imperative that the APIv4 staging call happens before
- * the the createOrder callback is returned.
+ * the createOrder callback is returned.
  *
  * For all documentation, see below:
  *
@@ -19,23 +19,24 @@
  * instructions
  *
  */
-import * as classnames from 'classnames';
 import {
   executePaypalPayment,
   stagePaypalPayment
 } from '@linode/api-v4/lib/account';
-import scriptLoader from 'react-async-script-loader';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { compose } from 'recompose';
-import { Theme, makeStyles } from 'src/components/core/styles';
+import CircleProgress from 'src/components/CircleProgress';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import Tooltip from 'src/components/core/Tooltip';
+import Notice from 'src/components/Notice';
 import { PAYPAL_CLIENT_ENV } from 'src/constants';
-import PaypalDialog from './PaymentBits/PaypalDialog';
 import { reportException } from 'src/exceptionReporting';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import PaypalDialog from './PaymentBits/PaypalDialog';
+import { SetSuccess } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -54,6 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paypalButtonWrapper: {
     position: 'relative',
+    left: theme.spacing(),
     zIndex: 1,
     transition: theme.transitions.create(['opacity'])
   },
@@ -66,14 +68,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface PaypalScript {
-  isScriptLoadSucceed?: boolean;
   isScriptLoaded?: boolean;
-  onScriptLoaded?: () => void;
 }
-
 export interface Props {
   usd: string;
-  setSuccess: (message: string | null, paymentWasMade?: boolean) => void;
+  setSuccess: SetSuccess;
 }
 
 type CombinedProps = Props & PaypalScript;
@@ -92,7 +91,7 @@ const client = {
 
 const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=capture`;
 
-const paypalScriptSrc = () => {
+export const paypalScriptSrc = () => {
   return `https://www.paypal.com/sdk/js?client-id=${client[PAYPAL_CLIENT_ENV]}${paypalSrcQueryParams}`;
 };
 
@@ -121,6 +120,10 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
   const [shouldRenderButton, setShouldRenderButton] = React.useState<boolean>(
     false
   );
+  const [
+    errorLoadingPaypalScript,
+    setErrorLoadingPaypalScript
+  ] = React.useState<boolean | undefined>();
 
   React.useEffect(() => {
     const isPayPalInitialized = window.hasOwnProperty('paypal');
@@ -136,9 +139,20 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
         React,
         ReactDOM
       });
+      setErrorLoadingPaypalScript(false);
       setShouldRenderButton(true);
     }
   }, [isScriptLoaded, shouldRenderButton]);
+
+  React.useEffect(() => {
+    const timeout: NodeJS.Timeout = setTimeout(() => {
+      if ('paypal' in window === false) {
+        setErrorLoadingPaypalScript(true);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   /**
    * user submits payment and we send APIv4 request to confirm paypal payment
@@ -149,10 +163,14 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
       payer_id: payerID,
       payment_id: paymentID
     })
-      .then(() => {
+      .then(response => {
         setExecuting(false);
         setDialogOpen(false);
-        setSuccess(`Payment for $${usd} successfully submitted`, true);
+        setSuccess(
+          `Payment for $${usd} successfully submitted`,
+          true,
+          response.warnings
+        );
       })
       .catch(_ => {
         setExecuting(false);
@@ -239,6 +257,22 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
 
   const enabled = shouldEnablePaypalButton(+usd);
 
+  if (typeof errorLoadingPaypalScript === 'undefined') {
+    return (
+      <Grid container direction="column" className={classes.root}>
+        <CircleProgress mini />
+      </Grid>
+    );
+  }
+
+  if (errorLoadingPaypalScript) {
+    return (
+      <Grid container direction="column" className={classes.root}>
+        <Notice error text="There was an error connecting with PayPal." />
+      </Grid>
+    );
+  }
+
   return (
     <>
       <Grid container direction="column" className={classes.root}>
@@ -317,7 +351,4 @@ export const shouldEnablePaypalButton = (value: number | undefined) => {
   return true;
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  scriptLoader(paypalScriptSrc())
-)(PayPalDisplay);
+export default React.memo(PayPalDisplay);

@@ -1,19 +1,14 @@
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
-import AppBar from 'src/components/core/AppBar';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLink from 'src/components/TabLink';
+import useFlags from 'src/hooks/useFlags';
 
 import withProfile, {
   Props as ProfileActionsProps
@@ -24,108 +19,79 @@ import TaxBanner from 'src/components/TaxBanner';
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
-const Users = React.lazy(() => import('src/features/Users'));
+const Users_PreCMR = React.lazy(() => import('src/features/Users'));
+const Users_CMR = React.lazy(() =>
+  import('src/features/Users/UsersLanding_CMR')
+);
 const Billing = React.lazy(() => import('src/features/Billing'));
 
-class AccountLanding extends React.Component<Props> {
-  handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = this.props;
-    const routeName = this.tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
+const AccountLanding: React.FC<Props> = props => {
+  const { location } = props;
+  const flags = useFlags();
 
-  tabs = [
+  const Users = flags.cmr ? Users_CMR : Users_PreCMR;
+
+  const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Billing Info',
-      routeName: `${this.props.match.url}/billing`
+      routeName: `${props.match.url}/billing`
     },
     {
       title: 'Users',
-      routeName: `${this.props.match.url}/users`
+      routeName: `${props.match.url}/users`
     },
     {
       title: 'Settings',
-      routeName: `${this.props.match.url}/settings`
+      routeName: `${props.match.url}/settings`
     }
   ];
 
-  render() {
-    const {
-      match: { url },
-      location
-    } = this.props;
+  const matches = (p: string) => {
+    return Boolean(matchPath(p, { path: location.pathname }));
+  };
 
-    const matches = (p: string) => {
-      return Boolean(matchPath(p, { path: this.props.location.pathname }));
-    };
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
+  };
 
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Account Settings" />
-        <TaxBanner location={location} marginBottom={24} />
-        <Breadcrumb
-          pathname={location.pathname}
-          labelTitle="Account"
-          removeCrumbX={1}
-          data-qa-profile-header
-        />
-        <AppBar position="static" color="default" role="tablist">
-          <Tabs
-            value={this.tabs.findIndex(tab => matches(tab.routeName))}
-            onChange={this.handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="on"
-          >
-            {this.tabs.map(tab => (
-              <Tab
-                key={tab.title}
-                data-qa-tab={tab.title}
-                component={React.forwardRef((props, ref) => (
-                  <TabLink
-                    to={tab.routeName}
-                    title={tab.title}
-                    {...props}
-                    ref={ref}
-                  />
-                ))}
-              />
-            ))}
-          </Tabs>
-        </AppBar>
+  return (
+    <React.Fragment>
+      <DocumentTitleSegment segment="Account Settings" />
+      <TaxBanner location={location} marginBottom={24} />
+      <Breadcrumb
+        pathname={location.pathname}
+        labelTitle="Account"
+        removeCrumbX={1}
+        data-qa-profile-header
+      />
+
+      <Tabs
+        index={Math.max(
+          tabs.findIndex(tab => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
+      >
+        <TabLinkList tabs={tabs} />
+
         <React.Suspense fallback={<SuspenseLoader />}>
-          <Switch>
-            <Route exact strict path={`${url}/billing`} component={Billing} />
-            <Route
-              exact
-              strict
-              path={`${url}/users`}
-              render={props => (
-                <Users
-                  {...props}
-                  isRestrictedUser={this.props.isRestrictedUser}
-                />
-              )}
-            />
-            <Route
-              exact
-              strict
-              path={`${url}/settings`}
-              component={GlobalSettings}
-            />
-            <Route exact strict path={`${url}`} component={Billing} />
-            <Redirect to={`${url}/billing`} />
-          </Switch>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <Billing />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <Users isRestrictedUser={props.isRestrictedUser} />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <GlobalSettings />
+            </SafeTabPanel>
+          </TabPanels>
         </React.Suspense>
-      </React.Fragment>
-    );
-  }
-}
+      </Tabs>
+    </React.Fragment>
+  );
+};
 
 interface StateProps {
   isRestrictedUser: boolean;

@@ -13,6 +13,7 @@ export interface AccountManagementProps {
   _hasGrant: (grant: GlobalGrantTypes) => boolean;
   _hasAccountAccess: boolean;
   _isManagedAccount: boolean;
+  _isLargeAccount: boolean;
 }
 
 export const useAccountManagement = () => {
@@ -26,6 +27,11 @@ export const useAccountManagement = () => {
 
   const accountSettings = useSelector(
     (state: ApplicationState) => state.__resources.accountSettings
+  );
+
+  const _isLargeAccount = useSelector(
+    (state: ApplicationState) =>
+      state.__resources.accountManagement.isLargeAccount
   );
 
   const _isRestrictedUser = profile.data?.restricted ?? false;
@@ -44,7 +50,8 @@ export const useAccountManagement = () => {
     _isRestrictedUser,
     _hasGrant,
     _hasAccountAccess,
-    _isManagedAccount
+    _isManagedAccount,
+    _isLargeAccount
   };
 };
 

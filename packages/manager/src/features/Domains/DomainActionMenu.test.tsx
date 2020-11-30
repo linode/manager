@@ -1,4 +1,3 @@
-import { cleanup } from '@testing-library/react';
 import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -20,20 +19,18 @@ const props = {
   ...reactRouterProps
 };
 
-afterEach(cleanup);
-
 describe('Domain action menu', () => {
   it('should include standard Domain actions', () => {
     const { queryByText } = renderWithTheme(<DomainActionMenu {...props} />);
     includesActions(['Edit', 'Clone', 'Delete'], queryByText);
   });
 
-  it('master Domains should include Edit DNS records action', () => {
+  it('primary Domains should include Edit DNS records action', () => {
     const { queryByText } = renderWithTheme(<DomainActionMenu {...props} />);
     includesActions(['Edit DNS Records'], queryByText);
   });
 
-  it('slave Domains should not include Edit DNS records action', () => {
+  it('secondary Domains should not include Edit DNS records action', () => {
     const { queryByText } = renderWithTheme(
       <DomainActionMenu {...props} type={'slave'} />
     );

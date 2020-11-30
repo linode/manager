@@ -1,68 +1,54 @@
 import { ZoneName } from '@linode/api-v4/lib/networking';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import useRegions from 'src/hooks/useRegions';
 import { MapState } from 'src/store/types';
 
-import { getIPv6DNSResolvers, ipv4DNSResolvers } from './resolvers';
-
-type ClassNames =
-  | 'root'
-  | 'title'
-  | 'section'
-  | 'individualContainer'
-  | 'ips'
-  | 'error';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: theme.spacing(2),
-      padding: theme.spacing(3),
-      paddingBottom: theme.spacing(2) + theme.spacing(1) / 2
-    },
-    section: {
-      marginBottom: theme.spacing(1)
-    },
-    title: {
-      marginBottom: theme.spacing(1)
-    },
-    individualContainer: {
-      marginBottom: theme.spacing(1)
-    },
-    ips: {
-      padding: `0 ${theme.spacing(1)}px !important`
-    },
-    error: {
-      color: theme.palette.status.errorDark
-    }
-  });
-
-const styled = withStyles(styles);
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: theme.spacing(3),
+    paddingBottom: theme.spacing(2) + theme.spacing(1) / 2
+  },
+  section: {
+    marginBottom: theme.spacing(1)
+  },
+  title: {
+    marginBottom: theme.spacing(1)
+  },
+  individualContainer: {
+    marginBottom: theme.spacing(1)
+  },
+  ips: {
+    padding: `0 ${theme.spacing(1)}px !important`
+  },
+  error: {
+    color: theme.palette.status.errorDark
+  }
+}));
 
 interface Props {
-  linodeRegion: ZoneName;
+  linodeRegion: string;
+  zoneName: ZoneName;
   linodeLabel: string;
   linkLocal?: string;
   sshIPAddress?: string;
 }
 
-type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps;
 
-const SummarySection: React.FC<any> = props => {
-  const { title, renderValue, classes, ...rest } = props;
-
+interface SummaryProps {
+  title: string;
+  renderValue: (args: any) => JSX.Element;
+}
+const SummarySection: React.FC<SummaryProps> = props => {
+  const { title, renderValue, ...rest } = props;
+  const classes = useStyles();
   return (
     <Grid
       container
@@ -75,19 +61,25 @@ const SummarySection: React.FC<any> = props => {
         </Typography>
       </Grid>
       <Grid item className={classes.ips}>
-        {renderValue(rest)}
+        {renderValue(rest as any)}
       </Grid>
     </Grid>
   );
 };
 
-const StyledSummarySection = styled(SummarySection);
+const StyledSummarySection = SummarySection;
 
 const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
-  const { classes, sshIPAddress, username, linodeRegion, linodeLabel } = props;
+  const { sshIPAddress, username, linodeRegion, linodeLabel, zoneName } = props;
+  const classes = useStyles();
 
-  const v4Resolvers = getIPv4DNSResolvers(linodeRegion);
-  const v6Resolvers = getIPv6DNSResolvers(linodeRegion);
+  const regions = useRegions();
+  const currentRegion = regions.entities.find(
+    thisRegion => thisRegion.id === linodeRegion
+  );
+
+  const v4Resolvers = currentRegion?.resolvers?.ipv4.split(',') ?? [];
+  const v6Resolvers = currentRegion?.resolvers?.ipv6.split(',') ?? [];
 
   const renderErrorMessage = () => (
     <Typography className={classes.error} component="span">
@@ -113,11 +105,7 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
               {username && linodeRegion && (
                 <StyledSummarySection
                   title="Lish via SSH"
-                  renderValue={renderLishLink(
-                    username,
-                    linodeRegion,
-                    linodeLabel
-                  )}
+                  renderValue={renderLishLink(username, zoneName, linodeLabel)}
                 />
               )}
             </Grid>
@@ -146,8 +134,6 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
   );
 };
 
-const restyled = withStyles(styles);
-
 interface StateProps {
   username?: string;
 }
@@ -158,13 +144,9 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
 
 const connected = connect(mapStateToProps);
 
-export default restyled(
-  connected(LinodeNetworkingSummaryPanel)
-) as React.ComponentType<Props>;
-
-const getIPv4DNSResolvers = (region: string) => {
-  return pathOr(ipv4DNSResolvers.newark, [region], ipv4DNSResolvers);
-};
+export default connected(LinodeNetworkingSummaryPanel) as React.ComponentType<
+  Props
+>;
 
 const renderDNSResolvers = (ips: string[]) => () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -187,18 +169,18 @@ const renderSSHLink = (address?: string) => () => (
 
 const renderLishLink = (
   username: string,
-  region: string,
+  zone: string,
   linodeLabel: string
 ) => () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
     <Grid item>
       <Typography variant="body1">
-        ssh -t {username}@lish-{region}.linode.com {linodeLabel}
+        ssh -t {username}@lish-{zone}.linode.com {linodeLabel}
       </Typography>
     </Grid>
     <Grid item>
       <CopyTooltip
-        text={`ssh -t ${username}@lish-${region}.linode.com ${linodeLabel}`}
+        text={`ssh -t ${username}@lish-${zone}.linode.com ${linodeLabel}`}
         standAlone
       />
     </Grid>

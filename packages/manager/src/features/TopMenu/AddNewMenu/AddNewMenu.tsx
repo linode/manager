@@ -4,7 +4,6 @@ import { AccountCapability } from '@linode/api-v4/lib/account';
 import {
   Menu,
   MenuButton,
-  MenuItem,
   MenuItems,
   MenuLink,
   MenuPopover
@@ -15,7 +14,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators, Dispatch } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
@@ -28,11 +26,8 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { MapState } from 'src/store/types';
 import AddNewMenuItem from './AddNewMenuItem';
-
-import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 
 type CSSClasses =
   | 'wrapper'
@@ -130,13 +125,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
-  // openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
-  openDomainDrawerForCreating: typeof openDomainDrawerForCreating;
-}
-
-type CombinedProps = Props &
-  WithStyles<CSSClasses> &
+type CombinedProps = WithStyles<CSSClasses> &
   RouteComponentProps<{}> &
   DispatchProps &
   StateProps;
@@ -189,12 +178,9 @@ class AddNewMenu extends React.Component<CombinedProps> {
                   ItemIcon={NodebalancerIcon}
                 />
               </MenuLink>
-              <MenuItem
-                onSelect={() => {
-                  this.props.openDomainDrawerForCreating(
-                    'Created from Add New Menu'
-                  );
-                }}
+              <MenuLink
+                as={Link}
+                to="/domains/create"
                 className={classes.menuItemLink}
               >
                 <AddNewMenuItem
@@ -202,13 +188,10 @@ class AddNewMenu extends React.Component<CombinedProps> {
                   body="Manage your DNS records using Linode’s high-availability name servers"
                   ItemIcon={DomainIcon}
                 />
-              </MenuItem>
+              </MenuLink>
               <MenuLink
                 as={Link}
                 to="/linodes/create?type=One-Click"
-                onClick={() => {
-                  sendOneClickNavigationEvent('Add New Menu');
-                }}
                 className={classes.menuItemLink}
               >
                 <AddNewMenuItem
@@ -224,7 +207,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                 className={classes.menuItemLink}
               >
                 <AddNewMenuItem
-                  title="Kubernetes"
+                  title="Kubernetes Cluster"
                   body="Create and manage Kubernetes Clusters for highly available container workloads"
                   ItemIcon={KubernetesIcon}
                 />
@@ -240,7 +223,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
 export const styledComponent = styled(AddNewMenu);
 
 interface DispatchProps {
-  openDomainDrawerForCreating: () => void;
   openVolumeDrawerForCreating: () => void;
 }
 
@@ -254,10 +236,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators({ openDomainDrawerForCreating }, dispatch);
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(mapStateToProps);
 
 export default compose<CombinedProps, {}>(
   connected,

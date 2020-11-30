@@ -3,6 +3,7 @@ import {
   cloneLinode,
   CreateLinodeRequest,
   Linode,
+  LinodeInterfacePayload,
   LinodeTypeClass
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -50,7 +51,7 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import LinodeCreate from './LinodeCreate';
-import { ExtendedType } from './SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 
 import {
   HandleSubmit,
@@ -96,7 +97,7 @@ interface State {
   backupsEnabled: boolean;
   privateIPEnabled: boolean;
   password: string;
-  udfs?: any[];
+  udfs?: any;
   tags?: Tag[];
   errors?: APIError[];
   formIsSubmitting: boolean;
@@ -104,6 +105,7 @@ interface State {
   appInstancesLoading: boolean;
   appInstancesError?: string;
   disabledClasses?: LinodeTypeClass[];
+  selectedVlanIDs: number[];
 }
 
 type CombinedProps = WithSnackbarProps &
@@ -135,9 +137,11 @@ const defaultState: State = {
   selectedRegionID: undefined,
   selectedTypeID: undefined,
   tags: [],
+  udfs: undefined,
   formIsSubmitting: false,
   errors: undefined,
-  appInstancesLoading: false
+  appInstancesLoading: false,
+  selectedVlanIDs: []
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -334,7 +338,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setTags = (tags: Tag[]) => this.setState({ tags });
 
-  setUDFs = (udfs: any[]) => this.setState({ udfs });
+  setUDFs = (udfs: any) => this.setState({ udfs });
+
+  setVlanID = (vlanIDs: number[]) => {
+    this.setState({ selectedVlanIDs: vlanIDs });
+  };
 
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
@@ -403,9 +411,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return getLabel(arg1, arg2, arg3);
   };
 
-  submitForm: HandleSubmit = (payload, linodeID?: number) => {
+  submitForm: HandleSubmit = (_payload, linodeID?: number) => {
     const { createType } = this.props;
-
+    const payload = { ..._payload };
     /**
      * Do manual password validation (someday we'll use Formik and
      * not need this). Only run this check if a password is present
@@ -417,11 +425,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * will be displayed, even if other required fields are missing.
      */
 
+    if (this.state.selectedVlanIDs.length > 0) {
+      payload.interfaces = getInterfacePayload(this.state.selectedVlanIDs);
+    }
+
     if (payload.root_pass) {
-      const passwordError = validatePassword(
-        this.props.flags.passwordValidation ?? 'none',
-        payload.root_pass
-      );
+      const passwordError = validatePassword(payload.root_pass);
 
       if (passwordError) {
         this.setState({
@@ -620,6 +629,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       enqueueSnackbar,
       closeSnackbar,
       regionsData,
+      typesData,
       ...restOfProps
     } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
@@ -645,8 +655,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
-        <Grid container spacing={0}>
-          <Grid item xs={12}>
+        <Grid container spacing={0} className="m0">
+          <Grid item xs={12} className="px0">
             <Breadcrumb
               pathname={'/linodes/create'}
               labelTitle="Create"
@@ -675,8 +685,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleSubmitForm={this.submitForm}
             resetCreationState={this.clearCreationState}
             setBackupID={this.setBackupID}
-            regionsData={filteredRegions}
+            regionsData={filteredRegions!}
             regionHelperText={regionHelperText}
+            typesData={typesData}
+            setVlanID={this.setVlanID}
             {...restOfProps}
             {...restOfState}
           />
@@ -775,3 +787,17 @@ const handleAnalytics = (
 
   sendCreateLinodeEvent(eventAction, eventLabel);
 };
+
+export const getInterfacePayload = (
+  vlanIDs: number[]
+): Record<string, LinodeInterfacePayload> =>
+  vlanIDs.reduce(
+    (acc, thisVLAN, currentIdx) => {
+      const slot = `eth${currentIdx + 1}`;
+      return {
+        ...acc,
+        [slot]: { type: 'additional', vlan_id: thisVLAN }
+      };
+    },
+    { eth0: { type: 'default' } }
+  );

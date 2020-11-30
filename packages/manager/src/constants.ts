@@ -21,7 +21,8 @@ export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
 /** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
-export const DOCS_SEARCH_URL = 'https://linode.com/docs/search/?q=';
+export const DOCS_SEARCH_URL =
+  'https://linode.com/docs/search/?sections=guides&q=';
 export const COMMUNITY_SEARCH_URL =
   'https://linode.com/community/questions/search?query=';
 export const ALGOLIA_APPLICATION_ID =
@@ -39,7 +40,12 @@ export const isProdAPI = RegExp(
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.
 export const API_MAX_PAGE_SIZE =
-  Number(process.env.REACT_APP_API_MAX_PAGE_SIZE) || 100;
+  Number(process.env.REACT_APP_API_MAX_PAGE_SIZE) || 500;
+
+// Having more of a single entity than this number classifies you as having
+// a "large account". Keeping separate from the API max in case they need
+// to diverge, but for now they're the same number.
+export const LARGE_ACCOUNT_THRESHOLD = API_MAX_PAGE_SIZE;
 
 // Sets Paypal Environment, valid values: 'sandbox|production'
 export const PAYPAL_CLIENT_ENV =
@@ -61,19 +67,12 @@ export const LOG_PERFORMANCE_METRICS =
   !isProductionBuild &&
   process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
 
-// Features
-export const isObjectStorageEnabledForEnvironment =
-  process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED === 'true';
-
-export const isKubernetesEnabledForEnvironment =
-  process.env.REACT_APP_KUBERNETES_ENABLED === 'true';
-
 export const DISABLE_EVENT_THROTTLE =
   Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
 
 // read about luxon formats https://moment.github.io/luxon/docs/manual/formatting.html
 // this format is not ISO
-export const DATETIME_DISPLAY_FORMAT = 'yyyy-MM-dd HH:mm:ss';
+export const DATETIME_DISPLAY_FORMAT = 'yyyy-MM-dd HH:mm';
 // ISO 8601 formats
 export const ISO_DATE_FORMAT = 'yyyy-MM-dd';
 export const ISO_DATETIME_NO_TZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";

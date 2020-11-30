@@ -1,32 +1,26 @@
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
-type ClassNames = 'root' | 'title';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    title: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  title: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
+  }
+}));
 
 interface Props {
   title: string;
   action?: () => JSX.Element | JSX.Element[] | null;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
-const TableHeader: React.FC<CombinedProps> = ({ classes, title, action }) => {
+const TableHeader: React.FC<CombinedProps> = ({ title, action }) => {
+  const classes = useStyles();
+
   return (
     <Grid container justify="space-between" alignItems="flex-end">
       <Grid item>
@@ -43,6 +37,4 @@ const TableHeader: React.FC<CombinedProps> = ({ classes, title, action }) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(TableHeader);
+export default TableHeader;

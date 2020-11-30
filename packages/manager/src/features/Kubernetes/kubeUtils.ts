@@ -99,6 +99,9 @@ export const getTotalNodesInCluster = (pools: PoolNodeWithPrice[]): number =>
   }, 0);
 
 export const getDescriptionForCluster = (cluster: ExtendedCluster) => {
+  if (!cluster.node_pools) {
+    return '';
+  }
   const nodes = getTotalNodesInCluster(cluster.node_pools);
   return `${pluralize('node', 'nodes', nodes)}, ${pluralize(
     'CPU core',

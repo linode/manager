@@ -5,27 +5,30 @@ import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
 import AddNewMenu from './AddNewMenu/AddNewMenu_CMR';
 import SearchBar from './SearchBar/SearchBar_CMR';
-import UserEventsMenu from './UserEventsMenu';
-import UserNotificationsMenu from './UserNotificationsMenu';
+import NotificationButton from './NotificationButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
     height: 50,
     color: theme.palette.text.primary,
-    backgroundColor: theme.bg.topMenu,
+    backgroundColor: theme.cmrBGColors.bgSecondaryActions,
     position: 'relative',
-    paddingRight: '0 !important'
+    paddingRight: '0 !important',
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'row'
   },
   toolbar: {
     padding: 0,
     height: `50px !important`,
-    [theme.breakpoints.up('md')]: {
+    width: 1280,
+    [theme.breakpoints.down('lg')]: {
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1)
     },
     [theme.breakpoints.up('lg')]: {
-      paddingLeft: theme.spacing(3),
-      paddingRight: theme.spacing(3)
+      paddingLeft: 0,
+      paddingRight: 0
     }
   }
 }));
@@ -61,8 +64,7 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
         <Toolbar className={classes.toolbar} variant="dense">
           <AddNewMenu />
           <SearchBar />
-          <UserNotificationsMenu />
-          <UserEventsMenu />
+          <NotificationButton />
         </Toolbar>
       </AppBar>
     </React.Fragment>

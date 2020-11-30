@@ -27,7 +27,7 @@ export const LinodeActivity: React.FC<CombinedProps> = props => {
   const { classes, linodeID } = props;
 
   return (
-    <div id="tabpanel-activity" role="tabpanel" aria-labelledby="tab-activity">
+    <div>
       <Typography
         variant="h2"
         className={classes.title}

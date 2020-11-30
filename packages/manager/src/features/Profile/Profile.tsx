@@ -1,24 +1,20 @@
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter
-} from 'react-router-dom';
-import AppBar from 'src/components/core/AppBar';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import H1Header from 'src/components/H1Header';
-import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLink from 'src/components/TabLink';
+import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
+import useFlags from 'src/hooks/useFlags';
+import Props from './OAuthClients';
 
 const SSHKeys = React.lazy(() => import('./SSHKeys'));
+const SSHKeys_CMR = React.lazy(() => import('./SSHKeys/SSHKeys_CMR'));
 const Settings = React.lazy(() => import('./Settings'));
 const Referrals = React.lazy(() => import('./Referrals'));
 const OAuthClients = React.lazy(() => import('./OAuthClients'));
+const OAuthClients_CMR = React.lazy(() =>
+  import('./OAuthClients/OAuthClients_CMR')
+);
 const LishSettings = React.lazy(() => import('./LishSettings'));
 const DisplaySettings = React.lazy(() => import('./DisplaySettings'));
 const AuthenticationSettings = React.lazy(() =>
@@ -26,113 +22,75 @@ const AuthenticationSettings = React.lazy(() =>
 );
 const APITokens = React.lazy(() => import('./APITokens'));
 
+const useStyles = makeStyles((theme: Theme) => ({
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
+  }
+}));
+
 type Props = RouteComponentProps<{}>;
 
 const Profile: React.FC<Props> = props => {
+  const classes = useStyles();
+  const flags = useFlags();
   const {
     match: { url }
   } = props;
 
-  const tabs = [
-    /* NB: These must correspond to the routes inside the Switch */
+  const tabs: NavTab[] = [
     {
       title: 'Display',
-      routeName: `${url}/display`
+      routeName: `${url}/display`,
+      component: DisplaySettings
     },
     {
       title: 'Password & Authentication',
-      routeName: `${url}/auth`
+      routeName: `${url}/auth`,
+      component: AuthenticationSettings
     },
     {
       title: 'SSH Keys',
-      routeName: `${url}/keys`
+      routeName: `${url}/keys`,
+      component: flags.cmr ? SSHKeys_CMR : SSHKeys
     },
     {
       title: 'LISH',
-      routeName: `${url}/lish`
+      routeName: `${url}/lish`,
+      component: LishSettings
     },
     {
       title: 'API Tokens',
-      routeName: `${url}/tokens`
+      routeName: `${url}/tokens`,
+      component: APITokens
     },
     {
       title: 'OAuth Apps',
-      routeName: `${url}/clients`
+      routeName: `${url}/clients`,
+      component: flags.cmr ? OAuthClients_CMR : OAuthClients
     },
     {
       title: 'Referrals',
-      routeName: `${url}/referrals`
+      routeName: `${url}/referrals`,
+      component: Referrals
     },
     {
       title: 'Settings',
-      routeName: `${url}/settings`
+      routeName: `${url}/settings`,
+      component: Settings
     }
   ];
 
-  const handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = props;
-    const routeName = tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
-
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
-
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="My Profile" />
-      <H1Header title="My Profile" data-qa-profile-header />
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          // Prevent console error for -1 as invalid tab index if we're redirecting from e.g. /profile/invalid-route
-          value={Math.max(
-            0,
-            tabs.findIndex(tab => matches(tab.routeName))
-          )}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-          data-qa-tabs
-        >
-          {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((props, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...props}
-                  ref={ref}
-                />
-              ))}
-            />
-          ))}
-        </Tabs>
-      </AppBar>
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <Switch>
-          <Route exact path={`${url}/settings`} component={Settings} />
-          <Route
-            exact
-            path={`${url}/auth`}
-            component={AuthenticationSettings}
-          />
-          <Route exact path={`${url}/tokens`} component={APITokens} />
-          <Route exact path={`${url}/clients`} component={OAuthClients} />
-          <Route exact path={`${url}/lish`} component={LishSettings} />
-          <Route exact path={`${url}/referrals`} component={Referrals} />
-          <Route exact path={`${url}/keys`} component={SSHKeys} />
-          <Route exact path={`${url}/display`} component={DisplaySettings} />
-          <Redirect to={`${url}/display`} />
-        </Switch>
-      </React.Suspense>
+      <DocumentTitleSegment segment="My Profile " />
+      <H1Header
+        title="My Profile"
+        className={flags.cmr ? classes.cmrSpacing : ''}
+        data-qa-profile-header
+      />
+      <NavTabs tabs={tabs} />
     </React.Fragment>
   );
 };

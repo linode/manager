@@ -26,13 +26,13 @@ import Menu from 'src/components/core/Menu';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
-import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import useStyles from './PrimaryNav.styles';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
 import useDomains from 'src/hooks/useDomains';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 type NavEntity =
   | 'Linodes'
@@ -84,8 +84,15 @@ export const PrimaryNav: React.FC<Props> = props => {
   const {
     _hasAccountAccess,
     _isManagedAccount,
+    _isLargeAccount,
     account
   } = useAccountManagement();
+
+  const showFirewalls = isFeatureEnabled(
+    'Cloud Firewall',
+    Boolean(flags.firewalls),
+    account?.data?.capabilities ?? []
+  );
 
   const primaryLinks: PrimaryLink[] = React.useMemo(
     () => [
@@ -121,11 +128,12 @@ export const PrimaryNav: React.FC<Props> = props => {
         href: '/domains',
         icon: <Domain style={{ transform: 'scale(1.5)' }} />,
         prefetchRequestFn: requestDomains,
-        prefetchRequestCondition: !domains.loading && domains.lastUpdated === 0
+        prefetchRequestCondition:
+          !domains.loading && domains.lastUpdated === 0 && !_isLargeAccount
       },
 
       {
-        hide: !flags.firewalls,
+        hide: !showFirewalls,
         display: 'Firewalls',
         href: '/firewalls',
         icon: <Firewall />
@@ -134,10 +142,7 @@ export const PrimaryNav: React.FC<Props> = props => {
         display: 'Marketplace',
         href: '/linodes/create?type=One-Click',
         attr: { 'data-qa-one-click-nav-btn': true },
-        icon: <OCA />,
-        onClick: () => {
-          sendOneClickNavigationEvent('Primary Nav');
-        }
+        icon: <OCA />
       },
       {
         display: 'Longview',
@@ -174,7 +179,7 @@ export const PrimaryNav: React.FC<Props> = props => {
       }
     ],
     [
-      flags.firewalls,
+      showFirewalls,
       _isManagedAccount,
       account.lastUpdated,
       _hasAccountAccess,
@@ -197,6 +202,7 @@ export const PrimaryNav: React.FC<Props> = props => {
       spacing={0}
       component="nav"
       role="navigation"
+      id="main-navigation"
     >
       <Grid item>
         <div
@@ -205,7 +211,12 @@ export const PrimaryNav: React.FC<Props> = props => {
             [classes.logoCollapsed]: isCollapsed
           })}
         >
-          <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
+          <Link
+            to={`/dashboard`}
+            onClick={closeMenu}
+            aria-label="Dashboard"
+            title="Dashboard"
+          >
             <Logo width={115} height={43} />
           </Link>
         </div>
@@ -393,16 +404,20 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
           listItemCollapsed: isCollapsed
         })}
       >
-        {icon && isCollapsed && <div className="icon">{icon}</div>}
-        <ListItemText
-          primary={display}
-          disableTypography={true}
+        {icon && isCollapsed && (
+          <div className="icon" aria-hidden>
+            {icon}
+          </div>
+        )}
+        <p
           className={classNames({
             [classes.linkItem]: true,
             primaryNavLink: true,
             hiddenWhenCollapsed: isCollapsed
           })}
-        />
+        >
+          {display}
+        </p>
       </Link>
       <Divider className={classes.divider} />
     </>

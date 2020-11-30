@@ -4,14 +4,6 @@ import { regions } from 'src/__data__/regionsData';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { LinodeSelect } from './LinodeSelect';
 
-const requests = require.requireMock('@linode/api-v4/lib/linodes');
-
-jest.mock('@linode/api-v4/lib/linodes', () => ({
-  getLinodes: () => jest.fn()
-}));
-
-requests.getLinodes = jest.fn().mockResolvedValue([]);
-
 const linodes: Item[] = [
   {
     label: 'test-linode-001',
@@ -53,7 +45,9 @@ describe('Linode Select', () => {
   });
   it('renders all linodes by default', () => {
     wrapper.setState({ linodes });
-    const { options } = wrapper.find('WithStyles(Select)').props() as any;
+    const { options } = wrapper
+      .find('WithStyles(WithTheme(Select))')
+      .props() as any;
     const regionItems = options
       .filter((option: Item) => option.data)
       .map((option: Item) => option.data.region);
@@ -64,7 +58,9 @@ describe('Linode Select', () => {
   it('disables Linodes in regions that support block storage when prop specified', () => {
     wrapper.setState({ linodes });
     wrapper.setProps({ shouldOnlyDisplayRegionsWithBlockStorage: true });
-    const { options } = wrapper.find('WithStyles(Select)').props() as any;
+    const { options } = wrapper
+      .find('WithStyles(WithTheme(Select))')
+      .props() as any;
     expect(options.length).toBe(2);
   });
 });

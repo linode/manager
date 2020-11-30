@@ -1,11 +1,16 @@
 import { curry } from 'ramda';
 import * as React from 'react';
-import Chart from 'chart.js';
+import { Chart } from 'chart.js';
 import 'chartjs-adapter-luxon';
 
 import LineChartIcon from 'src/assets/icons/line-chart.svg';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -74,6 +79,9 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   const [hiddenDatasets, setHiddenDatasets] = React.useState<number[]>([]);
 
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down(960));
+
   const {
     chartHeight,
     formatData,
@@ -213,9 +221,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     if (inputEl.current) {
       if (chartInstance.current) {
         chartInstance.current.destroy();
-        chartInstance.current = null;
       }
-      // console.warn(inputEl.current, inputEl.current.getContext('2d'))
       chartInstance.current = new Chart(inputEl.current.getContext('2d'), {
         type: 'line',
         data: {
@@ -234,30 +240,49 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       {legendRendered && legendRows && (
         <div className={classes.container}>
           <Table aria-label="Stats and metrics" className={classes.root}>
-            <TableHead>
-              <TableRow>
-                <TableCell className={classes.tableHeadInner}>
-                  <Typography
-                    variant="body2"
-                    component="span"
-                    className={classes.text}
-                  >
-                    Toggle Graphs
-                  </Typography>
-                  <LineChartIcon className={classes.chartIcon} />
-                </TableCell>
-                {finalRowHeaders.map((section, i) => (
-                  <TableCell
-                    key={i}
-                    data-qa-header-cell
-                    className={classes.tableHeadInner}
-                  >
-                    <Typography variant="body2" className={classes.text}>
-                      {section}CPU
+            <TableHead className={classes.tableHead}>
+              {/* Remove "Toggle Graph" label and repeat legend for each data set for mobile */}
+              {matchesSmDown ? (
+                data.map(section => (
+                  <TableRow key={section.label}>
+                    {finalRowHeaders.map((section, i) => (
+                      <TableCell
+                        key={i}
+                        data-qa-header-cell
+                        className={classes.tableHeadInner}
+                      >
+                        <Typography variant="body2" className={classes.text}>
+                          {section}
+                        </Typography>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell className={classes.tableHeadInner}>
+                    <Typography
+                      variant="body2"
+                      component="span"
+                      className={classes.text}
+                    >
+                      Toggle Graphs
                     </Typography>
+                    <LineChartIcon className={classes.chartIcon} />
                   </TableCell>
-                ))}
-              </TableRow>
+                  {finalRowHeaders.map((section, i) => (
+                    <TableCell
+                      key={i}
+                      data-qa-header-cell
+                      className={classes.tableHeadInner}
+                    >
+                      <Typography variant="body2" className={classes.text}>
+                        {section}
+                      </Typography>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              )}
             </TableHead>
             <TableBody>
               {legendRows?.map((_tick: any, idx: number) => {

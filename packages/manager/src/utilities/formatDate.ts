@@ -1,9 +1,9 @@
 import { DateTime, Duration } from 'luxon';
 import { reportException } from 'src/exceptionReporting';
-
-import store from 'src/store';
-import { DATETIME_DISPLAY_FORMAT } from 'src/constants';
+import { DATETIME_DISPLAY_FORMAT, ISO_DATE_FORMAT } from 'src/constants';
 import { parseAPIDate } from 'src/utilities/date';
+import getUserTimezone from 'src/utilities/getUserTimezone';
+import store from '../store';
 
 export type TimeInterval = 'day' | 'week' | 'month' | 'year' | 'never';
 
@@ -37,6 +37,7 @@ export const shouldHumanize = (
 interface FormatDateOptions {
   humanizeCutoff?: TimeInterval;
   format?: string;
+  displayTime?: boolean;
 }
 /**
  *
@@ -47,21 +48,13 @@ export const formatDate = (
   date: string | number,
   options: FormatDateOptions = {}
 ): string => {
-  let time;
   /** get the timezone from redux and use it as the timezone */
-  const state = store.getState();
-  const userTimezone = state.__resources?.profile?.data?.timezone ?? 'GMT';
-
-  try {
-    // Unknown error was causing this to crash in rare situations.
-    time = parseAPIDate(date).setZone(userTimezone);
-  } catch (e) {
-    // Better to return a blank date than an error or incorrect information.
-    reportException(e);
-    return 'Error getting date';
-  }
-
-  const expectedFormat = options.format || DATETIME_DISPLAY_FORMAT;
+  const userTimezone = getUserTimezone(store.getState());
+  const time = parseAPIDate(date).setZone(userTimezone);
+  // Default to including time in the output. Hide the time if options.displayTime === false
+  const defaultFormat =
+    options.displayTime !== false ? DATETIME_DISPLAY_FORMAT : ISO_DATE_FORMAT;
+  const expectedFormat = options.format || defaultFormat;
   const now = DateTime.local();
   const isFewSecondsAgo = time.plus({ seconds: 30 }) > now && time <= now;
   const formattedTime = shouldHumanize(time, options.humanizeCutoff)
@@ -71,6 +64,21 @@ export const formatDate = (
     : time.toFormat(expectedFormat);
 
   return formattedTime ?? time.toFormat(expectedFormat);
+};
+
+export const formatDateISO = (date: string) => {
+  let time;
+
+  try {
+    // Unknown error was causing this to crash in rare situations.
+    time = parseAPIDate(date);
+  } catch (e) {
+    // Better to return a blank date than an error or incorrect information.
+    reportException(e);
+    return 'Error parsing date';
+  }
+
+  return time.toISO();
 };
 
 export default formatDate;

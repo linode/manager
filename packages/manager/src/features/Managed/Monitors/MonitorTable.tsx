@@ -274,6 +274,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
       </OrderBy>
       <DeletionDialog
         label={dialog.entityLabel || ''}
+        entity="monitor"
         onDelete={handleDelete}
         onClose={closeDialog}
         open={dialog.isOpen}
@@ -302,8 +303,5 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
 };
 
 const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, Props>(
-  withSnackbar,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(withSnackbar, styled);
 export default enhanced(MonitorTable);

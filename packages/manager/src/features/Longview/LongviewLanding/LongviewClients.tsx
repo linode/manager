@@ -1,9 +1,10 @@
 import {
   LongviewClient,
+  ActiveLongviewPlan,
   LongviewSubscription
 } from '@linode/api-v4/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
+import { pathOr, isEmpty } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -21,6 +22,7 @@ import withLongviewClients, {
   Props as LongviewProps
 } from 'src/containers/longview.container';
 import withProfile from 'src/containers/profile.container';
+import useFlags from 'src/hooks/useFlags';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -32,13 +34,15 @@ import { getUsedStorage } from './Gauges/Storage';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing()
   },
   addNew: {
-    marginLeft: 'auto'
+    marginLeft: 'auto',
+    marginRight: 0
   },
   searchbar: {
     width: '100%',
@@ -66,11 +70,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectLabel: {
     minWidth: '65px'
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: 0,
+      marginRight: 0
+    }
+  },
+  cmrSpacingAddNew: {
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(2)
+    }
   }
 }));
 
 interface Props {
-  subscriptionsData: LongviewSubscription[];
+  activeSubscription: ActiveLongviewPlan;
 }
 
 export type CombinedProps = Props &
@@ -78,12 +93,14 @@ export type CombinedProps = Props &
   LongviewProps &
   WithSnackbarProps &
   StateProps &
+  // we need this to know if the account is managed
   SettingsProps &
   GrantsProps;
 
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
+  const { getLongviewClients } = props;
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
     false
   );
@@ -139,19 +156,17 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   >(false);
 
   const classes = useStyles();
+  const flags = useFlags();
 
   React.useEffect(() => {
-    props.getLongviewClients();
-  }, []);
+    getLongviewClients();
+  }, [getLongviewClients]);
 
-  const openDeleteDialog = React.useCallback(
-    (id: number, label: string) => {
-      toggleDeleteDialog(true);
-      setClientID(id);
-      setClientLabel(label);
-    },
-    [selectedClientID, selectedClientLabel]
-  );
+  const openDeleteDialog = React.useCallback((id: number, label: string) => {
+    toggleDeleteDialog(true);
+    setClientID(id);
+    setClientLabel(label);
+  }, []);
 
   const handleSubmit = () => {
     const {
@@ -190,8 +205,8 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
               'Error creating Longview client.'
             )[0].reason,
             { variant: 'error' }
-          ),
-            setNewClientLoading(false);
+          );
+          setNewClientLoading(false);
         }
       });
   };
@@ -202,14 +217,11 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
    */
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
-  const handleDrawerOpen = React.useCallback(
-    (id: number, label: string) => {
-      setClientID(id);
-      setClientLabel(label);
-      setDrawerOpen(true);
-    },
-    [selectedClientID, selectedClientLabel]
-  );
+  const handleDrawerOpen = React.useCallback((id: number, label: string) => {
+    setClientID(id);
+    setClientLabel(label);
+    setDrawerOpen(true);
+  }, []);
 
   const {
     longviewClientsData,
@@ -219,7 +231,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     longviewClientsResults,
     lvClientData,
     accountSettings,
-    subscriptionsData,
+    activeSubscription,
     createLongviewClient,
     deleteLongviewClient,
     userCanCreateClient
@@ -233,17 +245,12 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     setSortKey(selected.value as SortKey);
   };
 
-  const _subscription = pathOr('', ['longview_subscription'], accountSettings);
-  const activeSubscription = subscriptionsData.find(
-    thisSubscription => thisSubscription.id === _subscription
-  );
-
   const isManaged = pathOr(false, ['managed'], accountSettings);
+
   // If this value is defined they're not on the free plan
   // and don't need to be CTA'd to upgrade.
-  const isLongviewPro = Boolean(
-    pathOr(false, ['longview_subscription'], accountSettings)
-  );
+
+  const isLongviewPro = !isEmpty(activeSubscription);
 
   /**
    * Do the actual sorting & filtering
@@ -259,13 +266,12 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
+      <DocumentTitleSegment segment="Clients" />
       <Grid
         container
-        className={classes.headingWrapper}
+        className={`${classes.headingWrapper} ${flags.cmr &&
+          classes.cmrSpacing}`}
         alignItems="center"
-        id="tabpanel-clients"
-        role="tabpanel"
-        aria-labelledby="tab-clients"
       >
         <Grid item className={`py0 ${classes.searchbar}`}>
           <Search
@@ -289,7 +295,11 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
             hideLabel
           />
         </Grid>
-        <Grid item className={`${classes.addNew} py0`}>
+        <Grid
+          item
+          className={`py0 ${classes.addNew} ${flags.cmr &&
+            classes.cmrSpacingAddNew}`}
+        >
           <AddNewLink
             onClick={handleAddClient}
             label={newClientLoading ? 'Loading...' : 'Add a Client'}
@@ -342,7 +352,9 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         onClose={() => setSubscriptionDialogOpen(false)}
         onSubmit={handleSubmit}
         clientLimit={
-          activeSubscription ? activeSubscription.clients_included : 10
+          isEmpty(activeSubscription)
+            ? 10
+            : (activeSubscription as LongviewSubscription).clients_included
         }
       />
       <LongviewPackageDrawer
@@ -364,7 +376,7 @@ interface StateProps {
  * container because this is a unique case; we need
  * access to data from all clients.
  */
-const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
+const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
   const lvClientData = state.longviewStats ?? {};
   return {
     lvClientData

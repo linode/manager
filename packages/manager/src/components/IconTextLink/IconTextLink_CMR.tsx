@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 'auto',
     minHeight: 'auto',
     padding: 5,
-    transition: theme.transitions.create(['color']),
+    transition: 'none',
     width: 200,
     '&:focus': {
       backgroundColor: theme.palette.primary.main
@@ -87,6 +87,7 @@ const IconTextLink: React.FC<CombinedProps> = props => {
         )}
         title={title}
         onClick={onClick}
+        disableRipple
         data-qa-icon-text-link={title}
       >
         <span className={classes.label}>{text}</span>

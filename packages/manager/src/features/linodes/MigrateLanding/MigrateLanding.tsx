@@ -11,7 +11,7 @@ import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
@@ -56,13 +56,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = LinodeContextProps &
-  WithTypesAndImages &
-  RegionProps &
-  RouteComponentProps<{}>;
+type CombinedProps = LinodeContextProps & WithTypesAndImages & RegionProps;
 
 const MigrateLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+
+  const history = useHistory();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
     null
@@ -122,13 +121,13 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
         resetEventsPolling();
         setLoading(false);
         sendMigrationInitiatedEvent(
-          region.region,
+          region,
           selectedRegion,
           +formatDate(new Date().toISOString(), {
             format: 'H'
           })
         );
-        props.history.push(`/linodes/${linodeId}`);
+        history.push(`/linodes/${linodeId}`);
       })
       .catch((e: APIErrorType[]) => {
         setLoading(false);
@@ -241,7 +240,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
 
 interface LinodeContextProps {
   linodeId: number;
-  region: { region: string; countryCode: string };
+  region: string;
   label: string;
   linodeStatus: LinodeStatus;
   linodeSpecs: LinodeSpecs;
@@ -255,10 +254,7 @@ interface LinodeContextProps {
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
-  region: {
-    region: linode.region,
-    countryCode: getCountryCodeFromSlug(linode.region)
-  },
+  region: linode.region,
   type: linode.type,
   label: linode.label,
   image: linode.image,
@@ -326,36 +322,4 @@ const getDisabledReason = (
   // }
 
   return '';
-};
-
-export const getCountryCodeFromSlug = (regionSlug: string) => {
-  if (regionSlug.match(/ap-north/i)) {
-    return 'jp';
-  }
-
-  if (regionSlug.match(/ap-south/i)) {
-    return 'sg';
-  }
-
-  if (regionSlug.match(/eu-cent/i)) {
-    return 'de';
-  }
-
-  if (regionSlug.match(/eu/i)) {
-    return 'uk';
-  }
-
-  if (regionSlug.match(/ap-west/i)) {
-    return 'in';
-  }
-
-  if (regionSlug.match(/ap-southeast/i)) {
-    return 'au';
-  }
-
-  if (regionSlug.match(/ca-cent/i)) {
-    return 'ca';
-  }
-
-  return 'us';
 };

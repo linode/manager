@@ -49,7 +49,9 @@ const headers: HeaderCell[] = [
 
 const domainRow: EntityTableRow<Domain> = {
   Component: DomainRow as any,
-  data: domains
+  data: domains,
+  loading: false,
+  lastUpdated: 100
 };
 
 storiesOf('EntityTable', module)

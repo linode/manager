@@ -31,6 +31,10 @@ import {
 } from 'src/utilities/ga';
 import CancelNotice from '../CancelNotice';
 import BucketTable from './BucketTable';
+import BucketTable_CMR from './BucketTable_CMR';
+import useFlags from 'src/hooks/useFlags';
+import { readableBytes } from 'src/utilities/unitConversions';
+import BucketDetailsDrawer from './BucketDetailsDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -48,6 +52,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   const { isRestrictedUser, openBucketDrawer } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
 
   const { objectStorageClusters } = useObjectStorageClusters();
   const {
@@ -64,6 +69,21 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
   const [confirmBucketName, setConfirmBucketName] = React.useState<string>('');
+  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] = React.useState<
+    boolean
+  >(false);
+  const [bucketForDetails, setBucketForDetails] = React.useState<
+    ObjectStorageBucket | undefined
+  >(undefined);
+
+  const handleClickDetails = (bucket: ObjectStorageBucket) => {
+    setBucketDetailDrawerOpen(true);
+    setBucketForDetails(bucket);
+  };
+
+  const closeBucketDetailDrawer = () => {
+    setBucketDetailDrawerOpen(false);
+  };
 
   const handleClickRemove = (bucket: ObjectStorageBucket) => {
     setBucketToRemove(bucket);
@@ -201,15 +221,21 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
     );
   }
 
+  const _BucketTable = flags.cmr ? BucketTable_CMR : BucketTable;
+
+  const totalUsage = sumBucketUsage(data);
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
-      <div id="tabpanel-buckets" role="tabpanel" aria-labelledby="tab-buckets">
-        <Grid container justify="flex-end">
-          <Grid item>
-            <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
+      <div>
+        {!flags.cmr && (
+          <Grid container justify="flex-end">
+            <Grid item>
+              <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
+            </Grid>
           </Grid>
-        </Grid>
+        )}
         {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
         <Grid item xs={12}>
           <OrderBy data={data} order={'asc'} orderBy={'label'}>
@@ -219,11 +245,22 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
                 order,
                 handleOrderChange,
                 handleClickRemove,
+                handleClickDetails,
+                openBucketDrawer,
                 data: orderedData
               };
-              return <BucketTable {...bucketTableProps} />;
+              return <_BucketTable {...bucketTableProps} />;
             }}
           </OrderBy>
+          {/* If there's more than one Bucket, display the total usage. */}
+          {data.length > 1 ? (
+            <Typography
+              style={{ marginTop: 8, marginLeft: flags.cmr ? 15 : 0 }}
+              variant="body1"
+            >
+              Total usage: {readableBytes(totalUsage).formatted}
+            </Typography>
+          ) : null}
         </Grid>
         <ConfirmationDialog
           open={removeBucketConfirmationDialog.isOpen}
@@ -242,12 +279,22 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
           />
         </ConfirmationDialog>
       </div>
+      <BucketDetailsDrawer
+        open={bucketDetailDrawerOpen}
+        onClose={closeBucketDetailDrawer}
+        bucketLabel={bucketForDetails?.label}
+        hostname={bucketForDetails?.hostname}
+        created={bucketForDetails?.created}
+        cluster={bucketForDetails?.cluster}
+        size={bucketForDetails?.size}
+        objectsNumber={bucketForDetails?.objects}
+      />
     </React.Fragment>
   );
 };
 
 const RenderLoading: React.FC<{}> = () => {
-  return <CircleProgress data-testid="loading-state" />;
+  return <CircleProgress />;
 };
 
 const RenderError: React.FC<{}> = () => {
@@ -346,3 +393,10 @@ const Banner: React.FC<BannerProps> = React.memo(({ regionsAffected }) => {
     </Notice>
   );
 });
+
+export const sumBucketUsage = (buckets: ObjectStorageBucket[]) => {
+  return buckets.reduce((acc, thisBucket) => {
+    acc += thisBucket.size;
+    return acc;
+  }, 0);
+};

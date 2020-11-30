@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { deleteImage, Image } from '@linode/api-v4/lib/images';
+import { Image } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -8,8 +8,6 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import 'rxjs/add/operator/filter';
-import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -17,174 +15,164 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import EntityTable, {
+  EntityTableRow,
+  HeaderCell
+} from 'src/components/EntityTable';
+import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
-import OrderBy from 'src/components/OrderBy';
-import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableSortCell from 'src/components/TableSortCell';
+import useFlags from 'src/hooks/useFlags';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
-import { requestImages as _requestImages } from 'src/store/image/image.requests';
+import {
+  deleteImage as _deleteImage,
+  requestImages as _requestImages
+} from 'src/store/image/image.requests';
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
+import ImageRow_CMR from './ImageRow_CMR';
+import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
+import { DeleteImagePayload } from 'src/store/image/image.actions';
 
-type ClassNames = 'root' | 'title';
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  title: {
+    marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+  }
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    title: {
-      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
-    }
-  });
-
-interface State {
-  imageDrawer: {
-    open: boolean;
-    mode: DrawerMode;
-    imageID?: string;
-    label?: string;
-    description?: string;
-    selectedDisk: string | null;
-    selectedLinode?: number;
-  };
-  removeDialog: {
-    open: boolean;
-    submitting: boolean;
-    image?: string;
-    imageID?: string;
-    error?: string;
-  };
+interface ImageDrawerState {
+  open: boolean;
+  mode: DrawerMode;
+  imageID?: string;
+  label?: string;
+  description?: string;
+  selectedDisk: string | null;
+  selectedLinode?: number;
 }
 
-type CombinedProps = WithPrivateImages &
-  ImageDispatch &
-  WithStyles<ClassNames> &
+interface ImageDialogState {
+  open: boolean;
+  submitting: boolean;
+  image?: string;
+  imageID?: string;
+  error?: string;
+}
+
+type CombinedProps = ImageDispatch &
+  ImageDrawerState &
+  ImageDialogState &
   RouteComponentProps<{}> &
+  WithPrivateImages &
   WithSnackbarProps;
 
-class ImagesLanding extends React.Component<CombinedProps, State> {
-  eventsSub: Subscription;
+const defaultDrawerState = {
+  open: false,
+  mode: 'edit' as DrawerMode,
+  label: '',
+  description: '',
+  selectedDisk: null
+};
 
-  state: State = {
-    imageDrawer: {
-      open: false,
-      mode: 'edit',
-      label: '',
-      description: '',
-      selectedDisk: null
+const defaultDialogState = {
+  open: false,
+  submitting: false,
+  image: '',
+  imageID: '',
+  error: undefined
+};
+
+export const ImagesLanding: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+  const flags = useFlags();
+
+  useReduxLoad(['images']);
+
+  const { imagesData, imagesLoading, imagesError, deleteImage } = props;
+
+  const headers: HeaderCell[] = [
+    {
+      label: 'Image',
+      dataColumn: 'label',
+      sortable: true,
+      widthPercent: 22
     },
-    removeDialog: {
-      open: false,
-      submitting: false
+    {
+      label: 'Created',
+      dataColumn: 'created',
+      sortable: false,
+      widthPercent: 15,
+      hideOnMobile: flags.cmr
+    },
+    {
+      label: 'Expires',
+      dataColumn: 'expires',
+      sortable: false,
+      widthPercent: 15,
+      hideOnMobile: flags.cmr
+    },
+    {
+      label: 'Size',
+      dataColumn: 'size',
+      sortable: true,
+      widthPercent: 12
+    },
+    {
+      label: 'Action Menu',
+      visuallyHidden: true,
+      dataColumn: '',
+      sortable: false,
+      widthPercent: 35
     }
+  ];
+
+  const [drawer, setDrawer] = React.useState<ImageDrawerState>(
+    defaultDrawerState
+  );
+
+  const [dialog, setDialogState] = React.useState<ImageDialogState>(
+    defaultDialogState
+  );
+
+  const openDialog = (image: string, imageID: string) => {
+    setDialogState({
+      open: true,
+      submitting: false,
+      image,
+      imageID,
+      error: undefined
+    });
   };
 
-  componentDidMount() {
-    if (this.props.imagesLastUpdated === 0 && !this.props.imagesLoading) {
-      this.props.requestImages();
+  const closeDialog = () => {
+    setDialogState({ ...dialog, open: false });
+  };
+
+  const handleRemoveImage = () => {
+    if (!dialog.imageID) {
+      setDialogState(dialog => ({
+        ...dialog,
+        error: 'Image is not available.'
+      }));
     }
-  }
+    setDialogState(dialog => ({
+      ...dialog,
+      submitting: true,
+      error: undefined
+    }));
 
-  openForCreate = () => {
-    this.setState({
-      imageDrawer: {
-        open: true,
-        mode: 'create',
-        label: '',
-        description: '',
-        selectedDisk: null
-      }
-    });
-  };
-
-  openRemoveDialog = (image: string, imageID: string) => {
-    this.setState({
-      removeDialog: {
-        open: true,
-        image,
-        imageID,
-        submitting: false,
-        error: undefined
-      }
-    });
-  };
-
-  closeRemoveDialog = () => {
-    const { removeDialog } = this.state;
-    this.setState({
-      removeDialog: { ...removeDialog, open: false }
-    });
-  };
-
-  openForEdit = (label: string, description: string, imageID: string) => {
-    this.setState({
-      imageDrawer: {
-        open: true,
-        mode: 'edit',
-        description,
-        imageID,
-        label,
-        selectedDisk: null
-      }
-    });
-  };
-
-  openForRestore = (imageID: string) => {
-    this.setState({
-      imageDrawer: {
-        open: true,
-        mode: 'restore',
-        imageID,
-        selectedDisk: null
-      }
-    });
-  };
-
-  deployNewLinode = (imageID: string) => {
-    const { history } = this.props;
-    history.push({
-      pathname: `/linodes/create/`,
-      search: `?type=My%20Images&imageID=${imageID}`,
-      state: { selectedImageId: imageID }
-    });
-  };
-
-  removeImage = () => {
-    const { removeDialog } = this.state;
-    if (!this.state.removeDialog.imageID) {
-      this.setState({
-        removeDialog: { ...removeDialog, error: 'Image is not available.' }
-      });
-      return;
-    }
-    this.setState({
-      removeDialog: {
-        ...(removeDialog as any),
-        submitting: true,
-        errors: undefined
-      }
-    });
-    deleteImage(this.state.removeDialog.imageID)
+    deleteImage({ imageID: dialog.imageID! })
       .then(() => {
-        this.closeRemoveDialog();
+        closeDialog();
         /**
          * request generated by the Pagey HOC.
          *
@@ -195,73 +183,105 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
          * from taking any action on the Image.
          */
         // this.props.onDelete();
-        this.props.enqueueSnackbar('Image has been scheduled for deletion.', {
+        props.enqueueSnackbar('Image has been scheduled for deletion.', {
           variant: 'info'
         });
       })
       .catch(err => {
-        const error = getErrorStringOrDefault(
+        const _error = getErrorStringOrDefault(
           err,
           'There was an error deleting the image.'
         );
-        this.setState({ removeDialog: { ...removeDialog, error } });
+        setDialogState(dialog => ({
+          ...dialog,
+          submitting: false,
+          error: _error
+        }));
       });
   };
 
-  changeSelectedLinode = (linodeId: number | null) => {
-    if (!linodeId) {
-      this.setState({
-        imageDrawer: {
-          ...this.state.imageDrawer,
-          selectedDisk: null,
-          selectedLinode: undefined
-        }
-      });
-    }
-    if (this.state.imageDrawer.selectedLinode !== linodeId) {
-      this.setState({
-        imageDrawer: {
-          ...this.state.imageDrawer,
-          selectedDisk: null,
-          selectedLinode: linodeId!
-        }
-      });
-    }
-  };
-
-  changeSelectedDisk = (disk: string | null) => {
-    this.setState({
-      imageDrawer: { ...this.state.imageDrawer, selectedDisk: disk }
+  const openForCreate = () => {
+    setDrawer({
+      open: true,
+      mode: 'create',
+      label: '',
+      description: '',
+      selectedDisk: null
     });
   };
 
-  setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      imageDrawer: { ...this.state.imageDrawer, label: e.target.value }
+  const openForEdit = (label: string, description: string, imageID: string) => {
+    setDrawer({
+      open: true,
+      mode: 'edit',
+      description,
+      imageID,
+      label,
+      selectedDisk: null
     });
   };
 
-  setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      imageDrawer: { ...this.state.imageDrawer, description: e.target.value }
+  const openForRestore = (imageID: string) => {
+    setDrawer({
+      open: true,
+      mode: 'restore',
+      imageID,
+      selectedDisk: null
     });
   };
 
-  getActions = () => {
+  const deployNewLinode = (imageID: string) => {
+    const { history } = props;
+    history.push({
+      pathname: `/linodes/create/`,
+      search: `?type=Images&imageID=${imageID}`,
+      state: { selectedImageId: imageID }
+    });
+  };
+
+  const changeSelectedLinode = (linodeId: number | null) => {
+    setDrawer(prevDrawerState => ({
+      ...prevDrawerState,
+      selectedDisk: null,
+      selectedLinode: linodeId ?? undefined
+    }));
+  };
+
+  const changeSelectedDisk = (disk: string | null) => {
+    setDrawer(prevDrawerState => ({
+      ...prevDrawerState,
+      selectedDisk: disk
+    }));
+  };
+
+  const setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    setDrawer(prevDrawerState => ({
+      ...prevDrawerState,
+      label: value
+    }));
+  };
+
+  const setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDrawer(prevDrawerState => ({
+      ...prevDrawerState,
+      description: value
+    }));
+  };
+
+  const getActions = () => {
     return (
       <ActionsPanel>
-        <Button
-          buttonType="cancel"
-          onClick={this.closeRemoveDialog}
-          data-qa-cancel
-        >
+        <Button buttonType="cancel" onClick={closeDialog} data-qa-cancel>
           Cancel
         </Button>
         <Button
           buttonType="secondary"
           destructive
-          loading={this.state.removeDialog.submitting}
-          onClick={this.removeImage}
+          loading={dialog.submitting}
+          onClick={handleRemoveImage}
           data-qa-submit
         >
           Confirm
@@ -270,50 +290,106 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     );
   };
 
-  closeImageDrawer = () => {
-    this.setState({ imageDrawer: { ...this.state.imageDrawer, open: false } });
+  const closeImageDrawer = () => {
+    setDrawer(prevDrawerState => ({
+      ...prevDrawerState,
+      open: false
+    }));
   };
 
-  renderImageDrawer = () => {
-    const { imageDrawer } = this.state;
+  const renderImageDrawer = () => {
     return (
       <ImagesDrawer
-        open={imageDrawer.open}
-        mode={imageDrawer.mode}
-        label={imageDrawer.label}
-        description={imageDrawer.description}
-        selectedDisk={imageDrawer.selectedDisk}
-        selectedLinode={imageDrawer.selectedLinode || null}
-        imageID={imageDrawer.imageID}
-        changeDisk={this.changeSelectedDisk}
-        changeLinode={this.changeSelectedLinode}
-        changeLabel={this.setLabel}
-        changeDescription={this.setDescription}
-        onClose={this.closeImageDrawer}
+        open={drawer.open}
+        mode={drawer.mode}
+        label={drawer.label}
+        description={drawer.description}
+        selectedDisk={drawer.selectedDisk}
+        selectedLinode={drawer.selectedLinode || null}
+        imageID={drawer.imageID}
+        changeDisk={changeSelectedDisk}
+        changeLinode={changeSelectedLinode}
+        changeLabel={setLabel}
+        changeDescription={setDescription}
+        onClose={closeImageDrawer}
       />
     );
   };
 
-  render() {
-    const { classes, imagesData, imagesLoading, imagesError } = this.props;
+  const Table = flags.cmr ? EntityTable_CMR : EntityTable;
 
-    if (imagesLoading) {
-      return this.renderLoading();
-    }
+  const handlers: ImageHandlers = {
+    onRestore: openForRestore,
+    onDeploy: deployNewLinode,
+    onEdit: openForEdit,
+    onDelete: openDialog
+  };
 
-    /** Error State */
-    if (imagesError) {
-      return this.renderError(imagesError);
-    }
+  const imageRow: EntityTableRow<Image> = {
+    Component: flags.cmr ? ImageRow_CMR : ImageRow,
+    data: imagesData ?? [],
+    loading: false,
+    lastUpdated: 100,
+    handlers
+  };
 
-    /** Empty State */
-    if (!imagesData || imagesData.length === 0) {
-      return this.renderEmpty();
-    }
-
+  const renderError = (_: APIError[]) => {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
+        <ErrorState errorText="There was an error retrieving your images. Please reload and try again." />
+      </React.Fragment>
+    );
+  };
+
+  const renderLoading = () => {
+    return <CircleProgress />;
+  };
+
+  const renderEmpty = () => {
+    return (
+      <React.Fragment>
+        <DocumentTitleSegment segment="Images" />
+        <Placeholder
+          title="Add an Image"
+          copy={<EmptyCopy />}
+          buttonProps={[
+            {
+              onClick: openForCreate,
+              children: 'Add an Image'
+            }
+          ]}
+        />
+        {renderImageDrawer()}
+      </React.Fragment>
+    );
+  };
+
+  if (imagesLoading) {
+    return renderLoading();
+  }
+
+  /** Error State */
+  if (imagesError) {
+    return renderError(imagesError);
+  }
+
+  /** Empty State */
+  if (!imagesData || imagesData.length === 0) {
+    return renderEmpty();
+  }
+
+  return (
+    <React.Fragment>
+      <DocumentTitleSegment segment="Images" />
+      {flags.cmr ? (
+        <LandingHeader
+          title="Images"
+          entity="Image"
+          onAddNew={openForCreate}
+          docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
+        />
+      ) : (
         <Grid
           container
           justify="space-between"
@@ -323,7 +399,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         >
           <Grid item>
             <Breadcrumb
-              pathname={this.props.location.pathname}
+              pathname={props.location.pathname}
               labelTitle="Images"
               className={classes.title}
             />
@@ -331,137 +407,33 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item className="pt0">
-                <AddNewLink onClick={this.openForCreate} label="Add an Image" />
+                <AddNewLink onClick={openForCreate} label="Add an Image" />
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-        <OrderBy data={imagesData} orderBy={'label'} order={'asc'}>
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-            <Paginate data={orderedData}>
-              {({
-                data,
-                count,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize
-              }) => (
-                <>
-                  <Paper>
-                    <Table
-                      aria-label="List of Your Images"
-                      rowCount={data.length}
-                      colCount={4}
-                    >
-                      <TableHead>
-                        <TableRow role="rowgroup">
-                          <TableSortCell
-                            active={orderBy === 'label'}
-                            label={'label'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-image-name-header
-                          >
-                            Label
-                          </TableSortCell>
-                          <TableCell
-                            role="columnheader"
-                            data-qa-image-created-header
-                          >
-                            Created
-                          </TableCell>
-                          <TableCell role="columnheader" data-qa-expiry-header>
-                            Expires
-                          </TableCell>
-                          <TableSortCell
-                            active={orderBy === 'size'}
-                            label={'size'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-image-size-header
-                          >
-                            Size
-                          </TableSortCell>
-                          <TableCell />
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {data.map((image, idx) => (
-                          <ImageRow
-                            key={idx}
-                            image={image}
-                            onRestore={this.openForRestore}
-                            onDeploy={this.deployNewLinode}
-                            onEdit={this.openForEdit}
-                            onDelete={this.openRemoveDialog}
-                            updateFor={[image, classes]}
-                          />
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </Paper>
-                  <PaginationFooter
-                    count={count}
-                    handlePageChange={handlePageChange}
-                    handleSizeChange={handlePageSizeChange}
-                    page={page}
-                    pageSize={pageSize}
-                    eventCategory="images landing"
-                  />
-                </>
-              )}
-            </Paginate>
-          )}
-        </OrderBy>
-        {this.renderImageDrawer()}
-        <ConfirmationDialog
-          open={this.state.removeDialog.open}
-          title={`Remove ${this.state.removeDialog.image}`}
-          onClose={this.closeRemoveDialog}
-          actions={this.getActions}
-        >
-          {this.state.removeDialog.error && (
-            <Notice error text={this.state.removeDialog.error} />
-          )}
-          <Typography>Are you sure you want to remove this image?</Typography>
-        </ConfirmationDialog>
-      </React.Fragment>
-    );
-  }
-
-  renderError = (_: APIError[]) => {
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Images" />
-        <ErrorState errorText="There was an error retrieving your images. Please reload and try again." />
-      </React.Fragment>
-    );
-  };
-
-  renderLoading = () => {
-    return <CircleProgress />;
-  };
-
-  renderEmpty = () => {
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Images" />
-        <Placeholder
-          title="Add an Image"
-          copy={<EmptyCopy />}
-          buttonProps={[
-            {
-              onClick: this.openForCreate,
-              children: 'Add an Image'
-            }
-          ]}
+      )}
+      <Paper>
+        <Table
+          entity="image"
+          groupByTag={false}
+          row={imageRow}
+          headers={headers}
         />
-        {this.renderImageDrawer()}
-      </React.Fragment>
-    );
-  };
-}
+      </Paper>
+      {renderImageDrawer()}
+      <ConfirmationDialog
+        open={dialog.open}
+        title={`Remove ${dialog.image}`}
+        onClose={closeDialog}
+        actions={getActions}
+      >
+        {dialog.error && <Notice error text={dialog.error} />}
+        <Typography>Are you sure you want to remove this image?</Typography>
+      </ConfirmationDialog>
+    </React.Fragment>
+  );
+};
 
 const EmptyCopy = () => (
   <>
@@ -499,12 +471,14 @@ interface WithPrivateImages {
 }
 
 interface ImageDispatch {
+  deleteImage: (imageID: DeleteImagePayload) => Promise<{}>;
   requestImages: () => Promise<Image[]>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<ImageDispatch, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
+  deleteImage: (imageID: DeleteImagePayload) => dispatch(_deleteImage(imageID)),
   requestImages: () => dispatch(_requestImages())
 });
 
@@ -541,11 +515,8 @@ const withPrivateImages = connect(
   mapDispatchToProps
 );
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, {}>(
-  withRouter,
   withPrivateImages,
-  styled,
+  withRouter,
   withSnackbar
 )(ImagesLanding);

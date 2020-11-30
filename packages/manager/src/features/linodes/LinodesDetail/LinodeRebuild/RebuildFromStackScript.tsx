@@ -36,7 +36,6 @@ import {
   getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { PasswordValidationType } from 'src/featureFlags';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -50,7 +49,12 @@ import { RebuildDialog } from './RebuildDialog';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
-type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
+type ClassNames =
+  | 'root'
+  | 'error'
+  | 'emptyImagePanel'
+  | 'emptyImagePanelText'
+  | 'actions';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -66,6 +70,10 @@ const styles = (theme: Theme) =>
     emptyImagePanelText: {
       marginTop: theme.spacing(1),
       padding: `${theme.spacing(1)}px 0`
+    },
+    actions: {
+      marginBottom: '16px !important',
+      marginLeft: theme.spacing(3)
     }
   });
 
@@ -73,7 +81,6 @@ interface Props {
   type: 'community' | 'account';
   disabled: boolean;
   passwordHelperText: string;
-  passwordValidation: PasswordValidationType;
 }
 
 interface ContextProps {
@@ -110,23 +117,11 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     linodeId,
     enqueueSnackbar,
     history,
-    passwordHelperText,
-    passwordValidation
+    passwordHelperText
   } = props;
 
-  /**
-   * Dynamic validation schema, with password validation
-   * dependent on a value from a feature flag. Remove this
-   * once API password validation is stable.
-   */
-  const RebuildSchema = React.useMemo(
-    () =>
-      extendValidationSchema(
-        passwordValidation ?? 'none',
-        RebuildLinodeFromStackScriptSchema
-      ),
-    [passwordValidation]
-  );
+  const RebuildSchema = () =>
+    extendValidationSchema(RebuildLinodeFromStackScriptSchema);
 
   const [
     ss,
@@ -240,17 +235,16 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
       validationSchema={RebuildSchema}
       validateOnChange={false}
       onSubmit={handleFormSubmit}
-      render={formikProps => {
-        const {
-          errors,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-          status,
-          values,
-          validateForm
-        } = formikProps;
-
+    >
+      {({
+        errors,
+        handleSubmit,
+        isSubmitting,
+        setFieldValue,
+        status,
+        values,
+        validateForm
+      }) => {
         // The "Rebuild" button opens a confirmation modal.
         // We'd like to validate the form before this happens.
         const handleRebuildButtonClick = () => {
@@ -373,7 +367,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
             <ActionsPanel>
               <Button
                 buttonType="secondary"
-                className="destructive"
+                className={`destructive ${classes.actions}`}
                 onClick={handleRebuildButtonClick}
                 data-qa-rebuild
                 data-testid="rebuild-button"
@@ -391,7 +385,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
           </Grid>
         );
       }}
-    />
+    </Formik>
   );
 };
 

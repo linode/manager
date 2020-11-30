@@ -1,6 +1,10 @@
+import Axios from 'axios';
 import { stringify } from 'querystring';
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
-import { authentication } from 'src/utilities/storage';
+import {
+  authentication,
+  getEnvLocalStorageOverrides
+} from 'src/utilities/storage';
 import { v4 } from 'uuid';
 
 /**
@@ -16,15 +20,20 @@ export const genOAuthEndpoint = (
   scope = '*',
   nonce: string
 ) => {
+  // If there are local storage overrides, use those. Otherwise use variables set in the ENV.
+  const localStorageOverrides = getEnvLocalStorageOverrides();
+  const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
+  const loginRoot = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
+
   const query = {
-    client_id: CLIENT_ID,
+    client_id: clientID,
     scope,
     response_type: 'token',
     redirect_uri: `${APP_ROOT}/oauth/callback?returnTo=${redirectUri}`,
     state: nonce
   };
 
-  return `${LOGIN_ROOT}/oauth/authorize?${stringify(query)}`;
+  return `${loginRoot}/oauth/authorize?${stringify(query)}`;
 };
 
 /**
@@ -54,4 +63,24 @@ export const redirectToLogin = (
 ) => {
   const redirectUri = `${returnToPath}${queryString}`;
   window.location.assign(prepareOAuthEndpoint(redirectUri));
+};
+
+export interface RevokeTokenSuccess {
+  success: true;
+}
+
+export const revokeToken = (client_id: string, token: string) => {
+  const localStorageOverrides = getEnvLocalStorageOverrides();
+
+  const loginURL = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
+
+  return Axios({
+    baseURL: loginURL,
+    url: `/oauth/revoke`,
+    method: 'POST',
+    data: stringify({ client_id, token }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    }
+  });
 };

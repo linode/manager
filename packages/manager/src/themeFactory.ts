@@ -42,6 +42,10 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes rotate': any;
     '@keyframes dash': any;
     bg: any;
+    cmrBGColors: any;
+    cmrTextColors: any;
+    cmrBorderColors: any;
+    cmrIconColors: any;
     color: any;
     graphs: any;
     visually: any;
@@ -49,6 +53,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     animateCircleIcon?: any;
     addCircleHoverEffect?: any;
     applyLinkStyles?: any;
+    applyStatusPillStyles?: any;
 
     notificationList: any;
     status: any;
@@ -71,6 +76,64 @@ declare module '@material-ui/core/styles/createMuiTheme' {
 }
 
 const breakpoints = createBreakpoints({});
+
+const cmrBGColors = {
+  bgApp: '#f4f5f6',
+  bgPrimaryNav: '#3a3f46',
+  bgPrimaryNavActive: '#515861',
+  bgSecondaryActions: '#ffffff',
+  bgSearchBar: '#f7f7f8',
+  bgPaper: '#ffffff',
+  bgPrimaryButton: '#3683dc',
+  // notification center, add a tag, breadcrumb
+  bgSecondaryButton: '#e5f1ff',
+  bgTableHeader: '#f9fafa',
+  bgTableBody: '#ffffff',
+  bgStatusChip: '#f7f7f8',
+  bgBillingSummary: '#f5f9ff',
+  bgBreadcrumbParent: '#f5faff',
+  bgAccessRow: '#fafafa',
+  bgAccessHeader: '#f5f5f5'
+};
+
+const cmrTextColors = {
+  textAction: '#3683dc',
+  textBillingSummary: '#32363c',
+  textTab: '#3683dc',
+  textTabActive: '#32363c',
+  textStatusChip: '#5d646f',
+  linkActiveMedium: '#2575d0',
+  linkActiveLight: '#2575d0',
+  headlineStatic: '#32363c',
+  headlineActive: '#32363c',
+  tableStatic: '#55595d',
+  textTagButton: '#3683dc',
+  textAccessTable: '#606469',
+  textAccessCode: '#606469',
+  textBreadcrumbParent: '#3683dc'
+};
+
+const cmrBorderColors = {
+  borderNotificationCenter: '#cce4ff',
+  borderTypography: '#e3e5e8',
+  borderTabs: '#e3e5e8',
+  borderTabActive: '#3683dc',
+  borderBillingSummary: '#cce2ff',
+  borderBalance: '#c2daff',
+  borderTable: '#f4f5f6'
+};
+
+const cmrIconColors = {
+  iStatic: '#5d646f',
+  iActiveMedium: '#2575d0',
+  iActiveLight: '#3683dc',
+  iGreen: '#17cf73',
+  iOrange: '#ffb31a',
+  iRed: '#cf1e1e',
+  // Offline status
+  iGrey: '#dbdde1',
+  iCheckmark: '#444'
+};
 
 const primaryColors = {
   main: '#3683dc',
@@ -125,6 +188,29 @@ const genericLinkStyle = {
   cursor: 'pointer',
   '&:hover': {
     textDecoration: 'underline'
+  }
+};
+
+// Used for styling status pills as seen on Linodes
+const genericStatusPillStyle = {
+  backgroundColor: cmrBGColors.bgStatusChip,
+  color: cmrTextColors.textStatusChip,
+  fontFamily: primaryFonts.bold,
+  fontSize: '1.1rem',
+  padding: 10,
+  '&:before': {
+    display: 'inline-block',
+    borderRadius: '50%',
+    content: '""',
+    height: 16,
+    width: 16,
+    minWidth: 16,
+    marginRight: 8
+  },
+  [breakpoints.down('sm')]: {
+    fontSize: 14,
+    padding: '15px 12px',
+    borderRadius: 15
   }
 };
 
@@ -215,12 +301,15 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#3a3f46',
       topMenu: '#fff',
-      billingHeader: '#f5f9ff'
+      billingHeader: '#f5f9ff',
+      controlHeader: '#f9fafa',
+      chipActive: '#cecece'
     },
     color: {
       headline: primaryColors.headline,
       red: '#ca0813',
       green: '#00b159',
+      orange: '#ffb31a',
       yellow: '#fecf2f',
       border1: '#abadaf',
       border2: '#c5c6c8',
@@ -234,6 +323,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey6: '#e3e5e8',
       grey7: '#fafafa',
       grey8: '#828a97',
+      grey9: '#f4f5f6',
+      grey10: '#dbdde1',
       white: '#fff',
       black: '#222',
       blue: primaryColors.main,
@@ -254,8 +345,16 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       kubeLabel: '#272b31',
       primaryNavText: '#fff',
       borderBilling: '#cce2ff',
-      billingText: '#313335'
+      billingText: '#313335',
+      tagButton: '#f1f7fd',
+      tagText: '#3a3f46',
+      tagIcon: '#7daee8',
+      tagBorder: '#fff'
     },
+    cmrBGColors: cmrBGColors,
+    cmrTextColors: cmrTextColors,
+    cmrBorderColors: cmrBorderColors,
+    cmrIconColors: cmrIconColors,
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
       requests: `rgba(34, 206, 182, ${graphTransparency})`,
@@ -332,6 +431,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     applyLinkStyles: {
       ...genericLinkStyle
+    },
+    applyStatusPillStyles: {
+      ...genericStatusPillStyle
     },
     notificationList: {
       padding: '16px 32px 16px 23px',
@@ -524,6 +626,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             '&:active': {
               color: '#963530',
               borderColor: '#963530'
+            },
+            '&$disabled': {
+              borderColor: '#c9cacb',
+              backgroundColor: 'transparent',
+              color: '#c9cacb'
             }
           },
           '&.loading': {
@@ -665,7 +772,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         }
       },
-      MuiExpansionPanel: {
+      MuiAccordion: {
         root: {
           '& .actionPanel': {
             paddingLeft: spacingUnit * 2,
@@ -677,13 +784,13 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         }
       },
-      MuiExpansionPanelDetails: {
+      MuiAccordionDetails: {
         root: {
           padding: spacingUnit * 2,
           backgroundColor: 'white'
         }
       },
-      MuiExpansionPanelSummary: {
+      MuiAccordionSummary: {
         root: {
           '&$focused': {
             backgroundColor: '#fbfbfb'
@@ -800,6 +907,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         root: {
           maxWidth: 415,
           fontSize: '0.875rem',
+          lineHeight: 1.25,
           '&$error': {
             color: '#ca0813'
           }
@@ -1374,6 +1482,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         icon: {
           opacity: 1,
+          color: 'inherit !important',
           marginTop: 2
         },
         iconDirectionDesc: {

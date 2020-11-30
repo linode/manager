@@ -17,7 +17,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormHelperText from 'src/components/core/FormHelperText';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
   createStyles,
@@ -26,15 +25,11 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
-import { reportException } from 'src/exceptionReporting';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import {
   hasGrant,
   isRestrictedUser
@@ -42,17 +37,16 @@ import {
 import { ApplicationState } from 'src/store';
 import {
   CLONING,
-  CREATING,
   EDITING,
   Origin as DomainDrawerOrigin,
   resetDrawer
 } from 'src/store/domainDrawer';
+import { upsertDomain } from 'src/store/domains/domains.actions';
 import {
   DomainActionsProps,
   withDomainActions
 } from 'src/store/domains/domains.container';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-import { sendCreateDomainEvent } from 'src/utilities/ga';
 import {
   ExtendedIP,
   extendedIPToString,
@@ -62,14 +56,10 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DeleteDomain from './DeleteDomain';
 import { getInitialIPs, transferHelperText as helperText } from './domainUtils';
 
-type ClassNames = 'root' | 'addIP' | 'divider';
+type ClassNames = 'divider';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    addIP: {
-      left: -theme.spacing(2) + 3
-    },
     divider: {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(4)
@@ -107,11 +97,11 @@ export const generateDefaultDomainRecords = (
   ipv6?: string | null
 ) => {
   /**
-   * at this point, the IPv6 is including the prefix and we need to strip that
+   * At this point, the IPv6 is including the prefix and we need to strip that
    *
    * BUT
    *
-   * this logic only applies to Linodes' ipv6, not nodebalancers. No stripping
+   * this logic only applies to Linodes' ipv6, not NodeBalancers. No stripping
    * needed for NodeBalancers.
    */
   const cleanedIPv6 =
@@ -201,12 +191,11 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     }
 
     if (
-      this.props.domainProps && // there are domain props for an update and ...
+      this.props.domainProps && // There are domain props for an update and ...
       (!prevProps.domainProps || // it just appeared
         prevProps.domainProps.id !== this.props.domainProps.id)
     ) {
       // or the domain for editing has changed
-
       // then put it props into state to populate fields
       const {
         axfr_ips,
@@ -254,14 +243,12 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     );
 
     const generalError = errorMap.none;
-    const masterIPsError = errorMap.master_ips;
+    const primaryIPsError = errorMap.master_ips;
 
     const title = mode === EDITING ? 'Edit Domain' : 'Add a new Domain';
 
-    const isCreatingMasterDomain = mode === CREATING && type === 'master';
-    const isEditingMasterDomain = mode === EDITING && type === 'master';
-    const isCreatingSlaveDomain = mode === CREATING && type === 'slave';
-    const isEditingSlaveDomain = mode === EDITING && type === 'slave';
+    const isEditingPrimaryDomain = mode === EDITING && type === 'master';
+    const isEditingSecondaryDomain = mode === EDITING && type === 'slave';
 
     return (
       <Drawer title={title} open={open} onClose={this.closeDrawer}>
@@ -288,23 +275,21 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         >
           <FormControlLabel
             value="master"
-            label="Master"
+            label="Primary"
             control={<Radio />}
-            data-qa-domain-radio="Master"
+            data-qa-domain-radio="Primary"
             disabled={mode === EDITING || mode === CLONING || disabled}
           />
           <FormControlLabel
             value="slave"
-            label="Slave"
+            label="Secondary"
             control={<Radio />}
-            data-qa-domain-radio="Slave"
+            data-qa-domain-radio="Secondary"
             disabled={mode === EDITING || mode === CLONING || disabled}
           />
         </RadioGroup>
         <TextField
-          errorText={
-            (mode === CREATING || mode === EDITING || '') && errorMap.domain
-          }
+          errorText={(mode === EDITING || '') && errorMap.domain}
           value={domain}
           disabled={mode === CLONING || disabled}
           label="Domain"
@@ -322,7 +307,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {(isCreatingMasterDomain || isEditingMasterDomain) && (
+        {isEditingPrimaryDomain && (
           <TextField
             errorText={errorMap.soa_email}
             value={soaEmail}
@@ -333,15 +318,15 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {(isCreatingSlaveDomain || isEditingSlaveDomain) && (
+        {isEditingSecondaryDomain && (
           <React.Fragment>
             <MultipleIPInput
-              title="Master Nameserver IP Address"
+              title="Primary Nameserver IP Address"
               ips={this.state.master_ips.map(stringToExtendedIP)}
-              onChange={this.updateMasterIPAddress}
-              error={masterIPsError}
+              onChange={this.updatePrimaryIPAddress}
+              error={primaryIPsError}
             />
-            {isEditingSlaveDomain && (
+            {isEditingSecondaryDomain && (
               // Only when editing
               <MultipleIPInput
                 title="Domain Transfer IPs"
@@ -361,88 +346,6 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {isCreatingMasterDomain && (
-          <React.Fragment>
-            <Select
-              isClearable={false}
-              onChange={(value: Item<DefaultRecordsType>) =>
-                this.updateInsertDefaultRecords(value.value)
-              }
-              defaultValue={{
-                value: 'none',
-                label: 'Do not insert default records for me.'
-              }}
-              label="Insert Default Records"
-              options={[
-                {
-                  value: 'none',
-                  label: 'Do not insert default records for me.'
-                },
-                {
-                  value: 'linode',
-                  label: 'Insert default records from one of my Linodes.'
-                },
-                {
-                  value: 'nodebalancer',
-                  label: 'Insert default records from one of my NodeBalancers.'
-                }
-              ]}
-            />
-            <FormHelperText>
-              If specified, we can automatically create some domain records
-              (A/AAAA and MX) to get you started, based on one of your Linodes
-              or NodeBalancers.
-            </FormHelperText>
-          </React.Fragment>
-        )}
-        {isCreatingMasterDomain &&
-          this.state.defaultRecordsSetting === 'linode' && (
-            <React.Fragment>
-              <LinodeSelect
-                linodeError={errorMap.defaultLinode}
-                handleChange={this.updateSelectedLinode}
-                selectedLinode={
-                  this.state.selectedDefaultLinode
-                    ? this.state.selectedDefaultLinode.id
-                    : null
-                }
-              />
-              {!errorMap.defaultLinode && (
-                <FormHelperText>
-                  {this.state.selectedDefaultLinode &&
-                  !this.state.selectedDefaultLinode.ipv6
-                    ? `We'll automatically create domains for the first IPv4 address on this
-                    Linode.`
-                    : `We'll automatically create domain records for both the first
-                    IPv4 and IPv6 addresses on this Linode.`}
-                </FormHelperText>
-              )}
-            </React.Fragment>
-          )}
-        {isCreatingMasterDomain &&
-          this.state.defaultRecordsSetting === 'nodebalancer' && (
-            <React.Fragment>
-              <NodeBalancerSelect
-                nodeBalancerError={errorMap.defaultNodeBalancer}
-                handleChange={this.updateSelectedNodeBalancer}
-                selectedNodeBalancer={
-                  this.state.selectedDefaultNodeBalancer
-                    ? this.state.selectedDefaultNodeBalancer.id
-                    : null
-                }
-              />
-              {!errorMap.defaultNodeBalancer && (
-                <FormHelperText>
-                  {this.state.selectedDefaultNodeBalancer &&
-                  !this.state.selectedDefaultNodeBalancer.ipv6
-                    ? `We'll automatically create domains for the first IPv4 address on this
-                  NodeBalancer.`
-                    : `We'll automatically create domain records for both the first
-                  IPv4 and IPv6 addresses on this NodeBalancer.`}
-                </FormHelperText>
-              )}
-            </React.Fragment>
-          )}
         <ActionsPanel>
           <Button
             buttonType="primary"
@@ -503,159 +406,6 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     this.closeDrawer();
   };
 
-  create = () => {
-    const {
-      domain,
-      type,
-      soaEmail,
-      master_ips,
-      defaultRecordsSetting,
-      selectedDefaultLinode,
-      selectedDefaultNodeBalancer
-    } = this.state;
-    const { domainActions, origin } = this.props;
-
-    const tags = this.state.tags.map(tag => tag.value);
-
-    const finalMasterIPs = master_ips.filter(v => v !== '');
-
-    if (type === 'slave' && finalMasterIPs.length === 0) {
-      this.setState({
-        submitting: false,
-        errors: [
-          {
-            field: 'master_ips',
-            reason: 'You must provide at least one Master Nameserver IP Address'
-          }
-        ]
-      });
-      return;
-    }
-
-    /**
-     * In this case, the user wants default domain records created, but
-     * they haven't supplied a Linode or NodeBalancer
-     */
-    if (defaultRecordsSetting === 'linode' && !selectedDefaultLinode) {
-      return this.setState({
-        errors: [
-          {
-            reason: 'Please select a Linode.',
-            field: 'defaultLinode'
-          }
-        ]
-      });
-    }
-
-    if (
-      defaultRecordsSetting === 'nodebalancer' &&
-      !selectedDefaultNodeBalancer
-    ) {
-      return this.setState({
-        errors: [
-          {
-            reason: 'Please select a NodeBalancer.',
-            field: 'defaultNodeBalancer'
-          }
-        ]
-      });
-    }
-
-    const data =
-      type === 'master'
-        ? { domain, type, tags, soa_email: soaEmail }
-        : { domain, type, tags, master_ips: finalMasterIPs };
-
-    this.setState({ submitting: true });
-    domainActions
-      .createDomain(data)
-      .then((domainData: Domain) => {
-        if (!this.mounted) {
-          return;
-        }
-        sendCreateDomainEvent(origin);
-        /**
-         * now we check to see if the user wanted us to automatically create
-         * domain records for them. If so, create some A/AAAA and MX records
-         * with the first IPv4 and IPv6 from the Linode or NodeBalancer they
-         * selected.
-         *
-         * This only applies to master domains.
-         */
-        if (type === 'master') {
-          if (defaultRecordsSetting === 'linode') {
-            return generateDefaultDomainRecords(
-              domainData.domain,
-              domainData.id,
-              path(['ipv4', 0], selectedDefaultLinode),
-              path(['ipv6'], selectedDefaultLinode)
-            )
-              .then(() => {
-                return this.redirectToLandingOrDetail(type, domainData.id);
-              })
-              .catch((e: APIError[]) => {
-                reportException(
-                  `Default DNS Records couldn't be created from Linode: ${e[0].reason}`,
-                  {
-                    selectedLinode: this.state.selectedDefaultLinode!.id,
-                    domainID: domainData.id,
-                    ipv4: path(['ipv4', 0], selectedDefaultLinode),
-                    ipv6: path(['ipv6'], selectedDefaultLinode)
-                  }
-                );
-                return this.redirectToLandingOrDetail(type, domainData.id, {
-                  recordError:
-                    'There was an issue creating default domain records.'
-                });
-              });
-          }
-
-          if (defaultRecordsSetting === 'nodebalancer') {
-            return generateDefaultDomainRecords(
-              domainData.domain,
-              domainData.id,
-              path(['ipv4'], selectedDefaultNodeBalancer),
-              path(['ipv6'], selectedDefaultNodeBalancer)
-            )
-              .then(() => {
-                return this.redirectToLandingOrDetail(type, domainData.id);
-              })
-              .catch((e: APIError[]) => {
-                reportException(
-                  `Default DNS Records couldn't be created from NodeBalancer: ${e[0].reason}`,
-                  {
-                    selectedNodeBalancer: this.state
-                      .selectedDefaultNodeBalancer!.id,
-                    domainID: domainData.id,
-                    ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
-                    ipv6: path(['ipv6'], selectedDefaultNodeBalancer)
-                  }
-                );
-                return this.redirectToLandingOrDetail(type, domainData.id, {
-                  recordError:
-                    'There was an issue creating default domain records.'
-                });
-              });
-          }
-        }
-        return this.redirectToLandingOrDetail(type, domainData.id);
-      })
-      .catch(err => {
-        if (!this.mounted) {
-          return;
-        }
-        this.setState(
-          {
-            submitting: false,
-            errors: getAPIErrorOrDefault(err)
-          },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
-      });
-  };
-
   clone = () => {
     const { id } = this.props;
     const { cloneName } = this.state;
@@ -674,6 +424,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
+        this.props.upsertDomain(data);
         this.redirect(data.id || '');
         this.closeDrawer();
       })
@@ -699,21 +450,22 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     const tags = this.state.tags.map(tag => tag.value);
 
     if (!id) {
-      // weird case if the id was not passed
+      // Weird case if the id was not passed
       this.closeDrawer();
       return;
     }
 
-    const finalMasterIPs = master_ips.filter(v => v !== '');
+    const primaryIPs = master_ips.filter(v => v !== '');
     const finalTransferIPs = axfr_ips.filter(v => v !== '');
 
-    if (type === 'slave' && finalMasterIPs.length === 0) {
+    if (type === 'slave' && primaryIPs.length === 0) {
       this.setState({
         submitting: false,
         errors: [
           {
             field: 'master_ips',
-            reason: 'You must provide at least one Master Nameserver IP Address'
+            reason:
+              'You must provide at least one Primary Nameserver IP Address'
           }
         ]
       });
@@ -722,13 +474,13 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
 
     const data =
       type === 'master'
-        ? // not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
+        ? // Not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
           { domain, tags, soa_email: soaEmail, domainId: id }
         : {
             domain,
             type,
             tags,
-            master_ips: finalMasterIPs,
+            master_ips: primaryIPs,
             domainId: id,
             axfr_ips: finalTransferIPs
           };
@@ -759,9 +511,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 
   submit = () => {
-    if (this.props.mode === CREATING) {
-      this.create();
-    } else if (this.props.mode === CLONING) {
+    if (this.props.mode === CLONING) {
       this.clone();
     } else if (this.props.mode === EDITING) {
       this.update();
@@ -782,18 +532,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.setState({ soaEmail: e.target.value });
 
-  updateSelectedLinode = (linode: Linode) =>
-    this.setState({ selectedDefaultLinode: linode });
-
-  updateSelectedNodeBalancer = (nodebalancer: NodeBalancer) =>
-    this.setState({ selectedDefaultNodeBalancer: nodebalancer });
-
   updateTags = (selected: Tag[]) => {
     this.setState({ tags: selected });
-  };
-
-  updateInsertDefaultRecords = (value: DefaultRecordsType) => {
-    this.setState({ defaultRecordsSetting: value });
   };
 
   updateType = (
@@ -801,7 +541,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     value: 'master' | 'slave'
   ) => this.setState({ type: value });
 
-  updateMasterIPAddress = (newIPs: ExtendedIP[]) => {
+  updatePrimaryIPAddress = (newIPs: ExtendedIP[]) => {
     const master_ips =
       newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (this.mounted) {
@@ -814,13 +554,14 @@ const styled = withStyles(styles);
 
 interface DispatchProps {
   resetDrawer: () => void;
+  upsertDomain: (domain: Domain) => void;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators({ resetDrawer }, dispatch);
+  bindActionCreators({ resetDrawer, upsertDomain }, dispatch);
 
 interface StateProps {
-  mode: typeof CLONING | typeof CREATING | typeof EDITING;
+  mode: typeof CLONING | typeof EDITING;
   open: boolean;
   domain?: string;
   domainProps?: Domain;
@@ -834,12 +575,12 @@ const mapStateToProps = (state: ApplicationState) => {
   const domainEntities = state.__resources.domains.itemsById;
   const domainProps = domainEntities[String(id)];
   return {
-    mode: state.domainDrawer?.mode ?? CREATING,
+    mode: state.domainDrawer?.mode,
     open: state.domainDrawer?.open ?? false,
     domain: path(['domainDrawer', 'domain'], state),
     domainProps,
     id,
-    // disabled if the profile is restricted and doesn't have add_domains grant
+    // Disabled if the profile is restricted and doesn't have add_domains grant
     disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains'),
     origin: state.domainDrawer.origin
   };

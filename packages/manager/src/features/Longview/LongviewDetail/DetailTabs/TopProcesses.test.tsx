@@ -1,15 +1,14 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { longviewTopProcessesFactory } from 'src/factories/longviewTopProcesses';
 import { LongviewTopProcesses } from 'src/features/Longview/request.types';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { extendTopProcesses, Props, TopProcesses } from './TopProcesses';
 
-afterEach(cleanup);
-
 const props: Props = {
   topProcessesData: longviewTopProcessesFactory.build(),
-  topProcessesLoading: false
+  topProcessesLoading: false,
+  clientID: 1
 };
 
 describe('Top Processes', () => {
@@ -50,6 +49,7 @@ describe('Top Processes', () => {
           <TopProcesses
             topProcessesData={{ Processes: {} }}
             topProcessesLoading={true}
+            clientID={1}
           />
         )
       );

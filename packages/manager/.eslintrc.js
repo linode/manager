@@ -184,7 +184,6 @@ module.exports = {
         '**/*.stories.js',
         'scripts/**',
         'config/**',
-        'testServer.js',
         'cypress/**'
       ],
       rules: {
@@ -197,7 +196,7 @@ module.exports = {
     },
     {
       // scrips, config and cypress files can use console
-      files: ['scripts/**', 'config/**', 'testServer.js', 'cypress/**'],
+      files: ['scripts/**', 'config/**', 'cypress/**'],
       rules: {
         'no-console': 'off',
         // here we get false positives as cypress self handles async/await

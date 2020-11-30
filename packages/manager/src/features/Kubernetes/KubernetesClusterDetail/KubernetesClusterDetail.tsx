@@ -1,7 +1,8 @@
 import {
   getKubeConfig,
   getKubernetesClusterEndpoints,
-  KubernetesEndpointResponse
+  KubernetesEndpointResponse,
+  recycleAllNodes
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -9,7 +10,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import AppBar from 'src/components/core/AppBar';
 import Grid from 'src/components/core/Grid';
 import {
   createStyles,
@@ -17,8 +17,11 @@ import {
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import TabPanel from 'src/components/core/ReachTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import Tab from 'src/components/core/ReachTab';
+import TabList from 'src/components/core/ReachTabList';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -26,6 +29,7 @@ import KubeContainer, {
   DispatchProps
 } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import usePolling from 'src/hooks/usePolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
@@ -40,14 +44,17 @@ type ClassNames =
   | 'section'
   | 'button'
   | 'titleGridWrapper'
-  | 'tagHeading';
+  | 'tagHeading'
+  | 'tabList'
+  | 'tab';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {},
     tabBar: {
-      marginTop: 0
+      marginTop: 0,
+      position: 'relative'
     },
     backButton: {
       margin: '-6px 0 0 -16px',
@@ -76,6 +83,51 @@ const styles = (theme: Theme) =>
     },
     tagHeading: {
       marginBottom: theme.spacing(1) + 4
+    },
+    tab: {
+      '&[data-reach-tab]': {
+        // This was copied over from our MuiTab styling in themeFactory. Some of this could probably be cleaned up.
+        color: theme.color.tableHeaderText,
+        minWidth: 50,
+        textTransform: 'inherit',
+        fontSize: '0.93rem',
+        padding: '6px 16px',
+        position: 'relative',
+        overflow: 'hidden',
+        maxWidth: 264,
+        boxSizing: 'border-box',
+        borderBottom: '2px solid transparent',
+        minHeight: theme.spacing(1) * 6,
+        flexShrink: 0,
+        display: 'inline-flex',
+        alignItems: 'center',
+        verticalAlign: 'middle',
+        justifyContent: 'center',
+        appearance: 'none',
+        lineHeight: 1.3,
+        [theme.breakpoints.up('md')]: {
+          minWidth: 75
+        },
+        '&:hover': {
+          color: theme.color.blue
+        }
+      },
+      '&[data-reach-tab][data-selected]': {
+        fontFamily: theme.font.bold,
+        color: theme.color.headline,
+        borderBottom: `2px solid ${theme.color.blue}`
+      }
+    },
+    tabList: {
+      '&[data-reach-tab-list]': {
+        background: 'none !important',
+        boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
+        marginBottom: theme.spacing(3),
+        [theme.breakpoints.down('md')]: {
+          overflowX: 'scroll',
+          padding: 1
+        }
+      }
     }
   });
 interface KubernetesContainerProps {
@@ -124,6 +176,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
 
   const endpointAvailabilityInterval = React.useRef<number>();
   const kubeconfigAvailabilityInterval = React.useRef<number>();
+
+  usePolling([() => props.requestNodePools(+props.match.params.clusterID)]);
 
   const getEndpointToDisplay = (endpoints: string[]) => {
     // Per discussions with the API team and UX, we should display only the endpoint with port 443, so we are matching on that.
@@ -219,13 +273,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
       kubeconfigAvailabilityCheck(clusterID, true);
     }
 
-    const interval = setInterval(
-      () => props.requestNodePools(+props.match.params.clusterID),
-      10000
-    );
-
     return () => {
-      clearInterval(interval);
       clearInterval(endpointAvailabilityInterval.current);
       clearInterval(kubeconfigAvailabilityInterval.current);
     };
@@ -267,6 +315,15 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
     return cluster.label;
   };
 
+  const handleRecycleAllNodes = (nodePoolID: number) => {
+    return recycleAllNodes(cluster.id, nodePoolID).then(() => {
+      // Recycling nodes is an asynchronous process, and it probably won't make a difference to
+      // request Node Pools here (it could be several seconds before statuses change). I thought
+      // it was a good idea anyway, though.
+      props.requestNodePools(cluster.id);
+    });
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
@@ -295,65 +352,67 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
           <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
         </Grid>
       </Grid>
-      <Grid item>
-        <Grid item xs={12}>
-          <AppBar position="static" color="default" role="tablist">
-            <Tabs
-              value={0}
-              indicatorColor="primary"
-              textColor="primary"
-              variant="scrollable"
-              scrollButtons="on"
-              className={classes.tabBar}
-            >
-              <Tab key="Summary" label="Summary" data-qa-tab="Summary" />
-            </Tabs>
-          </AppBar>
-        </Grid>
-        <Grid item xs={12} className={classes.section}>
-          <KubeSummaryPanel
-            cluster={cluster}
-            endpoint={endpoint}
-            endpointError={endpointError}
-            endpointLoading={endpointLoading}
-            kubeconfigAvailable={kubeconfigAvailable}
-            kubeconfigError={kubeconfigError}
-            handleUpdateTags={(newTags: string[]) =>
-              props.updateCluster({
-                clusterID: cluster.id,
-                tags: newTags
-              })
-            }
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <NodePoolsDisplay
-            clusterLabel={cluster.label}
-            pools={cluster.node_pools}
-            types={props.typesData || []}
-            addNodePool={(pool: PoolNodeWithPrice) =>
-              props.createNodePool({
-                clusterID: cluster.id,
-                type: pool.type,
-                count: pool.count
-              })
-            }
-            updatePool={(id: number, updatedPool: PoolNodeWithPrice) =>
-              props.updateNodePool({
-                clusterID: cluster.id,
-                nodePoolID: id,
-                type: updatedPool.type,
-                count: updatedPool.count
-              })
-            }
-            deletePool={(poolID: number) =>
-              props.deleteNodePool({
-                clusterID: cluster.id,
-                nodePoolID: poolID
-              })
-            }
-          />
-        </Grid>
+
+      <Grid item xs={12}>
+        <Tabs defaultIndex={0} className={classes.tabBar}>
+          <TabList className={classes.tabList}>
+            <Tab className={classes.tab} key="Summary" data-qa-tab="Summary">
+              Summary
+            </Tab>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <Grid item xs={12} className={classes.section}>
+                <KubeSummaryPanel
+                  cluster={cluster}
+                  endpoint={endpoint}
+                  endpointError={endpointError}
+                  endpointLoading={endpointLoading}
+                  kubeconfigAvailable={kubeconfigAvailable}
+                  kubeconfigError={kubeconfigError}
+                  handleUpdateTags={(newTags: string[]) =>
+                    props.updateCluster({
+                      clusterID: cluster.id,
+                      tags: newTags
+                    })
+                  }
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <NodePoolsDisplay
+                  clusterLabel={cluster.label}
+                  pools={cluster.node_pools}
+                  types={props.typesData || []}
+                  addNodePool={(pool: PoolNodeWithPrice) =>
+                    props.createNodePool({
+                      clusterID: cluster.id,
+                      type: pool.type,
+                      count: pool.count
+                    })
+                  }
+                  updatePool={(id: number, updatedPool: PoolNodeWithPrice) =>
+                    props.updateNodePool({
+                      clusterID: cluster.id,
+                      nodePoolID: id,
+                      type: updatedPool.type,
+                      count: updatedPool.count
+                    })
+                  }
+                  deletePool={(poolID: number) =>
+                    props.deleteNodePool({
+                      clusterID: cluster.id,
+                      nodePoolID: poolID
+                    })
+                  }
+                  recycleAllNodes={(poolID: number) =>
+                    handleRecycleAllNodes(poolID)
+                  }
+                />
+              </Grid>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Grid>
     </React.Fragment>
   );

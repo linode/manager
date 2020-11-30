@@ -277,7 +277,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.setState(set(lensPath(['saving', 'global']), false));
           scrollErrorIntoView();
         });
-      return;
     }
 
     /* This is where individual entity saving could be implemented */
@@ -363,7 +362,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       if (updateFns.length) {
         this.setState((compose as any)(...updateFns));
       }
-      return;
     }
   };
 
@@ -419,16 +417,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       cancel_account: 'Can cancel the entire account'
     };
     return (
-      <Grid
-        item
-        key={perm}
-        xs={12}
-        sm={6}
-        className="py0"
-        id="tabpanel-userPermissions"
-        role="tabpanel"
-        aria-labelledby="tab-userPermissions"
-      >
+      <Grid item key={perm} xs={12} sm={6} className="py0">
         <FormControlLabel
           className={classes.globalRow}
           label={permDescriptionMap[perm]}
@@ -634,6 +623,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -35 }}
+                  htmlFor={`${entity}-select-all`}
                 >
                   None
                   <Radio
@@ -649,6 +639,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -65 }}
+                  htmlFor={`${entity}-select-all`}
                 >
                   Read Only
                   <Radio
@@ -664,6 +655,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -73 }}
+                  htmlFor={`${entity}-select-all`}
                 >
                   Read-Write
                   <Radio

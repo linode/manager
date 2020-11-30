@@ -1,7 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -20,6 +19,8 @@ import {
 } from 'src/features/Longview/request.types';
 import OverviewGraphs from './OverviewGraphs';
 import TopProcesses from './TopProcesses';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -47,7 +48,7 @@ interface Props {
   listeningPortsData: LongviewPortsResponse;
 }
 
-export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
+export type CombinedProps = Props;
 
 export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -66,6 +67,8 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
     lastUpdatedError,
     timezone
   } = props;
+
+  const flags = useFlags();
 
   /**
    * Package drawer open/close logic
@@ -86,12 +89,8 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Grid
-        container
-        id="tabpanel-overview"
-        role="tabpanel"
-        aria-labelledby="tab-overview"
-      >
+      <DocumentTitleSegment segment="Overview" />
+      <Grid container>
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>
             <Grid
@@ -113,10 +112,12 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                 lastUpdatedError={lastUpdatedError}
               />
               <TopProcesses
+                clientID={clientID}
                 topProcessesData={topProcessesData}
                 topProcessesLoading={topProcessesLoading}
                 topProcessesError={topProcessesError}
                 lastUpdatedError={lastUpdatedError}
+                cmrFlag={flags.cmr}
               />
             </Grid>
           </Paper>
@@ -132,11 +133,13 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
             servicesLoading={listeningPortsLoading && !lastUpdated}
             servicesError={portsError}
+            cmrFlag={flags.cmr}
           />
           <ActiveConnections
             connections={pathOr([], ['Ports', 'active'], listeningPortsData)}
             connectionsLoading={listeningPortsLoading && !lastUpdated}
             connectionsError={portsError}
+            cmrFlag={flags.cmr}
           />
         </Grid>
       </Grid>

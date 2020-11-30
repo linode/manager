@@ -1,10 +1,7 @@
-import { cleanup } from '@testing-library/react';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { useOpenClose } from './useOpenClose';
 
 describe('useOpenClose hook', () => {
-  afterEach(cleanup);
-
   it('defaults "isOpen" property to false', () => {
     const { result } = renderHook(() => useOpenClose());
     expect(result.current.isOpen).toBe(false);

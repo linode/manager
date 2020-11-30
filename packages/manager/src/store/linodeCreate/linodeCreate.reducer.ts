@@ -11,7 +11,7 @@ export const getInitialType = (): CreateTypes => {
   let queryParams;
   try {
     queryParams = parse(location.search.replace('?', '').toLowerCase());
-  } catch {
+  } catch (e) {
     // Broken query params shouldn't break the app, just default to fromImage
     return 'fromImage';
   }
@@ -28,7 +28,7 @@ export const getInitialType = (): CreateTypes => {
        * we have a subtype in the query string so now we need to deduce what
        * endpoint we should be POSTing to based on what is in the query params
        */
-      if (normalizedSubtype.includes('stackscript')) {
+      if (normalizedSubtype.includes('community' || 'account')) {
         return 'fromStackScript';
       } else if (normalizedSubtype.includes('clone')) {
         return 'fromLinode';
@@ -47,11 +47,14 @@ export const getInitialType = (): CreateTypes => {
        * here we know we don't have a subtype in the query string
        * but we do have a type (AKA a parent tab is selected). In this case,
        * we can assume the first child tab is selected within the parent tabs
+       * This is needed to determine the createType for conditional logic in the UI.
        */
       if (normalizedType.includes('one-click')) {
         return 'fromApp';
-      } else if (normalizedType.includes('images')) {
-        return 'fromImage';
+      } else if (normalizedType.includes('clone')) {
+        return 'fromLinode';
+      } else if (normalizedType.includes('backup')) {
+        return 'fromBackup';
       } else {
         return 'fromImage';
       }

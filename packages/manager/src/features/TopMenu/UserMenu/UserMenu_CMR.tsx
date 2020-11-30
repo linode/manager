@@ -6,6 +6,7 @@ import {
   MenuLink,
   MenuPopover
 } from '@reach/menu-button';
+import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
@@ -24,9 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     transform: `translateY(${theme.spacing(1)}px)`
   },
   button: {
-    padding: theme.spacing(1),
     borderRadius: 30,
     order: 4,
+    padding: theme.spacing(1),
     '&:hover, &.active': {
       '& $username': {
         color: theme.palette.primary.main
@@ -42,35 +43,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   userWrapper: {
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: '50%',
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.down('md')]: {
-      margin: 0,
       width: '28px',
       height: '28px'
     }
   },
   leftIcon: {
-    width: 30,
+    borderRadius: '50%',
     height: 30,
-    borderRadius: '50%'
+    width: 30
   },
   username: {
+    maxWidth: '135px',
+    overflow: 'hidden',
+    paddingRight: 15,
+    textOverflow: 'ellipsis',
     transition: theme.transitions.create(['color']),
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
+    whiteSpace: 'nowrap',
+    // Hides username as soon as things start to scroll
+    [theme.breakpoints.down(1345)]: {
+      ...theme.visually.hidden
     }
   },
   menuItem: {
-    fontSize: '.9rem',
     fontFamily: 'LatoWeb',
+    fontSize: '.9rem',
     '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
       color: 'white'
     }
   },
@@ -81,76 +85,82 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     lineHeight: 1,
+    paddingLeft: 15,
     '&[data-reach-menu-button]': {
-      textTransform: 'inherit',
+      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
+      border: 'none',
       borderRadius: 0,
-      fontSize: '1rem',
-      backgroundColor: theme.bg.primaryNavPaper,
       color: theme.color.primaryNavText,
       cursor: 'pointer',
-      border: 'none',
+      fontSize: '1rem',
+      height: 50,
+      textTransform: 'inherit',
       '&[aria-expanded="true"]': {
-        backgroundColor: theme.bg.primaryNavActiveBG,
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
         '& $caret': {
           transform: 'rotate(180deg)'
         }
-      },
-      height: 50,
-      padding: `0px 3px 0px 3px`
+      }
     },
     '&:hover': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     },
     '&:focus': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
+    },
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 7.5
     }
   },
   menuItemLink: {
+    lineHeight: 1,
     '&[data-reach-menu-item]': {
-      cursor: 'pointer',
-      fontSize: '1rem',
-      paddingTop: 12,
-      paddingRight: 40,
-      paddingBottom: 12,
-      '&:hover': {
-        backgroundColor: theme.bg.primaryNavActiveBG
-      },
-      '&:focus': {
-        backgroundColor: theme.bg.primaryNavActiveBG
-      },
       display: 'flex',
       alignItems: 'center',
-      color: theme.color.primaryNavText
+      color: theme.color.primaryNavText,
+      cursor: 'pointer',
+      fontSize: '1rem',
+      padding: '12px 40px 12px 15px',
+      '&:hover': {
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
+      },
+      '&:focus': {
+        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
+      }
     },
     '&[data-reach-menu-item][data-selected]': {
-      backgroundColor: theme.bg.primaryNavActiveBG
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
     },
-    lineHeight: 1
+    [theme.breakpoints.down('sm')]: {
+      padding: '10px 7.5px'
+    }
   },
   menuItemList: {
     '&[data-reach-menu-items]': {
-      padding: 0,
+      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
       border: 'none',
-      whiteSpace: 'normal',
-      backgroundColor: theme.bg.primaryNavPaper
+      padding: 0
     }
   },
   menuPopover: {
     '&[data-reach-menu], &[data-reach-menu-popover]': {
-      zIndex: 3000,
+      marginTop: -1,
       position: 'absolute',
       top: 50,
-      // Hack solution to have something semi-working on mobile.
+      zIndex: 3000,
       [theme.breakpoints.down('md')]: {
         left: 0
       }
     }
   },
   caret: {
+    color: '#9ea4ae',
     fontSize: 26,
     marginTop: 4,
-    color: '#9ea4ae',
-    marginLeft: 2
+    marginLeft: 2,
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   }
 }));
 
@@ -163,6 +173,7 @@ export const UserMenu: React.FC<{}> = () => {
   const { _hasAccountAccess, profile, account } = useAccountManagement();
 
   const userEmail = profile.data?.email;
+  const username = profile.data?.username;
 
   React.useEffect(() => {
     if (userEmail) {
@@ -195,9 +206,12 @@ export const UserMenu: React.FC<{}> = () => {
           data-testid="nav-group-profile"
         >
           {gravatarLoading ? (
-            <div className={classes.userWrapper} />
+            <div className={classes.userWrapper}>
+              <div className={classes.username}>{username}</div>
+            </div>
           ) : gravatarURL === 'not found' ? (
             <div className={classes.userWrapper}>
+              <div className={classes.username}>{username}</div>
               <UserIcon className={classes.leftIcon} />
             </div>
           ) : (
@@ -211,7 +225,7 @@ export const UserMenu: React.FC<{}> = () => {
           )}
           <KeyboardArrowDown className={classes.caret} />
         </MenuButton>
-        <MenuPopover className={classes.menuPopover} portal={false}>
+        <MenuPopover className={classes.menuPopover} position={positionRight}>
           <MenuItems className={classes.menuItemList}>
             {menuLinks.map(menuLink =>
               menuLink.hide ? null : (

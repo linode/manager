@@ -1,20 +1,14 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import AppBar from 'src/components/core/AppBar';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
+
 import { withLinodeDetailContext } from './linodeDetailContext';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary'));
@@ -86,126 +80,76 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     }
   ];
 
-  const handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = props;
-    const routeName = tabs[value].routeName;
-    history.push(`${routeName}`);
+  const matches = (p: string) => {
+    return Boolean(matchPath(p, { path: location.pathname }));
+  };
+
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
   };
 
   return (
-    <>
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          // Prevent console error for -1 as invalid tab index if we're redirecting from e.g. /linodes/invalid-route
-          value={Math.max(
-            tabs.findIndex(tab => matches(tab.routeName)),
-            0
-          )}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-        >
-          {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              label={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((tabProps, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...tabProps}
-                  ref={ref}
-                />
-              ))}
-            />
-          ))}
-        </Tabs>
-      </AppBar>
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <Switch>
-          <Route
-            exact
-            path={`/linodes/:linodeId/summary`}
-            component={LinodeSummary}
-          />
-          <Route
-            exact
-            path={`/linodes/:linodeId/volumes`}
-            render={routeProps => (
-              <div
-                id="tabpanel-volumes"
-                role="tabpanel"
-                aria-labelledby="tab-volumes"
-              >
-                <VolumesLanding
-                  linodeId={linodeId}
-                  linodeLabel={linodeLabel}
-                  linodeRegion={linodeRegion}
-                  linodeConfigs={linodeConfigs}
-                  readOnly={readOnly}
-                  fromLinodes
-                  removeBreadCrumb
-                  {...routeProps}
-                />
-              </div>
-            )}
-          />
-          <Route
-            exact
-            path={`/linodes/:linodeId/networking`}
-            component={LinodeNetworking}
-          />
-          <Route
-            exact
-            path={`/linodes/:linodeId/resize`}
-            component={LinodeResize}
-          />
-          <Route
-            exact
-            path={`/linodes/:linodeId/rescue`}
-            component={LinodeRescue}
-          />
-          <Route
-            exact
-            path={`/linodes/:linodeId/rebuild`}
-            component={LinodeRebuild}
-          />
-          <Route
-            exact
-            path={`/linodes/:linodeId/backup`}
-            component={LinodeBackup}
-          />
-          <Route
-            exact
-            path={`/linodes/:linodeId/activity`}
-            component={LinodeActivity}
-          />
-          <Route
-            exact
-            path={`/linodes/:linodeId/settings`}
-            component={LinodeSettings}
-          />
-          <Route
-            exact
-            path={`/linodes/:linodeId/advanced`}
-            component={LinodeAdvanced}
-          />
-          {/* 404 */}
-          <Redirect to={`${url}/summary`} />
-        </Switch>
-      </React.Suspense>
-    </>
-  );
-};
+    <Tabs
+      index={Math.max(
+        tabs.findIndex(tab => matches(tab.routeName)),
+        0
+      )}
+      onChange={navToURL}
+    >
+      <TabLinkList tabs={tabs} />
 
-const matches = (p: string) => {
-  return Boolean(matchPath(p, { path: location.pathname }));
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <TabPanels>
+          <SafeTabPanel index={0}>
+            <LinodeSummary />
+          </SafeTabPanel>
+          <SafeTabPanel index={1}>
+            <VolumesLanding
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeRegion={linodeRegion}
+              linodeConfigs={linodeConfigs}
+              readOnly={readOnly}
+              fromLinodes
+              removeBreadCrumb
+            />
+          </SafeTabPanel>
+
+          <SafeTabPanel index={2}>
+            <LinodeNetworking />
+          </SafeTabPanel>
+
+          <SafeTabPanel index={3}>
+            <LinodeResize />
+          </SafeTabPanel>
+
+          <SafeTabPanel index={4}>
+            <LinodeRescue />
+          </SafeTabPanel>
+
+          <SafeTabPanel index={5}>
+            <LinodeRebuild />
+          </SafeTabPanel>
+
+          <SafeTabPanel index={6}>
+            <LinodeBackup />
+          </SafeTabPanel>
+
+          <SafeTabPanel index={7}>
+            <LinodeActivity />
+          </SafeTabPanel>
+
+          <SafeTabPanel index={8}>
+            <LinodeSettings />
+          </SafeTabPanel>
+
+          <SafeTabPanel index={9}>
+            <LinodeAdvanced />
+          </SafeTabPanel>
+        </TabPanels>
+      </React.Suspense>
+    </Tabs>
+  );
 };
 
 interface ContextProps {

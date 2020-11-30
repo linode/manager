@@ -18,7 +18,6 @@ import {
   createPaymentsTable,
   createPaymentsTotalsTable
 } from './utils';
-import {ISO_DATE_FORMAT}from 'src/constants'
 
 const leftMargin = 30; // space that needs to be applied to every parent element
 const baseFont = 'helvetica';
@@ -99,6 +98,9 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
   }
   addLine(`${city}, ${state}, ${zip}`);
   addLine(`${country}`);
+  if (account.tax_id) {
+    addLine(`Tax ID: ${account.tax_id}`);
+  }
 
   return currentLine;
 };
@@ -136,7 +138,7 @@ export const printInvoice = (
 ): PdfResult => {
   try {
     const itemsPerPage = 12;
-    const date = formatDate(invoice.date, { format: ISO_DATE_FORMAT });
+    const date = formatDate(invoice.date, { displayTime: true });
     const invoiceId = invoice.id;
 
     /**
@@ -187,29 +189,9 @@ export const printInvoice = (
       );
       const rightHeaderYPosition = addRightHeader(doc, account);
 
-      /** only show tax ID if there is one provided */
-      const strings =
-        account.tax_id && hasTax
-          ? [
-              {
-                text: `Invoice: #${invoiceId}`
-              },
-              {
-                /*
-          300px left margin is a hacky way of aligning the text to the right
-          because this library stinks
-         */
-                text: `Tax ID: ${account.tax_id}`,
-                leftMargin: 300
-              }
-            ]
-          : [{ text: `Invoice: #${invoiceId}` }];
-
-      addTitle(
-        doc,
-        Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4,
-        ...strings
-      );
+      addTitle(doc, Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4, {
+        text: `Invoice: #${invoiceId}`
+      });
 
       createInvoiceItemsTable(doc, itemsChunk);
       createFooter(doc, baseFont);
@@ -240,7 +222,7 @@ export const printPayment = (
   taxID?: string
 ): PdfResult => {
   try {
-    const date = formatDate(payment.date, { format:ISO_DATE_FORMAT});
+    const date = formatDate(payment.date, { displayTime: true });
     const doc = new jsPDF({
       unit: 'px'
     });

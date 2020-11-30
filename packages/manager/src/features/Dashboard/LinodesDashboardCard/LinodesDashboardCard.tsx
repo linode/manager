@@ -1,7 +1,6 @@
-import { Entity, Event } from '@linode/api-v4/lib/account';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { LinodeType } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { compose, path, pathOr, prop, sortBy, take } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -17,23 +16,14 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
+import withLinodes, { StateProps } from 'src/containers/withLinodes.container';
 import LinodeRowHeadCell from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRowHeadCell';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
-import {
-  isEntityEvent,
-  isInProgressEvent
-} from 'src/store/events/event.helpers';
-import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
-import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
-import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
-import { formatNotifications } from 'src/utilities/formatNotifications';
+import { ShallowExtendedLinode } from 'src/store/linodes/types';
+import formatDate from 'src/utilities/formatDate';
 import DashboardCard from '../DashboardCard';
-
-interface EntityEvent extends Omit<Event, 'entity'> {
-  entity: Entity;
-}
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -47,7 +37,7 @@ const useStyles = makeStyles(() => ({
     width: '60%'
   },
   moreCol: {
-    width: '30%'
+    width: '20%'
   },
   actionsCol: {
     width: '10%'
@@ -61,7 +51,7 @@ interface ConnectedProps {
   types: LinodeType[];
 }
 
-type CombinedProps = ConnectedProps & WithUpdatingLinodesProps & WithTypesProps;
+type CombinedProps = ConnectedProps & WithTypesProps & StateProps;
 
 const LinodesDashboardCard: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -69,27 +59,27 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
   const { _loading } = useReduxLoad(['linodes', 'images']);
 
   const renderAction = () => {
-    return props.linodeCount > 5 ? (
+    return props.linodesData.length > 5 ? (
       <ViewAllLink
         text="View All"
         link={'/linodes'}
-        count={props.linodeCount}
+        count={props.linodesData.length}
       />
     ) : null;
   };
 
   const renderContent = () => {
-    const { loading, linodes, error } = props;
-    if (loading || _loading) {
+    const { linodesLoading, linodesError, linodesData } = props;
+    if (linodesLoading || _loading) {
       return renderLoading();
     }
 
-    if (error) {
-      return renderErrors(error);
+    if (linodesError) {
+      return renderErrors(linodesError);
     }
 
-    if (linodes.length > 0) {
-      return renderData(linodes);
+    if (linodesData.length > 0) {
+      return renderData(linodesData.slice(0, 5));
     }
 
     return renderEmpty();
@@ -124,7 +114,7 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
 
   const renderEmpty = () => <TableRowEmptyState colSpan={3} />;
 
-  const renderData = (data: ExtendedLinode[]) => {
+  const renderData = (data: ShallowExtendedLinode[]) => {
     return data.map(linode => {
       const { id, label, region } = linode;
       return (
@@ -136,7 +126,7 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
         >
           <LinodeRowHeadCell
             loading={false}
-            recentEvent={linode.recentEvent}
+            recentEvent={linode._recentEvent}
             backups={linode.backups}
             id={linode.id}
             ipv4={linode.ipv4}
@@ -144,7 +134,7 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
             label={linode.label}
             region={linode.region}
             status={linode.status}
-            displayStatus={linode.displayStatus || ''}
+            displayStatus={linode._displayStatus || ''}
             tags={linode.tags}
             mostRecentBackup={linode.backups.last_successful}
             disk={linode.specs.disk}
@@ -153,7 +143,11 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
             type={linode.type}
             image={linode.image}
             width={75}
-            maintenance={linode.maintenance ? linode.maintenance.when : ''}
+            maintenance={
+              linode._maintenance?.when
+                ? formatDate(linode._maintenance.when)
+                : ''
+            }
             isDashboard
           />
           <Hidden xsDown>
@@ -190,63 +184,6 @@ const withTypes = connect((state: ApplicationState) => ({
   typesData: state.__resources.types.entities
 }));
 
-type ExtendedLinode = {
-  recentEvent: Event;
-} & LinodeWithMaintenanceAndDisplayStatus;
-
-interface WithUpdatingLinodesProps {
-  linodes: ExtendedLinode[];
-  linodeCount: number;
-  loading: boolean;
-  error?: APIError[];
-}
-
-const withUpdatingLinodes = connect((state: ApplicationState) => {
-  const linodes = Object.values(state.__resources.linodes.itemsById);
-  const notifications = state.__resources.notifications.data || [];
-
-  const linodesWithMaintenance = addNotificationsToLinodes(
-    formatNotifications(notifications),
-    linodes
-  );
-
-  return {
-    linodes: compose(
-      mergeEvents(state.events.events),
-      take(5),
-      sortBy(prop('label'))
-    )(linodesWithMaintenance),
-    linodeCount: state.__resources.linodes.results,
-    loading: state.__resources.linodes.loading,
-    error: path(['read'], state.__resources.linodes.error)
-  };
-});
-
-const mergeEvents = (events: Event[]) => (linodes: Linode[]) =>
-  events.reduce((updatedLinodes, event) => {
-    if (isWantedEvent(event)) {
-      return updatedLinodes.map(linode =>
-        isEventRelevantToLinode(event, linode.id)
-          ? { ...linode, recentEvent: event }
-          : linode
-      );
-    }
-
-    return updatedLinodes;
-  }, linodes);
-
-const isWantedEvent = (e: Event): e is EntityEvent => {
-  if (!isInProgressEvent(e)) {
-    return false;
-  }
-
-  if (isEntityEvent(e)) {
-    return e.entity.type === 'linode';
-  }
-
-  return false;
-};
-
-const enhanced = recompose<CombinedProps, {}>(withUpdatingLinodes, withTypes);
+const enhanced = recompose<CombinedProps, {}>(withLinodes(), withTypes);
 
 export default enhanced(LinodesDashboardCard) as React.ComponentType<{}>;

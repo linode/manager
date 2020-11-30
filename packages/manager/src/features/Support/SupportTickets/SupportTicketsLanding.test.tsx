@@ -12,7 +12,15 @@ describe('Support Tickets Landing', () => {
       globalErrors={{}}
       setErrors={jest.fn()}
       clearErrors={jest.fn()}
-      classes={{ title: '', openTicketButton: '' }}
+      flags={{}}
+      ldClient={{} as any}
+      classes={{
+        title: '',
+        openTicketButton: '',
+        tabsWrapper: '',
+        tabList: '',
+        tab: ''
+      }}
       {...reactRouterProps}
     />
   );

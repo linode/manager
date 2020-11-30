@@ -48,6 +48,7 @@ export interface ReadableBytesOptions {
   maxUnit?: StorageSymbol;
   handleNegatives?: boolean;
   unitLabels?: Partial<Record<StorageSymbol, string>>;
+  base10?: boolean;
 }
 
 export type StorageSymbol = 'byte' | 'bytes' | 'KB' | 'MB' | 'GB' | 'TB';
@@ -95,8 +96,10 @@ export const readableBytes = (
 
   const power = determinePower(num, storageUnits, options);
 
+  const multiplier = options.base10 ? 1000 : 1024;
+
   // Some other magic to get the human-readable version
-  const result = num / Math.max(Math.pow(1024, power), 1);
+  const result = num / Math.max(Math.pow(multiplier, power), 1);
   const unit = storageUnits[power] || storageUnits[0];
 
   const decimalPlaces = determineDecimalPlaces(result, unit, options);
@@ -129,8 +132,12 @@ const determinePower = (
   if (options.unit) {
     return storageUnits.indexOf(options.unit);
   } else {
+    const multiplier = options.base10 ? 1000 : 1024;
+
     // Otherwise, we need to do some magic, which I don't 100% understand
-    const magicallyCalculatedPower = Math.floor(Math.log(num) / Math.log(1024));
+    const magicallyCalculatedPower = Math.floor(
+      Math.log(num) / Math.log(multiplier)
+    );
 
     // If the magically calculated power/unit is higher than the
     // provided maxUnit, use maxUnit instead.

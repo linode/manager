@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { SecuritySettings } from './SecuritySettings';
 
-describe('Security settings (IP whitelisting) form', () => {
+describe('Security settings (IP allowlisting) form', () => {
   const onSuccess = jest.fn();
   const updateProfile = jest.fn();
 
@@ -13,7 +13,7 @@ describe('Security settings (IP whitelisting) form', () => {
         root: '',
         title: ''
       }}
-      ipWhitelistingEnabled={false}
+      ipAllowlistingEnabled={false}
       onSuccess={onSuccess}
       updateProfile={updateProfile}
     />

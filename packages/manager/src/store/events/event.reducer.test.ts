@@ -18,7 +18,7 @@ describe('events.reducer', () => {
         const events: Event[] = [
           {
             id: 18029572,
-            time_remaining: 0,
+            time_remaining: null,
             secondary_entity: null,
             seen: true,
             created: '2018-12-03T22:34:09',
@@ -34,11 +34,12 @@ describe('events.reducer', () => {
               url: '/v4/linode/instances/11241778'
             },
             status: 'finished',
-            duration: 0
+            duration: 0,
+            message: null
           },
           {
             id: 18022171,
-            time_remaining: 0,
+            time_remaining: null,
             secondary_entity: null,
             seen: false,
             created: '2018-12-03T19:59:53',
@@ -54,7 +55,8 @@ describe('events.reducer', () => {
               url: '/v4/linode/instances/11642886'
             },
             status: 'started',
-            duration: 0
+            duration: 0,
+            message: null
           }
         ];
         const action = addEvents(events);

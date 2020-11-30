@@ -6,18 +6,18 @@ import IconTextLink from '../IconTextLink';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'center',
-    borderLeft: `1px solid ${theme.palette.divider}`,
+    borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    fontFamily: `${theme.font.normal} !important`,
     height: 50,
     lineHeight: 'normal',
     marginBottom: 0,
     marginRight: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
     minWidth: 'auto',
-    fontFamily: `${theme.font.normal} !important`,
+    paddingLeft: theme.spacing(2),
     padding: 0,
     '& svg': {
-      width: 24,
-      marginRight: theme.spacing(1.5)
+      marginRight: theme.spacing(1.5),
+      width: 24
     },
     '&:hover svg': {
       color: theme.palette.primary.main
@@ -27,17 +27,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   href: string;
+  hideText?: boolean;
 }
 
 type CombinedProps = Props;
 
 export const DocumentationButton: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { href } = props;
+  const { href, hideText } = props;
   return (
     <IconTextLink
       className={classes.root}
       SideIcon={TicketIcon}
+      hideText={hideText}
       text="Docs"
       title="Docs"
       onClick={() => window.open(href, '_blank', 'noopener')}

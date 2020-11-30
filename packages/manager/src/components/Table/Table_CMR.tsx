@@ -8,12 +8,7 @@ import {
 } from 'src/components/core/styles';
 import Table, { TableProps } from 'src/components/core/Table';
 
-type ClassNames =
-  | 'root'
-  | 'border'
-  | 'responsive'
-  | 'noMobileLabel'
-  | 'stickyHeader';
+type ClassNames = 'root' | 'border';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -27,77 +22,28 @@ const styles = (theme: Theme) =>
         opacity: 0.5
       },
       '& thead': {
-        borderTop: `1px solid ${theme.palette.divider}`
-      }
-    },
-    responsive: {
-      [theme.breakpoints.down('sm')]: {
-        '& .emptyCell': {
-          display: 'none'
-        },
-        '& thead': {
-          display: 'none'
-        },
-        '& tbody > tr': {
-          marginBottom: 0,
-          '& > td:first-child': {
-            backgroundColor: theme.bg.tableHeader,
-            '& .data': {
-              textAlign: 'right'
-            }
+        '& th': {
+          backgroundColor: theme.cmrBGColors.bgTableHeader,
+          borderTop: `2px solid ${theme.cmrBorderColors.borderTable}`,
+          borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+          borderBottom: `2px solid ${theme.cmrBorderColors.borderTable}`,
+          borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
+          fontFamily: theme.font.bold,
+          fontSize: '0.875em !important',
+          color: theme.palette.text.primary,
+          padding: '10px 15px',
+          '&:first-of-type': {
+            borderLeft: 'none'
+          },
+          '&:last-of-type': {
+            borderRight: 'none'
           }
-        },
-        '& tr': {
-          display: 'block',
-          marginBottom: 20,
-          height: 'auto'
-        },
-        '& td': {
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          minHeight: 32
-        }
-      }
-    },
-    noMobileLabel: {
-      [theme.breakpoints.down('sm')]: {
-        '& tbody > tr > td:first-child': {
-          '& > span:first-child': {
-            display: 'none'
-          }
-        },
-        '& .data': {
-          marginLeft: 0
         }
       }
     },
     border: {
-      border: `1px solid ${theme.palette.divider}`,
+      border: `1px solid ${theme.cmrBorderColors.borderTable}`,
       borderBottom: 0
-    },
-    stickyHeader: {
-      borderTop: 0,
-      '& th': {
-        position: 'sticky',
-        backgroundColor: theme.bg.tableHeader,
-        paddingTop: 0,
-        paddingBottom: 0,
-        height: 48,
-        zIndex: 5,
-        borderTop: `1px solid ${theme.palette.divider}`,
-        '&:first-child::before': {
-          content: '""',
-          borderTop: `1px solid ${theme.palette.divider}`,
-          backgroundColor: theme.bg.tableHeader,
-          position: 'absolute',
-          width: 5,
-          top: -1,
-          borderBottom: `2px solid ${theme.palette.divider}`,
-          height: 48,
-          left: -5
-        }
-      }
     }
   });
 
@@ -106,11 +52,9 @@ export interface Props extends TableProps {
   noOverflow?: boolean;
   tableClass?: string;
   border?: boolean;
-  isResponsive?: boolean; // back-door for tables that don't need to be responsive
   spacingTop?: 0 | 8 | 16 | 24;
   spacingBottom?: 0 | 8 | 16 | 24;
-  stickyHeader?: boolean;
-  removeLabelonMobile?: boolean; // only for table instances where we want to hide the cell label for small screens
+
   tableCaption?: string;
   colCount?: number;
   rowCount?: number;
@@ -123,14 +67,11 @@ class WrappedTable extends React.Component<CombinedProps> {
     const {
       classes,
       className,
-      isResponsive,
       tableClass,
       border,
       noOverflow,
       spacingTop,
       spacingBottom,
-      removeLabelonMobile,
-      stickyHeader,
       colCount,
       rowCount,
       ...rest
@@ -142,10 +83,7 @@ class WrappedTable extends React.Component<CombinedProps> {
           'tableWrapper',
           {
             [classes.root]: !noOverflow,
-            [classes.responsive]: isResponsive !== false, // must be explicity set to false
-            [classes.border]: border,
-            [classes.noMobileLabel]: removeLabelonMobile,
-            [classes.stickyHeader]: stickyHeader
+            [classes.border]: border
           },
           className
         )}

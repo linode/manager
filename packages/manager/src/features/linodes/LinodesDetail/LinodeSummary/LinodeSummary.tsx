@@ -48,7 +48,7 @@ import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import { ChartProps } from './types';
 import { parseAPIDate } from 'src/utilities/date';
-
+import getUserTimezone from 'src/utilities/getUserTimezone';
 setUpCharts();
 
 type ClassNames =
@@ -78,7 +78,7 @@ const styles = (theme: Theme) =>
       }
     },
     headerWrapper: {
-      marginTop: theme.spacing(1),
+      marginTop: 0,
       marginBottom: theme.spacing(2)
     },
     chart: {
@@ -150,7 +150,7 @@ interface State {
 
 type CombinedProps = LinodeContextProps &
   WithTheme &
-  WithTypesProps &
+  StateProps &
   WithImages &
   WithStyles<ClassNames>;
 
@@ -194,7 +194,9 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       const optionDisplay =
         testYear === currentYear && testMonth === currentMonth
           ? 'Last 30 Days'
-          : currentTime.set({ month: testMonth }).toFormat('LLL yyyy');
+          : currentTime
+              .set({ month: testMonth, year: testYear })
+              .toFormat('LLL yyyy');
       options.push([
         `${testYear} ${testMonth.toString().padStart(2, '0')}`,
         optionDisplay
@@ -427,12 +429,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
 
-        <Grid
-          container
-          id="tabpanel-summary"
-          role="tabpanel"
-          aria-labelledby="tab-summary"
-        >
+        <Grid container>
           <Grid item xs={12} md={8} lg={9} className={classes.main}>
             <Grid
               container
@@ -524,7 +521,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeVolumesError: linode._volumesError
 }));
 
-interface WithTypesProps {
+interface StateProps {
   typesData: LinodeType[];
   timezone: string;
   inProgressEvents: Record<number, number>;
@@ -532,20 +529,16 @@ interface WithTypesProps {
   mostRecentEventTime: string;
 }
 
-const withTypes = connect((state: ApplicationState, _ownProps) => ({
+const connected = connect((state: ApplicationState, _ownProps) => ({
   typesData: state.__resources.types.entities,
-  timezone: pathOr(
-    'UTC',
-    ['__resources', 'profile', 'data', 'timezone'],
-    state
-  ),
+  timezone: getUserTimezone(state),
   inProgressEvents: state.events.inProgressEvents,
   events: state.events.events,
   mostRecentEventTime: state.events.mostRecentEventTime
 }));
 
 const enhanced = compose<CombinedProps, {}>(
-  withTypes,
+  connected,
   linodeContext,
   withImages(),
   withTheme,

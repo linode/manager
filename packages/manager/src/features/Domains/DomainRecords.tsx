@@ -6,6 +6,7 @@ import {
   RecordType
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
+import * as classnames from 'classnames';
 import {
   compose,
   equals,
@@ -19,6 +20,7 @@ import {
   propEq
 } from 'ramda';
 import * as React from 'react';
+import { compose as recompose } from 'recompose';
 import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -43,17 +45,19 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
-import { truncateEnd } from 'src/utilities/truncate';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
-type ClassNames = 'root' | 'cells' | 'titles' | 'linkContainer';
+type ClassNames = 'root' | 'cells' | 'titles' | 'linkContainer' | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -64,9 +68,18 @@ const styles = (theme: Theme) =>
       }
     },
     cells: {
+      whiteSpace: 'nowrap',
       [theme.breakpoints.up('md')]: {
+        maxWidth: 300
+      },
+      '& .data': {
         maxWidth: 300,
-        wordBreak: 'break-all'
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        [theme.breakpoints.up('md')]: {
+          maxWidth: 750
+        }
       }
     },
     titles: {
@@ -83,6 +96,12 @@ const styles = (theme: Theme) =>
         '& button': {
           padding: 0
         }
+      }
+    },
+    cmrSpacing: {
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(),
+        marginRight: theme.spacing()
       }
     }
   });
@@ -113,7 +132,7 @@ interface State {
   confirmDialog: ConfirmationState;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & FeatureFlagConsumerProps;
 
 interface IType {
   title: string;
@@ -170,10 +189,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       fields
     }));
 
-  openForEditMasterDomain = (f: Partial<Domain>) =>
+  openForEditPrimaryDomain = (f: Partial<Domain>) =>
     this.openForEditing('master', f);
 
-  openForEditSlaveDomain = (f: Partial<Domain>) =>
+  openForEditSecondaryDomain = (f: Partial<Domain>) =>
     this.openForEditing('slave', f);
 
   openForCreateNSRecord = () => this.openForCreation('NS');
@@ -262,8 +281,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 
   handleOpenSOADrawer = (d: Domain) => {
     return d.type === 'master'
-      ? this.openForEditMasterDomain(d)
-      : this.openForEditSlaveDomain(d);
+      ? this.openForEditPrimaryDomain(d)
+      : this.openForEditSecondaryDomain(d);
   };
 
   generateTypes = (): IType[] => [
@@ -495,7 +514,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Hostname', render: (r: DomainRecord) => r.name },
         {
           title: 'Value',
-          render: (r: DomainRecord) => truncateEnd(r.target, 255)
+          render: (r: DomainRecord) => r.target
         },
         { title: 'TTL', render: getTTL },
         {
@@ -586,7 +605,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       columns: [
         { title: 'Name', render: (r: DomainRecord) => r.name },
         { title: 'Tag', render: (r: DomainRecord) => r.tag },
-        { title: 'Value', render: (r: DomainRecord) => r.target },
+        {
+          title: 'Value',
+          render: (r: DomainRecord) => r.target
+        },
         { title: 'TTL', render: getTTL },
         {
           title: '',
@@ -660,7 +682,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { domain, domainRecords, classes } = this.props;
+    const { domain, domainRecords, classes, flags } = this.props;
     const { drawer, confirmDialog } = this.state;
 
     return (
@@ -682,7 +704,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                     role="heading"
                     aria-level={2}
                     variant="h2"
-                    className={classes.titles}
+                    className={classnames({
+                      [classes.titles]: true,
+                      [classes.cmrSpacing]: flags.cmr
+                    })}
                     data-qa-domain-record={type.title}
                   >
                     {type.title}
@@ -691,7 +716,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 {type.link && (
                   <Grid item>
                     {' '}
-                    <div className={classes.linkContainer}>
+                    <div
+                      className={classnames({
+                        [classes.linkContainer]: true,
+                        [classes.cmrSpacing]: flags.cmr
+                      })}
+                    >
                       {type.link()}
                     </div>{' '}
                   </Grid>
@@ -922,4 +952,7 @@ const getNSRecords = compose<
 
 const styled = withStyles(styles);
 
-export default styled(DomainRecords);
+export default recompose<CombinedProps, Props>(
+  styled,
+  withFeatureFlags
+)(DomainRecords);

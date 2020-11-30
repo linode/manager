@@ -22,7 +22,7 @@ export interface PrimaryLink {
   display: string;
   logo?: React.ComponentType<any>;
   icon?: JSX.Element;
-  isDisabled?: () => string | undefined;
+  isDisabled?: () => string;
 }
 
 type CombinedProps = Props;
@@ -80,6 +80,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
               /* disregarding undefined is fine here because of the error handling thrown above */
               onClick!();
             }}
+            aria-live="polite"
             disabled={!!isDisabled ? !!isDisabled() : false}
             data-qa-nav-item={QAKey}
             className={linkClasses()}

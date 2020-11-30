@@ -7,8 +7,7 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 
-
-import Chart from 'chart.js';
+import { Chart } from 'chart.js';
 interface Options {
   width: number | string;
   height: number;

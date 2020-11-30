@@ -30,23 +30,22 @@ const mockTwoInvoices = {
   pages: 1,
   results: 2
 };
-const timeZonesList = ['US/Eastern', 'GMT', 'Asia/Hong_Kong'];
+const timeZonesList = ['America/New_York', 'GMT', 'Asia/Hong_Kong'];
 
-// cypress.moment does not support timezones
-import * as momentTz from 'moment-timezone';
+import { DateTime, IANAZone } from 'luxon';
 
-const localizeDate = (apiDate, timezone) => {
-  return momentTz
-    .utc(apiDate)
-    .tz(timezone)
-    .format('YYYY-MM-DD');
+const localizeDate = (apiDate, timezone: string) => {
+  expect(IANAZone.isValidZone(timezone)).to.be.true;
+  return DateTime.fromISO(apiDate, { zone: 'utc' })
+    .setZone(timezone)
+    .toFormat('yyyy-LL-dd');
 };
 
 // here We precompute the response as it should be before we modify the timezone for these tests
-let cachedGetProfile = null;
+let cachedGetProfile = {};
 import { getProfile } from '../../support/api/account';
 beforeEach(() => {
-  cachedGetProfile = getProfile().then(resp => {
+  getProfile().then(resp => {
     cachedGetProfile = resp.body;
   });
 });
@@ -64,6 +63,13 @@ const checkInvoice = (invoice, tz) => {
   mockGetInvoices(mockTwoInvoices);
   mockProfile(tz);
   cy.visitWithLogin('/account/billing');
+  // need to select show all time, to not have invoices hidden due to date
+  // findbylabel fails due to react-select being a non acc essible component, will change soon
+  // cy.findByLabelText('Transaction Dates').select('All Times')
+  cy.findByText('6 Months')
+    .click()
+    .type('All time{enter}');
+  cy.log(invoice.date, tz);
   cy.findByText(localizeDate(invoice.date, tz)).should('be.visible');
   cy.findByText(invoice.label).should('be.visible');
   cy.findByText(`$${invoice.total.toFixed(2)}`).should('be.visible');

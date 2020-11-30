@@ -7,38 +7,47 @@ import {
   withRouter
 } from 'react-router-dom';
 import { compose } from 'recompose';
+import NotFound from 'src/components/NotFound';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import useFlags from 'src/hooks/useFlags';
-import NotFound from 'src/components/NotFound';
+import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import {
   LinodeDetailContext,
   linodeDetailContextFactory as createLinodeDetailContext,
   LinodeDetailContextProvider
 } from './linodeDetailContext';
 
-const CloneLanding = React.lazy(() => import('../CloneLanding'));
 const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
+const LinodesDetailHeader_CMR = React.lazy(() =>
+  import('./LinodesDetailHeader/LinodeDetailHeader_CMR')
+);
 const LinodesDetailNavigation = React.lazy(() =>
   import('./LinodesDetailNavigation')
 );
 const LinodesDetailNavigation_CMR = React.lazy(() =>
   import('./LinodesDetailNavigation_CMR')
 );
+const LinodesDashboardNavigation = React.lazy(() =>
+  import('./LinodesDashboardNavigation')
+);
+const CloneLanding = React.lazy(() => import('../CloneLanding'));
 const MigrateLanding = React.lazy(() => import('../MigrateLanding'));
 
 interface Props {
   linodeId: string;
+  isDashboard: boolean;
 }
 
 type CombinedProps = Props & RouteComponentProps<{ linodeId: string }>;
 
 const LinodeDetail: React.FC<CombinedProps> = props => {
   const {
+    isDashboard,
     linodeId,
     match: { path }
   } = props;
+
   const dispatch = useDispatch();
   const linode = useExtendedLinode(+linodeId);
   const flags = useFlags();
@@ -60,18 +69,46 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
           */}
           <Route path={`${path}/clone`} component={CloneLanding} />
-          <Route path={`${path}/migrate`} component={MigrateLanding} />
+          {/* With CMR, the Migrate screen no longer has its own route, so some
+          conditional rendering is required here. */}
           <Route
-            render={() => (
-              <React.Fragment>
-                <LinodesDetailHeader />
-                {flags.cmr ? (
+            path={`${path}/migrate`}
+            render={() => {
+              return flags.cmr ? (
+                <React.Fragment>
+                  <LinodesDetailHeader_CMR />
                   <LinodesDetailNavigation_CMR />
+                </React.Fragment>
+              ) : (
+                <MigrateLanding />
+              );
+            }}
+          />
+          <Route
+            render={() =>
+              flags.cmr ? (
+                // We have separate routing for the version
+                // rendered on the dashboard, to prevent the url
+                // from changing when the active tab is changed.
+                isDashboard ? (
+                  // For single linode view
+                  <React.Fragment>
+                    <LinodesDetailHeader_CMR />
+                    <LinodesDashboardNavigation />
+                  </React.Fragment>
                 ) : (
+                  <React.Fragment>
+                    <LinodesDetailHeader_CMR />
+                    <LinodesDetailNavigation_CMR />
+                  </React.Fragment>
+                )
+              ) : (
+                <React.Fragment>
+                  <LinodesDetailHeader />
                   <LinodesDetailNavigation />
-                )}
-              </React.Fragment>
-            )}
+                </React.Fragment>
+              )
+            }
           />
         </Switch>
       </React.Suspense>

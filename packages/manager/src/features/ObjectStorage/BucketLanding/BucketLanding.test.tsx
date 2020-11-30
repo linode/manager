@@ -1,4 +1,4 @@
-import { cleanup } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import * as React from 'react';
 import {
   objectStorageBucketFactory,
@@ -6,8 +6,6 @@ import {
 } from 'src/factories/objectStorage';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import BucketLanding, { CombinedProps } from './BucketLanding';
-
-afterEach(cleanup);
 
 const mockCloseBucketDrawer = jest.fn();
 const mockOpenBucketDrawer = jest.fn();
@@ -20,19 +18,19 @@ const props: CombinedProps = {
 
 describe('ObjectStorageLanding', () => {
   it('renders a loading state', () => {
-    const { getByTestId } = renderWithTheme(<BucketLanding {...props} />);
-    getByTestId('loading-state');
+    renderWithTheme(<BucketLanding {...props} />);
+    screen.getByTestId('circle-progress');
   });
 
   it('renders an empty state', () => {
-    const { getByTestId } = renderWithTheme(<BucketLanding {...props} />, {
+    renderWithTheme(<BucketLanding {...props} />, {
       customStore: { __resources: { buckets: { data: [], lastUpdated: 1 } } }
     });
-    getByTestId('placeholder-button');
+    screen.getByTestId('placeholder-button');
   });
 
   it('renders per-cluster errors', () => {
-    const { getByText } = renderWithTheme(<BucketLanding {...props} />, {
+    renderWithTheme(<BucketLanding {...props} />, {
       customStore: {
         __resources: {
           buckets: {
@@ -45,11 +43,11 @@ describe('ObjectStorageLanding', () => {
         }
       }
     });
-    getByText(/^There was an error loading buckets in Newark, NJ/);
+    screen.getByText(/^There was an error loading buckets in Newark, NJ/);
   });
 
   it('renders general error state', () => {
-    const { getByText } = renderWithTheme(<BucketLanding {...props} />, {
+    renderWithTheme(<BucketLanding {...props} />, {
       customStore: {
         __resources: {
           buckets: {
@@ -65,19 +63,36 @@ describe('ObjectStorageLanding', () => {
         }
       }
     });
-    getByText(/^There was an error retrieving your buckets/);
+    screen.getByText(/^There was an error retrieving your buckets/);
   });
 
   it('renders rows for each Bucket', () => {
     const buckets = objectStorageBucketFactory.buildList(2);
-    const { getByText } = renderWithTheme(<BucketLanding {...props} />, {
+    renderWithTheme(<BucketLanding {...props} />, {
       customStore: {
         __resources: {
           buckets: { data: buckets, lastUpdated: 1 }
         }
       }
     });
-    getByText(buckets[0].label);
-    getByText(buckets[1].label);
+    screen.getByText(buckets[0].label);
+    screen.getByText(buckets[1].label);
+  });
+
+  it('renders a "Total usage" section if there is more than one Bucket', () => {
+    renderWithTheme(<BucketLanding {...props} />, {
+      customStore: {
+        __resources: {
+          buckets: {
+            data: objectStorageBucketFactory.buildList(2, {
+              size: 1024 * 1024 * 1024 * 5
+            }),
+            loading: false,
+            lastUpdated: 1
+          }
+        }
+      }
+    });
+    screen.getByText(/Total usage: 10 GB/);
   });
 });

@@ -18,12 +18,13 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   Permission,
   permTuplesToScopeString,
@@ -117,7 +118,7 @@ interface RadioButton extends HTMLInputElement {
 interface Props {
   label?: string;
   scopes?: string;
-  expiry?: string;
+  expiry?: string | null;
   submitting?: boolean;
   perms: string[];
   permNameMap: Record<string, string>;
@@ -196,10 +197,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
   // return whether all scopes selected in the create token flow are the same
   allScopesIdentical = () => {
     const { scopes, selectAllSelectedScope } = this.state;
-    const allScopesIdentical = scopes.every(
-      scope => scope[1] === selectAllSelectedScope
-    );
-    return allScopesIdentical;
+    return scopes.every(scope => scope[1] === selectAllSelectedScope);
   };
 
   renderPermsTable() {
@@ -365,10 +363,6 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     );
   }
 
-  errorResources = {
-    label: 'label'
-  };
-
   render() {
     const {
       label,
@@ -383,7 +377,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     } = this.props;
     const { expiryTups } = this.state;
 
-    const errorFor = getAPIErrorFor(this.errorResources, errors);
+    const errorMap = getErrorMap(['label', 'scopes'], errors);
 
     const expiryList = expiryTups.map((expiryTup: Expiry) => {
       return { label: expiryTup[0], value: expiryTup[1] };
@@ -404,15 +398,17 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         open={open}
         onClose={closeDrawer}
       >
+        {errorMap.none && <Notice error text={errorMap.none} />}
         {(mode === 'create' || mode === 'edit') && (
           <TextField
-            errorText={errorFor('label')}
+            errorText={errorMap.label}
             value={label || ''}
             label="Label"
             onChange={this.handleLabelChange}
             data-qa-add-label
           />
         )}
+
         {mode === 'create' && (
           <FormControl>
             <Select
@@ -430,11 +426,8 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
           <Typography>This application has access to your:</Typography>
         )}
         {(mode === 'view' || mode === 'create') && this.renderPermsTable()}
-        {errorFor('scopes') && (
-          <FormHelperText error>{errorFor('scopes')}</FormHelperText>
-        )}
-        {errorFor('none') && (
-          <FormHelperText error>{errorFor('none')}</FormHelperText>
+        {errorMap.scopes && (
+          <FormHelperText error>{errorMap.scopes}</FormHelperText>
         )}
         <ActionsPanel>
           {mode === 'view' && (

@@ -34,7 +34,7 @@ class DiskActionMenu extends React.Component<CombinedProps> {
           disabled: true
         }
       : {};
-    const actions = [
+    return [
       {
         title: 'Rename',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -83,8 +83,6 @@ class DiskActionMenu extends React.Component<CombinedProps> {
         ...(readOnly ? disabledProps : {})
       }
     ];
-
-    return actions;
   };
 
   render() {

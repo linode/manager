@@ -1,20 +1,16 @@
-import { AxiosError, AxiosResponse } from 'axios';
 import { baseRequest } from '@linode/api-v4/lib/request';
 import { APIError } from '@linode/api-v4/lib/types';
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as React from 'react';
-
-import { ACCESS_TOKEN, DEFAULT_ERROR_MESSAGE } from 'src/constants';
-import { interceptErrors } from 'src/utilities/interceptAPIError';
-
 import { AccountActivationError } from 'src/components/AccountActivation';
 import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
-
+import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
-
-import { API_ROOT, LOGIN_ROOT } from 'src/constants';
+import { interceptErrors } from 'src/utilities/interceptAPIError';
+import { getEnvLocalStorageOverrides } from './utilities/storage';
 
 const handleSuccess: <T extends AxiosResponse<any>>(
   response: T
@@ -112,20 +108,11 @@ baseRequest.interceptors.request.use(config => {
   /** Will end up being "Admin: 1234" or "Bearer 1234" */
   const token = ACCESS_TOKEN || (state.authentication?.token ?? '');
 
-  let finalUrl = '';
-
-  /**
-   * override the base URL with the one we have defined in the .env file
-   */
-  if (config.url && config.baseURL) {
-    finalUrl = config.baseURL.includes('login')
-      ? config.url.replace(config.baseURL, LOGIN_ROOT)
-      : config.url.replace(config.baseURL, API_ROOT);
-  }
+  const url = getURL(config);
 
   return {
     ...config,
-    url: finalUrl || config.url,
+    url,
     headers: {
       ...config.headers,
       ...(token && { Authorization: `${token}` })
@@ -140,3 +127,60 @@ Interceptor that initiates re-authentication if:
 Also rejects non-error responses if the API is in Maintenance mode
 */
 baseRequest.interceptors.response.use(handleSuccess, handleError);
+
+export const getURL = ({ url, baseURL }: AxiosRequestConfig) => {
+  if (!url || !baseURL) {
+    return;
+  }
+
+  const localStorageOverrides = getEnvLocalStorageOverrides();
+
+  const apiRoot = localStorageOverrides?.apiRoot ?? API_ROOT;
+
+  // If we have environment overrides in local storage, use those. Otherwise,
+  // override the baseURL (from @linode/api-v4) with the one we have defined
+  // in the environment (via .env file).
+  return url.replace(baseURL, apiRoot);
+};
+
+// A user's external UUID can be found on the response to /account.
+// Since that endpoint is not available to restricted users, the API also
+// returns it as an HTTP header ("X-Customer-Uuid"). This middleware injects
+// the value of the header to the GET /profile response so it can be added to
+// the Redux store and used throughout the app.
+export const injectEuuidToProfile = (
+  response: AxiosResponse
+): AxiosResponse => {
+  if (isSuccessfulGETProfileResponse(response)) {
+    const xCustomerUuidHeader = getXCustomerUuidHeader(response);
+    if (xCustomerUuidHeader) {
+      const profileWithEuuid = {
+        ...response.data,
+        _euuidFromHttpHeader: xCustomerUuidHeader
+      };
+
+      return {
+        ...response,
+        data: profileWithEuuid
+      };
+    }
+  }
+  return response;
+};
+
+export const isSuccessfulGETProfileResponse = (response: AxiosResponse) => {
+  const { config, status } = response;
+
+  const method = config.method?.toLowerCase();
+  const url = config.url?.toLowerCase();
+
+  return method === 'get' && status === 200 && url?.endsWith('/profile');
+};
+
+export const getXCustomerUuidHeader = (
+  response: AxiosResponse
+): string | undefined => {
+  return response.headers['x-customer-uuid'];
+};
+
+baseRequest.interceptors.response.use(injectEuuidToProfile);

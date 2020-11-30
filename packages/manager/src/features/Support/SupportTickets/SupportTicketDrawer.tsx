@@ -16,7 +16,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
@@ -475,6 +475,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
             required
             value={summary}
             onChange={handleSummaryInputChange}
+            inputProps={{ maxLength: 64 }}
             errorText={summaryError}
             data-qa-ticket-summary
           />
@@ -521,12 +522,12 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
             }
           />
           {/* <TicketAttachmentList attachments={attachments} /> */}
-          <ExpansionPanel
+          <Accordion
             heading="Formatting Tips"
             detailProps={{ className: classes.expPanelSummary }}
           >
             <Reference rootClass={classes.reference} />
-          </ExpansionPanel>
+          </Accordion>
           <AttachFileForm
             inlineDisplay
             files={files}

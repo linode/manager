@@ -1,9 +1,11 @@
-import Promise from 'bluebird';
 import { APIError } from '@linode/api-v4/lib/types';
+import Promise from 'bluebird';
+import classnames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
+import AddNewLink_CMR from 'src/components/AddNewLink/AddNewLink_CMR';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -12,14 +14,25 @@ import withLinodes, {
 } from 'src/containers/withLinodes.container';
 import { useDialog } from 'src/hooks/useDialog';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
+import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddDeviceDrawer from './AddDeviceDrawer';
 import FirewallDevicesTable from './FirewallDevicesTable';
+import FirewallDevicesTable_CMR from './FirewallDevicesTable_CMR';
 import RemoveDeviceDialog from './RemoveDeviceDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   message: {
     fontSize: '16px'
+  },
+  link: {
+    margin: '8px 8px 8px 0px'
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   }
 }));
 
@@ -45,7 +58,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
     if (devices.lastUpdated === 0 && !devices.loading) {
       requestDevices();
     }
-  }, [firewallID]);
+  }, [devices.lastUpdated, devices.loading, firewallID, requestDevices]);
 
   const {
     dialog,
@@ -54,6 +67,11 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
     handleError,
     submitDialog
   } = useDialog<number>(removeDevice);
+
+  const flags = useFlags();
+
+  const Link = flags.cmr ? AddNewLink_CMR : AddNewLink;
+  const Table = flags.cmr ? FirewallDevicesTable_CMR : FirewallDevicesTable;
 
   const _openDialog = React.useCallback(openDialog, [dialog, openDialog]);
   const _closeDialog = React.useCallback(closeDialog, [dialog, closeDialog]);
@@ -118,7 +136,12 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <Typography className={classes.message}>
+      <Typography
+        className={classnames({
+          [classes.message]: true,
+          [classes.cmrSpacing]: flags.cmr
+        })}
+      >
         The following Linodes have been assigned to this Firewall.
       </Typography>
       <Box
@@ -127,12 +150,13 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
         alignItems="flex-end"
         justifyContent="flex-end"
       >
-        <AddNewLink
+        <Link
           onClick={() => setDeviceDrawerOpen(true)}
           label="Add Linodes to Firewall"
+          className={flags.cmr && classes.link}
         />
       </Box>
-      <FirewallDevicesTable
+      <Table
         devices={deviceList}
         error={devices.error.read}
         lastUpdated={devices.lastUpdated}

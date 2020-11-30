@@ -27,12 +27,11 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import SelectPlanPanel, {
-  ExtendedType
-} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
@@ -49,7 +48,9 @@ type ClassNames =
   | 'currentPlanContainer'
   | 'resizeTitle'
   | 'checkbox'
-  | 'currentHeaderEmptyCell';
+  | 'currentHeaderEmptyCell'
+  | 'actions'
+  | 'errorLink';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -63,7 +64,10 @@ const styles = (theme: Theme) =>
       }
     },
     checkbox: {
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
+      '& .MuiButtonBase-root': {
+        marginLeft: 3
+      }
     },
     toolTip: {
       paddingTop: theme.spacing(1)
@@ -87,6 +91,14 @@ const styles = (theme: Theme) =>
     },
     currentHeaderEmptyCell: {
       width: '13%'
+    },
+    actions: {
+      paddingBottom: theme.spacing(2),
+      paddingLeft: theme.spacing(3)
+    },
+    errorLink: {
+      color: '#c44742',
+      textDecoration: 'underline'
     }
   });
 
@@ -101,7 +113,7 @@ interface LinodeContextProps {
 
 interface ConfirmationDialog {
   isOpen: boolean;
-  error?: string;
+  error?: string | JSX.Element;
   submitting: boolean;
   currentPlan: string;
   targetPlan: string;
@@ -133,32 +145,11 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     }
   };
 
-  static extendType = (type: LinodeType): ExtendedType => {
-    const {
-      label,
-      memory,
-      vcpus,
-      disk,
-      price: { monthly, hourly }
-    } = type;
-
-    const isGPU = type.class === 'gpu';
-
-    return {
-      ...type,
-      heading: label,
-      subHeadings: [
-        `$${monthly}/mo ($${isGPU ? hourly.toFixed(2) : hourly}/hr)`,
-        typeLabelDetails(memory, disk, vcpus)
-      ]
-    };
-  };
-
   openConfirmationModal = () => {
-    const { linodeType, currentTypesData } = this.props;
+    const { linodeType, typesData } = this.props;
     const { selectedId } = this.state;
-    const _current = getLinodeType(currentTypesData, linodeType || 'none');
-    const _target = getLinodeType(currentTypesData, selectedId);
+    const _current = getLinodeType(typesData, linodeType || 'none');
+    const _target = getLinodeType(typesData, selectedId);
     const currentPlan = _current ? _current.label : 'Unknown plan';
     const targetPlan = _target ? _target.label : 'Unknown plan';
     this.setState({
@@ -183,12 +174,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const {
+      classes,
       linodeId,
       linodeType,
       enqueueSnackbar,
       history,
       updateLinode,
-      currentTypesData
+      typesData
     } = this.props;
     const { selectedId } = this.state;
 
@@ -199,7 +191,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const isSmaller = isSmallerThanCurrentPlan(
       selectedId,
       linodeType || '',
-      currentTypesData
+      typesData
     );
 
     this.setState({
@@ -218,7 +210,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           selectedId: '',
           confirmationDialog: {
             ...this.state.confirmationDialog,
-            submitting: false
+            submitting: false,
+            isOpen: false
           }
         });
         resetEventsPolling();
@@ -235,10 +228,33 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
-        const error = getAPIErrorOrDefault(
-          errorResponse,
-          'There was an issue resizing your Linode.'
-        )[0].reason;
+        let error: string | JSX.Element = '';
+        const reason = errorResponse[0]?.reason ?? '';
+        if (
+          typeof reason === 'string' &&
+          reason.match(/allocated more disk/i)
+        ) {
+          error = (
+            <>
+              The current disk size of your Linode is too large for the new
+              service plan. Please resize your disk to accommodate the new plan.
+              You can read our{' '}
+              <ExternalLink
+                className={classes.errorLink}
+                hideIcon
+                text="Resize Your Linode"
+                link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
+              />{' '}
+              guide for more detailed instructions.
+            </>
+          );
+        } else {
+          error = getAPIErrorOrDefault(
+            errorResponse,
+            'There was an issue resizing your Linode.'
+          )[0].reason;
+        }
+
         this.setState({
           confirmationDialog: {
             ...this.state.confirmationDialog,
@@ -259,8 +275,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      currentTypesData,
-      deprecatedTypesData,
+      typesData,
       linodeType,
       linodeLabel,
       permissions,
@@ -268,9 +283,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeDisks,
       linodeStatus
     } = this.props;
-    const type = [...currentTypesData, ...deprecatedTypesData].find(
-      t => t.id === linodeType
-    );
+    const type = typesData.find(t => t.id === linodeType);
 
     const hostMaintenance = linodeStatus === 'stopped';
     const unauthorized = permissions === 'read_only';
@@ -291,11 +304,11 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const isSmaller = isSmallerThanCurrentPlan(
       this.state.selectedId,
       linodeType || '',
-      currentTypesData
+      typesData
     );
 
     return (
-      <div id="tabpanel-resize" role="tabpanel" aria-labelledby="tab-resize">
+      <div>
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
         <Paper className={classes.root}>
           {unauthorized && <LinodePermissionsError />}
@@ -323,7 +336,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
           <SelectPlanPanel
             currentPlanHeading={currentPlanHeading}
-            types={this.props.currentTypesData}
+            types={typesData.filter(
+              thisType => !thisType.isDeprecated && !thisType.isShadowPlan
+            )}
             onSelect={this.handleSelectPlan}
             selectedID={this.state.selectedId}
             disabled={disabled}
@@ -370,7 +385,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             }
           />
         </Paper>
-        <ActionsPanel>
+        <ActionsPanel className={classes.actions}>
           <Button
             disabled={
               !this.state.selectedId ||
@@ -395,21 +410,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles);
-
-interface WithTypesProps {
-  currentTypesData: ExtendedType[];
-  deprecatedTypesData: ExtendedType[];
-}
-
-const withTypes = connect((state: ApplicationState) => ({
-  currentTypesData: state.__resources.types.entities
-    .filter(eachType => eachType.successor === null)
-    .map(LinodeResize.extendType),
-
-  deprecatedTypesData: state.__resources.types.entities
-    .filter(eachType => eachType.successor !== null)
-    .map(LinodeResize.extendType)
-}));
 
 interface DispatchProps {
   updateLinode: (id: number) => void;

@@ -1,9 +1,10 @@
+import sync from 'css-animation-sync';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
-import Table from 'src/components/Table';
+import Table from 'src/components/Table/Table_CMR';
 import SortableTableHead_CMR from './SortableTableHead_CMR';
 
 const useStyles = makeStyles(() => ({
@@ -14,6 +15,11 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   dataLength: number;
+  toggleLinodeView: () => 'list' | 'grid';
+  linodeViewPreference: 'list' | 'grid';
+  toggleGroupLinodes: () => boolean;
+  linodesAreGrouped: boolean;
+  isVLAN?: boolean;
 }
 
 type CombinedProps = Omit<OrderByProps, 'data'> & Props;
@@ -21,12 +27,26 @@ type CombinedProps = Omit<OrderByProps, 'data'> & Props;
 const TableWrapper: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { dataLength, order, orderBy, handleOrderChange } = props;
+  const {
+    dataLength,
+    order,
+    orderBy,
+    handleOrderChange,
+    toggleLinodeView,
+    linodeViewPreference,
+    toggleGroupLinodes,
+    linodesAreGrouped,
+    isVLAN
+  } = props;
+
+  React.useEffect(() => {
+    sync('pulse');
+  }, []);
 
   return (
     <Paper className={classes.paperWrapper}>
       <Grid container className="my0">
-        <Grid item xs={12} className="p0">
+        <Grid item xs={12} className="py0">
           <Table
             aria-label="List of Linodes"
             rowCount={dataLength}
@@ -36,6 +56,11 @@ const TableWrapper: React.FC<CombinedProps> = props => {
               order={order}
               orderBy={orderBy}
               handleOrderChange={handleOrderChange}
+              toggleGroupLinodes={toggleGroupLinodes}
+              linodeViewPreference={linodeViewPreference}
+              toggleLinodeView={toggleLinodeView}
+              linodesAreGrouped={linodesAreGrouped}
+              isVLAN={isVLAN}
             />
             {props.children}
           </Table>

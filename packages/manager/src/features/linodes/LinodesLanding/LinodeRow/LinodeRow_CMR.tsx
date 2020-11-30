@@ -14,17 +14,21 @@ import Hidden from 'src/components/core/Hidden';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
+import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TagCell from 'src/components/TagCell';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import {
+  getProgressOrDefault,
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
-import useLinodes from 'src/hooks/useLinodes';
-import { capitalize } from 'src/utilities/capitalize';
+import { DialogType } from 'src/features/linodes/types';
+import useLinodeActions from 'src/hooks/useLinodeActions';
+import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
@@ -55,18 +59,25 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
+  vlanIP?: string;
+  isVLAN?: boolean;
   openTagDrawer: (
     linodeID: number,
     linodeLabel: string,
     tags: string[]
   ) => void;
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: (
+    type: DialogType,
+    linodeID: number,
+    linodeLabel?: string
+  ) => void;
   openPowerActionDialog: (
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  openNotificationDrawer: () => void;
 }
 
 export type CombinedProps = Props &
@@ -94,23 +105,25 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     type,
     tags,
     image,
+    vlanIP,
     // other props
     classes,
     linodeNotifications,
     openTagDrawer,
-    openDeleteDialog,
+    openDialog,
     openPowerActionDialog,
+    openNotificationDrawer,
     // displayType, @todo use for M3-2059
     recentEvent,
-    mutationAvailable
+    mutationAvailable,
+    isVLAN
   } = props;
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
+  const { enqueueSnackbar } = useSnackbar();
 
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const addTag = React.useCallback(
     (tag: string) => {
@@ -142,23 +155,20 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   const MaintenanceText = () => {
     return (
       <>
-        Please consult your{' '}
-        <Link to="/support/tickets?type=open">support tickets</Link> for
-        details.
+        Maintenance is scheduled for{' '}
+        {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}. For more
+        information, please see your{' '}
+        <Link to="/support/tickets?type=open">open support tickets.</Link>
       </>
     );
   };
 
-  const StatusIcon = (
-    <div
-      className={classNames({
-        [classes.statusIcon]: true,
-        [classes.statusIconRunning]: status === 'running',
-        [classes.statusIconOffline]: status === 'offline',
-        [classes.statusIconOther]: status !== ('running' || 'offline')
-      })}
-    />
-  );
+  const iconStatus =
+    status === 'running'
+      ? 'active'
+      : ['offline', 'stopped'].includes(status)
+      ? 'inactive'
+      : 'other';
 
   const headCell = (
     <LinodeRowHeadCell
@@ -180,6 +190,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       memory={memory}
       image={image}
       maintenance={maintenanceStartTime}
+      isVLAN={isVLAN}
     />
   );
 
@@ -194,78 +205,78 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     >
       {headCell}
       <TableCell
-        parentColumn="Status"
         className={classNames({
           [classes.statusCell]: true,
-          [classes.statusCellMaintenance]: maintenanceStartTime
+          [classes.statusCellMaintenance]: maintenanceStartTime,
+          [classes.vlan_Status]: isVLAN
         })}
         data-qa-status
       >
         {!maintenanceStartTime ? (
           loading ? (
-            recentEvent && (
-              <>
-                {StatusIcon}
+            <>
+              <StatusIcon status={iconStatus} />
+              <button
+                className={classes.statusLink}
+                onClick={() => openNotificationDrawer()}
+              >
                 <ProgressDisplay
                   className={classes.progressDisplay}
-                  progress={recentEvent.percent_complete}
+                  progress={getProgressOrDefault(recentEvent)}
                   text={transitionText(status, id, recentEvent)}
                 />
-              </>
-            )
+              </button>
+            </>
           ) : (
             <>
-              {StatusIcon}
-              {capitalize(displayStatus)}
+              <StatusIcon status={iconStatus} />
+              {displayStatus.includes('_')
+                ? capitalizeAllWords(displayStatus.replace('_', ' '))
+                : capitalize(displayStatus)}
             </>
           )
         ) : (
-          <>
-            <div>
-              <div>
-                <strong>Maintenance Scheduled</strong>
-              </div>
-              <div>
-                {dateTime[0]} at {dateTime[1]}
-              </div>
-            </div>
+          <div className={classes.maintenanceOuter}>
+            <strong>Maintenance Scheduled</strong>
             <HelpIcon
               text={<MaintenanceText />}
               className={classes.statusHelpIcon}
               tooltipPosition="top"
               interactive
             />
-          </>
+          </div>
         )}
       </TableCell>
-      <TableCell
-        parentColumn="IP Address"
-        className={classes.ipCell}
-        data-qa-ips
-      >
-        <div className={classes.ipCellWrapper}>
-          <IPAddress ips={ipv4} copyRight showCopyOnHover />
-        </div>
-      </TableCell>
-      <TableCell
-        parentColumn="Region"
-        className={classes.regionCell}
-        data-qa-region
-      >
-        <RegionIndicator region={region} />
-      </TableCell>
-      <LinodeRowBackupCell
-        linodeId={id}
-        backupsEnabled={backups.enabled || false}
-        mostRecentBackup={mostRecentBackup || ''}
-      />
+      {props.isVLAN ? (
+        <TableCell className={classes.ipCell} data-qa-ips>
+          <div className={classes.ipCellWrapper}>{vlanIP}</div>
+        </TableCell>
+      ) : null}
+      {props.isVLAN ? null : (
+        <Hidden xsDown>
+          <TableCell className={classes.ipCell} data-qa-ips>
+            <div className={classes.ipCellWrapper}>
+              <IPAddress ips={ipv4} copyRight />
+            </div>
+          </TableCell>
+          <TableCell className={classes.regionCell} data-qa-region>
+            <RegionIndicator region={region} />
+          </TableCell>
+          <LinodeRowBackupCell
+            linodeId={id}
+            backupsEnabled={backups.enabled || false}
+            mostRecentBackup={mostRecentBackup || ''}
+          />
+        </Hidden>
+      )}
       <Hidden mdDown>
         <TagCell
           tags={tags}
           addTag={addTag}
           deleteTag={deleteTag}
           listAllTags={() => openTagDrawer(id, label, tags)}
-          width={415}
+          width={300}
+          inTableContext
         />
       </Hidden>
 
@@ -283,9 +294,11 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             linodeType={type}
             linodeStatus={status}
             linodeBackups={backups}
-            openDeleteDialog={openDeleteDialog}
+            openDialog={openDialog}
             openPowerActionDialog={openPowerActionDialog}
             noImage={!image}
+            inTableContext
+            inVLANContext={isVLAN}
           />
         </div>
       </TableCell>
@@ -349,8 +362,7 @@ const ProgressDisplay: React.FC<{
 
   return (
     <Typography variant="body2" className={className}>
-      {text}:{' '}
-      {displayProgress === 'scheduled' ? '(0%)' : `(${displayProgress})`}
+      {text} {displayProgress === 'scheduled' ? '(0%)' : `(${displayProgress})`}
     </Typography>
   );
 };

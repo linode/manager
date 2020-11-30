@@ -4,13 +4,7 @@ import {
   Linode
 } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import {
-  matchPath,
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
@@ -18,35 +12,45 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
-import { convertForAria } from 'src/components/TabLink/TabLink';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
-type ClassNames = 'tabs' | 'tabRoot' | 'progress' | 'notFound';
+type ClassNames = 'tabs' | 'progress' | 'notFound' | 'lish';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
 const styles = (theme: Theme) =>
   createStyles({
     tabs: {
-      backgroundColor: theme.bg.offWhite,
-      margin: 0
-    },
-    tabRoot: {
+      backgroundColor: 'black',
       margin: 0,
-      flexBasis: '50%',
-      transition: theme.transitions.create('background-color'),
-      '&[aria-selected="true"]': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white',
-        '&:hover': {
-          backgroundColor: theme.palette.primary.light,
-          color: 'white'
+      '& [role="tablist"]': {
+        display: 'flex',
+        backgroundColor: theme.bg.offWhite,
+        margin: 0,
+        overflow: 'hidden'
+      },
+      '& [role="tab"]': {
+        backgroundColor: theme.bg.offWhite,
+        color: theme.color.tableHeaderText,
+        flexBasis: '50%',
+        margin: 0,
+        maxWidth: 'none !important',
+        '&[aria-selected="true"]': {
+          backgroundColor: theme.palette.primary.main,
+          borderBottom: 'none !important',
+          color: 'white !important',
+          '&:hover': {
+            backgroundColor: theme.palette.primary.light,
+            color: 'white'
+          }
         }
       }
     },
@@ -99,7 +103,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
     getLinode(+linodeId)
       .then(response => {
-        const { data: linode } = response;
+        const linode = response;
         if (!this.mounted) {
           return;
         }
@@ -169,9 +173,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
     return getLinodeLishToken(+linodeId)
       .then(response => {
-        const {
-          data: { lish_token: token }
-        } = response;
+        const { lish_token: token } = response;
         if (!this.mounted) {
           return;
         }
@@ -188,54 +190,28 @@ class Lish extends React.Component<CombinedProps, State> {
       });
   };
 
-  handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = this.props;
-    const routeName = this.tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
-
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { routeName: `${this.props.match.url}/weblish`, title: 'Weblish' },
-    { routeName: `${this.props.match.url}/glish`, title: 'Glish' }
+    {
+      title: 'Weblish',
+      routeName: `${this.props.match.url}/weblish`
+    },
+    {
+      title: 'Glish',
+      routeName: `${this.props.match.url}/glish`
+    }
   ];
 
   matches = (p: string) =>
     Boolean(matchPath(p, { path: this.props.location.pathname }));
 
-  renderWeblish = () => {
-    const { linode, token } = this.state;
-    if (linode && token) {
-      return (
-        <Weblish
-          token={token}
-          linode={linode}
-          refreshToken={this.refreshToken}
-        />
-      );
-    }
-    return null;
-  };
-
-  renderGlish = () => {
-    const { linode, token } = this.state;
-    if (linode && token) {
-      return (
-        <Glish token={token} linode={linode} refreshToken={this.refreshToken} />
-      );
-    }
-    return null;
-  };
-
   render() {
-    const {
-      classes,
-      match: { path }
-    } = this.props;
+    const { classes } = this.props;
     const { authenticated, loading, linode, token } = this.state;
+
+    const navToURL = (index: number) => {
+      this.props.history.push(this.tabs[index].routeName);
+    };
 
     // If the window.close() logic above fails, we render an error state as a fallback
     if (!authenticated) {
@@ -251,48 +227,35 @@ class Lish extends React.Component<CombinedProps, State> {
       );
     }
 
-    const tabA11yProps = (idName: string) => {
-      const ariaVal = convertForAria(idName);
-
-      return {
-        id: `tab-${ariaVal}`,
-        role: 'tab',
-        'aria-controls': `tabpanel-${ariaVal}`
-      };
-    };
-
     return (
       <React.Fragment>
-        <Tabs
-          value={this.tabs.findIndex(tab => this.matches(tab.routeName))}
-          onChange={this.handleTabChange}
-          className={classes.tabs}
-          indicatorColor="primary"
-          textColor="primary"
-          scrollButtons="off"
-        >
-          {this.tabs.map(tab => (
-            <Tab
-              classes={{
-                root: classes.tabRoot
-              }}
-              key={tab.title}
-              label={tab.title}
-              data-qa-tab={tab.title}
-              {...tabA11yProps(tab.title)}
-            />
-          ))}
+        <Tabs className={classes.tabs} onChange={navToURL}>
+          <TabLinkList className={classes.lish} tabs={this.tabs} />
+          <TabPanels>
+            {linode && token && (
+              <SafeTabPanel index={0} data-qa-tab="Weblish">
+                <Weblish
+                  token={token}
+                  linode={linode}
+                  refreshToken={this.refreshToken}
+                />
+              </SafeTabPanel>
+            )}
+            {linode && token && (
+              <SafeTabPanel index={1} data-qa-tab="Glish">
+                <Glish
+                  token={token}
+                  linode={linode}
+                  refreshToken={this.refreshToken}
+                />
+              </SafeTabPanel>
+            )}
+          </TabPanels>
         </Tabs>
         {loading && <CircleProgress noInner className={classes.progress} />}
         {/* Only show 404 component if we are missing _both_ linode and token */}
         {!loading && !linode && !token && (
           <NotFound className={classes.notFound} />
-        )}
-        {!loading && token && linode && (
-          <Switch>
-            <Route exact path={`${path}/weblish`} render={this.renderWeblish} />
-            <Route exact path={`${path}/glish`} render={this.renderGlish} />
-          </Switch>
         )}
       </React.Fragment>
     );

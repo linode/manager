@@ -1,12 +1,6 @@
-import {
-  cleanup,
-  fireEvent,
-  render,
-  wait,
-  waitForElement
-} from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { imagesByID as images } from 'src/__data__/images';
+import { imageFactory, normalizeEntities } from 'src/factories';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
@@ -20,10 +14,10 @@ jest.mock('src/hooks/useImages', () => ({
   useImages: jest.fn().mockResolvedValue({ error: {} })
 }));
 
-afterEach(cleanup);
+const images = normalizeEntities(imageFactory.buildList(10));
 
 const props: CombinedProps = {
-  classes: { root: '', error: '' },
+  classes: { root: '', error: '', actions: '' },
   linodeId: 1234,
   imagesData: images,
   imagesError: {},
@@ -34,7 +28,6 @@ const props: CombinedProps = {
   enqueueSnackbar: jest.fn(),
   permissions: 'read_write',
   passwordHelperText: '',
-  passwordValidation: 'complexity',
   requestKeys: jest.fn(),
   disabled: false,
   ...reactRouterProps
@@ -49,36 +42,32 @@ describe('RebuildFromImage', () => {
   });
 
   it('validates the form upon clicking the "Rebuild" button', async () => {
-    const { getByTestId, getByText } = render(
+    const { getByTestId, findByText } = render(
       wrapWithTheme(<RebuildFromImage {...props} />)
     );
     fireEvent.click(getByTestId('rebuild-button'));
-    await waitForElement(
-      () => [
-        getByText('An image is required.'),
-        getByText('Password is required.')
-      ],
-      {}
-    );
+
+    await findByText('An image is required.');
+    await findByText('Password is required.');
   });
 
   it('opens a confirmation modal after form has been validated', async () => {
-    const { getByTestId, getByText, getByPlaceholderText } = render(
+    const { getByTestId, findByText, getByPlaceholderText } = render(
       wrapWithTheme(<RebuildFromImage {...props} />)
     );
     fireEvent.change(getByTestId('select'), {
-      target: { value: 'linode/centos7' }
+      target: { value: 'private/1' }
     });
 
     fireEvent.blur(getByTestId('select'));
 
-    await wait(() =>
+    await waitFor(() =>
       fireEvent.change(getByPlaceholderText('Enter a password.'), {
         target: { value: 'xE7%9hX#hJsM' }
       })
     );
     fireEvent.click(getByTestId('rebuild-button'));
 
-    await waitForElement(() => getByText('Confirm Linode Rebuild'), {});
+    await findByText('Confirm Linode Rebuild');
   });
 });

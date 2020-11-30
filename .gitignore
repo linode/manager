@@ -90,6 +90,7 @@ typings/
 
 # custom files
 restart-manager.sh
+makefile
 
 # E2E Test Temporary Files
 **/e2e/errorShots/*.png
@@ -126,3 +127,5 @@ packages/manager/cypress/fixtures/example.json
 
 nohup.out
 packages/manager/bundle_analyzer_report.html
+
+**/manager/src/dev-tools/*.local.*

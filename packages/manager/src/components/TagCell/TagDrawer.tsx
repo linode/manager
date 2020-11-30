@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import Tag from 'src/components/Tag';
+import Tag from 'src/components/Tag/Tag_CMR';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddTag from './AddTag';
 
@@ -13,13 +13,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   tag: {}
 }));
 
+export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;
+
 interface Props {
   entityLabel: string;
   tags: string[];
   open: boolean;
-  addTag: (newTag: string) => Promise<void>;
-  deleteTag: (tag: string) => Promise<void>;
+  addTag: (newTag: string) => Promise<any>;
+  deleteTag: (tag: string) => Promise<any>;
   onClose: () => void;
+}
+
+export interface TagDrawerProps {
+  label: string;
+  tags: string[];
+  open: boolean;
+  entityID: number;
 }
 
 export type CombinedProps = Props;

@@ -1,5 +1,5 @@
 import { API_ROOT } from 'src/constants';
-import { NetworkUtilization } from '../account/types';
+import { NetworkUtilization, NetworkTransfer } from '../account/types';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 import { ResourcePage as Page } from '../types';
 import { Kernel, LinodeType as Type, Stats } from './types';
@@ -15,7 +15,7 @@ export const getLinodeStats = (linodeId: number) =>
   Request<Stats>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/stats`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * getLinodeStats
@@ -25,8 +25,8 @@ export const getLinodeStats = (linodeId: number) =>
  * If the current month, statistics will be retrieved for the past 30 days.
  *
  * @param linodeId { number } The id of the Linode to retrieve stats data for.
- * @param year { number }
- * @param month { number }
+ * @param year { string }
+ * @param month { string }
  */
 export const getLinodeStatsByDate = (
   linodeId: number,
@@ -36,7 +36,7 @@ export const getLinodeStatsByDate = (
   Request<Stats>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/stats/${year}/${month}`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * getLinodeTransfer
@@ -49,7 +49,28 @@ export const getLinodeTransfer = (linodeId: number) =>
   Request<NetworkUtilization>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/transfer`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
+
+/**
+ * getLinodeTransferByDate
+ *
+ * Returns network transfer information for your Linode by date
+ *
+ * @param linodeId { number } The id of the Linode to retrieve network transfer information for.
+ * @param year { string }
+ * @param month { string }
+ */
+export const getLinodeTransferByDate = (
+  linodeId: number,
+  year: string,
+  month: string
+) =>
+  Request<NetworkTransfer>(
+    setURL(
+      `${API_ROOT}/linode/instances/${linodeId}/transfer/${year}/${month}`
+    ),
+    setMethod('GET')
+  );
 
 /**
  * getLinodeKernels
@@ -64,7 +85,7 @@ export const getLinodeKernels = (params?: any, filter?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
-  ).then(response => response.data);
+  );
 
 /**
  * getLinodeKernel
@@ -79,7 +100,7 @@ export const getLinodeKernel = (kernelId: string) =>
   Request<Page<Kernel>>(
     setURL(`${API_ROOT}/linode/kernels/${kernelId}`),
     setMethod('GET')
-  ).then(response => response.data);
+  );
 
 /**
  * getLinodeTypes
@@ -88,10 +109,7 @@ export const getLinodeKernel = (kernelId: string) =>
  * This endpoint does not require authentication.
  */
 export const getLinodeTypes = () =>
-  Request<Page<Type>>(
-    setURL(`${API_ROOT}/linode/types`),
-    setMethod('GET')
-  ).then(response => response.data);
+  Request<Page<Type>>(setURL(`${API_ROOT}/linode/types`), setMethod('GET'));
 
 /**
  * getType
@@ -102,10 +120,7 @@ export const getLinodeTypes = () =>
  * @param typeId { number } The id of the Linode type to retrieve.
  */
 export const getType = (typeId: string) =>
-  Request<Type>(
-    setURL(`${API_ROOT}/linode/types/${typeId}`),
-    setMethod('GET')
-  ).then(response => response.data);
+  Request<Type>(setURL(`${API_ROOT}/linode/types/${typeId}`), setMethod('GET'));
 
 /**
  * getDeprecatedLinodeTypes
@@ -118,4 +133,4 @@ export const getDeprecatedLinodeTypes = () =>
   Request<Page<Type>>(
     setURL(`${API_ROOT}/linode/types-legacy`),
     setMethod('GET')
-  ).then(response => response.data);
+  );

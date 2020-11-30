@@ -29,13 +29,6 @@ const reducer: Reducer<State> = (
       };
 
     case SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        lastUpdated: Date.now(),
-        data: action.data
-      };
-
     case UPDATE:
       return {
         ...state,

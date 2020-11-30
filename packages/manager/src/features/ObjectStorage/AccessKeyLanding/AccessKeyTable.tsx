@@ -20,6 +20,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import AccessKeyMenu from './AccessKeyMenu';
+import { OpenAccessDrawer } from './types';
 
 type ClassNames = 'root' | 'headline' | 'paper' | 'labelCell' | 'copyIcon';
 
@@ -49,7 +50,7 @@ const styles = (theme: Theme) =>
 interface Props {
   isRestrictedUser: boolean;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
-  openDrawerForEditing: (objectStorageKey: ObjectStorageKey) => void;
+  openDrawer: OpenAccessDrawer;
 }
 
 export type CombinedProps = Props &
@@ -64,7 +65,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
     error,
     isRestrictedUser,
     openRevokeDialog,
-    openDrawerForEditing
+    openDrawer
   } = props;
 
   const renderContent = () => {
@@ -73,7 +74,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
     }
 
     if (loading) {
-      return <TableRowLoading colSpan={3} firstColWidth={50} oneLine />;
+      return <TableRowLoading colSpan={3} widths={[50]} oneLine />;
     }
 
     if (error) {
@@ -113,7 +114,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
           <AccessKeyMenu
             objectStorageKey={eachKey}
             openRevokeDialog={openRevokeDialog}
-            openDrawerForEditing={openDrawerForEditing}
+            openDrawer={openDrawer}
             label={eachKey.label}
           />
         </TableCell>
@@ -122,29 +123,27 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <React.Fragment>
-      <Paper className={classes.paper}>
-        <Table
-          aria-label="List of Object Storage Access Keys"
-          rowCount={data && data.length}
-          colCount={2}
-        >
-          <TableHead>
-            <TableRow data-qa-table-head role="rowgroup">
-              <TableCell className={classes.labelCell} data-qa-header-label>
-                Label
-              </TableCell>
-              <TableCell className={classes.labelCell} data-qa-header-key>
-                Access Key
-              </TableCell>
-              {/* empty cell for kebab menu */}
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderContent()}</TableBody>
-        </Table>
-      </Paper>
-    </React.Fragment>
+    <Paper className={classes.paper}>
+      <Table
+        aria-label="List of Object Storage Access Keys"
+        rowCount={data && data.length}
+        colCount={2}
+      >
+        <TableHead>
+          <TableRow data-qa-table-head role="rowgroup">
+            <TableCell className={classes.labelCell} data-qa-header-label>
+              Label
+            </TableCell>
+            <TableCell className={classes.labelCell} data-qa-header-key>
+              Access Key
+            </TableCell>
+            {/* empty cell for kebab menu */}
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderContent()}</TableBody>
+      </Table>
+    </Paper>
   );
 };
 

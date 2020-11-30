@@ -2,6 +2,7 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { regionFactory } from 'src/factories/regions';
 import { CombinedProps, LinodeActionMenu } from './LinodeActionMenu';
 
 const props: CombinedProps = {
@@ -12,6 +13,7 @@ const props: CombinedProps = {
   openDeleteDialog: jest.fn(),
   readOnly: false,
   typesLoading: false,
+  typesData: [],
   regionsData: [],
   regionsLastUpdated: 0,
   regionsLoading: false,
@@ -33,19 +35,16 @@ describe('LinodeActionMenu', () => {
   const wrapper = shallow<LinodeActionMenu>(<LinodeActionMenu {...props} />);
 
   describe('buildQueryStringForLinodeClone', () => {
-    it('returns `type`, `subtype`, and `linodeID` params', () => {
+    it('returns `type` and `linodeID` params', () => {
       const result = wrapper.instance().buildQueryStringForLinodeClone();
       expect(result).toMatch('type=');
-      expect(result).toMatch('subtype=');
       expect(result).toMatch('linodeID=');
     });
 
     it('includes `regionID` param if valid region', () => {
       wrapper.setProps({
         linodeRegion: 'us-east',
-        regionsData: [
-          { id: 'us-east', country: 'us', capabilities: [], status: 'ok' }
-        ]
+        regionsData: regionFactory.buildList(1, { id: 'us-east' })
       });
       expect(wrapper.instance().buildQueryStringForLinodeClone()).toMatch(
         'regionID=us-east'

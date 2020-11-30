@@ -1,31 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <% if (process.env.NODE_ENV === 'production') { %>
+    <script type="text/javascript" src="/new-relic.js"></script>
+    <% } %>
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      href="%PUBLIC_URL%/assets/logo-192-apple.png"
+    />
+    <link rel="stylesheet" href="%PUBLIC_URL%/fonts/fonts.css" />
+    <title>Linode Manager</title>
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <script type="text/javascript" src="/newrelic.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="theme-color" content="#000000">
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/assets/logo-192-apple.png">
-  <link rel="stylesheet" href="%PUBLIC_URL%/fonts/fonts.css">
-  <title>Linode Manager</title>
-</head>
-
-<body>
-  <noscript>
-    You need to enable JavaScript to run this app.
-  </noscript>
-  <div id="session-iframe"></div>
-  <div id="root"></div>
-</body>
-<script src="https://static.ada.support/embed.be6a6728.min.js" charset="utf-8"></script>
-<script>
-  window.setTimeout(()=>{
-    var ada = document.getElementsByClassName('ada-iframe')[0];
-    if (!!ada) ada.setAttribute('title','Ada Support Chat Bot');
-  },2000);
-</script>
-
+  <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="session-iframe"></div>
+    <div id="root"></div>
+  </body>
+  <script
+    src="https://static.ada.support/embed.be6a6728.min.js"
+    charset="utf-8"
+  ></script>
+  <script>
+    window.setTimeout(() => {
+      var ada = document.getElementsByClassName('ada-iframe')[0];
+      if (!!ada) ada.setAttribute('title', 'Ada Support Chat Bot');
+    }, 2000);
+  </script>
 </html>

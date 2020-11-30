@@ -1,4 +1,7 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
+import * as classnames from 'classnames';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ConsoleIcon from 'src/assets/icons/console.svg';
@@ -7,13 +10,19 @@ import DiskIcon from 'src/assets/icons/disk.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import RebootIcon from 'src/assets/icons/reboot.svg';
 import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
+import PowerOnIcon from 'src/assets/icons/power-button.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
-import ActionMenu from 'src/components/ActionMenu_CMR';
+import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
+import Hidden from 'src/components/core/Hidden';
 import List from 'src/components/core/List';
-import ListItem from 'src/components/core/ListItem';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -24,26 +33,59 @@ import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 import { distroIcons } from 'src/components/ImageSelect/icons';
+import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
+import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { OpenDialog } from 'src/features/linodes/types';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useImages from 'src/hooks/useImages';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
+import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import RenderIPs from './RenderIPs';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
 interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
   linode: Linode;
+  username?: string;
+  openDialog: OpenDialog;
+  openPowerActionDialog: (
+    bootAction: BootAction,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Config[]
+  ) => void;
+  backups: LinodeBackups;
+  linodeConfigs: Config[];
   numVolumes: number;
-  username: string;
-  openLishConsole: () => void;
+  openTagDrawer: (tags: string[]) => void;
+  openNotificationDrawer?: () => void;
+  isDetailLanding?: boolean;
 }
 
-const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
-  const { variant, linode, numVolumes, username, openLishConsole } = props;
+export type CombinedProps = LinodeEntityDetailProps;
+
+const LinodeEntityDetail: React.FC<CombinedProps> = props => {
+  const {
+    variant,
+    linode,
+    username,
+    openDialog,
+    openPowerActionDialog,
+    backups,
+    linodeConfigs,
+    numVolumes,
+    isDetailLanding,
+    openTagDrawer,
+    openNotificationDrawer
+  } = props;
 
   useReduxLoad(['images', 'types']);
   const { images } = useImages();
@@ -73,21 +115,29 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
+          openDialog={openDialog}
+          openPowerActionDialog={openPowerActionDialog}
+          linodeRegionDisplay={linodeRegionDisplay}
+          backups={backups}
+          linodeConfigs={linodeConfigs}
+          isDetailLanding={isDetailLanding}
+          type={'something'}
+          image={'something'}
+          openNotificationDrawer={openNotificationDrawer || (() => null)}
         />
       }
       body={
         <Body
           linodeLabel={linode.label}
+          numVolumes={numVolumes}
           numCPUs={linode.specs.vcpus}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
-          numVolumes={numVolumes}
           region={linode.region}
           ipv4={linode.ipv4}
           ipv6={linode.ipv6}
           linodeId={linode.id}
-          username={username}
-          openLishConsole={openLishConsole}
+          username={username ? username : 'none'}
         />
       }
       footer={
@@ -97,6 +147,9 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           linodeId={linode.id}
           linodeCreated={linode.created}
           linodeTags={linode.tags}
+          linodeLabel={linode.label}
+          openTagDrawer={openTagDrawer}
+          openDialog={openDialog}
         />
       }
     />
@@ -108,17 +161,31 @@ export default React.memo(LinodeEntityDetail);
 // =============================================================================
 // Header
 // =============================================================================
-interface HeaderProps {
+export interface HeaderProps {
   variant: LinodeEntityDetailVariant;
   imageVendor: string | null;
   linodeLabel: string;
   linodeId: number;
   linodeStatus: Linode['status'];
+  openDialog: OpenDialog;
+  openPowerActionDialog: (
+    bootAction: BootAction,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Config[]
+  ) => void;
+  linodeRegionDisplay: string;
+  backups: LinodeBackups;
+  type: string;
+  image: string;
+  linodeConfigs: Config[];
+  isDetailLanding?: boolean;
+  openNotificationDrawer: () => void;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.bg.white
+    backgroundColor: theme.cmrBGColors.bgSecondaryActions
   },
   linodeLabelWithDistro: {
     display: 'flex',
@@ -126,54 +193,129 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   linodeLabel: {
     marginLeft: 7,
-    color: theme.color.blue
+    color: theme.cmrTextColors.headlineActive
   },
   distroIcon: {
     fontSize: 25,
     marginRight: 10
   },
   body: {
-    marginLeft: 'auto',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: `0 !important`
+    [theme.breakpoints.up('md')]: {
+      marginLeft: 'auto',
+      padding: `0 !important`
+    }
   },
   actionItem: {
     marginRight: 10,
     marginBottom: 0,
-    padding: 10,
+    padding: '15px 10px',
+    transition: 'none',
     '& svg': {
       height: 20,
       width: 20,
-      fill: theme.color.blue,
       marginRight: 10
     },
     '& span': {
       fontFamily: `${theme.font.normal} !important`
+    },
+    '&:disabled': {
+      color: theme.color.disabled,
+      '& svg': {
+        fill: theme.color.disabled
+      }
+    },
+    '&:hover': {
+      color: '#ffffff',
+      backgroundColor: theme.color.blue,
+      '& svg': {
+        fill: '#ffffff',
+        '& g': {
+          stroke: '#ffffff'
+        },
+        '& path': {
+          stroke: '#ffffff'
+        }
+      }
+    },
+    '&:focus': {
+      outline: '1px dotted #999'
     }
   },
-  actionMenu: {
-    marginLeft: 30
+  statusChip: {
+    ...theme.applyStatusPillStyles
+  },
+  statusRunning: {
+    '&:before': {
+      backgroundColor: theme.cmrIconColors.iGreen
+    }
+  },
+  statusOffline: {
+    '&:before': {
+      backgroundColor: theme.cmrIconColors.iGrey
+    }
+  },
+  statusOther: {
+    '&:before': {
+      backgroundColor: theme.cmrIconColors.iOrange
+    }
+  },
+  actionItemsOuter: {
+    display: 'flex',
+    alignItems: 'center'
   }
 }));
 
 const Header: React.FC<HeaderProps> = props => {
-  const { variant, imageVendor, linodeLabel, linodeId, linodeStatus } = props;
+  const {
+    variant,
+    imageVendor,
+    linodeLabel,
+    linodeId,
+    linodeStatus,
+    linodeRegionDisplay,
+    openDialog,
+    openPowerActionDialog,
+    backups,
+    type,
+    image,
+    linodeConfigs,
+    isDetailLanding,
+    openNotificationDrawer
+  } = props;
 
   const classes = useHeaderStyles();
+  const theme = useTheme<Theme>();
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const distroIconClassName =
     imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
 
   const isDetails = variant === 'details';
 
+  const isRunning = linodeStatus === 'running';
+  const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
+  const isOther = !['running', 'stopped', 'offline'].includes(linodeStatus);
+
+  const handleConsoleButtonClick = (id: number) => {
+    sendLinodeActionMenuItemEvent('Launch Console');
+    lishLaunch(id);
+  };
+
   return (
     <EntityHeader
       parentLink={isDetails ? '/linodes' : undefined}
       parentText={isDetails ? 'Linodes' : undefined}
+      isDetailLanding={isDetailLanding}
       iconType="linode"
+      actions={
+        <Hidden mdUp>
+          <DocumentationButton hideText href="https://www.linode.com/" />
+        </Hidden>
+      }
       title={
         isDetails ? (
           <div className={classes.linodeLabelWithDistro}>
@@ -184,82 +326,109 @@ const Header: React.FC<HeaderProps> = props => {
             {linodeLabel}
           </div>
         ) : (
-          <>
-            <Link
-              to={`linode/instances/${linodeId}`}
-              className={classes.linodeLabel}
-            >
-              {linodeLabel}
-            </Link>
-            <Chip
-              style={{
-                marginLeft: 30,
-                backgroundColor: '#17cf73',
-                color: 'white',
-                fontSize: '1.1 rem',
-                height: 30,
-                borderRadius: 15,
-                letterSpacing: '.5px',
-                minWidth: 120,
-                marginRight: 30
-              }}
-              label={linodeStatus.toUpperCase()}
-              component="span"
-              clickable={false}
-            />
-          </>
+          <Link to={`linodes/${linodeId}`} className={classes.linodeLabel}>
+            {linodeLabel}
+          </Link>
         )
       }
       bodyClassName={classes.body}
       body={
         <>
-          {isDetails && (
-            <Chip
-              style={{
-                backgroundColor: '#17cf73',
-                color: 'white',
-                fontSize: '1.1 rem',
-                height: 30,
-                borderRadius: 15,
-                letterSpacing: '.5px',
-                minWidth: 120,
-                marginRight: 30
+          <Chip
+            className={classnames({
+              [classes.statusChip]: true,
+              [classes.statusRunning]: isRunning,
+              [classes.statusOffline]: isOffline,
+              [classes.statusOther]: isOther,
+              statusOtherDetail: isOther
+            })}
+            label={linodeStatus.replace('_', ' ').toUpperCase()}
+            component="span"
+            clickable={isOther ? true : false}
+            {...(isOther && { onClick: openNotificationDrawer })}
+          />
+
+          <div className={classes.actionItemsOuter}>
+            {!isDetails && (
+              <Hidden smDown>
+                <IconTextLink
+                  className={classes.actionItem}
+                  SideIcon={ViewDetailsIcon}
+                  text="View Details"
+                  title="View Details"
+                  to={`linodes/${linodeId}`}
+                />
+              </Hidden>
+            )}
+
+            <IconTextLink
+              className={classes.actionItem}
+              SideIcon={PowerOnIcon}
+              text={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+              title={linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+              onClick={() => {
+                const action =
+                  linodeStatus === 'running' ? 'Power Off' : 'Power On';
+                sendLinodeActionMenuItemEvent(`${action} Linode`);
+
+                openPowerActionDialog(
+                  `${action}` as BootAction,
+                  linodeId,
+                  linodeLabel,
+                  linodeStatus === 'running' ? linodeConfigs : []
+                );
               }}
-              label={linodeStatus.toUpperCase()}
-              component="span"
-              clickable={false}
+              disabled={!['running', 'offline'].includes(linodeStatus)}
             />
-          )}
 
-          {!isDetails && (
-            <IconTextLink
-              className={classes.actionItem}
-              SideIcon={ViewDetailsIcon}
-              text="ViewDetails"
-              title="ViewDetails"
+            <Hidden smDown>
+              <IconTextLink
+                className={classes.actionItem}
+                SideIcon={RebootIcon}
+                disabled={linodeStatus === 'offline'}
+                text="Reboot"
+                title="Reboot"
+                onClick={() => {
+                  sendLinodeActionMenuItemEvent('Reboot Linode');
+                  openPowerActionDialog(
+                    'Reboot',
+                    linodeId,
+                    linodeLabel,
+                    linodeConfigs
+                  );
+                }}
+              />
+
+              <IconTextLink
+                className={classes.actionItem}
+                SideIcon={ConsoleIcon}
+                text="Launch Console"
+                title="Launch Console"
+                onClick={() => {
+                  handleConsoleButtonClick(linodeId);
+                }}
+              />
+            </Hidden>
+
+            <LinodeActionMenu
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeRegion={linodeRegionDisplay}
+              linodeType={type}
+              linodeStatus={linodeStatus}
+              linodeBackups={backups}
+              openDialog={openDialog}
+              openPowerActionDialog={openPowerActionDialog}
+              noImage={!image}
+              inlineLabel={matchesMdDown ? undefined : 'More Actions'}
+              inLandingDetailContext={isDetailLanding}
             />
-          )}
-
-          <IconTextLink
-            className={classes.actionItem}
-            SideIcon={RebootIcon}
-            text="Reboot"
-            title="Reboot"
-          />
+          </div>
           {isDetails && (
-            <IconTextLink
-              className={classes.actionItem}
-              SideIcon={ConsoleIcon}
-              text="Launch Console"
-              title="Launch Console"
-            />
+            <Hidden smDown>
+              <DocumentationButton href="https://www.linode.com/" />
+            </Hidden>
           )}
-          <ActionMenu
-            inlineLabel="More Actions"
-            ariaLabel="linode-detail"
-            createActions={() => []}
-          />
-          {isDetails && <DocumentationButton href="https://www.linode.com/" />}
         </>
       }
     />
@@ -273,14 +442,13 @@ export interface BodyProps {
   numCPUs: number;
   gbRAM: number;
   gbStorage: number;
-  numVolumes: number;
   region: string;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   linodeId: number;
   username: string;
   linodeLabel: string;
-  openLishConsole: () => void;
+  numVolumes: number;
 }
 
 const useBodyStyles = makeStyles((theme: Theme) => ({
@@ -304,88 +472,95 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   iconTextOuter: {
     flexBasis: '72%',
     minWidth: 115,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    color: theme.cmrTextColors.tableStatic
   },
   ipContainer: {
     paddingLeft: '40px !important'
   },
   ipList: {
     marginTop: 4,
+    color: theme.cmrTextColors.tableStatic,
     '& li': {
       padding: 0,
+      fontSize: '0.875rem',
       lineHeight: 1.43
     }
-  },
-  // @todo: use mixin for this button reset (M3-4270)
-  button: {
-    backgroundColor: 'inherit',
-    border: 'none',
-    fontSize: 'inherit',
-    fontFamily: theme.font.semiBold,
-    color: theme.color.blue,
-    padding: 0,
-    cursor: 'pointer'
   },
   accessTable: {
     '& tr': {
       height: 34
     },
     '& td': {
-      lineHeight: 1.4,
+      lineHeight: 1.29,
+      fontSize: '0.875rem',
       fontStretch: 'normal',
       letterSpacing: 'normal',
       border: 'none',
       paddingTop: 8,
       paddingRight: 10,
       paddingBottom: 7,
-      paddingLeft: 10
+      paddingLeft: 10,
+      overflowX: 'auto',
+      maxWidth: '100%',
+      whiteSpace: 'nowrap',
+      backgroundColor: theme.cmrBGColors.bgAccessRow,
+      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`
     },
-    '& tr:first-child > td': {
-      borderBottom: '1px solid white'
-    },
-    '& tr:last-child > td': {
-      borderTop: '1px solid white'
-    },
-    '& tr > td:first-child': {
-      backgroundColor: theme.color.grey5,
-      fontWeight: 'bold'
-    },
-    '& tr > td:not(:first-child)': {
-      backgroundColor: theme.color.grey7
+    '& th': {
+      backgroundColor: theme.cmrBGColors.bgAccessHeader,
+      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
+      fontWeight: 'bold',
+      fontSize: '0.875rem',
+      color: theme.cmrTextColors.textAccessTable,
+      lineHeight: 1.1,
+      width: '102px',
+      whiteSpace: 'nowrap',
+      paddingTop: 8,
+      paddingRight: 10,
+      paddingBottom: 7,
+      paddingLeft: 10,
+      textAlign: 'left'
     }
   },
   accessTableContainer: {
-    overFlowX: 'hidden'
+    overflowX: 'auto',
+    maxWidth: 335,
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 728
+    },
+    [theme.breakpoints.up('lg')]: {
+      maxWidth: 600
+    }
   },
   code: {
-    // @todo: use font from designs
-    fontFamily: '"Ubuntu Mono", monospace, sans-serif'
+    fontFamily: '"SourceCodePro", monospace, sans-serif',
+    color: theme.cmrTextColors.textAccessCode
+  },
+  bodyWrapper: {
+    [theme.breakpoints.up('lg')]: {
+      justifyContent: 'space-between'
+    }
   }
 }));
 
 export const Body: React.FC<BodyProps> = React.memo(props => {
+  const classes = useBodyStyles();
   const {
     numCPUs,
     gbRAM,
     gbStorage,
-    numVolumes,
     region,
     ipv4,
     ipv6,
     linodeId,
     username,
-    linodeLabel
+    linodeLabel,
+    numVolumes
   } = props;
 
-  const classes = useBodyStyles();
-
   return (
-    <Grid
-      container
-      direction="row"
-      justify="space-between"
-      className={classes.accessTableContainer}
-    >
+    <Grid container direction="row" className={classes.bodyWrapper}>
       <Grid item>
         {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
         <Grid container>
@@ -420,7 +595,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
               </Grid>
 
               <Grid item className={classes.iconTextOuter}>
-                <Typography>{gbRAM} RAM</Typography>
+                <Typography>{gbRAM} GB RAM</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -464,35 +639,31 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
       </Grid>
       <Grid item>
         <List className={classes.ipList}>
-          {ipv4.slice(0, 3).map(thisIP => {
-            return <ListItem key={thisIP}>{thisIP}</ListItem>;
-          })}
-          {ipv6 && <ListItem>{ipv6}</ListItem>}
-          {ipv4.length > 3 && (
-            <>
-              ... plus{' '}
-              <Link to={`linodes/${linodeId}/networking`}>
-                {ipv4.length - 3} more
-              </Link>{' '}
-            </>
-          )}
+          <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
         </List>
       </Grid>
       <Grid item>
-        <Table className={classes.accessTable}>
-          <TableBody>
-            <TableRow>
-              <TableCell>SSH Access</TableCell>
-              <TableCell className={classes.code}>{sshLink(ipv4[0])}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>LISH via SSH</TableCell>
-              <TableCell className={classes.code}>
-                {lishLink(username, region, linodeLabel)}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <div className={classes.accessTableContainer}>
+          <Table className={classes.accessTable}>
+            <TableBody>
+              <TableRow>
+                <th scope="row">SSH Access</th>
+
+                <TableCell className={classes.code}>
+                  {sshLink(ipv4[0])}
+                </TableCell>
+              </TableRow>
+
+              <TableRow>
+                <th scope="row">LISH via SSH</th>
+
+                <TableCell className={classes.code}>
+                  {lishLink(username, region, linodeLabel)}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
       </Grid>
     </Grid>
   );
@@ -507,6 +678,9 @@ interface FooterProps {
   linodeId: number;
   linodeCreated: string;
   linodeTags: string[];
+  linodeLabel: string;
+  openTagDrawer: (tags: string[]) => void;
+  openDialog: OpenDialog;
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
@@ -521,55 +695,138 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
   listItem: {
     padding: `0px 10px`,
-    borderRight: `1px solid ${theme.color.grey6}`,
-    color: theme.color.grey8
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
+    color: theme.cmrTextColors.tableStatic
+  },
+  listItemLast: {
+    [theme.breakpoints.only('xs')]: {
+      borderRight: 'none',
+      paddingRight: 0
+    }
+  },
+  button: {
+    ...theme.applyLinkStyles,
+    padding: `0px 10px`,
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
+    fontSize: '.875rem',
+    fontWeight: 'bold',
+    '&:hover': {
+      textDecoration: 'none'
+    }
   },
   linodeCreated: {
     paddingLeft: 10,
-    color: theme.color.grey8
+    color: theme.cmrTextColors.tableStatic,
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'center'
+    }
   },
   linodeTags: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    [theme.breakpoints.only('xs')]: {
+      marginTop: 20,
+      marginBottom: 10
+    }
   }
 }));
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
-  const { linodePlan, linodeRegionDisplay, linodeId, linodeCreated } = props;
+  const {
+    linodePlan,
+    linodeRegionDisplay,
+    linodeId,
+    linodeCreated,
+    linodeTags,
+    openTagDrawer,
+    openDialog
+  } = props;
+
+  const _openMigrateDialog = React.useCallback(() => {
+    openDialog('migrate', linodeId);
+  }, [linodeId, openDialog]);
+
+  const _openResizeDialog = React.useCallback(() => {
+    openDialog('resize', linodeId);
+  }, [linodeId, openDialog]);
 
   const classes = useFooterStyles();
+
+  const { updateLinode } = useLinodeActions();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const addTag = React.useCallback(
+    (tag: string) => {
+      const newTags = [...linodeTags, tag];
+      updateLinode({ linodeId, tags: newTags }).catch(e =>
+        enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
+          variant: 'error'
+        })
+      );
+    },
+    [linodeTags, linodeId, updateLinode, enqueueSnackbar]
+  );
+
+  const deleteTag = React.useCallback(
+    (tag: string) => {
+      const newTags = linodeTags.filter(thisTag => thisTag !== tag);
+      updateLinode({ linodeId, tags: newTags }).catch(e =>
+        enqueueSnackbar(
+          getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
+          {
+            variant: 'error'
+          }
+        )
+      );
+    },
+    [linodeTags, linodeId, updateLinode, enqueueSnackbar]
+  );
+
   return (
-    <Grid container direction="row" justify="space-between">
-      <Grid item>
+    <Grid container direction="row" justify="space-between" alignItems="center">
+      <Grid item xs={12} sm={7}>
         <div className={classes.detailsSection}>
           {linodePlan && (
-            <Link
-              to={`/linodes/${linodeId}/resize`}
-              className={classes.listItem}
-            >
-              {linodePlan}
-            </Link>
+            <button onClick={_openResizeDialog} className={classes.button}>
+              {linodePlan} Plan
+            </button>
           )}
           {linodeRegionDisplay && (
-            <Link
-              to={`/linodes/${linodeId}/migrate`}
-              className={classes.listItem}
-            >
+            <button onClick={_openMigrateDialog} className={classes.button}>
               {linodeRegionDisplay}
-            </Link>
+            </button>
           )}
-          <Typography className={classes.listItem}>
+          <Typography
+            className={classnames({
+              [classes.listItem]: true,
+              [classes.listItemLast]: true
+            })}
+          >
             Linode ID {linodeId}
           </Typography>
-          <Typography className={classes.linodeCreated}>
-            Created{' '}
-            {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
-          </Typography>
+          <Hidden xsDown>
+            <Typography className={classes.linodeCreated}>
+              Created {formatDate(linodeCreated)}
+            </Typography>
+          </Hidden>
         </div>
       </Grid>
-      <Grid item className={classes.linodeTags}>
-        <div>Linode Tags</div>
+      <Hidden smUp>
+        <Grid item xs={12}>
+          <Typography className={classes.linodeCreated}>
+            Created {formatDate(linodeCreated)}
+          </Typography>
+        </Grid>
+      </Hidden>
+      <Grid item xs={12} sm={5} className={classes.linodeTags}>
+        <TagCell
+          width={500}
+          tags={linodeTags}
+          addTag={addTag}
+          deleteTag={deleteTag}
+          listAllTags={openTagDrawer}
+        />
       </Grid>
     </Grid>
   );

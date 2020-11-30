@@ -28,6 +28,7 @@ interface Props {
   ) => Promise<ResourcePage<StackScript>>;
   category: string;
   disabled?: boolean;
+  isOnCreate?: boolean;
 }
 
 type CombinedProps = StateProps & Props;

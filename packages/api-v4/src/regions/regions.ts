@@ -16,9 +16,7 @@ import { Region } from './types';
  *
  */
 export const getRegions = () =>
-  Request<Page<Region>>(setURL(`${API_ROOT}/regions`), setMethod('GET')).then(
-    response => response.data
-  );
+  Request<Page<Region>>(setURL(`${API_ROOT}/regions`), setMethod('GET'));
 
 /**
  * getRegion
@@ -29,9 +27,6 @@ export const getRegions = () =>
  *
  */
 export const getRegion = (regionID: string) =>
-  Request<Page<Region>>(
-    setURL(`${API_ROOT}/regions/${regionID}`),
-    setMethod('GET')
-  ).then(response => response.data);
+  Request<Region>(setURL(`${API_ROOT}/regions/${regionID}`), setMethod('GET'));
 
 export { Region };

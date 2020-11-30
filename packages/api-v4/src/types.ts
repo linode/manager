@@ -3,6 +3,11 @@ export interface APIError {
   reason: string;
 }
 
+export interface APIWarning {
+  title: string;
+  detail: string;
+}
+
 export interface ConfigOverride {
   baseURL?: string;
 }

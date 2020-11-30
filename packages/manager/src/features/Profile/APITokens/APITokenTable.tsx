@@ -114,9 +114,6 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   AccountStateProps;
 
-export const filterOutLinodeApps = (token: Token) =>
-  !token.website || !/.linode.com$/.test(token.website);
-
 export class APITokenTable extends React.Component<CombinedProps, State> {
   static defaultState: State = {
     form: {
@@ -176,7 +173,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         id: token.id,
         values: {
           scopes: token.scopes,
-          expiry: token.expiry,
+          expiry: token.expiry ?? '',
           label: token.label
         }
       }
@@ -192,7 +189,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         id: token.id,
         values: {
           scopes: token.scopes,
-          expiry: token.expiry,
+          expiry: token.expiry ?? '',
           label: token.label
         }
       }
@@ -382,7 +379,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           });
       }
     );
-    return;
   };
 
   editToken = () => {
@@ -435,7 +431,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           }
         );
       });
-    return;
   };
 
   componentDidMount() {
@@ -458,10 +453,10 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     }
 
-    const filteredData = data ? data.filter(filterOutLinodeApps) : [];
+    const tokens = data ?? [];
 
-    return filteredData.length > 0 ? (
-      this.renderRows(filteredData)
+    return tokens.length > 0 ? (
+      this.renderRows(tokens)
     ) : (
       <TableRowEmptyState colSpan={6} />
     );
@@ -483,7 +478,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         </TableCell>
         <TableCell parentColumn="Created">
           <Typography variant="body1" data-qa-token-created>
-            <DateTimeDisplay value={token.created} humanizeCutoff="month" />
+            <DateTimeDisplay value={token.created} />
           </Typography>
         </TableCell>
         <TableCell parentColumn="Expires">
@@ -496,10 +491,10 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
              The expiry time of apps that don't expire until revoked come back as 'null'.
              In this case, we display an expiry time of "never" as well.
              */
-            isWayInTheFuture(token.expiry) || token.expiry === null ? (
+            token.expiry === null || isWayInTheFuture(token.expiry) ? (
               'never'
             ) : (
-              <DateTimeDisplay value={token.expiry} humanizeCutoff="month" />
+              <DateTimeDisplay value={token.expiry} />
             )}
           </Typography>
         </TableCell>
@@ -642,26 +637,24 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   renderRevokeConfirmationActions = () => {
     return (
-      <React.Fragment>
-        <ActionsPanel>
-          <Button
-            buttonType="cancel"
-            onClick={this.closeRevokeDialog}
-            data-qa-button-cancel
-          >
-            Cancel
-          </Button>
-          <Button
-            buttonType="secondary"
-            loading={this.state.dialog.submittingDialog}
-            destructive
-            onClick={this.revokeAction}
-            data-qa-button-confirm
-          >
-            Revoke
-          </Button>
-        </ActionsPanel>
-      </React.Fragment>
+      <ActionsPanel>
+        <Button
+          buttonType="cancel"
+          onClick={this.closeRevokeDialog}
+          data-qa-button-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          buttonType="secondary"
+          loading={this.state.dialog.submittingDialog}
+          destructive
+          onClick={this.revokeAction}
+          data-qa-button-confirm
+        >
+          Revoke
+        </Button>
+      </ActionsPanel>
     );
   };
 

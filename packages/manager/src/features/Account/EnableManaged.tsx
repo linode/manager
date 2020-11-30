@@ -6,7 +6,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import SupportLink from 'src/components/SupportLink';
@@ -18,7 +18,6 @@ import { pluralize } from 'src/utilities/pluralize';
 interface Props {
   isManaged: boolean;
   update: (data: Partial<AccountSettings>) => void;
-  push: (url: string) => void;
 }
 
 interface StateProps {
@@ -68,7 +67,7 @@ export const ManagedContent: React.FC<ContentProps> = props => {
 };
 
 export const EnableManaged: React.FC<CombinedProps> = props => {
-  const { isManaged, linodeCount, push, update } = props;
+  const { isManaged, linodeCount, update } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -90,7 +89,7 @@ export const EnableManaged: React.FC<CombinedProps> = props => {
       .then(() => {
         handleClose();
         update({ managed: true });
-        push('/managed');
+        //push('/managed');
       })
       .catch(handleError);
   };
@@ -113,12 +112,12 @@ export const EnableManaged: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <ExpansionPanel heading="Linode Managed" defaultExpanded={true}>
+      <Accordion heading="Linode Managed" defaultExpanded={true}>
         <ManagedContent
           isManaged={isManaged}
           openConfirmationModal={() => setOpen(true)}
         />
-      </ExpansionPanel>
+      </Accordion>
       <ConfirmationDialog
         open={isOpen}
         error={error}

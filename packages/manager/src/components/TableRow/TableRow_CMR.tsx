@@ -10,8 +10,9 @@ import _TableRow, {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderLeft: `1px solid ${theme.palette.divider}`,
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    backgroundColor: theme.cmrBGColors.bgTableBody,
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.up('md')]: {
       boxShadow: `inset 3px 0 0 transparent`
@@ -43,14 +44,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:before': {
       transition: 'none',
       backgroundColor: theme.bg.lightBlue,
-      borderColor: theme.palette.primary.light
+      borderColor: theme.cmrBorderColors.borderTable
     },
     '& td': {
-      borderTopColor: theme.palette.primary.light,
+      borderTop: `1px solid ${theme.palette.primary.light}`,
       borderBottomColor: theme.palette.primary.light,
       position: 'relative',
       '&:first-child': {
         borderLeft: `1px solid ${theme.palette.primary.light}`
+      },
+      '&:last-child': {
+        borderTop: 'none',
+        backgroundColor: theme.cmrBGColors.bgApp
       },
       [theme.breakpoints.down('md')]: {
         '&:last-child': {
@@ -171,6 +176,9 @@ export const TableRow: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withRouter)(TableRow);
+const enhanced = compose<CombinedProps, Props>(
+  withRouter,
+  React.memo
+)(TableRow);
 
 export default enhanced;

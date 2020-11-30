@@ -13,9 +13,8 @@ import {
   Window
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { path, pathOr, sortBy } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -72,6 +71,7 @@ import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import BackupTableRow from './BackupTableRow';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
+import { initWindows } from 'src/utilities/initWindows';
 
 import DestructiveSnapshotDialog from './DestructiveSnapshotDialog';
 
@@ -185,13 +185,6 @@ type CombinedProps = PreloadedProps &
   ContextProps &
   WithSnackbarProps;
 
-const evenize = (n: number): number => {
-  if (n === 0) {
-    return n;
-  }
-  return n % 2 === 0 ? n : n - 1;
-};
-
 const isReadOnly = (permissions: GrantLevel) => {
   return permissions === 'read_only';
 };
@@ -209,6 +202,7 @@ export const aggregateBackups = (
 };
 
 /* tslint:disable-next-line */
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 class _LinodeBackup extends React.Component<CombinedProps, State> {
   state: State = {
     backups: this.props.backups.response,
@@ -271,30 +265,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     this.eventSubscription.unsubscribe();
   }
 
-  initWindows(timezone: string) {
-    let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
-      const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(
-        timezone
-      );
-      const finish = start.plus({ hours: 2 });
-      return [
-        `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,
-        `W${evenize(start.setZone('utc').hour)}`
-      ];
-    });
-
-    windows = sortBy<string[]>(window => window[0], windows);
-
-    windows.unshift(['Choose a time', 'Scheduling']);
-
-    return windows;
-  }
-
   constructor(props: CombinedProps) {
     super(props);
 
     /* TODO: use the timezone from the user's profile */
-    this.windows = this.initWindows(this.props.timezone);
+    this.windows = initWindows(this.props.timezone, true);
 
     this.days = [
       ['Choose a day', 'Scheduling'],
@@ -514,7 +489,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     const { history, linodeID } = this.props;
     history.push(
       '/linodes/create' +
-        `?type=My%20Images&subtype=Backups&backupID=${backup.id}&linodeID=${linodeID}`
+        `?type=Backups&backupID=${backup.id}&linodeID=${linodeID}`
     );
   };
 
@@ -849,6 +824,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             Cancelling backups associated with this Linode will delete all
             existing backups. Are you sure?
           </Typography>
+          <Typography style={{ marginTop: 12 }}>
+            <strong>Note: </strong>
+            Once backups for this Linode have been cancelled, you cannot
+            re-enable them for 24 hours.
+          </Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );
@@ -888,11 +868,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <div
-          id="tabpanel-backups"
-          role="tabpanel"
-          aria-labelledby="tab-backups"
-        >
+        <div>
           <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
           {backupsEnabled ? <this.Management /> : <this.Placeholder />}
         </div>

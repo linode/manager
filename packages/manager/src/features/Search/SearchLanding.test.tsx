@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
@@ -22,7 +22,9 @@ const props: Props = {
     nodebalancers: false,
     images: false,
     volumes: false,
-    kubernetes: false
+    kubernetes: false,
+    objectStorageClusters: false,
+    objectStorageBuckets: false
   },
   ...reactRouterProps
 };
@@ -37,7 +39,9 @@ jest.mock('src/hooks/useReduxLoad', () => ({
   useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false })
 }));
 
-afterEach(cleanup);
+jest.mock('src/hooks/useObjectStorageBuckets', () => ({
+  useObjectStorage: () => jest.fn().mockReturnValue({ loading: false })
+}));
 
 describe('Component', () => {
   it('should render', () => {

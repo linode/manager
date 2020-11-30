@@ -100,8 +100,9 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
               spacingChoice={spacingChoice}
               toggleTheme={_toggleTheme}
               toggleSpacing={_toggleSpacing}
-              children={children}
-            />
+            >
+              {children}
+            </MemoizedThemeProvider>
           )}
         </PreferenceToggle>
       )}

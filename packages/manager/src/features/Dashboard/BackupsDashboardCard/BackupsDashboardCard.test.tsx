@@ -1,12 +1,10 @@
-import { cleanup, fireEvent, wait } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import BackupsDashboardCard from './BackupsDashboardCard';
-
-afterEach(cleanup);
 
 jest.mock('src/hooks/useReduxLoad', () => ({
   useReduxLoad: () => ({ _loading: false })
@@ -46,7 +44,7 @@ describe('Backups dashboard card', () => {
       <BackupsDashboardCard {...props} linodesWithoutBackups={3} />
     );
     const button = getByTestId('back-up-existing-linodes');
-    await wait(() => fireEvent.click(button));
+    await waitFor(() => fireEvent.click(button));
     expect(props.openBackupDrawer).toHaveBeenCalledTimes(1);
   });
 

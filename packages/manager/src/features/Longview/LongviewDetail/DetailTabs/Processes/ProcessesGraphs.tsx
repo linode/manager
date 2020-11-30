@@ -17,6 +17,7 @@ import {
   formatMemory
 } from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
+import useFlags from 'src/hooks/useFlags';
 import {
   convertBytesToTarget,
   readableBytes
@@ -29,6 +30,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   graphWrap: {
     marginTop: theme.spacing(3)
+  },
+  cmrSpacing: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
   }
 }));
 
@@ -48,6 +54,7 @@ type CombinedProps = Props & WithTheme;
 
 const ProcessesGraphs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const {
     error,
@@ -104,7 +111,9 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <Typography variant="h2">Process History{name && `: ${name}`}</Typography>
+      <Typography variant="h2" className={flags.cmr ? classes.cmrSpacing : ''}>
+        Process History{name && `: ${name}`}
+      </Typography>
       <Paper className={classes.root}>
         <LongviewLineGraph
           title="CPU"

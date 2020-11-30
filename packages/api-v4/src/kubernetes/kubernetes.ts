@@ -27,7 +27,7 @@ export const getKubernetesClusters = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/lke/clusters`)
-  ).then(response => response.data);
+  );
 
 /**
  * getKubernetesCluster
@@ -38,7 +38,7 @@ export const getKubernetesCluster = (clusterID: number) =>
   Request<KubernetesCluster>(
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}`)
-  ).then(response => response.data);
+  );
 
 /**
  * createKubernetesClusters
@@ -50,7 +50,7 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters`),
     setData(data, createKubeClusterSchema)
-  ).then(response => response.data);
+  );
 
 /**
  * updateKubernetesCluster
@@ -65,7 +65,7 @@ export const updateKubernetesCluster = (
     setMethod('PUT'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}`),
     setData(data)
-  ).then(response => response.data);
+  );
 
 /**
  * deleteKubernetesCluster
@@ -76,7 +76,7 @@ export const deleteKubernetesCluster = (clusterID: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}`)
-  ).then(response => response.data);
+  );
 
 /** getKubeConfig
  *
@@ -89,7 +89,7 @@ export const getKubeConfig = (clusterId: number) =>
   Request<KubeConfigResponse>(
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
-  ).then(response => response.data);
+  );
 
 /** getKubernetesVersions
  *
@@ -101,7 +101,7 @@ export const getKubernetesVersions = () =>
   Request<Page<KubernetesVersion>>(
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/versions`)
-  ).then(response => response.data);
+  );
 
 /** getKubernetesVersion
  *
@@ -113,7 +113,7 @@ export const getKubernetesVersion = (versionID: string) =>
   Request<KubernetesVersion>(
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/versions/${versionID}`)
-  ).then(response => response.data);
+  );
 
 /** getKubernetesClusterEndpoint
  *
@@ -125,4 +125,4 @@ export const getKubernetesClusterEndpoints = (clusterID: number) =>
   Request<Page<KubernetesEndpointResponse>>(
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/api-endpoints`)
-  ).then(response => response.data);
+  );

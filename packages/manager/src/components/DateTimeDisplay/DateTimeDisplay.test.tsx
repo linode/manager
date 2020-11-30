@@ -1,13 +1,11 @@
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { cleanup } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { DateTimeDisplay, Props } from './DateTimeDisplay';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+jest.mock('../../utilities/getUserTimezone');
 
 const APIDate = '2018-07-20T04:23:17';
-
-beforeEach(cleanup);
 
 describe('DateTimeDisplay component', () => {
   describe('Non-humanized dates', () => {
@@ -15,7 +13,7 @@ describe('DateTimeDisplay component', () => {
       const props = { value: APIDate, humanizeCutoff: undefined };
       const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
 
-      getByText('2018-07-20 04:23:17');
+      getByText('2018-07-20 04:23');
     });
   });
 
@@ -30,7 +28,6 @@ describe('DateTimeDisplay component', () => {
       const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
 
       getByText('5 minutes ago');
-
     });
     describe('should output ISO strings if the date is older than the cutoff', () => {
       const almostOneWeek = DateTime.utc().minus({ days: 6 });

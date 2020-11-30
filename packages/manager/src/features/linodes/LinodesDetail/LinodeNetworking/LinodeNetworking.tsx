@@ -33,7 +33,6 @@ import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { ZONES } from 'src/constants';
-import { reportException } from 'src/exceptionReporting';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
@@ -199,6 +198,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.refreshIPs();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (prevProps.linode.id !== this.props.linode.id) {
+      this.refreshIPs();
+    }
   }
 
   openRemoveIPDialog = (IPToRemove: IPAddress) => {
@@ -517,12 +522,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     const zoneName = ZONES[linodeRegion];
 
-    if (!zoneName) {
-      reportException(`Unknown region: ${linodeRegion}`, {
-        linodeID
-      });
-    }
-
     const ipsWithRDNS =
       currentlySelectedIPRange && currentlySelectedIPRange.prefix
         ? listIPv6InRange(
@@ -533,18 +532,15 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         : [];
 
     return (
-      <div
-        id="tabpanel-networking"
-        role="tabpanel"
-        aria-labelledby="tab-networking"
-      >
+      <div>
         <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         {readOnly && <LinodePermissionsError />}
         <LinodeNetworkingSummaryPanel
           linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
           sshIPAddress={firstPublicIPAddress}
           linodeLabel={linodeLabel}
-          linodeRegion={zoneName}
+          linodeRegion={linodeRegion}
+          zoneName={zoneName}
         />
 
         {this.renderIPv4()}
@@ -764,7 +760,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             </TableHead>
             <TableBody>
               {this.state.ipv6Loading ? (
-                <TableRowLoading colSpan={4} firstColWidth={30} />
+                <TableRowLoading colSpan={4} widths={[30]} />
               ) : this.state.ipv6Error ? (
                 <TableRowError colSpan={12} message={this.state.ipv6Error} />
               ) : (
@@ -886,7 +882,7 @@ export const listIPv6InRange = (
       !['ipv6/range', 'ipv6/pool'].includes(thisIP.type) ||
       thisIP.rdns === null
     ) {
-      return;
+      return false;
     }
 
     // The ipaddr.js library throws an if it can't parse an IP address.
