@@ -1,6 +1,13 @@
 import { curry } from 'ramda';
 import * as React from 'react';
-import { Chart } from 'chart.js';
+import {
+  Chart,
+  LineElement,
+  LineController,
+  LinearScale,
+  PointElement,
+  TimeScale
+} from 'chart.js';
 import 'chartjs-adapter-luxon';
 
 import LineChartIcon from 'src/assets/icons/line-chart.svg';
@@ -23,6 +30,13 @@ import { Metrics } from 'src/utilities/statMetrics';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
 setUpCharts();
 
+Chart.register(
+  LineController,
+  LineElement,
+  LinearScale,
+  PointElement,
+  TimeScale
+);
 export interface DataSet {
   label: string;
   borderColor: string;
@@ -169,10 +183,9 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
               zone: timezone
             }
           }
-          // This cast is because the type definition does not include adapters
         }
       },
-      tooltips: {
+      tooltip: {
         cornerRadius: 0,
         backgroundColor: '#fbfbfb',
         bodyFontColor: '#32363C',
@@ -197,7 +210,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     return data.map((dataSet, idx) => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
         acc.push({
-          t: point[0],
+          x: point[0],
           y: formatData ? formatData(point[1]) : point[1]
         });
         return acc;
@@ -206,8 +219,8 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         label: dataSet.label,
         borderColor: dataSet.borderColor,
         backgroundColor: dataSet.backgroundColor,
+        fill: dataSet.backgroundColor,
         data: timeData,
-        fill: dataSet.fill,
         hidden: hiddenDatasets.includes(idx),
         ...lineOptions
       };
@@ -222,14 +235,16 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
+      const datasets = _formatData();
       chartInstance.current = new Chart(inputEl.current.getContext('2d'), {
         type: 'line',
         data: {
-          datasets: _formatData()
+          datasets
         },
         plugins,
         options: getChartOptions(suggestedMax, nativeLegend, unit)
       });
+      console.log(chartInstance.current.getDatasetMeta(0));
     }
   });
   return (
