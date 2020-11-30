@@ -322,8 +322,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
               </Grid>
               <Grid item>
                 <RegionSelect
-                  label={'Region'}
-                  placeholder={' '}
                   className={classes.regionSubtitle}
                   errorText={errorMap.region}
                   handleSelection={(regionID: string) =>

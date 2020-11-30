@@ -20,7 +20,7 @@ export const objectStorageClusterFactory = Factory.Sync.makeFactory<
 >({
   id: Factory.each(id => `cluster-${id}`) as any,
   domain: Factory.each(id => `cluster-${id}.linodeobjects.com`),
-  region: Factory.each(id => `region-${id}`),
+  region: 'us-east',
   static_site_domain: Factory.each(
     id => `website-cluster-${id}.linodeobjects.com`
   ),
