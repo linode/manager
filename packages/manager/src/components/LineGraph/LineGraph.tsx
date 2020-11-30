@@ -2,6 +2,7 @@ import { curry } from 'ramda';
 import * as React from 'react';
 import {
   Chart,
+  Filler,
   LineElement,
   LineController,
   LinearScale,
@@ -40,10 +41,6 @@ Chart.register(
 export interface DataSet {
   label: string;
   borderColor: string;
-  // this data property type might not be the perfect fit, but it works for
-  // the data returned from /linodes/:linodeID/stats and
-  // /nodebalancers/:nodebalancer/stats
-  // the first number will be a UTC data and the second will be the amount per second
   fill?: boolean | string;
   backgroundColor?: string;
   data: [number, number | null][];
@@ -112,6 +109,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
   // is undefined on linode/summary
   const plugins = [
+    Filler,
     {
       afterDatasetsDraw: () => {
         // hack to force re-render component in order to show legend
@@ -219,7 +217,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         label: dataSet.label,
         borderColor: dataSet.borderColor,
         backgroundColor: dataSet.backgroundColor,
-        fill: dataSet.backgroundColor,
+        fill: 'origin',
         data: timeData,
         hidden: hiddenDatasets.includes(idx),
         ...lineOptions
@@ -244,7 +242,6 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         plugins,
         options: getChartOptions(suggestedMax, nativeLegend, unit)
       });
-      console.log(chartInstance.current.getDatasetMeta(0));
     }
   });
   return (
