@@ -1,13 +1,14 @@
 import { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import ActionMenu, { Handlers } from './DomainActionMenu_CMR';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Hidden from 'src/components/core/Hidden';
+import { getDomainDisplayType } from './domainUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -107,7 +108,7 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
         {humanizeDomainStatus(status)}
       </TableCell>
       <Hidden xsDown>
-        <TableCell data-qa-domain-type>{type}</TableCell>
+        <TableCell data-qa-domain-type>{getDomainDisplayType(type)}</TableCell>
         <TableCell data-qa-domain-lastmodified>
           <DateTimeDisplay value={updated} />
         </TableCell>

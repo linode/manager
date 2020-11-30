@@ -207,11 +207,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
                     </Typography>
                   )}
                   <Typography variant="body1" component="span">
-                    commented{' '}
-                    <DateTimeDisplay
-                      value={data.date}
-                      humanizeCutoff={'never'}
-                    />
+                    commented <DateTimeDisplay value={data.date} />
                   </Typography>
                 </Grid>
               </Grid>

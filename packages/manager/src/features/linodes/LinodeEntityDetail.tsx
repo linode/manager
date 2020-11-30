@@ -23,7 +23,7 @@ import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMe
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useImages from 'src/hooks/useImages';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -31,6 +31,7 @@ import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import RenderIPs from './RenderIPs';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -486,22 +487,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
       <Grid container item className={classes.ipContainer} direction="column">
         <Grid item>IP Addresses</Grid>
         <Grid container item className={classes.ipContent} direction="column">
-          {ipv4.slice(0, 3).map(thisIP => {
-            return (
-              <Grid item key={thisIP}>
-                {thisIP}
-              </Grid>
-            );
-          })}
-          {ipv6 && <Grid item>{ipv6}</Grid>}
-          {ipv4.length > 3 && (
-            <>
-              ... plus{' '}
-              <Link to={`/linodes/${linodeId}/networking`}>
-                {ipv4.length - 3} more
-              </Link>{' '}
-            </>
-          )}
+          <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
         </Grid>
       </Grid>
 
@@ -599,7 +585,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const classes = useFooterStyles();
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
 
   const addTag = React.useCallback(
@@ -647,7 +633,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
         </Typography>
         <Typography className={classes.listItem}>
           <span className={classes.label}>Created:</span>{' '}
-          {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+          {formatDate(linodeCreated)}
         </Typography>
       </Grid>
       <Grid item className={classes.linodeTags}>

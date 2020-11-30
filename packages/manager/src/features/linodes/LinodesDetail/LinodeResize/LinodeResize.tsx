@@ -49,6 +49,7 @@ type ClassNames =
   | 'resizeTitle'
   | 'checkbox'
   | 'currentHeaderEmptyCell'
+  | 'actions'
   | 'errorLink';
 
 const styles = (theme: Theme) =>
@@ -63,7 +64,10 @@ const styles = (theme: Theme) =>
       }
     },
     checkbox: {
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
+      '& .MuiButtonBase-root': {
+        marginLeft: 3
+      }
     },
     toolTip: {
       paddingTop: theme.spacing(1)
@@ -87,6 +91,10 @@ const styles = (theme: Theme) =>
     },
     currentHeaderEmptyCell: {
       width: '13%'
+    },
+    actions: {
+      paddingBottom: theme.spacing(2),
+      paddingLeft: theme.spacing(3)
     },
     errorLink: {
       color: '#c44742',
@@ -221,7 +229,11 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       })
       .catch(errorResponse => {
         let error: string | JSX.Element = '';
-        if (errorResponse[0].reason.match(/allocated more disk/i)) {
+        const reason = errorResponse[0]?.reason ?? '';
+        if (
+          typeof reason === 'string' &&
+          reason.match(/allocated more disk/i)
+        ) {
           error = (
             <>
               The current disk size of your Linode is too large for the new
@@ -373,7 +385,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             }
           />
         </Paper>
-        <ActionsPanel>
+        <ActionsPanel className={classes.actions}>
           <Button
             disabled={
               !this.state.selectedId ||

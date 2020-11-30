@@ -10,7 +10,7 @@ import PowerDialogOrDrawer, {
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
@@ -113,7 +113,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     tags: []
   });
 
-  const { updateLinode, deleteLinode } = useLinodes();
+  const { updateLinode, deleteLinode } = useLinodeActions();
   const history = useHistory();
 
   const openPowerActionDialog = (

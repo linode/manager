@@ -30,6 +30,7 @@ export interface PaginationProps {
   pageSize: number;
   eventCategory: string;
   showAll?: boolean;
+  fixedSize?: boolean;
 }
 
 interface Props extends PaginationProps {
@@ -56,6 +57,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
     const {
       classes,
       count,
+      fixedSize,
       page,
       pageSize,
       handlePageChange,
@@ -64,7 +66,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
       showAll
     } = this.props;
 
-    if (count <= MIN_PAGE_SIZE) {
+    if (count <= MIN_PAGE_SIZE && !fixedSize) {
       return null;
     }
 
@@ -102,19 +104,21 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
             />
           )}
         </Grid>
-        <Grid item>
-          <Select
-            options={finalOptions}
-            defaultValue={defaultPagination}
-            onChange={this.handleSizeChange}
-            label="Number of items to show"
-            hideLabel
-            isClearable={false}
-            noMarginTop
-            menuPlacement="top"
-            medium
-          />
-        </Grid>
+        {!fixedSize ? (
+          <Grid item>
+            <Select
+              options={finalOptions}
+              defaultValue={defaultPagination}
+              onChange={this.handleSizeChange}
+              label="Number of items to show"
+              hideLabel
+              isClearable={false}
+              noMarginTop
+              menuPlacement="top"
+              medium
+            />
+          </Grid>
+        ) : null}
       </Grid>
     );
   }
