@@ -644,10 +644,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                       const lastBackup =
                                         thisLinode.backups.last_successful ===
                                         null
-                                          ? thisLinode.backups.schedule.day !==
-                                              null &&
-                                            thisLinode.backups.schedule
-                                              .window !== null
+                                          ? thisLinode.backups.enabled
                                             ? 'Scheduled'
                                             : 'Never'
                                           : thisLinode.backups.last_successful;
