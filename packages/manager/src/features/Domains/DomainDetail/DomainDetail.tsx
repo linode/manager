@@ -32,17 +32,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   cta: {
     display: 'flex',
     alignItems: 'center',
-    [theme.breakpoints.down(1100)]: {
-      marginRight: theme.spacing()
-    }
+    marginLeft: theme.spacing()
   },
   tagsButton: {
     height: 34,
-    minWidth: 80,
-    marginLeft: theme.spacing(4),
-    padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`,
-    [theme.breakpoints.down(1100)]: {
-      marginLeft: theme.spacing(1.5)
+    marginLeft: 0,
+    marginRight: theme.spacing(3),
+    minWidth: 'auto',
+    padding: 0,
+    '&:hover': {
+      textDecoration: 'underline'
     }
   },
   editIcon: {
@@ -130,15 +129,15 @@ const DomainDetail: React.FC<CombinedProps> = props => {
           />
         </Grid>
         <Grid item className={`${classes.cta} px0`}>
-          <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
           <Button
             buttonType="secondary"
-            onClick={() => scrollToTags()}
             className={classes.tagsButton}
+            onClick={() => scrollToTags()}
             aria-label={`Manage tags for "${domain.domain}"`}
           >
             <Edit className={classes.editIcon} /> Tags
           </Button>
+          <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
         </Grid>
       </Grid>
       {props.location.state && props.location.state.recordError && (

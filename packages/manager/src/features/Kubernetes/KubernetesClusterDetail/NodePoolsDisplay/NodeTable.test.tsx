@@ -24,7 +24,7 @@ describe('NodeTable', () => {
       await findByText('Ready');
     });
   });
-  it.skip('includes the Pool ID', () => {
+  it('includes the Pool ID', () => {
     const { getByText } = renderWithTheme(<NodeTable {...props} />);
     getByText('Pool ID 1');
   });
