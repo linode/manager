@@ -142,6 +142,7 @@ export interface CancelAccountPayload {
 }
 
 export type NotificationType =
+  | 'billing_email_bounce'
   | 'migration_scheduled'
   | 'migration_pending'
   | 'reboot_scheduled'
@@ -151,7 +152,8 @@ export type NotificationType =
   | 'ticket_important'
   | 'ticket_abuse'
   | 'notice'
-  | 'promotion';
+  | 'promotion'
+  | 'user_email_bounce';
 
 export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
@@ -282,6 +284,7 @@ export interface Event {
   username: string;
   secondary_entity: Entity | null;
   _initial?: boolean;
+  message: string | null;
 }
 /**
  * Represents an event which has an entity. For use with type guards.

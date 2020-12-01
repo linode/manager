@@ -80,12 +80,21 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     }
   ];
 
+  const matches = (p: string) => {
+    return Boolean(matchPath(p, { path: location.pathname }));
+  };
+
+  const navToURL = (index: number) => {
+    props.history.push(tabs[index].routeName);
+  };
+
   return (
     <Tabs
-      defaultIndex={Math.max(
+      index={Math.max(
         tabs.findIndex(tab => matches(tab.routeName)),
         0
       )}
+      onChange={navToURL}
     >
       <TabLinkList tabs={tabs} />
 
@@ -141,10 +150,6 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
       </React.Suspense>
     </Tabs>
   );
-};
-
-const matches = (p: string) => {
-  return Boolean(matchPath(p, { path: location.pathname }));
 };
 
 interface ContextProps {

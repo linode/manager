@@ -45,6 +45,7 @@ export const RegionOption: React.FC<CombinedProps> = props => {
       value={data.value}
       attrs={{ ['data-qa-region-select-item']: data.value }}
       {...props}
+      data-testid={data.value}
     >
       {isDisabled ? (
         <Tooltip

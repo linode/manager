@@ -331,6 +331,10 @@ class UserDetail extends React.Component<CombinedProps> {
         />
       );
 
+    const navToURL = (index: number) => {
+      this.props.history.push(this.tabs[index].routeName);
+    };
+
     return (
       <React.Fragment>
         <Grid container justify="space-between">
@@ -347,7 +351,7 @@ class UserDetail extends React.Component<CombinedProps> {
             />
           </Grid>
         </Grid>
-        <Tabs defaultIndex={this.clampTabChoice()}>
+        <Tabs defaultIndex={this.clampTabChoice()} onChange={navToURL}>
           <TabLinkList tabs={this.tabs} />
 
           {createdUsername && (

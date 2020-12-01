@@ -1,36 +1,58 @@
 import { Event } from '@linode/api-v4/lib/account';
-import { Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
+import { makeStyles } from 'src/components/core/styles';
+import TagDrawer from 'src/components/TagCell/TagDrawer';
+import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
+import PowerDialogOrDrawer, {
+  Action as BootAction
+} from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-import LinodeBusyStatus from '../LinodeSummary/LinodeBusyStatus';
+import { DialogType } from 'src/features/linodes/types';
+import { NotificationDrawer } from 'src/features/NotificationCenter';
+import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import useProfile from 'src/hooks/useProfile';
+import useReduxLoad from 'src/hooks/useReduxLoad';
+import useVolumes from 'src/hooks/useVolumes';
+import useLinodes from 'src/hooks/useLinodes';
+import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import HostMaintenance from './HostMaintenance';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
-import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
+import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
   LinodeDetailContext,
   withLinodeDetailContext
 } from '../linodeDetailContext';
-import { Config } from '@linode/api-v4/lib/linodes';
-import PowerDialogOrDrawer, {
-  Action as BootAction
-} from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { DialogType } from 'src/features/linodes/types';
-import useProfile from 'src/hooks/useProfile';
-import useReduxLoad from 'src/hooks/useReduxLoad';
-import useVolumes from 'src/hooks/useVolumes';
-import { getVolumesForLinode } from 'src/store/volume/volume.selector';
-import CircleProgress from 'src/components/CircleProgress';
-import useLinodes from 'src/hooks/useLinodes';
-import TagDrawer from 'src/components/TagCell/TagDrawer';
-import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue/RescueDialog';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
+import LinodeBusyStatus from '../LinodeSummary/LinodeBusyStatus';
+
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
-import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import DeleteDialog from '../../LinodesLanding/DeleteDialog';
+
+const useStyles = makeStyles(() => ({
+  '@keyframes blink': {
+    '0%': {
+      opacity: 1
+    },
+    '50%': {
+      opacity: 0.25
+    },
+    '100%': {
+      opacity: 1
+    }
+  },
+  root: {
+    '& .statusOther:before': {
+      animation: '$blink 2.5s linear infinite'
+    }
+  }
+}));
 
 interface Props {
   numVolumes: number;
@@ -68,6 +90,9 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   });
   const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
+
+  const classes = useStyles();
+  const notificationData = useNotificationData();
 
   const {
     linode,
@@ -118,6 +143,10 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     open: false,
     tags: []
   });
+
+  const [notificationDrawerOpen, setNotificationDrawerOpen] = React.useState(
+    false
+  );
 
   const { updateLinode, deleteLinode } = useLinodes();
   const history = useHistory();
@@ -256,8 +285,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     return deleteLinode(linodeId);
   };
 
+  const openNotificationDrawer = () => setNotificationDrawerOpen(true);
+  const closeNotificationDrawer = () => setNotificationDrawerOpen(false);
+
   return (
-    <React.Fragment>
+    <div className={classes.root}>
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
@@ -271,6 +303,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         openTagDrawer={openTagDrawer}
         openDialog={openDialog}
         openPowerActionDialog={openPowerActionDialog}
+        openNotificationDrawer={openNotificationDrawer}
       />
       {linodeInTransition(linodeStatus, firstEventWithProgress) && (
         <LinodeBusyStatus />
@@ -323,7 +356,12 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         open={backupsDialog.open}
         onClose={closeDialogs}
       />
-    </React.Fragment>
+      <NotificationDrawer
+        open={notificationDrawerOpen}
+        onClose={closeNotificationDrawer}
+        data={notificationData}
+      />
+    </div>
   );
 };
 

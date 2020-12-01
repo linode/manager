@@ -247,6 +247,7 @@ export interface ApplicationState {
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
   mockFeatureFlags: MockFeatureFlagState;
+  vlans: VlanState;
 }
 
 export const defaultState: ApplicationState = {
@@ -269,7 +270,8 @@ export const defaultState: ApplicationState = {
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
-  mockFeatureFlags: defaultMockFeatureFlagState
+  mockFeatureFlags: defaultMockFeatureFlagState,
+  vlans: defaultVLANState
 };
 
 /**
@@ -319,7 +321,8 @@ const reducers = combineReducers<ApplicationState>({
   globalErrors,
   longviewClients: longview,
   longviewStats,
-  mockFeatureFlags
+  mockFeatureFlags,
+  vlans
 });
 
 const enhancers = compose(

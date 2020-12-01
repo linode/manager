@@ -8,6 +8,7 @@ import { EmailChangeForm } from './EmailChangeForm';
 
 import { Provider } from 'react-redux';
 import store from 'src/store';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
 
 describe('Email change form', () => {
   const updateProfile = jest.fn();
@@ -23,6 +24,12 @@ describe('Email change form', () => {
           username="ThisUser"
           email="thisuser@example.com"
           updateProfile={updateProfile}
+          {...reactRouterProps}
+          notifications={[]}
+          notificationsLastUpdated={0}
+          notificationsLoading={false}
+          requestNotifications={jest.fn()}
+          notificationsError={[]}
         />
       </LinodeThemeWrapper>
     </Provider>

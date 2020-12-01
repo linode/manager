@@ -425,45 +425,51 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                                   body={
                                     <>
-                                      <Chip
-                                        className={classNames({
-                                          [classes.chip]: true,
-                                          [classes.chipRunning]: true,
-                                          [classes.chipActive]:
-                                            filterStatus === 'running'
-                                        })}
-                                        label={`${linodesRunningCount} RUNNING`}
-                                        onClick={() =>
-                                          this.setFilterStatus('running')
-                                        }
-                                        {...chipProps}
-                                      />
-                                      <Chip
-                                        className={classNames({
-                                          [classes.chip]: true,
-                                          [classes.chipPending]: true,
-                                          [classes.chipActive]:
-                                            filterStatus === 'busy'
-                                        })}
-                                        onClick={() =>
-                                          this.setFilterStatus('busy')
-                                        }
-                                        label={`${linodesBusyCount} BUSY`}
-                                        {...chipProps}
-                                      />
-                                      <Chip
-                                        className={classNames({
-                                          [classes.chip]: true,
-                                          [classes.chipOffline]: true,
-                                          [classes.chipActive]:
-                                            filterStatus === 'offline'
-                                        })}
-                                        onClick={() =>
-                                          this.setFilterStatus('offline')
-                                        }
-                                        label={`${linodesOfflineCount} OFFLINE`}
-                                        {...chipProps}
-                                      />
+                                      {linodesRunningCount !== 0 && (
+                                        <Chip
+                                          className={classNames({
+                                            [classes.chip]: true,
+                                            [classes.chipRunning]: true,
+                                            [classes.chipActive]:
+                                              filterStatus === 'running'
+                                          })}
+                                          label={`${linodesRunningCount} RUNNING`}
+                                          onClick={() =>
+                                            this.setFilterStatus('running')
+                                          }
+                                          {...chipProps}
+                                        />
+                                      )}
+                                      {linodesBusyCount !== 0 && (
+                                        <Chip
+                                          className={classNames({
+                                            [classes.chip]: true,
+                                            [classes.chipPending]: true,
+                                            [classes.chipActive]:
+                                              filterStatus === 'busy'
+                                          })}
+                                          onClick={() =>
+                                            this.setFilterStatus('busy')
+                                          }
+                                          label={`${linodesBusyCount} BUSY`}
+                                          {...chipProps}
+                                        />
+                                      )}
+                                      {linodesOfflineCount !== 0 && (
+                                        <Chip
+                                          className={classNames({
+                                            [classes.chip]: true,
+                                            [classes.chipOffline]: true,
+                                            [classes.chipActive]:
+                                              filterStatus === 'offline'
+                                          })}
+                                          onClick={() =>
+                                            this.setFilterStatus('offline')
+                                          }
+                                          label={`${linodesOfflineCount} OFFLINE`}
+                                          {...chipProps}
+                                        />
+                                      )}
                                       {filterStatus !== 'all' && (
                                         <IconTextLink
                                           SideIcon={Close}

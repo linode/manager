@@ -57,6 +57,9 @@ export const handlers = [
     const profile = profileFactory.build();
     return res(ctx.json(profile));
   }),
+  rest.put('*/profile', (req, res, ctx) => {
+    return res(ctx.json({ ...profileFactory.build(), ...(req.body as any) }));
+  }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(ctx.json(cachedRegions));
   }),
@@ -230,6 +233,9 @@ export const handlers = [
     });
     return res(ctx.json(account));
   }),
+  rest.put('*/account', (req, res, ctx) => {
+    return res(ctx.json({ ...accountFactory.build(), ...(req.body as any) }));
+  }),
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();
     return res(ctx.json(transfer));
@@ -297,7 +303,27 @@ export const handlers = [
     return res(ctx.json(makeResourcePage([])));
   }),
   rest.get('*/notifications', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage(notificationFactory.buildList(1))));
+    // const emailBounce = notificationFactory.build({
+    //   type: 'billing_email_bounce',
+    //   entity: null,
+    //   when: null,
+    //   message: 'We are unable to send emails to your billing email address!',
+    //   label: 'We are unable to send emails to your billing email address!',
+    //   severity: 'major',
+    //   until: null,
+    //   body: null
+    // });
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...notificationFactory.buildList(1)
+          // emailBounce
+        ])
+      )
+    );
+  }),
+  rest.post('*/networking/vlans', (req, res, ctx) => {
+    return res(ctx.json({}));
   })
 ];
 

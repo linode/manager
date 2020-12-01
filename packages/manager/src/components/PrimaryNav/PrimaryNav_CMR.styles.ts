@@ -125,16 +125,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   settings: {
     display: 'flex',
     alignItems: 'center',
+    alignSelf: 'stretch',
     justifyContent: 'center',
+    borderRadius: 0,
     color: '#e7e7e7',
     paddingLeft: 15,
     paddingRight: 15,
     transition: theme.transitions.create(['color']),
-    '&:hover': {
-      color: theme.color.green
+    '&:focus': {
+      borderRadius: 0
     },
-    '& svg': {
-      transition: theme.transitions.create(['transform'])
+    '&:hover': {
+      backgroundColor: theme.bg.primaryNavActiveBG
     },
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 7.5,
