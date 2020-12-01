@@ -43,7 +43,7 @@ const createBasicVolume = (linodeLabel?: string) => {
       .type(`${linodeLabel} {enter}`);
     cy.findByText('My Debian 10 Disk Profile');
   } else {
-    cy.findByText('Regions')
+    cy.findByText('Select a Region')
       .click()
       .type('new {enter}');
   }
