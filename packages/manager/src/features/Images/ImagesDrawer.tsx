@@ -241,10 +241,15 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
             resetEventsPolling();
             this.setState({
-              submitting: false,
               notice: 'Image scheduled for creation.'
             });
-            setTimeout(this.close, 4000);
+            setTimeout(() => {
+              this.setState({
+                submitting: false
+              });
+
+              this.close();
+            }, 4000);
           })
           .catch(errorResponse => {
             if (!this.mounted) {
