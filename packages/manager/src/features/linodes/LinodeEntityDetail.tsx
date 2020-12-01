@@ -367,6 +367,9 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   bodyWrapper: {
     padding: theme.spacing(2)
   },
+  columnLabel: {
+    color: theme.cmrTextColors.headlineStatic
+  },
   summaryContainer: {
     flexBasis: '25%',
     [theme.breakpoints.down(1100)]: {
@@ -463,7 +466,9 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
         className={classes.summaryContainer}
         direction="column"
       >
-        <Grid item>Summary</Grid>
+        <Grid item className={classes.columnLabel}>
+          Summary
+        </Grid>
         <Grid container item className={classes.summaryContent} direction="row">
           <Grid item>
             <Typography>
@@ -485,7 +490,9 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
       </Grid>
 
       <Grid container item className={classes.ipContainer} direction="column">
-        <Grid item>IP Addresses</Grid>
+        <Grid item className={classes.columnLabel}>
+          IP Addresses
+        </Grid>
         <Grid container item className={classes.ipContent} direction="column">
           <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
         </Grid>
@@ -497,7 +504,9 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
         className={classes.accessTableContainer}
         direction="column"
       >
-        <Grid item>Access</Grid>
+        <Grid item className={classes.columnLabel}>
+          Access
+        </Grid>
         <Grid item className={classes.accessTableContent}>
           <Table className={classes.accessTable}>
             <TableBody>

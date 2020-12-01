@@ -29,7 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: `11px 16px !important`
+    minHeight: 40,
+    padding: `10px 16px !important`,
+    [theme.breakpoints.down('sm')]: {
+      minHeight: 80
+    }
   },
   footerBorder: {
     borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`
