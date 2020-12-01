@@ -186,18 +186,6 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     width: '100%'
   },
-  actionItemsOuter: {
-    display: 'flex',
-    alignItems: 'center',
-    '&.MuiGrid-item': {
-      paddingRight: 0
-    }
-  },
-  actionItem: {
-    '&:focus': {
-      outline: '1px dotted #999'
-    }
-  },
   statusChip: {
     ...theme.applyStatusPillStyles,
     marginLeft: theme.spacing()
@@ -215,6 +203,18 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   statusOther: {
     '&:before': {
       backgroundColor: theme.cmrIconColors.iOrange
+    }
+  },
+  actionItemsOuter: {
+    display: 'flex',
+    alignItems: 'center',
+    '&.MuiGrid-item': {
+      paddingRight: 0
+    }
+  },
+  actionItem: {
+    '&:focus': {
+      outline: '1px dotted #999'
     }
   }
 }));
@@ -364,7 +364,7 @@ export interface BodyProps {
 }
 
 const useBodyStyles = makeStyles((theme: Theme) => ({
-  bodyWrapper: {
+  body: {
     padding: theme.spacing(2)
   },
   columnLabel: {
@@ -427,8 +427,6 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       border: 'none',
       borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
       fontSize: '0.875rem',
-      fontStretch: 'normal',
-      letterSpacing: 'normal',
       lineHeight: 1,
       maxWidth: 400,
       overflowX: 'auto',
@@ -458,18 +456,18 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
   } = props;
 
   return (
-    <Grid container item className={classes.bodyWrapper} direction="row">
+    <Grid className={classes.body} container item direction="row">
       {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
       <Grid
+        className={classes.summaryContainer}
         container
         item
-        className={classes.summaryContainer}
         direction="column"
       >
-        <Grid item className={classes.columnLabel}>
+        <Grid className={classes.columnLabel} item>
           Summary
         </Grid>
-        <Grid container item className={classes.summaryContent} direction="row">
+        <Grid className={classes.summaryContent} container item direction="row">
           <Grid item>
             <Typography>
               {pluralize('CPU Core', 'CPU Cores', numCPUs)}
@@ -489,25 +487,25 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
         </Grid>
       </Grid>
 
-      <Grid container item className={classes.ipContainer} direction="column">
+      <Grid className={classes.ipContainer} container item direction="column">
         <Grid item className={classes.columnLabel}>
           IP Addresses
         </Grid>
-        <Grid container item className={classes.ipContent} direction="column">
+        <Grid className={classes.ipContent} container item direction="column">
           <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
         </Grid>
       </Grid>
 
       <Grid
+        className={classes.accessTableContainer}
         container
         item
-        className={classes.accessTableContainer}
         direction="column"
       >
-        <Grid item className={classes.columnLabel}>
+        <Grid className={classes.columnLabel} item>
           Access
         </Grid>
-        <Grid item className={classes.accessTableContent}>
+        <Grid className={classes.accessTableContent} item>
           <Table className={classes.accessTable}>
             <TableBody>
               <TableRow>
@@ -545,13 +543,9 @@ interface FooterProps {
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
-  detailsSection: {
-    flexBasis: '66.67%',
-    [theme.breakpoints.down(1100)]: {
-      flexBasis: '100%',
-      '&.MuiGrid-item': {
-        paddingTop: theme.spacing(2)
-      }
+  footer: {
+    [theme.breakpoints.down('sm')]: {
+      minHeight: 81
     }
   },
   label: {
@@ -569,14 +563,10 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    flexBasis: '33.33%',
-    maxWidth: '33.33%',
-    [theme.breakpoints.down(1100)]: {
-      flexBasis: '100%',
-      maxWidth: '100%',
-      marginTop: theme.spacing(1.5),
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: theme.spacing(),
       '& > div': {
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-start'
       }
     }
   }
@@ -625,8 +615,14 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
   );
 
   return (
-    <Grid container direction="row" alignItems="center" justify="space-between">
-      <Grid container className={classes.detailsSection} item>
+    <Grid
+      className={classes.footer}
+      container
+      direction="row"
+      alignItems="center"
+      justify="space-between"
+    >
+      <Grid container item xs={12} md={8}>
         {linodePlan && (
           <Typography className={classes.listItem}>
             <span className={classes.label}>Plan:</span> {linodePlan}
@@ -645,7 +641,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           {formatDate(linodeCreated)}
         </Typography>
       </Grid>
-      <Grid item className={classes.linodeTags}>
+      <Grid className={classes.linodeTags} item xs={12} md={4}>
         <TagCell
           width={500}
           tags={linodeTags}

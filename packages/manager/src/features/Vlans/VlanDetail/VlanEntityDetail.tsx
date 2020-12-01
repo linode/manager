@@ -1,5 +1,7 @@
 import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as React from 'react';
+import Breadcrumb from 'src/components/Breadcrumb';
+import Button from 'src/components/Button';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -9,8 +11,6 @@ import Grid from 'src/components/Grid';
 import { dcDisplayNames } from 'src/constants';
 import VlanDialog from 'src/features/Vlans/VlanLanding/VlanDialog';
 import formatDate from 'src/utilities/formatDate';
-import Button from 'src/components/Button';
-import Breadcrumb from 'src/components/Breadcrumb';
 
 interface VlanEntityDetailProps {
   vlan: VLAN;
@@ -58,10 +58,8 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    [theme.breakpoints.up('md')]: {
-      marginLeft: 'auto',
-      padding: `0 !important`
-    }
+    marginLeft: 'auto',
+    padding: `0 !important`
   },
   actionItemsOuter: {
     display: 'flex',
@@ -91,15 +89,24 @@ const Header: React.FC<HeaderProps> = props => {
   return (
     <>
       <Grid
-        container
         className={classes.root}
+        container
         alignItems="center"
         justify="space-between"
       >
-        <Grid item className="px0">
-          <Breadcrumb pathname={location.pathname} data-qa-title />
+        <Grid className="px0" item>
+          <Breadcrumb
+            crumbOverrides={[
+              {
+                label: 'VLANs',
+                position: 1
+              }
+            ]}
+            pathname={location.pathname}
+            data-qa-title
+          />
         </Grid>
-        <Grid item className="px0">
+        <Grid className="px0" item>
           <DocumentationButton href="https://www.linode.com/" />
         </Grid>
       </Grid>
@@ -143,9 +150,6 @@ interface FooterProps {
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
-  detailsSection: {
-    padding: theme.spacing()
-  },
   label: {
     fontFamily: theme.font.bold
   },
@@ -166,7 +170,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   return (
     <Grid container direction="row" alignItems="center" justify="space-between">
-      <Grid container item className={classes.detailsSection}>
+      <Grid container item>
         {regionDisplay && (
           <Typography className={classes.listItem}>
             <span className={classes.label}>Region:</span> {regionDisplay}
