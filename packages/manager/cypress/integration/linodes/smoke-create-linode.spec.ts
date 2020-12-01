@@ -5,6 +5,7 @@ import {
 } from '../../support/api/linodes';
 import { assertToast } from '../../support/ui/events';
 import { fbtClick } from '../../support/helpers';
+import { selectRegionString } from '../../support/ui/constants';
 
 describe('create linode', () => {
   beforeEach(() => {
@@ -20,7 +21,7 @@ describe('create linode', () => {
       url: '*/linode/instances'
     }).as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
-    cy.contains('Select a Region')
+    cy.contains(selectRegionString)
       .click()
       .type('new {enter}');
     cy.get('[id="g6-nanode-1"]').click();

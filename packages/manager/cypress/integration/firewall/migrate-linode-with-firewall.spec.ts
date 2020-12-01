@@ -7,6 +7,7 @@ import {
 } from '../../support/api/linodes';
 import { deleteFirewallByLabel } from '../../support/api/firewalls';
 import { getClick, containsClick, fbtClick } from '../../support/helpers';
+import { selectRegionString } from '../../support/ui/constants';
 
 const fakeRegionsData = {
   data: [
@@ -141,7 +142,7 @@ describe('Migrate Linode With Firewall', () => {
     cy.findByText('Dallas, TX').click();
     cy.findByText('Accept').click();
     cy.findByText(`United States: Dallas, TX`).should('be.visible');
-    cy.findByText('Select a Region').click();
+    cy.findByText(selectRegionString).click();
     // checking that eu-west is not selectable
     // TODO uncomment this line once the logic is in the code to check for region with the cloud firewall capabilities
     // cy.findByText('London, UK', { timeout: 1000 }).should('not.exist');
@@ -180,7 +181,7 @@ describe('Migrate Linode With Firewall', () => {
       fbtClick('More Actions');
       fbtClick('Migrate');
       getClick('[data-qa-checked="false"]');
-      fbtClick('Select a Region');
+      fbtClick(selectRegionString);
       fbtClick('Dallas, TX');
       if (
         cy.contains('PROVISIONING').should('not.be.visible') &&
