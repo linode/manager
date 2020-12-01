@@ -196,8 +196,8 @@ const genericStatusPillStyle = {
   backgroundColor: 'transparent',
   color: cmrTextColors.textStatusChip,
   fontFamily: primaryFonts.bold,
-  fontSize: '1.1rem',
-  padding: 10,
+  fontSize: '1rem',
+  padding: 0,
   '&:before': {
     display: 'inline-block',
     borderRadius: '50%',
@@ -205,12 +205,7 @@ const genericStatusPillStyle = {
     height: 16,
     width: 16,
     minWidth: 16,
-    marginRight: 4
-  },
-  [breakpoints.down('sm')]: {
-    fontSize: 14,
-    padding: '15px 12px',
-    borderRadius: 15
+    marginRight: 8
   }
 };
 

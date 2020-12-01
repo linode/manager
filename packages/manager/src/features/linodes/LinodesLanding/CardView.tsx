@@ -32,7 +32,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   summaryOuter: {
     backgroundColor: theme.cmrBGColors.bgPaper,
+    margin: theme.spacing(),
     marginBottom: 20,
+    '&.MuiGrid-item': {
+      padding: 0
+    },
     '& .statusOther:before': {
       animation: '$pulse 1.5s ease-in-out infinite'
     }

@@ -29,7 +29,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.cmrBGColors.bgSecondaryActions,
-    padding: '4px 15px',
+    padding: '4px 16px',
+    paddingRight: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
       borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
     }
@@ -41,35 +42,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between'
   },
   breadCrumbDetailLanding: {
-    padding: '0 15px',
-    justifyContent: 'space-between',
-    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`
+    margin: 0,
+    padding: 0,
+    paddingLeft: theme.spacing(),
+    justifyContent: 'space-between'
   },
   contentOuter: {
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
-    padding: '10px 0',
-    flexWrap: 'wrap',
-    [theme.breakpoints.up('md')]: {
-      justifyContent: 'center',
-      padding: 0,
-      flexWrap: 'nowrap'
-    },
+    flexWrap: 'nowrap',
+    padding: 0,
     '& .MuiChip-root': {
       ...theme.applyStatusPillStyles,
       height: 30,
-      borderRadius: 15,
       marginTop: 1,
-      marginRight: 10,
       fontSize: '.875rem',
       letterSpacing: '.5px'
     }
   },
   bodyDetailVariant: {
-    padding: '4px 15px',
+    backgroundColor: theme.cmrBGColors.bgPaper,
+    flexWrap: 'nowrap',
     justifyContent: 'space-between',
-    flexWrap: 'nowrap'
+    padding: 0
   }
 }));
 
@@ -80,7 +76,6 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     actions,
     body,
     docsLink,
-    iconType,
     parentLink,
     parentText,
     title,
@@ -88,8 +83,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     bodyClassName,
     isSecondary,
     isDetailLanding,
-    headerOnly,
-    displayIcon
+    headerOnly
   } = props;
 
   return (
@@ -101,8 +95,6 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
       <Grid item className={classes.root}>
         {isDetailLanding && (
           <HeaderBreadCrumb
-            iconType={iconType}
-            displayIcon={displayIcon}
             title={title}
             parentLink={parentLink}
             parentText={parentText}
@@ -139,13 +131,11 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
         <Hidden mdUp>
           {body ? (
             <Grid
-              item
-              xs={12}
               className={classnames({
-                [classes.contentOuter]: true,
-                [classes.bodyDetailVariant]:
-                  Boolean(parentLink) || Boolean(isDetailLanding)
+                // [classes.contentOuter]: true,
+                [bodyClassName ?? '']: Boolean(bodyClassName)
               })}
+              item
             >
               {body}
             </Grid>

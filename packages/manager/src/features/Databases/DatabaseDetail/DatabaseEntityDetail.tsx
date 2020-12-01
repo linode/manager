@@ -221,7 +221,6 @@ const Header: React.FC<HeaderProps> = props => {
     <EntityHeader
       parentLink="/databases"
       parentText="Databases"
-      iconType="linode"
       actions={
         <Hidden mdUp>
           <DocumentationButton hideText href="https://www.linode.com/" />

@@ -77,7 +77,6 @@ const VlanLanding: React.FC<CombinedProps> = () => {
       <LandingHeader
         title="Virtual LANs"
         entity="VLAN"
-        iconType="linode"
         docsLink="http://google.com"
         headerOnly
         onAddNew={context.open}

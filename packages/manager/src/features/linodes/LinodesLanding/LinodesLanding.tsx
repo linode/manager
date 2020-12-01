@@ -447,7 +447,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                     }
                                     docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
                                     body={
-                                      <>
+                                      <div className={classes.chipContainer}>
                                         {linodesRunningCount !== 0 && (
                                           <Chip
                                             className={classNames({
@@ -481,7 +481,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                             label={`${linodesOfflineCount} OFFLINE`}
                                           />
                                         )}
-                                      </>
+                                      </div>
                                     }
                                   />
                                 )}
