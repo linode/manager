@@ -18,7 +18,7 @@ import useLinodeActions from 'src/hooks/useLinodeActions';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
-import { ShallowExtendedLinode } from 'src/store/linodes/types';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import formatDate from 'src/utilities/formatDate';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  data: ShallowExtendedLinode[];
+  data: LinodeWithMaintenance[];
   images: Image[];
   showHead?: boolean;
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;

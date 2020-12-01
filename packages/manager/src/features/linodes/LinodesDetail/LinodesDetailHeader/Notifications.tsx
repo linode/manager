@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import ProductNotification from 'src/components/ProductNotification';
 import withProfile from 'src/containers/profile.container';
-import { Maintenance } from 'src/store/linodes/types';
+import { Maintenance } from 'src/store/linodes/linodes.helpers';
 import { withNotifications } from 'src/store/notification/notification.containers';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import MigrationNotification from './MigrationNotification';
@@ -98,7 +98,7 @@ const enhanced = compose<CombinedProps, {}>(
     linodeNotifications: linode._notifications,
     linodeId: linode.id,
     linodeStatus: linode.status,
-    maintenance: linode._maintenance
+    maintenance: linode.maintenance
   })),
   withNotifications(undefined, ({ requestNotifications }) => ({
     requestNotifications
