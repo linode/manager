@@ -33,9 +33,7 @@ HTMLCanvasElement.prototype.getContext = () => {
 };
 
 // mocks the constructor returned by chart.js
-jest.mock('chart.js', () => {
-  return { default: jest.fn() };
-});
+jest.mock('chart.js');
 // this ignored injecting the adapter
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 jest.mock('chartjs-adapter-luxon', () => {});
