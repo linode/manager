@@ -1,7 +1,6 @@
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Checkbox from 'src/components/CheckBox';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -13,7 +12,12 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    borderRadius: 3,
+    marginTop: 24,
+    marginBottom: theme.spacing(2),
+    padding: '4px 16px',
     backgroundColor: theme.bg.white,
+    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
     '& ul:first-of-type': {
       fontFamily: theme.font.normal,
       '& li': {
@@ -59,7 +63,7 @@ const CautionNotice: React.FC<CombinedProps> = props => {
   const amountOfAttachedVolumes = props.linodeVolumes.length;
 
   return (
-    <Notice warning className={classes.root} spacingTop={24}>
+    <div className={classes.root}>
       <Typography className={classes.header}>
         <strong>Caution:</strong>
       </Typography>
@@ -120,8 +124,8 @@ const CautionNotice: React.FC<CombinedProps> = props => {
         onChange={() => props.setConfirmed(!props.hasConfirmed)}
         checked={props.hasConfirmed}
       />
-    </Notice>
+    </div>
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(CautionNotice);
+export default React.memo(CautionNotice);
