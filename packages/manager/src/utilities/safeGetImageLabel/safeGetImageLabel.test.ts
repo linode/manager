@@ -1,5 +1,7 @@
-import { normalizedImages } from 'src/__data__/images';
+import { imageFactory, normalizeEntities } from 'src/factories';
 import { safeGetImageLabel } from './safeGetImageLabel';
+
+const normalizedImages = normalizeEntities(imageFactory.buildList(10));
 
 describe('safeGetImageLabel', () => {
   it('should return an empty string if no slug provided', () => {
@@ -12,9 +14,9 @@ describe('safeGetImageLabel', () => {
     );
   });
 
-  it('should return "Fedora 23"', () => {
-    expect(safeGetImageLabel(normalizedImages, 'linode/containerlinux')).toBe(
-      'Container Linux'
+  it('should return the correct image label if it finds a match', () => {
+    expect(safeGetImageLabel(normalizedImages, 'private/1')).toBe(
+      normalizedImages['private/1'].label
     );
   });
 });

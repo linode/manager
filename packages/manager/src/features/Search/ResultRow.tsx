@@ -205,11 +205,9 @@ export const ResultRow: React.FC<CombinedProps> = props => {
           parentColumn="Created"
         >
           {result.data.created && (
-            <React.Fragment>
-              <Typography>
-                <DateTimeDisplay value={result.data.created} />
-              </Typography>
-            </React.Fragment>
+            <Typography>
+              <DateTimeDisplay value={result.data.created} />
+            </Typography>
           )}
         </TableCell>
 

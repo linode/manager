@@ -1,6 +1,6 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { imagesByID as images } from 'src/__data__/images';
+import { imageFactory, normalizeEntities } from 'src/factories';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
@@ -13,6 +13,8 @@ jest.mock('src/hooks/useReduxLoad', () => ({
 jest.mock('src/hooks/useImages', () => ({
   useImages: jest.fn().mockResolvedValue({ error: {} })
 }));
+
+const images = normalizeEntities(imageFactory.buildList(10));
 
 const props: CombinedProps = {
   classes: { root: '', error: '', actions: '' },
@@ -54,7 +56,7 @@ describe('RebuildFromImage', () => {
       wrapWithTheme(<RebuildFromImage {...props} />)
     );
     fireEvent.change(getByTestId('select'), {
-      target: { value: 'linode/centos7' }
+      target: { value: 'private/1' }
     });
 
     fireEvent.blur(getByTestId('select'));

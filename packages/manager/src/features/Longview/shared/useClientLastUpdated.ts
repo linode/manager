@@ -114,7 +114,7 @@ export const useClientLastUpdated = (
         if (document.visibilityState === 'visible') {
           requestAndSetLastUpdated(clientAPIKey);
         }
-      }, 10000);
+      }, 30000);
     });
 
     return () => {

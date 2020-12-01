@@ -229,7 +229,11 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       })
       .catch(errorResponse => {
         let error: string | JSX.Element = '';
-        if (errorResponse[0].reason.match(/allocated more disk/i)) {
+        const reason = errorResponse[0]?.reason ?? '';
+        if (
+          typeof reason === 'string' &&
+          reason.match(/allocated more disk/i)
+        ) {
           error = (
             <>
               The current disk size of your Linode is too large for the new

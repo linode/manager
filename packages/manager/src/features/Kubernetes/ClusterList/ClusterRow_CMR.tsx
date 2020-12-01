@@ -94,7 +94,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
 
       <Hidden smDown>
         <TableCell data-qa-cluster-date>
-          <DateTimeDisplay value={cluster.created} humanizeCutoff="month" />
+          <DateTimeDisplay value={cluster.created} />
         </TableCell>
       </Hidden>
       <TableCell data-qa-cluster-region>{cluster.region}</TableCell>

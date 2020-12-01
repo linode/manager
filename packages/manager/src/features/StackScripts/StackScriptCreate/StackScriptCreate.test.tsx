@@ -4,8 +4,9 @@ import * as React from 'react';
 import { StackScriptCreate } from './StackScriptCreate';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { imageFactory, normalizeEntities } from 'src/factories';
 
-import { normalizedImages as images } from 'src/__data__/images';
+const images = normalizeEntities(imageFactory.buildList(10));
 
 describe('StackScriptCreate', () => {
   const component = shallow(

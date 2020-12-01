@@ -1,9 +1,5 @@
 import { linodeReboot } from '@linode/api-v4/lib/linodes';
-import {
-  createVlan,
-  CreateVLANPayload,
-  createVlanSchema
-} from '@linode/api-v4/lib/vlans';
+import { CreateVLANPayload, createVlanSchema } from '@linode/api-v4/lib/vlans';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -20,13 +16,14 @@ import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
+import { vlanContext } from 'src/context';
 import useLinodes from 'src/hooks/useLinodes';
 import useRegions from 'src/hooks/useRegions';
+import useVlans from 'src/hooks/useVlans';
 import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
-import { vlanContext } from 'src/context';
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {},
@@ -52,6 +49,8 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
   const regionIDsWithVLANs = React.useMemo(() => {
     return regionsWithVLANS.map(thisRegion => thisRegion.id);
   }, [regionsWithVLANS]);
+
+  const { createVlan } = useVlans();
 
   const context = React.useContext(vlanContext);
 
@@ -162,7 +161,6 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
         <div className={classes.formSection}>
           <RegionSelect
             label={'Region (required)'}
-            placeholder={'Regions'}
             errorText={formik.errors.region}
             handleSelection={handleRegionSelect}
             regions={regionsWithVLANS}

@@ -83,7 +83,6 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
         handleSelection={handleSelection}
         regions={regions}
         selectedID={selectedID || null}
-        label="Select a Region"
         helperText={helperText}
       />
     </Paper>

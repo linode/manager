@@ -85,7 +85,7 @@ export interface State {
 type CombinedProps = Props & WithImagesProps & WithStyles<CSSClasses>;
 
 /* tslint:disable-next-line */
-export class _StackScript extends React.Component<CombinedProps> {
+export class SStackScript extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
@@ -152,7 +152,6 @@ export class _StackScript extends React.Component<CombinedProps> {
             <strong>Last revision: </strong>
             <DateTimeDisplay
               value={updated}
-              humanizeCutoff={'month'}
               className={classes.dateTimeDisplay}
             />
           </Typography>
@@ -204,4 +203,4 @@ const enhanced = compose<CombinedProps, Props>(
     imagesLoading
   }))
 );
-export default enhanced(_StackScript);
+export default enhanced(SStackScript);
