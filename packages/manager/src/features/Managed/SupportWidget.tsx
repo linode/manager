@@ -19,20 +19,11 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      color: '#3683DC',
       margin: 0,
+      marginRight: theme.spacing(2),
       padding: 0,
-      /**
-       * @bailly @kayla
-       * I had to ask Kayla how to override the
-       * button hover style here, but there must be
-       * a better way.
-       */
       '&:hover': {
-        textDecoration: 'underline',
-        '& svg': {
-          color: `${theme.palette.primary.light} !important`
-        }
+        textDecoration: 'underline'
       },
       '& svg': {
         marginRight: theme.spacing()
