@@ -151,7 +151,10 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    if (!prevProps.linodeDisks && this.props.linodeDisks) {
+    if (
+      prevProps?.linodeDisks?.length === 0 &&
+      this.props.linodeDisks!.length > 0
+    ) {
       this.setState({
         devices: {
           ...this.state.devices,
