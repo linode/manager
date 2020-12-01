@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paypalButtonWrapper: {
     position: 'relative',
+    left: theme.spacing(),
     zIndex: 1,
     transition: theme.transitions.create(['opacity'])
   },
