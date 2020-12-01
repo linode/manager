@@ -131,7 +131,8 @@ const cmrIconColors = {
   iOrange: '#ffb31a',
   iRed: '#cf1e1e',
   // Offline status
-  iGrey: '#dbdde1'
+  iGrey: '#dbdde1',
+  iCheckmark: '#444'
 };
 
 const primaryColors = {
@@ -771,7 +772,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         }
       },
-      MuiExpansionPanel: {
+      MuiAccordion: {
         root: {
           '& .actionPanel': {
             paddingLeft: spacingUnit * 2,
@@ -783,13 +784,13 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         }
       },
-      MuiExpansionPanelDetails: {
+      MuiAccordionDetails: {
         root: {
           padding: spacingUnit * 2,
           backgroundColor: 'white'
         }
       },
-      MuiExpansionPanelSummary: {
+      MuiAccordionSummary: {
         root: {
           '&$focused': {
             backgroundColor: '#fbfbfb'
@@ -906,6 +907,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         root: {
           maxWidth: 415,
           fontSize: '0.875rem',
+          lineHeight: 1.25,
           '&$error': {
             color: '#ca0813'
           }
@@ -1480,6 +1482,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         icon: {
           opacity: 1,
+          color: 'inherit !important',
           marginTop: 2
         },
         iconDirectionDesc: {

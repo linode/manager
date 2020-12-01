@@ -20,7 +20,9 @@ describe('BucketTableRow', () => {
       hostname={bucket.hostname}
       created={bucket.created}
       size={bucket.size}
+      objects={bucket.objects}
       onRemove={mockOnRemove}
+      onClickDetails={jest.fn()}
     />
   );
 

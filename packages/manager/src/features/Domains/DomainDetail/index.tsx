@@ -27,12 +27,12 @@ export const DomainDetailRouting: React.FC<RouteComponentProps<{
     // If not, we don't know if the Domain exists yet so we have to stall
     return <CircleProgress />;
   }
-  // Master Domains have a Detail page.
+  // Primary Domains have a Detail page.
   if (foundDomain.type === 'master') {
     return <DomainDetail {...props} />;
   }
 
-  // Slave Domains do not have a Detail page, so render the Landing
+  // Secondary Domains do not have a Detail page, so render the Landing
   // page with an open drawer.
   return (
     <DomainsLanding

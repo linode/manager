@@ -40,7 +40,7 @@ const NodeBalancerCreationError: React.FC<CombinedProps> = props => {
           : `Unable to create config for port ${errResponse.config.port}.`;
 
         return (
-          <Notice key={idx} error typeProps={{ component: 'div' }}>
+          <Notice key={idx} error>
             {message}
             {maybeListReason(errResponse.errors)}
           </Notice>

@@ -11,26 +11,27 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import Community from 'src/assets/community.svg';
-import Dashboard from 'src/assets/icons/dashboard_cmr.svg';
 import Gear from 'src/assets/icons/gear.svg';
-import Logo from 'src/assets/logo/new-logo.svg';
 import LogoIcon from 'src/assets/logo/logo.svg';
+import Logo from 'src/assets/logo/new-logo.svg';
 import Help from 'src/assets/primary-nav-help.svg';
 import Grid from 'src/components/core/Grid';
 import Hidden, { HiddenProps } from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
-import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import { useMediaQuery } from 'src/components/core/styles';
 import { Link } from 'src/components/Link';
 import UserMenu from 'src/features/TopMenu/UserMenu/UserMenu_CMR';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDomains from 'src/hooks/useDomains';
 import useFlags from 'src/hooks/useFlags';
+import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
+import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import usePrefetch from 'src/hooks/usePreFetch';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import usePrimaryNavStyles from './PrimaryNav_CMR.styles';
 import MobileNav from './MobileNav';
+import usePrimaryNavStyles from './PrimaryNav_CMR.styles';
 import ThemeToggle from './ThemeToggle';
 
 type NavEntity =
@@ -46,7 +47,6 @@ type NavEntity =
   | 'Images'
   | 'Firewalls'
   | 'Account'
-  | 'Dashboard'
   | 'StackScripts'
   | 'Help & Support'
   | 'Community'
@@ -86,8 +86,6 @@ export interface PrimaryNavProps {
 
 export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const classes = usePrimaryNavStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesMobile = useMediaQuery('(max-width:750px)');
   const matchesTablet = useMediaQuery('(max-width:1190px)');
 
@@ -99,10 +97,19 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
 
   const flags = useFlags();
   const { domains, requestDomains } = useDomains();
+  const {
+    objectStorageClusters,
+    requestObjectStorageClusters
+  } = useObjectStorageClusters();
+  const {
+    objectStorageBuckets,
+    requestObjectStorageBuckets
+  } = useObjectStorageBuckets();
 
   const {
     _isManagedAccount,
     _isLargeAccount,
+    _isRestrictedUser,
     account
   } = useAccountManagement();
 
@@ -118,21 +125,30 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
     account?.data?.capabilities ?? []
   );
 
+  const clustersLoadedOrLoadingOrHasError =
+    objectStorageClusters.lastUpdated > 0 ||
+    objectStorageClusters.loading ||
+    objectStorageClusters.error;
+
+  React.useEffect(() => {
+    if (!clustersLoadedOrLoadingOrHasError && !_isRestrictedUser) {
+      requestObjectStorageClusters();
+    }
+  }, [
+    _isRestrictedUser,
+    clustersLoadedOrLoadingOrHasError,
+    requestObjectStorageClusters
+  ]);
+
+  const clusterIds = objectStorageClusters.entities.map(
+    thisCluster => thisCluster.id
+  );
+
   const primaryLinkGroups: {
     group: NavGroup;
     links: PrimaryLink[];
   }[] = React.useMemo(
     () => [
-      {
-        group: 'None',
-        links: [
-          {
-            display: 'Dashboard',
-            href: '/dashboard',
-            hide: !matchesMobile
-          }
-        ]
-      },
       {
         group: 'Compute',
         links: [
@@ -191,6 +207,10 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
           {
             display: 'Object Storage',
             href: '/object-storage/buckets',
+            prefetchRequestFn: () => requestObjectStorageBuckets(clusterIds),
+            prefetchRequestCondition:
+              !objectStorageBuckets.loading &&
+              objectStorageBuckets.lastUpdated === 0,
             activeLinks: [
               '/object-storage/buckets',
               '/object-storage/access-keys'
@@ -229,15 +249,18 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       }
     ],
     [
-      matchesMobile,
       requestDomains,
       domains.loading,
       domains.lastUpdated,
       _isLargeAccount,
       showFirewalls,
       showVlans,
+      objectStorageBuckets.loading,
+      objectStorageBuckets.lastUpdated,
       flags.databases,
-      _isManagedAccount
+      _isManagedAccount,
+      requestObjectStorageBuckets,
+      clusterIds
     ]
   );
 
@@ -263,7 +286,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
                 [classes.logoCollapsed]: matchesTablet
               })}
             >
-              <Link to={`/dashboard`} title="Dashboard">
+              <Link to={`/linodes`} title="Linodes">
                 {matchesTablet ? (
                   <LogoIcon width={25} height={29} />
                 ) : (
@@ -278,30 +301,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             </Grid>
           )}
           <div className={classes.hideOnMobile}>
-            <Grid item>
-              <div
-                className={classNames({
-                  [classes.logoItem]: true,
-                  [classes.logoCollapsed]: matchesSmDown
-                })}
-              >
-                {matchesSmDown ? (
-                  <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
-                    <Dashboard
-                      width={20}
-                      height={16}
-                      style={{ marginRight: 6 }}
-                    />
-                  </Link>
-                ) : (
-                  <PrimaryNavLink
-                    display="Dashboard"
-                    href="/dashboard"
-                    closeMenu={closeMenu}
-                  />
-                )}
-              </div>
-            </Grid>
             {primaryLinkGroups.map(thisGroup => {
               // For each group, filter out hidden links.
               const filteredLinks = thisGroup.links.filter(

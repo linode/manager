@@ -56,7 +56,10 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
           }
           confirmEmail={confirmAccountEmail}
           changeEmail={() =>
-            history.push('/account', { contactDrawerOpen: true })
+            history.push('/account', {
+              contactDrawerOpen: true,
+              focusEmail: true
+            })
           }
         />
       )}

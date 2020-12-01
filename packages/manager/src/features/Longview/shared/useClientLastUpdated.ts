@@ -8,8 +8,8 @@ export const useClientLastUpdated = (
   clientAPIKey?: string,
   callback?: (lastUpdated?: number) => void
 ) => {
-  let mounted = true;
-  let requestInterval: NodeJS.Timeout;
+  const mounted = useRef(true);
+  const requestInterval = useRef(0);
 
   /*
    lastUpdated _might_ come back from the endpoint as 0, so it's important
@@ -57,7 +57,7 @@ export const useClientLastUpdated = (
         const _lastUpdated = response.DATA?.updated ?? 0;
 
         if (
-          mounted &&
+          mounted.current &&
           (typeof newLastUpdated === 'undefined' ||
             _lastUpdated > newLastUpdated)
         ) {
@@ -74,7 +74,7 @@ export const useClientLastUpdated = (
          */
         const reason = pathOr('', [0, 'TEXT'], e);
 
-        if (mounted) {
+        if (mounted.current) {
           if (reason.match(/authentication/i)) {
             setAuthed(false);
           }
@@ -110,15 +110,18 @@ export const useClientLastUpdated = (
       return;
     }
     requestAndSetLastUpdated(clientAPIKey).then(() => {
-      requestInterval = setInterval(() => {
-        requestAndSetLastUpdated(clientAPIKey);
-      }, 10000);
+      requestInterval.current = window.setInterval(() => {
+        if (document.visibilityState === 'visible') {
+          requestAndSetLastUpdated(clientAPIKey);
+        }
+      }, 30000);
     });
 
     return () => {
-      mounted = false;
-      clearInterval(requestInterval);
+      mounted.current = false;
+      clearInterval(requestInterval.current);
     };
+    // @todo: fix deps.
   }, [clientAPIKey]);
 
   return { lastUpdated, lastUpdatedError, authed, notifications };

@@ -10,6 +10,7 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
+import { BucketAccess } from './BucketAccess';
 
 const ObjectList = React.lazy(() => import('./BucketDetail'));
 // const Access = React.lazy(() => import('./BucketAccess'));
@@ -40,10 +41,10 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
       title: 'Objects',
       routeName: `${props.match.url}/objects`
     },
-    // {
-    //   title: 'Access',
-    //   routeName: `${props.match.url}/access`
-    // },
+    {
+      title: 'Access',
+      routeName: `${props.match.url}/access`
+    },
     {
       title: 'SSL/TLS',
       routeName: `${props.match.url}/ssl`
@@ -90,10 +91,10 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
             <SafeTabPanel index={0}>
               <ObjectList {...props} />
             </SafeTabPanel>
-            {/* <SafeTabPanel index={1}>
-              <Access />
-            </SafeTabPanel> */}
             <SafeTabPanel index={1}>
+              <BucketAccess bucketName={bucketName} clusterId={clusterId} />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
               <BucketSSL bucketName={bucketName} clusterId={clusterId} />
             </SafeTabPanel>
           </TabPanels>

@@ -21,9 +21,7 @@ import { formatEventWithUsername } from './Event.helpers';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
 const useStyles = makeStyles(() => ({
-  message: {
-    wordBreak: 'break-all'
-  }
+  message: {}
 }));
 
 interface ExtendedEvent extends Event {
@@ -58,9 +56,7 @@ export const EventRow: React.FC<CombinedProps> = props => {
     entityId,
     duration: event.duration,
     username: event.username,
-    action: event.action,
-    // This references the message field we get from API, whereas the generic 'message' prop is constructed by Cloud above.
-    eventMessage: event.message
+    action: event.action
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
@@ -76,7 +72,6 @@ export interface RowProps {
   created: string;
   username: string | null;
   duration: Event['duration'];
-  eventMessage: string | null;
 }
 
 export const Row: React.FC<RowProps> = props => {
@@ -91,8 +86,7 @@ export const Row: React.FC<RowProps> = props => {
     type,
     created,
     username,
-    duration,
-    eventMessage
+    duration
   } = props;
 
   /** Some event types may not be handled by our system (or new types
@@ -145,9 +139,6 @@ export const Row: React.FC<RowProps> = props => {
       </TableCell>
       <TableCell parentColumn={'When'} data-qa-event-created-cell>
         <DateTimeDisplay value={created} />
-      </TableCell>
-      <TableCell parentColumn={'Message'}>
-        <Typography variant="body1">{eventMessage}</Typography>
       </TableCell>
     </TableRow>
   );

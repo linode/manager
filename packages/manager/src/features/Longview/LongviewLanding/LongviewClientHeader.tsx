@@ -113,9 +113,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
 
   const formattedlastUpdatedTime =
     longviewClientLastUpdated !== undefined
-      ? `Last updated ${formatDate(longviewClientLastUpdated, {
-          humanizeCutoff: 'never'
-        })}`
+      ? `Last updated ${formatDate(longviewClientLastUpdated)}`
       : 'Latest update time not available';
 
   /**

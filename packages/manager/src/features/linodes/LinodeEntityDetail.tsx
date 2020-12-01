@@ -17,7 +17,6 @@ import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import List from 'src/components/core/List';
-import ListItem from 'src/components/core/ListItem';
 import {
   makeStyles,
   Theme,
@@ -40,7 +39,7 @@ import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrD
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useImages from 'src/hooks/useImages';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -48,6 +47,7 @@ import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import RenderIPs from './RenderIPs';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -266,10 +266,6 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   actionItemsOuter: {
     display: 'flex',
     alignItems: 'center'
-  },
-  progressDisplay: {
-    display: 'inline-block',
-    fontFamily: theme.font.bold
   }
 }));
 
@@ -643,18 +639,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
       </Grid>
       <Grid item>
         <List className={classes.ipList}>
-          {ipv4.slice(0, 3).map(thisIP => {
-            return <ListItem key={thisIP}>{thisIP}</ListItem>;
-          })}
-          {ipv6 && <ListItem>{ipv6}</ListItem>}
-          {ipv4.length > 3 && (
-            <>
-              ... plus{' '}
-              <Link to={`linodes/${linodeId}/networking`}>
-                {ipv4.length - 3} more
-              </Link>{' '}
-            </>
-          )}
+          <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
         </List>
       </Grid>
       <Grid item>
@@ -768,7 +753,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const classes = useFooterStyles();
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
 
   const addTag = React.useCallback(
@@ -822,8 +807,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
           <Hidden xsDown>
             <Typography className={classes.linodeCreated}>
-              Created{' '}
-              {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+              Created {formatDate(linodeCreated)}
             </Typography>
           </Hidden>
         </div>
@@ -831,8 +815,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Hidden smUp>
         <Grid item xs={12}>
           <Typography className={classes.linodeCreated}>
-            Created{' '}
-            {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+            Created {formatDate(linodeCreated)}
           </Typography>
         </Grid>
       </Hidden>

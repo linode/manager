@@ -71,9 +71,9 @@ export const ResultGroup: React.FC<CombinedProps> = props => {
   const [initial, hidden] =
     results.length > groupSize ? splitAt(groupSize, results) : [results, []];
 
-    const Table = flags.cmr ? Table_CMR : Table_PreCMR;
-    const TableRow = flags.cmr ? TableRow_CMR : TableRow_PreCMR;
-    const TableCell = flags.cmr ? TableCell_CMR : TableCell_PreCMR;
+  const Table = flags.cmr ? Table_CMR : Table_PreCMR;
+  const TableRow = flags.cmr ? TableRow_CMR : TableRow_PreCMR;
+  const TableCell = flags.cmr ? TableCell_CMR : TableCell_PreCMR;
 
   return (
     <Grid item className={classes.root}>
@@ -91,9 +91,11 @@ export const ResultGroup: React.FC<CombinedProps> = props => {
         <Table aria-label="Search Results">
           <TableHead>
             <TableRow>
-              {!flags.cmr && <Hidden smDown>
-                <TableCell className={classes.emptyCell} />
-              </Hidden>}
+              {!flags.cmr && (
+                <Hidden smDown>
+                  <TableCell className={classes.emptyCell} />
+                </Hidden>
+              )}
               <TableCell className={classes.headerCell}>Label</TableCell>
               <TableCell className={classes.headerCell}>Region</TableCell>
               <Hidden smDown>

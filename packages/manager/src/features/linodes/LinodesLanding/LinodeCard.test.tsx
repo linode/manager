@@ -144,7 +144,7 @@ describe('LinodeRow', () => {
     expect(getAllByRole('listitem')).toHaveLength(1);
   });
 
-  describe('when linodeNotifications is not empty', () => {
+  describe.skip('when linodeNotifications is not empty', () => {
     it('#TODO #REFACTOR should render a Flag', () => {
       const wrapper = shallow(
         <RenderFlag

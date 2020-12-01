@@ -13,7 +13,7 @@ describe('DateTimeDisplay component', () => {
       const props = { value: APIDate, humanizeCutoff: undefined };
       const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
 
-      getByText('2018-07-20 04:23:17');
+      getByText('2018-07-20 04:23');
     });
   });
 

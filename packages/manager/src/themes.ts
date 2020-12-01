@@ -67,7 +67,8 @@ const cmrIconColors = {
   iOrange: '#ffb31a',
   iRed: '#cf1e1e',
   // Offline status
-  iGrey: '#dbdde1'
+  iGrey: '#dbdde1',
+  iCheckmark: '#fff'
 };
 
 const primaryColors = {
@@ -394,19 +395,19 @@ const darkThemeOptions = {
         boxShadow: '0 0 5px #222'
       }
     },
-    MuiExpansionPanel: {
+    MuiAccordion: {
       root: {
         '& table': {
           border: `1px solid ${primaryColors.divider}`
         }
       }
     },
-    MuiExpansionPanelDetails: {
+    MuiAccordionDetails: {
       root: {
         backgroundColor: '#32363c'
       }
     },
-    MuiExpansionPanelSummary: {
+    MuiAccordionSummary: {
       root: {
         '&$focused': {
           backgroundColor: '#111111'
@@ -469,6 +470,7 @@ const darkThemeOptions = {
     MuiFormHelperText: {
       root: {
         color: '#c9cacb',
+        lineHeight: 1.25,
         '&$error': {
           color: '#ca0813'
         }

@@ -174,7 +174,6 @@ const Notice: React.FC<CombinedProps> = props => {
   ) : (
     <Typography
       {...typeProps}
-      component="div"
       onClick={onClick}
       className={`${classes.noticeText} noticeText`}
     >

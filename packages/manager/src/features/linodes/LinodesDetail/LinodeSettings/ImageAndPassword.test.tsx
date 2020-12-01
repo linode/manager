@@ -1,7 +1,9 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { normalizedImages } from 'src/__data__/images';
+import { imageFactory, normalizeEntities } from 'src/factories';
+
+const normalizedImages = normalizeEntities(imageFactory.buildList(10));
 
 import { ImageAndPassword } from './ImageAndPassword';
 

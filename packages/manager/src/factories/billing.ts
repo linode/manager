@@ -1,5 +1,12 @@
 import * as Factory from 'factory.ts';
-import { InvoiceItem, Payment, Invoice } from '@linode/api-v4/lib/account';
+import { APIWarning } from '@linode/api-v4/lib/types';
+import {
+  InvoiceItem,
+  Payment,
+  PaymentResponse,
+  PaypalResponse,
+  Invoice
+} from '@linode/api-v4/lib/account';
 
 export const invoiceItemFactory = Factory.Sync.makeFactory<InvoiceItem>({
   label: Factory.each(i => `Nanode 1GB - my-linode-${i} (${i})`),
@@ -34,4 +41,24 @@ export const invoiceFactory = Factory.Sync.makeFactory<Invoice>({
   tax: 1,
   total: 6,
   label: Factory.each(i => `Invoice #${i}`)
+});
+
+export const warningFactory = Factory.Sync.makeFactory<APIWarning>({
+  title:
+    'Your payment has been processed but we encountered an error releasing your resources.',
+  detail:
+    'Object Storage could not be reactivated, please open a support ticket.'
+});
+
+export const creditPaymentResponseFactory = Factory.Sync.makeFactory<
+  PaymentResponse
+>({
+  id: Factory.each(i => i),
+  usd: 10,
+  date: '2020-01-01T12:00:00',
+  warnings: warningFactory.buildList(1)
+});
+
+export const paypalResponseFactory = Factory.Sync.makeFactory<PaypalResponse>({
+  warnings: warningFactory.buildList(1)
 });

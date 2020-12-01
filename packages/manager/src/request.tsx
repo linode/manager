@@ -5,12 +5,7 @@ import * as React from 'react';
 import { AccountActivationError } from 'src/components/AccountActivation';
 import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
-import {
-  ACCESS_TOKEN,
-  API_ROOT,
-  DEFAULT_ERROR_MESSAGE,
-  LOGIN_ROOT
-} from 'src/constants';
+import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
@@ -138,22 +133,14 @@ export const getURL = ({ url, baseURL }: AxiosRequestConfig) => {
     return;
   }
 
-  const isLogin = baseURL.includes('login');
-
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
-  // If we have environment overrides in local storage, use those.
-  if (localStorageOverrides) {
-    return isLogin
-      ? url.replace(baseURL, localStorageOverrides.loginRoot)
-      : url.replace(baseURL, localStorageOverrides.apiRoot);
-  }
+  const apiRoot = localStorageOverrides?.apiRoot ?? API_ROOT;
 
-  // Override the baseURL (from @linode/api-v4) with the one we have defined
+  // If we have environment overrides in local storage, use those. Otherwise,
+  // override the baseURL (from @linode/api-v4) with the one we have defined
   // in the environment (via .env file).
-  return isLogin
-    ? url.replace(baseURL, LOGIN_ROOT)
-    : url.replace(baseURL, API_ROOT);
+  return url.replace(baseURL, apiRoot);
 };
 
 // A user's external UUID can be found on the response to /account.

@@ -76,22 +76,19 @@ const styles = (theme: Theme) =>
     regionCell: {
       width: '100%',
       [theme.breakpoints.up('md')]: {
-        width: '15%',
-
+        width: '15%'
       }
     },
     createdCell: {
       width: '100%',
       [theme.breakpoints.up('md')]: {
-        width: '20%',
-
+        width: '20%'
       }
     },
     tagCell: {
       width: '100%',
       [theme.breakpoints.up('md')]: {
-        width: '30%',
-
+        width: '30%'
       }
     },
     icon: {
@@ -106,8 +103,7 @@ const styles = (theme: Theme) =>
         stroke: theme.bg.main
       }
     },
-    labelRow: {
-    },
+    labelRow: {},
     resultBody: {},
     iconGridCell: {
       display: 'flex',
@@ -155,22 +151,25 @@ export const ResultRow: React.FC<CombinedProps> = props => {
       data-qa-result-row={result.label}
       ariaLabel={result.label}
     >
-      {!flags.cmr && <Hidden smDown>
+      {!flags.cmr && (
+        <Hidden smDown>
           <TableCell className={classes.iconTableCell}>
             <Grid item className={classes.iconGridCell}>
               <EntityIcon
                 variant={icon}
-                status={status && status}
+                status={status ? status : undefined}
                 marginTop={3}
                 loading={status && linodeInTransition(status)}
               />
             </Grid>
           </TableCell>
-        </Hidden>}
-      <TableCell className={classNames({
-        [classes.labelCell]: true,
-        [classes.labelCellCMR]: flags.cmr,
-        [classes.preCMRCell]: !flags.cmr
+        </Hidden>
+      )}
+      <TableCell
+        className={classNames({
+          [classes.labelCell]: true,
+          [classes.labelCellCMR]: flags.cmr,
+          [classes.preCMRCell]: !flags.cmr
         })}
         parentColumn="Label"
       >
@@ -183,41 +182,42 @@ export const ResultRow: React.FC<CombinedProps> = props => {
             })}
             title={result.label}
           >
-           {result.label}
+            {result.label}
           </Link>
           <Typography variant="body1">{result.data.description}</Typography>
         </div>
       </TableCell>
-      <TableCell className={classNames({
-        [classes.regionCell]: true,
-        [classes.preCMRCell]: !flags.cmr
+      <TableCell
+        className={classNames({
+          [classes.regionCell]: true,
+          [classes.preCMRCell]: !flags.cmr
         })}
         parentColumn="Region"
       >
         {result.data.region && <RegionIndicator region={result.data.region} />}
       </TableCell>
       <Hidden smDown>
-        <TableCell className={classNames({
-          [classes.createdCell]: true,
-          [classes.preCMRCell]: !flags.cmr
+        <TableCell
+          className={classNames({
+            [classes.createdCell]: true,
+            [classes.preCMRCell]: !flags.cmr
           })}
           parentColumn="Created"
         >
           {result.data.created && (
-            <React.Fragment>
-              <Typography>
-                <DateTimeDisplay value={result.data.created} />
-              </Typography>
-            </React.Fragment>
+            <Typography>
+              <DateTimeDisplay value={result.data.created} />
+            </Typography>
           )}
         </TableCell>
 
-        <TableCell className={classNames({
-        [classes.tagCell]: true,
-        [classes.preCMRCell]: !flags.cmr
-        })}
-        parentColumn="Tags"
-      >
+        <TableCell
+          className={classNames({
+            [classes.tagCell]: true,
+            [classes.preCMRCell]: !flags.cmr
+          })}
+          parentColumn="Tags"
+        >
           <Tags tags={result.data.tags} data-testid={'result-tags'} />
         </TableCell>
       </Hidden>

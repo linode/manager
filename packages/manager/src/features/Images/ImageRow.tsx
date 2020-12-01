@@ -7,7 +7,7 @@ import LinearProgress from 'src/components/LinearProgress';
 import RenderGuard from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/core/TableRow';
-import { formatDate } from 'src/utilities/format-date-iso8601';
+import { formatDate } from 'src/utilities/formatDate';
 import ActionMenu, { Handlers } from './ImagesActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({

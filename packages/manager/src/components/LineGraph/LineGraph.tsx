@@ -248,8 +248,8 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     if (inputEl.current) {
       if (chartInstance.current) {
         chartInstance.current.destroy();
-        chartInstance.current = null;
       }
+
       chartInstance.current = new Chart(inputEl.current.getContext('2d'), {
         type: 'line',
         data: {

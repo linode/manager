@@ -11,8 +11,42 @@ exports[`HighlightedMarkdown component should highlight text consistently 1`] = 
   
 
   <pre>
-    <code>
-      const x = function() { return true; }
+    <code
+      class="hljs javascript"
+    >
+      <span
+        class="hljs-keyword"
+      >
+        const
+      </span>
+       x = 
+      <span
+        class="hljs-function"
+      >
+        <span
+          class="hljs-keyword"
+        >
+          function
+        </span>
+        (
+        <span
+          class="hljs-params"
+        />
+        ) 
+      </span>
+      { 
+      <span
+        class="hljs-keyword"
+      >
+        return
+      </span>
+       
+      <span
+        class="hljs-literal"
+      >
+        true
+      </span>
+      ; }
 
     </code>
   </pre>

@@ -67,11 +67,23 @@ describe('OrderBy', () => {
         }
       }
     };
+    it('should return values from query params if available', () => {
+      expect(
+        getInitialValuesFromUserPreferences(
+          '',
+          preferences,
+          { order: 'desc', orderBy: 'test-key' },
+          'default',
+          'asc'
+        )
+      ).toEqual({ order: 'desc', orderBy: 'test-key' });
+    });
     it('should return values from preferences if the preference key exists', () => {
       expect(
         getInitialValuesFromUserPreferences(
           'listening-services',
           preferences,
+          {},
           'default',
           'desc'
         )
@@ -83,6 +95,7 @@ describe('OrderBy', () => {
         getInitialValuesFromUserPreferences(
           'listening-services',
           {},
+          {},
           'default',
           'asc'
         )
@@ -91,7 +104,13 @@ describe('OrderBy', () => {
 
     it('should return the defaults if there is no preference key provided', () => {
       expect(
-        getInitialValuesFromUserPreferences('', preferences, 'default', 'asc')
+        getInitialValuesFromUserPreferences(
+          '',
+          preferences,
+          {},
+          'default',
+          'asc'
+        )
       ).toEqual({ order: 'asc', orderBy: 'default' });
     });
   });

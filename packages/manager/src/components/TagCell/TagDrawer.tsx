@@ -19,8 +19,8 @@ interface Props {
   entityLabel: string;
   tags: string[];
   open: boolean;
-  addTag: (newTag: string) => Promise<void>;
-  deleteTag: (tag: string) => Promise<void>;
+  addTag: (newTag: string) => Promise<any>;
+  deleteTag: (tag: string) => Promise<any>;
   onClose: () => void;
 }
 
