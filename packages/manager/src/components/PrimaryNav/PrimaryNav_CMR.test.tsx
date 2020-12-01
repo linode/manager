@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import { withManaged, withoutManaged } from 'src/utilities/testHelpersStore';
-import PrimaryNav_CMR, { PrimaryNavProps } from './PrimaryNav_CMR';
+import PrimaryNav_CMR from './PrimaryNav_CMR';
 
-const props: PrimaryNavProps = {
+const props = {
   closeMenu: jest.fn(),
   toggleTheme: jest.fn(),
+  toggleSpacing: jest.fn(),
   isCollapsed: false
 };
 
