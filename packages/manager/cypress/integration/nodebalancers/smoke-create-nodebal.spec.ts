@@ -23,7 +23,7 @@ const createNodeBalancerWithUI = nodeBal => {
     .click()
     .type(testNodeBalTag);
   // this will create the NB in newark, where the default Linode was created
-  cy.contains('Regions')
+  cy.contains('Select a Region')
     .click()
     .type('new {enter}');
 
