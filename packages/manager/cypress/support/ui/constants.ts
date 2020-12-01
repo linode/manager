@@ -19,6 +19,8 @@ const waitDoubleRerender = () => {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(500);
 };
+
+export const selectRegionString = 'Select a Region';
 // List of Routes and validator of the route
 export const pages = [
   {

@@ -1,4 +1,5 @@
 import { makeTestLabel } from '../../support/api/common';
+import { selectRegionString } from '../../support/ui/constants';
 
 const multipleClick = (
   subject: Cypress.Chainable,
@@ -38,7 +39,7 @@ describe('LKE Create Cluster', () => {
       .click()
       .clear()
       .type(makeTestLabel());
-    cy.contains('Select a Region')
+    cy.contains(selectRegionString)
       .click()
       // .clear()
       .type('Newar{enter}');
