@@ -42,12 +42,23 @@ const styles = (theme: Theme) =>
 
 interface BucketTableRowProps extends ObjectStorageBucket {
   onRemove: () => void;
+  onDetails: () => void;
 }
 
 type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;
 
 export const BucketTableRow: React.FC<CombinedProps> = props => {
-  const { classes, label, cluster, hostname, created, size, onRemove } = props;
+  const {
+    classes,
+    label,
+    cluster,
+    hostname,
+    created,
+    size,
+    onRemove,
+    objects,
+    onDetails
+  } = props;
 
   return (
     <TableRow
@@ -84,11 +95,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
 
       <Hidden smDown>
         <TableCell>
-          <DateTimeDisplay
-            value={created}
-            humanizeCutoff="month"
-            data-qa-created
-          />
+          <DateTimeDisplay value={created} data-qa-created />
         </TableCell>
       </Hidden>
 
@@ -98,9 +105,18 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
         </Typography>
       </TableCell>
 
+      <Hidden smDown>
+        <TableCell>
+          <Typography variant="body2" data-qa-size>
+            {objects}
+          </Typography>
+        </TableCell>
+      </Hidden>
+
       <TableCell>
         <BucketActionMenu
           onRemove={onRemove}
+          onDetails={onDetails}
           label={label}
           cluster={cluster}
           data-qa-action-menu

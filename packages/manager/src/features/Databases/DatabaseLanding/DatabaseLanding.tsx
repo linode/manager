@@ -285,7 +285,9 @@ const DatabaseLanding: React.FC<{}> = _ => {
         initialOrder={{ order: 'asc', orderBy: 'label' }}
       />
       <DeletionDialog
+        typeToConfirm
         label={dialog.entityLabel ?? ''}
+        entity="database"
         error={dialog.error}
         open={dialog.isOpen}
         loading={dialog.isLoading}

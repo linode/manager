@@ -7,12 +7,11 @@ import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import DeletionDialog from 'src/components/DeletionDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
 import {
@@ -59,6 +58,8 @@ import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DomainRow from './DomainTableRow';
 import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
+
+const DOMAIN_CREATE_ROUTE = '/domains/create';
 
 type ClassNames =
   | 'root'
@@ -116,13 +117,15 @@ interface State {
   selectedDomainLabel: string;
   selectedDomainID?: number;
   removeDialogOpen: boolean;
+  removeDialogLoading: boolean;
+  removeDialogError?: string;
   disableDialogOpen: boolean;
 }
 
 interface Props {
   /** purely so we can force a preference to get the unit tests to pass */
   shouldGroupDomains?: boolean;
-  // Since Slave Domains do not have a Detail page, we allow the consumer to
+  // Since secondary Domains do not have a Detail page, we allow the consumer to
   // render this component with the "Edit Domain" drawer already opened.
   domainForEditing?: {
     domainId: number;
@@ -186,6 +189,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     createDrawerMode: 'create',
     createDrawerOpen: false,
     removeDialogOpen: false,
+    removeDialogLoading: false,
     selectedDomainLabel: '',
     disableDialogOpen: false
   };
@@ -246,47 +250,29 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     }
   };
 
-  getActions = () => {
-    return (
-      <ActionsPanel>
-        <Button
-          buttonType="cancel"
-          onClick={this.closeRemoveDialog}
-          data-qa-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="secondary"
-          destructive
-          onClick={this.removeDomain}
-          data-qa-submit
-        >
-          Confirm
-        </Button>
-      </ActionsPanel>
-    );
-  };
-
   removeDomain = () => {
     const { selectedDomainID } = this.state;
-    const { enqueueSnackbar, deleteDomain } = this.props;
+    const { deleteDomain } = this.props;
+    this.setState({ removeDialogLoading: true, removeDialogError: undefined });
     if (selectedDomainID) {
       deleteDomain({ domainId: selectedDomainID })
         .then(() => {
           this.closeRemoveDialog();
+          this.setState({ removeDialogLoading: false });
         })
-        .catch(() => {
-          this.closeRemoveDialog();
-          /** @todo render this error inside the modal */
-          enqueueSnackbar('Error when removing domain', {
-            variant: 'error'
+        .catch(e => {
+          this.setState({
+            removeDialogLoading: false,
+            removeDialogError: getAPIErrorOrDefault(
+              e,
+              'Error deleting Domain.'
+            )[0].reason
           });
         });
     } else {
-      this.closeRemoveDialog();
-      enqueueSnackbar('Error when removing domain', {
-        variant: 'error'
+      this.setState({
+        removeDialogLoading: false,
+        removeDialogError: 'Error deleting Domain.'
       });
     }
   };
@@ -325,6 +311,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   openRemoveDialog = (domain: string, domainId: number) => {
     this.setState({
       removeDialogOpen: true,
+      removeDialogError: undefined,
       selectedDomainLabel: domain,
       selectedDomainID: domainId
     });
@@ -338,6 +325,10 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
 
   openCreateDomainDrawer = () => {
     this.props.openForCreating('Created from Domain Landing');
+  };
+
+  navigateToCreate = () => {
+    this.props.history.push(DOMAIN_CREATE_ROUTE);
   };
 
   render() {
@@ -397,7 +388,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return (
         <React.Fragment>
           <RenderEmpty
-            onCreateDomain={this.openCreateDomainDrawer}
+            onCreateDomain={this.navigateToCreate}
             onImportZone={this.openImportZoneDrawer}
           />
           <DomainZoneImportDrawer
@@ -478,7 +469,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       </Button>
                     }
                     entity="Domain"
-                    onAddNew={this.openCreateDomainDrawer}
+                    onAddNew={this.navigateToCreate}
                     iconType="domain"
                     docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
                   />
@@ -531,7 +522,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         <Grid item className="pt0">
                           <AddNewLink
                             data-testid="create-domain"
-                            onClick={this.openCreateDomainDrawer}
+                            onClick={this.navigateToCreate}
                             label="Add a Domain"
                           />
                         </Grid>
@@ -573,14 +564,16 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           closeDialog={() => this.setState({ disableDialogOpen: false })}
           open={this.state.disableDialogOpen}
         />
-        <ConfirmationDialog
+        <DeletionDialog
+          typeToConfirm
+          entity="domain"
           open={this.state.removeDialogOpen}
-          title={`Remove ${this.state.selectedDomainLabel}`}
+          label={this.state.selectedDomainLabel}
+          loading={this.state.removeDialogLoading}
+          error={this.state.removeDialogError}
           onClose={this.closeRemoveDialog}
-          actions={this.getActions}
-        >
-          <Typography>Are you sure you want to remove this domain?</Typography>
-        </ConfirmationDialog>
+          onDelete={this.removeDomain}
+        />
       </React.Fragment>
     );
   }

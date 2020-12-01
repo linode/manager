@@ -82,7 +82,7 @@ const ObjectTableRow: React.FC<Props> = props => {
       </TableCell>
       <TableCell noWrap>{readableBytes(objectSize).formatted}</TableCell>
       <TableCell noWrap>
-        <DateTimeDisplay value={objectLastModified} humanizeCutoff="never" />
+        <DateTimeDisplay value={objectLastModified} />
       </TableCell>
       <TableCell>
         <ObjectActionMenu

@@ -3,7 +3,6 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import {
@@ -230,7 +229,6 @@ export class SupportTicketsLanding extends React.PureComponent<
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Support Tickets" />
-        <AbuseTicketBanner />
         <Grid
           container
           justify="space-between"

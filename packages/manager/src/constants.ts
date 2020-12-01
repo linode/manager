@@ -67,19 +67,12 @@ export const LOG_PERFORMANCE_METRICS =
   !isProductionBuild &&
   process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
 
-// Features
-export const isObjectStorageEnabledForEnvironment =
-  process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED === 'true';
-
-export const isKubernetesEnabledForEnvironment =
-  process.env.REACT_APP_KUBERNETES_ENABLED === 'true';
-
 export const DISABLE_EVENT_THROTTLE =
   Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
 
 // read about luxon formats https://moment.github.io/luxon/docs/manual/formatting.html
 // this format is not ISO
-export const DATETIME_DISPLAY_FORMAT = 'yyyy-MM-dd HH:mm:ss';
+export const DATETIME_DISPLAY_FORMAT = 'yyyy-MM-dd HH:mm';
 // ISO 8601 formats
 export const ISO_DATE_FORMAT = 'yyyy-MM-dd';
 export const ISO_DATETIME_NO_TZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";

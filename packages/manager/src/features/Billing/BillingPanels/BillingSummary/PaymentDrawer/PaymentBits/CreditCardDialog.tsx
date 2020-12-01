@@ -51,6 +51,7 @@ class DialogActions extends React.PureComponent<Actions> {
           loading={this.props.isMakingPayment}
           onClick={this.props.executePayment}
           data-qa-submit
+          data-testid="credit-card-submit"
         >
           Confirm Payment
         </Button>

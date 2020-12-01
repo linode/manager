@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { formatDate } from 'src/utilities/formatDate';
 import Hidden from 'src/components/core/Hidden';
-import ExtendedExpansionPanel from 'src/components/ExtendedExpansionPanel';
+import ExtendedAccordion from 'src/components/ExtendedAccordion';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -141,7 +141,7 @@ export const NotificationSection: React.FC<Props> = props => {
       </Hidden>
 
       <Hidden mdUp>
-        <ExtendedExpansionPanel
+        <ExtendedAccordion
           heading={header}
           headingNumberCount={content.length > 0 ? content.length : undefined}
           renderMainContent={innerContent}
@@ -218,11 +218,7 @@ export const ContentRow: React.FC<{
   return (
     <div className={classes.notificationItem}>
       <div style={{ width: item.timeStamp ? '70%' : '100%' }}>{item.body}</div>
-      {item.timeStamp && (
-        <Typography>
-          {formatDate(item.timeStamp, { humanizeCutoff: 'week' })}
-        </Typography>
-      )}
+      {item.timeStamp && <Typography>{formatDate(item.timeStamp)}</Typography>}
     </div>
   );
 });

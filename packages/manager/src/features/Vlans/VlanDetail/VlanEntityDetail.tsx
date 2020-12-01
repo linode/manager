@@ -245,7 +245,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
           <Hidden xsDown>
             <Typography className={classes.created}>
-              Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+              Created {formatDate(created)}
             </Typography>
           </Hidden>
         </div>
@@ -253,7 +253,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Hidden smUp>
         <Grid item xs={12}>
           <Typography className={classes.created}>
-            Created {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+            Created {formatDate(created)}
           </Typography>
         </Grid>
       </Hidden>

@@ -327,7 +327,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Image', key: 'image' },
       { label: 'Region', key: 'region' },
       { label: 'Created', key: 'created' },
-      { label: 'Most Recent Backup', key: 'backups.last_successful' },
+      { label: 'Last Backup', key: 'lastBackup' },
       { label: 'Tags', key: 'tags' }
     ];
 
@@ -344,7 +344,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       clickable: true
     };
 
-    const displayBackupsCTA = backupsCTA && !BackupsCtaDismissed.get();
+    const displayBackupsCTA =
+      !this.props.isVLAN && backupsCTA && !BackupsCtaDismissed.get();
 
     return (
       <React.Fragment>
@@ -658,8 +659,16 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                           }
                                         : { when: null };
 
+                                      const lastBackup =
+                                        e.backups.last_successful === null
+                                          ? e.backups.enabled
+                                            ? 'Scheduled'
+                                            : 'Never'
+                                          : e.backups.last_successful;
+
                                       return {
                                         ...e,
+                                        lastBackup,
                                         maintenance,
                                         linodeDescription: getLinodeDescription(
                                           e.label,

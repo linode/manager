@@ -20,11 +20,12 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TagCell from 'src/components/TagCell';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import {
+  getProgressOrDefault,
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { linodeMaintenanceWindowString } from '../../utilities';
@@ -118,7 +119,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     isVLAN
   } = props;
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
 
   const loading = linodeInTransition(status, recentEvent);
@@ -213,21 +214,19 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       >
         {!maintenanceStartTime ? (
           loading ? (
-            recentEvent && (
-              <>
-                <StatusIcon status={iconStatus} />
-                <button
-                  className={classes.statusLink}
-                  onClick={() => openNotificationDrawer()}
-                >
-                  <ProgressDisplay
-                    className={classes.progressDisplay}
-                    progress={recentEvent.percent_complete}
-                    text={transitionText(status, id, recentEvent)}
-                  />
-                </button>
-              </>
-            )
+            <>
+              <StatusIcon status={iconStatus} />
+              <button
+                className={classes.statusLink}
+                onClick={() => openNotificationDrawer()}
+              >
+                <ProgressDisplay
+                  className={classes.progressDisplay}
+                  progress={getProgressOrDefault(recentEvent)}
+                  text={transitionText(status, id, recentEvent)}
+                />
+              </button>
+            </>
           ) : (
             <>
               <StatusIcon status={iconStatus} />
