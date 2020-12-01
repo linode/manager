@@ -7,7 +7,8 @@ import {
   LineController,
   LinearScale,
   PointElement,
-  TimeScale
+  TimeScale,
+  Tooltip
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
 
@@ -36,7 +37,8 @@ Chart.register(
   LineElement,
   LinearScale,
   PointElement,
-  TimeScale
+  TimeScale,
+  Tooltip
 );
 export interface DataSet {
   label: string;
