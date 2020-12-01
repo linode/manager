@@ -60,7 +60,7 @@ interface ContextProps {
   linodeId: number;
   linodeRegion?: string;
   linodeLabel: string;
-  linodeDisks?: ExtendedDisk[];
+  linodeDisks: ExtendedDisk[];
   linodeStatus: LinodeStatus;
   permissions: GrantLevel;
 }
@@ -153,7 +153,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
   componentDidUpdate(prevProps: CombinedProps) {
     if (
       prevProps?.linodeDisks?.length === 0 &&
-      this.props.linodeDisks!.length > 0
+      this.props.linodeDisks.length > 0
     ) {
       this.setState({
         devices: {
