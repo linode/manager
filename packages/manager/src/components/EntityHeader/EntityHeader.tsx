@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between'
   },
   breadCrumbDetailLanding: {
-    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
     margin: 0,
     padding: 0,
     paddingLeft: theme.spacing(),
