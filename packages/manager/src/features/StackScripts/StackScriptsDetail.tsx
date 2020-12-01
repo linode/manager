@@ -42,6 +42,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Grant } from '@linode/api-v4/lib/account/types';
 import { MapState } from 'src/store/types';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 
 interface DialogVariantProps {
   open: boolean;
@@ -89,15 +90,17 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     cta: {
-      marginTop: theme.spacing(1),
-      [theme.breakpoints.down('sm')]: {
-        margin: 0,
-        display: 'flex',
-        flexBasis: '100%'
+      display: 'flex',
+      alignItems: 'center',
+      [theme.breakpoints.down(1100)]: {
+        marginRight: theme.spacing()
       }
     },
     button: {
-      marginBottom: theme.spacing(1)
+      marginLeft: theme.spacing(4),
+      [theme.breakpoints.down(1100)]: {
+        marginLeft: theme.spacing(1.5)
+      }
     },
     userName: {
       ...theme.typography.h1
@@ -136,7 +139,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
     }
   };
 
-  //TODO do we even need this?
+  // TODO do we even need this?
   mounted: boolean = false;
 
   componentDidMount() {
@@ -442,8 +445,13 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             {this.renderMakePublicDialog()}
           </>
         ) : ( */}
-        <Grid container justify="space-between" alignItems="center">
-          <Grid item>
+        <Grid
+          container
+          className="m0"
+          alignItems="center"
+          justify="space-between"
+        >
+          <Grid item className="px0">
             <Breadcrumb
               pathname={this.props.location.pathname}
               labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
@@ -456,7 +464,10 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
               ]}
             />
           </Grid>
-          <Grid item className={classes.cta}>
+          <Grid item className={`${classes.cta} px0`}>
+            {this.props.flags.cmr && (
+              <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
+            )}
             <Button
               buttonType="primary"
               className={classes.button}

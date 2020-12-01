@@ -10,6 +10,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Grid from 'src/components/Grid';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -104,11 +105,12 @@ const LinodeControls: React.FC<CombinedProps> = props => {
   return (
     <Grid
       container
-      justify="space-between"
+      className="m0"
       alignItems="flex-end"
+      justify="space-between"
       data-qa-linode={linode.label}
     >
-      <Grid item>
+      <Grid item className="px0">
         <Breadcrumb
           pathname={props.location.pathname}
           firstAndLastOnly
@@ -127,6 +129,9 @@ const LinodeControls: React.FC<CombinedProps> = props => {
           /* Override with any custom breadcrumb props that may have been passed in */
           {...breadcrumbProps}
         />
+      </Grid>
+      <Grid item className="px0">
+        <DocumentationButton href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/" />
       </Grid>
     </Grid>
   );

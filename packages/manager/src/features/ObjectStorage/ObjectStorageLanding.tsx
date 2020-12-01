@@ -10,6 +10,7 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
+import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
@@ -119,14 +120,22 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
+      <Box
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <Breadcrumb
           pathname={props.location.pathname}
           labelTitle="Object Storage"
           removeCrumbX={1}
         />
-
-        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
+        {flags.cmr ? (
+          <DocumentationButton_CMR href="https://www.linode.com/docs/platform/object-storage/" />
+        ) : (
+          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
+        )}
       </Box>
       <Tabs
         index={Math.max(

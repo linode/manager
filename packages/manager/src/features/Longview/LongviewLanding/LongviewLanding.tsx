@@ -15,8 +15,10 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
+import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useFlags from 'src/hooks/useFlags';
 
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
@@ -32,6 +34,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
     () => getLongviewSubscriptions().then(response => response.data),
     []
   );
+  const flags = useFlags();
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
@@ -55,15 +58,26 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
 
   return (
     <React.Fragment>
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
+      <Box
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <Breadcrumb
           pathname={props.location.pathname}
           labelTitle="Longview"
           removeCrumbX={1}
         />
-        <DocumentationButton
-          href={'https://www.linode.com/docs/platform/longview/longview/'}
-        />
+        {flags.cmr ? (
+          <DocumentationButton_CMR
+            href={'https://www.linode.com/docs/platform/longview/longview/'}
+          />
+        ) : (
+          <DocumentationButton
+            href={'https://www.linode.com/docs/platform/longview/longview/'}
+          />
+        )}
       </Box>
       <Tabs
         index={Math.max(

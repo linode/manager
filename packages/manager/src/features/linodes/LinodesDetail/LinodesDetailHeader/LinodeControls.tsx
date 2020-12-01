@@ -133,13 +133,14 @@ const LinodeControls: React.FC<CombinedProps> = props => {
       </Grid>
       <Grid item className={classes.controls}>
         <Button
-          onClick={() => lishLaunch(linode.id)}
+          buttonType="secondary"
           className={classes.launchButton}
-          data-qa-launch-console
           disableFocusRipple={true}
           disableRipple={true}
           disabled={disabled}
+          onClick={() => lishLaunch(linode.id)}
           aria-describedby="new-window"
+          data-qa-launch-console
         >
           Launch Console
         </Button>
