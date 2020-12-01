@@ -45,6 +45,7 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
     }
 
     return (
+      // eslint-disable-next-line
       <React.Fragment>
         {data.map(eachDevice => {
           return (
@@ -56,16 +57,10 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
                 {eachDevice.last_remote_addr}
               </TableCell>
               <TableCell parentColumn="Last Used">
-                <DateTimeDisplay
-                  value={eachDevice.last_authenticated}
-                  humanizeCutoff="month"
-                />
+                <DateTimeDisplay value={eachDevice.last_authenticated} />
               </TableCell>
               <TableCell parentColumn="Expires">
-                <DateTimeDisplay
-                  value={eachDevice.expiry}
-                  humanizeCutoff="month"
-                />
+                <DateTimeDisplay value={eachDevice.expiry} />
               </TableCell>
               <TableCell>
                 <UntrustButton

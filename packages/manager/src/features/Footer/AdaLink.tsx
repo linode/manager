@@ -42,7 +42,9 @@ const AdaLink: React.FC<CombinedProps> = props => {
      * Script is included in index.html
      */
     if ('AdaChaperone' in window) {
-      ada = new (window as any).AdaChaperone('linode');
+      ada = new (window as any).AdaChaperone('linode', {
+        customStyles: '#topBar > div:nth-child(2) > div { margin-right: 2.5em }'
+      });
     } else {
       setAdaError(
         'There was an issue loading the support bot. Please try again later.'
@@ -79,7 +81,4 @@ const AdaLink: React.FC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(AdaLink);
+export default compose<CombinedProps, Props>(React.memo, styled)(AdaLink);

@@ -503,7 +503,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         </TableCell>
         <TableCell>
           <Typography variant="body1" data-qa-token-created>
-            <DateTimeDisplay value={token.created} humanizeCutoff="month" />
+            <DateTimeDisplay value={token.created} />
           </Typography>
         </TableCell>
         <TableCell>
@@ -519,7 +519,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             token.expiry === null || isWayInTheFuture(token.expiry) ? (
               'never'
             ) : (
-              <DateTimeDisplay value={token.expiry} humanizeCutoff="month" />
+              <DateTimeDisplay value={token.expiry} />
             )}
           </Typography>
         </TableCell>

@@ -6,7 +6,6 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
@@ -78,7 +77,6 @@ export const Dashboard: React.FC<CombinedProps> = props => {
         />
       )}
       <Grid container spacing={3}>
-        <AbuseTicketBanner />
         <TaxBanner location={location} marginBottom={8} />
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>

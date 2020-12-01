@@ -2,11 +2,14 @@ import * as Factory from 'factory.ts';
 import { DateTime } from 'luxon';
 import { Notification, Entity } from '@linode/api-v4/lib/account';
 
-const generateEntity = (id: number): Entity => ({
+const generateEntity = (
+  id: number,
+  url: string = 'linode/instances'
+): Entity => ({
   type: 'linode',
   label: `linode-${id}`,
   id,
-  url: `/linode/instances/${id}`
+  url: `/${url}/${id}`
 });
 
 export const notificationFactory = Factory.Sync.makeFactory<Notification>({
@@ -25,7 +28,7 @@ export const notificationFactory = Factory.Sync.makeFactory<Notification>({
 
 export const abuseTicketNotificationFactory = notificationFactory.extend({
   type: 'ticket_abuse',
-  entity: Factory.each(i => generateEntity(i)),
+  entity: Factory.each(i => generateEntity(i, 'support/tickets')),
   when: null,
   message: 'You have an open abuse ticket!',
   label: 'You have an open abuse ticket!',

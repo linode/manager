@@ -76,7 +76,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
         {cluster.k8s_version}
       </TableCell>
       <TableCell parentColumn="Created" data-qa-cluster-date>
-        <DateTimeDisplay value={cluster.created} humanizeCutoff="month" />
+        <DateTimeDisplay value={cluster.created} />
       </TableCell>
       <TableCell parentColumn="Region" data-qa-cluster-region>
         {cluster.region}
