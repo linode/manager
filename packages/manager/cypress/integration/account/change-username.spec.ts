@@ -15,17 +15,16 @@ describe('username', () => {
       waitForAppLoad(`account/users/${username}`, false);
       cy.findByText('Username').should('be.visible');
       cy.wait('@textAvailable');
+      cy.findByText('Username').should('be.visible');
       cy.get('[data-testid="textfield-input"]')
         .first()
         .click()
-        .clear();
-      cy.get('[data-testid="textfield-input"]')
-        .first()
+        .click()
         .click()
         .type(testText);
       cy.get('[data-testid="textfield-input"]')
         .first()
-        .should('have.value', testText);
+        .should('have.value', username + testText);
     });
   });
 });

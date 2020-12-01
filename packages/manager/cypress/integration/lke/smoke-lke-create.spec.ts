@@ -38,9 +38,9 @@ describe('LKE Create Cluster', () => {
       .click()
       .clear()
       .type(makeTestLabel());
-    cy.findByLabelText('Region')
+    cy.contains('Select a Region')
       .click()
-      .clear()
+      // .clear()
       .type('Newar{enter}');
     cy.findByLabelText('Kubernetes Version')
       .click()

@@ -20,7 +20,7 @@ describe('create linode', () => {
       url: '*/linode/instances'
     }).as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
-    cy.contains('Regions')
+    cy.contains('Select a Region')
       .click()
       .type('new {enter}');
     cy.get('[id="g6-nanode-1"]').click();
