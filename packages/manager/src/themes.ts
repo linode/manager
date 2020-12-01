@@ -101,11 +101,10 @@ const iconCircleAnimation = {
 
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
-  backgroundColor: cmrBGColors.bgStatusChip,
+  backgroundColor: 'transparent',
   color: cmrTextColors.textStatusChip,
-
-  fontSize: '1.1rem',
-  padding: 10,
+  fontSize: '1rem',
+  padding: 0,
   '&:before': {
     display: 'inline-block',
     borderRadius: '50%',
