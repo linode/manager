@@ -9,7 +9,7 @@ import Request, {
 } from 'src/request';
 import { ResourcePage as Page } from '../types';
 
-import { VLAN } from './types';
+import { CreateVLANPayload, VLAN } from './types';
 
 /**
  * getVlans
@@ -43,7 +43,7 @@ export const getVlan = (vlanID: number) =>
  * Create a Virtual LAN (VLAN) in the specified region.
  *
  */
-export const createVlan = (data: VLAN) =>
+export const createVlan = (data: CreateVLANPayload) =>
   Request<VLAN>(
     setURL(`${API_ROOT}/networking/vlans`),
     setMethod('POST'),
@@ -70,7 +70,7 @@ export const deleteVlan = (vlanID: number) =>
  */
 export const connectVlan = (vlanID: number, linodes: number[]) =>
   Request<VLAN>(
-    setURL(`${API_ROOT}/networking/vlans/${vlanID}/connect`),
+    setURL(`${API_ROOT}/networking/vlans/${vlanID}/attach`),
     setMethod('POST'),
     setData({ linodes })
   );
@@ -84,7 +84,7 @@ export const connectVlan = (vlanID: number, linodes: number[]) =>
  */
 export const disconnectVlan = (vlanID: number, linodes: number[]) =>
   Request<VLAN>(
-    setURL(`${API_ROOT}/networking/vlans/${vlanID}/disconnect`),
+    setURL(`${API_ROOT}/networking/vlans/${vlanID}/detach`),
     setMethod('POST'),
     setData({ linodes })
   );

@@ -1,18 +1,19 @@
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import { MatcherFunction, render, RenderResult } from '@testing-library/react';
 import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
+import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
-import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
+import { DeepPartial } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import { FlagSet } from 'src/featureFlags';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import store, { ApplicationState, defaultState } from 'src/store';
-import { DeepPartial } from 'redux';
-import { FlagSet } from 'src/featureFlags';
 
 export const createPromiseLoaderResponse: <T>(
   r: T
@@ -49,7 +50,9 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
     <Provider store={storeToPass}>
       <LinodeThemeWrapper theme="dark" spacing="normal">
         <LDProvider value={{ flags: options.flags ?? {} }}>
-          <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+          <SnackbarProvider>
+            <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+          </SnackbarProvider>
         </LDProvider>
       </LinodeThemeWrapper>
     </Provider>

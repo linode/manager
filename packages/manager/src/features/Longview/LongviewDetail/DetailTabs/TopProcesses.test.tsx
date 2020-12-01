@@ -7,7 +7,8 @@ import { extendTopProcesses, Props, TopProcesses } from './TopProcesses';
 
 const props: Props = {
   topProcessesData: longviewTopProcessesFactory.build(),
-  topProcessesLoading: false
+  topProcessesLoading: false,
+  clientID: 1
 };
 
 describe('Top Processes', () => {
@@ -48,6 +49,7 @@ describe('Top Processes', () => {
           <TopProcesses
             topProcessesData={{ Processes: {} }}
             topProcessesLoading={true}
+            clientID={1}
           />
         )
       );

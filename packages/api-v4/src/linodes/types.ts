@@ -307,6 +307,7 @@ export interface CreateLinodeRequest {
   tags?: string[];
   private_ip?: boolean;
   authorized_users?: string[];
+  interfaces?: Record<string, LinodeInterfacePayload>;
 }
 
 export type RescueRequestObject = Pick<
