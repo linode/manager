@@ -1,7 +1,7 @@
-import { curry } from 'ramda';
 import * as React from 'react';
 import {
   Chart,
+  ChartOptions,
   Filler,
   LineElement,
   LineController,
@@ -113,6 +113,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   const plugins = [
     Filler,
     {
+      id: 'afterdatasetsdraw',
       afterDatasetsDraw: () => {
         // hack to force re-render component in order to show legend
         // tested this is called
@@ -135,7 +136,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     _suggestedMax?: number,
     _nativeLegend?: boolean,
     _tooltipUnit?: string
-  ) => {
+  ): ChartOptions<'line'> => {
     return {
       maintainAspectRatio: false,
       responsive: true,
@@ -144,12 +145,28 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         display: _nativeLegend,
         position: _nativeLegend ? 'bottom' : undefined
       },
+      tooltips: {
+        cornerRadius: 0,
+        backgroundColor: '#fbfbfb',
+        bodyFont: { color: '#32363C', weight: 'bold' },
+        displayColors: false,
+        titleFont: { color: '#606469' },
+        xPadding: 16,
+        yPadding: 10,
+        borderWidth: 0.5,
+        borderColor: '#999',
+        caretPadding: 10,
+        position: 'nearest',
+        callbacks: {
+          label: (ctx: any) => _formatTooltip(ctx, formatTooltip, _tooltipUnit)
+        },
+        intersect: false,
+        mode: 'index'
+      },
       scales: {
         y: {
           gridLines: {
-            borderDash: [3, 6],
-            zeroLineWidth: 1,
-            zeroLineBorderDashOffset: 2
+            borderDash: [3, 6]
           },
           suggestedMax: _suggestedMax ?? undefined,
 
@@ -184,24 +201,6 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
             }
           }
         }
-      },
-      tooltip: {
-        cornerRadius: 0,
-        backgroundColor: '#fbfbfb',
-        bodyFontColor: '#32363C',
-        displayColors: false,
-        titleFontColor: '#606469',
-        xPadding: 16,
-        yPadding: 10,
-        borderWidth: 0.5,
-        borderColor: '#999',
-        caretPadding: 10,
-        position: 'nearest',
-        callbacks: {
-          label: _formatTooltip(data, formatTooltip, _tooltipUnit)
-        },
-        intersect: false,
-        mode: 'index'
       }
     };
   };
@@ -239,7 +238,8 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       chartInstance.current = new Chart(inputEl.current.getContext('2d'), {
         type: 'line',
         data: {
-          datasets
+          datasets,
+          labels: []
         },
         plugins,
         options: getChartOptions(suggestedMax, nativeLegend, unit)
@@ -364,25 +364,16 @@ export const metricsBySection = (data: Metrics): number[] => [
   data.last
 ];
 
-export const _formatTooltip = curry(
-  (
-    data: DataSet[],
-    formatter: ((v: number) => string) | undefined,
-    unit: string | undefined,
-    t: any,
-    _d: any
-  ) => {
-    /**
-     * t and d are the params passed by chart.js to this component.
-     * data and formatter should be partially applied before this function
-     * is called directly by chart.js
-     */
-    const dataset = t?.datasetIndex ? data[t?.datasetIndex] : data[0];
-    const label = dataset.label;
-    const val = t?.index ? dataset.data[t?.index][1] || 0 : 0;
-    const value = formatter ? formatter(val) : roundTo(val);
-    return `${label}: ${value}${unit ? unit : ''}`;
-  }
-);
+export const _formatTooltip = (
+  ctx: any,
+  formatter: ((v: number) => string) | undefined,
+  unit: string | undefined
+) => {
+  const label = ctx.dataset.label;
+  const value = formatter
+    ? formatter(ctx.dataPoint.y)
+    : roundTo(ctx.dataPoint.y);
+  return `${label}: ${value}${unit ? unit : ''}`;
+};
 
 export default LineGraph;

@@ -117,7 +117,8 @@ const GaugePercent: React.FC<CombinedProps> = props => {
       chartInstance.current = new Chart(graphRef.current.getContext('2d'), {
         type: 'doughnut',
         data: {
-          datasets: graphDatasets
+          datasets: graphDatasets,
+          labels: []
         },
         options: graphOptions
       });
