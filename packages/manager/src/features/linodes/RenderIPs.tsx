@@ -27,7 +27,7 @@ export const RenderIPs: React.FC<CombinedProps> = props => {
       })}
       {ipv6 && <Grid item>{ipv6}</Grid>}
       {ipv4ShouldTruncate ? (
-        <>
+        <Grid item>
           ... plus{' '}
           <Link
             to={`/linodes/${linodeId}/networking`}
@@ -35,7 +35,7 @@ export const RenderIPs: React.FC<CombinedProps> = props => {
           >
             {ipv4.length - 3} more
           </Link>{' '}
-        </>
+        </Grid>
       ) : null}
     </>
   );
