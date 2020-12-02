@@ -382,7 +382,7 @@ export const _formatTooltip = (
    */
   const idx = ctx.datasetIndex;
   const pointIdx = ctx.dataIndex;
-  const rawValue = data[idx]?.['data'][pointIdx]?.[1] ?? 0;
+  const rawValue = data[idx]?.['data']?.[pointIdx]?.[1] ?? 0;
   const label = ctx.dataset.label;
   const value = formatter
     ? formatter(rawValue)
