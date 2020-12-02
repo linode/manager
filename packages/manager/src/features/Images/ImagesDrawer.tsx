@@ -1,5 +1,6 @@
 import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -71,6 +72,7 @@ interface State {
 type CombinedProps = Props &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
+  WithSnackbarProps &
   ImagesDispatch;
 
 export type DrawerMode = 'closed' | 'create' | 'imagize' | 'restore' | 'edit';
@@ -192,7 +194,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       selectedDisk,
       selectedLinode,
       updateImage,
-      createImage
+      createImage,
+      enqueueSnackbar
     } = this.props;
 
     this.setState({ errors: undefined, notice: undefined, submitting: true });
@@ -240,16 +243,16 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             }
 
             resetEventsPolling();
-            this.setState({
-              notice: 'Image scheduled for creation.'
-            });
-            setTimeout(() => {
-              this.setState({
-                submitting: false
-              });
 
-              this.close();
-            }, 4000);
+            this.setState({
+              submitting: false
+            });
+
+            this.close();
+
+            enqueueSnackbar('Image scheduled for creation.', {
+              variant: 'info'
+            });
           })
           .catch(errorResponse => {
             if (!this.mounted) {
@@ -433,5 +436,6 @@ export default compose<CombinedProps, Props>(
   styled,
   withRouter,
   withImages(),
+  withSnackbar,
   SectionErrorBoundary
 )(ImageDrawer);
