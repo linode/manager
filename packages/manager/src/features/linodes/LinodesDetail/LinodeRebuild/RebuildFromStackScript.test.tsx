@@ -1,6 +1,6 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { normalizedImages as images } from 'src/__data__/images';
+import { imageFactory, normalizeEntities } from 'src/factories';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import {
@@ -15,6 +15,8 @@ jest.mock('@linode/api-v4/lib/account', () => ({
   getUsers: jest.fn()
 }));
 
+const images = normalizeEntities(imageFactory.buildList(10));
+
 request.getUsers = jest.fn().mockResolvedValue([]);
 
 const props: CombinedProps = {
@@ -23,7 +25,8 @@ const props: CombinedProps = {
     root: '',
     error: '',
     emptyImagePanel: '',
-    emptyImagePanelText: ''
+    emptyImagePanelText: '',
+    actions: ''
   },
   linodeId: 1234,
   imagesData: images,
@@ -36,7 +39,6 @@ const props: CombinedProps = {
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
   passwordHelperText: '',
-  passwordValidation: 'complexity',
   ...reactRouterProps
 };
 

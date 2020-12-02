@@ -76,7 +76,7 @@ const styles = (theme: Theme) =>
       outline: 0,
       borderBottom: `1px solid ${theme.palette.divider}`,
       '&:not(.hasTooltip)': {
-        '&:hover, &:focus': {
+        '&:hover': {
           '& $buttonText': {
             color: 'white'
           },

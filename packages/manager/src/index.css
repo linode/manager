@@ -115,7 +115,7 @@ body.searchOverlay #main-content {
 
 @media (min-width: 1600px) {
   #main-content {
-    padding-top: 40px;
+    padding-top: 20px;
   }
 }
 
@@ -340,6 +340,22 @@ button::-moz-focus-inner {
 
 .fade-in-table {
   animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes pulse {
+  to {
+    background-color: hsla(40, 100%, 55%, 0);
+  }
+}
+
+/* Animate Linode Landing pending action status icons */
+.statusOther {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Animate Linode Details pending action status icon */
+.statusOtherDetail::before {
+  animation: pulse 1.5s ease-in-out infinite;
 }
 
 .no-transition *,

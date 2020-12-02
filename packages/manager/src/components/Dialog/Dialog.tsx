@@ -12,6 +12,7 @@ import { convertForAria } from 'src/components/TabLink/TabLink';
 export interface DialogProps extends _DialogProps {
   title: string;
   fullHeight?: boolean;
+  titleBottomBorder?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.color.drawerBackdrop
     },
     sticky: {
+      backgroundColor: theme.color.white,
       position: 'sticky',
       top: 0,
       padding: theme.spacing(),
@@ -69,14 +71,20 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       display: 'flex',
       justifyContent: 'space-between',
-      alignItems: 'center',
-      backgroundColor: theme.bg.white
+      alignItems: 'center'
+    },
+    titleBottomBorder: {
+      backgroundColor: '#e3e5e8',
+      height: 1,
+      width: '100%',
+      margin: '-2em 8px 0px 8px',
+      border: 'none'
     }
   })
 );
 
 const Dialog: React.FC<DialogProps> = props => {
-  const { title, fullHeight, children, ...rest } = props;
+  const { title, fullHeight, titleBottomBorder, children, ...rest } = props;
 
   const classes = useStyles();
 
@@ -121,6 +129,7 @@ const Dialog: React.FC<DialogProps> = props => {
             </Button>
           </Grid>
         </div>
+        {titleBottomBorder && <hr className={classes.titleBottomBorder} />}
         <Grid container>
           <div className={classes.dialogContent}>{children}</div>
         </Grid>

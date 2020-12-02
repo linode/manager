@@ -13,9 +13,8 @@ import {
   Window
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { path, pathOr, sortBy } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -72,6 +71,7 @@ import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import BackupTableRow from './BackupTableRow';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
+import { initWindows } from 'src/utilities/initWindows';
 
 import DestructiveSnapshotDialog from './DestructiveSnapshotDialog';
 
@@ -185,13 +185,6 @@ type CombinedProps = PreloadedProps &
   ContextProps &
   WithSnackbarProps;
 
-const evenize = (n: number): number => {
-  if (n === 0) {
-    return n;
-  }
-  return n % 2 === 0 ? n : n - 1;
-};
-
 const isReadOnly = (permissions: GrantLevel) => {
   return permissions === 'read_only';
 };
@@ -272,30 +265,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     this.eventSubscription.unsubscribe();
   }
 
-  initWindows(timezone: string) {
-    let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
-      const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(
-        timezone
-      );
-      const finish = start.plus({ hours: 2 });
-      return [
-        `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,
-        `W${evenize(start.setZone('utc').hour)}`
-      ];
-    });
-
-    windows = sortBy<string[]>(window => window[0], windows);
-
-    windows.unshift(['Choose a time', 'Scheduling']);
-
-    return windows;
-  }
-
   constructor(props: CombinedProps) {
     super(props);
 
     /* TODO: use the timezone from the user's profile */
-    this.windows = this.initWindows(this.props.timezone);
+    this.windows = initWindows(this.props.timezone, true);
 
     this.days = [
       ['Choose a day', 'Scheduling'],

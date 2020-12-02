@@ -3,7 +3,6 @@ import ActionMenu, { Action } from 'src/components/ActionMenu_CMR/';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Hidden from 'src/components/core/Hidden';
 import Button from 'src/components/Button';
-import { Link, useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
@@ -13,13 +12,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight,
     height: '100%',
     minWidth: 'auto',
     padding: '12px 10px',
     whiteSpace: 'nowrap',
     '&:hover': {
       backgroundColor: '#3683dc',
-      color: theme.color.white
+      color: '#ffffff'
     },
     '&[disabled]': {
       color: '#cdd0d5',
@@ -33,13 +33,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   onRemove: () => void;
+  onDetails: () => void;
   label: string;
   cluster: string;
 }
 
 export const BucketActionMenu: React.FC<Props> = props => {
   const classes = useStyles();
-  const history = useHistory();
 
   const createActions = () => {
     return (): Action[] => {
@@ -47,9 +47,7 @@ export const BucketActionMenu: React.FC<Props> = props => {
         {
           title: 'Details',
           onClick: () => {
-            history.push({
-              pathname: `/object-storage/buckets/${props.cluster}/${props.label}`
-            });
+            props.onDetails();
           }
         },
         {
@@ -65,12 +63,14 @@ export const BucketActionMenu: React.FC<Props> = props => {
   return (
     <div className={classes.inlineActions}>
       <Hidden smDown>
-        <Link
+        <Button
           className={classes.button}
-          to={`/object-storage/buckets/${props.cluster}/${props.label}`}
+          onClick={() => {
+            props.onDetails();
+          }}
         >
           Details
-        </Link>
+        </Button>
         <Button
           className={classes.button}
           onClick={() => {

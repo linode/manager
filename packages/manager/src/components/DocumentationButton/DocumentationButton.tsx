@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .insidePath': {
       fill: 'none',
       fillRule: 'evenodd',
-      stroke: '#3683DC',
+      stroke: 'currentColor',
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
       strokeWidth: '1.5'

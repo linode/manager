@@ -34,6 +34,7 @@ interface Props {
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
   handleClickRemove: (bucket: ObjectStorageBucket) => void;
+  handleClickDetails: (bucket: ObjectStorageBucket) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -45,6 +46,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
     order,
     handleOrderChange,
     handleClickRemove,
+    handleClickDetails,
     classes
   } = props;
 
@@ -110,7 +112,11 @@ export const BucketTable: React.FC<CombinedProps> = props => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <RenderData data={paginatedData} onRemove={handleClickRemove} />
+                <RenderData
+                  data={paginatedData}
+                  onRemove={handleClickRemove}
+                  onClickDetails={handleClickDetails}
+                />
               </TableBody>
             </Table>
           </Paper>
@@ -131,10 +137,11 @@ export const BucketTable: React.FC<CombinedProps> = props => {
 interface RenderDataProps {
   data: ObjectStorageBucket[];
   onRemove: (bucket: ObjectStorageBucket) => void;
+  onClickDetails: (bucket: ObjectStorageBucket) => void;
 }
 
 const RenderData: React.FC<RenderDataProps> = props => {
-  const { data, onRemove } = props;
+  const { data, onRemove, onClickDetails } = props;
 
   return (
     <>
@@ -143,6 +150,7 @@ const RenderData: React.FC<RenderDataProps> = props => {
           {...bucket}
           key={`${bucket.label}-${bucket.cluster}`}
           onRemove={() => onRemove(bucket)}
+          onClickDetails={() => onClickDetails(bucket)}
         />
       ))}
     </>

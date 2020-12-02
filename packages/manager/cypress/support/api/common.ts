@@ -62,6 +62,8 @@ export const testNamePrefix = 'cy-test-';
 
 // Images do not have tags
 export const isTestEntity = entity =>
-  entity.tags?.includes(testTag) || entity.label.startsWith(testNamePrefix);
+  entity.tags?.includes(testTag) ||
+  entity.label?.startsWith(testNamePrefix) ||
+  entity.summary?.includes(testTag);
 
 export const makeTestLabel = () => testNamePrefix + strings.randomTitle(10);

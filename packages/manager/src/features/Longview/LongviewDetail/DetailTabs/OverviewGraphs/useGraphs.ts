@@ -8,14 +8,15 @@ export const useGraphs = (
   start: number,
   end: number
 ) => {
-  let mounted = true;
-  let requestInterval: NodeJS.Timeout;
+  const requestInterval = React.useRef<number>(0);
+  const mounted = React.useRef(true);
 
   const [data, setData] = React.useState<Partial<AllData>>({});
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
+
   const request = (isLoading: boolean = true) => {
-    if (!mounted) {
+    if (!mounted.current) {
       return;
     }
     if (!start || !end || !clientAPIKey) {
@@ -31,14 +32,14 @@ export const useGraphs = (
       end
     })
       .then(response => {
-        if (mounted) {
+        if (mounted.current) {
           setLoading(false);
           setError(undefined);
           setData(response.DATA);
         }
       })
       .catch(e => {
-        if (mounted) {
+        if (mounted.current) {
           setLoading(false);
           setError(e.NOTIFICATIONS?.[0]?.TEXT ?? 'Unable to retrieve data.');
         }
@@ -50,13 +51,15 @@ export const useGraphs = (
     if (!clientAPIKey) {
       return;
     }
-    requestInterval = setInterval(() => {
-      request(false);
+    requestInterval.current = window.setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        request(false);
+      }
     }, 10000);
 
     return () => {
-      mounted = false;
-      clearInterval(requestInterval);
+      mounted.current = false;
+      clearInterval(requestInterval.current);
     };
   }, [clientAPIKey]);
 

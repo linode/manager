@@ -492,7 +492,7 @@ const MyComponent: React.FC<ReduxStateProps> = props => {
           <Table aria-label="List of your Volumes">
             <TableHeader>My Volumes</TableHeader>
             <TableBody>
-              {paginatedData.map(eachVolumes => {
+              {paginatedData.map(eachVolume => {
                 return (
                   <TableRow>
                     <TableCell>{eachVolume.label}</TableCell>

@@ -15,7 +15,7 @@ import Grid from 'src/components/Grid';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { useDialog } from 'src/hooks/useDialog';
 import useFlags from 'src/hooks/useFlags';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
@@ -95,7 +95,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   const classes = useStyles();
   const flags = useFlags();
 
-  const { deleteLinode } = useLinodes();
+  const { deleteLinode } = useLinodeActions();
 
   const deletePoolDialog = useDialog<number>(deletePool);
   const recycleAllNodesDialog = useDialog<number>(recycleAllNodes);

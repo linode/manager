@@ -32,7 +32,8 @@ const styles = (theme: Theme) =>
       fontFamily: theme.font.bold,
       fontSize: '.875rem',
       lineHeight: '1.125rem',
-      textDecoration: 'underline'
+      textDecoration: 'underline',
+      color: theme.cmrTextColors.linkActiveLight
     },
     labelStatusWrapper: {
       display: 'flex',
@@ -93,7 +94,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
 
       <Hidden smDown>
         <TableCell data-qa-cluster-date>
-          <DateTimeDisplay value={cluster.created} humanizeCutoff="month" />
+          <DateTimeDisplay value={cluster.created} />
         </TableCell>
       </Hidden>
       <TableCell data-qa-cluster-region>{cluster.region}</TableCell>

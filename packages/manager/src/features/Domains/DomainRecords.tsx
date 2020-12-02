@@ -54,7 +54,6 @@ import {
 } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
-import { truncateEnd } from 'src/utilities/truncate';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
@@ -71,8 +70,16 @@ const styles = (theme: Theme) =>
     cells: {
       whiteSpace: 'nowrap',
       [theme.breakpoints.up('md')]: {
+        maxWidth: 300
+      },
+      '& .data': {
         maxWidth: 300,
-        wordBreak: 'break-all'
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        [theme.breakpoints.up('md')]: {
+          maxWidth: 750
+        }
       }
     },
     titles: {
@@ -182,10 +189,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       fields
     }));
 
-  openForEditMasterDomain = (f: Partial<Domain>) =>
+  openForEditPrimaryDomain = (f: Partial<Domain>) =>
     this.openForEditing('master', f);
 
-  openForEditSlaveDomain = (f: Partial<Domain>) =>
+  openForEditSecondaryDomain = (f: Partial<Domain>) =>
     this.openForEditing('slave', f);
 
   openForCreateNSRecord = () => this.openForCreation('NS');
@@ -274,8 +281,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 
   handleOpenSOADrawer = (d: Domain) => {
     return d.type === 'master'
-      ? this.openForEditMasterDomain(d)
-      : this.openForEditSlaveDomain(d);
+      ? this.openForEditPrimaryDomain(d)
+      : this.openForEditSecondaryDomain(d);
   };
 
   generateTypes = (): IType[] => [
@@ -507,7 +514,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Hostname', render: (r: DomainRecord) => r.name },
         {
           title: 'Value',
-          render: (r: DomainRecord) => truncateEnd(r.target, 255)
+          render: (r: DomainRecord) => r.target
         },
         { title: 'TTL', render: getTTL },
         {
@@ -598,7 +605,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       columns: [
         { title: 'Name', render: (r: DomainRecord) => r.name },
         { title: 'Tag', render: (r: DomainRecord) => r.tag },
-        { title: 'Value', render: (r: DomainRecord) => r.target },
+        {
+          title: 'Value',
+          render: (r: DomainRecord) => r.target
+        },
         { title: 'TTL', render: getTTL },
         {
           title: '',

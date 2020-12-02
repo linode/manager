@@ -53,16 +53,10 @@ export const TrustedDevicesTable: React.FC<CombinedProps> = props => {
             <TableCell>{eachDevice.user_agent}</TableCell>
             <TableCell>{eachDevice.last_remote_addr}</TableCell>
             <TableCell>
-              <DateTimeDisplay
-                value={eachDevice.last_authenticated}
-                humanizeCutoff="month"
-              />
+              <DateTimeDisplay value={eachDevice.last_authenticated} />
             </TableCell>
             <TableCell>
-              <DateTimeDisplay
-                value={eachDevice.expiry}
-                humanizeCutoff="month"
-              />
+              <DateTimeDisplay value={eachDevice.expiry} />
             </TableCell>
             <TableCell className="p0">
               <UntrustButton

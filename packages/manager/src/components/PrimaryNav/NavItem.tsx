@@ -22,7 +22,7 @@ export interface PrimaryLink {
   display: string;
   logo?: React.ComponentType<any>;
   icon?: JSX.Element;
-  isDisabled?: () => string | undefined;
+  isDisabled?: () => string;
 }
 
 type CombinedProps = Props;

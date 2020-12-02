@@ -14,6 +14,7 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      backgroundColor: theme.bg.white,
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(1),
       '& > button': {

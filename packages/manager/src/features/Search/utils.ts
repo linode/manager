@@ -6,7 +6,8 @@ export const emptyResults: SearchResultsByEntity = {
   domains: [],
   images: [],
   nodebalancers: [],
-  kubernetesClusters: []
+  kubernetesClusters: [],
+  buckets: []
 };
 
 export const separateResultsByEntity = (
@@ -18,7 +19,8 @@ export const separateResultsByEntity = (
     domains: [],
     images: [],
     nodebalancers: [],
-    kubernetesClusters: []
+    kubernetesClusters: [],
+    buckets: []
   };
 
   searchResults.forEach(result => {

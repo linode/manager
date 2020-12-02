@@ -20,11 +20,12 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TagCell from 'src/components/TagCell';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import {
+  getProgressOrDefault,
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { linodeMaintenanceWindowString } from '../../utilities';
@@ -58,6 +59,8 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
+  vlanIP?: string;
+  isVLAN?: boolean;
   openTagDrawer: (
     linodeID: number,
     linodeLabel: string,
@@ -102,6 +105,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     type,
     tags,
     image,
+    vlanIP,
     // other props
     classes,
     linodeNotifications,
@@ -111,10 +115,11 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     openNotificationDrawer,
     // displayType, @todo use for M3-2059
     recentEvent,
-    mutationAvailable
+    mutationAvailable,
+    isVLAN
   } = props;
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
 
   const loading = linodeInTransition(status, recentEvent);
@@ -185,6 +190,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       memory={memory}
       image={image}
       maintenance={maintenanceStartTime}
+      isVLAN={isVLAN}
     />
   );
 
@@ -201,27 +207,26 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       <TableCell
         className={classNames({
           [classes.statusCell]: true,
-          [classes.statusCellMaintenance]: maintenanceStartTime
+          [classes.statusCellMaintenance]: maintenanceStartTime,
+          [classes.vlan_Status]: isVLAN
         })}
         data-qa-status
       >
         {!maintenanceStartTime ? (
           loading ? (
-            recentEvent && (
-              <>
-                <StatusIcon status={iconStatus} />
-                <button
-                  className={classes.statusLink}
-                  onClick={() => openNotificationDrawer()}
-                >
-                  <ProgressDisplay
-                    className={classes.progressDisplay}
-                    progress={recentEvent.percent_complete}
-                    text={transitionText(status, id, recentEvent)}
-                  />
-                </button>
-              </>
-            )
+            <>
+              <StatusIcon status={iconStatus} />
+              <button
+                className={classes.statusLink}
+                onClick={() => openNotificationDrawer()}
+              >
+                <ProgressDisplay
+                  className={classes.progressDisplay}
+                  progress={getProgressOrDefault(recentEvent)}
+                  text={transitionText(status, id, recentEvent)}
+                />
+              </button>
+            </>
           ) : (
             <>
               <StatusIcon status={iconStatus} />
@@ -242,21 +247,28 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           </div>
         )}
       </TableCell>
-      <Hidden xsDown>
+      {props.isVLAN ? (
         <TableCell className={classes.ipCell} data-qa-ips>
-          <div className={classes.ipCellWrapper}>
-            <IPAddress ips={ipv4} copyRight />
-          </div>
+          <div className={classes.ipCellWrapper}>{vlanIP}</div>
         </TableCell>
-        <TableCell className={classes.regionCell} data-qa-region>
-          <RegionIndicator region={region} />
-        </TableCell>
-        <LinodeRowBackupCell
-          linodeId={id}
-          backupsEnabled={backups.enabled || false}
-          mostRecentBackup={mostRecentBackup || ''}
-        />
-      </Hidden>
+      ) : null}
+      {props.isVLAN ? null : (
+        <Hidden xsDown>
+          <TableCell className={classes.ipCell} data-qa-ips>
+            <div className={classes.ipCellWrapper}>
+              <IPAddress ips={ipv4} copyRight />
+            </div>
+          </TableCell>
+          <TableCell className={classes.regionCell} data-qa-region>
+            <RegionIndicator region={region} />
+          </TableCell>
+          <LinodeRowBackupCell
+            linodeId={id}
+            backupsEnabled={backups.enabled || false}
+            mostRecentBackup={mostRecentBackup || ''}
+          />
+        </Hidden>
+      )}
       <Hidden mdDown>
         <TagCell
           tags={tags}
@@ -286,6 +298,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             openPowerActionDialog={openPowerActionDialog}
             noImage={!image}
             inTableContext
+            inVLANContext={isVLAN}
           />
         </div>
       </TableCell>

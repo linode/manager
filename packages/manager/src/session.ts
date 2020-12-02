@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import { stringify } from 'querystring';
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import {
@@ -62,4 +63,24 @@ export const redirectToLogin = (
 ) => {
   const redirectUri = `${returnToPath}${queryString}`;
   window.location.assign(prepareOAuthEndpoint(redirectUri));
+};
+
+export interface RevokeTokenSuccess {
+  success: true;
+}
+
+export const revokeToken = (client_id: string, token: string) => {
+  const localStorageOverrides = getEnvLocalStorageOverrides();
+
+  const loginURL = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
+
+  return Axios({
+    baseURL: loginURL,
+    url: `/oauth/revoke`,
+    method: 'POST',
+    data: stringify({ client_id, token }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    }
+  });
 };

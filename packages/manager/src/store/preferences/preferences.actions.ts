@@ -11,12 +11,6 @@ export interface OrderSet {
   orderBy: string;
 }
 
-export type SortKey =
-  | 'listening-services'
-  | 'active-connections'
-  | 'top-processes'
-  | 'lv-detail-processes';
-
 export interface UserPreferences {
   longviewTimeRange?: string;
   gst_banner_dismissed?: boolean;
@@ -28,9 +22,8 @@ export interface UserPreferences {
   theme?: ThemeChoice;
   spacing?: SpacingChoice;
   desktop_sidebar_open?: boolean;
-  sortKeys?: Partial<Record<SortKey, OrderSet>>;
+  sortKeys?: Partial<Record<string, OrderSet>>;
   main_content_banner_dismissal?: Record<string, boolean>;
-  is_large_account?: boolean;
   linode_news_banner_dismissed?: boolean;
   notification_drawer_view?: 'list' | 'grouped';
 }

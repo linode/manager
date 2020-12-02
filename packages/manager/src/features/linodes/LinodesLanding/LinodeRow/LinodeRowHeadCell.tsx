@@ -17,6 +17,7 @@ import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import {
+  getProgressOrDefault,
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
@@ -185,11 +186,11 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item>
           <div className={loading ? classes.labelWrapper : ''}>
-            {recentEvent && linodeInTransition(status, recentEvent) && (
+            {linodeInTransition(status, recentEvent) && (
               <ProgressDisplay
                 className={classes.loadingStatus}
                 text={transitionText(status, id, recentEvent)}
-                progress={recentEvent.percent_complete}
+                progress={getProgressOrDefault(recentEvent)}
               />
             )}
             <div className={classes.labelStatusWrapper}>

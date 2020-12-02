@@ -8,6 +8,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
+import { REFRESH_INTERVAL } from 'src/constants';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -23,6 +24,7 @@ import withStoreSearch, { SearchProps } from './withStoreSearch';
 
 import Error from 'src/assets/icons/error.svg';
 import './searchLanding.css';
+import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headline: {
@@ -64,7 +66,8 @@ const displayMap = {
   volumes: 'Volumes',
   nodebalancers: 'NodeBalancers',
   images: 'Images',
-  kubernetesClusters: 'Kubernetes'
+  kubernetesClusters: 'Kubernetes',
+  buckets: 'Buckets'
 };
 
 export type CombinedProps = SearchProps & RouteComponentProps<{}>;
@@ -88,6 +91,9 @@ const getErrorMessage = (errors: ErrorObject): string => {
   }
   if (errors.kubernetes) {
     errorString.push('Kubernetes');
+  }
+  if (errors.objectStorageClusters || errors.objectStorageBuckets) {
+    errorString.push('Buckets');
   }
   const joined = errorString.join(', ');
   return `Could not retrieve search results for: ${joined}`;
@@ -120,14 +126,12 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
     queryError = true;
   }
 
-  const { _loading } = useReduxLoad([
-    'linodes',
-    'volumes',
-    'nodeBalancers',
-    'images',
-    'domains',
-    'kubernetes'
-  ]);
+  const { _loading: reduxLoading } = useReduxLoad(
+    ['linodes', 'volumes', 'nodeBalancers', 'images', 'domains', 'kubernetes'],
+    REFRESH_INTERVAL,
+    !_isLargeAccount
+  );
+  const { loading: objectStorageLoading } = useObjectStorage(!_isLargeAccount);
 
   const { searchAPI } = useAPISearch();
 
@@ -162,10 +166,12 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
 
   const resultsEmpty = equals(finalResults, emptyResults);
 
+  const loading = reduxLoading || objectStorageLoading;
+
   return (
     <Grid container direction="column">
       <Grid item>
-        {!resultsEmpty && !_loading && (
+        {!resultsEmpty && !loading && !objectStorageLoading && (
           <H1Header
             title={`Search Results ${query && `for "${query}"`}`}
             className={`${classes.headline} ${flags.cmr && classes.cmrSpacing}`}
@@ -187,12 +193,12 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
           <Notice error text="Invalid query" />
         </Grid>
       )}
-      {(_loading || apiSearchLoading) && (
+      {(loading || apiSearchLoading) && (
         <Grid item data-qa-search-loading data-testid="loading">
           <CircleProgress />
         </Grid>
       )}
-      {resultsEmpty && !_loading && (
+      {resultsEmpty && !loading && (
         <Grid item data-qa-empty-state className={classes.emptyResultWrapper}>
           <div className={classes.emptyResult}>
             <Error className={classes.errorIcon} />
@@ -208,7 +214,7 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
           </div>
         </Grid>
       )}
-      {!_loading && (
+      {!loading && (
         <Grid item>
           {Object.keys(finalResults).map((entityType, idx: number) => (
             <ResultGroup

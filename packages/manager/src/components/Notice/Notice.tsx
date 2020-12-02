@@ -6,126 +6,117 @@ import Check from 'src/assets/icons/check.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Warning from 'src/assets/icons/warning.svg';
 import {
-  createStyles,
+  makeStyles,
   Theme,
-  withStyles,
-  WithStyles
+  withTheme,
+  WithTheme
 } from 'src/components/core/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid, { GridProps } from 'src/components/Grid';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import useFlags from 'src/hooks/useFlags';
 
-type ClassNames =
-  | 'root'
-  | 'important'
-  | 'inner'
-  | 'noticeText'
-  | 'error'
-  | 'errorList'
-  | 'warning'
-  | 'warningList'
-  | 'success'
-  | 'successList'
-  | 'flag'
-  | 'breakWords'
-  | 'icon'
-  | 'closeIcon';
-
-const styles = (theme: Theme) => {
-  const {
-    palette: { status }
-  } = theme;
-
-  return createStyles({
-    '@keyframes fadeIn': {
-      from: {
-        opacity: 0
-      },
-      to: {
-        opacity: 1
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0
     },
-    root: {
-      marginBottom: theme.spacing(2),
-      position: 'relative',
-      padding: '4px 16px',
-      maxWidth: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      '& + .notice': {
-        marginTop: `${theme.spacing(1)}px !important`
-      }
-    },
-    important: {
-      backgroundColor: theme.bg.white,
-      padding: theme.spacing(2),
-      '& $noticeText': {
-        fontFamily: theme.font.normal
-      }
-    },
-    icon: {
-      color: 'white',
-      position: 'absolute',
-      left: -25 // This value must be static regardless of theme selection
-    },
-    closeIcon: {
-      paddingLeft: theme.spacing(1)
-    },
-    inner: {
-      width: '100%'
-    },
-    breakWords: {
-      '& $noticeText': {
-        wordBreak: 'break-all'
-      }
-    },
-    noticeText: {
-      color: theme.palette.text.primary,
-      fontSize: '1rem',
-      lineHeight: `20px`,
-      fontFamily: 'LatoWebBold', // we keep this bold at all times
-      '& p': {
-        fontSize: '1rem'
-      }
-    },
-    error: {
-      borderLeft: `5px solid ${status.errorDark}`,
-      animation: '$fadeIn 225ms linear forwards',
-      '&$important': {
-        borderLeftWidth: 32
-      }
-    },
-    errorList: {
-      borderLeft: `5px solid ${status.errorDark}`
-    },
-    warning: {
-      borderLeft: `5px solid ${status.warningDark}`,
-      animation: '$fadeIn 225ms linear forwards',
-      '&$important': {
-        borderLeftWidth: 32
-      },
-      '& $icon': {
-        color: '#555'
-      }
-    },
-    warningList: {
-      borderLeft: `5px solid ${status.warningDark}`
-    },
-    success: {
-      borderLeft: `5px solid ${status.successDark}`,
-      animation: '$fadeIn 225ms linear forwards',
-      '&$important': {
-        borderLeftWidth: 32
-      }
-    },
-    successList: {
-      borderLeft: `5px solid ${status.successDark}`
-    },
-    flag: {
-      marginRight: theme.spacing(2)
+    to: {
+      opacity: 1
     }
-  });
-};
+  },
+  root: {
+    marginBottom: theme.spacing(2),
+    position: 'relative',
+    padding: '4px 16px',
+    maxWidth: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    '& + .notice': {
+      marginTop: `${theme.spacing(1)}px !important`
+    }
+  },
+  cmr: {
+    borderRadius: 3,
+    '& $important': {
+      backgroundColor: theme.cmrBGColors.bgPaper
+    },
+    '& $noticeText': {
+      color: theme.cmrTextColors.headlineStatic
+    },
+    '& $error': {
+      borderLeftColor: theme.cmrIconColors.iRed
+    }
+  },
+  important: {
+    backgroundColor: theme.bg.white,
+    padding: theme.spacing(2),
+    '& $noticeText': {
+      fontFamily: theme.font.normal
+    }
+  },
+  icon: {
+    color: 'white',
+    position: 'absolute',
+    left: -25 // This value must be static regardless of theme selection
+  },
+  closeIcon: {
+    paddingLeft: theme.spacing(1)
+  },
+  inner: {
+    width: '100%'
+  },
+  breakWords: {
+    '& $noticeText': {
+      wordBreak: 'break-all'
+    }
+  },
+  noticeText: {
+    color: theme.palette.text.primary,
+    fontSize: '1rem',
+    lineHeight: `20px`,
+    fontFamily: 'LatoWebBold', // we keep this bold at all times
+    '& p': {
+      fontSize: '1rem'
+    }
+  },
+  error: {
+    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
+    animation: '$fadeIn 225ms linear forwards',
+    '&$important': {
+      borderLeftWidth: 32
+    }
+  },
+  errorList: {
+    borderLeft: `5px solid ${theme.palette.status.errorDark}`
+  },
+  warning: {
+    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
+    animation: '$fadeIn 225ms linear forwards',
+    '&$important': {
+      borderLeftWidth: 32
+    },
+    '& $icon': {
+      color: '#555'
+    }
+  },
+  warningList: {
+    borderLeft: `5px solid ${theme.palette.status.warningDark}`
+  },
+  success: {
+    borderLeft: `5px solid ${theme.palette.status.successDark}`,
+    animation: '$fadeIn 225ms linear forwards',
+    '&$important': {
+      borderLeftWidth: 32
+    }
+  },
+  successList: {
+    borderLeft: `5px solid ${theme.palette.status.successDark}`
+  },
+  flag: {
+    marginRight: theme.spacing(2)
+  }
+}));
 
 interface Props extends GridProps {
   text?: string | JSX.Element;
@@ -148,11 +139,10 @@ interface Props extends GridProps {
   onClose?: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithTheme;
 
 const Notice: React.FC<CombinedProps> = props => {
   const {
-    classes,
     className,
     important,
     text,
@@ -173,6 +163,9 @@ const Notice: React.FC<CombinedProps> = props => {
     spacingBottom
   } = props;
 
+  const classes = useStyles();
+  const flags = useFlags();
+
   const c = html ? (
     <Typography
       {...typeProps}
@@ -181,7 +174,6 @@ const Notice: React.FC<CombinedProps> = props => {
   ) : (
     <Typography
       {...typeProps}
-      component="div"
       onClick={onClick}
       className={`${classes.noticeText} noticeText`}
     >
@@ -217,6 +209,7 @@ const Notice: React.FC<CombinedProps> = props => {
         [classes.successList]: success && notificationList,
         [classes.warning]: warning && !notificationList,
         [classes.warningList]: warning && notificationList,
+        [classes.cmr]: Boolean(flags.cmr),
         notice: true,
         ...(className && { [className]: true })
       })}
@@ -253,6 +246,4 @@ const Notice: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(Notice);
+export default withTheme(Notice);

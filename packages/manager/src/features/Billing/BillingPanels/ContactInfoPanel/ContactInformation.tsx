@@ -110,7 +110,9 @@ const ContactInformation: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     if (!editContactDrawerOpen && history.location.state?.contactDrawerOpen) {
       setEditContactDrawerOpen(true);
-      setFocusEmail(true);
+      if (history.location.state?.focusEmail) {
+        setFocusEmail(true);
+      }
     }
   }, [editContactDrawerOpen, history.location.state]);
 

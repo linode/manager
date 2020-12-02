@@ -2,16 +2,22 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: 'transparent',
-    marginTop: 10
+    marginTop: 10,
+    '& [data-reach-tab-list]': {
+      marginTop: 22
+    },
+    '& [data-reach-tab]': {
+      color: theme.color.blue
+    }
   },
   innerClass: {
     padding: 0

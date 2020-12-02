@@ -2,6 +2,7 @@ import * as React from 'react';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import Grid from 'src/components/core/Grid';
 import { MockData, mockDataController } from './mockDataController';
+import ServiceWorkerTool from './ServiceWorkerTool';
 
 const options: { label: string; key: keyof MockData }[] = [
   { label: 'Linodes', key: 'linode' }
@@ -51,6 +52,9 @@ const MockDataTool: React.FC<{}> = () => {
             </div>
           );
         })}
+      </Grid>
+      <Grid item xs={12}>
+        <ServiceWorkerTool />
       </Grid>
     </Grid>
   );

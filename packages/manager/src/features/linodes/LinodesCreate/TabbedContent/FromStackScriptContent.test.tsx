@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { images as mockImages } from 'src/__data__/images';
+import { imageFactory } from 'src/factories/images';
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
 import {
   CombinedProps,
@@ -9,6 +9,8 @@ import {
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import store from 'src/store';
 import { Provider } from 'react-redux';
+
+const mockImages = imageFactory.buildList(10);
 
 const mockProps: CombinedProps = {
   category: 'community',

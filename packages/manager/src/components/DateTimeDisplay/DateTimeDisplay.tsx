@@ -5,6 +5,7 @@ import formatDate, { TimeInterval } from 'src/utilities/formatDate';
 export interface Props {
   value: string;
   format?: string;
+  displayTime?: boolean;
   humanizeCutoff?: TimeInterval;
   className?: string;
   styles?: React.CSSProperties;
@@ -13,10 +14,10 @@ export interface Props {
 type CombinedProps = Props;
 
 export const DateTimeDisplay: React.FC<CombinedProps> = props => {
-  const { format, humanizeCutoff, value, className } = props;
+  const { format, humanizeCutoff, displayTime, value, className } = props;
   return (
     <Typography style={props.styles} component="span" className={className}>
-      {formatDate(value, { format, humanizeCutoff })}
+      {formatDate(value, { format, humanizeCutoff, displayTime })}
     </Typography>
   );
 };

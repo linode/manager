@@ -6,7 +6,7 @@ import Typography from 'src/components/core/Typography';
 
 export interface Props {
   isOpen: boolean;
-  error?: string;
+  error?: string | JSX.Element;
   submitting: boolean;
   currentPlan: string;
   targetPlan: string;

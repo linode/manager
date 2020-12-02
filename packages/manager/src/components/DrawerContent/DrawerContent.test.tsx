@@ -1,30 +1,41 @@
-import { shallow } from 'enzyme';
+import { screen } from '@testing-library/react';
 import * as React from 'react';
-import { DrawerContent } from './DrawerContent';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { DrawerContent, Props } from './DrawerContent';
 
-describe('DrawerContent', () => {
-  const component = shallow(
-    <DrawerContent title="Hello Drawer" loading={true} error={true}>
-      <table />
+const renderDrawer = (props: Props) =>
+  renderWithTheme(
+    <DrawerContent {...props}>
+      <div>Content</div>
     </DrawerContent>
   );
 
-  it('should show loading component while loading is in progress', () => {
-    expect(component.name()).toEqual('WithStyles(CircleProgressComponent)');
-    expect(component.find('table')).toHaveLength(0);
+const props: Props = {
+  loading: true,
+  error: false,
+  title: 'my-drawer'
+};
+
+describe('DrawerContent', () => {
+  it('should show a loading component while loading is in progress', () => {
+    renderDrawer(props);
+    expect(screen.queryByText('Content')).not.toBeInTheDocument();
+    expect(screen.getByTestId('circle-progress')).toBeInTheDocument();
   });
 
   it('should show error if loading is finished but the error persists', () => {
-    component.setProps({ loading: false });
-
-    expect(component.name()).toEqual('WithStyles(Notice)');
-    expect(component.find('table')).toHaveLength(0);
+    renderDrawer({
+      ...props,
+      loading: false,
+      error: true,
+      errorMessage: 'My Error'
+    });
+    expect(screen.getByText('My Error')).toBeInTheDocument();
+    expect(screen.queryByText('Content')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('circle-progress')).not.toBeInTheDocument();
   });
   it('should display content if there is no error nor loading', () => {
-    component.setProps({ error: false });
-
-    expect(component.find('CircleProgress')).toHaveLength(0);
-    expect(component.find('Notice')).toHaveLength(0);
-    expect(component.find('table')).toHaveLength(1);
+    renderDrawer({ ...props, loading: false });
+    expect(screen.getByText('Content')).toBeInTheDocument();
   });
 });

@@ -1,22 +1,7 @@
 import { BrowserOptions, Event as SentryEvent, init } from '@sentry/browser';
-import { lensPath, over } from 'ramda';
 import { SENTRY_URL } from 'src/constants';
-import redactAccessTokenFromUrl from 'src/utilities/redactAccessTokenFromUrl';
-
-const updateRequestUrl = over(
-  lensPath(['request', 'url']),
-  redactAccessTokenFromUrl
-);
-
-const beforeSend: BrowserOptions['beforeSend'] = (event, hint) => {
-  /** remove the user's access token from the URL if one exists */
-  const eventWithoutSensitiveInfo = updateRequestUrl(event);
-  /** maybe add a custom fingerprint if this error is relevant */
-  const eventWithCustomFingerprint = maybeAddCustomFingerprint(
-    eventWithoutSensitiveInfo
-  );
-  return eventWithCustomFingerprint;
-};
+import redactAccessToken from 'src/utilities/redactAccessToken';
+import deepStringTransform from 'src/utilities/deepStringTransform';
 
 export const initSentry = () => {
   if (SENTRY_URL) {
@@ -78,14 +63,82 @@ export const initSentry = () => {
         /localhost:3000{1}/g
       ],
       blacklistUrls: [
-        // Newrelic script
-        /newrelic\.js/i,
+        // New Relic script
+        /new-relic\.js/i,
         // Chrome extensions
         /extensions\//i,
         /^chrome:\/\//i
       ]
     });
   }
+};
+
+const beforeSend: BrowserOptions['beforeSend'] = (sentryEvent, hint) => {
+  const normalizedErrorMessage = normalizeErrorMessage(sentryEvent.message);
+
+  if (
+    errorsToIgnore.some(eachRegex =>
+      Boolean(normalizedErrorMessage?.match(eachRegex))
+    )
+  ) {
+    return null;
+  }
+
+  sentryEvent.message = normalizedErrorMessage;
+
+  /** remove the user's access token from the event if one exists */
+  const eventWithoutSensitiveInfo = deepStringTransform(
+    sentryEvent,
+    redactAccessToken
+  );
+
+  /** maybe add a custom fingerprint if this error is relevant */
+  return maybeAddCustomFingerprint(eventWithoutSensitiveInfo);
+};
+
+export const errorsToIgnore: RegExp[] = [
+  /Invalid (OAuth )?Token/gi,
+  /Not Found/gi,
+  /You are not authorized/gi,
+  /Unauthorized/gi,
+  /This Linode has been suspended/gi,
+  /safari-extension/gi,
+  /chrome-extension/gi,
+  // We know this is a problem. @todo: implement flow control in Lish.
+  /write data discarded, use flow control to avoid losing data/gi,
+  // This is an error coming from the MUI Ripple effect.
+  /TouchRipple/gi,
+  // The theory is that these come from network interruptions.
+  /Unexpected end of input/gi,
+  /Unexpected end of script/gi,
+  // Local storage errors:
+  /Failed to read the 'localStorage' property from 'Window'/gi,
+  /Cannot read property 'getItem' of null/gi,
+  /NS_ERROR_FILE_CORRUPTED/gi
+];
+
+// We can't trust the type of the "message" on a Sentry event, since it may
+// actually be something like a (Linode) API Error instead of a string. We need
+// to ensure we're  dealing with strings so we can determine if we should ignore
+// the error, or appropriately report the message to Sentry (i.e. not "<unknown>").
+export const normalizeErrorMessage = (sentryErrorMessage: any): string => {
+  if (typeof sentryErrorMessage === 'string') {
+    return sentryErrorMessage;
+  }
+
+  if (
+    Array.isArray(sentryErrorMessage) &&
+    sentryErrorMessage!.length === 1 &&
+    sentryErrorMessage[0]?.reason
+  ) {
+    return sentryErrorMessage[0].reason;
+  }
+
+  if (['undefined', 'function'].includes(typeof sentryErrorMessage)) {
+    return 'Unknown error';
+  }
+
+  return JSON.stringify(sentryErrorMessage);
 };
 
 const maybeAddCustomFingerprint = (event: SentryEvent): SentryEvent => {

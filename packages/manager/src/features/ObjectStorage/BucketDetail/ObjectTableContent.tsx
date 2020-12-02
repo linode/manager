@@ -41,9 +41,9 @@ const ObjectTableContent: React.FC<Props> = props => {
 
   if (loading && data.length === 0) {
     return flags.cmr ? (
-      <TableRowLoading_CMR colSpan={4} firstColWidth={20} />
+      <TableRowLoading_CMR colSpan={4} widths={[20]} />
     ) : (
-      <TableRowLoading colSpan={4} firstColWidth={20} />
+      <TableRowLoading colSpan={4} widths={[20]} />
     );
   }
 

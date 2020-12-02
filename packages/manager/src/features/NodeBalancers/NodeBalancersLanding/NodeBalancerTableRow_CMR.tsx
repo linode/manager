@@ -23,9 +23,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   statusWrapper: {
     whiteSpace: 'nowrap'
   },
+  portLink: {
+    color: theme.cmrTextColors.linkActiveLight
+  },
   link: {
     display: 'block',
     fontFamily: theme.font.bold,
+    color: theme.cmrTextColors.linkActiveLight,
     lineHeight: '1.125rem',
     textDecoration: 'underline'
   },
@@ -84,20 +88,24 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = props => {
           </Link>
         </div>
       </TableCell>
+
       <Hidden xsDown>
         <TableCell data-qa-node-status className={classes.statusWrapper}>
           <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
         </TableCell>
+      </Hidden>
+      <Hidden smDown>
         <TableCell data-qa-transferred>
           {convertMegabytesTo(transfer.total)}
         </TableCell>
+
         <TableCell data-qa-ports>
           {configs.length === 0 && 'None'}
           {configs.map(({ port, id: configId }, i) => (
             <React.Fragment key={id}>
               <Link
                 to={`/nodebalancers/${id}/configurations/${configId}`}
-                className="secondaryLink"
+                className={classes.portLink}
               >
                 {port}
               </Link>
@@ -106,6 +114,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = props => {
           ))}
         </TableCell>
       </Hidden>
+
       <TableCell data-qa-nodebalancer-ips>
         <div className={classes.ipsWrapper}>
           <IPAddress ips={[ipv4]} copyRight showMore />

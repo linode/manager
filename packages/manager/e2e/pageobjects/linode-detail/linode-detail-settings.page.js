@@ -196,16 +196,12 @@ class Settings extends Page {
 
     expect(this.deleteDialogTitle.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.deleteDialogTitle.selector
-        } selector`
+        `${assertLog.incorrectText} for "${this.deleteDialogTitle.selector} selector`
       )
       .toBe(confirmTitle);
     expect(this.deleteDialogContent.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.deleteDialogContent.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.deleteDialogContent.selector}" selector`
       )
       .toMatch(confirmContent);
 
@@ -277,7 +273,7 @@ class Settings extends Page {
       .toBe(powerState === 'on' ? 'false' : 'true');
     this.watchdogToggle.click();
     this.waitForNotice(
-      `Watchdog succesfully ${powerState === 'on' ? 'enabled' : 'disabled'}`
+      `Watchdog successfully ${powerState === 'on' ? 'enabled' : 'disabled'}`
     );
     const afterClick = this.watchdogToggle.getAttribute(
       'data-qa-watchdog-toggle'

@@ -1,9 +1,5 @@
 import { linodeReboot } from '@linode/api-v4/lib/linodes';
-import {
-  createVlan,
-  CreateVLANPayload,
-  createVlanSchema
-} from '@linode/api-v4/lib/vlans';
+import { CreateVLANPayload, createVlanSchema } from '@linode/api-v4/lib/vlans';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -20,13 +16,14 @@ import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
+import { vlanContext } from 'src/context';
 import useLinodes from 'src/hooks/useLinodes';
 import useRegions from 'src/hooks/useRegions';
+import useVlans from 'src/hooks/useVlans';
 import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
-import { vlanContext } from 'src/context';
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {},
@@ -53,12 +50,14 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
     return regionsWithVLANS.map(thisRegion => thisRegion.id);
   }, [regionsWithVLANS]);
 
+  const { createVlan } = useVlans();
+
   const context = React.useContext(vlanContext);
 
   const { resetForm, ...formik } = useFormik({
     initialValues: {
       description: '',
-      cidr_block: '10.0.0.0/24',
+      cidr_block: '',
       region: '',
       linodes: []
     },
@@ -127,7 +126,9 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
         if (rebootOnCreate) {
           // If we've been asked to do this, reboot every Linode we just
           // attached to the VLAN.
-          response.linodes.forEach(thisLinode => linodeReboot(thisLinode));
+          response.linodes.forEach(thisVLANLinode =>
+            linodeReboot(thisVLANLinode.id)
+          );
         }
         context.close();
         history.push('/vlans');
@@ -159,12 +160,12 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
       <form className={classes.form} onSubmit={formik.handleSubmit}>
         <div className={classes.formSection}>
           <RegionSelect
-            label={'Region'}
-            placeholder={'Regions'}
+            label={'Region (required)'}
             errorText={formik.errors.region}
             handleSelection={handleRegionSelect}
             regions={regionsWithVLANS}
             selectedID={formik.values.region}
+            required
           />
         </div>
         <div className={classes.formSection} data-testid="label-input">
@@ -184,7 +185,7 @@ export const CreateVLANDialog: React.FC<{}> = _ => {
           <TextField
             label="IP Range / Netmask"
             name="cidr_block"
-            helperText={`You can specify the IP range with a netmask (10.0.0.0/16) 
+            helperText={`You can specify the IP range with a netmask (10.0.0.0/16)
           or starting and ending IPs (10.0.0.0-10.0.0.20).`}
             helperTextPosition="top"
             value={formik.values.cidr_block}
