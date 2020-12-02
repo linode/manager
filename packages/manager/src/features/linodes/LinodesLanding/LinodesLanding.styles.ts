@@ -49,7 +49,7 @@ const styles = (theme: Theme) =>
     },
     chip: {
       ...theme.applyStatusPillStyles,
-      marginRight: theme.spacing(2),
+      marginRight: theme.spacing(3),
       paddingTop: '0px !important',
       paddingBottom: '0px !important',
       transition: 'none',

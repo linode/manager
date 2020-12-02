@@ -30,10 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     minHeight: 40,
-    padding: `10px 16px !important`,
-    [theme.breakpoints.down('sm')]: {
-      minHeight: 80
-    }
+    padding: `10px 16px !important`
   },
   footerBorder: {
     borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`

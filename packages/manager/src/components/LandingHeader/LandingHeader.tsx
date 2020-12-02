@@ -63,7 +63,7 @@ export const LandingHeader: React.FC<Props> = props => {
         )}
 
         {onAddNew && (
-          <Grid item className={!docsLink ? 'px0' : undefined}>
+          <Grid item>
             <Button
               buttonType="primary"
               className={classes.button}
