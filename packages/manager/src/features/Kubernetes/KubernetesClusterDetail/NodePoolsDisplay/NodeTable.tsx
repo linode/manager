@@ -1,6 +1,7 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -208,14 +209,20 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
   const displayIP = ip ?? '';
 
   return (
-    <TableRow rowLink={rowLink} ariaLabel={label}>
+    <TableRow ariaLabel={label}>
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
             <StatusIndicator status={statusIndicator} />
           </Grid>
           <Grid item>
-            <Typography variant="h3">{displayLabel}</Typography>
+            <Typography variant="h3">
+              {rowLink ? (
+                <Link to={rowLink}>{displayLabel}</Link>
+              ) : (
+                displayLabel
+              )}
+            </Typography>
           </Grid>
         </Grid>
       </TableCell>
