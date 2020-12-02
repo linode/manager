@@ -8,6 +8,7 @@ import TextField from 'src/components/TextField';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { SetSuccess } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -41,7 +42,7 @@ export interface Props {
   expiry: string;
   usd: string;
   minimumPayment: string;
-  setSuccess: (message: string | null, paymentWasMade?: boolean) => void;
+  setSuccess: SetSuccess;
 }
 
 export const CreditCard: React.FC<Props> = props => {
@@ -76,10 +77,14 @@ export const CreditCard: React.FC<Props> = props => {
       usd: (+usd).toFixed(2),
       cvv
     })
-      .then(_ => {
+      .then(response => {
         setSubmitting(false);
         setDialogOpen(false);
-        setSuccess(`Payment for $${usd} submitted successfully`, true);
+        setSuccess(
+          `Payment for $${usd} submitted successfully`,
+          true,
+          response.warnings
+        );
       })
       .catch(errorResponse => {
         setSubmitting(false);
@@ -118,7 +123,7 @@ export const CreditCard: React.FC<Props> = props => {
               </Grid>
               <Grid item className={classes.cvvFieldWrapper}>
                 <TextField
-                  label="CVV:"
+                  label="CVV (optional):"
                   small
                   onChange={handleCVVChange}
                   value={cvv}

@@ -1,21 +1,18 @@
 import { Region } from '@linode/api-v4/lib/regions';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
-
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect, {
   flags
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
-
 import { dcDisplayNames } from 'src/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   formatRegion,
   getHumanReadableCountry
 } from 'src/utilities/formatRegion';
-import { useFlags } from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -50,33 +47,39 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  currentRegion: { region: string; countryCode: string };
+  currentRegion: string;
   allRegions: Region[];
   handleSelectRegion: (id: string) => void;
   selectedRegion: string | null;
   errorText?: string;
+  helperText?: string;
 }
 
 type CombinedProps = Props;
 
 const ConfigureForm: React.FC<CombinedProps> = props => {
+  const { allRegions, currentRegion } = props;
   const classes = useStyles();
   const { cmr } = useFlags();
+
+  const country =
+    allRegions.find(thisRegion => thisRegion.id == currentRegion)?.country ??
+    'us';
 
   return (
     <Paper className={cmr ? classes.rootCMR : classes.root}>
       <Typography variant="h3">Configure Migration</Typography>
       <Typography>Current Region:</Typography>
       <div className={classes.currentRegion}>
-        {pathOr(() => null, [props.currentRegion.countryCode], flags)()}
+        {pathOr(() => null, [country], flags)()}
         <Typography>{`${getHumanReadableCountry(
-          props.currentRegion.region
-        )}: ${formatRegion(props.currentRegion.region)}`}</Typography>
+          props.currentRegion
+        )}: ${formatRegion(currentRegion)}`}</Typography>
       </div>
       <RegionSelect
         className={classes.select}
         regions={props.allRegions
-          .filter(eachRegion => eachRegion.id !== props.currentRegion.region)
+          .filter(eachRegion => eachRegion.id !== props.currentRegion)
           .map(eachRegion => ({
             ...eachRegion,
             display: dcDisplayNames[eachRegion.id]
@@ -84,14 +87,16 @@ const ConfigureForm: React.FC<CombinedProps> = props => {
         handleSelection={props.handleSelectRegion}
         selectedID={props.selectedRegion}
         errorText={props.errorText}
+        textFieldProps={{
+          helperText: props.helperText
+        }}
         menuPlacement="top"
         styles={{
           menuList: (base: any) => ({ ...base, maxHeight: `30vh !important` })
         }}
-        label="Select a Region"
       />
     </Paper>
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(ConfigureForm);
+export default React.memo(ConfigureForm);

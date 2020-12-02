@@ -153,6 +153,15 @@ export const isInProgressEvent = ({
 }: Pick<Event, 'percent_complete'>) =>
   percent_complete !== null && percent_complete < 100;
 
+export const isLongRunningProgressEventAction = (eventAction: EventAction) => {
+  const longRunningProgressEventActions: EventAction[] = [
+    'linode_resize',
+    'linode_migrate',
+    'linode_migrate_datacenter'
+  ];
+  return longRunningProgressEventActions.includes(eventAction);
+};
+
 export const isCompletedEvent = ({
   percent_complete
 }: Pick<Event, 'percent_complete'>) =>

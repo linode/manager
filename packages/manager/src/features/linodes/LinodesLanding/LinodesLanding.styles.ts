@@ -46,6 +46,7 @@ const styles = (theme: Theme) =>
       ...theme.applyStatusPillStyles,
       paddingTop: '0px !important',
       paddingBottom: '0px !important',
+      transition: 'none',
       '&:hover, &:focus, &:active': {
         backgroundColor: theme.bg.chipActive
       }
@@ -55,17 +56,17 @@ const styles = (theme: Theme) =>
     },
     chipRunning: {
       '&:before': {
-        backgroundColor: theme.color.green
+        backgroundColor: theme.cmrIconColors.iGreen
       }
     },
     chipPending: {
       '&:before': {
-        backgroundColor: theme.color.orange
+        backgroundColor: theme.cmrIconColors.iOrange
       }
     },
     chipOffline: {
       '&:before': {
-        backgroundColor: theme.color.grey10
+        backgroundColor: theme.cmrIconColors.iGrey
       }
     },
     clearFilters: {

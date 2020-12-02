@@ -1,25 +1,22 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import * as classNames from 'classnames';
-import hljs from 'highlight.js/lib/highlight';
-// Import languages as we need them to keep bundle size down
-import apache from 'highlight.js/lib/languages/apache';
-import bash from 'highlight.js/lib/languages/bash';
-import javascript from 'highlight.js/lib/languages/javascript';
-import nginx from 'highlight.js/lib/languages/nginx';
-import yaml from 'highlight.js/lib/languages/yaml';
+import * as hljs from 'highlight.js/lib/core';
 import 'highlight.js/styles/lightfair.css';
 import * as React from 'react';
-import { Converter } from 'showdown';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
-
+import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 // Register all languages we intend to use
-hljs.registerLanguage('apache', apache);
-hljs.registerLanguage('bash', bash);
-hljs.registerLanguage('javascript', javascript);
-hljs.registerLanguage('nginx', nginx);
-hljs.registerLanguage('yaml', yaml);
+hljs.registerLanguage('apache', require('highlight.js/lib/languages/apache'));
+hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
+hljs.registerLanguage(
+  'javascript',
+  require('highlight.js/lib/languages/javascript')
+);
+hljs.registerLanguage('nginx', require('highlight.js/lib/languages/nginx'));
+hljs.registerLanguage('yaml', require('highlight.js/lib/languages/yaml'));
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -59,14 +56,9 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => 
     }
   }, [language]);
 
-  const html = React.useMemo(() => {
-    return new Converter({
-      simplifiedAutoLink: true,
-      openLinksInNewWindow: true
-    }).makeHtml(textOrMarkdown);
-  }, [textOrMarkdown]);
+  const unsafe_parsedMarkdown = unsafe_MarkdownIt.render(textOrMarkdown);
 
-  const sanitizedHtml = sanitizeHTML(html);
+  const sanitizedHtml = sanitizeHTML(unsafe_parsedMarkdown);
 
   // Adapted from https://stackblitz.com/edit/react-highlighted-markdown?file=highlighted-markdown.tsx
   // All the safety checking is due to a reported error from certain versions of FireFox.

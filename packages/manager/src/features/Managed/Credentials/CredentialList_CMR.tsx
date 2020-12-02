@@ -65,8 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actionCell: {
     '&.emptyCell': {
-      fontSize: '0.875em !important',
-      borderTop: '2px solid #f4f5f6'
+      fontSize: '0.875em !important'
     }
   }
 }));
@@ -316,6 +315,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
       </div>
       <DeletionDialog
         open={dialog.isOpen}
+        entity="credential"
         label={dialog.entityLabel || ''}
         loading={dialog.isLoading}
         error={dialog.error}

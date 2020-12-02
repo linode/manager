@@ -140,14 +140,16 @@ const headers: HeaderCell[] = [
     dataColumn: 'transfer:total',
     sortable: true,
     widthPercent: 5,
-    hideOnMobile: true
+    hideOnMobile: true,
+    hideOnTablet: true
   },
   {
     label: 'Ports',
     dataColumn: 'updated',
     sortable: true,
     widthPercent: 5,
-    hideOnMobile: true
+    hideOnMobile: true,
+    hideOnTablet: true
   },
   {
     label: 'IP Address',
@@ -200,10 +202,11 @@ export class NodeBalancersLanding extends React.Component<
      * To keep NB node status up to date, poll NodeBalancers and configs every 30 seconds while the
      * user is on this page.
      */
-    this.pollInterval = window.setInterval(
-      () => getAllNodeBalancersWithConfigs(),
-      30 * 1000
-    );
+    this.pollInterval = window.setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        getAllNodeBalancersWithConfigs();
+      }
+    }, 30 * 1000);
   }
 
   componentWillUnmount() {

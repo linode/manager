@@ -11,7 +11,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -74,7 +74,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
           compose(
             setSubmitting(false),
             setSuccess(
-              `Watchdog succesfully ${value ? 'enabled' : 'disabled.'}`
+              `Watchdog successfully ${value ? 'enabled' : 'disabled.'}`
             ),
             setCurrentStatus(response.watchdog_enabled) as any
           )
@@ -98,7 +98,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <ExpansionPanel heading="Shutdown Watchdog" data-qa-watchdog-panel>
+        <Accordion heading="Shutdown Watchdog" data-qa-watchdog-panel>
           <Grid
             container
             alignItems="center"
@@ -142,7 +142,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
               </Typography>
             </Grid>
           </Grid>
-        </ExpansionPanel>
+        </Accordion>
       </React.Fragment>
     );
   }

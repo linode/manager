@@ -48,13 +48,7 @@ const InvoiceTable: React.FC<Props> = props => {
 };
 
 const renderDate = (v: null | string) =>
-  v ? (
-    <DateTimeDisplay
-      value={v}
-      format={`y-LL-dd HH:mm:ss`}
-      data-qa-invoice-date
-    />
-  ) : null;
+  v ? <DateTimeDisplay value={v} data-qa-invoice-date /> : null;
 
 const renderUnitPrice = (v: null | number) => (v ? `$${v}` : null);
 

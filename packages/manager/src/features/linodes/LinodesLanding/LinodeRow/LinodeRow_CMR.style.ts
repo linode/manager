@@ -22,7 +22,8 @@ type ClassNames =
   | 'progressDisplay'
   | 'regionCell'
   | 'tagCell'
-  | 'maintenanceOuter';
+  | 'maintenanceOuter'
+  | 'vlan_Status';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -48,7 +49,12 @@ const styles = (theme: Theme) =>
       }
     },
     bodyRow: {
-      height: 'auto'
+      height: 'auto',
+      '&:hover': {
+        '& [data-qa-copy-ip]': {
+          opacity: 1
+        }
+      }
     },
     progressDisplay: {
       display: 'inline-block'
@@ -100,6 +106,9 @@ const styles = (theme: Theme) =>
       '& *': {
         fontSize: '.875rem',
         paddingBottom: 0
+      },
+      '& [data-qa-copy-ip]': {
+        opacity: 0
       }
     },
     regionCell: {
@@ -111,6 +120,11 @@ const styles = (theme: Theme) =>
     maintenanceOuter: {
       display: 'flex',
       alignItems: 'center'
+    },
+
+    // The "Status" cell in the VLAN Detail context.
+    vlan_Status: {
+      width: '14%'
     }
   });
 

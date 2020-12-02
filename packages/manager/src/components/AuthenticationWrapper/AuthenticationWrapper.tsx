@@ -15,6 +15,7 @@ import { startEventsInterval } from 'src/events';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
+import { checkAccountSize } from 'src/store/accountManagement/accountManagement.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
@@ -52,7 +53,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
    */
   makeInitialRequests = async () => {
     // When loading Lish we avoid all this extra data loading
-    if (window.location?.pathname?.includes('/lish/')) {
+    if (window.location?.pathname?.match(/linodes\/[0-9]+\/lish/)) {
       return;
     }
 
@@ -65,7 +66,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestProfile(),
 
       // Is a user managed
-      this.props.requestSettings()
+      this.props.requestSettings(),
+
+      // Is this a large account? (should we use API or Redux-based search/pagination)
+      this.props.checkAccountSize()
     ];
 
     // Start events polling
@@ -217,6 +221,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 interface DispatchProps {
   initSession: () => void;
+  checkAccountSize: () => Promise<null>;
   requestAccount: () => Promise<Account>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
   requestNotifications: () => Promise<GetAllData<Notification>>;
@@ -232,6 +237,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => ({
   initSession: () => dispatch(handleInitTokens()),
+  checkAccountSize: () => dispatch(checkAccountSize()),
   requestAccount: () => dispatch(requestAccount()),
   requestLinodes: () => dispatch(requestLinodes({})),
   requestNotifications: () => dispatch(requestNotifications()),

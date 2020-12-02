@@ -5,6 +5,7 @@ import {
 } from 'src/store/events/event.selectors';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
 
 export const transitionStatus = [
   'booting',
@@ -35,23 +36,22 @@ export const linodeInTransition = (
   status: string,
   recentEvent?: Event
 ): boolean => {
-  if (!recentEvent) {
-    return false;
+  if (transitionStatus.includes(status)) {
+    return true;
   }
 
   return (
-    transitionStatus.includes(status) ||
-    (transitionAction.includes(recentEvent.action || '') &&
-      recentEvent.percent_complete !== null &&
-      recentEvent.percent_complete < 100)
+    recentEvent !== undefined &&
+    transitionAction.includes(recentEvent.action || '') &&
+    recentEvent.percent_complete !== null &&
+    recentEvent.percent_complete < 100
   );
 };
 
 export const transitionText = (
   status: string,
   linodeId: number,
-  recentEvent?: Event,
-  cmr?: boolean
+  recentEvent?: Event
 ): string => {
   // `linode_mutate` is a special case, because we want to display
   // "Upgrading" instead of "Mutate".
@@ -62,10 +62,11 @@ export const transitionText = (
   }
 
   if (recentEvent?.action === 'linode_clone') {
-    if (cmr === true) {
-      return buildLinodeCloneTransitionText(recentEvent, linodeId, true);
-    } else {
-      return buildLinodeCloneTransitionText(recentEvent, linodeId);
+    if (isPrimaryEntity(recentEvent, linodeId)) {
+      return 'Cloning';
+    }
+    if (isSecondaryEntity(recentEvent, linodeId)) {
+      return 'Creating';
     }
   }
 
@@ -132,3 +133,13 @@ export const linodesInTransition = (events: Event[]) => {
 
   return set;
 };
+
+// Return the progress of an event if one is given, otherwise return a default
+// of 100. This is useful in the situation where a Linode has recently completed
+// an in-progress event, but we don't have the updated status from the API  yet.
+// In this case it doesn't have a recentEvent attached (since it has completed),
+// but its status is still briefly in transition, so give it a progress of 100.
+export const getProgressOrDefault = (
+  event?: ExtendedEvent,
+  defaultProgress = 100
+) => event?.percent_complete ?? defaultProgress;

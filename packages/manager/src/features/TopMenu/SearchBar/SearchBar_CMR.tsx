@@ -15,12 +15,13 @@ import withStoreSearch, {
 } from 'src/features/Search/withStoreSearch';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { ReduxEntity, useReduxLoad } from 'src/hooks/useReduxLoad';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar_CMR.styles';
 import SearchSuggestion from './SearchSuggestion';
+import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
 
 type CombinedProps = WithTypesProps &
   WithImages &
@@ -62,6 +63,15 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
 
+const searchDeps: ReduxEntity[] = [
+  'linodes',
+  'nodeBalancers',
+  'images',
+  'domains',
+  'volumes',
+  'kubernetes'
+];
+
 export const SearchBar: React.FC<CombinedProps> = props => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
@@ -75,10 +85,17 @@ export const SearchBar: React.FC<CombinedProps> = props => {
 
   const { _isLargeAccount } = useAccountManagement();
 
+  // Only request things if the search bar is open/active.
+  const shouldMakeRequests = searchActive && !_isLargeAccount;
+
   const { _loading } = useReduxLoad(
-    ['linodes', 'nodeBalancers', 'images', 'domains', 'volumes', 'kubernetes'],
+    searchDeps,
     REFRESH_INTERVAL,
-    searchActive && !_isLargeAccount // Only request things if the search bar is open/active.
+    shouldMakeRequests
+  );
+
+  const { loading: objectStorageLoading } = useObjectStorage(
+    shouldMakeRequests
   );
 
   const { searchAPI } = useAPISearch();
@@ -110,11 +127,17 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     } else {
       search(searchText);
     }
-  }, [_loading, search, searchText, _searchAPI, _isLargeAccount]);
+  }, [
+    _loading,
+    objectStorageLoading,
+    search,
+    searchText,
+    _searchAPI,
+    _isLargeAccount
+  ]);
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
-    props.search(_searchText);
   };
 
   const toggleSearch = () => {
@@ -194,7 +217,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const finalOptions = createFinalOptions(
     _isLargeAccount ? apiResults : combinedResults,
     searchText,
-    _loading || apiSearchLoading,
+    _loading || apiSearchLoading || objectStorageLoading,
     // Ignore "Unauthorized" errors, since these will always happen on LKE
     // endpoints for restricted users. It's not really an "error" in this case.
     // We still want these users to be able to use the search feature.

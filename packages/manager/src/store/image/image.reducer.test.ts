@@ -1,4 +1,4 @@
-import { imageFactory } from 'src/factories/images';
+import { imageFactory, normalizeEntities } from 'src/factories';
 
 import {
   createImageActions,
@@ -12,10 +12,7 @@ import reducer, { defaultState } from './image.reducer';
 
 const mockError = [{ reason: 'an error' }];
 const mockImages = imageFactory.buildList(10);
-const mockImagesNormalized = mockImages.reduce((acc, thisImage) => {
-  acc[thisImage.id] = thisImage;
-  return acc;
-}, {});
+const mockImagesNormalized = normalizeEntities(mockImages);
 const mockParams = { diskID: 1 };
 const addEntities = () =>
   reducer(defaultState, requestImagesActions.done({ result: mockImages }));

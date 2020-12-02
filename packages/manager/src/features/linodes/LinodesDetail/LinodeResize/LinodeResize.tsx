@@ -48,7 +48,9 @@ type ClassNames =
   | 'currentPlanContainer'
   | 'resizeTitle'
   | 'checkbox'
-  | 'currentHeaderEmptyCell';
+  | 'currentHeaderEmptyCell'
+  | 'actions'
+  | 'errorLink';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -62,7 +64,10 @@ const styles = (theme: Theme) =>
       }
     },
     checkbox: {
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
+      '& .MuiButtonBase-root': {
+        marginLeft: 3
+      }
     },
     toolTip: {
       paddingTop: theme.spacing(1)
@@ -86,6 +91,14 @@ const styles = (theme: Theme) =>
     },
     currentHeaderEmptyCell: {
       width: '13%'
+    },
+    actions: {
+      paddingBottom: theme.spacing(2),
+      paddingLeft: theme.spacing(3)
+    },
+    errorLink: {
+      color: '#c44742',
+      textDecoration: 'underline'
     }
   });
 
@@ -100,7 +113,7 @@ interface LinodeContextProps {
 
 interface ConfirmationDialog {
   isOpen: boolean;
-  error?: string;
+  error?: string | JSX.Element;
   submitting: boolean;
   currentPlan: string;
   targetPlan: string;
@@ -161,6 +174,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const {
+      classes,
       linodeId,
       linodeType,
       enqueueSnackbar,
@@ -214,10 +228,33 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
-        const error = getAPIErrorOrDefault(
-          errorResponse,
-          'There was an issue resizing your Linode.'
-        )[0].reason;
+        let error: string | JSX.Element = '';
+        const reason = errorResponse[0]?.reason ?? '';
+        if (
+          typeof reason === 'string' &&
+          reason.match(/allocated more disk/i)
+        ) {
+          error = (
+            <>
+              The current disk size of your Linode is too large for the new
+              service plan. Please resize your disk to accommodate the new plan.
+              You can read our{' '}
+              <ExternalLink
+                className={classes.errorLink}
+                hideIcon
+                text="Resize Your Linode"
+                link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
+              />{' '}
+              guide for more detailed instructions.
+            </>
+          );
+        } else {
+          error = getAPIErrorOrDefault(
+            errorResponse,
+            'There was an issue resizing your Linode.'
+          )[0].reason;
+        }
+
         this.setState({
           confirmationDialog: {
             ...this.state.confirmationDialog,
@@ -348,7 +385,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             }
           />
         </Paper>
-        <ActionsPanel>
+        <ActionsPanel className={classes.actions}>
           <Button
             disabled={
               !this.state.selectedId ||

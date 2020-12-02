@@ -3,6 +3,7 @@ export interface Image {
   label: string;
   description: string | null;
   created: string;
+  updated: string;
   type: string;
   is_public: boolean;
   size: number;

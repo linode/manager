@@ -121,11 +121,12 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
     </Button>
   );
 
-  const _tooltipCopy = selected
-    ? readOnly
-      ? 'You do not have permission to modify this Linode.'
-      : tooltipCopy[selected]
-    : null;
+  const _tooltipCopy =
+    disabled && selected
+      ? readOnly
+        ? 'You do not have permission to modify this Linode.'
+        : tooltipCopy[selected]
+      : null;
 
   return (
     <Drawer open={open} onClose={onClose} title="Add an IP Address">

@@ -7,9 +7,15 @@ import Request, {
   setXFilter
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { CreateBucketSchema, UploadCertificateSchema } from './buckets.schema';
+import {
+  CreateBucketSchema,
+  UpdateBucketAccessSchema,
+  UploadCertificateSchema
+} from './buckets.schema';
 import {
   ObjectStorageBucket,
+  ObjectStorageBucketAccessRequest,
+  ObjectStorageBucketAccessResponse,
   ObjectStorageBucketRequestPayload,
   ObjectStorageBucketSSLRequest,
   ObjectStorageBucketSSLResponse,
@@ -143,4 +149,35 @@ export const deleteSSLCert = (clusterId: string, bucketName: string) =>
   Request<ObjectStorageBucketSSLResponse>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/ssl`)
+  );
+
+/**
+ * getBucketAccess
+ *
+ * Returns access information (ACL, CORS) for a given Bucket.
+ */
+export const getBucketAccess = (clusterId: string, bucketName: string) =>
+  Request<ObjectStorageBucketAccessResponse>(
+    setMethod('GET'),
+    setURL(
+      `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/access`
+    )
+  );
+
+/**
+ * updateBucketAccess
+ *
+ * Updates access information (ACL, CORS) for a given Bucket.
+ */
+export const updateBucketAccess = (
+  clusterId: string,
+  bucketName: string,
+  data: ObjectStorageBucketAccessRequest
+) =>
+  Request<{}>(
+    setMethod('PUT'),
+    setURL(
+      `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/access`
+    ),
+    setData(data, UpdateBucketAccessSchema)
   );

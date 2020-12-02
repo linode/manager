@@ -1,7 +1,11 @@
 import { rest, RequestHandler } from 'msw';
 
 import {
+  abuseTicketNotificationFactory,
   accountFactory,
+  appTokenFactory,
+  creditPaymentResponseFactory,
+  databaseFactory,
   domainFactory,
   domainRecordFactory,
   imageFactory,
@@ -24,6 +28,7 @@ import {
   nodeBalancerFactory,
   notificationFactory,
   objectStorageBucketFactory,
+  objectStorageClusterFactory,
   profileFactory,
   supportReplyFactory,
   supportTicketFactory,
@@ -32,7 +37,8 @@ import {
   eventFactory,
   tagFactory,
   nodeBalancerConfigFactory,
-  nodeBalancerConfigNodeFactory
+  nodeBalancerConfigNodeFactory,
+  VLANFactory
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -60,6 +66,10 @@ export const handlers = [
   rest.put('*/profile', (req, res, ctx) => {
     return res(ctx.json({ ...profileFactory.build(), ...(req.body as any) }));
   }),
+  rest.get('*/profile/apps', (req, res, ctx) => {
+    const tokens = appTokenFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(tokens)));
+  }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(ctx.json(cachedRegions));
   }),
@@ -72,7 +82,7 @@ export const handlers = [
     const images = [...privateImages, ...publicImages];
     return res(ctx.json(makeResourcePage(images)));
   }),
-  rest.get('*/instances', async (req, res, ctx) => {
+  rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(3, {
       backups: { enabled: false }
     });
@@ -197,8 +207,12 @@ export const handlers = [
     const buckets = objectStorageBucketFactory.buildList(20);
     return res(ctx.json(makeResourcePage(buckets)));
   }),
+  rest.get('*object-storage/clusters', (req, res, ctx) => {
+    const clusters = objectStorageClusterFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(clusters)));
+  }),
   rest.get('*/domains', (req, res, ctx) => {
-    const domains = domainFactory.buildList(25);
+    const domains = domainFactory.buildList(0);
     return res(ctx.json(makeResourcePage(domains)));
   }),
   rest.post('*/domains/*/records', (req, res, ctx) => {
@@ -208,6 +222,10 @@ export const handlers = [
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(10);
     return res(ctx.json(makeResourcePage(volumes)));
+  }),
+  rest.get('*/vlans', (req, res, ctx) => {
+    const vlans = VLANFactory.buildList(4);
+    return res(ctx.json(makeResourcePage(vlans)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
     return res(ctx.json({ display: 'compact' }));
@@ -246,11 +264,22 @@ export const handlers = [
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(1, {
-      action: 'linode_reboot',
+      action: 'lke_node_create',
       percent_complete: 15,
-      entity: { type: 'linode', id: 999, label: 'linode-1' }
+      entity: { type: 'linode', id: 999, label: 'linode-1' },
+      message:
+        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.'
     });
-    return res.once(ctx.json(makeResourcePage(events)));
+    const diskResize = eventFactory.build({
+      action: 'disk_resize',
+      percent_complete: 75,
+      secondary_entity: {
+        type: 'disk',
+        id: 1,
+        label: 'my-disk'
+      }
+    });
+    return res.once(ctx.json(makeResourcePage([...events, diskResize])));
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
@@ -282,9 +311,6 @@ export const handlers = [
     const tags = tagFactory.buildList(5);
     return res(ctx.json(makeResourcePage(tags)));
   }),
-  rest.get('*/account/notifications*', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage([])));
-  }),
   rest.get('*gravatar*', (req, res, ctx) => {
     return res(ctx.status(400), ctx.json({}));
   }),
@@ -313,10 +339,13 @@ export const handlers = [
     //   until: null,
     //   body: null
     // });
+    const abuseTicket = abuseTicketNotificationFactory.build();
+
     return res(
       ctx.json(
         makeResourcePage([
-          ...notificationFactory.buildList(1)
+          ...notificationFactory.buildList(1),
+          abuseTicket
           // emailBounce
         ])
       )
@@ -324,6 +353,17 @@ export const handlers = [
   }),
   rest.post('*/networking/vlans', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.post('*/account/payments', (req, res, ctx) => {
+    return res(ctx.json(creditPaymentResponseFactory.build()));
+  }),
+  rest.get('*/databases/mysql/instances', (req, res, ctx) => {
+    const online = databaseFactory.build({ status: 'ready' });
+    const initializing = databaseFactory.build({ status: 'initializing' });
+    const error = databaseFactory.build({ status: 'error' });
+    const unknown = databaseFactory.build({ status: 'unknown' });
+    const databases = [online, initializing, error, unknown];
+    return res(ctx.json(makeResourcePage(databases)));
   })
 ];
 
@@ -333,7 +373,7 @@ export const mockDataHandlers: Record<
   (count: number) => RequestHandler
 > = {
   linode: count =>
-    rest.get('*/instances', async (req, res, ctx) => {
+    rest.get('*/linode/instances', async (req, res, ctx) => {
       const linodes = linodeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(linodes)));
     })

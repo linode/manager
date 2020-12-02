@@ -1,9 +1,7 @@
 import { getManagedStats, ManagedStatsData } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -16,6 +14,7 @@ import withManaged, {
   ManagedProps
 } from 'src/containers/managedServices.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import usePolling from 'src/hooks/usePolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DashboardCard from '../DashboardCard_CMR';
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      marginBottom: theme.spacing(3)
+      marginBottom: 20
     }
   },
   status: {
@@ -62,31 +61,32 @@ type CombinedProps = ManagedProps &
 
 export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { requestManagedServices, requestManagedIssues } = props;
   const {
     data,
+    error,
     loading,
     lastUpdated,
-    error,
     update
   } = useAPIRequest<ManagedStatsData | null>(
     () => getManagedStats().then(response => response.data),
     null
   );
 
+  usePolling(
+    [
+      () => requestManagedServices().catch(_ => null),
+      () => requestManagedIssues().catch(_ => null),
+      update
+    ],
+    10000
+  );
+
   React.useEffect(() => {
+    // @todo rely on interval for initial requests
     // Rely on Redux error handling.
-    props.requestManagedServices().catch(_ => null);
-    props.requestManagedIssues().catch(_ => null);
-
-    const interval = setInterval(() => {
-      props.requestManagedServices().catch(_ => null);
-      props.requestManagedIssues().catch(_ => null);
-      update();
-    }, 10000);
-
-    return () => {
-      clearInterval(interval);
-    };
+    requestManagedServices().catch(_ => null);
+    requestManagedIssues().catch(_ => null);
   }, []);
 
   const statsError =
@@ -98,26 +98,16 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
 
   return (
     <DashboardCard
-      title="Linode Managed"
-      alignHeader="space-between"
       alignItems="center"
       className={classes.root}
       noHeaderActionStyles
-      headerAction={() => (
-        <Link to="/managed" className={classes.detailsLink}>
-          View details
-        </Link>
-      )}
-      data-qa-dash-managed
     >
-      <Paper>
-        <LoadingErrorOrContent
-          {...props}
-          data={data}
-          statsError={statsError}
-          statsLoading={statsLoading}
-        />
-      </Paper>
+      <LoadingErrorOrContent
+        {...props}
+        data={data}
+        statsError={statsError}
+        statsLoading={statsLoading}
+      />
     </DashboardCard>
   );
 };

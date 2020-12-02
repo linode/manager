@@ -23,7 +23,7 @@ import {
   StackScriptCategory
 } from 'src/features/StackScripts/stackScriptUtils';
 import { MapState } from 'src/store/types';
-import { formatDate } from 'src/utilities/format-date-iso8601';
+import { formatDate } from 'src/utilities/formatDate';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
 import StackScriptRow from './StackScriptRow';
@@ -77,7 +77,7 @@ const StackScriptsSection: React.FC<CombinedProps> = props => {
       isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsTotal={s.deployments_total}
-      updated={formatDate(s.updated, false)}
+      updated={formatDate(s.updated, { displayTime: false })}
       stackScriptID={s.id}
       triggerDelete={triggerDelete}
       triggerMakePublic={triggerMakePublic}

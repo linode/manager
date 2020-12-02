@@ -17,7 +17,7 @@ import BucketActionMenu from './BucketActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
 import { Link } from 'react-router-dom';
 
-type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link';
+type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link' | 'bucketLabel';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -34,17 +34,31 @@ const styles = (theme: Theme) =>
       '&:hover': {
         textDecoration: 'underline'
       }
+    },
+    bucketLabel: {
+      color: theme.cmrTextColors.linkActiveLight
     }
   });
 
 interface BucketTableRowProps extends ObjectStorageBucket {
   onRemove: () => void;
+  onDetails: () => void;
 }
 
 type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;
 
 export const BucketTableRow: React.FC<CombinedProps> = props => {
-  const { classes, label, cluster, hostname, created, size, onRemove } = props;
+  const {
+    classes,
+    label,
+    cluster,
+    hostname,
+    created,
+    size,
+    onRemove,
+    objects,
+    onDetails
+  } = props;
 
   return (
     <TableRow
@@ -58,7 +72,10 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
           <Grid item>
             <div className={classes.bucketNameWrapper}>
               <Typography variant="body2" component="h3" data-qa-label>
-                <Link to={`/object-storage/buckets/${cluster}/${label}`}>
+                <Link
+                  className={classes.bucketLabel}
+                  to={`/object-storage/buckets/${cluster}/${label}`}
+                >
                   {label}{' '}
                 </Link>
               </Typography>
@@ -78,11 +95,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
 
       <Hidden smDown>
         <TableCell>
-          <DateTimeDisplay
-            value={created}
-            humanizeCutoff="month"
-            data-qa-created
-          />
+          <DateTimeDisplay value={created} data-qa-created />
         </TableCell>
       </Hidden>
 
@@ -92,9 +105,18 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
         </Typography>
       </TableCell>
 
+      <Hidden smDown>
+        <TableCell>
+          <Typography variant="body2" data-qa-size>
+            {objects}
+          </Typography>
+        </TableCell>
+      </Hidden>
+
       <TableCell>
         <BucketActionMenu
           onRemove={onRemove}
+          onDetails={onDetails}
           label={label}
           cluster={cluster}
           data-qa-action-menu

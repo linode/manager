@@ -37,12 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center'
   },
   labelCell: {
-    width: '40%',
+    width: '60%',
     minWidth: 200,
     paddingLeft: 10
-  },
-  messageCell: {
-    width: '30%'
   }
 }));
 
@@ -278,7 +275,6 @@ export const EventsLanding: React.FC<CombinedProps> = props => {
               </TableCell>
               <TableCell data-qa-events-duration-header>Duration</TableCell>
               <TableCell data-qa-events-time-header>When</TableCell>
-              <TableCell className={classes.messageCell}>Message</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

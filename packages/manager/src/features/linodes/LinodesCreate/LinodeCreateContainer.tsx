@@ -3,6 +3,7 @@ import {
   cloneLinode,
   CreateLinodeRequest,
   Linode,
+  LinodeInterfacePayload,
   LinodeTypeClass
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -104,7 +105,7 @@ interface State {
   appInstancesLoading: boolean;
   appInstancesError?: string;
   disabledClasses?: LinodeTypeClass[];
-  selectedVlanID: number | null;
+  selectedVlanIDs: number[];
 }
 
 type CombinedProps = WithSnackbarProps &
@@ -140,7 +141,7 @@ const defaultState: State = {
   formIsSubmitting: false,
   errors: undefined,
   appInstancesLoading: false,
-  selectedVlanID: null
+  selectedVlanIDs: []
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -339,8 +340,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setUDFs = (udfs: any) => this.setState({ udfs });
 
-  setVlanID = (vlanID: number | null) => {
-    this.setState({ selectedVlanID: vlanID });
+  setVlanID = (vlanIDs: number[]) => {
+    this.setState({ selectedVlanIDs: vlanIDs });
   };
 
   generateLabel = () => {
@@ -424,18 +425,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * will be displayed, even if other required fields are missing.
      */
 
-    if (this.state.selectedVlanID) {
-      payload.interfaces = {
-        eth0: { type: 'default' },
-        eth1: { type: 'additional', vlan_id: this.state.selectedVlanID }
-      };
+    if (this.state.selectedVlanIDs.length > 0) {
+      payload.interfaces = getInterfacePayload(this.state.selectedVlanIDs);
     }
 
     if (payload.root_pass) {
-      const passwordError = validatePassword(
-        this.props.flags.passwordValidation ?? 'none',
-        payload.root_pass
-      );
+      const passwordError = validatePassword(payload.root_pass);
 
       if (passwordError) {
         this.setState({
@@ -792,3 +787,17 @@ const handleAnalytics = (
 
   sendCreateLinodeEvent(eventAction, eventLabel);
 };
+
+export const getInterfacePayload = (
+  vlanIDs: number[]
+): Record<string, LinodeInterfacePayload> =>
+  vlanIDs.reduce(
+    (acc, thisVLAN, currentIdx) => {
+      const slot = `eth${currentIdx + 1}`;
+      return {
+        ...acc,
+        [slot]: { type: 'additional', vlan_id: thisVLAN }
+      };
+    },
+    { eth0: { type: 'default' } }
+  );

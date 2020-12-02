@@ -128,10 +128,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     this.requestNodeBalancer(+nodeBalancerId);
 
     // Update NB information every 30 seconds, so that we have an accurate picture of nodes
-    this.pollInterval = window.setInterval(
-      () => this.requestNodeBalancer(+nodeBalancerId),
-      30 * 1000
-    );
+    this.pollInterval = window.setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        this.requestNodeBalancer(+nodeBalancerId);
+      }
+    }, 30 * 1000);
   }
 
   componentWillUnmount() {

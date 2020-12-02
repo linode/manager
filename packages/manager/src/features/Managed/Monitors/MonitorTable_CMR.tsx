@@ -288,6 +288,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
       </OrderBy>
       <DeletionDialog
         label={dialog.entityLabel || ''}
+        entity="monitor"
         onDelete={handleDelete}
         onClose={closeDialog}
         open={dialog.isOpen}
