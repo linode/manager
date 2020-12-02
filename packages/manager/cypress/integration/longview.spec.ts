@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { createLinode } from '../support/api/linodes';
 import { createClient, deleteAllTestClients } from '../support/api/longview';
-import { containsVisibleClick, getVisibleClick } from '../support/helpers';
+import { containsVisible, fbtVisible, getVisible } from '../support/helpers';
 import { waitForAppLoad } from '../support/ui/common';
 import strings from '../support/cypresshelpers';
 
@@ -16,7 +16,7 @@ describe('longview', () => {
         const linodeIp = linode['ipv4'][0];
         const longviewLabel = client.label;
         cy.visit('/longview');
-        cy.contains(longviewLabel).should('be.visible');
+        containsVisible(longviewLabel);
         cy.get('code')
           .first()
           .then($code => {
@@ -34,10 +34,10 @@ describe('longview', () => {
               console.log(out.stderr);
             });
             waitForAppLoad('/longview', false);
-            cy.get('[data-testid="longview-client-row"]');
-            cy.contains('All packages up to date');
-            cy.contains('View details').should('be.visible');
-            cy.contains('Swap').should('be.visible');
+            getVisible('[data-testid="longview-client-row"]');
+            fbtVisible(clientLabel);
+            fbtVisible('View details');
+            fbtVisible('Swap');
             deleteAllTestClients();
           });
       });
