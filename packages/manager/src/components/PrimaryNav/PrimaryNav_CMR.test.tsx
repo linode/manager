@@ -11,14 +11,6 @@ const props = {
 };
 
 describe('PrimaryNav_CMR', () => {
-  it('contains all nav groups', () => {
-    const { getByTestId } = renderWithTheme(<PrimaryNav_CMR {...props} />);
-    getByTestId('nav-group-Compute');
-    getByTestId('nav-group-Network');
-    getByTestId('nav-group-Storage');
-    getByTestId('nav-group-Monitors');
-  });
-
   it('only contains a "Managed" menu link if the user has Managed services.', () => {
     const { getByTestId, rerender, queryByTestId } = renderWithTheme(
       <PrimaryNav_CMR {...props} />,

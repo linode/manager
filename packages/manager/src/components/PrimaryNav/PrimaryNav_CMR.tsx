@@ -260,6 +260,25 @@ export const PrimaryNav: React.FC<Props> = props => {
         <Hidden mdUp>
           <Divider className={classes.divider} />
           <Link
+            to="/account"
+            onClick={closeMenu}
+            data-qa-nav-item="/account"
+            className={classNames({
+              [classes.listItem]: true,
+              [classes.active]:
+                linkIsActive('/account', location.search, location.pathname) ===
+                true
+            })}
+          >
+            <ListItemText
+              primary="Account"
+              disableTypography={true}
+              className={classNames({
+                [classes.linkItem]: true
+              })}
+            />
+          </Link>
+          <Link
             to="/profile/display"
             onClick={closeMenu}
             data-qa-nav-item="/profile/display"
@@ -390,6 +409,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
           ),
           listItemCollapsed: isCollapsed
         })}
+        data-testid={`menu-item-${display}`}
       >
         {icon && isCollapsed && (
           <div className="icon" aria-hidden>
