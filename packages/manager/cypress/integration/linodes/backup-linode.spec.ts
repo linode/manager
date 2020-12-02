@@ -56,11 +56,12 @@ describe('linode backups', () => {
         method: 'POST',
         url: `*/linode/instances/${linode.id}/backups`
       }).as('enableBackups');
-      cy.get('[data-qa-manual-name="true"]').type(`${linode.label} backup`);
+      cy.findByText(`${linode.label}`).should('be.visible');
       if (
         cy.contains('PROVISIONING').should('not.be.visible') &&
         cy.contains('BOOTING').should('not.be.visible')
       ) {
+        cy.get('[data-qa-manual-name="true"]').type(`${linode.label} backup`);
         cy.findByText('Take Snapshot')
           .should('be.visible')
           .click();
