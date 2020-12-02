@@ -108,7 +108,7 @@ const makeLinodeCreateReqWithBackupsEnabled = linode => {
  * if linode is undefined, will create default test debian linode in us-east
  * @param linode {label:'', tags:[],type:'',region:'',image:'',root_pass:''}
  */
-export const createLinode = (linode = undefined, password) => {
+export const createLinode = (linode = undefined, password = '') => {
   return makeLinodeCreateReq(linode, password).then(resp => {
     apiCheckErrors(resp);
     console.log(`Created Linode ${resp.body.label} successfully`, resp);
