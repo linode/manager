@@ -158,7 +158,8 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         caretPadding: 10,
         position: 'nearest',
         callbacks: {
-          label: (ctx: any) => _formatTooltip(ctx, formatTooltip, _tooltipUnit)
+          label: (ctx: any) =>
+            _formatTooltip(ctx, data, formatTooltip, _tooltipUnit)
         },
         intersect: false,
         mode: 'index'
@@ -366,13 +367,27 @@ export const metricsBySection = (data: Metrics): number[] => [
 
 export const _formatTooltip = (
   ctx: any,
+  data: DataSet[],
   formatter: ((v: number) => string) | undefined,
   unit: string | undefined
 ) => {
+  /**
+   * We sometimes want to format tooltips differently
+   * than the overall graph (if a series has a small value
+   * relative to the graph max, it will likely be rounded to
+   * zero).
+   *
+   * We need to access the raw unformatted data (passed as props.data)
+   * and apply a custom tooltip formatting function here.
+   */
+  const idx = ctx.datasetIndex;
+  const pointIdx = ctx.dataIndex;
+  const rawValue = data[idx]?.['data'][pointIdx]?.[1] ?? 0;
   const label = ctx.dataset.label;
   const value = formatter
-    ? formatter(ctx.dataPoint.y)
-    : roundTo(ctx.dataPoint.y);
+    ? formatter(rawValue)
+    : // If there's no formatter passed, we can use the previously formatted data.
+      roundTo(ctx.dataPoint.y);
   return `${label}: ${value}${unit ? unit : ''}`;
 };
 
