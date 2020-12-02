@@ -311,7 +311,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                 >
                   <AccessCell
                     active={scopeTup[1] === 0}
-                    scope="2"
+                    scope="0"
                     scopeDisplay={scopeTup[0]}
                     viewOnly={mode === 'view'}
                     disabled={false}

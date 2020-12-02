@@ -37,7 +37,10 @@ export const AccessCell: React.FC<AccessCellProps> = props => {
       return null;
     }
     return (
-      <span className={classes.checkIcon}>
+      <span
+        className={classes.checkIcon}
+        aria-label={`This token has ${scope} access for ${scopeDisplay}`}
+      >
         <Check />
       </span>
     );
