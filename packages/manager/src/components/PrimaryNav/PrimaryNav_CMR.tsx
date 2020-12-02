@@ -45,7 +45,8 @@ type NavEntity =
   | 'Firewalls'
   | 'Account'
   | 'Dashboard'
-  | 'StackScripts';
+  | 'StackScripts'
+  | 'Databases';
 
 interface PrimaryLink {
   display: NavEntity;
@@ -90,6 +91,15 @@ export const PrimaryNav: React.FC<Props> = props => {
     account?.data?.capabilities ?? []
   );
 
+  const showVlans = isFeatureEnabled(
+    'Vlans',
+    Boolean(flags.vlans),
+    account?.data?.capabilities ?? []
+  );
+
+  // No account capability returned yet.
+  const showDatabases = flags.databases;
+
   const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
     () => [
       [
@@ -113,6 +123,7 @@ export const PrimaryNav: React.FC<Props> = props => {
           icon: <Volume />
         },
         {
+          hide: !showVlans,
           display: 'VLANS',
           href: '/vlans',
           icon: <Linode />
@@ -155,6 +166,12 @@ export const PrimaryNav: React.FC<Props> = props => {
           icon: <Kubernetes />
         },
         {
+          hide: !showDatabases,
+          display: 'Databases',
+          href: '/databases',
+          icon: <Storage />
+        },
+        {
           display: 'Object Storage',
           href: '/object-storage/buckets',
           activeLinks: [
@@ -178,6 +195,8 @@ export const PrimaryNav: React.FC<Props> = props => {
     ],
     [
       showFirewalls,
+      showVlans,
+      showDatabases,
       _isManagedAccount,
       domains.loading,
       domains.lastUpdated,
