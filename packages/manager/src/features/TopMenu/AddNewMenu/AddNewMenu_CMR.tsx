@@ -44,7 +44,6 @@ const styles = (theme: Theme) =>
   createStyles({
     wrapper: {
       position: 'relative',
-      order: 1,
       marginRight: theme.spacing(1),
       [theme.breakpoints.down('sm')]: {
         flex: 1
