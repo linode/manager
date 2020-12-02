@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 import * as React from 'react';
 import Check from 'src/assets/icons/monitor-ok.svg';
 import Radio from 'src/components/Radio';
@@ -40,6 +41,7 @@ export const AccessCell: React.FC<AccessCellProps> = props => {
       <span
         className={classes.checkIcon}
         aria-label={`This token has ${scope} access for ${scopeDisplay}`}
+        tabIndex={0}
       >
         <Check />
       </span>
