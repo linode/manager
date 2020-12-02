@@ -254,7 +254,8 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2)
   },
   columnLabel: {
-    color: theme.cmrTextColors.headlineStatic
+    color: theme.cmrTextColors.headlineStatic,
+    fontFamily: theme.font.bold
   },
   summaryContent: {
     '& > div': {
@@ -336,17 +337,17 @@ const Body: React.FC<BodyProps> = props => {
 
   return (
     <Grid
-      className={classes.body}
       container
       item
-      justify="space-between"
+      className={classes.body}
       direction="row"
+      justify="space-between"
     >
       <Grid container item direction="column" xs={12} md={4}>
-        <Grid className={classes.columnLabel} item>
+        <Grid item className={classes.columnLabel}>
           Summary
         </Grid>
-        <Grid className={classes.summaryContent} container item direction="row">
+        <Grid container item className={classes.summaryContent} direction="row">
           <Grid item>
             <Typography>
               {pluralize('CPU Core', 'CPU Cores', numCPUs)}
@@ -365,17 +366,17 @@ const Body: React.FC<BodyProps> = props => {
       </Grid>
 
       <Grid
-        className={classes.accessTableContainer}
         container
         item
+        className={classes.accessTableContainer}
         direction="column"
         xs={12}
         md={8}
       >
-        <Grid className={classes.columnLabel} item>
+        <Grid item className={classes.columnLabel}>
           Access
         </Grid>
-        <Grid className={classes.accessTableContent} item>
+        <Grid item className={classes.accessTableContent}>
           <Table className={classes.accessTable}>
             <TableBody>
               <TableRow>
@@ -503,7 +504,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
             {formatDate(created)}
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={5} className={classes.tags}>
+        <Grid item className={classes.tags} xs={12} sm={5}>
           <TagCell
             width={500}
             tags={tags}

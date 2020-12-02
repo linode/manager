@@ -368,7 +368,8 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2)
   },
   columnLabel: {
-    color: theme.cmrTextColors.headlineStatic
+    color: theme.cmrTextColors.headlineStatic,
+    fontFamily: theme.font.bold
   },
   summaryContainer: {
     flexBasis: '25%',
@@ -456,18 +457,18 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
   } = props;
 
   return (
-    <Grid className={classes.body} container item direction="row">
+    <Grid container item className={classes.body} direction="row">
       {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
       <Grid
-        className={classes.summaryContainer}
         container
         item
+        className={classes.summaryContainer}
         direction="column"
       >
-        <Grid className={classes.columnLabel} item>
+        <Grid item className={classes.columnLabel}>
           Summary
         </Grid>
-        <Grid className={classes.summaryContent} container item direction="row">
+        <Grid container item className={classes.summaryContent} direction="row">
           <Grid item>
             <Typography>
               {pluralize('CPU Core', 'CPU Cores', numCPUs)}
@@ -487,25 +488,25 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
         </Grid>
       </Grid>
 
-      <Grid className={classes.ipContainer} container item direction="column">
+      <Grid container item className={classes.ipContainer} direction="column">
         <Grid item className={classes.columnLabel}>
           IP Addresses
         </Grid>
-        <Grid className={classes.ipContent} container item direction="column">
+        <Grid container item className={classes.ipContent} direction="column">
           <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
         </Grid>
       </Grid>
 
       <Grid
-        className={classes.accessTableContainer}
         container
         item
+        className={classes.accessTableContainer}
         direction="column"
       >
-        <Grid className={classes.columnLabel} item>
+        <Grid item className={classes.columnLabel}>
           Access
         </Grid>
-        <Grid className={classes.accessTableContent} item>
+        <Grid item className={classes.accessTableContent}>
           <Table className={classes.accessTable}>
             <TableBody>
               <TableRow>
@@ -616,8 +617,8 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   return (
     <Grid
-      className={classes.footer}
       container
+      className={classes.footer}
       direction="row"
       alignItems="center"
       justify="space-between"
@@ -641,7 +642,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           {formatDate(linodeCreated)}
         </Typography>
       </Grid>
-      <Grid className={classes.linodeTags} item xs={12} md={4}>
+      <Grid item className={classes.linodeTags} xs={12} md={4}>
         <TagCell
           width={500}
           tags={linodeTags}

@@ -28,6 +28,7 @@ const VlanEntityDetail: React.FC<CombinedProps> = props => {
       header={<Header id={vlan.id} label={vlan.description} />}
       footer={
         <Footer
+          label={vlan.description}
           regionDisplay={regionDisplay}
           cidr={vlan.cidr_block}
           id={vlan.id}
@@ -48,53 +49,27 @@ export interface HeaderProps {
   label: string;
 }
 
-const useHeaderStyles = makeStyles((theme: Theme) => ({
+const useHeaderStyles = makeStyles(() => ({
   root: {
     margin: 0,
     width: '100%'
-  },
-  body: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    marginLeft: 'auto',
-    padding: `0 !important`
-  },
-  actionItemsOuter: {
-    display: 'flex',
-    alignItems: 'center',
-    height: 40
-  },
-  actionItem: {
-    minWidth: 'auto'
   }
 }));
 
 const Header: React.FC<HeaderProps> = props => {
   const classes = useHeaderStyles();
 
-  const { id, label } = props;
-
-  const [modalOpen, toggleModal] = React.useState<boolean>(false);
-
-  const handleOpenDeleteVlanModal = () => {
-    toggleModal(true);
-  };
-
-  const handleCloseDeleteVlanModal = () => {
-    toggleModal(false);
-  };
+  const { label } = props;
 
   return (
     <>
       <Grid
-        className={classes.root}
         container
+        className={classes.root}
         alignItems="center"
         justify="space-between"
       >
-        <Grid className="px0" item>
+        <Grid item className="px0">
           <Breadcrumb
             crumbOverrides={[
               {
@@ -102,11 +77,13 @@ const Header: React.FC<HeaderProps> = props => {
                 position: 1
               }
             ]}
+            labelTitle={label}
+            labelOptions={{ noCap: true }}
             pathname={location.pathname}
             data-qa-title
           />
         </Grid>
-        <Grid className="px0" item>
+        <Grid item className="px0">
           <DocumentationButton href="https://www.linode.com/" />
         </Grid>
       </Grid>
@@ -114,25 +91,6 @@ const Header: React.FC<HeaderProps> = props => {
         parentLink="/vlans"
         parentText="Virtual LANs"
         title={label}
-        bodyClassName={classes.body}
-        body={
-          <div className={classes.actionItemsOuter}>
-            <Button
-              buttonType="secondary"
-              className={classes.actionItem}
-              onClick={handleOpenDeleteVlanModal}
-            >
-              Delete
-            </Button>
-          </div>
-        }
-      />
-      <VlanDialog
-        open={modalOpen}
-        selectedVlanID={id}
-        selectedVlanLabel={label}
-        closeDialog={handleCloseDeleteVlanModal}
-        redirectToLanding={true}
       />
     </>
   );
@@ -143,6 +101,7 @@ const Header: React.FC<HeaderProps> = props => {
 // =============================================================================
 
 interface FooterProps {
+  label: string;
   regionDisplay: string | null;
   cidr: string;
   id: number;
@@ -160,33 +119,76 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     '&:last-of-type': {
       borderRight: 'none'
     }
+  },
+  actionItemsOuter: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    height: 40
+  },
+  actionItem: {
+    minWidth: 'auto'
   }
 }));
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
-  const { regionDisplay, cidr, id, created } = props;
-
   const classes = useFooterStyles();
 
+  const { label, regionDisplay, cidr, id, created } = props;
+
+  const [modalOpen, toggleModal] = React.useState<boolean>(false);
+
+  const handleOpenDeleteVlanModal = () => {
+    toggleModal(true);
+  };
+
+  const handleCloseDeleteVlanModal = () => {
+    toggleModal(false);
+  };
+
   return (
-    <Grid container direction="row" alignItems="center" justify="space-between">
-      <Grid container item>
-        {regionDisplay && (
+    <>
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justify="space-between"
+      >
+        <Grid container item xs={12} sm={11}>
+          {regionDisplay && (
+            <Typography className={classes.listItem}>
+              <span className={classes.label}>Region:</span> {regionDisplay}
+            </Typography>
+          )}
           <Typography className={classes.listItem}>
-            <span className={classes.label}>Region:</span> {regionDisplay}
+            <span className={classes.label}>CIDR:</span> {cidr}
           </Typography>
-        )}
-        <Typography className={classes.listItem}>
-          <span className={classes.label}>CIDR:</span> {cidr}
-        </Typography>
-        <Typography className={classes.listItem}>
-          <span className={classes.label}>ID:</span> {id}
-        </Typography>
-        <Typography className={classes.listItem}>
-          <span className={classes.label}>Created:</span>{' '}
-          {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
-        </Typography>
+          <Typography className={classes.listItem}>
+            <span className={classes.label}>ID:</span> {id}
+          </Typography>
+          <Typography className={classes.listItem}>
+            <span className={classes.label}>Created:</span>{' '}
+            {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+          </Typography>
+        </Grid>
+        <Grid item className={classes.actionItemsOuter} xs={12} sm={1}>
+          <Button
+            buttonType="secondary"
+            className={classes.actionItem}
+            onClick={handleOpenDeleteVlanModal}
+          >
+            Delete
+          </Button>
+        </Grid>
       </Grid>
-    </Grid>
+
+      <VlanDialog
+        open={modalOpen}
+        selectedVlanID={id}
+        selectedVlanLabel={label}
+        closeDialog={handleCloseDeleteVlanModal}
+        redirectToLanding={true}
+      />
+    </>
   );
 });
