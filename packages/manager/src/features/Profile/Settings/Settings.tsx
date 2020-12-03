@@ -20,6 +20,7 @@ import { MapState } from 'src/store/types';
 import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
 import ThemeToggle from './ThemeToggle_CMR';
+// import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 
 type ClassNames = 'root' | 'title' | 'label';
 
