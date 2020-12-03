@@ -1,6 +1,10 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { createLinode } from '../support/api/linodes';
-import { createClient, deleteAllTestClients } from '../support/api/longview';
+import { createLinode, deleteLinodeById } from '../support/api/linodes';
+import {
+  createClient,
+  deleteAllTestClients,
+  deleteClientById
+} from '../support/api/longview';
 import { containsVisible, fbtVisible, getVisible } from '../support/helpers';
 import { waitForAppLoad } from '../support/ui/common';
 import strings from '../support/cypresshelpers';
@@ -39,7 +43,8 @@ describe('longview', () => {
               fbtVisible('View details');
               fbtVisible('Swap');
             });
-            deleteAllTestClients();
+            deleteLinodeById(linode.id);
+            deleteClientById(client.id);
           });
       });
     });
