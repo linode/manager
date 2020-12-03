@@ -33,7 +33,7 @@
     "axios-mock-adapter": "^1.15.0",
     "bluebird": "^3.5.1",
     "browser-detect": "^0.2.28",
-    "chart.js": "~2.9.4",
+    "chart.js": "3.0.0-beta.6",
     "chartjs-adapter-luxon": "^0.2.1",
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
@@ -144,7 +144,6 @@
     "@testing-library/user-event": "^12.1.1",
     "@types/algoliasearch": "^3.27.5",
     "@types/bluebird": "^3.5.20",
-    "@types/chart.js": "^2.9.21",
     "@types/classnames": "^2.2.3",
     "@types/enzyme": "^3.9.3",
     "@types/he": "^1.1.0",
@@ -269,9 +268,6 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}"
-    ],
-    "setupFiles": [
-      "<rootDir>/config/polyfills.js"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/config/testSetup.js",
