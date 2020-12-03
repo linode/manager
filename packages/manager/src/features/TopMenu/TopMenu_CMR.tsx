@@ -1,11 +1,17 @@
+import MenuIcon from '@material-ui/icons/Menu';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
+import Hidden from 'src/components/core/Hidden';
+import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
 import AddNewMenu from './AddNewMenu/AddNewMenu_CMR';
-import SearchBar from './SearchBar/SearchBar_CMR';
+import Community from './Community';
+import Help from './Help';
 import NotificationButton from './NotificationButton';
+import SearchBar from './SearchBar/SearchBar_CMR';
+import UserMenu from './UserMenu/UserMenu_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -34,6 +40,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  openSideMenu: () => void;
+  desktopMenuToggle: () => void;
   isLoggedInAsCustomer: boolean;
   username: string;
 }
@@ -41,7 +49,12 @@ interface Props {
 type PropsWithStyles = Props;
 
 const TopMenu: React.FC<PropsWithStyles> = props => {
-  const { username, isLoggedInAsCustomer } = props;
+  const {
+    openSideMenu,
+    username,
+    isLoggedInAsCustomer,
+    desktopMenuToggle
+  } = props;
 
   const classes = useStyles();
 
@@ -62,9 +75,32 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
       )}
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar} variant="dense">
+          <Hidden smDown>
+            <IconButton
+              color="inherit"
+              aria-label="open menu"
+              onClick={desktopMenuToggle}
+              // className={classes.navIconHide}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Hidden>
+          <Hidden mdUp>
+            <IconButton
+              color="inherit"
+              aria-label="open menu"
+              onClick={openSideMenu}
+              // className={classes.navIconHide}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Hidden>
           <AddNewMenu />
           <SearchBar />
+          <Help />
+          <Community />
           <NotificationButton />
+          <UserMenu />
         </Toolbar>
       </AppBar>
     </React.Fragment>
