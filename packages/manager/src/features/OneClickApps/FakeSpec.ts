@@ -597,7 +597,7 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Secure Your Server',
     description: `Save time on securing your Linode a by deploying an instance preconfigured with some basic security best practices: limited user account access, hardened SSH, and Fail2Ban for SSH Login Protection."
-    summary: `Harden your Linode before you deploy with the Secure Your Server One-Click App``,
+    summary: `Harden your Linode before you deploy with the Secure Your Server One-Click App`,
     related_guides: [
       {
         title: 'Securing your Server',
