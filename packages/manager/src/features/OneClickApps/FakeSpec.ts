@@ -595,6 +595,19 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/rust_color.svg'
   },
   {
+    name: 'Secure Your Server',
+    description: `Keeping your software up to date is the single biggest security precaution you can take for any operating system. Software updates range from critical vulnerability patches to minor bug fixes, and many software vulnerabilities are actually patched by the time they become public.`,
+    summary: `Basic steps to harden your Linode deployment.`,
+    related_guides: [
+      {
+        title: 'Securing your Server',
+        href:
+          'https://www.linode.com/docs/guides/securing-your-server/'
+      }
+    ],
+    logo_url: 'assets/secureyourserver_color.svg'
+  },
+  {
     name: 'Shadowsocks',
     description:
       'Shadowsocks is a lightweight SOCKS5 web proxy tool. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
