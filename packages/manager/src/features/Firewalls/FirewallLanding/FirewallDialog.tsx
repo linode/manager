@@ -121,7 +121,7 @@ const Actions: React.FC<ActionsProps> = props => {
         onClick={props.onSubmit}
         loading={props.isSubmitting}
         destructive={props.mode === 'delete'}
-        buttonType="secondary"
+        buttonType="primary"
       >
         {capitalize(props.mode)}
       </Button>

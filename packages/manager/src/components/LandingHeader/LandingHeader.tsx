@@ -1,28 +1,27 @@
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
-} from 'src/components/core/styles';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import EntityHeader, {
   HeaderProps
 } from 'src/components/EntityHeader/EntityHeader';
-import Hidden from '../core/Hidden';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   button: {
     borderRadius: 3,
     height: 34,
     padding: 0
+  },
+  hideOnMobile: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   }
 }));
 
 interface Props extends Omit<HeaderProps, 'actions'> {
   extraActions?: JSX.Element;
+  alwaysShowActions?: boolean;
   body?: JSX.Element;
   docsLink?: string;
   onAddNew?: () => void;
@@ -39,14 +38,13 @@ interface Props extends Omit<HeaderProps, 'actions'> {
 
 export const LandingHeader: React.FC<Props> = props => {
   const classes = useStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const {
     docsLink,
     onAddNew,
     entity,
     extraActions,
+    alwaysShowActions,
     createButtonWidth,
     createButtonText
   } = props;
@@ -65,13 +63,13 @@ export const LandingHeader: React.FC<Props> = props => {
         justify="flex-end"
       >
         {extraActions && (
-          <Hidden smDown>
-            <Grid item>{extraActions}</Grid>
-          </Hidden>
+          <Grid item className={alwaysShowActions ? '' : classes.hideOnMobile}>
+            {extraActions}
+          </Grid>
         )}
 
         {onAddNew && (
-          <Grid item className={!docsLink ? 'px0' : undefined}>
+          <Grid item>
             <Button
               buttonType="primary"
               className={classes.button}
@@ -84,9 +82,6 @@ export const LandingHeader: React.FC<Props> = props => {
             </Button>
           </Grid>
         )}
-        {docsLink && (
-          <DocumentationButton href={docsLink} hideText={matchesSmDown} />
-        )}
       </Grid>
     ),
     [
@@ -95,14 +90,15 @@ export const LandingHeader: React.FC<Props> = props => {
       onAddNew,
       classes.button,
       extraActions,
-      matchesSmDown,
       createButtonWidth,
       startsWithVowel,
       createButtonText
     ]
   );
 
-  return <EntityHeader isLanding actions={actions} {...props} />;
+  return (
+    <EntityHeader isLanding actions={actions} docsLink={docsLink} {...props} />
+  );
 };
 
 export default LandingHeader;

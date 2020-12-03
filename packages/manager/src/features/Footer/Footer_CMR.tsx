@@ -27,21 +27,25 @@ type CSSClasses =
 const styles = (theme: Theme) =>
   createStyles({
     container: {
-      margin: `0 auto`,
-      maxWidth: 1280,
       width: '100%',
+      backgroundColor: theme.bg.main,
+      margin: 0,
       [theme.breakpoints.down('xs')]: {
         flexDirection: 'column',
         alignItems: 'flex-start'
+      },
+      [theme.breakpoints.up('md')]: {
+        paddingLeft: 200
       }
     },
     desktopMenuIsOpen: {
       paddingLeft: 0,
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up(1100)]: {
         paddingLeft: theme.spacing(7) + 36
       }
     },
     version: {
+      marginLeft: 24,
       flex: 1,
       '&.MuiGrid-item': {
         paddingLeft: 0

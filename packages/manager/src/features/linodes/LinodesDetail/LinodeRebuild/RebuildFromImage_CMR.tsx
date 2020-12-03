@@ -209,7 +209,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
                 />
                 <Button
                   disabled={submitButtonDisabled || disabled}
-                  buttonType="secondary"
+                  buttonType="primary"
                   className="destructive"
                   onClick={handleRebuildButtonClick}
                   data-testid="rebuild-button"

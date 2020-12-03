@@ -15,7 +15,7 @@ type ClassNames =
   | 'root'
   | 'loading'
   | 'loadingText'
-  | 'destructive'
+  // | 'destructive'
   | 'compact'
   | 'superCompact'
   | 'reg';
@@ -44,28 +44,26 @@ const styles = (theme: Theme) =>
     },
     root: {
       minWidth: '105px',
-      paddingLeft: theme.spacing(3) + 4,
-      paddingRight: theme.spacing(3) + 4,
-      transition: 'none',
-      '&.cancel': {
-        border: `1px solid transparent`,
-        transition: theme.transitions.create(['color', 'border-color']),
-        '&:hover, &:focus': {
-          color: theme.palette.primary.light,
-          borderColor: theme.palette.primary.light
-        }
-      },
-      '&.remove': {
-        fontSize: '.9rem',
-        border: 0,
-        color: '#C44742',
-        padding: `${theme.spacing(2) + 2}px  ${theme.spacing(2) +
-          2}px ${theme.spacing(3) + 2}px ${theme.spacing(2) + 2}px`,
-        transition: theme.transitions.create(['color', 'border-color']),
-        '&:hover, &:focus': {
-          color: '#DF6560'
-        }
-      }
+      transition: 'none'
+      // '&.cancel': {
+      //   border: `1px solid transparent`,
+      //   transition: theme.transitions.create(['color', 'border-color']),
+      //   '&:hover, &:focus': {
+      //     color: theme.palette.primary.light,
+      //     borderColor: theme.palette.primary.light
+      //   }
+      // },
+      // '&.remove': {
+      //   fontSize: '.9rem',
+      //   border: 0,
+      //   color: '#C44742',
+      //   padding: `${theme.spacing(2) + 2}px  ${theme.spacing(2) +
+      //     2}px ${theme.spacing(3) + 2}px ${theme.spacing(2) + 2}px`,
+      //   transition: theme.transitions.create(['color', 'border-color']),
+      //   '&:hover, &:focus': {
+      //     color: '#DF6560'
+      //   }
+      // }
     },
     loading: {
       '& svg': {
@@ -78,34 +76,34 @@ const styles = (theme: Theme) =>
     loadingText: {
       marginRight: 8
     },
-    destructive: {
-      borderColor: '#C44742',
-      color: '#C44742',
-      background: theme.color.white,
-      '&.primary:not(.disabled)': {
-        backgroundColor: '#C44742',
-        color: theme.color.white,
-        '&:hover, &:focus': {
-          backgroundColor: '#DF6560',
-          color: theme.color.white
-        }
-      },
-      '&:hover, &:focus': {
-        background: theme.color.white,
-        color: '#DF6560',
-        borderColor: '#DF6560'
-      },
-      '&:active': {
-        color: '#963530',
-        borderColor: '#963530'
-      },
-      '&$loading': {
-        color: '#C44742 !important',
-        '&.primary': {
-          background: 'rgba(0, 0, 0, 0.12) !important'
-        }
-      }
-    },
+    // destructive: {
+    //   borderColor: '#C44742',
+    //   color: '#C44742',
+    //   background: theme.color.white,
+    //   '&.primary:not(.disabled)': {
+    //     backgroundColor: '#C44742',
+    //     color: '#fff',
+    //     '&:hover, &:focus': {
+    //       backgroundColor: '#DF6560',
+    //       color: '#fff'
+    //     }
+    //   },
+    //   '&:hover, &:focus': {
+    //     background: theme.color.white,
+    //     color: '#DF6560',
+    //     borderColor: '#DF6560'
+    //   },
+    //   '&:active': {
+    //     color: '#963530',
+    //     borderColor: '#963530'
+    //   },
+    //   '&$loading': {
+    //     color: '#C44742 !important',
+    //     '&.primary': {
+    //       background: 'rgba(0, 0, 0, 0.12) !important'
+    //     }
+    //   }
+    // },
     compact: {
       paddingLeft: theme.spacing(2) - 2,
       paddingRight: theme.spacing(2) - 2,
@@ -136,7 +134,8 @@ const getVariant = cond([
 const getColor = cond([
   [propEq('buttonType', 'primary'), always('primary')],
   [propEq('buttonType', 'secondary'), always('secondary')],
-  [propEq('buttonType', 'remove'), always('secondary')],
+  [propEq('buttonType', 'remove'), always('primary')],
+  [propEq('buttonType', 'destructive'), always('primary')],
   [propEq('buttonType', 'cancel'), always('secondary')],
   [() => true, always(undefined)]
 ]);
@@ -172,7 +171,7 @@ const wrappedButton: React.FC<CombinedProps> = props => {
             [classes.root]: true,
             [classes.loading]: loading,
             loading,
-            [classes.destructive]: destructive,
+            // [classes.destructive]: destructive,
             [classes.compact]: compact,
             [classes.superCompact]: superCompact,
             disabled: props.disabled
@@ -189,7 +188,7 @@ const wrappedButton: React.FC<CombinedProps> = props => {
           {loading ? (
             loadingText ? (
               /*
-                the recommendation here is to not use loadingText that
+                The recommendation here is to not use loadingText that
                 will create a large width for the button. Keep
                 your loading text strings short.
               */

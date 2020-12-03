@@ -29,7 +29,7 @@ const renderActions = (
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         loading={loading}
         onClick={onSubmit}

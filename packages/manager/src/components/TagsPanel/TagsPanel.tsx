@@ -1,11 +1,10 @@
-import AddCircle from '@material-ui/icons/AddCircle';
 import * as classNames from 'classnames';
 import { getTags } from '@linode/api-v4/lib/tags';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
+import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
@@ -13,7 +12,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -74,8 +72,10 @@ const styles = (theme: Theme) =>
       '& svg': {
         marginRight: theme.spacing(1)
       },
-      '&:hover p': {
-        color: theme.palette.primary.main
+      '&:hover': {
+        '& p': {
+          color: theme.palette.primary.main
+        }
       }
     },
     tagsPanelItemWrapper: {
@@ -399,7 +399,6 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             hideLabel
             value={tagInputValue}
             createOptionPosition="first"
-            autoFocus
             className={classes.selectTag}
             blurInputOnSelect={false}
             menuIsOpen={!loading && !tagError}
@@ -411,17 +410,12 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               [classes.hasError]: tagError
             })}
           >
-            <Button
+            <AddNewLink
+              label="Add New Tag"
+              disabled={loading || disabled}
               onClick={this.toggleTagInput}
               className={classes.addButton}
-              disableFocusRipple
-              disableRipple
-              disabled={loading || disabled}
-              data-qa-add-tag-btn
-            >
-              <AddCircle data-qa-add-tag />
-              <Typography data-qa-tag-p>Add New Tag</Typography>
-            </Button>
+            />
           </div>
         )}
       </div>
@@ -431,7 +425,4 @@ class TagsPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
-  styled,
-  withSnackbar
-)(TagsPanel);
+export default compose<CombinedProps, Props>(styled, withSnackbar)(TagsPanel);

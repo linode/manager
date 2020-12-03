@@ -27,7 +27,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   crumbLink: {
     color: theme.palette.primary.main,
     '&:hover': {
-      color: theme.palette.primary.light
+      color: theme.palette.primary.light,
+      textDecoration: 'underline'
     }
   },
   slash: {

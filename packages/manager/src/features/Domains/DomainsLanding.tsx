@@ -13,7 +13,6 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import DeletionDialog from 'src/components/DeletionDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
   Theme,
@@ -103,7 +102,8 @@ const styles = (theme: Theme) =>
     },
     importButton: {
       paddingTop: 5,
-      paddingBottom: 5
+      paddingBottom: 5,
+      whiteSpace: 'nowrap'
     }
   });
 
@@ -453,24 +453,18 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                 {flags.cmr ? (
                   <LandingHeader
                     title="Domains"
-                    body={
-                      <Hidden mdUp>
-                        <Button
-                          className={classes.importButton}
-                          onClick={this.openImportZoneDrawer}
-                        >
-                          Import a Zone
-                        </Button>
-                      </Hidden>
-                    }
                     extraActions={
-                      <Button onClick={this.openImportZoneDrawer}>
+                      <Button
+                        className={classes.importButton}
+                        onClick={this.openImportZoneDrawer}
+                        buttonType="secondary"
+                      >
                         Import a Zone
                       </Button>
                     }
+                    alwaysShowActions
                     entity="Domain"
                     onAddNew={this.navigateToCreate}
-                    iconType="domain"
                     docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
                   />
                 ) : (
@@ -511,7 +505,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       <Grid
                         container
                         alignItems="flex-end"
-                        style={{ width: 'auto' }}
+                        // style={{ width: 'auto' }}
                       >
                         <Grid item className="pt0">
                           <AddNewLink

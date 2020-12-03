@@ -27,12 +27,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   edit: {
     fontFamily: theme.font.normal,
+    color: theme.palette.primary.main,
     fontSize: '.875rem',
     fontWeight: 700,
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(1),
     minWidth: 'auto',
-    padding: 0
+    padding: 0,
+    '&:hover, &:focus': {
+      backgroundColor: 'transparent',
+      color: theme.palette.primary.main,
+      textDecoration: 'underline'
+    }
   }
 }));
 

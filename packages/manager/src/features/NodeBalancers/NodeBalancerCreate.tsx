@@ -99,7 +99,7 @@ const styles = (theme: Theme) =>
       }
     },
     cmrSpacing: {
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down(1100)]: {
         marginLeft: theme.spacing()
       }
     }
@@ -490,7 +490,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       <Button
         data-qa-confirm-cancel
         onClick={this.onRemoveConfig}
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         loading={this.state.deleteConfigConfirmDialog.submitting}
       >

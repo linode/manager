@@ -30,7 +30,7 @@ class DeleteIPActions extends React.PureComponent<CombinedProps> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.handleDeleteIP}
           loading={loading}

@@ -28,9 +28,7 @@ const styles = (theme: Theme) =>
       borderRadius: 3,
       padding: theme.spacing(1),
       marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(2),
       transition: theme.transitions.create(['opacity']),
-      order: 2,
       [theme.breakpoints.down('sm')]: {
         backgroundColor: theme.bg.white,
         position: 'absolute',

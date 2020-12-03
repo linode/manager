@@ -378,7 +378,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={() => this.resetAllFields(this.state.apiResponse)}
           data-qa-confirm-cancel

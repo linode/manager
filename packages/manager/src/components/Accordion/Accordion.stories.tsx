@@ -1,6 +1,8 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
+import { Provider } from 'react-redux';
 import Button from 'src/components/Button';
+import store from 'src/store';
 import ActionsPanel from '../ActionsPanel';
 import Accordion from './Accordion';
 
@@ -65,37 +67,43 @@ storiesOf('Accordion', module)
     </div>
   ))
   .add('Success!', () => (
-    <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-      <Accordion
-        success="You did it!"
-        heading="Why is Linode the best?"
-        actions={renderActions}
-      >
-        <p>Customer service!</p>
-      </Accordion>
-    </div>
+    <Provider store={store}>
+      <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
+        <Accordion
+          success="You did it!"
+          heading="Why is Linode the best?"
+          actions={renderActions}
+        >
+          <p>Customer service!</p>
+        </Accordion>
+      </div>
+    </Provider>
   ))
   .add('Warning!', () => (
-    <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-      <Accordion
-        warning="Careful now..."
-        heading="This is a warning"
-        actions={renderActions}
-      >
-        <p>Customer service!</p>
-      </Accordion>
-    </div>
+    <Provider store={store}>
+      <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
+        <Accordion
+          warning="Careful now..."
+          heading="This is a warning"
+          actions={renderActions}
+        >
+          <p>Customer service!</p>
+        </Accordion>
+      </div>
+    </Provider>
   ))
   .add('Error!', () => (
-    <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-      <Accordion
-        error="Oh no! Something broke!"
-        heading="Creating a new linode"
-        actions={renderActions}
-      >
-        <p>Customer service!</p>
-      </Accordion>
-    </div>
+    <Provider store={store}>
+      <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
+        <Accordion
+          error="Oh no! Something broke!"
+          heading="Creating a new linode"
+          actions={renderActions}
+        >
+          <p>Customer service!</p>
+        </Accordion>
+      </div>
+    </Provider>
   ))
   .add('Asynchronous Content', () => <AsyncContentExample />);
 

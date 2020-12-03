@@ -152,7 +152,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         loading={this.state.confirmDelete.submitting}
         onClick={this.deleteConfig}

@@ -75,8 +75,8 @@ const VlanDetail: React.FC<CombinedProps> = props => {
             <LandingHeader
               title="Linodes"
               entity="Linode"
+              isLanding={false}
               onAddNew={dialog.open}
-              displayIcon={false}
               createButtonText="Attach a Linode..."
             />
           }

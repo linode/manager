@@ -5,7 +5,7 @@ import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface Handlers {
   onRestore: (imageID: string) => void;
@@ -40,7 +40,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
 
   const inlineActions = [
     {
-      actionText: 'Details',
+      actionText: 'Edit',
       onClick: () => {
         onEdit(label, description ?? ' ', id);
       }
@@ -72,7 +72,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
     if (matchesSmDown) {
       actions.unshift(
         {
-          title: 'Details',
+          title: 'Edit',
           onClick: () => {
             onEdit(label, description ?? ' ', id);
           }

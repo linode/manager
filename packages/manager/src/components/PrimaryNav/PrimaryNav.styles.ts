@@ -53,8 +53,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         ${theme.spacing(1.5) - 1}px
         ${theme.spacing(4) + 1}px
       `,
-    '&:hover': {
+    '&:hover, &:focus': {
       backgroundColor: theme.bg.primaryNavActiveBG,
+      textDecoration: 'none',
       '& $linkItem': {
         color: 'white'
       },
@@ -117,6 +118,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: theme.spacing(1) === 8 ? 2 : 0
     },
     '&:hover': {
+      textDecoration: 'none',
       '&:before': {
         content: "''",
         borderColor: `transparent ${theme.bg.primaryNavActive} transparent transparent`

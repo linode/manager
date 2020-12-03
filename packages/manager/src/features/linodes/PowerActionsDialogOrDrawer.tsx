@@ -200,14 +200,7 @@ const Actions: React.FC<ActionsProps> = props => {
       <Button
         onClick={props.onSubmit}
         loading={props.loading}
-        destructive={
-          ['Power On', 'Reboot'].includes(props.action) ? false : true
-        }
-        buttonType={
-          ['Power On', 'Reboot'].includes(props.action)
-            ? 'primary'
-            : 'secondary'
-        }
+        buttonType="primary"
       >
         {props.action}
       </Button>
