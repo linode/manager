@@ -1,5 +1,4 @@
 import { Profile } from '@linode/api-v4/lib/profile';
-import { getQueryParam } from 'src/utilities/queryParams';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -18,7 +17,9 @@ import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
+import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
+import ThemeToggle from './ThemeToggle_CMR';
 
 type ClassNames = 'root' | 'title' | 'label';
 
@@ -62,32 +63,57 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
       getQueryParam(window.location.search, 'preferenceEditor') === 'true';
 
     return (
-      <Paper className={classes.root}>
+      <>
         <DocumentTitleSegment segment="Settings" />
-        <Typography variant="h2" className={classes.title}>
-          Notifications
-        </Typography>
-        <Grid container alignItems="center">
-          <Grid item xs={12}>
-            <FormControlLabel
-              className="toggleLassie"
-              control={<Toggle onChange={this.toggle} checked={status} />}
-              label={`
+        <Paper className={classes.root}>
+          <Typography variant="h2" className={classes.title}>
+            Notifications
+          </Typography>
+          <Grid container alignItems="center">
+            <Grid item xs={12}>
+              <FormControlLabel
+                className="toggleLassie"
+                control={<Toggle onChange={this.toggle} checked={status} />}
+                label={`
                 Email alerts for account activity are ${
                   status === true ? 'enabled' : 'disabled'
                 }
               `}
-              disabled={this.state.submitting}
-            />
+                disabled={this.state.submitting}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        {preferenceEditorMode && (
-          <PreferenceEditor
-            open={this.state.preferenceEditorOpen}
-            onClose={() => this.setState({ preferenceEditorOpen: false })}
-          />
-        )}
-      </Paper>
+          {preferenceEditorMode && (
+            <PreferenceEditor
+              open={this.state.preferenceEditorOpen}
+              onClose={() => this.setState({ preferenceEditorOpen: false })}
+            />
+          )}
+        </Paper>
+        <Paper className={classes.root}>
+          <Typography variant="h2" className={classes.title}>
+            Dark Mode
+          </Typography>
+          <Grid container alignItems="center">
+            <Grid item xs={12}>
+              <FormControlLabel
+                className="toggleLassie"
+                control={
+                  <ThemeToggle
+                    toggleTheme={() => {
+                      console.log('Toggle');
+                    }}
+                  />
+                }
+                label={`
+                Dark mode is ${status === true ? 'enabled' : 'disabled'}
+              `}
+                disabled={this.state.submitting}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
+      </>
     );
   }
 
