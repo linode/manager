@@ -2,6 +2,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   icon: {
+    cursor: 'pointer',
     position: 'relative',
     padding: theme.spacing(),
     marginLeft: theme.spacing(),
