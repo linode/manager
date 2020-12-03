@@ -21,6 +21,9 @@ import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
 import ThemeToggle from './ThemeToggle_CMR';
 // import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 
 type ClassNames = 'root' | 'title' | 'label';
 
@@ -43,7 +46,10 @@ interface State {
   preferenceEditorOpen: boolean;
 }
 
-type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps &
+  DispatchProps &
+  FeatureFlagConsumerProps &
+  WithStyles<ClassNames>;
 
 class ProfileSettings extends React.Component<CombinedProps, State> {
   state: State = {
@@ -58,7 +64,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, status } = this.props;
+    const { classes, status, flags } = this.props;
 
     const preferenceEditorMode =
       getQueryParam(window.location.search, 'preferenceEditor') === 'true';
@@ -91,29 +97,31 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
             />
           )}
         </Paper>
-        <Paper className={classes.root}>
-          <Typography variant="h2" className={classes.title}>
-            Dark Mode
-          </Typography>
-          <Grid container alignItems="center">
-            <Grid item xs={12}>
-              <FormControlLabel
-                className="toggleLassie"
-                control={
-                  <ThemeToggle
-                    toggleTheme={() => {
-                      console.log('Toggle');
-                    }}
-                  />
-                }
-                label={`
+        {flags.cmr ? (
+          <Paper className={classes.root}>
+            <Typography variant="h2" className={classes.title}>
+              Dark Mode
+            </Typography>
+            <Grid container alignItems="center">
+              <Grid item xs={12}>
+                <FormControlLabel
+                  className="toggleLassie"
+                  control={
+                    <ThemeToggle
+                      toggleTheme={() => {
+                        console.log('Toggle');
+                      }}
+                    />
+                  }
+                  label={`
                 Dark mode is ${status === true ? 'enabled' : 'disabled'}
               `}
-                disabled={this.state.submitting}
-              />
+                  disabled={this.state.submitting}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        ) : null}
       </>
     );
   }
@@ -153,6 +161,10 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(styled, connected);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  withFeatureFlags,
+  connected
+);
 
 export default enhanced(ProfileSettings);
