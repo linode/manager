@@ -211,8 +211,8 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
             </form>
             <ActionsPanel>
               <Button
-                buttonType="secondary"
-                className={`destructive ${classes.actions}`}
+                buttonType="primary"
+                className="destructive"
                 onClick={handleRebuildButtonClick}
                 data-testid="rebuild-button"
                 disabled={disabled}

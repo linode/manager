@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Typography from 'src/components/core/Typography';
-import EntityIcon, { Variant } from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 export interface BreadCrumbProps {
   title: string | JSX.Element;
-  iconType?: Variant;
   parentLink?: string;
   parentText?: string;
-  displayIcon?: boolean;
   headerOnly?: boolean;
 }
 
@@ -24,7 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rootWithoutParent: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: theme.spacing(),
+    whiteSpace: 'nowrap'
   },
   rootHeaderOnly: {
     display: 'flex',
@@ -32,10 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('sm')]: {
       flexBasis: '100%'
     }
-  },
-  iconContainer: {
-    padding: `5px !important`,
-    marginLeft: 16
   },
   headerWithLink: {
     display: 'flex',
@@ -108,40 +103,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(),
     paddingRight: theme.spacing(2) - 2,
     color: theme.cmrTextColors.headlineStatic
-  },
-  titleText: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingRight: theme.spacing(2) - 2,
-    paddingLeft: theme.spacing(2) - 2,
-    lineHeight: 1.2,
-    color: theme.cmrTextColors.headlineStatic
   }
 }));
 
 export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
-  const {
-    iconType,
-    parentLink,
-    parentText,
-    title,
-    displayIcon,
-    headerOnly
-  } = props;
   const classes = useStyles();
 
-  const _displayIcon = displayIcon ?? true;
+  const { parentLink, parentText, title, headerOnly } = props;
 
   if (parentLink) {
     return (
       <div className={classes.root}>
         <Grid item className={classes.headerWithLink}>
           <Grid wrap="nowrap" container alignItems="center" justify="center">
-            {iconType && _displayIcon && (
-              <Grid item className={classes.iconContainer}>
-                <EntityIcon variant={iconType} />
-              </Grid>
-            )}
             <Grid item>
               <Link to={parentLink}>
                 <Typography variant="h2" className={classes.parentLinkText}>
@@ -168,18 +142,8 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
         headerOnly ? classes.rootHeaderOnly : classes.rootWithoutParent
       }
     >
-      {iconType && _displayIcon && (
-        <Grid item>
-          <EntityIcon variant={iconType} />
-        </Grid>
-      )}
       <Grid item>
-        <Typography
-          variant="h2"
-          className={iconType && _displayIcon ? classes.titleText : 'p0'}
-        >
-          {title}
-        </Typography>
+        <Typography variant="h2">{title}</Typography>
       </Grid>
     </div>
   );

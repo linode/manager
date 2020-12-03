@@ -42,7 +42,7 @@ export const RevokeAccessKeyDialog: React.FC<RevokeKeysDialogProps> = props => {
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         onClick={handleSubmit}
         loading={isLoading}

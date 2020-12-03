@@ -4,13 +4,8 @@ import { useHistory } from 'react-router-dom';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
-} from 'src/components/core/styles';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
   username: string;
@@ -19,27 +14,14 @@ interface Props {
 
 type CombinedProps = Props;
 
-const useStyles = makeStyles(() => ({
-  actionInner: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    '& a': {
-      lineHeight: '1rem'
-    }
-  }
-}));
-
 const UsersActionMenu: React.FC<CombinedProps> = props => {
-  const { onDelete, username } = props;
-
   const history = useHistory();
-
-  const { profile } = useProfile();
-  const profileUsername = profile.data?.username;
-
-  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const { onDelete, username } = props;
+  const { profile } = useProfile();
+  const profileUsername = profile.data?.username;
 
   const actions: Action[] = [
     {
@@ -76,18 +58,16 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
           ariaLabel={`Action menu for user ${profileUsername}`}
         />
       ) : (
-        <div className={classes.actionInner}>
-          {actions.map(action => {
-            return (
-              <InlineMenuAction
-                key={action.title}
-                actionText={action.title}
-                onClick={action.onClick}
-                disabled={action.disabled}
-              />
-            );
-          })}
-        </div>
+        actions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+              disabled={action.disabled}
+            />
+          );
+        })
       )}
     </>
   );

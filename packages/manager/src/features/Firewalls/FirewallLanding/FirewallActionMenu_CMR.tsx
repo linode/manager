@@ -1,6 +1,5 @@
 import { FirewallStatus } from '@linode/api-v4/lib/firewalls';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   makeStyles,
   Theme,
@@ -8,57 +7,11 @@ import {
   useMediaQuery
 } from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
-    padding: '0px !important',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center'
-  },
-  inlineActions: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
-  link: {
-    padding: '12px 10px',
-    textAlign: 'center',
-
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      '& span': {
-        color: '#ffffff'
-      }
-    },
-    '& span': {
-      color: theme.cmrTextColors.linkActiveLight
-    }
-  },
-  action: {
-    marginLeft: 10
-  },
-  button: {
-    minWidth: 70,
-    ...theme.applyLinkStyles,
-    color: theme.cmrTextColors.linkActiveLight,
-    height: '100%',
-    padding: '12px 10px',
-    whiteSpace: 'nowrap',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      color: '#ffffff'
-    },
-    '&[disabled]': {
-      color: '#cdd0d5',
-      cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit'
-      }
-    }
+    display: 'flex'
   }
 }));
 
@@ -81,7 +34,6 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const history = useHistory();
 
   const {
     firewallID,
@@ -94,14 +46,8 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
 
   const inlineActions = [
     {
-      actionText: 'Details',
-      className: classes.link,
-      href: `/firewalls/${firewallID}`
-    },
-    {
       actionText:
         firewallStatus === ('enabled' as FirewallStatus) ? 'Disable' : 'Enable',
-      className: classes.button,
       onClick: () => {
         handleEnableDisable();
       }
@@ -124,14 +70,6 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
 
   const createActions = () => (): Action[] => {
     return [
-      {
-        title: 'Details',
-        onClick: () => {
-          history.push({
-            pathname: `/firewalls/${firewallID}`
-          });
-        }
-      },
       {
         title:
           firewallStatus === ('enabled' as FirewallStatus)
@@ -158,8 +96,6 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
             <InlineMenuAction
               key={action.actionText}
               actionText={action.actionText}
-              className={action.className}
-              href={action.href}
               onClick={action.onClick}
             />
           );

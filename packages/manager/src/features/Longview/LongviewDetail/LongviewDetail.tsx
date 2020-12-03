@@ -13,6 +13,7 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
+import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
 import Notice from 'src/components/Notice';
@@ -31,6 +32,7 @@ import {
   LongviewTopProcesses
 } from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import Apache from './DetailTabs/Apache';
 import MySQLLanding from './DetailTabs/MySQL';
@@ -74,7 +76,9 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     longviewClientData,
     timezone
   } = props;
+
   const classes = useStyles();
+  const flags = useFlags();
 
   React.useEffect(() => {
     /** request clients if they haven't already been requested */
@@ -211,9 +215,15 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           labelTitle={client.label}
           labelOptions={{ noCap: true }}
         />
-        <DocumentationButton
-          href={'https://www.linode.com/docs/platform/longview/longview/'}
-        />
+        {flags.cmr ? (
+          <DocumentationButton_CMR
+            href={'https://www.linode.com/docs/platform/longview/longview/'}
+          />
+        ) : (
+          <DocumentationButton
+            href={'https://www.linode.com/docs/platform/longview/longview/'}
+          />
+        )}
       </Box>
       {notifications.map((thisNotification, idx) => (
         <Notice

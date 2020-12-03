@@ -21,7 +21,7 @@ export const RebuildDialog: React.FC<RebuildDialogProps> = props => {
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         onClick={handleSubmit}
         data-qa-submit-rebuild

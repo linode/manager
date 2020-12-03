@@ -20,7 +20,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.linkActiveLight,
     fontSize: '.875rem',
     lineHeight: '1.125rem',
-    textDecoration: 'underline'
+    '&:hover, &:focus': {
+      textDecoration: 'underline'
+    }
   },
   labelWrapper: {
     display: 'flex',

@@ -10,6 +10,7 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
+import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
@@ -17,6 +18,7 @@ import NotFound from 'src/components/NotFound';
 import withFirewalls, {
   Props as WithFirewallsProps
 } from 'src/containers/firewalls.container';
+import useFlags from 'src/hooks/useFlags';
 
 const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding')
@@ -27,6 +29,8 @@ const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
 type CombinedProps = RouteComponentProps<{ id: string }> & WithFirewallsProps;
 
 export const FirewallDetail: React.FC<CombinedProps> = props => {
+  const flags = useFlags();
+
   // Source the Firewall's ID from the /:id path param.
   const thisFirewallId = props.match.params.id;
 
@@ -97,8 +101,8 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
       <Box
         display="flex"
         flexDirection="row"
+        alignItems="center"
         justifyContent="space-between"
-        paddingBottom={'20px'}
       >
         <Breadcrumb
           pathname={props.location.pathname}
@@ -110,7 +114,11 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
             errorText: updateError
           }}
         />
-        <DocumentationButton href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
+        {flags.cmr ? (
+          <DocumentationButton_CMR href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
+        ) : (
+          <DocumentationButton href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
+        )}
       </Box>
       <Tabs
         index={Math.max(

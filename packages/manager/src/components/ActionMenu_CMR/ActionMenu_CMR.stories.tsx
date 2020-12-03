@@ -86,17 +86,17 @@ class StoryActionMenuWithInlineLabel extends React.Component<CombinedProps> {
 
 storiesOf('CMR Action Menu', module)
   .add('Action Menu', () => (
-    <div style={{ textAlign: 'center' }}>
+    <div style={{ display: 'inline-block' }}>
       <StoryActionMenu />
     </div>
   ))
   .add('Action Menu with disabled menu item & tooltip', () => (
-    <div style={{ textAlign: 'center' }}>
+    <div style={{ display: 'inline-block' }}>
       <StoryActionMenuWithTooltip />
     </div>
   ))
   .add('Action Menu with inline label', () => (
-    <div style={{ textAlign: 'center' }}>
+    <div style={{ display: 'inline-block' }}>
       <StoryActionMenuWithInlineLabel />
     </div>
   ));

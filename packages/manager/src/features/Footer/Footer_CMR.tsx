@@ -40,7 +40,7 @@ const styles = (theme: Theme) =>
     },
     desktopMenuIsOpen: {
       paddingLeft: 0,
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up(1100)]: {
         paddingLeft: theme.spacing(7) + 36
       }
     },

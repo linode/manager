@@ -233,7 +233,7 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
                   <div className={classes.container}>
                     {showQRCode ? (
                       <Button
-                        buttonType="secondary"
+                        buttonType="primary"
                         className={classes.visibility}
                         onClick={toggleHidden}
                         destructive

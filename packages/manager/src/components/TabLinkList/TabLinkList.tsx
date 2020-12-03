@@ -26,11 +26,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '6px 16px',
       position: 'relative',
       textTransform: 'inherit',
+      textDecoration: 'none',
       [theme.breakpoints.up('md')]: {
         minWidth: 75
       },
       '&:hover': {
-        color: theme.color.blue
+        color: theme.color.blue,
+        textDecoration: 'none'
       }
     },
     '&[data-reach-tab][data-selected]': {

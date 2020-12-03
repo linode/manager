@@ -7,6 +7,7 @@ import { makeStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TagsPanel from 'src/components/TagsPanel';
+import TagsPanelRedesigned from 'src/components/TagsPanel/TagsPanelRedesigned';
 import summaryPanelStyles, {
   StyleProps
 } from 'src/containers/SummaryPanels.styles';
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down(1100)]: {
       marginLeft: theme.spacing()
     }
   },
@@ -83,7 +84,14 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
             Tags
           </Typography>
           <div className={hookClasses.tagPanel}>
-            <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
+            {flags.cmr ? (
+              <TagsPanelRedesigned
+                tags={domain.tags}
+                updateTags={handleUpdateTags}
+              />
+            ) : (
+              <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
+            )}
           </div>
         </Paper>
         <div

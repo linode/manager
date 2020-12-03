@@ -2,7 +2,7 @@ import { TrustedDevice } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmpty from 'src/components/TableRowEmptyState';

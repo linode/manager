@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import TicketIcon from 'src/assets/icons/ticket.svg';
+import TicketIcon from 'src/assets/icons/docs.svg';
 import {
   createStyles,
   Theme,
@@ -19,18 +19,14 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: `0 ${theme.spacing(1) + 4}px`,
-      color: '#3683DC',
-      /**
-       * @bailly @kayla
-       * I had to ask Kayla how to override the
-       * button hover style here, but there must be
-       * a better way.
-       */
+      margin: 0,
+      marginRight: theme.spacing(2),
+      padding: 0,
       '&:hover': {
-        '& svg': {
-          color: '#3683DC !important'
-        }
+        textDecoration: 'underline'
+      },
+      '& svg': {
+        marginRight: theme.spacing()
       }
     }
   });
@@ -68,9 +64,5 @@ export const SupportWidget: React.FC<CombinedProps> = props => {
 };
 
 const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  React.memo,
-  withRouter
-);
+const enhanced = compose<CombinedProps, {}>(styled, React.memo, withRouter);
 export default enhanced(SupportWidget);

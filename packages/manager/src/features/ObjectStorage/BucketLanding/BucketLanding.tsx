@@ -140,7 +140,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         onClick={removeBucket}
         data-qa-submit-rebuild

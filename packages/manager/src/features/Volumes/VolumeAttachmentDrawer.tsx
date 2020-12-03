@@ -232,7 +232,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           >
             Save
           </Button>
-          <Button onClick={this.handleClose} data-qa-cancel>
+          <Button onClick={this.handleClose} buttonType="cancel" data-qa-cancel>
             Cancel
           </Button>
         </ActionsPanel>

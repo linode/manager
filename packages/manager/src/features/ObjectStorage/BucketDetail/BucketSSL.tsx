@@ -227,18 +227,19 @@ export const RemoveCertForm: React.FC<FormProps> = props => {
   const createActions = () => (
     <ActionsPanel>
       <Button
+        disabled={submittingDialog}
+        onClick={() => setOpen(false)}
+        buttonType="cancel"
+      >
+        Cancel
+      </Button>
+      <Button
         loading={submittingDialog}
         onClick={removeCertificate}
         destructive
+        buttonType="primary"
       >
         Remove certificate
-      </Button>
-      <Button
-        disabled={submittingDialog}
-        onClick={() => setOpen(false)}
-        buttonType="secondary"
-      >
-        Cancel
       </Button>
     </ActionsPanel>
   );
@@ -248,7 +249,7 @@ export const RemoveCertForm: React.FC<FormProps> = props => {
         A TLS certificate has already been uploaded for this Bucket. To upload a
         new certificate, remove the current certificate.{` `}
       </Notice>
-      <Button destructive onClick={() => setOpen(true)} buttonType="secondary">
+      <Button destructive onClick={() => setOpen(true)} buttonType="primary">
         Remove Certificate
       </Button>
       <ConfirmationDialog

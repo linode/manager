@@ -792,7 +792,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           className={classes.cancelButton}
           onClick={this.handleOpenBackupsAlert}

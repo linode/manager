@@ -95,9 +95,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingBottom: 0
     },
     '&:hover': {
+      textDecoration: 'none',
       '& svg': {
         color: `${theme.palette.primary.main} !important`
       }
+    },
+    '&:focus': {
+      textDecoration: 'none'
     }
   },
   infoIcon: {

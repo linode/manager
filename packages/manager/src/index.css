@@ -169,6 +169,11 @@ a {
   cursor: pointer;
 }
 
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
 a.h-u:hover {
   text-decoration: underline;
 }

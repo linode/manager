@@ -45,7 +45,7 @@ export const ObjectStorageContent: React.FC<ContentProps> = props => {
         </Grid>
         <Grid item>
           <Button
-            buttonType="secondary"
+            buttonType="primary"
             destructive
             onClick={openConfirmationModal}
           >
@@ -106,7 +106,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = props => {
       </Button>
 
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         onClick={handleSubmit}
         loading={isLoading}

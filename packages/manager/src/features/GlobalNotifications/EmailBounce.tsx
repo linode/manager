@@ -161,7 +161,7 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo(props => {
             className={classes.buttonContainer}
           >
             <Button
-              buttonType="secondary"
+              buttonType="primary"
               onClick={handleConfirm}
               loading={loading}
               data-testid="confirmButton"
@@ -170,7 +170,7 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo(props => {
             </Button>
             <Button
               className={classes.updateButton}
-              buttonType="primary"
+              buttonType="secondary"
               onClick={changeEmail}
               data-testid="updateButton"
             >

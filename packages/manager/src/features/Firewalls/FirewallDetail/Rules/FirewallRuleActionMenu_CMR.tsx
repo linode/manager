@@ -3,26 +3,8 @@ import ActionMenu, {
   Action,
   ActionMenuProps
 } from 'src/components/ActionMenu_CMR';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
-} from 'src/components/core/styles';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  inlineActions: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
-  link: {
-    padding: '12px 10px'
-  }
-}));
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props extends Partial<ActionMenuProps> {
   idx: number;
@@ -33,7 +15,6 @@ interface Props extends Partial<ActionMenuProps> {
 type CombinedProps = Props;
 
 const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -47,7 +28,6 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
   const inlineActions = [
     {
       actionText: 'Edit',
-      className: classes.link,
       onClick: () => {
         triggerOpenRuleDrawerForEditing(idx);
       }
@@ -80,13 +60,11 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       {!matchesSmDown &&
-        // inTableContext &&
         inlineActions.map(action => {
           return (
             <InlineMenuAction
               key={action.actionText}
               actionText={action.actionText}
-              className={action.className}
               onClick={action.onClick}
             />
           );

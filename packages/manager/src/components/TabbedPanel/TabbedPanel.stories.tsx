@@ -12,15 +12,12 @@ storiesOf('TabbedPanel', module).add('default', () => {
     >
       <Grid item xs={10}>
         <TabbedPanel
-          someOtherProp={'This is some other prop'}
           header="Tabbed Panel"
           copy="This is an example of a tabbed panel."
           tabs={[
             {
               title: 'Tab One',
-              render: (renderProps: { someOtherProp: number }) => (
-                <div>Panel 1 {renderProps.someOtherProp}</div>
-              )
+              render: (renderProps: any) => <div>Panel 1</div>
             },
             {
               title: 'Tab Two',

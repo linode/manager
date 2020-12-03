@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0
   },
   objectNameButton: {
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight
   }
 }));
 
@@ -104,7 +105,6 @@ const ObjectTableRow: React.FC<Props> = props => {
         <ObjectActionMenu
           handleClickDownload={handleClickDownload}
           handleClickDelete={handleClickDelete}
-          handleClickDetails={handleClickDetails}
           objectName={fullName}
         />
       </TableCell>
