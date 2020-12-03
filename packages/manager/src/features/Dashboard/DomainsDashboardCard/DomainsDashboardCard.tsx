@@ -29,6 +29,7 @@ import withDomains, {
   DomainActionsProps
 } from 'src/containers/domains.container';
 import withEvents, { EventsProps } from 'src/containers/events.container';
+import { getDomainDisplayType } from 'src/features/Domains/domainUtils';
 import { openForEditing } from 'src/store/domainDrawer';
 import {
   isEntityEvent,
@@ -179,7 +180,9 @@ const DomainsDashboardCard: React.FC<CombinedProps> = props => {
                   </Typography>
                 )}
               </div>
-              <Typography className={classes.description}>{type}</Typography>
+              <Typography className={classes.description}>
+                {getDomainDisplayType(type)}
+              </Typography>
             </Grid>
           </Grid>
         </TableCell>

@@ -56,6 +56,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
     created,
     size,
     onRemove,
+    objects,
     onDetails
   } = props;
 
@@ -94,11 +95,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
 
       <Hidden smDown>
         <TableCell>
-          <DateTimeDisplay
-            value={created}
-            humanizeCutoff="month"
-            data-qa-created
-          />
+          <DateTimeDisplay value={created} data-qa-created />
         </TableCell>
       </Hidden>
 
@@ -107,6 +104,14 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
           {readableBytes(size).formatted}
         </Typography>
       </TableCell>
+
+      <Hidden smDown>
+        <TableCell>
+          <Typography variant="body2" data-qa-size>
+            {objects}
+          </Typography>
+        </TableCell>
+      </Hidden>
 
       <TableCell>
         <BucketActionMenu

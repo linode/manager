@@ -15,13 +15,20 @@ import { initWindows } from 'src/utilities/initWindows';
 import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  maintenanceWrapper: {
+    display: 'flex'
+  },
   chooseDay: {
+    marginTop: 0,
     marginRight: theme.spacing(2),
-    midWidth: 150
+    minWidth: 150
   },
   chooseTime: {
-    marginRight: theme.spacing(2),
-    midWidth: 150
+    marginTop: 0,
+    minWidth: 270
+  },
+  timeHelperText: {
+    fontSize: '0.875em'
   }
 }));
 
@@ -171,34 +178,39 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
       <FormHelperText style={{ maxWidth: 'none' }}>
         {maintenanceWindowHelperText}
       </FormHelperText>
-      <FormControl fullWidth className={classes.chooseDay}>
-        <Select
-          name="maintenanceDay"
-          id="maintenanceDay"
-          label="Day of Week"
-          errorText={dayError}
-          onChange={handleDaySelection}
-          options={daySelection}
-          placeholder="Choose a day"
-          value={defaultDaySelection}
-          isClearable={false}
-          data-qa-item="maintenanceDay"
-        />
-      </FormControl>
-      <FormControl fullWidth className={classes.chooseTime}>
-        <Select
-          name="maintenanceWindow"
-          id="maintenanceWindow"
-          label="Time of Day"
-          errorText={windowError}
-          onChange={handleWindowSelection}
-          options={windowSelection}
-          placeholder="Choose a time"
-          value={defaultTimeSelection}
-          isClearable={false}
-          data-qa-item="maintenanceWindow"
-        />
-      </FormControl>
+      <div className={classes.maintenanceWrapper}>
+        <FormControl className={classes.chooseDay}>
+          <Select
+            name="maintenanceDay"
+            id="maintenanceDay"
+            label="Day of Week"
+            errorText={dayError}
+            onChange={handleDaySelection}
+            options={daySelection}
+            placeholder="Choose a day"
+            value={defaultDaySelection}
+            isClearable={false}
+            data-qa-item="maintenanceDay"
+          />
+        </FormControl>
+        <FormControl className={classes.chooseTime}>
+          <Select
+            name="maintenanceWindow"
+            id="maintenanceWindow"
+            label="Time of Day"
+            errorText={windowError}
+            onChange={handleWindowSelection}
+            options={windowSelection}
+            placeholder="Choose a time"
+            value={defaultTimeSelection}
+            isClearable={false}
+            data-qa-item="maintenanceWindow"
+          />
+          <FormHelperText className={classes.timeHelperText}>
+            Time displayed in {timezone.replace('_', ' ')}
+          </FormHelperText>
+        </FormControl>
+      </div>
     </Accordion>
   );
 };

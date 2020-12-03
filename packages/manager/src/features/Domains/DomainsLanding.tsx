@@ -59,6 +59,8 @@ import DomainRow from './DomainTableRow';
 import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
+const DOMAIN_CREATE_ROUTE = '/domains/create';
+
 type ClassNames =
   | 'root'
   | 'titleWrapper'
@@ -123,7 +125,7 @@ interface State {
 interface Props {
   /** purely so we can force a preference to get the unit tests to pass */
   shouldGroupDomains?: boolean;
-  // Since Slave Domains do not have a Detail page, we allow the consumer to
+  // Since secondary Domains do not have a Detail page, we allow the consumer to
   // render this component with the "Edit Domain" drawer already opened.
   domainForEditing?: {
     domainId: number;
@@ -325,6 +327,10 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     this.props.openForCreating('Created from Domain Landing');
   };
 
+  navigateToCreate = () => {
+    this.props.history.push(DOMAIN_CREATE_ROUTE);
+  };
+
   render() {
     const { classes } = this.props;
     const {
@@ -382,7 +388,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return (
         <React.Fragment>
           <RenderEmpty
-            onCreateDomain={this.openCreateDomainDrawer}
+            onCreateDomain={this.navigateToCreate}
             onImportZone={this.openImportZoneDrawer}
           />
           <DomainZoneImportDrawer
@@ -463,7 +469,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       </Button>
                     }
                     entity="Domain"
-                    onAddNew={this.openCreateDomainDrawer}
+                    onAddNew={this.navigateToCreate}
                     iconType="domain"
                     docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
                   />
@@ -516,7 +522,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         <Grid item className="pt0">
                           <AddNewLink
                             data-testid="create-domain"
-                            onClick={this.openCreateDomainDrawer}
+                            onClick={this.navigateToCreate}
                             label="Add a Domain"
                           />
                         </Grid>

@@ -14,11 +14,11 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
-import { ShallowExtendedLinode } from 'src/store/linodes/types';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import formatDate from 'src/utilities/formatDate';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  data: ShallowExtendedLinode[];
+  data: LinodeWithMaintenance[];
   images: Image[];
   showHead?: boolean;
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
@@ -61,7 +61,7 @@ const CardView: React.FC<CombinedProps> = props => {
   const flags = useFlags();
   const notificationContext = React.useContext(_notificationContext);
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
   const { profile } = useProfile();
   const { _loading } = useReduxLoad(['volumes']);
   const { volumes } = useVolumes();

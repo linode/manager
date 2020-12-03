@@ -1,8 +1,10 @@
 import { rest, RequestHandler } from 'msw';
 
 import {
+  abuseTicketNotificationFactory,
   accountFactory,
   appTokenFactory,
+  creditPaymentResponseFactory,
   databaseFactory,
   domainFactory,
   domainRecordFactory,
@@ -26,6 +28,7 @@ import {
   nodeBalancerFactory,
   notificationFactory,
   objectStorageBucketFactory,
+  objectStorageClusterFactory,
   profileFactory,
   supportReplyFactory,
   supportTicketFactory,
@@ -204,8 +207,12 @@ export const handlers = [
     const buckets = objectStorageBucketFactory.buildList(20);
     return res(ctx.json(makeResourcePage(buckets)));
   }),
+  rest.get('*object-storage/clusters', (req, res, ctx) => {
+    const clusters = objectStorageClusterFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(clusters)));
+  }),
   rest.get('*/domains', (req, res, ctx) => {
-    const domains = domainFactory.buildList(25);
+    const domains = domainFactory.buildList(0);
     return res(ctx.json(makeResourcePage(domains)));
   }),
   rest.post('*/domains/*/records', (req, res, ctx) => {
@@ -304,9 +311,6 @@ export const handlers = [
     const tags = tagFactory.buildList(5);
     return res(ctx.json(makeResourcePage(tags)));
   }),
-  rest.get('*/account/notifications*', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage([])));
-  }),
   rest.get('*gravatar*', (req, res, ctx) => {
     return res(ctx.status(400), ctx.json({}));
   }),
@@ -335,10 +339,13 @@ export const handlers = [
     //   until: null,
     //   body: null
     // });
+    const abuseTicket = abuseTicketNotificationFactory.build();
+
     return res(
       ctx.json(
         makeResourcePage([
-          ...notificationFactory.buildList(1)
+          ...notificationFactory.buildList(1),
+          abuseTicket
           // emailBounce
         ])
       )
@@ -346,6 +353,9 @@ export const handlers = [
   }),
   rest.post('*/networking/vlans', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.post('*/account/payments', (req, res, ctx) => {
+    return res(ctx.json(creditPaymentResponseFactory.build()));
   }),
   rest.get('*/databases/mysql/instances', (req, res, ctx) => {
     const online = databaseFactory.build({ status: 'ready' });

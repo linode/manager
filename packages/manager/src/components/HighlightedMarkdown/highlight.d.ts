@@ -1,4 +1,4 @@
-declare module 'highlight.js/lib/highlight';
+declare module 'highlight.js/lib/core';
 declare module 'highlight.js/lib/languages/apache';
 declare module 'highlight.js/lib/languages/javascript';
 declare module 'highlight.js/lib/languages/yaml';

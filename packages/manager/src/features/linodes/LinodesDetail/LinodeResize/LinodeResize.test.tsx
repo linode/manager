@@ -30,11 +30,13 @@ describe('LinodeResize', () => {
         root: '',
         title: '',
         subTitle: '',
+        toolTip: '',
         currentPlanContainer: '',
         resizeTitle: '',
-        toolTip: '',
         checkbox: '',
-        currentHeaderEmptyCell: ''
+        currentHeaderEmptyCell: '',
+        actions: '',
+        errorLink: ''
       }}
       linodeId={12}
       permissions={{} as any}

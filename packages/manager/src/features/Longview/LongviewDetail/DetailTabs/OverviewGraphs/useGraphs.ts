@@ -9,44 +9,42 @@ export const useGraphs = (
   end: number
 ) => {
   const requestInterval = React.useRef<number>(0);
-  const mounted = React.useRef(false);
+  const mounted = React.useRef(true);
 
   const [data, setData] = React.useState<Partial<AllData>>({});
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
-  const request = React.useCallback(
-    (isLoading: boolean = true) => {
-      if (!mounted) {
-        return;
-      }
-      if (!start || !end || !clientAPIKey) {
-        return;
-      }
-      if (isLoading) {
-        setLoading(true);
-        setData({});
-      }
-      return getValues(clientAPIKey, {
-        fields: requestFields,
-        start,
-        end
+
+  const request = (isLoading: boolean = true) => {
+    if (!mounted.current) {
+      return;
+    }
+    if (!start || !end || !clientAPIKey) {
+      return;
+    }
+    if (isLoading) {
+      setLoading(true);
+      setData({});
+    }
+    return getValues(clientAPIKey, {
+      fields: requestFields,
+      start,
+      end
+    })
+      .then(response => {
+        if (mounted.current) {
+          setLoading(false);
+          setError(undefined);
+          setData(response.DATA);
+        }
       })
-        .then(response => {
-          if (mounted.current) {
-            setLoading(false);
-            setError(undefined);
-            setData(response.DATA);
-          }
-        })
-        .catch(e => {
-          if (mounted.current) {
-            setLoading(false);
-            setError(e.NOTIFICATIONS?.[0]?.TEXT ?? 'Unable to retrieve data.');
-          }
-        });
-    },
-    [start, end, clientAPIKey, requestFields]
-  );
+      .catch(e => {
+        if (mounted.current) {
+          setLoading(false);
+          setError(e.NOTIFICATIONS?.[0]?.TEXT ?? 'Unable to retrieve data.');
+        }
+      });
+  };
 
   // Poll the data. Reset/refresh the interval if the clientAPIKey changes.
   React.useEffect(() => {
@@ -63,7 +61,7 @@ export const useGraphs = (
       mounted.current = false;
       clearInterval(requestInterval.current);
     };
-  }, [clientAPIKey, request]);
+  }, [clientAPIKey]);
 
   return { error, data, loading, request };
 };

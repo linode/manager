@@ -4,6 +4,57 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-11-18] - 1.25.2
+
+### Fixed:
+
+- Only display 5 Linodes on the Dashboard
+- Performance regression for large accounts
+- Longview graph data not displaying correctly
+
+## [2020-11-17] - 1.25.1
+
+### Fixed:
+
+- Users with no Domains were unable to create a Domain
+- Table cell arrow icons had an incorrect color
+
+## [2020-11-17] - 1.25.0
+
+### Added:
+
+- Bucket and Object level access controls
+- Display total Object Storage usage on Bucket Landing page
+- Progress bar to LinodeDiskRow when a disk is resizing
+- “Objects” column to the Bucket Landing table
+- Bucket Details Drawer
+- Bucket results to search bar
+
+### Changed:
+
+- Add hideOnTablet prop to Entity Table component
+- Remove 'Copy to Clipboard' text in OBJ drawers
+- Disable API polling from inactive tabs
+- Add copy explaining billing address restrictions
+- Make typeToConfirm optional in DeletionDialog
+- Lazy load OBJ Buckets
+- Remove "Delete" option from DBaaS backups table
+- Hide permissions table if user has no buckets
+- Move Domain creation drawer content to a separate page at /domains/create
+- Handle API warnings after a successful payment.
+- Update Resize error message and add link
+
+### Fixed:
+
+- Remove filtering of app tokens
+- IP popover displaying incorrectly when adding a private IP address to a Linode
+
+## [2020-11-13] - v1.24.1
+
+### Fixed:
+
+- Overreporting Sentry errors
+
 ## [2020-11-02] - v1.24.0
 
 ### Added:
