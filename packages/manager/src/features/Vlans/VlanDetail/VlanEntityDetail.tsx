@@ -168,7 +168,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
           <Typography className={classes.listItem}>
             <span className={classes.label}>Created:</span>{' '}
-            {formatDate(created, { format: 'dd-LLL-y HH:mm ZZZZ' })}
+            {formatDate(created)}
           </Typography>
         </Grid>
         <Grid item className={classes.actionItemsOuter} xs={12} sm={1}>

@@ -15,6 +15,7 @@ type ClassNames =
   | 'root'
   | 'loading'
   | 'loadingText'
+  // | 'destructive'
   | 'compact'
   | 'superCompact'
   | 'reg';
@@ -81,10 +82,10 @@ const styles = (theme: Theme) =>
     //   background: theme.color.white,
     //   '&.primary:not(.disabled)': {
     //     backgroundColor: '#C44742',
-    //     color: theme.color.white,
+    //     color: '#fff',
     //     '&:hover, &:focus': {
     //       backgroundColor: '#DF6560',
-    //       color: theme.color.white
+    //       color: '#fff'
     //     }
     //   },
     //   '&:hover, &:focus': {
@@ -170,6 +171,7 @@ const wrappedButton: React.FC<CombinedProps> = props => {
             [classes.root]: true,
             [classes.loading]: loading,
             loading,
+            // [classes.destructive]: destructive,
             [classes.compact]: compact,
             [classes.superCompact]: superCompact,
             disabled: props.disabled
@@ -186,7 +188,7 @@ const wrappedButton: React.FC<CombinedProps> = props => {
           {loading ? (
             loadingText ? (
               /*
-                the recommendation here is to not use loadingText that
+                The recommendation here is to not use loadingText that
                 will create a large width for the button. Keep
                 your loading text strings short.
               */

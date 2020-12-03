@@ -290,6 +290,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     }
   },
   accessTable: {
+    tableLayout: 'fixed',
     '& tr': {
       height: 34
     },
@@ -302,7 +303,8 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       lineHeight: 1,
       padding: theme.spacing(),
       textAlign: 'left',
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
+      width: '25%'
     },
     '& td': {
       backgroundColor: theme.cmrBGColors.bgAccessRow,
@@ -312,7 +314,6 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       fontSize: '0.875rem',
       overflowX: 'auto',
       padding: theme.spacing(),
-      maxWidth: 400,
       whiteSpace: 'nowrap'
     }
   },

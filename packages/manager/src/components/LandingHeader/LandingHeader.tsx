@@ -1,22 +1,27 @@
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import EntityHeader, {
   HeaderProps
 } from 'src/components/EntityHeader/EntityHeader';
-import Hidden from '../core/Hidden';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   button: {
     borderRadius: 3,
     height: 34,
     padding: 0
+  },
+  hideOnMobile: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   }
 }));
 
 interface Props extends Omit<HeaderProps, 'actions'> {
   extraActions?: JSX.Element;
+  alwaysShowActions?: boolean;
   body?: JSX.Element;
   docsLink?: string;
   onAddNew?: () => void;
@@ -39,6 +44,7 @@ export const LandingHeader: React.FC<Props> = props => {
     onAddNew,
     entity,
     extraActions,
+    alwaysShowActions,
     createButtonWidth,
     createButtonText
   } = props;
@@ -57,9 +63,9 @@ export const LandingHeader: React.FC<Props> = props => {
         justify="flex-end"
       >
         {extraActions && (
-          <Hidden smDown>
-            <Grid item>{extraActions}</Grid>
-          </Hidden>
+          <Grid item className={alwaysShowActions ? '' : classes.hideOnMobile}>
+            {extraActions}
+          </Grid>
         )}
 
         {onAddNew && (

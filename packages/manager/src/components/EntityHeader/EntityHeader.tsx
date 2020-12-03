@@ -86,10 +86,18 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     headerOnly
   } = props;
 
+  const labelTitle = title.toString();
+
   return (
     <>
       <Grid item className={classes.root}>
-        {isLanding && <Breadcrumb pathname={location.pathname} data-qa-title />}
+        {isLanding && (
+          <Breadcrumb
+            labelTitle={labelTitle}
+            pathname={location.pathname}
+            data-qa-title
+          />
+        )}
         {docsLink && <DocumentationButton href={docsLink} />}
       </Grid>
       <Grid item className={classes.root}>
