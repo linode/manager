@@ -596,13 +596,12 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Secure Your Server',
-     description: `Save time on securing your Linode a by deploying an instance preconfigured with some basic security best practices: limited user account access, hardened SSH, and Fail2Ban for SSH Login Protection.`,
+    description: `Save time on securing your Linode by deploying an instance pre-configured with some basic security best practices: limited user account access, hardened SSH, and Fail2Ban for SSH Login Protection.`,
     summary: `Harden your Linode before you deploy with the Secure Your Server One-Click App.`,
     related_guides: [
       {
         title: 'Securing your Server',
-        href:
-          'https://www.linode.com/docs/guides/securing-your-server/'
+        href: 'https://www.linode.com/docs/guides/securing-your-server/'
       }
     ],
     logo_url: 'assets/secureyourserver_color.svg'
