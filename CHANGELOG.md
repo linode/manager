@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-12-03] - 1.26.0
+
+### Added:
+
+- Secure Your Server One-Click App
+
 ## [2020-11-18] - 1.25.2
 
 ### Fixed:
