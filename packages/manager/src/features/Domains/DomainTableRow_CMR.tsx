@@ -15,15 +15,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'block',
     fontFamily: theme.font.bold,
     lineHeight: '1.125rem',
-    textDecoration: 'underline',
-    color: theme.cmrTextColors.linkActiveLight
+    color: theme.cmrTextColors.linkActiveLight,
+    '&:hover, &:focus': {
+      textDecoration: 'underline'
+    }
   },
   button: {
     ...theme.applyLinkStyles,
     display: 'block',
     fontFamily: theme.font.bold,
+    color: theme.cmrTextColors.linkActiveLight,
     lineHeight: '1.125rem',
-    textDecoration: 'underline'
+    '&:hover, &:focus': {
+      textDecoration: 'underline'
+    }
   },
   domain: {
     width: '60%'
@@ -40,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
+    whiteSpace: 'nowrap'
+  },
+  statusCell: {
     whiteSpace: 'nowrap'
   },
   actionCell: {
@@ -95,7 +103,7 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
           )}
         </div>
       </TableCell>
-      <TableCell data-qa-domain-status>
+      <TableCell className={classes.statusCell} data-qa-domain-status>
         <StatusIcon status={domainStatusToIconStatus(status)} />
         {humanizeDomainStatus(status)}
       </TableCell>

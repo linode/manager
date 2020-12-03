@@ -47,7 +47,7 @@ class DialogActions extends React.PureComponent<Actions> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           loading={this.props.isMakingPayment}
           onClick={this.props.executePayment}
           data-qa-submit

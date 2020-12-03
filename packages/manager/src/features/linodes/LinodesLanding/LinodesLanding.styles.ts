@@ -11,6 +11,7 @@ type ClassNames =
   | 'CSVlinkContainer'
   | 'CSVlink'
   | 'addNewLink'
+  | 'chipContainer'
   | 'chip'
   | 'chipActive'
   | 'chipRunning'
@@ -42,13 +43,18 @@ const styles = (theme: Theme) =>
       marginBottom: -3,
       marginLeft: 15
     },
+    chipContainer: {
+      display: 'flex',
+      flexDirection: 'row'
+    },
     chip: {
       ...theme.applyStatusPillStyles,
+      marginRight: theme.spacing(3),
       paddingTop: '0px !important',
       paddingBottom: '0px !important',
       transition: 'none',
-      '&:hover, &:focus, &:active': {
-        backgroundColor: theme.bg.chipActive
+      '& .MuiChip-label': {
+        marginBottom: 2
       }
     },
     chipActive: {

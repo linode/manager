@@ -47,7 +47,7 @@ const DeletionDialog: React.FC<CombinedProps> = props => {
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         onClick={onDelete}
         loading={loading}

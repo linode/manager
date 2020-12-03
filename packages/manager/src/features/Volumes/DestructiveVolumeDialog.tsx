@@ -53,7 +53,7 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={method}
           data-qa-confirm

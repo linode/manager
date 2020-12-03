@@ -34,8 +34,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'flex-start'
   },
   cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(1)
+    [theme.breakpoints.down(1100)]: {
+      marginLeft: theme.spacing()
     }
   }
 }));

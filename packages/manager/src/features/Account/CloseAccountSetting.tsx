@@ -13,7 +13,7 @@ const CloseAccountSetting: React.FC<{}> = () => {
         <Grid container direction="column">
           <Grid item>
             <Button
-              buttonType="secondary"
+              buttonType="primary"
               destructive
               onClick={() => setDialogOpen(true)}
             >
