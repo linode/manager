@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
-import { normalizedImages } from 'src/__data__/images';
+import { imageFactory, normalizeEntities } from 'src/factories';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { StackScriptsLanding } from './StackScriptsLanding';
@@ -13,6 +13,8 @@ jest.mock('src/hooks/useReduxLoad', () => ({
 jest.mock('@linode/api-v4/lib/account', () => ({
   getUsers: jest.fn().mockResolvedValue({})
 }));
+
+const normalizedImages = normalizeEntities(imageFactory.buildList(10));
 
 describe('StackScripts Landing', () => {
   const { getByText } = render(
@@ -27,7 +29,7 @@ describe('StackScripts Landing', () => {
     )
   );
 
-  it.skip('icon text link text should read "Create New StackScript"', () => {
+  it('icon text link text should read "Create New StackScript"', () => {
     getByText(/create new stackscript/i);
   });
 });

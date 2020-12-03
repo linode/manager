@@ -1,8 +1,8 @@
-import * as request from '@linode/api-v4/lib/vlans/vlans';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { vlanContext } from 'src/context';
+import * as request from 'src/store/vlans/vlans.requests';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import CreateVLANDialog from './CreateVLANDialog';
 

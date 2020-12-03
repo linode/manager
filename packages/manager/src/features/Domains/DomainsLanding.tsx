@@ -59,6 +59,8 @@ import DomainRow from './DomainTableRow';
 import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
+const DOMAIN_CREATE_ROUTE = '/domains/create';
+
 type ClassNames =
   | 'root'
   | 'titleWrapper'
@@ -325,6 +327,10 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     this.props.openForCreating('Created from Domain Landing');
   };
 
+  navigateToCreate = () => {
+    this.props.history.push(DOMAIN_CREATE_ROUTE);
+  };
+
   render() {
     const { classes } = this.props;
     const {
@@ -382,7 +388,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return (
         <React.Fragment>
           <RenderEmpty
-            onCreateDomain={this.openCreateDomainDrawer}
+            onCreateDomain={this.navigateToCreate}
             onImportZone={this.openImportZoneDrawer}
           />
           <DomainZoneImportDrawer
@@ -463,9 +469,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       </Button>
                     }
                     entity="Domain"
-                    onAddNew={() => {
-                      this.props.history.push('/domains/create');
-                    }}
+                    onAddNew={this.navigateToCreate}
                     iconType="domain"
                     docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
                   />
@@ -518,9 +522,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         <Grid item className="pt0">
                           <AddNewLink
                             data-testid="create-domain"
-                            onClick={() => {
-                              this.props.history.push('/domains/create');
-                            }}
+                            onClick={this.navigateToCreate}
                             label="Add a Domain"
                           />
                         </Grid>

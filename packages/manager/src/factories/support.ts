@@ -5,7 +5,7 @@ export const supportTicketFactory = Factory.Sync.makeFactory<SupportTicket>({
   updated_by: 'test-account',
   closed: null,
   attachments: [],
-  summary: 'TEST Support Ticket',
+  summary: Factory.each(i => `TEST Support Ticket ${i}`),
   gravatar_id: '0',
   closable: false,
   id: Factory.each(i => i),

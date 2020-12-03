@@ -1,7 +1,7 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -21,6 +21,7 @@ import TableSortCell from 'src/components/TableSortCell';
 import { transitionText } from 'src/features/linodes/transitions';
 import useLinodes from 'src/hooks/useLinodes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 // Temporarily hidden; @todo reactivate
 // import NodeActionMenu from './NodeActionMenu';
@@ -208,14 +209,20 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
   const displayIP = ip ?? '';
 
   return (
-    <TableRow rowLink={rowLink} ariaLabel={label}>
+    <TableRow ariaLabel={label}>
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
             <StatusIndicator status={statusIndicator} />
           </Grid>
           <Grid item>
-            <Typography variant="h3">{displayLabel}</Typography>
+            <Typography variant="h3">
+              {rowLink ? (
+                <Link to={rowLink}>{displayLabel}</Link>
+              ) : (
+                displayLabel
+              )}
+            </Typography>
           </Grid>
         </Grid>
       </TableCell>
@@ -256,7 +263,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
  */
 export const nodeToRow = (
   node: PoolNodeResponse,
-  linodes: Linode[]
+  linodes: LinodeWithMaintenanceAndDisplayStatus[]
 ): NodeRow => {
   const foundLinode = linodes.find(
     thisLinode => thisLinode.id === node.instance_id
