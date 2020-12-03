@@ -135,7 +135,7 @@ const styles = (theme: Theme) =>
       minWidth: '100%'
     },
     cmrSpacing: {
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down(1100)]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing()
       }
@@ -718,7 +718,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           className={classes.cancelButton}
           onClick={this.handleOpenBackupsAlert}
@@ -775,7 +775,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           Close
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.cancelBackups}
           data-qa-confirm-cancel

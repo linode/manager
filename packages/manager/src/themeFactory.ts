@@ -193,11 +193,11 @@ const genericLinkStyle = {
 
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
-  backgroundColor: cmrBGColors.bgStatusChip,
+  backgroundColor: 'transparent',
   color: cmrTextColors.textStatusChip,
   fontFamily: primaryFonts.bold,
-  fontSize: '1.1rem',
-  padding: 10,
+  fontSize: '1rem',
+  padding: 0,
   '&:before': {
     display: 'inline-block',
     borderRadius: '50%',
@@ -206,11 +206,6 @@ const genericStatusPillStyle = {
     width: 16,
     minWidth: 16,
     marginRight: 8
-  },
-  [breakpoints.down('sm')]: {
-    fontSize: 14,
-    padding: '15px 12px',
-    borderRadius: 15
   }
 };
 
@@ -535,23 +530,29 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         root: {
           textTransform: 'inherit',
-          borderRadius: 0,
           fontSize: '1rem',
           lineHeight: 1,
           fontFamily:
             spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
-          color: primaryColors.main,
-          padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2}px`,
-          maxHeight: 48,
-          '&:hover': {
-            backgroundColor: '#fff'
+          // // backgroundColor: primaryColors.main,
+          // color: '#fff',
+          // padding: `2px 20px`,
+          // maxHeight: 34,
+          // position: 'relative',
+          // minHeight: `34px`,
+          cursor: 'pointer',
+          border: 'none',
+          [breakpoints.down('sm')]: {
+            marginLeft: spacingUnit,
+            maxHeight: 34,
+            minWidth: 100
           },
-          '&:focus': {
-            backgroundColor: 'transparent'
+          '&:hover': {
+            backgroundColor: primaryColors.light,
+            color: '#fff'
           },
           '&[aria-expanded="true"]': {
-            backgroundColor: primaryColors.dark
+            backgroundColor: primaryColors.light
           },
           '&$disabled': {
             color: '#bbb'
@@ -560,14 +561,21 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             color: primaryColors.text
           }
         },
-        text: {
-          padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2}px`,
-          '&:hover': {
-            color: primaryColors.light
-          }
-        },
+        // text: {
+        //   padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
+        //     spacingUnit / 2}px ${spacingUnit * 2}px`,
+        //   '&:hover': {
+        //     color: primaryColors.light
+        //   }
+        // },
         containedPrimary: {
+          backgroundColor: primaryColors.main,
+          borderRadius: '3px',
+          color: '#fff',
+          padding: `2px 20px`,
+          maxHeight: 34,
+          position: 'relative',
+          minHeight: 34,
           '&:hover, &:focus': {
             backgroundColor: primaryColors.light
           },
@@ -589,10 +597,10 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         containedSecondary: {
           backgroundColor: 'transparent',
           color: primaryColors.main,
-          border: `1px solid ${primaryColors.main}`,
-          padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
-          transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
+          //border: `1px solid ${primaryColors.main}`,
+          // padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
+          //   spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
+          // transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
             color: primaryColors.light,
@@ -608,31 +616,30 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             backgroundColor: 'transparent',
             color: '#c9cacb'
           },
-          '&.cancel': {
-            borderColor: 'transparent',
-            '&:hover, &:focus': {
-              borderColor: primaryColors.light,
-              backgroundColor: 'transparent'
-            }
-          },
-          '&.destructive': {
-            borderColor: '#c44742',
-            color: '#c44742',
-            '&:hover, &:focus': {
-              color: '#df6560',
-              borderColor: '#df6560',
-              backgroundColor: 'transparent'
-            },
-            '&:active': {
-              color: '#963530',
-              borderColor: '#963530'
-            },
-            '&$disabled': {
-              borderColor: '#c9cacb',
-              backgroundColor: 'transparent',
-              color: '#c9cacb'
-            }
-          },
+          // '&.cancel': {
+          //   borderColor: 'transparent',
+          //   '&:hover, &:focus': {
+          //     borderColor: primaryColors.light,
+          //     backgroundColor: 'transparent'
+          //   }
+          // },
+          // '&.destructive': {
+          //   backgroundColor: primaryColors.main,
+          //   color: '#fff',
+          //   '&:hover, &:focus': {
+          //     color: '#fff',
+          //     backgroundColor: primaryColors.light
+          //   },
+          //   '&:active': {
+          //     color: '#963530',
+          //     borderColor: '#963530'
+          //   },
+          //   '&$disabled': {
+          //     borderColor: '#c9cacb',
+          //     backgroundColor: 'transparent',
+          //     color: '#c9cacb'
+          //   }
+          // },
           '&.loading': {
             borderColor: primaryColors.text,
             color: primaryColors.text,
@@ -1512,39 +1519,40 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiTypography: {
         button: {
           textTransform: 'inherit',
-          borderRadius: 0,
+          borderRadius: '3px',
           fontSize: '1rem',
           lineHeight: 1,
           fontFamily:
             spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
-          color: '#fff',
           backgroundColor: primaryColors.main,
-          padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2}px`,
-          maxHeight: 48,
+          color: '#fff',
+          padding: `8px 20px`,
+          maxHeight: 34,
+          position: 'relative',
+          minHeight: `34px`,
           cursor: 'pointer',
+          border: 'none',
+          [breakpoints.down('sm')]: {
+            marginLeft: spacingUnit,
+            maxHeight: 34,
+            minWidth: 100
+          },
           '&:hover, &:focus': {
             backgroundColor: primaryColors.light
           },
           '&:active': {
-            backgroundColor: primaryColors.dark
+            backgroundColor: primaryColors.light
           },
           '&$colorSecondary': {
             backgroundColor: 'transparent',
             color: primaryColors.main,
-            border: `1px solid ${primaryColors.main}`,
-            padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
-              spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
-            transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
             '&:hover, &:focus': {
               backgroundColor: 'transparent !important',
-              color: primaryColors.light,
-              borderColor: primaryColors.light
+              color: primaryColors.light
             },
             '&:active': {
               backgroundColor: 'transparent',
-              color: primaryColors.dark,
-              borderColor: primaryColors.dark
+              color: primaryColors.light
             }
           }
         }

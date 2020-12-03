@@ -1,9 +1,7 @@
-import classNames from 'classnames';
 import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
 import {
@@ -12,33 +10,25 @@ import {
   useTheme,
   useMediaQuery
 } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 import withProfile from 'src/containers/profile.container';
 
 import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  stackScriptActionsWrapper: {
+    display: 'flex'
+  },
   button: {
     ...theme.applyLinkStyles,
-    color: theme.cmrTextColors.linkActiveLight,
-    fontSize: 14,
-    height: '100%',
-    minWidth: '70px',
     padding: '12px 10px',
     whiteSpace: 'nowrap',
     '&:hover': {
-      textDecoration: 'none',
-      backgroundColor: '#3683dc',
-      color: '#ffffff'
+      textDecoration: 'none'
     },
     '&:disabled': {
       color: '#bbb'
     }
-  },
-  stackScriptActionsWrapper: {
-    display: 'flex'
-  },
-  buttonCommunity: {
-    marginRight: theme.spacing()
   }
 }));
 
@@ -90,6 +80,30 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       ? "You don't have permissions to modify this StackScript"
       : undefined
   };
+
+  const inlineActions = [
+    {
+      actionText: 'Deploy New Linode',
+      className: classes.button,
+      disabled: !canAddLinodes,
+      onClick: () => {
+        history.push(
+          getStackScriptUrl(stackScriptUsername, stackScriptID, username)
+        );
+      }
+    }
+  ];
+
+  if (category === 'account') {
+    inlineActions.unshift({
+      actionText: 'Edit',
+      ...readonlyProps,
+      className: '',
+      onClick: () => {
+        history.push(`/stackscripts/${stackScriptID}/edit`);
+      }
+    });
+  }
 
   const createActions = () => {
     return (): Action[] => {
@@ -146,38 +160,18 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <div className={classes.stackScriptActionsWrapper}>
-      <Hidden smDown>
-        <div className="flexCenter">
-          {props.category === 'account' && (
-            <button
-              className={classes.button}
-              onClick={() => {
-                history.push(`/stackscripts/${stackScriptID}/edit`);
-              }}
-              disabled={!canModify}
-            >
-              Edit
-            </button>
-          )}
-
-          <button
-            className={classNames({
-              [classes.button]: true,
-              [classes.buttonCommunity]:
-                props.category === 'community' && props.isHeader === true
-            })}
-            onClick={() => {
-              history.push(
-                getStackScriptUrl(stackScriptUsername, stackScriptID, username)
-              );
-            }}
-            disabled={!canAddLinodes}
-          >
-            Deploy new Linode
-          </button>
-        </div>
-      </Hidden>
-
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              className={action.className}
+              disabled={action.disabled}
+              onClick={action.onClick}
+            />
+          );
+        })}
       {/* Hacky way to only display the action menu button on smaller screens for community StackScripts */}
       {category === 'community' || isPublic ? (
         <Hidden mdUp>

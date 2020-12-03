@@ -17,13 +17,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   diskSize: {
     width: '30%'
   },
-  actionMenu: {
-    paddingTop: 0,
-    paddingBottom: 0,
-    '&.MuiTableCell-root': {
-      paddingRight: 0
-    }
-  },
   progressBar: {
     display: 'flex',
     flexFlow: 'row nowrap',
@@ -32,6 +25,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   bar: {
     paddingLeft: theme.spacing(),
     width: 250
+  },
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0,
+    /*
+      Explicitly stating this as the theme file is automatically adding padding to the last cell
+      We can remove once we make the full switch to CMR styling
+      */
+    paddingRight: '0 !important'
   }
 }));
 
@@ -86,7 +90,7 @@ export const LinodeDiskRow: React.FC<Props> = props => {
           `${disk.size} MB`
         )}
       </TableCell>
-      <TableCell className={classes.actionMenu}>
+      <TableCell className={classes.actionCell}>
         <LinodeDiskActionMenu
           linodeStatus={status || 'offline'}
           linodeId={linodeId}
