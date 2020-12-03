@@ -3,7 +3,7 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
@@ -24,14 +24,19 @@ import formatDate from 'src/utilities/formatDate';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes pulse': {
     to: {
       backgroundColor: `hsla(40, 100%, 55%, 0)`
     }
   },
   summaryOuter: {
+    backgroundColor: theme.cmrBGColors.bgPaper,
+    margin: theme.spacing(),
     marginBottom: 20,
+    '&.MuiGrid-item': {
+      padding: 0
+    },
     '& .statusOther:before': {
       animation: '$pulse 1.5s ease-in-out infinite'
     }

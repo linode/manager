@@ -31,7 +31,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.bold,
     color: theme.cmrTextColors.linkActiveLight,
     lineHeight: '1.125rem',
-    textDecoration: 'underline'
+    '&:hover, &:focus': {
+      textDecoration: 'underline'
+    }
   },
   ipsWrapper: {
     display: 'inline-flex',

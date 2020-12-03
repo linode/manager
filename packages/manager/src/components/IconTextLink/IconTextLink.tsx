@@ -31,13 +31,10 @@ const styles = (theme: Theme) =>
       transition: 'none',
       margin: `0 -${theme.spacing(1) + theme.spacing(1) / 2}px 2px 0`,
       minHeight: 'auto',
+      borderRadius: 0,
       '&:hover': {
         color: theme.palette.primary.light,
         backgroundColor: 'transparent',
-        '& svg': {
-          fill: theme.palette.primary.light,
-          color: 'white'
-        },
         '& .border': {
           color: theme.palette.primary.light
         }
@@ -59,7 +56,7 @@ const styles = (theme: Theme) =>
       transition: 'none',
       fontSize: 18,
       marginRight: theme.spacing(0.5),
-      color: theme.cmrIconColors.iActiveLight,
+      color: 'inherit',
       '& .border': {
         transition: 'none'
       }
@@ -74,7 +71,10 @@ const styles = (theme: Theme) =>
     },
     linkWrapper: {
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      '&:hover, &:focus': {
+        textDecoration: 'none'
+      }
     }
   });
 

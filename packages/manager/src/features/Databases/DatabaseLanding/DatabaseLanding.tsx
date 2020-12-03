@@ -1,6 +1,4 @@
-import { Database, DatabaseStatus } from '@linode/api-v4/lib/databases/types';
-import Close from '@material-ui/icons/Close';
-import * as classNames from 'classnames';
+import { Database } from '@linode/api-v4/lib/databases/types';
 import { groupBy, prop } from 'ramda';
 import * as React from 'react';
 import Chip from 'src/components/core/Chip';
@@ -8,7 +6,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import DeletionDialog from 'src/components/DeletionDialog';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
-import IconTextLink from 'src/components/IconTextLink';
 import LandingHeader from 'src/components/LandingHeader';
 import TagDrawer, {
   OpenTagDrawer,
@@ -23,11 +20,9 @@ import DatabaseRow from './DatabaseRow';
 const useStyles = makeStyles((theme: Theme) => ({
   chip: {
     ...theme.applyStatusPillStyles,
+    marginRight: theme.spacing(3),
     paddingTop: '0px !important',
-    paddingBottom: '0px !important',
-    '&:hover, &:focus, &:active': {
-      backgroundColor: theme.bg.chipActive
-    }
+    paddingBottom: '0px !important'
   },
   chipActive: {
     backgroundColor: theme.bg.chipActive
@@ -50,15 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   chipPending: {
     '&:before': {
       backgroundColor: theme.cmrIconColors.iOrange
-    }
-  },
-  clearFilters: {
-    margin: '1px 0 0 0',
-    padding: 0,
-    '&:hover': {
-      '& svg': {
-        color: `${theme.palette.primary.main} !important`
-      }
     }
   }
 }));
@@ -124,8 +110,6 @@ interface CombinedHandlers extends DatabaseHandlers {
   openTagDrawer: OpenTagDrawer;
 }
 
-type FilterStatus = DatabaseStatus | 'all';
-
 const DatabaseLanding: React.FC<{}> = _ => {
   const classes = useStyles();
   const { databases, deleteDatabase, updateDatabase } = useDatabases();
@@ -134,8 +118,6 @@ const DatabaseLanding: React.FC<{}> = _ => {
   );
 
   const databaseData = Object.values(databases.itemsById ?? {});
-
-  const [filterStatus, setFilterStatus] = React.useState<FilterStatus>('all');
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
@@ -175,8 +157,6 @@ const DatabaseLanding: React.FC<{}> = _ => {
   };
 
   const counts = getChipCounts(databaseData);
-  const filteredData =
-    filterStatus === 'all' ? databaseData : counts[filterStatus];
 
   const handlers: CombinedHandlers = {
     triggerDeleteDatabase: openDialog,
@@ -186,7 +166,7 @@ const DatabaseLanding: React.FC<{}> = _ => {
   const _DatabaseRow = {
     Component: DatabaseRow,
     handlers,
-    data: filteredData,
+    data: databaseData,
     loading: databases.loading,
     lastUpdated: databases.lastUpdated,
     error: databases.error.read
@@ -200,69 +180,31 @@ const DatabaseLanding: React.FC<{}> = _ => {
     return <ErrorState errorText={message} />;
   }
 
-  const chipProps = {
-    component: 'button',
-    clickable: true
-  };
-
   const { ready, error, initializing, unknown } = counts;
   const chips = (
     <>
       {ready.length !== 0 && (
         <Chip
-          className={classNames({
-            [classes.chip]: true,
-            [classes.chipRunning]: true,
-            [classes.chipActive]: filterStatus === 'ready'
-          })}
+          className={`${classes.chip} ${classes.chipRunning}`}
           label={`${ready.length} READY`}
-          onClick={() => setFilterStatus('ready')}
-          {...chipProps}
         />
       )}
       {unknown.length !== 0 && (
         <Chip
-          className={classNames({
-            [classes.chip]: true,
-            [classes.chipOffline]: true,
-            [classes.chipActive]: filterStatus === 'unknown'
-          })}
-          onClick={() => setFilterStatus('unknown')}
+          className={`${classes.chip} ${classes.chipOffline}`}
           label={`${unknown.length} UNKNOWN`}
-          {...chipProps}
         />
       )}
       {error.length !== 0 && (
         <Chip
-          className={classNames({
-            [classes.chip]: true,
-            [classes.chipError]: true,
-            [classes.chipActive]: filterStatus === 'error'
-          })}
-          onClick={() => setFilterStatus('error')}
+          className={`${classes.chip} ${classes.chipError}`}
           label={`${error.length} ERROR`}
-          {...chipProps}
         />
       )}
       {initializing.length !== 0 && (
         <Chip
-          className={classNames({
-            [classes.chip]: true,
-            [classes.chipPending]: true,
-            [classes.chipActive]: filterStatus === 'initializing'
-          })}
-          onClick={() => setFilterStatus('initializing')}
+          className={`${classes.chip} ${classes.chipPending}`}
           label={`${initializing.length} INITIALIZING`}
-          {...chipProps}
-        />
-      )}
-      {filterStatus !== 'all' && (
-        <IconTextLink
-          SideIcon={Close}
-          text="CLEAR FILTERS"
-          title="CLEAR FILTERS"
-          className={`${classes.clearFilters}`}
-          onClick={() => setFilterStatus('all')}
         />
       )}
     </>
@@ -273,7 +215,6 @@ const DatabaseLanding: React.FC<{}> = _ => {
       <LandingHeader
         title="Databases"
         entity="Database"
-        iconType="linode"
         docsLink="http://google.com"
         body={chips}
       />
