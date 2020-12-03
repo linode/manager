@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
-import Grid from 'src/components/Grid';
+import Grid from 'src/components/core/Grid';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
@@ -50,6 +50,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     borderRadius: '50%',
     transition: theme.transitions.create(['box-shadow']),
+    height: 28,
+    width: 28,
     [theme.breakpoints.down('md')]: {
       width: '28px',
       height: '28px'
