@@ -34,10 +34,11 @@ describe('longview', () => {
               console.log(out.stderr);
             });
             waitForAppLoad('/longview', false);
-            getVisible('[data-testid="longview-client-row"]');
-            fbtVisible(clientLabel);
-            fbtVisible('View details');
-            fbtVisible('Swap');
+            getVisible(`[data-testid="${client.id}"]`).within(() => {
+              fbtVisible(clientLabel);
+              fbtVisible('View details');
+              fbtVisible('Swap');
+            });
             deleteAllTestClients();
           });
       });
