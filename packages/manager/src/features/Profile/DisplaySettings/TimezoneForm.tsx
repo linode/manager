@@ -53,10 +53,13 @@ interface Timezone {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const formatOffset = (offset: number, label: string) => {
-  const isHalfHour = offset % 1 === 0.5 ? ':30' : ':00';
+  const remainder = offset % 1:
+  const minutes = remainder * 100/(100/60):
+
+  const formattedMinutes = ':${minutes}
   const isPositive = Math.abs(offset) === offset ? '+' : '-';
   const rounded = Math.floor(Math.abs(offset));
-  return `\(GMT ${isPositive}${rounded}${isHalfHour}\) ${label}`;
+  return `\(GMT ${isPositive}${rounded}${formattedMinutes}\) ${label}`;
 };
 
 const renderTimeZonesList = (): Item[] => {
