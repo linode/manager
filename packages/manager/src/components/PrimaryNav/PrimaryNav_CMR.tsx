@@ -1,8 +1,7 @@
-import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
-import OCA from 'src/assets/addnewmenu/oneclick.svg';
+import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Domain from 'src/assets/icons/entityIcons/domain.svg';
 import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
@@ -18,10 +17,6 @@ import Managed from 'src/assets/icons/managed.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
-import Hidden from 'src/components/core/Hidden';
-import IconButton from 'src/components/core/IconButton';
-import ListItemText from 'src/components/core/ListItemText';
-import Menu from 'src/components/core/Menu';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDomains from 'src/hooks/useDomains';
 import useFlags from 'src/hooks/useFlags';
@@ -30,7 +25,6 @@ import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import usePrefetch from 'src/hooks/usePreFetch';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import useStyles from './PrimaryNav_CMR.styles';
-import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
 
 type NavEntity =
@@ -71,12 +65,8 @@ export interface Props {
 }
 
 export const PrimaryNav: React.FC<Props> = props => {
-  const { closeMenu, isCollapsed, toggleTheme } = props;
+  const { closeMenu, isCollapsed } = props;
   const classes = useStyles();
-
-  const [anchorEl, setAnchorEl] = React.useState<
-    (EventTarget & HTMLElement) | undefined
-  >();
 
   const flags = useFlags();
   const location = useLocation();
@@ -314,99 +304,6 @@ export const PrimaryNav: React.FC<Props> = props => {
             </div>
           );
         })}
-
-        <Hidden mdUp>
-          <Divider className={classes.divider} />
-          <Link
-            to="/account"
-            onClick={closeMenu}
-            data-qa-nav-item="/account"
-            className={classNames({
-              [classes.listItem]: true,
-              [classes.active]:
-                linkIsActive('/account', location.search, location.pathname) ===
-                true
-            })}
-          >
-            <ListItemText
-              primary="Account"
-              disableTypography={true}
-              className={classNames({
-                [classes.linkItem]: true
-              })}
-            />
-          </Link>
-          <Link
-            to="/profile/display"
-            onClick={closeMenu}
-            data-qa-nav-item="/profile/display"
-            className={classNames({
-              [classes.listItem]: true,
-              [classes.active]:
-                linkIsActive(
-                  '/profile/display',
-                  location.search,
-                  location.pathname
-                ) === true
-            })}
-          >
-            <ListItemText
-              primary="My Profile"
-              disableTypography={true}
-              className={classNames({
-                [classes.linkItem]: true
-              })}
-            />
-          </Link>
-          <Link
-            to="/logout"
-            onClick={closeMenu}
-            data-qa-nav-item="/logout"
-            className={classNames({
-              [classes.listItem]: true
-            })}
-          >
-            <ListItemText
-              primary="Log Out"
-              disableTypography={true}
-              className={classNames({
-                [classes.linkItem]: true
-              })}
-            />
-          </Link>
-        </Hidden>
-        <div className={classes.spacer} />
-        <IconButton
-          onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setAnchorEl(event.currentTarget);
-          }}
-          className={classNames({
-            [classes.settings]: true,
-            [classes.settingsCollapsed]: isCollapsed,
-            [classes.activeSettings]: !!anchorEl
-          })}
-          aria-label="User settings"
-        >
-          <Settings />
-        </IconButton>
-        <Menu
-          id="settings-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={() => {
-            setAnchorEl(undefined);
-          }}
-          getContentAnchorEl={undefined}
-          PaperProps={{ square: true, className: classes.paper }}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          className={classes.menu}
-          BackdropProps={{
-            className: classes.settingsBackdrop
-          }}
-        >
-          <ThemeToggle toggleTheme={toggleTheme} />
-        </Menu>
       </div>
     </Grid>
   );
