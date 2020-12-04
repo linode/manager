@@ -11,8 +11,7 @@ import Notice from '../Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    flexGrow: 1,
-    backgroundColor: theme.color.white
+    flexGrow: 1
   },
   inner: {
     padding: theme.spacing(2),

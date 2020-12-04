@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 24,
     marginBottom: theme.spacing(2),
     padding: '4px 16px',
-    backgroundColor: theme.bg.white,
+    backgroundColor: theme.cmrBGColors.bgPaper,
     borderLeft: `5px solid ${theme.palette.status.warningDark}`,
     '& ul:first-of-type': {
       fontFamily: theme.font.normal,

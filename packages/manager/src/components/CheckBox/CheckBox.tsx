@@ -23,11 +23,7 @@ const styles = (theme: Theme) =>
         transition: theme.transitions.create(['fill'])
       },
       '&:hover': {
-        color: theme.palette.primary.main,
-        fill: theme.color.white,
-        '& .defaultFill': {
-          fill: theme.color.white
-        }
+        color: theme.palette.primary.main
       },
       '&:hover$warning': {
         color: '#ffd322'
