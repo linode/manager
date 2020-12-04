@@ -7,7 +7,12 @@ import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme
+} from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -32,6 +37,7 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import RenderIPs from './RenderIPs';
+import classNames from 'classnames';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -281,27 +287,26 @@ const Header: React.FC<HeaderProps> = props => {
             />
           </Grid>
           <Grid item className={`${classes.actionItemsOuter} py0`}>
-            <Button
-              buttonType="secondary"
-              className={classes.actionItem}
-              disabled={!['running', 'offline'].includes(linodeStatus)}
-              onClick={() => {
-                const action =
-                  linodeStatus === 'running' ? 'Power Off' : 'Power On';
-                sendLinodeActionMenuItemEvent(`${action} Linode`);
+            <Hidden smDown>
+              <Button
+                buttonType="secondary"
+                className={classes.actionItem}
+                disabled={!['running', 'offline'].includes(linodeStatus)}
+                onClick={() => {
+                  const action =
+                    linodeStatus === 'running' ? 'Power Off' : 'Power On';
+                  sendLinodeActionMenuItemEvent(`${action} Linode`);
 
-                openPowerActionDialog(
-                  `${action}` as BootAction,
-                  linodeId,
-                  linodeLabel,
-                  linodeStatus === 'running' ? linodeConfigs : []
-                );
-              }}
-            >
-              {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-            </Button>
-
-            <Hidden xsDown>
+                  openPowerActionDialog(
+                    `${action}` as BootAction,
+                    linodeId,
+                    linodeLabel,
+                    linodeStatus === 'running' ? linodeConfigs : []
+                  );
+                }}
+              >
+                {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+              </Button>
               <Button
                 buttonType="secondary"
                 className={classes.actionItem}
@@ -365,6 +370,8 @@ export interface BodyProps {
 
 const useBodyStyles = makeStyles((theme: Theme) => ({
   body: {
+    flexWrap: 'nowrap',
+    justifyContent: 'space-between',
     padding: theme.spacing(2)
   },
   columnLabel: {
@@ -372,24 +379,28 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.bold
   },
   summaryContainer: {
-    flexBasis: '25%',
-    [theme.breakpoints.down(1100)]: {
-      flexBasis: '50%'
-    }
+    flexBasis: '25%'
   },
   summaryContent: {
     '& > div': {
-      flexBasis: '50%'
+      flexBasis: '50%',
+      [theme.breakpoints.down(720)]: {
+        flexBasis: '100%'
+      }
     },
     '& p': {
       color: theme.cmrTextColors.tableStatic
     }
   },
-  ipContainer: {
-    flexBasis: '25%',
-    [theme.breakpoints.down(1100)]: {
-      flexBasis: '50%'
+  rightColumn: {
+    flexBasis: '75%',
+    flexWrap: 'nowrap',
+    [theme.breakpoints.down(720)]: {
+      flexDirection: 'column'
     }
+  },
+  ipContainer: {
+    flexBasis: '35%'
   },
   ipContent: {
     color: theme.cmrTextColors.tableStatic,
@@ -397,10 +408,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1rem'
   },
   accessTableContainer: {
-    flex: '2 1 50%',
-    [theme.breakpoints.down(1100)]: {
-      flexBasis: '100%'
-    }
+    flexBasis: '65%'
   },
   accessTableContent: {
     '&.MuiGrid-item': {
@@ -423,7 +431,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(),
       textAlign: 'left',
       whiteSpace: 'nowrap',
-      width: '20%'
+      width: 100
     },
     '& td': {
       backgroundColor: theme.cmrBGColors.bgAccessRow,
@@ -489,41 +497,49 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
         </Grid>
       </Grid>
 
-      <Grid container item className={classes.ipContainer} direction="column">
-        <Grid item className={classes.columnLabel}>
-          IP Addresses
-        </Grid>
-        <Grid container item className={classes.ipContent} direction="column">
-          <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
-        </Grid>
-      </Grid>
-
       <Grid
         container
         item
-        className={classes.accessTableContainer}
-        direction="column"
+        className={classes.rightColumn}
+        direction="row"
+        justify="space-between"
       >
-        <Grid item className={classes.columnLabel}>
-          Access
+        <Grid container item className={classes.ipContainer} direction="column">
+          <Grid item className={classes.columnLabel}>
+            IP Addresses
+          </Grid>
+          <Grid container item className={classes.ipContent} direction="column">
+            <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
+          </Grid>
         </Grid>
-        <Grid item className={classes.accessTableContent}>
-          <Table className={classes.accessTable}>
-            <TableBody>
-              <TableRow>
-                <th scope="row">SSH Access</th>
-                <TableCell className={classes.code}>
-                  {sshLink(ipv4[0])}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <th scope="row">LISH via SSH</th>
-                <TableCell className={classes.code}>
-                  {lishLink(username, region, linodeLabel)}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+
+        <Grid
+          container
+          item
+          className={classes.accessTableContainer}
+          direction="column"
+        >
+          <Grid item className={classes.columnLabel}>
+            Access
+          </Grid>
+          <Grid item className={classes.accessTableContent}>
+            <Table className={classes.accessTable}>
+              <TableBody>
+                <TableRow>
+                  <th scope="row">SSH Access</th>
+                  <TableCell className={classes.code}>
+                    {sshLink(ipv4[0])}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <th scope="row">LISH via SSH</th>
+                  <TableCell className={classes.code}>
+                    {lishLink(username, region, linodeLabel)}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>
@@ -545,36 +561,59 @@ interface FooterProps {
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
-  footer: {
-    [theme.breakpoints.down('sm')]: {
-      minHeight: 81
+  details: {
+    flexWrap: 'nowrap',
+    [theme.breakpoints.down('md')]: {
+      marginTop: 0,
+      marginBottom: 0
+    },
+    [theme.breakpoints.down(720)]: {
+      alignItems: 'stretch',
+      flexDirection: 'column'
+    }
+  },
+  detailRow: {
+    [theme.breakpoints.down(720)]: {
+      display: 'flex',
+      '&:first-of-type': {
+        paddingBottom: theme.spacing(0.5)
+      }
     }
   },
   label: {
     fontFamily: theme.font.bold
   },
   listItem: {
+    display: 'inline-block',
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
     color: theme.cmrTextColors.tableStatic,
     padding: `0px 10px`,
-    '&:last-of-type': {
+    [theme.breakpoints.down(720)]: {
+      flex: '50%',
       borderRight: 'none'
     }
   },
+  listItemLast: {
+    borderRight: 'none'
+  },
   linodeTags: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       '& > div': {
-        justifyContent: 'flex-start'
+        flexDirection: 'row-reverse',
+        '& > button': {
+          marginRight: 4
+        }
       }
     }
   }
 }));
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
+  const classes = useFooterStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down(720));
+
   const {
     linodePlan,
     linodeRegionDisplay,
@@ -583,8 +622,6 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     linodeTags,
     openTagDrawer
   } = props;
-
-  const classes = useFooterStyles();
 
   const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
@@ -617,33 +654,44 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
   );
 
   return (
-    <Grid
-      container
-      className={classes.footer}
-      direction="row"
-      alignItems="center"
-      justify="space-between"
-    >
-      <Grid container item xs={12} md={8}>
-        {linodePlan && (
+    <Grid container direction="row" alignItems="center" justify="space-between">
+      <Grid
+        container
+        item
+        className={classes.details}
+        alignItems="flex-start"
+        xs={12}
+        lg={8}
+      >
+        <div className={classes.detailRow}>
+          {linodePlan && (
+            <Typography className={classes.listItem}>
+              <span className={classes.label}>Plan:</span> {linodePlan}
+            </Typography>
+          )}
+          {linodeRegionDisplay && (
+            <Typography
+              className={classNames({
+                [classes.listItem]: true,
+                [classes.listItemLast]: matchesSmDown
+              })}
+            >
+              <span className={classes.label}>Region:</span>{' '}
+              {linodeRegionDisplay}
+            </Typography>
+          )}
+        </div>
+        <div className={classes.detailRow}>
           <Typography className={classes.listItem}>
-            <span className={classes.label}>Plan:</span> {linodePlan}
+            <span className={classes.label}>Linode ID:</span> {linodeId}
           </Typography>
-        )}
-        {linodeRegionDisplay && (
-          <Typography className={classes.listItem}>
-            <span className={classes.label}>Region:</span> {linodeRegionDisplay}
+          <Typography className={`${classes.listItem} ${classes.listItemLast}`}>
+            <span className={classes.label}>Created:</span>{' '}
+            {formatDate(linodeCreated)}
           </Typography>
-        )}
-        <Typography className={classes.listItem}>
-          <span className={classes.label}>Linode ID:</span> {linodeId}
-        </Typography>
-        <Typography className={classes.listItem}>
-          <span className={classes.label}>Created:</span>{' '}
-          {formatDate(linodeCreated)}
-        </Typography>
+        </div>
       </Grid>
-      <Grid item className={classes.linodeTags} xs={12} md={4}>
+      <Grid item className={classes.linodeTags} xs={12} lg={4}>
         <TagCell
           width={500}
           tags={linodeTags}

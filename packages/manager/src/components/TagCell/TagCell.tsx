@@ -11,21 +11,19 @@ import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    minHeight: 40,
     position: 'relative'
   },
   rootDetails: {
-    justifyContent: 'center',
-    [theme.breakpoints.up('sm')]: {
-      justifyContent: 'flex-end'
-    }
+    justifyContent: 'flex-end'
   },
   menuItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.color.tagButton,
     width: '30px',
     height: '30px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: theme.color.tagButton,
     '& svg': {
       color: theme.color.tagIcon
     },
@@ -67,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'visible !important'
   },
   addTagButton: {
-    padding: '6px 10px',
+    padding: '7px 10px',
     borderRadius: 3,
     backgroundColor: theme.color.tagButton,
     border: 'none',

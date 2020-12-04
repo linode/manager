@@ -257,9 +257,15 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.headlineStatic,
     fontFamily: theme.font.bold
   },
+  summaryContainer: {
+    flexBasis: '28%'
+  },
   summaryContent: {
     '& > div': {
-      flexBasis: '50%'
+      flexBasis: '50%',
+      [theme.breakpoints.down(720)]: {
+        flexBasis: '100%'
+      }
     },
     '& p': {
       color: theme.cmrTextColors.tableStatic
@@ -278,10 +284,8 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     }
   },
   accessTableContainer: {
-    flex: '2 1 50%',
-    [theme.breakpoints.down(1100)]: {
-      flexBasis: '100%'
-    }
+    flexBasis: '72%',
+    flexWrap: 'nowrap'
   },
   accessTableContent: {
     '&.MuiGrid-item': {
@@ -304,7 +308,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(),
       textAlign: 'left',
       whiteSpace: 'nowrap',
-      width: '25%'
+      width: 140
     },
     '& td': {
       backgroundColor: theme.cmrBGColors.bgAccessRow,
@@ -344,7 +348,12 @@ const Body: React.FC<BodyProps> = props => {
       direction="row"
       justify="space-between"
     >
-      <Grid container item direction="column" xs={12} md={4}>
+      <Grid
+        container
+        item
+        className={classes.summaryContainer}
+        direction="column"
+      >
         <Grid item className={classes.columnLabel}>
           Summary
         </Grid>
@@ -371,8 +380,6 @@ const Body: React.FC<BodyProps> = props => {
         item
         className={classes.accessTableContainer}
         direction="column"
-        xs={12}
-        md={8}
       >
         <Grid item className={classes.columnLabel}>
           Access
@@ -430,6 +437,13 @@ interface FooterProps {
 }
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
+  details: {
+    flexWrap: 'nowrap',
+    [theme.breakpoints.down('md')]: {
+      marginTop: 0,
+      marginBottom: 0
+    }
+  },
   label: {
     fontFamily: theme.font.bold
   },
@@ -442,12 +456,14 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     }
   },
   tags: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    [theme.breakpoints.only('xs')]: {
-      marginTop: 20,
-      marginBottom: 10
+    [theme.breakpoints.down(720)]: {
+      marginLeft: theme.spacing(),
+      '& > div': {
+        flexDirection: 'row-reverse',
+        '& > button': {
+          marginRight: 4
+        }
+      }
     }
   }
 }));
@@ -496,7 +512,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
         alignItems="center"
         justify="space-between"
       >
-        <Grid container item xs={12} sm={7}>
+        <Grid container item className={classes.details} xs={12} sm={8}>
           <Typography className={classes.listItem}>
             <span className={classes.label}>ID:</span> {id}
           </Typography>
@@ -505,7 +521,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
             {formatDate(created)}
           </Typography>
         </Grid>
-        <Grid item className={classes.tags} xs={12} sm={5}>
+        <Grid item className={classes.tags} xs={12} sm={4}>
           <TagCell
             width={500}
             tags={tags}
