@@ -18,17 +18,6 @@ import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 const useStyles = makeStyles((theme: Theme) => ({
   stackScriptActionsWrapper: {
     display: 'flex'
-  },
-  button: {
-    ...theme.applyLinkStyles,
-    padding: '12px 10px',
-    whiteSpace: 'nowrap',
-    '&:hover': {
-      textDecoration: 'none'
-    },
-    '&:disabled': {
-      color: '#bbb'
-    }
   }
 }));
 
@@ -84,7 +73,6 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
   const inlineActions = [
     {
       actionText: 'Deploy New Linode',
-      className: classes.button,
       disabled: !canAddLinodes,
       onClick: () => {
         history.push(
@@ -98,7 +86,6 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
     inlineActions.unshift({
       actionText: 'Edit',
       ...readonlyProps,
-      className: '',
       onClick: () => {
         history.push(`/stackscripts/${stackScriptID}/edit`);
       }
@@ -166,7 +153,6 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
             <InlineMenuAction
               key={action.actionText}
               actionText={action.actionText}
-              className={action.className}
               disabled={action.disabled}
               onClick={action.onClick}
             />

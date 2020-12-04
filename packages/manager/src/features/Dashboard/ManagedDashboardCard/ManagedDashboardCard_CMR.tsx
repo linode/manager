@@ -24,7 +24,7 @@ import MonitorTickets from './MonitorTickets';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.color.white,
+    backgroundColor: theme.cmrBGColors.bgPaper,
     margin: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
