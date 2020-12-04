@@ -53,11 +53,11 @@ export const makeLinodeDataWithStatus = status => {
   };
 };
 
-const makeLinodeCreateReq = linode => {
+const makeLinodeCreateReq = (linode, password) => {
   const linodeData = linode
     ? linode
     : {
-        root_pass: strings.randomPass(),
+        root_pass: password ? password : strings.randomPass(),
         label: makeLinodeLabel(),
         type: 'g6-standard-2',
         region: 'us-east',
@@ -136,8 +136,8 @@ const makeLinodeCreateReqWithBackupsEnabled = linode => {
  * if linode is undefined, will create default test debian linode in us-east
  * @param linode {label:'', tags:[],type:'',region:'',image:'',root_pass:''}
  */
-export const createLinode = (linode = undefined) => {
-  return makeLinodeCreateReq(linode).then(resp => {
+export const createLinode = (linode = undefined, password = '') => {
+  return makeLinodeCreateReq(linode, password).then(resp => {
     apiCheckErrors(resp);
     console.log(`Created Linode ${resp.body.label} successfully`, resp);
     return resp.body;
