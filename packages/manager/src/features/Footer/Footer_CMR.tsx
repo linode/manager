@@ -9,8 +9,6 @@ import {
 import Grid from 'src/components/Grid';
 import createMailto from './createMailto';
 
-import AdaLink from './AdaLink';
-
 interface Props {
   desktopMenuIsOpen: boolean;
 }
@@ -21,8 +19,7 @@ type CSSClasses =
   | 'linkContainer'
   | 'link'
   | 'version'
-  | 'feedbackLink'
-  | 'adaLink';
+  | 'feedbackLink';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -78,17 +75,6 @@ const styles = (theme: Theme) =>
         '&.MuiGrid-item': {
           paddingRight: 0
         }
-      }
-    },
-    adaLink: {
-      padding: '0 !important',
-      marginRight: theme.spacing(2),
-      position: 'fixed',
-      zIndex: 2,
-      right: 0,
-      bottom: 8,
-      [theme.breakpoints.up('sm')]: {
-        marginRight: theme.spacing(3)
       }
     }
   });
@@ -147,9 +133,6 @@ export class Footer extends React.PureComponent<CombinedProps> {
             >
               Provide Feedback
             </a>
-          </Grid>
-          <Grid item className={classes.adaLink}>
-            <AdaLink />
           </Grid>
         </Grid>
       </footer>
