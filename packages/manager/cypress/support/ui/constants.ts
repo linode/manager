@@ -108,7 +108,7 @@ export const pages = [
           loadAppNoLogin(url);
           cy.findByText('Password Reset').should('be.visible');
           waitDoubleRerender();
-          cy.findByText('Display')
+          cy.contains('Display')
             .should('be.visible')
             .click();
         }
@@ -118,8 +118,8 @@ export const pages = [
         go: () => {
           loadAppNoLogin(routes.support);
           cy.findByTestId('nav-group-profile').click();
-          cy.findByTestId('menu-item-My Profile')
-            .should('have.text', 'My Profile')
+          cy.findByTestId('menu-item-Display')
+            .should('have.text', 'Display')
             .click({ force: true });
         }
       }
@@ -155,7 +155,7 @@ export const pages = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username');
           waitDoubleRerender();
-          cy.findByText('SSH Keys').click();
+          cy.contains('SSH Keys').click();
         }
       }
     ]
@@ -189,7 +189,7 @@ export const pages = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username');
           waitDoubleRerender();
-          cy.findByText('API Tokens').click();
+          cy.contains('API Tokens').click();
         }
       }
     ]
@@ -288,7 +288,7 @@ export const pages = [
           loadAppNoLogin(routes.account);
           cy.findByText('Billing Contact');
           waitDoubleRerender();
-          cy.findByText('Settings').click();
+          cy.contains('Settings').click();
         }
       }
     ]

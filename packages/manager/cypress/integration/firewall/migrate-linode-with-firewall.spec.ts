@@ -1,5 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import {
+  clickLinodeActionMenu,
   createLinode,
   createLinodeSpecifyRegion,
   createLinodeWithBackupsEnabled,
@@ -138,11 +139,11 @@ describe('Migrate Linode With Firewall', () => {
       response: fakeLinodeData
     }).as('getLinode');
 
-    cy.visitWithLogin(`/linodes/${fakeLinodeId}`);
-    cy.findByText('Dallas, TX').click();
-    cy.findByText('Accept').click();
+    cy.visitWithLogin(`/linodes/${fakeLinodeId}/migrate`);
+    cy.findByText('Dallas, TX').should('be.visible');
+    cy.get('[data-qa-checked="false"]').click();
     cy.findByText(`United States: Dallas, TX`).should('be.visible');
-    cy.findByText(selectRegionString).click();
+    cy.contains(selectRegionString).click();
     // checking that eu-west is not selectable
     // TODO uncomment this line once the logic is in the code to check for region with the cloud firewall capabilities
     // cy.findByText('London, UK', { timeout: 1000 }).should('not.exist');
@@ -178,7 +179,7 @@ describe('Migrate Linode With Firewall', () => {
       fbtClick('Create');
       cy.wait('@createFirewall');
       cy.visit(`/linodes/${linode.id}`);
-      fbtClick('More Actions');
+      clickLinodeActionMenu(linode.label);
       fbtClick('Migrate');
       getClick('[data-qa-checked="false"]');
       fbtClick(selectRegionString);
