@@ -26,7 +26,15 @@ const styles = (theme: Theme) => {
     palette: { status }
   } = theme;
   return createStyles({
-    root: {},
+    root: {
+      backgroundColor: theme.cmrBGColors.bgPaper,
+      '& .MuiAccordionSummary-root': {
+        backgroundColor: theme.cmrBGColors.bgPaper
+      },
+      '& .MuiAccordionDetails-root': {
+        backgroundColor: theme.cmrBGColors.bgPaper
+      }
+    },
     success: {
       backgroundColor: status.success,
       '&:hover, &:focus': {
