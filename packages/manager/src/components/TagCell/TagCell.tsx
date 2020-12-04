@@ -93,6 +93,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& > button': {
       marginLeft: theme.spacing(),
       marginRight: 4
+    },
+    // Shifts the AddTag component to the left
+    '& > div': {
+      justifyContent: 'flex-start !important',
+      marginLeft: theme.spacing()
     }
   }
 }));
