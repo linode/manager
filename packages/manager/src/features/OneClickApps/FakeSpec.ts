@@ -595,18 +595,6 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/rust_color.svg'
   },
   {
-    name: 'Secure Your Server',
-    description: `Save time on securing your Linode by deploying an instance pre-configured with some basic security best practices: limited user account access, hardened SSH, and Fail2Ban for SSH Login Protection.`,
-    summary: `Harden your Linode before you deploy with the Secure Your Server One-Click App.`,
-    related_guides: [
-      {
-        title: 'Securing your Server',
-        href: 'https://www.linode.com/docs/guides/securing-your-server/'
-      }
-    ],
-    logo_url: 'assets/secureyourserver_color.svg'
-  },
-  {
     name: 'Shadowsocks',
     description:
       'Shadowsocks is a lightweight SOCKS5 web proxy tool. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
