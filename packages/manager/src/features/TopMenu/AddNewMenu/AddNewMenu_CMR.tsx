@@ -160,7 +160,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="Linode"
-                          body="High performance SSD Linux servers for all of your infrastructure needs"
+                          body="High performance SSD Linux servers"
                           ItemIcon={LinodeIcon}
                         />
                       </MenuLink>
@@ -171,7 +171,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="Volume"
-                          body="Block Storage service allows you to attach additional storage to your Linode"
+                          body="Attach additional storage to your Linode"
                           ItemIcon={VolumeIcon}
                         />
                       </MenuLink>
@@ -182,7 +182,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                         {showVlans && (
                           <AddNewMenuItem
                             title="Virtual LAN"
-                            body="Create private Local Area Networks (LANs) for secure communication between Linodes."
+                            body="Securely communicate between Linodes"
                             ItemIcon={VLANIcon}
                           />
                         )}
@@ -194,7 +194,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="NodeBalancer"
-                          body="Ensure your valuable applications and services are highly-available"
+                          body="Ensure your services are highly available"
                           ItemIcon={NodebalancerIcon}
                         />
                       </MenuLink>
@@ -205,7 +205,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="Domain"
-                          body="Manage your DNS records using Linode’s high-availability name servers"
+                          body="Manage your DNS records"
                           ItemIcon={DomainIcon}
                         />
                       </MenuLink>
@@ -216,7 +216,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="Kubernetes Cluster"
-                          body="Create and manage Kubernetes Clusters for highly available container workloads"
+                          body="Highly available container workloads"
                           ItemIcon={KubernetesIcon}
                         />
                       </MenuLink>
@@ -227,7 +227,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                         >
                           <AddNewMenuItem
                             title="Database"
-                            body="Create cloud-based MySQL databases."
+                            body="Cloud-based MySQL databases."
                             ItemIcon={LinodeIcon} // to be replaced with database icon
                           />
                         </MenuItem>
@@ -239,7 +239,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="Marketplace"
-                          body="Deploy blogs, game servers, and other web apps with ease."
+                          body="Deploy applications with ease."
                           ItemIcon={OneClickIcon}
                           attr={{ 'data-qa-one-click-add-new': true }}
                         />
