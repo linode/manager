@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { getVisibleClick, containsVisibleClick } from '../../support/helpers';
+import { getClick, containsClick } from '../../support/helpers';
 import 'cypress-file-upload';
 
 describe('help & support', () => {
@@ -67,19 +67,17 @@ describe('help & support', () => {
         response: {}
       }).as('ticketNumberPost');
 
-      containsVisibleClick('Open New Ticket');
-      getVisibleClick('[placeholder="Enter a title for your ticket."]').type(
+      containsClick('Open New Ticket');
+      getClick('[placeholder="Enter a title for your ticket."]').type(
         ticketLabel
       );
       cy.get('[data-qa-enhanced-select="General/Account/Billing"]').should(
         'be.visible'
       );
-      getVisibleClick('[data-qa-ticket-description="true"]').type(
-        ticketDescription
-      );
+      getClick('[data-qa-ticket-description="true"]').type(ticketDescription);
       cy.get('[id="attach-file"]').attachFile(imagePath);
       cy.get('[value="test_screenshot.png"]').should('be.visible');
-      getVisibleClick('[data-qa-submit="true"]');
+      getClick('[data-qa-submit="true"]');
 
       cy.wait('@createTicket')
         .its('status')

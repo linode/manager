@@ -8,6 +8,8 @@ import {
   makeTestLabel
 } from './common';
 
+// import { getAll } from '../../../src/utilities/getAll';
+
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const testLinodeTag = testTag;
 export const makeRandomId = () => Math.floor(Math.random() * 99999999);
@@ -77,6 +79,32 @@ const makeLinodeCreateReq = (linode, password) => {
   });
 };
 
+const makeLinodeCreateReqSpecifyRegion = (region, linode) => {
+  const linodeData = linode
+    ? linode
+    : {
+        root_pass: strings.randomPass(),
+        label: makeLinodeLabel(),
+        type: 'g6-standard-2',
+        region,
+        image: 'linode/debian10',
+        tags: [testLinodeTag],
+        backups_enabled: false,
+        booted: true,
+        private_ip: true,
+        authorized_users: []
+      };
+
+  return cy.request({
+    method: 'POST',
+    url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
+    body: linodeData,
+    auth: {
+      bearer: oauthtoken
+    }
+  });
+};
+
 const makeLinodeCreateReqWithBackupsEnabled = linode => {
   const linodeData = linode
     ? linode
@@ -115,6 +143,16 @@ export const createLinode = (linode = undefined, password = '') => {
     return resp.body;
   });
 };
+export const createLinodeSpecifyRegion = (
+  region: string,
+  linode = undefined
+) => {
+  return makeLinodeCreateReqSpecifyRegion(region, linode).then(resp => {
+    apiCheckErrors(resp);
+    console.log(`Created Linode ${resp.body.label} successfully`, resp);
+    return resp.body;
+  });
+};
 
 export const createLinodeWithBackupsEnabled = (linode = undefined) => {
   return makeLinodeCreateReqWithBackupsEnabled(linode).then(resp => {
@@ -124,7 +162,8 @@ export const createLinodeWithBackupsEnabled = (linode = undefined) => {
   });
 };
 
-export const getLinodes = () => getAll('linode/instances');
+export const getLinodes = (page: number = 1) =>
+  getAll(`linode/instances?page=${page}`);
 
 export const deleteLinodeById = (linodeId: number) =>
   deleteById('linode/instances', linodeId);
@@ -138,11 +177,16 @@ export const deleteLinodeByLabel = (label = undefined) => {
 
 export const deleteAllTestLinodes = () => {
   getLinodes().then(resp => {
-    resp.body.data.forEach(linode => {
-      if (isTestEntity(linode)) {
-        deleteLinodeById(linode.id);
-      }
-    });
+    const pages = resp.body.pages;
+    for (let page = 1; page <= pages; page++) {
+      getLinodes(page).then(resp => {
+        resp.body.data.forEach(linode => {
+          if (isTestEntity(linode)) {
+            deleteLinodeById(linode.id);
+          }
+        });
+      });
+    }
   });
 };
 

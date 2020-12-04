@@ -4,6 +4,8 @@ import {
   deleteAllTestLinodes
 } from '../../support/api/linodes';
 import { assertToast } from '../../support/ui/events';
+import { fbtClick } from '../../support/helpers';
+import { selectRegionString } from '../../support/ui/constants';
 
 describe('create linode', () => {
   beforeEach(() => {
@@ -19,10 +21,10 @@ describe('create linode', () => {
       url: '*/linode/instances'
     }).as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
-    cy.contains('Regions')
+    cy.contains(selectRegionString)
       .click()
       .type('new {enter}');
-    cy.get('[data-qa-plan-row="Nanode 1GB"]').click();
+    cy.get('[id="g6-nanode-1"]').click();
     cy.get('#linode-label')
       .click()
       .clear()
@@ -33,7 +35,7 @@ describe('create linode', () => {
       .its('status')
       .should('eq', 200);
     assertToast(`Your Linode ${linodeLabel} is being created.`);
-    cy.contains('Provisioning').should('be.visible');
+    cy.contains('PROVISIONING').should('be.visible');
     deleteAllTestLinodes();
   });
 });
