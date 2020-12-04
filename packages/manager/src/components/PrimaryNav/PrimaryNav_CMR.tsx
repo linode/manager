@@ -2,18 +2,19 @@ import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
-import Kubernetes from 'src/assets/addnewmenu/kubernetes.svg';
 import OCA from 'src/assets/addnewmenu/oneclick.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Domain from 'src/assets/icons/entityIcons/domain.svg';
 import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
 import Image from 'src/assets/icons/entityIcons/image.svg';
+import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
+import VLAN from 'src/assets/icons/entityIcons/vlan.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import Longview from 'src/assets/icons/longview.svg';
-import Managed from 'src/assets/icons/managednav.svg';
+import Managed from 'src/assets/icons/managed.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -156,7 +157,7 @@ export const PrimaryNav: React.FC<Props> = props => {
           hide: !showVlans,
           display: 'VLANs',
           href: '/vlans',
-          icon: <Linode />
+          icon: <VLAN />
         },
         {
           display: 'NodeBalancers',
@@ -178,7 +179,7 @@ export const PrimaryNav: React.FC<Props> = props => {
         {
           display: 'Images',
           href: '/images',
-          icon: <Image className="small" />
+          icon: <Image />
         }
       ],
       [
@@ -217,7 +218,7 @@ export const PrimaryNav: React.FC<Props> = props => {
         {
           display: 'Longview',
           href: '/longview',
-          icon: <Longview className="small" />
+          icon: <Longview />
         },
         {
           display: 'Marketplace',
@@ -468,6 +469,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
         })}
         data-testid={`menu-item-${display}`}
       >
+        {/* <div style={{ display: 'flex', alignItems: 'center' }}> */}
         {icon && isCollapsed && (
           <div className="icon" aria-hidden>
             {icon}
@@ -482,6 +484,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
         >
           {display}
         </p>
+        {/* </div> */}
       </Link>
     </>
   );

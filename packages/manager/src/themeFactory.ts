@@ -324,6 +324,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       black: '#222',
       blue: primaryColors.main,
       offBlack: primaryColors.offBlack,
+      greenCyan: '#6FEC86',
       boxShadow: '#ddd',
       boxShadowDark: '#aaa',
       focusBorder: '#999',

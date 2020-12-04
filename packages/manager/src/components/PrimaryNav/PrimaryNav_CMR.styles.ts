@@ -48,22 +48,32 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     position: 'relative',
     cursor: 'pointer',
-    maxHeight: 42,
+    // maxHeight: 42,
     transition: theme.transitions.create(['background-color']),
+    '& p': {
+      // border: 'red solid 1px',
+      marginTop: 0,
+      marginBottom: 0
+    },
     padding: `
         ${theme.spacing(1.5)}px
         ${theme.spacing(4) - 2}px
-        ${theme.spacing(1.5) - 1}px
+        ${theme.spacing(1.5)}px
         ${theme.spacing(4) + 1}px
       `,
+    '&:focus': {
+      textDecoration: 'none'
+    },
     '&:hover': {
-      // @todo: make this gradient correct.
-      backgroundImage: 'linear-gradient(to right, #395149 , #395149)',
+      textDecoration: 'none',
+      border: 'red',
+      backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
       '& $linkItem': {
         color: 'white'
       },
       '& svg': {
-        fill: 'white',
+        // border: 'red solid 1px',
+        color: theme.color.greenCyan,
         '& *': {
           stroke: 'white'
         }
@@ -71,10 +81,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& .icon': {
       marginRight: theme.spacing(2),
+      color: theme.color.white,
       '& svg': {
-        width: 26,
-        height: 26,
-        transform: 'scale(1.75)',
+        // border: 'red solid 1px',
+        width: 21,
+        height: 21,
+        display: 'flex',
+        alignItems: 'center',
+        transform: 'scale(1.65)',
         fill: theme.color.primaryNavText,
         transition: theme.transitions.create(['fill']),
         '&.small': {
@@ -105,8 +119,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   active: {
-    // @todo: make this gradient correct.
-    backgroundImage: 'linear-gradient(to right, #395149 , #395149)',
+    backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+    textDecoration: 'none',
+    '& svg': {
+      color: theme.color.greenCyan
+    },
     '&:hover': {}
   },
   spacer: {
