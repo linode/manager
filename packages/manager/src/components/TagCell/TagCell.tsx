@@ -3,7 +3,12 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
 import IconButton from 'src/components/core/IconButton';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import Tag from 'src/components/Tag/Tag_CMR';
@@ -36,26 +41,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   addTag: {
-    marginRight: theme.spacing(),
-    cursor: 'pointer'
+    cursor: 'pointer',
+    marginRight: theme.spacing()
   },
   tagList: {
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    position: 'relative',
     display: 'flex',
-    flexWrap: 'nowrap'
+    flexWrap: 'nowrap',
+    overflow: 'hidden',
+    position: 'relative',
+    whiteSpace: 'nowrap'
   },
   tagListOverflow: {
     maskImage: `linear-gradient(to right, rgba(0, 0, 0, 1.0) 75%, transparent)`
   },
   button: {
-    padding: 0,
-    marginLeft: theme.spacing(),
-    width: '40px',
     backgroundColor: theme.color.tagButton,
-    color: theme.color.tagIcon,
     borderRadius: 0,
+    color: theme.color.tagIcon,
+    marginLeft: theme.spacing(),
+    padding: 0,
+    width: '40px',
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: '#ffff'
@@ -65,30 +70,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'visible !important'
   },
   addTagButton: {
-    padding: '7px 10px',
+    display: 'flex',
+    alignItems: 'center',
     borderRadius: 3,
     backgroundColor: theme.color.tagButton,
     border: 'none',
     color: theme.cmrTextColors.textTagButton,
-    display: 'flex',
+    cursor: 'pointer',
     fontSize: 14,
     fontWeight: 'bold',
-    alignItems: 'center',
-    cursor: 'pointer',
+    padding: '7px 10px',
     whiteSpace: 'nowrap',
     '& svg': {
+      color: theme.color.tagIcon,
       marginLeft: 10,
-      width: 10,
       height: 10,
-      color: theme.color.tagIcon
+      width: 10
+    }
+  },
+  breakpoint: {
+    flexDirection: 'row-reverse',
+    '& > button': {
+      marginLeft: theme.spacing(),
+      marginRight: 4
     }
   }
 }));
 
 interface Props {
+  className?: string;
+  breakpoint?: number;
   tags: string[];
   width: number; // Required so we can fade out after a certain point
-  className?: string;
   addTag: (newTag: string) => void;
   deleteTag: (tagToDelete: string) => void;
   listAllTags: (tags: string[]) => void;
@@ -113,10 +126,20 @@ const checkOverflow = (el: any) => {
 export type CombinedProps = Props;
 
 export const TagCell: React.FC<Props> = props => {
-  const { addTag, className, tags, width, inTableContext } = props;
+  const classes = useStyles();
+
+  const { addTag, breakpoint, className, tags, width, inTableContext } = props;
+
+  // Moves TagCell to the following row in the Detail Entity component pages at
+  // the width specified in the breakpoint prop if provided
+  const theme = useTheme<Theme>();
+  const matchesBreakpoint = useMediaQuery(
+    theme.breakpoints.down(breakpoint ? breakpoint : 0)
+  );
+  const isBreakpoint = breakpoint ? true : undefined;
+
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
-  const classes = useStyles();
   const overflowRef = React.useCallback(
     node => {
       if (node !== null) {
@@ -195,7 +218,8 @@ export const TagCell: React.FC<Props> = props => {
     <Grid
       className={classNames({
         [classes.root]: true,
-        [classes.rootDetails]: true
+        [classes.rootDetails]: true,
+        [classes.breakpoint]: isBreakpoint && matchesBreakpoint
       })}
       container
       direction="row"

@@ -454,17 +454,6 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     fontFamily: theme.font.bold
-  },
-  tags: {
-    [theme.breakpoints.down(720)]: {
-      marginLeft: theme.spacing(),
-      '& > div': {
-        flexDirection: 'row-reverse',
-        '& > button': {
-          marginRight: 4
-        }
-      }
-    }
   }
 }));
 
@@ -521,8 +510,9 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
             {formatDate(created)}
           </Typography>
         </Grid>
-        <Grid item className={classes.tags} xs={12} sm={4}>
+        <Grid item xs={12} sm={4}>
           <TagCell
+            breakpoint={720}
             width={500}
             tags={tags}
             addTag={addTag}

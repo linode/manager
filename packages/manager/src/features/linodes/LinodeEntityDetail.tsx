@@ -37,7 +37,6 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import RenderIPs from './RenderIPs';
-import classNames from 'classnames';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -596,21 +595,19 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   label: {
     fontFamily: theme.font.bold
   },
-  linodeTags: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
+  tags: {},
+  legacy: {
+    '&$details': {
+      marginTop: 0,
+      marginBottom: 0
+    },
+    '&$tags': {
       '& > div': {
         flexDirection: 'row-reverse',
         '& > button': {
           marginRight: 4
         }
       }
-    }
-  },
-  legacy: {
-    '&$details': {
-      marginTop: 0,
-      marginBottom: 0
     },
     '&.MuiGrid-item': {
       flexBasis: '100% !important',
@@ -671,7 +668,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Grid
         container
         item
-        className={classNames({
+        className={classnames({
           [classes.details]: true,
           [classes.legacy]: isLegacy
         })}
@@ -687,7 +684,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           )}
           {linodeRegionDisplay && (
             <Typography
-              className={classNames({
+              className={classnames({
                 [classes.listItem]: true,
                 [classes.listItemLast]: matchesSmDown
               })}
@@ -709,14 +706,15 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       </Grid>
       <Grid
         item
-        className={classNames({
-          [classes.linodeTags]: true,
+        className={classnames({
+          [classes.tags]: true,
           [classes.legacy]: isLegacy
         })}
         xs={12}
         lg={4}
       >
         <TagCell
+          breakpoint={1280}
           width={500}
           tags={linodeTags}
           addTag={addTag}
