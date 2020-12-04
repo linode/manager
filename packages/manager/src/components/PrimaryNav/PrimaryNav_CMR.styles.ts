@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     position: 'relative',
     cursor: 'pointer',
-    // maxHeight: 42,
+    height: 45,
     transition: theme.transitions.create(['background-color']),
     '& p': {
       // border: 'red solid 1px',

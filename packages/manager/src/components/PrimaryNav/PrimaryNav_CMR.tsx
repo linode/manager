@@ -173,7 +173,7 @@ export const PrimaryNav: React.FC<Props> = props => {
         },
         {
           display: 'StackScripts',
-          href: '/stackscripts?type=account',
+          href: '/stackscripts',
           icon: <StackScript />
         },
         {

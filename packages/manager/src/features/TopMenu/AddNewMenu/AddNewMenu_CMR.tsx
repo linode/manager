@@ -12,12 +12,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import OneClickIcon from 'src/assets/addnewmenu/oneclick.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
+import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
+import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
+import VLANIcon from 'src/assets/icons/entityIcons/vlan.svg';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import {
   createStyles,
   Theme,
@@ -92,6 +93,11 @@ const styles = (theme: Theme) =>
           backgroundColor: theme.bg.main,
           color: theme.palette.text.primary
         }
+      },
+      '& svg': {
+        width: 21,
+        height: 21,
+        transform: 'scale(1.75)'
       }
     },
     menuItemList: {
@@ -169,6 +175,18 @@ class AddNewMenu extends React.Component<CombinedProps> {
                           ItemIcon={VolumeIcon}
                         />
                       </MenuLink>
+                      <MenuItem
+                        onSelect={vlan.open}
+                        className={classes.menuItemLink}
+                      >
+                        {showVlans && (
+                          <AddNewMenuItem
+                            title="Virtual LAN"
+                            body="Create private Local Area Networks (LANs) for secure communication between Linodes."
+                            ItemIcon={VLANIcon}
+                          />
+                        )}
+                      </MenuItem>
                       <MenuLink
                         as={Link}
                         to="/nodebalancers/create"
@@ -193,18 +211,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       </MenuLink>
                       <MenuLink
                         as={Link}
-                        to="/linodes/create?type=One-Click"
-                        className={classes.menuItemLink}
-                      >
-                        <AddNewMenuItem
-                          title="Marketplace"
-                          body="Deploy blogs, game servers, and other web apps with ease."
-                          ItemIcon={OneClickIcon}
-                          attr={{ 'data-qa-one-click-add-new': true }}
-                        />
-                      </MenuLink>
-                      <MenuLink
-                        as={Link}
                         to="/kubernetes/create"
                         className={classes.menuItemLink}
                       >
@@ -214,18 +220,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
                           ItemIcon={KubernetesIcon}
                         />
                       </MenuLink>
-                      <MenuItem
-                        onSelect={vlan.open}
-                        className={classes.menuItemLink}
-                      >
-                        {showVlans && (
-                          <AddNewMenuItem
-                            title="Virtual LAN"
-                            body="Create private Local Area Networks (LANs) for secure communication between Linodes."
-                            ItemIcon={LinodeIcon}
-                          />
-                        )}
-                      </MenuItem>
                       {flags.databases && (
                         <MenuItem
                           onSelect={dbaas.open}
@@ -238,6 +232,18 @@ class AddNewMenu extends React.Component<CombinedProps> {
                           />
                         </MenuItem>
                       )}
+                      <MenuLink
+                        as={Link}
+                        to="/linodes/create?type=One-Click"
+                        className={classes.menuItemLink}
+                      >
+                        <AddNewMenuItem
+                          title="Marketplace"
+                          body="Deploy blogs, game servers, and other web apps with ease."
+                          ItemIcon={OneClickIcon}
+                          attr={{ 'data-qa-one-click-add-new': true }}
+                        />
+                      </MenuLink>
                     </MenuItems>
                   </MenuPopover>
                 </Menu>
