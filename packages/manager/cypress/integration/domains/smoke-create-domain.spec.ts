@@ -24,7 +24,7 @@ describe('Create a Domain', () => {
     cy.wait('@getDomains');
     cy.url().should('endWith', '/domains');
     cy.findByText('Add a Domain').click();
-    cy.findByText('Add a new Domain');
+    cy.findByText('Create a Domain');
     // The findByLabel does not work for this select
     // cy.findByLabelText('Add Tags')
     cy.findByText('create a tag', { exact: false })

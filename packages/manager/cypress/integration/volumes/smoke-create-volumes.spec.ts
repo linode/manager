@@ -7,6 +7,7 @@ import {
 } from '../../support/api/volumes';
 import { assertToast } from '../../support/ui/events';
 import { createLinode, deleteAllTestLinodes } from '../../support/api/linodes';
+import { selectRegionString } from '../../support/ui/constants';
 
 const urlExtension = '/volumes/create';
 const tag = 'cy-test';
@@ -18,9 +19,7 @@ const getVolumeLabelInput = () => {
   return cy.findAllByLabelText('Label (required)');
 };
 const clickDetach = () => {
-  cy.findByText('Detach')
-    .should('be.visible')
-    .click();
+  cy.get('[data-qa-action-menu-item="Detach"]:visible').click();
 };
 
 const createBasicVolume = (linodeLabel?: string) => {
@@ -45,7 +44,7 @@ const createBasicVolume = (linodeLabel?: string) => {
       .type(`${linodeLabel} {enter}`);
     cy.findByText('My Debian 10 Disk Profile');
   } else {
-    cy.findByText('Regions')
+    cy.findByText(selectRegionString)
       .click()
       .type('new {enter}');
   }
