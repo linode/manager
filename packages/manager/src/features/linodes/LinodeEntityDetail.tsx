@@ -580,9 +580,6 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
       }
     }
   },
-  label: {
-    fontFamily: theme.font.bold
-  },
   listItem: {
     display: 'inline-block',
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
@@ -596,6 +593,9 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   listItemLast: {
     borderRight: 'none'
   },
+  label: {
+    fontFamily: theme.font.bold
+  },
   linodeTags: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
@@ -605,6 +605,16 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
           marginRight: 4
         }
       }
+    }
+  },
+  legacy: {
+    '&$details': {
+      marginTop: 0,
+      marginBottom: 0
+    },
+    '&.MuiGrid-item': {
+      flexBasis: '100% !important',
+      maxWidth: '100% !important'
     }
   }
 }));
@@ -625,6 +635,9 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
+
+  // Cheat to determine if it's a legacy plan
+  const isLegacy = linodePlan && linodePlan.includes('(pending upgrade)');
 
   const addTag = React.useCallback(
     (tag: string) => {
@@ -658,7 +671,10 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Grid
         container
         item
-        className={classes.details}
+        className={classNames({
+          [classes.details]: true,
+          [classes.legacy]: isLegacy
+        })}
         alignItems="flex-start"
         xs={12}
         lg={8}
@@ -691,7 +707,15 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
         </div>
       </Grid>
-      <Grid item className={classes.linodeTags} xs={12} lg={4}>
+      <Grid
+        item
+        className={classNames({
+          [classes.linodeTags]: true,
+          [classes.legacy]: isLegacy
+        })}
+        xs={12}
+        lg={4}
+      >
         <TagCell
           width={500}
           tags={linodeTags}

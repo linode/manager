@@ -444,9 +444,6 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
       marginBottom: 0
     }
   },
-  label: {
-    fontFamily: theme.font.bold
-  },
   listItem: {
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
     color: theme.cmrTextColors.tableStatic,
@@ -454,6 +451,9 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     '&:last-of-type': {
       borderRight: 'none'
     }
+  },
+  label: {
+    fontFamily: theme.font.bold
   },
   tags: {
     [theme.breakpoints.down(720)]: {
