@@ -15,15 +15,17 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
+import withPreferences, {
+  Props as PreferencesProps
+} from 'src/containers/preferences.container';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
-import ThemeToggle from './ThemeToggle_CMR';
-// import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
+import ThemeToggle_CMR from './ThemeToggle_CMR';
 
 type ClassNames = 'root' | 'title' | 'label';
 
@@ -46,9 +48,15 @@ interface State {
   preferenceEditorOpen: boolean;
 }
 
-type CombinedProps = StateProps &
+interface Props {
+  toggleTheme: () => void;
+}
+
+type CombinedProps = Props &
+  StateProps &
   DispatchProps &
   FeatureFlagConsumerProps &
+  PreferencesProps &
   WithStyles<ClassNames>;
 
 class ProfileSettings extends React.Component<CombinedProps, State> {
@@ -64,7 +72,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, status, flags } = this.props;
+    const { classes, status, flags, toggleTheme, preferences } = this.props;
 
     const preferenceEditorMode =
       getQueryParam(window.location.search, 'preferenceEditor') === 'true';
@@ -106,15 +114,11 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
               <Grid item xs={12}>
                 <FormControlLabel
                   className="toggleLassie"
-                  control={
-                    <ThemeToggle
-                      toggleTheme={() => {
-                        console.log('Toggle');
-                      }}
-                    />
-                  }
+                  control={<ThemeToggle_CMR toggleTheme={toggleTheme} />}
                   label={`
-                Dark mode is ${status === true ? 'enabled' : 'disabled'}
+                Dark mode is ${
+                  preferences.theme === 'dark' ? 'enabled' : 'disabled'
+                }
               `}
                   disabled={this.state.submitting}
                 />
@@ -161,9 +165,10 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   withFeatureFlags,
+  withPreferences(),
   connected
 );
 

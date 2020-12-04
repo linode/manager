@@ -60,7 +60,6 @@ interface PrimaryLink {
 
 export interface Props {
   closeMenu: () => void;
-  toggleTheme: () => void;
   toggleSpacing: () => void; // to keep props same for non-cmr
   isCollapsed: boolean;
 }

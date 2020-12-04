@@ -360,7 +360,15 @@ const MainContent: React.FC<CombinedProps> = props => {
                                 exact
                                 strict
                               />
-                              <Route path="/profile" component={Profile} />
+                              <Route
+                                path="/profile"
+                                render={routeProps => (
+                                  <Profile
+                                    {...routeProps}
+                                    toggleTheme={props.toggleTheme}
+                                  />
+                                )}
+                              />
                               <Route exact path="/support" component={Help} />
                               <Route path="/search" component={SearchLanding} />
                               <Route
