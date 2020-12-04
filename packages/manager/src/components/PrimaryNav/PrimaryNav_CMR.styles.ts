@@ -51,7 +51,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 45,
     transition: theme.transitions.create(['background-color']),
     '& p': {
-      // border: 'red solid 1px',
       marginTop: 0,
       marginBottom: 0
     },
@@ -72,7 +71,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: 'white'
       },
       '& svg': {
-        // border: 'red solid 1px',
         color: theme.color.greenCyan,
         '& *': {
           stroke: 'white'
@@ -83,7 +81,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(2),
       color: theme.color.white,
       '& svg': {
-        // border: 'red solid 1px',
         width: 21,
         height: 21,
         display: 'flex',
