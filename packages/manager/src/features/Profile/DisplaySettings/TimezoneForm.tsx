@@ -54,7 +54,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const formatOffset = (offset: number, label: string) => {
   const remainder = Math.abs(offset) % 1;
-  // Translate a decimal to a fraction of 0.6 to convert to minutes.
+  // Translate a decimal to minutes.
   // Example: (0.75 * 100) / (100 / 60) = 0.45
   const minutes = (remainder * 100) / (100 / 60);
 
