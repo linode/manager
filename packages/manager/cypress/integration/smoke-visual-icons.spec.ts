@@ -1,6 +1,6 @@
 import { makeLinodeDataWithStatus } from '../support/api/linodes';
 
-describe('Checking icons render correctly', () => {
+describe.skip('Checking icons render correctly', () => {
   describe('Linode icon status', () => {
     const linodeIconStatus = [
       {

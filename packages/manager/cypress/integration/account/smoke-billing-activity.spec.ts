@@ -70,7 +70,7 @@ const checkInvoice = (invoice, tz) => {
     .click()
     .type('All time{enter}');
   cy.log(invoice.date, tz);
-  cy.findByText(localizeDate(invoice.date, tz)).should('be.visible');
+  cy.contains(localizeDate(invoice.date, tz)).should('be.visible');
   cy.findByText(invoice.label).should('be.visible');
   cy.findByText(`$${invoice.total.toFixed(2)}`).should('be.visible');
 };
