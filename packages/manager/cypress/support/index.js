@@ -25,11 +25,11 @@ import { deleteAllTestLinodes } from './api/linodes';
 import { deleteAllTestNodeBalancers } from './api/nodebalancers';
 import { deleteAllTestVolumes } from './api/volumes';
 import { deleteAllTestImages } from './api/images';
+import { deleteAllTestClients } from './api/longview';
 import {
   deleteAllTestAccessKeys,
   deleteAllTestBuckets
 } from './api/objectStorage';
-import { deleteAllTestClients } from './api/longview';
 
 it('Delete All Test Entities before anything happens', () => {
   deleteAllTestLinodes();
