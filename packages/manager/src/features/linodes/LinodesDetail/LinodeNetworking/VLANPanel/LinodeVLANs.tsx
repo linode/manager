@@ -179,13 +179,13 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
       >
         <Grid item className="p0">
           <Typography variant="h3" className={classes.headline}>
-            Virtual LANs
+            VLANs
           </Typography>
         </Grid>
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
             onClick={handleOpenDrawer}
-            label="Attach a VLAN..."
+            label="Attach a VLAN"
             disabled={readOnly}
           />
         </Grid>

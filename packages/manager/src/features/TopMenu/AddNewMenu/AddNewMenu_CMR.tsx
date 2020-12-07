@@ -1,4 +1,5 @@
 import { AccountCapability } from '@linode/api-v4/lib/account';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {
   Menu,
   MenuButton,
@@ -50,6 +51,8 @@ const styles = (theme: Theme) =>
       }
     },
     button: {
+      display: 'flex',
+      alignItems: 'center',
       '&[data-reach-menu-button]': {
         textTransform: 'inherit',
         borderRadius: '3px',
@@ -59,6 +62,7 @@ const styles = (theme: Theme) =>
         backgroundColor: theme.palette.primary.main,
         color: '#fff',
         padding: `2px 20px`,
+        paddingRight: 12,
         maxHeight: 34,
         position: 'relative',
         minHeight: `34px`,
@@ -76,9 +80,17 @@ const styles = (theme: Theme) =>
           backgroundColor: theme.palette.primary.light
         },
         '&[aria-expanded="true"]': {
-          backgroundColor: theme.palette.primary.light
+          backgroundColor: theme.palette.primary.light,
+          '& $caret': {
+            marginTop: 4,
+            transform: 'rotate(180deg)'
+          }
         }
       }
+    },
+    caret: {
+      marginTop: 2,
+      marginLeft: 4
     },
     menuItemLink: {
       '&[data-reach-menu-item]': {
@@ -143,7 +155,8 @@ class AddNewMenu extends React.Component<CombinedProps> {
                     className={classes.button}
                     data-qa-add-new-menu-button
                   >
-                    Create...
+                    Create
+                    <KeyboardArrowDown className={classes.caret} />
                   </MenuButton>
                   <MenuPopover className={classes.menuPopover} portal={false}>
                     <MenuItems className={classes.menuItemList}>
