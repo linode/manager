@@ -63,7 +63,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
 
     return (
       <Paper className={classes.root}>
-        <DocumentTitleSegment segment="Settings" />
+        <DocumentTitleSegment segment="My Settings" />
         <Typography variant="h2" className={classes.title}>
           Notifications
         </Typography>

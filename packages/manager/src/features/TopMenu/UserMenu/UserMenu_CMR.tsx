@@ -141,7 +141,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       border: 'none',
       padding: 0,
       paddingBottom: theme.spacing(1.5),
-      width: 300
+      width: 330
     }
   },
   menuHeader: {
@@ -157,7 +157,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   profileWrapper: {
     maxHeight: 200,
-    width: '100%'
+    width: '100%',
+    '& > div': {
+      whiteSpace: 'normal'
+    }
   },
   accountColumn: {
     whiteSpace: 'normal',
@@ -197,7 +200,7 @@ const profileLinks: MenuLink[] = [
     display: 'Display',
     href: '/profile/display'
   },
-  { display: 'Authentication', href: '/profile/auth' },
+  { display: 'Password & Authentication', href: '/profile/auth' },
   { display: 'SSH Keys', href: '/profile/keys' },
   { display: 'LISH Settings', href: '/profile/lish' },
   {
@@ -206,7 +209,7 @@ const profileLinks: MenuLink[] = [
   },
   { display: 'OAuth Apps', href: '/profile/clients' },
   { display: 'Referrals', href: '/profile/referrals' },
-  { display: 'Settings', href: '/profile/settings' },
+  { display: 'My Settings', href: '/profile/settings' },
   { display: 'Log Out', href: '/logout' }
 ];
 

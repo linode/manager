@@ -76,7 +76,7 @@ const Profile: React.FC<Props> = props => {
       component: Referrals
     },
     {
-      title: 'Settings',
+      title: 'My Settings',
       routeName: `${url}/settings`,
       component: Settings
     }
