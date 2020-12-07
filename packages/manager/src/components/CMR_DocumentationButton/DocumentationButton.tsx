@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.primary.light
       }
     },
-    [theme.breakpoints.down(1100)]: {
+    [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing()
     }
   },
