@@ -263,7 +263,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   summaryContent: {
     '& > div': {
       flexBasis: '50%',
-      [theme.breakpoints.down(720)]: {
+      [theme.breakpoints.down('sm')]: {
         flexBasis: '100%'
       }
     },
@@ -512,7 +512,6 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
         </Grid>
         <Grid item xs={12} sm={4}>
           <TagCell
-            breakpoint={720}
             width={500}
             tags={tags}
             addTag={addTag}

@@ -3,12 +3,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
 import IconButton from 'src/components/core/IconButton';
-import {
-  makeStyles,
-  Theme,
-  useMediaQuery,
-  useTheme
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import Tag from 'src/components/Tag/Tag_CMR';
@@ -87,18 +82,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 10,
       width: 10
     }
-  },
-  breakpoint: {
-    flexDirection: 'row-reverse',
-    '& > button': {
-      marginLeft: theme.spacing(),
-      marginRight: 4
-    },
-    // Shifts the AddTag component to the left
-    '& > div': {
-      justifyContent: 'flex-start !important',
-      marginLeft: theme.spacing()
-    }
   }
 }));
 
@@ -133,15 +116,7 @@ export type CombinedProps = Props;
 export const TagCell: React.FC<Props> = props => {
   const classes = useStyles();
 
-  const { addTag, breakpoint, className, tags, width, inTableContext } = props;
-
-  // Moves TagCell to the following row in the Detail Entity component pages at
-  // the width specified in the breakpoint prop if provided
-  const theme = useTheme<Theme>();
-  const matchesBreakpoint = useMediaQuery(
-    theme.breakpoints.down(breakpoint ? breakpoint : 0)
-  );
-  const isBreakpoint = breakpoint ? true : undefined;
+  const { addTag, className, tags, width, inTableContext } = props;
 
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
@@ -223,8 +198,7 @@ export const TagCell: React.FC<Props> = props => {
     <Grid
       className={classNames({
         [classes.root]: true,
-        [classes.rootDetails]: true,
-        [classes.breakpoint]: isBreakpoint && matchesBreakpoint
+        [classes.rootDetails]: true
       })}
       container
       direction="row"

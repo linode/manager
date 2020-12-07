@@ -383,7 +383,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   summaryContent: {
     '& > div': {
       flexBasis: '50%',
-      [theme.breakpoints.down(720)]: {
+      [theme.breakpoints.down('sm')]: {
         flexBasis: '100%'
       }
     },
@@ -394,7 +394,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   rightColumn: {
     flexBasis: '75%',
     flexWrap: 'nowrap',
-    [theme.breakpoints.down(720)]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
     }
   },
@@ -566,13 +566,13 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
       marginTop: 0,
       marginBottom: 0
     },
-    [theme.breakpoints.down(720)]: {
+    [theme.breakpoints.down('sm')]: {
       alignItems: 'stretch',
       flexDirection: 'column'
     }
   },
   detailRow: {
-    [theme.breakpoints.down(720)]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'flex',
       '&:first-of-type': {
         paddingBottom: theme.spacing(0.5)
@@ -584,7 +584,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
     color: theme.cmrTextColors.tableStatic,
     padding: `0px 10px`,
-    [theme.breakpoints.down(720)]: {
+    [theme.breakpoints.down('sm')]: {
       flex: '50%',
       borderRight: 'none'
     }
@@ -595,23 +595,18 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   label: {
     fontFamily: theme.font.bold
   },
-  tags: {},
-  legacy: {
-    '&$details': {
-      marginTop: 0,
-      marginBottom: 0
-    },
-    '&$tags': {
+  tags: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
       '& > div': {
         flexDirection: 'row-reverse',
         '& > button': {
           marginRight: 4
+        },
+        '& > div': {
+          justifyContent: 'flex-start !important'
         }
       }
-    },
-    '&.MuiGrid-item': {
-      flexBasis: '100% !important',
-      maxWidth: '100% !important'
     }
   }
 }));
@@ -619,7 +614,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
 export const Footer: React.FC<FooterProps> = React.memo(props => {
   const classes = useFooterStyles();
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down(720));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const {
     linodePlan,
@@ -632,9 +627,6 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
-
-  // Cheat to determine if it's a legacy plan
-  const isLegacy = linodePlan && linodePlan.includes('(pending upgrade)');
 
   const addTag = React.useCallback(
     (tag: string) => {
@@ -669,8 +661,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
         container
         item
         className={classnames({
-          [classes.details]: true,
-          [classes.legacy]: isLegacy
+          [classes.details]: true
         })}
         alignItems="flex-start"
         xs={12}
@@ -704,17 +695,8 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
         </div>
       </Grid>
-      <Grid
-        item
-        className={classnames({
-          [classes.tags]: true,
-          [classes.legacy]: isLegacy
-        })}
-        xs={12}
-        lg={4}
-      >
+      <Grid item className={classes.tags} xs={12} lg={4}>
         <TagCell
-          breakpoint={1280}
           width={500}
           tags={linodeTags}
           addTag={addTag}
