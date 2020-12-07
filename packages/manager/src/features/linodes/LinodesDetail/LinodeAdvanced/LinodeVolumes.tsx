@@ -332,7 +332,7 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
             onClick={openCreateVolumeDrawer}
-            label="Add a Volume..."
+            label="Add a Volume"
             disabled={false}
           />
         </Grid>
