@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   toolbar: {
     padding: 0,
     height: `50px !important`,
-    width: 1100,
+    width: '100%',
     [theme.breakpoints.down('lg')]: {
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1)

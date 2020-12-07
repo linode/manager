@@ -373,7 +373,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
   summaryContainer: {
     flexBasis: '25%',
-    [theme.breakpoints.down(1100)]: {
+    [theme.breakpoints.down('md')]: {
       flexBasis: '50%'
     }
   },
@@ -387,7 +387,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
   ipContainer: {
     flexBasis: '25%',
-    [theme.breakpoints.down(1100)]: {
+    [theme.breakpoints.down('md')]: {
       flexBasis: '50%'
     }
   },
@@ -398,7 +398,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
   accessTableContainer: {
     flex: '2 1 50%',
-    [theme.breakpoints.down(1100)]: {
+    [theme.breakpoints.down('md')]: {
       flexBasis: '100%'
     }
   },

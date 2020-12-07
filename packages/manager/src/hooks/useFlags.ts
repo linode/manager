@@ -27,6 +27,8 @@ export const useFlags = () => {
 
   return {
     ...flags,
+    // @todo: REMOVE BEFORE MERGE
+    cmr: true,
     ...mockFlags
   };
 };

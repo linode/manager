@@ -23,8 +23,8 @@ const styles = (theme: Theme) =>
       }
     },
     root: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
+      paddingLeft: theme.spacing(),
+      paddingRight: theme.spacing(),
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(2),
       borderBottom: `1px solid ${theme.palette.divider}`,
@@ -46,13 +46,17 @@ const styles = (theme: Theme) =>
     },
     iconWrapper: {
       width: 49,
-      height: 49
+      height: 49,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     content: {
       display: 'flex',
       flexDirection: 'column',
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
+      paddingLeft: theme.spacing(),
+      paddingRight: theme.spacing(2),
+      width: '100%'
     },
     titleLink: {
       textDecoration: 'none',

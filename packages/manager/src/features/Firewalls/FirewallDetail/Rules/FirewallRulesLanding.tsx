@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignSelf: 'flex-end'
   },
   cmrSpacing: {
-    [theme.breakpoints.down(1100)]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing()
     }

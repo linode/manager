@@ -107,7 +107,6 @@ class SearchSuggestion extends React.Component<CombinedProps> {
             <EntityIcon
               variant={icon}
               status={status}
-              marginTop={3}
               loading={status && linodeInTransition(status)}
             />
           </div>

@@ -224,12 +224,12 @@ export const styles = (theme: Theme) =>
     suggestionTitle: {
       fontSize: '1rem',
       color: theme.palette.text.primary,
-      wordBreak: 'break-all'
+      wordBreak: 'break-all',
+      fontWeight: 600
     },
     suggestionDescription: {
       color: theme.color.headline,
       fontSize: '.75rem',
-      fontWeight: 600,
       marginTop: 2
     },
     resultContainer: {
