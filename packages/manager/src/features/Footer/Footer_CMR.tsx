@@ -30,6 +30,7 @@ const styles = (theme: Theme) =>
       width: '100%',
       backgroundColor: theme.bg.main,
       margin: 0,
+      padding: '4px 0px',
       [theme.breakpoints.down('xs')]: {
         flexDirection: 'column',
         alignItems: 'flex-start'
