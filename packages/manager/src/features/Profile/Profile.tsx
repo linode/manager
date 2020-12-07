@@ -56,7 +56,7 @@ const Profile: React.FC<Props> = props => {
       component: flags.cmr ? SSHKeys_CMR : SSHKeys
     },
     {
-      title: 'LISH',
+      title: 'LISH Settings',
       routeName: `${url}/lish`,
       component: LishSettings
     },

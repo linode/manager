@@ -1,6 +1,6 @@
 import { Profile, TPAProvider } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { dec, lensPath, path, remove, set } from 'ramda';
+import { dec, equals, lensPath, path, remove, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -78,7 +78,7 @@ const styles = (theme: Theme) =>
     remove: {
       margin: '8px 0 0 -26px',
       [theme.breakpoints.up('md')]: {
-        margin: `0 0 ${theme.spacing(1) / 2}px 0`
+        margin: `0 0 ${theme.spacing(1) / 2}px 8px`
       }
     }
   });
@@ -164,7 +164,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Lish" />
         <Paper className={classes.root}>
           <Typography variant="h2" className={classes.title} data-qa-title>
-            LISH
+            LISH Settings
           </Typography>
           {success && <Notice success text={success} />}
           {authorizedKeysError && <Notice error text={authorizedKeysError} />}
@@ -200,7 +200,6 @@ class LishSettings extends React.Component<CombinedProps, State> {
                     label="SSH Public Key"
                     onChange={this.onPublicKeyChange(idx)}
                     value={authorizedKeys[idx] || ''}
-                    helperText="Place your SSH public keys here for use with Lish console access."
                     multiline
                     rows="4"
                     className={classes.keyTextarea}
@@ -217,6 +216,10 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   )}
                 </div>
               ))}
+              <Typography>
+                Place your SSH public keys here for use with Lish console
+                access.
+              </Typography>
               <AddNewLink
                 onClick={this.addSSHPublicKeyField}
                 label="Add SSH Public Key"
@@ -230,6 +233,10 @@ class LishSettings extends React.Component<CombinedProps, State> {
               buttonType="primary"
               onClick={this.onSubmit}
               loading={this.state.submitting}
+              disabled={
+                this.state.lishAuthMethod === this.props.lishAuthMethod &&
+                equals(this.state.authorizedKeys, this.props.authorizedKeys)
+              }
               data-qa-save
             >
               Save
