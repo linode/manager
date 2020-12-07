@@ -74,7 +74,6 @@ const styles = (theme: Theme) =>
       }
     },
     navIconHide: {
-      order: 5,
       position: 'relative',
       top: 1,
       '& > span': {
