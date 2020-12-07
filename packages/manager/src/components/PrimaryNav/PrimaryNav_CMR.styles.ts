@@ -48,7 +48,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     position: 'relative',
     cursor: 'pointer',
-    height: 45,
+    height: 36,
+    lineHeight: 0,
     transition: theme.transitions.create(['background-color']),
     '& p': {
       marginTop: 0,
@@ -81,8 +82,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(2),
       color: theme.color.white,
       '& svg': {
-        width: 21,
-        height: 21,
+        width: 20,
+        height: 20,
         display: 'flex',
         alignItems: 'center',
         transform: 'scale(1.65)',
