@@ -8,7 +8,7 @@ env:
 on:
   push:
     branches:
-      - M3-4477-initial-e2e-actions
+      - M3-4577-initial-e2e-actions
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
