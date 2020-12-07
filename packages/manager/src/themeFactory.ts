@@ -324,6 +324,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       black: '#222',
       blue: primaryColors.main,
       offBlack: primaryColors.offBlack,
+      greenCyan: '#6FEC86',
       boxShadow: '#ddd',
       boxShadowDark: '#aaa',
       focusBorder: '#999',
@@ -1567,6 +1568,17 @@ export default (options: ThemeOptions & ThemeOverrides) =>
       themeDefaults({
         spacingOverride: options.spacingOverride
       }),
-      options
+      {
+        breakpoints: {
+          values: {
+            xs: 0,
+            sm: 600,
+            md: 960,
+            lg: 1280,
+            xl: 1920
+          }
+        },
+        ...options
+      }
     )
   );

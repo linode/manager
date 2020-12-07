@@ -279,7 +279,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
   accessTableContainer: {
     flex: '2 1 50%',
-    [theme.breakpoints.down(1100)]: {
+    [theme.breakpoints.down('md')]: {
       flexBasis: '100%'
     }
   },
