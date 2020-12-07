@@ -46,7 +46,6 @@ const styles = (theme: Theme) =>
     },
     version: {
       marginLeft: 24,
-      flex: 1,
       '&.MuiGrid-item': {
         paddingLeft: 0
       }
