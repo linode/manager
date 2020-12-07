@@ -5,7 +5,6 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import Paper from 'src/components/core/Paper';
@@ -61,14 +60,14 @@ const styles = (theme: Theme) =>
       flexWrap: 'wrap'
     },
     addNew: {
+      ...theme.applyLinkStyles,
       marginTop: theme.spacing(2)
     },
     sshWrap: {
       margin: `${theme.spacing(1)}px 0`,
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-        alignItems: 'flex-end'
-      }
+      display: 'flex',
+      flexFlow: 'column nowrap',
+      alignItems: 'flex-start'
     },
     keyTextarea: {
       [theme.breakpoints.up('md')]: {
@@ -76,10 +75,7 @@ const styles = (theme: Theme) =>
       }
     },
     remove: {
-      margin: '8px 0 0 -26px',
-      [theme.breakpoints.up('md')]: {
-        margin: `0 0 ${theme.spacing(1) / 2}px 8px`
-      }
+      ...theme.applyLinkStyles
     }
   });
 
@@ -207,25 +203,26 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   />
                   {((idx === 0 && typeof authorizedKeys[0] !== 'undefined') ||
                     idx > 0) && (
-                    <Button
-                      buttonType="remove"
+                    <button
                       onClick={this.onPublicKeyRemove(idx)}
                       className={classes.remove}
                       data-qa-remove
-                    />
+                    >
+                      Remove
+                    </button>
                   )}
                 </div>
               ))}
-              <Typography>
+              <Typography style={{ paddingTop: 2 }}>
                 Place your SSH public keys here for use with Lish console
                 access.
               </Typography>
-              <AddNewLink
+              <button
                 onClick={this.addSSHPublicKeyField}
-                label="Add SSH Public Key"
-                left
                 className={classes.addNew}
-              />
+              >
+                Add SSH Public Key
+              </button>
             </React.Fragment>
           )}
           <ActionsPanel>
