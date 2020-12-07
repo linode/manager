@@ -1,6 +1,5 @@
 import { Config, Linode, LinodeStatus } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as classNames from 'classnames';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
@@ -14,7 +13,6 @@ import { ThunkDispatch } from 'redux-thunk';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
@@ -38,6 +36,7 @@ import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import BackupsCTA_CMR from 'src/features/Backups/BackupsCTA_CMR';
 import { DialogType } from 'src/features/linodes/types';
+import DetachLinodeDialog from 'src/features/Vlans/DetachLinodeDialog/DetachLinodeDialog';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import {
@@ -51,25 +50,24 @@ import {
   sendLinodesViewEvent
 } from 'src/utilities/ga';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 import { BackupsCtaDismissed } from 'src/utilities/storage';
+import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
+import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
+import RescueDialog from '../LinodesDetail/LinodeRescue/RescueDialog';
 import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
 import MigrateLinode from '../MigrateLanding/MigrateLinode';
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
 import CardView from './CardView';
 import DeleteDialog from './DeleteDialog';
-import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
-import RescueDialog from '../LinodesDetail/LinodeRescue/RescueDialog';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import DisplayLinodes from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import ToggleBox from './ToggleBox';
-import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import { ExtendedStatus, statusToPriority } from './utils';
-import getUserTimezone from 'src/utilities/getUserTimezone';
-import DetachLinodeDialog from 'src/features/Vlans/DetachLinodeDialog/DetachLinodeDialog';
 
 type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
 
@@ -328,14 +326,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Last Backup', key: 'lastBackup' }
     ];
 
-    const linodesRunningCount = filterLinodesByStatus('running', linodesData)
-      .length;
-
-    const linodesBusyCount = filterLinodesByStatus('busy', linodesData).length;
-
-    const linodesOfflineCount = filterLinodesByStatus('offline', linodesData)
-      .length;
-
     const displayBackupsCTA =
       !this.props.isVLAN && backupsCTA && !BackupsCtaDismissed.get();
 
@@ -447,43 +437,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                       this.props.history.push('/linodes/create')
                                     }
                                     docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-                                    body={
-                                      <div className={classes.chipContainer}>
-                                        {linodesRunningCount !== 0 && (
-                                          <Chip
-                                            className={classNames({
-                                              [classes.chip]: true,
-                                              [classes.chipRunning]: true,
-                                              [classes.chipActive]:
-                                                filterStatus === 'running'
-                                            })}
-                                            label={`${linodesRunningCount} RUNNING`}
-                                          />
-                                        )}
-                                        {linodesBusyCount !== 0 && (
-                                          <Chip
-                                            className={classNames({
-                                              [classes.chip]: true,
-                                              [classes.chipPending]: true,
-                                              [classes.chipActive]:
-                                                filterStatus === 'busy'
-                                            })}
-                                            label={`${linodesBusyCount} BUSY`}
-                                          />
-                                        )}
-                                        {linodesOfflineCount !== 0 && (
-                                          <Chip
-                                            className={classNames({
-                                              [classes.chip]: true,
-                                              [classes.chipOffline]: true,
-                                              [classes.chipActive]:
-                                                filterStatus === 'offline'
-                                            })}
-                                            label={`${linodesOfflineCount} OFFLINE`}
-                                          />
-                                        )}
-                                      </div>
-                                    }
                                   />
                                 )}
                               </Grid>
