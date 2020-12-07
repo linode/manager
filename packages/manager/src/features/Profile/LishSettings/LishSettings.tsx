@@ -157,7 +157,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Lish" />
+        <DocumentTitleSegment segment="LISH Settings" />
         <Paper className={classes.root}>
           <Typography variant="h2" className={classes.title} data-qa-title>
             LISH Settings
