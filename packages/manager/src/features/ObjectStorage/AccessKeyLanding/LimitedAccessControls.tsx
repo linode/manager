@@ -11,6 +11,7 @@ import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Toggle from 'src/components/Toggle';
+import AccessCell from './AccessCell';
 import { MODE } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -129,13 +130,6 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
 
   const disabled = !checked;
 
-  const radioDisabled = (scope: Scope, access: AccessType) => {
-    if (mode !== 'viewing') {
-      return disabled;
-    }
-    return scope.permissions !== access;
-  };
-
   return (
     <Table
       aria-label="Object Storage Access Key Permissions"
@@ -221,58 +215,48 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
                 {thisScope.bucket_name}
               </TableCell>
               <TableCell padding="checkbox" className={classes.radioCell}>
-                <Radio
-                  name={thisScope.bucket_name}
-                  disabled={radioDisabled(thisScope, SCOPES.none)}
-                  checked={thisScope.permissions === SCOPES.none}
-                  value="none"
+                <AccessCell
+                  active={thisScope.permissions === SCOPES.none}
+                  scope="none"
+                  scopeDisplay={scopeName}
+                  viewOnly={mode === 'viewing'}
+                  disabled={disabled}
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
                       permissions: SCOPES.none
                     })
                   }
-                  data-qa-perm-none-radio
-                  inputProps={{
-                    'aria-label': `no permissions for ${thisScope.cluster}`
-                  }}
                 />
               </TableCell>
               <TableCell padding="checkbox" className={classes.radioCell}>
-                <Radio
-                  name={scopeName}
-                  disabled={radioDisabled(thisScope, SCOPES.read)}
-                  checked={thisScope.permissions === SCOPES.read}
-                  value="read-only"
+                <AccessCell
+                  active={thisScope.permissions === SCOPES.read}
+                  scope="read-only"
+                  scopeDisplay={scopeName}
+                  viewOnly={mode === 'viewing'}
+                  disabled={disabled}
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
                       permissions: SCOPES.read
                     })
                   }
-                  data-qa-perm-read-radio
-                  inputProps={{
-                    'aria-label': `read-only for ${scopeName}`
-                  }}
                 />
               </TableCell>
               <TableCell padding="checkbox" className={classes.radioCell}>
-                <Radio
-                  name={scopeName}
-                  disabled={radioDisabled(thisScope, SCOPES.write)}
-                  checked={thisScope.permissions === SCOPES.write}
-                  value="read-write"
+                <AccessCell
+                  active={thisScope.permissions === SCOPES.write}
+                  scope="read-write"
+                  scopeDisplay={scopeName}
+                  viewOnly={mode === 'viewing'}
+                  disabled={disabled}
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
                       permissions: SCOPES.write
                     })
                   }
-                  data-qa-perm-rw-radio
-                  data-testid="perm-rw-radio"
-                  inputProps={{
-                    'aria-label': `read/write for ${scopeName}`
-                  }}
                 />
               </TableCell>
             </TableRow>

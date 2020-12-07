@@ -26,25 +26,25 @@ class APITokenMenu extends React.Component<CombinedProps> {
     } = this.props;
 
     return (closeMenu: Function): Action[] => {
-      const actions = !isThirdPartyAccessToken
+      return !isThirdPartyAccessToken
         ? [
             {
               title: 'View Token Scopes',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
+              onClick: () => {
                 openViewDrawer(token);
                 closeMenu();
               }
             },
             {
               title: 'Rename Token',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
+              onClick: () => {
                 openEditDrawer(token);
                 closeMenu();
               }
             },
             {
               title: 'Revoke',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
+              onClick: () => {
                 openRevokeDialog(token, type);
                 closeMenu();
               }
@@ -53,20 +53,19 @@ class APITokenMenu extends React.Component<CombinedProps> {
         : [
             {
               title: 'View Token Scopes',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
+              onClick: () => {
                 openViewDrawer(token);
                 closeMenu();
               }
             },
             {
               title: 'Revoke',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
+              onClick: () => {
                 openRevokeDialog(token, type);
                 closeMenu();
               }
             }
           ];
-      return actions;
     };
   };
 
