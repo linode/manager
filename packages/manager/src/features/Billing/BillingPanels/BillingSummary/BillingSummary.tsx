@@ -85,8 +85,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   iconButtonOuter: {
     display: 'flex',
     justifyContent: 'space-between',
-    [theme.breakpoints.between('sm', 'md')]: {
+    '& button, & a': {
+      justifyContent: 'flex-start'
+    },
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-start'
+    },
+    [theme.breakpoints.only('xs')]: {
       flexDirection: 'column'
+    },
+    [theme.breakpoints.only('md')]: {
+      flexDirection: 'column'
+    }
+  },
+  invoiceButton: {
+    [theme.breakpoints.only('sm')]: {
+      paddingLeft: 32
+    },
+    '& button': {
+      paddingLeft: '0'
     }
   },
   iconButton: {
@@ -193,15 +210,15 @@ export const BillingSummary: React.FC<Props> = props => {
                 onClick={openPaymentDrawer}
                 className={classes.iconButton}
               />
-
-              <IconTextLink
-                SideIcon={InvoiceIcon}
-                text="View last invoice"
-                title="View last invoice"
-                to={`/account/billing/invoices/${mostRecentInvoiceId}`}
-                className={classes.iconButton}
-                disabled={!mostRecentInvoiceId}
-              />
+              <span className={`${classes.invoiceButton}`}>
+                <IconTextLink
+                  SideIcon={InvoiceIcon}
+                  text="View last invoice"
+                  title="View last invoice"
+                  to={`/account/billing/invoices/${mostRecentInvoiceId}`}
+                  disabled={!mostRecentInvoiceId}
+                />
+              </span>
             </div>
           </Grid>
           <Grid item xs={12} md={4} className={classes.gridItem}>
