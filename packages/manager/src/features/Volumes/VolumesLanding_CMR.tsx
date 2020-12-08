@@ -4,6 +4,10 @@ import { Volume } from '@linode/api-v4/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import Placeholder from 'src/components/Placeholder';
+import Typography from 'src/components/core/Typography';
+import Link from 'src/components/Link';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -280,6 +284,34 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
 
   if (_loading) {
     return <Loading shouldDelay />;
+  }
+
+  if (mappedVolumesDataWithLinodes.length === 0) {
+    return (
+      <React.Fragment>
+        <DocumentTitleSegment segment="Images" />
+        <Placeholder
+          title="Volumes"
+          icon={VolumeIcon}
+          isEntity
+          buttonProps={[
+            {
+              onClick: () => props.history.push('/volumes/create'),
+              children: 'Add a Volume'
+            }
+          ]}
+        >
+          <Typography variant="subtitle1">
+            Attach additional storage to your Linode.
+          </Typography>
+          <Typography variant="subtitle1">
+            <Link to="https://www.linode.com/docs/products/storage/block-storage/">
+              Learn more about Linode Block Storage Volumes.
+            </Link>
+          </Typography>
+        </Placeholder>
+      </React.Fragment>
+    );
   }
 
   const handlers: VolumeHandlers = {

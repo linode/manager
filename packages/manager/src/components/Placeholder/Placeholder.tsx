@@ -11,7 +11,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 
-type ClassNames = 'root' | 'title' | 'copy' | 'icon' | 'button';
+type ClassNames = 'root' | 'title' | 'copy' | 'icon' | 'button' | 'entity';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -71,6 +71,11 @@ const styles = (theme: Theme) =>
         fill: theme.palette.primary.main
       }
     },
+    entity: {
+      borderRadius: '50%',
+      backgroundColor: theme.bg.offWhite,
+      color: theme.color.green
+    },
     title: {
       textAlign: 'center'
     },
@@ -94,10 +99,11 @@ export interface ExtendedButtonProps extends ButtonProps {
 export interface Props {
   icon?: React.ComponentType<any>;
   animate?: boolean;
-  copy?: string | React.ReactNode;
+  children?: string | React.ReactNode;
   title: string;
   buttonProps?: ExtendedButtonProps[];
   className?: string;
+  isEntity?: boolean;
   renderAsSecondary?: boolean;
 }
 
@@ -107,7 +113,7 @@ const Placeholder: React.FC<CombinedProps> = props => {
   const {
     animate,
     classes,
-    copy,
+    isEntity,
     title,
     icon: Icon,
     buttonProps,
@@ -123,7 +129,12 @@ const Placeholder: React.FC<CombinedProps> = props => {
       className={`${classes.root} ${props.className}`}
     >
       <Grid item xs={12}>
-        {Icon && <Icon className={`${classes.icon} ${animate && 'animate'}`} />}
+        {Icon && (
+          <Icon
+            className={`${classes.icon} ${animate && 'animate'} ${isEntity &&
+              classes.entity}`}
+          />
+        )}
       </Grid>
       <Grid item xs={12}>
         <H1Header
@@ -134,10 +145,10 @@ const Placeholder: React.FC<CombinedProps> = props => {
         />
       </Grid>
       <Grid item xs={12} lg={10} className={classes.copy}>
-        {typeof copy === 'string' ? (
-          <Typography variant="subtitle1">{copy}</Typography>
+        {typeof props.children === 'string' ? (
+          <Typography variant="subtitle1">{props.children}</Typography>
         ) : (
-          copy
+          props.children
         )}
       </Grid>
       {buttonProps && (
@@ -167,9 +178,6 @@ const Placeholder: React.FC<CombinedProps> = props => {
 
 Placeholder.defaultProps = {
   icon: LinodeIcon,
-  copy:
-    'The feature you are looking for is currently in development. Please check back soon.',
-  title: 'Feature in Progress',
   animate: true
 };
 

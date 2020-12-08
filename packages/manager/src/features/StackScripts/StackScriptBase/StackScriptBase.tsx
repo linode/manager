@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
-import StackScriptsIcon from 'src/assets/addnewmenu/stackscripts.svg';
+import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
@@ -497,17 +497,19 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               {userCannotCreateStackScripts ? (
                 <Placeholder
                   icon={StackScriptsIcon}
+                  isEntity
                   renderAsSecondary
                   title="StackScripts"
-                  copy="You don't have any StackScripts to select from."
                   className={classes.stackscriptPlaceholder}
-                />
+                >
+                  You don&apos;t have any StackScripts to select from.
+                </Placeholder>
               ) : (
                 <Placeholder
                   icon={StackScriptsIcon}
                   renderAsSecondary
+                  isEntity
                   title="StackScripts"
-                  copy={<EmptyCopy />}
                   buttonProps={[
                     {
                       children: 'Create New StackScript',
@@ -515,7 +517,32 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                     }
                   ]}
                   className={classes.stackscriptPlaceholder}
-                />
+                >
+                  <Typography variant="subtitle1">
+                    Automate Deployment with StackScripts!
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <a
+                      href="https://linode.com/docs/platform/stackscripts-new-manager/"
+                      target="_blank"
+                      aria-describedby="external-site"
+                      rel="noopener noreferrer"
+                      className="h-u"
+                    >
+                      Learn more about getting started
+                    </a>
+                    &nbsp;or&nbsp;
+                    <a
+                      href="https://www.linode.com/docs/"
+                      target="_blank"
+                      aria-describedby="external-site"
+                      rel="noopener noreferrer"
+                      className="h-u"
+                    >
+                      visit our guides and tutorials.
+                    </a>
+                  </Typography>
+                </Placeholder>
               )}
             </div>
           ) : (
@@ -673,35 +700,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
     userCannotCreateStackScripts:
       isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts')
   });
-
-  const EmptyCopy = () => (
-    <>
-      <Typography variant="subtitle1">
-        Automate Deployment with StackScripts!
-      </Typography>
-      <Typography variant="subtitle1">
-        <a
-          href="https://linode.com/docs/platform/stackscripts-new-manager/"
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-          className="h-u"
-        >
-          Learn more about getting started
-        </a>
-        &nbsp;or&nbsp;
-        <a
-          href="https://www.linode.com/docs/"
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-          className="h-u"
-        >
-          visit our guides and tutorials.
-        </a>
-      </Typography>
-    </>
-  );
 
   const connected = connect(mapStateToProps);
 
