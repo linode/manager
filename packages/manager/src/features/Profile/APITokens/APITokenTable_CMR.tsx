@@ -565,7 +565,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             {type === 'Personal Access Token' && (
               <AddNewLink
                 onClick={this.openCreateDrawer}
-                label="Create a Personal Access Token..."
+                label="Create a Personal Access Token"
                 className={classes.addNewLink}
               />
             )}
