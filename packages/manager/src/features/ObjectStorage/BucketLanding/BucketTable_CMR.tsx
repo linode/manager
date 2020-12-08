@@ -71,7 +71,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
     <div className={classes.root}>
       <Grid container justify="flex-end" className={classes.objBucketHeader}>
         <Grid item className={classes.addNewWrapper}>
-          <AddNewLink onClick={openBucketDrawer} label="Create a Bucket..." />
+          <AddNewLink onClick={openBucketDrawer} label="Create a Bucket" />
         </Grid>
       </Grid>
       {/* <LandingHeader

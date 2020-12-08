@@ -69,7 +69,7 @@ export const pages = [
         name: 'Nav',
         go: () => {
           loadAppNoLogin(routes.support);
-          cy.findByText('Create...').click();
+          cy.findByText('Create').click();
           cy.get('[data-qa-one-click-add-new="true"]').click();
         }
       }

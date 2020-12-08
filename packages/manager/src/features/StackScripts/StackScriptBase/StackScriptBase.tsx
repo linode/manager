@@ -557,7 +557,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                       className={classes.button}
                       onClick={this.goToCreateStackScript}
                     >
-                      Create a StackScript...
+                      Create a StackScript
                     </Button>
                   </div>
                 )}

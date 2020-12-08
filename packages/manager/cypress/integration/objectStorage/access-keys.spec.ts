@@ -20,7 +20,7 @@ describe('access keys', () => {
 
     createBucket(bucketLabel, clusterId).then(() => {
       cy.visitWithLogin('/object-storage/access-keys');
-      fbtClick('Add an Access Key...');
+      fbtClick('Add an Access Key');
       containsVisible('Create an Access Key');
       getVisible('[data-testid="textfield-input"]').type(accessKeyLabel);
       getClick('[data-qa-toggle="false"]');

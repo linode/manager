@@ -78,7 +78,7 @@ export const LandingHeader: React.FC<Props> = props => {
             >
               {createButtonText
                 ? createButtonText
-                : `Create ${startsWithVowel ? 'an' : 'a'} ${entity}...`}
+                : `Create ${startsWithVowel ? 'an' : 'a'} ${entity}`}
             </Button>
           </Grid>
         )}

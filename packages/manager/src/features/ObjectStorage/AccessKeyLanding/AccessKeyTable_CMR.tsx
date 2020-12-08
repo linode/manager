@@ -144,7 +144,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
             onClick={() => openDrawer('creating')}
-            label="Add an Access Key..."
+            label="Add an Access Key"
           />
         </Grid>
       </Grid>

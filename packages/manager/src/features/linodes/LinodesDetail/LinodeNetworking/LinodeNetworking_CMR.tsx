@@ -680,7 +680,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
                 </Button>
               </Hidden>
               <AddNewLink
-                label="Add an IP Address..."
+                label="Add an IP Address"
                 onClick={this.openAddIPDrawer}
               />
             </div>

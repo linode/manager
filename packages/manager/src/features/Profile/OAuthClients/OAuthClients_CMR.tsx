@@ -389,7 +389,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           <Grid className={classes.addNewWrapper} item>
             <AddNewLink
               onClick={() => this.openDrawer()(false)}
-              label="Add an OAuth App..."
+              label="Add an OAuth App"
               data-qa-oauth-create
             />
           </Grid>

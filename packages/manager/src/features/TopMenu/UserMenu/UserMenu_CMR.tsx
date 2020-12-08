@@ -102,6 +102,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       textTransform: 'inherit',
       '&[aria-expanded="true"]': {
         '& $caret': {
+          marginTop: 4,
           transform: 'rotate(180deg)'
         }
       }
@@ -128,7 +129,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   caret: {
     color: '#9ea4ae',
     fontSize: 26,
-    marginTop: 4,
+    marginTop: 2,
     marginLeft: 2,
     [theme.breakpoints.down('sm')]: {
       display: 'none'
