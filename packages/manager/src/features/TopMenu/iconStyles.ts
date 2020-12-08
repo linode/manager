@@ -6,6 +6,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     padding: theme.spacing(),
     marginLeft: theme.spacing(),
+    marginTop: 4,
     color: '#c9c7c7',
     border: 'none',
     backgroundColor: 'inherit',
@@ -20,15 +21,16 @@ export const useStyles = makeStyles((theme: Theme) => ({
   badge: {
     display: 'flex',
     position: 'absolute',
+    padding: theme.spacing(0.25),
     top: 5,
-    left: 23,
+    left: 20,
     alignItems: 'center',
     justifyContent: 'center',
     color: 'white',
     backgroundColor: theme.color.green,
-    fontSize: '0.75rem',
+    fontSize: '0.72rem',
     borderRadius: '50%',
-    height: 12,
-    width: 12
+    minWidth: 16,
+    minHeight: 16
   }
 }));
