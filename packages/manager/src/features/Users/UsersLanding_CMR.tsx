@@ -277,7 +277,7 @@ const UsersLanding: React.FC<CombinedProps> = props => {
                   : undefined
               }
               onClick={openForCreate}
-              label="Add a User..."
+              label="Add a User"
             />
           </Grid>
         </Grid>

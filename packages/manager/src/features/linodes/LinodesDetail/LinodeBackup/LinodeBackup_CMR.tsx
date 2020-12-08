@@ -135,7 +135,7 @@ const styles = (theme: Theme) =>
       minWidth: '100%'
     },
     cmrSpacing: {
-      [theme.breakpoints.down(1100)]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing()
       }
