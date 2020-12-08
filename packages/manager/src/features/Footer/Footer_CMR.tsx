@@ -30,6 +30,7 @@ const styles = (theme: Theme) =>
       width: '100%',
       backgroundColor: theme.bg.main,
       margin: 0,
+      padding: '4px 0px',
       [theme.breakpoints.down('xs')]: {
         flexDirection: 'column',
         alignItems: 'flex-start'
@@ -46,9 +47,11 @@ const styles = (theme: Theme) =>
     },
     version: {
       marginLeft: 24,
-      flex: 1,
       '&.MuiGrid-item': {
         paddingLeft: 0
+      },
+      [theme.breakpoints.down('xs')]: {
+        marginLeft: 16
       }
     },
     linkContainer: {
@@ -66,7 +69,6 @@ const styles = (theme: Theme) =>
         textDecoration: 'underline'
       },
       [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1)
       }
     },
