@@ -108,6 +108,10 @@ export const NotificationDrawer: React.FC<Props> = props => {
         <ChronologicalView notifications={chronologicalNotificationList} />
       ) : (
         <div className={classes.notificationSectionContainer}>
+          {chronologicalNotificationList.length === 0 ? (
+            // If this list is empty there's nothing to show regardless of selected view.
+            <Typography>No notifications to display.</Typography>
+          ) : null}
           <PendingActions pendingActions={pendingActions} onClose={onClose} />
           <Maintenance statusNotifications={statusNotifications} />
           <OpenSupportTickets
