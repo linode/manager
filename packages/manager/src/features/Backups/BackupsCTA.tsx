@@ -45,7 +45,8 @@ const styles = (theme: Theme) =>
     dismiss: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
-      minWidth: 'auto'
+      minWidth: 'auto',
+      marginTop: 10
     }
   });
 
@@ -106,7 +107,7 @@ const BackupsCTA: React.FC<CombinedProps> = props => {
           </Button>
           <Button
             data-qa-backup-existing
-            variant="text"
+            buttonType="secondary"
             className={classes.dismiss}
             onClick={dismissed}
           >

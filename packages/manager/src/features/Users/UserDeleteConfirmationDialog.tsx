@@ -26,9 +26,7 @@ class UserDeleteConfirmationDialog extends React.PureComponent<
         actions={this.renderActionsPanel}
         open={this.props.open}
       >
-        {`User ${
-          this.props.username
-        } will be permanently deleted. Are you sure?`}
+        {`User ${this.props.username} will be permanently deleted. Are you sure?`}
       </ConfirmationDialog>
     );
   }
@@ -44,7 +42,7 @@ class UserDeleteConfirmationDialog extends React.PureComponent<
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.deleteUser}
           data-qa-confirm-delete

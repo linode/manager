@@ -21,7 +21,7 @@ import {
   useNotificationContext
 } from 'src/features/NotificationCenter/NotificationContext';
 import ToastNotifications from 'src/features/ToastNotifications';
-import TopMenu from 'src/features/TopMenu/TopMenu';
+import TopMenu from 'src/features/TopMenu/TopMenu_CMR';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import CreateVLANDialog from 'src/features/Vlans/CreateVLANDialog';
 import CreateDatabaseDialog from 'src/features/Databases/CreateDatabaseDialog';
@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   cmrWrapper: {
+    maxWidth: `${theme.breakpoints.values.lg}px !important`,
     padding: `${theme.spacing(3)}px 0`,
     paddingTop: 20,
     transition: theme.transitions.create('opacity'),
@@ -99,7 +100,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '100%',
     position: 'relative',
     '& > .MuiGrid-container': {
-      maxWidth: 1280,
+      maxWidth: theme.breakpoints.values.lg,
       width: '100%'
     },
     '&.mlMain': {

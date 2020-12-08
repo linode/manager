@@ -165,7 +165,7 @@ const Actions: React.FC<ActionsProps> = props => {
         onClick={props.onSubmit}
         loading={props.isCancelling}
         destructive
-        buttonType="secondary"
+        buttonType="primary"
       >
         Close Account
       </Button>

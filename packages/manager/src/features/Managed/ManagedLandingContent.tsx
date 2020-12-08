@@ -10,6 +10,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/DocumentationButton';
+import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import Grid from 'src/components/Grid';
 import NavTabs from 'src/components/NavTabs';
 import { NavTab } from 'src/components/NavTabs/NavTabs';
@@ -146,17 +147,20 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
         />
         <Grid
           container
-          item
           direction="row"
           justify="flex-end"
           alignItems="center"
           xs={8}
         >
-          <Grid item className={flags.cmr ? classes.cmrSpacing : ''}>
+          <Grid item>
             <SupportWidget />
           </Grid>
-          <Grid item>
-            <DocumentationButton href="https://www.linode.com/docs/platform/linode-managed/" />
+          <Grid item className={flags.cmr ? classes.cmrSpacing : ''}>
+            {flags.cmr ? (
+              <DocumentationButton_CMR href="https://www.linode.com/docs/platform/linode-managed/" />
+            ) : (
+              <DocumentationButton href="https://www.linode.com/docs/platform/linode-managed/" />
+            )}
           </Grid>
         </Grid>
       </Box>
