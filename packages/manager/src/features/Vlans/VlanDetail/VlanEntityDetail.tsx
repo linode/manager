@@ -127,7 +127,9 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     height: 40
   },
   actionItem: {
-    minWidth: 'auto'
+    minWidth: 'auto',
+    paddingLeft: theme.spacing(),
+    paddingRight: theme.spacing()
   }
 }));
 
