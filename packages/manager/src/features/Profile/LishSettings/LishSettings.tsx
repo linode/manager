@@ -38,7 +38,8 @@ type ClassNames =
   | 'keyTextarea'
   | 'image'
   | 'addNew'
-  | 'remove';
+  | 'remove'
+  | 'button';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -64,10 +65,7 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2)
     },
     sshWrap: {
-      margin: `${theme.spacing(1)}px 0`,
-      display: 'flex',
-      flexFlow: 'column nowrap',
-      alignItems: 'flex-start'
+      margin: `${theme.spacing(1)}px 0`
     },
     keyTextarea: {
       [theme.breakpoints.up('md')]: {
@@ -76,6 +74,10 @@ const styles = (theme: Theme) =>
     },
     remove: {
       ...theme.applyLinkStyles
+    },
+    button: {
+      margin: 0,
+      padding: 0
     }
   });
 
@@ -157,10 +159,10 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="LISH Settings" />
+        <DocumentTitleSegment segment="LISH Console Settings" />
         <Paper className={classes.root}>
           <Typography variant="h2" className={classes.title} data-qa-title>
-            LISH Settings
+            LISH Console Settings
           </Typography>
           {success && <Notice success text={success} />}
           {authorizedKeysError && <Notice error text={authorizedKeysError} />}
@@ -227,6 +229,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
           )}
           <ActionsPanel>
             <Button
+              className={classes.button}
               buttonType="primary"
               onClick={this.onSubmit}
               loading={this.state.submitting}
