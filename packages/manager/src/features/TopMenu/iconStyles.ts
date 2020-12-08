@@ -6,6 +6,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     padding: theme.spacing(),
     marginLeft: theme.spacing(),
+    marginTop: 4,
     color: '#c9c7c7',
     border: 'none',
     backgroundColor: 'inherit',

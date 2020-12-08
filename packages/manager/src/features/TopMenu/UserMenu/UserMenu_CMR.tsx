@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     lineHeight: 1,
-    marginLeft: theme.spacing(),
+    marginLeft: theme.spacing(2),
     '&[data-reach-menu-button]': {
       backgroundColor: 'transparent',
       border: 'none',
