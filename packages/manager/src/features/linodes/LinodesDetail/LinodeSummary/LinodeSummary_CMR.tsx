@@ -130,8 +130,9 @@ const styles = (theme: Theme) =>
       paddingRight: '1em'
     },
     graphGrids: {
-      [theme.breakpoints.up('sm')]: {
-        flexWrap: 'nowrap'
+      flexWrap: 'nowrap',
+      [theme.breakpoints.down('sm')]: {
+        flexWrap: 'wrap'
       }
     }
   });

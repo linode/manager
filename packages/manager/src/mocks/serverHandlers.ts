@@ -94,7 +94,7 @@ export const handlers = [
       label: 'eventful'
     });
     const multipleIPLinode = linodeFactory.build({
-      label: 'linode-with-many-ips',
+      label: 'multiple-ips',
       ipv4: [
         '192.168.0.0',
         '192.168.0.1',
@@ -110,7 +110,7 @@ export const handlers = [
       ...busyLinodes,
       linodeFactory.build({
         label: 'shadow-plan',
-        type: 'g6-standard-3-s',
+        type: 'g5-standard-20-s1',
         backups: { enabled: false }
       }),
       eventLinode,

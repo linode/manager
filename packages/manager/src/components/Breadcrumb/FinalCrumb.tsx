@@ -29,11 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `2px 10px`
   },
   editableContainer: {
-    marginLeft: -theme.spacing(1),
-    marginTop: -10,
-    [theme.breakpoints.up('lg')]: {
-      marginTop: -9
-    }
+    marginLeft: -theme.spacing(1)
   },
   slash: {
     fontSize: 24,
@@ -72,23 +68,21 @@ const FinalCrumb: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <React.Fragment>
-      <div className={classes.labelWrapper}>
-        <H1Header
-          title={crumb}
-          className={classNames({
-            [classes.crumb]: true,
-            [classes.noCap]: labelOptions && labelOptions.noCap
-          })}
-          dataQaEl={crumb}
-        />
-        {labelOptions && labelOptions.subtitle && (
-          <Typography variant="body1" data-qa-label-subtitle>
-            {labelOptions.subtitle}
-          </Typography>
-        )}
-      </div>
-    </React.Fragment>
+    <div className={classes.labelWrapper}>
+      <H1Header
+        title={crumb}
+        className={classNames({
+          [classes.crumb]: true,
+          [classes.noCap]: labelOptions && labelOptions.noCap
+        })}
+        dataQaEl={crumb}
+      />
+      {labelOptions && labelOptions.subtitle && (
+        <Typography variant="body1" data-qa-label-subtitle>
+          {labelOptions.subtitle}
+        </Typography>
+      )}
+    </div>
   );
 };
 

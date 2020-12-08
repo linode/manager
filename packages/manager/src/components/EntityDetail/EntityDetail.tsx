@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 40,
     padding: `10px 16px !important`
   },
   footerBorder: {
