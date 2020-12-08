@@ -38,9 +38,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '12px'
   },
   graphGrids: {
+    flexWrap: 'nowrap',
     paddingLeft: '8px',
-    [theme.breakpoints.up('sm')]: {
-      flexWrap: 'nowrap'
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'wrap'
     }
   }
 }));

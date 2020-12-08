@@ -64,6 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
+    overflow: 'hidden',
     padding: `${theme.spacing(3)}px 0`,
     paddingTop: 20,
     transition: theme.transitions.create('opacity'),
@@ -91,6 +92,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden'
   },
   grid: {
+    marginLeft: 0,
+    marginRight: 0,
+    width: '100%',
     [theme.breakpoints.up('lg')]: {
       height: '100%'
     }
@@ -312,7 +316,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                       role="main"
                     >
                       <Grid container spacing={0} className={classes.grid}>
-                        <Grid item className={classes.switchWrapper}>
+                        <Grid item className={`${classes.switchWrapper} px0`}>
                           <GlobalNotifications />
                           <React.Suspense fallback={<SuspenseLoader />}>
                             <Switch>
