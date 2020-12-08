@@ -35,6 +35,8 @@ const styles = (theme: Theme) =>
       color: theme.palette.text.primary
     },
     searchWrapper: {
+      display: 'flex',
+      flexWrap: 'nowrap',
       position: 'sticky',
       width: '100%',
       top: 0,
