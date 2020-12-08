@@ -1,10 +1,11 @@
-import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
 import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
+import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import {
@@ -23,8 +24,8 @@ import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
-import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
+import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useImages from 'src/hooks/useImages';
@@ -36,7 +37,6 @@ import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import RenderIPs from './RenderIPs';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -438,14 +438,56 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
       fontSize: '0.875rem',
       lineHeight: 1,
-      overflowX: 'auto',
       padding: theme.spacing(),
       whiteSpace: 'nowrap'
     }
   },
   code: {
     color: theme.cmrTextColors.textAccessCode,
-    fontFamily: '"SourceCodePro", monospace, sans-serif'
+    fontFamily: '"SourceCodePro", monospace, sans-serif',
+
+    position: 'relative'
+  },
+  copyCell: {
+    width: 36,
+    backgroundColor: `${theme.cmrBGColors.bgSecondaryButton} !important`,
+    '& svg': {
+      width: 16,
+      height: 16,
+      '& path': {
+        fill: theme.cmrBGColors.bgSecondaryButton
+      }
+    },
+    '& button': {
+      padding: 0
+    },
+    '&:last-child': {
+      paddingRight: theme.spacing()
+    }
+  },
+  copyButton: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+    '&:hover': {
+      backgroundColor: 'transparent'
+    }
+  },
+  overflow: {
+    overflowX: 'auto'
+  },
+  gradient: {
+    overflowX: 'auto',
+    paddingRight: 30,
+    '&:after': {
+      content: '""',
+      width: 50,
+      height: '100%',
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      backgroundImage: `linear-gradient(to right,  rgb(250, 250, 250, 0.001), ${theme.color.grey7});`
+    }
   }
 }));
 
@@ -458,7 +500,6 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
     region,
     ipv4,
     ipv6,
-    linodeId,
     username,
     linodeLabel,
     numVolumes
@@ -503,18 +544,50 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
         direction="row"
         justify="space-between"
       >
-        <Grid container item className={classes.ipContainer} direction="column">
+        <Grid
+          container
+          item
+          md={5}
+          className={classes.accessTableContainer}
+          direction="column"
+        >
           <Grid item className={classes.columnLabel}>
             IP Addresses
           </Grid>
-          <Grid container item className={classes.ipContent} direction="column">
-            <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
+          <Grid item className={classes.accessTableContent}>
+            <Table className={classes.accessTable}>
+              <TableBody>
+                <TableRow>
+                  <TableCell className={classes.code}>
+                    <div className={classes.gradient}>{ipv4[0]}</div>
+                  </TableCell>
+                  <TableCell className={classes.copyCell}>
+                    <CopyTooltip
+                      text={ipv4[0]}
+                      className={classes.copyButton}
+                    />
+                  </TableCell>
+                </TableRow>
+                {ipv6 ? (
+                  <TableRow>
+                    <TableCell className={classes.code}>
+                      <div className={classes.gradient}>{ipv6}</div>
+                    </TableCell>
+                    <TableCell className={classes.copyCell}>
+                      <CopyTooltip text={ipv6} className={classes.copyButton} />
+                    </TableCell>
+                  </TableRow>
+                ) : null}
+              </TableBody>
+            </Table>
           </Grid>
+          {/* View All Link */}
         </Grid>
 
         <Grid
           container
           item
+          md={7}
           className={classes.accessTableContainer}
           direction="column"
         >
@@ -527,13 +600,21 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
                 <TableRow>
                   <th scope="row">SSH Access</th>
                   <TableCell className={classes.code}>
-                    {sshLink(ipv4[0])}
+                    <div className={classes.gradient}>{sshLink(ipv4[0])}</div>
+                  </TableCell>
+                  <TableCell className={classes.copyCell}>
+                    <CopyTooltip text={sshLink(ipv4[0])} />
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <th scope="row">LISH via SSH</th>
                   <TableCell className={classes.code}>
-                    {lishLink(username, region, linodeLabel)}
+                    <div className={classes.gradient}>
+                      {lishLink(username, region, linodeLabel)}
+                    </div>
+                  </TableCell>
+                  <TableCell className={classes.copyCell}>
+                    <CopyTooltip text={sshLink(ipv4[0])} />
                   </TableCell>
                 </TableRow>
               </TableBody>
