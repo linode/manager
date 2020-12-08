@@ -49,6 +49,9 @@ const styles = (theme: Theme) =>
       marginLeft: 24,
       '&.MuiGrid-item': {
         paddingLeft: 0
+      },
+      [theme.breakpoints.down('xs')]: {
+        marginLeft: 16
       }
     },
     linkContainer: {
@@ -66,7 +69,6 @@ const styles = (theme: Theme) =>
         textDecoration: 'underline'
       },
       [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1)
       }
     },
