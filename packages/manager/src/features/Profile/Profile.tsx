@@ -30,13 +30,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type Props = RouteComponentProps<{}>;
+interface Props {
+  toggleTheme: () => void;
+}
 
-const Profile: React.FC<Props> = props => {
+type CombinedProps = Props & RouteComponentProps<{}>;
+
+const Profile: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
   const {
-    match: { url }
+    match: { url },
+    toggleTheme
   } = props;
 
   const tabs: NavTab[] = [
@@ -56,7 +61,7 @@ const Profile: React.FC<Props> = props => {
       component: flags.cmr ? SSHKeys_CMR : SSHKeys
     },
     {
-      title: 'LISH',
+      title: 'LISH Console Settings',
       routeName: `${url}/lish`,
       component: LishSettings
     },
@@ -78,7 +83,7 @@ const Profile: React.FC<Props> = props => {
     {
       title: 'My Settings',
       routeName: `${url}/settings`,
-      component: Settings
+      render: <Settings toggleTheme={toggleTheme} />
     }
   ];
 

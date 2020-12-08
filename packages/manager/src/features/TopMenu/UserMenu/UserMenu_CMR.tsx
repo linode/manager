@@ -138,7 +138,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuItemList: {
     boxShadow: '0 6px 7px 0 rgba(0, 0, 0, 0.2)',
     '&[data-reach-menu-items]': {
-      backgroundColor: theme.bg.pureWhite,
+      backgroundColor: theme.cmrBGColors.bgPaper,
       border: 'none',
       padding: 0,
       paddingBottom: theme.spacing(1.5),
@@ -203,7 +203,7 @@ const profileLinks: MenuLink[] = [
   },
   { display: 'Password & Authentication', href: '/profile/auth' },
   { display: 'SSH Keys', href: '/profile/keys' },
-  { display: 'LISH Settings', href: '/profile/lish' },
+  { display: 'LISH Console Settings', href: '/profile/lish' },
   {
     display: 'API Tokens',
     href: '/profile/tokens'

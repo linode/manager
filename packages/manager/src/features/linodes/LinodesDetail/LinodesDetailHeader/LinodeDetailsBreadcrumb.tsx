@@ -22,15 +22,15 @@ import withEditableLabelState, {
   EditableLabelProps
 } from './editableLabelState';
 
-type ClassNames = 'breadCrumbs' | 'controls' | 'launchButton';
+type ClassNames = 'breadcrumb' | 'controls' | 'launchButton' | 'docs';
 
 const styles = (theme: Theme) =>
   createStyles({
-    breadCrumbs: {
-      position: 'relative',
-      top: -2,
-      [theme.breakpoints.down('sm')]: {
-        top: 10
+    breadcrumb: {
+      [theme.breakpoints.down('xs')]: {
+        '&.MuiGrid-item': {
+          paddingBottom: 0
+        }
       }
     },
     controls: {
@@ -51,6 +51,14 @@ const styles = (theme: Theme) =>
       },
       '&:focus > span:first-child': {
         outline: '1px dotted #999'
+      }
+    },
+    docs: {
+      [theme.breakpoints.down('xs')]: {
+        flexBasis: '100%',
+        '&.MuiGrid-item': {
+          paddingTop: 0
+        }
       }
     }
   });
@@ -106,16 +114,15 @@ const LinodeControls: React.FC<CombinedProps> = props => {
     <Grid
       container
       className="m0"
-      alignItems="flex-end"
+      alignItems="center"
       justify="space-between"
       data-qa-linode={linode.label}
     >
-      <Grid item className="px0">
+      <Grid item className={`px0 ${classes.breadcrumb}`}>
         <Breadcrumb
           pathname={props.location.pathname}
           firstAndLastOnly
           labelOptions={{ linkTo: getLabelLink() }}
-          className={classes.breadCrumbs}
           onEditHandlers={
             !disabled
               ? {
@@ -130,7 +137,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
           {...breadcrumbProps}
         />
       </Grid>
-      <Grid item className="px0">
+      <Grid item className={classes.docs}>
         <DocumentationButton href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/" />
       </Grid>
     </Grid>
