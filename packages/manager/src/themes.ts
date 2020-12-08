@@ -157,7 +157,7 @@ const darkThemeOptions = {
     primaryNavActive: '#303235',
     primaryNavActiveBG: '#464c53',
     primaryNavBorder: '#303235',
-    primaryNavPaper: '#3a3f46',
+    primaryNavPaper: '#2e3238',
     topMenu: '#33383d',
     billingHeader: '#222',
     controlHeader: 'rgba(0, 0, 0, 0.2)',

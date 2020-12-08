@@ -92,13 +92,13 @@ const styles = (theme: Theme) =>
     cta: {
       display: 'flex',
       alignItems: 'center',
-      [theme.breakpoints.down(1100)]: {
+      [theme.breakpoints.down('md')]: {
         marginRight: theme.spacing()
       }
     },
     button: {
       marginLeft: theme.spacing(4),
-      [theme.breakpoints.down(1100)]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(1.5)
       }
     },

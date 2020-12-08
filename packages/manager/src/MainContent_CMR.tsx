@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   cmrWrapper: {
-    maxWidth: '1100px !important',
+    maxWidth: `${theme.breakpoints.values.lg}px !important`,
     overflow: 'hidden',
     padding: `${theme.spacing(3)}px 0`,
     paddingTop: 20,
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '100%',
     position: 'relative',
     '& > .MuiGrid-container': {
-      maxWidth: 1280,
+      maxWidth: theme.breakpoints.values.lg,
       width: '100%'
     },
     '&.mlMain': {
