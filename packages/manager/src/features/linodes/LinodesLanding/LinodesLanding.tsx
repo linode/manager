@@ -1,4 +1,4 @@
-import { Config, Linode, LinodeStatus } from '@linode/api-v4/lib/linodes/types';
+import { Config, Linode } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -69,8 +69,6 @@ import ListView from './ListView';
 import ToggleBox from './ToggleBox';
 import { ExtendedStatus, statusToPriority } from './utils';
 
-type FilterStatus = 'running' | 'busy' | 'offline' | 'all';
-
 interface State {
   powerDialogOpen: boolean;
   powerDialogAction?: Action;
@@ -86,7 +84,6 @@ interface State {
   linodeResizeOpen: boolean;
   linodeMigrateOpen: boolean;
   detachLinodeFromVlanDialogOpen: boolean;
-  filterStatus: FilterStatus;
 }
 
 interface Params {
@@ -128,8 +125,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     CtaDismissed: BackupsCtaDismissed.get(),
     linodeResizeOpen: false,
     linodeMigrateOpen: false,
-    detachLinodeFromVlanDialogOpen: false,
-    filterStatus: 'all'
+    detachLinodeFromVlanDialogOpen: false
   };
 
   static docs = [LinodeGettingStarted, SecuringYourServer];
@@ -233,10 +229,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     BackupsCtaDismissed.set('true');
   };
 
-  setFilterStatus = (status: FilterStatus) => {
-    this.setState({ filterStatus: status });
-  };
-
   render() {
     const {
       imagesError,
@@ -251,23 +243,16 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesInTransition
     } = this.props;
 
-    const { filterStatus } = this.state;
-
     const params: Params = parse(this.props.location.search, {
       ignoreQueryPrefix: true
     });
-
-    const linodesFilteredByStatus = filterLinodesByStatus(
-      filterStatus,
-      linodesData
-    );
 
     // Filter the Linodes according to the `filterLinodesFn` prop (if it exists).
     // This is used in the VLAN Details view to only show Linodes belonging to
     // a given VLAN.
     const filteredLinodes = this.props.filterLinodesFn
-      ? linodesFilteredByStatus.filter(this.props.filterLinodesFn)
-      : linodesFilteredByStatus;
+      ? linodesData.filter(this.props.filterLinodesFn)
+      : linodesData;
 
     const extendedLinodes = this.props.extendLinodesFn
       ? filteredLinodes.map(this.props.extendLinodesFn)
@@ -675,31 +660,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-const filterLinodesByStatus = (
-  status: FilterStatus,
-  linodes: LinodeWithMaintenance[]
-) => {
-  if (status === 'all') {
-    return linodes;
-  }
-  return linodes.filter(thisLinode => {
-    const displayStatus = mapLinodeStatus(thisLinode.status);
-    return displayStatus === status;
-  });
-};
-
-const mapLinodeStatus = (linodeStatus: LinodeStatus) => {
-  switch (linodeStatus) {
-    case 'offline':
-    case 'stopped':
-      return 'offline';
-    case 'running':
-      return 'running';
-    default:
-      return 'busy';
-  }
-};
 
 const eventCategory = 'linodes landing';
 
