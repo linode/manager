@@ -9,15 +9,13 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
+  withTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
-import withPreferences, {
-  Props as PreferencesProps
-} from 'src/containers/preferences.container';
 import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
@@ -56,8 +54,7 @@ type CombinedProps = Props &
   StateProps &
   DispatchProps &
   FeatureFlagConsumerProps &
-  PreferencesProps &
-  WithStyles<ClassNames>;
+  WithStyles<ClassNames> & { theme: Theme };
 
 class ProfileSettings extends React.Component<CombinedProps, State> {
   state: State = {
@@ -72,7 +69,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, status, flags, toggleTheme, preferences } = this.props;
+    const { classes, status, flags, toggleTheme } = this.props;
 
     const preferenceEditorMode =
       getQueryParam(window.location.search, 'preferenceEditor') === 'true';
@@ -87,7 +84,6 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
           <Grid container alignItems="center">
             <Grid item xs={12}>
               <FormControlLabel
-                className="toggleLassie"
                 control={<Toggle onChange={this.toggle} checked={status} />}
                 label={`
                 Email alerts for account activity are ${
@@ -113,11 +109,10 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
             <Grid container alignItems="center">
               <Grid item xs={12}>
                 <FormControlLabel
-                  className="toggleLassie"
                   control={<ThemeToggle_CMR toggleTheme={toggleTheme} />}
                   label={`
                 Dark mode is ${
-                  preferences.theme === 'dark' ? 'enabled' : 'disabled'
+                  this.props.theme.name === 'darkTheme' ? 'enabled' : 'disabled'
                 }
               `}
                   disabled={this.state.submitting}
@@ -139,7 +134,6 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
         this.setState({ submitting: false });
       })
       .catch(() => {
-        /* Couldnt really imagine this being an issue... 1*/
         this.setState({ submitting: false });
       });
   };
@@ -168,7 +162,7 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withFeatureFlags,
-  withPreferences(),
+  withTheme,
   connected
 );
 
