@@ -49,14 +49,14 @@ const styles = (theme: Theme) =>
       display: 'flex'
     },
     default: {
-      color: theme.color.grey2
+      color: theme.color.grey1
     },
     icon: {},
     running: {
       color: theme.color.green
     },
     offline: {
-      color: theme.color.red
+      color: theme.color.grey1
     },
     maintenance: {},
     loading: {
