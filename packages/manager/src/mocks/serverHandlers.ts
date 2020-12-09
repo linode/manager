@@ -93,16 +93,28 @@ export const handlers = [
       status: 'rebooting',
       label: 'eventful'
     });
+    const multipleIPLinode = linodeFactory.build({
+      label: 'multiple-ips',
+      ipv4: [
+        '192.168.0.0',
+        '192.168.0.1',
+        '192.168.0.2',
+        '192.168.0.3',
+        '192.168.0.4',
+        '192.168.0.5'
+      ]
+    });
     const linodes = [
       ...onlineLinodes,
       ...offlineLinodes,
       ...busyLinodes,
       linodeFactory.build({
         label: 'shadow-plan',
-        type: 'g6-standard-3-s',
+        type: 'g5-standard-20-s1',
         backups: { enabled: false }
       }),
-      eventLinode
+      eventLinode,
+      multipleIPLinode
     ];
     return res(ctx.json(makeResourcePage(linodes)));
   }),

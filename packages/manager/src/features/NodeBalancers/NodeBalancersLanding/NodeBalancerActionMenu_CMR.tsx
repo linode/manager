@@ -3,7 +3,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 import {
   makeStyles,
   Theme,
@@ -12,7 +12,7 @@ import {
 } from 'src/components/core/styles';
 import Hidden from 'src/components/core/Hidden';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   inlineActions: {
     display: 'flex',
     alignItems: 'center'
@@ -40,76 +40,70 @@ export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
 
   const { nodeBalancerId, history, toggleDialog, label } = props;
 
-  const createActions = () => {
-    return (): Action[] => {
-      const actions = [
-        {
-          title: 'Settings',
-          onClick: () => {
-            history.push(`/nodebalancers/${nodeBalancerId}/settings`);
-          }
-        },
-        {
-          title: 'Delete',
-          onClick: () => {
-            toggleDialog(nodeBalancerId, label);
-          }
+  const createActions = () => (): Action[] => {
+    return [
+      {
+        title: 'Configurations',
+        onClick: () => {
+          history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
         }
-      ];
-
-      if (matchesSmDown) {
-        actions.unshift(
-          {
-            title: 'Details',
-            onClick: () => {
-              history.push(`/nodebalancers/${nodeBalancerId}/summary`);
-            }
-          },
-          {
-            title: 'Configurations',
-            onClick: () => {
-              history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
-            }
-          }
-        );
+      },
+      {
+        title: 'Settings',
+        onClick: () => {
+          history.push(`/nodebalancers/${nodeBalancerId}/settings`);
+        }
+      },
+      {
+        title: 'Delete',
+        onClick: () => {
+          toggleDialog(nodeBalancerId, label);
+        }
       }
-
-      return actions;
-    };
+    ];
   };
 
   const inlineActions = [
     {
-      actionText: 'Details',
-      href: `/nodebalancers/${nodeBalancerId}/summary`,
+      actionText: 'Configurations',
+      href: `/nodebalancers/${nodeBalancerId}/configurations`,
       className: classes.link
     },
     {
-      actionText: 'Configurations',
-      href: `/nodebalancers/${nodeBalancerId}/configurations`,
+      actionText: 'Settings',
+      href: `/nodebalancers/${nodeBalancerId}/settings`,
+      className: classes.link
+    },
+    {
+      actionText: 'Delete',
+      onClick: () => {
+        toggleDialog(nodeBalancerId, label);
+      },
       className: classes.link
     }
   ];
 
   return (
     <>
-      <Hidden smDown>
-        {inlineActions.map(action => {
+      {!matchesSmDown &&
+        inlineActions.map(action => {
           return (
             <InlineMenuAction
               key={action.actionText}
               actionText={action.actionText}
-              href={action.href}
               className={action.className}
+              href={action.href}
+              onClick={action.onClick}
             />
           );
         })}
+      <Hidden mdUp>
+        <ActionMenu
+          className={classes.action}
+          createActions={createActions()}
+          ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
+        />
       </Hidden>
-      <ActionMenu
-        className={classes.action}
-        createActions={createActions()}
-        ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
-      />
     </>
   );
 };

@@ -112,10 +112,12 @@ const LongviewList: React.FC<CombinedProps> = props => {
     );
   }
 
+  const pageSize = 5;
+
   return (
     // Don't use the value from local storage for this case,
     // since displaying a large number of client rows has performance impacts.
-    <Paginate data={filteredData} pageSize={5}>
+    <Paginate data={filteredData} pageSize={pageSize}>
       {({
         data: paginatedAndOrderedData,
         count,
@@ -132,15 +134,17 @@ const LongviewList: React.FC<CombinedProps> = props => {
               openPackageDrawer={openPackageDrawer}
             />
           </Box>
-          <PaginationFooter
-            count={count}
-            handlePageChange={handlePageChange}
-            handleSizeChange={handlePageSizeChange}
-            page={page}
-            pageSize={pageSize}
-            eventCategory="Longview Table"
-            fixedSize
-          />
+          {filteredData.length > pageSize ? (
+            <PaginationFooter
+              count={count}
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              page={page}
+              pageSize={pageSize}
+              eventCategory="Longview Table"
+              fixedSize
+            />
+          ) : null}
         </>
       )}
     </Paginate>

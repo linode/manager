@@ -28,6 +28,7 @@ import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
 import HostMaintenance from './HostMaintenance';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
+import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 
 interface Props {
   numVolumes: number;
@@ -251,6 +252,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
+      <LinodeDetailsBreadcrumb />
       <LinodeEntityDetail
         variant="details"
         linode={linode}

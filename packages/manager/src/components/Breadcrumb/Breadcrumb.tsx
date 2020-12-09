@@ -31,11 +31,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: -3
   },
   editablePreContainer: {
-    alignItems: 'flex-start'
+    alignItems: 'center'
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(1)
+      marginLeft: theme.spacing()
     }
   }
 }));

@@ -648,12 +648,14 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               <Button
                 style={{ paddingTop: 5, paddingBottom: 5 }}
                 onClick={this.openTransferDialog}
+                buttonType="secondary"
               >
                 IP Transfer
               </Button>
               <Button
                 style={{ paddingTop: 5, paddingBottom: 5 }}
                 onClick={this.openSharingDialog}
+                buttonType="secondary"
               >
                 IP Sharing
               </Button>
@@ -665,18 +667,20 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
                 <Button
                   style={{ padding: '16px 14px' }}
                   onClick={this.openTransferDialog}
+                  buttonType="secondary"
                 >
                   IP Transfer
                 </Button>
                 <Button
                   style={{ padding: '16px 28px 16px 14px' }}
                   onClick={this.openSharingDialog}
+                  buttonType="secondary"
                 >
                   IP Sharing
                 </Button>
               </Hidden>
               <AddNewLink
-                label="Add an IP Address..."
+                label="Add an IP Address"
                 onClick={this.openAddIPDrawer}
               />
             </div>

@@ -51,9 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     marginLeft: theme.spacing(1)
   },
-  label: {
-    color: theme.cmrTextColors.linkActiveLight
-  }
+  label: {}
 }));
 
 interface Props {
@@ -137,21 +135,16 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
 
   return (
     <div className={classes.root}>
-      <Grid
-        container
-        justify="space-between"
-        alignItems="flex-end"
-        className={classes.accessKeyHeader}
-      >
-        <Grid item className="p0">
+      <Grid container justify="flex-end" className={classes.accessKeyHeader}>
+        {/* <Grid item className="p0">
           <Typography variant="h3" data-qa-title className={classes.headline}>
             Access Keys
           </Typography>
-        </Grid>
+        </Grid> */}
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
             onClick={() => openDrawer('creating')}
-            label="Add an Access Key..."
+            label="Add an Access Key"
           />
         </Grid>
       </Grid>

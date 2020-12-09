@@ -11,7 +11,8 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import BucketTableRow from './BucketTableRow_CMR';
 import Hidden from 'src/components/core/Hidden';
-import LandingHeader from 'src/components/LandingHeader';
+import Grid from 'src/components/core/Grid';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -67,14 +68,19 @@ export const BucketTable: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   return (
-    <>
-      <LandingHeader
+    <div className={classes.root}>
+      <Grid container justify="flex-end" className={classes.objBucketHeader}>
+        <Grid item className={classes.addNewWrapper}>
+          <AddNewLink onClick={openBucketDrawer} label="Create a Bucket" />
+        </Grid>
+      </Grid>
+      {/* <LandingHeader
         title="Buckets"
         entity="Bucket"
         onAddNew={openBucketDrawer}
         iconType="bucket"
         docsLink="https://www.linode.com/docs/platform/object-storage/"
-      />
+      /> */}
       <Paginate data={data} pageSize={25}>
         {({
           data: paginatedData,
@@ -85,75 +91,74 @@ export const BucketTable: React.FC<CombinedProps> = props => {
           pageSize
         }) => (
           <React.Fragment>
-            <div className={classes.root}>
-              <Table aria-label="List of your Buckets">
-                <TableHead>
-                  <TableRow>
+            <Table aria-label="List of your Buckets">
+              <TableHead>
+                <TableRow>
+                  <TableSortCell
+                    active={orderBy === 'label'}
+                    label="label"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    data-qa-name
+                  >
+                    Name
+                  </TableSortCell>
+                  <Hidden xsDown>
                     <TableSortCell
-                      active={orderBy === 'label'}
-                      label="label"
+                      active={orderBy === 'cluster'}
+                      label="cluster"
                       direction={order}
                       handleClick={handleOrderChange}
-                      data-qa-name
+                      data-qa-region
                     >
-                      Name
+                      Region
                     </TableSortCell>
-                    <Hidden xsDown>
-                      <TableSortCell
-                        active={orderBy === 'cluster'}
-                        label="cluster"
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        data-qa-region
-                      >
-                        Region
-                      </TableSortCell>
-                    </Hidden>
-                    <Hidden smDown>
-                      <TableSortCell
-                        active={orderBy === 'created'}
-                        label="created"
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        data-qa-created
-                      >
-                        Created
-                      </TableSortCell>
-                    </Hidden>
+                  </Hidden>
+                  <Hidden smDown>
                     <TableSortCell
-                      active={orderBy === 'size'}
-                      label="size"
+                      active={orderBy === 'created'}
+                      label="created"
                       direction={order}
                       handleClick={handleOrderChange}
-                      data-qa-size
+                      data-qa-created
                     >
-                      Size
+                      Created
                     </TableSortCell>
-                    <Hidden smDown>
-                      <TableSortCell
-                        active={orderBy === 'objects'}
-                        label="objects"
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        data-qa-objects
-                      >
-                        Objects
-                      </TableSortCell>
-                    </Hidden>
+                  </Hidden>
+                  <TableSortCell
+                    active={orderBy === 'size'}
+                    label="size"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    data-qa-size
+                  >
+                    Size
+                  </TableSortCell>
+                  <Hidden smDown>
+                    <TableSortCell
+                      active={orderBy === 'objects'}
+                      label="objects"
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      data-qa-objects
+                    >
+                      Objects
+                    </TableSortCell>
+                  </Hidden>
 
-                    {/* Empty TableCell for ActionMenu*/}
-                    <TableCell />
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <RenderData
-                    data={paginatedData}
-                    onRemove={handleClickRemove}
-                    onDetails={handleClickDetails}
-                  />
-                </TableBody>
-              </Table>
-            </div>
+                  {/* Empty TableCell for ActionMenu*/}
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <RenderData
+                  data={paginatedData}
+                  onRemove={handleClickRemove}
+                  onDetails={handleClickDetails}
+                />
+              </TableBody>
+            </Table>
+
             <PaginationFooter
               count={count}
               page={page}
@@ -165,7 +170,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
           </React.Fragment>
         )}
       </Paginate>
-    </>
+    </div>
   );
 };
 

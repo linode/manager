@@ -111,7 +111,6 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         title="Firewalls"
         entity="Firewall"
         onAddNew={() => toggleAddFirewallDrawer(true)}
-        iconType="firewall"
         // This guide is not yet published and will 404
         // It will be published prior to any public beta
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"

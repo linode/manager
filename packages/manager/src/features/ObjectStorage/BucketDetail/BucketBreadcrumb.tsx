@@ -50,8 +50,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 4
   },
   link: {
-    color: theme.palette.primary.main,
-    cursor: 'pointer'
+    color: theme.cmrTextColors.linkActiveLight,
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline'
+    }
   },
   copied: {
     fontSize: '.85rem',

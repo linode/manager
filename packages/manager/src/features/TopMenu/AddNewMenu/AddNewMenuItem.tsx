@@ -23,10 +23,10 @@ const styles = (theme: Theme) =>
       }
     },
     root: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-      paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
+      paddingLeft: theme.spacing(),
+      paddingRight: theme.spacing(),
+      paddingTop: theme.spacing(),
+      paddingBottom: theme.spacing(),
       borderBottom: `1px solid ${theme.palette.divider}`,
       maxWidth: '350px',
       display: 'flex',
@@ -45,14 +45,18 @@ const styles = (theme: Theme) =>
       }
     },
     iconWrapper: {
-      width: 49,
-      height: 49
+      width: 48,
+      height: 48,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     content: {
       display: 'flex',
       flexDirection: 'column',
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
+      paddingLeft: theme.spacing(),
+      paddingRight: theme.spacing(2),
+      width: '100%'
     },
     titleLink: {
       textDecoration: 'none',

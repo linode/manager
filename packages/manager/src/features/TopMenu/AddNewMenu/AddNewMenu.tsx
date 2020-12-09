@@ -1,4 +1,3 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import { AccountCapability } from '@linode/api-v4/lib/account';
 
 import {
@@ -50,24 +49,22 @@ const styles = (theme: Theme) =>
     button: {
       '&[data-reach-menu-button]': {
         textTransform: 'inherit',
-        borderRadius: 0,
+        borderRadius: '3px',
         fontSize: '1rem',
         lineHeight: 1,
         fontFamily: theme.spacing() === 4 ? theme.font.normal : theme.font.bold,
         backgroundColor: theme.palette.primary.main,
         color: '#fff',
-        padding: `${theme.spacing() * 2}px ${theme.spacing() * 3 +
-          theme.spacing() / 2}px ${theme.spacing() * 2}px`,
-        maxHeight: 48,
+        padding: `2px 20px`,
+        maxHeight: 34,
         position: 'relative',
-        minHeight: `${theme.spacing(2) + 34}px`,
-        paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
+        minHeight: `34px`,
         cursor: 'pointer',
         border: 'none',
         [theme.breakpoints.down('sm')]: {
-          padding: '6px 34px 7px 11px',
-          maxHeight: 50,
-          minWidth: 105
+          marginLeft: theme.spacing(),
+          maxHeight: 34,
+          minWidth: 100
         },
         '&:hover': {
           backgroundColor: theme.palette.primary.light
@@ -76,10 +73,7 @@ const styles = (theme: Theme) =>
           backgroundColor: theme.palette.primary.light
         },
         '&[aria-expanded="true"]': {
-          backgroundColor: theme.palette.primary.light,
-          '& $caret': {
-            transform: 'rotate(180deg)'
-          }
+          backgroundColor: theme.palette.primary.light
         }
       }
     },
@@ -140,8 +134,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
       <div className={classes.wrapper}>
         <Menu>
           <MenuButton className={classes.button} data-qa-add-new-menu-button>
-            Create
-            <KeyboardArrowDown className={classes.caret} />
+            Create...
           </MenuButton>
           <MenuPopover className={classes.menuPopover} portal={false}>
             <MenuItems className={classes.menuItemList}>

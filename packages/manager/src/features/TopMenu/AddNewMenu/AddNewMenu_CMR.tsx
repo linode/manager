@@ -1,4 +1,5 @@
 import { AccountCapability } from '@linode/api-v4/lib/account';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {
   Menu,
   MenuButton,
@@ -12,12 +13,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import OneClickIcon from 'src/assets/addnewmenu/oneclick.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
+import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
+import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
+import VLANIcon from 'src/assets/icons/entityIcons/vlan.svg';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import {
   createStyles,
   Theme,
@@ -44,13 +46,14 @@ const styles = (theme: Theme) =>
   createStyles({
     wrapper: {
       position: 'relative',
-      order: 1,
       marginRight: theme.spacing(1),
       [theme.breakpoints.down('sm')]: {
         flex: 1
       }
     },
     button: {
+      display: 'flex',
+      alignItems: 'center',
       '&[data-reach-menu-button]': {
         textTransform: 'inherit',
         borderRadius: '3px',
@@ -60,6 +63,7 @@ const styles = (theme: Theme) =>
         backgroundColor: theme.palette.primary.main,
         color: '#fff',
         padding: `2px 20px`,
+        paddingRight: 12,
         maxHeight: 34,
         position: 'relative',
         minHeight: `34px`,
@@ -77,14 +81,23 @@ const styles = (theme: Theme) =>
           backgroundColor: theme.palette.primary.light
         },
         '&[aria-expanded="true"]': {
-          backgroundColor: theme.palette.primary.light
+          backgroundColor: theme.palette.primary.light,
+          '& $caret': {
+            marginTop: 4,
+            transform: 'rotate(180deg)'
+          }
         }
       }
+    },
+    caret: {
+      marginTop: 2,
+      marginLeft: 4
     },
     menuItemLink: {
       '&[data-reach-menu-item]': {
         padding: 0,
-        cursor: 'pointer'
+        cursor: 'pointer',
+        textDecoration: 'none'
       },
       '&[data-reach-menu-item][data-selected]': {
         background: theme.bg.main,
@@ -93,6 +106,11 @@ const styles = (theme: Theme) =>
           backgroundColor: theme.bg.main,
           color: theme.palette.text.primary
         }
+      },
+      '& svg': {
+        width: 21,
+        height: 21,
+        transform: 'scale(1.75)'
       }
     },
     menuItemList: {
@@ -144,7 +162,8 @@ class AddNewMenu extends React.Component<CombinedProps> {
                     className={classes.button}
                     data-qa-add-new-menu-button
                   >
-                    Create...
+                    Create
+                    <KeyboardArrowDown className={classes.caret} />
                   </MenuButton>
                   <MenuPopover className={classes.menuPopover} portal={false}>
                     <MenuItems className={classes.menuItemList}>
@@ -155,7 +174,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="Linode"
-                          body="High performance SSD Linux servers for all of your infrastructure needs"
+                          body="High performance SSD Linux servers"
                           ItemIcon={LinodeIcon}
                         />
                       </MenuLink>
@@ -166,10 +185,22 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="Volume"
-                          body="Block Storage service allows you to attach additional storage to your Linode"
+                          body="Attach additional storage to your Linode"
                           ItemIcon={VolumeIcon}
                         />
                       </MenuLink>
+                      <MenuItem
+                        onSelect={vlan.open}
+                        className={classes.menuItemLink}
+                      >
+                        {showVlans && (
+                          <AddNewMenuItem
+                            title="Virtual LAN"
+                            body="Securely communicate between Linodes"
+                            ItemIcon={VLANIcon}
+                          />
+                        )}
+                      </MenuItem>
                       <MenuLink
                         as={Link}
                         to="/nodebalancers/create"
@@ -177,7 +208,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="NodeBalancer"
-                          body="Ensure your valuable applications and services are highly-available"
+                          body="Ensure your services are highly available"
                           ItemIcon={NodebalancerIcon}
                         />
                       </MenuLink>
@@ -188,20 +219,8 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="Domain"
-                          body="Manage your DNS records using Linode’s high-availability name servers"
+                          body="Manage your DNS records"
                           ItemIcon={DomainIcon}
-                        />
-                      </MenuLink>
-                      <MenuLink
-                        as={Link}
-                        to="/linodes/create?type=One-Click"
-                        className={classes.menuItemLink}
-                      >
-                        <AddNewMenuItem
-                          title="Marketplace"
-                          body="Deploy blogs, game servers, and other web apps with ease."
-                          ItemIcon={OneClickIcon}
-                          attr={{ 'data-qa-one-click-add-new': true }}
                         />
                       </MenuLink>
                       <MenuLink
@@ -211,22 +230,10 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="Kubernetes Cluster"
-                          body="Create and manage Kubernetes Clusters for highly available container workloads"
+                          body="Highly available container workloads"
                           ItemIcon={KubernetesIcon}
                         />
                       </MenuLink>
-                      <MenuItem
-                        onSelect={vlan.open}
-                        className={classes.menuItemLink}
-                      >
-                        {showVlans && (
-                          <AddNewMenuItem
-                            title="Virtual LAN"
-                            body="Create private Local Area Networks (LANs) for secure communication between Linodes."
-                            ItemIcon={LinodeIcon}
-                          />
-                        )}
-                      </MenuItem>
                       {flags.databases && (
                         <MenuItem
                           onSelect={dbaas.open}
@@ -234,11 +241,23 @@ class AddNewMenu extends React.Component<CombinedProps> {
                         >
                           <AddNewMenuItem
                             title="Database"
-                            body="Create cloud-based MySQL databases."
+                            body="Cloud-based MySQL databases."
                             ItemIcon={LinodeIcon} // to be replaced with database icon
                           />
                         </MenuItem>
                       )}
+                      <MenuLink
+                        as={Link}
+                        to="/linodes/create?type=One-Click"
+                        className={classes.menuItemLink}
+                      >
+                        <AddNewMenuItem
+                          title="Marketplace"
+                          body="Deploy applications with ease."
+                          ItemIcon={OneClickIcon}
+                          attr={{ 'data-qa-one-click-add-new': true }}
+                        />
+                      </MenuLink>
                     </MenuItems>
                   </MenuPopover>
                 </Menu>

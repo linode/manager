@@ -1,23 +1,16 @@
 import * as React from 'react';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import { withManaged, withoutManaged } from 'src/utilities/testHelpersStore';
-import PrimaryNav_CMR, { PrimaryNavProps } from './PrimaryNav_CMR';
+import PrimaryNav_CMR from './PrimaryNav_CMR';
 
-const props: PrimaryNavProps = {
+const props = {
   closeMenu: jest.fn(),
   toggleTheme: jest.fn(),
+  toggleSpacing: jest.fn(),
   isCollapsed: false
 };
 
 describe('PrimaryNav_CMR', () => {
-  it('contains all nav groups', () => {
-    const { getByTestId } = renderWithTheme(<PrimaryNav_CMR {...props} />);
-    getByTestId('nav-group-Compute');
-    getByTestId('nav-group-Network');
-    getByTestId('nav-group-Storage');
-    getByTestId('nav-group-Monitors');
-  });
-
   it('only contains a "Managed" menu link if the user has Managed services.', () => {
     const { getByTestId, rerender, queryByTestId } = renderWithTheme(
       <PrimaryNav_CMR {...props} />,

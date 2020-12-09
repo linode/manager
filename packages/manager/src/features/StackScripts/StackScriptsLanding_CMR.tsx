@@ -5,6 +5,7 @@ import CircleProgress from 'src/components/CircleProgress';
 
 import Breadcrumb from 'src/components/Breadcrumb';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -16,7 +17,6 @@ import { filterImagesByType } from 'src/store/image/image.helpers';
 import StackScriptPanel from './StackScriptPanel/StackScriptPanel_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   panel: {
     '& > div': {
       padding: theme.spacing(2)
@@ -37,13 +37,23 @@ export const StackScriptsLanding: React.FC<CombinedProps> = props => {
       {!!history.location.state && !!history.location.state.successMessage && (
         <Notice success text={history.location.state.successMessage} />
       )}
-      <div className={classes.root}>
-        <Breadcrumb
-          pathname={location.pathname}
-          labelTitle="StackScripts"
-          removeCrumbX={1}
-        />
-      </div>
+      <Grid
+        container
+        alignItems="center"
+        justify="space-between"
+        className="m0"
+      >
+        <Grid item className="px0">
+          <Breadcrumb
+            labelTitle="StackScripts"
+            pathname={location.pathname}
+            removeCrumbX={1}
+          />
+        </Grid>
+        <Grid item className="px0">
+          <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
+        </Grid>
+      </Grid>
       <Grid container>
         {_loading ? (
           <CircleProgress />

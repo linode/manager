@@ -12,6 +12,7 @@ describe('ListLinodes', () => {
     CSVlinkContainer: '',
     CSVlink: '',
     addNewLink: '',
+    chipContainer: '',
     chip: '',
     chipActive: '',
     chipRunning: '',
@@ -34,14 +35,14 @@ describe('ListLinodes', () => {
           imagesLastUpdated={100}
           userTimezone="GMT"
           userProfileLoading={false}
+          someLinodesHaveScheduledMaintenance={true}
           linodesData={[]}
           classes={classes}
           clearDocs={clearDocs}
           enqueueSnackbar={jest.fn()}
-          linodesError={undefined}
-          linodesLoading={false}
-          linodesLastUpdated={0}
-          linodesResults={0}
+          linodesCount={0}
+          linodesRequestError={undefined}
+          linodesRequestLoading={false}
           managed={false}
           closeSnackbar={jest.fn()}
           setDocs={setDocs}
@@ -50,6 +51,7 @@ describe('ListLinodes', () => {
           {...reactRouterProps}
           ldClient={{} as any}
           flags={{}}
+          linodesInTransition={new Set<number>()}
         />
       )
     );

@@ -13,7 +13,6 @@ import { compose } from 'recompose';
 import StackScriptsIcon from 'src/assets/addnewmenu/stackscripts.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Typography from 'src/components/core/Typography';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
@@ -558,10 +557,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                       className={classes.button}
                       onClick={this.goToCreateStackScript}
                     >
-                      Create a StackScript...
+                      Create a StackScript
                     </Button>
-
-                    <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
                   </div>
                 )}
               </div>

@@ -3,11 +3,13 @@ import * as classnames from 'classnames';
 import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
-import Hidden from '../core/Hidden';
+import Breadcrumb from '../Breadcrumb';
+import DocumentationButton from '../CMR_DocumentationButton';
 
 export interface HeaderProps extends BreadCrumbProps {
   actions?: JSX.Element;
   body?: JSX.Element;
+  docsLink?: string;
   title: string | JSX.Element;
   bodyClassName?: string;
   isLanding?: boolean;
@@ -18,13 +20,17 @@ export interface HeaderProps extends BreadCrumbProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBGColors.bgSecondaryActions
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   breadcrumbOuter: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: '4px 15px',
+    backgroundColor: theme.cmrBGColors.bgSecondaryActions,
+    padding: '4px 16px',
+    paddingRight: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
       borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
     }
@@ -36,80 +42,83 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between'
   },
   breadCrumbDetailLanding: {
-    padding: '0 15px',
-    justifyContent: 'space-between',
-    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`
+    margin: 0,
+    padding: 0,
+    paddingLeft: theme.spacing(),
+    justifyContent: 'space-between'
   },
   contentOuter: {
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
-    padding: '10px 0',
-    // Needed for the 'clear filters' button on smaller screens, removed for medium+
-    flexWrap: 'wrap',
-    [theme.breakpoints.up('sm')]: {
-      padding: 10
-    },
-    [theme.breakpoints.up('md')]: {
-      justifyContent: 'center',
-      padding: 0,
-      flexWrap: 'nowrap'
-    },
+    flexWrap: 'nowrap',
+    padding: 0,
     '& .MuiChip-root': {
       ...theme.applyStatusPillStyles,
       height: 30,
-      borderRadius: 15,
       marginTop: 1,
-      marginRight: 10,
       fontSize: '.875rem',
       letterSpacing: '.5px'
     }
   },
   bodyDetailVariant: {
-    padding: '4px 15px',
+    backgroundColor: theme.cmrBGColors.bgPaper,
+    flexWrap: 'nowrap',
     justifyContent: 'space-between',
-    flexWrap: 'nowrap'
+    padding: 0
   }
 }));
 
 export const EntityHeader: React.FC<HeaderProps> = props => {
+  const classes = useStyles();
+
   const {
     actions,
     body,
-    iconType,
+    docsLink,
     parentLink,
     parentText,
     title,
+    isLanding,
     bodyClassName,
     isSecondary,
     isDetailLanding,
-    headerOnly,
-    displayIcon
+    headerOnly
   } = props;
-  const classes = useStyles();
+
+  const labelTitle = title.toString();
 
   return (
-    <Grid item className={classes.root}>
-      <Grid
-        item
-        xs={12}
-        className={classnames({
-          [classes.breadcrumbOuter]: true,
-          [classes.breadCrumbDetail]: Boolean(parentLink),
-          [classes.breadCrumbSecondary]: Boolean(isSecondary),
-          [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
-        })}
-      >
-        <HeaderBreadCrumb
-          iconType={iconType}
-          displayIcon={displayIcon}
-          title={title}
-          parentLink={parentLink}
-          parentText={parentText}
-          headerOnly={headerOnly}
-        />
-
-        <Hidden smDown>
+    <>
+      <Grid item className={classes.root}>
+        {isLanding && (
+          <Breadcrumb
+            labelTitle={labelTitle}
+            pathname={location.pathname}
+            data-qa-title
+          />
+        )}
+        {docsLink && <DocumentationButton href={docsLink} />}
+      </Grid>
+      <Grid item className={classes.root}>
+        {isDetailLanding && (
+          <HeaderBreadCrumb
+            title={title}
+            parentLink={parentLink}
+            parentText={parentText}
+            headerOnly={headerOnly}
+          />
+        )}
+        <Grid
+          item
+          xs={12}
+          className={classnames({
+            [classes.breadcrumbOuter]: true,
+            [classes.breadCrumbDetail]: Boolean(parentLink),
+            [classes.breadCrumbSecondary]: Boolean(isSecondary),
+            [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
+          })}
+        >
           {body ? (
             <Grid
               className={classnames({
@@ -121,27 +130,27 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
               {body}
             </Grid>
           ) : null}
-        </Hidden>
 
-        {/* I think only Landing variant uses this? */}
-        {actions}
+          {/* I think only Landing variant uses this? */}
+          {actions}
+        </Grid>
+        {/*
+        Keeping this for now as this may still be needed for details variant
+        <Hidden mdUp>
+          {body ? (
+            <Grid
+              className={classnames({
+                // [classes.contentOuter]: true,
+                [bodyClassName ?? '']: Boolean(bodyClassName)
+              })}
+              item
+            >
+              {body}
+            </Grid>
+          ) : null}
+        </Hidden> */}
       </Grid>
-      <Hidden mdUp>
-        {body ? (
-          <Grid
-            item
-            xs={12}
-            className={classnames({
-              [classes.contentOuter]: true,
-              [classes.bodyDetailVariant]:
-                Boolean(parentLink) || Boolean(isDetailLanding)
-            })}
-          >
-            {body}
-          </Grid>
-        ) : null}
-      </Hidden>
-    </Grid>
+    </>
   );
 };
 
