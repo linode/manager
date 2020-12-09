@@ -13,7 +13,7 @@ import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import VLAN from 'src/assets/icons/entityIcons/vlan.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import Longview from 'src/assets/icons/longview.svg';
-import Managed from 'src/assets/icons/managed.svg';
+import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -158,11 +158,7 @@ export const PrimaryNav: React.FC<Props> = props => {
           hide: !showFirewalls,
           display: 'Firewalls',
           href: '/firewalls',
-          icon: (
-            <Firewall
-              style={{ width: 26, height: 26, transform: 'scale(1.3)' }}
-            />
-          )
+          icon: <Firewall />
         },
         {
           display: 'StackScripts',
