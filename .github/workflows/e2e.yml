@@ -43,7 +43,7 @@ jobs:
         if: matrix['container'] == 'OAUTH_3'
       - run: |
           echo "MANAGER_OAUTH=$OAUTH_4" >> ./packages/manager/.env
-        if: matrix['container'] == OAUTH_4'
+        if: matrix['container'] == 'OAUTH_4'
       - run: |      
           echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
           echo "REACT_APP_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
