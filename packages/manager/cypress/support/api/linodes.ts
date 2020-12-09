@@ -79,7 +79,7 @@ const makeLinodeCreateReq = (linode, password) => {
   });
 };
 
-const makeLinodeCreateReqSpecifyRegion = (region, linode) => {
+export const makeLinodeCreateReqSpecifyRegion = (region, linode) => {
   const linodeData = linode
     ? linode
     : {
@@ -105,7 +105,7 @@ const makeLinodeCreateReqSpecifyRegion = (region, linode) => {
   });
 };
 
-const makeLinodeCreateReqWithBackupsEnabled = linode => {
+export const makeLinodeCreateReqWithBackupsEnabled = linode => {
   const linodeData = linode
     ? linode
     : {
