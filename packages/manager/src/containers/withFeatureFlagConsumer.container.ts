@@ -28,14 +28,11 @@ export const withFeatureFlagConsumer = (
         flags: {
           // Real LD flags from `withLDConsumer()`.
           ...this.props.flags,
-          // @todo: REMOVE BEFORE MERGE
-          cmr: true,
-          // Mock flags from Redux.
-          ...this.props.mockFlags,
-
           // !!! Override the CMR flag so that it's officially "released" !!!!
           // @todo: clean up all conditional logic based on this flag.
-          cmr: true
+          cmr: true,
+          // Mock flags from Redux.
+          ...this.props.mockFlags
         }
       });
     }
