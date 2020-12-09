@@ -3,10 +3,10 @@ import * as React from 'react';
 import Minus from 'src/assets/icons/minusSign.svg';
 import Plus from 'src/assets/icons/plusSign.svg';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   button: {
     width: 40,
     height: 40,
@@ -41,7 +41,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inputGroup: {
     display: 'flex',
-    position: 'relative'
+    position: 'relative',
+    '& button': {
+      borderRadius: 0,
+      minHeight: 'fit-content'
+    }
   },
   small: {
     '& $button': {
@@ -111,59 +115,57 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
   // TODO add error prop for error handling
   const classes = useStyles();
   return (
-    <React.Fragment>
-      <div
-        className={classnames({
-          [classes.small]: small,
-          [classes.inputGroup]: true
-        })}
+    <div
+      className={classnames({
+        [classes.small]: small,
+        [classes.inputGroup]: true
+      })}
+    >
+      <Button
+        buttonType="primary"
+        className={classes.button}
+        compact
+        aria-label="Subtract 1"
+        name="Subtract 1"
+        onClick={decrementValue}
+        disabled={disabled || value === min}
+        data-testid={'decrement-button'}
       >
-        <Button
-          buttonType="primary"
-          className={classes.button}
-          compact
-          aria-label="Subtract 1"
-          name="Subtract 1"
-          onClick={decrementValue}
-          disabled={disabled || value === min}
-          data-testid={'decrement-button'}
-        >
-          <Minus className={classes.minusIcon} />
-        </Button>
-        <TextField
-          className={classes.textField}
-          type="number"
-          label={inputLabel ? inputLabel : 'Edit Quantity'}
-          aria-live="polite"
-          name="Quantity"
-          hideLabel
-          small={small}
-          value={value}
-          onChange={onChange}
-          inputProps={{
-            className: classnames({
-              [classes.input]: true
-            }),
-            min,
-            max
-          }}
-          disabled={disabled}
-          data-testid={'quantity-input'}
-        />
-        <Button
-          buttonType="primary"
-          compact
-          className={classes.button}
-          aria-label="Add 1"
-          name="Add 1"
-          onClick={incrementValue}
-          disabled={disabled || value === max}
-          data-testid={'increment-button'}
-        >
-          <Plus className={classes.plusIcon} />
-        </Button>
-      </div>
-    </React.Fragment>
+        <Minus className={classes.minusIcon} />
+      </Button>
+      <TextField
+        className={classes.textField}
+        type="number"
+        label={inputLabel ? inputLabel : 'Edit Quantity'}
+        aria-live="polite"
+        name="Quantity"
+        hideLabel
+        small={small}
+        value={value}
+        onChange={onChange}
+        inputProps={{
+          className: classnames({
+            [classes.input]: true
+          }),
+          min,
+          max
+        }}
+        disabled={disabled}
+        data-testid={'quantity-input'}
+      />
+      <Button
+        buttonType="primary"
+        compact
+        className={classes.button}
+        aria-label="Add 1"
+        name="Add 1"
+        onClick={incrementValue}
+        disabled={disabled || value === max}
+        data-testid={'increment-button'}
+      >
+        <Plus className={classes.plusIcon} />
+      </Button>
+    </div>
   );
 };
 

@@ -61,7 +61,7 @@ const Profile: React.FC<CombinedProps> = props => {
       component: flags.cmr ? SSHKeys_CMR : SSHKeys
     },
     {
-      title: 'LISH',
+      title: 'LISH Console Settings',
       routeName: `${url}/lish`,
       component: LishSettings
     },
@@ -81,7 +81,7 @@ const Profile: React.FC<CombinedProps> = props => {
       component: Referrals
     },
     {
-      title: 'Settings',
+      title: 'My Settings',
       routeName: `${url}/settings`,
       render: <Settings toggleTheme={toggleTheme} />
     }

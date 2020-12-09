@@ -161,10 +161,10 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Lish" />
+        <DocumentTitleSegment segment="LISH Console Settings " />
         <Paper className={classes.root}>
           <Typography variant="h2" className={classes.title} data-qa-title>
-            LISH
+            LISH Console Settings
           </Typography>
           {success && <Notice success text={success} />}
           {authorizedKeysError && <Notice error text={authorizedKeysError} />}
