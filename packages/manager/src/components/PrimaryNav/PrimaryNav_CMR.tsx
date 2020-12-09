@@ -158,7 +158,11 @@ export const PrimaryNav: React.FC<Props> = props => {
           hide: !showFirewalls,
           display: 'Firewalls',
           href: '/firewalls',
-          icon: <Firewall />
+          icon: (
+            <Firewall
+              style={{ width: 26, height: 26, transform: 'scale(1.3)' }}
+            />
+          )
         },
         {
           display: 'StackScripts',
@@ -175,7 +179,7 @@ export const PrimaryNav: React.FC<Props> = props => {
         {
           display: 'Domains',
           href: '/domains',
-          icon: <Domain style={{ transform: 'scale(1.5)' }} />,
+          icon: <Domain />,
           prefetchRequestFn: requestDomains,
           prefetchRequestCondition:
             !domains.loading && domains.lastUpdated === 0 && !_isLargeAccount
