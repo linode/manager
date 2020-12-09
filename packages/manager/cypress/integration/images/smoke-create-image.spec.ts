@@ -1,9 +1,16 @@
 import { makeImageLabel } from '../../support/api/images';
 import { createLinode, deleteLinodeById } from '../../support/api/linodes';
+import {
+  containsClick,
+  containsVisible,
+  fbtClick,
+  getClick
+} from '../../support/helpers';
 import { assertToast } from '../../support/ui/events';
 
 describe('create image', () => {
   it('creates first image w/ drawer, and fail because POST is stubbed', () => {
+    const diskLabel = 'Debian 10 Disk';
     cy.server();
     cy.route({
       method: 'GET',
@@ -29,7 +36,7 @@ describe('create image', () => {
             {
               id: 44311273,
               status: 'ready',
-              label: 'Debian 10 Disk',
+              label: diskLabel,
               created: '2020-08-21T17:26:14',
               updated: '2020-08-21T17:26:30',
               filesystem: 'ext4',
@@ -50,25 +57,21 @@ describe('create image', () => {
         }
       }).as('getDisks');
       cy.visitWithLogin('/images');
-      cy.wait('@getImages');
+      // cy.wait('@getImages');
       const imageLabel = makeImageLabel();
-      cy.findAllByRole('button')
-        .filter(':contains("Add an Image")')
-        .click();
-
-      cy.findByText('Select a Linode').type(`${linode.label}{enter}`);
-      cy.findByText('Select a Disk')
-        .click()
-        .type(`Debian{enter}`);
-
+      cy.get('[class="MuiButton-label"]').within(() => {
+        containsClick('Add an Image');
+      });
+      fbtClick('Select a Linode').type(`${linode.label}{enter}`);
+      cy.wait('@getDisks').then(() => {
+        containsClick('Select a Disk').type(`${diskLabel}{enter}`);
+      });
       cy.findAllByLabelText('Label').type(`${imageLabel}{enter}`);
       cy.findAllByLabelText('Description').type(
         `${imageLabel} is an amazing image`
       );
       // here we should also stube the post to catch the call
-      cy.findByText('Create')
-        .should('be.visible')
-        .click();
+      getClick('[data-qa-submit="true"]');
       cy.wait('@postImages');
       cy.url().should('endWith', 'images');
       deleteLinodeById(linode.id);

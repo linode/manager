@@ -39,9 +39,11 @@ describe('longview', () => {
             });
             waitForAppLoad('/longview', false);
             getVisible(`[data-testid="${client.id}"]`).within(() => {
-              fbtVisible(clientLabel);
-              fbtVisible('View details');
-              fbtVisible('Swap');
+              if (cy.contains('Waiting for data...').should('not.be.visible')) {
+                fbtVisible(clientLabel);
+                containsVisible('View details');
+                containsVisible('Swap');
+              }
             });
             deleteLinodeById(linode.id);
             deleteClientById(client.id);
