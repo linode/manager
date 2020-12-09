@@ -3,7 +3,6 @@ import {
   clickLinodeActionMenu,
   createLinode,
   createLinodeSpecifyRegion,
-  createLinodeWithBackupsEnabled,
   deleteAllTestLinodes
 } from '../../support/api/linodes';
 import { deleteFirewallByLabel } from '../../support/api/firewalls';
@@ -141,15 +140,15 @@ describe('Migrate Linode With Firewall', () => {
 
     cy.visitWithLogin(`/linodes/${fakeLinodeId}/migrate`);
     cy.findByText('Dallas, TX').should('be.visible');
-    cy.get('[data-qa-checked="false"]').click();
+    getClick('[data-qa-checked="false"]');
     cy.findByText(`United States: Dallas, TX`).should('be.visible');
-    cy.contains(selectRegionString).click();
+    containsClick(selectRegionString);
     // checking that eu-west is not selectable
     // TODO uncomment this line once the logic is in the code to check for region with the cloud firewall capabilities
     // cy.findByText('London, UK', { timeout: 1000 }).should('not.exist');
     // checking that ap-south is selectable
-    cy.findByText('Singapore, SG').click();
-    cy.findByText('Enter Migration Queue').click();
+    fbtClick('Singapore, SG');
+    fbtClick('Enter Migration Queue');
     // this request will succeed because overloaded, we just check it is launched
     cy.wait('@migrateReq')
       .its('status')
@@ -170,13 +169,13 @@ describe('Migrate Linode With Firewall', () => {
         method: 'POST',
         url: `*/linode/instances/${linode.id}/migrate`
       }).as('migrateLinode');
-      fbtClick('Create a Firewall...');
+      fbtClick('Create a Firewall');
       cy.get('[data-testid="textfield-input"]').type(firewallLabel);
       getClick(
         '[data-qa-enhanced-select="Select a Linode or type to search..."]'
       );
       fbtClick(linode.label);
-      fbtClick('Create');
+      getClick('[data-qa-submit="true"]');
       cy.wait('@createFirewall');
       cy.visit(`/linodes/${linode.id}`);
       clickLinodeActionMenu(linode.label);
@@ -226,7 +225,7 @@ describe('Migrate Linode With Firewall', () => {
         method: 'POST',
         url: `*/linode/instances/${linode.id}/migrate`
       }).as('migrateLinode');
-      fbtClick('Create a Firewall...');
+      fbtClick('Create a Firewall');
       cy.get('[data-testid="textfield-input"]').type(firewallLabel);
       getClick(
         '[data-qa-enhanced-select="Select a Linode or type to search..."]'
