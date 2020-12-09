@@ -4,5 +4,4 @@
   Linode Cloud Manager
 </h1>
 
-This is the new Linode Manager. It provides a web interface for managing your Linode account. 
-Currently this software is *early-access* and is available at [cloud.linode.com](https://cloud.linode.com).
+This is the new Linode Manager. It provides a web interface for managing your Linode account. [cloud.linode.com](https://cloud.linode.com).
