@@ -451,7 +451,9 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
   copyCell: {
     width: 36,
+    height: 33,
     backgroundColor: `${theme.cmrBGColors.bgSecondaryButton} !important`,
+    padding: '0px !important',
     '& svg': {
       width: 16,
       height: 16,
@@ -469,7 +471,9 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   copyButton: {
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
     width: '100%',
+    height: '100%',
     '&:hover': {
       backgroundColor: 'transparent'
     }
