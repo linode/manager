@@ -165,13 +165,7 @@ const EntityIcon: React.FC<CombinedProps> = props => {
       aria-label={`${variant} is ${finalStatus}`}
       {...rest}
     >
-      <Icon
-        className={classNames({
-          [classes.icon]: true
-        })}
-        width={iconSize}
-        height={iconSize}
-      />
+      <Icon className={classes.icon} width={iconSize} height={iconSize} />
     </div>
   );
 };
