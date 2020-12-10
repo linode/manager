@@ -93,6 +93,7 @@ const cmrBGColors = {
   bgBillingSummary: '#f5f9ff',
   bgBreadcrumbParent: '#f5faff',
   bgAccessRow: '#fafafa',
+  bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
   bgAccessHeader: '#f5f5f5'
 };
 

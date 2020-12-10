@@ -1,10 +1,12 @@
-import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
 import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 import Button from 'src/components/Button';
+import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import {
@@ -23,8 +25,8 @@ import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
-import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
+import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useImages from 'src/hooks/useImages';
@@ -35,8 +37,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
+import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking_CMR';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import RenderIPs from './RenderIPs';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -418,7 +420,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   accessTable: {
     tableLayout: 'fixed',
     '& tr': {
-      height: 34
+      height: 32
     },
     '& th': {
       backgroundColor: theme.cmrBGColors.bgAccessHeader,
@@ -430,7 +432,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(),
       textAlign: 'left',
       whiteSpace: 'nowrap',
-      width: 100
+      width: 170
     },
     '& td': {
       backgroundColor: theme.cmrBGColors.bgAccessRow,
@@ -438,14 +440,53 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
       fontSize: '0.875rem',
       lineHeight: 1,
-      overflowX: 'auto',
       padding: theme.spacing(),
       whiteSpace: 'nowrap'
     }
   },
   code: {
     color: theme.cmrTextColors.textAccessCode,
-    fontFamily: '"SourceCodePro", monospace, sans-serif'
+    fontFamily: '"SourceCodePro", monospace, sans-serif',
+    position: 'relative'
+  },
+  copyCell: {
+    width: 36,
+    backgroundColor: `${theme.cmrBGColors.bgSecondaryButton} !important`,
+    '& svg': {
+      width: 16,
+      height: 16,
+      '& path': {
+        fill: theme.cmrBGColors.bgSecondaryButton
+      }
+    },
+    '& button': {
+      padding: 0
+    },
+    '&:last-child': {
+      paddingRight: theme.spacing()
+    }
+  },
+  copyButton: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+    '&:hover': {
+      backgroundColor: 'transparent'
+    }
+  },
+  gradient: {
+    overflowY: 'hidden', // For Edge
+    overflowX: 'auto',
+    paddingRight: 15,
+    '&:after': {
+      content: '""',
+      width: 30,
+      height: '100%',
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      backgroundImage: `linear-gradient(to right,  ${theme.cmrBGColors.bgAccessRowTransparentGradient}, ${theme.cmrBGColors.bgAccessRow});`
+    }
   }
 }));
 
@@ -458,11 +499,19 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
     region,
     ipv4,
     ipv6,
-    linodeId,
     username,
     linodeLabel,
+    linodeId,
     numVolumes
   } = props;
+
+  const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
+
+  const firstAddress = ipv4[0];
+
+  // If IPv6 is enabled, always use it in the second address slot. Otherwise use
+  // the second IPv4 address if it exists.
+  const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
 
   return (
     <Grid container item className={classes.body} direction="row">
@@ -503,18 +552,61 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
         direction="row"
         justify="space-between"
       >
-        <Grid container item className={classes.ipContainer} direction="column">
+        <Grid
+          container
+          item
+          md={5}
+          className={classes.accessTableContainer}
+          direction="column"
+        >
           <Grid item className={classes.columnLabel}>
-            IP Addresses
+            IP Address{numIPAddresses > 1 ? 'es' : ''}
           </Grid>
-          <Grid container item className={classes.ipContent} direction="column">
-            <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
+          <Grid item className={classes.accessTableContent}>
+            <Table className={classes.accessTable}>
+              <TableBody>
+                <TableRow>
+                  <TableCell className={classes.code}>
+                    <div className={classes.gradient}>{firstAddress}</div>
+                  </TableCell>
+                  <TableCell className={classes.copyCell}>
+                    <CopyTooltip
+                      text={firstAddress}
+                      className={classes.copyButton}
+                    />
+                  </TableCell>
+                </TableRow>
+                {secondAddress ? (
+                  <TableRow>
+                    <TableCell className={classes.code}>
+                      <div className={classes.gradient}>{secondAddress}</div>
+                    </TableCell>
+                    <TableCell className={classes.copyCell}>
+                      <CopyTooltip
+                        text={secondAddress}
+                        className={classes.copyButton}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ) : null}
+              </TableBody>
+            </Table>
+          </Grid>
+          <Grid item>
+            {numIPAddresses > 2 ? (
+              <Typography variant="body2">
+                <HashLink to={`/linodes/${linodeId}/networking#${ipv4TableID}`}>
+                  View all IP Addresses
+                </HashLink>
+              </Typography>
+            ) : null}
           </Grid>
         </Grid>
 
         <Grid
           container
           item
+          md={7}
           className={classes.accessTableContainer}
           direction="column"
         >
@@ -527,13 +619,27 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
                 <TableRow>
                   <th scope="row">SSH Access</th>
                   <TableCell className={classes.code}>
-                    {sshLink(ipv4[0])}
+                    <div className={classes.gradient}>{sshLink(ipv4[0])}</div>
+                  </TableCell>
+                  <TableCell className={classes.copyCell}>
+                    <CopyTooltip
+                      text={sshLink(ipv4[0])}
+                      className={classes.copyButton}
+                    />
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <th scope="row">LISH via SSH</th>
+                  <th scope="row">LISH Console via SSH</th>
                   <TableCell className={classes.code}>
-                    {lishLink(username, region, linodeLabel)}
+                    <div className={classes.gradient}>
+                      {lishLink(username, region, linodeLabel)}
+                    </div>
+                  </TableCell>
+                  <TableCell className={classes.copyCell}>
+                    <CopyTooltip
+                      text={sshLink(ipv4[0])}
+                      className={classes.copyButton}
+                    />
                   </TableCell>
                 </TableRow>
               </TableBody>
