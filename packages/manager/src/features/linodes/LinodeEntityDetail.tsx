@@ -507,6 +507,12 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
 
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
+  const firstAddress = ipv4[0];
+
+  // If IPv6 is enabled, always use it in the second address slot. Otherwise use
+  // the second IPv4 address if it exists.
+  const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
+
   return (
     <Grid container item className={classes.body} direction="row">
       {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
@@ -561,22 +567,25 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
               <TableBody>
                 <TableRow>
                   <TableCell className={classes.code}>
-                    <div className={classes.gradient}>{ipv4[0]}</div>
+                    <div className={classes.gradient}>{firstAddress}</div>
                   </TableCell>
                   <TableCell className={classes.copyCell}>
                     <CopyTooltip
-                      text={ipv4[0]}
+                      text={firstAddress}
                       className={classes.copyButton}
                     />
                   </TableCell>
                 </TableRow>
-                {ipv6 ? (
+                {secondAddress ? (
                   <TableRow>
                     <TableCell className={classes.code}>
-                      <div className={classes.gradient}>{ipv6}</div>
+                      <div className={classes.gradient}>{secondAddress}</div>
                     </TableCell>
                     <TableCell className={classes.copyCell}>
-                      <CopyTooltip text={ipv6} className={classes.copyButton} />
+                      <CopyTooltip
+                        text={secondAddress}
+                        className={classes.copyButton}
+                      />
                     </TableCell>
                   </TableRow>
                 ) : null}
