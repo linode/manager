@@ -485,7 +485,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       right: 0,
       bottom: 0,
-      backgroundImage: `linear-gradient(to right,  rgb(69, 75, 84, .001), ${theme.cmrBGColors.bgAccessRow});`
+      backgroundImage: `linear-gradient(to right,  ${theme.cmrBGColors.bgAccessRowTransparentGradient}, ${theme.cmrBGColors.bgAccessRow});`
     }
   }
 }));
@@ -560,7 +560,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
           direction="column"
         >
           <Grid item className={classes.columnLabel}>
-            IP Address{numIPAddresses > 1 ? 's' : ''}
+            IP Address{numIPAddresses > 1 ? 'es' : ''}
           </Grid>
           <Grid item className={classes.accessTableContent}>
             <Table className={classes.accessTable}>
