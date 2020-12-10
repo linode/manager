@@ -63,11 +63,9 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
   if (interfaces.length === 0 && !loading) {
     // Empty state
     return (
-      <Placeholder
-        title="No network interfaces detected"
-        copy="The Longview agent has not detected any interfaces that it can monitor."
-        renderAsSecondary
-      />
+      <Placeholder title="No network interfaces detected" renderAsSecondary>
+        The Longview agent has not detected any interfaces that it can monitor.
+      </Placeholder>
     );
   }
 

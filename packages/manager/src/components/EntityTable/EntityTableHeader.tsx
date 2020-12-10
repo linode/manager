@@ -110,6 +110,7 @@ export const EntityTableHeader: React.FC<Props> = props => {
             ) : (
               <_SortCell
                 thisCell={thisCell}
+                key={thisCell.dataColumn}
                 order={order}
                 orderBy={orderBy}
                 handleOrderChange={handleOrderChange}

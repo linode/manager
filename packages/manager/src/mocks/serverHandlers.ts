@@ -77,8 +77,8 @@ export const handlers = [
     return res(ctx.json(cachedTypes));
   }),
   rest.get('*/images', async (req, res, ctx) => {
-    const privateImages = imageFactory.buildList(10);
-    const publicImages = imageFactory.buildList(10, { is_public: true });
+    const privateImages = imageFactory.buildList(0);
+    const publicImages = imageFactory.buildList(0, { is_public: true });
     const images = [...privateImages, ...publicImages];
     return res(ctx.json(makeResourcePage(images)));
   }),
@@ -152,7 +152,7 @@ export const handlers = [
     return res(ctx.json(linode));
   }),
   rest.get('*/lke/clusters', async (req, res, ctx) => {
-    const clusters = kubernetesAPIResponse.buildList(10);
+    const clusters = kubernetesAPIResponse.buildList(0);
     return res(ctx.json(makeResourcePage(clusters)));
   }),
   rest.get('*/lke/clusters/:clusterId', async (req, res, ctx) => {
@@ -170,7 +170,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(endpoints)));
   }),
   rest.get('*/firewalls/', (req, res, ctx) => {
-    const firewalls = firewallFactory.buildList(10);
+    const firewalls = firewallFactory.buildList(0);
     return res(ctx.json(makeResourcePage(firewalls)));
   }),
   rest.get('*/firewalls/*/devices', (req, res, ctx) => {
@@ -191,7 +191,7 @@ export const handlers = [
     return res(ctx.json(newFirewall));
   }),
   rest.get('*/nodebalancers', (req, res, ctx) => {
-    const nodeBalancers = nodeBalancerFactory.buildList(10);
+    const nodeBalancers = nodeBalancerFactory.buildList(0);
     return res(ctx.json(makeResourcePage(nodeBalancers)));
   }),
   rest.get('*/nodebalancers/:nodeBalancerID', (req, res, ctx) => {
@@ -216,7 +216,7 @@ export const handlers = [
     }
   ),
   rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-    const buckets = objectStorageBucketFactory.buildList(20);
+    const buckets = objectStorageBucketFactory.buildList(0);
     return res(ctx.json(makeResourcePage(buckets)));
   }),
   rest.get('*object-storage/clusters', (req, res, ctx) => {
@@ -232,11 +232,11 @@ export const handlers = [
     return res(ctx.json(record));
   }),
   rest.get('*/volumes', (req, res, ctx) => {
-    const volumes = volumeFactory.buildList(10);
+    const volumes = volumeFactory.buildList(0);
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.get('*/vlans', (req, res, ctx) => {
-    const vlans = VLANFactory.buildList(4);
+    const vlans = VLANFactory.buildList(0);
     return res(ctx.json(makeResourcePage(vlans)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {

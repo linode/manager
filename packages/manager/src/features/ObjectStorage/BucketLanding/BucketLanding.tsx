@@ -311,7 +311,7 @@ const RenderEmpty: React.FC<{
       <DocumentTitleSegment segment="Buckets" />
       <Placeholder
         title="Object Storage"
-        copy={<EmptyCopy />}
+        isEntity
         icon={BucketIcon}
         renderAsSecondary
         buttonProps={[
@@ -320,28 +320,24 @@ const RenderEmpty: React.FC<{
             children: 'Add a Bucket'
           }
         ]}
-      />
+      >
+        <Typography variant="subtitle1">Need help getting started?</Typography>
+        <Typography variant="subtitle1">
+          <a
+            href="https://linode.com/docs/platform/object-storage"
+            target="_blank"
+            aria-describedby="external-site"
+            rel="noopener noreferrer"
+            className="h-u"
+          >
+            Learn more about storage options for your multimedia, archives, and
+            data backups here.
+          </a>
+        </Typography>
+      </Placeholder>
     </React.Fragment>
   );
 };
-
-const EmptyCopy = () => (
-  <>
-    <Typography variant="subtitle1">Need help getting started?</Typography>
-    <Typography variant="subtitle1">
-      <a
-        href="https://linode.com/docs/platform/object-storage"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        Learn more about storage options for your multimedia, archives, and data
-        backups here.
-      </a>
-    </Typography>
-  </>
-);
 
 const enhanced = compose<CombinedProps, Props>(
   React.memo,

@@ -44,7 +44,6 @@ export const BackupsPlaceholder: React.FC<Props> = props => {
         icon={VolumeIcon}
         title="Backups"
         renderAsSecondary
-        copy={backupPlaceholderText}
         buttonProps={[
           {
             onClick: () => setDialogOpen(true),
@@ -52,7 +51,9 @@ export const BackupsPlaceholder: React.FC<Props> = props => {
             disabled
           }
         ]}
-      />
+      >
+        {backupPlaceholderText}
+      </Placeholder>
       <EnableBackupsDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}

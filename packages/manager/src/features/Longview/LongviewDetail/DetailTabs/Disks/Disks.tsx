@@ -96,11 +96,9 @@ const Disks: React.FC<CombinedProps> = props => {
     if (!loading && sortedKeys.length === 0) {
       // Empty state
       return (
-        <Placeholder
-          title="No disks detected"
-          copy="The Longview agent has not detected any disks that it can monitor."
-          renderAsSecondary
-        />
+        <Placeholder title="No disks detected" renderAsSecondary>
+          The Longview agent has not detected any disks that it can monitor.
+        </Placeholder>
       );
     }
 

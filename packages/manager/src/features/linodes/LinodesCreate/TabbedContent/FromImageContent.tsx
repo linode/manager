@@ -49,17 +49,13 @@ export const FromImageContent: React.FC<CombinedProps> = props => {
     return (
       <Grid item className={`${classes.main} mlMain py0`}>
         <Paper>
-          <Placeholder
-            title="My Images"
-            renderAsSecondary
-            copy={
-              <Typography variant="subtitle1">
-                You don&#39;t have any private Images. Visit the{' '}
-                <Link to="/images">Images section</Link> to create an Image from
-                one of your Linode&#39;s disks.
-              </Typography>
-            }
-          />
+          <Placeholder title="My Images" renderAsSecondary>
+            <Typography variant="subtitle1">
+              You don&#39;t have any private Images. Visit the{' '}
+              <Link to="/images">Images section</Link> to create an Image from
+              one of your Linode&#39;s disks.
+            </Typography>
+          </Placeholder>
         </Paper>
       </Grid>
     );

@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -185,11 +185,14 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
         {!userHasBackups ? (
           <Paper>
             <Placeholder
+              isEntity
               icon={VolumeIcon}
-              copy="You do not have backups enabled for your Linodes. Please visit the Backups panel in the Linode Details view."
               title="Create from Backup"
               renderAsSecondary
-            />
+            >
+              You do not have backups enabled for your Linodes. Please visit the
+              Backups panel in the Linode Details view.
+            </Placeholder>
           </Paper>
         ) : (
           <React.Fragment>
