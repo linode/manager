@@ -172,6 +172,8 @@ export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
 // The API returns an error if more than 100 IPs are requested.
 const getAllIPs = getAll<IPAddress>(getIPs, 100);
 
+export const ipv4TableID = 'ips';
+
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
     removeIPDialogOpen: false,
@@ -691,7 +693,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <OrderBy data={ipDisplay} orderBy="type" order="asc">
             {({ data: orderedData, handleOrderChange, order, orderBy }) => {
               return (
-                <Table aria-label="IPv4 Addresses">
+                <Table aria-label="IPv4 Addresses" id={ipv4TableID}>
                   <TableHead>
                     <TableRow>
                       <TableCell style={{ width: '15%' }}>Address</TableCell>
