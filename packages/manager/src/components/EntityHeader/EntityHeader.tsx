@@ -16,13 +16,31 @@ export interface HeaderProps extends BreadCrumbProps {
   isSecondary?: boolean;
   isDetailLanding?: boolean;
   headerOnly?: boolean;
+  removeCrumbX?: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    margin: 0,
+    width: '100%',
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: theme.spacing()
+    }
+  },
+  landing: {
+    marginBottom: 0,
+    paddingTop: theme.spacing(),
+    paddingBottom: theme.spacing()
+  },
+  docs: {
+    marginRight: theme.spacing()
+  },
+  details: {
+    backgroundColor: theme.cmrBGColors.bgPaper,
+    margin: 0
   },
   breadcrumbOuter: {
     display: 'flex',
@@ -83,24 +101,44 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     bodyClassName,
     isSecondary,
     isDetailLanding,
-    headerOnly
+    headerOnly,
+    removeCrumbX
   } = props;
 
   const labelTitle = title.toString();
 
   return (
     <>
-      <Grid item className={classes.root}>
-        {isLanding && (
-          <Breadcrumb
-            labelTitle={labelTitle}
-            pathname={location.pathname}
-            data-qa-title
-          />
-        )}
-        {docsLink && <DocumentationButton href={docsLink} />}
-      </Grid>
-      <Grid item className={classes.root}>
+      {isLanding && (
+        <Grid container item className={`${classes.root} ${classes.landing}`}>
+          <Grid container item xs={12} sm={4}>
+            <Breadcrumb
+              labelTitle={labelTitle}
+              pathname={location.pathname}
+              removeCrumbX={removeCrumbX}
+              data-qa-title
+            />
+          </Grid>
+          <Grid
+            container
+            item
+            alignItems="center"
+            justify="flex-end"
+            wrap="nowrap"
+            xs={12}
+            sm={8}
+          >
+            {docsLink && (
+              <Grid item className={classes.docs}>
+                <DocumentationButton href={docsLink} />
+              </Grid>
+            )}
+            {actions}
+          </Grid>
+        </Grid>
+      )}
+
+      <Grid item className={`${classes.root} ${classes.details}`}>
         {isDetailLanding && (
           <HeaderBreadCrumb
             title={title}
@@ -113,13 +151,13 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
           item
           xs={12}
           className={classnames({
-            [classes.breadcrumbOuter]: true,
+            [classes.breadcrumbOuter]: isDetailLanding,
             [classes.breadCrumbDetail]: Boolean(parentLink),
             [classes.breadCrumbSecondary]: Boolean(isSecondary),
             [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
           })}
         >
-          {body ? (
+          {body && (
             <Grid
               className={classnames({
                 [classes.contentOuter]: true,
@@ -129,26 +167,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             >
               {body}
             </Grid>
-          ) : null}
-
-          {/* I think only Landing variant uses this? */}
-          {actions}
+          )}
         </Grid>
-        {/*
-        Keeping this for now as this may still be needed for details variant
-        <Hidden mdUp>
-          {body ? (
-            <Grid
-              className={classnames({
-                // [classes.contentOuter]: true,
-                [bodyClassName ?? '']: Boolean(bodyClassName)
-              })}
-              item
-            >
-              {body}
-            </Grid>
-          ) : null}
-        </Hidden> */}
       </Grid>
     </>
   );

@@ -411,20 +411,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               {displayBackupsCTA && (
                                 <BackupsCTA_CMR dismissed={this.dismissCTA} />
                               )}
-                              <Grid item xs={12}>
-                                {this.props.LandingHeader ? (
-                                  this.props.LandingHeader
-                                ) : (
-                                  <LandingHeader
-                                    title="Linodes"
-                                    entity="Linode"
-                                    onAddNew={() =>
-                                      this.props.history.push('/linodes/create')
-                                    }
-                                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-                                  />
-                                )}
-                              </Grid>
+                              {this.props.LandingHeader ? (
+                                this.props.LandingHeader
+                              ) : (
+                                <LandingHeader
+                                  title="Linodes"
+                                  entity="Linode"
+                                  onAddNew={() =>
+                                    this.props.history.push('/linodes/create')
+                                  }
+                                  docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                                />
+                              )}
                             </React.Fragment>
                           ) : (
                             <Grid

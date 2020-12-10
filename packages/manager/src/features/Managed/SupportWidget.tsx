@@ -19,8 +19,9 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      fontFamily: theme.font.normal,
       margin: 0,
-      marginRight: theme.spacing(2),
+      marginRight: theme.spacing(),
       padding: 0,
       '&:hover': {
         textDecoration: 'underline'
