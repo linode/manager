@@ -599,10 +599,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         containedSecondary: {
           backgroundColor: 'transparent',
           color: cmrTextColors.linkActiveMedium,
-          // border: `1px solid ${primaryColors.main}`,
-          // padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
-          //   spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
-          // transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
             borderColor: primaryColors.light,

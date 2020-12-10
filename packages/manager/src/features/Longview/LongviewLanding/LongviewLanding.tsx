@@ -55,7 +55,6 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
 
   const { accountSettings, createLongviewClient } = props;
 
-  // const [, setNewClientLoading] = React.useState<boolean>(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = React.useState<
     boolean
   >(false);
