@@ -59,7 +59,7 @@ describe('create image', () => {
       cy.visitWithLogin('/images');
       // cy.wait('@getImages');
       const imageLabel = makeImageLabel();
-      cy.get('[class="MuiButton-label"]').within(() => {
+      cy.get('[data-qa-placeholder-button="true"]').within(() => {
         containsClick('Add an Image');
       });
       fbtClick('Select a Linode').type(`${linode.label}{enter}`);
