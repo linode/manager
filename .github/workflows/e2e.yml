@@ -48,10 +48,7 @@ jobs:
       - run: |
           echo "MANAGER_OAUTH=$OAUTH_4" >> ./packages/manager/.env
         if: matrix['container'] == 'OAUTH_4'
-      - run: |      
-          echo "REACT_APP_LOGIN_ROOT=https://login.linode.com" >> ./packages/manager/.env
-          echo "REACT_APP_API_ROOT=https://api.linode.com/v4" >> ./packages/manager/.env
-          echo "REACT_APP_APP_ROOT=http://localhost:3000" >> ./packages/manager/.env
+      - run: |
           echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
           echo "REACT_APP_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
           yarn up &
