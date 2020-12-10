@@ -82,6 +82,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { types } = useTypes();
   const history = useHistory();
@@ -233,7 +234,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         }
       ];
 
-      if (matchesSmDown || inTableContext) {
+      if (inTableContext || (matchesSmDown && !inTableContext)) {
         actions.unshift({
           title: 'Launch Console',
           onClick: () => {
@@ -244,7 +245,10 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesSmDown) {
+      if (
+        (matchesMdDown && inTableContext) ||
+        (matchesSmDown && !inTableContext)
+      ) {
         actions.unshift({
           title: 'Reboot',
           disabled:
@@ -265,7 +269,11 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesSmDown || inVLANContext) {
+      if (
+        (matchesMdDown && inTableContext) ||
+        (matchesSmDown && !inTableContext) ||
+        inVLANContext
+      ) {
         actions.unshift({
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           onClick: handlePowerAction,
@@ -273,7 +281,11 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesSmDown && inVLANContext) {
+      if (
+        ((matchesMdDown && inTableContext) ||
+          (matchesSmDown && !inTableContext)) &&
+        inVLANContext
+      ) {
         actions.unshift({
           title: 'Detach',
           onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)
@@ -337,7 +349,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      {!matchesSmDown &&
+      {!matchesMdDown &&
         inTableContext &&
         inlineActions.map(action => {
           return (
