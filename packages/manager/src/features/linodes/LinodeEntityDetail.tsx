@@ -4,6 +4,7 @@ import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 import Button from 'src/components/Button';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
@@ -36,6 +37,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
+import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking_CMR';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
@@ -418,7 +420,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   accessTable: {
     tableLayout: 'fixed',
     '& tr': {
-      height: 34
+      height: 32
     },
     '& th': {
       backgroundColor: theme.cmrBGColors.bgAccessHeader,
@@ -430,7 +432,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(),
       textAlign: 'left',
       whiteSpace: 'nowrap',
-      width: 100
+      width: 170
     },
     '& td': {
       backgroundColor: theme.cmrBGColors.bgAccessRow,
@@ -445,7 +447,6 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   code: {
     color: theme.cmrTextColors.textAccessCode,
     fontFamily: '"SourceCodePro", monospace, sans-serif',
-
     position: 'relative'
   },
   copyCell: {
@@ -473,20 +474,18 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       backgroundColor: 'transparent'
     }
   },
-  overflow: {
-    overflowX: 'auto'
-  },
   gradient: {
+    overflowY: 'hidden', // For Edge
     overflowX: 'auto',
-    paddingRight: 30,
+    paddingRight: 15,
     '&:after': {
       content: '""',
-      width: 50,
+      width: 30,
       height: '100%',
       position: 'absolute',
       right: 0,
       bottom: 0,
-      backgroundImage: `linear-gradient(to right,  rgb(250, 250, 250, 0.001), ${theme.color.grey7});`
+      backgroundImage: `linear-gradient(to right,  rgb(69, 75, 84, .001), ${theme.cmrBGColors.bgAccessRow});`
     }
   }
 }));
@@ -502,8 +501,11 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
     ipv6,
     username,
     linodeLabel,
+    linodeId,
     numVolumes
   } = props;
+
+  const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
   return (
     <Grid container item className={classes.body} direction="row">
@@ -552,7 +554,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
           direction="column"
         >
           <Grid item className={classes.columnLabel}>
-            IP Addresses
+            IP Address{numIPAddresses > 1 ? 's' : ''}
           </Grid>
           <Grid item className={classes.accessTableContent}>
             <Table className={classes.accessTable}>
@@ -581,7 +583,15 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
               </TableBody>
             </Table>
           </Grid>
-          {/* View All Link */}
+          <Grid item>
+            {numIPAddresses > 2 ? (
+              <Typography variant="body2">
+                <HashLink to={`/linodes/${linodeId}/networking#${ipv4TableID}`}>
+                  View all IP Addresses
+                </HashLink>
+              </Typography>
+            ) : null}
+          </Grid>
         </Grid>
 
         <Grid
@@ -603,18 +613,24 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
                     <div className={classes.gradient}>{sshLink(ipv4[0])}</div>
                   </TableCell>
                   <TableCell className={classes.copyCell}>
-                    <CopyTooltip text={sshLink(ipv4[0])} />
+                    <CopyTooltip
+                      text={sshLink(ipv4[0])}
+                      className={classes.copyButton}
+                    />
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <th scope="row">LISH via SSH</th>
+                  <th scope="row">LISH Console via SSH</th>
                   <TableCell className={classes.code}>
                     <div className={classes.gradient}>
                       {lishLink(username, region, linodeLabel)}
                     </div>
                   </TableCell>
                   <TableCell className={classes.copyCell}>
-                    <CopyTooltip text={sshLink(ipv4[0])} />
+                    <CopyTooltip
+                      text={sshLink(ipv4[0])}
+                      className={classes.copyButton}
+                    />
                   </TableCell>
                 </TableRow>
               </TableBody>
