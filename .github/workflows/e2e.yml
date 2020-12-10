@@ -33,7 +33,7 @@ jobs:
           echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: |
-          echo "MANAGER_OAUTH=${{ matrix['container'] }}" >> ./packages/manager/.env
+          echo "MANAGER_OAUTH=$OAUTH_1" >> ./packages/manager/.env
         if: matrix['container'] == 'OAUTH_1'
       - run: |
           echo "MANAGER_OAUTH=$OAUTH_2" >> ./packages/manager/.env
