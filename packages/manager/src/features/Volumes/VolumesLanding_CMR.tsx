@@ -283,13 +283,17 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
   };
 
   if (_loading) {
-    return <Loading shouldDelay />;
+    return <Loading />;
   }
 
-  if (mappedVolumesDataWithLinodes.length === 0) {
+  if (
+    mappedVolumesDataWithLinodes.length === 0 &&
+    !volumesError.read &&
+    volumesLastUpdated > 0
+  ) {
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Images" />
+        <DocumentTitleSegment segment="Volumes" />
         <Placeholder
           title="Volumes"
           icon={VolumeIcon}
@@ -327,7 +331,7 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
   const volumeRow = {
     handlers,
     Component: VolumeTableRow,
-    data: mappedVolumesDataWithLinodes ?? [], // [],
+    data: mappedVolumesDataWithLinodes ?? [],
     loading: volumesLoading,
     lastUpdated: volumesLastUpdated,
     error: volumesError.read

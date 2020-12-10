@@ -375,7 +375,7 @@ export const handlers = [
     const error = databaseFactory.build({ status: 'error' });
     const unknown = databaseFactory.build({ status: 'unknown' });
     const databases = [online, initializing, error, unknown];
-    return res(ctx.delay(2000), ctx.json(makeResourcePage(databases)));
+    return res(ctx.json(makeResourcePage(databases)));
   })
 ];
 
