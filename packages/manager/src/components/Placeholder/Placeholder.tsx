@@ -77,7 +77,8 @@ const styles = (theme: Theme) =>
       color: theme.color.green
     },
     title: {
-      textAlign: 'center'
+      textAlign: 'center',
+      marginBottom: theme.spacing(2)
     },
     '& .insidePath path': {
       opacity: 0,
