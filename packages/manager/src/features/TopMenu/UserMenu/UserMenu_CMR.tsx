@@ -138,11 +138,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuItemList: {
     boxShadow: '0 6px 7px 0 rgba(0, 0, 0, 0.2)',
     '&[data-reach-menu-items]': {
-      backgroundColor: theme.bg.pureWhite,
+      backgroundColor: theme.cmrBGColors.bgPaper,
       border: 'none',
       padding: 0,
       paddingBottom: theme.spacing(1.5),
-      width: 300
+      width: 330
     }
   },
   inlineUserName: {
@@ -162,7 +162,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   profileWrapper: {
     maxHeight: 200,
-    width: '100%'
+    width: '100%',
+    '& > div': {
+      whiteSpace: 'normal'
+    }
   },
   accountColumn: {
     whiteSpace: 'normal',
@@ -202,16 +205,16 @@ const profileLinks: MenuLink[] = [
     display: 'Display',
     href: '/profile/display'
   },
-  { display: 'Authentication', href: '/profile/auth' },
+  { display: 'Password & Authentication', href: '/profile/auth' },
   { display: 'SSH Keys', href: '/profile/keys' },
-  { display: 'LISH Settings', href: '/profile/lish' },
+  { display: 'LISH Console Settings', href: '/profile/lish' },
   {
     display: 'API Tokens',
     href: '/profile/tokens'
   },
   { display: 'OAuth Apps', href: '/profile/clients' },
   { display: 'Referrals', href: '/profile/referrals' },
-  { display: 'Settings', href: '/profile/settings' },
+  { display: 'My Settings', href: '/profile/settings' },
   { display: 'Log Out', href: '/logout' }
 ];
 
