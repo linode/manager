@@ -7,6 +7,7 @@ import {
   ActiveLongviewPlan
 } from '@linode/api-v4/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -30,17 +31,11 @@ import useFlags from 'src/hooks/useFlags';
 import LandingHeader from 'src/components/LandingHeader';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import SubscriptionDialog from './SubscriptionDialog';
-import { isEmpty, pathOr } from 'ramda';
 
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
-interface Props {
-  activeSubscription: ActiveLongviewPlan;
-}
-
-type CombinedProps = Props &
-  LongviewProps &
+type CombinedProps = LongviewProps &
   RouteComponentProps<{}> &
   WithSnackbarProps &
   // We need this to know if the account is managed
@@ -58,18 +53,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
   );
   const flags = useFlags();
 
-  const {
-    // longviewClientsData,
-    // longviewClientsError,
-    // longviewClientsLastUpdated,
-    // longviewClientsLoading,
-    // longviewClientsResults,
-    // lvClientData,
-    accountSettings,
-    createLongviewClient
-    // deleteLongviewClient,
-    // userCanCreateClient
-  } = props;
+  const { accountSettings, createLongviewClient } = props;
 
   // const [, setNewClientLoading] = React.useState<boolean>(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = React.useState<
@@ -99,16 +83,16 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
   };
 
   const handleAddClient = () => {
-    // setNewClientLoading(true);
     createLongviewClient()
       .then(_ => {
-        // setNewClientLoading(false);
+        if (props.history.location.pathname !== '/longview/clients') {
+          props.history.push('/longview/clients');
+        }
       })
       .catch(errorResponse => {
         if (errorResponse[0].reason.match(/subscription/)) {
           // The user has reached their subscription limit.
           setSubscriptionDialogOpen(true);
-          // setNewClientLoading(false);
         } else {
           // Any network or other errors handled with a toast
           props.enqueueSnackbar(
@@ -118,7 +102,6 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
             )[0].reason,
             { variant: 'error' }
           );
-          // setNewClientLoading(false);
         }
       });
   };
@@ -150,12 +133,16 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
         justifyContent="space-between"
       >
         {flags.cmr ? (
-          <LandingHeader
-            title="Longview"
-            entity="Client"
-            onAddNew={handleAddClient}
-            docsLink="https://www.linode.com/docs/platform/longview/longview/"
-          />
+          // @todo: remove inline style when we switch over to CMR
+          <div style={{ width: '100%' }}>
+            <LandingHeader
+              title="Longview"
+              entity="Client"
+              docsLink="https://www.linode.com/docs/platform/longview/longview/"
+              onAddNew={handleAddClient}
+              removeCrumbX={1}
+            />
+          </div>
         ) : (
           <>
             <Breadcrumb
@@ -181,7 +168,10 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <LongviewClients {...props} />
+              <LongviewClients
+                activeSubscription={activeSubscriptionRequestHook.data}
+                {...props}
+              />
             </SafeTabPanel>
 
             <SafeTabPanel index={1}>
@@ -212,8 +202,8 @@ interface GrantsProps {
   userCanCreateClient: boolean;
 }
 
-export default compose<CombinedProps, Props & RouteComponentProps>(
-  withLongviewClients,
+export default compose<CombinedProps, {} & RouteComponentProps>(
+  withLongviewClients(),
   withProfile<GrantsProps, {}>((ownProps, { profileData }) => {
     const isRestrictedUser = (profileData || {}).restricted;
     const hasAddLongviewGrant = pathOr<boolean>(

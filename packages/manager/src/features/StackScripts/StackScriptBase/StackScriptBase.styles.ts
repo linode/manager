@@ -12,11 +12,10 @@ type ClassNames =
   | 'table'
   | 'searchWrapper'
   | 'searchBar'
+  | 'searchBarCMR'
   | 'stackscriptPlaceholder'
-  | 'cmrSpacing'
   | 'button'
   | 'cmrHeaderWrapper'
-  | 'searchBarCMR'
   | 'cmrActions';
 
 const styles = (theme: Theme) =>
@@ -45,14 +44,6 @@ const styles = (theme: Theme) =>
       paddingBottom: '40px !important',
       backgroundColor: theme.bg.white
     },
-    cmrHeaderWrapper: {
-      position: 'static',
-      [theme.breakpoints.up('sm')]: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }
-    },
     searchBar: {
       backgroundColor: theme.color.white,
       marginTop: 0,
@@ -60,7 +51,8 @@ const styles = (theme: Theme) =>
       '& .input': {
         backgroundColor: theme.cmrBGColors.bgSearchBar,
         border: 'none',
-        borderRadius: 3
+        borderRadius: 3,
+        minWidth: 415
       },
       '& > div': {
         marginRight: 0
@@ -74,12 +66,12 @@ const styles = (theme: Theme) =>
       }
     },
     searchBarCMR: {
-      flexBasis: '100%'
-    },
-    cmrSpacing: {
-      paddingTop: 4,
-      paddingBottom: `4px !important`,
-      paddingLeft: 4
+      flexBasis: '100%',
+      '& .input': {
+        backgroundColor: theme.cmrBGColors.bgPaper,
+        border: `1px solid ${theme.color.grey3}`,
+        borderRadius: 0
+      }
     },
     // Styles to override base placeholder styles for StackScript null state
     stackscriptPlaceholder: {
@@ -93,6 +85,17 @@ const styles = (theme: Theme) =>
       height: 34,
       padding: 0,
       marginRight: 8
+    },
+    cmrHeaderWrapper: {
+      backgroundColor: 'transparent',
+      position: 'static',
+      paddingTop: 0,
+      paddingBottom: '8px !important',
+      [theme.breakpoints.up('sm')]: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }
     },
     cmrActions: {
       display: 'flex',
