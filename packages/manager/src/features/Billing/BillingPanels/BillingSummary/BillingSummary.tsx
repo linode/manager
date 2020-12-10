@@ -1,6 +1,6 @@
 import { ActivePromotion } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import CreditCard from 'src/assets/icons/credit-card.svg';
 import Info from 'src/assets/icons/info.svg';
 import InvoiceIcon from 'src/assets/icons/invoice.svg';
@@ -126,6 +126,8 @@ export const BillingSummary: React.FC<Props> = props => {
     useRouteMatch('/account/billing/make-payment')
   );
 
+  const { replace } = useHistory();
+
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
   );
@@ -135,10 +137,10 @@ export const BillingSummary: React.FC<Props> = props => {
     []
   );
 
-  const closePaymentDrawer = React.useCallback(
-    () => setPaymentDrawerOpen(false),
-    []
-  );
+  const closePaymentDrawer = React.useCallback(() => {
+    setPaymentDrawerOpen(false);
+    replace('/account/billing');
+  }, [replace]);
 
   React.useEffect(() => {
     if (makePaymentRouteMatch) {
