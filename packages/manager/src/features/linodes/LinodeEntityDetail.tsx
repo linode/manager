@@ -22,7 +22,7 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
-import Grid from 'src/components/Grid';
+import Grid, { GridProps } from 'src/components/Grid';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
@@ -399,14 +399,113 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
     }
-  },
-  ipContainer: {
-    flexBasis: '35%'
-  },
-  ipContent: {
-    color: theme.cmrTextColors.tableStatic,
-    fontSize: '0.875rem',
-    lineHeight: '1rem'
+  }
+}));
+
+export const Body: React.FC<BodyProps> = React.memo(props => {
+  const classes = useBodyStyles();
+  const {
+    numCPUs,
+    gbRAM,
+    gbStorage,
+    region,
+    ipv4,
+    ipv6,
+    username,
+    linodeLabel,
+    linodeId,
+    numVolumes
+  } = props;
+
+  const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
+
+  const firstAddress = ipv4[0];
+
+  // If IPv6 is enabled, always use it in the second address slot. Otherwise use
+  // the second IPv4 address if it exists.
+  const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
+
+  return (
+    <Grid container item className={classes.body} direction="row">
+      {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
+      <Grid
+        container
+        item
+        className={classes.summaryContainer}
+        direction="column"
+      >
+        <Grid item className={classes.columnLabel}>
+          Summary
+        </Grid>
+        <Grid container item className={classes.summaryContent} direction="row">
+          <Grid item>
+            <Typography>
+              {pluralize('CPU Core', 'CPU Cores', numCPUs)}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography>{gbStorage} GB Storage</Typography>
+          </Grid>
+          <Grid item>
+            <Typography>{gbRAM} GB RAM</Typography>
+          </Grid>
+          <Grid item>
+            <Typography>
+              {pluralize('Volume', 'Volumes', numVolumes)}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Grid
+        container
+        item
+        className={classes.rightColumn}
+        direction="row"
+        justify="space-between"
+      >
+        <AccessTable
+          title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
+          rows={[{ text: firstAddress }, { text: secondAddress }]}
+          footer={
+            numIPAddresses > 2 ? (
+              <Typography variant="body2">
+                <HashLink to={`/linodes/${linodeId}/networking#${ipv4TableID}`}>
+                  View all IP Addresses
+                </HashLink>
+              </Typography>
+            ) : (
+              undefined
+            )
+          }
+          gridProps={{ md: 5 }}
+        />
+
+        <AccessTable
+          title="Access"
+          rows={[
+            { heading: 'SSH Access', text: sshLink(ipv4[0]) },
+            {
+              heading: 'LISH Console via SSH',
+              text: lishLink(username, region, linodeLabel)
+            }
+          ]}
+          gridProps={{ md: 7 }}
+        />
+      </Grid>
+    </Grid>
+  );
+});
+
+// =============================================================================
+// AccessTable
+// =============================================================================
+// @todo: Maybe move this component somewhere to its own file? Could potentially
+// be used elsewhere.
+const useAccessTableStyles = makeStyles((theme: Theme) => ({
+  columnLabel: {
+    color: theme.cmrTextColors.headlineStatic,
+    fontFamily: theme.font.bold
   },
   accessTableContainer: {
     flexBasis: '65%'
@@ -494,162 +593,56 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const Body: React.FC<BodyProps> = React.memo(props => {
-  const classes = useBodyStyles();
-  const {
-    numCPUs,
-    gbRAM,
-    gbStorage,
-    region,
-    ipv4,
-    ipv6,
-    username,
-    linodeLabel,
-    linodeId,
-    numVolumes
-  } = props;
+interface AccessTableRow {
+  text: string | null;
+  heading?: string;
+}
 
-  const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
+interface AccessTableProps {
+  title: string;
+  rows: AccessTableRow[];
+  gridProps?: GridProps;
+  footer?: JSX.Element;
+}
 
-  const firstAddress = ipv4[0];
-
-  // If IPv6 is enabled, always use it in the second address slot. Otherwise use
-  // the second IPv4 address if it exists.
-  const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
-
+export const AccessTable: React.FC<AccessTableProps> = React.memo(props => {
+  const classes = useAccessTableStyles();
   return (
-    <Grid container item className={classes.body} direction="row">
-      {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
-      <Grid
-        container
-        item
-        className={classes.summaryContainer}
-        direction="column"
-      >
-        <Grid item className={classes.columnLabel}>
-          Summary
-        </Grid>
-        <Grid container item className={classes.summaryContent} direction="row">
-          <Grid item>
-            <Typography>
-              {pluralize('CPU Core', 'CPU Cores', numCPUs)}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography>{gbStorage} GB Storage</Typography>
-          </Grid>
-          <Grid item>
-            <Typography>{gbRAM} GB RAM</Typography>
-          </Grid>
-          <Grid item>
-            <Typography>
-              {pluralize('Volume', 'Volumes', numVolumes)}
-            </Typography>
-          </Grid>
-        </Grid>
+    <Grid
+      container
+      item
+      md={6}
+      className={classes.accessTableContainer}
+      direction="column"
+      {...props.gridProps}
+    >
+      <Grid item className={classes.columnLabel}>
+        {props.title}
       </Grid>
-
-      <Grid
-        container
-        item
-        className={classes.rightColumn}
-        direction="row"
-        justify="space-between"
-      >
-        <Grid
-          container
-          item
-          md={5}
-          className={classes.accessTableContainer}
-          direction="column"
-        >
-          <Grid item className={classes.columnLabel}>
-            IP Address{numIPAddresses > 1 ? 'es' : ''}
-          </Grid>
-          <Grid item className={classes.accessTableContent}>
-            <Table className={classes.accessTable}>
-              <TableBody>
-                <TableRow>
+      <Grid item className={classes.accessTableContent}>
+        <Table className={classes.accessTable}>
+          <TableBody>
+            {props.rows.map(thisRow => {
+              return thisRow.text ? (
+                <TableRow key={thisRow.text}>
+                  {thisRow.heading ? (
+                    <th scope="row">{thisRow.heading}</th>
+                  ) : null}
                   <TableCell className={classes.code}>
-                    <div className={classes.gradient}>{firstAddress}</div>
+                    <div className={classes.gradient}>{thisRow.text}</div>
                   </TableCell>
                   <TableCell className={classes.copyCell}>
                     <CopyTooltip
-                      text={firstAddress}
+                      text={thisRow.text}
                       className={classes.copyButton}
                     />
                   </TableCell>
                 </TableRow>
-                {secondAddress ? (
-                  <TableRow>
-                    <TableCell className={classes.code}>
-                      <div className={classes.gradient}>{secondAddress}</div>
-                    </TableCell>
-                    <TableCell className={classes.copyCell}>
-                      <CopyTooltip
-                        text={secondAddress}
-                        className={classes.copyButton}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ) : null}
-              </TableBody>
-            </Table>
-          </Grid>
-          <Grid item>
-            {numIPAddresses > 2 ? (
-              <Typography variant="body2">
-                <HashLink to={`/linodes/${linodeId}/networking#${ipv4TableID}`}>
-                  View all IP Addresses
-                </HashLink>
-              </Typography>
-            ) : null}
-          </Grid>
-        </Grid>
-
-        <Grid
-          container
-          item
-          md={7}
-          className={classes.accessTableContainer}
-          direction="column"
-        >
-          <Grid item className={classes.columnLabel}>
-            Access
-          </Grid>
-          <Grid item className={classes.accessTableContent}>
-            <Table className={classes.accessTable}>
-              <TableBody>
-                <TableRow>
-                  <th scope="row">SSH Access</th>
-                  <TableCell className={classes.code}>
-                    <div className={classes.gradient}>{sshLink(ipv4[0])}</div>
-                  </TableCell>
-                  <TableCell className={classes.copyCell}>
-                    <CopyTooltip
-                      text={sshLink(ipv4[0])}
-                      className={classes.copyButton}
-                    />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <th scope="row">LISH Console via SSH</th>
-                  <TableCell className={classes.code}>
-                    <div className={classes.gradient}>
-                      {lishLink(username, region, linodeLabel)}
-                    </div>
-                  </TableCell>
-                  <TableCell className={classes.copyCell}>
-                    <CopyTooltip
-                      text={sshLink(ipv4[0])}
-                      className={classes.copyButton}
-                    />
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Grid>
-        </Grid>
+              ) : null;
+            })}
+          </TableBody>
+        </Table>
+        {props.footer ? <Grid item>{props.footer}</Grid> : null}
       </Grid>
     </Grid>
   );
