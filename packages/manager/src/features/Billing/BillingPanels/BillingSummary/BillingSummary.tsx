@@ -210,7 +210,7 @@ export const BillingSummary: React.FC<Props> = props => {
                 onClick={openPaymentDrawer}
                 className={classes.iconButton}
               />
-              <span className={`${classes.invoiceButton}`}>
+              <span className={classes.invoiceButton}>
                 <IconTextLink
                   SideIcon={InvoiceIcon}
                   text="View last invoice"
