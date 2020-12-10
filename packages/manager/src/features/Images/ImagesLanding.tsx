@@ -1,6 +1,6 @@
-import produce from 'immer';
 import { Image } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
+import produce from 'immer';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -8,6 +8,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -26,11 +27,13 @@ import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LandingHeader from 'src/components/LandingHeader';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import useFlags from 'src/hooks/useFlags';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
+import { DeleteImagePayload } from 'src/store/image/image.actions';
 import {
   deleteImage as _deleteImage,
   requestImages as _requestImages
@@ -41,7 +44,6 @@ import ImageRow, { ImageWithEvent } from './ImageRow';
 import ImageRow_CMR from './ImageRow_CMR';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
-import { DeleteImagePayload } from 'src/store/image/image.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -351,15 +353,29 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
         <Placeholder
-          title="Add an Image"
-          copy={<EmptyCopy />}
+          title="Images"
+          icon={ImageIcon}
+          isEntity
           buttonProps={[
             {
               onClick: openForCreate,
               children: 'Add an Image'
             }
           ]}
-        />
+        >
+          <Typography variant="subtitle1">
+            Adding an image is easy. Click here to
+          </Typography>
+          <Typography variant="subtitle1">
+            <Link to="https://linode.com/docs/platform/disk-images/linode-images-new-manager/">
+              learn more about Images
+            </Link>
+            &nbsp;or&nbsp;
+            <Link to="https://linode.com/docs/quick-answers/linode-platform/deploy-an-image-to-a-linode">
+              deploy an Image to a Linode.
+            </Link>
+          </Typography>
+        </Placeholder>
         {renderImageDrawer()}
       </React.Fragment>
     );
@@ -434,35 +450,6 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
     </React.Fragment>
   );
 };
-
-const EmptyCopy = () => (
-  <>
-    <Typography variant="subtitle1">
-      Adding an image is easy. Click here to
-    </Typography>
-    <Typography variant="subtitle1">
-      <a
-        href="https://linode.com/docs/platform/disk-images/linode-images-new-manager/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        learn more about Images
-      </a>
-      &nbsp;or&nbsp;
-      <a
-        href="https://linode.com/docs/quick-answers/linode-platform/deploy-an-image-to-a-linode"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        deploy an Image to a Linode.
-      </a>
-    </Typography>
-  </>
-);
 interface WithPrivateImages {
   imagesData: ImageWithEvent[];
   imagesLoading: boolean;
