@@ -10,8 +10,8 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
-import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import LandingHeader from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
@@ -126,15 +126,25 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Breadcrumb
-          pathname={props.location.pathname}
-          labelTitle="Object Storage"
-          removeCrumbX={1}
-        />
         {flags.cmr ? (
-          <DocumentationButton_CMR href="https://www.linode.com/docs/platform/object-storage/" />
+          // @todo: remove inline style when we switch over to CMR
+          <div style={{ width: '100%' }}>
+            <LandingHeader
+              title="Object Storage"
+              entity="Object Storage"
+              docsLink="https://www.linode.com/docs/platform/object-storage/"
+              removeCrumbX={1}
+            />
+          </div>
         ) : (
-          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
+          <>
+            <Breadcrumb
+              pathname={props.location.pathname}
+              labelTitle="Object Storage"
+              removeCrumbX={1}
+            />
+            <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
+          </>
         )}
       </Box>
       <Tabs

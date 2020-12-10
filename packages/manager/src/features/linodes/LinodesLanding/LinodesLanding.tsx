@@ -414,14 +414,17 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               {this.props.LandingHeader ? (
                                 this.props.LandingHeader
                               ) : (
-                                <LandingHeader
-                                  title="Linodes"
-                                  entity="Linode"
-                                  onAddNew={() =>
-                                    this.props.history.push('/linodes/create')
-                                  }
-                                  docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-                                />
+                                // @todo: remove inline style when we switch over to CMR
+                                <div style={{ marginTop: -8 }}>
+                                  <LandingHeader
+                                    title="Linodes"
+                                    entity="Linode"
+                                    onAddNew={() =>
+                                      this.props.history.push('/linodes/create')
+                                    }
+                                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                                  />
+                                </div>
                               )}
                             </React.Fragment>
                           ) : (
