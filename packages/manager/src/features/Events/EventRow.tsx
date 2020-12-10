@@ -4,7 +4,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
@@ -20,8 +20,10 @@ import { formatEventWithUsername } from './Event.helpers';
 
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
-const useStyles = makeStyles(() => ({
-  message: {}
+const useStyles = makeStyles((theme: Theme) => ({
+  icon: {
+    marginLeft: theme.spacing(1.5)
+  }
 }));
 
 interface ExtendedEvent extends Event {
@@ -109,22 +111,19 @@ export const Row: React.FC<RowProps> = props => {
       {!entityId && (
         <TableCell data-qa-event-icon-cell>
           <Hidden smDown>
-            <EntityIcon
-              data-qa-entity-icon
-              variant={type}
-              status={status}
-              size={28}
-              marginTop={1}
-            />
+            <div className={classes.icon}>
+              <EntityIcon
+                data-qa-entity-icon
+                variant={type}
+                status={status}
+                size={21}
+              />
+            </div>
           </Hidden>
         </TableCell>
       )}
       <TableCell parentColumn={'Event'} data-qa-event-message-cell>
-        <Typography
-          className={classes.message}
-          data-qa-event-message
-          variant="body1"
-        >
+        <Typography data-qa-event-message variant="body1">
           {displayedMessage}
         </Typography>
       </TableCell>
