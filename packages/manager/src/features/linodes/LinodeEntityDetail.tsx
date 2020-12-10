@@ -678,15 +678,16 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     }
   },
   detailRow: {
+    display: 'flex',
+    alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
-      display: 'flex',
       '&:first-of-type': {
         paddingBottom: theme.spacing(0.5)
       }
     }
   },
   listItem: {
-    display: 'inline-block',
+    display: 'flex',
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
     color: theme.cmrTextColors.tableStatic,
     padding: `0px 10px`,
@@ -699,7 +700,8 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     borderRight: 'none'
   },
   label: {
-    fontFamily: theme.font.bold
+    fontFamily: theme.font.bold,
+    marginRight: 4
   },
   tags: {
     [theme.breakpoints.down('md')]: {
@@ -776,7 +778,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
         <div className={classes.detailRow}>
           {linodePlan && (
             <Typography className={classes.listItem}>
-              <span className={classes.label}>Plan:</span> {linodePlan}
+              <span className={classes.label}>Plan: </span> {linodePlan}
             </Typography>
           )}
           {linodeRegionDisplay && (
