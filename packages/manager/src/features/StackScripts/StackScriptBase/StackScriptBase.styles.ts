@@ -35,6 +35,8 @@ const styles = (theme: Theme) =>
       color: theme.palette.text.primary
     },
     searchWrapper: {
+      display: 'flex',
+      flexWrap: 'nowrap',
       position: 'sticky',
       width: '100%',
       top: 0,
@@ -52,16 +54,23 @@ const styles = (theme: Theme) =>
       }
     },
     searchBar: {
-      marginTop: 0,
       backgroundColor: theme.color.white,
+      marginTop: 0,
+      minHeight: 'auto',
       '& .input': {
         backgroundColor: theme.cmrBGColors.bgSearchBar,
         border: 'none',
         borderRadius: 3
       },
-
       '& > div': {
         marginRight: 0
+      },
+      '& > input': {
+        padding: theme.spacing()
+      },
+      '& + button': {
+        paddingTop: 0,
+        paddingBottom: 0
       }
     },
     searchBarCMR: {
@@ -69,7 +78,7 @@ const styles = (theme: Theme) =>
     },
     cmrSpacing: {
       paddingTop: 4,
-      paddingBottom: `0 !important`,
+      paddingBottom: `4px !important`,
       paddingLeft: 4
     },
     // Styles to override base placeholder styles for StackScript null state

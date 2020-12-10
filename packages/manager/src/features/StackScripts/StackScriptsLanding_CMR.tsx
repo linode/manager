@@ -4,7 +4,6 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 
 import Breadcrumb from 'src/components/Breadcrumb';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -16,20 +15,11 @@ import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import StackScriptPanel from './StackScriptPanel/StackScriptPanel_CMR';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  panel: {
-    '& > div': {
-      padding: theme.spacing(2)
-    }
-  }
-}));
-
 type CombinedProps = WithImages & RouteComponentProps<{}>;
 
 export const StackScriptsLanding: React.FC<CombinedProps> = props => {
   const { history, imagesData } = props;
   const { _loading } = useReduxLoad(['images']);
-  const classes = useStyles();
 
   return (
     <React.Fragment>
@@ -54,11 +44,11 @@ export const StackScriptsLanding: React.FC<CombinedProps> = props => {
           <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
         </Grid>
       </Grid>
-      <Grid container>
+      <Grid container className="m0">
         {_loading ? (
           <CircleProgress />
         ) : (
-          <Grid className={classes.panel} item xs={12}>
+          <Grid item className="p0" xs={12}>
             <StackScriptPanel
               publicImages={imagesData}
               queryString={props.location.search}
