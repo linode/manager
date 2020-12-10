@@ -13,6 +13,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import DatabaseIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
@@ -109,8 +110,7 @@ const styles = (theme: Theme) =>
       },
       '& svg': {
         width: 21,
-        height: 21,
-        transform: 'scale(1.75)'
+        height: 21
       }
     },
     menuItemList: {
@@ -195,7 +195,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         {showVlans && (
                           <AddNewMenuItem
-                            title="Virtual LAN"
+                            title="VLAN"
                             body="Securely communicate between Linodes"
                             ItemIcon={VLANIcon}
                           />
@@ -229,7 +229,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                         className={classes.menuItemLink}
                       >
                         <AddNewMenuItem
-                          title="Kubernetes Cluster"
+                          title="Kubernetes"
                           body="Highly available container workloads"
                           ItemIcon={KubernetesIcon}
                         />
@@ -242,7 +242,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                           <AddNewMenuItem
                             title="Database"
                             body="Cloud-based MySQL databases."
-                            ItemIcon={LinodeIcon} // to be replaced with database icon
+                            ItemIcon={DatabaseIcon} // to be replaced with database icon
                           />
                         </MenuItem>
                       )}

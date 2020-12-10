@@ -8,6 +8,7 @@ export type ClassNames =
   | 'suggestionRoot'
   | 'highlight'
   | 'suggestionItem'
+  | 'suggestionIcon'
   | 'suggestionTitle'
   | 'suggestionDescription'
   | 'resultContainer'
@@ -219,7 +220,13 @@ export const styles = (theme: Theme) =>
       color: theme.palette.primary.main
     },
     suggestionItem: {
-      padding: theme.spacing(1)
+      padding: theme.spacing()
+    },
+    suggestionIcon: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginLeft: theme.spacing(1.5)
     },
     suggestionTitle: {
       fontSize: '1rem',
