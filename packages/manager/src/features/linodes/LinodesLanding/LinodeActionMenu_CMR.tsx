@@ -174,6 +174,9 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         : undefined
     };
 
+    const inLandingListView = matchesMdDown && inTableContext;
+    const inEntityView = matchesSmDown;
+
     return (): Action[] => {
       const actions: Action[] = [
         {
@@ -234,7 +237,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         }
       ];
 
-      if (inTableContext || (matchesSmDown && !inTableContext)) {
+      if (inTableContext || matchesSmDown) {
         actions.unshift({
           title: 'Launch Console',
           onClick: () => {
@@ -245,10 +248,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (
-        (matchesMdDown && inTableContext) ||
-        (matchesSmDown && !inTableContext)
-      ) {
+      if (inLandingListView || inEntityView) {
         actions.unshift({
           title: 'Reboot',
           disabled:
@@ -269,11 +269,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (
-        (matchesMdDown && inTableContext) ||
-        (matchesSmDown && !inTableContext) ||
-        inVLANContext
-      ) {
+      if (inLandingListView || inEntityView || inVLANContext) {
         actions.unshift({
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           onClick: handlePowerAction,
@@ -281,11 +277,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (
-        ((matchesMdDown && inTableContext) ||
-          (matchesSmDown && !inTableContext)) &&
-        inVLANContext
-      ) {
+      if ((inLandingListView || inEntityView) && inVLANContext) {
         actions.unshift({
           title: 'Detach',
           onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)

@@ -152,7 +152,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuHeader: {
     borderBottom: '1px solid #9ea4ae',
     color: theme.cmrTextColors.headlineStatic,
-    fontSize: '.875rem',
+    fontSize: '.75rem',
     letterSpacing: 1.875,
     marginBottom: theme.spacing(),
     marginLeft: theme.spacing(3),
