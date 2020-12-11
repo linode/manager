@@ -447,7 +447,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         getMoreStackScriptsFailed
       } = this.state;
 
-      const { classes, userCannotCreateStackScripts, isOnCreate } = this.props;
+      const { classes, userCannotCreateStackScripts } = this.props;
 
       if (error) {
         return (
@@ -550,44 +550,28 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               <div
                 className={classnames({
                   [classes.searchWrapper]: true,
-                  [classes.cmrSpacing]: this.props.flags.cmr,
                   [classes.cmrHeaderWrapper]: this.props.flags.cmr
                 })}
               >
-                <div
+                <DebouncedSearch
+                  placeholder="Search by Label, Username, or Description"
+                  onSearch={this.handleSearch}
+                  debounceTime={400}
                   className={classnames({
+                    [classes.searchBar]: true,
                     [classes.searchBarCMR]: this.props.flags.cmr
                   })}
-                >
-                  <DebouncedSearch
-                    placeholder="Search by Label, Username, or Description"
-                    onSearch={this.handleSearch}
-                    debounceTime={400}
-                    className={classes.searchBar}
-                    isSearching={isSearching}
-                    tooltipText={
-                      this.props.category === 'community'
-                        ? `Hint: try searching for a specific item by prepending your
+                  isSearching={isSearching}
+                  tooltipText={
+                    this.props.category === 'community'
+                      ? `Hint: try searching for a specific item by prepending your
                   search term with "username:", "label:", or "description:"`
-                        : ''
-                    }
-                    label="Search by Label, Username, or Description"
-                    hideLabel
-                    defaultValue={query}
-                  />
-                </div>
-
-                {this.props.flags.cmr && !isOnCreate && (
-                  <div className={classes.cmrActions}>
-                    <Button
-                      buttonType="primary"
-                      className={classes.button}
-                      onClick={this.goToCreateStackScript}
-                    >
-                      Create a StackScript
-                    </Button>
-                  </div>
-                )}
+                      : ''
+                  }
+                  label="Search by Label, Username, or Description"
+                  hideLabel
+                  defaultValue={query}
+                />
               </div>
               {this.props.flags.cmr ? (
                 <Table_CMR

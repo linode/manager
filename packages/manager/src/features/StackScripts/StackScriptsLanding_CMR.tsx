@@ -2,11 +2,9 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-
-import Breadcrumb from 'src/components/Breadcrumb';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
 import withImagesContainer, {
   WithImages
@@ -21,29 +19,23 @@ export const StackScriptsLanding: React.FC<CombinedProps> = props => {
   const { history, imagesData } = props;
   const { _loading } = useReduxLoad(['images']);
 
+  const goToCreateStackScript = () => {
+    history.push('/stackscripts/create');
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="StackScripts" />
       {!!history.location.state && !!history.location.state.successMessage && (
         <Notice success text={history.location.state.successMessage} />
       )}
-      <Grid
-        container
-        alignItems="center"
-        justify="space-between"
-        className="m0"
-      >
-        <Grid item className="px0">
-          <Breadcrumb
-            labelTitle="StackScripts"
-            pathname={location.pathname}
-            removeCrumbX={1}
-          />
-        </Grid>
-        <Grid item className="px0">
-          <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
-        </Grid>
-      </Grid>
+      <LandingHeader
+        title="StackScripts"
+        entity="StackScript"
+        createButtonWidth={180}
+        docsLink="https://www.linode.com/docs/platform/stackscripts"
+        onAddNew={goToCreateStackScript}
+      />
       <Grid container className="m0">
         {_loading ? (
           <CircleProgress />

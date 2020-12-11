@@ -26,13 +26,6 @@ type ClassNames = 'breadcrumb' | 'controls' | 'launchButton' | 'docs';
 
 const styles = (theme: Theme) =>
   createStyles({
-    breadcrumb: {
-      [theme.breakpoints.down('xs')]: {
-        '&.MuiGrid-item': {
-          paddingBottom: 0
-        }
-      }
-    },
     controls: {
       position: 'relative',
       marginTop: 9 - theme.spacing(1) / 2, // 4
@@ -55,7 +48,9 @@ const styles = (theme: Theme) =>
     },
     docs: {
       [theme.breakpoints.down('xs')]: {
+        display: 'flex',
         flexBasis: '100%',
+        justifyContent: 'flex-end',
         '&.MuiGrid-item': {
           paddingTop: 0
         }
@@ -118,7 +113,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
       justify="space-between"
       data-qa-linode={linode.label}
     >
-      <Grid item className={`px0 ${classes.breadcrumb}`}>
+      <Grid item className="px0">
         <Breadcrumb
           pathname={props.location.pathname}
           firstAndLastOnly
@@ -137,7 +132,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
           {...breadcrumbProps}
         />
       </Grid>
-      <Grid item className={classes.docs}>
+      <Grid item className={`px0 ${classes.docs}`}>
         <DocumentationButton href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/" />
       </Grid>
     </Grid>

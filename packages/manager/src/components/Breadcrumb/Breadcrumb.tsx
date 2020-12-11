@@ -1,7 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import useFlags from 'src/hooks/useFlags';
 import Crumbs, { CrumbOverridesProps } from './Crumbs';
 
 import { EditableProps, LabelProps } from './types';
@@ -22,7 +21,7 @@ export type CombinedProps = Props;
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
-    alignItems: 'flex-start'
+    alignItems: 'center'
   },
   preContainer: {
     display: 'flex',
@@ -32,17 +31,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   editablePreContainer: {
     alignItems: 'center'
-  },
-  cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing()
-    }
   }
 }));
 
 export const Breadcrumb: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const {
     labelTitle,
@@ -67,8 +60,7 @@ export const Breadcrumb: React.FC<CombinedProps> = props => {
       <div
         className={classNames({
           [classes.preContainer]: true,
-          [classes.editablePreContainer]: onEditHandlers !== undefined,
-          [classes.cmrSpacing]: flags.cmr
+          [classes.editablePreContainer]: onEditHandlers !== undefined
         })}
       >
         <Crumbs

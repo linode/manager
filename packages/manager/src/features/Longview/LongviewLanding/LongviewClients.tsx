@@ -13,6 +13,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Search from 'src/components/DebouncedSearchTextField';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import withSettings, {
@@ -34,7 +35,6 @@ import { getUsedStorage } from './Gauges/Storage';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
@@ -293,22 +293,6 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
             onChange={handleSortKeyChange}
             label="Sort by"
             hideLabel
-          />
-        </Grid>
-        <Grid
-          item
-          className={`py0 ${classes.addNew} ${flags.cmr &&
-            classes.cmrSpacingAddNew}`}
-        >
-          <AddNewLink
-            onClick={handleAddClient}
-            label={newClientLoading ? 'Loading...' : 'Add a Client'}
-            disabled={!userCanCreateClient}
-            disabledReason={
-              userCanCreateClient
-                ? ''
-                : 'You are not authorized to create Longview Clients. Please contact an account administrator.'
-            }
           />
         </Grid>
       </Grid>
