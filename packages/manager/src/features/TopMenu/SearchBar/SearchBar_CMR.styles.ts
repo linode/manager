@@ -74,15 +74,22 @@ const styles = (theme: Theme) =>
       }
     },
     navIconHide: {
-      order: 5,
+      cursor: 'pointer',
+      color: '#c9c7c7',
+      border: 'none',
+      padding: theme.spacing(),
+      backgroundColor: 'inherit',
+      '&:hover, &:focus': {
+        color: '#c1c1c0'
+      },
       position: 'relative',
       top: 1,
       '& > span': {
         justifyContent: 'flex-end'
       },
       '& svg': {
-        width: 32,
-        height: 32
+        width: 25,
+        height: 25
       },
       [theme.breakpoints.up('md')]: {
         display: 'none'

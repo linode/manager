@@ -1,4 +1,5 @@
 import { AccountCapability } from '@linode/api-v4/lib/account';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {
   Menu,
   MenuButton,
@@ -12,6 +13,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import DatabaseIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
@@ -51,6 +53,8 @@ const styles = (theme: Theme) =>
       }
     },
     button: {
+      display: 'flex',
+      alignItems: 'center',
       '&[data-reach-menu-button]': {
         textTransform: 'inherit',
         borderRadius: '3px',
@@ -60,6 +64,7 @@ const styles = (theme: Theme) =>
         backgroundColor: theme.palette.primary.main,
         color: '#fff',
         padding: `2px 20px`,
+        paddingRight: 12,
         maxHeight: 34,
         position: 'relative',
         minHeight: `34px`,
@@ -77,14 +82,23 @@ const styles = (theme: Theme) =>
           backgroundColor: theme.palette.primary.light
         },
         '&[aria-expanded="true"]': {
-          backgroundColor: theme.palette.primary.light
+          backgroundColor: theme.palette.primary.light,
+          '& $caret': {
+            marginTop: 4,
+            transform: 'rotate(180deg)'
+          }
         }
       }
+    },
+    caret: {
+      marginTop: 2,
+      marginLeft: 4
     },
     menuItemLink: {
       '&[data-reach-menu-item]': {
         padding: 0,
-        cursor: 'pointer'
+        cursor: 'pointer',
+        textDecoration: 'none'
       },
       '&[data-reach-menu-item][data-selected]': {
         background: theme.bg.main,
@@ -95,9 +109,8 @@ const styles = (theme: Theme) =>
         }
       },
       '& svg': {
-        width: 21,
-        height: 21,
-        transform: 'scale(1.75)'
+        width: 20,
+        height: 20
       }
     },
     menuItemList: {
@@ -149,7 +162,8 @@ class AddNewMenu extends React.Component<CombinedProps> {
                     className={classes.button}
                     data-qa-add-new-menu-button
                   >
-                    Create...
+                    Create
+                    <KeyboardArrowDown className={classes.caret} />
                   </MenuButton>
                   <MenuPopover className={classes.menuPopover} portal={false}>
                     <MenuItems className={classes.menuItemList}>
@@ -181,7 +195,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         {showVlans && (
                           <AddNewMenuItem
-                            title="Virtual LAN"
+                            title="VLAN"
                             body="Securely communicate between Linodes"
                             ItemIcon={VLANIcon}
                           />
@@ -215,7 +229,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                         className={classes.menuItemLink}
                       >
                         <AddNewMenuItem
-                          title="Kubernetes Cluster"
+                          title="Kubernetes"
                           body="Highly available container workloads"
                           ItemIcon={KubernetesIcon}
                         />
@@ -228,7 +242,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                           <AddNewMenuItem
                             title="Database"
                             body="Cloud-based MySQL databases."
-                            ItemIcon={LinodeIcon} // to be replaced with database icon
+                            ItemIcon={DatabaseIcon} // to be replaced with database icon
                           />
                         </MenuItem>
                       )}

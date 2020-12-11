@@ -38,7 +38,7 @@ const AccountLanding: React.FC<Props> = props => {
       routeName: `${props.match.url}/billing`
     },
     {
-      title: 'Users',
+      title: 'Users & Grants',
       routeName: `${props.match.url}/users`
     },
     {
@@ -60,7 +60,7 @@ const AccountLanding: React.FC<Props> = props => {
       <DocumentTitleSegment segment="Account Settings" />
       <TaxBanner location={location} marginBottom={24} />
       <Breadcrumb
-        pathname={location.pathname}
+        pathname={'/Account'}
         labelTitle="Account"
         removeCrumbX={1}
         data-qa-profile-header

@@ -64,6 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
+    overflow: 'hidden',
     padding: `${theme.spacing(3)}px 0`,
     paddingTop: 20,
     transition: theme.transitions.create('opacity'),
@@ -71,6 +72,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: theme.spacing(2),
       paddingLeft: 0,
       paddingRight: 0
+    },
+    [theme.breakpoints.between('md', 'lg')]: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
     }
   },
   content: {
@@ -91,6 +96,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden'
   },
   grid: {
+    marginLeft: 0,
+    marginRight: 0,
+    width: '100%',
     [theme.breakpoints.up('lg')]: {
       height: '100%'
     }
@@ -312,7 +320,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                       role="main"
                     >
                       <Grid container spacing={0} className={classes.grid}>
-                        <Grid item className={classes.switchWrapper}>
+                        <Grid item className={`${classes.switchWrapper} px0`}>
                           <GlobalNotifications />
                           <React.Suspense fallback={<SuspenseLoader />}>
                             <Switch>
@@ -361,7 +369,15 @@ const MainContent: React.FC<CombinedProps> = props => {
                                 exact
                                 strict
                               />
-                              <Route path="/profile" component={Profile} />
+                              <Route
+                                path="/profile"
+                                render={routeProps => (
+                                  <Profile
+                                    {...routeProps}
+                                    toggleTheme={props.toggleTheme}
+                                  />
+                                )}
+                              />
                               <Route exact path="/support" component={Help} />
                               <Route path="/search" component={SearchLanding} />
                               <Route

@@ -81,8 +81,8 @@ export type CombinedProps = Props & StateProps;
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
-  const matchesXsDown = useMediaQuery(theme.breakpoints.down('xs'));
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { types } = useTypes();
   const history = useHistory();
@@ -174,6 +174,9 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         : undefined
     };
 
+    const inLandingListView = matchesMdDown && inTableContext;
+    const inEntityView = matchesSmDown;
+
     return (): Action[] => {
       const actions: Action[] = [
         {
@@ -234,7 +237,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         }
       ];
 
-      if (matchesXsDown || inTableContext) {
+      if (inTableContext || matchesSmDown) {
         actions.unshift({
           title: 'Launch Console',
           onClick: () => {
@@ -245,7 +248,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesXsDown) {
+      if (inLandingListView || inEntityView) {
         actions.unshift({
           title: 'Reboot',
           disabled:
@@ -266,7 +269,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if ((matchesSmDown && inTableContext) || inVLANContext) {
+      if (inLandingListView || inEntityView || inVLANContext) {
         actions.unshift({
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           onClick: handlePowerAction,
@@ -274,7 +277,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesSmDown && inVLANContext) {
+      if ((inLandingListView || inEntityView) && inVLANContext) {
         actions.unshift({
           title: 'Detach',
           onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)
@@ -338,7 +341,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      {!matchesSmDown &&
+      {!matchesMdDown &&
         inTableContext &&
         inlineActions.map(action => {
           return (

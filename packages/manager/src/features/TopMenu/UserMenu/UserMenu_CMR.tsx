@@ -10,9 +10,10 @@ import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Tooltip from 'src/components/core/Tooltip';
 import Grid from 'src/components/core/Grid';
+import Hidden from 'src/components/core/Hidden';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
@@ -89,8 +90,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     lineHeight: 1,
-    paddingLeft: theme.spacing(2),
-    marginLeft: theme.spacing(),
+    marginLeft: theme.spacing(2),
     '&[data-reach-menu-button]': {
       backgroundColor: 'transparent',
       border: 'none',
@@ -102,6 +102,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       textTransform: 'inherit',
       '&[aria-expanded="true"]': {
         '& $caret': {
+          marginTop: 4,
           transform: 'rotate(180deg)'
         }
       }
@@ -128,7 +129,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   caret: {
     color: '#9ea4ae',
     fontSize: 26,
-    marginTop: 4,
+    marginTop: 2,
     marginLeft: 2,
     [theme.breakpoints.down('sm')]: {
       display: 'none'
@@ -137,17 +138,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuItemList: {
     boxShadow: '0 6px 7px 0 rgba(0, 0, 0, 0.2)',
     '&[data-reach-menu-items]': {
-      backgroundColor: theme.bg.pureWhite,
+      backgroundColor: theme.cmrBGColors.bgPaper,
       border: 'none',
       padding: 0,
       paddingBottom: theme.spacing(1.5),
       width: 300
     }
   },
+  inlineUserName: {
+    paddingRight: theme.spacing(),
+    fontSize: '1rem'
+  },
   menuHeader: {
     borderBottom: '1px solid #9ea4ae',
     color: theme.cmrTextColors.headlineStatic,
-    fontSize: '.875rem',
+    fontSize: '.75rem',
     letterSpacing: 1.875,
     marginBottom: theme.spacing(),
     marginLeft: theme.spacing(3),
@@ -156,8 +161,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'uppercase'
   },
   profileWrapper: {
+    marginBottom: theme.spacing(2),
     maxHeight: 200,
-    width: '100%'
+    width: '100%',
+    '& > div': {
+      whiteSpace: 'normal'
+    }
   },
   accountColumn: {
     whiteSpace: 'normal',
@@ -197,16 +206,16 @@ const profileLinks: MenuLink[] = [
     display: 'Display',
     href: '/profile/display'
   },
-  { display: 'Authentication', href: '/profile/auth' },
+  { display: 'Password & Authentication', href: '/profile/auth' },
   { display: 'SSH Keys', href: '/profile/keys' },
-  { display: 'LISH Settings', href: '/profile/lish' },
+  { display: 'LISH Console Settings', href: '/profile/lish' },
   {
     display: 'API Tokens',
     href: '/profile/tokens'
   },
   { display: 'OAuth Apps', href: '/profile/clients' },
   { display: 'Referrals', href: '/profile/referrals' },
-  { display: 'Settings', href: '/profile/settings' },
+  { display: 'My Settings', href: '/profile/settings' },
   { display: 'Log Out', href: '/logout' }
 ];
 
@@ -229,12 +238,12 @@ export const UserMenu: React.FC<{}> = () => {
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
       {
-        display: 'Billing and Contact Information',
+        display: 'Billing & Contact Information',
         href: '/account/billing'
       },
       // Restricted users can't view the Users tab regardless of their grants
       {
-        display: 'Users and Grants',
+        display: 'Users & Grants',
         href: '/account/users',
         hide: _isRestrictedUser
       },
@@ -279,33 +288,30 @@ export const UserMenu: React.FC<{}> = () => {
   return (
     <div>
       <ReachMenu>
-        <Tooltip
-          enterDelay={1000}
-          enterTouchDelay={2000}
-          leaveTouchDelay={3000}
-          placement={'top'}
-          title={userName}
+        <MenuButton
+          className={classes.menuButton}
+          data-testid="nav-group-profile"
         >
-          <MenuButton
-            className={classes.menuButton}
-            data-testid="nav-group-profile"
-          >
-            {gravatarLoading || gravatarURL === 'not found' ? (
-              <div className={classes.userWrapper}>
-                <UserIcon />
-              </div>
-            ) : (
-              <div className={classes.userWrapper}>
-                <img
-                  className={classes.gravatar}
-                  src={gravatarURL}
-                  alt="Gravatar"
-                />
-              </div>
-            )}
-            <KeyboardArrowDown className={classes.caret} />
-          </MenuButton>
-        </Tooltip>
+          <Hidden smDown>
+            <Typography className={classes.inlineUserName}>
+              {userName}
+            </Typography>
+          </Hidden>
+          {gravatarLoading || gravatarURL === 'not found' ? (
+            <div className={classes.userWrapper}>
+              <UserIcon />
+            </div>
+          ) : (
+            <div className={classes.userWrapper}>
+              <img
+                className={classes.gravatar}
+                src={gravatarURL}
+                alt="Gravatar"
+              />
+            </div>
+          )}
+          <KeyboardArrowDown className={classes.caret} />
+        </MenuButton>
         <MenuPopover className={classes.menuPopover} position={positionRight}>
           <MenuItems className={classes.menuItemList}>
             <div className={classes.userName}>

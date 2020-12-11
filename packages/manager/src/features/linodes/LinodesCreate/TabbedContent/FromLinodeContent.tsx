@@ -1,5 +1,5 @@
 import * as React from 'react';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -65,11 +65,14 @@ export const FromLinodeContent: React.FC<CombinedProps> = props => {
           <Paper>
             <Placeholder
               data-qa-placeholder
+              isEntity
               icon={VolumeIcon}
               renderAsSecondary
-              copy="You do not have any existing Linodes to clone from. Please first create a Linode from either an Image or StackScript."
               title="Clone from Existing Linode"
-            />
+            >
+              You do not have any existing Linodes to clone from. Please first
+              create a Linode from either an Image or StackScript.
+            </Placeholder>
           </Paper>
         </Grid>
       ) : (

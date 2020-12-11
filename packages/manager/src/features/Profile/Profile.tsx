@@ -30,13 +30,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type Props = RouteComponentProps<{}>;
+interface Props {
+  toggleTheme: () => void;
+}
 
-const Profile: React.FC<Props> = props => {
+type CombinedProps = Props & RouteComponentProps<{}>;
+
+const Profile: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
   const {
-    match: { url }
+    match: { url },
+    toggleTheme
   } = props;
 
   const tabs: NavTab[] = [
@@ -76,9 +81,9 @@ const Profile: React.FC<Props> = props => {
       component: Referrals
     },
     {
-      title: 'Settings',
+      title: 'My Settings',
       routeName: `${url}/settings`,
-      component: Settings
+      render: <Settings toggleTheme={toggleTheme} />
     }
   ];
 

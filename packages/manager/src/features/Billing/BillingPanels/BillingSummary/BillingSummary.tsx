@@ -1,5 +1,6 @@
 import { ActivePromotion } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import CreditCard from 'src/assets/icons/credit-card.svg';
 import Info from 'src/assets/icons/info.svg';
 import InvoiceIcon from 'src/assets/icons/invoice.svg';
@@ -85,8 +86,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   iconButtonOuter: {
     display: 'flex',
     justifyContent: 'space-between',
-    [theme.breakpoints.between('sm', 'md')]: {
+    '& button, & a': {
+      justifyContent: 'flex-start'
+    },
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-start'
+    },
+    [theme.breakpoints.only('xs')]: {
       flexDirection: 'column'
+    },
+    [theme.breakpoints.only('md')]: {
+      flexDirection: 'column'
+    }
+  },
+  invoiceButton: {
+    [theme.breakpoints.only('sm')]: {
+      paddingLeft: 32
+    },
+    '& button': {
+      paddingLeft: '0'
     }
   },
   iconButton: {
@@ -120,6 +138,13 @@ interface Props {
 export const BillingSummary: React.FC<Props> = props => {
   const { promotion, balanceUninvoiced, balance, mostRecentInvoiceId } = props;
 
+  // On-the-fly route matching so this component can open the drawer itself.
+  const makePaymentRouteMatch = Boolean(
+    useRouteMatch('/account/billing/make-payment')
+  );
+
+  const { replace } = useHistory();
+
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
   );
@@ -129,10 +154,16 @@ export const BillingSummary: React.FC<Props> = props => {
     []
   );
 
-  const closePaymentDrawer = React.useCallback(
-    () => setPaymentDrawerOpen(false),
-    []
-  );
+  const closePaymentDrawer = React.useCallback(() => {
+    setPaymentDrawerOpen(false);
+    replace('/account/billing');
+  }, [replace]);
+
+  React.useEffect(() => {
+    if (makePaymentRouteMatch) {
+      openPaymentDrawer();
+    }
+  }, [makePaymentRouteMatch, openPaymentDrawer]);
 
   const classes = useStyles();
 
@@ -193,15 +224,15 @@ export const BillingSummary: React.FC<Props> = props => {
                 onClick={openPaymentDrawer}
                 className={classes.iconButton}
               />
-
-              <IconTextLink
-                SideIcon={InvoiceIcon}
-                text="View last invoice"
-                title="View last invoice"
-                to={`/account/billing/invoices/${mostRecentInvoiceId}`}
-                className={classes.iconButton}
-                disabled={!mostRecentInvoiceId}
-              />
+              <span className={classes.invoiceButton}>
+                <IconTextLink
+                  SideIcon={InvoiceIcon}
+                  text="View last invoice"
+                  title="View last invoice"
+                  to={`/account/billing/invoices/${mostRecentInvoiceId}`}
+                  disabled={!mostRecentInvoiceId}
+                />
+              </span>
             </div>
           </Grid>
           <Grid item xs={12} md={4} className={classes.gridItem}>

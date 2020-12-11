@@ -1,3 +1,4 @@
+import { containsClick, fbtClick } from '../helpers';
 import { waitForAppLoad } from './common';
 
 export const loadAppNoLogin = path => waitForAppLoad(path, false);
@@ -69,7 +70,7 @@ export const pages = [
         name: 'Nav',
         go: () => {
           loadAppNoLogin(routes.support);
-          cy.findByText('Create...').click();
+          cy.findByText('Create').click();
           cy.get('[data-qa-one-click-add-new="true"]').click();
         }
       }
@@ -137,9 +138,7 @@ export const pages = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username').should('be.visible');
           waitDoubleRerender();
-          cy.findByText('Password & Authentication')
-            .should('be.visible')
-            .click();
+          containsClick('Password & Authentication');
         }
       }
     ]
@@ -172,7 +171,7 @@ export const pages = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username');
           waitDoubleRerender();
-          cy.findByText('LISH').click();
+          containsClick('LISH Console Settings');
         }
       }
     ]

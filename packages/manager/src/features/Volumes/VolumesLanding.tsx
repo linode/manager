@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
-import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
+import VolumesIcon from 'src/assets/icons/entityIcons/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -447,7 +447,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <DocumentTitleSegment segment="Volumes" />
           <Placeholder
             title="Volumes are not available in this region"
-            copy=""
+            isEntity
             icon={VolumesIcon}
             renderAsSecondary={!isVolumesLanding}
           />
@@ -461,7 +461,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <DocumentTitleSegment segment="Volumes" />
           <Placeholder
             title="No configs available."
-            copy="This Linode has no configurations. Click below to create a configuration."
+            isEntity
             icon={VolumesIcon}
             buttonProps={[
               {
@@ -470,7 +470,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
               }
             ]}
             renderAsSecondary={!isVolumesLanding}
-          />
+          >
+            This Linode has no configurations. Click below to create a
+            configuration.
+          </Placeholder>
         </React.Fragment>
       );
     }
@@ -481,7 +484,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         {readOnly && <LinodePermissionsError />}
         <Placeholder
           title="Add Block Storage!"
-          copy={<EmptyCopy />}
+          isEntity
           icon={VolumesIcon}
           renderAsSecondary={!isVolumesLanding}
           buttonProps={[
@@ -496,7 +499,30 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
               disabled: readOnly
             }
           ]}
-        />
+        >
+          <Typography variant="subtitle1">Need additional storage?</Typography>
+          <Typography variant="subtitle1">
+            <a
+              href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
+              target="_blank"
+              aria-describedby="external-site"
+              rel="noopener noreferrer"
+              className="h-u"
+            >
+              Here&apos;s how to use Block Storage with your Linode
+            </a>
+            &nbsp;or&nbsp;
+            <a
+              href="https://www.linode.com/docs/"
+              target="_blank"
+              aria-describedby="external-site"
+              rel="noopener noreferrer"
+              className="h-u"
+            >
+              visit our guides and tutorials.
+            </a>
+          </Typography>
+        </Placeholder>
       </React.Fragment>
     );
   };
@@ -620,33 +646,6 @@ const eventCategory = `volumes landing`;
 
 const toggleVolumesGroupBy = (checked: boolean) =>
   sendGroupByTagEnabledEvent(eventCategory, checked);
-
-const EmptyCopy = () => (
-  <>
-    <Typography variant="subtitle1">Need additional storage?</Typography>
-    <Typography variant="subtitle1">
-      <a
-        href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        Here's how to use Block Storage with your Linode
-      </a>
-      &nbsp;or&nbsp;
-      <a
-        href="https://www.linode.com/docs/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        visit our guides and tutorials.
-      </a>
-    </Typography>
-  </>
-);
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(

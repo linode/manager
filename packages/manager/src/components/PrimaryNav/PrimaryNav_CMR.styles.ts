@@ -73,9 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
       '& svg': {
         color: theme.color.greenCyan,
-        '& *': {
-          stroke: 'white'
-        }
+        fill: theme.color.greenCyan
       }
     },
     '& .icon': {
@@ -86,18 +84,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         height: 20,
         display: 'flex',
         alignItems: 'center',
-        transform: 'scale(1.65)',
         fill: theme.color.primaryNavText,
-        transition: theme.transitions.create(['fill']),
         '&.small': {
           transform: 'scale(1)'
         },
         '&:not(.wBorder) circle, & .circle': {
           display: 'none'
-        },
-        '& *': {
-          transition: theme.transitions.create(['stroke']),
-          stroke: theme.color.primaryNavText
         }
       }
     }
@@ -120,7 +112,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
     textDecoration: 'none',
     '& svg': {
-      color: theme.color.greenCyan
+      color: theme.color.greenCyan,
+      '& *': {
+        // stroke: theme.color.greenCyan
+      }
     },
     '&:hover': {}
   },

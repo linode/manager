@@ -245,7 +245,7 @@ const UsersLanding: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Users" />
+      <DocumentTitleSegment segment="Users & Grants" />
       {newUsername && (
         <Notice success text={`User ${newUsername} created successfully`} />
       )}
@@ -277,7 +277,7 @@ const UsersLanding: React.FC<CombinedProps> = props => {
                   : undefined
               }
               onClick={openForCreate}
-              label="Add a User..."
+              label="Add a User"
             />
           </Grid>
         </Grid>

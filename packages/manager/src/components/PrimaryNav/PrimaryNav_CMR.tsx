@@ -13,7 +13,7 @@ import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import VLAN from 'src/assets/icons/entityIcons/vlan.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import Longview from 'src/assets/icons/longview.svg';
-import Managed from 'src/assets/icons/managed.svg';
+import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -59,7 +59,6 @@ interface PrimaryLink {
 
 export interface Props {
   closeMenu: () => void;
-  toggleTheme: () => void;
   toggleSpacing: () => void; // to keep props same for non-cmr
   isCollapsed: boolean;
 }
@@ -176,7 +175,7 @@ export const PrimaryNav: React.FC<Props> = props => {
         {
           display: 'Domains',
           href: '/domains',
-          icon: <Domain style={{ transform: 'scale(1.5)' }} />,
+          icon: <Domain />,
           prefetchRequestFn: requestDomains,
           prefetchRequestCondition:
             !domains.loading && domains.lastUpdated === 0 && !_isLargeAccount
