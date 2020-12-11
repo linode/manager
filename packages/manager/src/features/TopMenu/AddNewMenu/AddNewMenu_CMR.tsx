@@ -109,8 +109,8 @@ const styles = (theme: Theme) =>
         }
       },
       '& svg': {
-        width: 21,
-        height: 21
+        width: 20,
+        height: 20
       }
     },
     menuItemList: {
