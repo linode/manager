@@ -22,7 +22,7 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
-import Grid from 'src/components/Grid';
+import Grid, { GridProps } from 'src/components/Grid';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
@@ -399,94 +399,6 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
     }
-  },
-  ipContainer: {
-    flexBasis: '35%'
-  },
-  ipContent: {
-    color: theme.cmrTextColors.tableStatic,
-    fontSize: '0.875rem',
-    lineHeight: '1rem'
-  },
-  accessTableContainer: {
-    flexBasis: '65%'
-  },
-  accessTableContent: {
-    '&.MuiGrid-item': {
-      padding: 0,
-      paddingLeft: theme.spacing()
-    }
-  },
-  accessTable: {
-    tableLayout: 'fixed',
-    '& tr': {
-      height: 32
-    },
-    '& th': {
-      backgroundColor: theme.cmrBGColors.bgAccessHeader,
-      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
-      color: theme.cmrTextColors.textAccessTable,
-      fontSize: '0.875rem',
-      fontWeight: 'bold',
-      lineHeight: 1,
-      padding: theme.spacing(),
-      textAlign: 'left',
-      whiteSpace: 'nowrap',
-      width: 170
-    },
-    '& td': {
-      backgroundColor: theme.cmrBGColors.bgAccessRow,
-      border: 'none',
-      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
-      fontSize: '0.875rem',
-      lineHeight: 1,
-      padding: theme.spacing(),
-      whiteSpace: 'nowrap'
-    }
-  },
-  code: {
-    color: theme.cmrTextColors.textAccessCode,
-    fontFamily: '"SourceCodePro", monospace, sans-serif',
-    position: 'relative'
-  },
-  copyCell: {
-    width: 36,
-    backgroundColor: `${theme.cmrBGColors.bgSecondaryButton} !important`,
-    '& svg': {
-      width: 16,
-      height: 16,
-      '& path': {
-        fill: theme.cmrBGColors.bgSecondaryButton
-      }
-    },
-    '& button': {
-      padding: 0
-    },
-    '&:last-child': {
-      paddingRight: theme.spacing()
-    }
-  },
-  copyButton: {
-    display: 'flex',
-    justifyContent: 'center',
-    width: '100%',
-    '&:hover': {
-      backgroundColor: 'transparent'
-    }
-  },
-  gradient: {
-    overflowY: 'hidden', // For Edge
-    overflowX: 'auto',
-    paddingRight: 15,
-    '&:after': {
-      content: '""',
-      width: 30,
-      height: '100%',
-      position: 'absolute',
-      right: 0,
-      bottom: 0,
-      backgroundImage: `linear-gradient(to right,  ${theme.cmrBGColors.bgAccessRowTransparentGradient}, ${theme.cmrBGColors.bgAccessRow});`
-    }
   }
 }));
 
@@ -552,100 +464,185 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
         direction="row"
         justify="space-between"
       >
-        <Grid
-          container
-          item
-          md={5}
-          className={classes.accessTableContainer}
-          direction="column"
-        >
-          <Grid item className={classes.columnLabel}>
-            IP Address{numIPAddresses > 1 ? 'es' : ''}
-          </Grid>
-          <Grid item className={classes.accessTableContent}>
-            <Table className={classes.accessTable}>
-              <TableBody>
-                <TableRow>
-                  <TableCell className={classes.code}>
-                    <div className={classes.gradient}>{firstAddress}</div>
-                  </TableCell>
-                  <TableCell className={classes.copyCell}>
-                    <CopyTooltip
-                      text={firstAddress}
-                      className={classes.copyButton}
-                    />
-                  </TableCell>
-                </TableRow>
-                {secondAddress ? (
-                  <TableRow>
-                    <TableCell className={classes.code}>
-                      <div className={classes.gradient}>{secondAddress}</div>
-                    </TableCell>
-                    <TableCell className={classes.copyCell}>
-                      <CopyTooltip
-                        text={secondAddress}
-                        className={classes.copyButton}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ) : null}
-              </TableBody>
-            </Table>
-          </Grid>
-          <Grid item>
-            {numIPAddresses > 2 ? (
+        <AccessTable
+          title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
+          rows={[{ text: firstAddress }, { text: secondAddress }]}
+          footer={
+            numIPAddresses > 2 ? (
               <Typography variant="body2">
                 <HashLink to={`/linodes/${linodeId}/networking#${ipv4TableID}`}>
                   View all IP Addresses
                 </HashLink>
               </Typography>
-            ) : null}
-          </Grid>
-        </Grid>
+            ) : (
+              undefined
+            )
+          }
+          gridProps={{ md: 5 }}
+        />
 
-        <Grid
-          container
-          item
-          md={7}
-          className={classes.accessTableContainer}
-          direction="column"
-        >
-          <Grid item className={classes.columnLabel}>
-            Access
-          </Grid>
-          <Grid item className={classes.accessTableContent}>
-            <Table className={classes.accessTable}>
-              <TableBody>
-                <TableRow>
-                  <th scope="row">SSH Access</th>
+        <AccessTable
+          title="Access"
+          rows={[
+            { heading: 'SSH Access', text: sshLink(ipv4[0]) },
+            {
+              heading: 'LISH Console via SSH',
+              text: lishLink(username, region, linodeLabel)
+            }
+          ]}
+          gridProps={{ md: 7 }}
+        />
+      </Grid>
+    </Grid>
+  );
+});
+
+// =============================================================================
+// AccessTable
+// =============================================================================
+// @todo: Maybe move this component somewhere to its own file? Could potentially
+// be used elsewhere.
+const useAccessTableStyles = makeStyles((theme: Theme) => ({
+  columnLabel: {
+    color: theme.cmrTextColors.headlineStatic,
+    fontFamily: theme.font.bold
+  },
+  accessTableContainer: {
+    flexBasis: '65%'
+  },
+  accessTableContent: {
+    '&.MuiGrid-item': {
+      padding: 0,
+      paddingLeft: theme.spacing()
+    }
+  },
+  accessTable: {
+    tableLayout: 'fixed',
+    '& tr': {
+      height: 32
+    },
+    '& th': {
+      backgroundColor: theme.cmrBGColors.bgAccessHeader,
+      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
+      color: theme.cmrTextColors.textAccessTable,
+      fontSize: '0.875rem',
+      fontWeight: 'bold',
+      lineHeight: 1,
+      padding: theme.spacing(),
+      textAlign: 'left',
+      whiteSpace: 'nowrap',
+      width: 170
+    },
+    '& td': {
+      backgroundColor: theme.cmrBGColors.bgAccessRow,
+      border: 'none',
+      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
+      fontSize: '0.875rem',
+      lineHeight: 1,
+      padding: theme.spacing(),
+      whiteSpace: 'nowrap'
+    }
+  },
+  code: {
+    color: theme.cmrTextColors.textAccessCode,
+    fontFamily: '"SourceCodePro", monospace, sans-serif',
+    position: 'relative'
+  },
+  copyCell: {
+    width: 36,
+    height: 33,
+    backgroundColor: `${theme.cmrBGColors.bgSecondaryButton} !important`,
+    padding: '0px !important',
+    '& svg': {
+      width: 16,
+      height: 16,
+      '& path': {
+        fill: theme.cmrBGColors.bgSecondaryButton
+      }
+    },
+    '& button': {
+      padding: 0
+    },
+    '&:last-child': {
+      paddingRight: theme.spacing()
+    }
+  },
+  copyButton: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    '&:hover': {
+      backgroundColor: 'transparent'
+    }
+  },
+  gradient: {
+    overflowY: 'hidden', // For Edge
+    overflowX: 'auto',
+    paddingRight: 15,
+    '&:after': {
+      content: '""',
+      width: 30,
+      height: '100%',
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      backgroundImage: `linear-gradient(to right,  ${theme.cmrBGColors.bgAccessRowTransparentGradient}, ${theme.cmrBGColors.bgAccessRow});`
+    }
+  }
+}));
+
+interface AccessTableRow {
+  text: string | null;
+  heading?: string;
+}
+
+interface AccessTableProps {
+  title: string;
+  rows: AccessTableRow[];
+  gridProps?: GridProps;
+  footer?: JSX.Element;
+}
+
+export const AccessTable: React.FC<AccessTableProps> = React.memo(props => {
+  const classes = useAccessTableStyles();
+  return (
+    <Grid
+      container
+      item
+      md={6}
+      className={classes.accessTableContainer}
+      direction="column"
+      {...props.gridProps}
+    >
+      <Grid item className={classes.columnLabel}>
+        {props.title}
+      </Grid>
+      <Grid item className={classes.accessTableContent}>
+        <Table className={classes.accessTable}>
+          <TableBody>
+            {props.rows.map(thisRow => {
+              return thisRow.text ? (
+                <TableRow key={thisRow.text}>
+                  {thisRow.heading ? (
+                    <th scope="row">{thisRow.heading}</th>
+                  ) : null}
                   <TableCell className={classes.code}>
-                    <div className={classes.gradient}>{sshLink(ipv4[0])}</div>
+                    <div className={classes.gradient}>{thisRow.text}</div>
                   </TableCell>
                   <TableCell className={classes.copyCell}>
                     <CopyTooltip
-                      text={sshLink(ipv4[0])}
+                      text={thisRow.text}
                       className={classes.copyButton}
                     />
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <th scope="row">LISH Console via SSH</th>
-                  <TableCell className={classes.code}>
-                    <div className={classes.gradient}>
-                      {lishLink(username, region, linodeLabel)}
-                    </div>
-                  </TableCell>
-                  <TableCell className={classes.copyCell}>
-                    <CopyTooltip
-                      text={sshLink(ipv4[0])}
-                      className={classes.copyButton}
-                    />
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Grid>
-        </Grid>
+              ) : null;
+            })}
+          </TableBody>
+        </Table>
+        {props.footer ? <Grid item>{props.footer}</Grid> : null}
       </Grid>
     </Grid>
   );
@@ -678,15 +675,16 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     }
   },
   detailRow: {
+    display: 'flex',
+    alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
-      display: 'flex',
       '&:first-of-type': {
         paddingBottom: theme.spacing(0.5)
       }
     }
   },
   listItem: {
-    display: 'inline-block',
+    display: 'flex',
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
     color: theme.cmrTextColors.tableStatic,
     padding: `0px 10px`,
@@ -699,7 +697,8 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     borderRight: 'none'
   },
   label: {
-    fontFamily: theme.font.bold
+    fontFamily: theme.font.bold,
+    marginRight: 4
   },
   tags: {
     [theme.breakpoints.down('md')]: {
@@ -776,7 +775,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
         <div className={classes.detailRow}>
           {linodePlan && (
             <Typography className={classes.listItem}>
-              <span className={classes.label}>Plan:</span> {linodePlan}
+              <span className={classes.label}>Plan: </span> {linodePlan}
             </Typography>
           )}
           {linodeRegionDisplay && (
