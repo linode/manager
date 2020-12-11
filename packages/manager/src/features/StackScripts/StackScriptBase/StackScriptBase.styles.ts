@@ -85,7 +85,11 @@ const styles = (theme: Theme) =>
     stackscriptPlaceholder: {
       padding: `${theme.spacing(1)}px 0`,
       margin: 0,
-      width: '100%'
+      width: '100%',
+      '& svg': {
+        marginTop: 4,
+        transform: 'scale(0.8)'
+      }
     },
     button: {
       width: 180,

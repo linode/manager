@@ -46,15 +46,12 @@ const styles = (theme: Theme) =>
       }
     },
     icon: {
+      padding: theme.spacing(2),
       '&.animate': {
         animation: '$scaleIn .5s ease-in-out'
       },
-      width: '120px',
-      height: '120px',
-      [theme.breakpoints.up('md')]: {
-        width: '150px',
-        height: '150px'
-      },
+      width: '160px',
+      height: '160px',
       '& .outerCircle': {
         fill: theme.color.absWhite,
         stroke: theme.bg.offWhite
@@ -73,8 +70,11 @@ const styles = (theme: Theme) =>
     },
     entity: {
       borderRadius: '50%',
-      backgroundColor: theme.bg.offWhite,
-      color: theme.color.green
+      backgroundColor: theme.bg.pureWhite,
+      color: theme.color.green,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     title: {
       textAlign: 'center',
@@ -129,12 +129,9 @@ const Placeholder: React.FC<CombinedProps> = props => {
       justify="center"
       className={`${classes.root} ${props.className}`}
     >
-      <Grid item xs={12}>
+      <Grid item xs={12} className={isEntity ? classes.entity : ''}>
         {Icon && (
-          <Icon
-            className={`${classes.icon} ${animate && 'animate'} ${isEntity &&
-              classes.entity}`}
-          />
+          <Icon className={`${classes.icon} ${animate && 'animate'} `} />
         )}
       </Grid>
       <Grid item xs={12}>

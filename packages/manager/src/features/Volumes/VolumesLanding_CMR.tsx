@@ -5,6 +5,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import { makeStyles } from 'src/components/core/styles';
 import Placeholder from 'src/components/Placeholder';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
@@ -142,7 +143,17 @@ const volumeHeaders = [
   }
 ];
 
+const useStyles = makeStyles(() => ({
+  empty: {
+    '& svg': {
+      transform: 'scale(0.75)'
+    }
+  }
+}));
+
 export const VolumesLanding: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const {
     volumesLoading,
     mappedVolumesDataWithLinodes,
@@ -296,6 +307,7 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
         <DocumentTitleSegment segment="Volumes" />
         <Placeholder
           title="Volumes"
+          className={classes.empty}
           icon={VolumeIcon}
           isEntity
           buttonProps={[
