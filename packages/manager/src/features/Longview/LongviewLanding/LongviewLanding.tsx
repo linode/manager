@@ -179,6 +179,8 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
             <SafeTabPanel index={0}>
               <LongviewClients
                 activeSubscription={activeSubscriptionRequestHook.data}
+                handleAddClient={handleAddClient}
+                newClientLoading={newClientLoading}
                 {...props}
               />
             </SafeTabPanel>
