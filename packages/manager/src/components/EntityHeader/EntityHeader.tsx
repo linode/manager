@@ -32,11 +32,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   landing: {
     marginBottom: 0,
-    paddingTop: theme.spacing(),
     paddingBottom: theme.spacing()
   },
   docs: {
     marginRight: theme.spacing()
+  },
+  actions: {
+    marginLeft: theme.spacing(2)
   },
   details: {
     backgroundColor: theme.cmrBGColors.bgPaper,
@@ -128,12 +130,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             xs={12}
             sm={8}
           >
-            {docsLink && (
-              <Grid item className={classes.docs}>
-                <DocumentationButton href={docsLink} />
-              </Grid>
-            )}
-            {actions}
+            {docsLink && <DocumentationButton href={docsLink} />}
+            <div className={classes.actions}>{actions}</div>
           </Grid>
         </Grid>
       )}
