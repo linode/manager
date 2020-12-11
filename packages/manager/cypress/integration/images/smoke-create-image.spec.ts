@@ -1,12 +1,6 @@
 import { makeImageLabel } from '../../support/api/images';
 import { createLinode, deleteLinodeById } from '../../support/api/linodes';
-import {
-  containsClick,
-  containsVisible,
-  fbtClick,
-  getClick
-} from '../../support/helpers';
-import { assertToast } from '../../support/ui/events';
+import { containsClick, fbtClick, getClick } from '../../support/helpers';
 
 describe('create image', () => {
   it('creates first image w/ drawer, and fail because POST is stubbed', () => {

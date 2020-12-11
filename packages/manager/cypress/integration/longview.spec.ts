@@ -1,10 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { createLinode, deleteLinodeById } from '../support/api/linodes';
-import {
-  createClient,
-  deleteAllTestClients,
-  deleteClientById
-} from '../support/api/longview';
+import { createClient, deleteClientById } from '../support/api/longview';
 import { containsVisible, fbtVisible, getVisible } from '../support/helpers';
 import { waitForAppLoad } from '../support/ui/common';
 import strings from '../support/cypresshelpers';
@@ -39,7 +35,13 @@ describe('longview', () => {
             });
             waitForAppLoad('/longview', false);
             getVisible(`[data-testid="${client.id}"]`).within(() => {
-              if (cy.contains('Waiting for data...').should('not.be.visible')) {
+              if (
+                cy
+                  .contains('Waiting for data...', {
+                    timeout: 1000000000
+                  })
+                  .should('not.be.visible')
+              ) {
                 fbtVisible(clientLabel);
                 containsVisible('View details');
                 containsVisible('Swap');
