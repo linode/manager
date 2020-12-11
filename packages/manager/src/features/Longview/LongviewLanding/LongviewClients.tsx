@@ -9,7 +9,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Search from 'src/components/DebouncedSearchTextField';
