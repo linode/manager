@@ -95,6 +95,10 @@ export const NotificationSection: React.FC<Props> = props => {
   const _loading = Boolean(loading); // false if not provided
   const classes = useStyles();
 
+  if (content.length === 0) {
+    return null;
+  }
+
   const innerContent = () => {
     return (
       <ContentBody
