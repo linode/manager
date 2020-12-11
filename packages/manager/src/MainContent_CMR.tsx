@@ -200,7 +200,7 @@ const MainContent: React.FC<CombinedProps> = props => {
   const dbaasContextValue = useDialogContext();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
-  const { account } = useAccountManagement();
+  const { account, _isManagedAccount } = useAccountManagement();
 
   const showFirewalls = isFeatureEnabled(
     'Cloud Firewall',
@@ -213,6 +213,8 @@ const MainContent: React.FC<CombinedProps> = props => {
     Boolean(props.flags.vlans),
     account?.data?.capabilities ?? []
   );
+
+  const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
 
   // Clean up and use the below once we know what the Databases piece will look like for Capabilities. Until then, the feature-based display logic for Databases will rely only on the flag.
   // const showDbaas = isFeatureEnabled(
@@ -402,9 +404,9 @@ const MainContent: React.FC<CombinedProps> = props => {
                                   component={Databases}
                                 />
                               )}
-                              <Redirect exact from="/" to="/linodes" />
+                              <Redirect exact from="/" to={defaultRoot} />
                               {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                              <Redirect from="/dashboard" to="/linodes" />
+                              <Redirect from="/dashboard" to={defaultRoot} />
                               <Route component={NotFound} />
                             </Switch>
                           </React.Suspense>

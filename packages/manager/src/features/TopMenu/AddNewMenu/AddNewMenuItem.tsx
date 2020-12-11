@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
       paddingTop: theme.spacing(),
       paddingBottom: theme.spacing(),
       borderBottom: `1px solid ${theme.palette.divider}`,
-      maxWidth: '350px',
+      maxWidth: '370px',
       display: 'flex',
       alignItems: 'center',
       transition: 'background-color .2s ease-in-out',

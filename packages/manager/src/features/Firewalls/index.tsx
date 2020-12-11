@@ -30,7 +30,7 @@ const Firewall: React.FC<CombinedProps> = props => {
         <Switch>
           <Route
             exact
-            path={`${path}`}
+            path={`${path}(/create)?`}
             component={flags.cmr ? FirewallLanding_CMR : FirewallLanding}
           />
           <Route path={`${path}/:id`} component={FirewallDetail} />

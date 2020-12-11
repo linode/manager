@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import {
+  RouteComponentProps,
+  useHistory,
+  useRouteMatch
+} from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
@@ -96,6 +100,22 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     toggleAddFirewallDrawer
   ]);
 
+  // On-the-fly route matching so this component can open the drawer itself.
+  const createFirewallRouteMatch = Boolean(useRouteMatch('/firewalls/create'));
+
+  React.useEffect(() => {
+    if (createFirewallRouteMatch) {
+      openDrawer();
+    }
+  }, [createFirewallRouteMatch, openDrawer]);
+
+  const { replace } = useHistory();
+
+  const closeDrawer = React.useCallback(() => {
+    toggleAddFirewallDrawer(false);
+    replace('/firewalls');
+  }, [toggleAddFirewallDrawer, replace]);
+
   const handlers: FirewallHandlers = {
     triggerEnableFirewall: handleOpenEnableFirewallModal,
     triggerDisableFirewall: handleOpenDisableFirewallModal,
@@ -140,6 +160,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
       <LandingHeader
         title="Firewalls"
         entity="Firewall"
+        breadcrumbProps={{ pathname: '/firewalls' }}
         onAddNew={openDrawer}
         // This guide is not yet published and will 404
         // It will be published prior to any public beta
@@ -154,7 +175,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
       />
       <AddFirewallDrawer
         open={addFirewallDrawerOpen}
-        onClose={() => toggleAddFirewallDrawer(false)}
+        onClose={closeDrawer}
         onSubmit={props.createFirewall}
         title="Add a Firewall"
       />

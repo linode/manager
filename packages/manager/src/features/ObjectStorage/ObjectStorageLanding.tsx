@@ -42,6 +42,17 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
 
   useReduxLoad(['clusters']);
 
+  // @todo: dispatch bucket drawer open action
+
+  // // On-the-fly route matching so this component can open the drawer itself.
+  // const createBucketRouteMatch = Boolean(useRouteMatch('/firewalls/create'));
+
+  // React.useEffect(() => {
+  //   if (createBucketRouteMatch) {
+  //     openDrawer();
+  //   }
+  // }, [createBucketRouteMatch, openDrawer]);
+
   const { objectStorageClusters } = useObjectStorageClusters();
   const {
     objectStorageBuckets,

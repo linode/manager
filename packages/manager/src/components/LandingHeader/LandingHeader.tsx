@@ -5,6 +5,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import EntityHeader, {
   HeaderProps
 } from 'src/components/EntityHeader/EntityHeader';
+import { BreadcrumbProps } from '../Breadcrumb';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -28,6 +29,7 @@ interface Props extends Omit<HeaderProps, 'actions'> {
   entity: string;
   createButtonWidth?: number;
   createButtonText?: string;
+  breadcrumbProps?: BreadcrumbProps;
 }
 
 /**
@@ -46,7 +48,8 @@ export const LandingHeader: React.FC<Props> = props => {
     extraActions,
     alwaysShowActions,
     createButtonWidth,
-    createButtonText
+    createButtonText,
+    breadcrumbProps
   } = props;
 
   const defaultCreateButtonWidth = 152;
@@ -97,7 +100,13 @@ export const LandingHeader: React.FC<Props> = props => {
   );
 
   return (
-    <EntityHeader isLanding actions={actions} docsLink={docsLink} {...props} />
+    <EntityHeader
+      isLanding
+      actions={actions}
+      docsLink={docsLink}
+      breadcrumbProps={breadcrumbProps}
+      {...props}
+    />
   );
 };
 

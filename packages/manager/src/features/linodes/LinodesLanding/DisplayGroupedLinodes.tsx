@@ -68,7 +68,8 @@ const styles = (theme: Theme) =>
       }
     },
     tagHeader: {
-      marginBottom: 2
+      marginBottom: 2,
+      marginLeft: theme.spacing()
     },
     tagHeaderOuter: {},
     paginationCell: {
