@@ -50,7 +50,6 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('xs')]: {
         display: 'flex',
         flexBasis: '100%',
-        justifyContent: 'flex-end',
         '&.MuiGrid-item': {
           paddingTop: 0
         }
@@ -113,7 +112,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
       justify="space-between"
       data-qa-linode={linode.label}
     >
-      <Grid item className="px0">
+      <Grid item className="p0">
         <Breadcrumb
           pathname={props.location.pathname}
           firstAndLastOnly
@@ -132,7 +131,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
           {...breadcrumbProps}
         />
       </Grid>
-      <Grid item className={`px0 ${classes.docs}`}>
+      <Grid item className={`p0 ${classes.docs}`}>
         <DocumentationButton href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/" />
       </Grid>
     </Grid>

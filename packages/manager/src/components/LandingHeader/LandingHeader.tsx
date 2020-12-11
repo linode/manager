@@ -8,7 +8,6 @@ import { BreadcrumbProps } from '../Breadcrumb';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
-    height: 34,
     marginLeft: theme.spacing(),
     padding: 0
   }
@@ -19,7 +18,7 @@ interface Props extends Omit<HeaderProps, 'actions'> {
   body?: JSX.Element;
   docsLink?: string;
   onAddNew?: () => void;
-  entity: string;
+  entity?: string;
   createButtonWidth?: number;
   createButtonText?: string;
   breadcrumbProps?: BreadcrumbProps;
@@ -46,7 +45,7 @@ export const LandingHeader: React.FC<Props> = props => {
 
   const defaultCreateButtonWidth = 152;
 
-  const startsWithVowel = /^[aeiou]/i.test(entity);
+  const startsWithVowel = entity && /^[aeiou]/i.test(entity);
 
   const actions = React.useMemo(
     () => (
@@ -81,7 +80,7 @@ export const LandingHeader: React.FC<Props> = props => {
   return (
     <EntityHeader
       isLanding
-      actions={actions}
+      actions={extraActions || onAddNew ? actions : undefined}
       docsLink={docsLink}
       breadcrumbProps={breadcrumbProps}
       {...props}
