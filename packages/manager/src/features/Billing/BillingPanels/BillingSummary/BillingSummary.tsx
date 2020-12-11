@@ -1,5 +1,6 @@
 import { ActivePromotion } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import CreditCard from 'src/assets/icons/credit-card.svg';
 import Info from 'src/assets/icons/info.svg';
 import InvoiceIcon from 'src/assets/icons/invoice.svg';
@@ -137,6 +138,13 @@ interface Props {
 export const BillingSummary: React.FC<Props> = props => {
   const { promotion, balanceUninvoiced, balance, mostRecentInvoiceId } = props;
 
+  // On-the-fly route matching so this component can open the drawer itself.
+  const makePaymentRouteMatch = Boolean(
+    useRouteMatch('/account/billing/make-payment')
+  );
+
+  const { replace } = useHistory();
+
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
   );
@@ -146,10 +154,16 @@ export const BillingSummary: React.FC<Props> = props => {
     []
   );
 
-  const closePaymentDrawer = React.useCallback(
-    () => setPaymentDrawerOpen(false),
-    []
-  );
+  const closePaymentDrawer = React.useCallback(() => {
+    setPaymentDrawerOpen(false);
+    replace('/account/billing');
+  }, [replace]);
+
+  React.useEffect(() => {
+    if (makePaymentRouteMatch) {
+      openPaymentDrawer();
+    }
+  }, [makePaymentRouteMatch, openPaymentDrawer]);
 
   const classes = useStyles();
 

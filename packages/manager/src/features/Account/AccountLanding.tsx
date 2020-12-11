@@ -60,7 +60,7 @@ const AccountLanding: React.FC<Props> = props => {
       <DocumentTitleSegment segment="Account Settings" />
       <TaxBanner location={location} marginBottom={24} />
       <Breadcrumb
-        pathname={location.pathname}
+        pathname={'/Account'}
         labelTitle="Account"
         removeCrumbX={1}
         data-qa-profile-header
