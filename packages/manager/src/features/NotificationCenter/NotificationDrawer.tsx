@@ -1,19 +1,20 @@
 import * as React from 'react';
 import Clock from 'src/assets/icons/clock.svg';
+import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
+import Link from 'src/components/Link';
+import useAccount from 'src/hooks/useAccount';
+import usePreferences from 'src/hooks/usePreferences';
 import Community from './Community';
 import Maintenance from './Maintenance';
+import { NotificationData } from './NotificationData/useNotificationData';
+import { ContentRow, NotificationItem } from './NotificationSection';
 import OpenSupportTickets from './OpenSupportTickets';
 import PastDue from './PastDue';
 import PendingActions from './PendingActions';
-import useAccount from 'src/hooks/useAccount';
-import usePreferences from 'src/hooks/usePreferences';
-import IconButton from 'src/components/core/IconButton';
-import { NotificationData } from './NotificationData/useNotificationData';
-import { ContentRow, NotificationItem } from './NotificationSection';
-import Tooltip from 'src/components/core/Tooltip';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -105,9 +106,16 @@ export const NotificationDrawer: React.FC<Props> = props => {
       </div>
 
       {chronologicalView ? (
-        <ChronologicalView notifications={chronologicalNotificationList} />
+        <ChronologicalView
+          notifications={chronologicalNotificationList}
+          onClose={onClose}
+        />
       ) : (
         <div className={classes.notificationSectionContainer}>
+          {chronologicalNotificationList.length === 0 ? (
+            // If this list is empty there's nothing to show regardless of selected view.
+            <EmptyMessage onClose={onClose} />
+          ) : null}
           <PendingActions pendingActions={pendingActions} onClose={onClose} />
           <Maintenance statusNotifications={statusNotifications} />
           <OpenSupportTickets
@@ -129,13 +137,25 @@ export const NotificationDrawer: React.FC<Props> = props => {
 
 export default React.memo(NotificationDrawer);
 
+const EmptyMessage: React.FC<{ onClose: () => void }> = React.memo(props => {
+  return (
+    <Typography>
+      No notifications to display.{' '}
+      <Link to="/events" onClick={props.onClose}>
+        View event history.
+      </Link>
+    </Typography>
+  );
+});
+
 interface ChronoProps {
   notifications: NotificationItem[];
+  onClose: () => void;
 }
 const ChronologicalView: React.FC<ChronoProps> = props => {
-  const { notifications } = props;
+  const { notifications, onClose } = props;
   if (notifications.length === 0) {
-    return <Typography>No notifications to display.</Typography>;
+    return <EmptyMessage onClose={onClose} />;
   }
   return (
     <>
