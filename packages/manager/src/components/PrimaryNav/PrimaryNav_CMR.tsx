@@ -1,20 +1,22 @@
+import Account from '@material-ui/icons/AccountCircle';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
-import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Domain from 'src/assets/icons/entityIcons/domain.svg';
 import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
 import Image from 'src/assets/icons/entityIcons/image.svg';
 import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
+import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import VLAN from 'src/assets/icons/entityIcons/vlan.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import Longview from 'src/assets/icons/longview.svg';
-import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
+import HelpIcon from 'src/assets/primary-nav-help.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -43,7 +45,9 @@ type NavEntity =
   | 'Account'
   | 'Dashboard'
   | 'StackScripts'
-  | 'Databases';
+  | 'Databases'
+  | 'Account'
+  | 'Help & Support';
 
 interface PrimaryLink {
   display: NavEntity;
@@ -214,6 +218,18 @@ export const PrimaryNav: React.FC<Props> = props => {
           href: '/linodes/create?type=One-Click',
           attr: { 'data-qa-one-click-nav-btn': true },
           icon: <OCA />
+        }
+      ],
+      [
+        {
+          display: 'Account',
+          href: '/account',
+          icon: <Account />
+        },
+        {
+          display: 'Help & Support',
+          href: '/support',
+          icon: <HelpIcon />
         }
       ]
     ],
