@@ -55,6 +55,9 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
 
   const { accountSettings, createLongviewClient } = props;
 
+  const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
+    false
+  );
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = React.useState<
     boolean
   >(false);
@@ -82,8 +85,10 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
   };
 
   const handleAddClient = () => {
+    setNewClientLoading(true);
     createLongviewClient()
       .then(_ => {
+        setNewClientLoading(false);
         if (props.history.location.pathname !== '/longview/clients') {
           props.history.push('/longview/clients');
         }
@@ -101,6 +106,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
             )[0].reason,
             { variant: 'error' }
           );
+          setNewClientLoading(false);
         }
       });
   };
@@ -137,6 +143,9 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
             <LandingHeader
               title="Longview"
               entity="Client"
+              createButtonText={
+                newClientLoading ? 'Loading...' : 'Create a Client'
+              }
               docsLink="https://www.linode.com/docs/platform/longview/longview/"
               onAddNew={handleAddClient}
               removeCrumbX={1}
@@ -161,6 +170,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
           0
         )}
         onChange={navToURL}
+        style={{ marginTop: 0 }}
       >
         <TabLinkList tabs={tabs} />
 

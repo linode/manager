@@ -295,24 +295,6 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
             hideLabel
           />
         </Grid>
-        {!flags.cmr && (
-          <Grid
-            item
-            className={`py0 ${classes.addNew} ${flags.cmr &&
-              classes.cmrSpacingAddNew}`}
-          >
-            <AddNewLink
-              onClick={handleAddClient}
-              label={newClientLoading ? 'Loading...' : 'Add a Client'}
-              disabled={!userCanCreateClient}
-              disabledReason={
-                userCanCreateClient
-                  ? ''
-                  : 'You are not authorized to create Longview Clients. Please contact an account administrator.'
-              }
-            />
-          </Grid>
-        )}
       </Grid>
       <LongviewList
         filteredData={sortedList}
