@@ -81,7 +81,7 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = props => {
           buttonType="primary"
           onClick={handleSubmit}
           loading={submitting}
-          disabled={disabled}
+          disabled={disabled || value === initialValue}
           tooltipText={tooltipText ? tooltipText : undefined}
         >
           Save
