@@ -82,13 +82,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
     transition: 'margin-left .1s linear',
     [theme.breakpoints.up('md')]: {
-      marginLeft: 200
+      marginLeft: 190
     }
   },
   fullWidthContent: {
     marginLeft: 0,
     [theme.breakpoints.up('md')]: {
-      marginLeft: theme.spacing(7) + 36
+      marginLeft: 60
     }
   },
   hidden: {

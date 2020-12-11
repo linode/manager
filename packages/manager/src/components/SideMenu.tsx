@@ -38,7 +38,7 @@ const styles = (theme: Theme) =>
     },
     menuPaperCMR: {
       height: '100%',
-      width: 200,
+      width: 190,
       backgroundColor: theme.bg.primaryNavPaper,
       borderRight: 'none',
       left: 'inherit',
@@ -53,9 +53,9 @@ const styles = (theme: Theme) =>
       transform: 'none'
     },
     collapsedDesktopMenu: {
-      width: theme.spacing(7) + 36,
+      width: 60,
       '&:hover': {
-        width: theme.spacing(9) + 150,
+        width: 190,
         '& .logoLetters, & .primaryNavLink': {
           opacity: 1
         }
@@ -85,8 +85,6 @@ class SideMenu extends React.Component<CombinedProps> {
       flags
     } = this.props;
 
-    const PrimaryNavComponent = flags.cmr ? PrimaryNav_CMR : PrimaryNav;
-
     return (
       <React.Fragment>
         <Hidden mdUp>
@@ -101,12 +99,20 @@ class SideMenu extends React.Component<CombinedProps> {
               keepMounted: true // Better open performance on mobile.
             }}
           >
-            <PrimaryNavComponent
-              closeMenu={closeMenu}
-              toggleTheme={toggleTheme}
-              toggleSpacing={toggleSpacing}
-              isCollapsed={false}
-            />
+            {flags.cmr ? (
+              <PrimaryNav_CMR
+                closeMenu={closeMenu}
+                toggleSpacing={toggleSpacing}
+                isCollapsed={false}
+              />
+            ) : (
+              <PrimaryNav
+                closeMenu={closeMenu}
+                toggleTheme={toggleTheme}
+                toggleSpacing={toggleSpacing}
+                isCollapsed={false}
+              />
+            )}
           </Drawer>
         </Hidden>
         <Hidden smDown implementation="css">
@@ -121,12 +127,20 @@ class SideMenu extends React.Component<CombinedProps> {
             }}
             className={classes.desktopMenu}
           >
-            <PrimaryNavComponent
-              closeMenu={closeMenu}
-              toggleTheme={toggleTheme}
-              toggleSpacing={toggleSpacing}
-              isCollapsed={desktopOpen}
-            />
+            {flags.cmr ? (
+              <PrimaryNav_CMR
+                closeMenu={closeMenu}
+                toggleSpacing={toggleSpacing}
+                isCollapsed={desktopOpen}
+              />
+            ) : (
+              <PrimaryNav
+                closeMenu={closeMenu}
+                toggleTheme={toggleTheme}
+                toggleSpacing={toggleSpacing}
+                isCollapsed={desktopOpen}
+              />
+            )}
           </Drawer>
         </Hidden>
       </React.Fragment>
