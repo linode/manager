@@ -1,11 +1,10 @@
 import { Profile, TPAProvider } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { dec, lensPath, path, remove, set } from 'ramda';
+import { dec, equals, lensPath, path, remove, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import Paper from 'src/components/core/Paper';
@@ -39,7 +38,8 @@ type ClassNames =
   | 'keyTextarea'
   | 'image'
   | 'addNew'
-  | 'remove';
+  | 'remove'
+  | 'button';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -61,14 +61,11 @@ const styles = (theme: Theme) =>
       flexWrap: 'wrap'
     },
     addNew: {
+      ...theme.applyLinkStyles,
       marginTop: theme.spacing(2)
     },
     sshWrap: {
-      margin: `${theme.spacing(1)}px 0`,
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-        alignItems: 'flex-end'
-      }
+      margin: `${theme.spacing(1)}px 0`
     },
     keyTextarea: {
       [theme.breakpoints.up('md')]: {
@@ -76,10 +73,11 @@ const styles = (theme: Theme) =>
       }
     },
     remove: {
-      margin: '8px 0 0 -26px',
-      [theme.breakpoints.up('md')]: {
-        margin: `0 0 ${theme.spacing(1) / 2}px 0`
-      }
+      ...theme.applyLinkStyles
+    },
+    button: {
+      margin: 0,
+      padding: 0
     }
   });
 
@@ -161,7 +159,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="LISH Console Settings " />
+        <DocumentTitleSegment segment="LISH Console Settings" />
         <Paper className={classes.root}>
           <Typography variant="h2" className={classes.title} data-qa-title>
             LISH Console Settings
@@ -200,7 +198,6 @@ class LishSettings extends React.Component<CombinedProps, State> {
                     label="SSH Public Key"
                     onChange={this.onPublicKeyChange(idx)}
                     value={authorizedKeys[idx] || ''}
-                    helperText="Place your SSH public keys here for use with Lish console access."
                     multiline
                     rows="4"
                     className={classes.keyTextarea}
@@ -208,28 +205,38 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   />
                   {((idx === 0 && typeof authorizedKeys[0] !== 'undefined') ||
                     idx > 0) && (
-                    <Button
-                      buttonType="remove"
+                    <button
                       onClick={this.onPublicKeyRemove(idx)}
                       className={classes.remove}
                       data-qa-remove
-                    />
+                    >
+                      Remove
+                    </button>
                   )}
                 </div>
               ))}
-              <AddNewLink
+              <Typography style={{ paddingTop: 2 }}>
+                Place your SSH public keys here for use with Lish console
+                access.
+              </Typography>
+              <button
                 onClick={this.addSSHPublicKeyField}
-                label="Add SSH Public Key"
-                left
                 className={classes.addNew}
-              />
+              >
+                Add SSH Public Key
+              </button>
             </React.Fragment>
           )}
           <ActionsPanel>
             <Button
+              className={classes.button}
               buttonType="primary"
               onClick={this.onSubmit}
               loading={this.state.submitting}
+              disabled={
+                this.state.lishAuthMethod === this.props.lishAuthMethod &&
+                equals(this.state.authorizedKeys, this.props.authorizedKeys)
+              }
               data-qa-save
             >
               Save

@@ -255,7 +255,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
           placeholder={
             searchActive
               ? 'Search'
-              : 'Search for Linodes, Volumes, NodeBalancers, Domains, Tags...'
+              : 'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
           }
           components={{ Control, Option }}
           styles={selectStyles}

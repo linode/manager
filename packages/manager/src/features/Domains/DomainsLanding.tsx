@@ -4,14 +4,13 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import DomainIcon from 'src/assets/addnewmenu/domain.svg';
+import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import DeletionDialog from 'src/components/DeletionDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
   createStyles,
@@ -20,6 +19,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DeletionDialog from 'src/components/DeletionDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import EntityTable, {
@@ -30,6 +30,7 @@ import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LandingHeader from 'src/components/LandingHeader';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
@@ -581,35 +582,6 @@ const RenderError: React.FC<{}> = () => {
   );
 };
 
-const EmptyCopy = () => (
-  <>
-    <Typography variant="subtitle1">
-      Create a Domain, add Domain records, import zones and domains.
-    </Typography>
-    <Typography variant="subtitle1">
-      <a
-        href="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        Find out how to setup your domains associated with your Linodes
-      </a>
-      &nbsp;or&nbsp;
-      <a
-        href="https://www.linode.com/docs/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        visit our guides and tutorials.
-      </a>
-    </Typography>
-  </>
-);
-
 const RenderEmpty: React.FC<{
   onCreateDomain: () => void;
   onImportZone: () => void;
@@ -618,8 +590,8 @@ const RenderEmpty: React.FC<{
     <React.Fragment>
       <DocumentTitleSegment segment="Domains" />
       <Placeholder
-        title="Manage your Domains"
-        copy={<EmptyCopy />}
+        title="Domains"
+        isEntity
         icon={DomainIcon}
         buttonProps={[
           {
@@ -631,7 +603,20 @@ const RenderEmpty: React.FC<{
             children: 'Import a Zone'
           }
         ]}
-      />
+      >
+        <Typography variant="subtitle1">
+          Create a Domain, add Domain records, import zones and domains.
+        </Typography>
+        <Typography variant="subtitle1">
+          <Link to="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/">
+            Get help managing your Domains
+          </Link>
+          &nbsp;or&nbsp;
+          <Link to="https://www.linode.com/docs/">
+            visit our guides and tutorials.
+          </Link>
+        </Typography>
+      </Placeholder>
     </React.Fragment>
   );
 };

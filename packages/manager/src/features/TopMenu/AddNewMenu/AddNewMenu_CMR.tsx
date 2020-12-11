@@ -13,11 +13,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import DatabaseIcon from 'src/assets/icons/entityIcons/bucket.svg';
+import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VLANIcon from 'src/assets/icons/entityIcons/vlan.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
@@ -109,8 +110,8 @@ const styles = (theme: Theme) =>
         }
       },
       '& svg': {
-        width: 21,
-        height: 21
+        width: 20,
+        height: 20
       }
     },
     menuItemList: {
@@ -145,9 +146,16 @@ const styled = withStyles(styles);
 class AddNewMenu extends React.Component<CombinedProps> {
   render() {
     const { accountCapabilities, classes, flags } = this.props;
+
     const showVlans = isFeatureEnabled(
       'Vlans',
       Boolean(flags.vlans),
+      accountCapabilities ?? []
+    );
+
+    const showFirewalls = isFeatureEnabled(
+      'Cloud Firewall',
+      Boolean(flags.firewalls),
       accountCapabilities ?? []
     );
 
@@ -212,6 +220,19 @@ class AddNewMenu extends React.Component<CombinedProps> {
                           ItemIcon={NodebalancerIcon}
                         />
                       </MenuLink>
+                      {showFirewalls ? (
+                        <MenuLink
+                          as={Link}
+                          to="/firewalls/create"
+                          className={classes.menuItemLink}
+                        >
+                          <AddNewMenuItem
+                            title="Firewalls"
+                            body="Control network access to your Linodes"
+                            ItemIcon={FirewallIcon}
+                          />
+                        </MenuLink>
+                      ) : null}
                       <MenuLink
                         as={Link}
                         to="/domains/create"
@@ -234,18 +255,17 @@ class AddNewMenu extends React.Component<CombinedProps> {
                           ItemIcon={KubernetesIcon}
                         />
                       </MenuLink>
-                      {flags.databases && (
-                        <MenuItem
-                          onSelect={dbaas.open}
-                          className={classes.menuItemLink}
-                        >
-                          <AddNewMenuItem
-                            title="Database"
-                            body="Cloud-based MySQL databases."
-                            ItemIcon={DatabaseIcon} // to be replaced with database icon
-                          />
-                        </MenuItem>
-                      )}
+                      <MenuLink
+                        as={Link}
+                        to="/object-storage/buckets/create"
+                        className={classes.menuItemLink}
+                      >
+                        <AddNewMenuItem
+                          title="Bucket"
+                          body="S3-compatible object storage "
+                          ItemIcon={BucketIcon} // to be replaced with database icon
+                        />
+                      </MenuLink>
                       <MenuLink
                         as={Link}
                         to="/linodes/create?type=One-Click"
@@ -253,7 +273,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       >
                         <AddNewMenuItem
                           title="Marketplace"
-                          body="Deploy applications with ease."
+                          body="Deploy applications with ease"
                           ItemIcon={OneClickIcon}
                           attr={{ 'data-qa-one-click-add-new': true }}
                         />
