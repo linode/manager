@@ -113,7 +113,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     <>
       {isLanding && (
         <Grid container item className={`${classes.root} ${classes.landing}`}>
-          <Grid container item xs={12} sm={4}>
+          <Grid container item xs={actions ? 3 : 8}>
             <Breadcrumb
               labelTitle={labelTitle}
               pathname={location.pathname}
@@ -127,8 +127,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             alignItems="center"
             justify="flex-end"
             wrap="nowrap"
-            xs={12}
-            sm={8}
+            xs={actions ? 9 : 4}
           >
             {docsLink && <DocumentationButton href={docsLink} />}
             <div className={classes.actions}>{actions}</div>

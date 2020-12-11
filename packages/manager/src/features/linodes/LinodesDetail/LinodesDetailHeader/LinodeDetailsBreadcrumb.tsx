@@ -4,12 +4,6 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Grid from 'src/components/Grid';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -22,41 +16,6 @@ import withEditableLabelState, {
   EditableLabelProps
 } from './editableLabelState';
 
-type ClassNames = 'breadcrumb' | 'controls' | 'launchButton' | 'docs';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    controls: {
-      position: 'relative',
-      marginTop: 9 - theme.spacing(1) / 2, // 4
-      [theme.breakpoints.down('sm')]: {
-        margin: 0,
-        left: -8,
-        display: 'flex',
-        flexBasis: '100%'
-      }
-    },
-    launchButton: {
-      lineHeight: 1,
-      '&:hover': {
-        backgroundColor: 'transparent',
-        textDecoration: 'underline'
-      },
-      '&:focus > span:first-child': {
-        outline: '1px dotted #999'
-      }
-    },
-    docs: {
-      [theme.breakpoints.down('xs')]: {
-        display: 'flex',
-        flexBasis: '100%',
-        '&.MuiGrid-item': {
-          paddingTop: 0
-        }
-      }
-    }
-  });
-
 interface Props {
   breadcrumbProps?: Partial<BreadcrumbProps>;
 }
@@ -64,12 +23,10 @@ interface Props {
 type CombinedProps = Props &
   LinodeDetailContext &
   EditableLabelProps &
-  RouteComponentProps<{}> &
-  WithStyles<ClassNames>;
+  RouteComponentProps<{}>;
 
 const LinodeControls: React.FC<CombinedProps> = props => {
   const {
-    classes,
     linode,
     updateLinode,
     editableLabelError,
@@ -131,14 +88,12 @@ const LinodeControls: React.FC<CombinedProps> = props => {
           {...breadcrumbProps}
         />
       </Grid>
-      <Grid item className={`p0 ${classes.docs}`}>
+      <Grid item className="p0">
         <DocumentationButton href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/" />
       </Grid>
     </Grid>
   );
 };
-
-const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   withEditableLabelState,
@@ -147,8 +102,7 @@ const enhanced = compose<CombinedProps, Props>(
     linode,
     updateLinode,
     configs: linode._configs
-  })),
-  styled
+  }))
 );
 
 export default enhanced(LinodeControls);
