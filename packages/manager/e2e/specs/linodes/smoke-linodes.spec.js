@@ -22,7 +22,7 @@ describe('List Linodes Suite', () => {
     const expectedOptions = [
       'Reboot',
       'Power Off',
-      'Launch Console',
+      'LISH Console',
       'Clone',
       'Resize',
       'View Backups',
@@ -98,9 +98,7 @@ describe('List Linodes Suite', () => {
     it('should display  console button', () => {
       expect(ListLinodes.launchConsole.isDisplayed())
         .withContext(
-          `"${ListLinodes.launchConsole.selector}" selector ${
-            assertLog.displayed
-          }`
+          `"${ListLinodes.launchConsole.selector}" selector ${assertLog.displayed}`
         )
         .toBe(true);
     });
@@ -108,9 +106,7 @@ describe('List Linodes Suite', () => {
     it('should display reboot button', () => {
       expect(ListLinodes.rebootButton.isDisplayed())
         .withContext(
-          `"${ListLinodes.rebootButton.selector}" selector ${
-            assertLog.displayed
-          }`
+          `"${ListLinodes.rebootButton.selector}" selector ${assertLog.displayed}`
         )
         .toBe(true);
     });
