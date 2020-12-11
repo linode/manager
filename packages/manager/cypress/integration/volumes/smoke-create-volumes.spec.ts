@@ -3,11 +3,17 @@ import {
   makeVolumeLabel,
   deleteAllTestVolumes,
   clickVolumeActionMenu,
-  createVolume
+  createVolume,
+  deleteVolumeById
 } from '../../support/api/volumes';
 import { assertToast } from '../../support/ui/events';
-import { createLinode, deleteAllTestLinodes } from '../../support/api/linodes';
+import {
+  createLinode,
+  deleteAllTestLinodes,
+  deleteLinodeById
+} from '../../support/api/linodes';
 import { selectRegionString } from '../../support/ui/constants';
+import { containsVisible } from '../../support/helpers';
 
 const urlExtension = '/volumes/create';
 const tag = 'cy-test';
@@ -59,12 +65,12 @@ const createBasicVolume = (linodeLabel?: string) => {
 };
 
 const validateBasicVolume = (volLabel: string, volId: string) => {
-  cy.findByText('Volume Configuration').should('be.visible');
+  containsVisible('Volume Configuration');
   cy.findByDisplayValue(`mkdir "/mnt/${volLabel}"`);
   cy.contains('Close')
     .should('be.visible')
     .click();
-  assertToast(`Volume ${volLabel} successfully created.`);
+  // assertToast(`Volume ${volLabel} successfully created.`);
   cy.findByText(volLabel).should('be.visible');
   cy.get(`[data-qa-volume-cell="${volId}"]`).within(() => {
     cy.findByText(region).should('be.visible');
@@ -91,14 +97,16 @@ describe('volumes', () => {
       const linodeId = linode.id;
       const linodeLabel = linode.label;
       createVolume(linodeId).then(volume => {
+        const volumeId = volume.id;
         cy.server();
         cy.route({
           method: 'POST',
           url: '*/volumes/' + volume.id + '/detach'
         }).as('volumeDetached');
         const volumeLabel = volume.label;
-        cy.findByText(linodeLabel).should('be.visible');
-        cy.findByText(volumeLabel).should('be.visible');
+        cy.reload();
+        containsVisible(linodeLabel);
+        containsVisible(volumeLabel);
         clickVolumeActionMenu(volume.label);
         clickDetach();
         cy.findByText(
@@ -109,6 +117,8 @@ describe('volumes', () => {
           .its('status')
           .should('eq', 200);
         assertToast('Volume detachment started', 2);
+        deleteLinodeById(linodeId);
+        deleteVolumeById(volumeId);
         deleteAllTestLinodes();
         deleteAllTestVolumes();
       });
