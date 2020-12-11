@@ -38,7 +38,13 @@ import BucketDetailsDrawer from './BucketDetailsDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing()
+  },
+  empty: {
+    '& svg': {
+      marginTop: theme.spacing(1.5),
+      transform: 'scale(0.8)'
+    }
   }
 }));
 
@@ -306,11 +312,14 @@ const RenderError: React.FC<{}> = () => {
 const RenderEmpty: React.FC<{
   onClick: () => void;
 }> = props => {
+  const classes = useStyles();
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
       <Placeholder
         title="Object Storage"
+        className={classes.empty}
         isEntity
         icon={BucketIcon}
         renderAsSecondary
