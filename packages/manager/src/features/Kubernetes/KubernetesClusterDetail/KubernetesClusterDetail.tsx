@@ -293,13 +293,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
-      <Grid
-        container
-        className="m0"
-        alignItems="center"
-        justify="space-between"
-        wrap="nowrap"
-      >
+      <Grid container alignItems="center" justify="space-between" wrap="nowrap">
         <Grid item className="p0">
           <Breadcrumb
             onEditHandlers={{
