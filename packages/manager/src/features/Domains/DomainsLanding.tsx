@@ -102,8 +102,7 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(2) - 8
     },
     importButton: {
-      paddingTop: 5,
-      paddingBottom: 5,
+      marginLeft: -theme.spacing(),
       whiteSpace: 'nowrap'
     }
   });
@@ -463,7 +462,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         Import a Zone
                       </Button>
                     }
-                    alwaysShowActions
                     entity="Domain"
                     onAddNew={this.navigateToCreate}
                     docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
