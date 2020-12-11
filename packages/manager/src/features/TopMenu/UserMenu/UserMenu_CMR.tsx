@@ -142,7 +142,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       border: 'none',
       padding: 0,
       paddingBottom: theme.spacing(1.5),
-      width: 330
+      width: 300
     }
   },
   inlineUserName: {
@@ -152,7 +152,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuHeader: {
     borderBottom: '1px solid #9ea4ae',
     color: theme.cmrTextColors.headlineStatic,
-    fontSize: '.875rem',
+    fontSize: '.75rem',
     letterSpacing: 1.875,
     marginBottom: theme.spacing(),
     marginLeft: theme.spacing(3),
@@ -161,6 +161,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'uppercase'
   },
   profileWrapper: {
+    marginBottom: theme.spacing(2),
     maxHeight: 200,
     width: '100%',
     '& > div': {
@@ -237,12 +238,12 @@ export const UserMenu: React.FC<{}> = () => {
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
       {
-        display: 'Billing and Contact Information',
+        display: 'Billing & Contact Information',
         href: '/account/billing'
       },
       // Restricted users can't view the Users tab regardless of their grants
       {
-        display: 'Users and Grants',
+        display: 'Users & Grants',
         href: '/account/users',
         hide: _isRestrictedUser
       },
