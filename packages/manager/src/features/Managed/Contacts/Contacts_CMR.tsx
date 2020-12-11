@@ -154,7 +154,7 @@ const Contacts: React.FC<CombinedProps> = props => {
                   setContactDrawerMode('create');
                   contactDrawer.open();
                 }}
-                label="Add a Contact..."
+                label="Add a Contact"
               />
             </Grid>
           </Grid>

@@ -85,34 +85,38 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           </TableSortCell>
         ) : null}
         {isVLAN ? null : (
-          <Hidden xsDown>
-            <TableSortCell
-              label="ipv4[0]" // we want to sort by the first ipv4
-              active={isActive('ipv4[0]')}
-              handleClick={handleOrderChange}
-              direction={order}
-            >
-              IP Address
-            </TableSortCell>
-            <TableSortCell
-              label="region"
-              direction={order}
-              active={isActive('region')}
-              handleClick={handleOrderChange}
-              data-qa-sort-region={order}
-            >
-              Region
-            </TableSortCell>
-            <TableSortCell
-              noWrap
-              label="backups:last_successful"
-              direction={order}
-              active={isActive('backups:last_successful')}
-              handleClick={handleOrderChange}
-            >
-              Last Backup
-            </TableSortCell>
-          </Hidden>
+          <>
+            <Hidden xsDown>
+              <TableSortCell
+                label="ipv4[0]" // we want to sort by the first ipv4
+                active={isActive('ipv4[0]')}
+                handleClick={handleOrderChange}
+                direction={order}
+              >
+                IP Address
+              </TableSortCell>
+              <TableSortCell
+                label="region"
+                direction={order}
+                active={isActive('region')}
+                handleClick={handleOrderChange}
+                data-qa-sort-region={order}
+              >
+                Region
+              </TableSortCell>
+            </Hidden>
+            <Hidden mdDown>
+              <TableSortCell
+                noWrap
+                label="backups:last_successful"
+                direction={order}
+                active={isActive('backups:last_successful')}
+                handleClick={handleOrderChange}
+              >
+                Last Backup
+              </TableSortCell>
+            </Hidden>
+          </>
         )}
         <TableCell>
           <div className={classes.controlHeader}>

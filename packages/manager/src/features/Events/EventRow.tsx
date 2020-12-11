@@ -116,7 +116,7 @@ export const Row: React.FC<RowProps> = props => {
                 data-qa-entity-icon
                 variant={type}
                 status={status}
-                size={21}
+                size={20}
               />
             </div>
           </Hidden>

@@ -207,7 +207,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
             <Grid item className={classes.addNewWrapper}>
               <AddNewLink
                 onClick={() => setMonitorDrawerOpen(true)}
-                label="Add a Monitor..."
+                label="Add a Monitor"
               />
             </Grid>
           </Grid>

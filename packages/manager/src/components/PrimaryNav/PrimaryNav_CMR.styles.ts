@@ -80,8 +80,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(2),
       color: theme.color.primaryNavText,
       '& svg': {
-        width: 21,
-        height: 21,
+        width: 20,
+        height: 20,
         display: 'flex',
         alignItems: 'center',
         fill: theme.color.primaryNavText,

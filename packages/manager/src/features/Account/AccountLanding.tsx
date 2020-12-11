@@ -38,7 +38,7 @@ const AccountLanding: React.FC<Props> = props => {
       routeName: `${props.match.url}/billing`
     },
     {
-      title: 'Users',
+      title: 'Users & Grants',
       routeName: `${props.match.url}/users`
     },
     {
