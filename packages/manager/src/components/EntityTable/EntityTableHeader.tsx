@@ -31,17 +31,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   '& .MuiTableCell-head': {
     borderBottom: 0
   },
-  controlHeader: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    backgroundColor: theme.cmrBGColors.bgTableHeader
-  },
-  toggleButton: {
-    padding: '0 10px',
-    '&:focus': {
-      // Browser default until we get styling direction for focus states
-      outline: '1px dotted #999'
-    }
+  groupByTagCell: {
+    textAlign: 'right',
+    backgroundColor: theme.cmrBGColors.bgTableHeader,
+    paddingRight: `0px !important`
   }
 }));
 
@@ -156,32 +149,69 @@ export const EntityTableHeader: React.FC<Props> = props => {
             ]
           )
         )}
-        <TableCell>
-          <div className={classes.controlHeader}>
-            <div id="groupByDescription" className="visually-hidden">
-              {isGroupedByTag
-                ? 'group by tag is currently enabled'
-                : 'group by tag is currently disabled'}
-            </div>
-            <Tooltip
-              placement="top-end"
-              title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
-            >
-              <IconButton
-                aria-label={`Toggle group by tag`}
-                aria-describedby={'groupByDescription'}
-                onClick={toggleGroupByTag}
-                disableRipple
-                className={classes.toggleButton}
-              >
-                <GroupByTag />
-              </IconButton>
-            </Tooltip>
-          </div>
-        </TableCell>
+        {toggleGroupByTag && typeof isGroupedByTag !== 'undefined' ? (
+          <TableCell className={classes.groupByTagCell}>
+            <GroupByTagToggle
+              toggleGroupByTag={toggleGroupByTag}
+              isGroupedByTag={isGroupedByTag}
+            />
+          </TableCell>
+        ) : null}
       </TableRow>
     </TableHead>
   );
 };
 
 export default React.memo(EntityTableHeader);
+
+// =============================================================================
+// <GroupByTagToggle />
+// =============================================================================
+interface GroupByTagToggleProps {
+  toggleGroupByTag: () => boolean;
+  isGroupedByTag: boolean;
+}
+
+const useGroupByTagToggleStyles = makeStyles((theme: Theme) => ({
+  controlHeader: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    backgroundColor: theme.cmrBGColors.bgTableHeader
+  },
+  toggleButton: {
+    padding: '0 10px',
+    '&:focus': {
+      outline: '1px dotted #999'
+    }
+  }
+}));
+
+export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = props => {
+  const classes = useGroupByTagToggleStyles();
+
+  const { toggleGroupByTag, isGroupedByTag } = props;
+
+  return (
+    <>
+      <div id="groupByDescription" className="visually-hidden">
+        {isGroupedByTag
+          ? 'group by tag is currently enabled'
+          : 'group by tag is currently disabled'}
+      </div>
+      <Tooltip
+        placement="top-end"
+        title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
+      >
+        <IconButton
+          aria-label={`Toggle group by tag`}
+          aria-describedby={'groupByDescription'}
+          onClick={toggleGroupByTag}
+          disableRipple
+          className={classes.toggleButton}
+        >
+          <GroupByTag />
+        </IconButton>
+      </Tooltip>
+    </>
+  );
+};
