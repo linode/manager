@@ -1,5 +1,4 @@
 import * as React from 'react';
-import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';

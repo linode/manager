@@ -135,13 +135,6 @@ const volumeHeaders = [
     dataColumn: 'Attached To',
     sortable: false,
     widthPercent: 20
-  },
-  {
-    label: 'Action Menu',
-    visuallyHidden: true,
-    dataColumn: '',
-    sortable: false,
-    widthPercent: 5
   }
 ];
 
