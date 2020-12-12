@@ -335,8 +335,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       linodesLoading
     } = this.props;
 
-    const Table = EntityTable_CMR;
-
     const handlers: DomainHandlers = {
       onClone: this.props.openForCloning,
       onEdit: this.props.openForEditing,
@@ -513,7 +511,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     </Grid>
                   </Grid>
                 )}
-                <Table
+                <EntityTable_CMR
                   entity="domain"
                   toggleGroupByTag={toggleGroupDomains}
                   isGroupedByTag={domainsAreGrouped}

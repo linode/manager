@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   toggleButton: {
     padding: '0 10px',
     '&:focus': {
-      // Browser default until we get styling direction for focus states
       outline: '1px dotted #999'
     }
   }

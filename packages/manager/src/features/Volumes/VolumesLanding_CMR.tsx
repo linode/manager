@@ -351,7 +351,6 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
         preferenceKey="volumes_group_by_tag"
         preferenceOptions={[false, true]}
         localStorageKey="GROUP_VOLUMES"
-        // toggleCallbackFnDebounced={toggleVolumesGroupBy}
       >
         {({
           preference: volumesAreGrouped,

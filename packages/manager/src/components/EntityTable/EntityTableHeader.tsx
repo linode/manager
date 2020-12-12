@@ -172,12 +172,7 @@ interface GroupByTagToggleProps {
   isGroupedByTag: boolean;
 }
 
-const useGroupByTagToggleStyles = makeStyles((theme: Theme) => ({
-  controlHeader: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    backgroundColor: theme.cmrBGColors.bgTableHeader
-  },
+const useGroupByTagToggleStyles = makeStyles(() => ({
   toggleButton: {
     padding: '0 10px',
     '&:focus': {
@@ -186,32 +181,34 @@ const useGroupByTagToggleStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = props => {
-  const classes = useGroupByTagToggleStyles();
+export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
+  props => {
+    const classes = useGroupByTagToggleStyles();
 
-  const { toggleGroupByTag, isGroupedByTag } = props;
+    const { toggleGroupByTag, isGroupedByTag } = props;
 
-  return (
-    <>
-      <div id="groupByDescription" className="visually-hidden">
-        {isGroupedByTag
-          ? 'group by tag is currently enabled'
-          : 'group by tag is currently disabled'}
-      </div>
-      <Tooltip
-        placement="top-end"
-        title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
-      >
-        <IconButton
-          aria-label={`Toggle group by tag`}
-          aria-describedby={'groupByDescription'}
-          onClick={toggleGroupByTag}
-          disableRipple
-          className={classes.toggleButton}
+    return (
+      <>
+        <div id="groupByDescription" className="visually-hidden">
+          {isGroupedByTag
+            ? 'group by tag is currently enabled'
+            : 'group by tag is currently disabled'}
+        </div>
+        <Tooltip
+          placement="top-end"
+          title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
         >
-          <GroupByTag />
-        </IconButton>
-      </Tooltip>
-    </>
-  );
-};
+          <IconButton
+            aria-label={`Toggle group by tag`}
+            aria-describedby={'groupByDescription'}
+            onClick={toggleGroupByTag}
+            disableRipple
+            className={classes.toggleButton}
+          >
+            <GroupByTag />
+          </IconButton>
+        </Tooltip>
+      </>
+    );
+  }
+);

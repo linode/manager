@@ -645,7 +645,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <EntityHeader
           title="IP Addresses"
           isSecondary
-          // @todo: Clean these body/actions props when EntityHeader is refactored.
+          // @todo: Clean these props when EntityHeader is refactored.
           body={
             <Hidden mdUp>
               <div style={{ marginRight: 5 }}>

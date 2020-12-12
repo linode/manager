@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-// @todo: Refactor this whole thing now that we have less variants.
+// @todo: Refactor this entire component now that we have less variants.
 export const EntityHeader: React.FC<HeaderProps> = props => {
   const classes = useStyles();
 
