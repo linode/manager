@@ -143,3 +143,5 @@ export const getProgressOrDefault = (
   event?: ExtendedEvent,
   defaultProgress = 100
 ) => event?.percent_complete ?? defaultProgress;
+
+export const isSecondaryStatus = (event: Event) => {};

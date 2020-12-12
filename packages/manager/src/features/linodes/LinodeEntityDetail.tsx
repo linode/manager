@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
+import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
@@ -26,6 +27,7 @@ import Grid, { GridProps } from 'src/components/Grid';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
+import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow_CMR';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
@@ -39,11 +41,19 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking_CMR';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import withRecentEvent, {
+  WithRecentEvent
+} from './LinodesLanding/withRecentEvent';
+import {
+  getProgressOrDefault,
+  transitionText as _transitionText
+} from './transitions';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
 interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
+  id: number;
   linode: Linode;
   username?: string;
   openDialog: OpenDialog;
@@ -61,7 +71,7 @@ interface LinodeEntityDetailProps {
   isDetailLanding?: boolean;
 }
 
-export type CombinedProps = LinodeEntityDetailProps;
+export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
 
 const LinodeEntityDetail: React.FC<CombinedProps> = props => {
   const {
@@ -75,7 +85,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
     numVolumes,
     isDetailLanding,
     openTagDrawer,
-    openNotificationDrawer
+    openNotificationDrawer,
+    recentEvent
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -97,6 +108,9 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
 
   const linodeRegionDisplay = dcDisplayNames[linode.region] ?? null;
 
+  const progress = getProgressOrDefault(recentEvent);
+  const transitionText = _transitionText(linode.status, linode.id, recentEvent);
+
   return (
     <EntityDetail
       header={
@@ -115,6 +129,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
           type={''}
           image={''}
           openNotificationDrawer={openNotificationDrawer || (() => null)}
+          progress={progress}
+          transitionText={transitionText}
         />
       }
       body={
@@ -147,7 +163,12 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
   );
 };
 
-export default React.memo(LinodeEntityDetail);
+const enhanced = compose<CombinedProps, LinodeEntityDetailProps>(
+  withRecentEvent,
+  React.memo
+);
+
+export default enhanced(LinodeEntityDetail);
 
 // =============================================================================
 // Header
@@ -172,6 +193,8 @@ export interface HeaderProps {
   linodeConfigs: Config[];
   isDetailLanding?: boolean;
   openNotificationDrawer: () => void;
+  progress: number;
+  transitionText?: string;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -223,6 +246,16 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       outline: '1px dotted #999'
     }
+  },
+  statusLink: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    '& p': {
+      color: theme.palette.primary.main,
+      fontFamily: theme.font.bold
+    }
   }
 }));
 
@@ -241,7 +274,10 @@ const Header: React.FC<HeaderProps> = props => {
     type,
     image,
     linodeConfigs,
-    isDetailLanding
+    isDetailLanding,
+    progress,
+    transitionText,
+    openNotificationDrawer
   } = props;
 
   const isDetails = variant === 'details';
@@ -286,6 +322,18 @@ const Header: React.FC<HeaderProps> = props => {
               component="span"
               {...isOther}
             />
+          </Grid>
+          <Grid item className="py0">
+            <button
+              className={classes.statusLink}
+              onClick={openNotificationDrawer}
+            >
+              <ProgressDisplay
+                // className={classes.progressDisplay}
+                progress={progress}
+                text={transitionText ?? ''}
+              />
+            </button>
           </Grid>
           <Grid item className={`${classes.actionItemsOuter} py0`}>
             <Hidden smDown>
