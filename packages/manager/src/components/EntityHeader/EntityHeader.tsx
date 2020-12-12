@@ -5,6 +5,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 import Breadcrumb from '../Breadcrumb';
 import DocumentationButton from '../CMR_DocumentationButton';
+import Typography from 'src/components/core/Typography';
 
 export interface HeaderProps extends BreadCrumbProps {
   actions?: JSX.Element;
@@ -57,7 +58,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0
   },
   breadCrumbSecondary: {
-    justifyContent: 'space-between'
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  label: {
+    marginLeft: 15
   },
   breadCrumbDetailLanding: {
     margin: 0,
@@ -87,6 +93,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+// @todo: Refactor this whole thing now that we have less variants.
 export const EntityHeader: React.FC<HeaderProps> = props => {
   const classes = useStyles();
 
@@ -157,6 +164,11 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
           })}
         >
+          {isSecondary ? (
+            <Typography variant="h3" className={classes.label}>
+              {labelTitle}
+            </Typography>
+          ) : null}
           {body && (
             <Grid
               className={classnames({
@@ -168,6 +180,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
               {body}
             </Grid>
           )}
+          {isSecondary ? actions : null}
         </Grid>
       </Grid>
     </>
