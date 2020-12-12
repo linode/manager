@@ -30,6 +30,8 @@ interface Props {
   entity: string;
   headers: HeaderCell[];
   groupByTag: boolean;
+  toggleGroupByTag?: () => boolean;
+  isGroupedByTag?: boolean;
   row: EntityTableRow<any>;
   initialOrder?: {
     order: OrderByProps['order'];
@@ -40,7 +42,15 @@ interface Props {
 export type CombinedProps = Props & PageyIntegrationProps;
 
 export const LandingTable: React.FC<CombinedProps> = props => {
-  const { entity, headers, groupByTag, row, initialOrder } = props;
+  const {
+    entity,
+    headers,
+    groupByTag,
+    row,
+    initialOrder,
+    toggleGroupByTag,
+    isGroupedByTag
+  } = props;
   const classes = useStyles();
   const tableProps = {
     data: row.data,
@@ -52,7 +62,9 @@ export const LandingTable: React.FC<CombinedProps> = props => {
     headers,
     initialOrder,
     entity,
-    handlers: row.handlers
+    handlers: row.handlers,
+    toggleGroupByTag,
+    isGroupedByTag
   };
 
   if (row.request) {
