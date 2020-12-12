@@ -368,7 +368,6 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
               <EntityTable_CMR
                 entity="volume"
                 headers={volumeHeaders}
-                groupByTag={volumesAreGrouped}
                 isGroupedByTag={volumesAreGrouped}
                 toggleGroupByTag={toggleGroupVolumes}
                 row={volumeRow}

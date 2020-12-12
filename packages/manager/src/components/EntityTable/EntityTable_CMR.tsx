@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   entity: string;
   headers: HeaderCell[];
-  groupByTag: boolean;
   toggleGroupByTag?: () => boolean;
   isGroupedByTag?: boolean;
   row: EntityTableRow<any>;
@@ -45,7 +44,6 @@ export const LandingTable: React.FC<CombinedProps> = props => {
   const {
     entity,
     headers,
-    groupByTag,
     row,
     initialOrder,
     toggleGroupByTag,
@@ -78,7 +76,7 @@ export const LandingTable: React.FC<CombinedProps> = props => {
     );
   }
 
-  if (groupByTag) {
+  if (isGroupedByTag) {
     return (
       <div className={classes.root}>
         <GroupedEntitiesByTag {...tableProps} />

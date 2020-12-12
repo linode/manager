@@ -22,10 +22,7 @@ import Typography from 'src/components/core/Typography';
 import DeletionDialog from 'src/components/DeletionDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EntityTable, {
-  EntityTableRow,
-  HeaderCell
-} from 'src/components/EntityTable';
+import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -170,13 +167,6 @@ const headers: HeaderCell[] = [
     sortable: true,
     widthPercent: 20,
     hideOnMobile: true
-  },
-  {
-    label: 'Action Menu',
-    visuallyHidden: true,
-    dataColumn: '',
-    sortable: false,
-    widthPercent: 5
   }
 ];
 
@@ -345,7 +335,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       linodesLoading
     } = this.props;
 
-    const Table = flags.cmr ? EntityTable_CMR : EntityTable;
+    const Table = EntityTable_CMR;
 
     const handlers: DomainHandlers = {
       onClone: this.props.openForCloning,
@@ -525,7 +515,8 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                 )}
                 <Table
                   entity="domain"
-                  groupByTag={domainsAreGrouped}
+                  toggleGroupByTag={toggleGroupDomains}
+                  isGroupedByTag={domainsAreGrouped}
                   row={domainRow}
                   headers={headers}
                   initialOrder={initialOrder}
