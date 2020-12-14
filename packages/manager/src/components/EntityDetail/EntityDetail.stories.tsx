@@ -13,6 +13,7 @@ storiesOf('EntityDetail', module).add('Linode', () => (
       <LinodeEntityDetail
         variant="details"
         numVolumes={2}
+        id={0}
         linode={linodeFactory.build()}
         username="linode-user"
         openTagDrawer={() => null}
@@ -27,6 +28,7 @@ storiesOf('EntityDetail', module).add('Linode', () => (
       <LinodeEntityDetail
         variant="landing"
         numVolumes={2}
+        id={0}
         linode={linodeFactory.build()}
         username="linode-user"
         openTagDrawer={() => null}
