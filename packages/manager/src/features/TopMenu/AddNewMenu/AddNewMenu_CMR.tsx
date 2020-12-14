@@ -227,7 +227,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                           className={classes.menuItemLink}
                         >
                           <AddNewMenuItem
-                            title="Firewalls"
+                            title="Firewall"
                             body="Control network access to your Linodes"
                             ItemIcon={FirewallIcon}
                           />
