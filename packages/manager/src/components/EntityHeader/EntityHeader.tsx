@@ -42,7 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   details: {
     backgroundColor: theme.cmrBGColors.bgPaper,
-    margin: 0
+    margin: 0,
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'wrap'
+    }
   },
   breadcrumbOuter: {
     display: 'flex',

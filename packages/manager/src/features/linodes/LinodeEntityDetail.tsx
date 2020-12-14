@@ -768,7 +768,13 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     padding: `0px 10px`,
     [theme.breakpoints.down('sm')]: {
       flex: '50%',
-      borderRight: 'none'
+      borderRight: 'none',
+      paddingRight: 0
+    }
+  },
+  listItemLegacy: {
+    [theme.breakpoints.down('sm')]: {
+      flex: '70%'
     }
   },
   listItemLast: {
@@ -779,16 +785,14 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     marginRight: 4
   },
   tags: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
+    marginLeft: theme.spacing(),
+    '& > div': {
+      flexDirection: 'row-reverse',
+      '& > button': {
+        marginRight: 4
+      },
       '& > div': {
-        flexDirection: 'row-reverse',
-        '& > button': {
-          marginRight: 4
-        },
-        '& > div': {
-          justifyContent: 'flex-start !important'
-        }
+        justifyContent: 'flex-start !important'
       }
     }
   }
@@ -798,6 +802,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
   const classes = useFooterStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
     linodePlan,
@@ -838,21 +843,32 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     [linodeTags, linodeId, updateLinode, enqueueSnackbar]
   );
 
+  const isLegacy = linodePlan && linodePlan.includes('(pending upgrade)');
+
+  const hasTags = linodeTags.length === 0 ? false : true;
+
   return (
     <Grid container direction="row" alignItems="center" justify="space-between">
       <Grid
         container
         item
         className={classnames({
-          [classes.details]: true
+          [classes.details]: true,
+          my0: isLegacy
         })}
         alignItems="flex-start"
         xs={12}
-        lg={8}
+        md={isLegacy || hasTags ? 12 : 10}
+        lg={isLegacy && hasTags ? 12 : hasTags ? 8 : 10}
       >
         <div className={classes.detailRow}>
           {linodePlan && (
-            <Typography className={classes.listItem}>
+            <Typography
+              className={classnames({
+                [classes.listItem]: true,
+                [classes.listItemLegacy]: isLegacy
+              })}
+            >
               <span className={classes.label}>Plan: </span> {linodePlan}
             </Typography>
           )}
@@ -869,7 +885,12 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           )}
         </div>
         <div className={classes.detailRow}>
-          <Typography className={classes.listItem}>
+          <Typography
+            className={classnames({
+              [classes.listItem]: true,
+              [classes.listItemLegacy]: isLegacy
+            })}
+          >
             <span className={classes.label}>Linode ID:</span> {linodeId}
           </Typography>
           <Typography className={`${classes.listItem} ${classes.listItemLast}`}>
@@ -878,7 +899,18 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
         </div>
       </Grid>
-      <Grid item className={classes.tags} xs={12} lg={4}>
+      <Grid
+        item
+        className={classnames({
+          [classes.tags]:
+            (isLegacy && hasTags) ||
+            (matchesMdDown && (isLegacy || hasTags)) ||
+            matchesSmDown
+        })}
+        xs={12}
+        md={isLegacy || hasTags ? 12 : 2}
+        lg={isLegacy && hasTags ? 12 : hasTags ? 4 : 2}
+      >
         <TagCell
           width={500}
           tags={linodeTags}
