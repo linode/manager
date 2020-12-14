@@ -16,6 +16,9 @@ import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import bucketDrawerContainer, {
+  DispatchProps
+} from 'src/containers/bucketDrawer.container';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
@@ -23,6 +26,8 @@ import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { openBucketDrawer } from 'src/store/bucketDrawer/bucketDrawer.actions';
 import BucketDrawer from './BucketLanding/BucketDrawer';
+import { compose } from 'recompose';
+import useOpenClose from 'src/hooks/useOpenClose';
 
 const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
 const AccessKeyLanding = React.lazy(() =>
@@ -35,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = RouteComponentProps<{}>;
+type CombinedProps = DispatchProps & RouteComponentProps<{}>;
 
 export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -47,17 +52,18 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   // // On-the-fly route matching so this component can open the drawer itself.
   // const createBucketRouteMatch = Boolean(useRouteMatch('/firewalls/create'));
 
-  // React.useEffect(() => {
-  //   if (createBucketRouteMatch) {
-  //     openDrawer();
-  //   }
-  // }, [createBucketRouteMatch, openDrawer]);
-
   const { objectStorageClusters } = useObjectStorageClusters();
   const {
     objectStorageBuckets,
     requestObjectStorageBuckets
   } = useObjectStorageBuckets();
+
+  const { openBucketDrawer } = props;
+
+  const [route, setRoute] = React.useState<string>('');
+  const [createButtonText, setCreateButtonText] = React.useState<string>('');
+  const [createButtonWidth, setCreateButtonWidth] = React.useState<number>(0);
+  const createOrEditDrawer = useOpenClose();
 
   const tabs = [
     /* NB: These must correspond to the routes, inside the Switch */
@@ -104,11 +110,17 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     requestObjectStorageBuckets
   ]);
 
+  React.useEffect(() => {
+    setRoute(props.location.pathname.replace('/object-storage/', ''));
+    updateCreateButton(route);
+  }, [route, props.location.pathname]);
+
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
   const navToURL = (index: number) => {
+    setRoute(props.location.pathname.replace('/object-storage/', ''));
     props.history.push(tabs[index].routeName);
   };
 
@@ -128,6 +140,32 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     objectStorageBuckets.data.length === 0 &&
     accountSettings.data?.object_storage === 'active';
 
+  const updateCreateButton = (_route: string) => {
+    switch (_route) {
+      case 'buckets':
+        setCreateButtonText('Create a Bucket');
+        setCreateButtonWidth(152);
+        break;
+      case 'access-keys':
+        setCreateButtonText('Create an Access Key');
+        setCreateButtonWidth(180);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const updateCreateAction = React.useMemo(() => {
+    switch (route) {
+      case 'buckets':
+        return openBucketDrawer;
+      case 'access-keys':
+        return createOrEditDrawer.open;
+      default:
+        return;
+    }
+  }, [createOrEditDrawer.open, openBucketDrawer, route]);
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
@@ -143,7 +181,10 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
             <LandingHeader
               title="Object Storage"
               entity="Object Storage"
+              createButtonText={createButtonText}
+              createButtonWidth={createButtonWidth}
               docsLink="https://www.linode.com/docs/platform/object-storage/"
+              onAddNew={updateCreateAction}
               removeCrumbX={1}
             />
           </div>
@@ -182,7 +223,12 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
               <BucketLanding isRestrictedUser={_isRestrictedUser} />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
-              <AccessKeyLanding isRestrictedUser={_isRestrictedUser} />
+              <AccessKeyLanding
+                isRestrictedUser={_isRestrictedUser}
+                accessDrawerOpen={createOrEditDrawer.isOpen}
+                openAccessDrawer={createOrEditDrawer.open}
+                closeAccessDrawer={createOrEditDrawer.close}
+              />
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
@@ -192,7 +238,9 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   );
 };
 
-export default React.memo(ObjectStorageLanding);
+const enhanced = compose<CombinedProps, {}>(React.memo, bucketDrawerContainer);
+
+export default enhanced(ObjectStorageLanding);
 
 // =============================================================================
 // <BillingNotice/>
