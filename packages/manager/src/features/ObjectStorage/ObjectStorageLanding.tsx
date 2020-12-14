@@ -48,6 +48,7 @@ type CombinedProps = DispatchProps & RouteComponentProps<{}>;
 
 export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { replace } = props.history;
 
   useReduxLoad(['clusters']);
 
@@ -168,16 +169,13 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     }
   };
 
-  const updateCreateAction = React.useMemo(() => {
-    switch (route) {
-      case 'buckets':
-        return openBucketDrawer();
-      case 'access-keys':
-        return createOrEditDrawer.open;
-      default:
-        return;
+  const updateCreateAction = React.useCallback(() => {
+    if (route === 'buckets') {
+      replace('/object-storage/buckets/create');
+    } else {
+      createOrEditDrawer.open();
     }
-  }, [createOrEditDrawer.open, route]);
+  }, [replace, createOrEditDrawer, route]);
 
   return (
     <React.Fragment>
@@ -197,7 +195,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
               createButtonText={createButtonText}
               createButtonWidth={createButtonWidth}
               docsLink="https://www.linode.com/docs/platform/object-storage/"
-              onAddNew={() => updateCreateAction()}
+              onAddNew={updateCreateAction}
               removeCrumbX={1}
               breadcrumbProps={{ pathname: '/object-storage' }}
             />
