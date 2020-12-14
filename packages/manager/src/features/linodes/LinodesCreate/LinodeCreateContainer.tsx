@@ -656,7 +656,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
         <Grid container spacing={0} className="m0">
-          <Grid item xs={12} className="px0">
+          <Grid item xs={12} className="p0">
             <Breadcrumb
               pathname={'/linodes/create'}
               labelTitle="Create"
