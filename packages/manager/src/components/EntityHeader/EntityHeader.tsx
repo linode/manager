@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   details: {
     backgroundColor: theme.cmrBGColors.bgPaper,
     margin: 0,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexWrap: 'wrap'
     }
   },
