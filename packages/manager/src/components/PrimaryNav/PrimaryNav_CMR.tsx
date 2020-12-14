@@ -3,6 +3,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
+import Database from 'src/assets/icons/entityIcons/database.svg';
 import Domain from 'src/assets/icons/entityIcons/domain.svg';
 import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
 import Image from 'src/assets/icons/entityIcons/image.svg';
@@ -193,7 +194,7 @@ export const PrimaryNav: React.FC<Props> = props => {
           hide: !showDatabases,
           display: 'Databases',
           href: '/databases',
-          icon: <Storage />
+          icon: <Database />
         },
         {
           display: 'Object Storage',
