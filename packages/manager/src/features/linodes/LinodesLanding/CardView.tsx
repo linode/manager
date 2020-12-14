@@ -142,6 +142,7 @@ const CardView: React.FC<CombinedProps> = props => {
                 <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
                   <LinodeEntityDetail
                     variant="landing"
+                    id={linode.id}
                     linode={linode}
                     isDetailLanding
                     numVolumes={getVolumesByLinode(linode.id)}

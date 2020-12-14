@@ -6,6 +6,7 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
+  onGetPageSuccess,
   onGetOneSuccess,
   onStart
 } from 'src/store/store.helpers.tmp';
@@ -16,6 +17,7 @@ import {
   deleteLinode,
   deleteLinodeActions,
   getLinodesActions,
+  getLinodesPageActions,
   getLinodeActions,
   updateLinodeActions,
   updateMultipleLinodes,
@@ -109,6 +111,21 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       params: { linodeId }
     } = action.payload;
     return onDeleteSuccess(linodeId, state);
+  }
+
+  if (isType(action, getLinodesPageActions.started)) {
+    return onStart(state);
+  }
+
+  if (isType(action, getLinodesPageActions.done)) {
+    const { result } = action.payload;
+
+    return onGetPageSuccess(result.data, state, result.results);
+  }
+
+  if (isType(action, getLinodesPageActions.failed)) {
+    const { error } = action.payload;
+    return onError({ read: error }, state);
   }
 
   return state;

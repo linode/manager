@@ -8,8 +8,8 @@ import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GridView from 'src/assets/icons/grid-view.svg';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { GroupByTagToggle } from 'src/components/EntityTable/EntityTableHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   toggleButton: {
     padding: '0 10px',
     '&:focus': {
-      // Browser default until we get styling direction for focus states
       outline: '1px dotted #999'
     }
   }
@@ -134,25 +133,10 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
                 <GridView />
               </IconButton>
             </Tooltip>
-            <div id="groupByDescription" className="visually-hidden">
-              {linodesAreGrouped
-                ? 'group by tag is currently enabled'
-                : 'group by tag is currently disabled'}
-            </div>
-            <Tooltip
-              placement="top-end"
-              title={`${linodesAreGrouped ? 'Ungroup' : 'Group'} by tag`}
-            >
-              <IconButton
-                aria-label={`Toggle group by tag`}
-                aria-describedby={'groupByDescription'}
-                onClick={toggleGroupLinodes}
-                disableRipple
-                className={classes.toggleButton}
-              >
-                <GroupByTag />
-              </IconButton>
-            </Tooltip>
+            <GroupByTagToggle
+              toggleGroupByTag={toggleGroupLinodes}
+              isGroupedByTag={linodesAreGrouped}
+            />
           </div>
         </TableCell>
       </TableRow>

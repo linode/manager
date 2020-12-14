@@ -645,27 +645,36 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <EntityHeader
           title="IP Addresses"
           isSecondary
+          // @todo: Clean these props when EntityHeader is refactored.
           body={
             <Hidden mdUp>
-              <Button
-                style={{ paddingTop: 5, paddingBottom: 5 }}
-                onClick={this.openTransferDialog}
-                buttonType="secondary"
-              >
-                IP Transfer
-              </Button>
-              <Button
-                style={{ paddingTop: 5, paddingBottom: 5 }}
-                onClick={this.openSharingDialog}
-                buttonType="secondary"
-              >
-                IP Sharing
-              </Button>
+              <div style={{ marginRight: 5 }}>
+                <Hidden xsDown>
+                  <Button
+                    style={{ paddingTop: 5, paddingBottom: 5 }}
+                    onClick={this.openTransferDialog}
+                    buttonType="secondary"
+                  >
+                    IP Transfer
+                  </Button>
+                  <Button
+                    style={{ paddingTop: 5, paddingBottom: 5 }}
+                    onClick={this.openSharingDialog}
+                    buttonType="secondary"
+                  >
+                    IP Sharing
+                  </Button>
+                </Hidden>
+                <AddNewLink
+                  label="Add an IP Address"
+                  onClick={this.openAddIPDrawer}
+                />
+              </div>
             </Hidden>
           }
           actions={
-            <div>
-              <Hidden smDown>
+            <Hidden smDown>
+              <div style={{ marginRight: 5 }}>
                 <Button
                   style={{ padding: '16px 14px' }}
                   onClick={this.openTransferDialog}
@@ -680,12 +689,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
                 >
                   IP Sharing
                 </Button>
-              </Hidden>
-              <AddNewLink
-                label="Add an IP Address"
-                onClick={this.openAddIPDrawer}
-              />
-            </div>
+                <AddNewLink
+                  label="Add an IP Address"
+                  onClick={this.openAddIPDrawer}
+                />
+              </div>
+            </Hidden>
           }
         />
         <Paper style={{ padding: 0 }}>
