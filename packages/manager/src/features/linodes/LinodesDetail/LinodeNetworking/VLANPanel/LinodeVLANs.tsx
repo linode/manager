@@ -193,7 +193,6 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
       <EntityTable_CMR
         entity="vlan"
         headers={vlanHeaders}
-        groupByTag={false}
         row={vlanRow}
         initialOrder={{ order: 'asc', orderBy: 'label' }}
       />

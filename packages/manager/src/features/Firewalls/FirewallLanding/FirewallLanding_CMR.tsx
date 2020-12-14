@@ -168,7 +168,6 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
       />
       <EntityTable
         entity="firewall"
-        groupByTag={false}
         row={firewallRow}
         headers={headers}
         initialOrder={{ order: 'asc', orderBy: 'domain' }}
