@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as classNames from 'classnames';
 import { PlaceholderProps } from 'react-select';
 import {
   createStyles,
@@ -8,7 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'smallerFontSize';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -18,18 +19,26 @@ const styles = (theme: Theme) =>
       wordWrap: 'normal',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
+      fontSize: '0.9rem'
+    },
+    smallerFontSize: {
       fontSize: '0.875rem !important'
     }
   });
 
-interface Props extends PlaceholderProps<any> {}
+interface Props extends PlaceholderProps<any> {
+  smallerPlaceholder?: boolean;
+}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const SelectPlaceholder: React.FC<CombinedProps> = props => {
   return (
     <Typography
-      className={props.classes.root}
+      className={classNames({
+        [props.classes.root]: true,
+        [props.classes.smallerFontSize]: props.smallerPlaceholder
+      })}
       {...props.innerProps}
       data-qa-select-placeholder
       data-qa-multi-select={
