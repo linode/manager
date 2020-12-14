@@ -44,7 +44,7 @@ const styles = (theme: Theme) =>
         '& $icon': {
           ...theme.animateCircleIcon
         },
-        '& svg': {
+        '& svg .outerCircle': {
           fill: theme.palette.primary.main,
           transition: 'fill .2s ease-in-out .2s'
         },
@@ -72,6 +72,7 @@ const styles = (theme: Theme) =>
       margin: '0 auto 16px',
       display: 'block',
       '& .outerCircle': {
+        fill: theme.bg.offWhiteDT,
         stroke: theme.bg.main
       },
       '& .insidePath': {
@@ -82,8 +83,7 @@ const styles = (theme: Theme) =>
       },
       '& svg': {
         width: 70,
-        height: 70,
-        fill: theme.bg.offWhiteDT
+        height: 70
       }
     },
     buttonTitle: {
