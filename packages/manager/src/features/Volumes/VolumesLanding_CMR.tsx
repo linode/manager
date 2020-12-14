@@ -185,7 +185,7 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
     poweredOff: false
   });
 
-  const { _loading } = useReduxLoad(['volumes']);
+  const { _loading } = useReduxLoad(['volumes', 'linodes']);
 
   const handleCloseAttachDrawer = () => {
     setAttachmentDrawer(attachmentDrawer => ({
