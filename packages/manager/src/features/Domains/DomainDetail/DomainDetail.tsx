@@ -128,7 +128,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
             labelOptions={{ noCap: true }}
           />
         </Grid>
-        <Grid item className={`${classes.cta} px0`}>
+        <Grid item className={`${classes.cta}`}>
           <Button
             buttonType="secondary"
             className={classes.tagsButton}

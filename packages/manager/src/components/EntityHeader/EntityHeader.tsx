@@ -27,10 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     margin: 0,
-    width: '100%',
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: theme.spacing()
-    }
+    width: '100%'
   },
   landing: {
     marginBottom: 0,
@@ -91,6 +88,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
     padding: 0
+  },
+  actionsWrapper: {
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 0
+    }
   }
 }));
 
@@ -130,12 +132,13 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             />
           </Grid>
           <Grid
+            className={classes.actionsWrapper}
             container
             item
             alignItems="center"
             justify="flex-end"
             wrap="nowrap"
-            xs={12}
+            // xs={12}
             sm={8}
           >
             {docsLink && (
