@@ -142,7 +142,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
           aria-describedby="new-window"
           data-qa-launch-console
         >
-          Launch Console
+          Launch LISH Console
         </Button>
         <LinodePowerControl
           status={linode.status}

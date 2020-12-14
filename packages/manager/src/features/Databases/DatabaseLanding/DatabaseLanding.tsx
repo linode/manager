@@ -232,7 +232,6 @@ const DatabaseLanding: React.FC<{}> = _ => {
       />
       <EntityTable
         entity="databases"
-        groupByTag={false}
         row={_DatabaseRow}
         headers={headers}
         initialOrder={{ order: 'asc', orderBy: 'label' }}

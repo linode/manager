@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
-import { matchPath, RouteComponentProps } from 'react-router-dom';
+import {
+  matchPath,
+  RouteComponentProps,
+  useRouteMatch
+} from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -47,10 +51,20 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
 
   useReduxLoad(['clusters']);
 
+  const dispatch = useDispatch<Dispatch>();
+
   // @todo: dispatch bucket drawer open action
 
-  // // On-the-fly route matching so this component can open the drawer itself.
-  // const createBucketRouteMatch = Boolean(useRouteMatch('/firewalls/create'));
+  // On-the-fly route matching so this component can open the drawer itself.
+  const createBucketRouteMatch = Boolean(
+    useRouteMatch('/object-storage/buckets/create')
+  );
+
+  React.useEffect(() => {
+    if (createBucketRouteMatch) {
+      dispatch(openBucketDrawer());
+    }
+  }, [dispatch, createBucketRouteMatch]);
 
   const { objectStorageClusters } = useObjectStorageClusters();
   const {
@@ -58,12 +72,11 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     requestObjectStorageBuckets
   } = useObjectStorageBuckets();
 
-  const { openBucketDrawer } = props;
+  const createOrEditDrawer = useOpenClose();
 
   const [route, setRoute] = React.useState<string>('');
   const [createButtonText, setCreateButtonText] = React.useState<string>('');
   const [createButtonWidth, setCreateButtonWidth] = React.useState<number>(0);
-  const createOrEditDrawer = useOpenClose();
 
   const tabs = [
     /* NB: These must correspond to the routes, inside the Switch */
@@ -158,13 +171,13 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const updateCreateAction = React.useMemo(() => {
     switch (route) {
       case 'buckets':
-        return openBucketDrawer;
+        return openBucketDrawer();
       case 'access-keys':
         return createOrEditDrawer.open;
       default:
         return;
     }
-  }, [createOrEditDrawer.open, openBucketDrawer, route]);
+  }, [createOrEditDrawer.open, route]);
 
   return (
     <React.Fragment>
@@ -184,8 +197,9 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
               createButtonText={createButtonText}
               createButtonWidth={createButtonWidth}
               docsLink="https://www.linode.com/docs/platform/object-storage/"
-              onAddNew={updateCreateAction}
+              onAddNew={() => updateCreateAction()}
               removeCrumbX={1}
+              breadcrumbProps={{ pathname: '/object-storage' }}
             />
           </div>
         ) : (

@@ -47,6 +47,8 @@ import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu_CMR';
 import VolumeTableRow from './VolumeTableRow_CMR';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import PreferenceToggle from 'src/components/PreferenceToggle';
+import { ToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 
 interface Props {
   isVolumesLanding?: boolean;
@@ -133,13 +135,6 @@ const volumeHeaders = [
     dataColumn: 'Attached To',
     sortable: false,
     widthPercent: 20
-  },
-  {
-    label: 'Action Menu',
-    visuallyHidden: true,
-    dataColumn: '',
-    sortable: false,
-    widthPercent: 5
   }
 ];
 
@@ -190,7 +185,7 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
     poweredOff: false
   });
 
-  const { _loading } = useReduxLoad(['volumes']);
+  const { _loading } = useReduxLoad(['volumes', 'linodes']);
 
   const handleCloseAttachDrawer = () => {
     setAttachmentDrawer(attachmentDrawer => ({
@@ -352,37 +347,53 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Volumes" />
-      <LandingHeader
-        title="Volumes"
-        entity="Volume"
-        onAddNew={() => props.history.push('/volumes/create')}
-        docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
-      />
-      <EntityTable_CMR
-        entity="volume"
-        headers={volumeHeaders}
-        groupByTag={false}
-        row={volumeRow}
-        initialOrder={{ order: 'asc', orderBy: 'label' }}
-      />
-      <VolumeAttachmentDrawer
-        open={attachmentDrawer.open}
-        volumeId={attachmentDrawer.volumeId || 0}
-        volumeLabel={attachmentDrawer.volumeLabel || ''}
-        linodeRegion={attachmentDrawer.linodeRegion || ''}
-        onClose={handleCloseAttachDrawer}
-      />
-      <DestructiveVolumeDialog
-        open={destructiveDialog.open}
-        error={destructiveDialog.error}
-        volumeLabel={destructiveDialog.volumeLabel}
-        linodeLabel={destructiveDialog.linodeLabel}
-        poweredOff={destructiveDialog.poweredOff || false}
-        mode={destructiveDialog.mode}
-        onClose={closeDestructiveDialog}
-        onDetach={detachVolume}
-        onDelete={deleteVolume}
-      />
+      <PreferenceToggle<boolean>
+        preferenceKey="volumes_group_by_tag"
+        preferenceOptions={[false, true]}
+        localStorageKey="GROUP_VOLUMES"
+      >
+        {({
+          preference: volumesAreGrouped,
+          togglePreference: toggleGroupVolumes
+        }: ToggleProps<boolean>) => {
+          return (
+            <>
+              <LandingHeader
+                title="Volumes"
+                entity="Volume"
+                onAddNew={() => props.history.push('/volumes/create')}
+                docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
+              />
+              <EntityTable_CMR
+                entity="volume"
+                headers={volumeHeaders}
+                isGroupedByTag={volumesAreGrouped}
+                toggleGroupByTag={toggleGroupVolumes}
+                row={volumeRow}
+                initialOrder={{ order: 'asc', orderBy: 'label' }}
+              />
+              <VolumeAttachmentDrawer
+                open={attachmentDrawer.open}
+                volumeId={attachmentDrawer.volumeId || 0}
+                volumeLabel={attachmentDrawer.volumeLabel || ''}
+                linodeRegion={attachmentDrawer.linodeRegion || ''}
+                onClose={handleCloseAttachDrawer}
+              />
+              <DestructiveVolumeDialog
+                open={destructiveDialog.open}
+                error={destructiveDialog.error}
+                volumeLabel={destructiveDialog.volumeLabel}
+                linodeLabel={destructiveDialog.linodeLabel}
+                poweredOff={destructiveDialog.poweredOff || false}
+                mode={destructiveDialog.mode}
+                onClose={closeDestructiveDialog}
+                onDetach={detachVolume}
+                onDelete={deleteVolume}
+              />
+            </>
+          );
+        }}
+      </PreferenceToggle>
     </React.Fragment>
   );
 };

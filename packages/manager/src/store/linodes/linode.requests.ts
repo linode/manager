@@ -15,6 +15,7 @@ import {
   deleteLinodeActions,
   getLinodeActions,
   getLinodesActions,
+  getLinodesPageActions,
   rebootLinodeActions,
   updateLinodeActions,
   upsertLinode
@@ -51,6 +52,14 @@ const getAllLinodes = (payload: { params?: any; filter?: any }) =>
 export const requestLinodes = createRequestThunk(
   getLinodesActions,
   ({ params, filter }) => getAllLinodes({ params, filter })
+);
+
+/**
+ * Single page of Linodes
+ */
+export const getLinodesPage = createRequestThunk(
+  getLinodesPageActions,
+  ({ params, filters }) => getLinodes(params, filters)
 );
 
 type RequestLinodeForStoreThunk = ThunkActionCreator<void, number>;

@@ -10,6 +10,7 @@ import EnhancedSelect, {
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import withLinodes from 'src/containers/withLinodes.container';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { formatRegion } from 'src/utilities';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -66,6 +67,8 @@ const LinodeSelect: React.FC<CombinedProps> = props => {
     inputId
   } = props;
 
+  const { _loading } = useReduxLoad(['linodes']);
+
   const linodes = region
     ? linodesData.filter(thisLinode => thisLinode.region === region)
     : linodesData;
@@ -104,7 +107,7 @@ const LinodeSelect: React.FC<CombinedProps> = props => {
       options={options}
       disabled={disabled}
       small={props.small}
-      isLoading={linodesLoading}
+      isLoading={linodesLoading || _loading}
       inputId={inputId}
       onChange={(selected: Item<number>) => {
         return handleChange(selected.data);
@@ -191,7 +194,7 @@ export const linodesToGroupedItems = (
     maybeFilteredLinodes
   );
 
-  const groupedItems = Object.keys(groupedByRegion).map(region => {
+  return Object.keys(groupedByRegion).map(region => {
     return {
       label: formatRegion(region),
       options: linodesToItems(
@@ -201,8 +204,6 @@ export const linodesToGroupedItems = (
       )
     };
   });
-
-  return groupedItems;
 };
 
 export const linodeFromGroupedItems = (

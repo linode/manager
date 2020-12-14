@@ -1,5 +1,5 @@
 import { CreateLinodeRequest, Linode } from '@linode/api-v4/lib/linodes';
-import { APIError, DeepPartial } from '@linode/api-v4/lib/types';
+import { APIError, DeepPartial, ResourcePage } from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 
@@ -67,3 +67,13 @@ export const rebootLinodeActions = actionCreator.async<
   {},
   APIError[]
 >('reboot');
+
+export interface PageParams {
+  params?: any;
+  filters?: any;
+}
+export const getLinodesPageActions = actionCreator.async<
+  PageParams,
+  ResourcePage<Linode>,
+  APIError[]
+>('get-page');
