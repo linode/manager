@@ -303,8 +303,15 @@ const Header: React.FC<HeaderProps> = props => {
     lishLaunch(id);
   };
 
+  const formattedStatus = linodeStatus.replace('_', ' ').toUpperCase();
+  const formattedTransitionText = (transitionText ?? '').toUpperCase();
+
   const hasSecondaryStatus =
-    typeof progress !== 'undefined' && typeof transitionText !== 'undefined';
+    typeof progress !== 'undefined' &&
+    typeof transitionText !== 'undefined' &&
+    // Kind of a hacky way to avoid "CLONING | CLONING (50%)" until we add logic
+    // to display "Cloning to 'destination-linode'.
+    formattedTransitionText !== formattedStatus;
 
   return (
     <EntityHeader
@@ -335,7 +342,7 @@ const Header: React.FC<HeaderProps> = props => {
                   [classes.divider]: hasSecondaryStatus,
                   statusOtherDetail: isOther
                 })}
-                label={linodeStatus.replace('_', ' ').toUpperCase()}
+                label={formattedStatus}
                 component="span"
                 {...isOther}
               />
@@ -351,8 +358,8 @@ const Header: React.FC<HeaderProps> = props => {
                   onClick={openNotificationDrawer}
                 >
                   <ProgressDisplay
-                    progress={progress!}
-                    text={transitionText!.toUpperCase() ?? ''}
+                    progress={progress ?? 0}
+                    text={formattedTransitionText}
                   />
                 </button>
               </Grid>
