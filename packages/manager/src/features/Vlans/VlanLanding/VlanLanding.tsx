@@ -83,7 +83,6 @@ const VlanLanding: React.FC<CombinedProps> = () => {
       />
       <EntityTable
         entity="vlans"
-        groupByTag={false}
         row={vLanRow}
         headers={headers}
         initialOrder={{ order: 'asc', orderBy: 'label' }}

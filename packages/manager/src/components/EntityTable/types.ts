@@ -32,6 +32,8 @@ export interface ListProps extends BaseProps {
     order: OrderByProps['order'];
     orderBy: OrderByProps['orderBy'];
   };
+  toggleGroupByTag?: () => boolean;
+  isGroupedByTag?: boolean;
 }
 
 export interface EntityTableRow<T> extends BaseProps {

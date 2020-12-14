@@ -56,7 +56,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 export type CombinedProps = ListProps;
 
 export const GroupedEntitiesByTag: React.FC<CombinedProps> = props => {
-  const { data, entity, handlers, headers, initialOrder, RowComponent } = props;
+  const {
+    data,
+    entity,
+    handlers,
+    headers,
+    initialOrder,
+    RowComponent,
+    toggleGroupByTag,
+    isGroupedByTag
+  } = props;
   const classes = useStyles();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
@@ -75,6 +84,8 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = props => {
               handleOrderChange={handleOrderChange}
               order={order}
               orderBy={orderBy}
+              toggleGroupByTag={toggleGroupByTag}
+              isGroupedByTag={isGroupedByTag}
             />
             {groupedEntities.map(([tag, domains]: [string, any[]]) => {
               return (
