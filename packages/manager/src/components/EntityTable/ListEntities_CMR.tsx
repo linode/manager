@@ -21,7 +21,9 @@ export const ListEntities: React.FC<CombinedProps> = props => {
     initialOrder,
     loading,
     lastUpdated,
-    RowComponent
+    RowComponent,
+    toggleGroupByTag,
+    isGroupedByTag
   } = props;
 
   return (
@@ -49,6 +51,8 @@ export const ListEntities: React.FC<CombinedProps> = props => {
                     handleOrderChange={handleOrderChange}
                     order={order}
                     orderBy={orderBy}
+                    toggleGroupByTag={toggleGroupByTag}
+                    isGroupedByTag={isGroupedByTag}
                   />
 
                   <TableBody>

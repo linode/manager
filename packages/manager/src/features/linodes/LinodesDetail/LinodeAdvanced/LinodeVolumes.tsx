@@ -340,7 +340,6 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
       <EntityTable_CMR
         entity="volume"
         headers={volumeHeaders}
-        groupByTag={false}
         row={volumeRow}
         initialOrder={{ order: 'asc', orderBy: 'label' }}
       />
