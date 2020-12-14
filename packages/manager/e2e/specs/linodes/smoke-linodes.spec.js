@@ -22,7 +22,7 @@ describe('List Linodes Suite', () => {
     const expectedOptions = [
       'Reboot',
       'Power Off',
-      'LISH Console',
+      'Launch LISH Console',
       'Clone',
       'Resize',
       'View Backups',

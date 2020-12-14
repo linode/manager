@@ -331,7 +331,7 @@ const Header: React.FC<HeaderProps> = props => {
                   handleConsoleButtonClick(linodeId);
                 }}
               >
-                LISH Console{' '}
+                Launch LISH Console
               </Button>
             </Hidden>
 

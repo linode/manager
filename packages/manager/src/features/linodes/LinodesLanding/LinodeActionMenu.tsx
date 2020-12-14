@@ -150,7 +150,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
     return (closeMenu: Function): Action[] => {
       const actions: Action[] = [
         {
-          title: 'LISH Console',
+          title: 'Launch LISH Console',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Launch Console');
             lishLaunch(linodeId);
