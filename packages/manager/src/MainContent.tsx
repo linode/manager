@@ -260,7 +260,6 @@ const MainContent: React.FC<CombinedProps> = props => {
               open={menuIsOpen}
               desktopOpen={desktopMenuIsOpen || false}
               closeMenu={() => toggleMenu(false)}
-              toggleTheme={props.toggleTheme}
               toggleSpacing={props.toggleSpacing}
             />
             <div
