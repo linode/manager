@@ -3,8 +3,9 @@ import * as classnames from 'classnames';
 import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
-import Breadcrumb from '../Breadcrumb';
+import Breadcrumb, { BreadcrumbProps } from '../Breadcrumb';
 import DocumentationButton from '../CMR_DocumentationButton';
+import Typography from 'src/components/core/Typography';
 
 export interface HeaderProps extends BreadCrumbProps {
   actions?: JSX.Element;
@@ -17,6 +18,7 @@ export interface HeaderProps extends BreadCrumbProps {
   isDetailLanding?: boolean;
   headerOnly?: boolean;
   removeCrumbX?: number;
+  breadcrumbProps?: BreadcrumbProps;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -57,7 +59,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0
   },
   breadCrumbSecondary: {
-    justifyContent: 'space-between'
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  label: {
+    marginLeft: 15
   },
   breadCrumbDetailLanding: {
     margin: 0,
@@ -87,6 +94,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+// @todo: Refactor this entire component now that we have less variants.
 export const EntityHeader: React.FC<HeaderProps> = props => {
   const classes = useStyles();
 
@@ -102,7 +110,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     isSecondary,
     isDetailLanding,
     headerOnly,
-    removeCrumbX
+    removeCrumbX,
+    breadcrumbProps
   } = props;
 
   const labelTitle = title.toString();
@@ -116,6 +125,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
               labelTitle={labelTitle}
               pathname={location.pathname}
               removeCrumbX={removeCrumbX}
+              {...breadcrumbProps}
               data-qa-title
             />
           </Grid>
@@ -157,6 +167,11 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
           })}
         >
+          {isSecondary ? (
+            <Typography variant="h3" className={classes.label}>
+              {labelTitle}
+            </Typography>
+          ) : null}
           {body && (
             <Grid
               className={classnames({
@@ -168,6 +183,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
               {body}
             </Grid>
           )}
+          {isSecondary ? actions : null}
         </Grid>
       </Grid>
     </>

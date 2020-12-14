@@ -25,12 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
-    padding: `
-        ${theme.spacing(2) - 2}px
-        0
-        ${theme.spacing(1) + theme.spacing(1) / 2}px
-        ${theme.spacing(4)}px
-      `,
+    padding: '14px 14px 12px',
     '& svg': {
       maxWidth: theme.spacing(3) + 91
     }
@@ -55,12 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: 0,
       marginBottom: 0
     },
-    padding: `
-        ${theme.spacing(1.5)}px
-        ${theme.spacing(4) - 2}px
-        ${theme.spacing(1.5)}px
-        ${theme.spacing(4) + 1}px
-      `,
+    padding: '12px 20px',
     '&:focus': {
       textDecoration: 'none'
     },
@@ -77,24 +67,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     '& .icon': {
+      color: theme.cmrIconColors.iGrey,
       marginRight: theme.spacing(2),
-      color: theme.color.primaryNavText,
       '& svg': {
-        width: 20,
-        height: 20,
         display: 'flex',
         alignItems: 'center',
-        fill: theme.color.primaryNavText,
-        '&.small': {
-          transform: 'scale(1)'
-        },
+        width: 20,
+        height: 20,
         '&:not(.wBorder) circle, & .circle': {
           display: 'none'
         }
       }
     }
   },
-  listItemCollapsed: {},
   collapsible: {
     fontSize: '0.9rem'
   },
@@ -112,10 +97,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
     textDecoration: 'none',
     '& svg': {
-      color: theme.color.greenCyan,
-      '& *': {
-        // stroke: theme.color.greenCyan
-      }
+      color: theme.color.greenCyan
     },
     '&:hover': {}
   },
