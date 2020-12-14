@@ -56,6 +56,9 @@ const styles = (theme: Theme) =>
 
 interface Props {
   isRestrictedUser: boolean;
+  accessDrawerOpen: boolean;
+  openAccessDrawer: () => void;
+  closeAccessDrawer: () => void;
 }
 
 export type FormikProps = FormikBag<CombinedProps, ObjectStorageKeyRequest>;
@@ -101,7 +104,6 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
 
   const displayKeysDialog = useOpenClose();
   const revokeKeysDialog = useOpenClose();
-  const createOrEditDrawer = useOpenClose();
   const viewPermissionsDrawer = useOpenClose();
 
   // Request object storage key when component is first rendered
@@ -126,7 +128,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         // "Refresh" keys to include the newly created key
         paginationProps.request();
 
-        createOrEditDrawer.close();
+        props.closeAccessDrawer();
         displayKeysDialog.open();
 
         // If our Redux Store says that the user doesn't have OBJ enabled,
@@ -180,7 +182,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     // If the new label is the same as the old one, no need to make an API
     // request. Just close the drawer and return early.
     if (values.label === keyToEdit.label) {
-      return createOrEditDrawer.close();
+      return props.closeAccessDrawer();
     }
 
     setSubmitting(true);
@@ -192,7 +194,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         // "Refresh" keys to display the newly updated key
         paginationProps.request();
 
-        createOrEditDrawer.close();
+        props.closeAccessDrawer();
 
         // @analytics
         sendEditAccessKeyEvent();
@@ -256,7 +258,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     switch (mode) {
       case 'creating':
       case 'editing':
-        createOrEditDrawer.open();
+        props.openAccessDrawer();
         break;
       case 'viewing':
         viewPermissionsDrawer.open();
@@ -290,7 +292,9 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
       )}
       <KeyTable
         {...paginationProps}
-        openDrawer={openDrawer}
+        openDrawer={
+          props.accessDrawerOpen ? () => openDrawer('creating') : openDrawer
+        }
         openRevokeDialog={openRevokeDialog}
         data-qa-access-key-table
       />
@@ -305,8 +309,8 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
       />
 
       <AccessKeyDrawer
-        open={createOrEditDrawer.isOpen}
-        onClose={createOrEditDrawer.close}
+        open={props.accessDrawerOpen}
+        onClose={props.closeAccessDrawer}
         onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
         mode={mode}
         objectStorageKey={keyToEdit ? keyToEdit : undefined}
