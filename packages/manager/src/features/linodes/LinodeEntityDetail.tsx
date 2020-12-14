@@ -5,8 +5,10 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
+import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CopyTooltip from 'src/components/CopyTooltip';
+import Box from 'src/components/core/Box';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import {
@@ -26,6 +28,7 @@ import Grid, { GridProps } from 'src/components/Grid';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
+import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow_CMR';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
@@ -39,11 +42,20 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking_CMR';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import withRecentEvent, {
+  WithRecentEvent
+} from './LinodesLanding/withRecentEvent';
+import {
+  getProgressOrDefault,
+  isEventWithSecondaryLinodeStatus,
+  transitionText as _transitionText
+} from './transitions';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
 interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
+  id: number;
   linode: Linode;
   username?: string;
   openDialog: OpenDialog;
@@ -61,7 +73,7 @@ interface LinodeEntityDetailProps {
   isDetailLanding?: boolean;
 }
 
-export type CombinedProps = LinodeEntityDetailProps;
+export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
 
 const LinodeEntityDetail: React.FC<CombinedProps> = props => {
   const {
@@ -75,7 +87,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
     numVolumes,
     isDetailLanding,
     openTagDrawer,
-    openNotificationDrawer
+    openNotificationDrawer,
+    recentEvent
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -97,6 +110,13 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
 
   const linodeRegionDisplay = dcDisplayNames[linode.region] ?? null;
 
+  let progress;
+  let transitionText;
+  if (recentEvent && isEventWithSecondaryLinodeStatus(recentEvent, linode.id)) {
+    progress = getProgressOrDefault(recentEvent);
+    transitionText = _transitionText(linode.status, linode.id, recentEvent);
+  }
+
   return (
     <EntityDetail
       header={
@@ -115,6 +135,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
           type={''}
           image={''}
           openNotificationDrawer={openNotificationDrawer || (() => null)}
+          progress={progress}
+          transitionText={transitionText}
         />
       }
       body={
@@ -147,7 +169,12 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
   );
 };
 
-export default React.memo(LinodeEntityDetail);
+const enhanced = compose<CombinedProps, LinodeEntityDetailProps>(
+  withRecentEvent,
+  React.memo
+);
+
+export default enhanced(LinodeEntityDetail);
 
 // =============================================================================
 // Header
@@ -172,6 +199,8 @@ export interface HeaderProps {
   linodeConfigs: Config[];
   isDetailLanding?: boolean;
   openNotificationDrawer: () => void;
+  progress?: number;
+  transitionText?: string;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -194,7 +223,9 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusChip: {
     ...theme.applyStatusPillStyles,
-    marginLeft: theme.spacing()
+    marginLeft: theme.spacing(),
+    height: `24px !important`,
+    borderRadius: 0
   },
   statusRunning: {
     '&:before': {
@@ -211,6 +242,10 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.cmrIconColors.iOrange
     }
   },
+  divider: {
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
+    paddingRight: `16px !important`
+  },
   actionItemsOuter: {
     display: 'flex',
     alignItems: 'center',
@@ -221,6 +256,16 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   actionItem: {
     '&:focus': {
       outline: '1px dotted #999'
+    }
+  },
+  statusLink: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    '& p': {
+      color: theme.palette.primary.main,
+      fontFamily: theme.font.bold
     }
   }
 }));
@@ -240,7 +285,10 @@ const Header: React.FC<HeaderProps> = props => {
     type,
     image,
     linodeConfigs,
-    isDetailLanding
+    isDetailLanding,
+    progress,
+    transitionText,
+    openNotificationDrawer
   } = props;
 
   const isDetails = variant === 'details';
@@ -253,6 +301,16 @@ const Header: React.FC<HeaderProps> = props => {
     sendLinodeActionMenuItemEvent('Launch Console');
     lishLaunch(id);
   };
+
+  const formattedStatus = linodeStatus.replace('_', ' ').toUpperCase();
+  const formattedTransitionText = (transitionText ?? '').toUpperCase();
+
+  const hasSecondaryStatus =
+    typeof progress !== 'undefined' &&
+    typeof transitionText !== 'undefined' &&
+    // Kind of a hacky way to avoid "CLONING | CLONING (50%)" until we add logic
+    // to display "Cloning to 'destination-linode'.
+    formattedTransitionText !== formattedStatus;
 
   return (
     <EntityHeader
@@ -272,20 +330,40 @@ const Header: React.FC<HeaderProps> = props => {
           alignItems="center"
           justify="space-between"
         >
-          <Grid item className="p0">
-            <Chip
-              className={classnames({
-                [classes.statusChip]: true,
-                [classes.statusRunning]: isRunning,
-                [classes.statusOffline]: isOffline,
-                [classes.statusOther]: isOther,
-                statusOtherDetail: isOther
-              })}
-              label={linodeStatus.replace('_', ' ').toUpperCase()}
-              component="span"
-              {...isOther}
-            />
-          </Grid>
+          <Box display="flex" alignItems="center">
+            <Grid item className="p0">
+              <Chip
+                className={classnames({
+                  [classes.statusChip]: true,
+                  [classes.statusRunning]: isRunning,
+                  [classes.statusOffline]: isOffline,
+                  [classes.statusOther]: isOther,
+                  [classes.divider]: hasSecondaryStatus,
+                  statusOtherDetail: isOther
+                })}
+                label={formattedStatus}
+                component="span"
+                {...isOther}
+              />
+            </Grid>
+            {hasSecondaryStatus ? (
+              <Grid
+                item
+                className="py0"
+                style={{ marginLeft: 16, marginBottom: 2 }}
+              >
+                <button
+                  className={classes.statusLink}
+                  onClick={openNotificationDrawer}
+                >
+                  <ProgressDisplay
+                    progress={progress ?? 0}
+                    text={formattedTransitionText}
+                  />
+                </button>
+              </Grid>
+            ) : null}
+          </Box>
           <Grid item className={`${classes.actionItemsOuter} py0`}>
             <Hidden smDown>
               <Button
