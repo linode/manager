@@ -1,5 +1,6 @@
-import { Event } from '@linode/api-v4/lib/account';
+import { Event, EventAction } from '@linode/api-v4/lib/account';
 import {
+  isEventRelevantToLinode,
   isPrimaryEntity,
   isSecondaryEntity
 } from 'src/store/events/event.selectors';
@@ -143,3 +144,29 @@ export const getProgressOrDefault = (
   event?: ExtendedEvent,
   defaultProgress = 100
 ) => event?.percent_complete ?? defaultProgress;
+
+// Linodes have a literal "status" given by the API (linode.status). There are
+// states the Linode can be in which aren't entirely communicated with the
+// status field, however. Example: Linode A can be cloning to another Linode,
+// but have an unrelated status like "running" or "offline". These states can be
+// determined by events with the following actions.
+const eventsWithSecondaryStatus: EventAction[] = [
+  'disk_duplicate',
+  'disk_resize',
+  'disk_imagize',
+  'linode_clone',
+  'linode_snapshot',
+  'linode_migrate',
+  'linode_migrate_datacenter',
+  'linode_mutate'
+];
+
+export const isEventWithSecondaryLinodeStatus = (
+  event: Event,
+  linodeId: number
+) => {
+  return (
+    isEventRelevantToLinode(event, linodeId) &&
+    eventsWithSecondaryStatus.includes(event.action)
+  );
+};
