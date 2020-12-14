@@ -138,7 +138,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             alignItems="center"
             justify="flex-end"
             wrap="nowrap"
-            // xs={12}
+            xs={12}
             sm={8}
           >
             {docsLink && (
