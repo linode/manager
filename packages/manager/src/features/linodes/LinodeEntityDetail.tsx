@@ -8,6 +8,7 @@ import { HashLink } from 'react-router-hash-link';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CopyTooltip from 'src/components/CopyTooltip';
+import Box from 'src/components/core/Box';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import {
@@ -46,6 +47,7 @@ import withRecentEvent, {
 } from './LinodesLanding/withRecentEvent';
 import {
   getProgressOrDefault,
+  isEventWithSecondaryLinodeStatus,
   transitionText as _transitionText
 } from './transitions';
 
@@ -108,8 +110,12 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
 
   const linodeRegionDisplay = dcDisplayNames[linode.region] ?? null;
 
-  const progress = getProgressOrDefault(recentEvent);
-  const transitionText = _transitionText(linode.status, linode.id, recentEvent);
+  let progress;
+  let transitionText;
+  if (recentEvent && isEventWithSecondaryLinodeStatus(recentEvent, linode.id)) {
+    progress = getProgressOrDefault(recentEvent);
+    transitionText = _transitionText(linode.status, linode.id, recentEvent);
+  }
 
   return (
     <EntityDetail
@@ -193,7 +199,7 @@ export interface HeaderProps {
   linodeConfigs: Config[];
   isDetailLanding?: boolean;
   openNotificationDrawer: () => void;
-  progress: number;
+  progress?: number;
   transitionText?: string;
 }
 
@@ -309,32 +315,41 @@ const Header: React.FC<HeaderProps> = props => {
           alignItems="center"
           justify="space-between"
         >
-          <Grid item className="py0">
-            <Chip
-              className={classnames({
-                [classes.statusChip]: true,
-                [classes.statusRunning]: isRunning,
-                [classes.statusOffline]: isOffline,
-                [classes.statusOther]: isOther,
-                statusOtherDetail: isOther
-              })}
-              label={linodeStatus.replace('_', ' ').toUpperCase()}
-              component="span"
-              {...isOther}
-            />
-          </Grid>
-          <Grid item className="py0">
-            <button
-              className={classes.statusLink}
-              onClick={openNotificationDrawer}
-            >
-              <ProgressDisplay
-                // className={classes.progressDisplay}
-                progress={progress}
-                text={transitionText ?? ''}
+          <Box display="flex" alignItems="center">
+            <Grid item className="py0">
+              <Chip
+                className={classnames({
+                  [classes.statusChip]: true,
+                  [classes.statusRunning]: isRunning,
+                  [classes.statusOffline]: isOffline,
+                  [classes.statusOther]: isOther,
+                  statusOtherDetail: isOther
+                })}
+                label={linodeStatus.replace('_', ' ').toUpperCase()}
+                component="span"
+                {...isOther}
               />
-            </button>
-          </Grid>
+            </Grid>
+            {typeof progress !== 'undefined' &&
+            typeof transitionText !== 'undefined' ? (
+              <Grid
+                item
+                className="py0"
+                style={{ marginLeft: 24, marginBottom: 2 }}
+              >
+                <button
+                  className={classes.statusLink}
+                  onClick={openNotificationDrawer}
+                >
+                  <ProgressDisplay
+                    // className={classes.progressDisplay}
+                    progress={progress}
+                    text={transitionText.toUpperCase() ?? ''}
+                  />
+                </button>
+              </Grid>
+            ) : null}
+          </Box>
           <Grid item className={`${classes.actionItemsOuter} py0`}>
             <Hidden smDown>
               <Button
