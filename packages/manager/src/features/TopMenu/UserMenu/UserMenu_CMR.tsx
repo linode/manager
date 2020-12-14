@@ -157,7 +157,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(),
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
-    padding: '16px 0',
+    padding: '16px 0 8px',
     textTransform: 'uppercase'
   },
   profileWrapper: {
