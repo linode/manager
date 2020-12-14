@@ -74,7 +74,7 @@ const styles = (theme: Theme) =>
       '& .outerCircle': {
         stroke: theme.bg.main
       },
-      '& .insidePath, .path': {
+      '& .insidePath': {
         fill: 'none',
         stroke: '#3683DC',
         strokeWidth: 1.25,

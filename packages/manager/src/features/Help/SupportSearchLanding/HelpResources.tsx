@@ -22,8 +22,7 @@ type ClassNames =
   | 'heading'
   | 'card'
   | 'tileTitle'
-  | 'icon'
-  | 'ada';
+  | 'icon';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -58,10 +57,6 @@ const styles = (theme: Theme) =>
       width: 66,
       height: 66,
       color: theme.palette.primary.main
-    },
-    ada: {
-      color: '#3683DC',
-      cursor: 'pointer'
     }
   });
 
