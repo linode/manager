@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Community from 'src/assets/icons/community.svg';
+import Community from 'src/assets/icons/community_nav.svg';
 import Link from 'src/components/Link';
 import { useStyles } from './iconStyles';
 
