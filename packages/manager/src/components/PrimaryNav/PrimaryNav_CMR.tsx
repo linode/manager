@@ -1,4 +1,4 @@
-import Account from '@material-ui/icons/AccountCircle';
+import Account from 'src/assets/icons/account.svg';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
@@ -17,7 +17,7 @@ import VLAN from 'src/assets/icons/entityIcons/vlan.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
-import HelpIcon from 'src/assets/primary-nav-help.svg';
+import HelpIcon from 'src/assets/icons/get_help.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import useAccountManagement from 'src/hooks/useAccountManagement';

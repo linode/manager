@@ -1,5 +1,5 @@
-import Community from '@material-ui/icons/Forum';
 import * as React from 'react';
+import Community from 'src/assets/icons/community.svg';
 import Link from 'src/components/Link';
 import { useStyles } from './iconStyles';
 

@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import Button from 'src/components/core/Button';
 import {
   createStyles,
@@ -9,7 +8,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ExternalLink from 'src/components/ExternalLink';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 
 type ClassNames =
@@ -75,7 +74,7 @@ const styles = (theme: Theme) =>
       '& .outerCircle': {
         stroke: theme.bg.main
       },
-      '& .insidePath': {
+      '& .insidePath, .path': {
         fill: 'none',
         stroke: '#3683DC',
         strokeWidth: 1.25,
@@ -99,7 +98,9 @@ const styles = (theme: Theme) =>
     }
   });
 
-type onClickFn = (e: React.MouseEvent<HTMLElement>) => void;
+type onClickFn = (
+  e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
+) => void;
 
 interface Props {
   title: string;
@@ -127,14 +128,7 @@ class Tile extends React.Component<CombinedProps> {
           {title}
         </Button>
       );
-    } else if (
-      link &&
-      (link.startsWith('http://') || link.startsWith('https://'))
-    ) {
-      return (
-        <ExternalLink link={link} text={title} className="black tile-link" />
-      );
-    } else if (link && link.startsWith('/')) {
+    } else if (link) {
       return (
         <Link to={link} className="black tile-link">
           {title}
@@ -167,7 +161,9 @@ class Tile extends React.Component<CombinedProps> {
         )}
         data-qa-tile={title}
         onClick={typeof link === 'function' ? link : undefined}
+        onKeyDown={typeof link === 'function' ? link : undefined}
         role="link"
+        tabIndex={0}
       >
         {icon && (
           <span className={classes.icon} data-qa-tile-icon>
@@ -180,7 +176,7 @@ class Tile extends React.Component<CombinedProps> {
           className={classes.tileTitle}
           data-qa-tile-title
         >
-          <React.Fragment>{link ? this.renderLink() : title}</React.Fragment>
+          {link ? this.renderLink() : title}
         </Typography>
         {description && (
           <Typography variant="body1" align="center" data-qa-tile-desc>
