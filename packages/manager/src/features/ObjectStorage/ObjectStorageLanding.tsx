@@ -76,8 +76,6 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const createOrEditDrawer = useOpenClose();
 
   const [route, setRoute] = React.useState<string>('');
-  const [createButtonText, setCreateButtonText] = React.useState<string>('');
-  const [createButtonWidth, setCreateButtonWidth] = React.useState<number>(0);
 
   const tabs = [
     /* NB: These must correspond to the routes, inside the Switch */
@@ -126,7 +124,6 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     setRoute(props.location.pathname.replace('/object-storage/', ''));
-    updateCreateButton(route);
   }, [route, props.location.pathname]);
 
   const matches = (p: string) => {
@@ -154,28 +151,26 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     objectStorageBuckets.data.length === 0 &&
     accountSettings.data?.object_storage === 'active';
 
-  const updateCreateButton = (_route: string) => {
-    switch (_route) {
-      case 'buckets':
-        setCreateButtonText('Create a Bucket');
-        setCreateButtonWidth(152);
-        break;
-      case 'access-keys':
-        setCreateButtonText('Create an Access Key');
-        setCreateButtonWidth(180);
-        break;
-      default:
-        break;
+  const matchesAccessKeys = Boolean(
+    matchPath(props.location.pathname, {
+      path: '/object-storage/access-keys',
+      exact: true
+    })
+  );
+
+  const createButtonText = matchesAccessKeys
+    ? 'Create an Access Key'
+    : 'Create a Bucket';
+
+  const createButtonWidth = matchesAccessKeys ? 180 : 152;
+
+  const createButtonAction = () => {
+    if (matchesAccessKeys) {
+      return createOrEditDrawer.open();
+    } else {
+      replace('/object-storage/buckets/create');
     }
   };
-
-  const updateCreateAction = React.useCallback(() => {
-    if (route === 'buckets') {
-      replace('/object-storage/buckets/create');
-    } else {
-      createOrEditDrawer.open();
-    }
-  }, [replace, createOrEditDrawer, route]);
 
   return (
     <React.Fragment>
@@ -195,7 +190,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
               createButtonText={createButtonText}
               createButtonWidth={createButtonWidth}
               docsLink="https://www.linode.com/docs/platform/object-storage/"
-              onAddNew={updateCreateAction}
+              onAddNew={createButtonAction}
               removeCrumbX={1}
               breadcrumbProps={{ pathname: '/object-storage' }}
             />

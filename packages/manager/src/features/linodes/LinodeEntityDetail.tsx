@@ -180,7 +180,6 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   linodeLabel: {
     color: theme.cmrTextColors.linkActiveLight,
-    marginLeft: theme.spacing(),
     '&:hover': {
       color: theme.palette.primary.light,
       textDecoration: 'underline'
@@ -273,7 +272,7 @@ const Header: React.FC<HeaderProps> = props => {
           alignItems="center"
           justify="space-between"
         >
-          <Grid item className="py0">
+          <Grid item className="p0">
             <Chip
               className={classnames({
                 [classes.statusChip]: true,

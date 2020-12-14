@@ -28,13 +28,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     margin: 0,
     width: '100%',
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: theme.spacing()
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: theme.spacing(),
+      paddingRight: theme.spacing()
     }
   },
   landing: {
     marginBottom: 0,
-    paddingBottom: theme.spacing()
+    paddingBottom: theme.spacing(),
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      padding: 0
+    }
   },
   docs: {
     marginRight: theme.spacing()
@@ -122,7 +127,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     <>
       {isLanding && (
         <Grid container item className={`${classes.root} ${classes.landing}`}>
-          <Grid container item xs={actions ? 3 : 8}>
+          <Grid container item xs={12} sm={4}>
             <Breadcrumb
               labelTitle={labelTitle}
               pathname={location.pathname}
@@ -136,8 +141,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             item
             alignItems="center"
             justify="flex-end"
-            wrap="nowrap"
-            xs={actions ? 9 : 4}
+            xs={12}
+            sm={8}
           >
             {docsLink && <DocumentationButton href={docsLink} />}
             <div className={classes.actions}>{actions}</div>

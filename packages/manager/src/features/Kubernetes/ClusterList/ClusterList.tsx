@@ -134,7 +134,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
       <DocumentTitleSegment segment="Kubernetes Clusters" />
       {flags.cmr ? (
         <LandingHeader
-          title="Kubernetes Clusters"
+          title="Kubernetes"
           docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
           onAddNew={() => history.push('/kubernetes/create')}
           entity="Cluster"
