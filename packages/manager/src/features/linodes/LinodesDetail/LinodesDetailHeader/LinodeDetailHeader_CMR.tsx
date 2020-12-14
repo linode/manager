@@ -255,6 +255,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
       <LinodeDetailsBreadcrumb />
       <LinodeEntityDetail
         variant="details"
+        id={linode.id}
         linode={linode}
         numVolumes={getVolumesByLinode(linode.id)}
         username={profile.data?.username}

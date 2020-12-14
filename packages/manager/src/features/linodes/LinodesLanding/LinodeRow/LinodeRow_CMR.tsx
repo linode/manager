@@ -311,7 +311,7 @@ export const RenderFlag: React.FC<{
 
 RenderFlag.displayName = `RenderFlag`;
 
-const ProgressDisplay: React.FC<{
+export const ProgressDisplay: React.FC<{
   className?: string;
   progress: null | number;
   text: string;
