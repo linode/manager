@@ -376,13 +376,11 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
             locationSearch,
             locationPathname,
             activeLinks
-          ),
-          listItemCollapsed: isCollapsed
+          )
         })}
         data-testid={`menu-item-${display}`}
       >
-        {/* <div style={{ display: 'flex', alignItems: 'center' }}> */}
-        {icon && isCollapsed && (
+        {icon && (
           <div className="icon" aria-hidden>
             {icon}
           </div>
@@ -396,7 +394,6 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
         >
           {display}
         </p>
-        {/* </div> */}
       </Link>
     </>
   );
