@@ -224,7 +224,9 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusChip: {
     ...theme.applyStatusPillStyles,
-    marginLeft: theme.spacing()
+    marginLeft: theme.spacing(),
+    height: `24px !important`,
+    borderRadius: 0
   },
   statusRunning: {
     '&:before': {
@@ -240,6 +242,10 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     '&:before': {
       backgroundColor: theme.cmrIconColors.iOrange
     }
+  },
+  divider: {
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
+    paddingRight: `16px !important`
   },
   actionItemsOuter: {
     display: 'flex',
@@ -297,6 +303,9 @@ const Header: React.FC<HeaderProps> = props => {
     lishLaunch(id);
   };
 
+  const hasSecondaryStatus =
+    typeof progress !== 'undefined' && typeof transitionText !== 'undefined';
+
   return (
     <EntityHeader
       parentLink={isDetails ? '/linodes' : undefined}
@@ -323,6 +332,7 @@ const Header: React.FC<HeaderProps> = props => {
                   [classes.statusRunning]: isRunning,
                   [classes.statusOffline]: isOffline,
                   [classes.statusOther]: isOther,
+                  [classes.divider]: hasSecondaryStatus,
                   statusOtherDetail: isOther
                 })}
                 label={linodeStatus.replace('_', ' ').toUpperCase()}
@@ -330,21 +340,19 @@ const Header: React.FC<HeaderProps> = props => {
                 {...isOther}
               />
             </Grid>
-            {typeof progress !== 'undefined' &&
-            typeof transitionText !== 'undefined' ? (
+            {hasSecondaryStatus ? (
               <Grid
                 item
                 className="py0"
-                style={{ marginLeft: 24, marginBottom: 2 }}
+                style={{ marginLeft: 16, marginBottom: 2 }}
               >
                 <button
                   className={classes.statusLink}
                   onClick={openNotificationDrawer}
                 >
                   <ProgressDisplay
-                    // className={classes.progressDisplay}
-                    progress={progress}
-                    text={transitionText.toUpperCase() ?? ''}
+                    progress={progress!}
+                    text={transitionText!.toUpperCase() ?? ''}
                   />
                 </button>
               </Grid>
