@@ -11,7 +11,7 @@ class KubernetesEmptyState extends React.Component<Props> {
   render() {
     return (
       <Placeholder
-        title="Kubernetes Clusters"
+        title="Kubernetes"
         isEntity
         icon={KubernetesSvg}
         buttonProps={[

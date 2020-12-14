@@ -21,6 +21,7 @@ interface Props extends Omit<HeaderProps, 'actions'> {
   entity?: string;
   createButtonWidth?: number;
   createButtonText?: string;
+  loading?: boolean;
   breadcrumbProps?: BreadcrumbProps;
 }
 
@@ -40,6 +41,7 @@ export const LandingHeader: React.FC<Props> = props => {
     extraActions,
     createButtonWidth,
     createButtonText,
+    loading,
     breadcrumbProps
   } = props;
 
@@ -56,6 +58,7 @@ export const LandingHeader: React.FC<Props> = props => {
           <Button
             buttonType="primary"
             className={classes.button}
+            loading={loading}
             onClick={onAddNew}
             style={{ width: createButtonWidth ?? defaultCreateButtonWidth }}
           >
@@ -68,8 +71,9 @@ export const LandingHeader: React.FC<Props> = props => {
     ),
     [
       extraActions,
-      classes.button,
       onAddNew,
+      classes.button,
+      loading,
       createButtonWidth,
       createButtonText,
       startsWithVowel,

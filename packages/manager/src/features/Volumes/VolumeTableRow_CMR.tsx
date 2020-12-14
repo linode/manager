@@ -14,21 +14,9 @@ import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles(() => ({
-  root: {},
   volumePath: {
     width: '35%',
     wordBreak: 'break-all'
-  },
-  actionCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0,
-    /*
-      Explicitly stating this as the theme file is automatically adding padding to the last cell
-      We can remove once we make the full switch to CMR styling
-      */
-    paddingRight: '0 !important'
   }
 }));
 
@@ -122,7 +110,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
           )}
         </TableCell>
       )}
-      <TableCell className={classes.actionCell}>
+      <TableCell>
         <VolumesActionMenu
           onShowConfig={openForConfig}
           filesystemPath={filesystemPath}
