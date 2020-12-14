@@ -18,7 +18,7 @@ const styles = (theme: Theme) =>
       wordWrap: 'normal',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-      fontSize: '0.9rem'
+      fontSize: '0.875rem !important'
     }
   });
 

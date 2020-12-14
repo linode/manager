@@ -147,7 +147,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inlineUserName: {
     paddingRight: theme.spacing(),
-    fontSize: '1rem'
+    fontSize: '0.875rem'
   },
   menuHeader: {
     borderBottom: '1px solid #9ea4ae',
