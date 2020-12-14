@@ -3,7 +3,7 @@ import * as classnames from 'classnames';
 import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
-import Breadcrumb from '../Breadcrumb';
+import Breadcrumb, { BreadcrumbProps } from '../Breadcrumb';
 import DocumentationButton from '../CMR_DocumentationButton';
 import Typography from 'src/components/core/Typography';
 
@@ -18,6 +18,7 @@ export interface HeaderProps extends BreadCrumbProps {
   isDetailLanding?: boolean;
   headerOnly?: boolean;
   removeCrumbX?: number;
+  breadcrumbProps?: BreadcrumbProps;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -109,7 +110,8 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     isSecondary,
     isDetailLanding,
     headerOnly,
-    removeCrumbX
+    removeCrumbX,
+    breadcrumbProps
   } = props;
 
   const labelTitle = title.toString();
@@ -123,6 +125,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
               labelTitle={labelTitle}
               pathname={location.pathname}
               removeCrumbX={removeCrumbX}
+              {...breadcrumbProps}
               data-qa-title
             />
           </Grid>
