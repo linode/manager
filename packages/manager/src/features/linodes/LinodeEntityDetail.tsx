@@ -222,6 +222,11 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     width: '100%'
   },
+  chipWrapper: {
+    '&.MuiGrid-item': {
+      marginTop: 2
+    }
+  },
   statusChip: {
     ...theme.applyStatusPillStyles,
     borderRadius: 0,
@@ -337,7 +342,7 @@ const Header: React.FC<HeaderProps> = props => {
           justify="space-between"
         >
           <Box display="flex" alignItems="center">
-            <Grid item className="p0">
+            <Grid item className={`p0 ${classes.chipWrapper}`}>
               <Chip
                 className={classnames({
                   [classes.statusChip]: true,
