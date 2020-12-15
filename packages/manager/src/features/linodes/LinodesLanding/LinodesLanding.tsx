@@ -554,7 +554,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               }}
                             </OrderBy>
                             {this.props.isVLAN ? null : (
-                              <Grid container justify="flex-end">
+                              <Grid
+                                container
+                                className={classes.CSVwrapper}
+                                justify="flex-end"
+                              >
                                 <Grid item className={classes.CSVlinkContainer}>
                                   <CSVLink
                                     data={linodesData.map(e => {
