@@ -18,8 +18,7 @@ export interface EntityDetailProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(),
-    marginBottom: theme.spacing(2)
+    // marginTop: theme.spacing()
   },
   header: {},
   body: {

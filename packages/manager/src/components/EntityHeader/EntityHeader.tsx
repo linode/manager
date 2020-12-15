@@ -88,7 +88,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiChip-root': {
       ...theme.applyStatusPillStyles,
       height: 30,
-      marginTop: 1,
       fontSize: '.875rem',
       letterSpacing: '.5px'
     }
