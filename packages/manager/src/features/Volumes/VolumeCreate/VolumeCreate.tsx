@@ -14,12 +14,10 @@ import { openForConfig, viewResizeInstructions } from 'src/store/volumeForm';
 import CreateVolumeForm from './CreateVolumeForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   main: {
     marginTop: theme.spacing(1)
   },
   title: {
-    marginTop: 3,
     marginBottom: theme.spacing(1)
   }
 }));

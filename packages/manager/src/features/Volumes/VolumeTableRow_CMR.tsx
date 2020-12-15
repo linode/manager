@@ -14,7 +14,6 @@ import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 
 const useStyles = makeStyles(() => ({
-  root: {},
   volumePath: {
     width: '35%',
     wordBreak: 'break-all'

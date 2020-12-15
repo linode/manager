@@ -1,5 +1,4 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import * as classnames from 'classnames';
 import {
   append,
   clone,
@@ -39,9 +38,6 @@ import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import {
   hasGrant,
   isRestrictedUser
@@ -63,44 +59,22 @@ import {
   transformConfigsForRequest
 } from './utils';
 
-type ClassNames =
-  | 'root'
-  | 'main'
-  | 'sidebar'
-  | 'title'
-  | 'cmrSidebar'
-  | 'cmrSpacing';
+type ClassNames = 'title' | 'sidebar';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    main: {
-      '&.MuiGrid-item': {
-        paddingLeft: 0,
-        [theme.breakpoints.down('md')]: {
-          paddingRight: 0
-        }
-      }
+    title: {
+      marginTop: theme.spacing(3)
     },
     sidebar: {
       [theme.breakpoints.up('md')]: {
         marginTop: '60px !important'
-      }
-    },
-    title: {
-      marginTop: theme.spacing(3)
-    },
-    cmrSidebar: {
+      },
       [theme.breakpoints.down('md')]: {
         '&.MuiGrid-item': {
           paddingLeft: 0,
           paddingRight: 0
         }
-      }
-    },
-    cmrSpacing: {
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing()
       }
     }
   });
@@ -109,8 +83,7 @@ type CombinedProps = WithNodeBalancerActions &
   StateProps &
   WithRegions &
   RouteComponentProps<{}> &
-  WithStyles<ClassNames> &
-  FeatureFlagConsumerProps;
+  WithStyles<ClassNames>;
 
 interface NodeBalancerFieldsState {
   label?: string;
@@ -500,7 +473,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { classes, regionsData, disabled, flags } = this.props;
+    const { classes, regionsData, disabled } = this.props;
     const { nodeBalancerFields } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
@@ -529,9 +502,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment="Create a NodeBalancer" />
         <Grid container className="m0">
-          <Grid item className={`mlMain ${flags.cmr && classes.main} `}>
+          <Grid item className={`mlMain p0`}>
             <Breadcrumb
-              pathname={this.props.location.pathname}
+              pathname="/NodeBalancers/Create"
               data-qa-create-nodebalancer-header
             />
             {generalError && !disabled && (
@@ -578,13 +551,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               disabled={disabled}
             />
             <Grid item xs={12}>
-              <Typography
-                variant="h2"
-                className={classnames({
-                  [classes.title]: true,
-                  [classes.cmrSpacing]: flags.cmr
-                })}
-              >
+              <Typography variant="h2" className={classes.title}>
                 NodeBalancer Settings
               </Typography>
             </Grid>
@@ -718,7 +685,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   );
                 }
               )}
-              <Grid item className={flags.cmr ? classes.cmrSpacing : ''}>
+              <Grid item>
                 <Button
                   buttonType="secondary"
                   onClick={this.addNodeBalancer}
@@ -730,11 +697,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               </Grid>
             </Grid>
           </Grid>
-          <Grid
-            item
-            className={`mlSidebar ${classes.sidebar} ${flags.cmr &&
-              classes.cmrSidebar}`}
-          >
+          <Grid item className={`mlSidebar ${classes.sidebar}`}>
             <CheckoutBar
               heading={`${this.state.nodeBalancerFields.label ||
                 'NodeBalancer'} Summary`}
@@ -865,6 +828,5 @@ export default recompose<CombinedProps, {}>(
   withRegions,
   withNodeBalancerActions,
   styled,
-  withRouter,
-  withFeatureFlags
+  withRouter
 )(NodeBalancerCreate);
