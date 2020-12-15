@@ -1,5 +1,5 @@
 import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
-import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -156,6 +156,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
       footer={
         <Footer
           linodePlan={linodePlan}
+          linodeType={linodeType}
           linodeRegionDisplay={linodeRegionDisplay}
           linodeId={linode.id}
           linodeCreated={linode.created}
@@ -731,6 +732,7 @@ export const AccessTable: React.FC<AccessTableProps> = React.memo(props => {
 // =============================================================================
 interface FooterProps {
   linodePlan: string | null;
+  linodeType: LinodeType | null;
   linodeRegionDisplay: string | null;
   linodeId: number;
   linodeCreated: string;
@@ -772,11 +774,6 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
       paddingRight: 0
     }
   },
-  listItemLegacy: {
-    [theme.breakpoints.down('sm')]: {
-      flex: '70%'
-    }
-  },
   listItemLast: {
     borderRight: 'none'
   },
@@ -806,6 +803,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const {
     linodePlan,
+    linodeType,
     linodeRegionDisplay,
     linodeId,
     linodeCreated,
@@ -843,9 +841,9 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     [linodeTags, linodeId, updateLinode, enqueueSnackbar]
   );
 
-  const isLegacy = linodePlan && linodePlan.includes('(pending upgrade)');
+  const isLegacy = linodeType?.successor;
 
-  const hasTags = linodeTags.length === 0 ? false : true;
+  const hasTags = linodeTags.length > 0;
 
   return (
     <Grid container direction="row" alignItems="center" justify="space-between">
@@ -863,12 +861,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       >
         <div className={classes.detailRow}>
           {linodePlan && (
-            <Typography
-              className={classnames({
-                [classes.listItem]: true,
-                [classes.listItemLegacy]: isLegacy
-              })}
-            >
+            <Typography className={classes.listItem}>
               <span className={classes.label}>Plan: </span> {linodePlan}
             </Typography>
           )}
@@ -885,12 +878,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           )}
         </div>
         <div className={classes.detailRow}>
-          <Typography
-            className={classnames({
-              [classes.listItem]: true,
-              [classes.listItemLegacy]: isLegacy
-            })}
-          >
+          <Typography className={classes.listItem}>
             <span className={classes.label}>Linode ID:</span> {linodeId}
           </Typography>
           <Typography className={`${classes.listItem} ${classes.listItemLast}`}>
