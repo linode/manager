@@ -743,7 +743,15 @@ interface FooterProps {
 const useFooterStyles = makeStyles((theme: Theme) => ({
   details: {
     flexWrap: 'nowrap',
-    [theme.breakpoints.down('md')]: {
+    '&.MuiGrid-item': {
+      paddingRight: 0
+    },
+    [theme.breakpoints.up(1400)]: {
+      flexBasis: '66.67%',
+      flexGrow: 0,
+      maxWidth: '66.67%'
+    },
+    [theme.breakpoints.down(1400)]: {
       marginTop: 0,
       marginBottom: 0
     },
@@ -768,18 +776,25 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     padding: `0px 10px`,
     [theme.breakpoints.down('sm')]: {
       flex: '50%',
-      borderRight: 'none'
+      borderRight: 'none',
+      paddingRight: 0
     }
   },
   listItemLast: {
-    borderRight: 'none'
+    borderRight: 'none',
+    paddingRight: 0
   },
   label: {
     fontFamily: theme.font.bold,
     marginRight: 4
   },
   tags: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.up(1400)]: {
+      flexBasis: '33.33%',
+      flexGrow: 0,
+      maxWidth: '33.33%'
+    },
+    [theme.breakpoints.down(1400)]: {
       marginLeft: theme.spacing(),
       '& > div': {
         flexDirection: 'row-reverse',
@@ -843,12 +858,9 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Grid
         container
         item
-        className={classnames({
-          [classes.details]: true
-        })}
+        className={classes.details}
         alignItems="flex-start"
-        xs={12}
-        lg={8}
+        md={12}
       >
         <div className={classes.detailRow}>
           {linodePlan && (
@@ -878,7 +890,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
         </div>
       </Grid>
-      <Grid item className={classes.tags} xs={12} lg={4}>
+      <Grid item className={classes.tags} md={12}>
         <TagCell
           width={500}
           tags={linodeTags}
