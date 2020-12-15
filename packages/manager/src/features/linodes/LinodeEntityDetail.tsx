@@ -1,5 +1,5 @@
 import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
 import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -156,7 +156,6 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
       footer={
         <Footer
           linodePlan={linodePlan}
-          linodeType={linodeType}
           linodeRegionDisplay={linodeRegionDisplay}
           linodeId={linode.id}
           linodeCreated={linode.created}
@@ -732,7 +731,6 @@ export const AccessTable: React.FC<AccessTableProps> = React.memo(props => {
 // =============================================================================
 interface FooterProps {
   linodePlan: string | null;
-  linodeType: LinodeType | null;
   linodeRegionDisplay: string | null;
   linodeId: number;
   linodeCreated: string;
@@ -745,7 +743,15 @@ interface FooterProps {
 const useFooterStyles = makeStyles((theme: Theme) => ({
   details: {
     flexWrap: 'nowrap',
-    [theme.breakpoints.down('md')]: {
+    '&.MuiGrid-item': {
+      paddingRight: 0
+    },
+    [theme.breakpoints.up(1400)]: {
+      flexBasis: '66.67%',
+      flexGrow: 0,
+      maxWidth: '66.67%'
+    },
+    [theme.breakpoints.down(1400)]: {
       marginTop: 0,
       marginBottom: 0
     },
@@ -775,21 +781,29 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     }
   },
   listItemLast: {
-    borderRight: 'none'
+    borderRight: 'none',
+    paddingRight: 0
   },
   label: {
     fontFamily: theme.font.bold,
     marginRight: 4
   },
   tags: {
-    marginLeft: theme.spacing(),
-    '& > div': {
-      flexDirection: 'row-reverse',
-      '& > button': {
-        marginRight: 4
-      },
+    [theme.breakpoints.up(1400)]: {
+      flexBasis: '33.33%',
+      flexGrow: 0,
+      maxWidth: '33.33%'
+    },
+    [theme.breakpoints.down(1400)]: {
+      marginLeft: theme.spacing(),
       '& > div': {
-        justifyContent: 'flex-start !important'
+        flexDirection: 'row-reverse',
+        '& > button': {
+          marginRight: 4
+        },
+        '& > div': {
+          justifyContent: 'flex-start !important'
+        }
       }
     }
   }
@@ -799,11 +813,9 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
   const classes = useFooterStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
     linodePlan,
-    linodeType,
     linodeRegionDisplay,
     linodeId,
     linodeCreated,
@@ -841,23 +853,14 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     [linodeTags, linodeId, updateLinode, enqueueSnackbar]
   );
 
-  const isLegacy = linodeType?.successor;
-
-  const hasTags = linodeTags.length > 0;
-
   return (
     <Grid container direction="row" alignItems="center" justify="space-between">
       <Grid
         container
         item
-        className={classnames({
-          [classes.details]: true,
-          my0: isLegacy
-        })}
+        className={classes.details}
         alignItems="flex-start"
-        xs={12}
-        md={isLegacy || hasTags ? 12 : 10}
-        lg={isLegacy && hasTags ? 12 : hasTags ? 8 : 10}
+        md={12}
       >
         <div className={classes.detailRow}>
           {linodePlan && (
@@ -887,18 +890,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
         </div>
       </Grid>
-      <Grid
-        item
-        className={classnames({
-          [classes.tags]:
-            (isLegacy && hasTags) ||
-            (matchesMdDown && (isLegacy || hasTags)) ||
-            matchesSmDown
-        })}
-        xs={12}
-        md={isLegacy || hasTags ? 12 : 2}
-        lg={isLegacy && hasTags ? 12 : hasTags ? 4 : 2}
-      >
+      <Grid item className={classes.tags} md={12}>
         <TagCell
           width={500}
           tags={linodeTags}
