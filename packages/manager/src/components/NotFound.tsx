@@ -13,7 +13,6 @@ const NotFound = (props: Props) => {
     <Placeholder
       icon={ErrorOutline}
       title="Not Found"
-      animate={false}
       className={props.className}
     />
   );

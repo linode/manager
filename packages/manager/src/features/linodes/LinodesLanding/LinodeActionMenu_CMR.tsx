@@ -43,7 +43,6 @@ const useStyles = makeStyles(() => ({
   },
   powerOnOrOff: {
     borderRadius: 0,
-    height: '100%',
     minWidth: 'auto',
     whiteSpace: 'nowrap',
     '&:hover': {

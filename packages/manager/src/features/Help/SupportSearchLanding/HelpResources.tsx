@@ -22,8 +22,7 @@ type ClassNames =
   | 'heading'
   | 'card'
   | 'tileTitle'
-  | 'icon'
-  | 'ada';
+  | 'icon';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -58,10 +57,6 @@ const styles = (theme: Theme) =>
       width: 66,
       height: 66,
       color: theme.palette.primary.main
-    },
-    ada: {
-      color: '#3683DC',
-      cursor: 'pointer'
     }
   });
 
@@ -104,7 +99,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     this.ada.show();
   };
 
-  openTicketDrawer = (e: React.MouseEvent) => {
+  openTicketDrawer = () => {
     this.setState({ drawerOpen: true });
   };
 
@@ -131,55 +126,50 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     const { drawerOpen } = this.state;
 
     return (
-      <React.Fragment>
-        <Grid item>
-          <Grid container className={classes.wrapper}>
-            <Grid item xs={12}>
-              <Typography variant="h2" className={classes.heading}>
-                Didn't find what you need? Get help.
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Tile
-                title="Create a Community Post"
-                description="Find help from other Linode users in the Community"
-                icon={<Community />}
-                link="https://linode.com/community/"
-              />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Tile
-                title="Talk to Ada"
-                description="Chat with the Linode Support bot to help troubleshoot"
-                icon={<Chat />}
-                link={this.handleAdaInit}
-                errorText={this.state.error}
-              />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Tile
-                title="Open a ticket"
-                description="If you are not able to solve an issue with the resources listed above,
-                you can contact Linode Support"
-                icon={<Support />}
-                link={this.openTicketDrawer}
-              />
-            </Grid>
+      <Grid item>
+        <Grid container className={classes.wrapper}>
+          <Grid item xs={12}>
+            <Typography variant="h2" className={classes.heading}>
+              Didn&apos;t find what you need? Get help.
+            </Typography>
           </Grid>
-          <SupportTicketDrawer
-            open={drawerOpen}
-            onClose={this.closeTicketDrawer}
-            onSuccess={this.onTicketCreated}
-          />
+          <Grid item xs={12} md={4}>
+            <Tile
+              title="Create a Community Post"
+              description="Find help from other Linode users in the Community"
+              icon={<Community />}
+              link="https://linode.com/community/"
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Tile
+              title="Talk to Ada"
+              description="Chat with the Linode Support bot to help troubleshoot"
+              icon={<Chat />}
+              link={this.handleAdaInit}
+              errorText={this.state.error}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Tile
+              title="Open a ticket"
+              description="If you are not able to solve an issue with the resources listed above,
+                you can contact Linode Support"
+              icon={<Support />}
+              link={this.openTicketDrawer}
+            />
+          </Grid>
         </Grid>
-      </React.Fragment>
+        <SupportTicketDrawer
+          open={drawerOpen}
+          onClose={this.closeTicketDrawer}
+          onSuccess={this.onTicketCreated}
+        />
+      </Grid>
     );
   }
 }
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
-  styled,
-  withRouter
-)(OtherWays);
+export default compose<any, any, any>(styled, withRouter)(OtherWays);

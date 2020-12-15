@@ -5,6 +5,12 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -16,6 +22,17 @@ import withEditableLabelState, {
   EditableLabelProps
 } from './editableLabelState';
 
+type ClassNames = 'root';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      [theme.breakpoints.down('sm')]: {
+        paddingRight: `${theme.spacing()}px !important`
+      }
+    }
+  });
+
 interface Props {
   breadcrumbProps?: Partial<BreadcrumbProps>;
 }
@@ -23,10 +40,12 @@ interface Props {
 type CombinedProps = Props &
   LinodeDetailContext &
   EditableLabelProps &
-  RouteComponentProps<{}>;
+  RouteComponentProps<{}> &
+  WithStyles<ClassNames>;
 
 const LinodeControls: React.FC<CombinedProps> = props => {
   const {
+    classes,
     linode,
     updateLinode,
     editableLabelError,
@@ -63,8 +82,8 @@ const LinodeControls: React.FC<CombinedProps> = props => {
   };
   return (
     <Grid
+      className={`${classes.root} m0`}
       container
-      className="m0"
       alignItems="center"
       justify="space-between"
       data-qa-linode={linode.label}
@@ -95,7 +114,10 @@ const LinodeControls: React.FC<CombinedProps> = props => {
   );
 };
 
+const styled = withStyles(styles);
+
 const enhanced = compose<CombinedProps, Props>(
+  styled,
   withEditableLabelState,
   withRouter,
   withLinodeDetailContext(({ linode, updateLinode }) => ({

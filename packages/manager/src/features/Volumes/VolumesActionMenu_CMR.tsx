@@ -3,22 +3,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
-} from 'src/components/core/styles';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0px !important'
-  }
-}));
 
 export interface ActionHandlers {
   openForConfig: (volumeLabel: string, volumePath: string) => void;
@@ -66,7 +52,6 @@ interface Props extends ActionHandlers {
 export type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const VolumesActionMenu: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -184,7 +169,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <div className={classes.root}>
+    <>
       {!matchesSmDown &&
         inlineActions.map(action => {
           return (
@@ -199,7 +184,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
         createActions={createActions()}
         ariaLabel={`Action menu for Volume ${props.volumeLabel}`}
       />
-    </div>
+    </>
   );
 };
 
