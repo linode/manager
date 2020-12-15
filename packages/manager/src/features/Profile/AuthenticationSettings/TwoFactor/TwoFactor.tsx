@@ -227,25 +227,17 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
                 )}
                 {twoFactorEnabled && (
                   <div className={classes.container}>
-                    {showQRCode ? (
-                      <button
-                        className={classes.button}
-                        onClick={toggleHidden}
-                        data-qa-hide-show-code
-                      >
-                        Hide QR Code
-                      </button>
-                    ) : (
-                      <button
-                        className={classes.button}
-                        onClick={toggleHidden}
-                        data-qa-hide-show-code
-                      >
-                        {twoFactorConfirmed
-                          ? 'Reset two-factor authentication'
-                          : 'Show QR Code'}
-                      </button>
-                    )}
+                    <button
+                      className={classes.button}
+                      onClick={toggleHidden}
+                      data-qa-hide-show-code
+                    >
+                      {showQRCode
+                        ? 'Hide QR Code'
+                        : twoFactorConfirmed
+                        ? 'Reset two-factor authentication'
+                        : 'Show QR Code'}
+                    </button>
                   </div>
                 )}
                 {twoFactorEnabled &&
