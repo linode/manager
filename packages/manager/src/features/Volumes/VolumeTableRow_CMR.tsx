@@ -122,33 +122,35 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
           )}
         </TableCell>
       )}
-      <TableCell className={classes.actionCell}>
-        <VolumesActionMenu
-          onShowConfig={openForConfig}
-          filesystemPath={filesystemPath}
-          linodeLabel={linodeLabel || ''}
-          regionID={region}
-          volumeId={id}
-          volumeTags={tags}
-          size={size}
-          label={label}
-          onEdit={openForEdit}
-          onResize={openForResize}
-          onClone={openForClone}
-          volumeLabel={label}
-          /**
-           * This is a safer check than linode_id (see logic in addAttachedLinodeInfoToVolume() from VolumesLanding)
-           * as it actually checks to see if the Linode exists before adding linodeLabel and linodeStatus.
-           * This avoids a bug (M3-2534) where a Volume attached to a just-deleted Linode
-           * could sometimes get tagged as "attached" here.
-           */
-          attached={Boolean(linodeLabel)}
-          isVolumesLanding={isVolumesLanding} // Passing this down to govern logic re: showing Attach or Detach in action menu.
-          onAttach={handleAttach}
-          onDetach={handleDetach}
-          poweredOff={linodeStatus === 'offline'}
-          onDelete={handleDelete}
-        />
+      <TableCell>
+        <div className={classes.actionCell}>
+          <VolumesActionMenu
+            onShowConfig={openForConfig}
+            filesystemPath={filesystemPath}
+            linodeLabel={linodeLabel || ''}
+            regionID={region}
+            volumeId={id}
+            volumeTags={tags}
+            size={size}
+            label={label}
+            onEdit={openForEdit}
+            onResize={openForResize}
+            onClone={openForClone}
+            volumeLabel={label}
+            /**
+             * This is a safer check than linode_id (see logic in addAttachedLinodeInfoToVolume() from VolumesLanding)
+             * as it actually checks to see if the Linode exists before adding linodeLabel and linodeStatus.
+             * This avoids a bug (M3-2534) where a Volume attached to a just-deleted Linode
+             * could sometimes get tagged as "attached" here.
+             */
+            attached={Boolean(linodeLabel)}
+            isVolumesLanding={isVolumesLanding} // Passing this down to govern logic re: showing Attach or Detach in action menu.
+            onAttach={handleAttach}
+            onDetach={handleDetach}
+            poweredOff={linodeStatus === 'offline'}
+            onDelete={handleDelete}
+          />
+        </div>
       </TableCell>
     </TableRow>
   );
