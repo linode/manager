@@ -87,7 +87,8 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('xs')]: {
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
-      }
+      },
+      paddingRight: '5px !important'
     },
     labelCell: {
       width: '25%'
