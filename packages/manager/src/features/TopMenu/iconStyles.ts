@@ -4,8 +4,11 @@ export const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     cursor: 'pointer',
     position: 'relative',
-    padding: theme.spacing(),
-    marginLeft: theme.spacing(),
+    padding: 6,
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(),
+      marginLeft: theme.spacing()
+    },
     marginTop: 4,
     color: '#c9c7c7',
     border: 'none',

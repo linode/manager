@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
-    overflow: 'hidden',
     padding: `${theme.spacing(3)}px 0`,
     paddingTop: 20,
     transition: theme.transitions.create('opacity'),
