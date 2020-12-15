@@ -224,9 +224,14 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusChip: {
     ...theme.applyStatusPillStyles,
-    marginLeft: theme.spacing(2),
+    borderRadius: 0,
     height: `24px !important`,
-    borderRadius: 0
+    marginLeft: theme.spacing(2)
+  },
+  statusChipLandingDetailView: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
   },
   statusRunning: {
     '&:before': {
@@ -336,6 +341,7 @@ const Header: React.FC<HeaderProps> = props => {
               <Chip
                 className={classnames({
                   [classes.statusChip]: true,
+                  [classes.statusChipLandingDetailView]: isDetailLanding,
                   [classes.statusRunning]: isRunning,
                   [classes.statusOffline]: isOffline,
                   [classes.statusOther]: isOther,
