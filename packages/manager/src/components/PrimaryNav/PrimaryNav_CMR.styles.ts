@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     '& .icon': {
-      color: theme.cmrIconColors.iGrey,
+      color: '#CFD0D2',
       marginRight: theme.spacing(2),
       '& svg': {
         display: 'flex',
@@ -106,30 +106,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   divider: {
     backgroundColor: 'rgba(0, 0, 0, 0.12)'
-  },
-  settings: {
-    width: 30,
-    margin: `auto auto 16px`,
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
-    color: '#e7e7e7',
-    transition: theme.transitions.create(['color']),
-    '& svg': {
-      transition: theme.transitions.create(['transform'])
-    },
-    '&:hover': {
-      color: theme.color.green
-    }
-  },
-  settingsCollapsed: {
-    margin: `auto 16px 16px ${theme.spacing(4) - 1}px`
-  },
-  activeSettings: {
-    color: theme.color.green,
-    '& svg': {
-      transform: 'rotate(90deg)'
-    }
   },
   menu: {},
   paper: {
