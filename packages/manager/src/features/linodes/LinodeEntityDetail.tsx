@@ -209,6 +209,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   linodeLabel: {
     color: theme.cmrTextColors.linkActiveLight,
+    marginLeft: theme.spacing(),
     '&:hover': {
       color: theme.palette.primary.light,
       textDecoration: 'underline'
@@ -223,7 +224,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusChip: {
     ...theme.applyStatusPillStyles,
-    marginLeft: theme.spacing(),
+    marginLeft: theme.spacing(2),
     height: `24px !important`,
     borderRadius: 0
   },
