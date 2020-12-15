@@ -1,5 +1,5 @@
 import * as React from 'react';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Placeholder from 'src/components/Placeholder';
@@ -42,6 +42,7 @@ export const BackupsPlaceholder: React.FC<Props> = props => {
       {disabled && <LinodePermissionsError />}
       <Placeholder
         icon={VolumeIcon}
+        isEntity
         title="Backups"
         renderAsSecondary
         buttonProps={[
