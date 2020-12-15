@@ -49,6 +49,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: 'inherit'
     }
   },
+  detailsContainer: {
+    '& > a': {
+      textDecoration: 'none !important'
+    }
+  },
   lastUpdatedOuter: {
     [theme.breakpoints.up('md')]: {
       marginTop: theme.spacing(1)
@@ -166,7 +171,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
           </>
         )}
       </Grid>
-      <Grid item>
+      <Grid item className={classes.detailsContainer}>
         <ButtonLink
           to={`/longview/clients/${clientID}`}
           linkText="View details"
