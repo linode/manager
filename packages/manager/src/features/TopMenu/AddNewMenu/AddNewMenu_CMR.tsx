@@ -99,7 +99,15 @@ const styles = (theme: Theme) =>
       '&[data-reach-menu-item]': {
         padding: 0,
         cursor: 'pointer',
-        textDecoration: 'none'
+        textDecoration: 'none',
+        '& h3': {
+          color: theme.cmrTextColors.linkActiveLight
+        },
+        '&:hover': {
+          '& h3': {
+            textDecoration: 'underline'
+          }
+        }
       },
       '&[data-reach-menu-item][data-selected]': {
         background: theme.bg.main,
