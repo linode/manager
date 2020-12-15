@@ -13,7 +13,6 @@ import Grid from 'src/components/Grid';
 import NavTabs from 'src/components/NavTabs';
 import { NavTab } from 'src/components/NavTabs/NavTabs';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import ManagedDashboardCard_CMR from '../Dashboard/ManagedDashboardCard/ManagedDashboardCard_CMR';
@@ -21,11 +20,9 @@ import SupportWidget from './SupportWidget';
 import SupportWidget_CMR from './SupportWidget_CMR';
 import LandingHeader from 'src/components/LandingHeader';
 
-const Contacts = React.lazy(() => import('./Contacts'));
 const Contacts_CMR = React.lazy(() => import('./Contacts/Contacts_CMR'));
 const Monitors = React.lazy(() => import('./Monitors'));
 const SSHAccess = React.lazy(() => import('./SSHAccess'));
-const CredentialList = React.lazy(() => import('./Credentials'));
 const CredentialList_CMR = React.lazy(() =>
   import('./Credentials/CredentialList_CMR')
 );
@@ -41,8 +38,6 @@ const getAllContacts = () =>
   getAll<ManagedContact>(getManagedContacts)().then(res => res.data);
 
 export const ManagedLandingContent: React.FC<CombinedProps> = props => {
-  const flags = useFlags();
-
   const credentials = useAPIRequest<ManagedCredential[]>(getAllCredentials, []);
 
   const contacts = useAPIRequest<ManagedContact[]>(getAllContacts, []);
@@ -68,10 +63,12 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
       )
     : undefined;
 
-  const ContactsTable = flags.cmr ? Contacts_CMR : Contacts;
-  const Credentials = flags.cmr ? CredentialList_CMR : CredentialList;
-
   const tabs: NavTab[] = [
+    {
+      title: 'Summary',
+      routeName: `${props.match.url}/summary`,
+      component: ManagedDashboardCard_CMR
+    },
     {
       title: 'Monitors',
       routeName: `${props.match.url}/monitors`,
@@ -96,7 +93,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
       title: 'Credentials',
       routeName: `${props.match.url}/credentials`,
       render: (
-        <Credentials
+        <CredentialList_CMR
           loading={credentials.loading && credentials.lastUpdated === 0}
           error={credentialsError}
           credentials={credentials.data}
@@ -108,7 +105,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
       title: 'Contacts',
       routeName: `${props.match.url}/contacts`,
       render: (
-        <ContactsTable
+        <Contacts_CMR
           contacts={contacts.data}
           loading={contacts.loading && contacts.lastUpdated === 0}
           error={contacts.error}
@@ -120,51 +117,18 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
     }
   ];
 
-  if (flags.cmr) {
-    tabs.unshift({
-      title: 'Summary',
-      routeName: `${props.match.url}/summary`,
-      component: ManagedDashboardCard_CMR
-    });
-  }
-
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
-        {flags.cmr ? (
-          // @todo: remove inline style when we switch over to CMR
-          <div style={{ width: '100%' }}>
-            <LandingHeader
-              title="Managed"
-              entity="Managed"
-              docsLink="https://www.linode.com/docs/platform/linode-managed/"
-              extraActions={<SupportWidget_CMR />}
-              removeCrumbX={1}
-            />
-          </div>
-        ) : (
-          <>
-            <Breadcrumb
-              pathname={props.location.pathname}
-              labelTitle="Managed"
-              removeCrumbX={1}
-            />
-            <Grid
-              container
-              direction="row"
-              justify="flex-end"
-              alignItems="center"
-              xs={8}
-            >
-              <Grid item>
-                <SupportWidget />
-              </Grid>
-              <Grid item>
-                <DocumentationButton href="https://www.linode.com/docs/platform/linode-managed/" />
-              </Grid>
-            </Grid>
-          </>
-        )}
+        <div style={{ width: '100%' }}>
+          <LandingHeader
+            title="Managed"
+            entity="Managed"
+            docsLink="https://www.linode.com/docs/platform/linode-managed/"
+            extraActions={<SupportWidget_CMR />}
+            removeCrumbX={1}
+          />
+        </div>
       </Box>
       <NavTabs tabs={tabs} />
     </React.Fragment>
