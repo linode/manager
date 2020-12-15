@@ -24,6 +24,7 @@ const props = {
   accessDrawerOpen: false,
   openAccessDrawer: jest.fn(),
   closeAccessDrawer: jest.fn(),
+  mode: 'creating' as any,
   ...pageyProps
 };
 

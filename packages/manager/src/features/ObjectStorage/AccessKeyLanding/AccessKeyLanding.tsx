@@ -57,8 +57,9 @@ const styles = (theme: Theme) =>
 interface Props {
   isRestrictedUser: boolean;
   accessDrawerOpen: boolean;
-  openAccessDrawer: () => void;
+  openAccessDrawer: (mode: MODE) => void;
   closeAccessDrawer: () => void;
+  mode: MODE;
 }
 
 export type FormikProps = FormikBag<CombinedProps, ObjectStorageKeyRequest>;
@@ -78,11 +79,17 @@ type CombinedProps = Props &
   DispatchProps;
 
 export const AccessKeyLanding: React.FC<CombinedProps> = props => {
-  const { object_storage, requestSettings, ...paginationProps } = props;
+  const {
+    object_storage,
+    requestSettings,
+    closeAccessDrawer,
+    openAccessDrawer,
+    mode,
+    accessDrawerOpen,
+    ...paginationProps
+  } = props;
 
   const flags = useFlags();
-
-  const [mode, setMode] = React.useState<MODE>('creating');
 
   // Key to display in Confirmation Modal upon creation
   const [
@@ -182,7 +189,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     // If the new label is the same as the old one, no need to make an API
     // request. Just close the drawer and return early.
     if (values.label === keyToEdit.label) {
-      return props.closeAccessDrawer();
+      return closeAccessDrawer();
     }
 
     setSubmitting(true);
@@ -194,7 +201,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         // "Refresh" keys to display the newly updated key
         paginationProps.request();
 
-        props.closeAccessDrawer();
+        closeAccessDrawer();
 
         // @analytics
         sendEditAccessKeyEvent();
@@ -253,12 +260,11 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     mode: MODE,
     objectStorageKey: ObjectStorageKey | null = null
   ) => {
-    setMode(mode);
     setKeyToEdit(objectStorageKey);
     switch (mode) {
       case 'creating':
       case 'editing':
-        props.openAccessDrawer();
+        openAccessDrawer(mode);
         break;
       case 'viewing':
         viewPermissionsDrawer.open();
@@ -292,9 +298,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
       )}
       <KeyTable
         {...paginationProps}
-        openDrawer={
-          props.accessDrawerOpen ? () => openDrawer('creating') : openDrawer
-        }
+        openDrawer={openDrawer}
         openRevokeDialog={openRevokeDialog}
         data-qa-access-key-table
       />
@@ -309,8 +313,8 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
       />
 
       <AccessKeyDrawer
-        open={props.accessDrawerOpen}
-        onClose={props.closeAccessDrawer}
+        open={accessDrawerOpen}
+        onClose={closeAccessDrawer}
         onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
         mode={mode}
         objectStorageKey={keyToEdit ? keyToEdit : undefined}
