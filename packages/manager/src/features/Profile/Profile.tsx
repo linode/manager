@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import H1Header from 'src/components/H1Header';
+import LandingHeader from 'src/components/LandingHeader';
 import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
 import useFlags from 'src/hooks/useFlags';
 import Props from './OAuthClients';
@@ -22,14 +21,6 @@ const AuthenticationSettings = React.lazy(() =>
 );
 const APITokens = React.lazy(() => import('./APITokens'));
 
-const useStyles = makeStyles((theme: Theme) => ({
-  cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing()
-    }
-  }
-}));
-
 interface Props {
   toggleTheme: () => void;
 }
@@ -37,7 +28,6 @@ interface Props {
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 const Profile: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
   const flags = useFlags();
   const {
     match: { url },
@@ -90,9 +80,9 @@ const Profile: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="My Profile " />
-      <H1Header
+      <LandingHeader
         title="My Profile"
-        className={flags.cmr ? classes.cmrSpacing : ''}
+        removeCrumbX={1}
         data-qa-profile-header
       />
       <NavTabs tabs={tabs} />

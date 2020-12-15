@@ -21,6 +21,10 @@ const props = {
   isRestrictedUser: false,
   object_storage: 'active' as AccountSettings['object_storage'],
   requestSettings: jest.fn(),
+  accessDrawerOpen: false,
+  openAccessDrawer: jest.fn(),
+  closeAccessDrawer: jest.fn(),
+  mode: 'creating' as any,
   ...pageyProps
 };
 

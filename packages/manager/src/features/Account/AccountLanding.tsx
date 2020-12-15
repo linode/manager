@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import LandingHeader from 'src/components/LandingHeader';
 import TabLinkList from 'src/components/TabLinkList';
+import TaxBanner from 'src/components/TaxBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useFlags from 'src/hooks/useFlags';
@@ -13,8 +14,6 @@ import useFlags from 'src/hooks/useFlags';
 import withProfile, {
   Props as ProfileActionsProps
 } from 'src/containers/profile.container';
-
-import TaxBanner from 'src/components/TaxBanner';
 
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
@@ -59,12 +58,7 @@ const AccountLanding: React.FC<Props> = props => {
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
       <TaxBanner location={location} marginBottom={24} />
-      <Breadcrumb
-        pathname={'/Account'}
-        labelTitle="Account"
-        removeCrumbX={1}
-        data-qa-profile-header
-      />
+      <LandingHeader title="Account" removeCrumbX={1} data-qa-profile-header />
 
       <Tabs
         index={Math.max(

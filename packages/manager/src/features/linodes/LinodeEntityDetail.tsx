@@ -224,7 +224,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusChip: {
     ...theme.applyStatusPillStyles,
-    marginLeft: theme.spacing(),
+    marginLeft: theme.spacing(2),
     height: `24px !important`,
     borderRadius: 0
   },
@@ -332,7 +332,7 @@ const Header: React.FC<HeaderProps> = props => {
           justify="space-between"
         >
           <Box display="flex" alignItems="center">
-            <Grid item className="py0">
+            <Grid item className="p0">
               <Chip
                 className={classnames({
                   [classes.statusChip]: true,

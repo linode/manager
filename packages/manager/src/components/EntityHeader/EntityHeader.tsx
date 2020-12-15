@@ -31,11 +31,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   landing: {
     marginBottom: 0,
-    paddingTop: theme.spacing(),
-    paddingBottom: theme.spacing()
+    paddingBottom: theme.spacing(),
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      padding: 0
+    }
   },
   docs: {
     marginRight: theme.spacing()
+  },
+  actions: {
+    marginLeft: theme.spacing(2)
   },
   details: {
     backgroundColor: theme.cmrBGColors.bgPaper,
@@ -81,7 +87,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiChip-root': {
       ...theme.applyStatusPillStyles,
       height: 30,
-      marginTop: 1,
       fontSize: '.875rem',
       letterSpacing: '.5px'
     }
@@ -143,16 +148,11 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             item
             alignItems="center"
             justify="flex-end"
-            wrap="nowrap"
             xs={12}
             sm={8}
           >
-            {docsLink && (
-              <Grid item className={classes.docs}>
-                <DocumentationButton href={docsLink} />
-              </Grid>
-            )}
-            {actions}
+            {docsLink && <DocumentationButton href={docsLink} />}
+            <div className={classes.actions}>{actions}</div>
           </Grid>
         </Grid>
       )}
