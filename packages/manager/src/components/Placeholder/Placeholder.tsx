@@ -47,9 +47,6 @@ const styles = (theme: Theme) =>
     },
     icon: {
       padding: theme.spacing(2),
-      '&.animate': {
-        animation: '$scaleIn .5s ease-in-out'
-      },
       width: '160px',
       height: '160px',
       '& .outerCircle': {
@@ -61,7 +58,6 @@ const styles = (theme: Theme) =>
       },
       '& .insidePath path': {
         opacity: 0,
-        animation: '$fadeIn .2s ease-in-out forwards .3s',
         stroke: theme.palette.primary.main
       },
       '& .bucket.insidePath path': {
@@ -99,7 +95,6 @@ export interface ExtendedButtonProps extends ButtonProps {
 
 export interface Props {
   icon?: React.ComponentType<any>;
-  animate?: boolean;
   children?: string | React.ReactNode;
   title: string;
   buttonProps?: ExtendedButtonProps[];
@@ -112,7 +107,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Placeholder: React.FC<CombinedProps> = props => {
   const {
-    animate,
     classes,
     isEntity,
     title,
@@ -130,9 +124,7 @@ const Placeholder: React.FC<CombinedProps> = props => {
       className={`${classes.root} ${props.className}`}
     >
       <Grid item xs={12} className={isEntity ? classes.entity : ''}>
-        {Icon && (
-          <Icon className={`${classes.icon} ${animate && 'animate'} `} />
-        )}
+        {Icon && <Icon className={classes.icon} />}
       </Grid>
       <Grid item xs={12}>
         <H1Header
@@ -175,8 +167,7 @@ const Placeholder: React.FC<CombinedProps> = props => {
 };
 
 Placeholder.defaultProps = {
-  icon: LinodeIcon,
-  animate: true
+  icon: LinodeIcon
 };
 
 const styled = withStyles(styles);

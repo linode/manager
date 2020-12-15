@@ -86,6 +86,7 @@ export class StackScriptSelectionRow extends React.Component<
           <Grid item>
             <Button
               compact
+              buttonType="secondary"
               className={classes.detailsButton}
               onClick={openDrawer}
             >
