@@ -21,7 +21,10 @@ export type CombinedProps = Props;
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: theme.spacing()
+    }
   },
   preContainer: {
     display: 'flex',

@@ -9,7 +9,7 @@ import {
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import UserIcon from 'src/assets/icons/user.svg';
+import UserIcon from 'src/assets/icons/account.svg';
 import Grid from 'src/components/core/Grid';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -53,6 +53,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create(['box-shadow']),
     height: 28,
     width: 28,
+    '& svg': {
+      color: '#c9c7c7',
+      width: 28,
+      height: 28
+    },
     [theme.breakpoints.down('md')]: {
       width: '28px',
       height: '28px'
@@ -147,7 +152,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inlineUserName: {
     paddingRight: theme.spacing(),
-    fontSize: '1rem'
+    fontSize: '0.875rem'
   },
   menuHeader: {
     borderBottom: '1px solid #9ea4ae',

@@ -27,11 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     margin: 0,
-    width: '100%',
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: theme.spacing(),
-      paddingRight: theme.spacing()
-    }
+    width: '100%'
   },
   landing: {
     marginBottom: 0,
@@ -97,6 +93,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
     padding: 0
+  },
+  actionsWrapper: {
+    [theme.breakpoints.only('sm')]: {
+      marginRight: 0
+    },
+    [theme.breakpoints.down('xs')]: {
+      paddingRight: '0px !important'
+    }
   }
 }));
 
@@ -136,6 +140,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             />
           </Grid>
           <Grid
+            className={classes.actionsWrapper}
             container
             item
             alignItems="center"
