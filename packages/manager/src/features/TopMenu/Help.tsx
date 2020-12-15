@@ -1,5 +1,5 @@
 import * as React from 'react';
-import HelpIcon from 'src/assets/primary-nav-help.svg';
+import HelpIcon from 'src/assets/icons/get_help.svg';
 import Link from 'src/components/Link';
 import { useStyles } from './iconStyles';
 
