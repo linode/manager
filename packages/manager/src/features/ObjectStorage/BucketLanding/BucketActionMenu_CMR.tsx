@@ -16,7 +16,7 @@ export const BucketActionMenu: React.FC<Props> = props => {
       {
         title: 'Details',
         onClick: () => {
-          props.onRemove();
+          props.onDetails();
         }
       },
       {
@@ -34,7 +34,7 @@ export const BucketActionMenu: React.FC<Props> = props => {
         <InlineMenuAction
           actionText="Details"
           onClick={() => {
-            props.onRemove();
+            props.onDetails();
           }}
         />
         <InlineMenuAction
