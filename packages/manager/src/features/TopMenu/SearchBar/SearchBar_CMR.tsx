@@ -22,7 +22,6 @@ import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar_CMR.styles';
 import SearchSuggestion from './SearchSuggestion';
 import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
-import SelectPlaceholder from 'src/components/EnhancedSelect/components/SelectPlaceholder';
 
 type CombinedProps = WithTypesProps &
   WithImages &
@@ -42,10 +41,6 @@ const Option = (props: any) => {
     <SearchSuggestion {...props} />
   );
 };
-
-const Placeholder = (props: any) => (
-  <SelectPlaceholder smallerPlaceholder {...props} />
-);
 
 // Style overrides for React Select
 export const selectStyles = {
@@ -262,7 +257,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
               ? 'Search'
               : 'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
           }
-          components={{ Control, Option, Placeholder }}
+          components={{ Control, Option }}
           styles={selectStyles}
           openMenuOnFocus={false}
           openMenuOnClick={false}
