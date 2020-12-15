@@ -88,6 +88,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
     padding: 0
+  },
+  actionsWrapper: {
+    [theme.breakpoints.only('sm')]: {
+      marginRight: 0
+    },
+    [theme.breakpoints.down('xs')]: {
+      paddingRight: '0px !important'
+    }
   }
 }));
 
@@ -127,6 +135,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             />
           </Grid>
           <Grid
+            className={classes.actionsWrapper}
             container
             item
             alignItems="center"
