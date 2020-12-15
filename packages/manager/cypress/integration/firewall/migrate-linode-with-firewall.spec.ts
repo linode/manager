@@ -6,7 +6,13 @@ import {
   deleteAllTestLinodes
 } from '../../support/api/linodes';
 import { deleteFirewallByLabel } from '../../support/api/firewalls';
-import { getClick, containsClick, fbtClick } from '../../support/helpers';
+import {
+  getClick,
+  containsClick,
+  fbtClick,
+  getVisible,
+  fbtVisible
+} from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
 
 const fakeRegionsData = {
@@ -157,20 +163,43 @@ describe('Migrate Linode With Firewall', () => {
 
   // create linode w/ firewall region then add firewall to it then attempt to migrate linode to non firewall region, should fail
   it('Cannot migrate linode with firewall to location w/out firewall - real data, ', () => {
-    const firewallLabel = 'testFirewall';
+    const firewallLabel = 'cy-test-firewall';
     cy.server();
     cy.route({
       method: 'POST',
       url: `*/networking/firewalls`
     }).as('createFirewall');
     cy.visitWithLogin('/firewalls');
+    cy.route({
+      method: 'GET',
+      url: `*/networking/firewalls*`
+    }).as('getFirewall');
+    cy.visitWithLogin('/firewalls');
     createLinodeSpecifyRegion('ap-southeast').then(linode => {
       cy.route({
         method: 'POST',
         url: `*/linode/instances/${linode.id}/migrate`
       }).as('migrateLinode');
-      fbtClick('Create a Firewall');
+      getVisible('[data-qa-header]').within(() => {
+        fbtVisible('Firewalls');
+      });
+      cy.reload();
+      cy.get('@getFirewall').then(response => {
+        const length = response.responseBody.data['length'];
+        getVisible('[data-qa-header]').within(() => {
+          fbtVisible('Firewalls');
+        });
+
+        if (length > 0) {
+          fbtClick('Create a Firewall');
+        } else {
+          fbtClick('Add a Firewall');
+        }
+      });
       cy.get('[data-testid="textfield-input"]').type(firewallLabel);
+      getVisible(
+        '[data-qa-enhanced-select="Select a Linode or type to search..."]'
+      );
       getClick(
         '[data-qa-enhanced-select="Select a Linode or type to search..."]'
       );
@@ -184,53 +213,70 @@ describe('Migrate Linode With Firewall', () => {
       fbtClick(selectRegionString);
       fbtClick('Dallas, TX');
       if (
-        cy.contains('PROVISIONING').should('not.be.visible') &&
-        cy.contains('BOOTING').should('not.be.visible')
+        cy
+          .contains('PROVISIONING', { timeout: 1000000000 })
+          .should('not.be.visible') &&
+        cy.contains('BOOTING', { timeout: 1000000000 }).should('not.be.visible')
       ) {
-        fbtClick('Enter Migration Queue');
+        getVisible('[type="button"]').within(() => {
+          containsClick('Enter Migration Queue');
+        });
       }
       cy.wait('@migrateLinode')
         .its('status')
         .should('eq', 400);
       if (!cy.findByText('Linode busy.').should('not.be.visible')) {
-        fbtClick('Enter Migration Queue');
+        getVisible('[type="button"]').within(() => {
+          containsClick('Enter Migration Queue');
+        });
         cy.wait('@migrateLinode')
           .its('status')
           .should('eq', 400);
-        if (!cy.findByText('Linode busy.').should('not.be.visible')) {
-          fbtClick('Enter Migration Queue');
-          cy.wait('@migrateLinode')
-            .its('status')
-            .should('eq', 400);
-        }
         cy.findByText(
-          'Target region for this Linode does not support Cloud Firewalls at this time. Please choose a different region or remove your firewall before migrating.'
+          'Target region for this Linode does not support Cloud Firewalls at this time. Please choose a different region or remove your firewall before migrating.',
+          { timeout: 1000000000 }
         ).should('be.visible');
       }
-      deleteAllTestLinodes();
       deleteFirewallByLabel(firewallLabel);
+      deleteAllTestLinodes();
     });
   });
 
   it('Cannot add linode without firewall location firewall - real data, ', () => {
-    const firewallLabel = 'testFirewall';
+    const firewallLabel = 'cy-test-firewall';
     cy.server();
     cy.route({
       method: 'POST',
       url: `*/networking/firewalls`
     }).as('createFirewall');
+    cy.route({
+      method: 'GET',
+      url: `*/networking/firewalls*`
+    }).as('getFirewall');
     cy.visitWithLogin('/firewalls');
     createLinode().then(linode => {
       cy.route({
         method: 'POST',
         url: `*/linode/instances/${linode.id}/migrate`
       }).as('migrateLinode');
-      fbtClick('Create a Firewall');
+      cy.get('@getFirewall').then(response => {
+        const length = response.responseBody.data['length'];
+        getVisible('[data-qa-header]').within(() => {
+          fbtVisible('Firewalls');
+        });
+
+        if (length > 0) {
+          fbtClick('Create a Firewall');
+        } else {
+          fbtClick('Add a Firewall');
+        }
+      });
       cy.get('[data-testid="textfield-input"]').type(firewallLabel);
       getClick(
         '[data-qa-enhanced-select="Select a Linode or type to search..."]'
       );
       cy.contains(linode.label).should('not.be.visible');
+      deleteAllTestLinodes();
     });
   });
 });
