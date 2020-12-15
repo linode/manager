@@ -478,6 +478,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                           )}
                           <Grid item xs={12}>
                             <OrderBy
+                              preferenceKey={'linodes-landing'}
                               data={extendedLinodes.map(linode => {
                                 // Determine the priority of this Linode's status.
                                 // We have to check for "Maintenance" and "Busy" since these are
