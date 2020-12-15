@@ -32,6 +32,7 @@ import { openBucketDrawer } from 'src/store/bucketDrawer/bucketDrawer.actions';
 import BucketDrawer from './BucketLanding/BucketDrawer';
 import { compose } from 'recompose';
 import useOpenClose from 'src/hooks/useOpenClose';
+import { MODE } from './AccessKeyLanding/types';
 
 const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
 const AccessKeyLanding = React.lazy(() =>
@@ -49,6 +50,7 @@ type CombinedProps = DispatchProps & RouteComponentProps<{}>;
 export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { replace } = props.history;
+  const [mode, setMode] = React.useState<MODE>('creating');
 
   useReduxLoad(['clusters']);
 
@@ -88,6 +90,11 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
       routeName: `${props.match.url}/access-keys`
     }
   ];
+
+  const openDrawer = (mode: MODE) => {
+    setMode(mode);
+    createOrEditDrawer.open();
+  };
 
   const { _isRestrictedUser, accountSettings } = useAccountManagement();
 
@@ -166,6 +173,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
 
   const createButtonAction = () => {
     if (matchesAccessKeys) {
+      setMode('creating');
       return createOrEditDrawer.open();
     } else {
       replace('/object-storage/buckets/create');
@@ -233,8 +241,9 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
               <AccessKeyLanding
                 isRestrictedUser={_isRestrictedUser}
                 accessDrawerOpen={createOrEditDrawer.isOpen}
-                openAccessDrawer={createOrEditDrawer.open}
+                openAccessDrawer={openDrawer}
                 closeAccessDrawer={createOrEditDrawer.close}
+                mode={mode}
               />
             </SafeTabPanel>
           </TabPanels>
