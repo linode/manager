@@ -6,17 +6,13 @@ import {
 } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
-import DocumentationButton from 'src/components/DocumentationButton';
-import Grid from 'src/components/Grid';
 import NavTabs from 'src/components/NavTabs';
 import { NavTab } from 'src/components/NavTabs/NavTabs';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import ManagedDashboardCard_CMR from '../Dashboard/ManagedDashboardCard/ManagedDashboardCard_CMR';
-import SupportWidget from './SupportWidget';
 import SupportWidget_CMR from './SupportWidget_CMR';
 import LandingHeader from 'src/components/LandingHeader';
 
