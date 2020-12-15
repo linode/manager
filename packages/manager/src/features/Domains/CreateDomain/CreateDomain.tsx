@@ -585,7 +585,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                 loading={submitting}
                 disabled={disabled}
               >
-                Create
+                Create Domain
               </Button>
             </ActionsPanel>
           </div>
