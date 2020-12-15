@@ -124,7 +124,7 @@ const Placeholder: React.FC<CombinedProps> = props => {
       className={`${classes.root} ${props.className}`}
     >
       <Grid item xs={12} className={isEntity ? classes.entity : ''}>
-        {Icon && <Icon className={`${classes.icon}`} />}
+        {Icon && <Icon className={classes.icon} />}
       </Grid>
       <Grid item xs={12}>
         <H1Header
