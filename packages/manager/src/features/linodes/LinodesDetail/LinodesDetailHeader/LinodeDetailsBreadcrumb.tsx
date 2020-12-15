@@ -22,10 +22,15 @@ import withEditableLabelState, {
   EditableLabelProps
 } from './editableLabelState';
 
-type ClassNames = 'breadcrumb' | 'controls' | 'launchButton' | 'docs';
+type ClassNames = 'root' | 'breadcrumb' | 'controls' | 'launchButton' | 'docs';
 
 const styles = (theme: Theme) =>
   createStyles({
+    root: {
+      [theme.breakpoints.down('sm')]: {
+        paddingRight: `${theme.spacing()}px !important`
+      }
+    },
     controls: {
       position: 'relative',
       marginTop: 9 - theme.spacing(1) / 2, // 4
@@ -107,8 +112,8 @@ const LinodeControls: React.FC<CombinedProps> = props => {
   };
   return (
     <Grid
+      className={`${classes.root} m0`}
       container
-      className="m0"
       alignItems="center"
       justify="space-between"
       data-qa-linode={linode.label}

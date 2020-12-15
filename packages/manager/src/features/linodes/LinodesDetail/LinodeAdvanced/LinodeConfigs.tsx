@@ -54,7 +54,8 @@ const styles = (theme: Theme) =>
         width: '100%',
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
-      }
+      },
+      paddingRight: 5
     }
   });
 

@@ -57,7 +57,7 @@ const styles = (theme: Theme) =>
       '& .react-select__value-container': {
         overflow: 'hidden',
         '& p': {
-          fontSize: '1rem',
+          fontSize: '0.875rem',
           overflow: 'visible'
         }
       },
