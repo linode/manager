@@ -23,7 +23,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
       color: '#c1c1c0'
     },
     '&:first-of-type': {
-      marginLeft: theme.spacing()
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing()
+      }
     },
     '& svg': {
       width: 20,
