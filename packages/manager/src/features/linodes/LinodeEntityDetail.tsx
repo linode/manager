@@ -222,11 +222,23 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     width: '100%'
   },
+  chipWrapper: {
+    [theme.breakpoints.up('sm')]: {
+      '&.MuiGrid-item': {
+        marginTop: 2
+      }
+    }
+  },
   statusChip: {
     ...theme.applyStatusPillStyles,
-    marginLeft: theme.spacing(2),
+    borderRadius: 0,
     height: `24px !important`,
-    borderRadius: 0
+    marginLeft: theme.spacing(2)
+  },
+  statusChipLandingDetailView: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
   },
   statusRunning: {
     '&:before': {
@@ -332,10 +344,14 @@ const Header: React.FC<HeaderProps> = props => {
           justify="space-between"
         >
           <Box display="flex" alignItems="center">
-            <Grid item className="p0">
+            <Grid
+              item
+              className={`p0 ${isDetailLanding && classes.chipWrapper}`}
+            >
               <Chip
                 className={classnames({
                   [classes.statusChip]: true,
+                  [classes.statusChipLandingDetailView]: isDetailLanding,
                   [classes.statusRunning]: isRunning,
                   [classes.statusOffline]: isOffline,
                   [classes.statusOther]: isOther,
