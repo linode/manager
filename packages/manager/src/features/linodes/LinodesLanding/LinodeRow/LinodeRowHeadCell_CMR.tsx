@@ -40,7 +40,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    '& a': {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: 'inline-block'
+    }
   },
   maintenanceContainer: {},
   maintenanceNotice: {
@@ -125,7 +130,8 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
       style={style}
     >
       <Grid container wrap="nowrap" alignItems="center">
-        <Grid item>
+        {/* Hidden overflow is necessary for the wrapping of the label to work. */}
+        <Grid item style={{ overflow: 'hidden' }}>
           <div className={classes.labelStatusWrapper}>
             <Link className={classes.link} to={`/linodes/${id}`} tabIndex={0}>
               {label}

@@ -28,6 +28,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     height: `50px !important`,
     width: '100%'
+  },
+  communityIcon: {
+    [theme.breakpoints.down(370)]: {
+      ...theme.visually.hidden
+    }
   }
 }));
 
@@ -72,7 +77,6 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
               color="inherit"
               aria-label="open menu"
               onClick={desktopMenuToggle}
-              // className={classes.navIconHide}
             >
               <MenuIcon />
             </IconButton>
@@ -82,7 +86,6 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
               color="inherit"
               aria-label="open menu"
               onClick={openSideMenu}
-              // className={classes.navIconHide}
             >
               <MenuIcon />
             </IconButton>
@@ -90,7 +93,7 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
           <AddNewMenu />
           <SearchBar />
           <Help />
-          <Community />
+          <Community className={classes.communityIcon} />
           <NotificationButton />
           <UserMenu />
         </Toolbar>
