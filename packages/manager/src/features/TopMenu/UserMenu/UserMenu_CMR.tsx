@@ -115,6 +115,10 @@ const useStyles = makeStyles((theme: Theme) => ({
           marginTop: 4,
           transform: 'rotate(180deg)'
         }
+      },
+      [theme.breakpoints.down('sm')]: {
+        paddingRight: 12,
+        paddingLeft: 12
       }
     },
     '&:hover, &:focus': {
