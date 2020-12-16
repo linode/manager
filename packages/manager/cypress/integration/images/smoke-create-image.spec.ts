@@ -59,7 +59,9 @@ describe('create image', () => {
       cy.visitWithLogin('/images');
       // cy.wait('@getImages');
       const imageLabel = makeImageLabel();
-      containsClick('Add an Image');
+      cy.get('[data-qa-placeholder-button="true"]').within(() => {
+        containsClick('Add an Image');
+      });
       fbtClick('Select a Linode').type(`${linode.label}{enter}`);
       cy.wait('@getDisks').then(() => {
         containsClick('Select a Disk').type(`${diskLabel}{enter}`);
