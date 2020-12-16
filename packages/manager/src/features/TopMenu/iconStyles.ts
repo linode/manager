@@ -14,14 +14,16 @@ export const useStyles = makeStyles((theme: Theme) => ({
     padding: 8,
     margin: 0,
     [theme.breakpoints.up('sm')]: {
-      padding: '8px 12px',
-      marginLeft: theme.spacing()
+      padding: '8px 12px'
     },
     [theme.breakpoints.down(370)]: {
       padding: 3
     },
     '&:hover, &:focus': {
       color: '#c1c1c0'
+    },
+    '&:first-of-type': {
+      marginLeft: theme.spacing()
     },
     '& svg': {
       width: 20,

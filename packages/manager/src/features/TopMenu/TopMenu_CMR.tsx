@@ -27,15 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   toolbar: {
     padding: 0,
     height: `50px !important`,
-    width: '100%',
-    [theme.breakpoints.down('lg')]: {
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1)
-    },
-    [theme.breakpoints.up('lg')]: {
-      paddingLeft: 0,
-      paddingRight: 0
-    }
+    width: '100%'
   },
   communityIcon: {
     [theme.breakpoints.down(370)]: {
@@ -85,7 +77,6 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
               color="inherit"
               aria-label="open menu"
               onClick={desktopMenuToggle}
-              // className={classes.navIconHide}
             >
               <MenuIcon />
             </IconButton>
@@ -95,7 +86,6 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
               color="inherit"
               aria-label="open menu"
               onClick={openSideMenu}
-              // className={classes.navIconHide}
             >
               <MenuIcon />
             </IconButton>
