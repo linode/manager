@@ -4,6 +4,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
+import { TableProps } from 'src/components/Table';
 import Table from 'src/components/Table/Table_CMR';
 import SortableTableHead_CMR from './SortableTableHead_CMR';
 
@@ -20,6 +21,7 @@ interface Props {
   toggleGroupLinodes: () => boolean;
   linodesAreGrouped: boolean;
   isVLAN?: boolean;
+  tableProps?: TableProps;
 }
 
 type CombinedProps = Omit<OrderByProps, 'data'> & Props;
@@ -36,7 +38,8 @@ const TableWrapper: React.FC<CombinedProps> = props => {
     linodeViewPreference,
     toggleGroupLinodes,
     linodesAreGrouped,
-    isVLAN
+    isVLAN,
+    tableProps
   } = props;
 
   React.useEffect(() => {
@@ -51,6 +54,7 @@ const TableWrapper: React.FC<CombinedProps> = props => {
             aria-label="List of Linodes"
             rowCount={dataLength}
             colCount={5}
+            {...tableProps}
           >
             <SortableTableHead_CMR
               order={order}
