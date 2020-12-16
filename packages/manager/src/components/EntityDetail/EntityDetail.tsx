@@ -17,6 +17,9 @@ export interface EntityDetailProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    // marginTop: theme.spacing()
+  },
   header: {},
   body: {
     paddingRight: theme.spacing(),
@@ -42,7 +45,7 @@ export const EntityDetail: React.FC<EntityDetailProps> = props => {
   const classes = useStyles();
 
   return (
-    <div>
+    <div className={classes.root}>
       {header}
 
       {body !== undefined && (

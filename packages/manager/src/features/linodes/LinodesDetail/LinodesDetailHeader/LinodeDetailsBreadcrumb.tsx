@@ -4,13 +4,13 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Grid from 'src/components/Grid';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -22,43 +22,13 @@ import withEditableLabelState, {
   EditableLabelProps
 } from './editableLabelState';
 
-type ClassNames = 'root' | 'breadcrumb' | 'controls' | 'launchButton' | 'docs';
+type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       [theme.breakpoints.down('sm')]: {
         paddingRight: `${theme.spacing()}px !important`
-      }
-    },
-    controls: {
-      position: 'relative',
-      marginTop: 9 - theme.spacing(1) / 2, // 4
-      [theme.breakpoints.down('sm')]: {
-        margin: 0,
-        left: -8,
-        display: 'flex',
-        flexBasis: '100%'
-      }
-    },
-    launchButton: {
-      lineHeight: 1,
-      '&:hover': {
-        backgroundColor: 'transparent',
-        textDecoration: 'underline'
-      },
-      '&:focus > span:first-child': {
-        outline: '1px dotted #999'
-      }
-    },
-    docs: {
-      [theme.breakpoints.down('xs')]: {
-        display: 'flex',
-        flexBasis: '100%',
-        justifyContent: 'flex-end',
-        '&.MuiGrid-item': {
-          paddingTop: 0
-        }
       }
     }
   });
@@ -118,7 +88,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
       justify="space-between"
       data-qa-linode={linode.label}
     >
-      <Grid item className="px0">
+      <Grid item className="p0">
         <Breadcrumb
           pathname={props.location.pathname}
           firstAndLastOnly
@@ -137,7 +107,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
           {...breadcrumbProps}
         />
       </Grid>
-      <Grid item className={`px0 ${classes.docs}`}>
+      <Grid item className="p0">
         <DocumentationButton href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/" />
       </Grid>
     </Grid>
@@ -147,14 +117,14 @@ const LinodeControls: React.FC<CombinedProps> = props => {
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
+  styled,
   withEditableLabelState,
   withRouter,
   withLinodeDetailContext(({ linode, updateLinode }) => ({
     linode,
     updateLinode,
     configs: linode._configs
-  })),
-  styled
+  }))
 );
 
 export default enhanced(LinodeControls);

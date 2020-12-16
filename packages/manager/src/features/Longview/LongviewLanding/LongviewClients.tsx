@@ -25,7 +25,6 @@ import withProfile from 'src/containers/profile.container';
 import useFlags from 'src/hooks/useFlags';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LongviewPackageDrawer from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';
 import { getFinalUsedCPU } from './Gauges/CPU';
@@ -85,6 +84,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   activeSubscription: ActiveLongviewPlan;
+  handleAddClient: () => void;
+  newClientLoading: boolean;
 }
 
 export type CombinedProps = Props &
@@ -100,9 +101,7 @@ type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
   const { getLongviewClients } = props;
-  const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
-    false
-  );
+
   const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
   const [selectedClientID, setClientID] = React.useState<number | undefined>(
     undefined
@@ -185,31 +184,6 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     props.history.push('/longview/plan-details');
   };
 
-  const handleAddClient = () => {
-    setNewClientLoading(true);
-    createLongviewClient()
-      .then(_ => {
-        setNewClientLoading(false);
-      })
-      .catch(errorResponse => {
-        if (errorResponse[0].reason.match(/subscription/)) {
-          // The user has reached their subscription limit.
-          setSubscriptionDialogOpen(true);
-          setNewClientLoading(false);
-        } else {
-          // Any network or other errors handled with a toast
-          props.enqueueSnackbar(
-            getAPIErrorOrDefault(
-              errorResponse,
-              'Error creating Longview client.'
-            )[0].reason,
-            { variant: 'error' }
-          );
-          setNewClientLoading(false);
-        }
-      });
-  };
-
   /**
    * State and handlers for the Packages drawer
    * (setClientLabel and setClientID are reused from the delete dialog)
@@ -231,9 +205,10 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     lvClientData,
     accountSettings,
     activeSubscription,
-    createLongviewClient,
     deleteLongviewClient,
-    userCanCreateClient
+    userCanCreateClient,
+    handleAddClient,
+    newClientLoading
   } = props;
 
   const handleSearch = (newQuery: string) => {

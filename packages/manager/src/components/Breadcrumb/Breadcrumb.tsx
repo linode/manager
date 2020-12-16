@@ -28,9 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   preContainer: {
     display: 'flex',
+    alignItems: 'center',
     flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    marginTop: -3
+    minHeight: 48
   },
   editablePreContainer: {
     alignItems: 'center'

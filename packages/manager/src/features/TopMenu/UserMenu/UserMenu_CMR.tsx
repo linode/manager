@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     lineHeight: 1,
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(2)
+      paddingLeft: 12
     },
     [theme.breakpoints.down(360)]: {
       paddingLeft: 3
@@ -157,7 +157,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inlineUserName: {
     paddingRight: theme.spacing(),
-    fontSize: '1rem'
+    fontSize: '0.875rem'
   },
   menuHeader: {
     borderBottom: '1px solid #9ea4ae',

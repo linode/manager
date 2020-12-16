@@ -13,7 +13,6 @@ import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
-import VLAN from 'src/assets/icons/entityIcons/vlan.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import HelpIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
@@ -33,7 +32,6 @@ import { linkIsActive } from './utils';
 type NavEntity =
   | 'Linodes'
   | 'Volumes'
-  | 'VLANs'
   | 'NodeBalancers'
   | 'Domains'
   | 'Longview'
@@ -97,12 +95,6 @@ export const PrimaryNav: React.FC<Props> = props => {
     account?.data?.capabilities ?? []
   );
 
-  const showVlans = isFeatureEnabled(
-    'Vlans',
-    Boolean(flags.vlans),
-    account?.data?.capabilities ?? []
-  );
-
   // No account capability returned yet.
   const showDatabases = flags.databases;
 
@@ -146,12 +138,6 @@ export const PrimaryNav: React.FC<Props> = props => {
           display: 'Volumes',
           href: '/volumes',
           icon: <Volume />
-        },
-        {
-          hide: !showVlans,
-          display: 'VLANs',
-          href: '/vlans',
-          icon: <VLAN />
         },
         {
           display: 'NodeBalancers',
@@ -236,7 +222,6 @@ export const PrimaryNav: React.FC<Props> = props => {
     ],
     [
       showFirewalls,
-      showVlans,
       showDatabases,
       _isManagedAccount,
       domains.loading,
