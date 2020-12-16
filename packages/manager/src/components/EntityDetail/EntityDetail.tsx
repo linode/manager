@@ -19,7 +19,8 @@ export interface EntityDetailProps {
 const useStyles = makeStyles((theme: Theme) => ({
   header: {},
   body: {
-    padding: `${theme.spacing(2)}px !important`,
+    paddingRight: theme.spacing(),
+    paddingBottom: theme.spacing(),
     backgroundColor: theme.cmrBGColors.bgSecondaryActions,
     borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
     borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
