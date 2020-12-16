@@ -50,6 +50,8 @@ const props: CombinedProps = {
   updateAccountSettingsInStore: jest.fn(),
   requestAccountSettings: jest.fn(),
   userCanCreateClient: true,
+  handleAddClient: jest.fn(),
+  newClientLoading: false,
   ...reactRouterProps
 };
 

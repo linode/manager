@@ -56,6 +56,10 @@ const styles = (theme: Theme) =>
 
 interface Props {
   isRestrictedUser: boolean;
+  accessDrawerOpen: boolean;
+  openAccessDrawer: (mode: MODE) => void;
+  closeAccessDrawer: () => void;
+  mode: MODE;
 }
 
 export type FormikProps = FormikBag<CombinedProps, ObjectStorageKeyRequest>;
@@ -75,11 +79,17 @@ type CombinedProps = Props &
   DispatchProps;
 
 export const AccessKeyLanding: React.FC<CombinedProps> = props => {
-  const { object_storage, requestSettings, ...paginationProps } = props;
+  const {
+    object_storage,
+    requestSettings,
+    closeAccessDrawer,
+    openAccessDrawer,
+    mode,
+    accessDrawerOpen,
+    ...paginationProps
+  } = props;
 
   const flags = useFlags();
-
-  const [mode, setMode] = React.useState<MODE>('creating');
 
   // Key to display in Confirmation Modal upon creation
   const [
@@ -101,7 +111,6 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
 
   const displayKeysDialog = useOpenClose();
   const revokeKeysDialog = useOpenClose();
-  const createOrEditDrawer = useOpenClose();
   const viewPermissionsDrawer = useOpenClose();
 
   // Request object storage key when component is first rendered
@@ -126,7 +135,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         // "Refresh" keys to include the newly created key
         paginationProps.request();
 
-        createOrEditDrawer.close();
+        props.closeAccessDrawer();
         displayKeysDialog.open();
 
         // If our Redux Store says that the user doesn't have OBJ enabled,
@@ -180,7 +189,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     // If the new label is the same as the old one, no need to make an API
     // request. Just close the drawer and return early.
     if (values.label === keyToEdit.label) {
-      return createOrEditDrawer.close();
+      return closeAccessDrawer();
     }
 
     setSubmitting(true);
@@ -192,7 +201,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         // "Refresh" keys to display the newly updated key
         paginationProps.request();
 
-        createOrEditDrawer.close();
+        closeAccessDrawer();
 
         // @analytics
         sendEditAccessKeyEvent();
@@ -251,12 +260,11 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     mode: MODE,
     objectStorageKey: ObjectStorageKey | null = null
   ) => {
-    setMode(mode);
     setKeyToEdit(objectStorageKey);
     switch (mode) {
       case 'creating':
       case 'editing':
-        createOrEditDrawer.open();
+        openAccessDrawer(mode);
         break;
       case 'viewing':
         viewPermissionsDrawer.open();
@@ -305,8 +313,8 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
       />
 
       <AccessKeyDrawer
-        open={createOrEditDrawer.isOpen}
-        onClose={createOrEditDrawer.close}
+        open={accessDrawerOpen}
+        onClose={closeAccessDrawer}
         onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
         mode={mode}
         objectStorageKey={keyToEdit ? keyToEdit : undefined}
