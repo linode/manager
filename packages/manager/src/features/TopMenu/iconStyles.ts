@@ -9,6 +9,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(),
       marginLeft: theme.spacing()
     },
+    [theme.breakpoints.down(360)]: {
+      padding: 3
+    },
     marginTop: 4,
     color: '#c9c7c7',
     border: 'none',

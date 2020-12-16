@@ -36,6 +36,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: 0,
       paddingRight: 0
     }
+  },
+  communityIcon: {
+    [theme.breakpoints.down(360)]: {
+      ...theme.visually.hidden
+    }
   }
 }));
 
@@ -98,7 +103,9 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
           <AddNewMenu />
           <SearchBar />
           <Help />
-          <Community />
+          <span className={classes.communityIcon}>
+            <Community />
+          </span>
           <NotificationButton />
           <UserMenu />
         </Toolbar>

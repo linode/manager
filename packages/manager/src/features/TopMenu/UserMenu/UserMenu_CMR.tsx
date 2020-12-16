@@ -98,6 +98,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing(2)
     },
+    [theme.breakpoints.down(360)]: {
+      paddingLeft: 3
+    },
     '&[data-reach-menu-button]': {
       backgroundColor: 'transparent',
       border: 'none',
