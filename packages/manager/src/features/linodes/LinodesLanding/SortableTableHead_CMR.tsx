@@ -27,20 +27,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   // here, just a lot of trial and error based on maximum expected column sizes.
   labelCell: {
     width: '24%',
-    [theme.breakpoints.only('md')]: {
-      width: '30%'
+    [theme.breakpoints.down('md')]: {
+      width: '20%'
     }
   },
   statusCell: {
-    width: '18%',
+    width: '20%',
+    [theme.breakpoints.only('md')]: {
+      width: '27%'
+    },
     [theme.breakpoints.down('sm')]: {
-      width: '22%'
+      width: '25%'
     }
   },
   ipAddressCell: {
-    width: '14%',
-    [theme.breakpoints.down('sm')]: {
-      width: '18%'
+    width: '16%',
+    [theme.breakpoints.only('sm')]: {
+      width: '22%'
     }
   },
   regionCell: {
