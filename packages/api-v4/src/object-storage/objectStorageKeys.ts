@@ -8,7 +8,11 @@ import Request, {
 } from '../request';
 import { ResourcePage as Page } from '../types';
 import { createObjectStorageKeysSchema } from './objectStorageKeys.schema';
-import { ObjectStorageKey, ObjectStorageKeyRequest } from './types';
+import {
+  ObjectStorageKey,
+  ObjectStorageKeyRequest,
+  UpdateObjectStorageKeyRequest
+} from './types';
 
 /**
  * getObjectStorageKeys
@@ -42,7 +46,7 @@ export const createObjectStorageKeys = (data: ObjectStorageKeyRequest) =>
  */
 export const updateObjectStorageKey = (
   id: number,
-  data: ObjectStorageKeyRequest
+  data: UpdateObjectStorageKeyRequest
 ) =>
   Request<ObjectStorageKey>(
     setMethod('PUT'),
