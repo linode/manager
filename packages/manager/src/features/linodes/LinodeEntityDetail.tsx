@@ -223,8 +223,10 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     width: '100%'
   },
   chipWrapper: {
-    '&.MuiGrid-item': {
-      marginTop: 2
+    [theme.breakpoints.up('sm')]: {
+      '&.MuiGrid-item': {
+        marginTop: 2
+      }
     }
   },
   statusChip: {
@@ -342,7 +344,10 @@ const Header: React.FC<HeaderProps> = props => {
           justify="space-between"
         >
           <Box display="flex" alignItems="center">
-            <Grid item className={`p0 ${classes.chipWrapper}`}>
+            <Grid
+              item
+              className={`p0 ${isDetailLanding && classes.chipWrapper}`}
+            >
               <Chip
                 className={classnames({
                   [classes.statusChip]: true,
