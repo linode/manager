@@ -279,7 +279,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             alignItems="center"
             justify="space-between"
           >
-            <Grid item className="px0">
+            <Grid item className="p0">
               <Breadcrumb
                 pathname={`/NodeBalancers/${nodeBalancerLabel}`}
                 firstAndLastOnly
@@ -291,11 +291,9 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                 }}
               />
             </Grid>
-            {this.props.flags.cmr && (
-              <Grid item className="px0">
-                <DocumentationButton href="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/" />
-              </Grid>
-            )}
+            <Grid item className="p0">
+              <DocumentationButton href="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/" />
+            </Grid>
           </Grid>
           {errorMap.none && <Notice error text={errorMap.none} />}
           <Tabs

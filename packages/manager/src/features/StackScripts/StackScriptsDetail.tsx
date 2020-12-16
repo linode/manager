@@ -25,14 +25,8 @@ import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
-import {
-  getStackScriptUrl,
-  StackScriptCategory
-  // canUserModifyAccountStackScript
-} from './stackScriptUtils';
-import withFeatureFlagConsumerContainer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
+import { getStackScriptUrl, StackScriptCategory } from './stackScriptUtils';
+
 import {
   hasGrant,
   isRestrictedUser as _isRestrictedUser
@@ -118,8 +112,7 @@ type CombinedProps = ProfileProps &
   StateProps &
   WithStyles<ClassNames> &
   SetDocsProps &
-  Props &
-  FeatureFlagConsumerProps;
+  Props;
 
 export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   state: State = {
@@ -396,14 +389,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const {
-      classes
-      // username,
-      // flags,
-      // isRestrictedUser,
-      // stackScriptGrants,
-      // userCannotAddLinodes
-    } = this.props;
+    const { classes } = this.props;
     const { loading, stackScript } = this.state;
 
     if (loading) {
@@ -422,36 +408,13 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        {/* {flags.cmr ? (
-          <>
-            <StackScriptDetailsHeader
-              isPublic={stackScript.is_public}
-              category={
-                username === stackScript.username ? 'account' : 'community'
-              }
-              stackScriptID={stackScript.id}
-              stackScriptLabel={stackScript.label}
-              stackScriptUsername={stackScript.username}
-              canModify={canUserModifyAccountStackScript(
-                isRestrictedUser,
-                stackScriptGrants,
-                stackScript.id
-              )}
-              canAddLinodes={!userCannotAddLinodes}
-              triggerDelete={this.handleOpenDeleteDialog}
-              triggerMakePublic={this.handleOpenMakePublicDialog}
-            />
-            {this.renderDeleteStackScriptDialog()}
-            {this.renderMakePublicDialog()}
-          </>
-        ) : ( */}
         <Grid
           container
           className="m0"
           alignItems="center"
           justify="space-between"
         >
-          <Grid item className="px0">
+          <Grid item className="p0">
             <Breadcrumb
               pathname={this.props.location.pathname}
               labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
@@ -464,10 +427,8 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
               ]}
             />
           </Grid>
-          <Grid item className={`${classes.cta} px0`}>
-            {this.props.flags.cmr && (
-              <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
-            )}
+          <Grid item className={`${classes.cta} p0`}>
+            <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
             <Button
               buttonType="primary"
               className={classes.button}
@@ -512,8 +473,7 @@ const enhanced = compose<CombinedProps, {}>(
   withProfile<ProfileProps, {}>((ownProps, { profileData: profile }) => ({
     username: profile?.username
   })),
-  withStyles(styles),
-  withFeatureFlagConsumerContainer
+  withStyles(styles)
 );
 
 export default enhanced(StackScriptsDetail);

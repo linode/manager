@@ -83,11 +83,6 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
-    const onlineLinodes = linodeFactory.buildList(3, {
-      backups: { enabled: false }
-    });
-    const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
-    const busyLinodes = linodeFactory.buildList(5, { status: 'migrating' });
     const eventLinode = linodeFactory.build({
       id: 999,
       status: 'rebooting',
@@ -102,16 +97,20 @@ export const handlers = [
         '192.168.0.3',
         '192.168.0.4',
         '192.168.0.5'
-      ]
+      ],
+      tags: ['test', 'test', 'test']
     });
     const linodes = [
-      ...onlineLinodes,
-      ...offlineLinodes,
-      ...busyLinodes,
       linodeFactory.build({
         label: 'shadow-plan',
         type: 'g5-standard-20-s1',
         backups: { enabled: false }
+      }),
+      linodeFactory.build({
+        label: 'shadow-plan-with-tags',
+        type: 'g5-standard-20-s1',
+        backups: { enabled: false },
+        tags: ['test', 'test', 'test']
       }),
       eventLinode,
       multipleIPLinode

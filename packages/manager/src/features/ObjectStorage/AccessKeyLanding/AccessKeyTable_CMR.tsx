@@ -1,7 +1,6 @@
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
-import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -14,44 +13,20 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import AccessKeyMenu from './AccessKeyMenu_CMR';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import { OpenAccessDrawer } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.color.white
-  },
-  accessKeyHeader: {
-    margin: 0,
-    width: '100%'
-  },
-  headline: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    marginLeft: 15,
-    lineHeight: '1.5rem'
-  },
-  addNewWrapper: {
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-      padding: 5
-    },
-    '&.MuiGrid-item': {
-      padding: 5
-    }
-  },
   labelCell: {
     width: '35%'
   },
   copyIcon: {
+    marginLeft: theme.spacing(),
     '& svg': {
       top: 1,
       width: 12,
       height: 12
-    },
-    marginLeft: theme.spacing(1)
-  },
-  label: {}
+    }
+  }
 }));
 
 interface Props {
@@ -103,12 +78,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
     return objectStorageKeys.map((eachKey: ObjectStorageKey) => (
       <TableRow key={eachKey.id} data-qa-table-row={eachKey.label}>
         <TableCell parentColumn="Label">
-          <Typography
-            variant="body2"
-            className={classes.label}
-            component="h3"
-            data-qa-key-label
-          >
+          <Typography variant="body2" component="h3" data-qa-key-label>
             {eachKey.label}
           </Typography>
         </TableCell>
@@ -134,40 +104,25 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <div className={classes.root}>
-      <Grid container justify="flex-end" className={classes.accessKeyHeader}>
-        {/* <Grid item className="p0">
-          <Typography variant="h3" data-qa-title className={classes.headline}>
-            Access Keys
-          </Typography>
-        </Grid> */}
-        <Grid item className={classes.addNewWrapper}>
-          <AddNewLink
-            onClick={() => openDrawer('creating')}
-            label="Create an Access Key"
-          />
-        </Grid>
-      </Grid>
-      <Table
-        aria-label="List of Object Storage Access Keys"
-        rowCount={data && data.length}
-        colCount={2}
-      >
-        <TableHead>
-          <TableRow data-qa-table-head>
-            <TableCell className={classes.labelCell} data-qa-header-label>
-              Label
-            </TableCell>
-            <TableCell className={classes.labelCell} data-qa-header-key>
-              Access Key
-            </TableCell>
-            {/* empty cell for kebab menu */}
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>{renderContent()}</TableBody>
-      </Table>
-    </div>
+    <Table
+      aria-label="List of Object Storage Access Keys"
+      rowCount={data && data.length}
+      colCount={2}
+    >
+      <TableHead>
+        <TableRow data-qa-table-head>
+          <TableCell className={classes.labelCell} data-qa-header-label>
+            Label
+          </TableCell>
+          <TableCell className={classes.labelCell} data-qa-header-key>
+            Access Key
+          </TableCell>
+          {/* empty cell for kebab menu */}
+          <TableCell />
+        </TableRow>
+      </TableHead>
+      <TableBody>{renderContent()}</TableBody>
+    </Table>
   );
 };
 

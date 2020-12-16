@@ -17,15 +17,13 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import Tab from 'src/components/core/ReachTab';
 import TabList from 'src/components/core/ReachTabList';
-import DocumentationButton from 'src/components/DocumentationButton';
-import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import KubeContainer, {
   DispatchProps
 } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import useFlags from 'src/hooks/useFlags';
 import usePolling from 'src/hooks/usePolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAllWithArguments } from 'src/utilities/getAll';
@@ -51,9 +49,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`
       }
     }
-  },
-  titleGridWrapper: {
-    marginBottom: theme.spacing(1)
   },
   tab: {
     '&[data-reach-tab]': {
@@ -121,7 +116,6 @@ const getAllEndpoints = getAllWithArguments<KubernetesEndpointResponse>(
 
 export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = props => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const {
     cluster,
@@ -299,15 +293,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
-      <Grid
-        container
-        className={classes.titleGridWrapper}
-        direction="row"
-        wrap="nowrap"
-        justify="space-between"
-        alignItems="flex-start"
-      >
-        <Grid item xs={12}>
+      <Grid container alignItems="center" justify="space-between">
+        <Grid item className="p0">
           <Breadcrumb
             onEditHandlers={{
               editableTextTitle: cluster.label,
@@ -320,12 +307,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             data-qa-breadcrumb
           />
         </Grid>
-        <Grid item className="pt0">
-          {flags.cmr ? (
-            <DocumentationButton_CMR href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
-          ) : (
-            <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
-          )}
+        <Grid item className="p0">
+          <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
         </Grid>
       </Grid>
 
