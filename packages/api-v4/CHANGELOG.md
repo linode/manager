@@ -1,3 +1,8 @@
+## [2020-12-16] - v0.39.0
+
+### Changed:
+“updated” field added to Image interface
+
 ## [2020-11-17] - v0.38.0
 
 ### Added:
