@@ -119,6 +119,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       [theme.breakpoints.down('sm')]: {
         paddingRight: 12,
         paddingLeft: 12
+      },
+      [theme.breakpoints.down(360)]: {
+        paddingRight: theme.spacing(),
+        paddingLeft: theme.spacing()
       }
     },
     '&:hover, &:focus': {
