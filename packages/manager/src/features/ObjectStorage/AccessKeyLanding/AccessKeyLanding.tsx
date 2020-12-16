@@ -194,7 +194,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
 
     setSubmitting(true);
 
-    updateObjectStorageKey(keyToEdit.id, values)
+    updateObjectStorageKey(keyToEdit.id, { label: values.label })
       .then(_ => {
         setSubmitting(false);
 
