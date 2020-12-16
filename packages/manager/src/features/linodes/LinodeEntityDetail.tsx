@@ -222,11 +222,23 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     width: '100%'
   },
+  chipWrapper: {
+    [theme.breakpoints.up('sm')]: {
+      '&.MuiGrid-item': {
+        marginTop: 2
+      }
+    }
+  },
   statusChip: {
     ...theme.applyStatusPillStyles,
-    marginLeft: theme.spacing(2),
+    borderRadius: 0,
     height: `24px !important`,
-    borderRadius: 0
+    marginLeft: theme.spacing(2)
+  },
+  statusChipLandingDetailView: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
   },
   statusRunning: {
     '&:before': {
@@ -332,10 +344,14 @@ const Header: React.FC<HeaderProps> = props => {
           justify="space-between"
         >
           <Box display="flex" alignItems="center">
-            <Grid item className="p0">
+            <Grid
+              item
+              className={`p0 ${isDetailLanding && classes.chipWrapper}`}
+            >
               <Chip
                 className={classnames({
                   [classes.statusChip]: true,
+                  [classes.statusChipLandingDetailView]: isDetailLanding,
                   [classes.statusRunning]: isRunning,
                   [classes.statusOffline]: isOffline,
                   [classes.statusOther]: isOther,
@@ -585,9 +601,6 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.headlineStatic,
     fontFamily: theme.font.bold
   },
-  accessTableContainer: {
-    flexBasis: '65%'
-  },
   accessTableContent: {
     '&.MuiGrid-item': {
       padding: 0,
@@ -686,14 +699,7 @@ interface AccessTableProps {
 export const AccessTable: React.FC<AccessTableProps> = React.memo(props => {
   const classes = useAccessTableStyles();
   return (
-    <Grid
-      container
-      item
-      md={6}
-      className={classes.accessTableContainer}
-      direction="column"
-      {...props.gridProps}
-    >
+    <Grid container item md={6} direction="column" {...props.gridProps}>
       <Grid item className={classes.columnLabel}>
         {props.title}
       </Grid>

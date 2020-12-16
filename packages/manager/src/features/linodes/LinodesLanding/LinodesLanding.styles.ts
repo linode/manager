@@ -10,6 +10,7 @@ type ClassNames =
   | 'tagGroup'
   | 'CSVlinkContainer'
   | 'CSVlink'
+  | 'CSVwrapper'
   | 'addNewLink'
   | 'chipContainer'
   | 'chip'
@@ -38,6 +39,11 @@ const styles = (theme: Theme) =>
     },
     CSVlinkContainer: {
       marginTop: theme.spacing(1)
+    },
+    CSVwrapper: {
+      marginLeft: 0,
+      marginRight: 0,
+      width: '100%'
     },
     addNewLink: {
       marginBottom: -3,
