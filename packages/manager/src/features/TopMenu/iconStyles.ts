@@ -2,16 +2,21 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   icon: {
-    cursor: 'pointer',
-    position: 'relative',
-    padding: theme.spacing(),
-    marginLeft: theme.spacing(),
-    marginTop: 4,
-    color: '#c9c7c7',
-    border: 'none',
+    display: 'flex',
+    alignItems: 'center',
     backgroundColor: 'inherit',
+    border: 'none',
+    color: '#c9c7c7',
+    cursor: 'pointer',
+    height: '100%',
+    outlineOffset: 'initial',
+    padding: '8px 12px',
+    position: 'relative',
     '&:hover, &:focus': {
       color: '#c1c1c0'
+    },
+    '&:first-of-type': {
+      marginLeft: theme.spacing()
     },
     '& svg': {
       width: 20,
