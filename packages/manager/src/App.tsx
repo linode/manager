@@ -16,6 +16,8 @@ import {
   DocumentTitleSegment,
   withDocumentTitleProvider
 } from 'src/components/DocumentTitle';
+import 'highlight.js/styles/a11y-light.css';
+import 'highlight.js/styles/a11y-dark.css';
 
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import withFeatureFlagConsumer, {
@@ -72,6 +74,17 @@ export class App extends React.Component<CombinedProps, State> {
     this.props.history.listen(({ pathname }) => {
       if ((window as any).ga) {
         (window as any).ga('send', 'pageview', pathname);
+      }
+    });
+
+    /**
+     * Allow an Easter egg for toggling the theme with
+     * a key combination
+     */
+    // eslint-disable-next-line
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.key === 'D') {
+        this.props.toggleTheme();
       }
     });
 

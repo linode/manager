@@ -63,10 +63,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     main: {
-      paddingTop: theme.spacing(1),
-      [theme.breakpoints.up('md')]: {
-        order: 1
-      }
+      paddingTop: theme.spacing(1)
     },
     sidebar: {
       [theme.breakpoints.up('md')]: {
@@ -417,8 +414,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <Paper>
-        <Grid item className={classes.main}>
-          <Grid item className="py0">
+        <Grid container item xs={12} className={classes.main}>
+          <Grid item xs={12}>
             <div className={classes.graphControls}>
               <Typography variant="h2" className={classes.labelRangeSelect}>
                 Resource Allocation
@@ -439,7 +436,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </div>
           </Grid>
 
-          <Grid container direction="row" className={classes.graphGrids}>
+          <Grid container item xs={12} className={classes.graphGrids}>
             <Grid item xs={12}>
               <StatsPanel
                 title="CPU (%)"
@@ -456,7 +453,11 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
 
-          <NetworkGraph stats={this.state.stats} {...chartProps} />
+          <Grid container item xs={12}>
+            <Grid item xs={12}>
+              <NetworkGraph stats={this.state.stats} {...chartProps} />
+            </Grid>
+          </Grid>
         </Grid>
       </Paper>
     );

@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       // Browser default until we get styling direction for focus states
       outline: '1px dotted #999'
     }
+  },
+  table: {
+    tableLayout: 'fixed'
   }
 }));
 
@@ -130,6 +133,7 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
                   linodesAreGrouped={linodesAreGrouped}
                   toggleLinodeView={toggleLinodeView}
                   toggleGroupLinodes={toggleGroupLinodes}
+                  tableProps={{ tableClass: classes.table }}
                 >
                   <TableBody>
                     <Component showHead {...componentProps} />

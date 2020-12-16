@@ -1,9 +1,11 @@
-import * as classnames from 'classnames';
 import { AccountCapability } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import * as classnames from 'classnames';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
+import Logo from 'src/assets/logo/logo-text.svg';
 import Box from 'src/components/core/Box';
 import {
   makeStyles,
@@ -11,38 +13,35 @@ import {
   withTheme,
   WithTheme
 } from 'src/components/core/styles';
-
+import Grid from 'src/components/Grid';
+import MainContentBanner from 'src/components/MainContentBanner';
+import NotFound from 'src/components/NotFound';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import SideMenu from 'src/components/SideMenu';
+import SuspenseLoader from 'src/components/SuspenseLoader';
+import withGlobalErrors, {
+  Props as GlobalErrorProps
+} from 'src/containers/globalErrors.container';
+import { dbaasContext, useDialogContext, vlanContext } from 'src/context';
 import BackupDrawer from 'src/features/Backups';
+import CreateDatabaseDialog from 'src/features/Databases/CreateDatabaseDialog';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
-import GlobalNotifications from 'src/features/GlobalNotifications';
 import Footer from 'src/features/Footer/Footer_CMR';
+import GlobalNotifications from 'src/features/GlobalNotifications';
 import {
   notificationContext,
   useNotificationContext
 } from 'src/features/NotificationCenter/NotificationContext';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu/TopMenu_CMR';
-import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import CreateVLANDialog from 'src/features/Vlans/CreateVLANDialog';
-import CreateDatabaseDialog from 'src/features/Databases/CreateDatabaseDialog';
-import { useDialogContext, vlanContext, dbaasContext } from 'src/context';
+import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-
-import Grid from 'src/components/Grid';
-import NotFound from 'src/components/NotFound';
-import SuspenseLoader from 'src/components/SuspenseLoader';
-import SideMenu from 'src/components/SideMenu';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-
-import withGlobalErrors, {
-  Props as GlobalErrorProps
-} from 'src/containers/globalErrors.container';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
+import useFlags from 'src/hooks/useFlags';
+import usePreferences from 'src/hooks/usePreferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-
-import Logo from 'src/assets/logo/logo-text.svg';
+import { FlagSet } from './featureFlags';
+import { UserPreferences } from './store/preferences/preferences.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appFrame: {
@@ -64,7 +63,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
-    overflow: 'hidden',
     padding: `${theme.spacing(3)}px 0`,
     paddingTop: 20,
     transition: theme.transitions.create('opacity'),
@@ -149,10 +147,7 @@ interface Props {
   isLoggedInAsCustomer: boolean;
 }
 
-type CombinedProps = Props &
-  GlobalErrorProps &
-  WithTheme &
-  FeatureFlagConsumerProps;
+type CombinedProps = Props & GlobalErrorProps & WithTheme;
 
 const Account = React.lazy(() => import('src/features/Account'));
 const LinodesRoutes = React.lazy(() => import('src/features/linodes'));
@@ -189,6 +184,8 @@ const Databases = React.lazy(() => import('src/features/Databases'));
 
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
+  const { preferences } = usePreferences();
 
   const NotificationProvider = notificationContext.Provider;
   const contextValue = useNotificationContext();
@@ -202,19 +199,29 @@ const MainContent: React.FC<CombinedProps> = props => {
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
   const { account, _isManagedAccount } = useAccountManagement();
 
+  const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
+
   const showFirewalls = isFeatureEnabled(
     'Cloud Firewall',
-    Boolean(props.flags.firewalls),
+    Boolean(flags.firewalls),
     account.data?.capabilities ?? []
   );
 
   const showVlans = isFeatureEnabled(
     'Vlans',
-    Boolean(props.flags.vlans),
+    Boolean(flags.vlans),
     account?.data?.capabilities ?? []
   );
 
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
+
+  const shouldDisplayMainContentBanner =
+    !bannerDismissed &&
+    checkFlagsForMainContentBanner(flags) &&
+    !checkPreferencesForBannerDismissal(
+      preferences ?? {},
+      flags?.mainContentBanner?.key
+    );
 
   // Clean up and use the below once we know what the Databases piece will look like for Capabilities. Until then, the feature-based display logic for Databases will rely only on the flag.
   // const showDbaas = isFeatureEnabled(
@@ -292,6 +299,15 @@ const MainContent: React.FC<CombinedProps> = props => {
             <VlanContextProvider value={vlanContextValue}>
               <NotificationProvider value={contextValue}>
                 <>
+                  {shouldDisplayMainContentBanner && (
+                    <MainContentBanner
+                      bannerText={flags.mainContentBanner?.text ?? ''}
+                      url={flags.mainContentBanner?.link?.url ?? ''}
+                      linkText={flags.mainContentBanner?.link?.text ?? ''}
+                      bannerKey={flags.mainContentBanner?.key ?? ''}
+                      onClose={() => setBannerDismissed(true)}
+                    />
+                  )}
                   <SideMenu
                     open={menuIsOpen}
                     desktopOpen={desktopMenuIsOpen || false}
@@ -397,7 +413,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                               {showVlans && (
                                 <Route path="/vlans" component={VLans} />
                               )}
-                              {props.flags.databases && (
+                              {flags.databases && (
                                 <Route
                                   path="/databases"
                                   component={Databases}
@@ -433,6 +449,23 @@ const MainContent: React.FC<CombinedProps> = props => {
 export default compose<CombinedProps, Props>(
   React.memo,
   withGlobalErrors(),
-  withTheme,
-  withFeatureFlags
+  withTheme
 )(MainContent);
+
+// =============================================================================
+// Utilities
+// =============================================================================
+export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
+  return Boolean(
+    flags.mainContentBanner &&
+      !isEmpty(flags.mainContentBanner) &&
+      flags.mainContentBanner.key
+  );
+};
+
+export const checkPreferencesForBannerDismissal = (
+  preferences: UserPreferences,
+  key = 'defaultKey'
+) => {
+  return Boolean(preferences?.main_content_banner_dismissal?.[key]);
+};
