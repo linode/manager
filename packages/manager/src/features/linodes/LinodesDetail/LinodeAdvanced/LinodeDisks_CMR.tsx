@@ -197,46 +197,41 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
               }) => {
                 return (
                   <React.Fragment>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Table aria-label="List of Disks">
-                          <TableHead>
-                            <TableRow>
-                              <TableSortCell
-                                active={orderBy === 'label'}
-                                label="label"
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Label
-                              </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'filesystem'}
-                                label="filesystem"
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Type
-                              </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'size'}
-                                label="size"
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Size
-                              </TableSortCell>
-                              <TableCell />
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {this.renderTableContent(
-                              paginatedData,
-                              linodeStatus
-                            )}
-                          </TableBody>
-                        </Table>
-                      </Grid>
+                    <Grid item xs={12}>
+                      <Table aria-label="List of Disks">
+                        <TableHead>
+                          <TableRow>
+                            <TableSortCell
+                              active={orderBy === 'label'}
+                              label="label"
+                              direction={order}
+                              handleClick={handleOrderChange}
+                            >
+                              Label
+                            </TableSortCell>
+                            <TableSortCell
+                              active={orderBy === 'filesystem'}
+                              label="filesystem"
+                              direction={order}
+                              handleClick={handleOrderChange}
+                            >
+                              Type
+                            </TableSortCell>
+                            <TableSortCell
+                              active={orderBy === 'size'}
+                              label="size"
+                              direction={order}
+                              handleClick={handleOrderChange}
+                            >
+                              Size
+                            </TableSortCell>
+                            <TableCell />
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {this.renderTableContent(paginatedData, linodeStatus)}
+                        </TableBody>
+                      </Table>
                     </Grid>
                     <PaginationFooter
                       page={page}

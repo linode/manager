@@ -95,7 +95,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     lineHeight: 1,
-    marginLeft: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      paddingLeft: 12
+    },
+    [theme.breakpoints.down(360)]: {
+      paddingLeft: 3
+    },
     '&[data-reach-menu-button]': {
       backgroundColor: 'transparent',
       border: 'none',
@@ -110,6 +115,14 @@ const useStyles = makeStyles((theme: Theme) => ({
           marginTop: 4,
           transform: 'rotate(180deg)'
         }
+      },
+      [theme.breakpoints.down('sm')]: {
+        paddingRight: 12,
+        paddingLeft: 12
+      },
+      [theme.breakpoints.down(360)]: {
+        paddingRight: theme.spacing(),
+        paddingLeft: theme.spacing()
       }
     },
     '&:hover, &:focus': {

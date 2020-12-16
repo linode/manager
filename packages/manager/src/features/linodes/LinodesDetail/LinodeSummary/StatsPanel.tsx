@@ -15,8 +15,7 @@ type ClassNames = 'root' | 'spinner' | 'title' | 'graphsUnavailable';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(2),
-      marginBottom: theme.spacing(2)
+      padding: theme.spacing(2)
     },
     spinner: {
       display: 'flex',
