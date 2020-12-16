@@ -42,6 +42,18 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
     setTimeout(() => {
       document.body.classList.remove('no-transition');
     }, 500);
+    /**
+     * Disable the inactive highlight.js theme when we toggle
+     * the app theme. This looks horrible but it is the recommended approach:
+     * https://github.com/highlightjs/highlight.js/blob/master/demo/demo.js
+     */
+    const inactiveTheme = value === 'dark' ? 'a11y-light' : 'a11y-dark';
+    const links = document.querySelectorAll('style');
+    links.forEach((thisLink: any) => {
+      const content = thisLink?.textContent ?? '';
+      // We're matching a comment in the style tag's text contents :groan:
+      thisLink.disabled = content.match(inactiveTheme);
+    });
     /** send to GA */
     sendThemeToggleEvent(value);
   };
