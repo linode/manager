@@ -585,9 +585,6 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.headlineStatic,
     fontFamily: theme.font.bold
   },
-  accessTableContainer: {
-    flexBasis: '65%'
-  },
   accessTableContent: {
     '&.MuiGrid-item': {
       padding: 0,
@@ -686,14 +683,7 @@ interface AccessTableProps {
 export const AccessTable: React.FC<AccessTableProps> = React.memo(props => {
   const classes = useAccessTableStyles();
   return (
-    <Grid
-      container
-      item
-      md={6}
-      className={classes.accessTableContainer}
-      direction="column"
-      {...props.gridProps}
-    >
+    <Grid container item md={6} direction="column" {...props.gridProps}>
       <Grid item className={classes.columnLabel}>
         {props.title}
       </Grid>

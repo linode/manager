@@ -22,6 +22,47 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       outline: '1px dotted #999'
     }
+  },
+  // There's nothing very scientific about the widths across the breakpoints
+  // here, just a lot of trial and error based on maximum expected column sizes.
+  labelCell: {
+    width: '24%',
+    [theme.breakpoints.only('md')]: {
+      width: '30%'
+    }
+  },
+  statusCell: {
+    width: '18%',
+    [theme.breakpoints.down('sm')]: {
+      width: '22%'
+    }
+  },
+  ipAddressCell: {
+    width: '14%',
+    [theme.breakpoints.down('sm')]: {
+      width: '18%'
+    }
+  },
+  regionCell: {
+    width: '14%',
+    [theme.breakpoints.down('xs')]: {
+      width: '18%'
+    }
+  },
+  lastBackupCell: {
+    width: '14%',
+    [theme.breakpoints.down('xs')]: {
+      width: '18%'
+    }
+  },
+  actionCell: {
+    width: '16%',
+    [theme.breakpoints.only('md')]: {
+      width: '10%'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '12%'
+    }
   }
 }));
 
@@ -60,6 +101,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           direction={order}
           active={isActive('label')}
           handleClick={handleOrderChange}
+          className={classes.labelCell}
           data-qa-sort-label={order}
         >
           Label
@@ -69,6 +111,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           label="_statusPriority"
           direction={order}
           active={isActive('_statusPriority')}
+          className={classes.statusCell}
           handleClick={handleOrderChange}
         >
           Status
@@ -91,18 +134,22 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
                 active={isActive('ipv4[0]')}
                 handleClick={handleOrderChange}
                 direction={order}
+                className={classes.ipAddressCell}
               >
                 IP Address
               </TableSortCell>
-              <TableSortCell
-                label="region"
-                direction={order}
-                active={isActive('region')}
-                handleClick={handleOrderChange}
-                data-qa-sort-region={order}
-              >
-                Region
-              </TableSortCell>
+              <Hidden smDown>
+                <TableSortCell
+                  label="region"
+                  direction={order}
+                  active={isActive('region')}
+                  handleClick={handleOrderChange}
+                  className={classes.regionCell}
+                  data-qa-sort-region={order}
+                >
+                  Region
+                </TableSortCell>
+              </Hidden>
             </Hidden>
             <Hidden mdDown>
               <TableSortCell
@@ -110,6 +157,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
                 label="backups:last_successful"
                 direction={order}
                 active={isActive('backups:last_successful')}
+                className={classes.lastBackupCell}
                 handleClick={handleOrderChange}
               >
                 Last Backup
@@ -117,7 +165,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
             </Hidden>
           </>
         )}
-        <TableCell>
+        <TableCell className={classes.actionCell}>
           <div className={classes.controlHeader}>
             <div id="displayViewDescription" className="visually-hidden">
               Currently in {linodeViewPreference} view

@@ -75,7 +75,7 @@ export const TableSortCell: React.FC<CombinedProps> = props => {
 
   return (
     <TableCell
-      className={classNames({
+      className={classNames(props.className, {
         [classes.root]: true,
         [classes.noWrap]: noWrap
       })}

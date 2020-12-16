@@ -225,9 +225,11 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
                 <IPAddress ips={ipv4} copyRight />
               </div>
             </TableCell>
-            <TableCell className={classes.regionCell} data-qa-region>
-              <RegionIndicator region={region} />
-            </TableCell>
+            <Hidden smDown>
+              <TableCell className={classes.regionCell} data-qa-region>
+                <RegionIndicator region={region} />
+              </TableCell>
+            </Hidden>
           </Hidden>
           <Hidden mdDown>
             <LinodeRowBackupCell
