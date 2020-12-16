@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   table: {
-    tableLayout: 'fixed'
+    // tableLayout: 'fixed'
   }
 }));
 
