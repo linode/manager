@@ -1,7 +1,7 @@
 // will need to change from beta to regular eventually
 import { deleteByIdBeta, getAllBeta, isTestEntity } from './common';
-import { deleteLinodeById } from './linodes';
-export const getFirewalls = () => getAllBeta('networking/firewalls');
+export const getFirewalls = (page: number = 1) =>
+  getAllBeta(`networking/firewalls?page=${page}`);
 
 export const deleteFirewallByLabel = firewall => {
   getFirewalls().then(resp => {
@@ -14,7 +14,7 @@ export const deleteAllTestFirewalls = () => {
   getFirewalls().then(resp => {
     const pages = resp.body.pages;
     for (let page = 1; page <= pages; page++) {
-      getFirewalls().then(resp => {
+      getFirewalls(page).then(resp => {
         resp.body.data.forEach(firewall => {
           if (isTestEntity(firewall)) {
             deleteFirewallById(firewall.id);

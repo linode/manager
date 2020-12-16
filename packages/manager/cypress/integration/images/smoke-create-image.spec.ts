@@ -1,6 +1,12 @@
 import { makeImageLabel } from '../../support/api/images';
 import { createLinode, deleteLinodeById } from '../../support/api/linodes';
-import { containsClick, fbtClick, getClick } from '../../support/helpers';
+import {
+  containsClick,
+  containsVisible,
+  fbtClick,
+  getClick,
+  getVisible
+} from '../../support/helpers';
 
 describe('create image', () => {
   it('creates first image w/ drawer, and fail because POST is stubbed', () => {
@@ -53,9 +59,7 @@ describe('create image', () => {
       cy.visitWithLogin('/images');
       // cy.wait('@getImages');
       const imageLabel = makeImageLabel();
-      cy.get('[data-qa-placeholder-button="true"]').within(() => {
-        containsClick('Add an Image');
-      });
+      containsClick('Add an Image');
       fbtClick('Select a Linode').type(`${linode.label}{enter}`);
       cy.wait('@getDisks').then(() => {
         containsClick('Select a Disk').type(`${diskLabel}{enter}`);
