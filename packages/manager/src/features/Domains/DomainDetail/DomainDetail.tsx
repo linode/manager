@@ -9,6 +9,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Loading from 'src/components/LandingLoading';
 import Notice from 'src/components/Notice';
 import summaryPanelStyles, {
   StyleProps
@@ -16,9 +17,6 @@ import summaryPanelStyles, {
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import useDomains from 'src/hooks/useDomains';
 import { getAllWithArguments } from 'src/utilities/getAll';
-
-import Loading from 'src/components/LandingLoading';
-
 import DomainRecords from '../DomainRecordsWrapper';
 
 type RouteProps = RouteComponentProps<{ domainId?: string }>;
@@ -121,14 +119,14 @@ const DomainDetail: React.FC<CombinedProps> = props => {
         alignItems="center"
         justify="space-between"
       >
-        <Grid item className="px0">
+        <Grid item className="p0">
           <Breadcrumb
             pathname={location.pathname}
             labelTitle={domain.domain}
             labelOptions={{ noCap: true }}
           />
         </Grid>
-        <Grid item className={`${classes.cta} px0`}>
+        <Grid item className={`${classes.cta} p0`}>
           <Button
             buttonType="secondary"
             className={classes.tagsButton}
