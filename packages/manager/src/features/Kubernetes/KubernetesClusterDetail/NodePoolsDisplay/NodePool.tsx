@@ -1,20 +1,11 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
-import Collapse from 'src/assets/icons/collapse.svg';
-import Recycle from 'src/assets/icons/recycle.svg';
-import Resize from 'src/assets/icons/resize.svg';
+import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import IconTextLink from 'src/components/IconTextLink';
 import NodeTable from './NodeTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  button: {
-    padding: theme.spacing()
-  },
-  nodeTable: {
-    marginTop: theme.spacing(0.5)
-  },
   container: {
     display: 'flex',
     flexDirection: 'row',
@@ -25,13 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: theme.spacing(2.5)
     }
   },
-  icon: {
-    '& svg': {
-      marginRight: theme.spacing()
-    },
-    '& span': {
-      top: 0
-    }
+  nodeTable: {
+    marginTop: theme.spacing(0.5)
   }
 }));
 
@@ -63,26 +49,24 @@ const NodePool: React.FC<Props> = props => {
       <div className={classes.container}>
         <Typography variant="h2">{typeLabel}</Typography>
         <div className={classes.container}>
-          <IconTextLink
-            text="Resize Pool"
-            SideIcon={Resize}
-            title="Resize Pool"
+          <Button
+            buttonType="secondary"
             onClick={() => handleClickResize(poolId)}
-            className={classes.icon}
-          />
-          <IconTextLink
-            text="Recycle Nodes"
-            SideIcon={Recycle}
-            title="Recycle Nodes"
+          >
+            Resize Pool
+          </Button>
+          <Button
+            buttonType="secondary"
             onClick={() => openRecycleAllNodesDialog(poolId)}
-          />
-          <IconTextLink
-            text="Delete Pool"
-            SideIcon={Collapse}
-            title="Delete Pool"
+          >
+            Recycle Nodes
+          </Button>
+          <Button
+            buttonType="secondary"
             onClick={() => openDeletePoolDialog(poolId)}
-            className={classes.icon}
-          />
+          >
+            Delete Pool
+          </Button>
         </div>
       </div>
       <div className={classes.nodeTable}>
