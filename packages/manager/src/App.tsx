@@ -31,7 +31,6 @@ import { MapState } from './store/types';
 
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
-import MainContent_CMR from './MainContent_CMR';
 
 interface Props {
   toggleTheme: () => void;
@@ -198,20 +197,7 @@ export class App extends React.Component<CombinedProps, State> {
           euuid={this.props.euuid}
         />
         <DocumentTitleSegment segment="Linode Manager" />
-        {this.props.featureFlagsLoading ? null : this.props.flags.cmr ? (
-          <MainContent_CMR
-            accountCapabilities={accountCapabilities}
-            accountError={accountError}
-            accountLoading={accountLoading}
-            history={this.props.history}
-            location={this.props.location}
-            toggleSpacing={toggleSpacing}
-            toggleTheme={toggleTheme}
-            appIsLoading={this.props.appIsLoading}
-            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-            username={username}
-          />
-        ) : (
+        {this.props.featureFlagsLoading ? null : (
           <MainContent
             accountCapabilities={accountCapabilities}
             accountError={accountError}
