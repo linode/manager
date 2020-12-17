@@ -19,6 +19,10 @@ export interface ObjectStorageKeyRequest {
   bucket_access: Scope[] | null;
 }
 
+export interface UpdateObjectStorageKeyRequest {
+  label: string;
+}
+
 export interface ObjectStorageBucketRequestPayload {
   label: string;
   cluster: string;
