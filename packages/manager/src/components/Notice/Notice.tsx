@@ -120,7 +120,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props extends GridProps {
   text?: string | JSX.Element;
-  html?: string;
   error?: boolean;
   errorGroup?: string;
   important?: boolean;
@@ -155,7 +154,6 @@ const Notice: React.FC<CombinedProps> = props => {
     typeProps,
     children,
     flag,
-    html,
     notificationList,
     onClick,
     onClose,
@@ -166,10 +164,10 @@ const Notice: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
 
-  const c = html ? (
+  const c = text ? (
     <Typography
       {...typeProps}
-      dangerouslySetInnerHTML={{ __html: sanitizeHTML(html) }}
+      dangerouslySetInnerHTML={{ __html: sanitizeHTML('html') }}
     />
   ) : (
     <Typography
