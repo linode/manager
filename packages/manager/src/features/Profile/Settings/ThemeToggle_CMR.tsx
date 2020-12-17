@@ -21,15 +21,6 @@ export const styles = (theme: Theme) =>
         transition: theme.transitions.create(['color']),
         color: '#C9CACB'
       }
-    },
-    toggle: {
-      '& > span:last-child': {
-        backgroundColor: '#f4f4f4 !important' as '#f4f4f4',
-        opacity: '0.38 !important' as any
-      },
-      '&.darkTheme .square': {
-        fill: '#444 !important'
-      }
     }
   });
 
@@ -59,7 +50,6 @@ export class ThemeToggle extends React.Component<CombinedProps> {
           onChange={toggle}
           checked={themeName !== 'lightTheme'}
           className={classNames({
-            [classes.toggle]: true,
             [themeName]: true
           })}
           aria-label="Switch Theme"
