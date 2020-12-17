@@ -3,11 +3,11 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import ButtonLink from 'src/components/Button/ButtonLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
+import Link from 'src/components/Link';
 import { DispatchProps } from 'src/containers/longview.container';
 import withClientStats, {
   Props as LVDataProps
@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   link: {
+    ...theme.applyLinkStyles,
     '& .buttonSpan': {
       padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`
     },
@@ -47,11 +48,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'underline',
       color: 'inherit',
       backgroundColor: 'inherit'
-    }
-  },
-  detailsContainer: {
-    '& > a': {
-      textDecoration: 'none !important'
     }
   },
   lastUpdatedOuter: {
@@ -171,12 +167,10 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
           </>
         )}
       </Grid>
-      <Grid item className={classes.detailsContainer}>
-        <ButtonLink
-          to={`/longview/clients/${clientID}`}
-          linkText="View details"
-          className={classes.link}
-        />
+      <Grid item>
+        <button className={classes.link}>
+          <Link to={`/longview/clients/${clientID}`}>View Details</Link>
+        </button>
         {!loading && (
           <div className={classes.lastUpdatedOuter}>
             <Typography variant="caption" className={classes.lastUpdatedText}>
