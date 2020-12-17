@@ -40,20 +40,12 @@ import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import LinodeDiskActionMenu from './LinodeDiskActionMenu_CMR';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
+import LinodeDiskRow from './LinodeDiskRow';
 
 import Paginate from 'src/components/Paginate';
 
-type ClassNames =
-  | 'root'
-  | 'headline'
-  | 'addNewWrapper'
-  | 'emptyCell'
-  | 'diskLabel'
-  | 'diskType'
-  | 'diskSize'
-  | 'actionMenu';
+type ClassNames = 'root' | 'headline' | 'addNewWrapper' | 'emptyCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -75,22 +67,6 @@ const styles = (theme: Theme) =>
       },
       '&.MuiGrid-item': {
         padding: 5
-      }
-    },
-    diskLabel: {
-      width: '23%'
-    },
-    diskType: {
-      width: '8%'
-    },
-    diskSize: {
-      width: '9%'
-    },
-    actionMenu: {
-      paddingTop: 0,
-      paddingBottom: 0,
-      '&.MuiTableCell-root': {
-        paddingRight: 0
       }
     }
   });
@@ -200,7 +176,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openDrawerForCreation}
-              label="Add a Disk..."
+              label="Add a Disk"
               disabled={readOnly || !freeDiskSpace}
               disabledReason={
                 !freeDiskSpace ? noFreeDiskSpaceWarning : undefined
@@ -221,46 +197,41 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
               }) => {
                 return (
                   <React.Fragment>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Table aria-label="List of Disks">
-                          <TableHead>
-                            <TableRow>
-                              <TableSortCell
-                                active={orderBy === 'label'}
-                                label="label"
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Label
-                              </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'filesystem'}
-                                label="filesystem"
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Type
-                              </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'size'}
-                                label="size"
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Size
-                              </TableSortCell>
-                              <TableCell />
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {this.renderTableContent(
-                              paginatedData,
-                              linodeStatus
-                            )}
-                          </TableBody>
-                        </Table>
-                      </Grid>
+                    <Grid item xs={12}>
+                      <Table aria-label="List of Disks">
+                        <TableHead>
+                          <TableRow>
+                            <TableSortCell
+                              active={orderBy === 'label'}
+                              label="label"
+                              direction={order}
+                              handleClick={handleOrderChange}
+                            >
+                              Label
+                            </TableSortCell>
+                            <TableSortCell
+                              active={orderBy === 'filesystem'}
+                              label="filesystem"
+                              direction={order}
+                              handleClick={handleOrderChange}
+                            >
+                              Type
+                            </TableSortCell>
+                            <TableSortCell
+                              active={orderBy === 'size'}
+                              label="size"
+                              direction={order}
+                              handleClick={handleOrderChange}
+                            >
+                              Size
+                            </TableSortCell>
+                            <TableCell />
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {this.renderTableContent(paginatedData, linodeStatus)}
+                        </TableBody>
+                      </Table>
                     </Grid>
                     <PaginationFooter
                       page={page}
@@ -283,8 +254,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderTableContent = (data: Disk[], status?: string) => {
-    const { classes, errors, linodeId, readOnly } = this.props;
+  renderTableContent = (disks: Disk[], status?: string) => {
+    const { errors, linodeId, readOnly } = this.props;
 
     if (errors) {
       return (
@@ -295,29 +266,22 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       );
     }
 
-    if (data.length === 0) {
+    if (disks.length === 0) {
       return <TableRowEmptyState colSpan={4} />;
     }
 
-    return data.map(disk => (
-      <TableRow key={disk.id} data-qa-disk={disk.label}>
-        <TableCell className={classes.diskLabel}>{disk.label}</TableCell>
-        <TableCell className={classes.diskType}>{disk.filesystem}</TableCell>
-        <TableCell className={classes.diskSize}>{disk.size} MB</TableCell>
-        <TableCell className={classes.actionMenu}>
-          <LinodeDiskActionMenu
-            linodeStatus={status || 'offline'}
-            linodeId={linodeId}
-            diskId={disk.id}
-            label={disk.label}
-            onRename={this.openDrawerForRename(disk)}
-            onResize={this.openDrawerForResize(disk)}
-            onImagize={this.openImagizeDrawer(disk)}
-            onDelete={this.openConfirmDelete(disk)}
-            readOnly={readOnly}
-          />
-        </TableCell>
-      </TableRow>
+    return disks.map(disk => (
+      <LinodeDiskRow
+        key={disk.id}
+        disk={disk}
+        linodeId={linodeId}
+        linodeStatus={status || 'offline'}
+        onRename={this.openDrawerForRename(disk.id)}
+        onResize={this.openDrawerForResize(disk)}
+        onImagize={this.openImagizeDrawer(disk)}
+        onDelete={this.openConfirmDelete(disk)}
+        readOnly={readOnly}
+      />
     ));
   };
 
@@ -358,7 +322,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           loading={submitting}
           onClick={this.deleteDisk}
@@ -514,7 +478,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       authorized_users: userSSHKeys
         ? userSSHKeys.filter(u => u.selected).map(u => u.username)
         : undefined
-    });
+    }).then(_ => resetEventsPolling());
   };
 
   renameDisk = (label: string) => {
@@ -551,7 +515,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       });
   };
 
-  openDrawerForRename = ({ id: diskId }: Disk) => () => {
+  openDrawerForRename = (diskId: number) => () => {
     this.setDrawer({
       diskId,
       mode: 'rename',

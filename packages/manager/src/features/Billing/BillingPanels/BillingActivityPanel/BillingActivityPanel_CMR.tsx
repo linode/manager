@@ -15,6 +15,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
+import Link from 'src/components/Link';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import OrderBy from 'src/components/OrderBy';
@@ -30,14 +31,14 @@ import {
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import { ISO_DATE_FORMAT, ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { useSet } from 'src/hooks/useSet';
 import { isAfter } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getAll, getAllWithArguments } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerContainer: {
@@ -379,7 +380,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
               <Typography variant="body1" className={classes.activeSince}>
                 Account active since{' '}
                 {formatDate(accountActiveSince, {
-                  format: ISO_DATE_FORMAT
+                  displayTime: false
                 })}
               </Typography>
             </div>
@@ -551,9 +552,15 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
 
     return (
       <TableRow {...rowProps} data-testid={`${type}-${id}`}>
-        <TableCell>{label}</TableCell>
         <TableCell>
-          <DateTimeDisplay format={ISO_DATE_FORMAT} value={date} />
+          {type === 'invoice' ? (
+            <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
+          ) : (
+            label
+          )}
+        </TableCell>
+        <TableCell>
+          <DateTimeDisplay value={date} />
         </TableCell>
         <TableCell className={classes.totalColumn}>
           <Currency quantity={total} wrapInParentheses={total < 0} />

@@ -29,6 +29,7 @@ const cmrBGColors = {
   bgBillingSummary: '#2d3d53',
   bgBreadcrumbParent: '#364863',
   bgAccessRow: '#454b54',
+  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
   bgAccessHeader: '#3a3f46'
 };
 
@@ -67,7 +68,8 @@ const cmrIconColors = {
   iOrange: '#ffb31a',
   iRed: '#cf1e1e',
   // Offline status
-  iGrey: '#dbdde1'
+  iGrey: '#dbdde1',
+  iCheckmark: '#fff'
 };
 
 const primaryColors = {
@@ -100,11 +102,10 @@ const iconCircleAnimation = {
 
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
-  backgroundColor: cmrBGColors.bgStatusChip,
+  backgroundColor: 'transparent',
   color: cmrTextColors.textStatusChip,
-
-  fontSize: '1.1rem',
-  padding: 10,
+  fontSize: '1rem',
+  padding: 0,
   '&:before': {
     display: 'inline-block',
     borderRadius: '50%',
@@ -115,9 +116,7 @@ const genericStatusPillStyle = {
     marginRight: 8
   },
   [breakpoints.down('sm')]: {
-    fontSize: 14,
-    padding: '15px 12px',
-    borderRadius: 15
+    fontSize: 14
   }
 };
 
@@ -157,7 +156,8 @@ const darkThemeOptions = {
     primaryNavActive: '#303235',
     primaryNavActiveBG: '#464c53',
     primaryNavBorder: '#303235',
-    primaryNavPaper: '#3a3f46',
+    primaryNavPaper: '#2e3238',
+    mainContentBanner: '#23272B',
     topMenu: '#33383d',
     billingHeader: '#222',
     controlHeader: 'rgba(0, 0, 0, 0.2)',
@@ -286,11 +286,11 @@ const darkThemeOptions = {
           color: primaryColors.text
         }
       },
-      text: {
-        '&:hover': {
-          backgroundColor: 'transparent'
-        }
-      },
+      // text: {
+      //   '&:hover': {
+      //     backgroundColor: 'transparent'
+      //   }
+      // },
       containedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: primaryColors.light
@@ -312,17 +312,14 @@ const darkThemeOptions = {
       },
       containedSecondary: {
         color: primaryColors.main,
-        border: `1px solid ${primaryColors.main}`,
         '&:hover, &:focus': {
-          color: primaryColors.light,
-          borderColor: primaryColors.light
+          color: primaryColors.light
         },
         '&:active': {
           color: primaryColors.dark,
           borderColor: primaryColors.dark
         },
         '&$disabled': {
-          borderColor: '#c9cacb',
           color: '#c9cacb'
         },
         '&.cancel': {
@@ -331,21 +328,20 @@ const darkThemeOptions = {
             borderColor: primaryColors.light
           }
         },
-        '&.destructive': {
-          borderColor: '#c44742',
-          color: '#c44742',
-          '&:hover, &:focus': {
-            color: '#df6560',
-            borderColor: '#df6560',
-            backgroundColor: 'transparent'
-          },
-          '&:active': {
-            color: '#963530',
-            borderColor: '#963530'
-          }
-        },
+        // '&.destructive': {
+        //   borderColor: '#c44742',
+        //   color: '#c44742',
+        //   '&:hover, &:focus': {
+        //     color: '#df6560',
+        //     borderColor: '#df6560',
+        //     backgroundColor: 'transparent'
+        //   },
+        //   '&:active': {
+        //     color: '#963530',
+        //     borderColor: '#963530'
+        //   }
+        // },
         '&.loading': {
-          borderColor: primaryColors.text,
           color: primaryColors.text,
           minWidth: 100,
           '& svg': {
@@ -394,19 +390,19 @@ const darkThemeOptions = {
         boxShadow: '0 0 5px #222'
       }
     },
-    MuiExpansionPanel: {
+    MuiAccordion: {
       root: {
         '& table': {
           border: `1px solid ${primaryColors.divider}`
         }
       }
     },
-    MuiExpansionPanelDetails: {
+    MuiAccordionDetails: {
       root: {
         backgroundColor: '#32363c'
       }
     },
-    MuiExpansionPanelSummary: {
+    MuiAccordionSummary: {
       root: {
         '&$focused': {
           backgroundColor: '#111111'
@@ -469,6 +465,7 @@ const darkThemeOptions = {
     MuiFormHelperText: {
       root: {
         color: '#c9cacb',
+        lineHeight: 1.25,
         '&$error': {
           color: '#ca0813'
         }

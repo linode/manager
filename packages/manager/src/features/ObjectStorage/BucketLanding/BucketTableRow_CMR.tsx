@@ -17,7 +17,12 @@ import BucketActionMenu from './BucketActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
 import { Link } from 'react-router-dom';
 
-type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link' | 'bucketLabel';
+type ClassNames =
+  | 'bucketNameWrapper'
+  | 'bucketRow'
+  | 'link'
+  | 'bucketLabel'
+  | 'actionCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,18 +41,44 @@ const styles = (theme: Theme) =>
       }
     },
     bucketLabel: {
-      color: theme.cmrTextColors.linkActiveLight
+      color: theme.cmrTextColors.linkActiveLight,
+      fontFamily: theme.font.bold,
+      '&:hover, &:focus': {
+        textDecoration: 'underline'
+      }
+    },
+    actionCell: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: 0,
+      /*
+      Explicitly stating this as the theme file is automatically adding padding to the last cell
+      We can remove once we make the full switch to CMR styling
+      */
+      paddingRight: '0 !important'
     }
   });
 
 interface BucketTableRowProps extends ObjectStorageBucket {
   onRemove: () => void;
+  onDetails: () => void;
 }
 
 type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;
 
 export const BucketTableRow: React.FC<CombinedProps> = props => {
-  const { classes, label, cluster, hostname, created, size, onRemove } = props;
+  const {
+    classes,
+    label,
+    cluster,
+    hostname,
+    created,
+    size,
+    onRemove,
+    objects,
+    onDetails
+  } = props;
 
   return (
     <TableRow
@@ -84,11 +115,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
 
       <Hidden smDown>
         <TableCell>
-          <DateTimeDisplay
-            value={created}
-            humanizeCutoff="month"
-            data-qa-created
-          />
+          <DateTimeDisplay value={created} data-qa-created />
         </TableCell>
       </Hidden>
 
@@ -98,9 +125,18 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
         </Typography>
       </TableCell>
 
-      <TableCell>
+      <Hidden smDown>
+        <TableCell>
+          <Typography variant="body2" data-qa-size>
+            {objects}
+          </Typography>
+        </TableCell>
+      </Hidden>
+
+      <TableCell className={classes.actionCell}>
         <BucketActionMenu
           onRemove={onRemove}
+          onDetails={onDetails}
           label={label}
           cluster={cluster}
           data-qa-action-menu

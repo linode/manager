@@ -21,7 +21,8 @@ type ClassNames =
   | 'clusterDescription'
   | 'clusterRow'
   | 'labelStatusWrapper'
-  | 'link';
+  | 'link'
+  | 'actionCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -32,8 +33,10 @@ const styles = (theme: Theme) =>
       fontFamily: theme.font.bold,
       fontSize: '.875rem',
       lineHeight: '1.125rem',
-      textDecoration: 'underline',
-      color: theme.cmrTextColors.linkActiveLight
+      color: theme.cmrTextColors.linkActiveLight,
+      '&:hover, &:focus': {
+        textDecoration: 'underline'
+      }
     },
     labelStatusWrapper: {
       display: 'flex',
@@ -49,6 +52,17 @@ const styles = (theme: Theme) =>
       '&:before': {
         display: 'none'
       }
+    },
+    actionCell: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: 0,
+      /*
+      Explicitly stating this as the theme file is automatically adding padding to the last cell
+      We can remove once we make the full switch to CMR styling
+      */
+      paddingRight: '0 !important'
     }
   });
 
@@ -94,7 +108,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
 
       <Hidden smDown>
         <TableCell data-qa-cluster-date>
-          <DateTimeDisplay value={cluster.created} humanizeCutoff="month" />
+          <DateTimeDisplay value={cluster.created} />
         </TableCell>
       </Hidden>
       <TableCell data-qa-cluster-region>{cluster.region}</TableCell>
@@ -108,7 +122,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
           {`${cluster.totalCPU} ${cluster.totalCPU === 1 ? 'CPU' : 'CPUs'}`}
         </TableCell>
       </Hidden>
-      <TableCell>
+      <TableCell className={classes.actionCell}>
         <ActionMenu
           clusterId={cluster.id}
           clusterLabel={cluster.label}

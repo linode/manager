@@ -1,60 +1,24 @@
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme
+} from 'src/components/core/styles';
+import InlineAction from 'src/components/InlineMenuAction';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     padding: '0px !important',
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center'
-  },
-  inlineActions: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
-  link: {
-    padding: '12px 10px',
-    textAlign: 'center',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      '& span': {
-        color: '#fff'
-      }
-    },
-    '& span': {
-      color: '#3683dc'
-    }
-  },
-  action: {
-    marginLeft: 10
-  },
-  button: {
-    minWidth: 70,
-    ...theme.applyLinkStyles,
-    height: '100%',
-    padding: '12px 10px',
-    whiteSpace: 'nowrap',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      color: '#fff'
-    },
-    '&[disabled]': {
-      color: '#cdd0d5',
-      cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit'
-      }
-    }
   }
 }));
 
 export interface ActionHandlers {
-  triggerDeleteDatabase?: (databaseID: number, databaseLabel: string) => void;
+  triggerDeleteDatabase: (databaseID: number, databaseLabel: string) => void;
   [index: string]: any;
 }
 
@@ -68,20 +32,16 @@ type CombinedProps = Props;
 
 const DatabaseActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const history = useHistory();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const {
-    databaseID,
-    databaseLabel,
-    inlineLabel,
-    triggerDeleteDatabase
-  } = props;
+  const { databaseID, databaseLabel, triggerDeleteDatabase } = props;
 
   const actions: Action[] = [
     {
-      title: 'Details',
+      title: 'Resize',
       onClick: () => {
-        history.push({ pathname: `/databases/${databaseID}` });
+        alert('Resize not yet implemented');
       }
     },
     {
@@ -96,11 +56,22 @@ const DatabaseActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <div className={classes.root}>
-      <ActionMenu
-        createActions={() => actions}
-        inlineLabel={inlineLabel}
-        ariaLabel={`Action menu for Database ${props.databaseLabel}`}
-      />
+      {!matchesSmDown &&
+        actions.map(thisAction => {
+          return (
+            <InlineAction
+              key={thisAction.title}
+              actionText={thisAction.title}
+              onClick={thisAction.onClick}
+            />
+          );
+        })}
+      {matchesSmDown && (
+        <ActionMenu
+          createActions={() => actions}
+          ariaLabel={`Action menu for Database ${props.databaseLabel}`}
+        />
+      )}
     </div>
   );
 };

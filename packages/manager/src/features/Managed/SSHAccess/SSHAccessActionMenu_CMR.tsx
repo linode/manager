@@ -10,7 +10,7 @@ import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
@@ -35,6 +35,12 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
   };
 
   const actions: Action[] = [
+    {
+      title: 'Edit',
+      onClick: () => {
+        openDrawer(linodeId);
+      }
+    },
     isEnabled
       ? {
           title: 'Disable',
@@ -69,13 +75,7 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
                 handleError('Error enabling SSH Access for this Linode.', err);
               });
           }
-        },
-    {
-      title: 'Edit',
-      onClick: () => {
-        openDrawer(linodeId);
-      }
-    }
+        }
   ];
 
   return (

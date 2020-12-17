@@ -3,9 +3,13 @@ import { useDispatch, useStore } from 'react-redux';
 import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import usePageVisibility from 'src/hooks/usePageVisibility';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
+import { requestClusters } from 'src/store/clusters/clusters.actions';
+import { getAllDatabases } from 'src/store/databases/databases.requests';
+import { getAllMySQLTypes } from 'src/store/databases/types.requests';
 import { requestDomains } from 'src/store/domains/domains.requests';
 import { getEvents } from 'src/store/events/event.request';
 import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
@@ -20,9 +24,8 @@ import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.request
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
-import { getAllVolumes } from 'src/store/volume/volume.requests';
-import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { getAllVlans } from 'src/store/vlans/vlans.requests';
+import { getAllVolumes } from 'src/store/volume/volume.requests';
 
 interface UseReduxPreload {
   _loading: boolean;
@@ -33,6 +36,7 @@ export type ReduxEntity =
   | 'volumes'
   | 'account'
   | 'accountSettings'
+  | 'databases'
   | 'domains'
   | 'images'
   | 'kubernetes'
@@ -47,14 +51,18 @@ export type ReduxEntity =
   | 'longview'
   | 'firewalls'
   | 'clusters'
-  | 'vlans';
+  | 'vlans'
+  | 'databases'
+  | 'databaseTypes';
 
+// The Buckets request is a special case since it depends on Clusters.
 type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
   linodes: () => requestLinodes({}),
   volumes: getAllVolumes,
   account: requestAccount,
   accountSettings: requestAccountSettings,
+  databases: () => getAllDatabases({}),
   domains: requestDomains,
   nodeBalancers: getAllNodeBalancers,
   images: requestImages,
@@ -69,7 +77,8 @@ const requestMap: RequestMap = {
   longview: getAllLongviewClients,
   firewalls: () => getAllFirewalls({}),
   clusters: requestClusters,
-  vlans: () => getAllVlans({})
+  vlans: () => getAllVlans({}),
+  databaseTypes: () => getAllMySQLTypes({})
 };
 
 export const useReduxLoad = (
@@ -80,6 +89,7 @@ export const useReduxLoad = (
   const [_loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const store = useStore<ApplicationState>();
+  const isVisible = usePageVisibility();
   /**
    * Restricted users get a 403 from /lke/clusters,
    * which gums up the works. We want to prevent that particular
@@ -102,7 +112,7 @@ export const useReduxLoad = (
   };
 
   useEffect(() => {
-    if (predicate && mountedRef.current) {
+    if (isVisible && predicate && mountedRef.current) {
       requestDeps(
         store.getState(),
         dispatch,
@@ -111,7 +121,7 @@ export const useReduxLoad = (
         _setLoading
       );
     }
-  }, [predicate, refreshInterval, _deps, dispatch, store]);
+  }, [predicate, refreshInterval, _deps, dispatch, store, isVisible]);
 
   useEffect(() => {
     return () => {
@@ -134,13 +144,20 @@ export const requestDeps = (
   const requests = [];
   for (i; i < deps.length; i++) {
     const currentResource = state.__resources[deps[i]] || state[deps[i]];
+
     if (currentResource) {
-      if (currentResource.lastUpdated === 0 && !currentResource.loading) {
+      const currentResourceHasError = hasError(currentResource?.error);
+      if (
+        currentResource.lastUpdated === 0 &&
+        !currentResource.loading &&
+        !currentResourceHasError
+      ) {
         needsToLoad = true;
         requests.push(requestMap[deps[i]]);
       } else if (
         Date.now() - currentResource.lastUpdated > refreshInterval &&
-        !currentResource.loading
+        !currentResource.loading &&
+        !currentResourceHasError
       ) {
         requests.push(requestMap[deps[i]]);
       }
@@ -161,3 +178,11 @@ export const requestDeps = (
 };
 
 export default useReduxLoad;
+
+export const hasError = (resourceError: any) => {
+  if (Array.isArray(resourceError) && resourceError.length > 0) {
+    return true;
+  }
+
+  return resourceError?.read !== undefined;
+};

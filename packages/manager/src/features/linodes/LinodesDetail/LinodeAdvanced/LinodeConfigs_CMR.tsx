@@ -9,6 +9,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { VLAN } from '@linode/api-v4/lib/vlans';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -67,7 +68,7 @@ type ClassNames =
   | 'memoryColumn'
   | 'kernelColumn'
   | 'interfacesColumn'
-  | 'rootDeviceColumn'
+  | 'deviceColumn'
   | 'actionsColumn';
 
 const styles = (theme: Theme) =>
@@ -78,15 +79,17 @@ const styles = (theme: Theme) =>
       width: '100%'
     },
     headline: {
-      marginBottom: 3,
-      marginLeft: 8,
+      marginTop: 8,
+      marginBottom: 8,
+      marginLeft: 15,
       lineHeight: '1.5rem'
     },
     addNewWrapper: {
       [theme.breakpoints.down('xs')]: {
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
-      }
+      },
+      padding: '5px !important'
     },
     labelCell: {
       width: '25%'
@@ -96,18 +99,18 @@ const styles = (theme: Theme) =>
       fontWeight: 'bold'
     },
     labelColumn: {
-      width: '20%'
+      width: '18%'
     },
     vmColumn: {
-      width: '9%'
-    },
-    kernelColumn: {
       width: '10%'
     },
-    interfacesColumn: {
-      width: '40%'
+    kernelColumn: {
+      width: '23%'
     },
-    rootDeviceColumn: {
+    interfacesColumn: {
+      width: '20%'
+    },
+    deviceColumn: {
       width: '20%'
     },
     actionsColumn: {
@@ -259,7 +262,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           className={classes.root}
         >
           <RootRef rootRef={this.configsPanel}>
-            <Grid item>
+            <Grid item className="p0">
               <Typography variant="h3" className={classes.headline}>
                 Configurations
               </Typography>
@@ -321,7 +324,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         loading={this.state.confirmDelete.submitting}
         onClick={this.deleteConfig}
@@ -342,7 +345,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         loading={this.state.confirmBoot.submitting}
         onClick={this.handleBoot}
@@ -546,9 +549,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                         </TableCell>
 
                         <TableCell
-                          className={`${classes.tableCell} ${classes.rootDeviceColumn}`}
+                          className={`${classes.tableCell} ${classes.deviceColumn}`}
                         >
-                          Root Device
+                          Disks
                         </TableCell>
                         {this.vlansEnabled() ? (
                           <TableCell
@@ -595,6 +598,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               onDelete={this.confirmDelete}
                               readOnly={readOnly}
                               linodeInterfaces={this.state.interfaces}
+                              linodeVolumes={this.props.linodeVolumes}
                               vlans={this.props.vlansData}
                               vlansEnabled={this.vlansEnabled()}
                             />
@@ -641,6 +645,7 @@ interface LinodeContext {
   configs: Config[];
   getLinodeConfigs: () => void;
   linodeDisks: Disk[];
+  linodeVolumes: Volume[];
 }
 
 const linodeContext = withLinodeDetailContext<LinodeContext>(
@@ -657,7 +662,8 @@ const linodeContext = withLinodeDetailContext<LinodeContext>(
     deleteLinodeConfig,
     configs: linode._configs,
     getLinodeConfigs,
-    linodeDisks: linode._disks
+    linodeDisks: linode._disks,
+    linodeVolumes: linode._volumes
   })
 );
 

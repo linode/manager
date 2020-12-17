@@ -13,7 +13,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -55,10 +55,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexBasis: '21.2%'
       }
     }
-  },
-  title: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(3)
   },
   main: {},
   sidebar: {
@@ -283,23 +279,19 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
       <Grid
         container
+        className="m0"
+        alignItems="center"
         justify="space-between"
-        alignItems="flex-end"
-        className={classes.title}
       >
-        <Grid item>
+        <Grid item className="p0">
           <Breadcrumb
             pathname={location.pathname}
             labelTitle="Create a Cluster"
             labelOptions={{ noCap: true }}
           />
         </Grid>
-        <Grid item>
-          <Grid container alignItems="flex-end">
-            <Grid item className="pt0">
-              <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
-            </Grid>
-          </Grid>
+        <Grid item className="p0">
+          <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
         </Grid>
       </Grid>
 
@@ -322,8 +314,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
               </Grid>
               <Grid item>
                 <RegionSelect
-                  label={'Region'}
-                  placeholder={' '}
                   className={classes.regionSubtitle}
                   errorText={errorMap.region}
                   handleSelection={(regionID: string) =>

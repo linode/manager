@@ -154,7 +154,7 @@ const Contacts: React.FC<CombinedProps> = props => {
                   setContactDrawerMode('create');
                   contactDrawer.open();
                 }}
-                label="Add a Contact..."
+                label="Add a Contact"
               />
             </Grid>
           </Grid>
@@ -267,6 +267,7 @@ const Contacts: React.FC<CombinedProps> = props => {
         <DeletionDialog
           open={dialog.isOpen}
           label={dialog.entityLabel || ''}
+          entity="contact"
           loading={dialog.isLoading}
           error={dialog.error}
           onClose={closeDialog}

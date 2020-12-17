@@ -28,9 +28,7 @@ const styles = (theme: Theme) =>
       borderRadius: 3,
       padding: theme.spacing(1),
       marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(2),
       transition: theme.transitions.create(['opacity']),
-      order: 2,
       [theme.breakpoints.down('sm')]: {
         backgroundColor: theme.bg.white,
         position: 'absolute',
@@ -59,7 +57,7 @@ const styles = (theme: Theme) =>
       '& .react-select__value-container': {
         overflow: 'hidden',
         '& p': {
-          fontSize: '1rem',
+          fontSize: '0.875rem',
           overflow: 'visible'
         }
       },
@@ -76,15 +74,22 @@ const styles = (theme: Theme) =>
       }
     },
     navIconHide: {
-      order: 5,
+      cursor: 'pointer',
+      color: '#c9c7c7',
+      border: 'none',
+      padding: theme.spacing(),
+      backgroundColor: 'inherit',
+      '&:hover, &:focus': {
+        color: '#c1c1c0'
+      },
       position: 'relative',
       top: 1,
       '& > span': {
         justifyContent: 'flex-end'
       },
       '& svg': {
-        width: 32,
-        height: 32
+        width: 25,
+        height: 25
       },
       [theme.breakpoints.up('md')]: {
         display: 'none'

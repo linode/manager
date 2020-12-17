@@ -21,13 +21,17 @@ export const ListEntities: React.FC<CombinedProps> = props => {
     initialOrder,
     loading,
     lastUpdated,
-    RowComponent
+    RowComponent,
+    toggleGroupByTag,
+    isGroupedByTag
   } = props;
+
   return (
     <OrderBy
       data={data}
       orderBy={initialOrder?.orderBy}
       order={initialOrder?.order}
+      preferenceKey={entity}
     >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
@@ -47,6 +51,8 @@ export const ListEntities: React.FC<CombinedProps> = props => {
                     handleOrderChange={handleOrderChange}
                     order={order}
                     orderBy={orderBy}
+                    toggleGroupByTag={toggleGroupByTag}
+                    isGroupedByTag={isGroupedByTag}
                   />
 
                   <TableBody>

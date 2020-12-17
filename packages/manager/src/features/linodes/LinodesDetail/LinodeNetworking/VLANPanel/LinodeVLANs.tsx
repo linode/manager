@@ -1,28 +1,24 @@
+import { Config } from '@linode/api-v4/lib/linodes';
+import { VLAN } from '@linode/api-v4/lib/vlans/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Loading from 'src/components/LandingLoading';
-import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
-import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
-import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
+import Grid from 'src/components/Grid';
+import Loading from 'src/components/LandingLoading';
+import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { getInterfaces } from '@linode/api-v4/lib/linodes/interfaces';
-import VlanTableRow from './VlanTableRow';
-import { AttachVlanDrawer } from './AttachVlanDrawer';
-import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
-import RemoveVlanDialog from './RemoveVlanDialog';
+import useInterfaces from 'src/hooks/useInterfaces';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVlans from 'src/hooks/useVlans';
-import { Config, LinodeInterface } from '@linode/api-v4/lib/linodes';
-import useFlags from 'src/hooks/useFlags';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import useAccountManagement from 'src/hooks/useAccountManagement';
-import { APIError } from '@linode/api-v4/lib/types';
-import { VLAN } from '@linode/api-v4/lib/vlans/types';
+import { AttachVlanDrawer } from './AttachVlanDrawer';
+import RemoveVlanDialog from './RemoveVlanDialog';
+import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
+import VlanTableRow from './VlanTableRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -102,51 +98,16 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
   >(undefined);
   const [selectedVlanLabel, setSelectedVlanLabel] = React.useState<string>('');
 
-  // Local state to manage requested interfaces.
-  const [interfaceData, setInterfaceData] = React.useState<LinodeInterface[]>(
-    []
-  );
-  const [interfaceRequestError, setInterfaceRequestError] = React.useState<
-    APIError[] | undefined
-  >(undefined);
-  const [interfaceDataLoading, setInterfaceDataLoading] = React.useState<
-    boolean
-  >(false);
-  const [interfacesLastUpdated, setInterfacesLastUpdated] = React.useState<
-    number
-  >(0);
-
   const { vlans, detachVlan } = useVlans();
 
-  const { account } = useAccountManagement();
-  const flags = useFlags();
+  const {
+    interfaces: reduxInterfacesObject,
+    requestInterfaces
+  } = useInterfaces();
+  const thisLinodeInterfaces = reduxInterfacesObject[linodeId];
+  const interfacesList = Object.values(thisLinodeInterfaces?.itemsById ?? {});
 
-  const vlansEnabled = isFeatureEnabled(
-    'Vlans',
-    Boolean(flags.vlans),
-    account?.data?.capabilities ?? []
-  );
-
-  const { _loading } = useReduxLoad(['vlans'], undefined, vlansEnabled);
-
-  const requestInterfaces = React.useCallback(() => {
-    setInterfaceRequestError(undefined);
-
-    getInterfaces(linodeId)
-      .then(interfaces => {
-        const privateInterfaces = interfaces.data.filter(
-          individualInterface => individualInterface.type !== 'default'
-        );
-
-        setInterfaceData(privateInterfaces);
-        setInterfacesLastUpdated(Date.now());
-        setInterfaceDataLoading(false);
-      })
-      .catch(err => {
-        setInterfaceRequestError(err);
-        setInterfaceDataLoading(false);
-      });
-  }, [linodeId]);
+  const { _loading } = useReduxLoad(['vlans']);
 
   // Local state to manage drawer for attaching VLANs.
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
@@ -157,17 +118,9 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     setDrawerOpen(true);
   };
 
-  React.useEffect(() => {
-    // Request interfaces upon page first loading.
-    if (vlansEnabled && interfacesLastUpdated === 0) {
-      setInterfaceDataLoading(true);
-      requestInterfaces();
-    }
-  }, [vlansEnabled, interfacesLastUpdated, requestInterfaces, linodeId]);
-
   const vlanData = React.useMemo(
     () =>
-      interfaceData
+      interfacesList
         .map(thisInterface => {
           // The interface is tied to the linode. If the interface has a vlan_id, we want to grab that VLAN from Redux
           const thisVlan = vlans.itemsById[thisInterface.vlan_id];
@@ -184,7 +137,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
           };
         })
         .filter(Boolean) as VlanData[],
-    [interfaceData, vlans.itemsById, configs, linodeId, readOnly]
+    [interfacesList, vlans.itemsById, configs, linodeId, readOnly]
   );
 
   const vlansAvailableForAttaching = getVlansAvailableForAttaching(
@@ -192,6 +145,10 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     vlanData,
     linodeRegion
   );
+
+  if (_loading) {
+    return <Loading shouldDelay />;
+  }
 
   const handleOpenRemoveVlanModal = (id: number, label: string) => {
     setSelectedVlanID(id);
@@ -207,16 +164,12 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
     handlers,
     Component: VlanTableRow,
     data: vlanData ?? [],
-    loading: interfaceDataLoading,
-    lastUpdated: interfacesLastUpdated,
-    error: interfaceRequestError || vlans.error.read
+    loading: thisLinodeInterfaces?.loading || _loading,
+    lastUpdated: thisLinodeInterfaces?.lastUpdated,
+    error: thisLinodeInterfaces?.error?.read || vlans.error.read
   };
 
-  if (interfaceDataLoading || _loading) {
-    return <Loading shouldDelay />;
-  }
-
-  return vlansEnabled ? (
+  return (
     <div className={classes.vlansPanel}>
       <Grid
         container
@@ -226,13 +179,13 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
       >
         <Grid item className="p0">
           <Typography variant="h3" className={classes.headline}>
-            Virtual LANs
+            VLANs
           </Typography>
         </Grid>
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
             onClick={handleOpenDrawer}
-            label="Attach a VLAN..."
+            label="Attach a VLAN"
             disabled={readOnly}
           />
         </Grid>
@@ -240,7 +193,6 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
       <EntityTable_CMR
         entity="vlan"
         headers={vlanHeaders}
-        groupByTag={false}
         row={vlanRow}
         initialOrder={{ order: 'asc', orderBy: 'label' }}
       />
@@ -251,7 +203,7 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         selectedVlanLabel={selectedVlanLabel}
         linodeId={linodeId}
         closeDialog={() => toggleRemoveModal(false)}
-        refreshInterfaces={requestInterfaces}
+        refreshInterfaces={() => requestInterfaces(linodeId)}
       />
       <AttachVlanDrawer
         open={drawerOpen}
@@ -261,10 +213,10 @@ export const LinodeVLANs: React.FC<CombinedProps> = props => {
         linodeId={linodeId}
         vlans={vlansAvailableForAttaching}
         readOnly={readOnly}
-        refreshInterfaces={requestInterfaces}
+        refreshInterfaces={() => requestInterfaces(linodeId)}
       />
     </div>
-  ) : null;
+  );
 };
 
 interface LinodeContextProps {

@@ -45,7 +45,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     [theme.breakpoints.up('lg')]: {
       minHeight: 200,
-      height: `calc(100vh - (220px + ${theme.spacing(20)}px))`
+      height: `calc(100vh - (220px + ${theme.spacing(20)}px))`,
+      marginBottom: 80
     }
   },
   dropzone: {
@@ -110,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   UploadZoneActiveButton: {
     position: 'absolute',
     zIndex: 10,
-    backgroundColor: theme.palette.divider,
+    backgroundColor: 'transparent',
     bottom: -70,
     left: theme.spacing(2),
     width: `calc(100% - ${theme.spacing(4)}px)`,

@@ -10,16 +10,12 @@ import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -27,6 +23,9 @@ import withLoadingAndError, {
   LoadingAndErrorHandlers,
   LoadingAndErrorState
 } from 'src/components/withLoadingAndError';
+import withFeatureFlagConsumerContainer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import {
   withNodeBalancerActions,
@@ -44,20 +43,6 @@ import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
 import NodeBalancerSummary from './NodeBalancerSummary';
 
-type ClassNames = 'root' | 'backButton';
-
-const styles = () =>
-  createStyles({
-    root: {},
-    backButton: {
-      margin: '5px 0 0 -16px',
-      '& svg': {
-        width: 34,
-        height: 34
-      }
-    }
-  });
-
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: string }>;
 
 interface State {
@@ -69,9 +54,9 @@ interface State {
 type CombinedProps = WithNodeBalancerActions &
   WithSnackbarProps &
   RouteProps &
+  FeatureFlagConsumerProps &
   LoadingAndErrorHandlers &
-  LoadingAndErrorState &
-  WithStyles<ClassNames>;
+  LoadingAndErrorState;
 
 class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   state: State = {
@@ -128,10 +113,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     this.requestNodeBalancer(+nodeBalancerId);
 
     // Update NB information every 30 seconds, so that we have an accurate picture of nodes
-    this.pollInterval = window.setInterval(
-      () => this.requestNodeBalancer(+nodeBalancerId),
-      30 * 1000
-    );
+    this.pollInterval = window.setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        this.requestNodeBalancer(+nodeBalancerId);
+      }
+    }, 30 * 1000);
   }
 
   componentWillUnmount() {
@@ -287,8 +273,13 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     return (
       <NodeBalancerProvider value={p}>
         <React.Fragment>
-          <Grid container justify="space-between">
-            <Grid item>
+          <Grid
+            container
+            className="m0"
+            alignItems="center"
+            justify="space-between"
+          >
+            <Grid item className="p0">
               <Breadcrumb
                 pathname={`/NodeBalancers/${nodeBalancerLabel}`}
                 firstAndLastOnly
@@ -299,6 +290,9 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                   errorText: labelError
                 }}
               />
+            </Grid>
+            <Grid item className="p0">
+              <DocumentationButton href="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/" />
             </Grid>
           </Grid>
           {errorMap.none && <Notice error text={errorMap.none} />}
@@ -347,7 +341,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
 const reloaded = reloadableWithRouter<
   CombinedProps,
   { nodeBalancerId?: number }
@@ -361,7 +354,7 @@ const reloaded = reloadableWithRouter<
 export default compose(
   setDocs(NodeBalancerDetail.docs),
   reloaded,
-  styled,
+  withFeatureFlagConsumerContainer,
   withSnackbar,
   withNodeBalancerActions,
   withLoadingAndError

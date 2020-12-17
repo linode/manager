@@ -2,7 +2,7 @@ import { TrustedDevice } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
@@ -53,16 +53,10 @@ export const TrustedDevicesTable: React.FC<CombinedProps> = props => {
             <TableCell>{eachDevice.user_agent}</TableCell>
             <TableCell>{eachDevice.last_remote_addr}</TableCell>
             <TableCell>
-              <DateTimeDisplay
-                value={eachDevice.last_authenticated}
-                humanizeCutoff="month"
-              />
+              <DateTimeDisplay value={eachDevice.last_authenticated} />
             </TableCell>
             <TableCell>
-              <DateTimeDisplay
-                value={eachDevice.expiry}
-                humanizeCutoff="month"
-              />
+              <DateTimeDisplay value={eachDevice.expiry} />
             </TableCell>
             <TableCell className="p0">
               <UntrustButton

@@ -13,7 +13,14 @@ import {
   PaymentSchema,
   StagePaypalPaymentSchema
 } from './account.schema';
-import { ExecutePayload, Payment, Paypal, SaveCreditCardData } from './types';
+import {
+  ExecutePayload,
+  Payment,
+  PaymentResponse,
+  Paypal,
+  PaypalResponse,
+  SaveCreditCardData
+} from './types';
 
 /**
  * getPayments
@@ -65,7 +72,7 @@ export const makePayment = (data: { usd: string; cvv?: string }) => {
     delete data.cvv;
   }
 
-  return Request<Payment>(
+  return Request<PaymentResponse>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('POST'),
     setData(data, PaymentSchema)
@@ -110,7 +117,7 @@ export const stagePaypalPayment = (data: Paypal) =>
  *
  */
 export const executePaypalPayment = (data: ExecutePayload) =>
-  Request<{}>(
+  Request<PaypalResponse>(
     setURL(`${API_ROOT}/account/payments/paypal/execute`),
     setMethod('POST'),
     setData(data, ExecutePaypalPaymentSchema)

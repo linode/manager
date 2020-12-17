@@ -1,10 +1,8 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import { AccountCapability } from '@linode/api-v4/lib/account';
 
 import {
   Menu,
   MenuButton,
-  MenuItem,
   MenuItems,
   MenuLink,
   MenuPopover
@@ -15,7 +13,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators, Dispatch } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
@@ -28,7 +25,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { MapState } from 'src/store/types';
 import AddNewMenuItem from './AddNewMenuItem';
 
@@ -53,24 +49,22 @@ const styles = (theme: Theme) =>
     button: {
       '&[data-reach-menu-button]': {
         textTransform: 'inherit',
-        borderRadius: 0,
+        borderRadius: '3px',
         fontSize: '1rem',
         lineHeight: 1,
         fontFamily: theme.spacing() === 4 ? theme.font.normal : theme.font.bold,
         backgroundColor: theme.palette.primary.main,
         color: '#fff',
-        padding: `${theme.spacing() * 2}px ${theme.spacing() * 3 +
-          theme.spacing() / 2}px ${theme.spacing() * 2}px`,
-        maxHeight: 48,
+        padding: `2px 20px`,
+        maxHeight: 34,
         position: 'relative',
-        minHeight: `${theme.spacing(2) + 34}px`,
-        paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
+        minHeight: `34px`,
         cursor: 'pointer',
         border: 'none',
         [theme.breakpoints.down('sm')]: {
-          padding: '6px 34px 7px 11px',
-          maxHeight: 50,
-          minWidth: 105
+          marginLeft: theme.spacing(),
+          maxHeight: 34,
+          minWidth: 100
         },
         '&:hover': {
           backgroundColor: theme.palette.primary.light
@@ -79,10 +73,7 @@ const styles = (theme: Theme) =>
           backgroundColor: theme.palette.primary.light
         },
         '&[aria-expanded="true"]': {
-          backgroundColor: theme.palette.primary.light,
-          '& $caret': {
-            transform: 'rotate(180deg)'
-          }
+          backgroundColor: theme.palette.primary.light
         }
       }
     },
@@ -128,13 +119,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
-  // openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
-  openDomainDrawerForCreating: typeof openDomainDrawerForCreating;
-}
-
-type CombinedProps = Props &
-  WithStyles<CSSClasses> &
+type CombinedProps = WithStyles<CSSClasses> &
   RouteComponentProps<{}> &
   DispatchProps &
   StateProps;
@@ -149,8 +134,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
       <div className={classes.wrapper}>
         <Menu>
           <MenuButton className={classes.button} data-qa-add-new-menu-button>
-            Create
-            <KeyboardArrowDown className={classes.caret} />
+            Create...
           </MenuButton>
           <MenuPopover className={classes.menuPopover} portal={false}>
             <MenuItems className={classes.menuItemList}>
@@ -187,12 +171,9 @@ class AddNewMenu extends React.Component<CombinedProps> {
                   ItemIcon={NodebalancerIcon}
                 />
               </MenuLink>
-              <MenuItem
-                onSelect={() => {
-                  this.props.openDomainDrawerForCreating(
-                    'Created from Add New Menu'
-                  );
-                }}
+              <MenuLink
+                as={Link}
+                to="/domains/create"
                 className={classes.menuItemLink}
               >
                 <AddNewMenuItem
@@ -200,7 +181,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                   body="Manage your DNS records using Linode’s high-availability name servers"
                   ItemIcon={DomainIcon}
                 />
-              </MenuItem>
+              </MenuLink>
               <MenuLink
                 as={Link}
                 to="/linodes/create?type=One-Click"
@@ -235,7 +216,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
 export const styledComponent = styled(AddNewMenu);
 
 interface DispatchProps {
-  openDomainDrawerForCreating: () => void;
   openVolumeDrawerForCreating: () => void;
 }
 
@@ -249,10 +229,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators({ openDomainDrawerForCreating }, dispatch);
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(mapStateToProps);
 
 export default compose<CombinedProps, {}>(
   connected,

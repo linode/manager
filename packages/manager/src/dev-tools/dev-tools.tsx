@@ -7,7 +7,7 @@ import EnvironmentToggleTool from './EnvironmentToggleTool';
 import store from 'src/store';
 import { Provider } from 'react-redux';
 import MockDataTool from './MockDataTool';
-import { MOCK_SERVICE_WORKER } from 'src/constants';
+import { isProductionBuild } from 'src/constants';
 import Grid from 'src/components/core/Grid';
 
 function install() {
@@ -26,7 +26,7 @@ function install() {
               <EnvironmentToggleTool />
             </Grid>
           )}
-          {MOCK_SERVICE_WORKER && (
+          {!isProductionBuild && (
             <Grid item xs={2}>
               <MockDataTool />
             </Grid>

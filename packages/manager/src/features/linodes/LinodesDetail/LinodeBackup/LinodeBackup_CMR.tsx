@@ -12,9 +12,8 @@ import {
   Window
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr, sortBy } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -59,14 +58,14 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { sendBackupsDisabledEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { initWindows } from 'src/utilities/initWindows';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import BackupsPlaceholder from './BackupsPlaceholder';
 import BackupTableRow from './BackupTableRow';
-import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
-
 import DestructiveSnapshotDialog from './DestructiveSnapshotDialog';
+import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
 type ClassNames =
   | 'paper'
@@ -117,10 +116,9 @@ const styles = (theme: Theme) =>
         marginTop: theme.spacing(2)
       }
     },
-    chooseTime: {
-      marginRight: theme.spacing(2)
-    },
+    chooseTime: {},
     chooseDay: {
+      marginRight: theme.spacing(2),
       minWidth: 150
     },
     cancelButton: {
@@ -191,13 +189,6 @@ type CombinedProps = PreloadedProps &
   RouteComponentProps<{}> &
   ContextProps &
   WithSnackbarProps;
-
-const evenize = (n: number): number => {
-  if (n === 0) {
-    return n;
-  }
-  return n % 2 === 0 ? n : n - 1;
-};
 
 const isReadOnly = (permissions: GrantLevel) => {
   return permissions === 'read_only';
@@ -275,30 +266,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     this.eventSubscription.unsubscribe();
   }
 
-  initWindows(timezone: string) {
-    let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
-      const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(
-        timezone
-      );
-      const finish = start.plus({ hours: 2 });
-      return [
-        `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,
-        `W${evenize(start.setZone('utc').hour)}`
-      ];
-    });
-
-    windows = sortBy<string[]>(window => window[0], windows);
-
-    windows.unshift(['Choose a time', 'Scheduling']);
-
-    return windows;
-  }
-
   constructor(props: CombinedProps) {
     super(props);
 
     /* TODO: use the timezone from the user's profile */
-    this.windows = this.initWindows(this.props.timezone);
+    this.windows = initWindows(this.props.timezone, true);
 
     this.days = [
       ['Choose a day', 'Scheduling'],
@@ -663,6 +635,22 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           the backup is promoted to the weekly slot. Up to two weekly backups
           are saved.
         </Typography>
+        <FormControl className={classes.chooseDay}>
+          <Select
+            textFieldProps={{
+              dataAttrs: {
+                'data-qa-weekday-select': true
+              }
+            }}
+            options={daySelection}
+            defaultValue={defaultDaySelection}
+            onChange={this.handleSelectBackupTime}
+            label="Day of Week"
+            placeholder="Choose a day"
+            isClearable={false}
+            noMarginTop
+          />
+        </FormControl>
         <FormControl className={classes.chooseTime}>
           <Select
             textFieldProps={{
@@ -680,25 +668,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             noMarginTop
           />
           <FormHelperText>
-            Windows displayed in {this.props.timezone}
+            Time displayed in {this.props.timezone.replace('_', ' ')}
           </FormHelperText>
-        </FormControl>
-
-        <FormControl className={classes.chooseDay}>
-          <Select
-            textFieldProps={{
-              dataAttrs: {
-                'data-qa-weekday-select': true
-              }
-            }}
-            options={daySelection}
-            defaultValue={defaultDaySelection}
-            onChange={this.handleSelectBackupTime}
-            label="Day of Week"
-            placeholder="Choose a day"
-            isClearable={false}
-            noMarginTop
-          />
         </FormControl>
         <ActionsPanel className={classes.scheduleAction}>
           <Button
@@ -747,7 +718,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           className={classes.cancelButton}
           onClick={this.handleOpenBackupsAlert}
@@ -804,7 +775,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           Close
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.cancelBackups}
           data-qa-confirm-cancel

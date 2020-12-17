@@ -42,7 +42,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   packageButton: {
     fontSize: '0.875rem',
     padding: 0,
-    textAlign: 'left'
+    textAlign: 'left',
+    '&:hover': {
+      textDecoration: 'underline',
+      color: 'inherit',
+      backgroundColor: 'inherit'
+    }
+  },
+  detailsContainer: {
+    '& > a': {
+      textDecoration: 'none !important'
+    }
   },
   lastUpdatedOuter: {
     [theme.breakpoints.up('md')]: {
@@ -113,9 +123,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
 
   const formattedlastUpdatedTime =
     longviewClientLastUpdated !== undefined
-      ? `Last updated ${formatDate(longviewClientLastUpdated, {
-          humanizeCutoff: 'never'
-        })}`
+      ? `Last updated ${formatDate(longviewClientLastUpdated)}`
       : 'Latest update time not available';
 
   /**
@@ -163,12 +171,11 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
           </>
         )}
       </Grid>
-      <Grid item>
+      <Grid item className={classes.detailsContainer}>
         <ButtonLink
           to={`/longview/clients/${clientID}`}
           linkText="View details"
           className={classes.link}
-          secondary
         />
         {!loading && (
           <div className={classes.lastUpdatedOuter}>

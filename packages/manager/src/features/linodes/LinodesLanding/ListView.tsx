@@ -8,7 +8,7 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import formatDate from 'src/utilities/formatDate';
 import LinodeRow from './LinodeRow/LinodeRow';
@@ -36,10 +36,10 @@ export const ListView: React.FC<CombinedProps> = props => {
     open: false,
     tags: [],
     label: '',
-    linodeID: 0
+    entityID: 0
   });
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
   const flags = useFlags();
 
   const notificationContext = React.useContext(_notificationContext);
@@ -57,7 +57,7 @@ export const ListView: React.FC<CombinedProps> = props => {
       open: true,
       label: linodeLabel,
       tags,
-      linodeID
+      entityID: linodeID
     });
   };
 
@@ -128,8 +128,8 @@ export const ListView: React.FC<CombinedProps> = props => {
         entityLabel={tagDrawer.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
-        deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
+        addTag={(newTag: string) => addTag(tagDrawer.entityID, newTag)}
+        deleteTag={(tag: string) => deleteTag(tagDrawer.entityID, tag)}
         onClose={closeTagDrawer}
       />
     </>

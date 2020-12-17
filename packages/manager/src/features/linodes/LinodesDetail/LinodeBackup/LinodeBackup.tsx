@@ -13,16 +13,15 @@ import {
   Window
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { path, pathOr, sortBy } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -72,6 +71,7 @@ import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import BackupTableRow from './BackupTableRow';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
+import { initWindows } from 'src/utilities/initWindows';
 
 import DestructiveSnapshotDialog from './DestructiveSnapshotDialog';
 
@@ -185,13 +185,6 @@ type CombinedProps = PreloadedProps &
   ContextProps &
   WithSnackbarProps;
 
-const evenize = (n: number): number => {
-  if (n === 0) {
-    return n;
-  }
-  return n % 2 === 0 ? n : n - 1;
-};
-
 const isReadOnly = (permissions: GrantLevel) => {
   return permissions === 'read_only';
 };
@@ -272,30 +265,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     this.eventSubscription.unsubscribe();
   }
 
-  initWindows(timezone: string) {
-    let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
-      const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(
-        timezone
-      );
-      const finish = start.plus({ hours: 2 });
-      return [
-        `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,
-        `W${evenize(start.setZone('utc').hour)}`
-      ];
-    });
-
-    windows = sortBy<string[]>(window => window[0], windows);
-
-    windows.unshift(['Choose a time', 'Scheduling']);
-
-    return windows;
-  }
-
   constructor(props: CombinedProps) {
     super(props);
 
     /* TODO: use the timezone from the user's profile */
-    this.windows = this.initWindows(this.props.timezone);
+    this.windows = initWindows(this.props.timezone, true);
 
     this.days = [
       ['Choose a day', 'Scheduling'],
@@ -563,8 +537,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <Placeholder
           icon={VolumeIcon}
           title="Backups"
+          isEntity
           renderAsSecondary
-          copy={backupPlaceholderText}
           buttonProps={[
             {
               onClick: () => this.enableBackups(),
@@ -573,7 +547,9 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               disabled
             }
           ]}
-        />
+        >
+          {backupPlaceholderText}
+        </Placeholder>
       </React.Fragment>
     );
   };
@@ -583,33 +559,31 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     const disabled = isReadOnly(permissions);
 
     return (
-      <React.Fragment>
-        <Paper className={classes.paper} style={{ padding: 0 }}>
-          <Table aria-label="List of Backups">
-            <TableHead>
-              <TableRow>
-                <TableCell>Label</TableCell>
-                <TableCell>Date Created</TableCell>
-                <TableCell>Duration</TableCell>
-                <TableCell>Disks</TableCell>
-                <TableCell>Space Required</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {backups.map((backup: LinodeBackup, idx: number) => (
-                <BackupTableRow
-                  key={idx}
-                  backup={backup}
-                  disabled={disabled}
-                  handleDeploy={this.handleDeploy}
-                  handleRestore={this.handleRestore}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </Paper>
-      </React.Fragment>
+      <Paper className={classes.paper} style={{ padding: 0 }}>
+        <Table aria-label="List of Backups">
+          <TableHead>
+            <TableRow>
+              <TableCell>Label</TableCell>
+              <TableCell>Date Created</TableCell>
+              <TableCell>Duration</TableCell>
+              <TableCell>Disks</TableCell>
+              <TableCell>Space Required</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {backups.map((backup: LinodeBackup, idx: number) => (
+              <BackupTableRow
+                key={idx}
+                backup={backup}
+                disabled={disabled}
+                handleDeploy={this.handleDeploy}
+                handleRestore={this.handleRestore}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
     );
   };
 
@@ -717,73 +691,71 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <React.Fragment>
-        <Paper className={classes.paper}>
-          <Typography
-            variant="h2"
-            className={classes.subTitle}
-            data-qa-settings-heading
-          >
-            Settings
-          </Typography>
-          <Typography variant="body1" data-qa-settings-desc>
-            Configure when automatic backups are initiated. The Linode Backup
-            Service will generate a backup between the selected hours every day,
-            and will overwrite the previous daily backup. The selected day is
-            when the backup is promoted to the weekly slot. Up to two weekly
-            backups are saved.
-          </Typography>
-          <FormControl className={classes.chooseTime}>
-            <Select
-              textFieldProps={{
-                dataAttrs: {
-                  'data-qa-time-select': true
-                }
-              }}
-              options={timeSelection}
-              onChange={this.handleSelectBackupWindow}
-              label="Time of Day"
-              placeholder="Choose a time"
-              isClearable={false}
-              defaultValue={defaultTimeSelection}
-              name="Time of Day"
-              noMarginTop
-            />
-            <FormHelperText>
-              Windows displayed in {this.props.timezone}
-            </FormHelperText>
-          </FormControl>
+      <Paper className={classes.paper}>
+        <Typography
+          variant="h2"
+          className={classes.subTitle}
+          data-qa-settings-heading
+        >
+          Settings
+        </Typography>
+        <Typography variant="body1" data-qa-settings-desc>
+          Configure when automatic backups are initiated. The Linode Backup
+          Service will generate a backup between the selected hours every day,
+          and will overwrite the previous daily backup. The selected day is when
+          the backup is promoted to the weekly slot. Up to two weekly backups
+          are saved.
+        </Typography>
+        <FormControl className={classes.chooseTime}>
+          <Select
+            textFieldProps={{
+              dataAttrs: {
+                'data-qa-time-select': true
+              }
+            }}
+            options={timeSelection}
+            onChange={this.handleSelectBackupWindow}
+            label="Time of Day"
+            placeholder="Choose a time"
+            isClearable={false}
+            defaultValue={defaultTimeSelection}
+            name="Time of Day"
+            noMarginTop
+          />
+          <FormHelperText>
+            Windows displayed in {this.props.timezone}
+          </FormHelperText>
+        </FormControl>
 
-          <FormControl className={classes.chooseDay}>
-            <Select
-              textFieldProps={{
-                dataAttrs: {
-                  'data-qa-weekday-select': true
-                }
-              }}
-              options={daySelection}
-              defaultValue={defaultDaySelection}
-              onChange={this.handleSelectBackupTime}
-              label="Day of Week"
-              placeholder="Choose a day"
-              isClearable={false}
-              noMarginTop
-            />
-          </FormControl>
-          <ActionsPanel className={classes.scheduleAction}>
-            <Button
-              buttonType="primary"
-              onClick={this.saveSettings}
-              disabled={isReadOnly(permissions)}
-              loading={this.state.settingsForm.loading}
-              data-qa-schedule
-            >
-              Save Schedule
-            </Button>
-          </ActionsPanel>
-          {errorText && <FormHelperText error>{errorText}</FormHelperText>}
-        </Paper>
-      </React.Fragment>
+        <FormControl className={classes.chooseDay}>
+          <Select
+            textFieldProps={{
+              dataAttrs: {
+                'data-qa-weekday-select': true
+              }
+            }}
+            options={daySelection}
+            defaultValue={defaultDaySelection}
+            onChange={this.handleSelectBackupTime}
+            label="Day of Week"
+            placeholder="Choose a day"
+            isClearable={false}
+            noMarginTop
+          />
+        </FormControl>
+        <ActionsPanel className={classes.scheduleAction}>
+          <Button
+            buttonType="primary"
+            onClick={this.saveSettings}
+            disabled={isReadOnly(permissions)}
+            loading={this.state.settingsForm.loading}
+            data-qa-schedule
+          >
+            Save Schedule
+          </Button>
+        </ActionsPanel>
+        {errorText && <FormHelperText error>{errorText}</FormHelperText>}
+      </Paper>
     );
   };
 
@@ -818,7 +790,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           className={classes.cancelButton}
           onClick={this.handleOpenBackupsAlert}
@@ -893,12 +865,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <React.Fragment>
-        <div>
-          <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
-          {backupsEnabled ? <this.Management /> : <this.Placeholder />}
-        </div>
-      </React.Fragment>
+      <div>
+        <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
+        {backupsEnabled ? <this.Management /> : <this.Placeholder />}
+      </div>
     );
   }
 }

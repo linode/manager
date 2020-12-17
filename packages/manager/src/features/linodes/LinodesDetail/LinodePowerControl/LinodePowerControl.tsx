@@ -76,7 +76,7 @@ const styles = (theme: Theme) =>
       outline: 0,
       borderBottom: `1px solid ${theme.palette.divider}`,
       '&:not(.hasTooltip)': {
-        '&:hover, &:focus': {
+        '&:hover': {
           '& $buttonText': {
             color: 'white'
           },
@@ -204,11 +204,12 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Button
+          buttonType="secondary"
+          className={`${classes.button} ${anchorEl ? 'active' : ''}`}
           disabled={isBusy || isStopped || isUnknown}
           onClick={this.openMenu}
           aria-owns={anchorEl ? 'power' : undefined}
           aria-haspopup="true"
-          className={`${classes.button} ${anchorEl ? 'active' : ''}`}
           data-qa-power-control={text}
         >
           <div className={classes.buttonInner}>

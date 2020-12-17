@@ -13,7 +13,7 @@ describe('Timezone change form', () => {
         title: ''
       }}
       timezone={'Pacific/Niue'}
-      updateProfile={updateProfile}
+      updateTimezone={updateProfile}
       loggedInAsCustomer={true}
     />
   );

@@ -48,13 +48,15 @@ export const DeleteDomain: React.FC<CombinedProps> = props => {
   return (
     <>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         onClick={() => openDialog(props.domainId, props.domainLabel)}
       >
         Delete Domain
       </Button>
       <DeletionDialog
+        typeToConfirm
+        entity="domain"
         open={dialog.isOpen}
         label={dialog.entityLabel || ''}
         loading={dialog.isLoading}

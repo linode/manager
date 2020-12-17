@@ -38,3 +38,9 @@ export const updateDatabaseActions = actionCreator.async<
   Database,
   APIError[]
 >(`update`);
+
+export const resetPasswordActions = actionCreator.async<
+  { databaseID: number; root_password: string },
+  Database,
+  APIError[]
+>(`reset-password`);

@@ -12,6 +12,7 @@ import { compose as recompose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -29,7 +30,12 @@ import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import withAccount, { StateProps } from 'src/containers/account.container';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { withLinodeDetailContext } from '../linodeDetailContext';
@@ -45,7 +51,6 @@ import { IPTypes } from './types';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
-import Hidden from 'src/components/core/Hidden';
 import LinodeVLANs from './VLANPanel/LinodeVLANs';
 
 type ClassNames =
@@ -155,13 +160,19 @@ interface State {
   sharingDialogOpen: boolean;
 }
 
-type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
+type CombinedProps = ContextProps &
+  WithStyles<ClassNames> &
+  DispatchProps &
+  FeatureFlagConsumerProps &
+  StateProps;
 
 // Save some typing below
 export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
 
 // The API returns an error if more than 100 IPs are requested.
 const getAllIPs = getAll<IPAddress>(getIPs, 100);
+
+export const ipv4TableID = 'ips';
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
@@ -513,6 +524,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: IPAddress) => i.address)
     );
 
+    const vlansEnabled = isFeatureEnabled(
+      'Vlans',
+      Boolean(this.props.flags.vlans),
+      this.props.accountData?.capabilities ?? []
+    );
+
     return (
       <div>
         {readOnly && <LinodePermissionsError />}
@@ -615,7 +632,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           />
         )}
 
-        <LinodeVLANs key={this.props.linode.id} />
+        {vlansEnabled && <LinodeVLANs />}
       </div>
     );
   }
@@ -628,43 +645,56 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <EntityHeader
           title="IP Addresses"
           isSecondary
+          // @todo: Clean these props when EntityHeader is refactored.
           body={
             <Hidden mdUp>
-              <Button
-                style={{ paddingTop: 5, paddingBottom: 5 }}
-                onClick={this.openTransferDialog}
-              >
-                IP Transfer
-              </Button>
-              <Button
-                style={{ paddingTop: 5, paddingBottom: 5 }}
-                onClick={this.openSharingDialog}
-              >
-                IP Sharing
-              </Button>
+              <div style={{ marginRight: 5 }}>
+                <Hidden xsDown>
+                  <Button
+                    style={{ paddingTop: 5, paddingBottom: 5 }}
+                    onClick={this.openTransferDialog}
+                    buttonType="secondary"
+                  >
+                    IP Transfer
+                  </Button>
+                  <Button
+                    style={{ paddingTop: 5, paddingBottom: 5 }}
+                    onClick={this.openSharingDialog}
+                    buttonType="secondary"
+                  >
+                    IP Sharing
+                  </Button>
+                </Hidden>
+                <AddNewLink
+                  label="Add an IP Address"
+                  onClick={this.openAddIPDrawer}
+                />
+              </div>
             </Hidden>
           }
           actions={
-            <div>
-              <Hidden smDown>
+            <Hidden smDown>
+              <div style={{ marginRight: 5 }}>
                 <Button
                   style={{ padding: '16px 14px' }}
                   onClick={this.openTransferDialog}
+                  buttonType="secondary"
                 >
                   IP Transfer
                 </Button>
                 <Button
                   style={{ padding: '16px 28px 16px 14px' }}
                   onClick={this.openSharingDialog}
+                  buttonType="secondary"
                 >
                   IP Sharing
                 </Button>
-              </Hidden>
-              <AddNewLink
-                label="Add an IP Address..."
-                onClick={this.openAddIPDrawer}
-              />
-            </div>
+                <AddNewLink
+                  label="Add an IP Address"
+                  onClick={this.openAddIPDrawer}
+                />
+              </div>
+            </Hidden>
           }
         />
         <Paper style={{ padding: 0 }}>
@@ -672,7 +702,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <OrderBy data={ipDisplay} orderBy="type" order="asc">
             {({ data: orderedData, handleOrderChange, order, orderBy }) => {
               return (
-                <Table aria-label="IPv4 Addresses">
+                <Table aria-label="IPv4 Addresses" id={ipv4TableID}>
                   <TableHead>
                     <TableRow>
                       <TableCell style={{ width: '15%' }}>Address</TableCell>
@@ -733,7 +763,13 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
+const enhanced = recompose<CombinedProps, {}>(
+  connected,
+  withFeatureFlags,
+  withAccount(),
+  linodeContext,
+  styled
+);
 
 export default enhanced(LinodeNetworking);
 

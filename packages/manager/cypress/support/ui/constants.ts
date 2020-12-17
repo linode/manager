@@ -1,3 +1,4 @@
+import { containsClick, fbtClick } from '../helpers';
 import { waitForAppLoad } from './common';
 
 export const loadAppNoLogin = path => waitForAppLoad(path, false);
@@ -19,6 +20,8 @@ const waitDoubleRerender = () => {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(500);
 };
+
+export const selectRegionString = 'Select a Region';
 // List of Routes and validator of the route
 export const pages = [
   {
@@ -67,7 +70,7 @@ export const pages = [
         name: 'Nav',
         go: () => {
           loadAppNoLogin(routes.support);
-          cy.findByText('Create...').click();
+          cy.findByText('Create').click();
           cy.get('[data-qa-one-click-add-new="true"]').click();
         }
       }
@@ -106,7 +109,7 @@ export const pages = [
           loadAppNoLogin(url);
           cy.findByText('Password Reset').should('be.visible');
           waitDoubleRerender();
-          cy.findByText('Display')
+          cy.contains('Display')
             .should('be.visible')
             .click();
         }
@@ -116,8 +119,8 @@ export const pages = [
         go: () => {
           loadAppNoLogin(routes.support);
           cy.findByTestId('nav-group-profile').click();
-          cy.findByTestId('menu-item-My Profile')
-            .should('have.text', 'My Profile')
+          cy.findByTestId('menu-item-Display')
+            .should('have.text', 'Display')
             .click({ force: true });
         }
       }
@@ -135,9 +138,7 @@ export const pages = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username').should('be.visible');
           waitDoubleRerender();
-          cy.findByText('Password & Authentication')
-            .should('be.visible')
-            .click();
+          containsClick('Password & Authentication');
         }
       }
     ]
@@ -153,7 +154,7 @@ export const pages = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username');
           waitDoubleRerender();
-          cy.findByText('SSH Keys').click();
+          cy.contains('SSH Keys').click();
         }
       }
     ]
@@ -170,7 +171,7 @@ export const pages = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username');
           waitDoubleRerender();
-          cy.findByText('LISH').click();
+          containsClick('LISH Console Settings');
         }
       }
     ]
@@ -187,7 +188,7 @@ export const pages = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username');
           waitDoubleRerender();
-          cy.findByText('API Tokens').click();
+          cy.contains('API Tokens').click();
         }
       }
     ]
@@ -286,7 +287,7 @@ export const pages = [
           loadAppNoLogin(routes.account);
           cy.findByText('Billing Contact');
           waitDoubleRerender();
-          cy.findByText('Settings').click();
+          cy.contains('Settings').click();
         }
       }
     ]

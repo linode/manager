@@ -1,11 +1,9 @@
-import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
 import { getTFAToken, Profile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
@@ -47,10 +45,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     border: 0
   },
-  showHideText: {
-    fontSize: '1rem',
-    marginLeft: theme.spacing(2),
-    color: theme.palette.text.primary
+  button: {
+    ...theme.applyLinkStyles
   },
   disabled: {
     '& *': {
@@ -231,34 +227,17 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
                 )}
                 {twoFactorEnabled && (
                   <div className={classes.container}>
-                    {showQRCode ? (
-                      <Button
-                        buttonType="secondary"
-                        className={classes.visibility}
-                        onClick={toggleHidden}
-                        destructive
-                        data-qa-hide-show-code
-                      >
-                        <SettingsBackupRestore />
-                        <span className={classes.showHideText}>
-                          Hide QR Code
-                        </span>
-                      </Button>
-                    ) : (
-                      <Button
-                        buttonType="secondary"
-                        className={classes.visibility}
-                        onClick={toggleHidden}
-                        data-qa-hide-show-code
-                      >
-                        <SettingsBackupRestore />
-                        <span className={classes.showHideText}>
-                          {twoFactorConfirmed
-                            ? 'Reset two-factor authentication'
-                            : 'Show QR Code'}
-                        </span>
-                      </Button>
-                    )}
+                    <button
+                      className={classes.button}
+                      onClick={toggleHidden}
+                      data-qa-hide-show-code
+                    >
+                      {showQRCode
+                        ? 'Hide QR Code'
+                        : twoFactorConfirmed
+                        ? 'Reset two-factor authentication'
+                        : 'Show QR Code'}
+                    </button>
                   </div>
                 )}
                 {twoFactorEnabled &&

@@ -11,7 +11,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -74,7 +74,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
           compose(
             setSubmitting(false),
             setSuccess(
-              `Watchdog succesfully ${value ? 'enabled' : 'disabled.'}`
+              `Watchdog successfully ${value ? 'enabled' : 'disabled.'}`
             ),
             setCurrentStatus(response.watchdog_enabled) as any
           )
@@ -97,53 +97,50 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
     const disabled = permissions === 'read_only';
 
     return (
-      <React.Fragment>
-        <ExpansionPanel heading="Shutdown Watchdog" data-qa-watchdog-panel>
-          <Grid
-            container
-            alignItems="center"
-            className={classes.shutDownWatchdog}
-          >
-            {(success || errors) && (
-              <Grid item xs={12}>
-                <Notice
-                  success={Boolean(success)}
-                  error={Boolean(errors)}
-                  text={success || errors}
-                />
-              </Grid>
-            )}
-            <Grid item xs={12} md={2}>
-              <FormControlLabel
-                className="toggleLassie"
-                control={
-                  <Toggle
-                    onChange={this.toggleWatchdog}
-                    checked={currentStatus}
-                    data-qa-watchdog-toggle={currentStatus}
-                  />
-                }
-                label={currentStatus ? 'Enabled' : 'Disabled'}
-                aria-label={
-                  currentStatus
-                    ? 'Shutdown Watchdog is enabled'
-                    : 'Shutdown Watchdog is disabled'
-                }
-                disabled={submitting || disabled}
+      <Accordion heading="Shutdown Watchdog" data-qa-watchdog-panel>
+        <Grid
+          container
+          alignItems="center"
+          className={classes.shutDownWatchdog}
+        >
+          {(success || errors) && (
+            <Grid item xs={12}>
+              <Notice
+                success={Boolean(success)}
+                error={Boolean(errors)}
+                text={success || errors}
               />
             </Grid>
-            <Grid item xs={12} md={10} lg={8} xl={6}>
-              <Typography data-qa-watchdog-desc>
-                Shutdown Watchdog, also known as Lassie, is a Linode Manager
-                feature capable of automatically rebooting your Linode if it
-                powers off unexpectedly. Lassie is not technically an
-                availability monitoring tool, but it can help get your Linode
-                back online fast if it’s accidentally powered off.
-              </Typography>
-            </Grid>
+          )}
+          <Grid item xs={12} md={2}>
+            <FormControlLabel
+              control={
+                <Toggle
+                  onChange={this.toggleWatchdog}
+                  checked={currentStatus}
+                  data-qa-watchdog-toggle={currentStatus}
+                />
+              }
+              label={currentStatus ? 'Enabled' : 'Disabled'}
+              aria-label={
+                currentStatus
+                  ? 'Shutdown Watchdog is enabled'
+                  : 'Shutdown Watchdog is disabled'
+              }
+              disabled={submitting || disabled}
+            />
           </Grid>
-        </ExpansionPanel>
-      </React.Fragment>
+          <Grid item xs={12} md={10} lg={8} xl={6}>
+            <Typography data-qa-watchdog-desc>
+              Shutdown Watchdog, also known as Lassie, is a Linode Manager
+              feature capable of automatically rebooting your Linode if it
+              powers off unexpectedly. Lassie is not technically an availability
+              monitoring tool, but it can help get your Linode back online fast
+              if it’s accidentally powered off.
+            </Typography>
+          </Grid>
+        </Grid>
+      </Accordion>
     );
   }
 }

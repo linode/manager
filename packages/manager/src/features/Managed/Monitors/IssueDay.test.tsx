@@ -11,6 +11,6 @@ describe('IssueDay', () => {
       issues: []
     };
     const { getByText } = renderWithTheme(<IssueDay {...props} />);
-    getByText('1-Oct-2020');
+    getByText('2020-10-01');
   });
 });

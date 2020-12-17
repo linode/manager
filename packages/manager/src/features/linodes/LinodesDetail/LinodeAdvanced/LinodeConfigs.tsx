@@ -54,7 +54,8 @@ const styles = (theme: Theme) =>
         width: '100%',
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1)
-      }
+      },
+      paddingRight: 5
     }
   });
 
@@ -152,7 +153,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         loading={this.state.confirmDelete.submitting}
         onClick={this.deleteConfig}

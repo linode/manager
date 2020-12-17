@@ -31,7 +31,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.bold,
     color: theme.cmrTextColors.linkActiveLight,
     lineHeight: '1.125rem',
-    textDecoration: 'underline'
+    '&:hover, &:focus': {
+      textDecoration: 'underline'
+    }
   },
   ipsWrapper: {
     display: 'inline-flex',
@@ -88,13 +90,17 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = props => {
           </Link>
         </div>
       </TableCell>
+
       <Hidden xsDown>
         <TableCell data-qa-node-status className={classes.statusWrapper}>
           <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
         </TableCell>
+      </Hidden>
+      <Hidden smDown>
         <TableCell data-qa-transferred>
           {convertMegabytesTo(transfer.total)}
         </TableCell>
+
         <TableCell data-qa-ports>
           {configs.length === 0 && 'None'}
           {configs.map(({ port, id: configId }, i) => (
@@ -110,6 +116,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = props => {
           ))}
         </TableCell>
       </Hidden>
+
       <TableCell data-qa-nodebalancer-ips>
         <div className={classes.ipsWrapper}>
           <IPAddress ips={[ipv4]} copyRight showMore />

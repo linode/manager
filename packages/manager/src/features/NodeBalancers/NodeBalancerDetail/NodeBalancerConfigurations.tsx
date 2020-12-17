@@ -35,7 +35,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import PromiseLoader, {
   PromiseLoaderResponse
@@ -987,7 +987,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     };
 
     return (
-      <ExpansionPanel
+      <Accordion
         key={`nb-config-${idx}`}
         updateFor={[
           idx,
@@ -1071,7 +1071,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           onNodeWeightChange={this.onNodeWeightChange(idx)}
           onNodeModeChange={this.onNodeModeChange(idx)}
         />
-      </ExpansionPanel>
+      </Accordion>
     );
   };
 
@@ -1088,7 +1088,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       <Button
         data-qa-confirm-cancel
         onClick={this.deleteConfig}
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         loading={this.state.deleteConfigConfirmDialog.submitting}
       >

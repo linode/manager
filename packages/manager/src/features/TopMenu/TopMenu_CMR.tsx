@@ -1,11 +1,17 @@
+import MenuIcon from '@material-ui/icons/Menu';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
+import Hidden from 'src/components/core/Hidden';
+import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
 import AddNewMenu from './AddNewMenu/AddNewMenu_CMR';
-import SearchBar from './SearchBar/SearchBar_CMR';
+import Community from './Community';
+import Help from './Help';
 import NotificationButton from './NotificationButton';
+import SearchBar from './SearchBar/SearchBar_CMR';
+import UserMenu from './UserMenu/UserMenu_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -21,19 +27,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   toolbar: {
     padding: 0,
     height: `50px !important`,
-    width: 1280,
-    [theme.breakpoints.down('lg')]: {
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1)
-    },
-    [theme.breakpoints.up('lg')]: {
-      paddingLeft: 0,
-      paddingRight: 0
+    width: '100%'
+  },
+  communityIcon: {
+    [theme.breakpoints.down(370)]: {
+      ...theme.visually.hidden
     }
   }
 }));
 
 interface Props {
+  openSideMenu: () => void;
+  desktopMenuToggle: () => void;
   isLoggedInAsCustomer: boolean;
   username: string;
 }
@@ -41,7 +46,12 @@ interface Props {
 type PropsWithStyles = Props;
 
 const TopMenu: React.FC<PropsWithStyles> = props => {
-  const { username, isLoggedInAsCustomer } = props;
+  const {
+    openSideMenu,
+    username,
+    isLoggedInAsCustomer,
+    desktopMenuToggle
+  } = props;
 
   const classes = useStyles();
 
@@ -62,9 +72,30 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
       )}
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar} variant="dense">
+          <Hidden smDown>
+            <IconButton
+              color="inherit"
+              aria-label="open menu"
+              onClick={desktopMenuToggle}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Hidden>
+          <Hidden mdUp>
+            <IconButton
+              color="inherit"
+              aria-label="open menu"
+              onClick={openSideMenu}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Hidden>
           <AddNewMenu />
           <SearchBar />
+          <Help />
+          <Community className={classes.communityIcon} />
           <NotificationButton />
+          <UserMenu />
         </Toolbar>
       </AppBar>
     </React.Fragment>

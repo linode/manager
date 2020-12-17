@@ -10,7 +10,6 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
-import { DATETIME_DISPLAY_FORMAT } from 'src/constants';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import Hidden from 'src/components/core/Hidden';
 
@@ -76,16 +75,10 @@ const TicketRow: React.FC<CombinedProps> = props => {
       </TableCell>
       <Hidden xsDown>
         <TableCell data-qa-support-date>
-          <DateTimeDisplay
-            value={ticket.opened}
-            format={DATETIME_DISPLAY_FORMAT}
-          />
+          <DateTimeDisplay value={ticket.opened} />
         </TableCell>
         <TableCell data-qa-support-updated>
-          <DateTimeDisplay
-            value={ticket.updated}
-            format={DATETIME_DISPLAY_FORMAT}
-          />
+          <DateTimeDisplay value={ticket.updated} />
         </TableCell>
       </Hidden>
       <Hidden smDown>

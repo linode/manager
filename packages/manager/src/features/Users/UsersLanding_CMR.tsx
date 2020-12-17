@@ -84,6 +84,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 40,
       height: 40
     }
+  },
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0,
+    /*
+      Explicitly stating this as the theme file is automatically adding padding to the last cell
+      We can remove once we make the full switch to CMR styling
+      */
+    paddingRight: '0 !important'
   }
 }));
 
@@ -205,7 +216,7 @@ const UsersLanding: React.FC<CombinedProps> = props => {
         <TableCell data-qa-user-restriction>
           {user.restricted ? 'Limited' : 'Full'}
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.actionCell}>
           <ActionMenu username={user.username} onDelete={onUsernameDelete} />
         </TableCell>
       </TableRow>
@@ -234,7 +245,7 @@ const UsersLanding: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Users" />
+      <DocumentTitleSegment segment="Users & Grants" />
       {newUsername && (
         <Notice success text={`User ${newUsername} created successfully`} />
       )}
@@ -266,7 +277,7 @@ const UsersLanding: React.FC<CombinedProps> = props => {
                   : undefined
               }
               onClick={openForCreate}
-              label="Add a User..."
+              label="Add a User"
             />
           </Grid>
         </Grid>

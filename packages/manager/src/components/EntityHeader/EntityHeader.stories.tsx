@@ -13,7 +13,6 @@ storiesOf('EntityHeader', module)
         title="Linodes"
         entity="Linode"
         onAddNew={() => null}
-        iconType="linode"
         docsLink="https://linode.com/docs"
         body={
           <Grid item>
@@ -61,7 +60,6 @@ storiesOf('EntityHeader', module)
         title="My-linode-12345"
         parentLink="/linodes"
         parentText="Linodes"
-        iconType="linode"
         actions={
           <ActionMenu ariaLabel="linode-detail" createActions={() => []} />
         }

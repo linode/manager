@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   important: {
-    backgroundColor: theme.bg.white,
+    backgroundColor: theme.cmrBGColors.bgPaper,
     padding: theme.spacing(2),
     '& $noticeText': {
       fontFamily: theme.font.normal
@@ -174,7 +174,6 @@ const Notice: React.FC<CombinedProps> = props => {
   ) : (
     <Typography
       {...typeProps}
-      component="div"
       onClick={onClick}
       className={`${classes.noticeText} noticeText`}
     >

@@ -33,10 +33,18 @@ import CancelNotice from '../CancelNotice';
 import BucketTable from './BucketTable';
 import BucketTable_CMR from './BucketTable_CMR';
 import useFlags from 'src/hooks/useFlags';
+import { readableBytes } from 'src/utilities/unitConversions';
+import BucketDetailsDrawer from './BucketDetailsDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing()
+  },
+  empty: {
+    '& svg': {
+      marginTop: theme.spacing(1.5),
+      transform: 'scale(0.8)'
+    }
   }
 }));
 
@@ -67,6 +75,21 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
   const [confirmBucketName, setConfirmBucketName] = React.useState<string>('');
+  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] = React.useState<
+    boolean
+  >(false);
+  const [bucketForDetails, setBucketForDetails] = React.useState<
+    ObjectStorageBucket | undefined
+  >(undefined);
+
+  const handleClickDetails = (bucket: ObjectStorageBucket) => {
+    setBucketDetailDrawerOpen(true);
+    setBucketForDetails(bucket);
+  };
+
+  const closeBucketDetailDrawer = () => {
+    setBucketDetailDrawerOpen(false);
+  };
 
   const handleClickRemove = (bucket: ObjectStorageBucket) => {
     setBucketToRemove(bucket);
@@ -123,7 +146,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         onClick={removeBucket}
         data-qa-submit-rebuild
@@ -206,6 +229,8 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
 
   const _BucketTable = flags.cmr ? BucketTable_CMR : BucketTable;
 
+  const totalUsage = sumBucketUsage(data);
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
@@ -226,12 +251,22 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
                 order,
                 handleOrderChange,
                 handleClickRemove,
+                handleClickDetails,
                 openBucketDrawer,
                 data: orderedData
               };
               return <_BucketTable {...bucketTableProps} />;
             }}
           </OrderBy>
+          {/* If there's more than one Bucket, display the total usage. */}
+          {data.length > 1 ? (
+            <Typography
+              style={{ marginTop: 8, marginLeft: flags.cmr ? 15 : 0 }}
+              variant="body1"
+            >
+              Total usage: {readableBytes(totalUsage).formatted}
+            </Typography>
+          ) : null}
         </Grid>
         <ConfirmationDialog
           open={removeBucketConfirmationDialog.isOpen}
@@ -250,6 +285,16 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
           />
         </ConfirmationDialog>
       </div>
+      <BucketDetailsDrawer
+        open={bucketDetailDrawerOpen}
+        onClose={closeBucketDetailDrawer}
+        bucketLabel={bucketForDetails?.label}
+        hostname={bucketForDetails?.hostname}
+        created={bucketForDetails?.created}
+        cluster={bucketForDetails?.cluster}
+        size={bucketForDetails?.size}
+        objectsNumber={bucketForDetails?.objects}
+      />
     </React.Fragment>
   );
 };
@@ -267,12 +312,15 @@ const RenderError: React.FC<{}> = () => {
 const RenderEmpty: React.FC<{
   onClick: () => void;
 }> = props => {
+  const classes = useStyles();
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
       <Placeholder
         title="Object Storage"
-        copy={<EmptyCopy />}
+        className={classes.empty}
+        isEntity
         icon={BucketIcon}
         renderAsSecondary
         buttonProps={[
@@ -281,28 +329,24 @@ const RenderEmpty: React.FC<{
             children: 'Add a Bucket'
           }
         ]}
-      />
+      >
+        <Typography variant="subtitle1">Need help getting started?</Typography>
+        <Typography variant="subtitle1">
+          <a
+            href="https://linode.com/docs/platform/object-storage"
+            target="_blank"
+            aria-describedby="external-site"
+            rel="noopener noreferrer"
+            className="h-u"
+          >
+            Learn more about storage options for your multimedia, archives, and
+            data backups here.
+          </a>
+        </Typography>
+      </Placeholder>
     </React.Fragment>
   );
 };
-
-const EmptyCopy = () => (
-  <>
-    <Typography variant="subtitle1">Need help getting started?</Typography>
-    <Typography variant="subtitle1">
-      <a
-        href="https://linode.com/docs/platform/object-storage"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        Learn more about storage options for your multimedia, archives, and data
-        backups here.
-      </a>
-    </Typography>
-  </>
-);
 
 const enhanced = compose<CombinedProps, Props>(
   React.memo,
@@ -354,3 +398,10 @@ const Banner: React.FC<BannerProps> = React.memo(({ regionsAffected }) => {
     </Notice>
   );
 });
+
+export const sumBucketUsage = (buckets: ObjectStorageBucket[]) => {
+  return buckets.reduce((acc, thisBucket) => {
+    acc += thisBucket.size;
+    return acc;
+  }, 0);
+};

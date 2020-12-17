@@ -15,6 +15,7 @@ export interface HeaderCell {
   widthPercent: number;
   visuallyHidden?: boolean;
   hideOnMobile?: boolean;
+  hideOnTablet?: boolean;
 }
 export interface BaseProps {
   error?: APIError[];
@@ -31,6 +32,8 @@ export interface ListProps extends BaseProps {
     order: OrderByProps['order'];
     orderBy: OrderByProps['orderBy'];
   };
+  toggleGroupByTag?: () => boolean;
+  isGroupedByTag?: boolean;
 }
 
 export interface EntityTableRow<T> extends BaseProps {

@@ -14,6 +14,7 @@ export interface EntityTableRow<T> extends BaseProps {
 interface Props {
   entity: string;
   headers: HeaderCell[];
+  toggleGroupByTag?: () => boolean;
   groupByTag: boolean;
   row: EntityTableRow<any>;
   initialOrder?: {
@@ -71,6 +72,7 @@ export interface HeaderCell {
   widthPercent: number;
   visuallyHidden?: boolean;
   hideOnMobile?: boolean;
+  hideOnTablet?: boolean;
 }
 
 export default LandingTable;

@@ -7,6 +7,7 @@ import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Placeholder from 'src/components/Placeholder';
 import { filterImagesByType } from 'src/store/image/image.helpers';
+import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import {
   BasicFromContentProps,
   ReduxStateProps,
@@ -49,17 +50,13 @@ export const FromImageContent: React.FC<CombinedProps> = props => {
     return (
       <Grid item className={`${classes.main} mlMain py0`}>
         <Paper>
-          <Placeholder
-            title="My Images"
-            renderAsSecondary
-            copy={
-              <Typography variant="subtitle1">
-                You don&#39;t have any private Images. Visit the{' '}
-                <Link to="/images">Images section</Link> to create an Image from
-                one of your Linode&#39;s disks.
-              </Typography>
-            }
-          />
+          <Placeholder title="My Images" icon={ImageIcon} isEntity>
+            <Typography variant="subtitle1">
+              You don&#39;t have any private Images. Visit the{' '}
+              <Link to="/images">Images section</Link> to create an Image from
+              one of your Linode&#39;s disks.
+            </Typography>
+          </Placeholder>
         </Paper>
       </Grid>
     );

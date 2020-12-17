@@ -10,6 +10,7 @@ import { compose } from 'recompose';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
+const DomainCreate = React.lazy(() => import('./CreateDomain'));
 const DomainsLanding = React.lazy(() => import('./DomainsLanding'));
 const DomainDetail = React.lazy(() => import('./DomainDetail'));
 
@@ -23,6 +24,7 @@ const DomainsRoutes: React.FC<CombinedProps> = props => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
+        <Route component={DomainCreate} exact path={`${path}/create`} />
         <Route
           path={`${path}/:domainId/records`}
           exact

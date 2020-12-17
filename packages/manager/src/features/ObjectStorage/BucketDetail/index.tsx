@@ -7,9 +7,12 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/DocumentationButton';
+import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
+import useFlags from 'src/hooks/useFlags';
+import { BucketAccess } from './BucketAccess';
 
 const ObjectList = React.lazy(() => import('./BucketDetail'));
 // const Access = React.lazy(() => import('./BucketAccess'));
@@ -30,6 +33,8 @@ type CombinedProps = RouteComponentProps<MatchProps>;
 
 export const BucketDetailLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
+
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
@@ -40,10 +45,10 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
       title: 'Objects',
       routeName: `${props.match.url}/objects`
     },
-    // {
-    //   title: 'Access',
-    //   routeName: `${props.match.url}/access`
-    // },
+    {
+      title: 'Access',
+      routeName: `${props.match.url}/access`
+    },
     {
       title: 'SSL/TLS',
       routeName: `${props.match.url}/ssl`
@@ -64,6 +69,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
       <Box
         display="flex"
         flexDirection="row"
+        alignItems="center"
         justifyContent="space-between"
         className={classes.headerBox}
       >
@@ -79,7 +85,11 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
           ]}
           labelOptions={{ noCap: true }}
         />
-        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
+        {flags.cmr ? (
+          <DocumentationButton_CMR href="https://www.linode.com/docs/platform/object-storage/" />
+        ) : (
+          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
+        )}
       </Box>
 
       <Tabs index={index} onChange={handleTabChange}>
@@ -90,10 +100,10 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
             <SafeTabPanel index={0}>
               <ObjectList {...props} />
             </SafeTabPanel>
-            {/* <SafeTabPanel index={1}>
-              <Access />
-            </SafeTabPanel> */}
             <SafeTabPanel index={1}>
+              <BucketAccess bucketName={bucketName} clusterId={clusterId} />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
               <BucketSSL bucketName={bucketName} clusterId={clusterId} />
             </SafeTabPanel>
           </TabPanels>

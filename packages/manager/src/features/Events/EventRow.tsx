@@ -4,7 +4,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
@@ -20,9 +20,9 @@ import { formatEventWithUsername } from './Event.helpers';
 
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
-const useStyles = makeStyles(() => ({
-  message: {
-    wordBreak: 'break-all'
+const useStyles = makeStyles((theme: Theme) => ({
+  icon: {
+    marginLeft: theme.spacing(1.5)
   }
 }));
 
@@ -58,9 +58,7 @@ export const EventRow: React.FC<CombinedProps> = props => {
     entityId,
     duration: event.duration,
     username: event.username,
-    action: event.action,
-    // This references the message field we get from API, whereas the generic 'message' prop is constructed by Cloud above.
-    eventMessage: event.message
+    action: event.action
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
@@ -76,7 +74,6 @@ export interface RowProps {
   created: string;
   username: string | null;
   duration: Event['duration'];
-  eventMessage: string | null;
 }
 
 export const Row: React.FC<RowProps> = props => {
@@ -91,8 +88,7 @@ export const Row: React.FC<RowProps> = props => {
     type,
     created,
     username,
-    duration,
-    eventMessage
+    duration
   } = props;
 
   /** Some event types may not be handled by our system (or new types
@@ -115,22 +111,19 @@ export const Row: React.FC<RowProps> = props => {
       {!entityId && (
         <TableCell data-qa-event-icon-cell>
           <Hidden smDown>
-            <EntityIcon
-              data-qa-entity-icon
-              variant={type}
-              status={status}
-              size={28}
-              marginTop={1}
-            />
+            <div className={classes.icon}>
+              <EntityIcon
+                data-qa-entity-icon
+                variant={type}
+                status={status}
+                size={20}
+              />
+            </div>
           </Hidden>
         </TableCell>
       )}
       <TableCell parentColumn={'Event'} data-qa-event-message-cell>
-        <Typography
-          className={classes.message}
-          data-qa-event-message
-          variant="body1"
-        >
+        <Typography data-qa-event-message variant="body1">
           {displayedMessage}
         </Typography>
       </TableCell>
@@ -145,9 +138,6 @@ export const Row: React.FC<RowProps> = props => {
       </TableCell>
       <TableCell parentColumn={'When'} data-qa-event-created-cell>
         <DateTimeDisplay value={created} />
-      </TableCell>
-      <TableCell parentColumn={'Message'}>
-        <Typography variant="body1">{eventMessage}</Typography>
       </TableCell>
     </TableRow>
   );

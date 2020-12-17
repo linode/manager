@@ -80,6 +80,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   );
 
   const { objectStorageBuckets: buckets } = useBuckets();
+  const hidePermissionsTable = buckets.data.length === 0;
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   // This is for local display management only, not part of the payload
@@ -208,7 +209,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
                   onBlur={handleBlur}
                   disabled={isRestrictedUser || mode === 'viewing'}
                 />
-                {mode === 'creating' && (
+                {mode === 'creating' && !hidePermissionsTable ? (
                   <LimitedAccessControls
                     mode={mode}
                     bucket_access={values.bucket_access}
@@ -216,7 +217,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
                     handleToggle={handleToggleAccess}
                     checked={limitedAccessChecked}
                   />
-                )}
+                ) : null}
                 <ActionsPanel>
                   <Button
                     buttonType="primary"

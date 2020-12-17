@@ -7,6 +7,7 @@ import { makeStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TagsPanel from 'src/components/TagsPanel';
+import TagsPanelRedesigned from 'src/components/TagsPanel/TagsPanelRedesigned';
 import summaryPanelStyles, {
   StyleProps
 } from 'src/containers/SummaryPanels.styles';
@@ -28,18 +29,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       order: 1
     }
   },
-  sidebar: {
+  tagsSection: {
     [theme.breakpoints.up('md')]: {
       marginTop: theme.spacing(1),
       order: 2
-    }
-  },
-  cmrSidebar: {
-    [theme.breakpoints.down('md')]: {
-      '&.MuiGrid-item': {
-        paddingLeft: 0,
-        paddingRight: 0
-      }
+    },
+    '&.MuiGrid-item': {
+      paddingLeft: 0,
+      paddingRight: 0
     }
   },
   cmrSpacing: {
@@ -79,8 +76,7 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
       <Grid
         item
         xs={12}
-        className={`${hookClasses.sidebar} ${flags.cmr &&
-          hookClasses.cmrSidebar}`}
+        className={hookClasses.tagsSection}
         id="domains-tag-section"
       >
         <Paper className={classes.summarySection}>
@@ -88,7 +84,14 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
             Tags
           </Typography>
           <div className={hookClasses.tagPanel}>
-            <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
+            {flags.cmr ? (
+              <TagsPanelRedesigned
+                tags={domain.tags}
+                updateTags={handleUpdateTags}
+              />
+            ) : (
+              <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
+            )}
           </div>
         </Paper>
         <div

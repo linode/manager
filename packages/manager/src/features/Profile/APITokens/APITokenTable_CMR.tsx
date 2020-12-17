@@ -139,9 +139,6 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   AccountStateProps;
 
-export const filterOutLinodeApps = (token: Token) =>
-  !token.website || !/.linode.com$/.test(token.website);
-
 export class APITokenTable extends React.Component<CombinedProps, State> {
   static defaultState: State = {
     form: {
@@ -481,10 +478,10 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     }
 
-    const filteredData = data ? data.filter(filterOutLinodeApps) : [];
+    const tokens = data ?? [];
 
-    return filteredData.length > 0 ? (
-      this.renderRows(filteredData)
+    return tokens.length > 0 ? (
+      this.renderRows(tokens)
     ) : (
       <TableRowEmptyState colSpan={6} />
     );
@@ -506,7 +503,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         </TableCell>
         <TableCell>
           <Typography variant="body1" data-qa-token-created>
-            <DateTimeDisplay value={token.created} humanizeCutoff="month" />
+            <DateTimeDisplay value={token.created} />
           </Typography>
         </TableCell>
         <TableCell>
@@ -522,7 +519,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             token.expiry === null || isWayInTheFuture(token.expiry) ? (
               'never'
             ) : (
-              <DateTimeDisplay value={token.expiry} humanizeCutoff="month" />
+              <DateTimeDisplay value={token.expiry} />
             )}
           </Typography>
         </TableCell>
@@ -568,7 +565,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             {type === 'Personal Access Token' && (
               <AddNewLink
                 onClick={this.openCreateDrawer}
-                label="Create a Personal Access Token..."
+                label="Create a Personal Access Token"
                 className={classes.addNewLink}
               />
             )}
@@ -702,7 +699,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           loading={this.state.dialog.submittingDialog}
           destructive
           onClick={this.revokeAction}

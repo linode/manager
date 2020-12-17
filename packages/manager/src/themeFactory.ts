@@ -93,6 +93,7 @@ const cmrBGColors = {
   bgBillingSummary: '#f5f9ff',
   bgBreadcrumbParent: '#f5faff',
   bgAccessRow: '#fafafa',
+  bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
   bgAccessHeader: '#f5f5f5'
 };
 
@@ -131,7 +132,8 @@ const cmrIconColors = {
   iOrange: '#ffb31a',
   iRed: '#cf1e1e',
   // Offline status
-  iGrey: '#dbdde1'
+  iGrey: '#dbdde1',
+  iCheckmark: '#444'
 };
 
 const primaryColors = {
@@ -192,11 +194,11 @@ const genericLinkStyle = {
 
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
-  backgroundColor: cmrBGColors.bgStatusChip,
+  backgroundColor: 'transparent',
   color: cmrTextColors.textStatusChip,
   fontFamily: primaryFonts.bold,
-  fontSize: '1.1rem',
-  padding: 10,
+  fontSize: '1rem',
+  padding: 0,
   '&:before': {
     display: 'inline-block',
     borderRadius: '50%',
@@ -205,11 +207,6 @@ const genericStatusPillStyle = {
     width: 16,
     minWidth: 16,
     marginRight: 8
-  },
-  [breakpoints.down('sm')]: {
-    fontSize: 14,
-    padding: '15px 12px',
-    borderRadius: 15
   }
 };
 
@@ -299,6 +296,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavActiveBG: '#515861',
       primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#3a3f46',
+      mainContentBanner: '#33373D',
       topMenu: '#fff',
       billingHeader: '#f5f9ff',
       controlHeader: '#f9fafa',
@@ -328,6 +326,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       black: '#222',
       blue: primaryColors.main,
       offBlack: primaryColors.offBlack,
+      greenCyan: '#6FEC86',
       boxShadow: '#ddd',
       boxShadowDark: '#aaa',
       focusBorder: '#999',
@@ -534,23 +533,29 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         root: {
           textTransform: 'inherit',
-          borderRadius: 0,
           fontSize: '1rem',
           lineHeight: 1,
           fontFamily:
             spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
-          color: primaryColors.main,
-          padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2}px`,
-          maxHeight: 48,
-          '&:hover': {
-            backgroundColor: '#fff'
+          // // backgroundColor: primaryColors.main,
+          // color: '#fff',
+          // padding: `2px 20px`,
+          // maxHeight: 34,
+          // position: 'relative',
+          // minHeight: `34px`,
+          cursor: 'pointer',
+          border: 'none',
+          [breakpoints.down('sm')]: {
+            marginLeft: spacingUnit,
+            maxHeight: 34,
+            minWidth: 100
           },
-          '&:focus': {
-            backgroundColor: 'transparent'
+          '&:hover': {
+            backgroundColor: primaryColors.light,
+            color: '#fff'
           },
           '&[aria-expanded="true"]': {
-            backgroundColor: primaryColors.dark
+            backgroundColor: primaryColors.light
           },
           '&$disabled': {
             color: '#bbb'
@@ -559,14 +564,21 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             color: primaryColors.text
           }
         },
-        text: {
-          padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2}px`,
-          '&:hover': {
-            color: primaryColors.light
-          }
-        },
+        // text: {
+        //   padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
+        //     spacingUnit / 2}px ${spacingUnit * 2}px`,
+        //   '&:hover': {
+        //     color: primaryColors.light
+        //   }
+        // },
         containedPrimary: {
+          backgroundColor: primaryColors.main,
+          borderRadius: '3px',
+          color: '#fff',
+          padding: `2px 20px`,
+          maxHeight: 34,
+          position: 'relative',
+          minHeight: 34,
           '&:hover, &:focus': {
             backgroundColor: primaryColors.light
           },
@@ -587,51 +599,46 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         containedSecondary: {
           backgroundColor: 'transparent',
-          color: primaryColors.main,
-          border: `1px solid ${primaryColors.main}`,
-          padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
-          transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
+          color: cmrTextColors.linkActiveMedium,
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
-            color: primaryColors.light,
-            borderColor: primaryColors.light
+            borderColor: primaryColors.light,
+            color: primaryColors.light
           },
           '&:active': {
             backgroundColor: 'transparent',
-            color: primaryColors.dark,
-            borderColor: primaryColors.dark
+            borderColor: primaryColors.dark,
+            color: primaryColors.dark
           },
           '&$disabled': {
-            borderColor: '#c9cacb',
             backgroundColor: 'transparent',
+            borderColor: '#c9cacb',
             color: '#c9cacb'
           },
-          '&.cancel': {
-            borderColor: 'transparent',
-            '&:hover, &:focus': {
-              borderColor: primaryColors.light,
-              backgroundColor: 'transparent'
-            }
-          },
-          '&.destructive': {
-            borderColor: '#c44742',
-            color: '#c44742',
-            '&:hover, &:focus': {
-              color: '#df6560',
-              borderColor: '#df6560',
-              backgroundColor: 'transparent'
-            },
-            '&:active': {
-              color: '#963530',
-              borderColor: '#963530'
-            },
-            '&$disabled': {
-              borderColor: '#c9cacb',
-              backgroundColor: 'transparent',
-              color: '#c9cacb'
-            }
-          },
+          // '&.cancel': {
+          //   borderColor: 'transparent',
+          //   '&:hover, &:focus': {
+          //     borderColor: primaryColors.light,
+          //     backgroundColor: 'transparent'
+          //   }
+          // },
+          // '&.destructive': {
+          //   backgroundColor: primaryColors.main,
+          //   color: '#fff',
+          //   '&:hover, &:focus': {
+          //     color: '#fff',
+          //     backgroundColor: primaryColors.light
+          //   },
+          //   '&:active': {
+          //     color: '#963530',
+          //     borderColor: '#963530'
+          //   },
+          //   '&$disabled': {
+          //     borderColor: '#c9cacb',
+          //     backgroundColor: 'transparent',
+          //     color: '#c9cacb'
+          //   }
+          // },
           '&.loading': {
             borderColor: primaryColors.text,
             color: primaryColors.text,
@@ -771,7 +778,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         }
       },
-      MuiExpansionPanel: {
+      MuiAccordion: {
         root: {
           '& .actionPanel': {
             paddingLeft: spacingUnit * 2,
@@ -783,13 +790,13 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         }
       },
-      MuiExpansionPanelDetails: {
+      MuiAccordionDetails: {
         root: {
           padding: spacingUnit * 2,
           backgroundColor: 'white'
         }
       },
-      MuiExpansionPanelSummary: {
+      MuiAccordionSummary: {
         root: {
           '&$focused': {
             backgroundColor: '#fbfbfb'
@@ -906,6 +913,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         root: {
           maxWidth: 415,
           fontSize: '0.875rem',
+          lineHeight: 1.25,
           '&$error': {
             color: '#ca0813'
           }
@@ -1480,6 +1488,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         icon: {
           opacity: 1,
+          color: 'inherit !important',
           marginTop: 2
         },
         iconDirectionDesc: {
@@ -1509,39 +1518,40 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiTypography: {
         button: {
           textTransform: 'inherit',
-          borderRadius: 0,
+          borderRadius: '3px',
           fontSize: '1rem',
           lineHeight: 1,
           fontFamily:
             spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
-          color: '#fff',
           backgroundColor: primaryColors.main,
-          padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
-            spacingUnit / 2}px ${spacingUnit * 2}px`,
-          maxHeight: 48,
+          color: '#fff',
+          padding: `8px 20px`,
+          maxHeight: 34,
+          position: 'relative',
+          minHeight: `34px`,
           cursor: 'pointer',
+          border: 'none',
+          [breakpoints.down('sm')]: {
+            marginLeft: spacingUnit,
+            maxHeight: 34,
+            minWidth: 100
+          },
           '&:hover, &:focus': {
             backgroundColor: primaryColors.light
           },
           '&:active': {
-            backgroundColor: primaryColors.dark
+            backgroundColor: primaryColors.light
           },
           '&$colorSecondary': {
             backgroundColor: 'transparent',
             color: primaryColors.main,
-            border: `1px solid ${primaryColors.main}`,
-            padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
-              spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
-            transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
             '&:hover, &:focus': {
               backgroundColor: 'transparent !important',
-              color: primaryColors.light,
-              borderColor: primaryColors.light
+              color: primaryColors.light
             },
             '&:active': {
               backgroundColor: 'transparent',
-              color: primaryColors.dark,
-              borderColor: primaryColors.dark
+              color: primaryColors.light
             }
           }
         }
@@ -1556,6 +1566,17 @@ export default (options: ThemeOptions & ThemeOverrides) =>
       themeDefaults({
         spacingOverride: options.spacingOverride
       }),
-      options
+      {
+        breakpoints: {
+          values: {
+            xs: 0,
+            sm: 600,
+            md: 960,
+            lg: 1280,
+            xl: 1920
+          }
+        },
+        ...options
+      }
     )
   );

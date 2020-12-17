@@ -4,17 +4,14 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-import ActionsPanel from 'src/components/ActionsPanel';
+import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
   Theme,
@@ -22,16 +19,15 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DeletionDialog from 'src/components/DeletionDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EntityTable, {
-  EntityTableRow,
-  HeaderCell
-} from 'src/components/EntityTable';
+import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LandingHeader from 'src/components/LandingHeader';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
@@ -59,6 +55,8 @@ import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DomainRow from './DomainTableRow';
 import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
+
+const DOMAIN_CREATE_ROUTE = '/domains/create';
 
 type ClassNames =
   | 'root'
@@ -101,8 +99,8 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(2) - 8
     },
     importButton: {
-      paddingTop: 5,
-      paddingBottom: 5
+      marginLeft: -theme.spacing(),
+      whiteSpace: 'nowrap'
     }
   });
 
@@ -116,13 +114,15 @@ interface State {
   selectedDomainLabel: string;
   selectedDomainID?: number;
   removeDialogOpen: boolean;
+  removeDialogLoading: boolean;
+  removeDialogError?: string;
   disableDialogOpen: boolean;
 }
 
 interface Props {
   /** purely so we can force a preference to get the unit tests to pass */
   shouldGroupDomains?: boolean;
-  // Since Slave Domains do not have a Detail page, we allow the consumer to
+  // Since secondary Domains do not have a Detail page, we allow the consumer to
   // render this component with the "Edit Domain" drawer already opened.
   domainForEditing?: {
     domainId: number;
@@ -167,13 +167,6 @@ const headers: HeaderCell[] = [
     sortable: true,
     widthPercent: 20,
     hideOnMobile: true
-  },
-  {
-    label: 'Action Menu',
-    visuallyHidden: true,
-    dataColumn: '',
-    sortable: false,
-    widthPercent: 5
   }
 ];
 
@@ -186,6 +179,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     createDrawerMode: 'create',
     createDrawerOpen: false,
     removeDialogOpen: false,
+    removeDialogLoading: false,
     selectedDomainLabel: '',
     disableDialogOpen: false
   };
@@ -246,47 +240,29 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     }
   };
 
-  getActions = () => {
-    return (
-      <ActionsPanel>
-        <Button
-          buttonType="cancel"
-          onClick={this.closeRemoveDialog}
-          data-qa-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="secondary"
-          destructive
-          onClick={this.removeDomain}
-          data-qa-submit
-        >
-          Confirm
-        </Button>
-      </ActionsPanel>
-    );
-  };
-
   removeDomain = () => {
     const { selectedDomainID } = this.state;
-    const { enqueueSnackbar, deleteDomain } = this.props;
+    const { deleteDomain } = this.props;
+    this.setState({ removeDialogLoading: true, removeDialogError: undefined });
     if (selectedDomainID) {
       deleteDomain({ domainId: selectedDomainID })
         .then(() => {
           this.closeRemoveDialog();
+          this.setState({ removeDialogLoading: false });
         })
-        .catch(() => {
-          this.closeRemoveDialog();
-          /** @todo render this error inside the modal */
-          enqueueSnackbar('Error when removing domain', {
-            variant: 'error'
+        .catch(e => {
+          this.setState({
+            removeDialogLoading: false,
+            removeDialogError: getAPIErrorOrDefault(
+              e,
+              'Error deleting Domain.'
+            )[0].reason
           });
         });
     } else {
-      this.closeRemoveDialog();
-      enqueueSnackbar('Error when removing domain', {
-        variant: 'error'
+      this.setState({
+        removeDialogLoading: false,
+        removeDialogError: 'Error deleting Domain.'
       });
     }
   };
@@ -325,6 +301,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   openRemoveDialog = (domain: string, domainId: number) => {
     this.setState({
       removeDialogOpen: true,
+      removeDialogError: undefined,
       selectedDomainLabel: domain,
       selectedDomainID: domainId
     });
@@ -340,6 +317,10 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     this.props.openForCreating('Created from Domain Landing');
   };
 
+  navigateToCreate = () => {
+    this.props.history.push(DOMAIN_CREATE_ROUTE);
+  };
+
   render() {
     const { classes } = this.props;
     const {
@@ -353,8 +334,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       isRestrictedUser,
       linodesLoading
     } = this.props;
-
-    const Table = flags.cmr ? EntityTable_CMR : EntityTable;
 
     const handlers: DomainHandlers = {
       onClone: this.props.openForCloning,
@@ -397,7 +376,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return (
         <React.Fragment>
           <RenderEmpty
-            onCreateDomain={this.openCreateDomainDrawer}
+            onCreateDomain={this.navigateToCreate}
             onImportZone={this.openImportZoneDrawer}
           />
           <DomainZoneImportDrawer
@@ -462,24 +441,17 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                 {flags.cmr ? (
                   <LandingHeader
                     title="Domains"
-                    body={
-                      <Hidden mdUp>
-                        <Button
-                          className={classes.importButton}
-                          onClick={this.openImportZoneDrawer}
-                        >
-                          Import a Zone
-                        </Button>
-                      </Hidden>
-                    }
                     extraActions={
-                      <Button onClick={this.openImportZoneDrawer}>
+                      <Button
+                        className={classes.importButton}
+                        onClick={this.openImportZoneDrawer}
+                        buttonType="secondary"
+                      >
                         Import a Zone
                       </Button>
                     }
                     entity="Domain"
-                    onAddNew={this.openCreateDomainDrawer}
-                    iconType="domain"
+                    onAddNew={this.navigateToCreate}
                     docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
                   />
                 ) : (
@@ -520,7 +492,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       <Grid
                         container
                         alignItems="flex-end"
-                        style={{ width: 'auto' }}
+                        // style={{ width: 'auto' }}
                       >
                         <Grid item className="pt0">
                           <AddNewLink
@@ -531,7 +503,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         <Grid item className="pt0">
                           <AddNewLink
                             data-testid="create-domain"
-                            onClick={this.openCreateDomainDrawer}
+                            onClick={this.navigateToCreate}
                             label="Add a Domain"
                           />
                         </Grid>
@@ -539,9 +511,10 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     </Grid>
                   </Grid>
                 )}
-                <Table
+                <EntityTable_CMR
                   entity="domain"
-                  groupByTag={domainsAreGrouped}
+                  toggleGroupByTag={toggleGroupDomains}
+                  isGroupedByTag={domainsAreGrouped}
                   row={domainRow}
                   headers={headers}
                   initialOrder={initialOrder}
@@ -573,14 +546,16 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           closeDialog={() => this.setState({ disableDialogOpen: false })}
           open={this.state.disableDialogOpen}
         />
-        <ConfirmationDialog
+        <DeletionDialog
+          typeToConfirm
+          entity="domain"
           open={this.state.removeDialogOpen}
-          title={`Remove ${this.state.selectedDomainLabel}`}
+          label={this.state.selectedDomainLabel}
+          loading={this.state.removeDialogLoading}
+          error={this.state.removeDialogError}
           onClose={this.closeRemoveDialog}
-          actions={this.getActions}
-        >
-          <Typography>Are you sure you want to remove this domain?</Typography>
-        </ConfirmationDialog>
+          onDelete={this.removeDomain}
+        />
       </React.Fragment>
     );
   }
@@ -596,35 +571,6 @@ const RenderError: React.FC<{}> = () => {
   );
 };
 
-const EmptyCopy = () => (
-  <>
-    <Typography variant="subtitle1">
-      Create a Domain, add Domain records, import zones and domains.
-    </Typography>
-    <Typography variant="subtitle1">
-      <a
-        href="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        Find out how to setup your domains associated with your Linodes
-      </a>
-      &nbsp;or&nbsp;
-      <a
-        href="https://www.linode.com/docs/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        visit our guides and tutorials.
-      </a>
-    </Typography>
-  </>
-);
-
 const RenderEmpty: React.FC<{
   onCreateDomain: () => void;
   onImportZone: () => void;
@@ -633,8 +579,8 @@ const RenderEmpty: React.FC<{
     <React.Fragment>
       <DocumentTitleSegment segment="Domains" />
       <Placeholder
-        title="Manage your Domains"
-        copy={<EmptyCopy />}
+        title="Domains"
+        isEntity
         icon={DomainIcon}
         buttonProps={[
           {
@@ -646,7 +592,20 @@ const RenderEmpty: React.FC<{
             children: 'Import a Zone'
           }
         ]}
-      />
+      >
+        <Typography variant="subtitle1">
+          Create a Domain, add Domain records, import zones and domains.
+        </Typography>
+        <Typography variant="subtitle1">
+          <Link to="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/">
+            Get help managing your Domains
+          </Link>
+          &nbsp;or&nbsp;
+          <Link to="https://www.linode.com/docs/">
+            visit our guides and tutorials.
+          </Link>
+        </Typography>
+      </Placeholder>
     </React.Fragment>
   );
 };

@@ -13,12 +13,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   tag: {}
 }));
 
+export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;
+
 interface Props {
   entityLabel: string;
   tags: string[];
   open: boolean;
-  addTag: (newTag: string) => Promise<void>;
-  deleteTag: (tag: string) => Promise<void>;
+  addTag: (newTag: string) => Promise<any>;
+  deleteTag: (tag: string) => Promise<any>;
   onClose: () => void;
 }
 
@@ -26,7 +28,7 @@ export interface TagDrawerProps {
   label: string;
   tags: string[];
   open: boolean;
-  linodeID: number;
+  entityID: number;
 }
 
 export type CombinedProps = Props;

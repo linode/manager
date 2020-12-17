@@ -3,7 +3,7 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
@@ -14,7 +14,7 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
@@ -24,14 +24,19 @@ import formatDate from 'src/utilities/formatDate';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes pulse': {
     to: {
       backgroundColor: `hsla(40, 100%, 55%, 0)`
     }
   },
   summaryOuter: {
+    backgroundColor: theme.cmrBGColors.bgPaper,
+    margin: `${theme.spacing()}px 0`,
     marginBottom: 20,
+    '&.MuiGrid-item': {
+      padding: 0
+    },
     '& .statusOther:before': {
       animation: '$pulse 1.5s ease-in-out infinite'
     }
@@ -61,7 +66,7 @@ const CardView: React.FC<CombinedProps> = props => {
   const flags = useFlags();
   const notificationContext = React.useContext(_notificationContext);
 
-  const { updateLinode } = useLinodes();
+  const { updateLinode } = useLinodeActions();
   const { profile } = useProfile();
   const { _loading } = useReduxLoad(['volumes']);
   const { volumes } = useVolumes();
@@ -69,7 +74,7 @@ const CardView: React.FC<CombinedProps> = props => {
     open: false,
     tags: [],
     label: '',
-    linodeID: 0
+    entityID: 0
   });
 
   const closeTagDrawer = () => {
@@ -81,13 +86,13 @@ const CardView: React.FC<CombinedProps> = props => {
       open: true,
       label: linodeLabel,
       tags,
-      linodeID
+      entityID: linodeID
     });
   };
 
-  const addTag = (linodeID: number, newTag: string) => {
+  const addTag = (linodeId: number, newTag: string) => {
     const _tags = [...tagDrawer.tags, newTag];
-    return updateLinode({ linodeId: linodeID, tags: _tags }).then(_ => {
+    return updateLinode({ linodeId, tags: _tags }).then(_ => {
       setTagDrawer({ ...tagDrawer, tags: _tags });
     });
   };
@@ -130,13 +135,14 @@ const CardView: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Grid container>
+      <Grid container className="m0" style={{ width: '100%' }}>
         {flags.cmr
           ? data.map((linode, idx: number) => (
               <React.Fragment key={`linode-card-${idx}`}>
                 <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
                   <LinodeEntityDetail
                     variant="landing"
+                    id={linode.id}
                     linode={linode}
                     isDetailLanding
                     numVolumes={getVolumesByLinode(linode.id)}
@@ -182,8 +188,8 @@ const CardView: React.FC<CombinedProps> = props => {
         entityLabel={tagDrawer.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        addTag={(newTag: string) => addTag(tagDrawer.linodeID, newTag)}
-        deleteTag={(tag: string) => deleteTag(tagDrawer.linodeID, tag)}
+        addTag={(newTag: string) => addTag(tagDrawer.entityID, newTag)}
+        deleteTag={(tag: string) => deleteTag(tagDrawer.entityID, tag)}
         onClose={closeTagDrawer}
       />
     </React.Fragment>
