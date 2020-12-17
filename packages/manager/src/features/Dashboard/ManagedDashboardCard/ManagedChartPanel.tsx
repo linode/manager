@@ -229,17 +229,19 @@ export const ManagedChartPanel: React.FC<CombinedProps> = props => {
   const initialTab = 0;
 
   return (
-    <div className={classes.graphControls}>
-      <TabbedPanel
-        rootClass={`tabbedPanel`}
-        innerClass={classes.inner}
-        error={undefined} // Use custom error handling (above)
-        header={''}
-        copy={''}
-        tabs={tabs}
-        initTab={initialTab}
-      />
-    </div>
+    <React.Fragment>
+      <div className={classes.graphControls}>
+        <TabbedPanel
+          rootClass={`tabbedPanel`}
+          innerClass={classes.inner}
+          error={undefined} // Use custom error handling (above)
+          header={''}
+          copy={''}
+          tabs={tabs}
+          initTab={initialTab}
+        />
+      </div>
+    </React.Fragment>
   );
 };
 
