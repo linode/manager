@@ -32,13 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   link: {
-    ...theme.applyLinkStyles,
-    '& .buttonSpan': {
-      padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`
-    },
-    [theme.breakpoints.down('md')]: {
-      top: -4
-    }
+    ...theme.applyLinkStyles
   },
   packageButton: {
     fontSize: '0.875rem',
