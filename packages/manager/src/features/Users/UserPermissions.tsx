@@ -277,6 +277,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.setState(set(lensPath(['saving', 'global']), false));
           scrollErrorIntoView();
         });
+      return;
     }
 
     /* This is where individual entity saving could be implemented */
@@ -362,6 +363,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       if (updateFns.length) {
         this.setState((compose as any)(...updateFns));
       }
+      return;
     }
   };
 
@@ -623,7 +625,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -35 }}
-                  htmlFor={`${entity}-select-all`}
                 >
                   None
                   <Radio
@@ -639,7 +640,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -65 }}
-                  htmlFor={`${entity}-select-all`}
                 >
                   Read Only
                   <Radio
@@ -655,7 +655,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -73 }}
-                  htmlFor={`${entity}-select-all`}
                 >
                   Read-Write
                   <Radio
