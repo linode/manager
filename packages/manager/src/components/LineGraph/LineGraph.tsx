@@ -3,6 +3,7 @@ import {
   Chart,
   ChartOptions,
   Filler,
+  Legend,
   LineElement,
   LineController,
   LinearScale,
@@ -33,6 +34,7 @@ import MetricDisplayStyles from './NewMetricDisplay.styles';
 setUpCharts();
 
 Chart.register(
+  Legend,
   LineController,
   LineElement,
   LinearScale,
