@@ -296,6 +296,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavActiveBG: '#515861',
       primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#3a3f46',
+      mainContentBanner: '#33373D',
       topMenu: '#fff',
       billingHeader: '#f5f9ff',
       controlHeader: '#f9fafa',

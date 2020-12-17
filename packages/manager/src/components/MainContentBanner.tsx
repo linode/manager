@@ -11,7 +11,7 @@ import { compose } from 'recompose';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bannerOuter: {
-    backgroundColor: theme.bg.primaryNavPaper,
+    backgroundColor: theme.bg.mainContentBanner,
     padding: theme.spacing(2),
     position: 'sticky',
     top: 0,
