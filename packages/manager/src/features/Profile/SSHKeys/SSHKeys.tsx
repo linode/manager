@@ -141,7 +141,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
         </Grid>
         <Paper>
           <Table>
-            <TableHead>
+            <TableHead data-qa-table-head>
               <TableRow>
                 <TableCell data-qa-label-column>Label</TableCell>
                 <TableCell data-qa-key-column>Key</TableCell>

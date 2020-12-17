@@ -31,10 +31,10 @@ describe('SSHKeys', () => {
       />
     );
 
-    it('should have table header with SSH Keys title and an action', () => {
+    it('should have table header with SSH Keys title', () => {
       expect(
         wrapper
-          .find(`WithStyles(TableHeader)[title="SSH Keys"][action]`)
+          .find('WithStyles(ForwardRef(TableHead))[data-qa-table-head]')
           .exists()
       ).toBeTruthy();
     });
