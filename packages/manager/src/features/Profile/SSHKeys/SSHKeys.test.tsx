@@ -14,6 +14,14 @@ describe('SSHKeys', () => {
     const wrapper = shallow(
       <SSHKeys
         {...pageyProps}
+        classes={{
+          root: '',
+          sshKeysHeader: '',
+          headline: '',
+          addNewWrapper: '',
+          createdCell: '',
+          actionCell: ''
+        }}
         data={[
           { id: 1, label: '', ssh_key: '', created: '', fingerprint: '' },
           { id: 2, label: '', ssh_key: '', created: '', fingerprint: '' },
@@ -52,8 +60,16 @@ describe('SSHKeys', () => {
     const wrapper = shallow(
       <SSHKeys
         {...pageyProps}
-        loading={true}
+        classes={{
+          root: '',
+          sshKeysHeader: '',
+          headline: '',
+          addNewWrapper: '',
+          createdCell: '',
+          actionCell: ''
+        }}
         data={undefined}
+        loading={true}
         timezone={'GMT'}
       />
     );
@@ -65,8 +81,16 @@ describe('SSHKeys', () => {
     const wrapper = shallow(
       <SSHKeys
         {...pageyProps}
-        error={[{ reason: 'error here' }]}
+        classes={{
+          root: '',
+          sshKeysHeader: '',
+          headline: '',
+          addNewWrapper: '',
+          createdCell: '',
+          actionCell: ''
+        }}
         data={undefined}
+        error={[{ reason: 'error here' }]}
         timezone={'GMT'}
       />
     );
@@ -76,7 +100,19 @@ describe('SSHKeys', () => {
 
   it('should display TableEmptyState if done loading and count is 0', () => {
     const wrapper = shallow(
-      <SSHKeys {...pageyProps} data={undefined} timezone={'GMT'} />
+      <SSHKeys
+        {...pageyProps}
+        classes={{
+          root: '',
+          sshKeysHeader: '',
+          headline: '',
+          addNewWrapper: '',
+          createdCell: '',
+          actionCell: ''
+        }}
+        data={undefined}
+        timezone={'GMT'}
+      />
     );
 
     expect(
