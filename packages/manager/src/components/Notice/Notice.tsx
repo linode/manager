@@ -173,6 +173,23 @@ const Notice: React.FC<CombinedProps> = props => {
     </Typography>
   ) : null;
 
+  /**
+   * There are some cases where the message
+   * can be either a string or JSX. In those
+   * cases we should use props.children, but
+   * we want to make sure the string is wrapped
+   * in Typography and formatted as it would be
+   * if it were passed as props.text.
+   */
+  const _children =
+    typeof children === 'string' ? (
+      <Typography className={`${classes.noticeText} noticeText`}>
+        {children}
+      </Typography>
+    ) : (
+      children
+    );
+
   const errorScrollClassName = errorGroup
     ? `error-for-scroll-${errorGroup}`
     : `error-for-scroll`;
@@ -222,7 +239,7 @@ const Notice: React.FC<CombinedProps> = props => {
             <Warning className={classes.icon} data-qa-warning-img />
           )) ||
           (error && <Error className={classes.icon} data-qa-error-img />))}
-      <div className={classes.inner}>{innerText || children}</div>
+      <div className={classes.inner}>{innerText || _children}</div>
       {dismissible && (
         <Grid item className={classes.closeIcon}>
           <Close
