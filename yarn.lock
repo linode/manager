@@ -1270,7 +1270,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.5", "@babel/runtime@^7.8.3":
+"@babel/runtime@^7.8.3":
   version "7.12.1"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.1.tgz#b4116a6b6711d010b2dad3b7b6e43bf1b9954740"
   integrity sha512-J5AIf3vPj3UwXaAzb5j1xM4WAQDX3EMgemF8rjCP3SoW09LfRKAXQKt6CoVYl230P6iWdRcBbnLDDdnqWxZSCA==
@@ -7116,10 +7116,10 @@ csstype@^3.0.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.4.tgz#b156d7be03b84ff425c9a0a4b1e5f4da9c5ca888"
   integrity sha512-xc8DUsCLmjvCfoD7LTGE0ou2MIWLx0K9RCZwSHMOdynqRsP4MtUcLeqh1HcQ2dInwDTqn+3CE0/FZh1et+p4jA==
 
-csv-parse@3.0.0, csv-parse@^4.6.3:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.12.0.tgz#fd42d6291bbaadd51d3009f6cadbb3e53b4ce026"
-  integrity sha512-wPQl3H79vWLPI8cgKFcQXl0NBgYYEqVnT1i6/So7OjMpsI540oD7p93r3w6fDSyPvwkTepG05F69/7AViX2lXg==
+csv-parse@^4.6.3:
+  version "4.14.0"
+  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.14.0.tgz#5e1f62234a9790de49e8322df823187f8d500d26"
+  integrity sha512-Mh6JEKAD4/scRM7jbQ5FbhuHbAVp+FN27S6PMF5ILuR7ofclfR0Fj6YmutFMXVgaNk/4GTy9bkmV8SMzwsv45Q==
 
 currently-unhandled@^0.4.1:
   version "0.4.1"
@@ -13064,14 +13064,6 @@ markdown-to-jsx@^6.9.1, markdown-to-jsx@^6.9.3:
     prop-types "^15.6.2"
     unquote "^1.1.0"
 
-match-sorter@^4.1.0:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/match-sorter/-/match-sorter-4.2.1.tgz#575b4b3737185ba9518b67612b66877ea0b37358"
-  integrity sha512-s+3h9TiZU9U1pWhIERHf8/f4LmBN6IXaRgo2CI17+XGByGS1GvG5VvXK9pcGyCjGe3WM3mSYRC3ipGrd5UEVgw==
-  dependencies:
-    "@babel/runtime" "^7.10.5"
-    remove-accents "0.4.2"
-
 material-colors@^1.2.1:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/material-colors/-/material-colors-1.2.6.tgz#6d1958871126992ceecc72f4bcc4d8f010865f46"
@@ -15725,20 +15717,6 @@ react-popper@^1.3.4:
     typed-styles "^0.0.7"
     warning "^4.0.2"
 
-react-query-devtools@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/react-query-devtools/-/react-query-devtools-2.6.1.tgz#ccb544d1d63bfc003b851424583f5d5c85fad6d1"
-  integrity sha512-qQX7MStNIZnRzDDnWepQmBG7fn7+U4AhxVpm1Kc1smaZIUEmgW8Jt8zzCutgRbcfNbJrbGi2EhRxE5BuuhvBmg==
-  dependencies:
-    match-sorter "^4.1.0"
-
-react-query@^2.25.2:
-  version "2.25.2"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-2.25.2.tgz#afefdf57a166bcbf08c93a26522a8c6cb1bdf849"
-  integrity sha512-GIz75WlRAzJ+wKos9VPw6PMAB3FqGmB2lHtRZlvKKByurlMNHa5rOFPz4WCYGWsPBSk7m6FHWrkK9aItDrP2mw==
-  dependencies:
-    "@babel/runtime" "^7.5.5"
-
 react-redux@~7.1.3:
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.1.3.tgz#717a3d7bbe3a1b2d535c94885ce04cdc5a33fc79"
@@ -16258,11 +16236,6 @@ relateurl@^0.2.7:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
   integrity sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=
-
-remove-accents@0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/remove-accents/-/remove-accents-0.4.2.tgz#0a43d3aaae1e80db919e07ae254b285d9e1c7bb5"
-  integrity sha1-CkPTqq4egNuRngeuJUsoXZ4ce7U=
 
 remove-trailing-separator@^1.0.1:
   version "1.1.0"

@@ -51,8 +51,6 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
-  // const [updateError, setUpdateError] = React.useState<string | undefined>();
-
   const navToURL = (index: number) => {
     props.history.push(tabs[index].routeName);
   };

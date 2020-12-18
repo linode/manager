@@ -56,13 +56,6 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     openModal('disable', id, label);
   };
 
-  // const {
-  //   itemsById: firewalls,
-  //   loading: firewallsLoading,
-  //   error: firewallsError,
-  //   lastUpdated: firewallsLastUpdated
-  // } = props;
-
   const headers = [
     {
       label: 'Firewall',
