@@ -88,8 +88,8 @@ export const NGINX: React.FC<Props> = props => {
   const notice = Number(nginx?.status) > 0 ? nginx?.status_message : null;
 
   if (notice !== null) {
-    const message = (
-      <>
+    return (
+      <Notice warning>
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
@@ -100,9 +100,8 @@ export const NGINX: React.FC<Props> = props => {
           />{' '}
           for help troubleshooting the NGINX Longview app.
         </Typography>
-      </>
+      </Notice>
     );
-    return <Notice warning text={message} />;
   }
 
   return (

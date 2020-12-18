@@ -120,7 +120,7 @@ export const TabbedPanel: React.FC<CombinedProps> = props => {
   return (
     <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
       <div className={`${classes.inner} ${innerClass}`}>
-        {error && <Notice text={error} error />}
+        {error && <Notice error>{error}</Notice>}
         {header !== '' && (
           <Typography variant="h2" data-qa-tp-title>
             {header}

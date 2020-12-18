@@ -309,7 +309,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             text="There was an error loading your Linode's Disks."
           />
         )}
-        {submissionError && <Notice error text={submissionError} />}
+        {submissionError && <Notice error>{submissionError}</Notice>}
         <Typography data-qa-description>
           If you&apos;re expecting a temporary burst of traffic to your website,
           or if you&apos;re not using your Linode as much as you thought, you
