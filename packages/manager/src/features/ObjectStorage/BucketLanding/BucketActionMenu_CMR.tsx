@@ -14,6 +14,12 @@ export const BucketActionMenu: React.FC<Props> = props => {
   const createActions = () => (): Action[] => {
     return [
       {
+        title: 'Details',
+        onClick: () => {
+          props.onDetails();
+        }
+      },
+      {
         title: 'Delete',
         onClick: () => {
           props.onRemove();
@@ -25,6 +31,12 @@ export const BucketActionMenu: React.FC<Props> = props => {
   return (
     <>
       <Hidden smDown>
+        <InlineMenuAction
+          actionText="Details"
+          onClick={() => {
+            props.onDetails();
+          }}
+        />
         <InlineMenuAction
           actionText="Delete"
           onClick={() => {

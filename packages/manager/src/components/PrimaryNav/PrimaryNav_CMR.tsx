@@ -1,19 +1,21 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
-import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
+import Account from 'src/assets/icons/account.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
+import Database from 'src/assets/icons/entityIcons/database.svg';
 import Domain from 'src/assets/icons/entityIcons/domain.svg';
 import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
 import Image from 'src/assets/icons/entityIcons/image.svg';
 import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
+import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
-import VLAN from 'src/assets/icons/entityIcons/vlan.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
+import HelpIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
-import Managed from 'src/assets/icons/managed.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -30,7 +32,6 @@ import { linkIsActive } from './utils';
 type NavEntity =
   | 'Linodes'
   | 'Volumes'
-  | 'VLANs'
   | 'NodeBalancers'
   | 'Domains'
   | 'Longview'
@@ -43,7 +44,9 @@ type NavEntity =
   | 'Account'
   | 'Dashboard'
   | 'StackScripts'
-  | 'Databases';
+  | 'Databases'
+  | 'Account'
+  | 'Help & Support';
 
 interface PrimaryLink {
   display: NavEntity;
@@ -92,12 +95,6 @@ export const PrimaryNav: React.FC<Props> = props => {
     account?.data?.capabilities ?? []
   );
 
-  const showVlans = isFeatureEnabled(
-    'Vlans',
-    Boolean(flags.vlans),
-    account?.data?.capabilities ?? []
-  );
-
   // No account capability returned yet.
   const showDatabases = flags.databases;
 
@@ -143,12 +140,6 @@ export const PrimaryNav: React.FC<Props> = props => {
           icon: <Volume />
         },
         {
-          hide: !showVlans,
-          display: 'VLANs',
-          href: '/vlans',
-          icon: <VLAN />
-        },
-        {
           display: 'NodeBalancers',
           href: '/nodebalancers',
           icon: <NodeBalancer />
@@ -175,7 +166,7 @@ export const PrimaryNav: React.FC<Props> = props => {
         {
           display: 'Domains',
           href: '/domains',
-          icon: <Domain style={{ transform: 'scale(1.5)' }} />,
+          icon: <Domain />,
           prefetchRequestFn: requestDomains,
           prefetchRequestCondition:
             !domains.loading && domains.lastUpdated === 0 && !_isLargeAccount
@@ -189,7 +180,7 @@ export const PrimaryNav: React.FC<Props> = props => {
           hide: !showDatabases,
           display: 'Databases',
           href: '/databases',
-          icon: <Storage />
+          icon: <Database />
         },
         {
           display: 'Object Storage',
@@ -215,11 +206,22 @@ export const PrimaryNav: React.FC<Props> = props => {
           attr: { 'data-qa-one-click-nav-btn': true },
           icon: <OCA />
         }
+      ],
+      [
+        {
+          display: 'Account',
+          href: '/account',
+          icon: <Account />
+        },
+        {
+          display: 'Help & Support',
+          href: '/support',
+          icon: <HelpIcon />
+        }
       ]
     ],
     [
       showFirewalls,
-      showVlans,
       showDatabases,
       _isManagedAccount,
       domains.loading,
@@ -360,13 +362,11 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
             locationSearch,
             locationPathname,
             activeLinks
-          ),
-          listItemCollapsed: isCollapsed
+          )
         })}
         data-testid={`menu-item-${display}`}
       >
-        {/* <div style={{ display: 'flex', alignItems: 'center' }}> */}
-        {icon && isCollapsed && (
+        {icon && (
           <div className="icon" aria-hidden>
             {icon}
           </div>
@@ -380,7 +380,6 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
         >
           {display}
         </p>
-        {/* </div> */}
       </Link>
     </>
   );

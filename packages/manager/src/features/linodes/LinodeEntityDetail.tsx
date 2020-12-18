@@ -1,10 +1,14 @@
-import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
 import * as classnames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
+import { compose } from 'recompose';
 import Button from 'src/components/Button';
+import CopyTooltip from 'src/components/CopyTooltip';
+import Box from 'src/components/core/Box';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import {
@@ -20,11 +24,12 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
-import Grid from 'src/components/Grid';
+import Grid, { GridProps } from 'src/components/Grid';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
-import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
+import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow_CMR';
+import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useImages from 'src/hooks/useImages';
@@ -35,13 +40,22 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
+import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking_CMR';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import RenderIPs from './RenderIPs';
+import withRecentEvent, {
+  WithRecentEvent
+} from './LinodesLanding/withRecentEvent';
+import {
+  getProgressOrDefault,
+  isEventWithSecondaryLinodeStatus,
+  transitionText as _transitionText
+} from './transitions';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
 interface LinodeEntityDetailProps {
   variant: LinodeEntityDetailVariant;
+  id: number;
   linode: Linode;
   username?: string;
   openDialog: OpenDialog;
@@ -59,7 +73,7 @@ interface LinodeEntityDetailProps {
   isDetailLanding?: boolean;
 }
 
-export type CombinedProps = LinodeEntityDetailProps;
+export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
 
 const LinodeEntityDetail: React.FC<CombinedProps> = props => {
   const {
@@ -73,7 +87,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
     numVolumes,
     isDetailLanding,
     openTagDrawer,
-    openNotificationDrawer
+    openNotificationDrawer,
+    recentEvent
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -95,6 +110,13 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
 
   const linodeRegionDisplay = dcDisplayNames[linode.region] ?? null;
 
+  let progress;
+  let transitionText;
+  if (recentEvent && isEventWithSecondaryLinodeStatus(recentEvent, linode.id)) {
+    progress = getProgressOrDefault(recentEvent);
+    transitionText = _transitionText(linode.status, linode.id, recentEvent);
+  }
+
   return (
     <EntityDetail
       header={
@@ -113,6 +135,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
           type={''}
           image={''}
           openNotificationDrawer={openNotificationDrawer || (() => null)}
+          progress={progress}
+          transitionText={transitionText}
         />
       }
       body={
@@ -145,7 +169,12 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
   );
 };
 
-export default React.memo(LinodeEntityDetail);
+const enhanced = compose<CombinedProps, LinodeEntityDetailProps>(
+  withRecentEvent,
+  React.memo
+);
+
+export default enhanced(LinodeEntityDetail);
 
 // =============================================================================
 // Header
@@ -170,6 +199,8 @@ export interface HeaderProps {
   linodeConfigs: Config[];
   isDetailLanding?: boolean;
   openNotificationDrawer: () => void;
+  progress?: number;
+  transitionText?: string;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
@@ -191,9 +222,23 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     width: '100%'
   },
+  chipWrapper: {
+    [theme.breakpoints.up('sm')]: {
+      '&.MuiGrid-item': {
+        marginTop: 2
+      }
+    }
+  },
   statusChip: {
     ...theme.applyStatusPillStyles,
-    marginLeft: theme.spacing()
+    borderRadius: 0,
+    height: `24px !important`,
+    marginLeft: theme.spacing(2)
+  },
+  statusChipLandingDetailView: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
   },
   statusRunning: {
     '&:before': {
@@ -210,6 +255,10 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.cmrIconColors.iOrange
     }
   },
+  divider: {
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
+    paddingRight: `16px !important`
+  },
   actionItemsOuter: {
     display: 'flex',
     alignItems: 'center',
@@ -220,6 +269,16 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   actionItem: {
     '&:focus': {
       outline: '1px dotted #999'
+    }
+  },
+  statusLink: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    '& p': {
+      color: theme.palette.primary.main,
+      fontFamily: theme.font.bold
     }
   }
 }));
@@ -239,7 +298,10 @@ const Header: React.FC<HeaderProps> = props => {
     type,
     image,
     linodeConfigs,
-    isDetailLanding
+    isDetailLanding,
+    progress,
+    transitionText,
+    openNotificationDrawer
   } = props;
 
   const isDetails = variant === 'details';
@@ -252,6 +314,16 @@ const Header: React.FC<HeaderProps> = props => {
     sendLinodeActionMenuItemEvent('Launch Console');
     lishLaunch(id);
   };
+
+  const formattedStatus = linodeStatus.replace('_', ' ').toUpperCase();
+  const formattedTransitionText = (transitionText ?? '').toUpperCase();
+
+  const hasSecondaryStatus =
+    typeof progress !== 'undefined' &&
+    typeof transitionText !== 'undefined' &&
+    // Kind of a hacky way to avoid "CLONING | CLONING (50%)" until we add logic
+    // to display "Cloning to 'destination-linode'.
+    formattedTransitionText !== formattedStatus;
 
   return (
     <EntityHeader
@@ -271,20 +343,44 @@ const Header: React.FC<HeaderProps> = props => {
           alignItems="center"
           justify="space-between"
         >
-          <Grid item className="py0">
-            <Chip
-              className={classnames({
-                [classes.statusChip]: true,
-                [classes.statusRunning]: isRunning,
-                [classes.statusOffline]: isOffline,
-                [classes.statusOther]: isOther,
-                statusOtherDetail: isOther
-              })}
-              label={linodeStatus.replace('_', ' ').toUpperCase()}
-              component="span"
-              {...isOther}
-            />
-          </Grid>
+          <Box display="flex" alignItems="center">
+            <Grid
+              item
+              className={`p0 ${isDetailLanding && classes.chipWrapper}`}
+            >
+              <Chip
+                className={classnames({
+                  [classes.statusChip]: true,
+                  [classes.statusChipLandingDetailView]: isDetailLanding,
+                  [classes.statusRunning]: isRunning,
+                  [classes.statusOffline]: isOffline,
+                  [classes.statusOther]: isOther,
+                  [classes.divider]: hasSecondaryStatus,
+                  statusOtherDetail: isOther
+                })}
+                label={formattedStatus}
+                component="span"
+                {...isOther}
+              />
+            </Grid>
+            {hasSecondaryStatus ? (
+              <Grid
+                item
+                className="py0"
+                style={{ marginLeft: 16, marginBottom: 2 }}
+              >
+                <button
+                  className={classes.statusLink}
+                  onClick={openNotificationDrawer}
+                >
+                  <ProgressDisplay
+                    progress={progress ?? 0}
+                    text={formattedTransitionText}
+                  />
+                </button>
+              </Grid>
+            ) : null}
+          </Box>
           <Grid item className={`${classes.actionItemsOuter} py0`}>
             <Hidden smDown>
               <Button
@@ -329,7 +425,7 @@ const Header: React.FC<HeaderProps> = props => {
                   handleConsoleButtonClick(linodeId);
                 }}
               >
-                Launch Console{' '}
+                Launch LISH Console
               </Button>
             </Hidden>
 
@@ -397,55 +493,6 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
     }
-  },
-  ipContainer: {
-    flexBasis: '35%'
-  },
-  ipContent: {
-    color: theme.cmrTextColors.tableStatic,
-    fontSize: '0.875rem',
-    lineHeight: '1rem'
-  },
-  accessTableContainer: {
-    flexBasis: '65%'
-  },
-  accessTableContent: {
-    '&.MuiGrid-item': {
-      padding: 0,
-      paddingLeft: theme.spacing()
-    }
-  },
-  accessTable: {
-    tableLayout: 'fixed',
-    '& tr': {
-      height: 34
-    },
-    '& th': {
-      backgroundColor: theme.cmrBGColors.bgAccessHeader,
-      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
-      color: theme.cmrTextColors.textAccessTable,
-      fontSize: '0.875rem',
-      fontWeight: 'bold',
-      lineHeight: 1,
-      padding: theme.spacing(),
-      textAlign: 'left',
-      whiteSpace: 'nowrap',
-      width: 100
-    },
-    '& td': {
-      backgroundColor: theme.cmrBGColors.bgAccessRow,
-      border: 'none',
-      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
-      fontSize: '0.875rem',
-      lineHeight: 1,
-      overflowX: 'auto',
-      padding: theme.spacing(),
-      whiteSpace: 'nowrap'
-    }
-  },
-  code: {
-    color: theme.cmrTextColors.textAccessCode,
-    fontFamily: '"SourceCodePro", monospace, sans-serif'
   }
 }));
 
@@ -458,11 +505,19 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
     region,
     ipv4,
     ipv6,
-    linodeId,
     username,
     linodeLabel,
+    linodeId,
     numVolumes
   } = props;
+
+  const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
+
+  const firstAddress = ipv4[0];
+
+  // If IPv6 is enabled, always use it in the second address slot. Otherwise use
+  // the second IPv4 address if it exists.
+  const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
 
   return (
     <Grid container item className={classes.body} direction="row">
@@ -503,43 +558,175 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
         direction="row"
         justify="space-between"
       >
-        <Grid container item className={classes.ipContainer} direction="column">
-          <Grid item className={classes.columnLabel}>
-            IP Addresses
-          </Grid>
-          <Grid container item className={classes.ipContent} direction="column">
-            <RenderIPs ipv4={ipv4} ipv6={ipv6} linodeId={linodeId} />
-          </Grid>
-        </Grid>
+        <AccessTable
+          title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
+          rows={[{ text: firstAddress }, { text: secondAddress }]}
+          footer={
+            numIPAddresses > 2 ? (
+              <Typography variant="body2">
+                <HashLink to={`/linodes/${linodeId}/networking#${ipv4TableID}`}>
+                  View all IP Addresses
+                </HashLink>
+              </Typography>
+            ) : (
+              undefined
+            )
+          }
+          gridProps={{ md: 5 }}
+        />
 
-        <Grid
-          container
-          item
-          className={classes.accessTableContainer}
-          direction="column"
-        >
-          <Grid item className={classes.columnLabel}>
-            Access
-          </Grid>
-          <Grid item className={classes.accessTableContent}>
-            <Table className={classes.accessTable}>
-              <TableBody>
-                <TableRow>
-                  <th scope="row">SSH Access</th>
+        <AccessTable
+          title="Access"
+          rows={[
+            { heading: 'SSH Access', text: sshLink(ipv4[0]) },
+            {
+              heading: 'LISH Console via SSH',
+              text: lishLink(username, region, linodeLabel)
+            }
+          ]}
+          gridProps={{ md: 7 }}
+        />
+      </Grid>
+    </Grid>
+  );
+});
+
+// =============================================================================
+// AccessTable
+// =============================================================================
+// @todo: Maybe move this component somewhere to its own file? Could potentially
+// be used elsewhere.
+const useAccessTableStyles = makeStyles((theme: Theme) => ({
+  columnLabel: {
+    color: theme.cmrTextColors.headlineStatic,
+    fontFamily: theme.font.bold
+  },
+  accessTableContent: {
+    '&.MuiGrid-item': {
+      padding: 0,
+      paddingLeft: theme.spacing()
+    }
+  },
+  accessTable: {
+    tableLayout: 'fixed',
+    '& tr': {
+      height: 32
+    },
+    '& th': {
+      backgroundColor: theme.cmrBGColors.bgAccessHeader,
+      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
+      color: theme.cmrTextColors.textAccessTable,
+      fontSize: '0.875rem',
+      fontWeight: 'bold',
+      lineHeight: 1,
+      padding: theme.spacing(),
+      textAlign: 'left',
+      whiteSpace: 'nowrap',
+      width: 170
+    },
+    '& td': {
+      backgroundColor: theme.cmrBGColors.bgAccessRow,
+      border: 'none',
+      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
+      fontSize: '0.875rem',
+      lineHeight: 1,
+      padding: theme.spacing(),
+      whiteSpace: 'nowrap'
+    }
+  },
+  code: {
+    color: theme.cmrTextColors.textAccessCode,
+    fontFamily: '"SourceCodePro", monospace, sans-serif',
+    position: 'relative'
+  },
+  copyCell: {
+    width: 36,
+    height: 33,
+    backgroundColor: `${theme.cmrBGColors.bgSecondaryButton} !important`,
+    padding: '0px !important',
+    '& svg': {
+      width: 16,
+      height: 16,
+      '& path': {
+        fill: theme.cmrBGColors.bgSecondaryButton
+      }
+    },
+    '& button': {
+      padding: 0
+    },
+    '&:last-child': {
+      paddingRight: theme.spacing()
+    }
+  },
+  copyButton: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    '&:hover': {
+      backgroundColor: 'transparent'
+    }
+  },
+  gradient: {
+    overflowY: 'hidden', // For Edge
+    overflowX: 'auto',
+    paddingRight: 15,
+    '&:after': {
+      content: '""',
+      width: 30,
+      height: '100%',
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      backgroundImage: `linear-gradient(to right,  ${theme.cmrBGColors.bgAccessRowTransparentGradient}, ${theme.cmrBGColors.bgAccessRow});`
+    }
+  }
+}));
+
+interface AccessTableRow {
+  text: string | null;
+  heading?: string;
+}
+
+interface AccessTableProps {
+  title: string;
+  rows: AccessTableRow[];
+  gridProps?: GridProps;
+  footer?: JSX.Element;
+}
+
+export const AccessTable: React.FC<AccessTableProps> = React.memo(props => {
+  const classes = useAccessTableStyles();
+  return (
+    <Grid container item md={6} direction="column" {...props.gridProps}>
+      <Grid item className={classes.columnLabel}>
+        {props.title}
+      </Grid>
+      <Grid item className={classes.accessTableContent}>
+        <Table className={classes.accessTable}>
+          <TableBody>
+            {props.rows.map(thisRow => {
+              return thisRow.text ? (
+                <TableRow key={thisRow.text}>
+                  {thisRow.heading ? (
+                    <th scope="row">{thisRow.heading}</th>
+                  ) : null}
                   <TableCell className={classes.code}>
-                    {sshLink(ipv4[0])}
+                    <div className={classes.gradient}>{thisRow.text}</div>
+                  </TableCell>
+                  <TableCell className={classes.copyCell}>
+                    <CopyTooltip
+                      text={thisRow.text}
+                      className={classes.copyButton}
+                    />
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <th scope="row">LISH via SSH</th>
-                  <TableCell className={classes.code}>
-                    {lishLink(username, region, linodeLabel)}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Grid>
-        </Grid>
+              ) : null;
+            })}
+          </TableBody>
+        </Table>
+        {props.footer ? <Grid item>{props.footer}</Grid> : null}
       </Grid>
     </Grid>
   );
@@ -562,7 +749,15 @@ interface FooterProps {
 const useFooterStyles = makeStyles((theme: Theme) => ({
   details: {
     flexWrap: 'nowrap',
-    [theme.breakpoints.down('md')]: {
+    '&.MuiGrid-item': {
+      paddingRight: 0
+    },
+    [theme.breakpoints.up(1400)]: {
+      flexBasis: '66.67%',
+      flexGrow: 0,
+      maxWidth: '66.67%'
+    },
+    [theme.breakpoints.down(1400)]: {
       marginTop: 0,
       marginBottom: 0
     },
@@ -572,31 +767,40 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     }
   },
   detailRow: {
+    display: 'flex',
+    alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
-      display: 'flex',
       '&:first-of-type': {
         paddingBottom: theme.spacing(0.5)
       }
     }
   },
   listItem: {
-    display: 'inline-block',
+    display: 'flex',
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
     color: theme.cmrTextColors.tableStatic,
     padding: `0px 10px`,
     [theme.breakpoints.down('sm')]: {
       flex: '50%',
-      borderRight: 'none'
+      borderRight: 'none',
+      paddingRight: 0
     }
   },
   listItemLast: {
-    borderRight: 'none'
+    borderRight: 'none',
+    paddingRight: 0
   },
   label: {
-    fontFamily: theme.font.bold
+    fontFamily: theme.font.bold,
+    marginRight: 4
   },
   tags: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.up(1400)]: {
+      flexBasis: '33.33%',
+      flexGrow: 0,
+      maxWidth: '33.33%'
+    },
+    [theme.breakpoints.down(1400)]: {
       marginLeft: theme.spacing(),
       '& > div': {
         flexDirection: 'row-reverse',
@@ -660,17 +864,14 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       <Grid
         container
         item
-        className={classnames({
-          [classes.details]: true
-        })}
+        className={classes.details}
         alignItems="flex-start"
-        xs={12}
-        lg={8}
+        md={12}
       >
         <div className={classes.detailRow}>
           {linodePlan && (
             <Typography className={classes.listItem}>
-              <span className={classes.label}>Plan:</span> {linodePlan}
+              <span className={classes.label}>Plan: </span> {linodePlan}
             </Typography>
           )}
           {linodeRegionDisplay && (
@@ -695,7 +896,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
           </Typography>
         </div>
       </Grid>
-      <Grid item className={classes.tags} xs={12} lg={4}>
+      <Grid item className={classes.tags} md={12}>
         <TagCell
           width={500}
           tags={linodeTags}

@@ -172,6 +172,8 @@ export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
 // The API returns an error if more than 100 IPs are requested.
 const getAllIPs = getAll<IPAddress>(getIPs, 100);
 
+export const ipv4TableID = 'ips';
+
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
     removeIPDialogOpen: false,
@@ -643,27 +645,36 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <EntityHeader
           title="IP Addresses"
           isSecondary
+          // @todo: Clean these props when EntityHeader is refactored.
           body={
             <Hidden mdUp>
-              <Button
-                style={{ paddingTop: 5, paddingBottom: 5 }}
-                onClick={this.openTransferDialog}
-                buttonType="secondary"
-              >
-                IP Transfer
-              </Button>
-              <Button
-                style={{ paddingTop: 5, paddingBottom: 5 }}
-                onClick={this.openSharingDialog}
-                buttonType="secondary"
-              >
-                IP Sharing
-              </Button>
+              <div style={{ marginRight: 5 }}>
+                <Hidden xsDown>
+                  <Button
+                    style={{ paddingTop: 5, paddingBottom: 5 }}
+                    onClick={this.openTransferDialog}
+                    buttonType="secondary"
+                  >
+                    IP Transfer
+                  </Button>
+                  <Button
+                    style={{ paddingTop: 5, paddingBottom: 5 }}
+                    onClick={this.openSharingDialog}
+                    buttonType="secondary"
+                  >
+                    IP Sharing
+                  </Button>
+                </Hidden>
+                <AddNewLink
+                  label="Add an IP Address"
+                  onClick={this.openAddIPDrawer}
+                />
+              </div>
             </Hidden>
           }
           actions={
-            <div>
-              <Hidden smDown>
+            <Hidden smDown>
+              <div style={{ marginRight: 5 }}>
                 <Button
                   style={{ padding: '16px 14px' }}
                   onClick={this.openTransferDialog}
@@ -678,12 +689,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
                 >
                   IP Sharing
                 </Button>
-              </Hidden>
-              <AddNewLink
-                label="Add an IP Address"
-                onClick={this.openAddIPDrawer}
-              />
-            </div>
+                <AddNewLink
+                  label="Add an IP Address"
+                  onClick={this.openAddIPDrawer}
+                />
+              </div>
+            </Hidden>
           }
         />
         <Paper style={{ padding: 0 }}>
@@ -691,7 +702,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <OrderBy data={ipDisplay} orderBy="type" order="asc">
             {({ data: orderedData, handleOrderChange, order, orderBy }) => {
               return (
-                <Table aria-label="IPv4 Addresses">
+                <Table aria-label="IPv4 Addresses" id={ipv4TableID}>
                   <TableHead>
                     <TableRow>
                       <TableCell style={{ width: '15%' }}>Address</TableCell>

@@ -4,15 +4,11 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-import AddNewLink from 'src/components/AddNewLink';
-import Breadcrumb from 'src/components/Breadcrumb';
+import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import DeletionDialog from 'src/components/DeletionDialog';
-import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
   createStyles,
   Theme,
@@ -20,27 +16,21 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DeletionDialog from 'src/components/DeletionDialog';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EntityTable, {
-  EntityTableRow,
-  HeaderCell
-} from 'src/components/EntityTable';
+import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import LandingHeader from 'src/components/LandingHeader';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import Toggle from 'src/components/Toggle';
 import domainsContainer, {
   Props as DomainProps
 } from 'src/containers/domains.container';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { Domains } from 'src/documentation';
 import { ApplicationState } from 'src/store';
 import {
@@ -55,7 +45,6 @@ import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DisableDomainDialog from './DisableDomainDialog';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DomainRow from './DomainTableRow';
-import DomainRow_CMR from './DomainTableRow_CMR';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
@@ -69,7 +58,8 @@ type ClassNames =
   | 'dnsWarning'
   | 'tagWrapper'
   | 'tagGroup'
-  | 'importButton';
+  | 'importButton'
+  | 'banner';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -101,9 +91,11 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(2) - 8
     },
     importButton: {
-      paddingTop: 5,
-      paddingBottom: 5,
+      marginLeft: -theme.spacing(),
       whiteSpace: 'nowrap'
+    },
+    banner: {
+      marginBottom: theme.spacing()
     }
   });
 
@@ -141,8 +133,7 @@ export type CombinedProps = DomainProps &
   RouteComponentProps<{}> &
   StateProps &
   DispatchProps &
-  WithSnackbarProps &
-  FeatureFlagConsumerProps;
+  WithSnackbarProps;
 
 const headers: HeaderCell[] = [
   {
@@ -170,13 +161,6 @@ const headers: HeaderCell[] = [
     sortable: true,
     widthPercent: 20,
     hideOnMobile: true
-  },
-  {
-    label: 'Action Menu',
-    visuallyHidden: true,
-    dataColumn: '',
-    sortable: false,
-    widthPercent: 5
   }
 ];
 
@@ -338,14 +322,11 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       domainsData,
       domainsLoading,
       domainsLastUpdated,
-      flags,
       howManyLinodesOnAccount,
       isLargeAccount,
       isRestrictedUser,
       linodesLoading
     } = this.props;
-
-    const Table = flags.cmr ? EntityTable_CMR : EntityTable;
 
     const handlers: DomainHandlers = {
       onClone: this.props.openForCloning,
@@ -355,7 +336,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     };
 
     const domainRow: EntityTableRow<Domain> = {
-      Component: flags.cmr ? DomainRow_CMR : DomainRow,
+      Component: DomainRow,
       data: domainsData ?? [],
       request: isLargeAccount ? getDomains : undefined,
       handlers,
@@ -423,14 +404,12 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Domains" />
         {shouldShowBanner && (
           <Notice warning important className={classes.dnsWarning}>
-            <Typography variant="h3">
-              Your DNS zones are not being served.
-            </Typography>
-            <Typography>
-              Your domains will not be served by Linode&#39;s nameservers unless
-              you have at least one active Linode on your account.
-              <Link to="/linodes/create"> You can create one here.</Link>
-            </Typography>
+            <div className={classes.banner}>
+              <strong>Your DNS zones are not being served.</strong>
+            </div>
+            Your domains will not be served by Linode&#39;s nameservers unless
+            you have at least one active Linode on your account.
+            <Link to="/linodes/create"> You can create one here.</Link>
           </Notice>
         )}
         {this.props.location.state?.recordError && (
@@ -450,83 +429,25 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           }: ToggleProps<boolean>) => {
             return (
               <React.Fragment>
-                {flags.cmr ? (
-                  <LandingHeader
-                    title="Domains"
-                    extraActions={
-                      <Button
-                        className={classes.importButton}
-                        onClick={this.openImportZoneDrawer}
-                        buttonType="secondary"
-                      >
-                        Import a Zone
-                      </Button>
-                    }
-                    alwaysShowActions
-                    entity="Domain"
-                    onAddNew={this.navigateToCreate}
-                    docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
-                  />
-                ) : (
-                  <Grid
-                    container
-                    justify="space-between"
-                    alignItems="flex-end"
-                    style={{ paddingBottom: 0 }}
-                  >
-                    <Grid item className={classes.titleWrapper}>
-                      <Breadcrumb
-                        // This component can be rendered with the URL
-                        // /domains/:domainId, which would result in a double
-                        // breadcrumb. Thus we give the <Breadcrumb /> an explicit
-                        // pathname.
-                        pathname="Domains"
-                        labelTitle="Domains"
-                        className={classes.breadcrumbs}
-                      />
-                    </Grid>
-                    <Grid item className="p0">
-                      <FormControlLabel
-                        className={classes.tagGroup}
-                        control={
-                          <Toggle
-                            className={
-                              domainsAreGrouped ? ' checked' : ' unchecked'
-                            }
-                            onChange={toggleGroupDomains}
-                            checked={domainsAreGrouped}
-                            disabled={isLargeAccount}
-                          />
-                        }
-                        label="Group by Tag:"
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Grid
-                        container
-                        alignItems="flex-end"
-                        // style={{ width: 'auto' }}
-                      >
-                        <Grid item className="pt0">
-                          <AddNewLink
-                            onClick={this.openImportZoneDrawer}
-                            label="Import a Zone"
-                          />
-                        </Grid>
-                        <Grid item className="pt0">
-                          <AddNewLink
-                            data-testid="create-domain"
-                            onClick={this.navigateToCreate}
-                            label="Add a Domain"
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                )}
-                <Table
+                <LandingHeader
+                  title="Domains"
+                  extraActions={
+                    <Button
+                      className={classes.importButton}
+                      onClick={this.openImportZoneDrawer}
+                      buttonType="secondary"
+                    >
+                      Import a Zone
+                    </Button>
+                  }
+                  entity="Domain"
+                  onAddNew={this.navigateToCreate}
+                  docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
+                />
+                <EntityTable_CMR
                   entity="domain"
-                  groupByTag={domainsAreGrouped}
+                  toggleGroupByTag={toggleGroupDomains}
+                  isGroupedByTag={domainsAreGrouped}
                   row={domainRow}
                   headers={headers}
                   initialOrder={initialOrder}
@@ -583,35 +504,6 @@ const RenderError: React.FC<{}> = () => {
   );
 };
 
-const EmptyCopy = () => (
-  <>
-    <Typography variant="subtitle1">
-      Create a Domain, add Domain records, import zones and domains.
-    </Typography>
-    <Typography variant="subtitle1">
-      <a
-        href="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        Find out how to setup your domains associated with your Linodes
-      </a>
-      &nbsp;or&nbsp;
-      <a
-        href="https://www.linode.com/docs/"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        visit our guides and tutorials.
-      </a>
-    </Typography>
-  </>
-);
-
 const RenderEmpty: React.FC<{
   onCreateDomain: () => void;
   onImportZone: () => void;
@@ -620,8 +512,8 @@ const RenderEmpty: React.FC<{
     <React.Fragment>
       <DocumentTitleSegment segment="Domains" />
       <Placeholder
-        title="Manage your Domains"
-        copy={<EmptyCopy />}
+        title="Domains"
+        isEntity
         icon={DomainIcon}
         buttonProps={[
           {
@@ -633,7 +525,20 @@ const RenderEmpty: React.FC<{
             children: 'Import a Zone'
           }
         ]}
-      />
+      >
+        <Typography variant="subtitle1">
+          Create a Domain, add Domain records, import zones and domains.
+        </Typography>
+        <Typography variant="subtitle1">
+          <Link to="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/">
+            Get help managing your Domains
+          </Link>
+          &nbsp;or&nbsp;
+          <Link to="https://www.linode.com/docs/">
+            visit our guides and tutorials.
+          </Link>
+        </Typography>
+      </Placeholder>
     </React.Fragment>
   );
 };
@@ -688,7 +593,6 @@ export default compose<CombinedProps, Props>(
   domainsContainer(),
   connected,
   withSnackbar,
-  withFeatureFlags,
   styled
 )(DomainsLanding);
 

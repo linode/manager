@@ -93,6 +93,7 @@ const cmrBGColors = {
   bgBillingSummary: '#f5f9ff',
   bgBreadcrumbParent: '#f5faff',
   bgAccessRow: '#fafafa',
+  bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
   bgAccessHeader: '#f5f5f5'
 };
 
@@ -295,6 +296,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavActiveBG: '#515861',
       primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#3a3f46',
+      mainContentBanner: '#33373D',
       topMenu: '#fff',
       billingHeader: '#f5f9ff',
       controlHeader: '#f9fafa',
@@ -597,24 +599,20 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         containedSecondary: {
           backgroundColor: 'transparent',
-          color: primaryColors.main,
-          //border: `1px solid ${primaryColors.main}`,
-          // padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
-          //   spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
-          // transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
+          color: cmrTextColors.linkActiveMedium,
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
-            color: primaryColors.light,
-            borderColor: primaryColors.light
+            borderColor: primaryColors.light,
+            color: primaryColors.light
           },
           '&:active': {
             backgroundColor: 'transparent',
-            color: primaryColors.dark,
-            borderColor: primaryColors.dark
+            borderColor: primaryColors.dark,
+            color: primaryColors.dark
           },
           '&$disabled': {
-            borderColor: '#c9cacb',
             backgroundColor: 'transparent',
+            borderColor: '#c9cacb',
             color: '#c9cacb'
           },
           // '&.cancel': {

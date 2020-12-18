@@ -1,6 +1,6 @@
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 import * as React from 'react';
-
+import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
 import { extendedClusters } from 'src/__data__/kubernetes';
 import { ClusterRow } from './ClusterRow';
 
@@ -14,34 +14,22 @@ const cluster = {
 
 const props = {
   cluster,
-  openDeleteDialog: jest.fn(),
-  classes: {
-    root: '',
-    label: '',
-    clusterDescription: '',
-    clusterRow: ''
-  }
+  openDeleteDialog: jest.fn()
 };
 
-const component = shallow(<ClusterRow {...props} />);
-
 describe('ClusterRow component', () => {
-  it('should render without crashing', () => {
-    expect(component).toHaveLength(1);
+  it('should render', () => {
+    const { getByTestId } = render(
+      wrapWithTheme(wrapWithTableBody(<ClusterRow {...props} />))
+    );
+
+    getByTestId('cluster-row');
   });
 
-  it('should render the cluster version', () => {
-    const version = component.find('[data-qa-cluster-version]');
-    expect(version.contains(extendedClusters[0].k8s_version)).toBeTruthy();
-  });
+  it('renders a TableRow with label, and region', () => {
+    const { getByText } = render(wrapWithTableBody(<ClusterRow {...props} />));
 
-  it('should render the cluster label', () => {
-    const label = component.find('[data-qa-cluster-label]');
-    expect(label.contains(extendedClusters[0].label)).toBeTruthy();
-  });
-
-  it('should render the region', () => {
-    const region = component.find('[data-qa-cluster-region]');
-    expect(region.contains(extendedClusters[0].region)).toBeTruthy();
+    getByText('cluster-1');
+    getByText('us-central');
   });
 });

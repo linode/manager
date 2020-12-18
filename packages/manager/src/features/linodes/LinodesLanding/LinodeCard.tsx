@@ -303,7 +303,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
               aria-describedby="new-window"
               data-qa-console
             >
-              Launch Console
+              LISH Console
             </Button>
             <Button
               className={`${classes.button}

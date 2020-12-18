@@ -29,6 +29,7 @@ const cmrBGColors = {
   bgBillingSummary: '#2d3d53',
   bgBreadcrumbParent: '#364863',
   bgAccessRow: '#454b54',
+  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
   bgAccessHeader: '#3a3f46'
 };
 
@@ -115,9 +116,7 @@ const genericStatusPillStyle = {
     marginRight: 8
   },
   [breakpoints.down('sm')]: {
-    fontSize: 14,
-    padding: '15px 12px',
-    borderRadius: 15
+    fontSize: 14
   }
 };
 
@@ -158,6 +157,7 @@ const darkThemeOptions = {
     primaryNavActiveBG: '#464c53',
     primaryNavBorder: '#303235',
     primaryNavPaper: '#2e3238',
+    mainContentBanner: '#23272B',
     topMenu: '#33383d',
     billingHeader: '#222',
     controlHeader: 'rgba(0, 0, 0, 0.2)',

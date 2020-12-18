@@ -1,6 +1,7 @@
 import { Database } from '@linode/api-v4/lib/databases/types';
 import { groupBy, prop } from 'ramda';
 import * as React from 'react';
+import CircleProgress from 'src/components/CircleProgress';
 import Chip from 'src/components/core/Chip';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DeletionDialog from 'src/components/DeletionDialog';
@@ -11,10 +12,12 @@ import TagDrawer, {
   OpenTagDrawer,
   TagDrawerProps
 } from 'src/components/TagCell/TagDrawer';
+import { dbaasContext } from 'src/context';
 import useDatabases from 'src/hooks/useDatabases';
 import { useDialog } from 'src/hooks/useDialog';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ActionHandlers as DatabaseHandlers } from './DatabaseActionMenu';
+import DatabaseEmptyState from './DatabaseEmptyState';
 import DatabaseRow from './DatabaseRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -118,6 +121,7 @@ const DatabaseLanding: React.FC<{}> = _ => {
   );
 
   const databaseData = Object.values(databases.itemsById ?? {});
+  const openCreateDialog = React.useContext(dbaasContext).open;
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
@@ -180,6 +184,14 @@ const DatabaseLanding: React.FC<{}> = _ => {
     return <ErrorState errorText={message} />;
   }
 
+  if (databases.loading) {
+    return <CircleProgress />;
+  }
+
+  if (databaseData.length === 0) {
+    return <DatabaseEmptyState openAddDatabaseDrawer={openCreateDialog} />;
+  }
+
   const { ready, error, initializing, unknown } = counts;
   const chips = (
     <>
@@ -220,7 +232,6 @@ const DatabaseLanding: React.FC<{}> = _ => {
       />
       <EntityTable
         entity="databases"
-        groupByTag={false}
         row={_DatabaseRow}
         headers={headers}
         initialOrder={{ order: 'asc', orderBy: 'label' }}

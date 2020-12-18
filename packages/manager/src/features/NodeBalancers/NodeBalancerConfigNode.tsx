@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import MenuItem from 'src/components/core/MenuItem';
@@ -52,6 +51,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   'chip-DOWN': {
     backgroundColor: theme.color.red
+  },
+  button: {
+    ...theme.applyLinkStyles
   }
 }));
 
@@ -209,6 +211,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = props => {
             <Grid item xs={6} sm={3} lg={2}>
               <TextField
                 label="Mode"
+                inputId={`mode-${idx}`}
                 value={node.mode}
                 select
                 inputProps={{ 'data-node-idx': idx }}
@@ -236,13 +239,15 @@ export const NodeBalancerConfigNode: React.FC<Props> = props => {
           )}
           <ActionsPanel className={classes.backendIPAction}>
             {(forEdit || idx !== 0) && (
-              <Button
-                buttonType="remove"
+              <button
+                className={classes.button}
                 data-node-idx={idx}
                 onClick={removeNode}
                 data-qa-remove-node
                 disabled={disabled}
-              />
+              >
+                Remove
+              </button>
             )}
           </ActionsPanel>
         </Grid>

@@ -8,8 +8,8 @@ import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GridView from 'src/assets/icons/grid-view.svg';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { GroupByTagToggle } from 'src/components/EntityTable/EntityTableHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
@@ -20,8 +20,51 @@ const useStyles = makeStyles((theme: Theme) => ({
   toggleButton: {
     padding: '0 10px',
     '&:focus': {
-      // Browser default until we get styling direction for focus states
       outline: '1px dotted #999'
+    }
+  },
+  // There's nothing very scientific about the widths across the breakpoints
+  // here, just a lot of trial and error based on maximum expected column sizes.
+  labelCell: {
+    width: '24%',
+    [theme.breakpoints.down('md')]: {
+      width: '20%'
+    }
+  },
+  statusCell: {
+    width: '20%',
+    [theme.breakpoints.only('md')]: {
+      width: '27%'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '25%'
+    }
+  },
+  ipAddressCell: {
+    width: '16%',
+    [theme.breakpoints.only('sm')]: {
+      width: '22%'
+    }
+  },
+  regionCell: {
+    width: '14%',
+    [theme.breakpoints.down('xs')]: {
+      width: '18%'
+    }
+  },
+  lastBackupCell: {
+    width: '14%',
+    [theme.breakpoints.down('xs')]: {
+      width: '18%'
+    }
+  },
+  actionCell: {
+    width: '16%',
+    [theme.breakpoints.only('md')]: {
+      width: '10%'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '12%'
     }
   }
 }));
@@ -61,6 +104,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           direction={order}
           active={isActive('label')}
           handleClick={handleOrderChange}
+          className={classes.labelCell}
           data-qa-sort-label={order}
         >
           Label
@@ -70,6 +114,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           label="_statusPriority"
           direction={order}
           active={isActive('_statusPriority')}
+          className={classes.statusCell}
           handleClick={handleOrderChange}
         >
           Status
@@ -85,36 +130,45 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           </TableSortCell>
         ) : null}
         {isVLAN ? null : (
-          <Hidden xsDown>
-            <TableSortCell
-              label="ipv4[0]" // we want to sort by the first ipv4
-              active={isActive('ipv4[0]')}
-              handleClick={handleOrderChange}
-              direction={order}
-            >
-              IP Address
-            </TableSortCell>
-            <TableSortCell
-              label="region"
-              direction={order}
-              active={isActive('region')}
-              handleClick={handleOrderChange}
-              data-qa-sort-region={order}
-            >
-              Region
-            </TableSortCell>
-            <TableSortCell
-              noWrap
-              label="backups:last_successful"
-              direction={order}
-              active={isActive('backups:last_successful')}
-              handleClick={handleOrderChange}
-            >
-              Last Backup
-            </TableSortCell>
-          </Hidden>
+          <>
+            <Hidden xsDown>
+              <TableSortCell
+                label="ipv4[0]" // we want to sort by the first ipv4
+                active={isActive('ipv4[0]')}
+                handleClick={handleOrderChange}
+                direction={order}
+                className={classes.ipAddressCell}
+              >
+                IP Address
+              </TableSortCell>
+              <Hidden smDown>
+                <TableSortCell
+                  label="region"
+                  direction={order}
+                  active={isActive('region')}
+                  handleClick={handleOrderChange}
+                  className={classes.regionCell}
+                  data-qa-sort-region={order}
+                >
+                  Region
+                </TableSortCell>
+              </Hidden>
+            </Hidden>
+            <Hidden mdDown>
+              <TableSortCell
+                noWrap
+                label="backups:last_successful"
+                direction={order}
+                active={isActive('backups:last_successful')}
+                className={classes.lastBackupCell}
+                handleClick={handleOrderChange}
+              >
+                Last Backup
+              </TableSortCell>
+            </Hidden>
+          </>
         )}
-        <TableCell>
+        <TableCell className={classes.actionCell}>
           <div className={classes.controlHeader}>
             <div id="displayViewDescription" className="visually-hidden">
               Currently in {linodeViewPreference} view
@@ -130,25 +184,10 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
                 <GridView />
               </IconButton>
             </Tooltip>
-            <div id="groupByDescription" className="visually-hidden">
-              {linodesAreGrouped
-                ? 'group by tag is currently enabled'
-                : 'group by tag is currently disabled'}
-            </div>
-            <Tooltip
-              placement="top-end"
-              title={`${linodesAreGrouped ? 'Ungroup' : 'Group'} by tag`}
-            >
-              <IconButton
-                aria-label={`Toggle group by tag`}
-                aria-describedby={'groupByDescription'}
-                onClick={toggleGroupLinodes}
-                disableRipple
-                className={classes.toggleButton}
-              >
-                <GroupByTag />
-              </IconButton>
-            </Tooltip>
+            <GroupByTagToggle
+              toggleGroupByTag={toggleGroupLinodes}
+              isGroupedByTag={linodesAreGrouped}
+            />
           </div>
         </TableCell>
       </TableRow>

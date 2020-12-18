@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   summaryOuter: {
     backgroundColor: theme.cmrBGColors.bgPaper,
-    margin: theme.spacing(),
+    margin: `${theme.spacing()}px 0`,
     marginBottom: 20,
     '&.MuiGrid-item': {
       padding: 0
@@ -135,13 +135,14 @@ const CardView: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Grid container>
+      <Grid container className="m0" style={{ width: '100%' }}>
         {flags.cmr
           ? data.map((linode, idx: number) => (
               <React.Fragment key={`linode-card-${idx}`}>
                 <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
                   <LinodeEntityDetail
                     variant="landing"
+                    id={linode.id}
                     linode={linode}
                     isDetailLanding
                     numVolumes={getVolumesByLinode(linode.id)}

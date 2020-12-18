@@ -38,7 +38,13 @@ import BucketDetailsDrawer from './BucketDetailsDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing()
+  },
+  empty: {
+    '& svg': {
+      marginTop: theme.spacing(1.5),
+      transform: 'scale(0.8)'
+    }
   }
 }));
 
@@ -306,12 +312,15 @@ const RenderError: React.FC<{}> = () => {
 const RenderEmpty: React.FC<{
   onClick: () => void;
 }> = props => {
+  const classes = useStyles();
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
       <Placeholder
         title="Object Storage"
-        copy={<EmptyCopy />}
+        className={classes.empty}
+        isEntity
         icon={BucketIcon}
         renderAsSecondary
         buttonProps={[
@@ -320,28 +329,24 @@ const RenderEmpty: React.FC<{
             children: 'Add a Bucket'
           }
         ]}
-      />
+      >
+        <Typography variant="subtitle1">Need help getting started?</Typography>
+        <Typography variant="subtitle1">
+          <a
+            href="https://linode.com/docs/platform/object-storage"
+            target="_blank"
+            aria-describedby="external-site"
+            rel="noopener noreferrer"
+            className="h-u"
+          >
+            Learn more about storage options for your multimedia, archives, and
+            data backups here.
+          </a>
+        </Typography>
+      </Placeholder>
     </React.Fragment>
   );
 };
-
-const EmptyCopy = () => (
-  <>
-    <Typography variant="subtitle1">Need help getting started?</Typography>
-    <Typography variant="subtitle1">
-      <a
-        href="https://linode.com/docs/platform/object-storage"
-        target="_blank"
-        aria-describedby="external-site"
-        rel="noopener noreferrer"
-        className="h-u"
-      >
-        Learn more about storage options for your multimedia, archives, and data
-        backups here.
-      </a>
-    </Typography>
-  </>
-);
 
 const enhanced = compose<CombinedProps, Props>(
   React.memo,

@@ -16,7 +16,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from 'src/components/core/Grid';
@@ -57,10 +57,6 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  title: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(3)
-  },
   main: {
     width: '100%'
   },
@@ -396,25 +392,16 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   return (
     <Grid container>
       <DocumentTitleSegment segment="Create a Domain" />
-      <Grid
-        container
-        justify="space-between"
-        alignItems="flex-end"
-        className={classes.title}
-      >
-        <Grid item>
+      <Grid container alignItems="center" justify="space-between">
+        <Grid item className="p0">
           <Breadcrumb
             pathname={location.pathname}
             labelTitle="Create a Domain"
             labelOptions={{ noCap: true }}
           />
         </Grid>
-        <Grid item>
-          <Grid container alignItems="flex-end">
-            <Grid item className="pt0">
-              <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
-            </Grid>
-          </Grid>
+        <Grid item className="p0">
+          <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
         </Grid>
       </Grid>
 
@@ -585,7 +572,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                 loading={submitting}
                 disabled={disabled}
               >
-                Create
+                Create Domain
               </Button>
             </ActionsPanel>
           </div>

@@ -108,6 +108,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
               variant={icon}
               status={status}
               loading={status && linodeInTransition(status)}
+              size={20}
             />
           </div>
           <div

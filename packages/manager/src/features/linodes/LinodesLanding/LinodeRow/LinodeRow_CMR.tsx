@@ -218,21 +218,27 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         </TableCell>
       ) : null}
       {props.isVLAN ? null : (
-        <Hidden xsDown>
-          <TableCell className={classes.ipCell} data-qa-ips>
-            <div className={classes.ipCellWrapper}>
-              <IPAddress ips={ipv4} copyRight />
-            </div>
-          </TableCell>
-          <TableCell className={classes.regionCell} data-qa-region>
-            <RegionIndicator region={region} />
-          </TableCell>
-          <LinodeRowBackupCell
-            linodeId={id}
-            backupsEnabled={backups.enabled || false}
-            mostRecentBackup={mostRecentBackup || ''}
-          />
-        </Hidden>
+        <>
+          <Hidden xsDown>
+            <TableCell className={classes.ipCell} data-qa-ips>
+              <div className={classes.ipCellWrapper}>
+                <IPAddress ips={ipv4} copyRight />
+              </div>
+            </TableCell>
+            <Hidden smDown>
+              <TableCell className={classes.regionCell} data-qa-region>
+                <RegionIndicator region={region} />
+              </TableCell>
+            </Hidden>
+          </Hidden>
+          <Hidden mdDown>
+            <LinodeRowBackupCell
+              linodeId={id}
+              backupsEnabled={backups.enabled || false}
+              mostRecentBackup={mostRecentBackup || ''}
+            />
+          </Hidden>
+        </>
       )}
 
       <TableCell className={classes.actionCell} data-qa-notifications>
@@ -307,7 +313,7 @@ export const RenderFlag: React.FC<{
 
 RenderFlag.displayName = `RenderFlag`;
 
-const ProgressDisplay: React.FC<{
+export const ProgressDisplay: React.FC<{
   className?: string;
   progress: null | number;
   text: string;
