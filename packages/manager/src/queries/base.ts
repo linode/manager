@@ -7,7 +7,7 @@ import { Entity } from 'src/store/types';
 // =============================================================================
 type QueryConfigTypes = 'shortLived' | 'longLived' | 'oneTimeFetch';
 
-export const queryConfigs: Record<
+export const queryPresets: Record<
   QueryConfigTypes,
   Partial<QueryConfig<any, any>>
 > = {
@@ -33,7 +33,7 @@ export const queryConfigs: Record<
 
 export const queryCache = new QueryCache({
   defaultConfig: {
-    queries: queryConfigs.longLived
+    queries: queryPresets.longLived
   }
 });
 
@@ -66,17 +66,3 @@ export const mutationHandlers = <T extends Entity, E = APIError[]>(
     }
   };
 };
-
-// =============================================================================
-// Keys
-// =============================================================================
-type FirewallKeys = 'queryFirewalls' | 'mutateFirewall';
-
-export const firewallKeys: Record<FirewallKeys, FirewallKeys> = {
-  queryFirewalls: 'queryFirewalls',
-  mutateFirewall: 'mutateFirewall'
-};
-
-// More key types/definitions go here.
-
-export const queryKeys = { ...firewallKeys };

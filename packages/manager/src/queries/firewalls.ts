@@ -6,29 +6,26 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
-import {
-  mutationHandlers,
-  listToItemsByID,
-  queryConfigs,
-  firewallKeys
-} from './base';
+import { mutationHandlers, listToItemsByID, queryPresets } from './base';
 
 const getAllFirewallsRequest = () =>
   getAll<Firewall>((passedParams, passedFilter) =>
     getFirewalls(passedParams, passedFilter)
   )().then(data => listToItemsByID(data.data));
 
+const queryKey = 'queryFirewalls';
+
 export const useFirewallQuery = () => {
   return useQuery<Record<string, Firewall>, APIError[]>(
-    firewallKeys.queryFirewalls,
+    queryKey,
     getAllFirewallsRequest,
-    queryConfigs.longLived
+    queryPresets.longLived
   );
 };
 
 export const useMutateFirewall = (id: number) => {
   return useMutation<Firewall, APIError[], Partial<Firewall>>(
     (payload: Partial<Firewall>) => updateFirewall(id, payload),
-    mutationHandlers(firewallKeys.queryFirewalls, id)
+    mutationHandlers(queryKey, id)
   );
 };

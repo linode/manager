@@ -1,17 +1,11 @@
 import { getSSHPubKey, ManagedSSHPubKey } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
-
-const keys = {
-  managedSSHKey: 'managedSSHKey'
-};
+import { queryPresets } from './base';
 
 export const useManagedSSHKey = () =>
   useQuery<ManagedSSHPubKey, APIError[]>(
-    keys.managedSSHKey,
-    () => getSSHPubKey(),
-    {
-      refetchOnWindowFocus: false,
-      staleTime: Infinity
-    }
+    'managedSSHKey',
+    getSSHPubKey,
+    queryPresets.longLived
   );
