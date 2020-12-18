@@ -8,7 +8,7 @@ env:
 on:
   push:
     branches:
-      - M3-4577-initial-e2e-actions-workflow
+      - M3-daily-update
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
