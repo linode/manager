@@ -1,13 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import {
-  createStyles,
-  withStyles,
-  WithTheme
-} from 'src/components/core/styles';
+import { withStyles, WithTheme } from 'src/components/core/styles';
 import Toggle from 'src/components/Toggle';
-
-export const styles = () => createStyles({});
 
 interface Props {
   toggleTheme: () => void;
@@ -19,31 +13,29 @@ const onClickHandler = () => {
 
 type CombinedProps = Props & WithTheme;
 
-export class ThemeToggle extends React.Component<CombinedProps> {
-  render() {
-    const { toggleTheme, theme } = this.props;
-    const { name: themeName } = theme;
+const ThemeToggle: React.FC<CombinedProps> = props => {
+  const { toggleTheme, theme } = props;
+  const { name: themeName } = theme;
 
-    const toggle = () => {
-      toggleTheme();
-      onClickHandler();
-    };
+  const toggle = () => {
+    toggleTheme();
+    onClickHandler();
+  };
 
-    return (
-      <div>
-        <Toggle
-          onChange={toggle}
-          checked={themeName !== 'lightTheme'}
-          className={classNames({
-            [themeName]: true
-          })}
-          aria-label="Switch Theme"
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Toggle
+        onChange={toggle}
+        checked={themeName !== 'lightTheme'}
+        className={classNames({
+          [themeName]: true
+        })}
+        aria-label="Switch Theme"
+      />
+    </div>
+  );
+};
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles({}, { withTheme: true });
 
 export default styled(ThemeToggle);
