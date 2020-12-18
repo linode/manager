@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-12-18] - 1.27.1
+
+### Fixed:
+- Revert upgrade to Chart.js that was causing Sentry errors and graph display errors
+
 ## [2020-12-16] - 1.27.0
 
 This release includes sweeping changes to the Cloud Manager UI. For more details, please visit https://www.linode.com/blog/linode/cloud-manager-enhancements-dec2020/
