@@ -1,5 +1,9 @@
 import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
   openSecretModal: (id: string, label: string) => void;
@@ -18,46 +22,54 @@ interface Props {
 
 type CombinedProps = Props;
 
-class OAuthClientActionMenu extends React.Component<CombinedProps> {
-  createActions = () => {
-    const { label, redirectUri, isPublic, clientID } = this.props;
-    return (closeMenu: Function): Action[] => {
-      const actions = [
-        {
-          title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.props.openEditDrawer(isPublic, redirectUri, label, clientID);
-            closeMenu();
-          }
-        },
-        {
-          title: 'Reset Secret',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
-            this.props.openSecretModal(clientID, label);
-          }
-        },
-        {
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
-            this.props.openDeleteModal(clientID, label);
-          }
-        }
-      ];
+export const OAuthClientActionMenu: React.FC<CombinedProps> = props => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-      return actions;
-    };
-  };
+  const { label, redirectUri, isPublic, clientID } = props;
 
-  render() {
-    return (
-      <ActionMenu
-        createActions={this.createActions()}
-        ariaLabel={`Action menu for OAuth Client ${this.props.label}`}
-      />
-    );
-  }
-}
+  const actions: Action[] = [
+    {
+      title: 'Edit',
+      onClick: () => {
+        props.openEditDrawer(isPublic, redirectUri, label, clientID);
+      }
+    },
+    {
+      title: 'Reset',
+      onClick: () => {
+        props.openSecretModal(clientID, label);
+      }
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        props.openDeleteModal(clientID, label);
+      }
+    }
+  ];
+
+  return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {matchesSmDown ? (
+        <ActionMenu
+          createActions={() => actions}
+          ariaLabel={`Action menu for OAuth Client ${props.label}`}
+        />
+      ) : (
+        actions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+            />
+          );
+        })
+      )}
+    </>
+  );
+};
 
 export default OAuthClientActionMenu;
