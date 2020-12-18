@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
-import PrimaryNav, { Props } from './PrimaryNav';
+import PrimaryNav, { Props } from './PrimaryNav_CMR';
 import useFlags from 'src/hooks/useFlags';
 
 jest.mock('src/hooks/useFlags', () => ({
@@ -10,13 +10,11 @@ jest.mock('src/hooks/useFlags', () => ({
 
 const mockCloseMenu = jest.fn();
 const mockToggleSpacing = jest.fn();
-const mockToggleTheme = jest.fn();
 
 const props: Props = {
   closeMenu: mockCloseMenu,
   isCollapsed: false,
-  toggleSpacing: mockToggleSpacing,
-  toggleTheme: mockToggleTheme
+  toggleSpacing: mockToggleSpacing
 };
 
 describe('PrimaryNav', () => {

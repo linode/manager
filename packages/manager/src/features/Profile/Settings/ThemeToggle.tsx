@@ -13,7 +13,7 @@ const onClickHandler = () => {
 
 type CombinedProps = Props & WithTheme;
 
-const ThemeToggle: React.FC<CombinedProps> = props => {
+export const ThemeToggle: React.FC<CombinedProps> = props => {
   const { toggleTheme, theme } = props;
   const { name: themeName } = theme;
 
