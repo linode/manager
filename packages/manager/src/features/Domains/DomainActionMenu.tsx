@@ -1,8 +1,8 @@
 import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
-import { sendDomainStatusChangeEvent } from 'src/utilities/ga';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface Handlers {
   onRemove: (domain: string, id: number) => void;
@@ -23,102 +23,108 @@ interface Props extends Handlers {
   status: DomainStatus;
 }
 
-type CombinedProps = RouteComponentProps<any> & Props;
+type CombinedProps = Props;
 
-export class DomainActionMenu extends React.Component<CombinedProps> {
-  goToDomain = () => {
-    this.props.history.push(`/domains/${this.props.id}`);
-  };
+export const DomainActionMenu: React.FC<CombinedProps> = props => {
+  const {
+    domain,
+    id,
+    onClone,
+    onDisableOrEnable,
+    onEdit,
+    onRemove,
+    status
+  } = props;
 
-  handleRemove = () => {
-    const { domain, id, onRemove } = this.props;
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const handleRemove = () => {
     onRemove(domain, id);
   };
 
-  handleEdit = () => {
-    const { domain, id, onEdit } = this.props;
+  const handleEdit = () => {
     onEdit(domain, id);
   };
 
-  handleClone = () => {
-    const { domain, id, onClone } = this.props;
+  const handleClone = () => {
     onClone(domain, id);
   };
 
-  createActions = () => (closeMenu: Function): Action[] => {
+  const inlineActions = [
+    {
+      actionText: 'Edit',
+      onClick: () => {
+        handleEdit();
+      }
+    },
+    {
+      actionText: status === 'active' ? 'Disable' : 'Enable',
+      onClick: () => {
+        onDisableOrEnable(
+          status === 'active' ? 'disable' : 'enable',
+          domain,
+          id
+        );
+      }
+    }
+  ];
+
+  const createActions = () => (): Action[] => {
     const baseActions = [
       {
-        title: 'Edit',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.handleEdit();
-          closeMenu();
-          e.preventDefault();
-        }
-      },
-      {
         title: 'Clone',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.handleClone();
-          closeMenu();
-          e.preventDefault();
-        }
-      },
-      {
-        title: this.props.status === 'active' ? 'Disable' : 'Enable',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          const actionToTake =
-            this.props.status === 'active' ? 'disable' : 'enable';
-          this.props.onDisableOrEnable(
-            actionToTake,
-            this.props.domain,
-            this.props.id
-          );
-          if (actionToTake === 'enable') {
-            /**
-             * disabling opens a dialog modal, so don't send the event
-             * for when the user is disabling
-             */
-            sendDomainStatusChangeEvent('Enable');
-          }
-          closeMenu();
-          e.preventDefault();
+        onClick: () => {
+          handleClone();
         }
       },
       {
         title: 'Delete',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.handleRemove();
-          closeMenu();
-          e.preventDefault();
+        onClick: () => {
+          handleRemove();
         }
       }
     ];
 
-    if (this.props.type === 'master') {
-      return [
-        {
-          title: 'Edit DNS Records',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.goToDomain();
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        ...baseActions
-      ];
-    } else {
-      return [...baseActions];
+    if (matchesSmDown) {
+      baseActions.unshift({
+        title: status === 'active' ? 'Disable' : 'Enable',
+        onClick: () => {
+          onDisableOrEnable(
+            status === 'active' ? 'disable' : 'enable',
+            domain,
+            id
+          );
+        }
+      });
+      baseActions.unshift({
+        title: 'Edit',
+        onClick: () => {
+          handleEdit();
+        }
+      });
     }
+    return [...baseActions];
   };
 
-  render() {
-    return (
+  return (
+    <>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              onClick={action.onClick}
+            />
+          );
+        })}
       <ActionMenu
-        createActions={this.createActions()}
-        ariaLabel={`Action menu for Domain ${this.props.domain}`}
+        createActions={createActions()}
+        ariaLabel={`Action menu for Domain ${domain}`}
       />
-    );
-  }
-}
+    </>
+  );
+};
 
-export default withRouter(DomainActionMenu);
+export default React.memo(DomainActionMenu);

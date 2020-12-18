@@ -172,14 +172,12 @@ const Notice: React.FC<CombinedProps> = props => {
       dangerouslySetInnerHTML={{ __html: sanitizeHTML(html) }}
     />
   ) : (
-    <Typography
-      {...typeProps}
-      onClick={onClick}
-      className={`${classes.noticeText} noticeText`}
-    >
+    // @todo: refactor this so we're not breaking rules
+    // eslint-disable-next-line
+    <div onClick={onClick} className={`${classes.noticeText} noticeText`}>
       {Boolean(text) && text}
       {Boolean(children) && children}
-    </Typography>
+    </div>
   );
 
   const errorScrollClassName = errorGroup
