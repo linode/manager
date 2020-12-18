@@ -77,8 +77,8 @@ export const MySQLLanding: React.FC<Props> = props => {
   const notice = Number(mySQL?.status) > 0 ? mySQL?.status_message : null;
 
   if (notice !== null) {
-    const message = (
-      <>
+    return (
+      <Notice warning>
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
@@ -89,9 +89,8 @@ export const MySQLLanding: React.FC<Props> = props => {
           />{' '}
           for help troubleshooting the MySQL Longview app.
         </Typography>
-      </>
+      </Notice>
     );
-    return <Notice warning text={message} />;
   }
 
   return (

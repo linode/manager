@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link as RouterLink, LinkProps } from 'react-router-dom';
 
 const isExternal = (href: string) => {
-  return href.match(/http/);
+  return href.match(/http/) || href.match(/mailto/);
 };
 
 export const Link: React.FC<LinkProps> = props => {
