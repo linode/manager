@@ -31,9 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(2)
     }
   },
-  link: {
-    ...theme.applyLinkStyles
-  },
   packageButton: {
     fontSize: '0.875rem',
     padding: 0,
@@ -162,9 +159,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         )}
       </Grid>
       <Grid item>
-        <button className={classes.link}>
-          <Link to={`/longview/clients/${clientID}`}>View Details</Link>
-        </button>
+        <Link to={`/longview/clients/${clientID}`}>View Details</Link>
         {!loading && (
           <div className={classes.lastUpdatedOuter}>
             <Typography variant="caption" className={classes.lastUpdatedText}>
