@@ -232,7 +232,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(clusters)));
   }),
   rest.get('*/domains', (req, res, ctx) => {
-    const domains = domainFactory.buildList(0);
+    const domains = domainFactory.buildList(10);
     return res(ctx.json(makeResourcePage(domains)));
   }),
   rest.post('*/domains/*/records', (req, res, ctx) => {

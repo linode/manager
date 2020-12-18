@@ -32,8 +32,6 @@ const props: CombinedProps = {
   openForEditing: jest.fn(),
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
-  ldClient: {} as any,
-  flags: {},
   classes: {
     domain: '',
     dnsWarning: '',
@@ -43,7 +41,8 @@ const props: CombinedProps = {
     tagGroup: '',
     title: '',
     breadcrumbs: '',
-    importButton: ''
+    importButton: '',
+    banner: ''
   },
   domainsByID: {},
   upsertMultipleDomains: jest.fn(),
@@ -70,7 +69,7 @@ describe('Domains Landing', () => {
     const { container } = render(wrapWithTheme(<DomainsLanding {...props} />));
 
     await waitFor(() =>
-      assertOrder(container, '[data-qa-label]', [
+      assertOrder(container, '[data-qa-domain-label]', [
         'domain-0',
         'domain-1',
         'domain-2',
