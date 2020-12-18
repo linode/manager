@@ -7,5 +7,5 @@ export const useManagedSSHKey = () =>
   useQuery<ManagedSSHPubKey, APIError[]>(
     'managedSSHKey',
     getSSHPubKey,
-    queryPresets.longLived
+    queryPresets.oneTimeFetch
   );
