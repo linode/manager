@@ -60,7 +60,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   const { data } = useFirewallQuery();
   const thisFirewall = data?.[thisFirewallId];
 
-  const [updateFirewall, { error, reset }] = useMutateFirewall(
+  const { mutateAsync: updateFirewall, error, reset } = useMutateFirewall(
     Number(thisFirewallId)
   );
 

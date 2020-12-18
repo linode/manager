@@ -1,5 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { QueryCache, QueryConfig, MutationConfig } from 'react-query';
+import { QueryClient, UseMutationOptions, UseQueryOptions } from 'react-query';
 import { Entity } from 'src/store/types';
 
 // =============================================================================
@@ -7,10 +7,7 @@ import { Entity } from 'src/store/types';
 // =============================================================================
 type QueryConfigTypes = 'shortLived' | 'longLived' | 'oneTimeFetch';
 
-export const queryPresets: Record<
-  QueryConfigTypes,
-  Partial<QueryConfig<any, any>>
-> = {
+export const queryPresets: Record<QueryConfigTypes, UseQueryOptions<any>> = {
   shortLived: {
     refetchOnWindowFocus: true,
     refetchOnMount: true,
@@ -31,10 +28,8 @@ export const queryPresets: Record<
   }
 };
 
-export const queryCache = new QueryCache({
-  defaultConfig: {
-    queries: queryPresets.longLived
-  }
+export const queryClient = new QueryClient({
+  defaultOptions: { queries: queryPresets.longLived }
 });
 
 // =============================================================================
@@ -52,17 +47,14 @@ export const listToItemsByID = <E extends Entity[]>(entityList: E) => {
 export const mutationHandlers = <T extends Entity, E = APIError[]>(
   queryKey: string,
   entityID: number
-): MutationConfig<T, E, Partial<T>, () => void> => {
+): UseMutationOptions<T, E, Partial<T>, () => void> => {
   return {
     onSuccess: updatedEntity => {
       // Update the query data to include the newly updated Entity.
-      return queryCache.setQueryData<ItemsByID<T>, ItemsByID<T>>(
-        queryKey,
-        oldData => ({
-          ...oldData,
-          [entityID]: updatedEntity
-        })
-      );
+      queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => ({
+        ...oldData,
+        [entityID]: updatedEntity
+      }));
     }
   };
 };

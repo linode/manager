@@ -23,7 +23,7 @@ type CombinedProps = RouteComponentProps<{}> & FireProps;
 const FirewallLanding: React.FC<CombinedProps> = props => {
   const { deleteFirewall, disableFirewall, enableFirewall } = props;
 
-  const { data, isLoading, error, updatedAt } = useFirewallQuery();
+  const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
 
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
     boolean
@@ -154,7 +154,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     Component: FirewallRow,
     data: firewallArray,
     loading: isLoading,
-    lastUpdated: updatedAt,
+    lastUpdated: dataUpdatedAt,
     error: error ?? undefined
   };
 

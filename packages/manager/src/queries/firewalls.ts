@@ -25,7 +25,9 @@ export const useFirewallQuery = () => {
 
 export const useMutateFirewall = (id: number) => {
   return useMutation<Firewall, APIError[], Partial<Firewall>>(
-    (payload: Partial<Firewall>) => updateFirewall(id, payload),
+    (payload: Partial<Firewall>) => {
+      return updateFirewall(id, payload);
+    },
     mutationHandlers(queryKey, id)
   );
 };
