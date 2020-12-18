@@ -97,13 +97,6 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
     setDrawerOpen(true);
   };
 
-  const successMsg = (
-    <Typography>
-      SSH key added successfully. <Link to="/profile/keys">Click here</Link> to
-      manage your keys.
-    </Typography>
-  );
-
   const usersWithKeys = users
     ? users.filter(thisUser => thisUser.keys.length > 0)
     : [];
@@ -112,7 +105,12 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
     <React.Fragment>
       <TableHeader title="SSH Keys" />
       {success && (
-        <Notice success text={successMsg} data-testid="ssh-success-message" />
+        <Notice success data-testid="ssh-success-message">
+          <Typography>
+            SSH key added successfully.{' '}
+            <Link to="/profile/keys">Click here</Link> to manage your keys.
+          </Typography>
+        </Notice>
       )}
       <Table isResponsive={false} border spacingBottom={16}>
         <TableHead>
