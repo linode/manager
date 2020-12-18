@@ -243,9 +243,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
               [classes.button]: true,
               [classes.cmrSpacing]: flags.cmr
             })}
-            onClick={() => {
-              handleOpenAddDrawer();
-            }}
+            onClick={handleOpenAddDrawer}
           >
             Add a Node Pool
           </Button>

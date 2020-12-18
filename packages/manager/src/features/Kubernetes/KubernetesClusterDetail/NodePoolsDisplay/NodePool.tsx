@@ -1,25 +1,9 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import NodeTable from './NodeTable';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    '& button': {
-      paddingRight: theme.spacing(2.5),
-      paddingLeft: theme.spacing(2.5)
-    }
-  },
-  nodeTable: {
-    marginTop: theme.spacing(0.5)
-  }
-}));
 
 interface Props {
   poolId: number;
@@ -42,13 +26,18 @@ const NodePool: React.FC<Props> = props => {
     poolId
   } = props;
 
-  const classes = useStyles();
-
   return (
     <>
-      <div className={classes.container}>
-        <Typography variant="h2">{typeLabel}</Typography>
-        <div className={classes.container}>
+      <Grid
+        container
+        className="my0"
+        alignItems="center"
+        justify="space-between"
+      >
+        <Grid item>
+          <Typography variant="h2">{typeLabel}</Typography>
+        </Grid>
+        <Grid item>
           <Button
             buttonType="secondary"
             onClick={() => handleClickResize(poolId)}
@@ -67,16 +56,14 @@ const NodePool: React.FC<Props> = props => {
           >
             Delete Pool
           </Button>
-        </div>
-      </div>
-      <div className={classes.nodeTable}>
-        <NodeTable
-          poolId={poolId}
-          nodes={nodes}
-          typeLabel={typeLabel}
-          openRecycleNodeDialog={openRecycleNodeDialog}
-        />
-      </div>
+        </Grid>
+      </Grid>
+      <NodeTable
+        poolId={poolId}
+        nodes={nodes}
+        typeLabel={typeLabel}
+        openRecycleNodeDialog={openRecycleNodeDialog}
+      />
     </>
   );
 };
