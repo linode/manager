@@ -23,7 +23,7 @@ import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.
 import { MapState } from 'src/store/types';
 import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
-import ThemeToggle_CMR from './ThemeToggle_CMR';
+import ThemeToggle from './ThemeToggle';
 
 type ClassNames = 'root' | 'title' | 'label';
 
@@ -109,7 +109,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
             <Grid container alignItems="center">
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<ThemeToggle_CMR toggleTheme={toggleTheme} />}
+                  control={<ThemeToggle toggleTheme={toggleTheme} />}
                   label={`
                 Dark mode is ${
                   this.props.theme.name === 'darkTheme' ? 'enabled' : 'disabled'
