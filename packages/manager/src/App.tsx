@@ -31,6 +31,7 @@ import { MapState } from './store/types';
 
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
+import GoTo from './GoTo';
 
 interface Props {
   toggleTheme: () => void;
@@ -43,6 +44,7 @@ interface State {
   menuOpen: boolean;
   welcomeBanner: boolean;
   hasError: boolean;
+  goToOpen: boolean;
 }
 
 type CombinedProps = Props &
@@ -59,7 +61,8 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
-    hasError: false
+    hasError: false,
+    goToOpen: false
   };
 
   componentDidCatch() {
@@ -84,6 +87,16 @@ export class App extends React.Component<CombinedProps, State> {
     document.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.ctrlKey && event.shiftKey && event.key === 'D') {
         this.props.toggleTheme();
+      }
+    });
+
+    // eslint-disable-next-line
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.metaKey && event.key === 'k') {
+        this.setState(prevState => ({
+          ...prevState,
+          goToOpen: !prevState.goToOpen
+        }));
       }
     });
 
@@ -118,6 +131,10 @@ export class App extends React.Component<CombinedProps, State> {
         }
       });
   }
+
+  goToClose = () => {
+    this.setState({ goToOpen: false });
+  };
 
   render() {
     const { hasError } = this.state;
@@ -188,6 +205,7 @@ export class App extends React.Component<CombinedProps, State> {
           </span>
         </div>
         {/** Update the LD client with the user's id as soon as we know it */}
+        <GoTo open={this.state.goToOpen} onClose={this.goToClose} />
         <IdentifyUser
           userID={userId}
           username={username}
