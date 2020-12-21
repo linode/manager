@@ -136,6 +136,7 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = props => {
                 >
                   <TableCell className={classes.cellCheckbox}>
                     <CheckBox
+                      disabled={disabled}
                       checked={selected}
                       onChange={onSSHKeyChange}
                       inputProps={{
