@@ -1,251 +1,379 @@
-import { pathOr } from 'ramda';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
-import UserIcon from 'src/assets/icons/user.svg';
-import ButtonBase from 'src/components/core/ButtonBase';
-import Hidden from 'src/components/core/Hidden';
-import Menu from 'src/components/core/Menu';
-import MenuItem from 'src/components/core/MenuItem';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import { MapState } from 'src/store/types';
+  Menu as ReachMenu,
+  MenuButton,
+  MenuItems,
+  MenuLink,
+  MenuPopover
+} from '@reach/menu-button';
+import { positionRight } from '@reach/popover';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import UserIcon from 'src/assets/icons/account.svg';
+import Grid from 'src/components/core/Grid';
+import Hidden from 'src/components/core/Hidden';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {
   display: string;
   href: string;
+  hide?: boolean;
 }
 
-const menuLinks: MenuLink[] = [
-  { display: 'My Profile', href: '/profile/display' },
+const useStyles = makeStyles((theme: Theme) => ({
+  menu: {
+    transform: `translateY(${theme.spacing(1)}px)`
+  },
+  button: {
+    borderRadius: 30,
+    order: 4,
+    padding: theme.spacing(1),
+    '&:hover, &.active': {
+      '& $username': {
+        color: theme.palette.primary.main
+      },
+      '& $userWrapper': {
+        boxShadow: '0 0 10px #bbb'
+      }
+    },
+    '&:focus': {
+      '& $username': {
+        color: theme.palette.primary.main
+      }
+    }
+  },
+  userWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    transition: theme.transitions.create(['box-shadow']),
+    height: 28,
+    width: 28,
+    '& svg': {
+      color: '#c9c7c7',
+      width: 28,
+      height: 28
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '28px',
+      height: '28px'
+    }
+  },
+  leftIcon: {
+    borderRadius: '50%',
+    height: 30,
+    width: 30
+  },
+  username: {
+    maxWidth: '135px',
+    overflow: 'hidden',
+    paddingRight: 15,
+    textOverflow: 'ellipsis',
+    transition: theme.transitions.create(['color']),
+    whiteSpace: 'nowrap',
+    // Hides username as soon as things start to scroll
+    [theme.breakpoints.down(1345)]: {
+      ...theme.visually.hidden
+    }
+  },
+  menuItem: {
+    fontFamily: 'LatoWeb',
+    fontSize: '.9rem',
+    '&:hover, &:focus': {
+      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
+      color: 'white'
+    }
+  },
+  hidden: {
+    ...theme.visually.hidden
+  },
+  menuButton: {
+    display: 'flex',
+    alignItems: 'center',
+    lineHeight: 1,
+    [theme.breakpoints.up('sm')]: {
+      paddingLeft: 12
+    },
+    [theme.breakpoints.down(360)]: {
+      paddingLeft: 3
+    },
+    '&[data-reach-menu-button]': {
+      backgroundColor: 'transparent',
+      border: 'none',
+      borderRadius: 0,
+      color: '#c9c7c7',
+      cursor: 'pointer',
+      fontSize: '1rem',
+      height: 50,
+      textTransform: 'inherit',
+      '&[aria-expanded="true"]': {
+        '& $caret': {
+          marginTop: 4,
+          transform: 'rotate(180deg)'
+        }
+      },
+      [theme.breakpoints.down('sm')]: {
+        paddingRight: 12,
+        paddingLeft: 12
+      },
+      [theme.breakpoints.down(360)]: {
+        paddingRight: theme.spacing(),
+        paddingLeft: theme.spacing()
+      }
+    },
+    '&:hover, &:focus': {
+      backgroundColor: theme.cmrBGColors.bgStatusChip
+    }
+  },
+  gravatar: {
+    height: 30,
+    width: 30,
+    borderRadius: '50%'
+  },
+  menuPopover: {
+    '&[data-reach-menu], &[data-reach-menu-popover]': {
+      position: 'absolute',
+      top: 50,
+      zIndex: 3000,
+      [theme.breakpoints.down('md')]: {
+        left: 0
+      }
+    }
+  },
+  caret: {
+    color: '#9ea4ae',
+    fontSize: 26,
+    marginTop: 2,
+    marginLeft: 2,
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
+  },
+  menuItemList: {
+    boxShadow: '0 6px 7px 0 rgba(0, 0, 0, 0.2)',
+    '&[data-reach-menu-items]': {
+      backgroundColor: theme.cmrBGColors.bgPaper,
+      border: 'none',
+      padding: 0,
+      paddingBottom: theme.spacing(1.5),
+      width: 300
+    }
+  },
+  inlineUserName: {
+    paddingRight: theme.spacing(),
+    fontSize: '0.875rem'
+  },
+  menuHeader: {
+    borderBottom: '1px solid #9ea4ae',
+    color: theme.cmrTextColors.headlineStatic,
+    fontSize: '.75rem',
+    letterSpacing: 1.875,
+    marginBottom: theme.spacing(),
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    padding: '16px 0 8px',
+    textTransform: 'uppercase'
+  },
+  profileWrapper: {
+    marginBottom: theme.spacing(2),
+    maxHeight: 200,
+    width: '100%',
+    '& > div': {
+      whiteSpace: 'normal'
+    }
+  },
+  accountColumn: {
+    whiteSpace: 'normal',
+    width: '100%'
+  },
+  menuItemLink: {
+    lineHeight: 1,
+    '&[data-reach-menu-item]': {
+      display: 'flex',
+      alignItems: 'center',
+      color: theme.cmrTextColors.linkActiveMedium,
+      cursor: 'pointer',
+      fontSize: '1rem',
+      padding: '8px 24px',
+      '&:focus, &:hover': {
+        backgroundColor: theme.cmrBGColors.bgApp,
+        color: theme.cmrTextColors.linkActiveMedium
+      }
+    },
+    '&[data-reach-menu-item][data-selected]': {
+      backgroundColor: theme.cmrBGColors.bgApp,
+      color: theme.cmrTextColors.linkActiveMedium
+    }
+  },
+  userName: {
+    color: theme.cmrTextColors.headlineStatic,
+    fontSize: '1.1rem',
+    marginTop: -1,
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    paddingTop: theme.spacing(2)
+  }
+}));
+
+const profileLinks: MenuLink[] = [
+  {
+    display: 'Display',
+    href: '/profile/display'
+  },
+  { display: 'Password & Authentication', href: '/profile/auth' },
+  { display: 'SSH Keys', href: '/profile/keys' },
+  { display: 'LISH Console Settings', href: '/profile/lish' },
+  {
+    display: 'API Tokens',
+    href: '/profile/tokens'
+  },
+  { display: 'OAuth Apps', href: '/profile/clients' },
+  { display: 'Referrals', href: '/profile/referrals' },
+  { display: 'My Settings', href: '/profile/settings' },
   { display: 'Log Out', href: '/logout' }
 ];
 
-type CSSClasses =
-  | 'menu'
-  | 'button'
-  | 'userWrapper'
-  | 'leftIcon'
-  | 'username'
-  | 'menuItem'
-  | 'hidden';
+export const UserMenu: React.FC<{}> = () => {
+  const classes = useStyles();
 
-const styles = (theme: Theme) =>
-  createStyles({
-    menu: {
-      transform: `translateY(${theme.spacing(1)}px)`
-    },
-    button: {
-      padding: theme.spacing(1),
-      borderRadius: 30,
-      order: 4,
-      marginRight: -theme.spacing(1),
-      '&:hover, &.active': {
-        '& $username': {
-          color: theme.palette.primary.main
-        },
-        '& $userWrapper': {
-          boxShadow: '0 0 10px #bbb'
-        }
+  const [gravatarURL, setGravatarURL] = React.useState<string | undefined>();
+  const [gravatarLoading, setGravatarLoading] = React.useState<boolean>(false);
+
+  const {
+    profile,
+    _hasAccountAccess,
+    _isRestrictedUser
+  } = useAccountManagement();
+
+  const hasFullAccountAccess =
+    profile.data?.grants?.global?.account_access === 'read_write' ||
+    !_isRestrictedUser;
+
+  const accountLinks: MenuLink[] = React.useMemo(
+    () => [
+      {
+        display: 'Billing & Contact Information',
+        href: '/account/billing'
       },
-      '&:focus': {
-        '& $username': {
-          color: theme.palette.primary.main
-        }
+      // Restricted users can't view the Users tab regardless of their grants
+      {
+        display: 'Users & Grants',
+        href: '/account/users',
+        hide: _isRestrictedUser
+      },
+      // Restricted users with read_write account access can view Settings.
+      {
+        display: 'Account Settings',
+        href: '/account/settings',
+        hide: !hasFullAccountAccess
       }
-    },
-    userWrapper: {
-      marginRight: theme.spacing(1),
-      borderRadius: '50%',
-      width: '40px',
-      height: '40px',
-      transition: theme.transitions.create(['box-shadow']),
-      [theme.breakpoints.down('md')]: {
-        margin: 0,
-        width: '28px',
-        height: '28px'
-      }
-    },
-    leftIcon: {
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%'
-    },
-    username: {
-      transition: theme.transitions.create(['color']),
-      [theme.breakpoints.down('md')]: {
-        display: 'none'
-      }
-    },
-    menuItem: {
-      fontSize: '.9rem',
-      fontFamily: 'LatoWeb',
-      '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white'
-      }
-    },
-    hidden: {
-      ...theme.visually.hidden
-    }
-  });
+    ],
+    [hasFullAccountAccess, _isRestrictedUser]
+  );
 
-export type CombinedProps = StateProps & WithStyles<CSSClasses>;
+  const userEmail = profile.data?.email;
+  const userName = profile.data?.username ?? '';
 
-interface State {
-  anchorEl?: HTMLElement;
-  gravatarUrl: string | undefined;
-}
-
-export class UserMenu extends React.Component<CombinedProps, State> {
-  state = {
-    anchorEl: undefined,
-    gravatarUrl: undefined
-  };
-
-  constructor(props: CombinedProps) {
-    super(props);
-  }
-
-  mounted: boolean = false;
-
-  handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: undefined });
-  };
-
-  renderMenuLink(menuLink: MenuLink) {
-    const { classes } = this.props;
-    return (
-      <Link
-        role="menuitem"
-        to={menuLink.href}
-        className={classes.menuItem}
-        data-qa-menu-link={menuLink.display}
-        key={menuLink.display}
-        onClick={this.handleClose}
-      >
-        <MenuItem key={menuLink.display}>{menuLink.display}</MenuItem>
-      </Link>
-    );
-  }
-
-  setGravatarUrl(email: string) {
-    getGravatarUrl(email).then(url => {
-      this.setState({ gravatarUrl: url });
-    });
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps: StateProps) {
-    /** 2018-09-06: Should this be in componentDidUpdate? */
-    const { userEmail: currentUserEmail } = this.props;
-    const { userEmail } = nextProps;
-
-    if (userEmail && userEmail !== currentUserEmail) {
-      this.setGravatarUrl(userEmail);
-    }
-  }
-
-  renderAvatar() {
-    const { classes } = this.props;
-    const { gravatarUrl } = this.state;
-    if (!gravatarUrl) {
-      return null;
-    }
-    return gravatarUrl !== 'not found' ? (
-      <div className={classes.userWrapper}>
-        <img src={gravatarUrl} className={classes.leftIcon} alt="Gravatar" />
-      </div>
-    ) : (
-      <div className={classes.userWrapper}>
-        <UserIcon className={classes.leftIcon} />
-      </div>
-    );
-  }
-
-  componentDidMount() {
-    this.mounted = true;
-
-    const { userEmail } = this.props;
-
+  React.useEffect(() => {
     if (userEmail) {
-      this.setGravatarUrl(userEmail);
+      setGravatarLoading(true);
+      getGravatarUrl(userEmail).then(url => {
+        setGravatarLoading(false);
+        setGravatarURL(url);
+      });
     }
-  }
+  }, [userEmail]);
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  render() {
-    const { classes, username } = this.props;
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
-
-    return (
-      <React.Fragment>
-        <Hidden smDown>
-          <ButtonBase
-            onClick={this.handleMenu}
-            className={` ${classes.button} ${anchorEl && 'active'}`}
-            data-qa-user-menu
-            aria-label="User Menu"
-          >
-            {username && (
-              <React.Fragment>
-                {this.renderAvatar()}
-                <span className={classes.username}>{username && username}</span>
-              </React.Fragment>
-            )}
-          </ButtonBase>
-          <Menu
-            anchorEl={anchorEl}
-            getContentAnchorEl={undefined}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right'
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
-            }}
-            open={open}
-            onClose={this.handleClose}
-            className={classes.menu}
-          >
-            {/* <MenuItem
-              key="placeholder"
-              aria-hidden
-              className={classes.hidden}
-            /> */}
-            {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
-          </Menu>
-        </Hidden>
-      </React.Fragment>
+  const renderLink = (menuLink: MenuLink) =>
+    menuLink.hide ? null : (
+      <Grid item xs={6}>
+        <MenuLink
+          key={menuLink.display}
+          as={Link}
+          to={menuLink.href}
+          className={classes.menuItemLink}
+          data-testid={`menu-item-${menuLink.display}`}
+        >
+          {menuLink.display}
+        </MenuLink>
+      </Grid>
     );
-  }
-}
 
-interface StateProps {
-  userEmail: string;
-  username: string;
-}
+  return (
+    <div>
+      <ReachMenu>
+        <Tooltip title={'Profile & Account'} disableTouchListener>
+          <MenuButton
+            className={classes.menuButton}
+            data-testid="nav-group-profile"
+          >
+            <Hidden smDown>
+              <Typography className={classes.inlineUserName}>
+                {userName}
+              </Typography>
+            </Hidden>
+            {gravatarLoading || gravatarURL === 'not found' ? (
+              <div className={classes.userWrapper}>
+                <UserIcon />
+              </div>
+            ) : (
+              <div className={classes.userWrapper}>
+                <img
+                  className={classes.gravatar}
+                  src={gravatarURL}
+                  alt="Gravatar"
+                />
+              </div>
+            )}
+            <KeyboardArrowDown className={classes.caret} />
+          </MenuButton>
+        </Tooltip>
+        <MenuPopover className={classes.menuPopover} position={positionRight}>
+          <MenuItems className={classes.menuItemList}>
+            <div className={classes.userName}>
+              <strong>{userName}</strong>
+            </div>
+            <div className={classes.menuHeader}>My Profile</div>
+            <Grid
+              container
+              wrap="wrap"
+              direction="column"
+              className={classes.profileWrapper}
+            >
+              {profileLinks.map(renderLink)}
+            </Grid>
+            {_hasAccountAccess ? (
+              <>
+                <div className={classes.menuHeader}>Account</div>
+                <Grid container>
+                  <Grid item className={classes.accountColumn}>
+                    {accountLinks.map(menuLink =>
+                      menuLink.hide ? null : (
+                        <MenuLink
+                          key={menuLink.display}
+                          as={Link}
+                          to={menuLink.href}
+                          className={classes.menuItemLink}
+                          data-testid={`menu-item-${menuLink.display}`}
+                        >
+                          {menuLink.display}
+                        </MenuLink>
+                      )
+                    )}
+                  </Grid>
+                </Grid>
+              </>
+            ) : null}
+          </MenuItems>
+        </MenuPopover>
+      </ReachMenu>
+    </div>
+  );
+};
 
-const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
-  userEmail: pathOr('', ['data', 'email'], state.__resources.profile),
-  username: pathOr('', ['data', 'username'], state.__resources.profile)
-});
-
-export default compose<CombinedProps, {}>(
-  connect(mapStateToProps),
-  withStyles(styles)
-)(UserMenu);
+export default React.memo(UserMenu);
