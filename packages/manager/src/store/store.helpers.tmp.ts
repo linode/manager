@@ -129,9 +129,10 @@ export const onGetPageSuccess = <E extends Entity>(
   return isFullRequest
     ? {
         ...newState,
-        lastUpdated: Date.now()
+        lastUpdated: Date.now(),
+        loading: false
       }
-    : newState;
+    : { ...newState, loading: false };
 };
 
 export const createRequestThunk = <Req extends any, Res extends any, Err>(

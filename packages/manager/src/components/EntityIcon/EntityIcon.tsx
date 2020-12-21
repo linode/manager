@@ -7,7 +7,6 @@ import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
 import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
-import LoadingIcon from 'src/assets/icons/entityIcons/loading.svg';
 import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
 import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
@@ -28,9 +27,6 @@ type ClassNames =
   | 'icon'
   | 'running'
   | 'offline'
-  | 'maintenance'
-  | 'loading'
-  | 'loadingIcon'
   | 'animated';
 
 const styles = (theme: Theme) =>
@@ -49,23 +45,17 @@ const styles = (theme: Theme) =>
       display: 'flex'
     },
     default: {
-      color: theme.color.grey2
+      color: theme.color.grey1
     },
     icon: {},
     running: {
       color: theme.color.green
     },
     offline: {
+      color: theme.color.grey1
+    },
+    error: {
       color: theme.color.red
-    },
-    maintenance: {},
-    loading: {
-      position: 'absolute',
-      top: 0,
-      left: 0
-    },
-    loadingIcon: {
-      fill: theme.color.offBlack
     },
     animated: {
       animation: '$rotate 2s linear infinite'
@@ -122,7 +112,6 @@ const EntityIcon: React.FC<CombinedProps> = props => {
     size,
     className,
     marginTop,
-    stopAnimation,
     ...rest
   } = props;
 
@@ -143,7 +132,7 @@ const EntityIcon: React.FC<CombinedProps> = props => {
       case 'disabled':
         return 'offline';
       case 'has_errors':
-        return 'offline';
+        return 'error';
       default:
         return 'offline';
     }
@@ -164,8 +153,8 @@ const EntityIcon: React.FC<CombinedProps> = props => {
       className={classNames(
         {
           [classes.root]: true,
-          [classes.default]: !loading,
-          [classes[`${finalStatus}`]]: !loading
+          [classes.default]: true,
+          [classes[`${finalStatus}`]]: true
         },
         className
       )}
@@ -176,26 +165,7 @@ const EntityIcon: React.FC<CombinedProps> = props => {
       aria-label={`${variant} is ${finalStatus}`}
       {...rest}
     >
-      <Icon
-        className={classNames({
-          [classes.icon]: true,
-          ['loading']: loading
-        })}
-        width={iconSize}
-        height={iconSize}
-      />
-      {loading && (
-        <div className={classes.loading}>
-          <LoadingIcon
-            className={classNames({
-              [classes.loadingIcon]: true,
-              [classes.animated]: !stopAnimation
-            })}
-            width={iconSize - 2}
-            height={iconSize - 2}
-          />
-        </div>
-      )}
+      <Icon className={classes.icon} width={iconSize} height={iconSize} />
     </div>
   );
 };

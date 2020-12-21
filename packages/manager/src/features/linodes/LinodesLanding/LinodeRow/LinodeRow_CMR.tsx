@@ -5,7 +5,6 @@ import {
   LinodeStatus
 } from '@linode/api-v4/lib/linodes';
 import * as classNames from 'classnames';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -17,7 +16,6 @@ import HelpIcon from 'src/components/HelpIcon';
 import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
-import TagCell from 'src/components/TagCell';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import {
   getProgressOrDefault,
@@ -25,9 +23,7 @@ import {
   transitionText
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
-import useLinodeActions from 'src/hooks/useLinodeActions';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
   HasMutationAvailable
@@ -109,7 +105,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     // other props
     classes,
     linodeNotifications,
-    openTagDrawer,
     openDialog,
     openPowerActionDialog,
     openNotificationDrawer,
@@ -119,38 +114,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     isVLAN
   } = props;
 
-  const { updateLinode } = useLinodeActions();
-  const { enqueueSnackbar } = useSnackbar();
-
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
-
-  const addTag = React.useCallback(
-    (tag: string) => {
-      const newTags = [...tags, tag];
-      updateLinode({ linodeId: id, tags: newTags }).catch(e =>
-        enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-          variant: 'error'
-        })
-      );
-    },
-    [tags, id, updateLinode, enqueueSnackbar]
-  );
-
-  const deleteTag = React.useCallback(
-    (tag: string) => {
-      const newTags = tags.filter(thisTag => thisTag !== tag);
-      updateLinode({ linodeId: id, tags: newTags }).catch(e =>
-        enqueueSnackbar(
-          getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
-          {
-            variant: 'error'
-          }
-        )
-      );
-    },
-    [tags, id, updateLinode, enqueueSnackbar]
-  );
 
   const MaintenanceText = () => {
     return (
@@ -253,32 +218,28 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         </TableCell>
       ) : null}
       {props.isVLAN ? null : (
-        <Hidden xsDown>
-          <TableCell className={classes.ipCell} data-qa-ips>
-            <div className={classes.ipCellWrapper}>
-              <IPAddress ips={ipv4} copyRight />
-            </div>
-          </TableCell>
-          <TableCell className={classes.regionCell} data-qa-region>
-            <RegionIndicator region={region} />
-          </TableCell>
-          <LinodeRowBackupCell
-            linodeId={id}
-            backupsEnabled={backups.enabled || false}
-            mostRecentBackup={mostRecentBackup || ''}
-          />
-        </Hidden>
+        <>
+          <Hidden xsDown>
+            <TableCell className={classes.ipCell} data-qa-ips>
+              <div className={classes.ipCellWrapper}>
+                <IPAddress ips={ipv4} copyRight />
+              </div>
+            </TableCell>
+            <Hidden smDown>
+              <TableCell className={classes.regionCell} data-qa-region>
+                <RegionIndicator region={region} />
+              </TableCell>
+            </Hidden>
+          </Hidden>
+          <Hidden mdDown>
+            <LinodeRowBackupCell
+              linodeId={id}
+              backupsEnabled={backups.enabled || false}
+              mostRecentBackup={mostRecentBackup || ''}
+            />
+          </Hidden>
+        </>
       )}
-      <Hidden mdDown>
-        <TagCell
-          tags={tags}
-          addTag={addTag}
-          deleteTag={deleteTag}
-          listAllTags={() => openTagDrawer(id, label, tags)}
-          width={300}
-          inTableContext
-        />
-      </Hidden>
 
       <TableCell className={classes.actionCell} data-qa-notifications>
         <div className={classes.actionInner}>
@@ -352,7 +313,7 @@ export const RenderFlag: React.FC<{
 
 RenderFlag.displayName = `RenderFlag`;
 
-const ProgressDisplay: React.FC<{
+export const ProgressDisplay: React.FC<{
   className?: string;
   progress: null | number;
   text: string;

@@ -11,8 +11,7 @@ import Notice from '../Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    flexGrow: 1,
-    backgroundColor: theme.color.white
+    flexGrow: 1
   },
   inner: {
     padding: theme.spacing(2),
@@ -34,6 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-tab]': {
       // This was copied over from our MuiTab styling in themeFactory. Some of this could probably be cleaned up.
       color: theme.cmrTextColors.textTab,
+      background: 'transparent',
+      border: 'none',
       minWidth: 50,
       textTransform: 'inherit',
       fontSize: '0.93rem',
@@ -119,7 +120,7 @@ export const TabbedPanel: React.FC<CombinedProps> = props => {
   return (
     <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
       <div className={`${classes.inner} ${innerClass}`}>
-        {error && <Notice text={error} error />}
+        {error && <Notice error>{error}</Notice>}
         {header !== '' && (
           <Typography variant="h2" data-qa-tp-title>
             {header}

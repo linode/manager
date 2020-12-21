@@ -9,8 +9,11 @@ import {
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import UserIcon from 'src/assets/icons/user.svg';
+import UserIcon from 'src/assets/icons/account.svg';
+import Grid from 'src/components/core/Grid';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
@@ -48,6 +51,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     borderRadius: '50%',
     transition: theme.transitions.create(['box-shadow']),
+    height: 28,
+    width: 28,
+    '& svg': {
+      color: '#c9c7c7',
+      width: 28,
+      height: 28
+    },
     [theme.breakpoints.down('md')]: {
       width: '28px',
       height: '28px'
@@ -85,66 +95,47 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     lineHeight: 1,
-    paddingLeft: 15,
+    [theme.breakpoints.up('sm')]: {
+      paddingLeft: 12
+    },
+    [theme.breakpoints.down(360)]: {
+      paddingLeft: 3
+    },
     '&[data-reach-menu-button]': {
-      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
+      backgroundColor: 'transparent',
       border: 'none',
       borderRadius: 0,
-      color: theme.color.primaryNavText,
+      color: '#c9c7c7',
       cursor: 'pointer',
       fontSize: '1rem',
       height: 50,
       textTransform: 'inherit',
       '&[aria-expanded="true"]': {
-        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
         '& $caret': {
+          marginTop: 4,
           transform: 'rotate(180deg)'
         }
-      }
-    },
-    '&:hover': {
-      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
-    },
-    '&:focus': {
-      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
-    },
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: 7.5
-    }
-  },
-  menuItemLink: {
-    lineHeight: 1,
-    '&[data-reach-menu-item]': {
-      display: 'flex',
-      alignItems: 'center',
-      color: theme.color.primaryNavText,
-      cursor: 'pointer',
-      fontSize: '1rem',
-      padding: '12px 40px 12px 15px',
-      '&:hover': {
-        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
       },
-      '&:focus': {
-        backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
+      [theme.breakpoints.down('sm')]: {
+        paddingRight: 12,
+        paddingLeft: 12
+      },
+      [theme.breakpoints.down(360)]: {
+        paddingRight: theme.spacing(),
+        paddingLeft: theme.spacing()
       }
     },
-    '&[data-reach-menu-item][data-selected]': {
-      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive
-    },
-    [theme.breakpoints.down('sm')]: {
-      padding: '10px 7.5px'
+    '&:hover, &:focus': {
+      backgroundColor: theme.cmrBGColors.bgStatusChip
     }
   },
-  menuItemList: {
-    '&[data-reach-menu-items]': {
-      backgroundColor: theme.cmrBGColors.bgPrimaryNav,
-      border: 'none',
-      padding: 0
-    }
+  gravatar: {
+    height: 30,
+    width: 30,
+    borderRadius: '50%'
   },
   menuPopover: {
     '&[data-reach-menu], &[data-reach-menu-popover]': {
-      marginTop: -1,
       position: 'absolute',
       top: 50,
       zIndex: 3000,
@@ -156,13 +147,95 @@ const useStyles = makeStyles((theme: Theme) => ({
   caret: {
     color: '#9ea4ae',
     fontSize: 26,
-    marginTop: 4,
+    marginTop: 2,
     marginLeft: 2,
     [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
+  },
+  menuItemList: {
+    boxShadow: '0 6px 7px 0 rgba(0, 0, 0, 0.2)',
+    '&[data-reach-menu-items]': {
+      backgroundColor: theme.cmrBGColors.bgPaper,
+      border: 'none',
+      padding: 0,
+      paddingBottom: theme.spacing(1.5),
+      width: 300
+    }
+  },
+  inlineUserName: {
+    paddingRight: theme.spacing(),
+    fontSize: '0.875rem'
+  },
+  menuHeader: {
+    borderBottom: '1px solid #9ea4ae',
+    color: theme.cmrTextColors.headlineStatic,
+    fontSize: '.75rem',
+    letterSpacing: 1.875,
+    marginBottom: theme.spacing(),
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    padding: '16px 0 8px',
+    textTransform: 'uppercase'
+  },
+  profileWrapper: {
+    marginBottom: theme.spacing(2),
+    maxHeight: 200,
+    width: '100%',
+    '& > div': {
+      whiteSpace: 'normal'
+    }
+  },
+  accountColumn: {
+    whiteSpace: 'normal',
+    width: '100%'
+  },
+  menuItemLink: {
+    lineHeight: 1,
+    '&[data-reach-menu-item]': {
+      display: 'flex',
+      alignItems: 'center',
+      color: theme.cmrTextColors.linkActiveMedium,
+      cursor: 'pointer',
+      fontSize: '1rem',
+      padding: '8px 24px',
+      '&:focus, &:hover': {
+        backgroundColor: theme.cmrBGColors.bgApp,
+        color: theme.cmrTextColors.linkActiveMedium
+      }
+    },
+    '&[data-reach-menu-item][data-selected]': {
+      backgroundColor: theme.cmrBGColors.bgApp,
+      color: theme.cmrTextColors.linkActiveMedium
+    }
+  },
+  userName: {
+    color: theme.cmrTextColors.headlineStatic,
+    fontSize: '1.1rem',
+    marginTop: -1,
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    paddingTop: theme.spacing(2)
   }
 }));
+
+const profileLinks: MenuLink[] = [
+  {
+    display: 'Display',
+    href: '/profile/display'
+  },
+  { display: 'Password & Authentication', href: '/profile/auth' },
+  { display: 'SSH Keys', href: '/profile/keys' },
+  { display: 'LISH Console Settings', href: '/profile/lish' },
+  {
+    display: 'API Tokens',
+    href: '/profile/tokens'
+  },
+  { display: 'OAuth Apps', href: '/profile/clients' },
+  { display: 'Referrals', href: '/profile/referrals' },
+  { display: 'My Settings', href: '/profile/settings' },
+  { display: 'Log Out', href: '/logout' }
+];
 
 export const UserMenu: React.FC<{}> = () => {
   const classes = useStyles();
@@ -170,10 +243,40 @@ export const UserMenu: React.FC<{}> = () => {
   const [gravatarURL, setGravatarURL] = React.useState<string | undefined>();
   const [gravatarLoading, setGravatarLoading] = React.useState<boolean>(false);
 
-  const { _hasAccountAccess, profile, account } = useAccountManagement();
+  const {
+    profile,
+    _hasAccountAccess,
+    _isRestrictedUser
+  } = useAccountManagement();
+
+  const hasFullAccountAccess =
+    profile.data?.grants?.global?.account_access === 'read_write' ||
+    !_isRestrictedUser;
+
+  const accountLinks: MenuLink[] = React.useMemo(
+    () => [
+      {
+        display: 'Billing & Contact Information',
+        href: '/account/billing'
+      },
+      // Restricted users can't view the Users tab regardless of their grants
+      {
+        display: 'Users & Grants',
+        href: '/account/users',
+        hide: _isRestrictedUser
+      },
+      // Restricted users with read_write account access can view Settings.
+      {
+        display: 'Account Settings',
+        href: '/account/settings',
+        hide: !hasFullAccountAccess
+      }
+    ],
+    [hasFullAccountAccess, _isRestrictedUser]
+  );
 
   const userEmail = profile.data?.email;
-  const username = profile.data?.username;
+  const userName = profile.data?.username ?? '';
 
   React.useEffect(() => {
     if (userEmail) {
@@ -185,18 +288,20 @@ export const UserMenu: React.FC<{}> = () => {
     }
   }, [userEmail]);
 
-  const menuLinks: MenuLink[] = React.useMemo(
-    () => [
-      {
-        display: 'Account',
-        href: '/account',
-        hide: account.loading || !_hasAccountAccess
-      },
-      { display: 'My Profile', href: '/profile/display' },
-      { display: 'Log Out', href: '/logout' }
-    ],
-    [account.loading, _hasAccountAccess]
-  );
+  const renderLink = (menuLink: MenuLink) =>
+    menuLink.hide ? null : (
+      <Grid item xs={6}>
+        <MenuLink
+          key={menuLink.display}
+          as={Link}
+          to={menuLink.href}
+          className={classes.menuItemLink}
+          data-testid={`menu-item-${menuLink.display}`}
+        >
+          {menuLink.display}
+        </MenuLink>
+      </Grid>
+    );
 
   return (
     <div>
@@ -205,20 +310,20 @@ export const UserMenu: React.FC<{}> = () => {
           className={classes.menuButton}
           data-testid="nav-group-profile"
         >
-          {gravatarLoading ? (
+          <Hidden smDown>
+            <Typography className={classes.inlineUserName}>
+              {userName}
+            </Typography>
+          </Hidden>
+          {gravatarLoading || gravatarURL === 'not found' ? (
             <div className={classes.userWrapper}>
-              <div className={classes.username}>{username}</div>
-            </div>
-          ) : gravatarURL === 'not found' ? (
-            <div className={classes.userWrapper}>
-              <div className={classes.username}>{username}</div>
-              <UserIcon className={classes.leftIcon} />
+              <UserIcon />
             </div>
           ) : (
             <div className={classes.userWrapper}>
               <img
+                className={classes.gravatar}
                 src={gravatarURL}
-                className={classes.leftIcon}
                 alt="Gravatar"
               />
             </div>
@@ -227,19 +332,40 @@ export const UserMenu: React.FC<{}> = () => {
         </MenuButton>
         <MenuPopover className={classes.menuPopover} position={positionRight}>
           <MenuItems className={classes.menuItemList}>
-            {menuLinks.map(menuLink =>
-              menuLink.hide ? null : (
-                <MenuLink
-                  key={menuLink.display}
-                  as={Link}
-                  to={menuLink.href}
-                  className={classes.menuItemLink}
-                  data-testid={`menu-item-${menuLink.display}`}
-                >
-                  {menuLink.display}
-                </MenuLink>
-              )
-            )}
+            <div className={classes.userName}>
+              <strong>{userName}</strong>
+            </div>
+            <div className={classes.menuHeader}>My Profile</div>
+            <Grid
+              container
+              wrap="wrap"
+              direction="column"
+              className={classes.profileWrapper}
+            >
+              {profileLinks.map(renderLink)}
+            </Grid>
+            {_hasAccountAccess ? (
+              <>
+                <div className={classes.menuHeader}>Account</div>
+                <Grid container>
+                  <Grid item className={classes.accountColumn}>
+                    {accountLinks.map(menuLink =>
+                      menuLink.hide ? null : (
+                        <MenuLink
+                          key={menuLink.display}
+                          as={Link}
+                          to={menuLink.href}
+                          className={classes.menuItemLink}
+                          data-testid={`menu-item-${menuLink.display}`}
+                        >
+                          {menuLink.display}
+                        </MenuLink>
+                      )
+                    )}
+                  </Grid>
+                </Grid>
+              </>
+            ) : null}
           </MenuItems>
         </MenuPopover>
       </ReachMenu>

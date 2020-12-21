@@ -32,16 +32,9 @@ import {
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent
 } from 'src/utilities/ga';
-import InlineMenuAction from 'src/components/InlineMenuAction/InlineMenuAction';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  inlineActions: {
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
+const useStyles = makeStyles(() => ({
   link: {
     padding: '12px 10px'
   },
@@ -49,9 +42,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 10
   },
   powerOnOrOff: {
-    height: '100%',
+    borderRadius: 0,
     minWidth: 'auto',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    '&:hover': {
+      textDecoration: 'none'
+    }
   }
 }));
 
@@ -76,7 +72,6 @@ export interface Props {
   ) => void;
   inlineLabel?: string;
   inTableContext?: boolean;
-  inLandingDetailContext?: boolean;
   inVLANContext?: boolean;
 }
 
@@ -86,6 +81,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { types } = useTypes();
   const history = useHistory();
@@ -159,7 +155,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       openDialog,
       openPowerActionDialog,
       readOnly,
-      inLandingDetailContext,
       inVLANContext
     } = props;
 
@@ -177,6 +172,9 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         ? 'This action is unavailable while your Linode is undergoing host maintenance.'
         : undefined
     };
+
+    const inLandingListView = matchesMdDown && inTableContext;
+    const inEntityView = matchesSmDown;
 
     return (): Action[] => {
       const actions: Action[] = [
@@ -238,9 +236,9 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         }
       ];
 
-      if (matchesSmDown || inTableContext) {
+      if (inTableContext || matchesSmDown) {
         actions.unshift({
-          title: 'Launch Console',
+          title: 'Launch LISH Console',
           onClick: () => {
             sendLinodeActionMenuItemEvent('Launch Console');
             lishLaunch(linodeId);
@@ -249,7 +247,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesSmDown || inTableContext) {
+      if (inLandingListView || inEntityView) {
         actions.unshift({
           title: 'Reboot',
           disabled:
@@ -270,7 +268,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if ((matchesSmDown && inTableContext) || inVLANContext) {
+      if (inLandingListView || inEntityView || inVLANContext) {
         actions.unshift({
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           onClick: handlePowerAction,
@@ -278,24 +276,10 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         });
       }
 
-      if (matchesSmDown && inVLANContext) {
+      if ((inLandingListView || inEntityView) && inVLANContext) {
         actions.unshift({
           title: 'Detach',
           onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)
-        });
-      }
-
-      if (
-        (matchesSmDown && inLandingDetailContext) ||
-        (matchesSmDown && inTableContext)
-      ) {
-        actions.unshift({
-          title: 'Details',
-          onClick: () => {
-            history.push({
-              pathname: `/linodes/${linodeId}`
-            });
-          }
         });
       }
 
@@ -311,15 +295,18 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     inlineLabel,
     inTableContext,
     inVLANContext,
-    openDialog
+    openDialog,
+    readOnly
   } = props;
 
+  const readOnlyProps = readOnly
+    ? {
+        disabled: true,
+        tooltip: "You don't have permission to modify this Linode"
+      }
+    : {};
+
   const inlineActions = [
-    {
-      actionText: 'Details',
-      className: classes.link,
-      href: `/linodes/${linodeId}`
-    },
     inVLANContext
       ? {
           actionText: 'Detach',
@@ -330,12 +317,30 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           disabled: !['running', 'offline'].includes(linodeStatus),
           className: classes.powerOnOrOff,
           onClick: handlePowerAction
-        }
+        },
+    {
+      actionText: 'Reboot',
+      className: classes.link,
+      disabled:
+        linodeStatus !== 'running' ||
+        readOnly ||
+        Boolean(configsError?.[0]?.reason),
+      tooltip: readOnly
+        ? "You don't have permission to modify this Linode."
+        : configsError
+        ? 'Could not load configs for this Linode.'
+        : undefined,
+      onClick: () => {
+        sendLinodeActionMenuItemEvent('Reboot Linode');
+        openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
+      },
+      ...readOnlyProps
+    }
   ];
 
   return (
     <>
-      {!matchesSmDown &&
+      {!matchesMdDown &&
         inTableContext &&
         inlineActions.map(action => {
           return (
@@ -343,7 +348,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               key={action.actionText}
               actionText={action.actionText}
               className={action.className}
-              href={action.href}
               disabled={action.disabled}
               onClick={action.onClick}
             />

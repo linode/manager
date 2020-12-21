@@ -11,7 +11,9 @@ describe('ListLinodes', () => {
     tagGroup: '',
     CSVlinkContainer: '',
     CSVlink: '',
+    CSVwrapper: '',
     addNewLink: '',
+    chipContainer: '',
     chip: '',
     chipActive: '',
     chipRunning: '',
@@ -55,6 +57,6 @@ describe('ListLinodes', () => {
       )
     );
 
-    expect(getByText('Add your first Linode!')).toBeInTheDocument();
+    expect(getByText('Add a Linode')).toBeInTheDocument();
   });
 });

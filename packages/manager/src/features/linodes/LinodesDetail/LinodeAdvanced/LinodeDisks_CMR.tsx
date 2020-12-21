@@ -176,7 +176,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openDrawerForCreation}
-              label="Add a Disk..."
+              label="Add a Disk"
               disabled={readOnly || !freeDiskSpace}
               disabledReason={
                 !freeDiskSpace ? noFreeDiskSpaceWarning : undefined
@@ -197,46 +197,41 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
               }) => {
                 return (
                   <React.Fragment>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Table aria-label="List of Disks">
-                          <TableHead>
-                            <TableRow>
-                              <TableSortCell
-                                active={orderBy === 'label'}
-                                label="label"
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Label
-                              </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'filesystem'}
-                                label="filesystem"
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Type
-                              </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'size'}
-                                label="size"
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Size
-                              </TableSortCell>
-                              <TableCell />
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {this.renderTableContent(
-                              paginatedData,
-                              linodeStatus
-                            )}
-                          </TableBody>
-                        </Table>
-                      </Grid>
+                    <Grid item xs={12}>
+                      <Table aria-label="List of Disks">
+                        <TableHead>
+                          <TableRow>
+                            <TableSortCell
+                              active={orderBy === 'label'}
+                              label="label"
+                              direction={order}
+                              handleClick={handleOrderChange}
+                            >
+                              Label
+                            </TableSortCell>
+                            <TableSortCell
+                              active={orderBy === 'filesystem'}
+                              label="filesystem"
+                              direction={order}
+                              handleClick={handleOrderChange}
+                            >
+                              Type
+                            </TableSortCell>
+                            <TableSortCell
+                              active={orderBy === 'size'}
+                              label="size"
+                              direction={order}
+                              handleClick={handleOrderChange}
+                            >
+                              Size
+                            </TableSortCell>
+                            <TableCell />
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {this.renderTableContent(paginatedData, linodeStatus)}
+                        </TableBody>
+                      </Table>
                     </Grid>
                     <PaginationFooter
                       page={page}
@@ -327,7 +322,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           loading={submitting}
           onClick={this.deleteDisk}

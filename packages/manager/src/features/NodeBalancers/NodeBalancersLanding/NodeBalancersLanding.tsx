@@ -24,10 +24,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EntityTable, {
-  EntityTableRow,
-  HeaderCell
-} from 'src/components/EntityTable';
+import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -163,13 +160,6 @@ const headers: HeaderCell[] = [
     sortable: true,
     widthPercent: 5,
     hideOnMobile: true
-  },
-  {
-    label: 'Action Menu',
-    visuallyHidden: true,
-    dataColumn: '',
-    sortable: false,
-    widthPercent: 5
   }
 ];
 
@@ -301,8 +291,6 @@ export class NodeBalancersLanding extends React.Component<
       return <NodeBalancersLandingEmptyState />;
     }
 
-    const Table = flags.cmr ? EntityTable_CMR : EntityTable;
-
     const nodeBalancerRow: EntityTableRow<NodeBalancer> = {
       Component: flags.cmr ? NodeBalancerTableRow_CMR : NodeBalancerTableRow,
       data: Object.values(nodeBalancersData),
@@ -335,7 +323,6 @@ export class NodeBalancersLanding extends React.Component<
                       this.props.history.push('/nodebalancers/create')
                     }
                     createButtonWidth={190}
-                    iconType="nodebalancer"
                     docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
                   />
                 ) : (
@@ -388,9 +375,10 @@ export class NodeBalancersLanding extends React.Component<
                     </Grid>
                   </Grid>
                 )}
-                <Table
+                <EntityTable_CMR
                   entity="nodebalancer"
-                  groupByTag={nodeBalancersAreGrouped}
+                  isGroupedByTag={nodeBalancersAreGrouped}
+                  toggleGroupByTag={toggleNodeBalancerGroupByTag}
                   row={nodeBalancerRow}
                   headers={headers}
                   initialOrder={{ order: 'desc', orderBy: 'label' }}
@@ -429,7 +417,7 @@ export class NodeBalancersLanding extends React.Component<
         <Button
           data-qa-confirm-cancel
           onClick={this.onSubmitDelete}
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           loading={this.state.deleteConfirmDialog.submitting}
         >

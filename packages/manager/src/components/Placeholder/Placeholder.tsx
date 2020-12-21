@@ -11,7 +11,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 
-type ClassNames = 'root' | 'title' | 'copy' | 'icon' | 'button';
+type ClassNames = 'root' | 'title' | 'copy' | 'icon' | 'button' | 'entity';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -46,15 +46,9 @@ const styles = (theme: Theme) =>
       }
     },
     icon: {
-      '&.animate': {
-        animation: '$scaleIn .5s ease-in-out'
-      },
-      width: '120px',
-      height: '120px',
-      [theme.breakpoints.up('md')]: {
-        width: '150px',
-        height: '150px'
-      },
+      padding: theme.spacing(2),
+      width: '160px',
+      height: '160px',
       '& .outerCircle': {
         fill: theme.color.absWhite,
         stroke: theme.bg.offWhite
@@ -64,15 +58,23 @@ const styles = (theme: Theme) =>
       },
       '& .insidePath path': {
         opacity: 0,
-        animation: '$fadeIn .2s ease-in-out forwards .3s',
         stroke: theme.palette.primary.main
       },
       '& .bucket.insidePath path': {
         fill: theme.palette.primary.main
       }
     },
+    entity: {
+      borderRadius: '50%',
+      backgroundColor: theme.cmrBGColors.bgPaper,
+      color: theme.color.green,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
     title: {
-      textAlign: 'center'
+      textAlign: 'center',
+      marginBottom: theme.spacing(2)
     },
     '& .insidePath path': {
       opacity: 0,
@@ -93,11 +95,11 @@ export interface ExtendedButtonProps extends ButtonProps {
 
 export interface Props {
   icon?: React.ComponentType<any>;
-  animate?: boolean;
-  copy?: string | React.ReactNode;
+  children?: string | React.ReactNode;
   title: string;
   buttonProps?: ExtendedButtonProps[];
   className?: string;
+  isEntity?: boolean;
   renderAsSecondary?: boolean;
 }
 
@@ -105,9 +107,8 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Placeholder: React.FC<CombinedProps> = props => {
   const {
-    animate,
     classes,
-    copy,
+    isEntity,
     title,
     icon: Icon,
     buttonProps,
@@ -122,8 +123,8 @@ const Placeholder: React.FC<CombinedProps> = props => {
       justify="center"
       className={`${classes.root} ${props.className}`}
     >
-      <Grid item xs={12}>
-        {Icon && <Icon className={`${classes.icon} ${animate && 'animate'}`} />}
+      <Grid item xs={12} className={isEntity ? classes.entity : ''}>
+        {Icon && <Icon className={classes.icon} />}
       </Grid>
       <Grid item xs={12}>
         <H1Header
@@ -134,10 +135,10 @@ const Placeholder: React.FC<CombinedProps> = props => {
         />
       </Grid>
       <Grid item xs={12} lg={10} className={classes.copy}>
-        {typeof copy === 'string' ? (
-          <Typography variant="subtitle1">{copy}</Typography>
+        {typeof props.children === 'string' ? (
+          <Typography variant="subtitle1">{props.children}</Typography>
         ) : (
-          copy
+          props.children
         )}
       </Grid>
       {buttonProps && (
@@ -166,11 +167,7 @@ const Placeholder: React.FC<CombinedProps> = props => {
 };
 
 Placeholder.defaultProps = {
-  icon: LinodeIcon,
-  copy:
-    'The feature you are looking for is currently in development. Please check back soon.',
-  title: 'Feature in Progress',
-  animate: true
+  icon: LinodeIcon
 };
 
 const styled = withStyles(styles);

@@ -143,42 +143,37 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo(props => {
   }
 
   return (
-    <Notice
-      important
-      error
-      spacing={2}
-      text={
-        <Grid container alignItems="center">
-          <Grid item xs={12} md={6} lg={8}>
-            {text}
-          </Grid>
-          <Grid
-            container
-            item
-            xs={12}
-            md={6}
-            lg={4}
-            className={classes.buttonContainer}
-          >
-            <Button
-              buttonType="secondary"
-              onClick={handleConfirm}
-              loading={loading}
-              data-testid="confirmButton"
-            >
-              {confirmationText}
-            </Button>
-            <Button
-              className={classes.updateButton}
-              buttonType="primary"
-              onClick={changeEmail}
-              data-testid="updateButton"
-            >
-              {updateText}
-            </Button>
-          </Grid>
+    <Notice important error spacing={2}>
+      <Grid container alignItems="center">
+        <Grid item xs={12} md={6} lg={8}>
+          {text}
         </Grid>
-      }
-    />
+        <Grid
+          container
+          item
+          xs={12}
+          md={6}
+          lg={4}
+          className={classes.buttonContainer}
+        >
+          <Button
+            buttonType="primary"
+            onClick={handleConfirm}
+            loading={loading}
+            data-testid="confirmButton"
+          >
+            {confirmationText}
+          </Button>
+          <Button
+            className={classes.updateButton}
+            buttonType="secondary"
+            onClick={changeEmail}
+            data-testid="updateButton"
+          >
+            {updateText}
+          </Button>
+        </Grid>
+      </Grid>
+    </Notice>
   );
 });

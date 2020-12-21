@@ -25,12 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
-    padding: `
-        ${theme.spacing(2) - 2}px
-        0
-        ${theme.spacing(1) + theme.spacing(1) / 2}px
-        ${theme.spacing(4)}px
-      `,
+    padding: '14px 14px 12px',
     '& svg': {
       maxWidth: theme.spacing(3) + 91
     }
@@ -48,49 +43,43 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     position: 'relative',
     cursor: 'pointer',
-    maxHeight: 42,
+    height: 36,
+    lineHeight: 0,
     transition: theme.transitions.create(['background-color']),
-    padding: `
-        ${theme.spacing(1.5)}px
-        ${theme.spacing(4) - 2}px
-        ${theme.spacing(1.5) - 1}px
-        ${theme.spacing(4) + 1}px
-      `,
+    '& p': {
+      marginTop: 0,
+      marginBottom: 0
+    },
+    padding: '12px 20px',
+    '&:focus': {
+      textDecoration: 'none'
+    },
     '&:hover': {
-      // @todo: make this gradient correct.
-      backgroundImage: 'linear-gradient(to right, #395149 , #395149)',
+      textDecoration: 'none',
+      border: 'red',
+      backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
       '& $linkItem': {
         color: 'white'
       },
       '& svg': {
-        fill: 'white',
-        '& *': {
-          stroke: 'white'
-        }
+        color: theme.color.greenCyan,
+        fill: theme.color.greenCyan
       }
     },
     '& .icon': {
+      color: '#CFD0D2',
       marginRight: theme.spacing(2),
       '& svg': {
-        width: 26,
-        height: 26,
-        transform: 'scale(1.75)',
-        fill: theme.color.primaryNavText,
-        transition: theme.transitions.create(['fill']),
-        '&.small': {
-          transform: 'scale(1)'
-        },
+        display: 'flex',
+        alignItems: 'center',
+        width: 20,
+        height: 20,
         '&:not(.wBorder) circle, & .circle': {
           display: 'none'
-        },
-        '& *': {
-          transition: theme.transitions.create(['stroke']),
-          stroke: theme.color.primaryNavText
         }
       }
     }
   },
-  listItemCollapsed: {},
   collapsible: {
     fontSize: '0.9rem'
   },
@@ -105,8 +94,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   active: {
-    // @todo: make this gradient correct.
-    backgroundImage: 'linear-gradient(to right, #395149 , #395149)',
+    backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+    textDecoration: 'none',
+    '& svg': {
+      color: theme.color.greenCyan
+    },
     '&:hover': {}
   },
   spacer: {
@@ -114,30 +106,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   divider: {
     backgroundColor: 'rgba(0, 0, 0, 0.12)'
-  },
-  settings: {
-    width: 30,
-    margin: `auto auto 16px`,
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
-    color: '#e7e7e7',
-    transition: theme.transitions.create(['color']),
-    '& svg': {
-      transition: theme.transitions.create(['transform'])
-    },
-    '&:hover': {
-      color: theme.color.green
-    }
-  },
-  settingsCollapsed: {
-    margin: `auto 16px 16px ${theme.spacing(4) - 1}px`
-  },
-  activeSettings: {
-    color: theme.color.green,
-    '& svg': {
-      transform: 'rotate(90deg)'
-    }
   },
   menu: {},
   paper: {

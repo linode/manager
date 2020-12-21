@@ -10,10 +10,9 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
-import StackScriptsIcon from 'src/assets/addnewmenu/stackscripts.svg';
+import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Typography from 'src/components/core/Typography';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
@@ -448,7 +447,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         getMoreStackScriptsFailed
       } = this.state;
 
-      const { classes, userCannotCreateStackScripts, isOnCreate } = this.props;
+      const { classes, userCannotCreateStackScripts } = this.props;
 
       if (error) {
         return (
@@ -498,17 +497,19 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               {userCannotCreateStackScripts ? (
                 <Placeholder
                   icon={StackScriptsIcon}
+                  isEntity
                   renderAsSecondary
                   title="StackScripts"
-                  copy="You don't have any StackScripts to select from."
                   className={classes.stackscriptPlaceholder}
-                />
+                >
+                  You don&apos;t have any StackScripts to select from.
+                </Placeholder>
               ) : (
                 <Placeholder
                   icon={StackScriptsIcon}
                   renderAsSecondary
+                  isEntity
                   title="StackScripts"
-                  copy={<EmptyCopy />}
                   buttonProps={[
                     {
                       children: 'Create New StackScript',
@@ -516,7 +517,32 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                     }
                   ]}
                   className={classes.stackscriptPlaceholder}
-                />
+                >
+                  <Typography variant="subtitle1">
+                    Automate Deployment with StackScripts!
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <a
+                      href="https://linode.com/docs/platform/stackscripts-new-manager/"
+                      target="_blank"
+                      aria-describedby="external-site"
+                      rel="noopener noreferrer"
+                      className="h-u"
+                    >
+                      Learn more about getting started
+                    </a>
+                    &nbsp;or&nbsp;
+                    <a
+                      href="https://www.linode.com/docs/"
+                      target="_blank"
+                      aria-describedby="external-site"
+                      rel="noopener noreferrer"
+                      className="h-u"
+                    >
+                      visit our guides and tutorials.
+                    </a>
+                  </Typography>
+                </Placeholder>
               )}
             </div>
           ) : (
@@ -524,46 +550,28 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               <div
                 className={classnames({
                   [classes.searchWrapper]: true,
-                  [classes.cmrSpacing]: this.props.flags.cmr,
                   [classes.cmrHeaderWrapper]: this.props.flags.cmr
                 })}
               >
-                <div
+                <DebouncedSearch
+                  placeholder="Search by Label, Username, or Description"
+                  onSearch={this.handleSearch}
+                  debounceTime={400}
                   className={classnames({
+                    [classes.searchBar]: true,
                     [classes.searchBarCMR]: this.props.flags.cmr
                   })}
-                >
-                  <DebouncedSearch
-                    placeholder="Search by Label, Username, or Description"
-                    onSearch={this.handleSearch}
-                    debounceTime={400}
-                    className={classes.searchBar}
-                    isSearching={isSearching}
-                    tooltipText={
-                      this.props.category === 'community'
-                        ? `Hint: try searching for a specific item by prepending your
+                  isSearching={isSearching}
+                  tooltipText={
+                    this.props.category === 'community'
+                      ? `Hint: try searching for a specific item by prepending your
                   search term with "username:", "label:", or "description:"`
-                        : ''
-                    }
-                    label="Search by Label, Username, or Description"
-                    hideLabel
-                    defaultValue={query}
-                  />
-                </div>
-
-                {this.props.flags.cmr && !isOnCreate && (
-                  <div className={classes.cmrActions}>
-                    <Button
-                      buttonType="primary"
-                      className={classes.button}
-                      onClick={this.goToCreateStackScript}
-                    >
-                      Create a StackScript...
-                    </Button>
-
-                    <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
-                  </div>
-                )}
+                      : ''
+                  }
+                  label="Search by Label, Username, or Description"
+                  hideLabel
+                  defaultValue={query}
+                />
               </div>
               {this.props.flags.cmr ? (
                 <Table_CMR
@@ -676,35 +684,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
     userCannotCreateStackScripts:
       isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts')
   });
-
-  const EmptyCopy = () => (
-    <>
-      <Typography variant="subtitle1">
-        Automate Deployment with StackScripts!
-      </Typography>
-      <Typography variant="subtitle1">
-        <a
-          href="https://linode.com/docs/platform/stackscripts-new-manager/"
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-          className="h-u"
-        >
-          Learn more about getting started
-        </a>
-        &nbsp;or&nbsp;
-        <a
-          href="https://www.linode.com/docs/"
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-          className="h-u"
-        >
-          visit our guides and tutorials.
-        </a>
-      </Typography>
-    </>
-  );
 
   const connected = connect(mapStateToProps);
 

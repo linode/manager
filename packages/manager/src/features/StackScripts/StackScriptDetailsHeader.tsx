@@ -40,7 +40,6 @@ const StackScriptDetailsHeader: React.FC<CombinedProps> = props => {
       title={stackScriptLabel}
       parentLink="/stackscripts"
       parentText="StackScripts"
-      iconType="stackscript"
       isSecondary
       actions={
         <StackScriptActionMenu

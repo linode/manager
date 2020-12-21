@@ -102,7 +102,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     if (!updatedTimezone) {
       return;
     }
-    this.setState({ submitting: true });
+    this.setState({ submitting: true, success: undefined });
 
     this.props
       .updateTimezone(updatedTimezone.value as string)
@@ -110,6 +110,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
         this.setState({
           submitting: false,
           success: 'Account timezone updated.',
+          updatedTimezone: null,
           errors: undefined
         });
       })
@@ -129,7 +130,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, loggedInAsCustomer, timezone } = this.props;
-    const { errors, submitting, success } = this.state;
+    const { errors, submitting, success, updatedTimezone } = this.state;
     const timezoneDisplay = pathOr(
       timezone,
       ['label'],
@@ -188,6 +189,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
             buttonType="primary"
             onClick={this.onSubmit}
             loading={submitting}
+            disabled={updatedTimezone === null}
             data-qa-tz-submit
           >
             Save

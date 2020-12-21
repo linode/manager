@@ -14,7 +14,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
@@ -32,12 +32,14 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import withAccount from 'src/containers/account.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -45,24 +47,45 @@ import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import APITokenMenu from './APITokenMenu';
 import { basePermNameMap, basePerms } from './utils';
 
-import withAccount from 'src/containers/account.container';
-
-type ClassNames = 'headline' | 'paper' | 'labelCell' | 'createdCell';
+type ClassNames =
+  | 'root'
+  | 'headline'
+  | 'paper'
+  | 'addNewWrapper'
+  | 'addNewLink'
+  | 'labelCell'
+  | 'actionMenu';
 
 const styles = (theme: Theme) =>
   createStyles({
+    root: {
+      background: theme.color.white,
+      width: '100%'
+    },
     headline: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
+      marginLeft: 7
     },
     paper: {
       marginBottom: theme.spacing(2)
     },
-    labelCell: {
-      width: '40%'
+    addNewWrapper: {
+      '&.MuiGrid-item': {
+        padding: 5
+      }
     },
-    createdCell: {
-      width: '30%'
+    addNewLink: {
+      padding: 5,
+      width: 260
+    },
+    labelCell: {
+      width: '40%',
+      [theme.breakpoints.down('md')]: {
+        width: '25%'
+      }
+    },
+    actionMenu: {
+      display: 'flex',
+      justifyContent: 'flex-end'
     }
   });
 
@@ -463,7 +486,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   }
 
   renderRows(tokens: Token[]) {
-    const { title, type } = this.props;
+    const { classes, title, type } = this.props;
 
     return tokens.map((token: Token) => (
       <TableRow
@@ -471,17 +494,17 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         key={token.id}
         data-qa-table-row={token.label}
       >
-        <TableCell parentColumn="Label">
+        <TableCell>
           <Typography variant="h3" data-qa-token-label>
             {token.label}
           </Typography>
         </TableCell>
-        <TableCell parentColumn="Created">
+        <TableCell>
           <Typography variant="body1" data-qa-token-created>
             <DateTimeDisplay value={token.created} />
           </Typography>
         </TableCell>
-        <TableCell parentColumn="Expires">
+        <TableCell>
           <Typography variant="body1" data-qa-token-expiry>
             {/*
              The expiry time of tokens that never expire are returned from the API as
@@ -498,7 +521,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             )}
           </Typography>
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.actionMenu}>
           <APITokenMenu
             token={token}
             type={type}
@@ -521,21 +544,27 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end">
+        <Grid
+          className={`${classes.root} m0`}
+          container
+          alignItems="center"
+          justify="space-between"
+        >
           <Grid item>
             <Typography
-              variant="h2"
+              variant="h3"
               className={classes.headline}
               data-qa-table={type}
             >
               {title}
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item className={classes.addNewWrapper}>
             {type === 'Personal Access Token' && (
               <AddNewLink
                 onClick={this.openCreateDrawer}
-                label="Add a Personal Access Token"
+                label="Create a Personal Access Token"
+                className={classes.addNewLink}
               />
             )}
           </Grid>
@@ -544,9 +573,31 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           <Table aria-label="List of Personal Access Tokens">
             <TableHead>
               <TableRow data-qa-table-head>
-                <TableCell className={classes.labelCell}>Label</TableCell>
-                <TableCell className={classes.createdCell}>Created</TableCell>
-                <TableCell>Expires</TableCell>
+                <TableSortCell
+                  className={classes.labelCell}
+                  active={this.props.orderBy === 'label'}
+                  label="label"
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                >
+                  Label
+                </TableSortCell>
+                <TableSortCell
+                  active={this.props.orderBy === 'created'}
+                  label="created"
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                >
+                  Created
+                </TableSortCell>
+                <TableSortCell
+                  active={this.props.orderBy === 'expiry'}
+                  label="expiry"
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                >
+                  Expires
+                </TableSortCell>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -630,7 +681,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       dialog: { type }
     } = this.state;
 
-    type === 'OAuth Client Token'
+    return type === 'OAuth Client Token'
       ? this.revokeAppToken()
       : this.revokePersonalAccessToken();
   };
@@ -646,7 +697,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           loading={this.state.dialog.submittingDialog}
           destructive
           onClick={this.revokeAction}

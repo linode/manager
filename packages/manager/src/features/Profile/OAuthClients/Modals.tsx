@@ -123,7 +123,7 @@ const resetDialogActions = ({
         </Button>
         <Button
           destructive
-          buttonType="secondary"
+          buttonType="primary"
           onClick={resetSecret}
           data-qa-button-confirm
           loading={loading}
@@ -158,7 +158,7 @@ const deleteDialogActions = ({
         </Button>
         <Button
           destructive
-          buttonType="secondary"
+          buttonType="primary"
           onClick={deleteSecret}
           data-qa-button-confirm
           loading={loading}

@@ -71,7 +71,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Accordion heading="Delete Linode">
           <Button
-            buttonType="secondary"
+            buttonType="primary"
             destructive
             style={{ marginBottom: 8 }}
             onClick={this.openDeleteDialog}
@@ -110,7 +110,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         destructive
         onClick={this.deleteLinode}
         data-qa-confirm-delete

@@ -16,6 +16,8 @@ import {
   DocumentTitleSegment,
   withDocumentTitleProvider
 } from 'src/components/DocumentTitle';
+import 'highlight.js/styles/a11y-light.css';
+import 'highlight.js/styles/a11y-dark.css';
 
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import withFeatureFlagConsumer, {
@@ -29,7 +31,6 @@ import { MapState } from './store/types';
 
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
-import MainContent_CMR from './MainContent_CMR';
 
 interface Props {
   toggleTheme: () => void;
@@ -72,6 +73,17 @@ export class App extends React.Component<CombinedProps, State> {
     this.props.history.listen(({ pathname }) => {
       if ((window as any).ga) {
         (window as any).ga('send', 'pageview', pathname);
+      }
+    });
+
+    /**
+     * Allow an Easter egg for toggling the theme with
+     * a key combination
+     */
+    // eslint-disable-next-line
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.key === 'D') {
+        this.props.toggleTheme();
       }
     });
 
@@ -185,20 +197,7 @@ export class App extends React.Component<CombinedProps, State> {
           euuid={this.props.euuid}
         />
         <DocumentTitleSegment segment="Linode Manager" />
-        {this.props.featureFlagsLoading ? null : this.props.flags.cmr ? (
-          <MainContent_CMR
-            accountCapabilities={accountCapabilities}
-            accountError={accountError}
-            accountLoading={accountLoading}
-            history={this.props.history}
-            location={this.props.location}
-            toggleSpacing={toggleSpacing}
-            toggleTheme={toggleTheme}
-            appIsLoading={this.props.appIsLoading}
-            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-            username={username}
-          />
-        ) : (
+        {this.props.featureFlagsLoading ? null : (
           <MainContent
             accountCapabilities={accountCapabilities}
             accountError={accountError}

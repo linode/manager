@@ -25,23 +25,18 @@ import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
-import {
-  getStackScriptUrl,
-  StackScriptCategory,
-  canUserModifyAccountStackScript
-} from './stackScriptUtils';
-import withFeatureFlagConsumerContainer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
+import { getStackScriptUrl, StackScriptCategory } from './stackScriptUtils';
+
 import {
   hasGrant,
   isRestrictedUser as _isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
-import StackScriptDetailsHeader from './StackScriptDetailsHeader';
+// import StackScriptDetailsHeader from './StackScriptDetailsHeader';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Grant } from '@linode/api-v4/lib/account/types';
 import { MapState } from 'src/store/types';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 
 interface DialogVariantProps {
   open: boolean;
@@ -89,15 +84,17 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     cta: {
-      marginTop: theme.spacing(1),
-      [theme.breakpoints.down('sm')]: {
-        margin: 0,
-        display: 'flex',
-        flexBasis: '100%'
+      display: 'flex',
+      alignItems: 'center',
+      [theme.breakpoints.down('md')]: {
+        marginRight: theme.spacing()
       }
     },
     button: {
-      marginBottom: theme.spacing(1)
+      marginLeft: theme.spacing(4),
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(1.5)
+      }
     },
     userName: {
       ...theme.typography.h1
@@ -115,8 +112,7 @@ type CombinedProps = ProfileProps &
   StateProps &
   WithStyles<ClassNames> &
   SetDocsProps &
-  Props &
-  FeatureFlagConsumerProps;
+  Props;
 
 export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   state: State = {
@@ -136,7 +132,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
     }
   };
 
-  //TODO do we even need this?
+  // TODO do we even need this?
   mounted: boolean = false;
 
   componentDidMount() {
@@ -327,7 +323,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.handleMakePublic}
         >
@@ -344,7 +340,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={this.handleDeleteStackScript}
           loading={this.state.dialog.delete.submitting}
@@ -393,14 +389,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const {
-      classes,
-      username,
-      flags,
-      isRestrictedUser,
-      stackScriptGrants,
-      userCannotAddLinodes
-    } = this.props;
+    const { classes } = this.props;
     const { loading, stackScript } = this.state;
 
     if (loading) {
@@ -419,55 +408,38 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        {flags.cmr ? (
-          <>
-            <StackScriptDetailsHeader
-              isPublic={stackScript.is_public}
-              category={
-                username === stackScript.username ? 'account' : 'community'
-              }
-              stackScriptID={stackScript.id}
-              stackScriptLabel={stackScript.label}
-              stackScriptUsername={stackScript.username}
-              canModify={canUserModifyAccountStackScript(
-                isRestrictedUser,
-                stackScriptGrants,
-                stackScript.id
-              )}
-              canAddLinodes={!userCannotAddLinodes}
-              triggerDelete={this.handleOpenDeleteDialog}
-              triggerMakePublic={this.handleOpenMakePublicDialog}
+        <Grid
+          container
+          className="m0"
+          alignItems="center"
+          justify="space-between"
+        >
+          <Grid item className="p0">
+            <Breadcrumb
+              pathname={this.props.location.pathname}
+              labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
+              labelTitle={stackScript.label}
+              crumbOverrides={[
+                {
+                  position: 1,
+                  label: 'StackScripts'
+                }
+              ]}
             />
-            {this.renderDeleteStackScriptDialog()}
-            {this.renderMakePublicDialog()}
-          </>
-        ) : (
-          <Grid container justify="space-between" alignItems="center">
-            <Grid item>
-              <Breadcrumb
-                pathname={this.props.location.pathname}
-                labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
-                labelTitle={stackScript.label}
-                crumbOverrides={[
-                  {
-                    position: 1,
-                    label: 'StackScripts'
-                  }
-                ]}
-              />
-            </Grid>
-            <Grid item className={classes.cta}>
-              <Button
-                buttonType="primary"
-                className={classes.button}
-                onClick={this.handleCreateClick}
-                data-qa-stack-deploy
-              >
-                Deploy New Linode
-              </Button>
-            </Grid>
           </Grid>
-        )}
+          <Grid item className={`${classes.cta} p0`}>
+            <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
+            <Button
+              buttonType="primary"
+              className={classes.button}
+              onClick={this.handleCreateClick}
+              data-qa-stack-deploy
+            >
+              Deploy New Linode
+            </Button>
+          </Grid>
+        </Grid>
+        {/* )} */}
         <div className="detailsWrapper">
           <_StackScript data={stackScript} />
         </div>
@@ -501,8 +473,7 @@ const enhanced = compose<CombinedProps, {}>(
   withProfile<ProfileProps, {}>((ownProps, { profileData: profile }) => ({
     username: profile?.username
   })),
-  withStyles(styles),
-  withFeatureFlagConsumerContainer
+  withStyles(styles)
 );
 
 export default enhanced(StackScriptsDetail);

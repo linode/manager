@@ -3,6 +3,7 @@ import {
   makeDomainLabel
 } from '../../support/api/domains';
 import { testTag } from '../../support/api/common';
+import { getClick } from '../../support/helpers';
 
 describe('Create a Domain', () => {
   before(deleteAllTestDomains);
@@ -24,7 +25,7 @@ describe('Create a Domain', () => {
     cy.wait('@getDomains');
     cy.url().should('endWith', '/domains');
     cy.findByText('Add a Domain').click();
-    cy.findByText('Add a new Domain');
+    cy.findByText('Create a Domain');
     // The findByLabel does not work for this select
     // cy.findByLabelText('Add Tags')
     cy.findByText('create a tag', { exact: false })
@@ -33,7 +34,7 @@ describe('Create a Domain', () => {
     const label = makeDomainLabel();
     cy.findByLabelText('Domain').type(label);
     cy.findByLabelText('SOA Email Address').type('devs@linode.com');
-    cy.findByText('Create').click();
+    getClick('[data-testid="create-domain-submit"]');
     cy.get('[data-qa-header]').should('contain', label);
   });
 });

@@ -24,6 +24,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import AccessCell from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   Permission,
@@ -308,16 +309,13 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   padding="checkbox"
                   className={classes.noneCell}
                 >
-                  <Radio
-                    name={scopeTup[0]}
-                    disabled={mode !== 'create' && scopeTup[1] !== 0}
-                    checked={scopeTup[1] === 0}
-                    value="0"
+                  <AccessCell
+                    active={scopeTup[1] === 0}
+                    scope="0"
+                    scopeDisplay={scopeTup[0]}
+                    viewOnly={mode === 'view'}
+                    disabled={false}
                     onChange={this.handleScopeChange}
-                    data-qa-perm-none-radio
-                    inputProps={{
-                      'aria-label': `no access for ${scopeTup[0]}`
-                    }}
                   />
                 </TableCell>
                 <TableCell
@@ -325,16 +323,13 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   padding="checkbox"
                   className={classes.readOnlyCell}
                 >
-                  <Radio
-                    name={scopeTup[0]}
-                    disabled={mode !== 'create' && scopeTup[1] !== 1}
-                    checked={scopeTup[1] === 1}
-                    value="1"
+                  <AccessCell
+                    active={scopeTup[1] === 1}
+                    scope="1"
+                    scopeDisplay={scopeTup[0]}
+                    viewOnly={mode === 'view'}
+                    disabled={false}
                     onChange={this.handleScopeChange}
-                    data-qa-perm-read-radio
-                    inputProps={{
-                      'aria-label': `read-only for ${scopeTup[0]}`
-                    }}
                   />
                 </TableCell>
                 <TableCell
@@ -342,17 +337,13 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   padding="checkbox"
                   className={classes.readWritecell}
                 >
-                  <Radio
-                    name={scopeTup[0]}
-                    disabled={mode !== 'create' && scopeTup[1] !== 2}
-                    checked={scopeTup[1] === 2}
-                    value="2"
+                  <AccessCell
+                    active={scopeTup[1] === 2}
+                    scope="2"
+                    scopeDisplay={scopeTup[0]}
+                    viewOnly={mode === 'view'}
+                    disabled={false}
                     onChange={this.handleScopeChange}
-                    data-qa-perm-rw-radio
-                    data-testid="perm-rw-radio"
-                    inputProps={{
-                      'aria-label': `read/write for ${scopeTup[0]}`
-                    }}
                   />
                 </TableCell>
               </TableRow>

@@ -9,10 +9,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Search from 'src/components/DebouncedSearchTextField';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import withSettings, {
@@ -25,7 +25,6 @@ import withProfile from 'src/containers/profile.container';
 import useFlags from 'src/hooks/useFlags';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LongviewPackageDrawer from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';
 import { getFinalUsedCPU } from './Gauges/CPU';
@@ -34,7 +33,6 @@ import { getUsedStorage } from './Gauges/Storage';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
@@ -86,6 +84,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   activeSubscription: ActiveLongviewPlan;
+  handleAddClient: () => void;
+  newClientLoading: boolean;
 }
 
 export type CombinedProps = Props &
@@ -101,9 +101,7 @@ type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
   const { getLongviewClients } = props;
-  const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
-    false
-  );
+
   const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
   const [selectedClientID, setClientID] = React.useState<number | undefined>(
     undefined
@@ -186,31 +184,6 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     props.history.push('/longview/plan-details');
   };
 
-  const handleAddClient = () => {
-    setNewClientLoading(true);
-    createLongviewClient()
-      .then(_ => {
-        setNewClientLoading(false);
-      })
-      .catch(errorResponse => {
-        if (errorResponse[0].reason.match(/subscription/)) {
-          // The user has reached their subscription limit.
-          setSubscriptionDialogOpen(true);
-          setNewClientLoading(false);
-        } else {
-          // Any network or other errors handled with a toast
-          props.enqueueSnackbar(
-            getAPIErrorOrDefault(
-              errorResponse,
-              'Error creating Longview client.'
-            )[0].reason,
-            { variant: 'error' }
-          );
-          setNewClientLoading(false);
-        }
-      });
-  };
-
   /**
    * State and handlers for the Packages drawer
    * (setClientLabel and setClientID are reused from the delete dialog)
@@ -232,9 +205,10 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     lvClientData,
     accountSettings,
     activeSubscription,
-    createLongviewClient,
     deleteLongviewClient,
-    userCanCreateClient
+    userCanCreateClient,
+    handleAddClient,
+    newClientLoading
   } = props;
 
   const handleSearch = (newQuery: string) => {
@@ -293,22 +267,6 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
             onChange={handleSortKeyChange}
             label="Sort by"
             hideLabel
-          />
-        </Grid>
-        <Grid
-          item
-          className={`py0 ${classes.addNew} ${flags.cmr &&
-            classes.cmrSpacingAddNew}`}
-        >
-          <AddNewLink
-            onClick={handleAddClient}
-            label={newClientLoading ? 'Loading...' : 'Add a Client'}
-            disabled={!userCanCreateClient}
-            disabledReason={
-              userCanCreateClient
-                ? ''
-                : 'You are not authorized to create Longview Clients. Please contact an account administrator.'
-            }
           />
         </Grid>
       </Grid>
