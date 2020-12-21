@@ -6,11 +6,11 @@ import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
-import AddNewMenu from './AddNewMenu/AddNewMenu_CMR';
+import AddNewMenu from './AddNewMenu';
 import Community from './Community';
 import Help from './Help';
 import NotificationButton from './NotificationButton';
-import SearchBar from './SearchBar/SearchBar_CMR';
+import SearchBar from './SearchBar';
 import TopMenuIcon from './TopMenuIcon';
 import UserMenu from './UserMenu';
 
