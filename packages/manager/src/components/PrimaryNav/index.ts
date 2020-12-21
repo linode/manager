@@ -1,2 +1,2 @@
-import PrimaryNav from './PrimaryNav_CMR';
+import PrimaryNav from './PrimaryNav';
 export default PrimaryNav;

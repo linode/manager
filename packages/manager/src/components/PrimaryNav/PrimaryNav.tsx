@@ -26,7 +26,7 @@ import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
 import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import usePrefetch from 'src/hooks/usePreFetch';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import useStyles from './PrimaryNav_CMR.styles';
+import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
 
 type NavEntity =
