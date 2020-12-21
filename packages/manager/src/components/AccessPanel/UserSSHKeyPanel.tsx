@@ -68,12 +68,13 @@ export interface UserSSHKeyObject {
 interface Props {
   users?: UserSSHKeyObject[];
   error?: string;
+  disabled?: boolean;
   onKeyAddSuccess: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
+const UserSSHKeyPanel: React.FC<CombinedProps> = props => {
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   /**
    * Success state can be handled here, which makes it hard to clear on e.g. form errors,
@@ -84,7 +85,7 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
    * In addition, there's never been any error handling for SSH keys, which maybe we should add.
    */
   const [success, setSuccess] = React.useState<boolean>(false);
-  const { classes, error, onKeyAddSuccess, users } = props;
+  const { classes, disabled, error, onKeyAddSuccess, users } = props;
 
   const handleKeyAddSuccess = () => {
     onKeyAddSuccess();
@@ -135,6 +136,7 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
                 >
                   <TableCell className={classes.cellCheckbox}>
                     <CheckBox
+                      disabled={disabled}
                       checked={selected}
                       onChange={onSSHKeyChange}
                       inputProps={{
@@ -166,7 +168,11 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
           )}
         </TableBody>
       </Table>
-      <Button buttonType="secondary" onClick={handleOpenDrawer}>
+      <Button
+        buttonType="secondary"
+        onClick={handleOpenDrawer}
+        disabled={disabled}
+      >
         Add an SSH Key
       </Button>
       <SSHKeyCreationDrawer
