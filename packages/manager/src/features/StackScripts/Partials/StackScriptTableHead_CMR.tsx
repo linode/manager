@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 'calc(100% - 65px)'
   },
   deploys: {
-    width: '13%',
+    width: '14%',
     [theme.breakpoints.down('sm')]: {
       width: '28%'
     }
