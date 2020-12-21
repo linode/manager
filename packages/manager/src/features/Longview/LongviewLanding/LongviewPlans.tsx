@@ -251,7 +251,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
           />
         )}
         {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}
-        {isManaged && <Notice success text={managedText} />}
+        {isManaged && <Notice success>{managedText}</Notice>}
         {!isManaged && (
           <>
             <Table className={styles.table}>

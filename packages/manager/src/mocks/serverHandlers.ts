@@ -83,6 +83,12 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
+    const onlineLinodes = linodeFactory.buildList(3, {
+      backups: { enabled: false },
+      ipv4: ['000.000.000.000']
+    });
+    const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
+    const busyLinodes = linodeFactory.buildList(5, { status: 'migrating' });
     const eventLinode = linodeFactory.build({
       id: 999,
       status: 'rebooting',
@@ -101,6 +107,9 @@ export const handlers = [
       tags: ['test', 'test', 'test']
     });
     const linodes = [
+      ...onlineLinodes,
+      ...offlineLinodes,
+      ...busyLinodes,
       linodeFactory.build({
         label: 'shadow-plan',
         type: 'g5-standard-20-s1',
@@ -223,7 +232,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(clusters)));
   }),
   rest.get('*/domains', (req, res, ctx) => {
-    const domains = domainFactory.buildList(0);
+    const domains = domainFactory.buildList(10);
     return res(ctx.json(makeResourcePage(domains)));
   }),
   rest.post('*/domains/*/records', (req, res, ctx) => {
