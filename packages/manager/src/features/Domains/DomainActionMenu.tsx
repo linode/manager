@@ -1,7 +1,8 @@
 import { DomainStatus } from '@linode/api-v4/lib/domains';
+import { splitAt } from 'ramda';
 import * as React from 'react';
-import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface Handlers {
@@ -82,17 +83,13 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
     }
   ];
 
-  const splitActionsArrayIndex = 2; // Index at which non-inline actions begin. Our convention: place actions that are inline (at normal viewports) at start of the array.
-  const inlineActions = actions.slice(0, splitActionsArrayIndex);
+  // Index at which non-inline actions begin. Our convention: place actions that are inline (at non-mobile/non-tablet viewports) at start of the array.
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   const createActions = () => (): Action[] => {
-    // Place all actions in menu. (no inline actions)
-    if (matchesSmDown) {
-      return actions;
-    }
-
-    // Place some actions in menu. (other actions inline)
-    return actions.slice(splitActionsArrayIndex);
+    return menuActions;
   };
 
   return (
