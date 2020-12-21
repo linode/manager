@@ -1,9 +1,9 @@
-import { shallow } from 'enzyme';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import * as React from 'react';
 import { ThemeToggle } from './ThemeToggle';
 
 describe('ThemeToggle', () => {
   it('should render', () => {
-    shallow(<ThemeToggle toggleTheme={jest.fn()} />);
+    renderWithTheme(<ThemeToggle toggleTheme={jest.fn()} />);
   });
 });
