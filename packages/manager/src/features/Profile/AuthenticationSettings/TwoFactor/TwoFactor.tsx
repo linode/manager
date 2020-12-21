@@ -23,8 +23,7 @@ import ScratchDialog from './ScratchCodeDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingBottom: theme.spacing(2),
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(4)
   },
   container: {
     display: 'flex',
@@ -34,16 +33,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3)
   },
-  title: {
-    marginBottom: theme.spacing(1)
-  },
-  helpText: {
+  copy: {
+    lineHeight: '20px',
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(),
     maxWidth: 900
-  },
-  visibility: {
-    color: theme.palette.primary.main,
-    padding: 0,
-    border: 0
   },
   button: {
     ...theme.applyLinkStyles
@@ -198,16 +192,12 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
               >
                 {success && <Notice success text={success} />}
                 {generalError && <Notice error text={generalError} />}
-                <Typography
-                  variant="h2"
-                  className={classes.title}
-                  data-qa-title
-                >
+                <Typography variant="h3" data-qa-title>
                   Two-Factor Authentication (TFA)
                 </Typography>
                 <Typography
                   variant="body1"
-                  className={classes.helpText}
+                  className={classes.copy}
                   data-qa-copy
                 >
                   Two-factor authentication increases the security of your

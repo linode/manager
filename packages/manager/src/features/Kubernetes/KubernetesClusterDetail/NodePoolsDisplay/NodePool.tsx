@@ -1,39 +1,9 @@
 import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
-import Collapse from 'src/assets/icons/collapse.svg';
-import Recycle from 'src/assets/icons/recycle.svg';
-import Resize from 'src/assets/icons/resize.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
-import IconTextLink from 'src/components/IconTextLink';
+import Grid from 'src/components/Grid';
 import NodeTable from './NodeTable';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
-    padding: theme.spacing()
-  },
-  nodeTable: {
-    marginTop: theme.spacing(0.5)
-  },
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    '& button': {
-      paddingRight: theme.spacing(2.5),
-      paddingLeft: theme.spacing(2.5)
-    }
-  },
-  icon: {
-    '& svg': {
-      marginRight: theme.spacing()
-    },
-    '& span': {
-      top: 0
-    }
-  }
-}));
 
 interface Props {
   poolId: number;
@@ -56,43 +26,44 @@ const NodePool: React.FC<Props> = props => {
     poolId
   } = props;
 
-  const classes = useStyles();
-
   return (
     <>
-      <div className={classes.container}>
-        <Typography variant="h2">{typeLabel}</Typography>
-        <div className={classes.container}>
-          <IconTextLink
-            text="Resize Pool"
-            SideIcon={Resize}
-            title="Resize Pool"
+      <Grid
+        container
+        className="my0"
+        alignItems="center"
+        justify="space-between"
+      >
+        <Grid item>
+          <Typography variant="h2">{typeLabel}</Typography>
+        </Grid>
+        <Grid item>
+          <Button
+            buttonType="secondary"
             onClick={() => handleClickResize(poolId)}
-            className={classes.icon}
-          />
-          <IconTextLink
-            text="Recycle Nodes"
-            SideIcon={Recycle}
-            title="Recycle Nodes"
+          >
+            Resize Pool
+          </Button>
+          <Button
+            buttonType="secondary"
             onClick={() => openRecycleAllNodesDialog(poolId)}
-          />
-          <IconTextLink
-            text="Delete Pool"
-            SideIcon={Collapse}
-            title="Delete Pool"
+          >
+            Recycle Nodes
+          </Button>
+          <Button
+            buttonType="secondary"
             onClick={() => openDeletePoolDialog(poolId)}
-            className={classes.icon}
-          />
-        </div>
-      </div>
-      <div className={classes.nodeTable}>
-        <NodeTable
-          poolId={poolId}
-          nodes={nodes}
-          typeLabel={typeLabel}
-          openRecycleNodeDialog={openRecycleNodeDialog}
-        />
-      </div>
+          >
+            Delete Pool
+          </Button>
+        </Grid>
+      </Grid>
+      <NodeTable
+        poolId={poolId}
+        nodes={nodes}
+        typeLabel={typeLabel}
+        openRecycleNodeDialog={openRecycleNodeDialog}
+      />
     </>
   );
 };
