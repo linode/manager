@@ -8,6 +8,7 @@ import {
   createLinode,
   deleteLinodeById
 } from '../../support/api/linodes';
+import { selectRegionString } from '../../support/ui/constants';
 
 const deployNodeBalancer = () => {
   // This is not an error, the tag is deploy-linode
@@ -23,7 +24,7 @@ const createNodeBalancerWithUI = nodeBal => {
     .click()
     .type(testNodeBalTag);
   // this will create the NB in newark, where the default Linode was created
-  cy.contains('Regions')
+  cy.contains(selectRegionString)
     .click()
     .type('new {enter}');
 

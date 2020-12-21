@@ -412,12 +412,12 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
 
     if (!isEmpty(gpu)) {
       const programInfo = this.getDisabledClass('gpu') ? (
-        <Typography>
+        <>
           GPU instances are not available in the selected region. Currently
           these plans are only available in {this.getRegionsWithGPU()}.
-        </Typography>
+        </>
       ) : (
-        <Typography>
+        <>
           This is a pilot program for Linode GPU Instances.
           <a
             href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
@@ -430,13 +430,13 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
           with more information. This program has finite resources and may not
           be available at the time of your request. Some additional verification
           may be required to access these services.
-        </Typography>
+        </>
       );
       tabs.push({
         render: () => {
           return (
             <>
-              <Notice warning text={programInfo} />
+              <Notice warning>{programInfo}</Notice>
               <Typography data-qa-gpu className={classes.copy}>
                 Linodes with dedicated GPUs accelerate highly specialized
                 applications such as machine learning, AI, and video

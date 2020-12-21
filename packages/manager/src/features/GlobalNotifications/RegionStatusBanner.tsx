@@ -75,7 +75,11 @@ export const RegionStatusBanner: React.FC<CombinedProps> = props => {
     return null;
   }
 
-  return <Notice warning important text={renderBanner(statusWarnings)} />;
+  return (
+    <Notice warning important>
+      {renderBanner(statusWarnings)}
+    </Notice>
+  );
 };
 
 const withRegions = RegionsContainer(({ data, loading, error }) => ({

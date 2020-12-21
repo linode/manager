@@ -11,8 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& svg': {
       marginLeft: 4,
-      width: 20,
-      color: '#ffffff !important'
+      width: 20
     },
     '&:hover': {
       backgroundColor: '#3683dc',
@@ -76,7 +75,7 @@ export const TableSortCell: React.FC<CombinedProps> = props => {
 
   return (
     <TableCell
-      className={classNames({
+      className={classNames(props.className, {
         [classes.root]: true,
         [classes.noWrap]: noWrap
       })}

@@ -42,10 +42,9 @@ storiesOf('Typography', module).add('Headings', () => (
       list state.
     </Typography>
     <Divider />
-    <Placeholder
-      title="Placeholder/Null Heading"
-      copy="This is a separate component utilized for null state headings."
-    />
+    <Placeholder title="Placeholder/Null Heading">
+      This is a separate component utilized for null state headings.
+    </Placeholder>
     <Divider />
   </React.Fragment>
 ));

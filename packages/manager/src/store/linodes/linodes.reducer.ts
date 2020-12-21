@@ -1,4 +1,3 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { Reducer } from 'redux';
 import {
   addMany,
@@ -7,6 +6,7 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
+  onGetPageSuccess,
   onGetOneSuccess,
   onStart
 } from 'src/store/store.helpers.tmp';
@@ -17,16 +17,22 @@ import {
   deleteLinode,
   deleteLinodeActions,
   getLinodesActions,
+  getLinodesPageActions,
   getLinodeActions,
   updateLinodeActions,
   updateMultipleLinodes,
   upsertLinode
 } from './linodes.actions';
 
+import { LinodeWithMaintenanceAndDisplayStatus } from './types';
+
 /**
  * State
  */
-export type State = MappedEntityState2<Linode, EntityError>;
+export type State = MappedEntityState2<
+  LinodeWithMaintenanceAndDisplayStatus,
+  EntityError
+>;
 
 export const defaultState: State = createDefaultState();
 
@@ -105,6 +111,21 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       params: { linodeId }
     } = action.payload;
     return onDeleteSuccess(linodeId, state);
+  }
+
+  if (isType(action, getLinodesPageActions.started)) {
+    return onStart(state);
+  }
+
+  if (isType(action, getLinodesPageActions.done)) {
+    const { result } = action.payload;
+
+    return onGetPageSuccess(result.data, state, result.results);
+  }
+
+  if (isType(action, getLinodesPageActions.failed)) {
+    const { error } = action.payload;
+    return onError({ read: error }, state);
   }
 
   return state;

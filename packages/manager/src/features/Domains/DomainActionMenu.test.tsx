@@ -24,16 +24,4 @@ describe('Domain action menu', () => {
     const { queryByText } = renderWithTheme(<DomainActionMenu {...props} />);
     includesActions(['Edit', 'Clone', 'Delete'], queryByText);
   });
-
-  it('master Domains should include Edit DNS records action', () => {
-    const { queryByText } = renderWithTheme(<DomainActionMenu {...props} />);
-    includesActions(['Edit DNS Records'], queryByText);
-  });
-
-  it('slave Domains should not include Edit DNS records action', () => {
-    const { queryByText } = renderWithTheme(
-      <DomainActionMenu {...props} type={'slave'} />
-    );
-    includesActions(['Edit DNS Records'], queryByText, false);
-  });
 });

@@ -65,8 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actionCell: {
     '&.emptyCell': {
-      fontSize: '0.875em !important',
-      borderTop: '2px solid #f4f5f6'
+      fontSize: '0.875em !important'
     }
   }
 }));
@@ -245,7 +244,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
           </Grid>
           <Grid className={classes.addNewWrapper} item>
             <AddNewLink
-              label="Add Credentials..."
+              label="Add Credentials"
               onClick={() => setDrawerOpen(true)}
             />
           </Grid>

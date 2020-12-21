@@ -4,6 +4,86 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-12-16] - 1.27.0
+
+This release includes sweeping changes to the Cloud Manager UI. For more details, please visit https://www.linode.com/blog/linode/cloud-manager-enhancements-dec2020/
+
+### Added:
+- Deep link to the Payment drawer 
+- Add missing link to invoice details in invoice rows
+
+### Changed:
+- Replace all user-facing Domains master/slave terminology with primary/secondary
+- Sortable tables now update the URL on sort change to make sort preferences bookmarkable
+- Upgrade: Chart.js 3.0 (beta)
+- Move theme toggle to My Profile > Settings
+- New icon set for CMR
+- Update empty states for all entities
+- Add warning when migrating a Linode with VLANs to a region w/o VLANs
+- Make time displays consistent throughout the app (ISO format)
+- Smaller page sizes for Longview Landing
+- Move abuse ticket banner to global notifications
+- Update URL query param on input change on support search landing page
+- Remove the Dashboard
+- Hide Longview pagination footer if there's only one page
+- Use Region Select styles in Object Storage Cluster selection
+- Improve Backups column in Linode .csv file
+ 
+### Fixed:
+- Low reputation error when resizing a Linode intercepted by disk size error logic
+- Prevent multiple imagize submissions in succession
+
+## [2020-12-03] - 1.26.0
+
+### Added:
+
+- Secure Your Server One-Click App
+
+## [2020-11-18] - 1.25.2
+
+### Fixed:
+
+- Only display 5 Linodes on the Dashboard
+- Performance regression for large accounts
+- Longview graph data not displaying correctly
+
+## [2020-11-17] - 1.25.1
+
+### Fixed:
+
+- Users with no Domains were unable to create a Domain
+- Table cell arrow icons had an incorrect color
+
+## [2020-11-17] - 1.25.0
+
+### Added:
+
+- Bucket and Object level access controls
+- Display total Object Storage usage on Bucket Landing page
+- Progress bar to LinodeDiskRow when a disk is resizing
+- “Objects” column to the Bucket Landing table
+- Bucket Details Drawer
+- Bucket results to search bar
+
+### Changed:
+
+- Add hideOnTablet prop to Entity Table component
+- Remove 'Copy to Clipboard' text in OBJ drawers
+- Disable API polling from inactive tabs
+- Add copy explaining billing address restrictions
+- Make typeToConfirm optional in DeletionDialog
+- Lazy load OBJ Buckets
+- Remove "Delete" option from DBaaS backups table
+- Hide permissions table if user has no buckets
+- Move Domain creation drawer content to a separate page at /domains/create
+- Handle API warnings after a successful payment.
+- Update Resize error message and add link
+
+### Fixed:
+
+- Remove filtering of app tokens
+- IP popover displaying incorrectly when adding a private IP address to a Linode
+
 ## [2020-11-13] - v1.24.1
 
 ### Fixed:

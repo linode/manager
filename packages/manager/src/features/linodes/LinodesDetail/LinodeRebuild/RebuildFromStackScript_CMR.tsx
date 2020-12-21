@@ -361,7 +361,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
                 />
                 <Button
                   disabled={submitButtonDisabled}
-                  buttonType="secondary"
+                  buttonType="primary"
                   className="destructive"
                   onClick={handleRebuildButtonClick}
                   data-qa-rebuild

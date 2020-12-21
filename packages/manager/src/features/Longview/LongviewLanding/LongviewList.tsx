@@ -112,25 +112,29 @@ const LongviewList: React.FC<CombinedProps> = props => {
     );
   }
 
+  const pageSize = 5;
+
   return (
-    <React.Fragment>
-      <Paginate data={filteredData}>
-        {({
-          data: paginatedAndOrderedData,
-          count,
-          handlePageChange,
-          handlePageSizeChange,
-          page,
-          pageSize
-        }) => (
-          <>
-            <Box flexDirection="column">
-              <LongviewRows
-                longviewClientsData={paginatedAndOrderedData}
-                triggerDeleteLongviewClient={triggerDeleteLongviewClient}
-                openPackageDrawer={openPackageDrawer}
-              />
-            </Box>
+    // Don't use the value from local storage for this case,
+    // since displaying a large number of client rows has performance impacts.
+    <Paginate data={filteredData} pageSize={pageSize}>
+      {({
+        data: paginatedAndOrderedData,
+        count,
+        handlePageChange,
+        handlePageSizeChange,
+        page,
+        pageSize
+      }) => (
+        <>
+          <Box flexDirection="column">
+            <LongviewRows
+              longviewClientsData={paginatedAndOrderedData}
+              triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+              openPackageDrawer={openPackageDrawer}
+            />
+          </Box>
+          {filteredData.length > pageSize ? (
             <PaginationFooter
               count={count}
               handlePageChange={handlePageChange}
@@ -138,11 +142,12 @@ const LongviewList: React.FC<CombinedProps> = props => {
               page={page}
               pageSize={pageSize}
               eventCategory="Longview Table"
+              fixedSize
             />
-          </>
-        )}
-      </Paginate>
-    </React.Fragment>
+          ) : null}
+        </>
+      )}
+    </Paginate>
   );
 };
 

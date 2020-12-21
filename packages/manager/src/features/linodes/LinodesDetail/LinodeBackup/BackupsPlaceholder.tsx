@@ -1,5 +1,6 @@
 import * as React from 'react';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Placeholder from 'src/components/Placeholder';
@@ -14,7 +15,17 @@ interface Props {
 
 export type CombinedProps = Props;
 
+const useStyles = makeStyles(() => ({
+  empty: {
+    '& svg': {
+      transform: 'scale(0.75)'
+    }
+  }
+}));
+
 export const BackupsPlaceholder: React.FC<Props> = props => {
+  const classes = useStyles();
+
   const { backupsMonthlyPrice, linodeId, disabled } = props;
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -42,9 +53,10 @@ export const BackupsPlaceholder: React.FC<Props> = props => {
       {disabled && <LinodePermissionsError />}
       <Placeholder
         icon={VolumeIcon}
+        className={classes.empty}
+        isEntity
         title="Backups"
         renderAsSecondary
-        copy={backupPlaceholderText}
         buttonProps={[
           {
             onClick: () => setDialogOpen(true),
@@ -52,7 +64,9 @@ export const BackupsPlaceholder: React.FC<Props> = props => {
             disabled
           }
         ]}
-      />
+      >
+        {backupPlaceholderText}
+      </Placeholder>
       <EnableBackupsDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}

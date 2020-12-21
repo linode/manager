@@ -15,6 +15,7 @@ import {
   sortClientsBy,
   sortFunc
 } from './LongviewClients';
+import { LongviewLanding } from './LongviewLanding';
 
 jest.mock('../request');
 jest.mock('./LongviewClientRow');
@@ -49,6 +50,8 @@ const props: CombinedProps = {
   updateAccountSettingsInStore: jest.fn(),
   requestAccountSettings: jest.fn(),
   userCanCreateClient: true,
+  handleAddClient: jest.fn(),
+  newClientLoading: false,
   ...reactRouterProps
 };
 
@@ -108,14 +111,14 @@ describe('Longview clients list view', () => {
     expect(props.getLongviewClients).toHaveBeenCalledTimes(1);
   });
 
-  it('should have an Add a Client button', () => {
-    const { queryByText } = renderWithTheme(<LongviewClients {...props} />);
-    expect(queryByText('Add a Client')).toBeInTheDocument();
+  it('should have an Create a Client button', () => {
+    const { queryByText } = renderWithTheme(<LongviewLanding {...props} />);
+    expect(queryByText('Create a Client')).toBeInTheDocument();
   });
 
-  it('should attempt to create a new client when the Add a Client button is clicked', async () => {
-    const { getByText } = renderWithTheme(<LongviewClients {...props} />);
-    const button = getByText('Add a Client');
+  it('should attempt to create a new client when the Create a Client button is clicked', async () => {
+    const { getByText } = renderWithTheme(<LongviewLanding {...props} />);
+    const button = getByText('Create a Client');
     fireEvent.click(button);
     await waitFor(() =>
       expect(props.createLongviewClient).toHaveBeenCalledWith()

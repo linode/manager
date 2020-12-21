@@ -16,7 +16,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from 'src/components/core/Grid';
@@ -57,10 +57,6 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  title: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(3)
-  },
   main: {
     width: '100%'
   },
@@ -209,10 +205,10 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   );
 
   const generalError = errorMap.none;
-  const masterIPsError = errorMap.master_ips;
+  const primaryIPsError = errorMap.master_ips;
 
-  const isCreatingMasterDomain = type === 'master';
-  const isCreatingSlaveDomain = type === 'slave';
+  const isCreatingPrimaryDomain = type === 'master';
+  const isCreatingSecondaryDomain = type === 'slave';
 
   const redirect = (id: number | '', state?: Record<string, string>) => {
     const returnPath = !!id ? `/domains/${id}` : '/domains';
@@ -234,14 +230,14 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   const create = () => {
     const _tags = tags.map(tag => tag.value);
 
-    const finalMasterIPs = master_ips.filter(v => v !== '');
+    const primaryIPs = master_ips.filter(v => v !== '');
 
-    if (type === 'slave' && finalMasterIPs.length === 0) {
+    if (type === 'slave' && primaryIPs.length === 0) {
       setSubmitting(false);
       setErrors([
         {
           field: 'master_ips',
-          reason: 'You must provide at least one Master Nameserver IP Address'
+          reason: 'You must provide at least one Primary Nameserver IP Address'
         }
       ]);
       return;
@@ -275,7 +271,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     const data =
       type === 'master'
         ? { domain, type, _tags, soa_email: soaEmail }
-        : { domain, type, _tags, master_ips: finalMasterIPs };
+        : { domain, type, _tags, master_ips: primaryIPs };
 
     setSubmitting(true);
     domainActions
@@ -385,7 +381,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     setErrors([]);
   };
 
-  const updateMasterIPAddress = (newIPs: ExtendedIP[]) => {
+  const updatePrimaryIPAddress = (newIPs: ExtendedIP[]) => {
     const master_ips =
       newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (mounted) {
@@ -396,25 +392,16 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   return (
     <Grid container>
       <DocumentTitleSegment segment="Create a Domain" />
-      <Grid
-        container
-        justify="space-between"
-        alignItems="flex-end"
-        className={classes.title}
-      >
-        <Grid item>
+      <Grid container alignItems="center" justify="space-between">
+        <Grid item className="p0">
           <Breadcrumb
             pathname={location.pathname}
             labelTitle="Create a Domain"
             labelOptions={{ noCap: true }}
           />
         </Grid>
-        <Grid item>
-          <Grid container alignItems="flex-end">
-            <Grid item className="pt0">
-              <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
-            </Grid>
-          </Grid>
+        <Grid item className="p0">
+          <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
         </Grid>
       </Grid>
 
@@ -446,16 +433,16 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
             >
               <FormControlLabel
                 value="master"
-                label="Master"
+                label="Primary"
                 control={<Radio />}
-                data-qa-domain-radio="Master"
+                data-qa-domain-radio="Primary"
                 disabled={disabled}
               />
               <FormControlLabel
                 value="slave"
-                label="Slave"
+                label="Secondary"
                 control={<Radio />}
-                data-qa-domain-radio="Slave"
+                data-qa-domain-radio="Secondary"
                 disabled={disabled}
               />
             </RadioGroup>
@@ -468,7 +455,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
               data-qa-domain-name
               data-testid="domain-name-input"
             />
-            {isCreatingMasterDomain && (
+            {isCreatingPrimaryDomain && (
               <TextField
                 errorText={errorMap.soa_email}
                 value={soaEmail}
@@ -479,13 +466,13 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                 disabled={disabled}
               />
             )}
-            {isCreatingSlaveDomain && (
+            {isCreatingSecondaryDomain && (
               <MultipleIPInput
-                title="Master Nameserver IP Address"
+                title="Primary Nameserver IP Address"
                 className={classes.ip}
                 ips={master_ips.map(stringToExtendedIP)}
-                onChange={updateMasterIPAddress}
-                error={masterIPsError}
+                onChange={updatePrimaryIPAddress}
+                error={primaryIPsError}
               />
             )}
             <TagsInput
@@ -494,7 +481,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
               tagError={errorMap.tags}
               disabled={disabled}
             />
-            {isCreatingMasterDomain && (
+            {isCreatingPrimaryDomain && (
               <React.Fragment>
                 <Select
                   isClearable={false}
@@ -530,7 +517,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                 </FormHelperText>
               </React.Fragment>
             )}
-            {isCreatingMasterDomain && defaultRecordsSetting === 'linode' && (
+            {isCreatingPrimaryDomain && defaultRecordsSetting === 'linode' && (
               <React.Fragment>
                 <LinodeSelect
                   linodeError={errorMap.defaultLinode}
@@ -551,7 +538,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                 )}
               </React.Fragment>
             )}
-            {isCreatingMasterDomain &&
+            {isCreatingPrimaryDomain &&
               defaultRecordsSetting === 'nodebalancer' && (
                 <React.Fragment>
                   <NodeBalancerSelect
@@ -585,7 +572,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                 loading={submitting}
                 disabled={disabled}
               >
-                Create
+                Create Domain
               </Button>
             </ActionsPanel>
           </div>

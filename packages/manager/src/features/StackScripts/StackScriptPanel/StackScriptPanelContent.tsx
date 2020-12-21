@@ -170,7 +170,7 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
           Cancel
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           destructive
           onClick={handleDeleteStackScript}
           loading={dialog.delete.submitting}

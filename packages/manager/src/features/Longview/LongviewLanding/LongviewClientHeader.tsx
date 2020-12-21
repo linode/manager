@@ -3,11 +3,11 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import ButtonLink from 'src/components/Button/ButtonLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
+import Link from 'src/components/Link';
 import { DispatchProps } from 'src/containers/longview.container';
 import withClientStats, {
   Props as LVDataProps
@@ -31,18 +31,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(2)
     }
   },
-  link: {
-    '& .buttonSpan': {
-      padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`
-    },
-    [theme.breakpoints.down('md')]: {
-      top: -4
-    }
-  },
   packageButton: {
     fontSize: '0.875rem',
     padding: 0,
-    textAlign: 'left'
+    textAlign: 'left',
+    '&:hover': {
+      textDecoration: 'underline',
+      color: 'inherit',
+      backgroundColor: 'inherit'
+    }
   },
   lastUpdatedOuter: {
     [theme.breakpoints.up('md')]: {
@@ -113,9 +110,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
 
   const formattedlastUpdatedTime =
     longviewClientLastUpdated !== undefined
-      ? `Last updated ${formatDate(longviewClientLastUpdated, {
-          humanizeCutoff: 'never'
-        })}`
+      ? `Last updated ${formatDate(longviewClientLastUpdated)}`
       : 'Latest update time not available';
 
   /**
@@ -164,12 +159,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         )}
       </Grid>
       <Grid item>
-        <ButtonLink
-          to={`/longview/clients/${clientID}`}
-          linkText="View details"
-          className={classes.link}
-          secondary
-        />
+        <Link to={`/longview/clients/${clientID}`}>View Details</Link>
         {!loading && (
           <div className={classes.lastUpdatedOuter}>
             <Typography variant="caption" className={classes.lastUpdatedText}>

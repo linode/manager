@@ -1,5 +1,4 @@
 import { Profile } from '@linode/api-v4/lib/profile';
-import { getQueryParam } from 'src/utilities/queryParams';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -10,15 +9,21 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
+  withTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
+import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
+import ThemeToggle from './ThemeToggle';
 
 type ClassNames = 'root' | 'title' | 'label';
 
@@ -41,7 +46,15 @@ interface State {
   preferenceEditorOpen: boolean;
 }
 
-type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
+interface Props {
+  toggleTheme: () => void;
+}
+
+type CombinedProps = Props &
+  StateProps &
+  DispatchProps &
+  FeatureFlagConsumerProps &
+  WithStyles<ClassNames> & { theme: Theme };
 
 class ProfileSettings extends React.Component<CombinedProps, State> {
   state: State = {
@@ -56,38 +69,59 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, status } = this.props;
+    const { classes, status, flags, toggleTheme } = this.props;
 
     const preferenceEditorMode =
       getQueryParam(window.location.search, 'preferenceEditor') === 'true';
 
     return (
-      <Paper className={classes.root}>
-        <DocumentTitleSegment segment="Settings" />
-        <Typography variant="h2" className={classes.title}>
-          Notifications
-        </Typography>
-        <Grid container alignItems="center">
-          <Grid item xs={12}>
-            <FormControlLabel
-              className="toggleLassie"
-              control={<Toggle onChange={this.toggle} checked={status} />}
-              label={`
+      <>
+        <DocumentTitleSegment segment="My Settings" />
+        <Paper className={classes.root}>
+          <Typography variant="h2" className={classes.title}>
+            Notifications
+          </Typography>
+          <Grid container alignItems="center">
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={<Toggle onChange={this.toggle} checked={status} />}
+                label={`
                 Email alerts for account activity are ${
                   status === true ? 'enabled' : 'disabled'
                 }
               `}
-              disabled={this.state.submitting}
-            />
+                disabled={this.state.submitting}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        {preferenceEditorMode && (
-          <PreferenceEditor
-            open={this.state.preferenceEditorOpen}
-            onClose={() => this.setState({ preferenceEditorOpen: false })}
-          />
-        )}
-      </Paper>
+          {preferenceEditorMode && (
+            <PreferenceEditor
+              open={this.state.preferenceEditorOpen}
+              onClose={() => this.setState({ preferenceEditorOpen: false })}
+            />
+          )}
+        </Paper>
+        {flags.cmr ? (
+          <Paper className={classes.root}>
+            <Typography variant="h2" className={classes.title}>
+              Dark Mode
+            </Typography>
+            <Grid container alignItems="center">
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={<ThemeToggle toggleTheme={toggleTheme} />}
+                  label={`
+                Dark mode is ${
+                  this.props.theme.name === 'darkTheme' ? 'enabled' : 'disabled'
+                }
+              `}
+                  disabled={this.state.submitting}
+                />
+              </Grid>
+            </Grid>
+          </Paper>
+        ) : null}
+      </>
     );
   }
 
@@ -100,7 +134,6 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
         this.setState({ submitting: false });
       })
       .catch(() => {
-        /* Couldnt really imagine this being an issue... 1*/
         this.setState({ submitting: false });
       });
   };
@@ -126,6 +159,11 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(styled, connected);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withFeatureFlags,
+  withTheme,
+  connected
+);
 
 export default enhanced(ProfileSettings);

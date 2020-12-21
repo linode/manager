@@ -145,7 +145,13 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               undefined,
               `Error removing ${secondaryLabel} from Firewall ${label}.`
             );
+          case 'longviewclient_create':
+            return _toast(
+              `Longview Client ${label} successfully created.`,
+              `Error creating Longview Client ${label}.`
+            );
           default:
+            // eslint-disable-next-line array-callback-return
             return;
         }
       })

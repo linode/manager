@@ -7,7 +7,11 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import PrimaryNav from 'src/components/PrimaryNav';
+import { compose } from 'recompose';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
+import PrimaryNav from './PrimaryNav/PrimaryNav_CMR';
 
 type ClassNames =
   | 'menuPaper'
@@ -19,16 +23,13 @@ const styles = (theme: Theme) =>
   createStyles({
     menuPaper: {
       height: '100%',
-      width: theme.spacing(14) + 103, // 215
+      width: 190,
       backgroundColor: theme.bg.primaryNavPaper,
       borderRight: 'none',
       left: 'inherit',
       boxShadow: 'none',
       transition: 'width linear .1s',
-      overflowX: 'hidden',
-      [theme.breakpoints.up('xl')]: {
-        width: theme.spacing(22) + 99 // 275
-      }
+      overflowX: 'hidden'
     },
     menuDocked: {
       height: '100%'
@@ -37,9 +38,9 @@ const styles = (theme: Theme) =>
       transform: 'none'
     },
     collapsedDesktopMenu: {
-      width: theme.spacing(7) + 36,
+      width: 60,
       '&:hover': {
-        width: theme.spacing(9) + 150,
+        width: 190,
         '& .logoLetters, & .primaryNavLink': {
           opacity: 1
         }
@@ -51,22 +52,14 @@ interface Props {
   open: boolean;
   desktopOpen: boolean;
   closeMenu: () => void;
-  toggleTheme: () => void;
   toggleSpacing: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & FeatureFlagConsumerProps;
 
 class SideMenu extends React.Component<CombinedProps> {
   render() {
-    const {
-      classes,
-      open,
-      desktopOpen,
-      closeMenu,
-      toggleSpacing,
-      toggleTheme
-    } = this.props;
+    const { classes, open, desktopOpen, closeMenu, toggleSpacing } = this.props;
 
     return (
       <React.Fragment>
@@ -74,7 +67,9 @@ class SideMenu extends React.Component<CombinedProps> {
           <Drawer
             variant="temporary"
             open={open}
-            classes={{ paper: classes.menuPaper }}
+            classes={{
+              paper: classes.menuPaper
+            }}
             onClose={closeMenu}
             ModalProps={{
               keepMounted: true // Better open performance on mobile.
@@ -82,7 +77,6 @@ class SideMenu extends React.Component<CombinedProps> {
           >
             <PrimaryNav
               closeMenu={closeMenu}
-              toggleTheme={toggleTheme}
               toggleSpacing={toggleSpacing}
               isCollapsed={false}
             />
@@ -93,16 +87,14 @@ class SideMenu extends React.Component<CombinedProps> {
             variant="permanent"
             open
             classes={{
-              paper: `${classes.menuPaper} ${
-                desktopOpen ? classes.collapsedDesktopMenu : ''
-              }`,
+              paper: `${classes.menuPaper} ${desktopOpen &&
+                classes.collapsedDesktopMenu}`,
               docked: classes.menuDocked
             }}
             className={classes.desktopMenu}
           >
             <PrimaryNav
               closeMenu={closeMenu}
-              toggleTheme={toggleTheme}
               toggleSpacing={toggleSpacing}
               isCollapsed={desktopOpen}
             />
@@ -113,6 +105,9 @@ class SideMenu extends React.Component<CombinedProps> {
   }
 }
 
-const styled = withStyles(styles);
+const enhanced = compose<CombinedProps, Props>(
+  withStyles(styles),
+  withFeatureFlagConsumer
+);
 
-export default styled(SideMenu);
+export default enhanced(SideMenu);

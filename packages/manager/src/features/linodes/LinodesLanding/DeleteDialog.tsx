@@ -87,7 +87,7 @@ const Actions: React.FC<ActionsProps> = props => {
         onClick={props.onSubmit}
         loading={props.loading}
         destructive
-        buttonType="secondary"
+        buttonType="primary"
       >
         Delete
       </Button>

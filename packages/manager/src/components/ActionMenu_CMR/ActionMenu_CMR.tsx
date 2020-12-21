@@ -38,8 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
       '&[aria-expanded="true"]': {
         backgroundColor: '#3683dc',
-        color: '#fff',
-        width: '100%'
+        color: '#fff'
       }
     }
   },

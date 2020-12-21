@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0
   },
   objectNameButton: {
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight
   }
 }));
 
@@ -97,14 +98,13 @@ const ObjectTableRow: React.FC<Props> = props => {
       <TableCell noWrap>{readableBytes(objectSize).formatted}</TableCell>
       <Hidden smDown>
         <TableCell noWrap>
-          <DateTimeDisplay value={objectLastModified} humanizeCutoff="never" />
+          <DateTimeDisplay value={objectLastModified} />
         </TableCell>
       </Hidden>
       <TableCell className={classes.actionCell}>
         <ObjectActionMenu
           handleClickDownload={handleClickDownload}
           handleClickDelete={handleClickDelete}
-          handleClickDetails={handleClickDetails}
           objectName={fullName}
         />
       </TableCell>

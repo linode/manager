@@ -10,7 +10,7 @@ import PowerDialogOrDrawer, {
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
@@ -28,6 +28,7 @@ import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
 import HostMaintenance from './HostMaintenance';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
+import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 
 interface Props {
   numVolumes: number;
@@ -112,7 +113,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     tags: []
   });
 
-  const { updateLinode, deleteLinode } = useLinodes();
+  const { updateLinode, deleteLinode } = useLinodeActions();
   const history = useHistory();
 
   const openPowerActionDialog = (
@@ -251,8 +252,10 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
+      <LinodeDetailsBreadcrumb />
       <LinodeEntityDetail
         variant="details"
+        id={linode.id}
         linode={linode}
         numVolumes={getVolumesByLinode(linode.id)}
         username={profile.data?.username}

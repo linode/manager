@@ -243,12 +243,12 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     );
 
     const generalError = errorMap.none;
-    const masterIPsError = errorMap.master_ips;
+    const primaryIPsError = errorMap.master_ips;
 
     const title = mode === EDITING ? 'Edit Domain' : 'Add a new Domain';
 
-    const isEditingMasterDomain = mode === EDITING && type === 'master';
-    const isEditingSlaveDomain = mode === EDITING && type === 'slave';
+    const isEditingPrimaryDomain = mode === EDITING && type === 'master';
+    const isEditingSecondaryDomain = mode === EDITING && type === 'slave';
 
     return (
       <Drawer title={title} open={open} onClose={this.closeDrawer}>
@@ -275,16 +275,16 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         >
           <FormControlLabel
             value="master"
-            label="Master"
+            label="Primary"
             control={<Radio />}
-            data-qa-domain-radio="Master"
+            data-qa-domain-radio="Primary"
             disabled={mode === EDITING || mode === CLONING || disabled}
           />
           <FormControlLabel
             value="slave"
-            label="Slave"
+            label="Secondary"
             control={<Radio />}
-            data-qa-domain-radio="Slave"
+            data-qa-domain-radio="Secondary"
             disabled={mode === EDITING || mode === CLONING || disabled}
           />
         </RadioGroup>
@@ -307,7 +307,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {isEditingMasterDomain && (
+        {isEditingPrimaryDomain && (
           <TextField
             errorText={errorMap.soa_email}
             value={soaEmail}
@@ -318,15 +318,15 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {isEditingSlaveDomain && (
+        {isEditingSecondaryDomain && (
           <React.Fragment>
             <MultipleIPInput
-              title="Master Nameserver IP Address"
+              title="Primary Nameserver IP Address"
               ips={this.state.master_ips.map(stringToExtendedIP)}
-              onChange={this.updateMasterIPAddress}
-              error={masterIPsError}
+              onChange={this.updatePrimaryIPAddress}
+              error={primaryIPsError}
             />
-            {isEditingSlaveDomain && (
+            {isEditingSecondaryDomain && (
               // Only when editing
               <MultipleIPInput
                 title="Domain Transfer IPs"
@@ -455,16 +455,17 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       return;
     }
 
-    const finalMasterIPs = master_ips.filter(v => v !== '');
+    const primaryIPs = master_ips.filter(v => v !== '');
     const finalTransferIPs = axfr_ips.filter(v => v !== '');
 
-    if (type === 'slave' && finalMasterIPs.length === 0) {
+    if (type === 'slave' && primaryIPs.length === 0) {
       this.setState({
         submitting: false,
         errors: [
           {
             field: 'master_ips',
-            reason: 'You must provide at least one Master Nameserver IP Address'
+            reason:
+              'You must provide at least one Primary Nameserver IP Address'
           }
         ]
       });
@@ -479,7 +480,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             domain,
             type,
             tags,
-            master_ips: finalMasterIPs,
+            master_ips: primaryIPs,
             domainId: id,
             axfr_ips: finalTransferIPs
           };
@@ -540,7 +541,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     value: 'master' | 'slave'
   ) => this.setState({ type: value });
 
-  updateMasterIPAddress = (newIPs: ExtendedIP[]) => {
+  updatePrimaryIPAddress = (newIPs: ExtendedIP[]) => {
     const master_ips =
       newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (this.mounted) {

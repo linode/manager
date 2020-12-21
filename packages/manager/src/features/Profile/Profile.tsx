@@ -1,20 +1,14 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import H1Header from 'src/components/H1Header';
+import LandingHeader from 'src/components/LandingHeader';
 import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
-import useFlags from 'src/hooks/useFlags';
 import Props from './OAuthClients';
 
 const SSHKeys = React.lazy(() => import('./SSHKeys'));
-const SSHKeys_CMR = React.lazy(() => import('./SSHKeys/SSHKeys_CMR'));
 const Settings = React.lazy(() => import('./Settings'));
 const Referrals = React.lazy(() => import('./Referrals'));
 const OAuthClients = React.lazy(() => import('./OAuthClients'));
-const OAuthClients_CMR = React.lazy(() =>
-  import('./OAuthClients/OAuthClients_CMR')
-);
 const LishSettings = React.lazy(() => import('./LishSettings'));
 const DisplaySettings = React.lazy(() => import('./DisplaySettings'));
 const AuthenticationSettings = React.lazy(() =>
@@ -22,21 +16,16 @@ const AuthenticationSettings = React.lazy(() =>
 );
 const APITokens = React.lazy(() => import('./APITokens'));
 
-const useStyles = makeStyles((theme: Theme) => ({
-  cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing()
-    }
-  }
-}));
+interface Props {
+  toggleTheme: () => void;
+}
 
-type Props = RouteComponentProps<{}>;
+type CombinedProps = Props & RouteComponentProps<{}>;
 
-const Profile: React.FC<Props> = props => {
-  const classes = useStyles();
-  const flags = useFlags();
+const Profile: React.FC<CombinedProps> = props => {
   const {
-    match: { url }
+    match: { url },
+    toggleTheme
   } = props;
 
   const tabs: NavTab[] = [
@@ -53,10 +42,10 @@ const Profile: React.FC<Props> = props => {
     {
       title: 'SSH Keys',
       routeName: `${url}/keys`,
-      component: flags.cmr ? SSHKeys_CMR : SSHKeys
+      component: SSHKeys
     },
     {
-      title: 'LISH',
+      title: 'LISH Console Settings',
       routeName: `${url}/lish`,
       component: LishSettings
     },
@@ -68,7 +57,7 @@ const Profile: React.FC<Props> = props => {
     {
       title: 'OAuth Apps',
       routeName: `${url}/clients`,
-      component: flags.cmr ? OAuthClients_CMR : OAuthClients
+      component: OAuthClients
     },
     {
       title: 'Referrals',
@@ -76,18 +65,18 @@ const Profile: React.FC<Props> = props => {
       component: Referrals
     },
     {
-      title: 'Settings',
+      title: 'My Settings',
       routeName: `${url}/settings`,
-      component: Settings
+      render: <Settings toggleTheme={toggleTheme} />
     }
   ];
 
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="My Profile " />
-      <H1Header
+      <LandingHeader
         title="My Profile"
-        className={flags.cmr ? classes.cmrSpacing : ''}
+        removeCrumbX={1}
         data-qa-profile-header
       />
       <NavTabs tabs={tabs} />

@@ -26,11 +26,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '6px 16px',
       position: 'relative',
       textTransform: 'inherit',
+      textDecoration: 'none',
       [theme.breakpoints.up('md')]: {
         minWidth: 75
       },
       '&:hover': {
-        color: theme.color.blue
+        color: theme.color.blue,
+        textDecoration: 'none'
       }
     },
     '&[data-reach-tab][data-selected]': {
@@ -44,7 +46,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-tab-list]': {
       background: 'none !important',
       boxShadow: `inset 0 -1px 0 ${theme.cmrBorderColors.borderTabs}`,
-      marginTop: 22,
       marginBottom: theme.spacing(3),
       [theme.breakpoints.down('md')]: {
         overflowX: 'scroll',

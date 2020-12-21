@@ -5,14 +5,11 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Loading from 'src/components/LandingLoading';
 import Notice from 'src/components/Notice';
 import summaryPanelStyles, {
   StyleProps
@@ -20,43 +17,44 @@ import summaryPanelStyles, {
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import useDomains from 'src/hooks/useDomains';
 import { getAllWithArguments } from 'src/utilities/getAll';
-
-import Loading from 'src/components/LandingLoading';
-
 import DomainRecords from '../DomainRecordsWrapper';
 
 type RouteProps = RouteComponentProps<{ domainId?: string }>;
 
-type ClassNames = 'error' | 'tagsButton' | 'editIcon';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    ...summaryPanelStyles(theme),
-    error: {
-      marginTop: `${theme.spacing(3)}px !important`,
-      marginBottom: `0 !important`
-    },
-    tagsButton: {
-      padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`,
-      height: 34,
-      minWidth: 80,
-      marginTop: theme.spacing(1),
-      [theme.breakpoints.down('md')]: {
-        marginRight: theme.spacing()
-      }
-    },
-    editIcon: {
-      width: 20,
-      height: 20,
-      marginRight: theme.spacing(0.5)
+const useStyles = makeStyles((theme: Theme) => ({
+  ...summaryPanelStyles(theme),
+  error: {
+    marginTop: `${theme.spacing(3)}px !important`,
+    marginBottom: `0 !important`
+  },
+  cta: {
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: theme.spacing()
+  },
+  tagsButton: {
+    height: 34,
+    marginLeft: 0,
+    marginRight: theme.spacing(3),
+    minWidth: 'auto',
+    padding: 0,
+    '&:hover': {
+      textDecoration: 'underline'
     }
-  });
+  },
+  editIcon: {
+    width: 20,
+    height: 20,
+    marginRight: theme.spacing()
+  }
+}));
 
-type CombinedProps = RouteProps & StyleProps & WithStyles<ClassNames>;
+type CombinedProps = RouteProps & StyleProps;
 
 const DomainDetail: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const {
-    classes,
     location,
     match: {
       params: { domainId }
@@ -115,22 +113,30 @@ const DomainDetail: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Grid container justify="space-between" className="m0">
-        <Grid item className="px0">
+      <Grid
+        container
+        className="m0"
+        alignItems="center"
+        justify="space-between"
+      >
+        <Grid item className="p0">
           <Breadcrumb
             pathname={location.pathname}
             labelTitle={domain.domain}
             labelOptions={{ noCap: true }}
           />
         </Grid>
-        <Button
-          buttonType="secondary"
-          onClick={() => scrollToTags()}
-          className={classes.tagsButton}
-          aria-label={`Manage tags for "${domain.domain}"`}
-        >
-          <Edit className={classes.editIcon} /> Tags
-        </Button>
+        <Grid item className={`${classes.cta} p0`}>
+          <Button
+            buttonType="secondary"
+            className={classes.tagsButton}
+            onClick={() => scrollToTags()}
+            aria-label={`Manage tags for "${domain.domain}"`}
+          >
+            <Edit className={classes.editIcon} /> Tags
+          </Button>
+          <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
+        </Grid>
       </Grid>
       {props.location.state && props.location.state.recordError && (
         <Notice
@@ -149,7 +155,6 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   );
 };
 
-const localStyles = withStyles(styles);
 const reloaded = reloadableWithRouter<{}, { domainId?: number }>(
   (routePropsOld, routePropsNew) => {
     return (
@@ -159,7 +164,4 @@ const reloaded = reloadableWithRouter<{}, { domainId?: number }>(
   }
 );
 
-export default compose<CombinedProps, RouteProps>(
-  reloaded,
-  localStyles
-)(DomainDetail);
+export default compose<CombinedProps, RouteProps>(reloaded)(DomainDetail);

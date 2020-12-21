@@ -3,7 +3,6 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import {
@@ -230,14 +229,14 @@ export class SupportTicketsLanding extends React.PureComponent<
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Support Tickets" />
-        <AbuseTicketBanner />
         <Grid
           container
+          className="m0"
+          alignItems="center"
           justify="space-between"
           updateFor={[classes]}
-          alignItems="center"
         >
-          <Grid item>
+          <Grid item className="p0">
             <Breadcrumb
               pathname={location.pathname}
               labelTitle="Tickets"
@@ -245,24 +244,20 @@ export class SupportTicketsLanding extends React.PureComponent<
             />
           </Grid>
           {!this.props.globalErrors.account_unactivated && (
-            <Grid item>
-              <Grid container alignItems="flex-end">
-                <Grid item>
-                  <Button
-                    buttonType="primary"
-                    onClick={this.openDrawer}
-                    data-qa-open-ticket-link
-                    className={classes.openTicketButton}
-                    onKeyPress={e => {
-                      if (e.keyCode === 13) {
-                        this.openDrawer();
-                      }
-                    }}
-                  >
-                    Open New Ticket
-                  </Button>
-                </Grid>
-              </Grid>
+            <Grid item className="p0">
+              <Button
+                buttonType="primary"
+                onClick={this.openDrawer}
+                data-qa-open-ticket-link
+                className={classes.openTicketButton}
+                onKeyPress={e => {
+                  if (e.keyCode === 13) {
+                    this.openDrawer();
+                  }
+                }}
+              >
+                Open New Ticket
+              </Button>
             </Grid>
           )}
         </Grid>

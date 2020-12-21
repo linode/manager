@@ -11,13 +11,13 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import useFlags from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
+import { ExtendedLinode } from '../LinodesDetail/types';
 import TableWrapper from './TableWrapper';
 import TableWrapper_CMR from './TableWrapper_CMR';
 import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
-import { ShallowExtendedLinode } from 'src/store/linodes/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       // Browser default until we get styling direction for focus states
       outline: '1px dotted #999'
     }
+  },
+  table: {
+    // tableLayout: 'fixed'
   }
 }));
 
@@ -45,7 +48,7 @@ interface Props {
   ) => void;
   display: 'grid' | 'list';
   component: any;
-  data: ShallowExtendedLinode[];
+  data: ExtendedLinode[];
   someLinodesHaveMaintenance: boolean;
   toggleLinodeView: () => 'grid' | 'list';
   toggleGroupLinodes: () => boolean;
@@ -78,7 +81,7 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
   const numberOfLinodesWithMaintenance = data.reduce((acc, thisLinode) => {
-    if (thisLinode._maintenance) {
+    if (thisLinode.maintenance) {
       acc++;
     }
     return acc;
@@ -130,6 +133,7 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
                   linodesAreGrouped={linodesAreGrouped}
                   toggleLinodeView={toggleLinodeView}
                   toggleGroupLinodes={toggleGroupLinodes}
+                  tableProps={{ tableClass: classes.table }}
                 >
                   <TableBody>
                     <Component showHead {...componentProps} />

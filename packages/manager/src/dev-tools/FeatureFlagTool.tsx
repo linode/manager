@@ -9,7 +9,7 @@ import Grid from 'src/components/core/Grid';
 
 const options: { label: string; flag: keyof Flags }[] = [
   { label: 'CMR', flag: 'cmr' },
-  { label: 'Firewalls', flag: 'firewalls' }
+  { label: 'Databases', flag: 'databases' }
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {

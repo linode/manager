@@ -1,5 +1,6 @@
 import { APIWarning } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import makeAsyncScriptLoader from 'react-async-script';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -14,9 +15,8 @@ import AccountContainer, {
   DispatchProps as AccountDispatchProps
 } from 'src/containers/account.container';
 import { v4 } from 'uuid';
-
 import CreditCard from './CreditCardPayment';
-import PayPal from './Paypal';
+import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -55,6 +55,8 @@ export const getMinimumPayment = (balance: number | false) => {
   return Math.min(5, balance).toFixed(2);
 };
 
+const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
+
 export const PaymentDrawer: React.FC<CombinedProps> = props => {
   const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
   const classes = useStyles();
@@ -67,6 +69,9 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
 
   const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
   const [payPalKey, setPayPalKey] = React.useState<string>(v4());
+  const [isPaypalScriptLoaded, setIsPaypalScriptLoaded] = React.useState<
+    boolean
+  >(false);
 
   React.useEffect(() => {
     setUSD(getMinimumPayment(balance));
@@ -111,6 +116,10 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
     );
   }
 
+  const onScriptLoad = () => {
+    setIsPaypalScriptLoaded(true);
+  };
+
   return (
     <Drawer title="Make a Payment" open={open} onClose={onClose}>
       <Grid container>
@@ -150,7 +159,13 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
             setSuccess={setSuccess}
           />
 
-          <PayPal key={payPalKey} usd={usd} setSuccess={setSuccess} />
+          <AsyncPaypal
+            key={payPalKey}
+            usd={usd}
+            setSuccess={setSuccess}
+            asyncScriptOnLoad={onScriptLoad}
+            isScriptLoaded={isPaypalScriptLoaded}
+          />
         </Grid>
       </Grid>
     </Drawer>
@@ -183,7 +198,7 @@ const Warning: React.FC<WarningProps> = props => {
       {warning.title} {ticketLink}
     </>
   );
-  return <Notice warning text={message} />;
+  return <Notice warning>{message}</Notice>;
 };
 
 const withAccount = AccountContainer(

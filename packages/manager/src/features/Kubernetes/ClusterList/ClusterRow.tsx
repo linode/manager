@@ -1,40 +1,48 @@
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+import { Link } from 'react-router-dom';
+import Hidden from 'src/components/core/Hidden';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { ExtendedCluster, PoolNodeWithPrice } from './../types';
 import ActionMenu from './ClusterActionMenu';
 
-type ClassNames = 'root' | 'label' | 'clusterDescription' | 'clusterRow';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    label: {
-      width: '30%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
-    },
-    clusterDescription: {
-      paddingTop: theme.spacing(1) / 2
-    },
-    clusterRow: {
-      '&:before': {
-        display: 'none'
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  link: {
+    display: 'block',
+    color: theme.cmrTextColors.linkActiveLight,
+    fontFamily: theme.font.bold,
+    fontSize: '.875rem',
+    lineHeight: '1.125rem',
+    '&:hover, &:focus': {
+      textDecoration: 'underline'
     }
-  });
+  },
+  labelStatusWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    whiteSpace: 'nowrap'
+  },
+  clusterRow: {
+    '&:before': {
+      display: 'none'
+    }
+  },
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0,
+    /*
+      Explicitly stating this as the theme file is automatically adding padding to the last cell
+      We can remove once we make the full switch to CMR styling
+      */
+    paddingRight: '0 !important'
+  }
+}));
 
 interface Props {
   cluster: ExtendedCluster;
@@ -45,49 +53,57 @@ interface Props {
   ) => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, cluster, openDeleteDialog } = props;
+  const classes = useStyles();
+
+  const { cluster, openDeleteDialog } = props;
+
   return (
     <TableRow
       key={cluster.id}
       data-qa-cluster-cell={cluster.id}
       data-testid={'cluster-row'}
-      rowLink={`/kubernetes/clusters/${cluster.id}/summary`}
       className={classes.clusterRow}
       ariaLabel={`Cluster ${cluster.label}`}
     >
-      <TableCell
-        parentColumn="Cluster Label"
-        className={classes.label}
-        data-qa-cluster-label
-      >
+      <TableCell data-qa-cluster-label>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
-            <EntityIcon variant="kube" marginTop={1} />
-          </Grid>
-          <Grid item>
-            <Typography variant="h3">{cluster.label}</Typography>
+            <div className={classes.labelStatusWrapper}>
+              <Link
+                className={classes.link}
+                to={`/kubernetes/clusters/${cluster.id}/summary`}
+                tabIndex={0}
+              >
+                {cluster.label}
+              </Link>
+            </div>
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell parentColumn="Version" data-qa-cluster-version>
-        {cluster.k8s_version}
-      </TableCell>
-      <TableCell parentColumn="Created" data-qa-cluster-date>
-        <DateTimeDisplay value={cluster.created} humanizeCutoff="month" />
-      </TableCell>
-      <TableCell parentColumn="Region" data-qa-cluster-region>
-        {cluster.region}
-      </TableCell>
-      <TableCell parentColumn="Total Memory" data-qa-cluster-memory>
-        {`${cluster.totalMemory / 1024}GB`}
-      </TableCell>
-      <TableCell parentColumn="Total CPUs" data-qa-cluster-cpu>
-        {`${cluster.totalCPU} ${cluster.totalCPU === 1 ? 'CPU' : 'CPUs'}`}
-      </TableCell>
-      <TableCell>
+      <Hidden smDown>
+        <TableCell data-qa-cluster-version>{cluster.k8s_version}</TableCell>
+      </Hidden>
+
+      <Hidden smDown>
+        <TableCell data-qa-cluster-date>
+          <DateTimeDisplay value={cluster.created} />
+        </TableCell>
+      </Hidden>
+      <TableCell data-qa-cluster-region>{cluster.region}</TableCell>
+      <Hidden xsDown>
+        <TableCell data-qa-cluster-memory>
+          {`${cluster.totalMemory / 1024}GB`}
+        </TableCell>
+      </Hidden>
+      <Hidden xsDown>
+        <TableCell data-qa-cluster-cpu>
+          {`${cluster.totalCPU} ${cluster.totalCPU === 1 ? 'CPU' : 'CPUs'}`}
+        </TableCell>
+      </Hidden>
+      <TableCell className={classes.actionCell}>
         <ActionMenu
           clusterId={cluster.id}
           clusterLabel={cluster.label}
@@ -100,6 +116,4 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(ClusterRow);
+export default ClusterRow;

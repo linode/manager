@@ -9,7 +9,8 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -25,30 +26,43 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import paginate, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { LinodeAPI } from 'src/documentation';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import Modals from './Modals';
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
 
-import Modals from './Modals';
-
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'headline' | 'addNewWrapper' | 'actionCell';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    title: {
-      margin: `0 0 ${theme.spacing(2)}px`
+    root: {
+      backgroundColor: theme.color.white,
+      width: '100%'
+    },
+    headline: {
+      marginLeft: 15
+    },
+    addNewWrapper: {
+      '&.MuiGrid-item': {
+        padding: 5
+      }
+    },
+    actionCell: {
+      display: 'flex',
+      justifyContent: 'flex-end'
     }
   });
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Props extends PaginationProps<OAuthClient> {}
 
 interface State {
@@ -307,21 +321,21 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
   };
 
   renderRows = (data: OAuthClient[]) => {
-    return data.map(({ id, label, redirect_uri, public: isPublic, status }) => (
+    const { classes } = this.props;
+
+    return data.map(({ id, label, redirect_uri, public: isPublic }) => (
       <TableRow ariaLabel={label} key={id} data-qa-table-row={label}>
-        <TableCell parentColumn="Label" data-qa-oauth-label>
-          {label}
-        </TableCell>
-        <TableCell parentColumn="Access" data-qa-oauth-access>
-          {isPublic ? 'Public' : 'Private'}
-        </TableCell>
-        <TableCell parentColumn="ID" data-qa-oauth-id>
-          {id}
-        </TableCell>
-        <TableCell parentColumn="Callback URL" data-qa-oauth-callback>
-          {redirect_uri}
-        </TableCell>
-        <TableCell>
+        <TableCell data-qa-oauth-label>{label}</TableCell>
+        <Hidden xsDown>
+          <TableCell data-qa-oauth-access>
+            {isPublic ? 'Public' : 'Private'}
+          </TableCell>
+        </Hidden>
+        <TableCell data-qa-oauth-id>{id}</TableCell>
+        <Hidden xsDown>
+          <TableCell data-qa-oauth-callback>{redirect_uri}</TableCell>
+        </Hidden>
+        <TableCell className={classes.actionCell}>
           <ActionMenu
             openSecretModal={this.openSecretModal}
             openDeleteModal={this.openDeleteModal}
@@ -354,22 +368,27 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     // TODO Need to unify internal & external usage of 'OAuth Clients'/'OAuth Apps'.
     // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'OAuth Apps' for user-facing displays.
     return (
-      <div>
+      <>
         <DocumentTitleSegment segment="OAuth Apps" />
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
+        <Grid
+          className={`${classes.root} m0`}
+          container
+          alignItems="center"
+          justify="space-between"
+        >
+          <Grid className="p0" item>
             <Typography
-              className={classes.title}
-              variant="h2"
-              data-qa-table={classes.title}
+              className={classes.headline}
+              variant="h3"
+              data-qa-table={classes.headline}
             >
               OAuth Apps
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid className={classes.addNewWrapper} item>
             <AddNewLink
               onClick={() => this.openDrawer()(false)}
-              label="Create OAuth App"
+              label="Add an OAuth App"
               data-qa-oauth-create
             />
           </Grid>
@@ -378,10 +397,22 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           <Table aria-label="List of OAuth Apps">
             <TableHead data-qa-table-head>
               <TableRow>
-                <TableCell style={{ width: '20%' }}>Label</TableCell>
-                <TableCell style={{ width: '20%' }}>Access</TableCell>
+                <TableSortCell
+                  active={this.props.orderBy === 'label'}
+                  label="label"
+                  direction={this.props.order}
+                  handleClick={this.props.handleOrderChange}
+                  style={{ width: '20%' }}
+                >
+                  Label
+                </TableSortCell>
+                <Hidden xsDown>
+                  <TableCell>Access</TableCell>
+                </Hidden>
                 <TableCell style={{ width: '20%' }}>ID</TableCell>
-                <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
+                <Hidden xsDown>
+                  <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
+                </Hidden>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -429,7 +460,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           handleSizeChange={this.props.handlePageSizeChange}
           eventCategory="oauth clients"
         />
-      </div>
+      </>
     );
   }
 

@@ -49,7 +49,12 @@ import { RebuildDialog } from './RebuildDialog';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
-type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
+type ClassNames =
+  | 'root'
+  | 'error'
+  | 'emptyImagePanel'
+  | 'emptyImagePanelText'
+  | 'actions';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -65,6 +70,10 @@ const styles = (theme: Theme) =>
     emptyImagePanelText: {
       marginTop: theme.spacing(1),
       padding: `${theme.spacing(1)}px 0`
+    },
+    actions: {
+      marginBottom: '16px !important',
+      marginLeft: theme.spacing(3)
     }
   });
 
@@ -357,7 +366,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
             </form>
             <ActionsPanel>
               <Button
-                buttonType="secondary"
+                buttonType="primary"
                 className="destructive"
                 onClick={handleRebuildButtonClick}
                 data-qa-rebuild

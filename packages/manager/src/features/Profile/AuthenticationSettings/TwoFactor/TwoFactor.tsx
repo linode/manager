@@ -1,11 +1,9 @@
-import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
 import { getTFAToken, Profile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
@@ -25,8 +23,7 @@ import ScratchDialog from './ScratchCodeDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingBottom: theme.spacing(2),
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(4)
   },
   container: {
     display: 'flex',
@@ -36,21 +33,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3)
   },
-  title: {
-    marginBottom: theme.spacing(1)
-  },
-  helpText: {
+  copy: {
+    lineHeight: '20px',
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(),
     maxWidth: 900
   },
-  visibility: {
-    color: theme.palette.primary.main,
-    padding: 0,
-    border: 0
-  },
-  showHideText: {
-    fontSize: '1rem',
-    marginLeft: theme.spacing(2),
-    color: theme.palette.text.primary
+  button: {
+    ...theme.applyLinkStyles
   },
   disabled: {
     '& *': {
@@ -202,16 +192,12 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
               >
                 {success && <Notice success text={success} />}
                 {generalError && <Notice error text={generalError} />}
-                <Typography
-                  variant="h2"
-                  className={classes.title}
-                  data-qa-title
-                >
+                <Typography variant="h3" data-qa-title>
                   Two-Factor Authentication (TFA)
                 </Typography>
                 <Typography
                   variant="body1"
-                  className={classes.helpText}
+                  className={classes.copy}
                   data-qa-copy
                 >
                   Two-factor authentication increases the security of your
@@ -231,34 +217,17 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
                 )}
                 {twoFactorEnabled && (
                   <div className={classes.container}>
-                    {showQRCode ? (
-                      <Button
-                        buttonType="secondary"
-                        className={classes.visibility}
-                        onClick={toggleHidden}
-                        destructive
-                        data-qa-hide-show-code
-                      >
-                        <SettingsBackupRestore />
-                        <span className={classes.showHideText}>
-                          Hide QR Code
-                        </span>
-                      </Button>
-                    ) : (
-                      <Button
-                        buttonType="secondary"
-                        className={classes.visibility}
-                        onClick={toggleHidden}
-                        data-qa-hide-show-code
-                      >
-                        <SettingsBackupRestore />
-                        <span className={classes.showHideText}>
-                          {twoFactorConfirmed
-                            ? 'Reset two-factor authentication'
-                            : 'Show QR Code'}
-                        </span>
-                      </Button>
-                    )}
+                    <button
+                      className={classes.button}
+                      onClick={toggleHidden}
+                      data-qa-hide-show-code
+                    >
+                      {showQRCode
+                        ? 'Hide QR Code'
+                        : twoFactorConfirmed
+                        ? 'Reset two-factor authentication'
+                        : 'Show QR Code'}
+                    </button>
                   </div>
                 )}
                 {twoFactorEnabled &&

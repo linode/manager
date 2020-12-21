@@ -6,7 +6,6 @@ import classnames from 'classnames';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
-import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -15,7 +14,7 @@ import Grid from 'src/components/Grid';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { useDialog } from 'src/hooks/useDialog';
 import useFlags from 'src/hooks/useFlags';
-import useLinodes from 'src/hooks/useLinodes';
+import useLinodeActions from 'src/hooks/useLinodeActions';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
@@ -25,19 +24,15 @@ import NodeDialog from './NodeDialog';
 import NodePool from './NodePool';
 import NodePoolDialog from './NodePoolDialog';
 import RecycleAllNodesDialog from './RecycleAllNodesDialog';
+import Button from 'src/components/Button';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(3),
     paddingTop: '4px'
   },
-  addNodePoolLink: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    '& button': {
-      marginButton: 0,
-      paddingBottom: theme.spacing()
-    }
+  button: {
+    marginBottom: theme.spacing()
   },
   displayTable: {
     width: '100%',
@@ -95,7 +90,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   const classes = useStyles();
   const flags = useFlags();
 
-  const { deleteLinode } = useLinodes();
+  const { deleteLinode } = useLinodeActions();
 
   const deletePoolDialog = useDialog<number>(deletePool);
   const recycleAllNodesDialog = useDialog<number>(recycleAllNodes);
@@ -226,10 +221,9 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     <>
       <Grid
         container
+        alignItems="center"
         justify="space-between"
-        alignItems="flex-end"
         updateFor={[classes]}
-        style={{ paddingBottom: 0 }}
       >
         <Grid item>
           <Typography
@@ -243,19 +237,16 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
           </Typography>
         </Grid>
         <Grid item>
-          <div
+          <Button
+            buttonType="primary"
             className={classnames({
-              [classes.addNodePoolLink]: true,
+              [classes.button]: true,
               [classes.cmrSpacing]: flags.cmr
             })}
+            onClick={handleOpenAddDrawer}
           >
-            <AddNewLink
-              onClick={() => {
-                handleOpenAddDrawer();
-              }}
-              label="Add a Node Pool"
-            />
-          </div>
+            Add a Node Pool
+          </Button>
         </Grid>
       </Grid>
       <Paper className={classes.root}>

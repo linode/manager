@@ -13,7 +13,6 @@ import {
 } from 'src/components/core/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid, { GridProps } from 'src/components/Grid';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -49,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   important: {
-    backgroundColor: theme.bg.white,
+    backgroundColor: theme.cmrBGColors.bgPaper,
     padding: theme.spacing(2),
     '& $noticeText': {
       fontFamily: theme.font.normal
@@ -119,8 +118,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props extends GridProps {
-  text?: string | JSX.Element;
-  html?: string;
+  text?: string;
   error?: boolean;
   errorGroup?: string;
   important?: boolean;
@@ -155,7 +153,6 @@ const Notice: React.FC<CombinedProps> = props => {
     typeProps,
     children,
     flag,
-    html,
     notificationList,
     onClick,
     onClose,
@@ -166,21 +163,32 @@ const Notice: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
 
-  const c = html ? (
-    <Typography
-      {...typeProps}
-      dangerouslySetInnerHTML={{ __html: sanitizeHTML(html) }}
-    />
-  ) : (
+  const innerText = text ? (
     <Typography
       {...typeProps}
       onClick={onClick}
       className={`${classes.noticeText} noticeText`}
     >
-      {Boolean(text) && text}
-      {Boolean(children) && children}
+      {text}
     </Typography>
-  );
+  ) : null;
+
+  /**
+   * There are some cases where the message
+   * can be either a string or JSX. In those
+   * cases we should use props.children, but
+   * we want to make sure the string is wrapped
+   * in Typography and formatted as it would be
+   * if it were passed as props.text.
+   */
+  const _children =
+    typeof children === 'string' ? (
+      <Typography className={`${classes.noticeText} noticeText`}>
+        {children}
+      </Typography>
+    ) : (
+      children
+    );
 
   const errorScrollClassName = errorGroup
     ? `error-for-scroll-${errorGroup}`
@@ -231,7 +239,7 @@ const Notice: React.FC<CombinedProps> = props => {
             <Warning className={classes.icon} data-qa-warning-img />
           )) ||
           (error && <Error className={classes.icon} data-qa-error-img />))}
-      <div className={classes.inner}>{c}</div>
+      <div className={classes.inner}>{innerText || _children}</div>
       {dismissible && (
         <Grid item className={classes.closeIcon}>
           <Close

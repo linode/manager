@@ -1,12 +1,14 @@
-import { curry } from 'ramda';
 import * as React from 'react';
 import {
-  ChartDataSets,
-  ChartOptions,
   Chart,
-  ChartXAxe,
-  ChartTooltipItem,
-  ChartData
+  ChartOptions,
+  Filler,
+  LineElement,
+  LineController,
+  LinearScale,
+  PointElement,
+  TimeScale,
+  Tooltip
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
 
@@ -30,13 +32,17 @@ import { Metrics } from 'src/utilities/statMetrics';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
 setUpCharts();
 
+Chart.register(
+  LineController,
+  LineElement,
+  LinearScale,
+  PointElement,
+  TimeScale,
+  Tooltip
+);
 export interface DataSet {
   label: string;
   borderColor: string;
-  // this data property type might not be the perfect fit, but it works for
-  // the data returned from /linodes/:linodeID/stats and
-  // /nodebalancers/:nodebalancer/stats
-  // the first number will be a UTC data and the second will be the amount per second
   fill?: boolean | string;
   backgroundColor?: string;
   data: [number, number | null][];
@@ -61,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   ...MetricDisplayStyles(theme)
 }));
 
-const lineOptions: ChartDataSets = {
+const lineOptions = {
   borderWidth: 1,
   borderJoinStyle: 'miter',
   lineTension: 0,
@@ -105,7 +111,9 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
   // is undefined on linode/summary
   const plugins = [
+    Filler,
     {
+      id: 'afterdatasetsdraw',
       afterDatasetsDraw: () => {
         // hack to force re-render component in order to show legend
         // tested this is called
@@ -128,8 +136,8 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     _suggestedMax?: number,
     _nativeLegend?: boolean,
     _tooltipUnit?: string
-  ) => {
-    const finalChartOptions: ChartOptions = {
+  ): ChartOptions<'line'> => {
+    return {
       maintainAspectRatio: false,
       responsive: true,
       animation: { duration: 0 },
@@ -137,56 +145,12 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         display: _nativeLegend,
         position: _nativeLegend ? 'bottom' : undefined
       },
-      scales: {
-        yAxes: [
-          {
-            gridLines: {
-              borderDash: [3, 6],
-              zeroLineWidth: 1,
-              zeroLineBorderDashOffset: 2
-            },
-            ticks: {
-              suggestedMax: _suggestedMax ?? undefined,
-              beginAtZero: true,
-              callback(value: number, _index: number) {
-                return humanizeLargeData(value);
-              }
-            }
-          }
-        ],
-        xAxes: [
-          {
-            type: 'time',
-            gridLines: {
-              display: false
-            },
-            time: {
-              stepSize: showToday ? 3 : 5,
-              displayFormats: showToday
-                ? {
-                    hour: 'HH:00',
-                    minute: 'HH:mm'
-                  }
-                : {
-                    hour: 'LLL dd',
-                    minute: 'LLL dd'
-                  }
-            },
-            adapters: {
-              date: {
-                zone: timezone
-              }
-            }
-            // This cast is because the type definition does not include adapters
-          } as ChartXAxe
-        ]
-      },
       tooltips: {
         cornerRadius: 0,
         backgroundColor: '#fbfbfb',
-        bodyFontColor: '#32363C',
+        bodyFont: { color: '#32363C', weight: 'bold' },
         displayColors: false,
-        titleFontColor: '#606469',
+        titleFont: { color: '#606469' },
         xPadding: 16,
         yPadding: 10,
         borderWidth: 0.5,
@@ -194,37 +158,59 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         caretPadding: 10,
         position: 'nearest',
         callbacks: {
-          label: _formatTooltip(data, formatTooltip, _tooltipUnit)
+          label: (ctx: any) =>
+            _formatTooltip(ctx, data, formatTooltip, _tooltipUnit)
         },
         intersect: false,
         mode: 'index'
+      },
+      scales: {
+        y: {
+          gridLines: {
+            borderDash: [3, 6]
+          },
+          suggestedMax: _suggestedMax ?? undefined,
+
+          beginAtZero: true,
+          ticks: {
+            callback(value: number, _index: number) {
+              return humanizeLargeData(value);
+            }
+          }
+        },
+
+        x: {
+          type: 'time',
+          gridLines: {
+            display: false
+          },
+          time: {
+            stepSize: showToday ? 3 : 5,
+            displayFormats: showToday
+              ? {
+                  hour: 'HH:00',
+                  minute: 'HH:mm'
+                }
+              : {
+                  hour: 'LLL dd',
+                  minute: 'LLL dd'
+                }
+          },
+          adapters: {
+            date: {
+              zone: timezone
+            }
+          }
+        }
       }
     };
-
-    /**
-     * We've been given a max unit, which indicates that
-     * the data we're looking at is in bytes. We should
-     * adjust the tooltip display so that if the maxUnit is GB we
-     * display 8MB instead of 0.0000000000000000000000008 GB
-     *
-     * NOTE: formatTooltip is curried, so here we're creating a new
-     * function has the raw data from props bound to it. This is because
-     * we need to access the original data to determine what unit to display
-     * it in.
-     *
-     * NOTE2: _maxUnit is the unit that all series on the graph will be converted to.
-     * However, in the tooltip, each individual value will be formatted according to
-     * the most appropriate unit, if a unit is provided.
-     */
-
-    return finalChartOptions as ChartOptions;
   };
 
   const _formatData = () => {
     return data.map((dataSet, idx) => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
         acc.push({
-          t: point[0],
+          x: point[0],
           y: formatData ? formatData(point[1]) : point[1]
         });
         return acc;
@@ -233,8 +219,8 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         label: dataSet.label,
         borderColor: dataSet.borderColor,
         backgroundColor: dataSet.backgroundColor,
+        fill: 'origin',
         data: timeData,
-        fill: dataSet.fill,
         hidden: hiddenDatasets.includes(idx),
         ...lineOptions
       };
@@ -249,11 +235,12 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
-
+      const datasets = _formatData();
       chartInstance.current = new Chart(inputEl.current.getContext('2d'), {
         type: 'line',
         data: {
-          datasets: _formatData()
+          datasets,
+          labels: []
         },
         plugins,
         options: getChartOptions(suggestedMax, nativeLegend, unit)
@@ -378,25 +365,30 @@ export const metricsBySection = (data: Metrics): number[] => [
   data.last
 ];
 
-export const _formatTooltip = curry(
-  (
-    data: DataSet[],
-    formatter: ((v: number) => string) | undefined,
-    unit: string | undefined,
-    t: ChartTooltipItem,
-    _d: ChartData
-  ) => {
-    /**
-     * t and d are the params passed by chart.js to this component.
-     * data and formatter should be partially applied before this function
-     * is called directly by chart.js
-     */
-    const dataset = t?.datasetIndex ? data[t?.datasetIndex] : data[0];
-    const label = dataset.label;
-    const val = t?.index ? dataset.data[t?.index][1] || 0 : 0;
-    const value = formatter ? formatter(val) : roundTo(val);
-    return `${label}: ${value}${unit ? unit : ''}`;
-  }
-);
+export const _formatTooltip = (
+  ctx: any,
+  data: DataSet[],
+  formatter: ((v: number) => string) | undefined,
+  unit: string | undefined
+) => {
+  /**
+   * We sometimes want to format tooltips differently
+   * than the overall graph (if a series has a small value
+   * relative to the graph max, it will likely be rounded to
+   * zero).
+   *
+   * We need to access the raw unformatted data (passed as props.data)
+   * and apply a custom tooltip formatting function here.
+   */
+  const idx = ctx.datasetIndex;
+  const pointIdx = ctx.dataIndex;
+  const rawValue = data[idx]?.['data']?.[pointIdx]?.[1] ?? 0;
+  const label = ctx.dataset.label;
+  const value = formatter
+    ? formatter(rawValue)
+    : // If there's no formatter passed, we can use the previously formatted data.
+      roundTo(ctx.dataPoint.y);
+  return `${label}: ${value}${unit ? unit : ''}`;
+};
 
 export default LineGraph;

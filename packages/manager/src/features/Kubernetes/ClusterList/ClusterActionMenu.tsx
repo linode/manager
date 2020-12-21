@@ -3,8 +3,10 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import Hidden from 'src/components/core/Hidden';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 import { reportException } from 'src/exceptionReporting';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -17,51 +19,42 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 
-export const ClusterActionMenu: React.FunctionComponent<
-  CombinedProps
-> = props => {
-  const {
-    clusterId,
-    clusterLabel,
-    enqueueSnackbar,
-    history,
-    openDialog
-  } = props;
+export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const createActions = () => {
-    return (closeMenu: Function): Action[] => {
-      const actions = [
-        {
-          title: 'Download kubeconfig',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            downloadKubeConfig();
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Edit Cluster',
-          onClick: () => {
-            history.push({
-              pathname: `/kubernetes/clusters/${clusterId}`,
-              state: {
-                editing: true
-              }
-            });
-          }
-        },
-        {
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            openDialog();
-            closeMenu();
-            e.preventDefault();
-          }
+  const { clusterId, clusterLabel, enqueueSnackbar, openDialog } = props;
+
+  const inlineActions = [
+    {
+      actionText: 'Download kubeconfig',
+      onClick: () => {
+        downloadKubeConfig();
+      }
+    },
+    {
+      actionText: 'Delete',
+      onClick: () => {
+        openDialog();
+      }
+    }
+  ];
+
+  const createActions = () => (): Action[] => {
+    return [
+      {
+        title: 'Download kubeconfig',
+        onClick: () => {
+          downloadKubeConfig();
         }
-      ];
-
-      return actions;
-    };
+      },
+      {
+        title: 'Delete',
+        onClick: () => {
+          openDialog();
+        }
+      }
+    ];
   };
 
   const downloadKubeConfig = () => {
@@ -91,16 +84,27 @@ export const ClusterActionMenu: React.FunctionComponent<
   };
 
   return (
-    <ActionMenu
-      createActions={createActions()}
-      ariaLabel={`Action menu for Cluster ${props.clusterLabel}`}
-    />
+    <>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      <Hidden mdUp>
+        <ActionMenu
+          createActions={createActions()}
+          ariaLabel={`Action menu for Cluster ${props.clusterLabel}`}
+        />
+      </Hidden>
+    </>
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withSnackbar,
-  withRouter
-);
+const enhanced = compose<CombinedProps, Props>(withSnackbar, withRouter);
 
 export default enhanced(ClusterActionMenu);

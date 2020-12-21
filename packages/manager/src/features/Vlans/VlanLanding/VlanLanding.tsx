@@ -75,16 +75,14 @@ const VlanLanding: React.FC<CombinedProps> = () => {
   return (
     <React.Fragment>
       <LandingHeader
-        title="Virtual LANs"
+        title="VLANs"
         entity="VLAN"
-        iconType="linode"
-        docsLink="http://google.com"
+        docsLink="https://www.linode.com/"
         headerOnly
         onAddNew={context.open}
       />
       <EntityTable
         entity="vlans"
-        groupByTag={false}
         row={vLanRow}
         headers={headers}
         initialOrder={{ order: 'asc', orderBy: 'label' }}

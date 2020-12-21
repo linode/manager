@@ -22,6 +22,7 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
+import { ExtendedLinode } from '../LinodesDetail/types';
 import useFlags from 'src/hooks/useFlags';
 import TableWrapper from './TableWrapper';
 import TableWrapper_CMR from './TableWrapper_CMR';
@@ -30,7 +31,6 @@ import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
 import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
-import { ShallowExtendedLinode } from 'src/store/linodes/types';
 
 type ClassNames =
   | 'root'
@@ -68,7 +68,8 @@ const styles = (theme: Theme) =>
       }
     },
     tagHeader: {
-      marginBottom: 2
+      marginBottom: 2,
+      marginLeft: theme.spacing()
     },
     tagHeaderOuter: {},
     paginationCell: {
@@ -102,7 +103,7 @@ interface Props {
   ) => void;
   display: 'grid' | 'list';
   component: any;
-  data: ShallowExtendedLinode[];
+  data: ExtendedLinode[];
   someLinodesHaveMaintenance: boolean;
   toggleLinodeView: () => 'grid' | 'list';
   toggleGroupLinodes: () => boolean;
@@ -146,7 +147,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
   const numberOfLinodesWithMaintenance = data.reduce((acc, thisLinode) => {
-    if (thisLinode._maintenance) {
+    if (thisLinode.maintenance) {
       acc++;
     }
     return acc;

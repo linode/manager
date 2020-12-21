@@ -1,7 +1,10 @@
 import { Token } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
   token: Token;
@@ -14,70 +17,63 @@ interface Props {
 
 type CombinedProps = Props;
 
-class APITokenMenu extends React.Component<CombinedProps> {
-  createActions = () => {
-    const {
-      isThirdPartyAccessToken,
-      openViewDrawer,
-      openEditDrawer,
-      openRevokeDialog,
-      token,
-      type
-    } = this.props;
+export const APITokenMenu: React.FC<CombinedProps> = props => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    return (closeMenu: Function): Action[] => {
-      const actions = !isThirdPartyAccessToken
-        ? [
-            {
-              title: 'View Token Scopes',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
-                openViewDrawer(token);
-                closeMenu();
-              }
-            },
-            {
-              title: 'Rename Token',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
-                openEditDrawer(token);
-                closeMenu();
-              }
-            },
-            {
-              title: 'Revoke',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
-                openRevokeDialog(token, type);
-                closeMenu();
-              }
-            }
-          ]
-        : [
-            {
-              title: 'View Token Scopes',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
-                openViewDrawer(token);
-                closeMenu();
-              }
-            },
-            {
-              title: 'Revoke',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
-                openRevokeDialog(token, type);
-                closeMenu();
-              }
-            }
-          ];
-      return actions;
-    };
-  };
+  const {
+    isThirdPartyAccessToken,
+    openViewDrawer,
+    openEditDrawer,
+    openRevokeDialog,
+    token,
+    type
+  } = props;
 
-  render() {
-    return (
-      <ActionMenu
-        createActions={this.createActions()}
-        ariaLabel={`Action menu for API Token ${this.props.token.label}`}
-      />
-    );
+  const actions: Action[] = [
+    {
+      title: 'Revoke',
+      onClick: () => {
+        openRevokeDialog(token, type);
+      }
+    }
+  ];
+  if (!isThirdPartyAccessToken) {
+    actions.unshift({
+      title: 'Rename',
+      onClick: () => {
+        openEditDrawer(token);
+      }
+    });
   }
-}
+  actions.unshift({
+    title: 'View Scopes',
+    onClick: () => {
+      openViewDrawer(token);
+    }
+  });
+
+  return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {matchesSmDown ? (
+        <ActionMenu
+          createActions={() => actions}
+          ariaLabel={`Action menu for API Token ${props.token.label}`}
+        />
+      ) : (
+        actions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+            />
+          );
+        })
+      )}
+    </>
+  );
+};
 
 export default APITokenMenu;

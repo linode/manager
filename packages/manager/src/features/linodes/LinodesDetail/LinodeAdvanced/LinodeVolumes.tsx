@@ -332,7 +332,7 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
             onClick={openCreateVolumeDrawer}
-            label="Add a Volume..."
+            label="Add a Volume"
             disabled={false}
           />
         </Grid>
@@ -340,7 +340,6 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
       <EntityTable_CMR
         entity="volume"
         headers={volumeHeaders}
-        groupByTag={false}
         row={volumeRow}
         initialOrder={{ order: 'asc', orderBy: 'label' }}
       />
