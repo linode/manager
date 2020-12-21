@@ -31,7 +31,6 @@ import {
   hasGrant,
   isRestrictedUser as _isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
-// import StackScriptDetailsHeader from './StackScriptDetailsHeader';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Grant } from '@linode/api-v4/lib/account/types';

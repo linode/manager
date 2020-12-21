@@ -11,12 +11,10 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import useFlags from 'src/hooks/useFlags';
-import StackScriptsSection from './StackScriptsSection';
-import StackScriptsSection_CMR from './StackScriptsSection_CMR';
 import StackScriptBase, {
   StateProps
 } from '../StackScriptBase/StackScriptBase';
+import StackScriptsSection from './StackScriptsSection';
 
 interface DialogVariantProps {
   open: boolean;
@@ -57,8 +55,6 @@ const defaultDialogState = {
 };
 
 export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
-  const flags = useFlags();
-
   const { currentFilter } = props;
 
   const [mounted, setMounted] = React.useState<boolean>(false);
@@ -184,10 +180,10 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
   const renderConfirmMakePublicActions = () => {
     return (
       <ActionsPanel>
-        <Button buttonType="cancel" onClick={handleCloseDialog}>
+        <Button buttonType="secondary" onClick={handleCloseDialog}>
           Cancel
         </Button>
-        <Button buttonType="secondary" destructive onClick={handleMakePublic}>
+        <Button buttonType="primary" destructive onClick={handleMakePublic}>
           Yes, make me a star!
         </Button>
       </ActionsPanel>
@@ -229,27 +225,15 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      {flags.cmr ? (
-        <StackScriptsSection_CMR
-          isSorting={props.isSorting}
-          data={props.listOfStackScripts}
-          publicImages={props.publicImages}
-          triggerDelete={handleOpenDeleteDialog}
-          triggerMakePublic={handleOpenMakePublicDialog}
-          currentUser={props.currentUser}
-          category={props.category}
-        />
-      ) : (
-        <StackScriptsSection
-          isSorting={props.isSorting}
-          data={props.listOfStackScripts}
-          publicImages={props.publicImages}
-          triggerDelete={handleOpenDeleteDialog}
-          triggerMakePublic={handleOpenMakePublicDialog}
-          currentUser={props.currentUser}
-          category={props.category}
-        />
-      )}
+      <StackScriptsSection
+        isSorting={props.isSorting}
+        data={props.listOfStackScripts}
+        publicImages={props.publicImages}
+        triggerDelete={handleOpenDeleteDialog}
+        triggerMakePublic={handleOpenMakePublicDialog}
+        currentUser={props.currentUser}
+        category={props.category}
+      />
       {renderDeleteStackScriptDialog()}
       {renderMakePublicDialog()}
     </React.Fragment>

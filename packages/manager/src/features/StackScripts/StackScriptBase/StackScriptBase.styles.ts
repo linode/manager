@@ -11,11 +11,7 @@ type ClassNames =
   | 'table'
   | 'searchWrapper'
   | 'searchBar'
-  | 'searchBarCMR'
-  | 'stackscriptPlaceholder'
-  | 'button'
-  | 'cmrHeaderWrapper'
-  | 'cmrActions';
+  | 'stackscriptPlaceholder';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -34,21 +30,27 @@ const styles = (theme: Theme) =>
     searchWrapper: {
       display: 'flex',
       flexWrap: 'nowrap',
-      backgroundColor: theme.bg.white,
-      paddingTop: theme.spacing(2),
-      paddingBottom: '40px !important',
+      backgroundColor: 'transparent',
+      paddingTop: 0,
+      paddingBottom: '8px !important',
       position: 'sticky',
       top: 0,
       width: '100%',
-      zIndex: 11
+      zIndex: 11,
+      [theme.breakpoints.up('sm')]: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }
     },
     searchBar: {
       backgroundColor: theme.color.white,
+      flexBasis: '100%',
       marginTop: 0,
       '& .input': {
-        backgroundColor: theme.cmrBGColors.bgSearchBar,
-        border: 'none',
-        borderRadius: 3,
+        backgroundColor: theme.cmrBGColors.bgPaper,
+        border: `1px solid ${theme.color.grey3}`,
+        borderRadius: 0,
         minHeight: 'auto',
         minWidth: 415
       },
@@ -63,14 +65,6 @@ const styles = (theme: Theme) =>
         paddingBottom: 0
       }
     },
-    searchBarCMR: {
-      flexBasis: '100%',
-      '& .input': {
-        backgroundColor: theme.cmrBGColors.bgPaper,
-        border: `1px solid ${theme.color.grey3}`,
-        borderRadius: 0
-      }
-    },
     // Styles to override base placeholder styles for StackScript null state
     stackscriptPlaceholder: {
       padding: `${theme.spacing(1)}px 0`,
@@ -80,28 +74,6 @@ const styles = (theme: Theme) =>
         marginTop: 4,
         transform: 'scale(0.8)'
       }
-    },
-    button: {
-      borderRadius: 3,
-      height: 34,
-      width: 180,
-      marginRight: 8,
-      padding: 0
-    },
-    cmrHeaderWrapper: {
-      backgroundColor: 'transparent',
-      position: 'static',
-      paddingTop: 0,
-      paddingBottom: '8px !important',
-      [theme.breakpoints.up('sm')]: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }
-    },
-    cmrActions: {
-      display: 'flex',
-      alignItems: 'center'
     }
   });
 

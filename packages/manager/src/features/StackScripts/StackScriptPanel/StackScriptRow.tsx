@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import StackScriptsActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
 import {
@@ -36,87 +37,83 @@ export interface Props {
 
 export type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
 
-export class StackScriptRow extends React.Component<CombinedProps, {}> {
-  render() {
-    const {
-      classes,
-      label,
-      description,
-      images,
-      deploymentsTotal,
-      updated,
-      stackScriptID,
-      stackScriptUsername,
-      triggerDelete,
-      triggerMakePublic,
-      canModify,
-      isPublic,
-      category,
-      canAddLinodes
-    } = this.props;
+export const StackScriptRow: React.FC<CombinedProps> = props => {
+  const {
+    classes,
+    label,
+    description,
+    images,
+    deploymentsTotal,
+    updated,
+    stackScriptID,
+    stackScriptUsername,
+    triggerDelete,
+    triggerMakePublic,
+    canModify,
+    isPublic,
+    category,
+    canAddLinodes
+  } = props;
 
-    const renderLabel = () => {
-      return (
-        <React.Fragment>
-          <Link to={`/stackscripts/${stackScriptID}`}>
-            <Typography variant="h3" className={classes.libTitle}>
-              {stackScriptUsername && (
-                <span
-                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}
-                >
-                  {stackScriptUsername} /&nbsp;
-                </span>
-              )}
-              <span className={classes.libRadioLabel}>{label}</span>
-            </Typography>
-          </Link>
-          {description && (
-            <Typography variant="body1" className={classes.libDescription}>
-              {description}
-            </Typography>
-          )}
-        </React.Fragment>
-      );
-    };
-
+  const renderLabel = () => {
     return (
       <React.Fragment>
-        <TableRow data-qa-table-row={label} ariaLabel={label}>
-          <TableCell data-qa-stackscript-title parentColumn="StackScript">
-            {renderLabel()}
-          </TableCell>
-          <TableCell parentColumn="Total Deploys">
-            <Typography data-qa-stackscript-deploys>
-              {deploymentsTotal}
-            </Typography>
-          </TableCell>
-          <TableCell parentColumn="Last Revision">
-            <Typography data-qa-stackscript-revision>{updated}</Typography>
-          </TableCell>
-          <TableCell
-            data-qa-stackscript-images
-            parentColumn="Compatible Images"
-          >
-            {displayTagsAndShowMore(images)}
-          </TableCell>
-          <TableCell>
-            <StackScriptsActionMenu
-              stackScriptID={stackScriptID}
-              stackScriptUsername={stackScriptUsername}
-              stackScriptLabel={label}
-              triggerDelete={triggerDelete}
-              triggerMakePublic={triggerMakePublic}
-              canModify={canModify}
-              canAddLinodes={canAddLinodes}
-              isPublic={isPublic}
-              category={category}
-            />
-          </TableCell>
-        </TableRow>
+        <Link to={`/stackscripts/${stackScriptID}`}>
+          <Typography variant="h3" className={classes.libTitle}>
+            {stackScriptUsername && (
+              <span
+                className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}
+              >
+                {stackScriptUsername} /&nbsp;
+              </span>
+            )}
+            <span className={classes.libRadioLabel}>{label}</span>
+          </Typography>
+        </Link>
+        {description && (
+          <Typography variant="body1" className={classes.libDescription}>
+            {description}
+          </Typography>
+        )}
       </React.Fragment>
     );
-  }
-}
+  };
+
+  return (
+    <TableRow data-qa-table-row={label} ariaLabel={label}>
+      <TableCell data-qa-stackscript-title>{renderLabel()}</TableCell>
+      <TableCell>
+        <Typography data-qa-stackscript-deploys>{deploymentsTotal}</Typography>
+      </TableCell>
+      <Hidden smDown>
+        <TableCell>
+          <Typography data-qa-stackscript-revision>{updated}</Typography>
+        </TableCell>
+        <TableCell data-qa-stackscript-images>
+          {displayTagsAndShowMore(images)}
+        </TableCell>
+      </Hidden>
+      <Hidden mdDown>
+        <TableCell data-qa-stackscript-status>
+          {isPublic ? 'Public' : 'Private'}
+        </TableCell>
+      </Hidden>
+      <TableCell className={classes.actionCell}>
+        <StackScriptsActionMenu
+          stackScriptID={stackScriptID}
+          stackScriptUsername={stackScriptUsername}
+          stackScriptLabel={label}
+          triggerDelete={triggerDelete}
+          triggerMakePublic={triggerMakePublic}
+          canModify={canModify}
+          canAddLinodes={canAddLinodes}
+          isPublic={isPublic}
+          category={category}
+        />
+      </TableCell>
+    </TableRow>
+  );
+};
 
 export default recompose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,

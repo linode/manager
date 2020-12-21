@@ -9,12 +9,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
@@ -31,17 +25,6 @@ export interface ExtendedLinode extends Linode {
   subHeadings: string[];
 }
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      backgroundColor: theme.color.white,
-      marginBottom: theme.spacing(3),
-      padding: theme.spacing(3)
-    }
-  });
-
 interface Props {
   error?: string;
   publicImages: Record<string, Image>;
@@ -50,10 +33,7 @@ interface Props {
   location: RouteComponentProps<{}>['location'];
 }
 
-type CombinedProps = Props &
-  StateProps &
-  WithStyles<ClassNames> &
-  RouteComponentProps<{}>;
+type CombinedProps = Props & StateProps & RouteComponentProps<{}>;
 
 class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
@@ -118,36 +98,34 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { classes, queryString } = this.props;
+    const { queryString } = this.props;
 
     const tabValue = getTabValueFromQueryString(queryString, StackScriptTabs);
 
     return (
-      <div className={classes.root}>
-        <Tabs defaultIndex={tabValue} onChange={this.handleTabChange}>
-          <TabLinkList tabs={this.createTabs} />
-          <TabPanels>
-            <SafeTabPanel index={0}>
-              <StackScriptPanelContent
-                publicImages={this.props.publicImages}
-                currentUser={this.props.username}
-                request={getMineAndAccountStackScripts}
-                key="account-tab"
-                category="account"
-              />
-            </SafeTabPanel>
-            <SafeTabPanel index={1}>
-              <StackScriptPanelContent
-                publicImages={this.props.publicImages}
-                currentUser={this.props.username}
-                request={getCommunityStackscripts}
-                key="community-tab"
-                category="community"
-              />
-            </SafeTabPanel>
-          </TabPanels>
-        </Tabs>
-      </div>
+      <Tabs defaultIndex={tabValue} onChange={this.handleTabChange}>
+        <TabLinkList tabs={this.createTabs} />
+        <TabPanels>
+          <SafeTabPanel index={0}>
+            <StackScriptPanelContent
+              publicImages={this.props.publicImages}
+              currentUser={this.props.username}
+              request={getMineAndAccountStackScripts}
+              key="account-tab"
+              category="account"
+            />
+          </SafeTabPanel>
+          <SafeTabPanel index={1}>
+            <StackScriptPanelContent
+              publicImages={this.props.publicImages}
+              currentUser={this.props.username}
+              request={getCommunityStackscripts}
+              key="community-tab"
+              category="community"
+            />
+          </SafeTabPanel>
+        </TabPanels>
+      </Tabs>
     );
   }
 }
@@ -209,10 +187,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, Props>(
   connected,
-  RenderGuard,
-  styled
+  RenderGuard
 )(SelectStackScriptPanel);

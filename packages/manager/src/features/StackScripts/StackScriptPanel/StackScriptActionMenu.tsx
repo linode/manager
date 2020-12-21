@@ -2,11 +2,23 @@ import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import Hidden from 'src/components/core/Hidden';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme
+} from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 import withProfile from 'src/containers/profile.container';
-
 import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
+
+const useStyles = makeStyles(() => ({
+  stackScriptActionsWrapper: {
+    display: 'flex'
+  }
+}));
 
 interface Props {
   stackScriptID: number;
@@ -22,6 +34,7 @@ interface Props {
   // /LandingPanel that uses different values for categories that we shouldn't
   // change until we're actually using it.
   category: StackScriptCategory | string;
+  isHeader?: boolean;
 }
 
 interface ProfileProps {
@@ -31,6 +44,10 @@ interface ProfileProps {
 type CombinedProps = Props & RouteComponentProps<{}> & ProfileProps;
 
 const StackScriptActionMenu: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
   const {
     stackScriptID,
     stackScriptUsername,
@@ -52,31 +69,43 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       : undefined
   };
 
+  const inlineActions = [
+    {
+      actionText: 'Deploy New Linode',
+      disabled: !canAddLinodes,
+      onClick: () => {
+        history.push(
+          getStackScriptUrl(stackScriptUsername, stackScriptID, username)
+        );
+      }
+    }
+  ];
+
+  if (category === 'account') {
+    inlineActions.unshift({
+      actionText: 'Edit',
+      ...readonlyProps,
+      onClick: () => {
+        history.push(`/stackscripts/${stackScriptID}/edit`);
+      }
+    });
+  }
+
   const createActions = () => {
-    return (closeMenu: Function): Action[] => {
-      const actions: Action[] = [
-        {
+    return (): Action[] => {
+      const actions: Action[] = [];
+
+      if (matchesSmDown) {
+        actions.unshift({
           title: 'Deploy New Linode',
           disabled: !canAddLinodes,
           tooltip: !canAddLinodes
             ? "You don't have permissions to add Linodes"
             : undefined,
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             history.push(
               getStackScriptUrl(stackScriptUsername, stackScriptID, username)
             );
-            e.preventDefault();
-          }
-        }
-      ];
-
-      if (!isPublic) {
-        actions.push({
-          title: 'Delete',
-          ...readonlyProps,
-          onClick: e => {
-            closeMenu();
-            triggerDelete(stackScriptID, stackScriptLabel);
           }
         });
       }
@@ -84,13 +113,12 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       // We only add the "Edit" option if the current tab/category isn't
       // "Community StackScripts". A user's own public StackScripts are still
       // editable under "Account StackScripts".
-      if (category !== 'community') {
-        actions.push({
+      if (matchesSmDown && category !== 'community') {
+        actions.unshift({
           title: 'Edit',
           ...readonlyProps,
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             history.push(`/stackscripts/${stackScriptID}/edit`);
-            e.preventDefault();
           }
         });
       }
@@ -99,10 +127,15 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
         actions.push({
           title: 'Make StackScript Public',
           ...readonlyProps,
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            // open a modal here as well
-            closeMenu();
+          onClick: () => {
             triggerMakePublic(stackScriptID, stackScriptLabel);
+          }
+        });
+        actions.push({
+          title: 'Delete',
+          ...readonlyProps,
+          onClick: () => {
+            triggerDelete(stackScriptID, stackScriptLabel);
           }
         });
       }
@@ -110,11 +143,35 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       return actions;
     };
   };
+
   return (
-    <ActionMenu
-      createActions={createActions()}
-      ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
-    />
+    <div className={classes.stackScriptActionsWrapper}>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              disabled={action.disabled}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      {/* Hacky way to only display the action menu button on smaller screens for community StackScripts */}
+      {category === 'community' || isPublic ? (
+        <Hidden mdUp>
+          <ActionMenu
+            createActions={createActions()}
+            ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
+          />
+        </Hidden>
+      ) : (
+        <ActionMenu
+          createActions={createActions()}
+          ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
+        />
+      )}
+    </div>
   );
 };
 
