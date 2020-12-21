@@ -214,9 +214,9 @@ describe('Migrate Linode With Firewall', () => {
       fbtClick('Dallas, TX');
       if (
         cy
-          .contains('PROVISIONING', { timeout: 1000000000 })
+          .contains('PROVISIONING', { timeout: 180000 })
           .should('not.be.visible') &&
-        cy.contains('BOOTING', { timeout: 1000000000 }).should('not.be.visible')
+        cy.contains('BOOTING', { timeout: 180000 }).should('not.be.visible')
       ) {
         getVisible('[type="button"]').within(() => {
           containsClick('Enter Migration Queue');
@@ -234,7 +234,7 @@ describe('Migrate Linode With Firewall', () => {
           .should('eq', 400);
         cy.findByText(
           'Target region for this Linode does not support Cloud Firewalls at this time. Please choose a different region or remove your firewall before migrating.',
-          { timeout: 1000000000 }
+          { timeout: 180000 }
         ).should('be.visible');
       }
       deleteFirewallByLabel(firewallLabel);

@@ -23,7 +23,7 @@ describe('longview', () => {
             const curlCommand = $code.text();
             cy.exec('./cypress/support/longview.sh', {
               failOnNonZeroExit: false,
-              timeout: 1000000000,
+              timeout: 360000,
               env: {
                 LINODEIP: `${linodeIp}`,
                 LINODEPASSWORD: `${linodePassword}`,
@@ -38,7 +38,7 @@ describe('longview', () => {
               if (
                 cy
                   .contains('Waiting for data...', {
-                    timeout: 1000000000
+                    timeout: 360000
                   })
                   .should('not.be.visible')
               ) {
