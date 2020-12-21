@@ -51,15 +51,15 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
     onClone(domain, id);
   };
 
-  const inlineActions = [
+  const actions: Action[] = [
     {
-      actionText: 'Edit',
+      title: 'Edit',
       onClick: () => {
         handleEdit();
       }
     },
     {
-      actionText: status === 'active' ? 'Disable' : 'Enable',
+      title: status === 'active' ? 'Disable' : 'Enable',
       onClick: () => {
         onDisableOrEnable(
           status === 'active' ? 'disable' : 'enable',
@@ -67,44 +67,32 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
           id
         );
       }
+    },
+    {
+      title: 'Clone',
+      onClick: () => {
+        handleClone();
+      }
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        handleRemove();
+      }
     }
   ];
 
-  const createActions = () => (): Action[] => {
-    const baseActions = [
-      {
-        title: 'Clone',
-        onClick: () => {
-          handleClone();
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          handleRemove();
-        }
-      }
-    ];
+  const splitActionsArrayIndex = 2; // Index at which non-inline actions begin. Our convention: place actions that are inline (at normal viewports) at start of the array.
+  const inlineActions = actions.slice(0, splitActionsArrayIndex);
 
+  const createActions = () => (): Action[] => {
+    // Place all actions in menu. (no inline actions)
     if (matchesSmDown) {
-      baseActions.unshift({
-        title: status === 'active' ? 'Disable' : 'Enable',
-        onClick: () => {
-          onDisableOrEnable(
-            status === 'active' ? 'disable' : 'enable',
-            domain,
-            id
-          );
-        }
-      });
-      baseActions.unshift({
-        title: 'Edit',
-        onClick: () => {
-          handleEdit();
-        }
-      });
+      return actions;
     }
-    return [...baseActions];
+
+    // Place some actions in menu. (other actions inline)
+    return actions.slice(splitActionsArrayIndex);
   };
 
   return (
@@ -113,8 +101,8 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
         inlineActions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );
