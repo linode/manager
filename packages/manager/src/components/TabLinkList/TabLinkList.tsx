@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       appearance: 'none',
       borderBottom: '2px solid transparent',
       boxSizing: 'border-box',
-      color: theme.cmrTextColors.textTab,
+      color: theme.cmrTextColors.linkActiveLight,
       fontSize: '0.93rem',
       lineHeight: 1.3,
       maxWidth: 264,
@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&[data-reach-tab][data-selected]': {
       fontFamily: theme.font.bold,
-      color: theme.cmrTextColors.textTabActive,
-      borderBottom: `2px solid ${theme.cmrBorderColors.borderTabActive}`
+      color: theme.cmrTextColors.headlineStatic,
+      borderBottom: `2px solid ${theme.cmrTextColors.linkActiveLight}`
     }
   },
   tabList: {

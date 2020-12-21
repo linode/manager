@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 3,
     backgroundColor: theme.color.tagButton,
     border: 'none',
-    color: theme.cmrTextColors.textTagButton,
+    color: theme.cmrTextColors.linkActiveLight,
     cursor: 'pointer',
     fontSize: 14,
     fontWeight: 'bold',
