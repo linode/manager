@@ -1,6 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { withStyles, WithTheme } from 'src/components/core/styles';
+import { Theme, useTheme } from 'src/components/core/styles';
 import Toggle from 'src/components/Toggle';
 
 interface Props {
@@ -11,10 +11,11 @@ const onClickHandler = () => {
   document.body.classList.add('no-transition');
 };
 
-type CombinedProps = Props & WithTheme;
+type CombinedProps = Props;
 
 export const ThemeToggle: React.FC<CombinedProps> = props => {
-  const { toggleTheme, theme } = props;
+  const { toggleTheme } = props;
+  const theme = useTheme<Theme>();
   const { name: themeName } = theme;
 
   const toggle = () => {
@@ -36,6 +37,4 @@ export const ThemeToggle: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles({}, { withTheme: true });
-
-export default styled(ThemeToggle);
+export default ThemeToggle;
