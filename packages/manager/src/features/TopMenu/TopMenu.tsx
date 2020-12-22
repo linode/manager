@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
     height: 50,
     color: theme.palette.text.primary,
-    backgroundColor: theme.cmrBGColors.bgSecondaryActions,
+    backgroundColor: theme.cmrBGColors.bgPaper,
     position: 'relative',
     paddingRight: '0 !important',
     display: 'flex',

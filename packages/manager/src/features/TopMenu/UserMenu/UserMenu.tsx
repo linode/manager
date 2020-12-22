@@ -127,7 +127,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     '&:hover, &:focus': {
-      backgroundColor: theme.cmrBGColors.bgStatusChip
+      backgroundColor: theme.cmrBGColors.bgApp
     }
   },
   gravatar: {
