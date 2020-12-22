@@ -43,13 +43,15 @@ export const createDomainSchema = domainSchemaBase.shape({
       otherwise: string()
     })
     .email('SOA Email is not valid.'),
-  master_ips: array().when('type', {
-    is: type => type === 'slave',
-    then: array()
-      .of(string())
-      .required('At least one primary IP address is required.'),
-    otherwise: array().of(string())
-  })
+  master_ips: array()
+    .of(string())
+    .when('type', {
+      is: type => type === 'slave',
+      then: array()
+        .of(string())
+        .required('At least one primary IP address is required.'),
+      otherwise: array().of(string())
+    })
 });
 
 export const updateDomainSchema = domainSchemaBase.shape({
