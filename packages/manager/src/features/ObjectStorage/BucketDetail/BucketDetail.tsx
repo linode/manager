@@ -32,7 +32,6 @@ import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import bucketRequestsContainer, {
   BucketsRequests
 } from 'src/containers/bucketRequests.container';
-import { FeatureFlagConsumerProps } from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { sendDownloadObjectEvent } from 'src/utilities/ga';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
@@ -107,8 +106,7 @@ interface MatchProps {
 type CombinedProps = RouteComponentProps<MatchProps> &
   WithStyles<ClassNames> &
   WithSnackbarProps &
-  BucketsRequests &
-  FeatureFlagConsumerProps;
+  BucketsRequests;
 
 interface State {
   data: ExtendedObject[];
