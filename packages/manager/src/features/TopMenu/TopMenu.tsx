@@ -58,7 +58,9 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
 
   const classes = useStyles();
 
-  const navHoverText = isSideMenuOpen ? 'Collapse menu' : 'Expand menu';
+  const navHoverText = isSideMenuOpen
+    ? 'Collapse side menu'
+    : 'Expand side menu';
 
   return (
     <React.Fragment>
@@ -83,7 +85,7 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
               aria-label="open menu"
               onClick={desktopMenuToggle}
             >
-              <TopMenuIcon title={navHoverText}>
+              <TopMenuIcon title={navHoverText} key={navHoverText}>
                 <MenuIcon />
               </TopMenuIcon>
             </IconButton>
@@ -94,7 +96,7 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
               aria-label="open menu"
               onClick={openSideMenu}
             >
-              <TopMenuIcon title={navHoverText}>
+              <TopMenuIcon title={navHoverText} key={navHoverText}>
                 <MenuIcon />
               </TopMenuIcon>
             </IconButton>
