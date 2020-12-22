@@ -1,8 +1,15 @@
 import {
   createDomainRecord,
   Domain,
-  DomainType
+  DomainType,
+  createDomainSchema,
+  CreateDomainPayload
 } from '@linode/api-v4/lib/domains';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
+import { useFormik } from 'formik';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -47,7 +54,7 @@ import {
   DomainActionsProps,
   withDomainActions
 } from 'src/store/domains/domains.container';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import { sendCreateDomainEvent } from 'src/utilities/ga';
 import {
   ExtendedIP,
@@ -164,14 +171,10 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   const { disabled, domainActions, origin } = props;
 
   const [mounted, setMounted] = React.useState<boolean>(false);
+  // Errors for selecting Linode/NB for default records aren't part
+  // of the payload and must be handled separately.
+  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-  const [domain, setDomain] = React.useState<string>('');
-  const [type, setType] = React.useState<DomainType>('master');
-  const [soaEmail, setSOAEmail] = React.useState<string>('');
-  const [tags, setTags] = React.useState<Tag[]>([]);
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<APIError[]>([]);
-  const [master_ips, setMaster_IPS] = React.useState<string[]>([]);
   const [defaultRecordsSetting, setDefaultRecordsSetting] = React.useState<
     DefaultRecordsType
   >('none');
@@ -183,6 +186,20 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     setSelectedDefaultNodeBalancer
   ] = React.useState<NodeBalancer | undefined>(undefined);
 
+  const { values, ...formik } = useFormik({
+    initialValues: {
+      domain: '',
+      type: 'master' as DomainType,
+      soa_email: '',
+      master_ips: [],
+      tags: []
+    },
+    validationSchema: createDomainSchema,
+    validateOnChange: true,
+    validateOnMount: true,
+    onSubmit: values => create(values)
+  });
+
   React.useEffect(() => {
     setMounted(true);
 
@@ -192,23 +209,15 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   }, []);
 
   const errorMap = getErrorMap(
-    [
-      'master_ips',
-      'domain',
-      'type',
-      'soa_email',
-      'tags',
-      'defaultNodeBalancer',
-      'defaultLinode'
-    ],
+    ['defaultLinode', 'defaultNodeBalancer'],
     errors
   );
 
-  const generalError = errorMap.none;
-  const primaryIPsError = errorMap.master_ips;
+  const generalError = formik.status?.generalError || errorMap.none;
+  const primaryIPsError = formik.errors.master_ips;
 
-  const isCreatingPrimaryDomain = type === 'master';
-  const isCreatingSecondaryDomain = type === 'slave';
+  const isCreatingPrimaryDomain = values.type === 'master';
+  const isCreatingSecondaryDomain = values.type === 'slave';
 
   const redirect = (id: number | '', state?: Record<string, string>) => {
     const returnPath = !!id ? `/domains/${id}` : '/domains';
@@ -227,21 +236,14 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     }
   };
 
-  const create = () => {
-    const _tags = tags.map(tag => tag.value);
+  const create = (_values: CreateDomainPayload) => {
+    const { domain, type, master_ips, soa_email: soaEmail, tags } = _values;
+    const _tags = tags;
+    // Array.isArray(tags) && tags.length > 0
+    //   ? tags.map(tag => tag?.value ?? '')
+    //   : undefined;
 
-    const primaryIPs = master_ips.filter(v => v !== '');
-
-    if (type === 'slave' && primaryIPs.length === 0) {
-      setSubmitting(false);
-      setErrors([
-        {
-          field: 'master_ips',
-          reason: 'You must provide at least one Primary Nameserver IP Address'
-        }
-      ]);
-      return;
-    }
+    const primaryIPs = (master_ips ?? []).filter(v => v !== '');
 
     /**
      * In this case, the user wants default domain records created, but
@@ -273,7 +275,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
         ? { domain, type, _tags, soa_email: soaEmail }
         : { domain, type, _tags, master_ips: primaryIPs };
 
-    setSubmitting(true);
+    formik.setSubmitting(true);
     domainActions
       .createDomain(data)
       .then((domainData: Domain) => {
@@ -289,7 +291,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
          *
          * This only applies to master domains.
          */
-        if (type === 'master') {
+        if (values.type === 'master') {
           if (defaultRecordsSetting === 'linode') {
             return generateDefaultDomainRecords(
               domainData.domain,
@@ -350,17 +352,18 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
         if (!mounted) {
           return;
         }
-        setSubmitting(false);
-        setErrors(getAPIErrorOrDefault(err));
+        const mapErrorToStatus = (generalError: string) =>
+          formik.setStatus({ generalError });
+        formik.setSubmitting(false);
+        handleFieldErrors(formik.setErrors, err);
+        handleGeneralErrors(
+          mapErrorToStatus,
+          err,
+          'An unexpected error occurred.'
+        );
         scrollErrorIntoView();
       });
   };
-
-  const updateLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setDomain(e.target.value);
-
-  const updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setSOAEmail(e.target.value);
 
   const updateSelectedLinode = (linode: Linode) =>
     setSelectedDefaultLinode(linode);
@@ -368,7 +371,8 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   const updateSelectedNodeBalancer = (nodebalancer: NodeBalancer) =>
     setSelectedDefaultNodeBalancer(nodebalancer);
 
-  const updateTags = (selected: Tag[]) => setTags(selected);
+  const updateTags = (selected: Tag[]) =>
+    formik.setFieldValue('tags', selected);
 
   const updateInsertDefaultRecords = (value: DefaultRecordsType) =>
     setDefaultRecordsSetting(value);
@@ -377,7 +381,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     e: React.ChangeEvent<HTMLInputElement>,
     value: 'master' | 'slave'
   ) => {
-    setType(value);
+    formik.setFieldValue('type', value);
     setErrors([]);
   };
 
@@ -385,15 +389,10 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     const master_ips =
       newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (mounted) {
-      setMaster_IPS(master_ips);
+      formik.setFieldValue('master_ips', master_ips);
+      formik.setFieldTouched('master_ips');
     }
   };
-
-  // Required values depend on what type of Domain is being created.
-  const hasEnteredAllRequiredValues =
-    Boolean(domain) && isCreatingPrimaryDomain
-      ? Boolean(soaEmail)
-      : master_ips.length > 0;
 
   return (
     <Grid container>
@@ -428,14 +427,14 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
         )}
 
         <Paper data-qa-label-header>
-          <div className={classes.inner}>
+          <form onSubmit={formik.handleSubmit} className={classes.inner}>
             <RadioGroup
               aria-label="type"
               className={classes.radio}
               name="type"
               onChange={updateType}
               row
-              value={type}
+              value={values.type}
             >
               <FormControlLabel
                 value="master"
@@ -454,21 +453,28 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
             </RadioGroup>
             <TextField
               required
-              errorText={errorMap.domain}
-              value={domain}
+              errorText={
+                formik.touched.domain ? formik.errors.domain : undefined
+              }
+              value={values.domain}
               disabled={disabled}
               label="Domain"
-              onChange={updateLabel}
+              onChange={formik.handleChange}
+              onBlur={() => formik.setFieldTouched('domain')}
               data-qa-domain-name
               data-testid="domain-name-input"
             />
             {isCreatingPrimaryDomain && (
               <TextField
                 required
-                errorText={errorMap.soa_email}
-                value={soaEmail}
+                name={'soa_email'}
+                errorText={
+                  formik.touched.soa_email ? formik.errors.soa_email : undefined
+                }
+                value={values.soa_email}
                 label="SOA Email Address"
-                onChange={updateEmailAddress}
+                onChange={formik.handleChange}
+                onBlur={() => formik.setFieldTouched('soa_email')}
                 data-qa-soa-email
                 data-testid="soa-email-input"
                 disabled={disabled}
@@ -478,15 +484,19 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
               <MultipleIPInput
                 title="Primary Nameserver IP Address (required)"
                 className={classes.ip}
-                ips={master_ips.map(stringToExtendedIP)}
+                ips={values.master_ips.map(stringToExtendedIP)}
                 onChange={updatePrimaryIPAddress}
-                error={primaryIPsError}
+                error={
+                  formik.touched.master_ips
+                    ? (primaryIPsError as string | undefined)
+                    : undefined
+                }
               />
             )}
             <TagsInput
-              value={tags}
+              value={values.tags}
               onChange={updateTags}
-              tagError={errorMap.tags}
+              tagError={formik.errors?.tags?.[0]}
               disabled={disabled}
             />
             {isCreatingPrimaryDomain && (
@@ -574,16 +584,16 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
             <ActionsPanel>
               <Button
                 buttonType="primary"
-                onClick={create}
+                onClick={() => formik.handleSubmit()}
                 data-qa-submit
                 data-testid="create-domain-submit"
-                loading={submitting}
-                disabled={disabled || !hasEnteredAllRequiredValues}
+                loading={formik.isSubmitting}
+                disabled={disabled || !formik.isValid}
               >
                 Create Domain
               </Button>
             </ActionsPanel>
-          </div>
+          </form>
         </Paper>
       </Grid>
     </Grid>
