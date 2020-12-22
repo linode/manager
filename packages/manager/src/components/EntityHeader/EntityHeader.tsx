@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.cmrBGColors.bgSecondaryActions,
+    backgroundColor: theme.cmrBGColors.bgPaper,
     padding: '4px 16px',
     paddingRight: theme.spacing(),
     [theme.breakpoints.down('sm')]: {

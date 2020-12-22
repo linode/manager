@@ -49,7 +49,6 @@ const styles = (theme: Theme) =>
       marginTop: 0,
       minHeight: 'auto',
       '& .input': {
-        backgroundColor: theme.cmrBGColors.bgSearchBar,
         border: 'none',
         borderRadius: 3,
         minWidth: 415

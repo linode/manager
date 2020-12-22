@@ -81,59 +81,38 @@ const cmrBGColors = {
   bgApp: '#f4f5f6',
   bgPrimaryNav: '#3a3f46',
   bgPrimaryNavActive: '#515861',
-  bgSecondaryActions: '#ffffff',
-  bgSearchBar: '#f7f7f8',
   bgPaper: '#ffffff',
   bgPrimaryButton: '#3683dc',
   // notification center, add a tag, breadcrumb
   bgSecondaryButton: '#e5f1ff',
   bgTableHeader: '#f9fafa',
-  bgTableBody: '#ffffff',
-  bgStatusChip: '#f7f7f8',
   bgBillingSummary: '#f5f9ff',
-  bgBreadcrumbParent: '#f5faff',
   bgAccessRow: '#fafafa',
-  bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
-  bgAccessHeader: '#f5f5f5'
+  bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)'
 };
 
 const cmrTextColors = {
-  textAction: '#3683dc',
-  textBillingSummary: '#32363c',
-  textTab: '#3683dc',
-  textTabActive: '#32363c',
-  textStatusChip: '#5d646f',
-  linkActiveMedium: '#2575d0',
   linkActiveLight: '#2575d0',
   headlineStatic: '#32363c',
-  headlineActive: '#32363c',
-  tableStatic: '#55595d',
-  textTagButton: '#3683dc',
-  textAccessTable: '#606469',
-  textAccessCode: '#606469',
-  textBreadcrumbParent: '#3683dc'
+  tableStatic: '#606469',
+  textAccessTable: '#606469'
 };
 
 const cmrBorderColors = {
-  borderNotificationCenter: '#cce4ff',
   borderTypography: '#e3e5e8',
   borderTabs: '#e3e5e8',
-  borderTabActive: '#3683dc',
   borderBillingSummary: '#cce2ff',
   borderBalance: '#c2daff',
   borderTable: '#f4f5f6'
 };
 
 const cmrIconColors = {
-  iStatic: '#5d646f',
-  iActiveMedium: '#2575d0',
   iActiveLight: '#3683dc',
   iGreen: '#17cf73',
   iOrange: '#ffb31a',
   iRed: '#cf1e1e',
   // Offline status
-  iGrey: '#dbdde1',
-  iCheckmark: '#444'
+  iGrey: '#dbdde1'
 };
 
 const primaryColors = {
@@ -195,7 +174,7 @@ const genericLinkStyle = {
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
-  color: cmrTextColors.textStatusChip,
+  color: cmrTextColors.tableStatic,
   fontFamily: primaryFonts.bold,
   fontSize: '1rem',
   padding: 0,
@@ -599,7 +578,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         containedSecondary: {
           backgroundColor: 'transparent',
-          color: cmrTextColors.linkActiveMedium,
+          color: cmrTextColors.linkActiveLight,
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
             borderColor: primaryColors.light,
