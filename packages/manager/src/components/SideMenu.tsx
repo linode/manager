@@ -11,7 +11,7 @@ import { compose } from 'recompose';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
-import PrimaryNav from './PrimaryNav/PrimaryNav_CMR';
+import PrimaryNav from './PrimaryNav/PrimaryNav';
 
 type ClassNames =
   | 'menuPaper'

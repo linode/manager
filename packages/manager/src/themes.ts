@@ -17,59 +17,38 @@ const cmrBGColors = {
   bgApp: '#3a3f46',
   bgPrimaryNav: '#23262a',
   bgPrimaryNavActive: '#0C0D0E',
-  bgSecondaryActions: '#2e3238',
-  bgSearchBar: '#515862',
   bgPaper: '#2e3238',
   bgPrimaryButton: '#3683dc',
   // notification center, add a tag, breadcrumb
   bgSecondaryButton: '#364863',
   bgTableHeader: '#33373e',
-  bgTableBody: '#2e3238',
-  bgStatusChip: '#454b54',
   bgBillingSummary: '#2d3d53',
-  bgBreadcrumbParent: '#364863',
   bgAccessRow: '#454b54',
-  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
-  bgAccessHeader: '#3a3f46'
+  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)'
 };
 
 const cmrTextColors = {
-  textAction: '#74aae6',
-  textBillingSummary: '#f2f2f2',
-  textTab: '#74aae6',
-  textTabActive: '#74aae6',
-  textStatusChip: '#e6e6e6',
-  linkActiveMedium: '#2575d0',
   linkActiveLight: '#74aae6',
   headlineStatic: '#e6e6e6',
-  headlineActive: '#abb1ba',
   tableStatic: '#e6e6e6',
-  textTagButton: '#9caec9',
-  textAccessTable: '#acb0b4',
-  textAccessCode: '#e4e5e7',
-  textBreadcrumbParent: '#ffffff'
+  textAccessTable: '#acb0b4'
 };
 
 const cmrBorderColors = {
-  borderNotificationCenter: '#486084',
   borderTypography: '#454b54',
   borderTabs: '#5c6470',
-  borderTabActive: '#74aae6',
   borderBillingSummary: '#243142',
   borderBalance: '#4d79b2',
   borderTable: '#3a3f46'
 };
 
 const cmrIconColors = {
-  iStatic: '#abb1ba',
-  iActiveMedium: '#2575d0',
   iActiveLight: '#74aae6',
   iGreen: '#17cf73',
   iOrange: '#ffb31a',
   iRed: '#cf1e1e',
   // Offline status
-  iGrey: '#dbdde1',
-  iCheckmark: '#fff'
+  iGrey: '#dbdde1'
 };
 
 const primaryColors = {
@@ -103,7 +82,7 @@ const iconCircleAnimation = {
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
-  color: cmrTextColors.textStatusChip,
+  color: cmrTextColors.tableStatic,
   fontSize: '1rem',
   padding: 0,
   '&:before': {

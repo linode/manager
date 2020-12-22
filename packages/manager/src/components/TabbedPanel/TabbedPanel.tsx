@@ -61,8 +61,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&[data-reach-tab][data-selected]': {
       fontFamily: theme.font.bold,
-      color: theme.cmrTextColors.textTabActive,
-      borderBottom: `2px solid ${theme.cmrBorderColors.borderTabActive}`
+      color: theme.cmrTextColors.headlineStatic,
+      borderBottom: `2px solid ${theme.cmrBorderColors.linkActiveLight}`
     }
   },
   tabList: {

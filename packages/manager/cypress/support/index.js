@@ -30,6 +30,7 @@ import {
   deleteAllTestAccessKeys,
   deleteAllTestBuckets
 } from './api/objectStorage';
+import { deleteAllTestFirewalls } from './api/firewalls';
 it('Delete All Test Entities before anything happens', () => {
   deleteAllTestLinodes();
   deleteAllTestNodeBalancers();
@@ -38,4 +39,5 @@ it('Delete All Test Entities before anything happens', () => {
   deleteAllTestClients();
   deleteAllTestAccessKeys();
   deleteAllTestBuckets();
+  deleteAllTestFirewalls();
 });

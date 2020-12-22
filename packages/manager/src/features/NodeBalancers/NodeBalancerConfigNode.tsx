@@ -169,6 +169,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = props => {
                   'data-qa-backend-ip-address': true
                 }
               }}
+              disabled={disabled}
               handleChange={onNodeAddressChange}
               selectedRegion={nodeBalancerRegion}
               nodeIndex={idx}
