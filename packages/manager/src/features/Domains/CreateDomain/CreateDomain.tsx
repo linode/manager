@@ -389,6 +389,12 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     }
   };
 
+  // Required values depend on what type of Domain is being created.
+  const hasEnteredAllRequiredValues =
+    Boolean(domain) && isCreatingPrimaryDomain
+      ? Boolean(soaEmail)
+      : master_ips.length > 0;
+
   return (
     <Grid container>
       <DocumentTitleSegment segment="Create a Domain" />
@@ -447,6 +453,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
               />
             </RadioGroup>
             <TextField
+              required
               errorText={errorMap.domain}
               value={domain}
               disabled={disabled}
@@ -457,6 +464,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
             />
             {isCreatingPrimaryDomain && (
               <TextField
+                required
                 errorText={errorMap.soa_email}
                 value={soaEmail}
                 label="SOA Email Address"
@@ -468,7 +476,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
             )}
             {isCreatingSecondaryDomain && (
               <MultipleIPInput
-                title="Primary Nameserver IP Address"
+                title="Primary Nameserver IP Address (required)"
                 className={classes.ip}
                 ips={master_ips.map(stringToExtendedIP)}
                 onChange={updatePrimaryIPAddress}
@@ -570,7 +578,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                 data-qa-submit
                 data-testid="create-domain-submit"
                 loading={submitting}
-                disabled={disabled}
+                disabled={disabled || !hasEnteredAllRequiredValues}
               >
                 Create Domain
               </Button>
