@@ -192,12 +192,14 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
       type: 'master' as DomainType,
       soa_email: '',
       master_ips: [],
-      tags: []
+      tags: [] as Item<string>[]
     },
     validationSchema: createDomainSchema,
     validateOnChange: true,
     validateOnMount: true,
-    onSubmit: values => create(values)
+    onSubmit: values =>
+      // Map from Item[] to string[] for tags
+      create({ ...values, tags: values.tags.map(thisTag => thisTag.value) })
   });
 
   React.useEffect(() => {
@@ -238,10 +240,6 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
 
   const create = (_values: CreateDomainPayload) => {
     const { domain, type, master_ips, soa_email: soaEmail, tags } = _values;
-    const _tags = tags;
-    // Array.isArray(tags) && tags.length > 0
-    //   ? tags.map(tag => tag?.value ?? '')
-    //   : undefined;
 
     const primaryIPs = (master_ips ?? []).filter(v => v !== '');
 
@@ -272,8 +270,8 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
 
     const data =
       type === 'master'
-        ? { domain, type, _tags, soa_email: soaEmail }
-        : { domain, type, _tags, master_ips: primaryIPs };
+        ? { domain, type, tags, soa_email: soaEmail }
+        : { domain, type, tags, master_ips: primaryIPs };
 
     formik.setSubmitting(true);
     domainActions
@@ -496,7 +494,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
             <TagsInput
               value={values.tags}
               onChange={updateTags}
-              tagError={formik.errors?.tags?.[0]}
+              tagError={formik.errors?.tags as string}
               disabled={disabled}
             />
             {isCreatingPrimaryDomain && (
