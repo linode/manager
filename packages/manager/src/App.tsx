@@ -204,8 +204,8 @@ export class App extends React.Component<CombinedProps, State> {
             Opens an external site in a new window
           </span>
         </div>
-        {/** Update the LD client with the user's id as soon as we know it */}
         <GoTo open={this.state.goToOpen} onClose={this.goToClose} />
+        {/** Update the LD client with the user's id as soon as we know it */}
         <IdentifyUser
           userID={userId}
           username={username}
