@@ -34,17 +34,14 @@ jobs:
             ~/.cache/Cypress
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-      - env:
-          REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
-          REACT_APP_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          MANAGER_OAUTH: ${{ secrets[matrix.manager_oauth] }}
-        run: |
+      - run: |
+          echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
+          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+          echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
+          echo "REACT_APP_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
           yarn up &
       - name: Run tests
         uses: cypress-io/github-action@v2
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           working-directory: packages/manager
           wait-on: 'http://localhost:3000'
