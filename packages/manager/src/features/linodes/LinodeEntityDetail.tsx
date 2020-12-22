@@ -205,7 +205,7 @@ export interface HeaderProps {
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBGColors.bgSecondaryActions
+    backgroundColor: theme.cmrBGColors.bgPaper
   },
   linodeLabel: {
     color: theme.cmrTextColors.linkActiveLight,
@@ -613,8 +613,8 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       height: 32
     },
     '& th': {
-      backgroundColor: theme.cmrBGColors.bgAccessHeader,
-      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
+      backgroundColor: theme.cmrBGColors.bgApp,
+      borderBottom: `1px solid ${theme.cmrBGColors.bgPaper}`,
       color: theme.cmrTextColors.textAccessTable,
       fontSize: '0.875rem',
       fontWeight: 'bold',
@@ -627,7 +627,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
     '& td': {
       backgroundColor: theme.cmrBGColors.bgAccessRow,
       border: 'none',
-      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
+      borderBottom: `1px solid ${theme.cmrBGColors.bgPaper}`,
       fontSize: '0.875rem',
       lineHeight: 1,
       padding: theme.spacing(),
@@ -635,7 +635,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
     }
   },
   code: {
-    color: theme.cmrTextColors.textAccessCode,
+    color: theme.cmrTextColors.tableStatic,
     fontFamily: '"SourceCodePro", monospace, sans-serif',
     position: 'relative'
   },

@@ -60,10 +60,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconLeft: {
     marginRight: theme.spacing(1),
-    color: theme.cmrIconColors.iCheckmark
+    color: theme.cmrTextColors.headlineStatic
   },
   iconRight: {
-    color: theme.cmrIconColors.iCheckmark
+    color: theme.cmrTextColors.headlineStatic
   },
   rotate: {
     animation: '$rotate 2s linear infinite'

@@ -299,8 +299,8 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       height: 34
     },
     '& th': {
-      backgroundColor: theme.cmrBGColors.bgAccessHeader,
-      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
+      backgroundColor: theme.cmrBGColors.bgApp,
+      borderBottom: `1px solid ${theme.cmrBGColors.bgPaper}`,
       color: theme.cmrTextColors.textAccessTable,
       fontSize: '0.875rem',
       fontWeight: 'bold',
@@ -313,7 +313,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     '& td': {
       backgroundColor: theme.cmrBGColors.bgAccessRow,
       border: 'none',
-      borderBottom: `1px solid ${theme.cmrBGColors.bgTableBody}`,
+      borderBottom: `1px solid ${theme.cmrBGColors.bgPaper}`,
       lineHeight: 1,
       fontSize: '0.875rem',
       overflowX: 'auto',
@@ -322,7 +322,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     }
   },
   code: {
-    color: theme.cmrTextColors.textAccessCode,
+    color: theme.cmrTextColors.tableStatic,
     fontFamily: '"SourceCodePro", monospace, sans-serif'
   }
 }));
