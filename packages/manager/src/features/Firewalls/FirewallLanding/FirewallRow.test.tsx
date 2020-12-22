@@ -37,10 +37,13 @@ describe('FirewallRow', () => {
     const mockTriggerEnableFirewall = jest.fn();
 
     const baseProps: CombinedProps = {
-      firewallID: 1,
-      firewallLabel: firewall.label,
-      firewallRules: firewall.rules,
-      firewallStatus: firewall.status,
+      id: 1,
+      label: firewall.label,
+      rules: firewall.rules,
+      status: firewall.status,
+      tags: [],
+      created_dt: '',
+      updated_dt: '',
       triggerDeleteFirewall: mockTriggerDeleteFirewall,
       triggerDisableFirewall: mockTriggerDisableFirewall,
       triggerEnableFirewall: mockTriggerEnableFirewall

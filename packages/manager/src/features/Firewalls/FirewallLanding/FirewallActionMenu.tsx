@@ -1,13 +1,14 @@
 import { FirewallStatus } from '@linode/api-v4/lib/firewalls';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface ActionHandlers {
   triggerEnableFirewall: (firewallID: number, firewallLabel: string) => void;
   triggerDisableFirewall: (firewallID: number, firewallLabel: string) => void;
   triggerDeleteFirewall: (firewallID: number, firewallLabel: string) => void;
+  [index: string]: any;
 }
 
 interface Props extends ActionHandlers {
@@ -19,6 +20,9 @@ interface Props extends ActionHandlers {
 type CombinedProps = Props;
 
 const FirewallActionMenu: React.FC<CombinedProps> = props => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
   const {
     firewallID,
     firewallLabel,
@@ -27,36 +31,45 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
     triggerDisableFirewall,
     triggerDeleteFirewall
   } = props;
-  const history = useHistory();
 
-  const createActions = () => {
-    return (closeMenu: Function): Action[] => [
+  const inlineActions = [
+    {
+      actionText:
+        firewallStatus === ('enabled' as FirewallStatus) ? 'Disable' : 'Enable',
+      onClick: () => {
+        handleEnableDisable();
+      }
+    },
+    {
+      actionText: 'Delete',
+      onClick: () => {
+        triggerDeleteFirewall(firewallID, firewallLabel);
+      }
+    }
+  ];
+
+  const handleEnableDisable = () => {
+    const request = () =>
+      firewallStatus === 'disabled'
+        ? triggerEnableFirewall(firewallID, firewallLabel)
+        : triggerDisableFirewall(firewallID, firewallLabel);
+    request();
+  };
+
+  const createActions = () => (): Action[] => {
+    return [
       {
-        title: firewallStatus === 'disabled' ? 'Enable' : 'Disable',
+        title:
+          firewallStatus === ('enabled' as FirewallStatus)
+            ? 'Disable'
+            : 'Enable',
         onClick: () => {
-          const request = () =>
-            firewallStatus === 'disabled'
-              ? triggerEnableFirewall(firewallID, firewallLabel)
-              : triggerDisableFirewall(firewallID, firewallLabel);
-
-          request();
-
-          closeMenu();
-        }
-      },
-      {
-        title: 'Edit',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
-          history.push(`/firewalls/${firewallID}/rules`);
-          e.preventDefault();
-          e.stopPropagation();
+          handleEnableDisable();
         }
       },
       {
         title: 'Delete',
         onClick: () => {
-          closeMenu();
           triggerDeleteFirewall(firewallID, firewallLabel);
         }
       }
@@ -64,10 +77,24 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <ActionMenu
-      createActions={createActions()}
-      ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
-    />
+    <>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      {matchesSmDown && (
+        <ActionMenu
+          createActions={createActions()}
+          ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
+        />
+      )}
+    </>
   );
 };
 

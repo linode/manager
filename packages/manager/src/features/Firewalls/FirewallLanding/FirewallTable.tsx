@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles } from 'src/components/core/styles';
-import { StateProps as FireProps } from 'src/containers/firewalls.container';
-
 import Paper from 'src/components/core/Paper';
+import { makeStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -14,8 +12,8 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableSortCell from 'src/components/TableSortCell';
+import { StateProps as FireProps } from 'src/containers/firewalls.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
 import { ActionHandlers } from './FirewallActionMenu';
 import FirewallRow from './FirewallRow';
 
@@ -121,10 +119,14 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                         return (
                           <FirewallRow
                             key={`firewall-row-${eachFirewall.id}`}
-                            firewallID={eachFirewall.id}
-                            firewallLabel={eachFirewall.label}
-                            firewallRules={eachFirewall.rules}
-                            firewallStatus={eachFirewall.status}
+                            id={eachFirewall.id}
+                            label={eachFirewall.label}
+                            rules={eachFirewall.rules}
+                            status={eachFirewall.status}
+                            // These props are required
+                            tags={[]}
+                            created_dt=""
+                            updated_dt=""
                             {...actionMenuHandlers}
                           />
                         );

@@ -4,15 +4,14 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
+import Table from 'src/components/Table/Table_CMR';
 import TableContentWrapper from 'src/components/TableContentWrapper';
-import TableSortCell from 'src/components/TableSortCell';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallDeviceRow from './FirewallDeviceRow';
 
@@ -57,11 +56,11 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                         label={'entity:label'}
                         direction={order}
                         handleClick={handleOrderChange}
+                        colSpan={2}
                         data-qa-firewall-device-linode-header
                       >
                         Linode
                       </TableSortCell>
-                      <TableCell />
                     </TableRow>
                   </TableHead>
                   <TableBody>

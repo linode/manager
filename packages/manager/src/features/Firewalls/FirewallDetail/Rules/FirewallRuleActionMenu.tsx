@@ -1,5 +1,10 @@
 import * as React from 'react';
-import ActionMenu, { Action, ActionMenuProps } from 'src/components/ActionMenu';
+import ActionMenu, {
+  Action,
+  ActionMenuProps
+} from 'src/components/ActionMenu_CMR';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props extends Partial<ActionMenuProps> {
   idx: number;
@@ -10,6 +15,9 @@ interface Props extends Partial<ActionMenuProps> {
 type CombinedProps = Props;
 
 const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
   const {
     idx,
     triggerDeleteFirewallRule,
@@ -17,31 +25,58 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
     ...actionMenuProps
   } = props;
 
-  const createActions = React.useCallback(() => {
-    return (closeMenu: Function): Action[] => [
+  const inlineActions = [
+    {
+      actionText: 'Edit',
+      onClick: () => {
+        triggerOpenRuleDrawerForEditing(idx);
+      }
+    },
+    {
+      actionText: 'Delete',
+      onClick: () => {
+        triggerDeleteFirewallRule(idx);
+      }
+    }
+  ];
+
+  const createActions = () => (): Action[] => {
+    return [
       {
         title: 'Edit',
         onClick: () => {
-          closeMenu();
           triggerOpenRuleDrawerForEditing(idx);
         }
       },
       {
         title: 'Delete',
         onClick: () => {
-          closeMenu();
           triggerDeleteFirewallRule(idx);
         }
       }
     ];
-  }, []);
+  };
 
   return (
-    <ActionMenu
-      createActions={createActions()}
-      ariaLabel={`Action menu for Firewall Rule`}
-      {...actionMenuProps}
-    />
+    <>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.actionText}
+              actionText={action.actionText}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      {matchesSmDown && (
+        <ActionMenu
+          createActions={createActions()}
+          ariaLabel={`Action menu for Firewall Rule`}
+          {...actionMenuProps}
+        />
+      )}
+    </>
   );
 };
 

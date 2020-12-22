@@ -3,73 +3,99 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import Typography from 'src/components/core/Typography';
-import EntityIcon from 'src/components/EntityIcon';
+import Hidden from 'src/components/core/Hidden';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import StatusIcon from 'src/components/StatusIcon';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
+import { capitalize } from 'src/utilities/capitalize';
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
-interface Props extends ActionHandlers {
-  firewallID: number;
-  firewallLabel: string;
-  firewallStatus: Firewall['status'];
-  firewallRules: Firewall['rules'];
-}
+const useStyles = makeStyles((theme: Theme) => ({
+  link: {
+    display: 'block',
+    fontFamily: theme.font.bold,
+    color: theme.cmrTextColors.linkActiveLight,
+    fontSize: '.875rem',
+    lineHeight: '1.125rem',
+    '&:hover, &:focus': {
+      textDecoration: 'underline'
+    }
+  },
+  labelWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    whiteSpace: 'nowrap'
+  },
+  actionCell: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: 0,
+    '&.MuiTableCell-root': {
+      paddingRight: 0
+    }
+  }
+}));
 
-export type CombinedProps = Props;
+export type CombinedProps = Firewall & ActionHandlers;
 
 export const FirewallRow: React.FC<CombinedProps> = props => {
-  const {
-    firewallID,
-    firewallLabel,
-    firewallStatus,
-    firewallRules,
-    ...actionHandlers
-  } = props;
+  const { id, label, status, rules, ...actionHandlers } = props;
+  const classes = useStyles();
 
   const {
     devices: { itemsById, error, loading, lastUpdated },
     requestDevices
-  } = useFirewallDevices(firewallID);
+  } = useFirewallDevices(id);
   const devices = Object.values(itemsById);
 
   React.useEffect(() => {
     if (lastUpdated === 0 && !loading) {
       requestDevices();
     }
-  }, []);
+  }, [lastUpdated, loading, requestDevices]);
 
-  const count = getCountOfRules(firewallRules);
+  const count = getCountOfRules(rules);
 
   return (
     <TableRow
-      key={`firewall-row-${firewallID}`}
-      rowLink={`/firewalls/${firewallID}`}
-      data-testid={`firewall-row-${firewallID}`}
-      ariaLabel={`Firewall ${firewallLabel}`}
+      key={`firewall-row-${id}`}
+      data-testid={`firewall-row-${id}`}
+      ariaLabel={`Firewall ${label}`}
     >
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
-            <EntityIcon variant="firewall" status={firewallStatus} />
+            <div className={classes.labelWrapper}>
+              <Link
+                className={classes.link}
+                to={`/firewalls/${id}`}
+                tabIndex={0}
+              >
+                {label}
+              </Link>
+            </div>
           </Grid>
-          <Grid item>
-            <Typography variant="h3">{firewallLabel}</Typography>
-          </Grid>
-        </Grid>
-      </TableCell>
-      <TableCell>{firewallStatus}</TableCell>
-      <TableCell>{getRuleString(count)}</TableCell>
-      <TableCell>
-        {getLinodesCellString(devices, loading, error.read)}
+        </Grid>{' '}
       </TableCell>
       <TableCell>
+        <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
+        {capitalize(status)}
+      </TableCell>
+      <Hidden xsDown>
+        <TableCell>{getRuleString(count)}</TableCell>
+        <TableCell>
+          {getLinodesCellString(devices, loading, error.read)}
+        </TableCell>
+      </Hidden>
+      <TableCell className={classes.actionCell}>
         <ActionMenu
-          firewallID={firewallID}
-          firewallLabel={firewallLabel}
-          firewallStatus={firewallStatus}
+          firewallID={id}
+          firewallLabel={label}
+          firewallStatus={status}
           {...actionHandlers}
         />
       </TableCell>
@@ -150,4 +176,6 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(FirewallRow);
+export default compose<CombinedProps, ActionHandlers & Firewall>(React.memo)(
+  FirewallRow
+);
