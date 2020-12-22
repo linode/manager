@@ -1,3 +1,4 @@
+import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
@@ -23,7 +24,7 @@ type CombinedProps = Props & RouteComponentProps;
 export const DiskActionMenu: React.FC<CombinedProps> = props => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const { linodeStatus, readOnly } = props;
+  const { linodeStatus, readOnly, linodeId, history, diskId } = props;
 
   let _tooltip =
     linodeStatus === 'offline'
@@ -39,88 +40,62 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
       }
     : {};
 
-  const inlineActions = [
+  const actions: Action[] = [
     {
-      actionText: 'Rename',
+      title: 'Rename',
       onClick: () => {
         props.onRename();
       },
       disabled: props.readOnly,
-      tooltipText: props.readOnly ? _tooltip : ''
+      tooltip: props.readOnly ? _tooltip : ''
     },
     {
-      actionText: 'Resize',
+      title: 'Resize',
       onClick: () => {
         props.onResize();
       },
       disabled: props.linodeStatus !== 'offline' || props.readOnly,
-      tooltipText:
+      tooltip:
         props.linodeStatus !== 'offline' || props.readOnly ? _tooltip : ''
+    },
+    {
+      title: 'Imagize',
+      onClick: () => {
+        props.onImagize();
+      },
+      ...(readOnly ? disabledProps : {})
+    },
+    {
+      title: 'Clone',
+      onClick: () => {
+        history.push(`/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`);
+      },
+      ...(readOnly ? disabledProps : {})
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        props.onDelete();
+      },
+      ...(readOnly ? disabledProps : {})
     }
   ];
 
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
+
   const createActions = () => (): Action[] => {
-    const { linodeId, readOnly, history, diskId } = props;
-
-    const actions: Action[] = [
-      {
-        title: 'Imagize',
-        onClick: () => {
-          props.onImagize();
-        },
-        ...(readOnly ? disabledProps : {})
-      },
-      {
-        title: 'Clone',
-        onClick: () => {
-          history.push(
-            `/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`
-          );
-        },
-        ...(readOnly ? disabledProps : {})
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          props.onDelete();
-        },
-        ...(readOnly ? disabledProps : {})
-      }
-    ];
-
-    if (matchesSmDown) {
-      actions.unshift(
-        {
-          title: 'Rename',
-          onClick: () => {
-            props.onRename();
-          },
-          disabled: props.readOnly,
-          tooltip: props.readOnly ? _tooltip : ''
-        },
-        {
-          title: 'Resize',
-          onClick: () => {
-            props.onResize();
-          },
-          disabled: props.linodeStatus !== 'offline' || props.readOnly,
-          tooltip:
-            props.linodeStatus !== 'offline' || props.readOnly ? _tooltip : ''
-        }
-      );
-    }
-
-    return actions;
+    return menuActions;
   };
 
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        inlineActions!.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );

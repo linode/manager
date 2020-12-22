@@ -1,10 +1,11 @@
 import { Event } from '@linode/api-v4/lib/account';
+import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface Handlers {
@@ -38,55 +39,38 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
     onDelete
   } = props;
 
-  const inlineActions = [
+  const actions: Action[] = [
     {
-      actionText: 'Edit',
+      title: 'Edit',
       onClick: () => {
         onEdit(label, description ?? ' ', id);
       }
     },
     {
-      actionText: 'Deploy New Linode',
+      title: 'Deploy New Linode',
       onClick: () => {
         onDeploy(id);
+      }
+    },
+    {
+      title: 'Restore to Existing Linode',
+      onClick: () => {
+        onRestore(id);
+      }
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        onDelete(label, id);
       }
     }
   ];
 
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
+
   const createActions = () => (): Action[] => {
-    const actions: Action[] = [
-      {
-        title: 'Restore to Existing Linode',
-        onClick: () => {
-          onRestore(id);
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          onDelete(label, id);
-        }
-      }
-    ];
-
-    if (matchesSmDown) {
-      actions.unshift(
-        {
-          title: 'Edit',
-          onClick: () => {
-            onEdit(label, description ?? ' ', id);
-          }
-        },
-        {
-          title: 'Deploy New Linode',
-          onClick: () => {
-            onDeploy(id);
-          }
-        }
-      );
-    }
-
-    return actions;
+    return menuActions;
   };
 
   return (
@@ -95,8 +79,8 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
         inlineActions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );
