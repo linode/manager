@@ -170,6 +170,9 @@ const GoTo: React.FC<CombinedProps> = props => {
       open={props.open}
       onClose={props.onClose}
     >
+      {/* I was about to put a "@todo" item for mobile display, but realized
+      keyboard shortcuts are not realistic on mobile devices. So I think an
+      absolute width here is fine. */}
       <div style={{ width: 400, maxHeight: 600 }}>
         <EnhancedSelect
           label="Go To"
