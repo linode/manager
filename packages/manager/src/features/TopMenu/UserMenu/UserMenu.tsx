@@ -307,7 +307,12 @@ export const UserMenu: React.FC<{}> = () => {
   return (
     <div>
       <ReachMenu>
-        <Tooltip title={'Profile & Account'} disableTouchListener>
+        <Tooltip
+          title={'Profile & Account'}
+          disableTouchListener
+          enterDelay={500}
+          leaveDelay={0}
+        >
           <MenuButton
             className={classes.menuButton}
             data-testid="nav-group-profile"
