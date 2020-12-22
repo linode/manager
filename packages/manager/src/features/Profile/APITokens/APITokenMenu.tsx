@@ -30,7 +30,19 @@ export const APITokenMenu: React.FC<CombinedProps> = props => {
     type
   } = props;
 
-  const actions: Action[] = [
+  const baseActions: Action[] = [
+    {
+      title: 'View Scopes',
+      onClick: () => {
+        openViewDrawer(token);
+      }
+    },
+    {
+      title: 'Rename',
+      onClick: () => {
+        openEditDrawer(token);
+      }
+    },
     {
       title: 'Revoke',
       onClick: () => {
@@ -38,20 +50,10 @@ export const APITokenMenu: React.FC<CombinedProps> = props => {
       }
     }
   ];
-  if (!isThirdPartyAccessToken) {
-    actions.unshift({
-      title: 'Rename',
-      onClick: () => {
-        openEditDrawer(token);
-      }
-    });
-  }
-  actions.unshift({
-    title: 'View Scopes',
-    onClick: () => {
-      openViewDrawer(token);
-    }
-  });
+
+  const actions = isThirdPartyAccessToken
+    ? baseActions.filter(action => action.title !== 'Rename')
+    : baseActions;
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
