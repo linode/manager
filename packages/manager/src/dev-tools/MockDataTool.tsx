@@ -6,7 +6,8 @@ import ServiceWorkerTool from './ServiceWorkerTool';
 
 const options: { label: string; key: keyof MockData }[] = [
   { label: 'Linodes', key: 'linode' },
-  { label: 'NodeBalancers', key: 'nodeBalancer' }
+  { label: 'NodeBalancers', key: 'nodeBalancer' },
+  { label: 'Domains', key: 'domain' }
 ];
 
 const MockDataTool: React.FC<{}> = () => {

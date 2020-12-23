@@ -1,20 +1,22 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
+import { Domain } from '@linode/api-v4/lib/domains/types';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers/types';
 import { v4 } from 'uuid';
 
 // Simple pub/sub class to keep track of mock data for the local dev tools. This allows subscription
 // from the mock service worker, so the handlers can be updated whenever the mock data changes.
-export type MockDataType = 'linode';
+export type MockDataType = 'linode' | 'nodeBalancer' | 'domain';
+
+export interface MockDataEntity<T> {
+  mocked: boolean;
+  quantity: number;
+  template?: Partial<T>;
+}
 
 export interface MockData {
-  linode?: {
-    mocked: boolean;
-    quantity: number;
-    template?: Partial<Linode>;
-  };
-  nodeBalancer?: {
-    mocked: boolean;
-    quantity: number;
-  };
+  linode?: MockDataEntity<Linode>;
+  nodeBalancer?: MockDataEntity<NodeBalancer>;
+  domain?: MockDataEntity<Domain>;
 }
 
 export type SubscribeFunction = (mockData: MockData) => void;
