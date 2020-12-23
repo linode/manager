@@ -104,7 +104,7 @@ export const handlers = [
         '192.168.0.4',
         '192.168.0.5'
       ],
-      tags: ['test', 'test', 'test']
+      tags: ['test1', 'test2', 'test3']
     });
     const linodes = [
       ...onlineLinodes,
@@ -119,7 +119,7 @@ export const handlers = [
         label: 'shadow-plan-with-tags',
         type: 'g5-standard-20-s1',
         backups: { enabled: false },
-        tags: ['test', 'test', 'test']
+        tags: ['test1', 'test2', 'test3']
       }),
       eventLinode,
       multipleIPLinode
