@@ -11,6 +11,10 @@ export interface MockData {
     quantity: number;
     template?: Partial<Linode>;
   };
+  nodeBalancer?: {
+    mocked: boolean;
+    quantity: number;
+  };
 }
 
 export type SubscribeFunction = (mockData: MockData) => void;
@@ -35,7 +39,7 @@ export class MockDataController {
   }
 
   updateMockData(newMockData: MockData) {
-    this.mockData = newMockData;
+    this.mockData = { ...this.mockData, ...newMockData };
     this.notifySubscribers();
   }
 
