@@ -4,6 +4,7 @@ import { NotificationDrawer } from 'src/features/NotificationCenter';
 import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import { notificationContext as _notificationContext } from '../NotificationCenter/NotificationContext';
 import { useStyles } from './iconStyles';
+import TopMenuIcon from './TopMenuIcon';
 
 export const NotificationButton: React.FC<{}> = _ => {
   const notificationContext = React.useContext(_notificationContext);
@@ -25,7 +26,9 @@ export const NotificationButton: React.FC<{}> = _ => {
         className={classes.icon}
         onClick={notificationContext.openDrawer}
       >
-        <Bell />
+        <TopMenuIcon title="Notifications">
+          <Bell />
+        </TopMenuIcon>
         {numEvents > 0 ? (
           <span className={classes.badge}>{numEvents}</span>
         ) : null}
