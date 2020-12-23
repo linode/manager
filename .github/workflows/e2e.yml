@@ -39,7 +39,7 @@ jobs:
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
           echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
           echo "REACT_APP_CLIENT_ID=${{ secrets.CLIENT_ID }}" >> ./packages/manager/.env
-          echo "MANAGER_OAUTH"=${{ secrets[matrix.manager_oauth] }}" >> ./packages/manager/.env
+          echo "MANAGER_OAUTH=${{ secrets[matrix.manager_oauth] }}" >> ./packages/manager/.env
           yarn up &
       - name: Run tests
         uses: cypress-io/github-action@v2
