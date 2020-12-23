@@ -23,6 +23,8 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   longviewActivePlanFactory,
+  longviewClientFactory,
+  longviewSubscriptionFactory,
   managedStatsFactory,
   monitorFactory,
   nodeBalancerFactory,
@@ -319,6 +321,14 @@ export const handlers = [
   rest.get('*/longview/plan', (req, res, ctx) => {
     const plan = longviewActivePlanFactory.build();
     return res(ctx.json(plan));
+  }),
+  rest.get('*/longview/subscriptions', (req, res, ctx) => {
+    const subscriptions = longviewSubscriptionFactory.buildList(10);
+    return res(ctx.json(makeResourcePage(subscriptions)));
+  }),
+  rest.get('*/longview/clients', (req, res, ctx) => {
+    const clients = longviewClientFactory.buildList(10);
+    return res(ctx.json(makeResourcePage(clients)));
   }),
   rest.post('*/backups/enable/*', (req, res, ctx) => {
     return res(ctx.json({}));
