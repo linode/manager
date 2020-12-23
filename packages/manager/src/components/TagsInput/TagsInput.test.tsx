@@ -15,7 +15,7 @@ describe('TagsInput', () => {
   it('sets account tags based on API request', async () => {
     const { getByTestId, queryAllByTestId } = renderWithTheme(
       <TagsInput
-        value={'mockvalue' as any} // We're mocking this component so ignore the Props typing
+        value={['mockvalue'] as any} // We're mocking this component so ignore the Props typing
         onChange={onChange}
       />
     );
