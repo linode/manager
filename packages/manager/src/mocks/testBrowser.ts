@@ -6,6 +6,7 @@ import store, { ApplicationState } from 'src/store';
 import { requestDomains } from 'src/store/domains/domains.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
+import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { handlers, mockDataHandlers } from './serverHandlers';
 
 let worker: SetupWorkerApi;
@@ -29,6 +30,8 @@ if (!isProductionBuild) {
 
 const requestEntities = (mockData: MockData, reduxState: ApplicationState) => {
   // In the future this could be dynamic (Linodes, Domains, etc.)
+  // Addendum 12/23/20: The wiring here will change once we move to React Query,
+  // we should handle this update at that time.
   if (mockData.linode && !reduxState.__resources.linodes.loading) {
     store.dispatch(requestLinodes({}) as any);
   }
@@ -37,6 +40,9 @@ const requestEntities = (mockData: MockData, reduxState: ApplicationState) => {
   }
   if (mockData.domain && !reduxState.__resources.domains.loading) {
     store.dispatch(requestDomains() as any);
+  }
+  if (mockData.volume && !reduxState.__resources.volumes.loading) {
+    store.dispatch(getAllVolumes() as any);
   }
 };
 

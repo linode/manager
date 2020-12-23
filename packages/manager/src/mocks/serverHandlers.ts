@@ -406,5 +406,10 @@ export const mockDataHandlers: Record<
     rest.get('*/domains', (req, res, ctx) => {
       const domains = domainFactory.buildList(count);
       return res(ctx.json(makeResourcePage(domains)));
+    }),
+  volume: count =>
+    rest.get('*/volumes', (req, res, ctx) => {
+      const volumes = volumeFactory.buildList(count);
+      return res(ctx.json(makeResourcePage(volumes)));
     })
 };
