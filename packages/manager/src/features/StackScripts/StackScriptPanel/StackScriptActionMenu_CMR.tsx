@@ -1,4 +1,4 @@
-import { path } from 'ramda';
+import { path, splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -15,7 +15,7 @@ import withProfile from 'src/containers/profile.container';
 
 import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   stackScriptActionsWrapper: {
     display: 'flex'
   }
@@ -70,79 +70,59 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       : undefined
   };
 
-  const inlineActions = [
+  const baseActions: Action[] = [
     {
-      actionText: 'Deploy New Linode',
+      title: 'Edit',
+      ...readonlyProps,
+      onClick: () => {
+        history.push(`/stackscripts/${stackScriptID}/edit`);
+      }
+    },
+    {
+      title: 'Deploy New Linode',
       disabled: !canAddLinodes,
+      tooltip:
+        !canAddLinodes && matchesSmDown // test this
+          ? "You don't have permissions to add Linodes"
+          : undefined,
       onClick: () => {
         history.push(
           getStackScriptUrl(stackScriptUsername, stackScriptID, username)
         );
       }
+    },
+    {
+      title: 'Make StackScript Public',
+      ...readonlyProps,
+      onClick: () => {
+        triggerMakePublic(stackScriptID, stackScriptLabel);
+      }
+    },
+    {
+      title: 'Delete',
+      ...readonlyProps,
+      onClick: () => {
+        triggerDelete(stackScriptID, stackScriptLabel);
+      }
     }
   ];
 
-  if (category === 'account') {
-    inlineActions.unshift({
-      actionText: 'Edit',
-      ...readonlyProps,
-      onClick: () => {
-        history.push(`/stackscripts/${stackScriptID}/edit`);
-      }
-    });
-  }
+  const titlesForPrivateActions = ['Make StackScript Public', 'Delete'];
+  const actionsForPublicScripts = baseActions.filter(
+    baseAction => !titlesForPrivateActions.includes(baseAction.title)
+  );
 
-  const createActions = () => {
-    return (): Action[] => {
-      const actions: Action[] = [];
+  const actions = isPublic
+    ? category === 'account'
+      ? actionsForPublicScripts
+      : actionsForPublicScripts.filter(action => action.title !== 'Edit') // if category !== 'account' (i.e., === 'community'), exclude the Edit action.
+    : baseActions; // if !isPublic, show all actions
 
-      if (matchesSmDown) {
-        actions.unshift({
-          title: 'Deploy New Linode',
-          disabled: !canAddLinodes,
-          tooltip: !canAddLinodes
-            ? "You don't have permissions to add Linodes"
-            : undefined,
-          onClick: () => {
-            history.push(
-              getStackScriptUrl(stackScriptUsername, stackScriptID, username)
-            );
-          }
-        });
-      }
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
-      // We only add the "Edit" option if the current tab/category isn't
-      // "Community StackScripts". A user's own public StackScripts are still
-      // editable under "Account StackScripts".
-      if (matchesSmDown && category !== 'community') {
-        actions.unshift({
-          title: 'Edit',
-          ...readonlyProps,
-          onClick: () => {
-            history.push(`/stackscripts/${stackScriptID}/edit`);
-          }
-        });
-      }
-
-      if (!isPublic) {
-        actions.push({
-          title: 'Make StackScript Public',
-          ...readonlyProps,
-          onClick: () => {
-            triggerMakePublic(stackScriptID, stackScriptLabel);
-          }
-        });
-        actions.push({
-          title: 'Delete',
-          ...readonlyProps,
-          onClick: () => {
-            triggerDelete(stackScriptID, stackScriptLabel);
-          }
-        });
-      }
-
-      return actions;
-    };
+  const createActions = () => (): Action[] => {
+    return menuActions;
   };
 
   return (
@@ -151,8 +131,8 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
         inlineActions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               disabled={action.disabled}
               onClick={action.onClick}
             />
