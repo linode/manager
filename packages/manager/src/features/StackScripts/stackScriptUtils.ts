@@ -30,7 +30,6 @@ export const baseApps = {
   '401698': 'Drupal - Latest One-Click',
   '401707': 'GitLab - Latest One-Click',
   '401708': 'WooCommerce - Latest One-Click',
-  '401706': 'WireGuard - Latest One-Click',
   '401709': 'Minecraft - Latest One-Click',
   '401701': 'LAMP One-Click',
   '401719': 'OpenVPN - Latest One-Click',
