@@ -23,7 +23,7 @@ describe('longview', () => {
             const curlCommand = $code.text();
             cy.exec('./cypress/support/longview.sh', {
               failOnNonZeroExit: false,
-              timeout: 360000,
+              timeout: 480000,
               env: {
                 LINODEIP: `${linodeIp}`,
                 LINODEPASSWORD: `${linodePassword}`,
@@ -38,12 +38,12 @@ describe('longview', () => {
               if (
                 cy
                   .contains('Waiting for data...', {
-                    timeout: 360000
+                    timeout: 480000
                   })
                   .should('not.be.visible')
               ) {
                 fbtVisible(clientLabel);
-                containsVisible('View details');
+                getVisible(`[href="/longview/clients/${client.id}"]`);
                 containsVisible('Swap');
               }
             });
