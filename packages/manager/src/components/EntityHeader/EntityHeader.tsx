@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: 0
     },
     [theme.breakpoints.down('xs')]: {
-      paddingRight: '0px !important'
+      marginBottom: 0
     }
   }
 }));
