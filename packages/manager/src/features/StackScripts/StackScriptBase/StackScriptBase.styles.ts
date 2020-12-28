@@ -11,6 +11,7 @@ type ClassNames =
   | 'table'
   | 'searchWrapper'
   | 'searchBar'
+  | 'landing'
   | 'stackscriptPlaceholder';
 
 const styles = (theme: Theme) =>
@@ -30,8 +31,8 @@ const styles = (theme: Theme) =>
     searchWrapper: {
       display: 'flex',
       flexWrap: 'nowrap',
-      backgroundColor: 'transparent',
-      paddingTop: 0,
+      backgroundColor: theme.cmrBGColors.bgPaper,
+      paddingTop: theme.spacing(),
       paddingBottom: '8px !important',
       position: 'sticky',
       top: 0,
@@ -64,6 +65,10 @@ const styles = (theme: Theme) =>
         paddingTop: 0,
         paddingBottom: 0
       }
+    },
+    landing: {
+      backgroundColor: `${theme.cmrBGColors.bgApp} !important`,
+      marginTop: -theme.spacing(2.5)
     },
     // Styles to override base placeholder styles for StackScript null state
     stackscriptPlaceholder: {

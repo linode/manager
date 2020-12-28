@@ -35,26 +35,19 @@ interface Props {
 
 type CombinedProps = Props & StateProps & RouteComponentProps<{}>;
 
-class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
-  mounted: boolean = false;
+const SelectStackScriptPanel: React.FC<CombinedProps> = props => {
+  const { publicImages, queryString, username } = props;
 
-  componentDidMount() {
-    this.mounted = true;
-    this.replaceTypeIfInvalid();
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
+  const [, setMounted] = React.useState<boolean>(false);
 
   // If a user gives an invalid tab type in the query string, replace it with
   // the default. The default tab will be given to the <TabbedPanel /> component
   // anyway, but replacing the query string ensures that the correct tab is
   // bookmark-able.
-  replaceTypeIfInvalid = () => {
+  const replaceTypeIfInvalid = React.useCallback(() => {
     // The leading '?' is present on the react-router `search` prop, so remove
     // it before parsing the query string.
-    const prevQueryString = this.props.location.search.slice(1);
+    const prevQueryString = props.location.search.slice(1);
     const parsedPrevQueryString = parse(prevQueryString);
 
     const validTabTypes = StackScriptTabs.map(thisTab => thisTab.category);
@@ -66,20 +59,29 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
         query: parsedPrevQueryString.query
       });
       // Replace current history instead of pushing a new item.
-      this.props.history.replace({
+      props.history.replace({
         search: newQueryString
       });
     }
-  };
+  }, [props.history, props.location.search]);
 
-  createTabs = StackScriptTabs.map(tab => ({
+  React.useEffect(() => {
+    setMounted(true);
+    replaceTypeIfInvalid();
+
+    return () => {
+      setMounted(false);
+    };
+  }, [replaceTypeIfInvalid]);
+
+  const createTabs = StackScriptTabs.map(tab => ({
     title: tab.title,
     routeName: tab.routeName
   }));
 
   // When the user clicks on a Tab, update the query string so a specific type
   // of StackScript can be bookmarked.
-  handleTabChange = (value: number = 0) => {
+  const handleTabChange = (value: number = 0) => {
     // Don't do anything if `value` isn't in range of the Tabs array. This is
     // impossible unless the implementation changes.
     if (value < 0 || value > StackScriptTabs.length - 1) {
@@ -92,43 +94,39 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
 
     // Push a new item of browser history here containing the StackScript type.
     // It's OK to clear out the "query" QS param from a UX perspective.
-    this.props.history.push({
+    props.history.push({
       search: queryString
     });
   };
 
-  render() {
-    const { queryString } = this.props;
+  const tabValue = getTabValueFromQueryString(queryString, StackScriptTabs);
 
-    const tabValue = getTabValueFromQueryString(queryString, StackScriptTabs);
-
-    return (
-      <Tabs defaultIndex={tabValue} onChange={this.handleTabChange}>
-        <TabLinkList tabs={this.createTabs} />
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <StackScriptPanelContent
-              publicImages={this.props.publicImages}
-              currentUser={this.props.username}
-              request={getMineAndAccountStackScripts}
-              key="account-tab"
-              category="account"
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <StackScriptPanelContent
-              publicImages={this.props.publicImages}
-              currentUser={this.props.username}
-              request={getCommunityStackscripts}
-              key="community-tab"
-              category="community"
-            />
-          </SafeTabPanel>
-        </TabPanels>
-      </Tabs>
-    );
-  }
-}
+  return (
+    <Tabs defaultIndex={tabValue} onChange={handleTabChange}>
+      <TabLinkList tabs={createTabs} />
+      <TabPanels>
+        <SafeTabPanel index={0}>
+          <StackScriptPanelContent
+            publicImages={publicImages}
+            currentUser={username}
+            request={getMineAndAccountStackScripts}
+            key="account-tab"
+            category="account"
+          />
+        </SafeTabPanel>
+        <SafeTabPanel index={1}>
+          <StackScriptPanelContent
+            publicImages={publicImages}
+            currentUser={username}
+            request={getCommunityStackscripts}
+            key="community-tab"
+            category="community"
+          />
+        </SafeTabPanel>
+      </TabPanels>
+    </Tabs>
+  );
+};
 
 export interface StackScriptTab {
   title: string;

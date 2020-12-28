@@ -2,6 +2,7 @@ import { Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import classnames from 'classnames';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -540,8 +541,12 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
             </div>
           ) : (
             <React.Fragment>
-              {/* @todo: fix stickiness */}
-              <div className={classes.searchWrapper}>
+              <div
+                className={classnames({
+                  [classes.searchWrapper]: true,
+                  [classes.landing]: !isSelecting
+                })}
+              >
                 <DebouncedSearch
                   placeholder="Search by Label, Username, or Description"
                   onSearch={this.handleSearch}
