@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
     borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
-    backgroundColor: theme.cmrBGColors.bgTableBody,
+    backgroundColor: theme.cmrBGColors.bgPaper,
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.up('md')]: {
       boxShadow: `inset 3px 0 0 transparent`

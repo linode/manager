@@ -4,9 +4,10 @@ import {
   containsClick,
   containsVisible,
   fbtClick,
-  getClick
+  fbtVisible,
+  getClick,
+  getVisible
 } from '../../support/helpers';
-import { assertToast } from '../../support/ui/events';
 
 describe('create image', () => {
   it('creates first image w/ drawer, and fail because POST is stubbed', () => {
@@ -57,10 +58,20 @@ describe('create image', () => {
         }
       }).as('getDisks');
       cy.visitWithLogin('/images');
-      // cy.wait('@getImages');
+      containsVisible('Images');
+      cy.wait('@getImages');
       const imageLabel = makeImageLabel();
-      cy.get('[data-qa-placeholder-button="true"]').within(() => {
-        containsClick('Add an Image');
+      cy.get('@getImages').then(response => {
+        const length = response.responseBody.data['length'];
+        getVisible('[data-qa-header]').within(() => {
+          fbtVisible('Images');
+        });
+
+        if (length > 0) {
+          fbtClick('Create an Image');
+        } else {
+          fbtClick('Add an Image');
+        }
       });
       fbtClick('Select a Linode').type(`${linode.label}{enter}`);
       cy.wait('@getDisks').then(() => {

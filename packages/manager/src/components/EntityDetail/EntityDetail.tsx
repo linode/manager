@@ -17,19 +17,16 @@ export interface EntityDetailProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    // marginTop: theme.spacing()
-  },
   header: {},
   body: {
     paddingRight: theme.spacing(),
     paddingBottom: theme.spacing(),
-    backgroundColor: theme.cmrBGColors.bgSecondaryActions,
+    backgroundColor: theme.cmrBGColors.bgPaper,
     borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
     borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
   },
   footer: {
-    backgroundColor: theme.cmrBGColors.bgSecondaryActions,
+    backgroundColor: theme.cmrBGColors.bgPaper,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -45,7 +42,7 @@ export const EntityDetail: React.FC<EntityDetailProps> = props => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <>
       {header}
 
       {body !== undefined && (
@@ -61,7 +58,7 @@ export const EntityDetail: React.FC<EntityDetailProps> = props => {
       >
         {footer}
       </Grid>
-    </div>
+    </>
   );
 };
 
