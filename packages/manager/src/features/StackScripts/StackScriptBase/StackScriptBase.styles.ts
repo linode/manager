@@ -26,6 +26,7 @@ const styles = (theme: Theme) =>
       textAlign: 'center'
     },
     table: {
+      backgroundColor: theme.cmrBGColors.bgPaper,
       overflow: 'scroll'
     },
     searchWrapper: {

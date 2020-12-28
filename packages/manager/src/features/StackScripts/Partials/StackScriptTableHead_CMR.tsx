@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   stackscriptTitles: {
-    width: '54%',
+    width: '40%',
     '&:before': {
       top: '0 !important',
       left: '0 !important',
@@ -68,10 +68,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '15%'
   },
   status: {
-    width: '10%'
+    width: '5%'
   },
   actionMenu: {
-    width: '4%'
+    width: '10%'
   },
   tr: {
     height: 48

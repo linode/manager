@@ -4,22 +4,11 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
-} from 'src/components/core/styles';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import withProfile from 'src/containers/profile.container';
 
 import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
-
-const useStyles = makeStyles(() => ({
-  stackScriptActionsWrapper: {
-    display: 'flex'
-  }
-}));
 
 interface Props {
   stackScriptID: number;
@@ -45,7 +34,6 @@ interface ProfileProps {
 type CombinedProps = Props & RouteComponentProps<{}> & ProfileProps;
 
 const StackScriptActionMenu: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -126,7 +114,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <div className={classes.stackScriptActionsWrapper}>
+    <>
       {!matchesSmDown &&
         inlineActions.map(action => {
           return (
@@ -152,7 +140,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
           ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
         />
       )}
-    </div>
+    </>
   );
 };
 
