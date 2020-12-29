@@ -898,9 +898,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiIconButton: {
         root: {
           padding: spacingUnit + spacingUnit / 2,
-          color: primaryColors.main,
+          color: cmrTextColors.linkActiveLight,
           '&:hover': {
-            color: primaryColors.light,
+            color: primaryColors.main,
             backgroundColor: 'transparent'
           }
         },
