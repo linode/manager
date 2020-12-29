@@ -1,10 +1,10 @@
-import * as classnames from 'classnames';
 import {
   getActiveLongviewPlan,
-  updateActiveLongviewPlan,
-  LongviewSubscription
+  LongviewSubscription,
+  updateActiveLongviewPlan
 } from '@linode/api-v4/lib/longview';
 import { APIError } from '@linode/api-v4/lib/types';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -127,6 +127,14 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     disabledTableRow: {
       cursor: 'not-allowed !important'
+    },
+    link: {
+      '& a': {
+        color: theme.cmrTextColors.linkActiveLight
+      },
+      '& a:hover': {
+        color: theme.palette.primary.main
+      }
     }
   };
 });
@@ -251,7 +259,11 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
           />
         )}
         {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}
-        {isManaged && <Notice success>{managedText}</Notice>}
+        {isManaged && (
+          <Notice className={styles.link} success>
+            {managedText}
+          </Notice>
+        )}
         {!isManaged && (
           <>
             <Table className={styles.table}>

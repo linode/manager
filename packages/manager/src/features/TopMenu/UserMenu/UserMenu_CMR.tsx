@@ -201,7 +201,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '8px 24px',
       '&:focus, &:hover': {
         backgroundColor: theme.cmrBGColors.bgApp,
-        color: theme.cmrTextColors.linkActiveLight
+        color: theme.palette.primary.main
       }
     },
     '&[data-reach-menu-item][data-selected]': {
