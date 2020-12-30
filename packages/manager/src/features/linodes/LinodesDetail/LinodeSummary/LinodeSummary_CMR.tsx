@@ -12,6 +12,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
+import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -29,6 +30,8 @@ import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/lino
 import { ApplicationState } from 'src/store';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import { setUpCharts } from 'src/utilities/charts';
+import { parseAPIDate } from 'src/utilities/date';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 import { initAll } from 'src/utilities/initAll';
 import { isRecent } from 'src/utilities/isRecent';
 import {
@@ -39,83 +42,37 @@ import {
 import NetworkGraph from './NetworkGraph_CMR';
 import StatsPanel from './StatsPanel';
 import { ChartProps } from './types';
-import { parseAPIDate } from 'src/utilities/date';
-import Paper from 'src/components/core/Paper';
-import getUserTimezone from 'src/utilities/getUserTimezone';
 setUpCharts();
 
 type ClassNames =
-  | 'main'
-  | 'sidebar'
-  | 'headerWrapper'
   | 'chart'
   | 'chartSelect'
-  | 'bottomLegend'
-  | 'graphTitle'
-  | 'graphSelectTitle'
   | 'graphControls'
-  | 'subHeaderOuter'
-  | 'textWrap'
+  | 'graphGrids'
   | 'headerOuter'
-  | 'labelRangeSelect'
-  | 'graphGrids';
+  | 'labelRangeSelect';
 
 const styles = (theme: Theme) =>
   createStyles({
-    main: {
-      paddingTop: theme.spacing(1)
-    },
-    sidebar: {
-      [theme.breakpoints.up('md')]: {
-        order: 2
-      }
-    },
-    headerWrapper: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2)
-    },
     chart: {
       position: 'relative',
       paddingLeft: theme.spacing(3)
     },
-    bottomLegend: {
-      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
-        1
-      )}px`,
-      padding: 10,
-      color: '#777',
-      backgroundColor: theme.bg.offWhiteDT,
-      border: `1px solid ${theme.color.border3}`,
-      fontSize: 14
-    },
-    graphTitle: {},
-    graphSelectTitle: {
-      marginRight: theme.spacing(1),
-      position: 'relative',
-      color: theme.color.headline,
-      top: -1
+    chartSelect: {
+      maxWidth: 150
     },
     graphControls: {
       display: 'flex',
       alignItems: 'center',
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-      paddingLeft: '32px'
+      marginTop: theme.spacing(0.5),
+      paddingLeft: theme.spacing()
     },
-    chartSelect: {
-      maxWidth: 150
-    },
-    subHeaderOuter: {
-      width: '100%',
-      display: 'inline-block',
-      [theme.breakpoints.up('md')]: {
-        width: 'auto',
-        textAlign: 'right'
+    graphGrids: {
+      flexWrap: 'nowrap',
+      margin: 0,
+      [theme.breakpoints.down('sm')]: {
+        flexWrap: 'wrap'
       }
-    },
-    textWrap: {
-      display: 'inline-block',
-      whiteSpace: 'nowrap'
     },
     headerOuter: {
       [theme.breakpoints.up('md')]: {
@@ -125,12 +82,6 @@ const styles = (theme: Theme) =>
     },
     labelRangeSelect: {
       paddingRight: '1em'
-    },
-    graphGrids: {
-      flexWrap: 'nowrap',
-      [theme.breakpoints.down('sm')]: {
-        flexWrap: 'wrap'
-      }
     }
   });
 
@@ -157,7 +108,7 @@ type CombinedProps = LinodeContextProps &
   WithImages &
   WithStyles<ClassNames>;
 
-const chartHeight = 300;
+const chartHeight = 240;
 
 const statsFetchInterval = 30000;
 
@@ -414,7 +365,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <Paper>
-        <Grid container item xs={12} className={classes.main}>
+        <Grid container className="m0" xs={12}>
           <Grid item xs={12}>
             <div className={classes.graphControls}>
               <Typography variant="h2" className={classes.labelRangeSelect}>
@@ -435,7 +386,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               />
             </div>
           </Grid>
-
           <Grid container item xs={12} className={classes.graphGrids}>
             <Grid item xs={12}>
               <StatsPanel

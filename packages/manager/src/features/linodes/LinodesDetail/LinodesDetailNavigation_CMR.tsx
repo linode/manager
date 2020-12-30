@@ -4,11 +4,11 @@ import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import { withLinodeDetailContext } from './linodeDetailContext';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 const LinodeSummary_CMR = React.lazy(() =>
   import('./LinodeSummary/LinodeSummary_CMR')
 );
@@ -49,12 +49,10 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
       routeName: `${url}/networking`,
       title: 'Network'
     },
-    // Previously Volumes
     {
       routeName: `${url}/storage`,
       title: 'Storage'
     },
-    // Previously Disks/Configs
     {
       routeName: `${url}/configurations`,
       title: 'Configurations'
@@ -93,41 +91,43 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
       <DocumentTitleSegment
         segment={`${linodeLabel} - ${tabs[getIndex()]?.title ?? 'Detail View'}`}
       />
-      <Tabs index={getIndex()} onChange={navToURL}>
-        <TabLinkList tabs={tabs} />
+      <div style={{ marginTop: 8 }}>
+        <Tabs index={getIndex()} onChange={navToURL}>
+          <TabLinkList tabs={tabs} />
 
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <SafeTabPanel index={0}>
-              <LinodeSummary_CMR />
-            </SafeTabPanel>
+          <React.Suspense fallback={<SuspenseLoader />}>
+            <TabPanels>
+              <SafeTabPanel index={0}>
+                <LinodeSummary_CMR />
+              </SafeTabPanel>
 
-            <SafeTabPanel index={1}>
-              <LinodeNetworking_CMR />
-            </SafeTabPanel>
+              <SafeTabPanel index={1}>
+                <LinodeNetworking_CMR />
+              </SafeTabPanel>
 
-            <SafeTabPanel index={2}>
-              <LinodeStorage />
-            </SafeTabPanel>
+              <SafeTabPanel index={2}>
+                <LinodeStorage />
+              </SafeTabPanel>
 
-            <SafeTabPanel index={3}>
-              <LinodeAdvanced_CMR />
-            </SafeTabPanel>
+              <SafeTabPanel index={3}>
+                <LinodeAdvanced_CMR />
+              </SafeTabPanel>
 
-            <SafeTabPanel index={4}>
-              <LinodeBackup_CMR />
-            </SafeTabPanel>
+              <SafeTabPanel index={4}>
+                <LinodeBackup_CMR />
+              </SafeTabPanel>
 
-            <SafeTabPanel index={5}>
-              <LinodeActivity_CMR />
-            </SafeTabPanel>
+              <SafeTabPanel index={5}>
+                <LinodeActivity_CMR />
+              </SafeTabPanel>
 
-            <SafeTabPanel index={6}>
-              <LinodeSettings_CMR />
-            </SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
-      </Tabs>
+              <SafeTabPanel index={6}>
+                <LinodeSettings_CMR />
+              </SafeTabPanel>
+            </TabPanels>
+          </React.Suspense>
+        </Tabs>
+      </div>
     </>
   );
 };

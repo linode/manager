@@ -1,40 +1,26 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 
-type ClassNames = 'root' | 'spinner' | 'title' | 'graphsUnavailable';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(2)
-    },
-    spinner: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '100%'
-    },
-    graphsUnavailable: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '100%',
-      padding: theme.spacing(2),
-      paddingTop: 0
-    },
-    title: {
-      padding: theme.spacing(2)
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  graphsUnavailable: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    padding: theme.spacing(2),
+    paddingTop: 0
+  },
+  spinner: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%'
+  }
+}));
 
 interface Props {
   renderBody: () => JSX.Element;
@@ -45,11 +31,12 @@ interface Props {
   isTooEarlyForGraphData?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export const StatsPanel: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const {
-    classes,
     error,
     height,
     loading,
@@ -59,8 +46,8 @@ export const StatsPanel: React.FC<CombinedProps> = props => {
   } = props;
 
   return (
-    <Paper className={classes.root}>
-      <Typography className={classes.title} variant="h2" data-qa-stats-title>
+    <Paper>
+      <Typography variant="h2" data-qa-stats-title>
         {title}
       </Typography>
       {isTooEarlyForGraphData ? (
@@ -83,6 +70,4 @@ export const StatsPanel: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(StatsPanel);
+export default StatsPanel;
