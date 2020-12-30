@@ -8,7 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.primary.main,
-    borderRadius: 3,
+    borderRadius: 1,
     color: 'white',
     cursor: 'pointer',
     lineHeight: '1.25rem',
