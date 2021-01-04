@@ -30,37 +30,35 @@ export const APITokenMenu: React.FC<CombinedProps> = props => {
     type
   } = props;
 
-  const baseActions: Action[] = [
+  const actions = [
     {
       title: 'View Scopes',
       onClick: () => {
         openViewDrawer(token);
       }
     },
-    {
-      title: 'Rename',
-      onClick: () => {
-        openEditDrawer(token);
-      }
-    },
+    !isThirdPartyAccessToken
+      ? {
+          title: 'Rename',
+          onClick: () => {
+            openEditDrawer(token);
+          }
+        }
+      : null,
     {
       title: 'Revoke',
       onClick: () => {
         openRevokeDialog(token, type);
       }
     }
-  ];
-
-  const actions = isThirdPartyAccessToken
-    ? baseActions.filter(action => action.title !== 'Rename')
-    : baseActions;
+  ].filter(Boolean) as Action[];
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {matchesSmDown ? (
         <ActionMenu
-          createActions={() => actions}
+          actionsList={actions}
           ariaLabel={`Action menu for API Token ${props.token.label}`}
         />
       ) : (

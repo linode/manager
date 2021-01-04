@@ -88,10 +88,6 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
 
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
-  const createActions = () => (): Action[] => {
-    return menuActions;
-  };
-
   return (
     <>
       {!matchesSmDown &&
@@ -105,7 +101,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
           );
         })}
       <ActionMenu
-        createActions={createActions()}
+        actionsList={menuActions}
         ariaLabel={`Action menu for Domain ${domain}`}
       />
     </>
