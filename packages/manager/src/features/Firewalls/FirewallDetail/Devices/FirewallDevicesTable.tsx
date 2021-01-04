@@ -25,7 +25,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const FirewallTable: React.FC<CombinedProps> = props => {
+const FirewallDevicesTable: React.FC<CombinedProps> = props => {
   const { devices, error, lastUpdated, loading, triggerRemoveDevice } = props;
 
   const _error =
@@ -99,4 +99,4 @@ const FirewallTable: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(FirewallTable);
+export default compose<CombinedProps, Props>(React.memo)(FirewallDevicesTable);
