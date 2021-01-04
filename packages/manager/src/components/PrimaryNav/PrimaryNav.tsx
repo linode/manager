@@ -277,7 +277,8 @@ export const PrimaryNav: React.FC<Props> = props => {
             return null;
           }
           return (
-            <div key={idx} className={classes.linkGroup}>
+            <div key={idx}>
+              <Divider className={classes.divider} />
               {filteredLinks.map(thisLink => {
                 const props = {
                   key: thisLink.display,
@@ -343,45 +344,42 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
   } = props;
 
   return (
-    <>
-      <Divider className={classes.divider} />
-      <Link
-        to={href}
-        onClick={(e: React.ChangeEvent<any>) => {
-          closeMenu();
-          if (onClick) {
-            onClick(e);
-          }
-        }}
-        {...prefetchProps}
-        {...attr}
+    <Link
+      to={href}
+      onClick={(e: React.ChangeEvent<any>) => {
+        closeMenu();
+        if (onClick) {
+          onClick(e);
+        }
+      }}
+      {...prefetchProps}
+      {...attr}
+      className={classNames({
+        [classes.listItem]: true,
+        [classes.active]: linkIsActive(
+          href,
+          locationSearch,
+          locationPathname,
+          activeLinks
+        )
+      })}
+      data-testid={`menu-item-${display}`}
+    >
+      {icon && (
+        <div className="icon" aria-hidden>
+          {icon}
+        </div>
+      )}
+      <p
         className={classNames({
-          [classes.listItem]: true,
-          [classes.active]: linkIsActive(
-            href,
-            locationSearch,
-            locationPathname,
-            activeLinks
-          )
+          [classes.linkItem]: true,
+          primaryNavLink: true,
+          hiddenWhenCollapsed: isCollapsed
         })}
-        data-testid={`menu-item-${display}`}
       >
-        {icon && (
-          <div className="icon" aria-hidden>
-            {icon}
-          </div>
-        )}
-        <p
-          className={classNames({
-            [classes.linkItem]: true,
-            primaryNavLink: true,
-            hiddenWhenCollapsed: isCollapsed
-          })}
-        >
-          {display}
-        </p>
-      </Link>
-    </>
+        {display}
+      </p>
+    </Link>
   );
 });
 
