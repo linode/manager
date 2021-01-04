@@ -7,18 +7,19 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+import NavTabs from 'src/components/NavTabs';
+import { NavTab } from 'src/components/NavTabs/NavTabs';
 import RenderGuard from 'src/components/RenderGuard';
-import SafeTabPanel from 'src/components/SafeTabPanel';
-import TabLinkList from 'src/components/TabLinkList';
 import { MapState } from 'src/store/types';
 import { getQueryParam } from 'src/utilities/queryParams';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts
 } from '../stackScriptUtils';
-import StackScriptPanelContent from './StackScriptPanelContent';
+
+const StackScriptPanelContent = React.lazy(() =>
+  import('./StackScriptPanelContent')
+);
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -101,30 +102,60 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = props => {
 
   const tabValue = getTabValueFromQueryString(queryString, StackScriptTabs);
 
+  const tabs: NavTab[] = [
+    {
+      title: 'Account StackScripts',
+      routeName: `/stackscripts?type=account`,
+      render: (
+        <StackScriptPanelContent
+          category="account"
+          key="account-tab"
+          publicImages={publicImages}
+          currentUser={username}
+          request={getMineAndAccountStackScripts}
+        />
+      )
+    },
+    {
+      title: 'Community StackScripts',
+      routeName: `/stackscripts?type=community`,
+      render: (
+        <StackScriptPanelContent
+          category="community"
+          key="community-tab"
+          publicImages={publicImages}
+          currentUser={username}
+          request={getCommunityStackscripts}
+        />
+      )
+    }
+  ];
+
   return (
-    <Tabs defaultIndex={tabValue} onChange={handleTabChange}>
-      <TabLinkList tabs={createTabs} />
-      <TabPanels>
-        <SafeTabPanel index={0}>
-          <StackScriptPanelContent
-            publicImages={publicImages}
-            currentUser={username}
-            request={getMineAndAccountStackScripts}
-            key="account-tab"
-            category="account"
-          />
-        </SafeTabPanel>
-        <SafeTabPanel index={1}>
-          <StackScriptPanelContent
-            publicImages={publicImages}
-            currentUser={username}
-            request={getCommunityStackscripts}
-            key="community-tab"
-            category="community"
-          />
-        </SafeTabPanel>
-      </TabPanels>
-    </Tabs>
+    <NavTabs tabs={tabs} />
+    // <Tabs defaultIndex={tabValue} onChange={handleTabChange}>
+    //   <TabLinkList tabs={createTabs} />
+    //   <TabPanels>
+    //     <SafeTabPanel index={0}>
+    //       <StackScriptPanelContent
+    //         publicImages={publicImages}
+    //         currentUser={username}
+    //         request={getMineAndAccountStackScripts}
+    //         key="account-tab"
+    //         category="account"
+    //       />
+    //     </SafeTabPanel>
+    //     <SafeTabPanel index={1}>
+    //       <StackScriptPanelContent
+    //         publicImages={publicImages}
+    //         currentUser={username}
+    //         request={getCommunityStackscripts}
+    //         key="community-tab"
+    //         category="community"
+    //       />
+    //     </SafeTabPanel>
+    //   </TabPanels>
+    // </Tabs>
   );
 };
 
