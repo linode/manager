@@ -241,8 +241,6 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   const create = (_values: CreateDomainPayload) => {
     const { domain, type, master_ips, soa_email: soaEmail, tags } = _values;
 
-    const primaryIPs = (master_ips ?? []).filter(v => v !== '');
-
     /**
      * In this case, the user wants default domain records created, but
      * they haven't supplied a Linode or NodeBalancer
@@ -271,7 +269,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     const data =
       type === 'master'
         ? { domain, type, tags, soa_email: soaEmail }
-        : { domain, type, tags, master_ips: primaryIPs };
+        : { domain, type, tags, master_ips };
 
     formik.setSubmitting(true);
     domainActions
