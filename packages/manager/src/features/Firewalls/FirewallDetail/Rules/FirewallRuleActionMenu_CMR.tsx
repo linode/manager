@@ -25,53 +25,36 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
     ...actionMenuProps
   } = props;
 
-  const inlineActions = [
+  const actions = [
     {
-      actionText: 'Edit',
+      title: 'Edit',
       onClick: () => {
         triggerOpenRuleDrawerForEditing(idx);
       }
     },
     {
-      actionText: 'Delete',
+      title: 'Delete',
       onClick: () => {
         triggerDeleteFirewallRule(idx);
       }
     }
   ];
 
-  const createActions = () => (): Action[] => {
-    return [
-      {
-        title: 'Edit',
-        onClick: () => {
-          triggerOpenRuleDrawerForEditing(idx);
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          triggerDeleteFirewallRule(idx);
-        }
-      }
-    ];
-  };
-
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        actions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );
         })}
       {matchesSmDown && (
         <ActionMenu
-          createActions={createActions()}
+          actionsList={actions}
           ariaLabel={`Action menu for Firewall Rule`}
           {...actionMenuProps}
         />

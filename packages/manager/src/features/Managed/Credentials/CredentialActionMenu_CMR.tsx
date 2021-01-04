@@ -46,7 +46,7 @@ const CredentialActionMenu: React.FC<CombinedProps> = props => {
     <>
       {matchesSmDown ? (
         <ActionMenu
-          createActions={() => actions}
+          actionsList={actions}
           ariaLabel={`Action menu for Managed Credentials for ${label}`}
         />
       ) : (
