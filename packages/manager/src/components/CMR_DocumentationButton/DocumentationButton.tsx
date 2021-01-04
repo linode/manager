@@ -36,7 +36,7 @@ export const DocumentationButton: React.FC<CombinedProps> = props => {
 
   return (
     <IconTextLink
-      className={classes.root}
+      className={`${classes.root} docsButton`}
       SideIcon={DocsIcon}
       text="Docs"
       title="Docs"
