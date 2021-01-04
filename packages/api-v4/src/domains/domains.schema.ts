@@ -49,7 +49,10 @@ export const createDomainSchema = domainSchemaBase.shape({
       is: type => type === 'slave',
       then: array()
         .of(string())
-        .required('At least one primary IP address is required.'),
+        .compact()
+        .ensure()
+        .required('At least one primary IP address is required.')
+        .min(1, 'At least one primary IP address is required.'),
       otherwise: array().of(string())
     })
 });

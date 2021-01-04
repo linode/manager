@@ -388,7 +388,6 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
       newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (mounted) {
       formik.setFieldValue('master_ips', master_ips);
-      formik.setFieldTouched('master_ips');
     }
   };
 
