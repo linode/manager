@@ -674,7 +674,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           }
           actions={
             <Hidden smDown>
-              <div style={{ marginRight: 5 }}>
+              <div style={{ marginRight: 5, paddingTop: 5, paddingBottom: 5 }}>
                 <Button
                   style={{ padding: '16px 14px' }}
                   onClick={this.openTransferDialog}
