@@ -84,10 +84,6 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
-  const createActions = () => (): Action[] => {
-    return menuActions;
-  };
-
   return (
     <>
       {!matchesSmDown &&
@@ -101,7 +97,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
           );
         })}
       <ActionMenu
-        createActions={createActions()}
+        actionsList={menuActions}
         ariaLabel={`Action menu for Disk ${props.label}`}
       />
     </>

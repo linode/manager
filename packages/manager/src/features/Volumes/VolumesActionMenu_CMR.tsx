@@ -148,10 +148,6 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
-  const createActions = () => (): Action[] => {
-    return menuActions;
-  };
-
   return (
     <>
       {!matchesSmDown &&
@@ -165,7 +161,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
           );
         })}
       <ActionMenu
-        createActions={createActions()}
+        actionsList={menuActions}
         ariaLabel={`Action menu for Volume ${props.volumeLabel}`}
       />
     </>

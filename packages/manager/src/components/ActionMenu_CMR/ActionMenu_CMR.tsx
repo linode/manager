@@ -104,7 +104,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
-  createActions: () => Action[];
+  // createActions: () => Action[];
+  actionsList: Action[];
   toggleOpenCallback?: () => void;
   // we want to require using aria label for these buttons
   // as they don't have text (just an icon)
@@ -119,13 +120,13 @@ type CombinedProps = Props;
 
 const ActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { createActions, toggleOpenCallback } = props;
+  const { toggleOpenCallback, actionsList } = props;
 
-  const [actions, setActions] = React.useState<Action[]>([]);
+  // const [actions, setActions] = React.useState<Action[]>([]);
 
-  React.useEffect(() => {
-    setActions(createActions());
-  }, [createActions]);
+  // React.useEffect(() => {
+  //   setActions(createActions());
+  // }, [createActions]);
 
   const { ariaLabel, inlineLabel } = props;
 
@@ -141,7 +142,11 @@ const ActionMenu: React.FC<CombinedProps> = props => {
     }
   };
 
-  if (typeof actions === 'undefined') {
+  // if (typeof actions === 'undefined') {
+  //   return null;
+  // }
+
+  if (!actionsList || actionsList.length === 0) {
     return null;
   }
 
@@ -162,7 +167,7 @@ const ActionMenu: React.FC<CombinedProps> = props => {
         </MenuButton>
         <MenuPopover className={classes.popover} position={positionRight}>
           <MenuItems className={classes.itemsOuter}>
-            {(actions as Action[]).map((a, idx) => (
+            {(actionsList as Action[]).map((a, idx) => (
               <MenuItem
                 key={idx}
                 className={classNames({
@@ -195,4 +200,4 @@ const ActionMenu: React.FC<CombinedProps> = props => {
   );
 };
 
-export default ActionMenu;
+export default React.memo(ActionMenu);

@@ -70,60 +70,55 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       : undefined
   };
 
-  const baseActions: Action[] = [
-    {
-      title: 'Edit',
-      ...readonlyProps,
-      onClick: () => {
-        history.push(`/stackscripts/${stackScriptID}/edit`);
-      }
-    },
+  const actions = [
+    // We only add the "Edit" option if the current tab/category isn't
+    // "Community StackScripts". A user's own public StackScripts are still
+    // editable under "Account StackScripts".
+    category === 'account'
+      ? {
+          title: 'Edit',
+          ...readonlyProps,
+          onClick: () => {
+            history.push(`/stackscripts/${stackScriptID}/edit`);
+          }
+        }
+      : null,
     {
       title: 'Deploy New Linode',
       disabled: !canAddLinodes,
-      tooltip:
-        !canAddLinodes && matchesSmDown // test this
+      tooltip: matchesSmDown
+        ? !canAddLinodes
           ? "You don't have permissions to add Linodes"
-          : undefined,
+          : undefined
+        : undefined,
       onClick: () => {
         history.push(
           getStackScriptUrl(stackScriptUsername, stackScriptID, username)
         );
       }
     },
-    {
-      title: 'Make StackScript Public',
-      ...readonlyProps,
-      onClick: () => {
-        triggerMakePublic(stackScriptID, stackScriptLabel);
-      }
-    },
-    {
-      title: 'Delete',
-      ...readonlyProps,
-      onClick: () => {
-        triggerDelete(stackScriptID, stackScriptLabel);
-      }
-    }
-  ];
-
-  const titlesForPrivateActions = ['Make StackScript Public', 'Delete'];
-  const actionsForPublicScripts = baseActions.filter(
-    baseAction => !titlesForPrivateActions.includes(baseAction.title)
-  );
-
-  const actions = isPublic
-    ? category === 'account'
-      ? actionsForPublicScripts
-      : actionsForPublicScripts.filter(action => action.title !== 'Edit') // if category !== 'account' (i.e., === 'community'), exclude the Edit action.
-    : baseActions; // if !isPublic, show all actions
+    !isPublic
+      ? {
+          title: 'Make StackScript Public',
+          ...readonlyProps,
+          onClick: () => {
+            triggerMakePublic(stackScriptID, stackScriptLabel);
+          }
+        }
+      : null,
+    !isPublic
+      ? {
+          title: 'Delete',
+          ...readonlyProps,
+          onClick: () => {
+            triggerDelete(stackScriptID, stackScriptLabel);
+          }
+        }
+      : null
+  ].filter(Boolean) as Action[];
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
-
-  const createActions = () => (): Action[] => {
-    return menuActions;
-  };
 
   return (
     <div className={classes.stackScriptActionsWrapper}>
@@ -142,13 +137,13 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       {category === 'community' || isPublic ? (
         <Hidden mdUp>
           <ActionMenu
-            createActions={createActions()}
+            actionsList={menuActions}
             ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
           />
         </Hidden>
       ) : (
         <ActionMenu
-          createActions={createActions()}
+          actionsList={menuActions}
           ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
         />
       )}
