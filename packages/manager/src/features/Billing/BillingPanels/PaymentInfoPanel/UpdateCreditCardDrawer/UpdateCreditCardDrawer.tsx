@@ -130,11 +130,6 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
         onClose();
       })
       .catch(error => {
-        // Manually handle "CVV required" errors until the API change is made.
-        // Once that happens, update account.schema to make it a required field.
-        if (flags.cvvRequired && !cvv && Array.isArray(error)) {
-          error.push({ reason: 'CVV is required.', field: 'cvv' });
-        }
         setSubmitting(false);
         setErrors(getAPIErrorOrDefault(error, 'Unable to update credit card.'));
       });
