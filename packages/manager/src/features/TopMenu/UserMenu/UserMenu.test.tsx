@@ -1,24 +1,9 @@
-import { shallow } from 'enzyme';
+import { screen } from '@testing-library/react';
 import * as React from 'react';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { UserMenu } from './UserMenu';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import UserMenu from './UserMenu';
 
-const classes = {
-  button: '',
-  hidden: '',
-  leftIcon: '',
-  menu: '',
-  menuItem: '',
-  userWrapper: '',
-  username: ''
-};
 it('renders without crashing', () => {
-  shallow(
-    <UserMenu
-      classes={classes}
-      userEmail=""
-      username=""
-      {...reactRouterProps}
-    />
-  );
+  renderWithTheme(<UserMenu />);
+  expect(screen.queryByText('My Profile')).not.toBeNull();
 });
