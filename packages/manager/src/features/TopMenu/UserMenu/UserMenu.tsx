@@ -291,9 +291,8 @@ export const UserMenu: React.FC<{}> = () => {
 
   const renderLink = (menuLink: MenuLink) =>
     menuLink.hide ? null : (
-      <Grid item xs={6}>
+      <Grid item xs={6} key={menuLink.display}>
         <MenuLink
-          key={menuLink.display}
           as={Link}
           to={menuLink.href}
           className={classes.menuItemLink}
