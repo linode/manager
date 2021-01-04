@@ -52,11 +52,16 @@ interface Timezone {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const formatOffset = (offset: number, label: string) => {
-  const isHalfHour = offset % 1 === 0.5 ? ':30' : ':00';
+export const formatOffset = (offset: number, label: string) => {
+  const remainder = Math.abs(offset) % 1;
+  // Translate a decimal to minutes.
+  // Example: (0.75 * 100) / (100 / 60) = 0.45
+  const minutes = (remainder * 100) / (100 / 60);
+
+  const formattedMinutes = String(minutes).padStart(2, '0');
   const isPositive = Math.abs(offset) === offset ? '+' : '-';
   const rounded = Math.floor(Math.abs(offset));
-  return `\(GMT ${isPositive}${rounded}${isHalfHour}\) ${label}`;
+  return `\(GMT ${isPositive}${rounded}:${formattedMinutes}\) ${label}`;
 };
 
 const renderTimeZonesList = (): Item[] => {
