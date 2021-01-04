@@ -11,22 +11,20 @@ export interface Props {
 }
 
 export const BucketActionMenu: React.FC<Props> = props => {
-  const createActions = () => (): Action[] => {
-    return [
-      {
-        title: 'Details',
-        onClick: () => {
-          props.onDetails();
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          props.onRemove();
-        }
+  const actions: Action[] = [
+    {
+      title: 'Details',
+      onClick: () => {
+        props.onDetails();
       }
-    ];
-  };
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        props.onRemove();
+      }
+    }
+  ];
 
   return (
     <>
@@ -46,7 +44,7 @@ export const BucketActionMenu: React.FC<Props> = props => {
       </Hidden>
       <Hidden mdUp>
         <ActionMenu
-          createActions={createActions()}
+          actionsList={actions}
           ariaLabel={`Action menu for Bucket ${props.label}`}
         />
       </Hidden>
