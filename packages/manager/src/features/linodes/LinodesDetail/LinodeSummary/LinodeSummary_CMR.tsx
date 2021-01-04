@@ -56,6 +56,7 @@ const styles = (theme: Theme) =>
   createStyles({
     chart: {
       position: 'relative',
+      paddingTop: theme.spacing(2),
       paddingLeft: theme.spacing(3)
     },
     chartSelect: {
