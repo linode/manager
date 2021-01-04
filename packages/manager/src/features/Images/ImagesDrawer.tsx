@@ -311,6 +311,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const {
+      availableImages,
       label,
       description,
       selectedDisk,
@@ -363,7 +364,16 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             linodeError={linodeError}
             disabled={!canCreateImage}
             handleChange={linode => this.handleLinodeChange(linode.id)}
-            updateFor={[selectedLinode, linodeError, classes]}
+            filterCondition={linode =>
+              availableImages ? availableImages.includes(linode.id) : true
+            }
+            updateFor={[
+              selectedLinode,
+              linodeError,
+              classes,
+              canCreateImage,
+              availableImages
+            ]}
           />
         )}
 
@@ -447,6 +457,7 @@ const styled = withStyles(styles);
 
 interface ProfileProps {
   canCreateImage: boolean;
+  availableImages: number[] | null;
 }
 
 export default compose<CombinedProps, Props>(
@@ -458,6 +469,14 @@ export default compose<CombinedProps, Props>(
   withProfile<ProfileProps, {}>((undefined, { profileData: profile }) => ({
     canCreateImage:
       Boolean(!profile?.restricted) ||
-      Boolean(profile?.grants?.global.add_images)
+      Boolean(profile?.grants?.global.add_images),
+    // Unrestricted users can create Images from any disk;
+    // Restricted users need read_write on the Linode they're trying to Imagize
+    // (in addition to the global add_images grant).
+    availableImages: profile?.restricted
+      ? profile?.grants?.linode
+          .filter(thisGrant => thisGrant.permissions === 'read_write')
+          .map(thisGrant => thisGrant.id) ?? []
+      : null
   }))
 )(ImageDrawer);
