@@ -13,7 +13,7 @@ const getAllFirewallsRequest = () =>
     getFirewalls(passedParams, passedFilter)
   )().then(data => listToItemsByID(data.data));
 
-const queryKey = 'queryFirewalls';
+const queryKey = 'firewall';
 
 export const useFirewallQuery = () => {
   return useQuery<Record<string, Firewall>, APIError[]>(
