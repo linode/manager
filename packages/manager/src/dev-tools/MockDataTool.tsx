@@ -5,7 +5,10 @@ import { MockData, mockDataController } from './mockDataController';
 import ServiceWorkerTool from './ServiceWorkerTool';
 
 const options: { label: string; key: keyof MockData }[] = [
-  { label: 'Linodes', key: 'linode' }
+  { label: 'Linodes', key: 'linode' },
+  { label: 'NodeBalancers', key: 'nodeBalancer' },
+  { label: 'Domains', key: 'domain' },
+  { label: 'Volumes', key: 'volume' }
 ];
 
 const MockDataTool: React.FC<{}> = () => {
