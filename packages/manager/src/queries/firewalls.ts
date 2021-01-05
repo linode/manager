@@ -5,20 +5,19 @@ import {
 } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
-import { getAll } from 'src/utilities/getAll';
 import { mutationHandlers, listToItemsByID, queryPresets } from './base';
 
-const getAllFirewallsRequest = () =>
-  getAll<Firewall>((passedParams, passedFilter) =>
-    getFirewalls(passedParams, passedFilter)
-  )().then(data => listToItemsByID(data.data));
+const getFirewallsRequest = (passedParams: any = {}, passedFilter: any = {}) =>
+  getFirewalls(passedParams, passedFilter).then(data =>
+    listToItemsByID(data.data)
+  );
 
 const queryKey = 'firewall';
 
-export const useFirewallQuery = () => {
+export const useFirewallQuery = (params: any = {}, filter: any = {}) => {
   return useQuery<Record<string, Firewall>, APIError[]>(
-    queryKey,
-    getAllFirewallsRequest,
+    [queryKey, params, filter],
+    () => getFirewallsRequest(params, filter),
     queryPresets.longLived
   );
 };
