@@ -30,8 +30,4 @@
   #dev-tools:hover .tools {
     justify-content: space-between;
   }
-
-  #dev-tools:hover .column {
-    margin: 0 1em 0 1em;
-  }
 }

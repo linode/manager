@@ -18,16 +18,16 @@ function install() {
       <div id="dev-tools">
         <div>🛠</div>
         <Grid container spacing={2} className="tools">
-          <Grid item xs={2} className="column">
+          <Grid item xs={4} sm={2} className="column">
             <FeatureFlagTool />
           </Grid>
           {process.env.NODE_ENV === 'development' && (
-            <Grid item xs={2} className="column">
+            <Grid item xs={4} sm={5} md={3} className="column">
               <EnvironmentToggleTool />
             </Grid>
           )}
           {!isProductionBuild && (
-            <Grid item xs={2} className="column">
+            <Grid item xs={4} sm={5} md={3} className="column">
               <MockDataTool />
             </Grid>
           )}
