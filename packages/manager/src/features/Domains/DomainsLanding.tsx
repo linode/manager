@@ -451,17 +451,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                   row={domainRow}
                   headers={headers}
                   initialOrder={initialOrder}
-                  normalizeData={(pageyData: Domain[]) => {
-                    // Use Redux copies of each Domain, since Redux is more up-to-date.
-                    return getReduxCopyOfDomains(
-                      pageyData,
-                      this.props.domainsByID
-                    );
-                  }}
-                  // Persist Pagey data to Redux.
-                  persistData={(data: Domain[]) => {
-                    this.props.upsertMultipleDomains(data);
-                  }}
                 />
               </React.Fragment>
             );

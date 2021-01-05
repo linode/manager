@@ -11,6 +11,7 @@ import LandingHeader from 'src/components/LandingHeader';
 import withFirewalls, {
   Props as FireProps
 } from 'src/containers/firewalls.container';
+import usePagination from 'src/hooks/usePagination';
 import { useFirewallQuery } from 'src/queries/firewalls';
 import AddFirewallDrawer from './AddFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu_CMR';
@@ -23,7 +24,12 @@ type CombinedProps = RouteComponentProps<{}> & FireProps;
 const FirewallLanding: React.FC<CombinedProps> = props => {
   const { deleteFirewall, disableFirewall, enableFirewall } = props;
 
-  const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
+  const pagination = usePagination();
+
+  const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery({
+    page: pagination.page,
+    page_size: pagination.pageSize
+  });
 
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
     boolean
@@ -118,7 +124,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     triggerDeleteFirewall: handleOpenDeleteFirewallModal
   };
 
-  const firewallArray = Object.values(data ?? {});
+  const firewallArray = Object.values(data?.data ?? {});
 
   if (isLoading) {
     return <CircleProgress />;
@@ -158,15 +164,14 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         entity="Firewall"
         breadcrumbProps={{ pathname: '/firewalls' }}
         onAddNew={openDrawer}
-        // This guide is not yet published and will 404
-        // It will be published prior to any public beta
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
       />
       <EntityTable
         entity="firewall"
+        pagination={pagination}
+        count={data?.results ?? 0}
         row={firewallRow}
         headers={headers}
-        initialOrder={{ order: 'asc', orderBy: 'domain' }}
       />
       <AddFirewallDrawer
         open={addFirewallDrawerOpen}

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { OrderByProps } from 'src/components/OrderBy';
-import APIPaginatedTable from './APIPaginatedTable';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag';
 import ListEntities from './ListEntities';
-import { BaseProps, PageyIntegrationProps } from './types';
+import { BaseProps } from './types';
 
 export interface EntityTableRow<T> extends BaseProps {
   Component: React.ComponentType<any>;
@@ -23,29 +22,10 @@ interface Props {
   };
 }
 
-export type CombinedProps = Props & PageyIntegrationProps;
+export type CombinedProps = Props;
 
 export const LandingTable: React.FC<CombinedProps> = props => {
   const { entity, headers, groupByTag, row, initialOrder } = props;
-
-  if (row.request) {
-    const tableProps = {
-      RowComponent: row.Component,
-      request: row.request,
-      initialOrder,
-      headers,
-      entity,
-      handlers: row.handlers,
-      lastUpdated: row.lastUpdated
-    };
-    return (
-      <APIPaginatedTable
-        {...tableProps}
-        persistData={props.persistData}
-        normalizeData={props.normalizeData}
-      />
-    );
-  }
 
   const tableProps = {
     data: row.data,

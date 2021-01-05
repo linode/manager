@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
-import { PaginationProps } from 'src/components/Pagey';
+import { PaginationProps } from 'src/hooks/usePagination';
+import OrderBy from 'src/components/OrderBy';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import EntityTableHeader from './EntityTableHeader';
-import { Entity, ListProps, PageyIntegrationProps } from './types';
+import { Entity, ListProps } from './types';
 
-export type CombinedProps = ListProps &
-  PaginationProps<Entity> &
-  PageyIntegrationProps;
+interface Props {
+  count: number;
+}
+export type CombinedProps = Props & ListProps & PaginationProps<Entity>;
 
 export const APIPaginatedTable: React.FC<CombinedProps> = props => {
   const {
@@ -21,8 +22,6 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
     loading,
     page,
     pageSize,
-    request,
-    handleOrderChange,
     handlePageChange,
     handlePageSizeChange,
     entity,
@@ -32,68 +31,62 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
     RowComponent
   } = props;
 
-  const _data = data ?? [];
-
-  const normalizedData = props.normalizeData
-    ? props.normalizeData(_data)
-    : _data;
-
-  React.useEffect(() => {
-    if (initialOrder) {
-      handleOrderChange(initialOrder.orderBy, initialOrder.order);
-    } else {
-      request();
-    }
-  }, [request, handleOrderChange, initialOrder]);
-
   return (
-    <>
-      <Paper>
-        <Table aria-label={`List of ${entity}`}>
-          <EntityTableHeader
-            headers={headers}
-            order={props.order}
-            orderBy={props.orderBy ?? 'asc'}
-            handleOrderChange={props.handleOrderChange}
-          />
-          <TableBody>
-            <TableContentWrapper
-              length={count}
-              loading={loading}
-              error={error}
-              lastUpdated={100}
-            >
-              {normalizedData.map(thisEntity => (
-                <RowComponent
-                  key={thisEntity.id}
-                  {...thisEntity}
-                  {...handlers}
+    <OrderBy
+      data={data}
+      orderBy={initialOrder?.orderBy}
+      order={initialOrder?.order}
+    >
+      {({ data: orderedData, order, orderBy, handleOrderChange }) => {
+        const _handleOrderChange = (order: any, orderBy: any) => {
+          // If we're changing the sort we should go back to page 1
+          if (page !== 1) {
+            handlePageChange(1);
+          }
+          // Call the OrderBy built-in change handler
+          handleOrderChange(orderBy, order);
+        };
+        return (
+          <>
+            <Paper>
+              <Table aria-label={`List of ${entity}`}>
+                <EntityTableHeader
+                  headers={headers}
+                  order={order}
+                  orderBy={orderBy ?? 'asc'}
+                  handleOrderChange={_handleOrderChange}
                 />
-              ))}
-            </TableContentWrapper>
-          </TableBody>
-        </Table>
-      </Paper>
-      <PaginationFooter
-        count={count}
-        page={page}
-        pageSize={pageSize}
-        handlePageChange={handlePageChange}
-        handleSizeChange={handlePageSizeChange}
-        eventCategory={`${entity} landing table`}
-      />
-    </>
+                <TableBody>
+                  <TableContentWrapper
+                    length={data.length}
+                    loading={loading}
+                    error={error}
+                    lastUpdated={100}
+                  >
+                    {orderedData.map(thisEntity => (
+                      <RowComponent
+                        key={thisEntity.id}
+                        {...thisEntity}
+                        {...handlers}
+                      />
+                    ))}
+                  </TableContentWrapper>
+                </TableBody>
+              </Table>
+            </Paper>
+            <PaginationFooter
+              count={count}
+              page={page}
+              pageSize={pageSize}
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              eventCategory={`${entity} landing table`}
+            />
+          </>
+        );
+      }}
+    </OrderBy>
   );
 };
 
-const enhanced = compose<CombinedProps, any>(
-  Pagey((ownProps, params, filters) => ownProps.request(params, filters), {
-    cb: (ownProps, response) => {
-      if (ownProps.persistData) {
-        ownProps.persistData(response.data);
-      }
-    }
-  })
-);
-
-export default enhanced(APIPaginatedTable);
+export default APIPaginatedTable;

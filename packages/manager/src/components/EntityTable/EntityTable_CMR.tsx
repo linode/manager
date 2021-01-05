@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { OrderByProps } from 'src/components/OrderBy';
+import { PaginationProps } from 'src/hooks/usePagination';
 import APIPaginatedTable from './APIPaginatedTable';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag_CMR';
 import ListEntities from './ListEntities_CMR';
-import { EntityTableRow, PageyIntegrationProps } from './types';
+import { EntityTableRow } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
@@ -32,16 +33,19 @@ interface Props {
   toggleGroupByTag?: () => boolean;
   isGroupedByTag?: boolean;
   row: EntityTableRow<any>;
+  pagination?: PaginationProps<any>;
+  count?: number;
   initialOrder?: {
     order: OrderByProps['order'];
     orderBy: OrderByProps['orderBy'];
   };
 }
 
-export type CombinedProps = Props & PageyIntegrationProps;
+export type CombinedProps = Props;
 
 export const LandingTable: React.FC<CombinedProps> = props => {
   const {
+    count,
     entity,
     headers,
     row,
@@ -62,18 +66,12 @@ export const LandingTable: React.FC<CombinedProps> = props => {
     entity,
     handlers: row.handlers,
     toggleGroupByTag,
-    isGroupedByTag
+    isGroupedByTag,
+    count: count ?? 0
   };
 
-  if (row.request) {
-    return (
-      <APIPaginatedTable
-        {...tableProps}
-        persistData={props.persistData}
-        normalizeData={props.normalizeData}
-        data={undefined}
-      />
-    );
+  if (props.pagination) {
+    return <APIPaginatedTable {...tableProps} {...props.pagination} />;
   }
 
   if (isGroupedByTag) {

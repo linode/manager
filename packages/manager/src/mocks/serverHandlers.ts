@@ -180,7 +180,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(endpoints)));
   }),
   rest.get('*/firewalls/', (req, res, ctx) => {
-    const firewalls = firewallFactory.buildList(0);
+    const firewalls = firewallFactory.buildList(10);
     return res(ctx.json(makeResourcePage(firewalls)));
   }),
   rest.get('*/firewalls/*/devices', (req, res, ctx) => {
