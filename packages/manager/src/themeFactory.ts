@@ -161,12 +161,13 @@ const iconCircleHoverEffect = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   background: 'none',
-  color: primaryColors.main,
+  color: cmrTextColors.linkActiveLight,
   border: 'none',
-  padding: 0,
   font: 'inherit',
+  padding: 0,
   cursor: 'pointer',
   '&:hover': {
+    color: primaryColors.main,
     textDecoration: 'underline'
   }
 };
@@ -273,7 +274,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       tableHeader: '#fbfbfb',
       primaryNavActive: '#f4f4f4',
       primaryNavActiveBG: '#515861',
-      primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#3a3f46',
       mainContentBanner: '#33373D',
       topMenu: '#fff',
@@ -287,7 +287,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       green: '#00b159',
       orange: '#ffb31a',
       yellow: '#fecf2f',
-      border1: '#abadaf',
       border2: '#c5c6c8',
       border3: '#eee',
       borderPagination: '#ccc',
@@ -297,8 +296,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey4: '#8C929D',
       grey5: '#f5f5f5',
       grey6: '#e3e5e8',
-      grey7: '#fafafa',
-      grey8: '#828a97',
       grey9: '#f4f5f6',
       grey10: '#dbdde1',
       white: '#fff',
@@ -516,7 +513,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           lineHeight: 1,
           fontFamily:
             spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
-          // // backgroundColor: primaryColors.main,
+          // backgroundColor: primaryColors.main,
           // color: '#fff',
           // padding: `2px 20px`,
           // maxHeight: 34,
@@ -581,8 +578,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           color: cmrTextColors.linkActiveLight,
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
-            borderColor: primaryColors.light,
-            color: primaryColors.light
+            borderColor: primaryColors.main,
+            color: primaryColors.main
           },
           '&:active': {
             backgroundColor: 'transparent',
@@ -901,9 +898,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiIconButton: {
         root: {
           padding: spacingUnit + spacingUnit / 2,
-          color: primaryColors.main,
+          color: cmrTextColors.linkActiveLight,
           '&:hover': {
-            color: primaryColors.light,
+            color: primaryColors.main,
             backgroundColor: 'transparent'
           }
         },
@@ -1221,7 +1218,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
               }
             }
           },
-
           '& $disabled': {
             '&$switchBase': {
               '& + $track': {

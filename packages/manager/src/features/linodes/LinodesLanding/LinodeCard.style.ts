@@ -102,6 +102,7 @@ const styles = (theme: Theme) =>
       textTransform: 'capitalize'
     },
     statusHelpIcon: {
+      color: theme.cmrTextColors.linkActiveLight,
       paddingTop: 0,
       paddingBottom: 0
     },
