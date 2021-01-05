@@ -36,7 +36,6 @@ const styles = (theme: Theme) =>
       alignItems: 'center'
     },
     enableButton: {
-      borderRadius: 3,
       height: 40,
       padding: 0,
       width: 152
@@ -89,7 +88,7 @@ const BackupsCTA: React.FC<CombinedProps> = props => {
             onClick={openBackupsDrawer}
             className={classes.enableButton}
           >
-            Enable Backups...
+            Enable Backups
           </Button>
         </Hidden>
         <button onClick={dismissed} className={classes.closeIcon}>

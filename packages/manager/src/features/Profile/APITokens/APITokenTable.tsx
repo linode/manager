@@ -73,10 +73,6 @@ const styles = (theme: Theme) =>
         padding: 5
       }
     },
-    addNewLink: {
-      padding: 5,
-      width: 260
-    },
     labelCell: {
       width: '40%',
       [theme.breakpoints.down('md')]: {
@@ -564,7 +560,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
               <AddNewLink
                 onClick={this.openCreateDrawer}
                 label="Create a Personal Access Token"
-                className={classes.addNewLink}
               />
             )}
           </Grid>
