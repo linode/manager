@@ -14,6 +14,7 @@ import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import useRegions from 'src/hooks/useRegions';
 import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 import {
@@ -46,6 +47,12 @@ const initialValues: CreateFirewallPayload = {
 
 const AddFirewallDrawer: React.FC<CombinedProps> = props => {
   const { onClose, onSubmit, ...restOfDrawerProps } = props;
+
+  /**
+   * We'll eventually want to check the read_write firewall
+   * grant here too, but it doesn't exist yet.
+   */
+  const { _isRestrictedUser } = useAccountManagement();
 
   const regions = useRegions();
 
@@ -114,8 +121,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          setFieldValue,
-          validateField
+          setFieldValue
         }) => {
           const generalError =
             status?.generalError ||
@@ -125,6 +131,12 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
 
           return (
             <form onSubmit={handleSubmit}>
+              {_isRestrictedUser ? (
+                <Notice
+                  error
+                  text="You don't have permissions to create a new Firewall. Please contact an account administrator for details."
+                />
+              ) : null}
               {generalError && (
                 <Notice
                   key={status}
@@ -141,6 +153,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               <TextField
                 aria-label="Label for your new Firewall"
                 label="Label"
+                disabled={_isRestrictedUser}
                 name="label"
                 value={values.label}
                 onChange={handleChange}
@@ -152,6 +165,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               />
               <LinodeMultiSelect
                 showAllOption
+                disabled={_isRestrictedUser}
                 allowedRegions={regionsWithFirewalls}
                 helperText={`Assign one or more Linodes to this firewall. You can add
                  Linodes later if you want to customize your rules first. Only Linodes in
@@ -171,10 +185,16 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
                   data-qa-submit
                   data-testid="add-firewall-submit"
                   loading={isSubmitting}
+                  disabled={_isRestrictedUser}
                 >
                   Create
                 </Button>
-                <Button onClick={onClose} buttonType="cancel" data-qa-cancel>
+                <Button
+                  onClick={onClose}
+                  buttonType="cancel"
+                  disabled={_isRestrictedUser}
+                  data-qa-cancel
+                >
                   Cancel
                 </Button>
               </ActionsPanel>
