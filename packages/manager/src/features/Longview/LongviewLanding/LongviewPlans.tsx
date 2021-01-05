@@ -171,6 +171,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
     mayUserModifyLVSubscription
   } = props;
   const styles = useStyles();
+  const mounted = React.useRef<boolean>(false);
 
   const [currentSubscription, setCurrentSubscription] = React.useState<
     string | undefined
@@ -184,13 +185,27 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
   const [updateSuccessMsg, setUpdateSuccessMsg] = React.useState<string>('');
 
   React.useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  React.useEffect(() => {
     getActiveLongviewPlan()
       .then((plan: LongviewSubscription) => {
+        if (!mounted.current) {
+          return;
+        }
         const activeID = plan.id ?? LONGVIEW_FREE_ID;
         setCurrentSubscription(activeID);
         setSelectedSub(activeID);
       })
       .catch(_ => {
+        if (!mounted.current) {
+          return;
+        }
+
         setUpdateErrorMsg('Error loading your current Longview plan');
       });
   }, []);
