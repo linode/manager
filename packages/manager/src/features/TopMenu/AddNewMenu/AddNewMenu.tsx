@@ -105,6 +105,7 @@ const styles = (theme: Theme) =>
         },
         '&:hover': {
           '& h3': {
+            color: theme.palette.primary.main,
             textDecoration: 'underline'
           }
         }

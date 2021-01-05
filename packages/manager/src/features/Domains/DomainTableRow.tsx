@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.125rem',
     color: theme.cmrTextColors.linkActiveLight,
     '&:hover, &:focus': {
+      color: theme.palette.primary.main,
       textDecoration: 'underline'
     }
   },
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.linkActiveLight,
     lineHeight: '1.125rem',
     '&:hover, &:focus': {
+      color: theme.palette.primary.main,
       textDecoration: 'underline'
     }
   },

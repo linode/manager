@@ -79,6 +79,20 @@ const iconCircleAnimation = {
   }
 };
 
+// Used for styling html buttons to look like our generic links
+const genericLinkStyle = {
+  background: 'none',
+  color: cmrTextColors.linkActiveLight,
+  border: 'none',
+  font: 'inherit',
+  padding: 0,
+  cursor: 'pointer',
+  '&:hover': {
+    color: primaryColors.main,
+    textDecoration: 'underline'
+  }
+};
+
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
@@ -134,7 +148,6 @@ const darkThemeOptions = {
     tableHeader: '#2B2E32',
     primaryNavActive: '#303235',
     primaryNavActiveBG: '#464c53',
-    primaryNavBorder: '#303235',
     primaryNavPaper: '#2e3238',
     mainContentBanner: '#23272B',
     topMenu: '#33383d',
@@ -148,7 +161,6 @@ const darkThemeOptions = {
     green: '#00b159',
     orange: '#ffb31a',
     yellow: '#fecf2f',
-    border1: '#000',
     border2: '#111',
     border3: '#222',
     borderPagination: '#222222',
@@ -156,7 +168,6 @@ const darkThemeOptions = {
     grey2: 'rgba(0, 0, 0, 0.2)',
     grey3: '#999',
     grey5: 'rgba(0, 0, 0, 0.2)',
-    grey7: 'rgba(0, 0, 0, 0.2)',
     grey9: primaryColors.divider,
     grey10: '#dbdde1',
     white: '#32363c',
@@ -231,6 +242,9 @@ const darkThemeOptions = {
       color: primaryColors.text
     }
   },
+  applyLinkStyles: {
+    ...genericLinkStyle
+  },
   applyStatusPillStyles: {
     ...genericStatusPillStyle
   },
@@ -290,9 +304,9 @@ const darkThemeOptions = {
         }
       },
       containedSecondary: {
-        color: primaryColors.main,
+        color: cmrTextColors.linkActiveLight,
         '&:hover, &:focus': {
-          color: primaryColors.light
+          color: primaryColors.main
         },
         '&:active': {
           color: primaryColors.dark,
@@ -507,7 +521,6 @@ const darkThemeOptions = {
     },
     MuiPaper: {
       root: {
-        // originally '#32363c'
         backgroundColor: cmrBGColors.bgPaper
       }
     },
@@ -567,7 +580,13 @@ const darkThemeOptions = {
     MuiTableCell: {
       root: {
         borderTop: `1px solid ${primaryColors.divider}`,
-        borderBottom: `1px solid ${primaryColors.divider}`
+        borderBottom: `1px solid ${primaryColors.divider}`,
+        '& a': {
+          color: cmrTextColors.linkActiveLight
+        },
+        '& a:hover': {
+          color: primaryColors.main
+        }
       },
       head: {
         color: primaryColors.text,
@@ -620,6 +639,12 @@ const darkThemeOptions = {
     },
     MuiTypography: {
       root: {
+        '& a': {
+          color: cmrTextColors.linkActiveLight
+        },
+        '& a:hover': {
+          color: primaryColors.main
+        },
         '& a.black': {
           color: primaryColors.text
         },

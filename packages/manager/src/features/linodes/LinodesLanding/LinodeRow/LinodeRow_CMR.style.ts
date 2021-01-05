@@ -77,6 +77,7 @@ const styles = (theme: Theme) =>
         }
       },
       '& button': {
+        color: theme.cmrTextColors.linkActiveLight,
         padding: '0 6px',
         position: 'relative',
         top: 1
@@ -89,10 +90,11 @@ const styles = (theme: Theme) =>
     statusLink: {
       backgroundColor: 'transparent',
       border: 'none',
+      color: theme.cmrTextColors.linkActiveLight,
       cursor: 'pointer',
       padding: 0,
       '& p': {
-        color: theme.palette.primary.main,
+        color: theme.cmrTextColors.linkActiveLight,
         fontFamily: theme.font.bold
       }
     },

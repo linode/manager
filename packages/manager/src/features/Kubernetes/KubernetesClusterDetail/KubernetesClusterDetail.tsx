@@ -10,14 +10,14 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Grid from 'src/components/core/Grid';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import Tab from 'src/components/core/ReachTab';
+import TabList from 'src/components/core/ReachTabList';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import Tab from 'src/components/core/ReachTab';
-import TabList from 'src/components/core/ReachTabList';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import KubeContainer, {
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-tab][data-selected]': {
       fontFamily: theme.font.bold,
       color: theme.color.headline,
-      borderBottom: `2px solid ${theme.color.blue}`
+      borderBottom: `2px solid ${theme.cmrTextColors.linkActiveLight}`
     }
   },
   tabList: {

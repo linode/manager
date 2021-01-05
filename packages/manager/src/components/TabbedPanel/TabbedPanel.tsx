@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   tab: {
     '&[data-reach-tab]': {
       // This was copied over from our MuiTab styling in themeFactory. Some of this could probably be cleaned up.
-      color: theme.cmrTextColors.textTab,
+      color: theme.cmrTextColors.linkActiveLight,
       background: 'transparent',
       border: 'none',
       minWidth: 50,

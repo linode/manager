@@ -58,7 +58,6 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
     { color: theme.color.red, alias: 'theme.color.red' },
     { color: theme.color.green, alias: 'theme.color.green' },
     { color: theme.color.yellow, alias: 'theme.color.yellow' },
-    { color: theme.color.border1, alias: 'theme.color.border1' },
     { color: theme.color.border2, alias: 'theme.color.border2' },
     { color: theme.color.border3, alias: 'theme.color.border3' },
     { color: theme.color.grey1, alias: 'theme.color.grey1' },
@@ -66,9 +65,7 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
     { color: theme.color.grey3, alias: 'theme.color.grey3' },
     { color: theme.color.grey4, alias: 'theme.color.grey4' },
     { color: theme.color.grey5, alias: 'theme.color.grey5' },
-    { color: theme.color.grey6, alias: 'theme.color.grey6' },
-    { color: theme.color.grey7, alias: 'theme.color.grey7' },
-    { color: theme.color.grey8, alias: 'theme.color.grey8' }
+    { color: theme.color.grey6, alias: 'theme.color.grey6' }
   ];
 
   const bgColors = [
@@ -85,7 +82,6 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
       color: theme.bg.primaryNavActiveBG,
       alias: 'theme.bg.primaryNavActiveBG'
     },
-    { color: theme.bg.primaryNavBorder, alias: 'theme.bg.primaryNavBorder' },
     { color: theme.bg.primaryNavPaper, alias: 'theme.bg.primaryNavPaper' },
     { color: theme.bg.topMenu, alias: 'theme.bg.topMenu' },
     { color: theme.bg.billingHeader, alias: 'theme.bg.billingHeader' }

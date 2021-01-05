@@ -123,7 +123,9 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         Maintenance is scheduled for{' '}
         {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}. For more
         information, please see your{' '}
-        <Link to="/support/tickets?type=open">open support tickets.</Link>
+        <Link className={classes.statusLink} to="/support/tickets?type=open">
+          open support tickets.
+        </Link>
       </>
     );
   };
