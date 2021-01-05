@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { Redirect, useHistory, useLocation, matchPath } from 'react-router-dom';
+import { matchPath, Redirect, useHistory, useLocation } from 'react-router-dom';
+import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import ReachTabs from 'src/components/core/ReachTabs';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from '../TabLinkList/TabLinkList';
-import TabPanel from 'src/components/core/ReachTabPanel';
 
 export interface NavTab {
   title: string;
   routeName: string;
+  category?: string;
   component?:
     | React.ComponentType
     | React.LazyExoticComponent<React.ComponentType>;
@@ -42,7 +43,15 @@ const NavTabs: React.FC<CombinedProps> = props => {
     }
   };
 
-  const tabMatch = getTabMatch(tabs, reactRouterLocation.pathname);
+  let location;
+
+  if (reactRouterLocation.search !== '') {
+    location = reactRouterLocation.pathname + reactRouterLocation.search;
+  } else {
+    location = reactRouterLocation.pathname;
+  }
+
+  const tabMatch = getTabMatch(tabs, location);
 
   // Redirect to the first tab's route name if the pathname is unknown.
   if (tabMatch.idx === -1) {

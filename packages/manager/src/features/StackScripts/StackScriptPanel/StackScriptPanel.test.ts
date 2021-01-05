@@ -1,16 +1,15 @@
-import { getTabValueFromQueryString, StackScriptTab } from './StackScriptPanel';
+import { NavTab } from 'src/components/NavTabs/NavTabs';
+import { getTabValueFromQueryString } from './StackScriptPanel';
 
 describe('getTabValueFromQueryString helper function', () => {
-  const tabs: StackScriptTab[] = [
+  const tabs: NavTab[] = [
     {
       title: 'Account StackScripts',
-      request: jest.fn(),
       category: 'account',
       routeName: '/stackscripts?type=account'
     },
     {
       title: 'Community StackScripts',
-      request: jest.fn(),
       category: 'community',
       routeName: '/stackscripts?type=community'
     }
