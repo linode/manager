@@ -147,108 +147,53 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     );
   };
 
-  const createLinodeActions = () => {
-    const {
-      linodeId,
-      linodeLabel,
-      linodeStatus,
-      openDialog,
-      openPowerActionDialog,
-      readOnly,
-      inVLANContext
-    } = props;
+  const {
+    linodeId,
+    linodeLabel,
+    linodeStatus,
+    openPowerActionDialog,
+    inlineLabel,
+    inTableContext,
+    inVLANContext,
+    openDialog,
+    readOnly
+  } = props;
 
-    const readOnlyProps = readOnly
-      ? {
-          disabled: true,
-          tooltip: "You don't have permission to modify this Linode"
-        }
-      : {};
+  const hasHostMaintenance = linodeStatus === 'stopped';
+  const maintenanceProps = {
+    disabled: hasHostMaintenance,
+    tooltip: hasHostMaintenance
+      ? 'This action is unavailable while your Linode is undergoing host maintenance.'
+      : undefined
+  };
 
-    const hasHostMaintenance = linodeStatus === 'stopped';
-    const maintenanceProps = {
-      disabled: hasHostMaintenance,
-      tooltip: hasHostMaintenance
-        ? 'This action is unavailable while your Linode is undergoing host maintenance.'
-        : undefined
-    };
-
-    const inLandingListView = matchesMdDown && inTableContext;
-    const inEntityView = matchesSmDown;
-
-    return (): Action[] => {
-      const actions: Action[] = [
-        {
-          title: 'Clone',
-          onClick: () => {
-            sendLinodeActionMenuItemEvent('Clone');
-            history.push({
-              pathname: '/linodes/create',
-              search: buildQueryStringForLinodeClone()
-            });
-          },
-          ...maintenanceProps,
-          ...readOnlyProps
-        },
-        {
-          title: 'Resize',
-          onClick: () => {
-            openDialog('resize', linodeId);
-          },
-          ...maintenanceProps,
-          ...readOnlyProps
-        },
-        {
-          title: 'Rebuild',
-          onClick: () => {
-            sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
-            openDialog('rebuild', linodeId);
-          },
-          ...maintenanceProps,
-          ...readOnlyProps
-        },
-        {
-          title: 'Rescue',
-          onClick: () => {
-            sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
-            openDialog('rescue', linodeId);
-          },
-          ...maintenanceProps,
-          ...readOnlyProps
-        },
-        {
-          title: 'Migrate',
-          onClick: () => {
-            sendMigrationNavigationEvent('/linodes');
-            sendLinodeActionMenuItemEvent('Migrate');
-            openDialog('migrate', linodeId);
-          },
-          ...readOnlyProps
-        },
-        {
-          title: 'Delete',
-          onClick: () => {
-            sendLinodeActionMenuItemEvent('Delete Linode');
-
-            openDialog('delete', linodeId, linodeLabel);
-          },
-          ...readOnlyProps
-        }
-      ];
-
-      if (inTableContext || matchesSmDown) {
-        actions.unshift({
-          title: 'Launch LISH Console',
-          onClick: () => {
-            sendLinodeActionMenuItemEvent('Launch Console');
-            lishLaunch(linodeId);
-          },
-          ...readOnlyProps
-        });
+  const readOnlyProps = readOnly
+    ? {
+        disabled: true,
+        tooltip: "You don't have permission to modify this Linode"
       }
+    : {};
 
-      if (inLandingListView || inEntityView) {
-        actions.unshift({
+  const inLandingListView = matchesMdDown && inTableContext;
+  const inEntityView = matchesSmDown;
+
+  const actions = [
+    (inLandingListView || inEntityView) && inVLANContext
+      ? {
+          title: 'Detach',
+          onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)
+        }
+      : null,
+    inLandingListView || inEntityView || inVLANContext
+      ? {
+          title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
+          onClick: handlePowerAction,
+          className: classes.powerOnOrOff,
+          disabled: !['running', 'offline'].includes(linodeStatus)
+        }
+      : null,
+    inLandingListView || inEntityView
+      ? {
           title: 'Reboot',
           disabled:
             linodeStatus !== 'running' ||
@@ -265,61 +210,90 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
           },
           ...readOnlyProps
+        }
+      : null,
+    inTableContext || matchesSmDown
+      ? {
+          title: 'Launch LISH Console',
+          onClick: () => {
+            sendLinodeActionMenuItemEvent('Launch Console');
+            lishLaunch(linodeId);
+          },
+          ...readOnlyProps
+        }
+      : null,
+    {
+      title: 'Clone',
+      onClick: () => {
+        sendLinodeActionMenuItemEvent('Clone');
+        history.push({
+          pathname: '/linodes/create',
+          search: buildQueryStringForLinodeClone()
         });
-      }
+      },
+      ...maintenanceProps,
+      ...readOnlyProps
+    },
+    {
+      title: 'Resize',
+      onClick: () => {
+        openDialog('resize', linodeId);
+      },
+      ...maintenanceProps,
+      ...readOnlyProps
+    },
+    {
+      title: 'Rebuild',
+      onClick: () => {
+        sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
+        openDialog('rebuild', linodeId);
+      },
+      ...maintenanceProps,
+      ...readOnlyProps
+    },
+    {
+      title: 'Rescue',
+      onClick: () => {
+        sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
+        openDialog('rescue', linodeId);
+      },
+      ...maintenanceProps,
+      ...readOnlyProps
+    },
+    {
+      title: 'Migrate',
+      onClick: () => {
+        sendMigrationNavigationEvent('/linodes');
+        sendLinodeActionMenuItemEvent('Migrate');
+        openDialog('migrate', linodeId);
+      },
+      ...readOnlyProps
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        sendLinodeActionMenuItemEvent('Delete Linode');
 
-      if (inLandingListView || inEntityView || inVLANContext) {
-        actions.unshift({
-          title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
-          onClick: handlePowerAction,
-          disabled: !['running', 'offline'].includes(linodeStatus)
-        });
-      }
-
-      if ((inLandingListView || inEntityView) && inVLANContext) {
-        actions.unshift({
-          title: 'Detach',
-          onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)
-        });
-      }
-
-      return actions;
-    };
-  };
-
-  const {
-    linodeId,
-    linodeLabel,
-    linodeStatus,
-    openPowerActionDialog,
-    inlineLabel,
-    inTableContext,
-    inVLANContext,
-    openDialog,
-    readOnly
-  } = props;
-
-  const readOnlyProps = readOnly
-    ? {
-        disabled: true,
-        tooltip: "You don't have permission to modify this Linode"
-      }
-    : {};
+        openDialog('delete', linodeId, linodeLabel);
+      },
+      ...readOnlyProps
+    }
+  ].filter(Boolean) as Action[];
 
   const inlineActions = [
     inVLANContext
       ? {
-          actionText: 'Detach',
+          title: 'Detach',
           onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)
         }
       : {
-          actionText: linodeStatus === 'running' ? 'Power Off' : 'Power On',
+          title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           disabled: !['running', 'offline'].includes(linodeStatus),
           className: classes.powerOnOrOff,
           onClick: handlePowerAction
         },
     {
-      actionText: 'Reboot',
+      title: 'Reboot',
       className: classes.link,
       disabled:
         linodeStatus !== 'running' ||
@@ -345,8 +319,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         inlineActions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               className={action.className}
               disabled={action.disabled}
               onClick={action.onClick}
@@ -356,7 +330,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       <ActionMenu
         className={classes.action}
         toggleOpenCallback={toggleOpenActionMenu}
-        createActions={createLinodeActions()}
+        actionsList={actions}
         ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
         inlineLabel={inlineLabel}
       />

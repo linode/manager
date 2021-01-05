@@ -1,3 +1,4 @@
+import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
@@ -52,6 +53,8 @@ interface Props extends ActionHandlers {
 export type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const VolumesActionMenu: React.FC<CombinedProps> = props => {
+  const { attached, poweredOff, isVolumesLanding } = props;
+
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -90,83 +93,60 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
     onDelete(volumeId, volumeLabel);
   };
 
-  const inlineActions = [
+  const actions: Action[] = [
     {
-      actionText: 'Show Config',
+      title: 'Show Config',
       onClick: () => {
         handleShowConfig();
       }
     },
     {
-      actionText: 'Edit',
+      title: 'Edit',
       onClick: () => {
         handleOpenEdit();
+      }
+    },
+    {
+      title: 'Resize',
+      onClick: () => {
+        handleResize();
+      }
+    },
+    {
+      title: 'Clone',
+      onClick: () => {
+        handleClone();
       }
     }
   ];
 
-  const createActions = () => {
-    const { attached, poweredOff, isVolumesLanding } = props;
-
-    return (): Action[] => {
-      const actions = [
-        {
-          title: 'Resize',
-          onClick: () => {
-            handleResize();
-          }
-        },
-        {
-          title: 'Clone',
-          onClick: () => {
-            handleClone();
-          }
-        }
-      ];
-
-      if (matchesSmDown) {
-        actions.unshift({
-          title: 'Edit',
-          onClick: () => {
-            handleOpenEdit();
-          }
-        });
-        actions.unshift({
-          title: 'Show Config',
-          onClick: () => {
-            handleShowConfig();
-          }
-        });
+  if (!attached && isVolumesLanding) {
+    actions.push({
+      title: 'Attach',
+      onClick: () => {
+        handleAttach();
       }
-
-      if (!attached && isVolumesLanding) {
-        actions.push({
-          title: 'Attach',
-          onClick: () => {
-            handleAttach();
-          }
-        });
-      } else {
-        actions.push({
-          title: 'Detach',
-          onClick: () => {
-            handleDetach();
-          }
-        });
+    });
+  } else {
+    actions.push({
+      title: 'Detach',
+      onClick: () => {
+        handleDetach();
       }
+    });
+  }
 
-      if (!attached || poweredOff) {
-        actions.push({
-          title: 'Delete',
-          onClick: () => {
-            handleDelete();
-          }
-        });
+  if (!attached || poweredOff) {
+    actions.push({
+      title: 'Delete',
+      onClick: () => {
+        handleDelete();
       }
+    });
+  }
 
-      return actions;
-    };
-  };
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
     <>
@@ -174,14 +154,14 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
         inlineActions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );
         })}
       <ActionMenu
-        createActions={createActions()}
+        actionsList={menuActions}
         ariaLabel={`Action menu for Volume ${props.volumeLabel}`}
       />
     </>
