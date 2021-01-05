@@ -32,16 +32,16 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
     triggerDeleteFirewall
   } = props;
 
-  const inlineActions = [
+  const actions: Action[] = [
     {
-      actionText:
+      title:
         firewallStatus === ('enabled' as FirewallStatus) ? 'Disable' : 'Enable',
       onClick: () => {
         handleEnableDisable();
       }
     },
     {
-      actionText: 'Delete',
+      title: 'Delete',
       onClick: () => {
         triggerDeleteFirewall(firewallID, firewallLabel);
       }
@@ -56,41 +56,21 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
     request();
   };
 
-  const createActions = () => (): Action[] => {
-    return [
-      {
-        title:
-          firewallStatus === ('enabled' as FirewallStatus)
-            ? 'Disable'
-            : 'Enable',
-        onClick: () => {
-          handleEnableDisable();
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          triggerDeleteFirewall(firewallID, firewallLabel);
-        }
-      }
-    ];
-  };
-
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        actions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );
         })}
       {matchesSmDown && (
         <ActionMenu
-          createActions={createActions()}
+          actionsList={actions}
           ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
         />
       )}

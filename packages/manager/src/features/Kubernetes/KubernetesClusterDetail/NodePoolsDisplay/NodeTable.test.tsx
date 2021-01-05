@@ -15,6 +15,8 @@ const props: Props = {
   openRecycleNodeDialog: jest.fn()
 };
 
+beforeAll(() => linodeFactory.resetSequenceNumber());
+
 describe('NodeTable', () => {
   it('includes label, status, and IP columns', () => {
     const { findByText } = renderWithTheme(<NodeTable {...props} />);

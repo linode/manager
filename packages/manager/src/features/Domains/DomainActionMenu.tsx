@@ -1,7 +1,8 @@
 import { DomainStatus } from '@linode/api-v4/lib/domains';
+import { splitAt } from 'ramda';
 import * as React from 'react';
-import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface Handlers {
@@ -51,15 +52,15 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
     onClone(domain, id);
   };
 
-  const inlineActions = [
+  const actions: Action[] = [
     {
-      actionText: 'Edit',
+      title: 'Edit',
       onClick: () => {
         handleEdit();
       }
     },
     {
-      actionText: status === 'active' ? 'Disable' : 'Enable',
+      title: status === 'active' ? 'Disable' : 'Enable',
       onClick: () => {
         onDisableOrEnable(
           status === 'active' ? 'disable' : 'enable',
@@ -67,45 +68,25 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
           id
         );
       }
+    },
+    {
+      title: 'Clone',
+      onClick: () => {
+        handleClone();
+      }
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        handleRemove();
+      }
     }
   ];
 
-  const createActions = () => (): Action[] => {
-    const baseActions = [
-      {
-        title: 'Clone',
-        onClick: () => {
-          handleClone();
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          handleRemove();
-        }
-      }
-    ];
+  // Index at which non-inline actions begin. Our convention: place actions that are inline (at non-mobile/non-tablet viewports) at start of the array.
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
 
-    if (matchesSmDown) {
-      baseActions.unshift({
-        title: status === 'active' ? 'Disable' : 'Enable',
-        onClick: () => {
-          onDisableOrEnable(
-            status === 'active' ? 'disable' : 'enable',
-            domain,
-            id
-          );
-        }
-      });
-      baseActions.unshift({
-        title: 'Edit',
-        onClick: () => {
-          handleEdit();
-        }
-      });
-    }
-    return [...baseActions];
-  };
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
     <>
@@ -113,14 +94,14 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
         inlineActions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );
         })}
       <ActionMenu
-        createActions={createActions()}
+        actionsList={menuActions}
         ariaLabel={`Action menu for Domain ${domain}`}
       />
     </>

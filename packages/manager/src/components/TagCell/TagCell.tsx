@@ -72,6 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: 'none',
     color: theme.cmrTextColors.linkActiveLight,
     cursor: 'pointer',
+    fontFamily: theme.font.normal,
     fontSize: 14,
     fontWeight: 'bold',
     padding: '7px 10px',

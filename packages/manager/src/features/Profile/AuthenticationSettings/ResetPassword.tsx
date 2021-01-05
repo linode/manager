@@ -22,7 +22,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing()
   },
   link: {
-    marginTop: theme.spacing()
+    color: theme.cmrTextColors.linkActiveLight,
+    marginTop: theme.spacing(),
+    '&:hover': {
+      color: theme.palette.primary.main
+    }
   },
   disabled: {
     '& *': {
