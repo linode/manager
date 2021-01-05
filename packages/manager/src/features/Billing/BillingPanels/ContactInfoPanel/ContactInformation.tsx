@@ -1,17 +1,14 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
-
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-
-import BillingContactDrawer from './EditBillingContactDrawer';
-
+import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
-import * as classNames from 'classnames';
+import BillingContactDrawer from './EditBillingContactDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -49,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   editBtn: {
     fontFamily: theme.font.normal,
-    color: theme.palette.primary.main,
+    color: theme.cmrTextColors.linkActiveLight,
     fontSize: '.875rem',
     fontWeight: 700,
     marginBottom: theme.spacing(2),

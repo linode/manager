@@ -40,59 +40,35 @@ export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
 
   const { nodeBalancerId, history, toggleDialog, label } = props;
 
-  const createActions = () => (): Action[] => {
-    return [
-      {
-        title: 'Configurations',
-        onClick: () => {
-          history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
-        }
-      },
-      {
-        title: 'Settings',
-        onClick: () => {
-          history.push(`/nodebalancers/${nodeBalancerId}/settings`);
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          toggleDialog(nodeBalancerId, label);
-        }
+  const actions: Action[] = [
+    {
+      title: 'Configurations',
+      onClick: () => {
+        history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
       }
-    ];
-  };
-
-  const inlineActions = [
-    {
-      actionText: 'Configurations',
-      href: `/nodebalancers/${nodeBalancerId}/configurations`,
-      className: classes.link
     },
     {
-      actionText: 'Settings',
-      href: `/nodebalancers/${nodeBalancerId}/settings`,
-      className: classes.link
+      title: 'Settings',
+      onClick: () => {
+        history.push(`/nodebalancers/${nodeBalancerId}/settings`);
+      }
     },
     {
-      actionText: 'Delete',
+      title: 'Delete',
       onClick: () => {
         toggleDialog(nodeBalancerId, label);
-      },
-      className: classes.link
+      }
     }
   ];
 
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        actions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
-              className={action.className}
-              href={action.href}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );
@@ -100,7 +76,7 @@ export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
       <Hidden mdUp>
         <ActionMenu
           className={classes.action}
-          createActions={createActions()}
+          actionsList={actions}
           ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
         />
       </Hidden>

@@ -196,18 +196,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item]': {
       display: 'flex',
       alignItems: 'center',
-      color: theme.cmrTextColors.linkActiveMedium,
+      color: theme.cmrTextColors.linkActiveLight,
       cursor: 'pointer',
       fontSize: '1rem',
       padding: '8px 24px',
       '&:focus, &:hover': {
         backgroundColor: theme.cmrBGColors.bgApp,
-        color: theme.cmrTextColors.linkActiveMedium
+        color: theme.palette.primary.main
       }
     },
     '&[data-reach-menu-item][data-selected]': {
       backgroundColor: theme.cmrBGColors.bgApp,
-      color: theme.cmrTextColors.linkActiveMedium
+      color: theme.cmrTextColors.linkActiveLight
     }
   },
   userName: {
@@ -291,9 +291,8 @@ export const UserMenu: React.FC<{}> = () => {
 
   const renderLink = (menuLink: MenuLink) =>
     menuLink.hide ? null : (
-      <Grid item xs={6}>
+      <Grid item xs={6} key={menuLink.display}>
         <MenuLink
-          key={menuLink.display}
           as={Link}
           to={menuLink.href}
           className={classes.menuItemLink}

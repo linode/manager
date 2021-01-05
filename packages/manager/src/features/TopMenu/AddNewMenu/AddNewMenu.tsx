@@ -15,10 +15,10 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VLANIcon from 'src/assets/icons/entityIcons/vlan.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
@@ -31,7 +31,7 @@ import {
 import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
-import { vlanContext, dbaasContext } from 'src/context';
+import { dbaasContext, vlanContext } from 'src/context';
 import { MapState } from 'src/store/types';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem from './AddNewMenuItem';
@@ -58,7 +58,7 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       '&[data-reach-menu-button]': {
         textTransform: 'inherit',
-        borderRadius: '3px',
+        borderRadius: 1,
         fontSize: '1rem',
         lineHeight: 1,
         fontFamily: theme.spacing() === 4 ? theme.font.normal : theme.font.bold,
@@ -105,6 +105,7 @@ const styles = (theme: Theme) =>
         },
         '&:hover': {
           '& h3': {
+            color: theme.palette.primary.main,
             textDecoration: 'underline'
           }
         }

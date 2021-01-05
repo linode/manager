@@ -63,6 +63,14 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
+    root: {
+      // Adds spacing when the docs button wraps to make it look a little less awkward
+      [theme.breakpoints.down(380)]: {
+        '& .docsButton': {
+          paddingBottom: theme.spacing(2)
+        }
+      }
+    },
     titleWrapper: {
       flex: 1
     },
@@ -428,7 +436,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
             togglePreference: toggleGroupDomains
           }: ToggleProps<boolean>) => {
             return (
-              <React.Fragment>
+              <div className={classes.root}>
                 <LandingHeader
                   title="Domains"
                   extraActions={
@@ -463,7 +471,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     this.props.upsertMultipleDomains(data);
                   }}
                 />
-              </React.Fragment>
+              </div>
             );
           }}
         </PreferenceToggle>

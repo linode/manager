@@ -23,6 +23,8 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   longviewActivePlanFactory,
+  longviewClientFactory,
+  longviewSubscriptionFactory,
   managedStatsFactory,
   monitorFactory,
   nodeBalancerFactory,
@@ -104,7 +106,7 @@ export const handlers = [
         '192.168.0.4',
         '192.168.0.5'
       ],
-      tags: ['test', 'test', 'test']
+      tags: ['test1', 'test2', 'test3']
     });
     const linodes = [
       ...onlineLinodes,
@@ -119,7 +121,7 @@ export const handlers = [
         label: 'shadow-plan-with-tags',
         type: 'g5-standard-20-s1',
         backups: { enabled: false },
-        tags: ['test', 'test', 'test']
+        tags: ['test1', 'test2', 'test3']
       }),
       eventLinode,
       multipleIPLinode
@@ -320,6 +322,14 @@ export const handlers = [
     const plan = longviewActivePlanFactory.build();
     return res(ctx.json(plan));
   }),
+  rest.get('*/longview/subscriptions', (req, res, ctx) => {
+    const subscriptions = longviewSubscriptionFactory.buildList(10);
+    return res(ctx.json(makeResourcePage(subscriptions)));
+  }),
+  rest.get('*/longview/clients', (req, res, ctx) => {
+    const clients = longviewClientFactory.buildList(10);
+    return res(ctx.json(makeResourcePage(clients)));
+  }),
   rest.post('*/backups/enable/*', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
@@ -396,5 +406,20 @@ export const mockDataHandlers: Record<
     rest.get('*/linode/instances', async (req, res, ctx) => {
       const linodes = linodeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(linodes)));
+    }),
+  nodeBalancer: count =>
+    rest.get('*/nodebalancers', (req, res, ctx) => {
+      const nodeBalancers = nodeBalancerFactory.buildList(count);
+      return res(ctx.json(makeResourcePage(nodeBalancers)));
+    }),
+  domain: count =>
+    rest.get('*/domains', (req, res, ctx) => {
+      const domains = domainFactory.buildList(count);
+      return res(ctx.json(makeResourcePage(domains)));
+    }),
+  volume: count =>
+    rest.get('*/volumes', (req, res, ctx) => {
+      const volumes = volumeFactory.buildList(count);
+      return res(ctx.json(makeResourcePage(volumes)));
     })
 };

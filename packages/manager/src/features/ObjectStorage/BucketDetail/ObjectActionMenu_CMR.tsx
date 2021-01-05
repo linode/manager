@@ -41,7 +41,7 @@ export const ObjectActionMenu: React.FC<Props> = props => {
     <>
       {matchesSmDown ? (
         <ActionMenu
-          createActions={() => actions}
+          actionsList={actions}
           ariaLabel={`Action menu for Object ${objectName}`}
         />
       ) : (

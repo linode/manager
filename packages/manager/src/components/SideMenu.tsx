@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import Drawer from 'src/components/core/Drawer';
 import Hidden from 'src/components/core/Hidden';
 import {
@@ -7,7 +8,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import { compose } from 'recompose';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -38,7 +38,7 @@ const styles = (theme: Theme) =>
       transform: 'none'
     },
     collapsedDesktopMenu: {
-      width: 60,
+      width: 52,
       '&:hover': {
         width: 190,
         '& .logoLetters, & .primaryNavLink': {
