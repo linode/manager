@@ -44,13 +44,8 @@ const NavTabs: React.FC<CombinedProps> = props => {
   };
 
   // Detects if there's a search param, otherwise it won't detect instances
-  // like "/stackscipts?type=account"
-  let location;
-  if (reactRouterLocation.search !== '') {
-    location = reactRouterLocation.pathname + reactRouterLocation.search;
-  } else {
-    location = reactRouterLocation.pathname;
-  }
+  // like '/stackscipts?type=account'
+  const location = reactRouterLocation.pathname + reactRouterLocation.search;
 
   const tabMatch = getTabMatch(tabs, location);
 
