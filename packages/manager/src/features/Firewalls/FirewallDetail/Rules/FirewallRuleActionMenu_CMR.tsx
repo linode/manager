@@ -25,7 +25,7 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
     ...actionMenuProps
   } = props;
 
-  const actions = [
+  const actions: Action[] = [
     {
       title: 'Edit',
       onClick: () => {
