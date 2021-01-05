@@ -10,7 +10,6 @@ import TabLinkList from '../TabLinkList/TabLinkList';
 export interface NavTab {
   title: string;
   routeName: string;
-  category?: string;
   component?:
     | React.ComponentType
     | React.LazyExoticComponent<React.ComponentType>;
