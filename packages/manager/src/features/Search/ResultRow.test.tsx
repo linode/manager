@@ -1,6 +1,7 @@
+import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 import { searchbarResult1 } from 'src/__data__/searchResults';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { ResultRow } from './ResultRow';
 
@@ -33,22 +34,9 @@ const props = {
   classes
 };
 
-// const propsWithTags = {
-//   result: searchbarResult2,
-//   redirect: jest.fn(),
-//   openDomainDrawerForEditing: jest.fn(),
-//   classes
-// }
-
-const component = renderWithTheme(<ResultRow {...props} />);
-
-// const { getByTestId } = renderWithTheme(<ResultRow {...propsWithTags} />);
-
 describe('ResultRow component', () => {
+  render(wrapWithTableBody(<ResultRow {...props} />));
   it('should render', () => {
-    expect(component).toBeDefined();
+    expect(screen.getByText('result1')).toBeInTheDocument();
   });
-  // it('should render tags if any', () => {
-  //   expect(getByTestId('result-tags')).toBeDefined();
-  // });
 });

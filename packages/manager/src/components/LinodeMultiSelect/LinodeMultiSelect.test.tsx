@@ -21,6 +21,7 @@ const props: CombinedProps = {
   linodesData: linodes,
   linodesResults: linodes.length,
   linodesLastUpdated: 1000,
+  selectedLinodes: [],
   showAllOption: true,
   getLinodes: jest.fn()
 };

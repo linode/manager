@@ -33,7 +33,7 @@ import {
   useNotificationContext
 } from 'src/features/NotificationCenter/NotificationContext';
 import ToastNotifications from 'src/features/ToastNotifications';
-import TopMenu from 'src/features/TopMenu/TopMenu_CMR';
+import TopMenu from 'src/features/TopMenu';
 import CreateVLANDialog from 'src/features/Vlans/CreateVLANDialog';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   fullWidthContent: {
     marginLeft: 0,
     [theme.breakpoints.up('md')]: {
-      marginLeft: 60
+      marginLeft: 52
     }
   },
   hidden: {
@@ -326,6 +326,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                     `}
                   >
                     <TopMenu
+                      isSideMenuOpen={!desktopMenuIsOpen}
                       openSideMenu={() => toggleMenu(true)}
                       desktopMenuToggle={desktopMenuToggle}
                       isLoggedInAsCustomer={props.isLoggedInAsCustomer}

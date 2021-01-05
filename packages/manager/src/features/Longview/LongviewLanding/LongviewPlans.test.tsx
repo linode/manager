@@ -31,6 +31,25 @@ const props: CombinedProps = {
   }
 };
 
+const testRow = (
+  id: string,
+  label: string,
+  clients: string,
+  dataRetention: string,
+  dataResolution: string,
+  price: string
+) => {
+  within(screen.getByTestId(`plan-cell-${id}`)).getByText(label);
+  within(screen.getByTestId(`clients-cell-${id}`)).getByText(String(clients));
+  within(screen.getByTestId(`data-retention-cell-${id}`)).getByText(
+    dataRetention
+  );
+  within(screen.getByTestId(`data-resolution-cell-${id}`)).getByText(
+    dataResolution
+  );
+  within(screen.getByTestId(`price-cell-${id}`)).getByText(price);
+};
+
 describe('LongviewPlans', () => {
   it('sets the document title to "Plan Details"', async () => {
     const WrappedComponent = withDocumentTitleProvider(LongviewPlans);
@@ -40,27 +59,6 @@ describe('LongviewPlans', () => {
 
   it('renders all columns for all plan types', async () => {
     renderWithTheme(<LongviewPlans {...props} />);
-
-    const testRow = async (
-      id: string,
-      label: string,
-      clients: string,
-      dataRetention: string,
-      dataResolution: string,
-      price: string
-    ) => {
-      within(await screen.findByTestId(`plan-cell-${id}`)).getByText(label);
-      within(await screen.findByTestId(`clients-cell-${id}`)).getByText(
-        String(clients)
-      );
-      within(await screen.findByTestId(`data-retention-cell-${id}`)).getByText(
-        dataRetention
-      );
-      within(await screen.findByTestId(`data-resolution-cell-${id}`)).getByText(
-        dataResolution
-      );
-      within(await screen.findByTestId(`price-cell-${id}`)).getByText(price);
-    };
 
     testRow(
       LONGVIEW_FREE_ID,

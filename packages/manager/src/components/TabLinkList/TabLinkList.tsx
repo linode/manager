@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-tab][data-selected]': {
       fontFamily: theme.font.bold,
       color: theme.cmrTextColors.headlineStatic,
-      borderBottom: `2px solid ${theme.cmrTextColors.linkActiveLight}`
+      borderBottom: `3px solid ${theme.cmrTextColors.linkActiveLight}`
     }
   },
   tabList: {
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-tab-list]': {
       background: 'none !important',
       boxShadow: `inset 0 -1px 0 ${theme.cmrBorderColors.borderTabs}`,
-      marginBottom: theme.spacing(3),
+      marginBottom: theme.spacing(),
       [theme.breakpoints.down('md')]: {
         overflowX: 'scroll',
         padding: 1
