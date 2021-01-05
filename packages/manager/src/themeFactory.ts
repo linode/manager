@@ -549,7 +549,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         // },
         containedPrimary: {
           backgroundColor: primaryColors.main,
-          borderRadius: '3px',
+          borderRadius: 1,
           color: '#fff',
           padding: `2px 20px`,
           maxHeight: 34,
