@@ -5,13 +5,12 @@ import ActionMenu_CMR from './ActionMenu_CMR';
 
 describe('ActionMenu', () => {
   const action = { title: 'whatever', onClick: () => undefined };
-  const createActionsMany = () => {
-    return [action, action, action];
-  };
+
+  const manyActions = [action, action, action];
 
   it.skip('should render a menu when provided many or one action(s).', () => {
     const result = mount(
-      <ActionMenu_CMR createActions={createActionsMany} ariaLabel="label" />
+      <ActionMenu_CMR actionsList={manyActions} ariaLabel="label" />
     );
     expect(result.find('WithStyles(ActionMenu)')).toHaveLength(1);
 

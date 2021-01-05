@@ -1,4 +1,4 @@
-import { path } from 'ramda';
+import { path, splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -15,7 +15,7 @@ import withProfile from 'src/containers/profile.container';
 
 import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   stackScriptActionsWrapper: {
     display: 'flex'
   }
@@ -70,80 +70,55 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       : undefined
   };
 
-  const inlineActions = [
-    {
-      actionText: 'Deploy New Linode',
-      disabled: !canAddLinodes,
-      onClick: () => {
-        history.push(
-          getStackScriptUrl(stackScriptUsername, stackScriptID, username)
-        );
-      }
-    }
-  ];
-
-  if (category === 'account') {
-    inlineActions.unshift({
-      actionText: 'Edit',
-      ...readonlyProps,
-      onClick: () => {
-        history.push(`/stackscripts/${stackScriptID}/edit`);
-      }
-    });
-  }
-
-  const createActions = () => {
-    return (): Action[] => {
-      const actions: Action[] = [];
-
-      if (matchesSmDown) {
-        actions.unshift({
-          title: 'Deploy New Linode',
-          disabled: !canAddLinodes,
-          tooltip: !canAddLinodes
-            ? "You don't have permissions to add Linodes"
-            : undefined,
-          onClick: () => {
-            history.push(
-              getStackScriptUrl(stackScriptUsername, stackScriptID, username)
-            );
-          }
-        });
-      }
-
-      // We only add the "Edit" option if the current tab/category isn't
-      // "Community StackScripts". A user's own public StackScripts are still
-      // editable under "Account StackScripts".
-      if (matchesSmDown && category !== 'community') {
-        actions.unshift({
+  const actions = [
+    // We only add the "Edit" option if the current tab/category isn't
+    // "Community StackScripts". A user's own public StackScripts are still
+    // editable under "Account StackScripts".
+    category === 'account'
+      ? {
           title: 'Edit',
           ...readonlyProps,
           onClick: () => {
             history.push(`/stackscripts/${stackScriptID}/edit`);
           }
-        });
+        }
+      : null,
+    {
+      title: 'Deploy New Linode',
+      disabled: !canAddLinodes,
+      tooltip: matchesSmDown
+        ? !canAddLinodes
+          ? "You don't have permissions to add Linodes"
+          : undefined
+        : undefined,
+      onClick: () => {
+        history.push(
+          getStackScriptUrl(stackScriptUsername, stackScriptID, username)
+        );
       }
-
-      if (!isPublic) {
-        actions.push({
+    },
+    !isPublic
+      ? {
           title: 'Make StackScript Public',
           ...readonlyProps,
           onClick: () => {
             triggerMakePublic(stackScriptID, stackScriptLabel);
           }
-        });
-        actions.push({
+        }
+      : null,
+    !isPublic
+      ? {
           title: 'Delete',
           ...readonlyProps,
           onClick: () => {
             triggerDelete(stackScriptID, stackScriptLabel);
           }
-        });
-      }
+        }
+      : null
+  ].filter(Boolean) as Action[];
 
-      return actions;
-    };
-  };
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
     <div className={classes.stackScriptActionsWrapper}>
@@ -151,8 +126,8 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
         inlineActions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               disabled={action.disabled}
               onClick={action.onClick}
             />
@@ -162,13 +137,13 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
       {category === 'community' || isPublic ? (
         <Hidden mdUp>
           <ActionMenu
-            createActions={createActions()}
+            actionsList={menuActions}
             ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
           />
         </Hidden>
       ) : (
         <ActionMenu
-          createActions={createActions()}
+          actionsList={menuActions}
           ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
         />
       )}
