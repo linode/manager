@@ -18,7 +18,10 @@ import {
   updateFirewallRulesActions
 } from './firewalls.actions';
 
-const getAllFirewallsRequest = (payload: { params?: any; filter?: any }) =>
+export const getAllFirewallsRequest = (payload: {
+  params?: any;
+  filter?: any;
+}) =>
   getAll<Firewall>((passedParams, passedFilter) =>
     getFirewalls(passedParams, passedFilter)
   )(payload.params, payload.filter);

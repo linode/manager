@@ -21,6 +21,9 @@ import store from 'src/store';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 import loadDevTools from './dev-tools/load';
+import { QueryClientProvider } from 'react-query';
+// import { ReactQueryDevtools } from 'react-query/devtools';
+import { queryClient } from './queries/base';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
 const App = React.lazy(() => import('./App'));
@@ -46,7 +49,7 @@ const renderLish = () => (
 );
 
 const renderApp = (props: RouteComponentProps) => (
-  <React.Fragment>
+  <QueryClientProvider client={queryClient}>
     <SplashScreen />
     <LinodeThemeWrapper>
       {(toggle, spacing) => (
@@ -66,7 +69,11 @@ const renderApp = (props: RouteComponentProps) => (
         </SnackBar>
       )}
     </LinodeThemeWrapper>
-  </React.Fragment>
+    {/* <ReactQueryDevtools
+      initialIsOpen={false}
+      toggleButtonProps={{ style: { marginLeft: '3em' } }}
+    /> */}
+  </QueryClientProvider>
 );
 
 const renderCancel = () => (

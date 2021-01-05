@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import Grid from 'src/components/Grid';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
 import CreditCard from './CreditCard';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
@@ -26,8 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3)
   },
   edit: {
+    color: theme.cmrTextColors.linkActiveLight,
     fontFamily: theme.font.normal,
-    color: theme.palette.primary.main,
     fontSize: '.875rem',
     fontWeight: 700,
     marginBottom: theme.spacing(2),
