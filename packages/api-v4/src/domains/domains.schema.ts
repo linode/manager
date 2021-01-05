@@ -42,7 +42,19 @@ export const createDomainSchema = domainSchemaBase.shape({
       then: string().required('SOA Email is required.'),
       otherwise: string()
     })
-    .email('SOA Email is not valid.')
+    .email('SOA Email is not valid.'),
+  master_ips: array()
+    .of(string())
+    .when('type', {
+      is: type => type === 'slave',
+      then: array()
+        .of(string())
+        .compact()
+        .ensure()
+        .required('At least one primary IP address is required.')
+        .min(1, 'At least one primary IP address is required.'),
+      otherwise: array().of(string())
+    })
 });
 
 export const updateDomainSchema = domainSchemaBase.shape({
