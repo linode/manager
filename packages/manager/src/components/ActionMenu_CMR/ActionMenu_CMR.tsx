@@ -104,7 +104,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
-  // createActions: () => Action[];
   actionsList: Action[];
   toggleOpenCallback?: () => void;
   // we want to require using aria label for these buttons
@@ -122,12 +121,6 @@ const ActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { toggleOpenCallback, actionsList } = props;
 
-  // const [actions, setActions] = React.useState<Action[]>([]);
-
-  // React.useEffect(() => {
-  //   setActions(createActions());
-  // }, [createActions]);
-
   const { ariaLabel, inlineLabel } = props;
 
   const handleClick = () => {
@@ -141,10 +134,6 @@ const ActionMenu: React.FC<CombinedProps> = props => {
       toggleOpenCallback();
     }
   };
-
-  // if (typeof actions === 'undefined') {
-  //   return null;
-  // }
 
   if (!actionsList || actionsList.length === 0) {
     return null;
