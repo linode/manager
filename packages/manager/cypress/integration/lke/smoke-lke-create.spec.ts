@@ -1,4 +1,12 @@
 import { makeTestLabel } from '../../support/api/common';
+import {
+  containsClick,
+  containsVisible,
+  fbtClick,
+  fbtVisible,
+  getClick,
+  getVisible
+} from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
 
 const multipleClick = (
@@ -20,32 +28,26 @@ const addNodes = (plan: string, nb: number) => {
     cy.get('[data-testid="textfield-input"]')
       .invoke('val')
       .should('eq', `${nb}`);
-    cy.findByText('Add').click();
+    fbtClick('Add');
   });
 };
 
 describe('LKE Create Cluster', () => {
   it('Simple Page Check', () => {
     const lkeId = Math.ceil(Math.random() * 9999);
-    cy.server();
-    cy.route({
-      method: 'POST',
-      url: '*/lke/clusters',
-      response: { id: lkeId }
-    }).as('createCluster');
+    cy.intercept('POST', '*/lke/clusters', { id: lkeId }).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
-    cy.findByText('Add Node Pools');
-    cy.findByLabelText('Cluster Label')
+    fbtVisible('Add Node Pools');
+    cy.contains('Cluster Label')
+      .next()
+      .children()
       .click()
-      .clear()
       .type(makeTestLabel());
-    cy.contains(selectRegionString)
+    containsClick(selectRegionString).type('Newar{enter}');
+    cy.contains('Kubernetes Version')
+      .next()
+      .children()
       .click()
-      // .clear()
-      .type('Newar{enter}');
-    cy.findByLabelText('Kubernetes Version')
-      .click()
-      .clear()
       .type('1.17{enter}');
 
     const kNb2Gb = 2;
@@ -53,17 +55,17 @@ describe('LKE Create Cluster', () => {
 
     // wait for change to reflect on Checkout bar
 
-    cy.findByText('Linode 2GB Plan');
+    fbtVisible('Linode 2GB Plan');
     cy.get('[data-testid="kube-checkout-bar"]').within(_bar => {
-      cy.findByText('Linode 2GB Plan');
-      cy.get('[data-testid="remove-pool-button"]');
+      fbtVisible('Linode 2GB Plan');
+      getVisible('[data-testid="remove-pool-button"]');
       cy.get('[data-qa-notice="true"]').within(_notice => {
-        cy.findByText(
+        fbtVisible(
           'We recommend at least 3 nodes in each pool. Fewer nodes may affect availability.'
-        ).should('be.visible');
+        );
       });
     });
-    cy.findByText('Create Cluster').click();
+    fbtClick('Create Cluster');
     cy.wait('@createCluster');
     cy.url().should('endWith', `/kubernetes/clusters/${lkeId}/summary`);
   });

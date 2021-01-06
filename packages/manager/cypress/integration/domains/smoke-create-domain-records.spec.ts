@@ -6,46 +6,87 @@ import {
 } from '../../support/api/domains';
 
 import { makeTestLabel } from '../../support/api/common';
+import { fbtClick, getClick } from '../../support/helpers';
 
 const createRecords = () => [
   {
     name: 'Add an A/AAAA Record',
     tableAriaLabel: 'List of Domains A/AAAA Record',
     fields: [
-      { name: 'Hostname', value: makeTestLabel() },
-      { name: 'IP Address', value: `${makeRandomIP()}` }
+      {
+        name: '[data-qa-target="Hostname"]',
+        value: makeTestLabel(),
+        skipCheck: false
+      },
+      {
+        name: '[data-qa-target="IP Address"]',
+        value: `${makeRandomIP()}`,
+        skipCheck: false
+      }
     ]
   },
   {
     name: 'Add a CNAME Record',
     tableAriaLabel: 'List of Domains CNAME Record',
     fields: [
-      { name: 'Hostname', value: makeTestLabel() },
-      { name: 'Alias to', value: `${makeTestLabel()}.net` }
+      {
+        name: '[data-qa-target="Hostname"]',
+        value: makeTestLabel(),
+        skipCheck: false
+      },
+      {
+        name: '[data-qa-target="Alias to"]',
+        value: `${makeTestLabel()}.net`,
+        skipCheck: false
+      }
     ]
   },
   {
     name: 'Add a TXT Record',
     tableAriaLabel: 'List of Domains TXT Record',
     fields: [
-      { name: 'Hostname', value: makeTestLabel() },
-      { name: 'Value', value: makeTestLabel() }
+      {
+        name: '[data-qa-target="Hostname"]',
+        value: makeTestLabel(),
+        skipCheck: false
+      },
+      {
+        name: '[data-qa-target="Value"]',
+        value: makeTestLabel(),
+        skipCheck: false
+      }
     ]
   },
   {
     name: 'Add a SRV Record',
     tableAriaLabel: 'List of Domains SRV Record',
     fields: [
-      { name: 'Service', value: makeTestLabel(), skipCheck: true },
-      { name: 'Target', value: makeTestLabel(), approximate: true }
+      {
+        name: '[data-qa-target="Service"]',
+        value: makeTestLabel(),
+        skipCheck: true
+      },
+      {
+        name: '[data-qa-target="Target"]',
+        value: makeTestLabel(),
+        approximate: true
+      }
     ]
   },
   {
     name: 'Add a CAA Record',
     tableAriaLabel: 'List of Domains CAA Record',
     fields: [
-      { name: 'Name', value: makeTestLabel() },
-      { name: 'Value', value: makeTestLabel() }
+      {
+        name: '[data-qa-target="Name"]',
+        value: makeTestLabel(),
+        skipCheck: false
+      },
+      {
+        name: '[data-qa-target="Value"]',
+        value: makeTestLabel(),
+        skipCheck: false
+      }
     ]
   }
 ];
@@ -55,27 +96,17 @@ describe('Creates Domains record with Form', () => {
   createRecords().forEach(rec => {
     return it(rec.name, () => {
       createDomain().then(domain => {
-        cy.server();
-        cy.route({
-          method: 'POST',
-          url: '/v4/domains/*/record*'
-        }).as('apiCreateRecord');
+        cy.intercept('POST', '/v4/domains/*/record*').as('apiCreateRecord');
         const url = `/domains/${domain.id}`;
         cy.visitWithLogin(`/domains/${domain.id}`);
         cy.url().should('contain', url);
-        cy.findByText(rec.name).click();
+        fbtClick(rec.name);
         rec.fields.forEach(f => {
-          cy.findByLabelText(f.name)
-            .should('be.visible')
-            .click()
-            .clear()
-            .type(f.value);
+          getClick(f.name).type(f.value);
         });
-        cy.findByText('Save')
-          .should('be.visible')
-          .click();
+        fbtClick('Save');
         cy.wait('@apiCreateRecord')
-          .its('status')
+          .its('response.statusCode')
           .should('eq', 200);
         cy.get(`[aria-label="${rec.tableAriaLabel}"]`).within(_table => {
           rec.fields.forEach(f => {
@@ -87,6 +118,6 @@ describe('Creates Domains record with Form', () => {
         });
         deleteDomainById(domain.id);
       });
-    }); // it
-  }); // foreach
+    });
+  });
 });

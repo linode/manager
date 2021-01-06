@@ -1,15 +1,15 @@
 import { Route } from '../support/api/routes';
 import { createLinode, deleteAllTestLinodes } from '../support/api/linodes';
+import { fbtVisible, getVisible } from '../support/helpers';
 
 describe('dashboard', () => {
   it('checks the dashboard page with 2+ linodes', () => {
     createLinode().then(() => {
       createLinode().then(() => {
         cy.visitWithLogin('/');
-        cy.get('[data-qa-add-new-menu-button="true"]').should('be.visible');
-        cy.findByLabelText('Main search').should('be.visible');
-        cy.get('[aria-label="Notifications"]').should('be.visible');
-        cy.get('[data-qa-loading="true"]').should('be.visible');
+        getVisible('[data-qa-add-new-menu-button="true"]');
+        fbtVisible('Main search');
+        getVisible('[aria-label="Notifications"]');
         deleteAllTestLinodes();
       });
     });
@@ -19,16 +19,14 @@ describe('dashboard', () => {
     const MAX_GET_REQ_TO_API = 4;
     const xhrData: any = [];
     cy.wrap(xhrData).as('xhrData');
-    cy.server({
+    cy.server();
+    cy.route({
       // Here we handle all requests passing through Cypress' server
       onRequest: req => {
         xhrData.push(req);
       }
     });
-    cy.route({
-      method: 'GET',
-      url: '/v4/**'
-    }).as('apiGet');
+    cy.route('/v4/**').as('apiGet');
 
     cy.visitWithLogin('/');
     cy.window({ timeout: 5000 });
@@ -44,6 +42,6 @@ describe('dashboard', () => {
     });
     cy.visitWithLogin('/');
     cy.wait('@getLinodes');
-    cy.findByText('Error loading Linodes').should('be.visible');
+    fbtVisible('Error loading Linodes');
   });
 });

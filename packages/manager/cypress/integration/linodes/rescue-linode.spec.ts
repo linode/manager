@@ -3,6 +3,7 @@ import {
   deleteLinodeById,
   clickLinodeActionMenu
 } from '../../support/api/linodes';
+import { fbtVisible, getClick } from '../../support/helpers';
 import { assertToast } from '../../support/ui/events';
 
 const rebootInRescueMode = () => {
@@ -13,31 +14,18 @@ describe('rescue linode', () => {
   it('rescue a linode', () => {
     cy.visitWithLogin('/support');
     createLinode().then(linode => {
-      cy.server();
       // mock 200 response
-      cy.route({
-        method: 'POST',
-        url: `*/linode/instances/${linode.id}/rescue`,
-        response: {}
+      cy.intercept('POST', `*/linode/instances/${linode.id}/rescue`, req => {
+        req.reply(200);
       }).as('postRebootInRescueMode');
       const rescueUrl = `/linodes/${linode.id}`;
       cy.visit(rescueUrl);
       clickLinodeActionMenu(linode.label);
-      cy.get('[data-qa-action-menu-item="Rescue"]:visible')
-        .should('be.visible')
-        .click();
+      getClick('[data-qa-action-menu-item="Rescue"]:visible');
       rebootInRescueMode();
       // check mocked response and make sure UI responded correctly
-      cy.route({
-        url: `*/account/events**`,
-        method: 'GET',
-        response: {
-          results: 0,
-          data: []
-        }
-      });
       cy.wait('@postRebootInRescueMode')
-        .its('status')
+        .its('response.statusCode')
         .should('eq', 200);
       assertToast('Linode rescue started.');
       deleteLinodeById(linode.id);
@@ -47,27 +35,17 @@ describe('rescue linode', () => {
   it('rescue blocked', () => {
     cy.visitWithLogin('/support');
     createLinode().then(linode => {
-      cy.server();
-      cy.route({
-        url: `*/account/events**`,
-        method: 'GET',
-        response: {
-          results: 0,
-          data: []
-        }
-      });
       // not mocking response here
-      cy.route({
-        method: 'POST',
-        url: `*/linode/instances/${linode.id}/rescue`
-      }).as('postRebootInRescueMode');
+      cy.intercept('POST', `*/linode/instances/${linode.id}/rescue`).as(
+        'postRebootInRescueMode'
+      );
       const rescueUrl = `/linodes/${linode.id}/rescue`;
       cy.visit(rescueUrl);
-      cy.findAllByText(`Rescue ${linode.label}`).should('be.visible');
+      fbtVisible(`Rescue ${linode.label}`);
       rebootInRescueMode();
       // check response, verify bad request and UI response (toast)
       cy.wait('@postRebootInRescueMode')
-        .its('status')
+        .its('response.statusCode')
         .should('eq', 400);
       cy.findByText('Linode busy.');
       deleteLinodeById(linode.id);
