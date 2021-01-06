@@ -406,5 +406,20 @@ export const mockDataHandlers: Record<
     rest.get('*/linode/instances', async (req, res, ctx) => {
       const linodes = linodeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(linodes)));
+    }),
+  nodeBalancer: count =>
+    rest.get('*/nodebalancers', (req, res, ctx) => {
+      const nodeBalancers = nodeBalancerFactory.buildList(count);
+      return res(ctx.json(makeResourcePage(nodeBalancers)));
+    }),
+  domain: count =>
+    rest.get('*/domains', (req, res, ctx) => {
+      const domains = domainFactory.buildList(count);
+      return res(ctx.json(makeResourcePage(domains)));
+    }),
+  volume: count =>
+    rest.get('*/volumes', (req, res, ctx) => {
+      const volumes = volumeFactory.buildList(count);
+      return res(ctx.json(makeResourcePage(volumes)));
     })
 };

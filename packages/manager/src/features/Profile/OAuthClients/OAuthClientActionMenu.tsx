@@ -54,7 +54,7 @@ export const OAuthClientActionMenu: React.FC<CombinedProps> = props => {
     <>
       {matchesSmDown ? (
         <ActionMenu
-          createActions={() => actions}
+          actionsList={actions}
           ariaLabel={`Action menu for OAuth Client ${props.label}`}
         />
       ) : (

@@ -1,6 +1,5 @@
 import {
   FirewallRuleProtocol,
-  FirewallRules,
   FirewallRuleType
 } from '@linode/api-v4/lib/firewalls/types';
 import { Item } from 'src/components/EnhancedSelect/Select';
@@ -85,7 +84,8 @@ export const allIPs = {
   ipv6: [allIPv6]
 };
 
-export interface PredefinedFirewall extends FirewallRules {
+export interface PredefinedFirewall {
+  inbound: FirewallRuleType[];
   label: string;
 }
 
