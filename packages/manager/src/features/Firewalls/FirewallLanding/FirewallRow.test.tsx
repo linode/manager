@@ -15,6 +15,24 @@ import {
   getRuleString
 } from './FirewallRow';
 
+const matchMedia = window.matchMedia;
+beforeAll(() => {
+  window.matchMedia = () => ({
+    matches: true,
+    addEventListener: jest.fn(),
+    onchange: jest.fn(),
+    removeEventListener: jest.fn(),
+    media: '',
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    dispatchEvent: jest.fn()
+  });
+});
+
+afterAll(() => {
+  window.matchMedia = matchMedia;
+});
+
 describe('FirewallRow', () => {
   describe('Utility functions', () => {
     it('should return correct number of inbound and outbound rules', () => {
@@ -37,10 +55,7 @@ describe('FirewallRow', () => {
     const mockTriggerEnableFirewall = jest.fn();
 
     const baseProps: CombinedProps = {
-      firewallID: 1,
-      firewallLabel: firewall.label,
-      firewallRules: firewall.rules,
-      firewallStatus: firewall.status,
+      ...firewall,
       triggerDeleteFirewall: mockTriggerDeleteFirewall,
       triggerDisableFirewall: mockTriggerDisableFirewall,
       triggerEnableFirewall: mockTriggerEnableFirewall
@@ -50,9 +65,9 @@ describe('FirewallRow', () => {
       const { getByTestId, getByText } = render(
         wrapWithTableBody(<FirewallRow {...baseProps} />)
       );
-      getByTestId('firewall-row-1');
+      getByTestId('firewall-row-0');
       getByText(firewall.label);
-      getByText(firewall.status);
+      getByText(new RegExp(firewall.status, 'i'));
       getByText(getRuleString(getCountOfRules(firewall.rules)));
     });
   });

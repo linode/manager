@@ -10,8 +10,11 @@ import EntityTableHeader from './EntityTableHeader';
 import { Entity, ListProps } from './types';
 
 interface Props {
+  // Since this component is working with API paginated data it doesn't know
+  // what the total number of entities is; we pass this from above.
   count: number;
 }
+
 export type CombinedProps = Props & ListProps & PaginationProps<Entity>;
 
 export const APIPaginatedTable: React.FC<CombinedProps> = props => {
