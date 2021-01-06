@@ -7,7 +7,7 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import useEvents from 'src/hooks/useEvents';
-import LinodeDiskActionMenu from './LinodeDiskActionMenu_CMR';
+import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   diskLabel: {

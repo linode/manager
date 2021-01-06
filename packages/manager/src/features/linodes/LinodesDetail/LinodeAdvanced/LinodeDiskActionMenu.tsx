@@ -1,7 +1,11 @@
+import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
   linodeStatus: string;
@@ -17,82 +21,89 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps;
 
-class DiskActionMenu extends React.Component<CombinedProps> {
-  createActions = () => (closeMenu: Function): Action[] => {
-    const { linodeStatus, linodeId, readOnly, history, diskId } = this.props;
-    let tooltip;
-    tooltip =
-      linodeStatus === 'offline'
-        ? undefined
-        : 'Your Linode must be fully powered down in order to perform this action';
-    tooltip = readOnly
-      ? "You don't have permissions to perform this action"
-      : tooltip;
-    const disabledProps = tooltip
-      ? {
-          tooltip,
-          disabled: true
-        }
-      : {};
-    return [
-      {
-        title: 'Rename',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-          this.props.onRename();
-          closeMenu();
-        },
-        ...(readOnly ? disabledProps : {})
-      },
-      {
-        title: 'Resize',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-          this.props.onResize();
-          closeMenu();
-        },
-        ...disabledProps
-      },
-      {
-        title: 'Imagize',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-          this.props.onImagize();
-          closeMenu();
-        },
-        ...(readOnly ? disabledProps : {})
-      },
-      {
-        title: 'Clone',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-          closeMenu();
-          history.push(
-            `/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`
-          );
-        },
-        disabled: readOnly
-      },
-      {
-        title: 'Delete',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-          this.props.onDelete();
-          closeMenu();
-        },
-        ...(readOnly ? disabledProps : {})
-      }
-    ];
-  };
+export const DiskActionMenu: React.FC<CombinedProps> = props => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const { linodeStatus, readOnly, linodeId, history, diskId } = props;
 
-  render() {
-    return (
+  let _tooltip =
+    linodeStatus === 'offline'
+      ? undefined
+      : 'Your Linode must be fully powered down in order to perform this action';
+  _tooltip = readOnly
+    ? "You don't have permissions to perform this action"
+    : _tooltip;
+
+  const disabledProps = _tooltip
+    ? {
+        tooltip: _tooltip,
+        disabled: true
+      }
+    : {};
+
+  const actions: Action[] = [
+    {
+      title: 'Rename',
+      onClick: () => {
+        props.onRename();
+      },
+      disabled: readOnly,
+      tooltip: readOnly ? _tooltip : ''
+    },
+    {
+      title: 'Resize',
+      onClick: () => {
+        props.onResize();
+      },
+      disabled: linodeStatus !== 'offline' || readOnly,
+      tooltip: linodeStatus !== 'offline' || readOnly ? _tooltip : ''
+    },
+    {
+      title: 'Imagize',
+      onClick: () => {
+        props.onImagize();
+      },
+      ...(readOnly ? disabledProps : {})
+    },
+    {
+      title: 'Clone',
+      onClick: () => {
+        history.push(`/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`);
+      },
+      ...(readOnly ? disabledProps : {})
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        props.onDelete();
+      },
+      ...(readOnly ? disabledProps : {})
+    }
+  ];
+
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
+
+  return (
+    <>
+      {!matchesSmDown &&
+        inlineActions!.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+              disabled={action.disabled}
+              tooltip={action.tooltip}
+            />
+          );
+        })}
       <ActionMenu
-        createActions={this.createActions()}
-        ariaLabel={`Action menu for Disk ${this.props.label}`}
+        actionsList={menuActions}
+        ariaLabel={`Action menu for Disk ${props.label}`}
       />
-    );
-  }
-}
+    </>
+  );
+};
 
 export default withRouter(DiskActionMenu);
