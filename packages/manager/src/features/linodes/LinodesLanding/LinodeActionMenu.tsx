@@ -291,7 +291,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     }
   ].filter(Boolean) as Action[];
 
-  const inlineActions = [
+  const inlineActions: InlineActions[] = [
     inVLANContext
       ? {
           title: 'Detach',
@@ -299,8 +299,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         }
       : {
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
-          disabled: !['running', 'offline'].includes(linodeStatus),
           className: classes.powerOnOrOff,
+          disabled: !['running', 'offline'].includes(linodeStatus),
           onClick: handlePowerAction
         },
     {
@@ -335,6 +335,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               className={action.className}
               disabled={action.disabled}
               onClick={action.onClick}
+              tooltip={action.tooltip}
             />
           );
         })}
@@ -348,6 +349,14 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     </>
   );
 };
+
+interface InlineActions {
+  title: string;
+  onClick?: () => void;
+  className?: string;
+  disabled?: boolean;
+  tooltip?: string;
+}
 
 interface StateProps {
   readOnly: boolean;
