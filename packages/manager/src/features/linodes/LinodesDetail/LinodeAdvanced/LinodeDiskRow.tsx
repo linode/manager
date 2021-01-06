@@ -2,6 +2,7 @@ import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent/BarPercent_CMR';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import useEvents from 'src/hooks/useEvents';
@@ -15,7 +16,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '10%'
   },
   diskSize: {
-    width: '30%'
+    width: '15%'
+  },
+  diskCreated: {
+    width: '20%'
   },
   progressBar: {
     display: 'flex',
@@ -89,6 +93,9 @@ export const LinodeDiskRow: React.FC<Props> = props => {
         ) : (
           `${disk.size} MB`
         )}
+      </TableCell>
+      <TableCell className={classes.diskCreated}>
+        <DateTimeDisplay value={disk.created} />
       </TableCell>
       <TableCell className={classes.actionCell}>
         <LinodeDiskActionMenu
