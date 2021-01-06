@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -9,10 +8,10 @@ import TextField from 'src/components/TextField';
 
 type ClassNames = 'replyField';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     replyField: {
-      maxHeight: 200,
+      height: 420,
       marginTop: 0,
       '& > div': {
         maxWidth: '100% !important'
@@ -37,7 +36,7 @@ class TicketReply extends React.Component<CombinedProps> {
       <TextField
         className={classes.replyField}
         multiline
-        rows={9}
+        rows={20}
         value={value}
         placeholder={placeholder || 'Enter your reply'}
         data-qa-ticket-description

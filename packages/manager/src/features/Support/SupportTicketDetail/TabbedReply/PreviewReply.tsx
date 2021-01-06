@@ -3,7 +3,6 @@ import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -11,11 +10,11 @@ import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 
 type ClassNames = 'root';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {
       border: '1px solid #ccc',
-      height: 200,
+      height: 420,
       padding: `9px 12px 9px 12px`,
       overflowY: 'auto'
     }
