@@ -1,5 +1,10 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { getClick, containsClick } from '../../support/helpers';
+import {
+  getClick,
+  containsClick,
+  getVisible,
+  containsVisible
+} from '../../support/helpers';
 import 'cypress-file-upload';
 
 describe('help & support', () => {
@@ -11,90 +16,79 @@ describe('help & support', () => {
     const ticketId = Math.floor(Math.random() * 99999999 + 10000000);
     const ts = new Date();
 
-    cy.server();
-    cy.route({
-      method: 'GET',
-      url: '*/profile'
-    }).as('getProfile');
+    cy.intercept('GET', '*/profile').as('getProfile');
 
     cy.visitWithLogin('/support/tickets');
     cy.wait('@getProfile').then(xhr => {
-      const user = xhr.response.body['username'];
-      cy.route({
-        method: 'POST',
-        url: `*/support/tickets`,
-        response: {
-          attachments: [],
-          closable: false,
-          closed: null,
-          description: 'this is a test ticket',
-          entity: null,
-          id: ticketId,
-          opened: ts.toISOString(),
-          opened_by: user,
-          status: 'new',
-          summary: 'cy-test ticket',
-          updated: ts.toISOString(),
-          updated_by: user
-        }
+      const user = xhr.response?.body['username'];
+      cy.intercept('POST', '*/support/tickets*', req => {
+        req.reply(res => {
+          res.send({
+            attachments: [image],
+            closable: false,
+            closed: null,
+            description: 'this is a test ticket',
+            entity: null,
+            id: ticketId,
+            opened: ts.toISOString(),
+            opened_by: user,
+            status: 'new',
+            summary: 'cy-test ticket',
+            updated: ts.toISOString(),
+            updated_by: user
+          });
+        });
       }).as('createTicket');
-      cy.route({
-        method: 'GET',
-        url: `*/support/tickets/${ticketId}`,
-        response: {
-          attachments: [image],
-          closable: false,
-          closed: null,
-          description: 'this is a test ticket',
-          entity: null,
-          id: ticketId,
-          opened: ts.toISOString(),
-          opened_by: user,
-          status: 'new',
-          summary: 'cy-test ticket',
-          updated: ts.toISOString(),
-          updated_by: user
-        }
+      cy.intercept(`*/support/tickets/${ticketId}`, {
+        attachments: [image],
+        closable: false,
+        closed: null,
+        description: 'this is a test ticket',
+        entity: null,
+        id: ticketId,
+        opened: ts.toISOString(),
+        opened_by: user,
+        status: 'new',
+        summary: 'cy-test ticket',
+        updated: ts.toISOString(),
+        updated_by: user
       }).as('getTicket');
-      cy.route({
-        method: 'GET',
-        url: `*/support/tickets/${ticketId}/replies`,
-        response: { data: [], page: 1, pages: 1, results: 0 }
+      cy.intercept(`*/support/tickets/${ticketId}/replies`, {
+        data: [],
+        page: 1,
+        pages: 1,
+        results: 0
       }).as('getReplies');
-      cy.route({
-        method: 'POST',
-        url: `*/support/tickets/${ticketId}/attachments`,
-        response: {}
+      cy.intercept('POST', `*/support/tickets/${ticketId}/attachments`, req => {
+        req.reply(200);
       }).as('ticketNumberPost');
 
       containsClick('Open New Ticket');
       getClick('[placeholder="Enter a title for your ticket."]').type(
         ticketLabel
       );
-      cy.get('[data-qa-enhanced-select="General/Account/Billing"]').should(
-        'be.visible'
-      );
+      getVisible('[data-qa-enhanced-select="General/Account/Billing"]');
       getClick('[data-qa-ticket-description="true"]').type(ticketDescription);
       cy.get('[id="attach-file"]').attachFile(imagePath);
-      cy.get('[value="test_screenshot.png"]').should('be.visible');
+      getVisible('[value="test_screenshot.png"]');
       getClick('[data-qa-submit="true"]');
 
       cy.wait('@createTicket')
-        .its('status')
+        .its('response.statusCode')
         .should('eq', 200);
       cy.wait('@getTicket')
-        .its('status')
+        .its('response.statusCode')
         .should('eq', 200);
       cy.wait('@ticketNumberPost')
-        .its('status')
+        .its('response.statusCode')
         .should('eq', 200);
       cy.wait('@getReplies')
-        .its('status')
+        .its('response.statusCode')
         .should('eq', 200);
 
-      cy.contains(`#${ticketId}: ${ticketLabel}`).should('be.visible');
-      cy.contains(ticketDescription).should('be.visible');
-      cy.contains(image).should('be.visible');
+      containsVisible(`#${ticketId}: ${ticketLabel}`);
+      containsVisible(ticketDescription);
+      containsVisible(image);
     });
   });
 });

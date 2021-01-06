@@ -1,3 +1,10 @@
+import {
+  fbtClick,
+  fbtVisible,
+  getClick,
+  getVisible
+} from '../../support/helpers';
+
 /* eslint-disable sonarjs/no-duplicate-string */
 const accountData = {
   company: 'company_name',
@@ -42,28 +49,27 @@ const newAccountData = {
 };
 
 const mockGetAccountResponse = data => {
-  cy.server();
-  cy.route({
-    method: 'GET',
-    response: data,
-    url: '*/account'
+  cy.intercept('GET', '*/account', req => {
+    req.reply(res => {
+      res.send(data);
+    });
   }).as('getAccount');
 };
 const checkAccountContactDisplay = data => {
-  cy.findByText('Billing Contact');
-  cy.findByText(data['company']);
-  cy.get('[data-qa-contact-name]');
+  fbtVisible('Billing Contact');
+  fbtVisible(data['company']);
+  getVisible('[data-qa-contact-name]');
   cy.findByText(data['first_name'], { exact: false });
   cy.findByText(data['last_name'], { exact: false });
-  cy.contains(data['address_1'], { exact: false });
-  cy.contains(data['address_2'], { exact: false });
+  cy.contains(data['address_1']);
+  cy.contains(data['address_2']);
   cy.findByText(data['state'], { exact: false });
   cy.findByText(data['zip'], { exact: false });
   cy.findByText(data['email']);
   cy.findByText(data['phone']);
 };
 
-describe('Billling Contact', () => {
+describe('Billing Contact', () => {
   it('Check Billing Contact Form', () => {
     mockGetAccountResponse(accountData);
     cy.visitWithLogin('/account/billing');
@@ -71,13 +77,10 @@ describe('Billling Contact', () => {
   });
   it('Edit Contact Info', () => {
     mockGetAccountResponse(accountData);
-    cy.route({
-      url: '*/account',
-      method: 'PUT'
-    }).as('postAccount');
+    cy.intercept('PUT', '*/account').as('putAccount');
     cy.visitWithLogin('/account/billing');
     cy.get('[data-qa-contact-summary]').within(_contact => {
-      cy.findByText('Edit').click();
+      fbtClick('Edit');
     });
     // checking drawer is visible
     cy.findByLabelText('First Name')
@@ -90,7 +93,6 @@ describe('Billling Contact', () => {
       .click()
       .clear()
       .type(newAccountData['last_name']);
-
     cy.findByLabelText('Company Name')
       .should('be.visible')
       .click()
@@ -126,11 +128,7 @@ describe('Billling Contact', () => {
       .click()
       .clear()
       .type(newAccountData['phone']);
-    cy.get('[data-qa-contact-country]')
-      .should('be.visible')
-      .click()
-      .type('France{enter}');
-
+    getClick('[data-qa-contact-country]').type('France{enter}');
     cy.findByLabelText('State / Province')
       .should('be.visible')
       .click()
@@ -141,12 +139,11 @@ describe('Billling Contact', () => {
       .click()
       .clear()
       .type(newAccountData['tax_id']);
-
-    cy.findByText('Save').click();
-
-    cy.wait('@postAccount').then(xhr => {
-      // no state in french address, so it should be removed
-      expect(xhr.request.body).to.eql(newAccountData);
+    fbtClick('Save').then(() => {
+      cy.wait('@putAccount').then(xhr => {
+        // no state in french address, so it should be removed
+        expect(xhr.request.body).to.eql(newAccountData);
+      });
     });
   });
 });

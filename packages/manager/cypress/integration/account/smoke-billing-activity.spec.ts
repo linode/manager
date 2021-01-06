@@ -1,9 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 const mockGetInvoices = data => {
-  cy.route({
-    method: 'GET',
-    response: data,
-    url: '*/account/invoices?*'
+  cy.intercept('*/account/invoices?*', req => {
+    req.reply(res => {
+      res.send(data);
+    });
   }).as('getAccount');
 };
 
@@ -44,6 +44,11 @@ const localizeDate = (apiDate, timezone: string) => {
 // here We precompute the response as it should be before we modify the timezone for these tests
 let cachedGetProfile = {};
 import { getProfile } from '../../support/api/account';
+import {
+  containsClick,
+  containsVisible,
+  fbtVisible
+} from '../../support/helpers';
 beforeEach(() => {
   getProfile().then(resp => {
     cachedGetProfile = resp.body;
@@ -51,28 +56,26 @@ beforeEach(() => {
 });
 
 const mockProfile = timezone => {
-  cy.route({
-    method: 'GET',
-    response: { ...cachedGetProfile, timezone },
-    url: '*/profile'
+  cy.intercept('*/profile', req => {
+    req.reply(res => {
+      res.send({ ...cachedGetProfile, timezone });
+    });
   }).as('getProfile');
 };
 
 const checkInvoice = (invoice, tz) => {
-  cy.server();
   mockGetInvoices(mockTwoInvoices);
   mockProfile(tz);
   cy.visitWithLogin('/account/billing');
   // need to select show all time, to not have invoices hidden due to date
   // findbylabel fails due to react-select being a non acc essible component, will change soon
   // cy.findByLabelText('Transaction Dates').select('All Times')
-  cy.findByText('6 Months')
-    .click()
-    .type('All time{enter}');
+  fbtVisible('Billing & Payment History');
+  containsClick('6 Months').type('All time{enter}');
   cy.log(invoice.date, tz);
-  cy.contains(localizeDate(invoice.date, tz)).should('be.visible');
-  cy.findByText(invoice.label).should('be.visible');
-  cy.findByText(`$${invoice.total.toFixed(2)}`).should('be.visible');
+  containsVisible(localizeDate(invoice.date, tz));
+  fbtVisible(invoice.label);
+  fbtVisible(`$${invoice.total.toFixed(2)}`);
 };
 
 describe('Billling Activity Feed', () => {

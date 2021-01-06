@@ -1,4 +1,5 @@
 import { getProfile } from '../../support/api/account';
+import { fbtVisible } from '../../support/helpers';
 import { waitForAppLoad } from '../../support/ui/common';
 const testText = 'testing123';
 
@@ -7,24 +8,17 @@ describe('username', () => {
     cy.visitWithLogin(`/dashboard`);
     getProfile().then(profile => {
       const username = profile.body.username;
-      cy.server();
-      cy.route({
-        method: 'GET',
-        url: '*/account/events?page_size=25'
-      }).as('textAvailable');
       waitForAppLoad(`account/users/${username}`, false);
-      cy.findByText('Username').should('be.visible');
-      cy.wait('@textAvailable');
-      cy.findByText('Username').should('be.visible');
+      fbtVisible('Username');
+      fbtVisible('Username');
       cy.get('[data-testid="textfield-input"]')
         .first()
         .click()
-        .click()
-        .click()
+        .clear()
         .type(testText);
       cy.get('[data-testid="textfield-input"]')
         .first()
-        .should('have.value', username + testText);
+        .should('have.value', testText);
     });
   });
 });

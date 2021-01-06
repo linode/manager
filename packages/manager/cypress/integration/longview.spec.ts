@@ -9,7 +9,6 @@ describe('longview', () => {
   it('tests longview', () => {
     const linodePassword = strings.randomPass();
     const clientLabel = 'cy-test-client';
-    cy.server();
     cy.visitWithLogin('/dashboard');
     createLinode(undefined, linodePassword).then(linode => {
       createClient(undefined, clientLabel).then(client => {
@@ -40,7 +39,7 @@ describe('longview', () => {
                   .contains('Waiting for data...', {
                     timeout: 480000
                   })
-                  .should('not.be.visible')
+                  .should('not.exist')
               ) {
                 fbtVisible(clientLabel);
                 getVisible(`[href="/longview/clients/${client.id}"]`);
