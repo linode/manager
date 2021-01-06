@@ -172,14 +172,14 @@ const ActionMenu: React.FC<CombinedProps> = props => {
                 disabled={a.disabled}
               >
                 {a.title}
-                {a.tooltip && (
+                {a.tooltip ? (
                   <HelpIcon
                     data-qa-tooltip-icon
                     text={a.tooltip}
                     tooltipPosition="right"
                     className={classes.tooltip}
                   />
-                )}
+                ) : null}
               </MenuItem>
             ))}
           </MenuItems>

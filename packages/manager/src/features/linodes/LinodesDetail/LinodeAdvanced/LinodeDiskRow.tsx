@@ -65,6 +65,7 @@ export const LinodeDiskRow: React.FC<Props> = props => {
     onImagize,
     onRename,
     onResize,
+    linodeStatus,
     readOnly
   } = props;
 
@@ -102,7 +103,7 @@ export const LinodeDiskRow: React.FC<Props> = props => {
       </Hidden>
       <TableCell className={classes.actionCell}>
         <LinodeDiskActionMenu
-          linodeStatus={status || 'offline'}
+          linodeStatus={linodeStatus || 'offline'}
           linodeId={linodeId}
           diskId={disk.id}
           label={disk.label}

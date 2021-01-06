@@ -33,9 +33,10 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
   _tooltip = readOnly
     ? "You don't have permissions to perform this action"
     : _tooltip;
+
   const disabledProps = _tooltip
     ? {
-        _tooltip,
+        tooltip: _tooltip,
         disabled: true
       }
     : {};
@@ -46,17 +47,16 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
       onClick: () => {
         props.onRename();
       },
-      disabled: props.readOnly,
-      tooltip: props.readOnly ? _tooltip : ''
+      disabled: readOnly,
+      tooltip: readOnly ? _tooltip : ''
     },
     {
       title: 'Resize',
       onClick: () => {
         props.onResize();
       },
-      disabled: props.linodeStatus !== 'offline' || props.readOnly,
-      tooltip:
-        props.linodeStatus !== 'offline' || props.readOnly ? _tooltip : ''
+      disabled: linodeStatus !== 'offline' || readOnly,
+      tooltip: linodeStatus !== 'offline' || readOnly ? _tooltip : ''
     },
     {
       title: 'Imagize',
@@ -93,6 +93,8 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
               key={action.title}
               actionText={action.title}
               onClick={action.onClick}
+              disabled={action.disabled}
+              tooltip={action.tooltip}
             />
           );
         })}

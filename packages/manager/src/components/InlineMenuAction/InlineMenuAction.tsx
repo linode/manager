@@ -42,6 +42,7 @@ interface Props {
   className?: string;
   href?: string;
   disabled?: boolean;
+  tooltip?: string;
   loading?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
@@ -49,7 +50,15 @@ interface Props {
 type CombinedProps = Props;
 
 const InlineMenuAction: React.FC<CombinedProps> = props => {
-  const { actionText, className, href, disabled, onClick, loading } = props;
+  const {
+    actionText,
+    className,
+    href,
+    disabled,
+    tooltip,
+    onClick,
+    loading
+  } = props;
 
   const classes = useStyles();
 
@@ -66,6 +75,7 @@ const InlineMenuAction: React.FC<CombinedProps> = props => {
         onClick={onClick}
         disabled={disabled}
         loading={loading}
+        tooltipText={tooltip}
       >
         {actionText}
       </Button>
