@@ -4,13 +4,6 @@ import { BarPercent, getPercentage } from './BarPercent';
 
 const componentLoading = shallow(
   <BarPercent
-    classes={{
-      root: '',
-      primaryColor: '',
-      loadingText: '',
-      rounded: '',
-      overLimit: ''
-    }}
     value={20}
     max={100}
     loadingText="loading..."

@@ -10,11 +10,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import AddNewLink from 'src/components/AddNewLink';
-import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import Hidden from 'src/components/core/Hidden';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import CSVLink from 'src/components/DownloadCSV';
@@ -24,7 +20,6 @@ import LandingHeader from 'src/components/LandingHeader';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import Toggle from 'src/components/Toggle';
 import withBackupCta, {
   BackupCTAProps
 } from 'src/containers/withBackupCTA.container';
@@ -66,7 +61,7 @@ import DisplayLinodes from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
-import ToggleBox from './ToggleBox';
+import TransferDisplay from './TransferDisplay';
 import { ExtendedStatus, statusToPriority } from './utils';
 
 interface State {
@@ -239,7 +234,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesData,
       classes,
       backupsCTA,
-      location,
       linodesInTransition
     } = this.props;
 
@@ -316,40 +310,37 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        {this.props.flags.cmr && (
-          <>
-            <LinodeResize_CMR
-              open={this.state.linodeResizeOpen}
-              onClose={this.closeDialogs}
-              linodeId={this.state.selectedLinodeID}
-              linodeLabel={
-                this.props.linodesData.find(
-                  thisLinode => thisLinode.id === this.state.selectedLinodeID
-                )?.label ?? undefined
-              }
-            />
-            <MigrateLinode
-              open={this.state.linodeMigrateOpen}
-              onClose={this.closeDialogs}
-              linodeID={this.state.selectedLinodeID ?? -1}
-            />
-            <LinodeRebuildDialog
-              open={this.state.rebuildDialogOpen}
-              onClose={this.closeDialogs}
-              linodeId={this.state.selectedLinodeID ?? -1}
-            />
-            <RescueDialog
-              open={this.state.rescueDialogOpen}
-              onClose={this.closeDialogs}
-              linodeId={this.state.selectedLinodeID ?? -1}
-            />
-            <EnableBackupsDialog
-              open={this.state.enableBackupsDialogOpen}
-              onClose={this.closeDialogs}
-              linodeId={this.state.selectedLinodeID ?? -1}
-            />
-          </>
-        )}
+        <LinodeResize_CMR
+          open={this.state.linodeResizeOpen}
+          onClose={this.closeDialogs}
+          linodeId={this.state.selectedLinodeID}
+          linodeLabel={
+            this.props.linodesData.find(
+              thisLinode => thisLinode.id === this.state.selectedLinodeID
+            )?.label ?? undefined
+          }
+        />
+        <MigrateLinode
+          open={this.state.linodeMigrateOpen}
+          onClose={this.closeDialogs}
+          linodeID={this.state.selectedLinodeID ?? -1}
+        />
+        <LinodeRebuildDialog
+          open={this.state.rebuildDialogOpen}
+          onClose={this.closeDialogs}
+          linodeId={this.state.selectedLinodeID ?? -1}
+        />
+        <RescueDialog
+          open={this.state.rescueDialogOpen}
+          onClose={this.closeDialogs}
+          linodeId={this.state.selectedLinodeID ?? -1}
+        />
+        <EnableBackupsDialog
+          open={this.state.enableBackupsDialogOpen}
+          onClose={this.closeDialogs}
+          linodeId={this.state.selectedLinodeID ?? -1}
+        />
+
         {!this.props.isVLAN &&
           this.props.someLinodesHaveScheduledMaintenance && (
             <MaintenanceBanner
@@ -406,76 +397,29 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                     }: ToggleProps<'list' | 'grid'>) => {
                       return (
                         <React.Fragment>
-                          {this.props.flags.cmr ? (
-                            <React.Fragment>
-                              {displayBackupsCTA && (
-                                <BackupsCTA_CMR dismissed={this.dismissCTA} />
-                              )}
-                              {this.props.LandingHeader ? (
-                                this.props.LandingHeader
-                              ) : (
-                                // @todo: remove inline style when we switch over to CMR
-                                <div style={{ marginTop: -8 }}>
-                                  <LandingHeader
-                                    title="Linodes"
-                                    entity="Linode"
-                                    onAddNew={() =>
-                                      this.props.history.push('/linodes/create')
-                                    }
-                                    docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-                                  />
-                                </div>
-                              )}
-                            </React.Fragment>
-                          ) : (
-                            <Grid
-                              container
-                              alignItems="center"
-                              justify="space-between"
-                              item
-                              xs={12}
-                              style={{ paddingBottom: 0 }}
-                            >
-                              <Grid item className={classes.title}>
-                                <Breadcrumb
-                                  pathname={location.pathname}
-                                  data-qa-title
-                                  labelTitle="Linodes"
-                                  className={classes.title}
-                                />
-                              </Grid>
-
-                              <Hidden xsDown>
-                                <FormControlLabel
-                                  className={classes.tagGroup}
-                                  control={
-                                    <Toggle
-                                      className={
-                                        linodesAreGrouped
-                                          ? ' checked'
-                                          : ' unchecked'
-                                      }
-                                      onChange={toggleGroupLinodes}
-                                      checked={linodesAreGrouped as boolean}
-                                    />
+                          <React.Fragment>
+                            {displayBackupsCTA && (
+                              <BackupsCTA_CMR dismissed={this.dismissCTA} />
+                            )}
+                            {this.props.LandingHeader ? (
+                              this.props.LandingHeader
+                            ) : (
+                              // @todo: remove inline style when we switch over to CMR
+                              <div style={{ marginTop: -8 }}>
+                                <LandingHeader
+                                  title="Linodes"
+                                  entity="Linode"
+                                  onAddNew={() =>
+                                    this.props.history.push('/linodes/create')
                                   }
-                                  label="Group by Tag:"
-                                />
-                                <ToggleBox
-                                  handleClick={toggleLinodeView}
-                                  status={linodeViewPreference}
-                                />
-                              </Hidden>
+                                  docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                                >
+                                  <TransferDisplay />
+                                </LandingHeader>
+                              </div>
+                            )}
+                          </React.Fragment>
 
-                              <AddNewLink
-                                onClick={_ => {
-                                  this.props.history.push('/linodes/create');
-                                }}
-                                label="Add a Linode"
-                                className={classes.addNewLink}
-                              />
-                            </Grid>
-                          )}
                           <Grid item xs={12}>
                             <OrderBy
                               preferenceKey={'linodes-landing'}

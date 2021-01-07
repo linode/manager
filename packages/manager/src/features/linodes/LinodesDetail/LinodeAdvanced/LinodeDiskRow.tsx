@@ -1,6 +1,6 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import BarPercent from 'src/components/BarPercent/BarPercent_CMR';
+import BarPercent from 'src/components/BarPercent';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';

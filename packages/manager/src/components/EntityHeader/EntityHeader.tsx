@@ -151,6 +151,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             xs={12}
             sm={8}
           >
+            {props.children}
             {docsLink && <DocumentationButton href={docsLink} />}
             <div className={classes.actions}>{actions}</div>
           </Grid>
