@@ -48,6 +48,11 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       textDecoration: 'none'
     }
+  },
+  powerOn: {
+    '& > span > span': {
+      paddingRight: 2
+    }
   }
 }));
 
@@ -289,7 +294,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       : {
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
           disabled: !['running', 'offline'].includes(linodeStatus),
-          className: classes.powerOnOrOff,
+          className: `${classes.powerOnOrOff} ${linodeStatus !== 'running' &&
+            classes.powerOn}`,
           onClick: handlePowerAction
         },
     {
