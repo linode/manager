@@ -124,7 +124,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     triggerDeleteFirewall: handleOpenDeleteFirewallModal
   };
 
-  const firewallArray = Object.values(data?.data ?? {});
+  const firewallArray = Object.values(data?.firewalls ?? {});
 
   if (isLoading) {
     return <CircleProgress />;

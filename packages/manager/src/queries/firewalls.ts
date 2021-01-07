@@ -9,7 +9,7 @@ import { mutationHandlers, listToItemsByID, queryPresets } from './base';
 
 const getFirewallsRequest = (passedParams: any = {}, passedFilter: any = {}) =>
   getFirewalls(passedParams, passedFilter).then(data => ({
-    data: listToItemsByID(data.data),
+    firewalls: listToItemsByID(data.data),
     results: data.results
   }));
 
@@ -17,7 +17,7 @@ const queryKey = 'firewall';
 
 interface FirewallData {
   results: number;
-  data: Record<string, Firewall>;
+  firewalls: Record<string, Firewall>;
 }
 
 export const useFirewallQuery = (params: any = {}, filter: any = {}) => {
