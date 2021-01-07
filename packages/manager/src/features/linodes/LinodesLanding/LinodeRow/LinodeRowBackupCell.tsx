@@ -1,38 +1,32 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      width: '14%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
-    }
-  });
+const useStyles = makeStyles(() => ({
+  root: {
+    borderTop: 'none',
+    padding: '10px 15px',
+    width: '14%'
+  }
+}));
 
 interface Props {
-  mostRecentBackup: string | null;
   linodeId: number;
+  mostRecentBackup: string | null;
   backupsEnabled: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const LinodeRowBackupCell: React.FC<CombinedProps> = props => {
-  const { classes, mostRecentBackup, backupsEnabled, linodeId } = props;
+  const classes = useStyles();
+
+  const { linodeId, backupsEnabled, mostRecentBackup } = props;
 
   return (
-    <TableCell parentColumn="Last Backup" className={classes.root}>
+    <TableCell className={classes.root}>
       <BackupStatus
         linodeId={linodeId}
         backupsEnabled={backupsEnabled}
@@ -42,6 +36,4 @@ const LinodeRowBackupCell: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(LinodeRowBackupCell);
+export default compose<CombinedProps, Props>(React.memo)(LinodeRowBackupCell);
