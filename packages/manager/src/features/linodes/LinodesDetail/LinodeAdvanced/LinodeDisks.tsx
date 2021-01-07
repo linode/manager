@@ -7,6 +7,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Hidden from 'src/components/core/Hidden';
 import RootRef from 'src/components/core/RootRef';
 import {
   createStyles,
@@ -17,9 +18,10 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import OrderBy from 'src/components/OrderBy';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import OrderBy from 'src/components/OrderBy';
+import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
@@ -42,8 +44,6 @@ import userSSHKeyHoc, {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 import LinodeDiskRow from './LinodeDiskRow';
-
-import Paginate from 'src/components/Paginate';
 
 type ClassNames = 'root' | 'headline' | 'addNewWrapper' | 'emptyCell';
 
@@ -225,14 +225,16 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                             >
                               Size
                             </TableSortCell>
-                            <TableSortCell
-                              active={orderBy === 'created'}
-                              label="created"
-                              direction={order}
-                              handleClick={handleOrderChange}
-                            >
-                              Created
-                            </TableSortCell>
+                            <Hidden smDown>
+                              <TableSortCell
+                                active={orderBy === 'created'}
+                                label="created"
+                                direction={order}
+                                handleClick={handleOrderChange}
+                              >
+                                Created
+                              </TableSortCell>
+                            </Hidden>
                             <TableCell />
                           </TableRow>
                         </TableHead>

@@ -1,6 +1,7 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent/BarPercent_CMR';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
@@ -94,9 +95,11 @@ export const LinodeDiskRow: React.FC<Props> = props => {
           `${disk.size} MB`
         )}
       </TableCell>
-      <TableCell className={classes.diskCreated}>
-        <DateTimeDisplay value={disk.created} />
-      </TableCell>
+      <Hidden smDown>
+        <TableCell className={classes.diskCreated}>
+          <DateTimeDisplay value={disk.created} />
+        </TableCell>
+      </Hidden>
       <TableCell className={classes.actionCell}>
         <LinodeDiskActionMenu
           linodeStatus={status || 'offline'}
