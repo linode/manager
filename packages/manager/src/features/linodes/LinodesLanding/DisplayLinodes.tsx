@@ -9,11 +9,9 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
-import useFlags from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { ExtendedLinode } from '../LinodesDetail/types';
 import TableWrapper from './TableWrapper';
-import TableWrapper_CMR from './TableWrapper_CMR';
 import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
@@ -76,8 +74,6 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
     ...rest
   } = props;
 
-  const flags = useFlags();
-
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
   const numberOfLinodesWithMaintenance = data.reduce((acc, thisLinode) => {
@@ -125,68 +121,59 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
         };
         return (
           <React.Fragment>
-            {display === 'list' &&
-              (flags.cmr ? (
-                <TableWrapper_CMR
-                  {...tableWrapperProps}
-                  linodeViewPreference={linodeViewPreference}
-                  linodesAreGrouped={linodesAreGrouped}
-                  toggleLinodeView={toggleLinodeView}
-                  toggleGroupLinodes={toggleGroupLinodes}
-                  tableProps={{ tableClass: classes.table }}
-                >
-                  <TableBody>
-                    <Component showHead {...componentProps} />
-                  </TableBody>
-                </TableWrapper_CMR>
-              ) : (
-                <TableWrapper {...tableWrapperProps}>
-                  <TableBody>
-                    <Component showHead {...componentProps} />
-                  </TableBody>
-                </TableWrapper>
-              ))}
+            {display === 'list' && (
+              <TableWrapper
+                {...tableWrapperProps}
+                linodeViewPreference={linodeViewPreference}
+                linodesAreGrouped={linodesAreGrouped}
+                toggleLinodeView={toggleLinodeView}
+                toggleGroupLinodes={toggleGroupLinodes}
+                tableProps={{ tableClass: classes.table }}
+              >
+                <TableBody>
+                  <Component showHead {...componentProps} />
+                </TableBody>
+              </TableWrapper>
+            )}
             {display === 'grid' && (
               <>
                 <Grid item xs={12} className={'px0'}>
-                  {flags.cmr && (
-                    <div className={classes.controlHeader}>
-                      <div
-                        id="displayViewDescription"
-                        className="visually-hidden"
-                      >
-                        Currently in {linodeViewPreference} view
-                      </div>
-                      <Tooltip placement="top" title="List view">
-                        <IconButton
-                          aria-label="Toggle display"
-                          aria-describedby={'displayViewDescription'}
-                          onClick={toggleLinodeView}
-                          disableRipple
-                          className={classes.toggleButton}
-                        >
-                          <TableView />
-                        </IconButton>
-                      </Tooltip>
-
-                      <div id="groupByDescription" className="visually-hidden">
-                        {linodesAreGrouped
-                          ? 'group by tag is currently enabled'
-                          : 'group by tag is currently disabled'}
-                      </div>
-                      <Tooltip placement="top-end" title="Group by tag">
-                        <IconButton
-                          aria-label={`Toggle group by tag`}
-                          aria-describedby={'groupByDescription'}
-                          onClick={toggleGroupLinodes}
-                          disableRipple
-                          className={classes.toggleButton}
-                        >
-                          <GroupByTag />
-                        </IconButton>
-                      </Tooltip>
+                  <div className={classes.controlHeader}>
+                    <div
+                      id="displayViewDescription"
+                      className="visually-hidden"
+                    >
+                      Currently in {linodeViewPreference} view
                     </div>
-                  )}
+                    <Tooltip placement="top" title="List view">
+                      <IconButton
+                        aria-label="Toggle display"
+                        aria-describedby={'displayViewDescription'}
+                        onClick={toggleLinodeView}
+                        disableRipple
+                        className={classes.toggleButton}
+                      >
+                        <TableView />
+                      </IconButton>
+                    </Tooltip>
+
+                    <div id="groupByDescription" className="visually-hidden">
+                      {linodesAreGrouped
+                        ? 'group by tag is currently enabled'
+                        : 'group by tag is currently disabled'}
+                    </div>
+                    <Tooltip placement="top-end" title="Group by tag">
+                      <IconButton
+                        aria-label={`Toggle group by tag`}
+                        aria-describedby={'groupByDescription'}
+                        onClick={toggleGroupLinodes}
+                        disableRipple
+                        className={classes.toggleButton}
+                      >
+                        <GroupByTag />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
                 </Grid>
                 <Component showHead {...componentProps} />
               </>

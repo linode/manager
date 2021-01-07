@@ -1,108 +1,74 @@
+import * as classnames from 'classnames';
 import { Event } from '@linode/api-v4/lib/account';
 import { LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import EntityIcon from 'src/components/EntityIcon';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
-import TableCell from 'src/components/TableCell';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
 import withImages, { WithImages } from 'src/containers/withImages.container';
-import {
-  getProgressOrDefault,
-  linodeInTransition,
-  transitionText
-} from 'src/features/linodes/transitions';
-import { filterImagesByType } from 'src/store/image/image.helpers';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
-import { linodeMaintenanceWindowString } from '../../utilities';
 import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
-type ClassNames =
-  | 'root'
-  | 'link'
-  | 'loadingStatus'
-  | 'labelWrapper'
-  | 'status'
-  | 'labelRow'
-  | 'labelStatusWrapper'
-  | 'dashboard'
-  | 'wrapHeader'
-  | 'maintenanceContainer'
-  | 'maintenanceNotice'
-  | 'helpIcon';
+import { filterImagesByType } from 'src/store/image/image.helpers';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    link: {
-      display: 'block'
-    },
-    labelWrapper: {
-      minHeight: 50,
-      paddingTop: theme.spacing(1) / 4
-    },
-    root: {
-      '& h3': {
-        transition: theme.transitions.create(['color'])
-      },
-      [theme.breakpoints.up('lg')]: {
-        width: '40%'
-      },
-      [theme.breakpoints.up('xl')]: {
-        width: '35%'
-      }
-    },
-    dashboard: {
-      width: '70%'
-    },
-    status: {
-      marginLeft: theme.spacing(1) / 2,
-      position: 'relative',
-      top: 0,
-      lineHeight: '0.8rem'
-    },
-    labelRow: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center'
-    },
-    loadingStatus: {
-      marginBottom: theme.spacing(1) / 2
-    },
-    labelStatusWrapper: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center'
-    },
-    wrapHeader: {
-      wordBreak: 'break-all'
-    },
-    maintenanceContainer: {},
-    maintenanceNotice: {
-      paddingTop: 0,
-      paddingBottom: 0,
-      '& .noticeText': {
-        display: 'flex',
-        alignItems: 'center',
-        fontSize: '.9rem',
-        '& br': {
-          display: 'none'
-        }
-      }
-    },
-    helpIcon: {
-      paddingTop: 0,
-      paddingBottom: 0
+const useStyles = makeStyles((theme: Theme) => ({
+  link: {
+    display: 'block',
+    fontFamily: theme.font.bold,
+    fontSize: '.875rem',
+    lineHeight: '1.125rem',
+    color: theme.cmrTextColors.linkActiveLight,
+    '&:hover, &:focus': {
+      textDecoration: 'underline'
     }
-  });
+  },
+  root: {
+    '& h3': {
+      transition: theme.transitions.create(['color'])
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '20%'
+    },
+    [theme.breakpoints.up('xl')]: {
+      width: '35%'
+    }
+  },
+  labelStatusWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    whiteSpace: 'nowrap',
+    '& a': {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: 'inline-block'
+    }
+  },
+  maintenanceContainer: {},
+  maintenanceNotice: {
+    paddingTop: 0,
+    paddingBottom: 0,
+    '& .noticeText': {
+      display: 'flex',
+      alignItems: 'center',
+      fontSize: '.9rem',
+      '& br': {
+        display: 'none'
+      }
+    }
+  },
+  helpIcon: {
+    paddingTop: 0,
+    paddingBottom: 0
+  },
+  // The head cell in the VLAN Detail context.
+  vlanContext: {
+    width: '14%'
+  }
+}));
 
 interface Props {
   backups: LinodeBackups;
@@ -125,42 +91,24 @@ interface Props {
   recentEvent?: Event;
   maintenance?: string | null;
   isDashboard?: boolean;
+  isVLAN?: boolean;
 }
 
-type CombinedProps = Props &
-  WithDisplayType &
-  Pick<WithImages, 'imagesData'> &
-  WithStyles<ClassNames>;
+type CombinedProps = Props & WithDisplayType & Pick<WithImages, 'imagesData'>;
 
 const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const {
     // linode props
     label,
-    status,
-    memory,
-    disk,
-    vcpus,
     id,
-    image,
     // other props
-    classes,
-    loading,
-    recentEvent,
-    displayType,
-    imagesData,
     width,
     maintenance,
-    isDashboard
+    isDashboard,
+    isVLAN
   } = props;
-
-  const description = getLinodeDescription(
-    displayType,
-    memory,
-    disk,
-    vcpus,
-    image,
-    imagesData
-  );
 
   const style = width ? { width: `${width}%` } : {};
   const dateTime = maintenance && maintenance.split(' ');
@@ -174,37 +122,20 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <TableCell className={classes.root} style={style} rowSpan={loading ? 2 : 1}>
+    <TableCell
+      className={classnames({
+        [classes.root]: true,
+        [classes.vlanContext]: isVLAN
+      })}
+      style={style}
+    >
       <Grid container wrap="nowrap" alignItems="center">
-        <Grid item className="py0">
-          <EntityIcon
-            variant="linode"
-            status={status}
-            loading={linodeInTransition(status, recentEvent)}
-            marginTop={1}
-          />
-        </Grid>
-        <Grid item>
-          <div className={loading ? classes.labelWrapper : ''}>
-            {linodeInTransition(status, recentEvent) && (
-              <ProgressDisplay
-                className={classes.loadingStatus}
-                text={transitionText(status, id, recentEvent)}
-                progress={getProgressOrDefault(recentEvent)}
-              />
-            )}
-            <div className={classes.labelStatusWrapper}>
-              <Link to={`/linodes/${id}`} tabIndex={0}>
-                <Typography
-                  variant="h3"
-                  className={classes.wrapHeader}
-                  data-qa-label
-                >
-                  {label}
-                </Typography>
-              </Link>
-            </div>
-            <Typography>{description}</Typography>
+        {/* Hidden overflow is necessary for the wrapping of the label to work. */}
+        <Grid item style={{ overflow: 'hidden' }}>
+          <div className={classes.labelStatusWrapper}>
+            <Link className={classes.link} to={`/linodes/${id}`} tabIndex={0}>
+              {label}
+            </Link>
           </div>
           {maintenance && dateTime && isDashboard && (
             <div className={classes.maintenanceContainer}>
@@ -215,7 +146,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
                 className={classes.maintenanceNotice}
               >
                 Maintenance: <br />
-                {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}
+                {dateTime[0]} at {dateTime[1]}
                 <HelpIcon
                   text={<MaintenanceText />}
                   tooltipPosition="top"
@@ -231,29 +162,12 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   withDisplayType,
   withImages((ownProps, imagesData) => ({
     ...ownProps,
     imagesData: filterImagesByType(imagesData, 'public')
-  })),
-  styled
+  }))
 );
 
 export default enhanced(LinodeRowHeadCell);
-
-const ProgressDisplay: React.FC<{
-  className: string;
-  progress: null | number;
-  text: string;
-}> = props => {
-  const { progress, text, className } = props;
-  const displayProgress = progress ? `${progress}%` : `scheduled`;
-
-  return (
-    <Typography variant="body2" className={className}>
-      {text}: {displayProgress}
-    </Typography>
-  );
-};

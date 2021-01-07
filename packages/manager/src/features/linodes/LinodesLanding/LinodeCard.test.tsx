@@ -74,8 +74,6 @@ describe('LinodeRow', () => {
     mutationAvailable: false,
     enqueueSnackbar: jest.fn(),
     closeSnackbar: jest.fn(),
-    flags: {},
-    ldClient: {} as any,
     type: 'whatever',
     tags: [],
     status: 'running',

@@ -8,13 +8,12 @@ import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import { linodeFactory } from 'src/factories/linodes';
-import LinodeRow_CMR from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow_CMR';
-import SortableTableHead_CMR from 'src/features/linodes/LinodesLanding/SortableTableHead_CMR.tsx';
+import LinodeRow from 'src/features/linodes/LinodesLanding/LinodeRow';
+import SortableTableHead from 'src/features/linodes/LinodesLanding/SortableTableHead';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import store from 'src/store';
 import capitalize from 'src/utilities/capitalize';
 import TableWrapper from './Table';
-import TableWrapper_CMR from './Table';
 
 const linodes = linodeFactory.buildList(10);
 
@@ -37,8 +36,8 @@ class StoryTable extends React.Component {
       <Provider store={store}>
         <OrderBy data={Object.values(linodes)} orderBy={'label'} order={'asc'}>
           {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-            <TableWrapper_CMR>
-              <SortableTableHead_CMR
+            <TableWrapper>
+              <SortableTableHead
                 order={order}
                 orderBy={orderBy}
                 handleOrderChange={handleOrderChange}
@@ -50,7 +49,7 @@ class StoryTable extends React.Component {
 
               <TableBody>
                 {orderedData.map(linode => (
-                  <LinodeRow_CMR
+                  <LinodeRow
                     key={linode.id}
                     id={linode.id}
                     image={linode.image}
@@ -71,10 +70,10 @@ class StoryTable extends React.Component {
                     openDialog={this.handleDialog}
                     openPowerActionDialog={this.handlePowerActionDialog}
                     openNotificationDrawer={() => null}
-                  ></LinodeRow_CMR>
+                  ></LinodeRow>
                 ))}
               </TableBody>
-            </TableWrapper_CMR>
+            </TableWrapper>
           )}
         </OrderBy>
       </Provider>
