@@ -30,17 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   bar: {
     paddingLeft: theme.spacing(),
     width: 250
-  },
-  actionCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0,
-    /*
-      Explicitly stating this as the theme file is automatically adding padding to the last cell
-      We can remove once we make the full switch to CMR styling
-      */
-    paddingRight: '0 !important'
   }
 }));
 
@@ -101,7 +90,7 @@ export const LinodeDiskRow: React.FC<Props> = props => {
           <DateTimeDisplay value={disk.created} />
         </TableCell>
       </Hidden>
-      <TableCell className={classes.actionCell}>
+      <TableCell>
         <LinodeDiskActionMenu
           linodeStatus={linodeStatus || 'offline'}
           linodeId={linodeId}

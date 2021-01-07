@@ -4,8 +4,21 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import {
+  Theme,
+  useMediaQuery,
+  useTheme,
+  makeStyles
+} from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  }
+}));
 
 interface Props {
   linodeStatus: string;
@@ -24,6 +37,8 @@ type CombinedProps = Props & RouteComponentProps;
 export const DiskActionMenu: React.FC<CombinedProps> = props => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const classes = useStyles();
+
   const { linodeStatus, readOnly, linodeId, history, diskId } = props;
 
   let _tooltip =
@@ -85,7 +100,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
-    <>
+    <div className={classes.root}>
       {!matchesSmDown &&
         inlineActions!.map(action => {
           return (
@@ -102,7 +117,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
         actionsList={menuActions}
         ariaLabel={`Action menu for Disk ${props.label}`}
       />
-    </>
+    </div>
   );
 };
 
