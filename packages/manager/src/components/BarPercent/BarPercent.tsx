@@ -104,7 +104,7 @@ export const BarPercent: React.FC<CombinedProps> = props => {
         <Typography
           style={{
             position: 'absolute',
-            left: `${Math.min(value + 1, 87)}%`,
+            left: `${Math.min(value + 4, 87)}%`,
             color: theme.palette.text.primary,
             fontSize: '14px'
           }}

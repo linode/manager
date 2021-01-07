@@ -14,13 +14,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
-    justify: 'center',
+    justifyContent: 'center',
     flexFlow: 'row nowrap'
   },
   wrapper: {
     border: 'none',
     backgroundColor: 'inherit',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    marginRight: theme.spacing(4),
+    paddingRight: 0
   },
   labelText: {
     marginRight: theme.spacing(1),
@@ -31,8 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(3)
   },
   bar: {
-    width: 150,
-    marginRight: theme.spacing(3)
+    width: 150
   },
   overLimit: {
     color: theme.palette.status.warningDark,
@@ -53,7 +54,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     flexFlow: 'row nowrap',
     marginTop: theme.spacing(1),
+    '& p': {
+      marginRight: 4
+    },
     '& svg': {
+      marginTop: 5,
       width: 15,
       height: 15
     }
@@ -147,7 +152,7 @@ export const TransferDialog: React.FC<DialogProps> = React.memo(props => {
           <Close />
         </button>
       </Grid>
-      <Grid container justify="space-between">
+      <Grid container justify="space-between" style={{ marginBottom: 0 }}>
         <Grid item style={{ marginRight: 10 }}>
           <Typography>{used} GB Used</Typography>
         </Grid>
@@ -175,8 +180,8 @@ export const TransferDialog: React.FC<DialogProps> = React.memo(props => {
         {daysRemainingInMonth} days left to end of billing cycle.
       </Typography>
       <Typography className={classes.proratedNotice}>
-        Your account's transfer quota is prorated based on your Linodes'
-        creation and deletion dates.
+        Your account&apos;s transfer quota is prorated based on your
+        Linodes&apos; creation and deletion dates.
       </Typography>
       <div className={classes.link}>
         <Typography>How to mitigate overages </Typography>{' '}
