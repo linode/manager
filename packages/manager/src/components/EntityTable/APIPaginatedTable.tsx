@@ -15,6 +15,8 @@ interface Props {
   count: number;
 }
 
+export type Order = 'asc' | 'desc';
+
 export type CombinedProps = Props & ListProps & PaginationProps<Entity>;
 
 export const APIPaginatedTable: React.FC<CombinedProps> = props => {
@@ -41,7 +43,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
       order={initialOrder?.order}
     >
       {({ data: orderedData, order, orderBy, handleOrderChange }) => {
-        const _handleOrderChange = (order: any, orderBy: any) => {
+        const _handleOrderChange = (orderBy: string, order: Order) => {
           // If we're changing the sort we should go back to page 1
           if (page !== 1) {
             handlePageChange(1);
