@@ -32,10 +32,8 @@ const formatTotalTraffic = (value: number) =>
 const useStyles = makeStyles((theme: Theme) => ({
   chart: {
     position: 'relative',
+    paddingTop: theme.spacing(2),
     paddingLeft: theme.spacing(3)
-  },
-  totalTraffic: {
-    margin: '12px'
   },
   graphGrids: {
     flexWrap: 'nowrap',

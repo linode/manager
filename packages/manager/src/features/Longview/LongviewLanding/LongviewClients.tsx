@@ -1,10 +1,10 @@
 import {
-  LongviewClient,
   ActiveLongviewPlan,
+  LongviewClient,
   LongviewSubscription
 } from '@linode/api-v4/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr, isEmpty } from 'ramda';
+import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -38,31 +38,31 @@ const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
     marginBottom: theme.spacing()
   },
-  addNew: {
-    marginLeft: 'auto',
-    marginRight: 0
-  },
   searchbar: {
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: 'auto',
-      '& >div': {
-        width: '300px'
+    '&.MuiGrid-item': {
+      paddingLeft: 0
+    },
+    '& > div': {
+      width: '300px'
+    },
+    [theme.breakpoints.down('sm')]: {
+      '&.MuiGrid-item': {
+        paddingLeft: theme.spacing()
       }
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
     }
   },
   cta: {
     marginTop: theme.spacing(2)
   },
-  lastUpdated: {
-    marginBottom: theme.spacing(2)
-  },
   sortSelect: {
-    width: 210,
     display: 'flex',
-    flexFlow: 'row nowrap',
     alignItems: 'center',
-    [theme.breakpoints.up('md')]: {
+    flexFlow: 'row nowrap',
+    width: 210,
+    [theme.breakpoints.up('xs')]: {
       width: 221
     }
   },
@@ -73,11 +73,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       marginLeft: 0,
       marginRight: 0
-    }
-  },
-  cmrSpacingAddNew: {
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(2)
     }
   }
 }));
@@ -247,7 +242,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
           classes.cmrSpacing}`}
         alignItems="center"
       >
-        <Grid item className={`py0 ${classes.searchbar}`}>
+        <Grid item className={classes.searchbar}>
           <Search
             placeholder="Filter by client label or hostname"
             label="Filter by client label or hostname"

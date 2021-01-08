@@ -20,7 +20,8 @@ const styles = (theme: Theme) =>
         marginBottom: theme.spacing(1)
       },
       '& > :first-child': {
-        marginRight: theme.spacing(1)
+        marginRight: theme.spacing(),
+        marginLeft: 0
       }
     }
   });
