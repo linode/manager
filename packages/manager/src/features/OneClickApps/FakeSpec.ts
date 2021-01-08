@@ -176,7 +176,6 @@ export const oneClickApps: OCA[] = [
     ],
     logo_url: 'assets/flask_color.svg'
   },
-
   {
     name: 'Docker',
     description: `Docker is a tool that enables you to create, deploy, and manage lightweight, stand-alone packages that contain everything needed to run an application (code, libraries, runtime, system settings, and dependencies).`,
