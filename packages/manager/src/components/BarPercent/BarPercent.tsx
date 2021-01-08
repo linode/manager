@@ -104,16 +104,26 @@ export const BarPercent: React.FC<CombinedProps> = props => {
         <Typography
           style={{
             position: 'absolute',
-            left: `${Math.min(value + 4, 87)}%`,
+            left: overLimit ? '25%' : `${Math.min(value + 4, 70)}%`,
             color: theme.palette.text.primary,
             fontSize: '14px'
           }}
         >
-          {value > 1 ? Math.round(value) : value.toFixed(2)}%
+          {getInlineDisplayValue(value, overLimit)}
         </Typography>
       ) : null}
     </div>
   );
+};
+
+export const getInlineDisplayValue = (
+  value: number,
+  overLimit: boolean = false
+) => {
+  if (overLimit) {
+    return 'Over quota';
+  }
+  return `${value > 1 ? Math.round(value) : value.toFixed(2)}%`;
 };
 
 export const getPercentage = (value: number, max: number) =>

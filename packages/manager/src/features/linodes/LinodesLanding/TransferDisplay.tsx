@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   labelText: {
     marginRight: theme.spacing(1),
+    fontSize: '0.9rem',
     ...theme.applyLinkStyles
   },
   paper: {
@@ -92,6 +93,7 @@ export const TransferDisplay: React.FC<{}> = _ => {
             className={classes.bar}
             max={100}
             value={poolUsagePct}
+            overLimit={quota < used}
             displayValueInline
           />
         )}
