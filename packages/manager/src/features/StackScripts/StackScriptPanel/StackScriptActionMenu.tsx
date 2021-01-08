@@ -17,7 +17,9 @@ import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 
 const useStyles = makeStyles(() => ({
   stackScriptActionsWrapper: {
-    display: 'flex'
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
   }
 }));
 

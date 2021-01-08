@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       left: '0 !important',
       width: '0 !important',
       height: '0 !important'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '50%'
     }
   },
   selectingStackscriptTitles: {
@@ -56,16 +59,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 'calc(100% - 65px)'
   },
   deploys: {
-    width: '14%',
+    width: '13%',
     [theme.breakpoints.down('sm')]: {
-      width: '28%'
+      width: '15%'
     }
   },
   revisions: {
     width: '13%'
   },
   tags: {
-    width: '15%'
+    width: '17%'
   },
   status: {
     width: '5%'

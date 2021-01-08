@@ -89,7 +89,7 @@ export const StackScriptRow: React.FC<CombinedProps> = props => {
         <TableCell>
           <Typography data-qa-stackscript-revision>{updated}</Typography>
         </TableCell>
-        <TableCell data-qa-stackscript-images>
+        <TableCell data-qa-stackscript-images className={classes.chip}>
           {displayTagsAndShowMore(images)}
         </TableCell>
       </Hidden>
@@ -98,7 +98,7 @@ export const StackScriptRow: React.FC<CombinedProps> = props => {
           {isPublic ? 'Public' : 'Private'}
         </TableCell>
       </Hidden>
-      <TableCell className={classes.actionCell}>
+      <TableCell>
         <StackScriptsActionMenu
           stackScriptID={stackScriptID}
           stackScriptUsername={stackScriptUsername}

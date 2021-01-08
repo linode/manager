@@ -69,7 +69,7 @@ const styles = (theme: Theme) =>
     },
     landing: {
       backgroundColor: `${theme.cmrBGColors.bgApp} !important`,
-      marginTop: -theme.spacing(2.5)
+      marginTop: -theme.spacing()
     },
     // Styles to override base placeholder styles for StackScript null state
     stackscriptPlaceholder: {

@@ -13,7 +13,7 @@ export type ClassNames =
   | 'stackScriptCell'
   | 'stackScriptUsername'
   | 'detailsButton'
-  | 'actionCell';
+  | 'chip';
 
 export const styles = (theme: Theme) =>
   createStyles({
@@ -69,11 +69,10 @@ export const styles = (theme: Theme) =>
         backgroundColor: 'transparent'
       }
     },
-    actionCell: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      padding: 0
+    chip: {
+      '& .MuiChip-root:first-child': {
+        backgroundColor: theme.cmrBGColors.bgApp
+      }
     }
   });
 
