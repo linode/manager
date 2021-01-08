@@ -14,7 +14,7 @@ const styles = () =>
   createStyles({
     root: {
       border: '1px solid #ccc',
-      height: 420,
+      height: 320,
       padding: `9px 12px 9px 12px`,
       overflowY: 'auto'
     }
