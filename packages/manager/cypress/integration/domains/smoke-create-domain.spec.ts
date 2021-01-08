@@ -9,7 +9,7 @@ describe('Create a Domain', () => {
   before(deleteAllTestDomains);
 
   it('Creates first Domain', () => {
-    // we stub this to ensure there is an empty state
+    // modify incoming response
     cy.intercept('GET', 'v4/domains*', req => {
       req.reply(res => {
         res.send({
@@ -20,6 +20,7 @@ describe('Create a Domain', () => {
         });
       });
     }).as('getDomains');
+    // intercept create Domain request
     cy.intercept('POST', '*/domains').as('createDomain');
     cy.visitWithLogin('/domains');
     cy.wait('@getDomains');
@@ -31,8 +32,8 @@ describe('Create a Domain', () => {
       .click()
       .type(`${testTag}{enter}`);
     const label = makeDomainLabel();
-    cy.findByLabelText('Domain').type(label);
-    cy.findByLabelText('SOA Email Address').type('devs@linode.com');
+    fbtVisible('Domain (required)').type(label);
+    fbtVisible('SOA Email Address (required)').type('devs@linode.com');
     getClick('[data-testid="create-domain-submit"]');
     cy.wait('@createDomain');
     cy.get('[data-qa-header]').should('contain', label);

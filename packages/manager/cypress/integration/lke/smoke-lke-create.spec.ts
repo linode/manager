@@ -35,7 +35,10 @@ const addNodes = (plan: string, nb: number) => {
 describe('LKE Create Cluster', () => {
   it('Simple Page Check', () => {
     const lkeId = Math.ceil(Math.random() * 9999);
-    cy.intercept('POST', '*/lke/clusters', { id: lkeId }).as('createCluster');
+    // intercept request to stub response
+    cy.intercept('POST', '*/lke/clusters', {
+      id: lkeId
+    }).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
     fbtVisible('Add Node Pools');
     cy.contains('Cluster Label')

@@ -18,6 +18,7 @@ const deleteLinodeFromActionMenu = linodeLabel => {
 
 describe('linode landing', () => {
   it('deleting multiple linode with action menu', () => {
+    // catch delete request
     cy.intercept('DELETE', '*/linode/instances/*').as('deleteLinode');
     createLinode().then(linodeA => {
       createLinode().then(linodeB => {

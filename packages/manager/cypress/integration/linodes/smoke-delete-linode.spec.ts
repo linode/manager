@@ -6,6 +6,7 @@ describe('delete linode', () => {
   it('deletes linode from linodes page', () => {
     cy.visitWithLogin('/linodes');
     createLinode().then(linode => {
+      // catch delete request
       cy.intercept('DELETE', '*/linode/instances/*').as('deleteLinode');
 
       clickLinodeActionMenu(linode.label);

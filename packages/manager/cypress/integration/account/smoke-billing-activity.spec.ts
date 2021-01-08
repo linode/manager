@@ -1,5 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 const mockGetInvoices = data => {
+  // modify incoming response
   cy.intercept('*/account/invoices?*', req => {
     req.reply(res => {
       res.send(data);
@@ -56,6 +57,7 @@ beforeEach(() => {
 });
 
 const mockProfile = timezone => {
+  // modify incoming response
   cy.intercept('*/profile', req => {
     req.reply(res => {
       res.send({ ...cachedGetProfile, timezone });
@@ -70,6 +72,8 @@ const checkInvoice = (invoice, tz) => {
   // need to select show all time, to not have invoices hidden due to date
   // findbylabel fails due to react-select being a non acc essible component, will change soon
   // cy.findByLabelText('Transaction Dates').select('All Times')
+  cy.wait('@getProfile');
+  cy.wait('@getAccount');
   fbtVisible('Billing & Payment History');
   containsClick('6 Months').type('All time{enter}');
   cy.log(invoice.date, tz);

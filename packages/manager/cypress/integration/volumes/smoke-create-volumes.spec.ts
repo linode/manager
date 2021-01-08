@@ -37,6 +37,7 @@ const clickDetach = () => {
 
 const createBasicVolume = (linodeLabel?: string) => {
   const volLabel = makeVolumeLabel();
+  // catch create volume post
   cy.intercept('POST', '*/volumes').as('volumeCreated');
   cy.visitWithLogin(urlExtension);
   cy.findByText('volumes');
@@ -93,6 +94,7 @@ describe('volumes', () => {
       const linodeLabel = linode.label;
       createVolume(linodeId).then(volume => {
         const volumeId = volume.id;
+        // catch detach volume post
         cy.intercept('POST', '*/volumes/' + volume.id + '/detach').as(
           'volumeDetached'
         );

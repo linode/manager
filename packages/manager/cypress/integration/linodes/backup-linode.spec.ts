@@ -17,9 +17,11 @@ describe('linode backups', () => {
   it('enable backups', () => {
     createLinode().then(linode => {
       cy.visitWithLogin(`/dashboard`);
+      // intercept request
       cy.intercept('POST', `*/linode/instances/${linode.id}/backups/enable`).as(
         'enableBackups'
       );
+      // intercept response
       cy.intercept('*/account/settings').as('getSettings');
       cy.visit(`/linodes/${linode.id}/backup`);
       // if account is managed, test will pass but skip enabling backups
@@ -47,6 +49,7 @@ describe('linode backups', () => {
     cy.visitWithLogin('/dashboard');
     createLinodeWithBackupsEnabled().then(linode => {
       cy.visit(`/linodes/${linode.id}/backup`);
+      // intercept request
       cy.intercept('POST', `*/linode/instances/${linode.id}/backups`).as(
         'enableBackups'
       );

@@ -19,6 +19,7 @@ describe('create linode', () => {
   it('creates a nanode', () => {
     const rootpass = strings.randomPass();
     const linodeLabel = makeLinodeLabel();
+    // intercept request
     cy.intercept('POST', '*/linode/instances').as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
     containsClick(selectRegionString).type('new {enter}');

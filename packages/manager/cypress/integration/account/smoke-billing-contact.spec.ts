@@ -9,7 +9,7 @@ import {
 const accountData = {
   company: 'company_name',
   email: 'test_email@linode.com',
-  first_name: 'first name',
+  first_name: 'First name',
   last_name: 'Last Name',
   address_1: 'terrible address address for test',
   address_2: 'Very long address for test Very long address for test Ve ',
@@ -36,7 +36,7 @@ const accountData = {
 const newAccountData = {
   company: 'New company_name',
   email: 'new_test_email@linode.com',
-  first_name: 'new first name',
+  first_name: 'New first name',
   last_name: 'New Last Name',
   address_1: 'new terrible address address for test',
   address_2: 'new Very long address for test Very long address for test Ve ',
@@ -48,13 +48,6 @@ const newAccountData = {
   zip: '19108'
 };
 
-const mockGetAccountResponse = data => {
-  cy.intercept('GET', '*/account', req => {
-    req.reply(res => {
-      res.send(data);
-    });
-  }).as('getAccount');
-};
 const checkAccountContactDisplay = data => {
   fbtVisible('Billing Contact');
   fbtVisible(data['company']);
@@ -71,13 +64,15 @@ const checkAccountContactDisplay = data => {
 
 describe('Billing Contact', () => {
   it('Check Billing Contact Form', () => {
-    mockGetAccountResponse(accountData);
+    // intercept get account request and stub response
+    cy.intercept('GET', '*/account', accountData).as('getAccount');
+
     cy.visitWithLogin('/account/billing');
     checkAccountContactDisplay(accountData);
   });
   it('Edit Contact Info', () => {
-    mockGetAccountResponse(accountData);
-    cy.intercept('PUT', '*/account').as('putAccount');
+    // intercept create account request and stub response
+    cy.intercept('PUT', '*/account', newAccountData).as('createAccount');
     cy.visitWithLogin('/account/billing');
     cy.get('[data-qa-contact-summary]').within(_contact => {
       fbtClick('Edit');
@@ -140,8 +135,7 @@ describe('Billing Contact', () => {
       .clear()
       .type(newAccountData['tax_id']);
     fbtClick('Save').then(() => {
-      cy.wait('@putAccount').then(xhr => {
-        // no state in french address, so it should be removed
+      cy.wait('@createAccount').then(xhr => {
         expect(xhr.request.body).to.eql(newAccountData);
       });
     });

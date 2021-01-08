@@ -35,7 +35,7 @@ describe('rescue linode', () => {
   it('rescue blocked', () => {
     cy.visitWithLogin('/support');
     createLinode().then(linode => {
-      // not mocking response here
+      // not mocking response here, intercepting post
       cy.intercept('POST', `*/linode/instances/${linode.id}/rescue`).as(
         'postRebootInRescueMode'
       );
