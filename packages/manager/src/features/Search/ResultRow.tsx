@@ -72,7 +72,7 @@ export const ResultRow: React.FC<CombinedProps> = props => {
       data-qa-result-row={result.label}
       ariaLabel={result.label}
     >
-      <TableCell className={classes.labelCell} parentColumn="Label">
+      <TableCell className={classes.labelCell}>
         <Link
           to={result.data.path}
           className={classes.link}
@@ -82,11 +82,11 @@ export const ResultRow: React.FC<CombinedProps> = props => {
         </Link>
         <Typography variant="body1">{result.data.description}</Typography>
       </TableCell>
-      <TableCell className={classes.regionCell} parentColumn="Region">
+      <TableCell className={classes.regionCell}>
         {result.data.region && <RegionIndicator region={result.data.region} />}
       </TableCell>
       <Hidden smDown>
-        <TableCell className={classes.createdCell} parentColumn="Created">
+        <TableCell className={classes.createdCell}>
           {result.data.created && (
             <Typography>
               <DateTimeDisplay value={result.data.created} />
@@ -94,7 +94,7 @@ export const ResultRow: React.FC<CombinedProps> = props => {
           )}
         </TableCell>
 
-        <TableCell className={classes.tagCell} parentColumn="Tags">
+        <TableCell className={classes.tagCell}>
           <Tags tags={result.data.tags} data-testid={'result-tags'} />
         </TableCell>
       </Hidden>
