@@ -13,7 +13,7 @@ import {
 } from './domains.schema';
 
 import { ResourcePage as Page } from '../types';
-import { Domain } from './types';
+import { Domain, CreateDomainPayload, UpdateDomainPayload } from './types';
 
 /**
  * Returns a paginated list of Domains.
@@ -40,7 +40,7 @@ export const getDomain = (domainId: number) =>
  *
  * @param data { object } Options for type, status, etc.
  */
-export const createDomain = (data: Partial<Domain>) =>
+export const createDomain = (data: CreateDomainPayload) =>
   Request<Domain>(
     setData(data, createDomainSchema),
     setURL(`${API_ROOT}/domains`),
@@ -53,7 +53,7 @@ export const createDomain = (data: Partial<Domain>) =>
  * @param domainId { number } The ID of the Domain to access.
  * @param data { object } Options for type, status, etc.
  */
-export const updateDomain = (domainId: number, data: Partial<Domain>) =>
+export const updateDomain = (domainId: number, data: UpdateDomainPayload) =>
   Request<Domain>(
     setURL(`${API_ROOT}/domains/${domainId}`),
     setMethod('PUT'),
