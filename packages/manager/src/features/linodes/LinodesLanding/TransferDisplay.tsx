@@ -93,7 +93,6 @@ export const TransferDisplay: React.FC<{}> = _ => {
             className={classes.bar}
             max={100}
             value={poolUsagePct}
-            overLimit={quota < used}
             displayValueInline
           />
         )}
