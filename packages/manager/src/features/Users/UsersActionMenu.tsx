@@ -1,80 +1,76 @@
-import { path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
-import { MapState } from 'src/store/types';
+import useProfile from 'src/hooks/useProfile';
+import { useHistory } from 'react-router-dom';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
   username: string;
   onDelete: (username: string) => void;
 }
 
-type CombinedProps = Props & StateProps & RouteComponentProps<{}>;
+type CombinedProps = Props;
 
-class UsersActionMenu extends React.Component<CombinedProps> {
-  createActions = () => {
-    const {
-      onDelete,
-      username,
-      profileUsername,
-      history: { push }
-    } = this.props;
+const UsersActionMenu: React.FC<CombinedProps> = props => {
+  const history = useHistory();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    return (closeMenu: Function): Action[] => {
-      const actions = [
-        {
-          title: 'User Profile',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
-            push(`/account/users/${username}`);
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'User Permissions',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
-            push(`/account/users/${username}/permissions`);
-            e.preventDefault();
-          }
-        },
-        {
-          disabled: username === profileUsername,
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDelete(username);
-            closeMenu();
-            e.preventDefault();
-          },
-          tooltip:
-            username === profileUsername
-              ? "You can't delete the currently active user."
-              : undefined
-        }
-      ];
+  const { onDelete, username } = props;
+  const { profile } = useProfile();
+  const profileUsername = profile.data?.username;
 
-      return actions;
-    };
-  };
+  const actions: Action[] = [
+    {
+      title: 'User Profile',
+      onClick: () => {
+        history.push(`/account/users/${username}`);
+      }
+    },
+    {
+      title: 'User Permissions',
+      onClick: () => {
+        history.push(`/account/users/${username}/permissions`);
+      }
+    },
+    {
+      disabled: username === profileUsername,
+      title: 'Delete',
+      onClick: () => {
+        onDelete(username);
+      },
+      tooltip:
+        username === profileUsername
+          ? "You can't delete the currently active user."
+          : undefined
+    }
+  ];
 
-  render() {
-    return (
-      <ActionMenu
-        createActions={this.createActions()}
-        ariaLabel={`Action menu for user ${this.props.profileUsername}`}
-      />
-    );
-  }
-}
-interface StateProps {
-  profileUsername?: string;
-}
+  return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {matchesSmDown ? (
+        <ActionMenu
+          actionsList={actions}
+          ariaLabel={`Action menu for user ${profileUsername}`}
+        />
+      ) : (
+        actions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+              disabled={action.disabled}
+            />
+          );
+        })
+      )}
+    </>
+  );
+};
 
-const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
-  profileUsername: path(['data', 'username'], state.__resources.profile)
-});
-
-export const connected = connect(mapStateToProps);
-
-export default withRouter(connected(UsersActionMenu));
+export default UsersActionMenu;
