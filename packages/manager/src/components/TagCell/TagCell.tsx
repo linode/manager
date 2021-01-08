@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.tagButton,
     borderRadius: 0,
     color: theme.color.tagIcon,
+    height: 30,
     marginLeft: theme.spacing(),
     padding: 0,
     width: '40px',
@@ -233,7 +234,7 @@ export const TagCell: React.FC<Props> = props => {
           </div>
 
           {hasOverflow && (
-            <Grid item>
+            <Grid item className="py0">
               <IconButton
                 onKeyPress={() => props.listAllTags(tags)}
                 onClick={() => props.listAllTags(tags)}

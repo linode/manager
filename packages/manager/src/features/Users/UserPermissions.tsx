@@ -40,9 +40,8 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames =
-  | 'titleWrapper'
+  | 'title'
   | 'toggle'
-  | 'topGrid'
   | 'unrestrictedRoot'
   | 'globalSection'
   | 'globalRow'
@@ -50,28 +49,18 @@ type ClassNames =
   | 'grantTable'
   | 'selectAll'
   | 'tableSubheading'
-  | 'permSelect'
-  | 'setAll';
+  | 'setAll'
+  | 'label';
 
 const styles = (theme: Theme) =>
   createStyles({
-    topGrid: {
-      marginTop: theme.spacing(1)
-    },
-    titleWrapper: {
-      marginTop: 0,
-      padding: 0,
-      display: 'flex',
-      alignItems: 'center'
+    title: {
+      [theme.breakpoints.down('sm')]: {
+        paddingLeft: theme.spacing()
+      }
     },
     toggle: {
       marginRight: 3
-    },
-    permSelect: {
-      width: 'auto',
-      [theme.breakpoints.up('sm')]: {
-        justifyContent: 'flex-end'
-      }
     },
     unrestrictedRoot: {
       marginTop: theme.spacing(2),
@@ -92,6 +81,13 @@ const styles = (theme: Theme) =>
       '& th': {
         width: '25%',
         minWidth: 150
+      },
+      '& td': {
+        width: '100%',
+        [theme.breakpoints.down('sm')]: {
+          paddingRight: '0 !important',
+          paddingLeft: 0
+        }
       }
     },
     tableSubheading: {
@@ -117,6 +113,13 @@ const styles = (theme: Theme) =>
       },
       '& .react-select__menu-list': {
         width: '100%'
+      }
+    },
+    label: {
+      '& div': {
+        [theme.breakpoints.down('sm')]: {
+          width: '100%'
+        }
       }
     }
   });
@@ -671,7 +674,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             {entityGrants.map((grant, idx) => {
               return (
                 <TableRow key={grant.id} data-qa-specific-grant={grant.label}>
-                  <TableCell parentColumn="Label">{grant.label}</TableCell>
+                  <TableCell className={classes.label} parentColumn="Label">
+                    {grant.label}
+                  </TableCell>
                   <TableCell parentColumn="None" padding="checkbox">
                     <Radio
                       name={`${grant.id}-perms`}
@@ -820,7 +825,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {generalError && <Notice error text={generalError} spacingTop={8} />}
         <Grid container alignItems="center" style={{ width: 'auto' }}>
           <Grid item>
-            <Typography variant="h2" data-qa-restrict-access={restricted}>
+            <Typography
+              className={classes.title}
+              variant="h2"
+              data-qa-restrict-access={restricted}
+            >
               Full Account Access:
             </Typography>
           </Grid>

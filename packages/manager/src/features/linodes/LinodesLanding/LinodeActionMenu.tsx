@@ -45,7 +45,8 @@ const useStyles = makeStyles(() => ({
   },
   powerOnOrOff: {
     borderRadius: 0,
-    minWidth: 'auto',
+    justifyContent: 'flex-start',
+    minWidth: 83,
     whiteSpace: 'nowrap',
     '&:hover': {
       textDecoration: 'none'
