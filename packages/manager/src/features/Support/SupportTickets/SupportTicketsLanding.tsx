@@ -81,14 +81,14 @@ const styles = (theme: Theme) =>
       '&[data-reach-tab][data-selected]': {
         fontFamily: theme.font.bold,
         color: theme.color.headline,
-        borderBottom: `2px solid ${theme.color.blue}`
+        borderBottom: `3px solid ${theme.color.blue}`
       }
     },
     tabList: {
       '&[data-reach-tab-list]': {
         background: 'none !important',
         boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
-        marginBottom: theme.spacing(3),
+        marginBottom: theme.spacing(),
         [theme.breakpoints.down('md')]: {
           overflowX: 'scroll',
           padding: 1
