@@ -26,28 +26,44 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 
-type ClassNames = 'root' | 'inner' | 'deleteRoot' | 'topMargin';
+type ClassNames =
+  | 'title'
+  | 'root'
+  | 'inner'
+  | 'button'
+  | 'deleteRoot'
+  | 'topMargin';
 
 const styles = (theme: Theme) =>
   createStyles({
+    title: {
+      marginTop: theme.spacing(2),
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: theme.spacing()
+      }
+    },
     root: {
       flexGrow: 1,
-      width: '100%',
-      marginTop: theme.spacing(1),
+      backgroundColor: theme.color.white,
+      marginTop: theme.spacing(),
       marginBottom: theme.spacing(3),
-      backgroundColor: theme.color.white
+      width: '100%'
+    },
+    button: {
+      marginLeft: 0
     },
     deleteRoot: {
       flexGrow: 1,
-      width: '100%',
+      backgroundColor: theme.color.white,
       marginTop: theme.spacing(3),
-      backgroundColor: theme.color.white
+      width: '100%'
     },
     inner: {
       padding: theme.spacing(3)
     },
     topMargin: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
+      marginLeft: 0
     }
   });
 
@@ -128,8 +144,12 @@ class UserProfile extends React.Component<CombinedProps> {
     const generalProfileError = hasProfileErrorFor('none');
 
     return (
-      <div>
-        <Typography variant="h2" data-qa-profile-header>
+      <>
+        <Typography
+          className={classes.title}
+          variant="h2"
+          data-qa-profile-header
+        >
           User Profile
         </Typography>
         <Paper className={classes.root}>
@@ -152,6 +172,7 @@ class UserProfile extends React.Component<CombinedProps> {
             <ActionsPanel>
               <Button
                 buttonType="primary"
+                className={classes.button}
                 loading={accountSaving}
                 onClick={saveAccount}
                 data-qa-submit
@@ -190,6 +211,7 @@ class UserProfile extends React.Component<CombinedProps> {
                 // This should be disabled if this is NOT the current user.
                 disabled={profileUsername !== originalUsername}
                 buttonType="primary"
+                className={classes.button}
                 loading={profileSaving}
                 onClick={saveProfile}
                 data-qa-submit
@@ -199,7 +221,7 @@ class UserProfile extends React.Component<CombinedProps> {
             </ActionsPanel>
           </div>
         </Paper>
-      </div>
+      </>
     );
   };
 
