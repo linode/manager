@@ -23,9 +23,7 @@ import { DialogType } from 'src/features/linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import { ExtendedLinode } from '../LinodesDetail/types';
-import useFlags from 'src/hooks/useFlags';
 import TableWrapper from './TableWrapper';
-import TableWrapper_CMR from './TableWrapper_CMR';
 import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
@@ -131,8 +129,6 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
     ...rest
   } = props;
 
-  const flags = useFlags();
-
   const dataLength = data.length;
 
   const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
@@ -157,41 +153,39 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
     return (
       <>
         <Grid item xs={12} className={'px0'}>
-          {flags.cmr && (
-            <div className={classes.controlHeader}>
-              <div id="displayViewDescription" className="visually-hidden">
-                Currently in {linodeViewPreference} view
-              </div>
-              <Tooltip placement="top" title="List view">
-                <IconButton
-                  aria-label="Toggle display"
-                  aria-describedby={'displayViewDescription'}
-                  onClick={toggleLinodeView}
-                  disableRipple
-                  className={classes.toggleButton}
-                >
-                  <TableView />
-                </IconButton>
-              </Tooltip>
-
-              <div id="groupByDescription" className="visually-hidden">
-                {linodesAreGrouped
-                  ? 'group by tag is currently enabled'
-                  : 'group by tag is currently disabled'}
-              </div>
-              <Tooltip placement="top-end" title="Ungroup by tag">
-                <IconButton
-                  aria-label={`Toggle group by tag`}
-                  aria-describedby={'groupByDescription'}
-                  onClick={toggleGroupLinodes}
-                  disableRipple
-                  className={classes.toggleButton}
-                >
-                  <GroupByTag />
-                </IconButton>
-              </Tooltip>
+          <div className={classes.controlHeader}>
+            <div id="displayViewDescription" className="visually-hidden">
+              Currently in {linodeViewPreference} view
             </div>
-          )}
+            <Tooltip placement="top" title="List view">
+              <IconButton
+                aria-label="Toggle display"
+                aria-describedby={'displayViewDescription'}
+                onClick={toggleLinodeView}
+                disableRipple
+                className={classes.toggleButton}
+              >
+                <TableView />
+              </IconButton>
+            </Tooltip>
+
+            <div id="groupByDescription" className="visually-hidden">
+              {linodesAreGrouped
+                ? 'group by tag is currently enabled'
+                : 'group by tag is currently disabled'}
+            </div>
+            <Tooltip placement="top-end" title="Ungroup by tag">
+              <IconButton
+                aria-label={`Toggle group by tag`}
+                aria-describedby={'groupByDescription'}
+                onClick={toggleGroupLinodes}
+                disableRipple
+                className={classes.toggleButton}
+              >
+                <GroupByTag />
+              </IconButton>
+            </Tooltip>
+          </div>
         </Grid>
         {orderedGroupedLinodes.length === 0 ? (
           <Typography style={{ textAlign: 'center' }}>
@@ -278,173 +272,89 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
 
   if (display === 'list') {
     return (
-      // eslint-disable-next-line
-      <React.Fragment>
-        {flags.cmr ? (
-          <TableWrapper_CMR
-            {...tableWrapperProps}
-            linodeViewPreference="list"
-            linodesAreGrouped={true}
-            toggleLinodeView={toggleLinodeView}
-            toggleGroupLinodes={toggleGroupLinodes}
-          >
-            {orderedGroupedLinodes.length === 0 ? (
-              <TableBody>
-                <TableRowEmptyState_CMR colSpan={12} />
-              </TableBody>
-            ) : null}
-            {orderedGroupedLinodes.map(([tag, linodes]) => {
-              return (
-                <React.Fragment key={tag}>
-                  <Paginate
-                    data={linodes}
-                    pageSize={infinitePageSize}
-                    pageSizeSetter={setInfinitePageSize}
-                  >
-                    {({
-                      data: paginatedData,
-                      handlePageChange,
-                      handlePageSizeChange,
-                      page,
-                      pageSize,
-                      count
-                    }) => {
-                      const finalProps = {
-                        ...rest,
-                        data: paginatedData,
-                        pageSize,
-                        page,
-                        handlePageSizeChange,
-                        handlePageChange,
-                        handleOrderChange,
-                        order,
-                        orderBy,
-                        isVLAN
-                      };
-                      return (
-                        <TableBody
-                          className={classes.groupContainer}
-                          data-qa-tag-header={tag}
-                        >
-                          <TableRow
-                            className={classes.tagHeaderRow}
-                            role="cell"
+      <TableWrapper
+        {...tableWrapperProps}
+        linodeViewPreference="list"
+        linodesAreGrouped={true}
+        toggleLinodeView={toggleLinodeView}
+        toggleGroupLinodes={toggleGroupLinodes}
+      >
+        {orderedGroupedLinodes.length === 0 ? (
+          <TableBody>
+            <TableRowEmptyState_CMR colSpan={12} />
+          </TableBody>
+        ) : null}
+        {orderedGroupedLinodes.map(([tag, linodes]) => {
+          return (
+            <React.Fragment key={tag}>
+              <Paginate
+                data={linodes}
+                pageSize={infinitePageSize}
+                pageSizeSetter={setInfinitePageSize}
+              >
+                {({
+                  data: paginatedData,
+                  handlePageChange,
+                  handlePageSizeChange,
+                  page,
+                  pageSize,
+                  count
+                }) => {
+                  const finalProps = {
+                    ...rest,
+                    data: paginatedData,
+                    pageSize,
+                    page,
+                    handlePageSizeChange,
+                    handlePageChange,
+                    handleOrderChange,
+                    order,
+                    orderBy,
+                    isVLAN
+                  };
+                  return (
+                    <TableBody
+                      className={classes.groupContainer}
+                      data-qa-tag-header={tag}
+                    >
+                      <TableRow className={classes.tagHeaderRow} role="cell">
+                        <TableCell colSpan={7}>
+                          <Typography
+                            variant="h2"
+                            component="h3"
+                            className={classes.tagHeader}
                           >
-                            <TableCell colSpan={7}>
-                              <Typography
-                                variant="h2"
-                                component="h3"
-                                className={classes.tagHeader}
-                              >
-                                {tag}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <Component {...finalProps} />
-                          {count > MIN_PAGE_SIZE && (
-                            <TableRow>
-                              <TableCell
-                                colSpan={7}
-                                className={classes.paginationCell}
-                              >
-                                <PaginationFooter
-                                  count={count}
-                                  handlePageChange={handlePageChange}
-                                  handleSizeChange={handlePageSizeChange}
-                                  pageSize={pageSize}
-                                  page={page}
-                                  eventCategory={'linodes landing'}
-                                  showAll
-                                />
-                              </TableCell>
-                            </TableRow>
-                          )}
-                        </TableBody>
-                      );
-                    }}
-                  </Paginate>
-                </React.Fragment>
-              );
-            })}
-          </TableWrapper_CMR>
-        ) : (
-          <TableWrapper {...tableWrapperProps}>
-            {orderedGroupedLinodes.map(([tag, linodes]) => {
-              return (
-                <React.Fragment key={tag}>
-                  <Paginate
-                    data={linodes}
-                    pageSize={infinitePageSize}
-                    pageSizeSetter={setInfinitePageSize}
-                  >
-                    {({
-                      data: paginatedData,
-                      handlePageChange,
-                      handlePageSizeChange,
-                      page,
-                      pageSize,
-                      count
-                    }) => {
-                      const finalProps = {
-                        ...rest,
-                        data: paginatedData,
-                        pageSize,
-                        page,
-                        handlePageSizeChange,
-                        handlePageChange,
-                        handleOrderChange,
-                        order,
-                        orderBy,
-                        isVLAN
-                      };
-                      return (
-                        <TableBody
-                          className={classes.groupContainer}
-                          data-qa-tag-header={tag}
-                        >
-                          <TableRow
-                            className={classes.tagHeaderRow}
-                            role="cell"
+                            {tag}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                      <Component {...finalProps} />
+                      {count > MIN_PAGE_SIZE && (
+                        <TableRow>
+                          <TableCell
+                            colSpan={7}
+                            className={classes.paginationCell}
                           >
-                            <TableCell colSpan={7}>
-                              <Typography
-                                variant="h2"
-                                component="h3"
-                                className={classes.tagHeader}
-                              >
-                                {tag}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                          <Component {...finalProps} />
-                          {count > MIN_PAGE_SIZE && (
-                            <TableRow>
-                              <TableCell
-                                colSpan={7}
-                                className={classes.paginationCell}
-                              >
-                                <PaginationFooter
-                                  count={count}
-                                  handlePageChange={handlePageChange}
-                                  handleSizeChange={handlePageSizeChange}
-                                  pageSize={pageSize}
-                                  page={page}
-                                  eventCategory={'linodes landing'}
-                                  showAll
-                                />
-                              </TableCell>
-                            </TableRow>
-                          )}
-                        </TableBody>
-                      );
-                    }}
-                  </Paginate>
-                </React.Fragment>
-              );
-            })}
-          </TableWrapper>
-        )}
-      </React.Fragment>
+                            <PaginationFooter
+                              count={count}
+                              handlePageChange={handlePageChange}
+                              handleSizeChange={handlePageSizeChange}
+                              pageSize={pageSize}
+                              page={page}
+                              eventCategory={'linodes landing'}
+                              showAll
+                            />
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  );
+                }}
+              </Paginate>
+            </React.Fragment>
+          );
+        })}
+      </TableWrapper>
     );
   }
 
