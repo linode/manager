@@ -56,7 +56,7 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <h4>Environment</h4>
+        <h4 style={{ marginBottom: 8 }}>Environment</h4>
       </Grid>
       <Grid item xs={12}>
         <select
@@ -67,6 +67,7 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
             setSelectedOption(Math.max(selectedIndex, 0));
           }}
           defaultValue={currentEnvLabel}
+          style={{ marginRight: 8 }}
         >
           <option value="" disabled>
             Select an environment
@@ -81,7 +82,6 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
           })}
         </select>
         <button
-          style={{ marginLeft: 8 }}
           onClick={() => {
             const selected = options[selectedOption];
             if (selected) {
