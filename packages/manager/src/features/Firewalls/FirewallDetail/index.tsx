@@ -6,6 +6,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/DocumentationButton';
 import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -28,7 +29,16 @@ const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
 
 type CombinedProps = RouteComponentProps<{ id: string }> & WithFirewallsProps;
 
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing()
+    }
+  }
+}));
+
 export const FirewallDetail: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
   const flags = useFlags();
 
   // Source the Firewall's ID from the /:id path param.
@@ -102,6 +112,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
+        className={classes.root}
       >
         <Breadcrumb
           pathname={props.location.pathname}

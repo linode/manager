@@ -5,31 +5,27 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
+import Tab from 'src/components/core/ReachTab';
+import TabList from 'src/components/core/ReachTabList';
+import TabPanel from 'src/components/core/ReachTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import TabPanel from 'src/components/core/ReachTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import Tab from 'src/components/core/ReachTab';
-import TabList from 'src/components/core/ReachTabList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
-import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import SupportTicketDrawer from './SupportTicketDrawer';
-import TicketList from './TicketList';
-import TicketList_CMR from './TicketList_CMR';
 import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
-import withFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
+import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
+import SupportTicketDrawer from './SupportTicketDrawer';
+import TicketList from './TicketList_CMR';
 
 type ClassNames =
   | 'title'
@@ -41,12 +37,15 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     title: {
-      marginBottom: theme.spacing(2)
+      [theme.breakpoints.down('xs')]: {
+        marginLeft: theme.spacing()
+      }
     },
     openTicketButton: {
       minWidth: 150,
-      paddingLeft: theme.spacing(1) + 4,
-      paddingRight: theme.spacing(1) + 4
+      [theme.breakpoints.down('sm')]: {
+        marginRight: theme.spacing()
+      }
     },
     tabsWrapper: {
       position: 'relative'
@@ -82,14 +81,14 @@ const styles = (theme: Theme) =>
       '&[data-reach-tab][data-selected]': {
         fontFamily: theme.font.bold,
         color: theme.color.headline,
-        borderBottom: `2px solid ${theme.color.blue}`
+        borderBottom: `3px solid ${theme.color.blue}`
       }
     },
     tabList: {
       '&[data-reach-tab-list]': {
         background: 'none !important',
         boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
-        marginBottom: theme.spacing(3),
+        marginBottom: theme.spacing(),
         [theme.breakpoints.down('md')]: {
           overflowX: 'scroll',
           padding: 1
@@ -104,8 +103,7 @@ interface Props {
 type CombinedProps = Props &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
-  GlobalErrorProps &
-  FeatureFlagConsumerProps;
+  GlobalErrorProps;
 
 interface State {
   value: number;
@@ -236,7 +234,7 @@ export class SupportTicketsLanding extends React.PureComponent<
           justify="space-between"
           updateFor={[classes]}
         >
-          <Grid item className="p0">
+          <Grid item className={`${classes.title} p0`}>
             <Breadcrumb
               pathname={location.pathname}
               labelTitle="Tickets"
@@ -273,18 +271,10 @@ export class SupportTicketsLanding extends React.PureComponent<
           </TabList>
           <TabPanels>
             <TabPanel>
-              {this.props.flags.cmr ? (
-                <TicketList_CMR newTicket={newTicket} filterStatus={'open'} />
-              ) : (
-                <TicketList newTicket={newTicket} filterStatus={'open'} />
-              )}
+              <TicketList newTicket={newTicket} filterStatus={'open'} />
             </TabPanel>
             <TabPanel>
-              {this.props.flags.cmr ? (
-                <TicketList_CMR newTicket={newTicket} filterStatus={'closed'} />
-              ) : (
-                <TicketList newTicket={newTicket} filterStatus={'closed'} />
-              )}
+              <TicketList newTicket={newTicket} filterStatus={'closed'} />
             </TabPanel>
           </TabPanels>
         </Tabs>
@@ -300,6 +290,5 @@ const styled = withStyles(styles);
 export default compose<CombinedProps, Props>(
   withRouter,
   styled,
-  withGlobalErrors(),
-  withFlags
+  withGlobalErrors()
 )(SupportTicketsLanding);
