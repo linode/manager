@@ -1,79 +1,43 @@
-import { shallow } from 'enzyme';
-import * as React from 'react';
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { regionFactory } from 'src/factories/regions';
-import { CombinedProps, LinodeActionMenu } from './LinodeActionMenu';
-
-const props: CombinedProps = {
-  linodeId: 123,
-  linodeLabel: 'testLinode',
-  linodeRegion: 'us-east',
-  linodeType: 'g6-standard-1',
-  openDeleteDialog: jest.fn(),
-  readOnly: false,
-  typesLoading: false,
-  typesData: [],
-  regionsData: [],
-  regionsLastUpdated: 0,
-  regionsLoading: false,
-  openPowerActionDialog: jest.fn(),
-  linodeBackups: {
-    enabled: false,
-    schedule: {
-      window: null,
-      day: null
-    },
-    last_successful: null
-  },
-  linodeStatus: '',
-  noImage: false,
-  ...reactRouterProps
-};
+import { buildQueryStringForLinodeClone } from './LinodeActionMenu';
 
 describe('LinodeActionMenu', () => {
-  const wrapper = shallow<LinodeActionMenu>(<LinodeActionMenu {...props} />);
-
   describe('buildQueryStringForLinodeClone', () => {
     it('returns `type` and `linodeID` params', () => {
-      const result = wrapper.instance().buildQueryStringForLinodeClone();
+      const result = buildQueryStringForLinodeClone(
+        1,
+        'us-east',
+        'g6-standard-1',
+        [],
+        []
+      );
       expect(result).toMatch('type=');
       expect(result).toMatch('linodeID=');
     });
 
     it('includes `regionID` param if valid region', () => {
-      wrapper.setProps({
-        linodeRegion: 'us-east',
-        regionsData: regionFactory.buildList(1, { id: 'us-east' })
-      });
-      expect(wrapper.instance().buildQueryStringForLinodeClone()).toMatch(
-        'regionID=us-east'
-      );
-
-      wrapper.setProps({
-        linodeRegion: 'invalid-region'
-      });
-      expect(wrapper.instance().buildQueryStringForLinodeClone()).not.toMatch(
-        'regionID='
-      );
+      const regionsData = regionFactory.buildList(1, { id: 'us-east' });
+      expect(
+        buildQueryStringForLinodeClone(1, 'us-east', '', [], regionsData)
+      ).toMatch('regionID=us-east');
+      expect(
+        buildQueryStringForLinodeClone(1, 'invalid-region', '', [], regionsData)
+      ).not.toMatch('regionID=us-east');
     });
 
-    it('includes `typeID` param if valid type', () => {
-      wrapper.setProps({
-        // This is not actually (currently) a valid type, but it's in the mock data
-        linodeType: 'g5-standard-2',
-        typesData: extendedTypes
-      });
-      expect(wrapper.instance().buildQueryStringForLinodeClone()).toMatch(
-        'typeID=g5-standard-2'
-      );
-
-      wrapper.setProps({
-        linodeType: 'invalid-type'
-      });
-      expect(wrapper.instance().buildQueryStringForLinodeClone()).not.toMatch(
-        'typeID='
-      );
-    });
+    it('includes `typeID` param if valid type', () =>
+      expect(
+        buildQueryStringForLinodeClone(
+          1,
+          '',
+          'g5-standard-2',
+          extendedTypes,
+          []
+        )
+      ).toMatch('typeID=g5-standard-2'));
+    expect(
+      buildQueryStringForLinodeClone(1, '', 'invalid-type', extendedTypes, [])
+    ).not.toMatch('typeID=');
   });
 });

@@ -25,11 +25,15 @@ export const ServiceWorkerTool: React.FC<{}> = _ => {
 
   return (
     <>
-      <span>Mock Service Worker: {workerActive ? 'Enabled' : 'Disabled'}</span>
+      <span style={{ marginRight: 8 }}>
+        <span style={{ marginRight: 8 }}>Mock Service Worker:</span>
+        {workerActive ? 'Enabled' : 'Disabled'}
+      </span>
       <input
         type="checkbox"
         checked={workerActive}
         onChange={e => handleToggleWorker(e)}
+        style={{ margin: 0 }}
       />
     </>
   );
