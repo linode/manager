@@ -4,9 +4,11 @@ import { fbtVisible, getVisible } from '../support/helpers';
 
 describe('dashboard', () => {
   it('checks the dashboard page with 2+ linodes', () => {
+    cy.intercept('GET', '*/profile/preferences').as('getPreferences');
     createLinode().then(() => {
       createLinode().then(() => {
         cy.visitWithLogin('/');
+        cy.wait('@getPreferences');
         getVisible('[data-qa-add-new-menu-button="true"]');
         fbtVisible('Main search');
         getVisible('[aria-label="Notifications"]');
