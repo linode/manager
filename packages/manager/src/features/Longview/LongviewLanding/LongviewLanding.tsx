@@ -3,22 +3,20 @@ import {
   getLongviewSubscriptions
 } from '@linode/api-v4/lib/longview';
 import {
-  LongviewSubscription,
-  ActiveLongviewPlan
+  ActiveLongviewPlan,
+  LongviewSubscription
 } from '@linode/api-v4/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
-import Box from 'src/components/core/Box';
-import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
-import DocumentationButton from 'src/components/DocumentationButton';
+import LandingHeader from 'src/components/LandingHeader';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import TabLinkList from 'src/components/TabLinkList';
 import withSettings, {
   Props as SettingsProps
 } from 'src/containers/accountSettings.container';
@@ -27,8 +25,6 @@ import withLongviewClients, {
 } from 'src/containers/longview.container';
 import withProfile from 'src/containers/profile.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import useFlags from 'src/hooks/useFlags';
-import LandingHeader from 'src/components/LandingHeader';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import SubscriptionDialog from './SubscriptionDialog';
 
@@ -51,7 +47,6 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
     () => getLongviewSubscriptions().then(response => response.data),
     []
   );
-  const flags = useFlags();
 
   const { accountSettings, createLongviewClient } = props;
 
@@ -131,38 +126,15 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
 
   return (
     <>
-      <Box
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        {flags.cmr ? (
-          // @todo: remove inline style when we switch over to CMR
-          <div style={{ width: '100%' }}>
-            <LandingHeader
-              title="Longview"
-              entity="Client"
-              createButtonText="Create a Client"
-              docsLink="https://www.linode.com/docs/platform/longview/longview/"
-              loading={newClientLoading}
-              onAddNew={handleAddClient}
-              removeCrumbX={1}
-            />
-          </div>
-        ) : (
-          <>
-            <Breadcrumb
-              pathname={props.location.pathname}
-              labelTitle="Longview"
-              removeCrumbX={1}
-            />
-            <DocumentationButton
-              href={'https://www.linode.com/docs/platform/longview/longview/'}
-            />
-          </>
-        )}
-      </Box>
+      <LandingHeader
+        title="Longview"
+        entity="Client"
+        createButtonText="Create a Client"
+        docsLink="https://www.linode.com/docs/platform/longview/longview/"
+        loading={newClientLoading}
+        onAddNew={handleAddClient}
+        removeCrumbX={1}
+      />
       <Tabs
         index={Math.max(
           tabs.findIndex(tab => matches(tab.routeName)),

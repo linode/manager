@@ -32,21 +32,29 @@ import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  tabBar: {
-    marginTop: 0,
-    position: 'relative'
+  root: {
+    [theme.breakpoints.down('sm')]: {
+      paddingRight: theme.spacing()
+    },
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: theme.spacing()
+    }
   },
   section: {
     alignItems: 'flex-start'
   },
-  button: {
-    marginBottom: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
-      order: 2
-    },
-    '& button': {
-      [theme.breakpoints.only('md')]: {
-        padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`
+  tabBar: {
+    marginTop: 0,
+    position: 'relative'
+  },
+  tabList: {
+    '&[data-reach-tab-list]': {
+      background: 'none !important',
+      boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
+      marginBottom: theme.spacing(3),
+      [theme.breakpoints.down('md')]: {
+        overflowX: 'scroll',
+        padding: 1
       }
     }
   },
@@ -82,17 +90,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontFamily: theme.font.bold,
       color: theme.color.headline,
       borderBottom: `2px solid ${theme.cmrTextColors.linkActiveLight}`
-    }
-  },
-  tabList: {
-    '&[data-reach-tab-list]': {
-      background: 'none !important',
-      boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
-      marginBottom: theme.spacing(3),
-      [theme.breakpoints.down('md')]: {
-        overflowX: 'scroll',
-        padding: 1
-      }
     }
   }
 }));
@@ -293,7 +290,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
-      <Grid container alignItems="center" justify="space-between">
+      <Grid
+        container
+        className={classes.root}
+        alignItems="center"
+        justify="space-between"
+      >
         <Grid item className="p0">
           <Breadcrumb
             onEditHandlers={{
@@ -307,7 +309,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             data-qa-breadcrumb
           />
         </Grid>
-        <Grid item className="p0">
+        <Grid item>
           <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
         </Grid>
       </Grid>

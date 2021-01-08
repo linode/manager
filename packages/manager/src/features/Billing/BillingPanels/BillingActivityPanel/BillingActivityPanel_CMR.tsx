@@ -94,17 +94,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   transactionType: {
-    marginRight: theme.spacing() + 2,
-    width: 200,
-    [theme.breakpoints.down('sm')]: {
-      marginTop: 4
-    }
+    marginRight: theme.spacing(),
+    width: 200
   },
   transactionDate: {
-    width: 130,
-    [theme.breakpoints.down('sm')]: {
-      marginTop: 4
-    }
+    width: 130
   },
   descriptionColumn: {
     width: '25%'
