@@ -26,13 +26,7 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 
-type ClassNames =
-  | 'title'
-  | 'root'
-  | 'inner'
-  | 'button'
-  | 'deleteRoot'
-  | 'topMargin';
+type ClassNames = 'title' | 'wrapper' | 'topMargin';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -42,24 +36,13 @@ const styles = (theme: Theme) =>
         marginLeft: theme.spacing()
       }
     },
-    root: {
-      flexGrow: 1,
+    wrapper: {
       backgroundColor: theme.color.white,
       marginTop: theme.spacing(),
-      marginBottom: theme.spacing(3),
-      width: '100%'
-    },
-    button: {
-      marginLeft: 0
-    },
-    deleteRoot: {
-      flexGrow: 1,
-      backgroundColor: theme.color.white,
-      marginTop: theme.spacing(3),
-      width: '100%'
-    },
-    inner: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
+      '&:not(:last-child)': {
+        marginBottom: theme.spacing(3)
+      }
     },
     topMargin: {
       marginTop: theme.spacing(2),
@@ -152,74 +135,69 @@ class UserProfile extends React.Component<CombinedProps> {
         >
           User Profile
         </Typography>
-        <Paper className={classes.root}>
-          <div className={classes.inner}>
-            {accountSuccess && (
-              <Notice success spacingBottom={0}>
-                Username updated successfully
-              </Notice>
-            )}
-            {generalAccountError && (
-              <Notice error text={generalAccountError} spacingBottom={0} />
-            )}
-            <TextField
-              label="Username"
-              value={username}
-              onChange={changeUsername}
-              errorText={hasAccountErrorFor('username')}
-              data-qa-username
-            />
-            <ActionsPanel>
-              <Button
-                buttonType="primary"
-                className={classes.button}
-                loading={accountSaving}
-                onClick={saveAccount}
-                data-qa-submit
-              >
-                Save
-              </Button>
-            </ActionsPanel>
-          </div>
+        <Paper className={classes.wrapper}>
+          {accountSuccess && (
+            <Notice success spacingBottom={0}>
+              Username updated successfully
+            </Notice>
+          )}
+          {generalAccountError && (
+            <Notice error text={generalAccountError} spacingBottom={0} />
+          )}
+          <TextField
+            label="Username"
+            value={username}
+            onChange={changeUsername}
+            errorText={hasAccountErrorFor('username')}
+            data-qa-username
+          />
+          <ActionsPanel>
+            <Button
+              buttonType="primary"
+              disabled={username === originalUsername}
+              loading={accountSaving}
+              onClick={saveAccount}
+              data-qa-submit
+            >
+              Save
+            </Button>
+          </ActionsPanel>
         </Paper>
-        <Paper className={classes.root}>
-          <div className={classes.inner}>
-            {profileSuccess && (
-              <Notice success spacingBottom={0}>
-                Email updated successfully
-              </Notice>
-            )}
-            {generalProfileError && (
-              <Notice error text={generalProfileError} spacingBottom={0} />
-            )}
-            <TextField
+        <Paper className={classes.wrapper}>
+          {profileSuccess && (
+            <Notice success spacingBottom={0}>
+              Email updated successfully
+            </Notice>
+          )}
+          {generalProfileError && (
+            <Notice error text={generalProfileError} spacingBottom={0} />
+          )}
+          <TextField
+            // This should be disabled if this is NOT the current user.
+            disabled={profileUsername !== originalUsername}
+            label="Email"
+            value={email}
+            onChange={changeEmail}
+            tooltipText={
+              profileUsername !== originalUsername
+                ? "You can't change another user's email address"
+                : ''
+            }
+            errorText={hasProfileErrorFor('email')}
+            data-qa-email
+          />
+          <ActionsPanel>
+            <Button
               // This should be disabled if this is NOT the current user.
               disabled={profileUsername !== originalUsername}
-              label="Email"
-              value={email}
-              onChange={changeEmail}
-              tooltipText={
-                profileUsername !== originalUsername
-                  ? "You can't change another user's email address"
-                  : ''
-              }
-              errorText={hasProfileErrorFor('email')}
-              data-qa-email
-            />
-            <ActionsPanel>
-              <Button
-                // This should be disabled if this is NOT the current user.
-                disabled={profileUsername !== originalUsername}
-                buttonType="primary"
-                className={classes.button}
-                loading={profileSaving}
-                onClick={saveProfile}
-                data-qa-submit
-              >
-                Save
-              </Button>
-            </ActionsPanel>
-          </div>
+              buttonType="primary"
+              loading={profileSaving}
+              onClick={saveProfile}
+              data-qa-submit
+            >
+              Save
+            </Button>
+          </ActionsPanel>
         </Paper>
       </>
     );
@@ -265,38 +243,36 @@ class UserProfile extends React.Component<CombinedProps> {
     const { classes, profileUsername } = this.props;
     const { userDeleteError, toDeleteUsername } = this.state;
     return (
-      <Paper className={classes.deleteRoot}>
-        <div className={classes.inner}>
-          <Typography variant="h2" data-qa-delete-user-header>
-            Delete User
-          </Typography>
-          {userDeleteError && (
-            <Notice
-              className={classes.topMargin}
-              error
-              text="Error when deleting user, please try again later"
-            />
-          )}
-          <Button
-            disabled={profileUsername === toDeleteUsername}
+      <Paper className={classes.wrapper}>
+        <Typography variant="h2" data-qa-delete-user-header>
+          Delete User
+        </Typography>
+        {userDeleteError && (
+          <Notice
             className={classes.topMargin}
-            buttonType="primary"
-            destructive
-            onClick={this.onDelete}
-            data-qa-confirm-delete
-          >
-            Delete
-          </Button>
-          {profileUsername === toDeleteUsername && (
-            <HelpIcon
-              className={classes.topMargin}
-              text="You can't delete the currently active user"
-            />
-          )}
-          <Typography className={classes.topMargin} variant="body1">
-            The user will be deleted permanently.
-          </Typography>
-        </div>
+            error
+            text="Error when deleting user, please try again later"
+          />
+        )}
+        <Button
+          disabled={profileUsername === toDeleteUsername}
+          className={classes.topMargin}
+          buttonType="primary"
+          destructive
+          onClick={this.onDelete}
+          data-qa-confirm-delete
+        >
+          Delete
+        </Button>
+        {profileUsername === toDeleteUsername && (
+          <HelpIcon
+            className={classes.topMargin}
+            text="You can't delete the currently active user"
+          />
+        )}
+        <Typography className={classes.topMargin} variant="body1">
+          The user will be deleted permanently.
+        </Typography>
       </Paper>
     );
   }
@@ -306,9 +282,10 @@ class UserProfile extends React.Component<CombinedProps> {
     const { toDeleteUsername, deleteConfirmDialogOpen } = this.state;
 
     return (
-      <React.Fragment>
+      // eslint-disable-next-line react/jsx-no-useless-fragment
+      <>
         {username !== undefined ? (
-          <React.Fragment>
+          <>
             <DocumentTitleSegment segment={`${username} - Profile`} />
             {this.renderProfileSection()}
             {this.renderDeleteSection()}
@@ -318,11 +295,11 @@ class UserProfile extends React.Component<CombinedProps> {
               onDelete={this.onDeleteConfirm}
               onCancel={this.onDeleteCancel}
             />
-          </React.Fragment>
+          </>
         ) : (
           <CircleProgress />
         )}
-      </React.Fragment>
+      </>
     );
   }
 }

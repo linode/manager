@@ -912,7 +912,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         root: {
           '&$disabled': {
             borderColor: '#ccc',
-            color: '#ccc',
+            color: 'rgba(0, 0, 0, 0.75)',
             opacity: 0.5
           },
           '&$focused': {
