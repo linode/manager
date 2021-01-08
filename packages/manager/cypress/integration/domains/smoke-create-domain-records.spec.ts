@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import {
   createDomain,
   deleteDomainById,
@@ -96,6 +97,7 @@ describe('Creates Domains record with Form', () => {
   createRecords().forEach(rec => {
     return it(rec.name, () => {
       createDomain().then(domain => {
+        // intercept create api record request
         cy.intercept('POST', '/v4/domains/*/record*').as('apiCreateRecord');
         const url = `/domains/${domain.id}`;
         cy.visitWithLogin(`/domains/${domain.id}`);

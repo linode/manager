@@ -46,7 +46,7 @@ describe('create NodeBalancer', () => {
         label: makeNodeBalLabel(),
         linodePrivateIp: linode.ipv4[1]
       };
-
+      // catch request
       cy.intercept('POST', '*/nodebalancers').as('createNodeBalancer');
       createNodeBalancerWithUI(nodeBal);
       cy.wait('@createNodeBalancer')
@@ -59,6 +59,7 @@ describe('create NodeBalancer', () => {
   });
   it('API error Handling', () => {
     createLinode().then(linode => {
+      // catch request
       cy.intercept('POST', '*/nodebalancers').as('createNodeBalancer');
       createNodeBalancerWithUI({
         label: 'cy-test-dfghjk^uu7',

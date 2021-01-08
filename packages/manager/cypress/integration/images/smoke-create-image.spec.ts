@@ -12,48 +12,42 @@ import {
 describe('create image', () => {
   it('creates first image w/ drawer, and fail because POST is stubbed', () => {
     const diskLabel = 'Debian 10 Disk';
-    cy.intercept('/v4/images?page_size=100', req => {
-      req.reply(res => {
-        res.send({
-          results: 0,
-          data: [],
-          page: 1,
-          pages: 1
-        });
-      });
+    // stub incoming response
+    cy.intercept('/v4/images?page_size=100', {
+      results: 0,
+      data: [],
+      page: 1,
+      pages: 1
     }).as('getImages');
     cy.intercept('POST', '*/images', req => {
       req.reply(200);
     }).as('postImages');
     createLinode().then(linode => {
-      cy.intercept(`*/linode/instances/${linode.id}/disks*`, req => {
-        req.reply(res => {
-          res.send({
-            results: 2,
-            data: [
-              {
-                id: 44311273,
-                status: 'ready',
-                label: diskLabel,
-                created: '2020-08-21T17:26:14',
-                updated: '2020-08-21T17:26:30',
-                filesystem: 'ext4',
-                size: 81408
-              },
-              {
-                id: 44311274,
-                status: 'ready',
-                label: '512 MB Swap Image',
-                created: '2020-08-21T17:26:14',
-                updated: '2020-08-21T17:26:31',
-                filesystem: 'swap',
-                size: 512
-              }
-            ],
-            page: 1,
-            pages: 1
-          });
-        });
+      // stub incoming disks response
+      cy.intercept(`*/linode/instances/${linode.id}/disks*`, {
+        results: 2,
+        data: [
+          {
+            id: 44311273,
+            status: 'ready',
+            label: diskLabel,
+            created: '2020-08-21T17:26:14',
+            updated: '2020-08-21T17:26:30',
+            filesystem: 'ext4',
+            size: 81408
+          },
+          {
+            id: 44311274,
+            status: 'ready',
+            label: '512 MB Swap Image',
+            created: '2020-08-21T17:26:14',
+            updated: '2020-08-21T17:26:31',
+            filesystem: 'swap',
+            size: 512
+          }
+        ],
+        page: 1,
+        pages: 1
       }).as('getDisks');
       cy.visitWithLogin('/images');
       getVisible('[data-qa-header]').within(() => {

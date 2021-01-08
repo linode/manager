@@ -43,6 +43,7 @@ describe('Migrate Linode With Firewall', () => {
     const fakeLinodeId = 9999;
     const fakeFirewallId = 6666;
 
+    // modify incoming response
     cy.intercept('*/networking/firewalls*', req => {
       req.reply(res => {
         res.send({
@@ -116,16 +117,19 @@ describe('Migrate Linode With Firewall', () => {
       tags: []
     };
 
+    // modify incoming response
     cy.intercept('*/regions', req => {
       req.reply(res => {
         res.send(fakeRegionsData);
       });
     }).as('getRegions');
 
-    cy.intercept('POST', `*/linode/instances/${fakeLinodeId}/migrate`, req => {
-      req.reply(200);
+    // intercept request and stub it, respond with 200
+    cy.intercept('POST', `*/linode/instances/${fakeLinodeId}/migrate`, {
+      statusCode: 200
     }).as('migrateReq');
 
+    // modify incoming response
     cy.intercept('*/linode/instances/*', req => {
       req.reply(res => {
         res.send({
@@ -137,6 +141,7 @@ describe('Migrate Linode With Firewall', () => {
       });
     }).as('getLinodes');
 
+    // modify incoming response
     cy.intercept(`*/linode/instances/${fakeLinodeId}/migrate`, req => {
       req.reply(res => {
         res.send(fakeLinodeData);
@@ -173,12 +178,15 @@ describe('Migrate Linode With Firewall', () => {
     };
 
     const firewallLabel = 'cy-test-firewall';
+    // intercept create firewall request
     cy.intercept('POST', `*/networking/firewalls`).as('createFirewall');
+    // modify incoming response
     cy.intercept('*/networking/firewalls*').as('getFirewalls');
 
     cy.visitWithLogin('/firewalls');
 
     createLinodeSpecifyRegion('ap-southeast').then(linode => {
+      // intercept migrate linode request
       cy.intercept('POST', `*/linode/instances/${linode.id}/migrate`).as(
         'migrateLinode'
       );
@@ -242,10 +250,13 @@ describe('Migrate Linode With Firewall', () => {
 
   it('Cannot add linode without firewall location firewall - real data, ', () => {
     const firewallLabel = 'cy-test-firewall';
+    // intercept create firewall request
     cy.intercept('POST', '*/networking/firewalls').as('createFirewall');
+    // modify incoming response
     cy.intercept('*/networking/firewalls*').as('getFirewall');
     cy.visitWithLogin('/firewalls');
     createLinode().then(linode => {
+      // intercept migrate linode request
       cy.intercept('POST', `*/linode/instances/${linode.id}/migrate`).as(
         'migrateLinode'
       );
