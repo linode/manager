@@ -36,7 +36,7 @@ const styles = (theme: Theme) =>
       marginRight: theme.spacing(1)
     },
     appName: {
-      fontSize: '2.4rem',
+      fontSize: '2.0rem',
       fontFamily: theme.font.normal,
       color: theme.color.grey4,
       lineHeight: '2.5rem'
