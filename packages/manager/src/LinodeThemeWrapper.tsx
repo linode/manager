@@ -37,23 +37,27 @@ const themes = { light, dark };
 
 type CombinedProps = Props & PreferencesActionsProps;
 
+const setActiveHighlightTheme = (value: ThemeChoice) => {
+  /**
+   * Disable the inactive highlight.js theme when we toggle
+   * the app theme. This looks horrible but it is the recommended approach:
+   * https://github.com/highlightjs/highlight.js/blob/master/demo/demo.js
+   */
+  const inactiveTheme = value === 'dark' ? 'a11y-light' : 'a11y-dark';
+  const links = document.querySelectorAll('style');
+  links.forEach((thisLink: any) => {
+    const content = thisLink?.textContent ?? '';
+    // We're matching a comment in the style tag's text contents :groan:
+    thisLink.disabled = content.match(inactiveTheme);
+  });
+};
+
 const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
   const toggleTheme = (value: ThemeChoice) => {
     setTimeout(() => {
       document.body.classList.remove('no-transition');
     }, 500);
-    /**
-     * Disable the inactive highlight.js theme when we toggle
-     * the app theme. This looks horrible but it is the recommended approach:
-     * https://github.com/highlightjs/highlight.js/blob/master/demo/demo.js
-     */
-    const inactiveTheme = value === 'dark' ? 'a11y-light' : 'a11y-dark';
-    const links = document.querySelectorAll('style');
-    links.forEach((thisLink: any) => {
-      const content = thisLink?.textContent ?? '';
-      // We're matching a comment in the style tag's text contents :groan:
-      thisLink.disabled = content.match(inactiveTheme);
-    });
+    setActiveHighlightTheme(value);
     /** send to GA */
     sendThemeToggleEvent(value);
   };
@@ -72,6 +76,9 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
     /** request the user preferences on app load */
     props
       .getUserPreferences()
+      .then(response => {
+        setActiveHighlightTheme(response?.theme ?? 'light');
+      })
       .catch(
         () =>
           /** swallow the error. PreferenceToggle.tsx handles failures gracefully */ null
