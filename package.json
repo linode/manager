@@ -57,7 +57,7 @@
     "node-fetch": "^2.6.1",
     "bl": "^3.0.1",
     "y18n": "^4.0.0",
-    "ua-parser-js ": "^0.7.23"
+    "ua-parser-js": "^0.7.23"
   },
   "workspaces": {
     "packages": [
