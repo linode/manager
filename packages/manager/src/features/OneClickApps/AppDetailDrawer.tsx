@@ -41,8 +41,7 @@ const styles = (theme: Theme) =>
       fontSize: '2.0rem',
       fontFamily: theme.font.normal,
       color: theme.color.grey4,
-      lineHeight: '2.5rem',
-      maxWidth: 'fit-content'
+      lineHeight: '2.5rem'
     },
     summary: {
       marginTop: theme.spacing(2),
@@ -64,7 +63,8 @@ const styles = (theme: Theme) =>
       marginLeft: -theme.spacing(3)
     },
     wrapAppName: {
-      minWidth: 180
+      maxWidth: 'fit-content',
+      minWidth: 170
     }
   });
 
