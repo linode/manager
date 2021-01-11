@@ -38,7 +38,8 @@ const styles = (theme: Theme) =>
     appName: {
       fontSize: '2.4rem',
       fontFamily: theme.font.normal,
-      color: theme.color.grey4
+      color: theme.color.grey4,
+      lineHeight: '2.5rem'
     },
     summary: {
       marginTop: theme.spacing(2),

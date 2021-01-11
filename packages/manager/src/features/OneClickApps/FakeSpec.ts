@@ -295,7 +295,7 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/drupal_color.svg'
   },
   {
-    name: 'Filecloud',
+    name: 'FileCloud',
     description: `File synchronization across multiple users’ computers and other devices to keep everyone working without interruption.`,
     summary: 'Enterprise file sharing to manage and sync from any device',
     related_guides: [
