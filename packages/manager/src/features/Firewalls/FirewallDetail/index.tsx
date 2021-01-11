@@ -55,7 +55,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
     props.history.push(tabs[index].routeName);
   };
 
-  const { data } = useFirewallQuery();
+  const { data, isLoading } = useFirewallQuery();
   const thisFirewall = data?.firewalls[thisFirewallId];
 
   const { mutateAsync: updateFirewall, error, reset } = useMutateFirewall(
@@ -67,7 +67,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   // If we're still fetching Firewalls, display a loading spinner. This will
   // probably only happen when navigating to a Firewall's Detail page directly
   // via URL bookmark (as opposed to clicking on the Firewall Landing table).
-  if (props.lastUpdated === 0 && props.loading === true && !thisFirewall) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
