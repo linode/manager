@@ -126,7 +126,7 @@ const styles = (theme: Theme) =>
     },
     cancelButton: {
       marginBottom: theme.spacing(1),
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('sm')]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing()
       }
@@ -138,7 +138,7 @@ const styles = (theme: Theme) =>
       minWidth: '100%'
     },
     cmrSpacing: {
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('sm')]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing()
       }
@@ -651,6 +651,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             label="Day of Week"
             placeholder="Choose a day"
             isClearable={false}
+            menuPlacement="top"
+            name="Day of Week"
             noMarginTop
           />
         </FormControl>
@@ -667,6 +669,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             placeholder="Choose a time"
             isClearable={false}
             defaultValue={defaultTimeSelection}
+            menuPlacement="top"
             name="Time of Day"
             noMarginTop
           />
