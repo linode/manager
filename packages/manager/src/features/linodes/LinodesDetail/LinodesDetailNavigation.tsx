@@ -19,9 +19,7 @@ const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
 const LinodeAdvanced_CMR = React.lazy(() =>
   import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel_CMR')
 );
-const LinodeBackup_CMR = React.lazy(() =>
-  import('./LinodeBackup/LinodeBackup_CMR')
-);
+const LinodeBackup = React.lazy(() => import('./LinodeBackup'));
 const LinodeActivity_CMR = React.lazy(() =>
   import('./LinodeActivity/LinodeActivity_CMR')
 );
@@ -114,7 +112,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
               </SafeTabPanel>
 
               <SafeTabPanel index={4}>
-                <LinodeBackup_CMR />
+                <LinodeBackup />
               </SafeTabPanel>
 
               <SafeTabPanel index={5}>

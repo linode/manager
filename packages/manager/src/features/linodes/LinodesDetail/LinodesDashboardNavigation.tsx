@@ -3,9 +3,9 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import SuspenseLoader from 'src/components/SuspenseLoader';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -34,9 +34,7 @@ const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
 const LinodeAdvanced_CMR = React.lazy(() =>
   import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel_CMR')
 );
-const LinodeBackup_CMR = React.lazy(() =>
-  import('./LinodeBackup/LinodeBackup_CMR')
-);
+const LinodeBackup = React.lazy(() => import('./LinodeBackup'));
 const LinodeActivity_CMR = React.lazy(() =>
   import('./LinodeActivity/LinodeActivity_CMR')
 );
@@ -78,7 +76,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = () => {
         title: 'Configurations'
       },
       {
-        render: () => suspenseWrapper(LinodeBackup_CMR),
+        render: () => suspenseWrapper(LinodeBackup),
         title: 'Backups'
       },
       {
