@@ -872,7 +872,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           fontFamily:
             spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
           fontSize: '.9rem',
-          marginBottom: 4,
+          marginBottom: 8,
           '&$focused': {
             color: '#555'
           },
