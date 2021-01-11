@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.cmrBGColors.bgTableHeader
   },
   toggleButton: {
+    color: '#d2d3d4',
     padding: 10,
     '&:focus': {
       // Browser default until we get styling direction for focus states
