@@ -1230,31 +1230,18 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             }
           },
           '& .icon': {
-            transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+            borderRadius: 1,
+            height: 16,
+            width: 16,
             position: 'relative',
             left: 0,
-            width: 16,
-            height: 16,
-            borderRadius: 0
+            transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
           },
           '& .square': {
+            fill: 'white',
             transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
           },
           '&:hover, &:focus': {
-            '& $disabled': {
-              '&$switchBase': {
-                '& + $track': {
-                  backgroundColor: '#ddd',
-                  borderColor: '#ccc'
-                }
-              }
-            },
-            '& $track, & + $track': {
-              borderColor: '#606469'
-            },
-            '& .square': {
-              fill: '#aaa'
-            },
             '& $checked': {
               '& .square': {
                 fill: '#eee'
@@ -1272,12 +1259,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           left: 12,
           marginLeft: 0,
           marginTop: 0,
-          width: 42,
-          height: 22,
-          borderRadius: 0,
-          backgroundColor: '#f4f4f4',
-          border: '1px solid #999',
+          backgroundColor: '#C8CACB',
+          borderRadius: 1,
           boxSizing: 'content-box',
+          height: 24,
+          width: 44,
           transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
         },
         switchBase: {
