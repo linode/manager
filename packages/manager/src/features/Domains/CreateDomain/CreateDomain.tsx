@@ -35,7 +35,6 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
-import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
@@ -191,15 +190,14 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
       domain: '',
       type: 'master' as DomainType,
       soa_email: '',
-      master_ips: [],
-      tags: [] as Item<string>[]
+      master_ips: []
     },
     validationSchema: createDomainSchema,
     validateOnChange: true,
     validateOnMount: true,
     onSubmit: values =>
       // Map from Item[] to string[] for tags
-      create({ ...values, tags: values.tags.map(thisTag => thisTag.value) })
+      create(values)
   });
 
   React.useEffect(() => {
@@ -367,9 +365,6 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   const updateSelectedNodeBalancer = (nodebalancer: NodeBalancer) =>
     setSelectedDefaultNodeBalancer(nodebalancer);
 
-  const updateTags = (selected: Tag[]) =>
-    formik.setFieldValue('tags', selected);
-
   const updateInsertDefaultRecords = (value: DefaultRecordsType) =>
     setDefaultRecordsSetting(value);
 
@@ -488,12 +483,6 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                 }
               />
             )}
-            <TagsInput
-              value={values.tags}
-              onChange={updateTags}
-              tagError={formik.errors?.tags as string}
-              disabled={disabled}
-            />
             {isCreatingPrimaryDomain && (
               <React.Fragment>
                 <Select

@@ -12,8 +12,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn workspaces run precommit",
-      "pre-push": "yarn workspace linode-manager prepush"
+      "pre-commit": "yarn workspaces run precommit"
     }
   },
   "scripts": {
