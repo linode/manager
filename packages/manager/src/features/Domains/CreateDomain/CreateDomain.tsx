@@ -195,9 +195,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     validationSchema: createDomainSchema,
     validateOnChange: true,
     validateOnMount: true,
-    onSubmit: values =>
-      // Map from Item[] to string[] for tags
-      create(values)
+    onSubmit: values => create(values)
   });
 
   React.useEffect(() => {
