@@ -107,10 +107,14 @@ const styles = (theme: Theme) =>
 
       '& *': {
         fontSize: '.875rem',
+        paddingTop: 0,
         paddingBottom: 0
       },
       '& [data-qa-copy-ip]': {
         opacity: 0
+      },
+      '& svg': {
+        marginTop: 2
       }
     },
     regionCell: {

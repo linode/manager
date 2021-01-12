@@ -648,7 +648,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       width: 16,
       height: 16,
       '& path': {
-        fill: theme.cmrBGColors.bgSecondaryButton
+        fill: theme.cmrBorderColors.borderBalance
       }
     },
     '& button': {
