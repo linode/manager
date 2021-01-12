@@ -7,7 +7,7 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import useEvents from 'src/hooks/useEvents';
-import LinodeDiskActionMenu from './LinodeDiskActionMenu_CMR';
+import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   diskLabel: {
@@ -30,17 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   bar: {
     paddingLeft: theme.spacing(),
     width: 250
-  },
-  actionCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0,
-    /*
-      Explicitly stating this as the theme file is automatically adding padding to the last cell
-      We can remove once we make the full switch to CMR styling
-      */
-    paddingRight: '0 !important'
   }
 }));
 
@@ -65,6 +54,7 @@ export const LinodeDiskRow: React.FC<Props> = props => {
     onImagize,
     onRename,
     onResize,
+    linodeStatus,
     readOnly
   } = props;
 
@@ -100,9 +90,9 @@ export const LinodeDiskRow: React.FC<Props> = props => {
           <DateTimeDisplay value={disk.created} />
         </TableCell>
       </Hidden>
-      <TableCell className={classes.actionCell}>
+      <TableCell>
         <LinodeDiskActionMenu
-          linodeStatus={status || 'offline'}
+          linodeStatus={linodeStatus || 'offline'}
           linodeId={linodeId}
           diskId={disk.id}
           label={disk.label}

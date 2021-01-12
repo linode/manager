@@ -209,7 +209,10 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
             }
             action={
               <div className={classes.actionMenu}>
-                <LinodeActionMenu {...actionMenuProps} />
+                <LinodeActionMenu
+                  {...actionMenuProps}
+                  openDialog={openDialog}
+                />
               </div>
             }
             className={`${classes.customeMQ} ${'title'}`}
