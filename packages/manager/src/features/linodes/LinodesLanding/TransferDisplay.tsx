@@ -62,9 +62,6 @@ export const TransferDisplay: React.FC<{}> = _ => {
 
   return (
     <Paper className={classes.root}>
-      <Typography variant="h3" className={classes.title}>
-        Monthly Network Transfer Pool
-      </Typography>
       <Grid
         container
         direction="row"
@@ -72,6 +69,9 @@ export const TransferDisplay: React.FC<{}> = _ => {
         alignItems="flex-start"
       >
         <Grid item xs={12} md={6} style={{ paddingRight: 40 }}>
+          <Typography variant="h3" className={classes.title}>
+            Monthly Network Transfer Pool
+          </Typography>
           <div className={classes.barLabels}>
             <Typography>{used} GB Used</Typography>
 
@@ -92,16 +92,21 @@ export const TransferDisplay: React.FC<{}> = _ => {
             rounded
           />
           <Typography className={classes.proratedNotice}>
-            Transfer pool will refresh in {getDaysRemaining()} days.
+            Your account&apos;s monthly network transfer allotment will reset in{' '}
+            {getDaysRemaining()} days.
           </Typography>
         </Grid>
         <Grid item xs={12} md={6}>
           <Typography className={classes.proratedNotice}>
-            Your account&apos;s transfer pool is prorated based on your
-            Linodes&apos; creation and deletion dates.
+            Your account&apos;s network transfer pool adds up all the included
+            transfer associated with the active Linode services on your account,
+            and is prorated based on service creation and/or deletion date(s).
           </Typography>
           <div className={classes.link}>
-            <Typography>How to avoid surprises </Typography>{' '}
+            <Typography>
+              Optimize your network usage and avoid billing surprises related to
+              network transfer.
+            </Typography>{' '}
             <Link to="https://www.linode.com/docs/guides/network-transfer-quota/">
               <OpenInNew />
             </Link>
