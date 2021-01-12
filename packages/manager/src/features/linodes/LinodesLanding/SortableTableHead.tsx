@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.cmrBGColors.bgTableHeader
   },
   toggleButton: {
+    color: '#d2d3d4',
     padding: '0 10px',
     '&:focus': {
       outline: '1px dotted #999'

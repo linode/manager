@@ -89,7 +89,7 @@ export class App extends React.Component<CombinedProps, State> {
         this.props.toggleTheme();
       }
 
-      if (event.metaKey && event.key === 'k') {
+      if (event.ctrlKey && event.shiftKey && event.key === 'K') {
         this.setState(prevState => ({
           ...prevState,
           goToOpen: !prevState.goToOpen

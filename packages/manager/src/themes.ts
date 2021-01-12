@@ -474,6 +474,9 @@ const darkThemeOptions = {
     },
     MuiInput: {
       root: {
+        backgroundColor: '#444',
+        border: '1px solid #222',
+        color: primaryColors.text,
         '&$disabled': {
           borderColor: '#606469',
           color: '#ccc !important'
@@ -482,9 +485,6 @@ const darkThemeOptions = {
           borderColor: primaryColors.main,
           boxShadow: '0 0 2px 1px #222'
         },
-        border: '1px solid #222',
-        color: primaryColors.text,
-        backgroundColor: '#444',
         '& svg': {
           color: primaryColors.main
         }
@@ -543,23 +543,6 @@ const darkThemeOptions = {
         backgroundColor: '#32363c',
         color: primaryColors.text,
         boxShadow: '0 0 5px #222'
-      }
-    },
-    MuiSwitch: {
-      root: {
-        '& $checked': {
-          color: `#abadaf !important`,
-          '& .square': {
-            fill: 'white !important'
-          }
-        }
-      },
-      checked: {},
-      switchBase: {
-        color: '#abadaf !important'
-      },
-      track: {
-        border: '1px solid #222'
       }
     },
     MuiTab: {

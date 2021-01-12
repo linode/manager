@@ -37,10 +37,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       border: 0,
       borderRadius: 4
     },
-    '& .react-select__option': {
-      ...theme.applyLinkStyles,
-      padding: `8px, 8px, 8px, 12px`
-    },
     '& .react-select__option--is-focused': {
       backgroundColor: theme.palette.primary.main,
       color: 'white'
@@ -86,6 +82,11 @@ const GoTo: React.FC<CombinedProps> = props => {
   const links = React.useMemo(
     () => [
       {
+        hide: !_isManagedAccount,
+        display: 'Managed',
+        href: '/managed'
+      },
+      {
         display: 'Linodes',
         href: '/linodes',
         activeLinks: ['/linodes', '/linodes/create']
@@ -95,40 +96,15 @@ const GoTo: React.FC<CombinedProps> = props => {
         href: '/volumes'
       },
       {
-        display: 'Object Storage',
-        href: '/object-storage/buckets',
-        activeLinks: ['/object-storage/buckets', '/object-storage/access-keys']
-      },
-      {
         display: 'NodeBalancers',
         href: '/nodebalancers'
-      },
-      {
-        display: 'Domains',
-        href: '/domains'
       },
       {
         hide: !showFirewalls,
         display: 'Firewalls',
         href: '/firewalls'
       },
-      {
-        display: 'Marketplace',
-        href: '/linodes/create?type=One-Click'
-      },
-      {
-        display: 'Longview',
-        href: '/longview'
-      },
-      {
-        display: 'Kubernetes',
-        href: '/kubernetes/clusters'
-      },
-      {
-        hide: !_isManagedAccount,
-        display: 'Managed',
-        href: '/managed'
-      },
+
       {
         display: 'StackScripts',
         href: '/stackscripts'
@@ -138,13 +114,39 @@ const GoTo: React.FC<CombinedProps> = props => {
         href: '/images'
       },
       {
-        display: 'Profile',
-        href: '/profile/display'
+        display: 'Domains',
+        href: '/domains'
+      },
+      {
+        display: 'Kubernetes',
+        href: '/kubernetes/clusters'
+      },
+      {
+        display: 'Object Storage',
+        href: '/object-storage/buckets',
+        activeLinks: ['/object-storage/buckets', '/object-storage/access-keys']
+      },
+      {
+        display: 'Longview',
+        href: '/longview'
+      },
+
+      {
+        display: 'Marketplace',
+        href: '/linodes/create?type=One-Click'
       },
       {
         hide: account.lastUpdated === 0 || !_hasAccountAccess,
         display: 'Account',
         href: '/account/billing'
+      },
+      {
+        display: 'Help & Support',
+        href: '/support'
+      },
+      {
+        display: 'Profile',
+        href: '/profile/display'
       }
     ],
     [showFirewalls, _hasAccountAccess, _isManagedAccount, account.lastUpdated]
@@ -152,10 +154,12 @@ const GoTo: React.FC<CombinedProps> = props => {
 
   const options: Item[] = React.useMemo(
     () =>
-      links.map(thisLink => ({
-        label: thisLink.display,
-        value: thisLink.href
-      })),
+      links
+        .filter(thisLink => !thisLink.hide)
+        .map(thisLink => ({
+          label: thisLink.display,
+          value: thisLink.href
+        })),
     [links]
   );
 
