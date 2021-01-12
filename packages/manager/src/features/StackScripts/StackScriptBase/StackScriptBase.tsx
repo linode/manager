@@ -1,8 +1,8 @@
-import * as classnames from 'classnames';
 import { Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import classnames from 'classnames';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -18,11 +18,7 @@ import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
-import Table from 'src/components/Table';
-import Table_CMR from 'src/components/Table/Table_CMR';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
+import Table from 'src/components/Table/Table_CMR';
 import {
   hasGrant,
   isRestrictedUser
@@ -33,8 +29,7 @@ import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import { getDisplayName } from 'src/utilities/getDisplayName';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import { getQueryParam } from 'src/utilities/queryParams';
-import StackScriptTableHead from '../Partials/StackScriptTableHead';
-import StackScriptTableHead_CMR from '../Partials/StackScriptTableHead_CMR';
+import StackScriptTableHead from '../Partials/StackScriptTableHead_CMR';
 import {
   AcceptedFilters,
   generateCatchAllFilter,
@@ -79,7 +74,6 @@ interface StoreProps {
 }
 
 type CombinedProps = StyleProps &
-  FeatureFlagConsumerProps &
   RouteComponentProps &
   StoreProps & {
     publicImages: Record<string, Image>;
@@ -550,17 +544,14 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               <div
                 className={classnames({
                   [classes.searchWrapper]: true,
-                  [classes.cmrHeaderWrapper]: this.props.flags.cmr
+                  [classes.landing]: !isSelecting
                 })}
               >
                 <DebouncedSearch
                   placeholder="Search by Label, Username, or Description"
                   onSearch={this.handleSearch}
                   debounceTime={400}
-                  className={classnames({
-                    [classes.searchBar]: true,
-                    [classes.searchBarCMR]: this.props.flags.cmr
-                  })}
+                  className={classes.searchBar}
                   isSearching={isSearching}
                   tooltipText={
                     this.props.category === 'community'
@@ -573,53 +564,27 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   defaultValue={query}
                 />
               </div>
-              {this.props.flags.cmr ? (
-                <Table_CMR
-                  aria-label="List of StackScripts"
-                  rowCount={listOfStackScripts.length}
-                  colCount={isSelecting ? 1 : 4}
-                  noOverflow={true}
-                  tableClass={classes.table}
-                  border
-                >
-                  <StackScriptTableHead_CMR
-                    handleClickTableHeader={this.handleClickTableHeader}
-                    sortOrder={sortOrder}
-                    currentFilterType={currentFilterType}
-                    isSelecting={isSelecting}
-                  />
-                  <Component
-                    {...this.props}
-                    {...this.state}
-                    getDataAtPage={this.getDataAtPage}
-                    getNext={this.getNext}
-                  />
-                </Table_CMR>
-              ) : (
-                <Table
-                  aria-label="List of StackScripts"
-                  rowCount={listOfStackScripts.length}
-                  colCount={isSelecting ? 1 : 4}
-                  noOverflow={true}
-                  tableClass={classes.table}
-                  removeLabelonMobile={!isSelecting}
-                  border
-                  stickyHeader
-                >
-                  <StackScriptTableHead
-                    handleClickTableHeader={this.handleClickTableHeader}
-                    sortOrder={sortOrder}
-                    currentFilterType={currentFilterType}
-                    isSelecting={isSelecting}
-                  />
-                  <Component
-                    {...this.props}
-                    {...this.state}
-                    getDataAtPage={this.getDataAtPage}
-                    getNext={this.getNext}
-                  />
-                </Table>
-              )}
+              <Table
+                aria-label="List of StackScripts"
+                rowCount={listOfStackScripts.length}
+                colCount={isSelecting ? 1 : 4}
+                noOverflow={true}
+                tableClass={classes.table}
+                border
+              >
+                <StackScriptTableHead
+                  handleClickTableHeader={this.handleClickTableHeader}
+                  sortOrder={sortOrder}
+                  currentFilterType={currentFilterType}
+                  isSelecting={isSelecting}
+                />
+                <Component
+                  {...this.props}
+                  {...this.state}
+                  getDataAtPage={this.getDataAtPage}
+                  getNext={this.getNext}
+                />
+              </Table>
 
               {/*
                * show loading indicator if we're getting more stackscripts
@@ -687,12 +652,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
   const connected = connect(mapStateToProps);
 
-  return compose(
-    withRouter,
-    connected,
-    withFeatureFlagConsumer,
-    withStyles
-  )(EnhancedComponent);
+  return compose(withRouter, connected, withStyles)(EnhancedComponent);
 };
 
 export default withStackScriptBase;
