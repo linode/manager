@@ -190,7 +190,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
       domain: '',
       type: 'master' as DomainType,
       soa_email: '',
-      master_ips: []
+      master_ips: ['']
     },
     validationSchema: createDomainSchema,
     validateOnChange: true,
