@@ -12,14 +12,11 @@ class Example extends React.Component<{}, { value?: string }> {
 
   render() {
     return (
-      <>
-        <FormControlLabel
-          className="toggleLabel"
-          control={<Toggle />}
-          label="Example Label"
-        />
-        <Toggle checked={true} />
-      </>
+      <FormControlLabel
+        className="toggleLabel"
+        control={<Toggle />}
+        label="Example Label"
+      />
     );
   }
 }
