@@ -7,7 +7,7 @@ import {
 import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
 import { stringify } from 'qs';
-import { pathOr } from 'ramda';
+import { pathOr, splitAt } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -159,7 +159,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     openPowerActionDialog,
     inlineLabel,
     inTableContext,
-    inVLANContext,
     openDialog,
     readOnly
   } = props;
@@ -172,10 +171,13 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       : undefined
   };
 
+  const noPermissionTooltipText =
+    "You don't have permission to modify this Linode.";
+
   const readOnlyProps = readOnly
     ? {
         disabled: true,
-        tooltip: "You don't have permission to modify this Linode"
+        tooltip: noPermissionTooltipText
       }
     : {};
 
@@ -183,30 +185,26 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const inEntityView = matchesSmDown;
 
   const actions = [
-    (inLandingListView || inEntityView) && inVLANContext
-      ? {
-          title: 'Detach',
-          onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)
-        }
-      : null,
-    inLandingListView || inEntityView || inVLANContext
+    inLandingListView || inEntityView || inTableContext
       ? {
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
-          onClick: handlePowerAction,
           className: classes.powerOnOrOff,
-          disabled: !['running', 'offline'].includes(linodeStatus)
+          disabled: !['running', 'offline'].includes(linodeStatus) || readOnly,
+          tooltip: readOnly ? noPermissionTooltipText : undefined,
+          onClick: handlePowerAction
         }
       : null,
-    inLandingListView || inEntityView
+    inLandingListView || inEntityView || inTableContext
       ? {
           title: 'Reboot',
+          className: classes.link,
           disabled:
             linodeStatus !== 'running' ||
             !hasMadeConfigsRequest ||
             readOnly ||
             Boolean(configsError?.[0]?.reason),
           tooltip: readOnly
-            ? "You don't have permission to modify this Linode."
+            ? noPermissionTooltipText
             : configsError
             ? 'Could not load configs for this Linode.'
             : undefined,
@@ -289,39 +287,10 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       },
       ...readOnlyProps
     }
-  ].filter(Boolean) as Action[];
+  ].filter(Boolean) as ExtendedAction[];
 
-  const inlineActions: InlineActions[] = [
-    inVLANContext
-      ? {
-          title: 'Detach',
-          onClick: () => openDialog('detach_vlan', linodeId, linodeLabel)
-        }
-      : {
-          title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
-          className: classes.powerOnOrOff,
-          disabled: !['running', 'offline'].includes(linodeStatus),
-          onClick: handlePowerAction
-        },
-    {
-      title: 'Reboot',
-      className: classes.link,
-      disabled:
-        linodeStatus !== 'running' ||
-        readOnly ||
-        Boolean(configsError?.[0]?.reason),
-      tooltip: readOnly
-        ? "You don't have permission to modify this Linode."
-        : configsError
-        ? 'Could not load configs for this Linode.'
-        : undefined,
-      onClick: () => {
-        sendLinodeActionMenuItemEvent('Reboot Linode');
-        openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
-      },
-      ...readOnlyProps
-    }
-  ];
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
     <>
@@ -342,7 +311,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       <ActionMenu
         className={classes.action}
         toggleOpenCallback={toggleOpenActionMenu}
-        actionsList={actions}
+        actionsList={menuActions}
         ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
         inlineLabel={inlineLabel}
       />
@@ -350,12 +319,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   );
 };
 
-interface InlineActions {
-  title: string;
-  onClick?: () => void;
+interface ExtendedAction extends Action {
   className?: string;
-  disabled?: boolean;
-  tooltip?: string;
 }
 
 interface StateProps {
