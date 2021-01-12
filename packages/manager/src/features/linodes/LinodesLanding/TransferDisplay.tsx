@@ -12,7 +12,7 @@ import { useAccountTransfer } from 'src/queries/accountTransfer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(),
+    marginTop: theme.spacing(2),
     padding: `${theme.spacing()}px ${theme.spacing(2)}px`
   },
   barLabels: {
@@ -40,9 +40,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: 4
     },
     '& svg': {
-      marginTop: 5,
       width: 15,
-      height: 15
+      height: 15,
+      position: 'relative',
+      top: 3
     }
   }
 }));
@@ -92,24 +93,24 @@ export const TransferDisplay: React.FC<{}> = _ => {
             rounded
           />
           <Typography className={classes.proratedNotice}>
-            Your account&apos;s monthly network transfer allotment will reset in{' '}
-            {getDaysRemaining()} days.
+            Your account&rsquo;s monthly network transfer allotment will reset
+            in {getDaysRemaining()} days.
           </Typography>
         </Grid>
         <Grid item xs={12} md={6}>
           <Typography className={classes.proratedNotice}>
-            Your account&apos;s network transfer pool adds up all the included
+            Your account&rsquo;s network transfer pool adds up all the included
             transfer associated with the active Linode services on your account,
             and is prorated based on service creation and/or deletion date(s).
           </Typography>
           <div className={classes.link}>
             <Typography>
               Optimize your network usage and avoid billing surprises related to
-              network transfer.
-            </Typography>{' '}
-            <Link to="https://www.linode.com/docs/guides/network-transfer-quota/">
-              <OpenInNew />
-            </Link>
+              network transfer.{' '}
+              <Link to="https://www.linode.com/docs/guides/network-transfer-quota/">
+                <OpenInNew />
+              </Link>
+            </Typography>
           </div>
         </Grid>
       </Grid>
