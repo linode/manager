@@ -15,9 +15,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
     padding: `${theme.spacing()}px ${theme.spacing(2)}px`
   },
-  overLimit: {
-    color: theme.palette.status.warningDark,
-    fontFamily: theme.font.bold
+  barLabels: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(0.5)
   },
   poolUsageProgress: {
     marginBottom: theme.spacing(1) / 2
@@ -26,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1)
   },
   title: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(),
     fontSize: '0.95rem'
   },
   link: {
@@ -68,25 +70,21 @@ export const TransferDisplay: React.FC<{}> = _ => {
         direction="row"
         justify="space-between"
         alignItems="flex-start"
-        style={{ marginBottom: 0 }}
       >
-        <Grid item xs={12} md={6} style={{ paddingRight: 20 }}>
-          <Grid container justify="space-between">
-            <Grid item style={{ marginRight: 10 }}>
-              <Typography>{used} GB Used</Typography>
-            </Grid>
-            <Grid item>
-              <Typography>
-                {quota >= used ? (
-                  <span>{quota - used} GB Available</span>
-                ) : (
-                  <span>
-                    {(quota - used).toString().replace(/\-/, '')} GB Over Quota
-                  </span>
-                )}
-              </Typography>
-            </Grid>
-          </Grid>
+        <Grid item xs={12} md={6} style={{ paddingRight: 40 }}>
+          <div className={classes.barLabels}>
+            <Typography>{used} GB Used</Typography>
+
+            <Typography>
+              {quota >= used ? (
+                <span>{quota - used} GB Available</span>
+              ) : (
+                <span>
+                  {(quota - used).toString().replace(/\-/, '')} GB Over Quota
+                </span>
+              )}
+            </Typography>
+          </div>
           <BarPercent
             max={100}
             value={Math.ceil(poolUsagePct)}
@@ -97,7 +95,7 @@ export const TransferDisplay: React.FC<{}> = _ => {
             Transfer pool will refresh in {getDaysRemaining()} days.
           </Typography>
         </Grid>
-        <Grid item xs={12} md={6} style={{ paddingLeft: 20 }}>
+        <Grid item xs={12} md={6}>
           <Typography className={classes.proratedNotice}>
             Your account&apos;s transfer pool is prorated based on your
             Linodes&apos; creation and deletion dates.
