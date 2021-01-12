@@ -14,7 +14,7 @@ import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Drawer from 'src/components/Drawer';
+import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
@@ -450,7 +450,13 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     data.find(thisEntity => String(thisEntity.value) === entityID) || null;
 
   return (
-    <Drawer open={open} onClose={close} title="Open a Support Ticket">
+    <Dialog
+      open={open}
+      onClose={close}
+      fullHeight
+      fullWidth
+      title="Open a Support Ticket"
+    >
       {props.children || (
         <React.Fragment>
           {generalError && <Notice error text={generalError} data-qa-notice />}
@@ -556,7 +562,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
           </ActionsPanel>
         </React.Fragment>
       )}
-    </Drawer>
+    </Dialog>
   );
 };
 

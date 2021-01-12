@@ -27,8 +27,8 @@ import EntityHeader from 'src/components/EntityHeader';
 import Grid, { GridProps } from 'src/components/Grid';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
-import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu_CMR';
-import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow_CMR';
+import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
+import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
@@ -648,7 +648,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       width: 16,
       height: 16,
       '& path': {
-        fill: theme.cmrBGColors.bgSecondaryButton
+        fill: theme.cmrBorderColors.borderBalance
       }
     },
     '& button': {

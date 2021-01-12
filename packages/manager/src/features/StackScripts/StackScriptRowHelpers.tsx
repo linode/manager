@@ -5,44 +5,18 @@ import { createStyles, Theme } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 
 export type ClassNames =
-  | 'root'
-  | 'respPadding'
-  | 'images'
-  | 'libTitleContainer'
   | 'libRadio'
   | 'libRadioLabel'
   | 'libTitle'
-  | 'libTitleLink'
   | 'libDescription'
-  | 'colImages'
   | 'selectionGrid'
   | 'stackScriptCell'
   | 'stackScriptUsername'
-  | 'deployButton'
   | 'detailsButton'
-  | 'actionCell';
+  | 'chip';
 
 export const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      padding: theme.spacing(2),
-      borderBottom: `solid 1px ${theme.palette.grey['200']}`
-    },
-    labelCell: {
-      background: theme.bg.offWhite,
-      marginBottom: theme.spacing(2)
-    },
-    respPadding: {
-      [theme.breakpoints.down('md')]: {
-        paddingLeft: '78px !important'
-      }
-    },
-    colImages: {
-      padding: theme.spacing(1)
-    },
-    libTitleContainer: {
-      display: 'flex'
-    },
     libRadio: {
       display: 'flex',
       flexWrap: 'wrap',
@@ -58,11 +32,6 @@ export const styles = (theme: Theme) =>
         wordBreak: 'break-all'
       }
     },
-    libTitleLink: {
-      display: 'block',
-      marginTop: -1,
-      fontSize: '.9rem'
-    },
     libDescription: {
       [theme.breakpoints.down('sm')]: {
         fontSize: 12
@@ -70,11 +39,6 @@ export const styles = (theme: Theme) =>
       [theme.breakpoints.between('sm', 'lg')]: {
         wordBreak: 'break-word'
       }
-    },
-    images: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      marginBottom: theme.spacing(1)
     },
     selectionGrid: {
       flexDirection: 'column',
@@ -92,10 +56,6 @@ export const styles = (theme: Theme) =>
     stackScriptUsername: {
       color: theme.color.grey1
     },
-    deployButton: {
-      whiteSpace: 'nowrap',
-      border: 0
-    },
     detailsButton: {
       padding: 0,
       fontSize: '0.875rem',
@@ -109,8 +69,10 @@ export const styles = (theme: Theme) =>
         backgroundColor: 'transparent'
       }
     },
-    actionCell: {
-      margin: 0
+    chip: {
+      '& .MuiChip-root:first-child': {
+        backgroundColor: theme.cmrBGColors.bgApp
+      }
     }
   });
 

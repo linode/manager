@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   landing: {
     marginBottom: 0,
-    paddingBottom: theme.spacing(),
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       padding: 0
@@ -102,7 +101,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: 0
     },
     [theme.breakpoints.down('xs')]: {
-      paddingRight: '0px !important'
+      marginBottom: 0
     }
   }
 }));

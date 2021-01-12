@@ -26,23 +26,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   desktopMenuIsOpen: {
     paddingLeft: 0,
-    [theme.breakpoints.up(1100)]: {
-      paddingLeft: theme.spacing(7) + 36
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: 52
     }
   },
   version: {
-    marginLeft: 24,
+    marginLeft: theme.spacing(2),
     '&.MuiGrid-item': {
       paddingLeft: 0
     },
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: 16
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: theme.spacing()
     }
   },
   linkContainer: {
     [theme.breakpoints.down('xs')]: {
-      paddingTop: '0 !important',
-      paddingBottom: '0 !important'
+      padding: '0 8px !important'
     }
   },
   link: {

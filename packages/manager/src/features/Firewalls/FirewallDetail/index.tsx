@@ -3,22 +3,23 @@ import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-
 import Box from 'src/components/core/Box';
-import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/DocumentationButton';
 import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
-
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabLinkList from 'src/components/TabLinkList';
 import withFirewalls, {
   Props as WithFirewallsProps
 } from 'src/containers/firewalls.container';
 import useFlags from 'src/hooks/useFlags';
+import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding')
@@ -28,7 +29,16 @@ const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
 
 type CombinedProps = RouteComponentProps<{ id: string }> & WithFirewallsProps;
 
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing()
+    }
+  }
+}));
+
 export const FirewallDetail: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
   const flags = useFlags();
 
   // Source the Firewall's ID from the /:id path param.
@@ -51,14 +61,18 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
-  const [updateError, setUpdateError] = React.useState<string | undefined>();
-
   const navToURL = (index: number) => {
     props.history.push(tabs[index].routeName);
   };
 
-  // Find the Firewall in the store.
-  const thisFirewall = props.itemsById[thisFirewallId];
+  const { data } = useFirewallQuery();
+  const thisFirewall = data?.[thisFirewallId];
+
+  const { mutateAsync: updateFirewall, error, reset } = useMutateFirewall(
+    Number(thisFirewallId)
+  );
+
+  const errorText = getErrorStringOrDefault(error ?? '');
 
   // If we're still fetching Firewalls, display a loading spinner. This will
   // probably only happen when navigating to a Firewall's Detail page directly
@@ -80,18 +94,13 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   }
 
   const handleLabelChange = (newLabel: string) => {
-    setUpdateError(undefined);
-
-    return props
-      .updateFirewall({ firewallID: thisFirewall.id, label: newLabel })
-      .catch(e => {
-        setUpdateError(e[0].reason);
-        return Promise.reject(e);
-      });
+    if (error) {
+      reset();
+    }
+    return updateFirewall({ label: newLabel });
   };
 
   const resetEditableLabel = () => {
-    setUpdateError(undefined);
     return thisFirewall.label;
   };
 
@@ -103,6 +112,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
+        className={classes.root}
       >
         <Breadcrumb
           pathname={props.location.pathname}
@@ -111,7 +121,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
             editableTextTitle: thisFirewall.label,
             onEdit: handleLabelChange,
             onCancel: resetEditableLabel,
-            errorText: updateError
+            errorText
           }}
         />
         {flags.cmr ? (

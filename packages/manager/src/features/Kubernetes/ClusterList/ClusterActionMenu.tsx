@@ -25,37 +25,20 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
 
   const { clusterId, clusterLabel, enqueueSnackbar, openDialog } = props;
 
-  const inlineActions = [
+  const actions: Action[] = [
     {
-      actionText: 'Download kubeconfig',
+      title: 'Download kubeconfig',
       onClick: () => {
         downloadKubeConfig();
       }
     },
     {
-      actionText: 'Delete',
+      title: 'Delete',
       onClick: () => {
         openDialog();
       }
     }
   ];
-
-  const createActions = () => (): Action[] => {
-    return [
-      {
-        title: 'Download kubeconfig',
-        onClick: () => {
-          downloadKubeConfig();
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          openDialog();
-        }
-      }
-    ];
-  };
 
   const downloadKubeConfig = () => {
     getKubeConfig(clusterId)
@@ -86,18 +69,18 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        actions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
             />
           );
         })}
       <Hidden mdUp>
         <ActionMenu
-          createActions={createActions()}
+          actionsList={actions}
           ariaLabel={`Action menu for Cluster ${props.clusterLabel}`}
         />
       </Hidden>

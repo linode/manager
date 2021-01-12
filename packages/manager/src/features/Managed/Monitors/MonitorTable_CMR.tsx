@@ -39,7 +39,7 @@ import MonitorTableContent from './MonitorTableContent_CMR';
 const useStyles = makeStyles((theme: Theme) => ({
   addNewWrapper: {
     marginBottom: 5,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       marginRight: theme.spacing()
     }
   },

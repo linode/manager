@@ -21,6 +21,12 @@ import RestrictedUserLabel from './RestrictedUserLabel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    '& a': {
+      color: theme.cmrTextColors.linkActiveLight
+    },
+    '& a:hover': {
+      color: theme.palette.primary.main
+    },
     [theme.breakpoints.down('md')]: {
       flexDirection: 'row',
       alignItems: 'center'
