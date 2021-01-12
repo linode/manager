@@ -37,7 +37,7 @@ describe('longview', () => {
               if (
                 cy
                   .contains('Waiting for data...', {
-                    timeout: 600000
+                    timeout: 900000
                   })
                   .should('not.exist')
               ) {

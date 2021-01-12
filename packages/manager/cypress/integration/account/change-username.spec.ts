@@ -11,8 +11,8 @@ describe('username', () => {
       const username = profile.body.username;
       cy.visitWithLogin(`account/users/${username}`);
       fbtVisible('Username');
-      // cy.wait('@getClusters');
-      // cy.wait('@getLogin');
+      fbtVisible('Email');
+      fbtVisible('Delete User');
       getVisible('[id="username"]')
         .clear()
         .type(testText);
