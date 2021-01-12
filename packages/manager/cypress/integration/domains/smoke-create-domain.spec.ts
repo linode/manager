@@ -2,7 +2,6 @@ import {
   deleteAllTestDomains,
   makeDomainLabel
 } from '../../support/api/domains';
-import { testTag } from '../../support/api/common';
 import { fbtClick, fbtVisible, getClick } from '../../support/helpers';
 
 describe('Create a Domain', () => {
@@ -26,11 +25,6 @@ describe('Create a Domain', () => {
     cy.wait('@getDomains');
     fbtClick('Add a Domain');
     fbtVisible('Create a Domain');
-    // The findByLabel does not work for this select
-    // cy.findByLabelText('Add Tags')
-    cy.findByText('create a tag', { exact: false })
-      .click()
-      .type(`${testTag}{enter}`);
     const label = makeDomainLabel();
     fbtVisible('Domain (required)').type(label);
     fbtVisible('SOA Email Address (required)').type('devs@linode.com');
