@@ -180,7 +180,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     }
     submitDialog(dialog.entityID).catch(err => {
       handleError(
-        getAPIErrorOrDefault(err, 'Error deleting this Linode.')[0].reason
+        getAPIErrorOrDefault(err, 'Error recycling this node.')[0].reason
       );
     });
   };
