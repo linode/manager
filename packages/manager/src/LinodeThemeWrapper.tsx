@@ -77,7 +77,12 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
     props
       .getUserPreferences()
       .then(response => {
-        setActiveHighlightTheme(response?.theme ?? 'light');
+        // Without the timeout a race condition sometimes runs the theme
+        // highlight checker before the stylesheets have fully loaded.
+        window.setTimeout(
+          () => setActiveHighlightTheme(response?.theme ?? 'light'),
+          1000
+        );
       })
       .catch(
         () =>
