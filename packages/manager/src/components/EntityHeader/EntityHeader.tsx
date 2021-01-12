@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   landing: {
     marginBottom: 0,
-    paddingBottom: theme.spacing(),
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       padding: 0
