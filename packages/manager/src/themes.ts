@@ -545,23 +545,6 @@ const darkThemeOptions = {
         boxShadow: '0 0 5px #222'
       }
     },
-    MuiSwitch: {
-      root: {
-        '& $checked': {
-          color: `#abadaf !important`,
-          '& .square': {
-            fill: 'white !important'
-          }
-        }
-      },
-      checked: {},
-      switchBase: {
-        color: '#abadaf !important'
-      },
-      track: {
-        border: '1px solid #222'
-      }
-    },
     MuiTab: {
       root: {
         color: '#fff',
