@@ -99,7 +99,6 @@
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
     "build": "node scripts/build.js",
     "precommit": "lint-staged && yarn typecheck",
-    "prepush": "./scripts/pre-push.sh",
     "test": "jest --color",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "yarn run start-storybook -p 6006 --ci",

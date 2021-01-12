@@ -872,7 +872,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           fontFamily:
             spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
           fontSize: '.9rem',
-          marginBottom: 2,
+          marginBottom: 8,
           '&$focused': {
             color: '#555'
           },
@@ -910,6 +910,15 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       },
       MuiInput: {
         root: {
+          alignItems: 'center',
+          backgroundColor: '#fff',
+          border: '1px solid #ccc',
+          boxSizing: 'border-box',
+          color: primaryColors.text,
+          lineHeight: 1,
+          maxWidth: 415,
+          minHeight: 34,
+          transition: 'border-color 225ms ease-in-out',
           '&$disabled': {
             borderColor: '#ccc',
             color: '#ccc',
@@ -925,15 +934,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           '&$error': {
             borderColor: '#ca0813'
           },
-          maxWidth: 415,
-          border: '1px solid #ccc',
-          alignItems: 'center',
-          transition: 'border-color 225ms ease-in-out',
-          lineHeight: 1,
-          minHeight: spacingUnit * 6,
-          color: primaryColors.text,
-          boxSizing: 'border-box',
-          backgroundColor: '#fff',
           [breakpoints.down('xs')]: {
             maxWidth: '100%',
             width: '100%'
@@ -959,10 +959,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         error: {},
         disabled: {},
         input: {
-          padding: `${spacingUnit * 2 - spacingUnit / 2}px ${spacingUnit * 2 -
-            spacingUnit / 2}px ${spacingUnit * 2 - spacingUnit / 2 + 1}px`,
+          boxSizing: 'border-box',
           fontSize: '.9rem',
-          boxSizing: 'border-box'
+          padding: 8
         },
         formControl: {
           'label + &': {

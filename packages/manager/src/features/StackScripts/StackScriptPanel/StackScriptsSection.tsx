@@ -6,14 +6,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
-import TableRow from 'src/components/core/TableRow';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import {
   hasGrant,
   isRestrictedUser as _isRestrictedUser
@@ -28,16 +24,12 @@ import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
 import StackScriptRow from './StackScriptRow';
 
-type ClassNames = 'root' | 'loadingWrapper';
-
-const styles = () =>
-  createStyles({
-    root: {},
-    loadingWrapper: {
-      border: 0,
-      paddingTop: 100
-    }
-  });
+const useStyles = makeStyles(() => ({
+  loadingWrapper: {
+    border: 0,
+    paddingTop: 100
+  }
+}));
 
 export interface Props {
   data: StackScript[];
@@ -53,13 +45,13 @@ export interface Props {
   category: StackScriptCategory | string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
+type CombinedProps = Props & StateProps;
 
 const StackScriptsSection: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
   const {
     data,
     isSorting,
-    classes,
     triggerDelete,
     triggerMakePublic,
     isRestrictedUser,
@@ -73,7 +65,7 @@ const StackScriptsSection: React.FC<CombinedProps> = props => {
       key={s.id}
       label={s.label}
       stackScriptUsername={s.username}
-      description={truncateText(s.description, 100)}
+      description={truncateText(s.description, 80)}
       isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsTotal={s.deployments_total}
@@ -106,8 +98,6 @@ const StackScriptsSection: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
 interface StateProps {
   isRestrictedUser: boolean;
   stackScriptGrants: Grant[];
@@ -127,6 +117,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(connected, styled);
+const enhanced = compose<CombinedProps, Props>(connected);
 
 export default enhanced(StackScriptsSection);

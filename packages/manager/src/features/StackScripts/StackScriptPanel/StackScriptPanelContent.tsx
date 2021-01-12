@@ -11,14 +11,10 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
-import StackScriptsSection from './StackScriptsSection';
-import StackScriptsSection_CMR from './StackScriptsSection_CMR';
 import StackScriptBase, {
   StateProps
 } from '../StackScriptBase/StackScriptBase';
+import StackScriptsSection from './StackScriptsSection';
 
 interface DialogVariantProps {
   open: boolean;
@@ -26,19 +22,14 @@ interface DialogVariantProps {
   error?: string;
 }
 interface DialogState {
-  makePublic: DialogVariantProps;
   delete: DialogVariantProps;
+  makePublic: DialogVariantProps;
   stackScriptID: number | undefined;
   stackScriptLabel: string;
 }
 
-interface State {
-  dialog: DialogState;
-  successMessage: string;
-  fieldError?: { reason: string };
-}
-
 interface Props {
+  category: string;
   currentUser: string;
   publicImages: Record<string, Image>;
   request: (
@@ -46,220 +37,139 @@ interface Props {
     params?: any,
     filter?: any
   ) => Promise<ResourcePage<StackScript>>;
-  category: string;
 }
 
-type CombinedProps = Props & FeatureFlagConsumerProps & StateProps;
+type CombinedProps = Props & StateProps;
 
-class StackScriptPanelContent extends React.Component<CombinedProps, State> {
-  state: State = {
-    successMessage: '',
-    dialog: {
+const defaultDialogState = {
+  delete: {
+    open: false,
+    submitting: false
+  },
+  makePublic: {
+    open: false,
+    submitting: false
+  },
+  stackScriptID: undefined,
+  stackScriptLabel: ''
+};
+
+export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
+  const { currentFilter } = props;
+
+  const [mounted, setMounted] = React.useState<boolean>(false);
+  const [dialog, setDialogState] = React.useState<DialogState>(
+    defaultDialogState
+  );
+
+  React.useEffect(() => {
+    setMounted(true);
+
+    return () => {
+      setMounted(false);
+    };
+  }, []);
+
+  const handleCloseDialog = () => {
+    setDialogState({
+      ...defaultDialogState
+    });
+  };
+
+  const handleOpenDeleteDialog = (id: number, label: string) => {
+    setDialogState({
+      delete: {
+        open: true,
+        submitting: false
+      },
       makePublic: {
         open: false,
         submitting: false
       },
+      stackScriptID: id,
+      stackScriptLabel: label
+    });
+  };
+
+  const handleOpenMakePublicDialog = (id: number, label: string) => {
+    setDialogState({
       delete: {
         open: false,
         submitting: false
       },
-      stackScriptID: undefined,
-      stackScriptLabel: ''
-    }
-  };
-
-  mounted: boolean = false;
-
-  componentDidMount() {
-    this.mounted = true;
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  handleOpenDeleteDialog = (id: number, label: string) => {
-    this.setState({
-      dialog: {
-        delete: {
-          open: true,
-          submitting: false
-        },
-        makePublic: {
-          open: false,
-          submitting: false
-        },
-        stackScriptID: id,
-        stackScriptLabel: label
-      }
+      makePublic: {
+        open: true,
+        submitting: false
+      },
+      stackScriptID: id,
+      stackScriptLabel: label
     });
   };
 
-  handleOpenMakePublicDialog = (id: number, label: string) => {
-    this.setState({
-      dialog: {
-        delete: {
-          open: false,
-          submitting: false
-        },
-        makePublic: {
-          open: true,
-          submitting: false
-        },
-        stackScriptID: id,
-        stackScriptLabel: label
+  const handleDeleteStackScript = () => {
+    setDialogState({
+      ...defaultDialogState,
+      delete: {
+        ...dialog.delete,
+        submitting: true,
+        error: undefined
       }
     });
-  };
-
-  handleCloseDialog = () => {
-    this.setState({
-      dialog: {
-        ...this.state.dialog,
-        delete: {
-          open: false,
-          submitting: false
-        },
-        makePublic: {
-          open: false,
-          submitting: false
-        }
-      }
-    });
-  };
-
-  handleDeleteStackScript = () => {
-    const { dialog } = this.state;
-    this.setState({
-      dialog: {
-        ...dialog,
-        delete: {
-          ...dialog.delete,
-          submitting: true,
-          error: undefined
-        }
-      }
-    });
-    deleteStackScript(this.state.dialog.stackScriptID!)
+    deleteStackScript(dialog.stackScriptID!)
       .then(_ => {
-        if (!this.mounted) {
+        if (!mounted) {
           return;
         }
-        this.setState({
-          dialog: {
-            delete: {
-              open: false,
-              submitting: false
-            },
-            makePublic: {
-              open: false,
-              submitting: false
-            },
-            stackScriptID: undefined,
-            stackScriptLabel: ''
-          }
-        });
-        this.props.getDataAtPage(1, this.props.currentFilter, true);
+        handleCloseDialog();
+        props.getDataAtPage(1, props.currentFilter, true);
       })
       .catch(e => {
-        if (!this.mounted) {
+        if (!mounted) {
           return;
         }
-        this.setState({
-          dialog: {
-            ...dialog,
-            delete: {
-              open: true,
-              submitting: false,
-              error: e[0].reason
-            },
-            makePublic: {
-              open: false,
-              submitting: false
-            }
+        setDialogState({
+          ...defaultDialogState,
+          delete: {
+            open: true,
+            submitting: false,
+            error: e[0].reason
+          },
+          makePublic: {
+            open: false,
+            submitting: false
           }
         });
       });
   };
 
-  handleMakePublic = () => {
-    const { dialog } = this.state;
-    const { currentFilter } = this.props;
-
+  const handleMakePublic = () => {
     updateStackScript(dialog.stackScriptID!, { is_public: true })
       .then(_ => {
-        if (!this.mounted) {
+        if (!mounted) {
           return;
         }
-        this.setState({
-          successMessage: `${dialog.stackScriptLabel} successfully published to the public library`,
-          dialog: {
-            delete: {
-              open: false,
-              submitting: false
-            },
-            makePublic: {
-              open: false,
-              submitting: false
-            },
-            stackScriptID: undefined,
-            stackScriptLabel: ''
-          }
-        });
-        this.props.getDataAtPage(1, currentFilter, true);
+        handleCloseDialog();
+        props.getDataAtPage(1, currentFilter, true);
       })
       .catch(_ => {
-        if (!this.mounted) {
+        if (!mounted) {
           return;
         }
-        this.setState({
-          dialog: {
-            delete: {
-              open: false,
-              submitting: false
-            },
-            makePublic: {
-              open: false,
-              submitting: false
-            },
-            stackScriptID: undefined,
-            stackScriptLabel: ''
-          },
-          fieldError: {
-            reason: 'Unable to complete your request at this time'
-          }
-        });
+        handleCloseDialog();
       });
   };
 
-  renderConfirmMakePublicActions = () => {
+  const renderConfirmDeleteActions = () => {
     return (
       <ActionsPanel>
-        <Button buttonType="cancel" onClick={this.handleCloseDialog}>
+        <Button buttonType="cancel" onClick={handleCloseDialog}>
           Cancel
         </Button>
         <Button
           buttonType="primary"
           destructive
-          onClick={this.handleMakePublic}
-        >
-          Yes, make me a star!
-        </Button>
-      </ActionsPanel>
-    );
-  };
-
-  renderConfirmDeleteActions = () => {
-    return (
-      <ActionsPanel>
-        <Button buttonType="cancel" onClick={this.handleCloseDialog}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          destructive
-          onClick={this.handleDeleteStackScript}
-          loading={this.state.dialog.delete.submitting}
+          onClick={handleDeleteStackScript}
+          loading={dialog.delete.submitting}
         >
           Delete
         </Button>
@@ -267,15 +177,26 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderDeleteStackScriptDialog = () => {
-    const { dialog } = this.state;
+  const renderConfirmMakePublicActions = () => {
+    return (
+      <ActionsPanel>
+        <Button buttonType="secondary" onClick={handleCloseDialog}>
+          Cancel
+        </Button>
+        <Button buttonType="primary" destructive onClick={handleMakePublic}>
+          Yes, make me a star!
+        </Button>
+      </ActionsPanel>
+    );
+  };
 
+  const renderDeleteStackScriptDialog = () => {
     return (
       <ConfirmationDialog
         title={`Delete ${dialog.stackScriptLabel}?`}
         open={dialog.delete.open}
-        actions={this.renderConfirmDeleteActions}
-        onClose={this.handleCloseDialog}
+        actions={renderConfirmDeleteActions}
+        onClose={handleCloseDialog}
         error={dialog.delete.error}
       >
         <Typography>
@@ -285,15 +206,13 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderMakePublicDialog = () => {
-    const { dialog } = this.state;
-
+  const renderMakePublicDialog = () => {
     return (
       <ConfirmationDialog
         title={`Woah, just a word of caution...`}
         open={dialog.makePublic.open}
-        actions={this.renderConfirmMakePublicActions}
-        onClose={this.handleCloseDialog}
+        actions={renderConfirmMakePublicActions}
+        onClose={handleCloseDialog}
       >
         <Typography>
           Are you sure you want to make {dialog.stackScriptLabel} public? This
@@ -304,38 +223,23 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
     );
   };
 
-  render() {
-    return (
-      <React.Fragment>
-        {this.props.flags.cmr ? (
-          <StackScriptsSection_CMR
-            isSorting={this.props.isSorting}
-            data={this.props.listOfStackScripts}
-            publicImages={this.props.publicImages}
-            triggerDelete={this.handleOpenDeleteDialog}
-            triggerMakePublic={this.handleOpenMakePublicDialog}
-            currentUser={this.props.currentUser}
-            category={this.props.category}
-          />
-        ) : (
-          <StackScriptsSection
-            isSorting={this.props.isSorting}
-            data={this.props.listOfStackScripts}
-            publicImages={this.props.publicImages}
-            triggerDelete={this.handleOpenDeleteDialog}
-            triggerMakePublic={this.handleOpenMakePublicDialog}
-            currentUser={this.props.currentUser}
-            category={this.props.category}
-          />
-        )}
-        {this.renderDeleteStackScriptDialog()}
-        {this.renderMakePublicDialog()}
-      </React.Fragment>
-    );
-  }
-}
+  return (
+    <React.Fragment>
+      <StackScriptsSection
+        isSorting={props.isSorting}
+        data={props.listOfStackScripts}
+        publicImages={props.publicImages}
+        triggerDelete={handleOpenDeleteDialog}
+        triggerMakePublic={handleOpenMakePublicDialog}
+        currentUser={props.currentUser}
+        category={props.category}
+      />
+      {renderDeleteStackScriptDialog()}
+      {renderMakePublicDialog()}
+    </React.Fragment>
+  );
+};
 
 export default compose<CombinedProps, Props>(
-  StackScriptBase({ isSelecting: false, useQueryString: true }),
-  withFeatureFlagConsumer
+  StackScriptBase({ isSelecting: false, useQueryString: true })
 )(StackScriptPanelContent);

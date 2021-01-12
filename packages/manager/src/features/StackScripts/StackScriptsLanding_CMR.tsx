@@ -11,7 +11,7 @@ import withImagesContainer, {
 } from 'src/containers/withImages.container';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import StackScriptPanel from './StackScriptPanel/StackScriptPanel_CMR';
+import StackScriptPanel from './StackScriptPanel';
 
 type CombinedProps = WithImages & RouteComponentProps<{}>;
 
