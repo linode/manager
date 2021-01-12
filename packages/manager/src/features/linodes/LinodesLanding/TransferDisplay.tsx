@@ -22,10 +22,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(0.5)
   },
   poolUsageProgress: {
-    marginBottom: theme.spacing(1) / 2
-  },
-  proratedNotice: {
-    marginTop: theme.spacing(1)
+    marginBottom: theme.spacing(1) / 2,
+    '& .MuiLinearProgress-root': {
+      borderRadius: 1
+    }
   },
   title: {
     marginBottom: theme.spacing(),
@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 15,
       position: 'relative',
       top: 3
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: theme.spacing(0.5)
     }
   }
 }));
@@ -67,7 +70,7 @@ export const TransferDisplay: React.FC<{}> = _ => {
         container
         direction="row"
         justify="space-between"
-        alignItems="flex-start"
+        alignItems="center"
       >
         <Grid item xs={12} md={6} style={{ paddingRight: 40 }}>
           <Typography variant="h3" className={classes.title}>
@@ -90,15 +93,14 @@ export const TransferDisplay: React.FC<{}> = _ => {
             max={100}
             value={Math.ceil(poolUsagePct)}
             className={classes.poolUsageProgress}
-            rounded
           />
-          <Typography className={classes.proratedNotice}>
+          <Typography style={{ marginBottom: 6 }}>
             Your account&rsquo;s monthly network transfer allotment will reset
             in {getDaysRemaining()} days.
           </Typography>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Typography className={classes.proratedNotice}>
+          <Typography>
             Your account&rsquo;s network transfer pool adds up all the included
             transfer associated with the active Linode services on your account,
             and is prorated based on service creation and/or deletion date(s).
