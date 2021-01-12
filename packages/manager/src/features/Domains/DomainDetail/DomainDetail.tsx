@@ -1,12 +1,10 @@
-import Edit from '@material-ui/icons/Edit';
 import { DomainRecord, getDomainRecords } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
-import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Loading from 'src/components/LandingLoading';
@@ -23,29 +21,18 @@ type RouteProps = RouteComponentProps<{ domainId?: string }>;
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...summaryPanelStyles(theme),
+  root: {
+    margin: 0,
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: theme.spacing()
+    },
+    [theme.breakpoints.down('sm')]: {
+      paddingRight: theme.spacing()
+    }
+  },
   error: {
     marginTop: `${theme.spacing(3)}px !important`,
     marginBottom: `0 !important`
-  },
-  cta: {
-    display: 'flex',
-    alignItems: 'center',
-    marginLeft: theme.spacing()
-  },
-  tagsButton: {
-    height: 34,
-    marginLeft: 0,
-    marginRight: theme.spacing(3),
-    minWidth: 'auto',
-    padding: 0,
-    '&:hover': {
-      textDecoration: 'underline'
-    }
-  },
-  editIcon: {
-    width: 20,
-    height: 20,
-    marginRight: theme.spacing()
   }
 }));
 
@@ -70,11 +57,6 @@ const DomainDetail: React.FC<CombinedProps> = props => {
     refreshDomainRecords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const tagSection = document.getElementById('domains-tag-section');
-  const scrollToTags = () => {
-    return tagSection && tagSection.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const handleUpdateTags = (tagsList: string[]) => {
     if (!domainId) {
@@ -112,31 +94,19 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Grid
         container
-        className="m0"
+        className={classes.root}
         alignItems="center"
         justify="space-between"
       >
-        <Grid item className="p0">
-          <Breadcrumb
-            pathname={location.pathname}
-            labelTitle={domain.domain}
-            labelOptions={{ noCap: true }}
-          />
-        </Grid>
-        <Grid item className={`${classes.cta} p0`}>
-          <Button
-            buttonType="secondary"
-            className={classes.tagsButton}
-            onClick={() => scrollToTags()}
-            aria-label={`Manage tags for "${domain.domain}"`}
-          >
-            <Edit className={classes.editIcon} /> Tags
-          </Button>
-          <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
-        </Grid>
+        <Breadcrumb
+          pathname={location.pathname}
+          labelTitle={domain.domain}
+          labelOptions={{ noCap: true }}
+        />
+        <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
       </Grid>
       {props.location.state && props.location.state.recordError && (
         <Notice
@@ -151,7 +121,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
         records={records}
         domain={domain}
       />
-    </React.Fragment>
+    </>
   );
 };
 
