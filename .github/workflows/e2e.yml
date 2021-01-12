@@ -33,24 +33,23 @@ jobs:
           echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       # personal account
-      - run: |
-          echo "MANAGER_OAUTH=$OAUTH_1" >> ./packages/manager/.env
+      - run: echo "MANAGER_OAUTH=$OAUTH_1" >> ./packages/manager/.env
         if: matrix['container'] == 'OAUTH_1'
         # prod-test-001
-      - run: |
-          echo "MANAGER_OAUTH=$OAUTH_2" >> ./packages/manager/.env
+      - run: echo "MANAGER_OAUTH=$OAUTH_2" >> ./packages/manager/.env
         if: matrix['container'] == 'OAUTH_2'
         # prod-test-002
-      - run: |
-          echo "MANAGER_OAUTH=$OAUTH_3" >> ./packages/manager/.env
+      - run: echo "MANAGER_OAUTH=$OAUTH_3" >> ./packages/manager/.env
         if: matrix['container'] == 'OAUTH_3'
         # prod-test-008
-      - run: |
-          echo "MANAGER_OAUTH=$OAUTH_4" >> ./packages/manager/.env
+      - run: echo "MANAGER_OAUTH=$OAUTH_4" >> ./packages/manager/.env
         if: matrix['container'] == 'OAUTH_4'
       - run: |
           echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
           echo "REACT_APP_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
+          echo "REACT_APP_LOGIN_ROOT=https://login.linode.com" >> ./packages/manager/.env
+          echo "REACT_APP_API_ROOT=https://api.linode.com/v4" >> ./packages/manager/.env
+          echo "REACT_APP_APP_ROOT=http://localhost:3000" >> ./packages/manager/.env
           yarn up &
       - name: Run tests
         uses: cypress-io/github-action@v2
