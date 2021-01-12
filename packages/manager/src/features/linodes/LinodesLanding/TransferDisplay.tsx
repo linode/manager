@@ -12,8 +12,8 @@ import { useAccountTransfer } from 'src/queries/accountTransfer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(2)
+    marginTop: theme.spacing(),
+    padding: `${theme.spacing()}px ${theme.spacing(2)}px`
   },
   overLimit: {
     color: theme.palette.status.warningDark,
@@ -26,7 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1)
   },
   title: {
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(2),
+    fontSize: '0.95rem'
   },
   link: {
     display: 'flex',
@@ -66,11 +67,10 @@ export const TransferDisplay: React.FC<{}> = _ => {
         container
         direction="row"
         justify="space-between"
-        alignItems="center"
+        alignItems="flex-start"
         style={{ marginBottom: 0 }}
-        spacing={8}
       >
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} style={{ paddingRight: 20 }}>
           <Grid container justify="space-between">
             <Grid item style={{ marginRight: 10 }}>
               <Typography>{used} GB Used</Typography>
@@ -97,7 +97,7 @@ export const TransferDisplay: React.FC<{}> = _ => {
             Transfer pool will refresh in {getDaysRemaining()} days.
           </Typography>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} style={{ paddingLeft: 20 }}>
           <Typography className={classes.proratedNotice}>
             Your account&apos;s transfer pool is prorated based on your
             Linodes&apos; creation and deletion dates.
