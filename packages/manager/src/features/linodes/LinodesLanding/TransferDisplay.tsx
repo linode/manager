@@ -1,40 +1,19 @@
 import { DateTime } from 'luxon';
-import Close from '@material-ui/icons/Close';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Dialog from 'src/components/core/Dialog';
+import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
+import CircleProgress from 'src/components/CircleProgress';
 import Link from 'src/components/Link';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexFlow: 'row nowrap'
-  },
-  wrapper: {
-    border: 'none',
-    backgroundColor: 'inherit',
-    cursor: 'pointer',
-    marginRight: theme.spacing(4),
-    paddingRight: 0
-  },
-  labelText: {
-    marginRight: theme.spacing(1),
-    fontSize: '0.9rem',
-    ...theme.applyLinkStyles
-  },
-  paper: {
-    width: '30%',
-    padding: theme.spacing(3)
-  },
-  bar: {
-    width: 150
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(2)
   },
   overLimit: {
     color: theme.palette.status.warningDark,
@@ -47,8 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1)
   },
   title: {
-    marginBottom: theme.spacing(),
-    marginLeft: 0
+    marginBottom: theme.spacing()
   },
   link: {
     display: 'flex',
@@ -67,8 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const TransferDisplay: React.FC<{}> = _ => {
-  const [isOpen, setOpen] = React.useState(false);
-
   const classes = useStyles();
 
   const { data, isLoading } = useAccountTransfer();
@@ -77,34 +53,64 @@ export const TransferDisplay: React.FC<{}> = _ => {
 
   const poolUsagePct = used < quota ? (used / quota) * 100 : 100;
 
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
   return (
-    <>
-      <button
-        className={`${classes.root} ${classes.wrapper}`}
-        onClick={() => setOpen(true)}
+    <Paper className={classes.root}>
+      <Typography variant="h3" className={classes.title}>
+        Monthly Network Transfer Pool
+      </Typography>
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+        style={{ marginBottom: 0 }}
+        spacing={8}
       >
-        <Typography className={classes.labelText}>
-          Monthly Network Transfer Pool
-        </Typography>
-        {isLoading ? (
-          <Typography className={classes.bar}>Loading...</Typography>
-        ) : (
+        <Grid item xs={12} md={6}>
+          <Grid container justify="space-between">
+            <Grid item style={{ marginRight: 10 }}>
+              <Typography>{used} GB Used</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>
+                {quota >= used ? (
+                  <span>{quota - used} GB Available</span>
+                ) : (
+                  <span>
+                    {(quota - used).toString().replace(/\-/, '')} GB Over Quota
+                  </span>
+                )}
+              </Typography>
+            </Grid>
+          </Grid>
           <BarPercent
-            className={classes.bar}
             max={100}
-            value={poolUsagePct}
-            displayValueInline
+            value={Math.ceil(poolUsagePct)}
+            className={classes.poolUsageProgress}
+            rounded
           />
-        )}
-      </button>
-      <TransferDialog
-        isOpen={isOpen}
-        quota={quota}
-        used={used}
-        poolUsagePct={poolUsagePct}
-        onClose={() => setOpen(false)}
-      />
-    </>
+          <Typography className={classes.proratedNotice}>
+            Transfer pool will refresh in {getDaysRemaining()} days.
+          </Typography>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Typography className={classes.proratedNotice}>
+            Your account&apos;s transfer pool is prorated based on your
+            Linodes&apos; creation and deletion dates.
+          </Typography>
+          <div className={classes.link}>
+            <Typography>How to avoid surprises </Typography>{' '}
+            <Link to="https://www.linode.com/docs/guides/network-transfer-quota/">
+              <OpenInNew />
+            </Link>
+          </div>
+        </Grid>
+      </Grid>
+    </Paper>
   );
 };
 
@@ -117,79 +123,3 @@ export const getDaysRemaining = () =>
   );
 
 export default React.memo(TransferDisplay);
-
-// =============================================================================
-// Dialog
-// =============================================================================
-interface DialogProps {
-  isOpen: boolean;
-  used: number;
-  quota: number;
-  poolUsagePct: number;
-  onClose: () => void;
-}
-
-export const TransferDialog: React.FC<DialogProps> = React.memo(props => {
-  const classes = useStyles();
-  const { isOpen, onClose, poolUsagePct, quota, used } = props;
-
-  const daysRemainingInMonth = getDaysRemaining();
-
-  return (
-    <Dialog
-      open={isOpen}
-      classes={{ paper: classes.paper }}
-      onClose={onClose}
-      title="Monthly Network Transfer Pool"
-    >
-      <Grid
-        container
-        justify="space-between"
-        alignItems="center"
-        className={classes.title}
-      >
-        <Typography variant="h2">Monthly Network Transfer Pool</Typography>
-        <button className={classes.wrapper} onClick={onClose}>
-          <Close />
-        </button>
-      </Grid>
-      <Grid container justify="space-between" style={{ marginBottom: 0 }}>
-        <Grid item style={{ marginRight: 10 }}>
-          <Typography>{used} GB Used</Typography>
-        </Grid>
-        <Grid item>
-          <Typography>
-            {quota >= used ? (
-              <span>{quota - used} GB Available</span>
-            ) : (
-              <span className={classes.overLimit}>
-                {(quota - used).toString().replace(/\-/, '')} GB Over Quota
-              </span>
-            )}
-          </Typography>
-        </Grid>
-      </Grid>
-      <BarPercent
-        max={100}
-        value={Math.ceil(poolUsagePct)}
-        className={classes.poolUsageProgress}
-        rounded
-        overLimit={quota < used}
-      />
-
-      <Typography className={classes.proratedNotice}>
-        {daysRemainingInMonth} days left to end of billing cycle.
-      </Typography>
-      <Typography className={classes.proratedNotice}>
-        Your account&apos;s transfer quota is prorated based on your
-        Linodes&apos; creation and deletion dates.
-      </Typography>
-      <div className={classes.link}>
-        <Typography>How to mitigate overages </Typography>{' '}
-        <Link to="https://linode.com/docs">
-          <OpenInNew />
-        </Link>
-      </div>
-    </Dialog>
-  );
-});

@@ -413,9 +413,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                     this.props.history.push('/linodes/create')
                                   }
                                   docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-                                >
-                                  <TransferDisplay />
-                                </LandingHeader>
+                                />
                               </div>
                             )}
                           </React.Fragment>
@@ -568,6 +566,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 );
               }}
             </PreferenceToggle>
+            <TransferDisplay />
           </Grid>
           {displayBackupsCTA && !this.props.flags.cmr && (
             <Grid item className="mlSidebar py0">
