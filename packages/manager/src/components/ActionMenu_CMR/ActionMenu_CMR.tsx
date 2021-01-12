@@ -94,7 +94,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   tooltip: {
-    color: theme.color.white,
+    color: '#fff',
+    '& :hover': {
+      color: '#4d99f1',
+      backgroundColor: 'transparent'
+    },
     padding: '0 0 0 8px',
     '& svg': {
       height: 20,
@@ -172,14 +176,14 @@ const ActionMenu: React.FC<CombinedProps> = props => {
                 disabled={a.disabled}
               >
                 {a.title}
-                {a.tooltip && (
+                {a.tooltip ? (
                   <HelpIcon
                     data-qa-tooltip-icon
                     text={a.tooltip}
                     tooltipPosition="right"
                     className={classes.tooltip}
                   />
-                )}
+                ) : null}
               </MenuItem>
             ))}
           </MenuItems>
