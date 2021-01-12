@@ -184,7 +184,12 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        <OrderBy data={disks} orderBy={'created'} order={'asc'}>
+        <OrderBy
+          data={disks}
+          orderBy={'created'}
+          order={'asc'}
+          preferenceKey="linode-disks"
+        >
           {({ data: orderedData, handleOrderChange, order, orderBy }) => (
             <Paginate data={orderedData} scrollToRef={this.disksHeader}>
               {({
