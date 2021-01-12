@@ -83,3 +83,14 @@ export const recycleAllNodes = (clusterID: number, nodePoolID: number) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}/recycle`)
   );
+
+/**
+ * recycleNode
+ *
+ * Recycles a single nodes by id.
+ */
+export const recycleNode = (clusterID: number, nodeID: string) =>
+  Request<{}>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/nodes/${nodeID}/recycle`)
+  );

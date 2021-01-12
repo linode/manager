@@ -23,8 +23,7 @@ import useLinodes from 'src/hooks/useLinodes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
-// Temporarily hidden; @todo reactivate
-// import NodeActionMenu from './NodeActionMenu';
+import NodeActionMenu from './NodeActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
@@ -35,6 +34,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ipCell: {
     width: '25%'
+  },
+  actionMenu: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0
   },
   error: {
     color: theme.color.red
@@ -48,7 +53,7 @@ export interface Props {
   poolId: number;
   nodes: PoolNodeResponse[];
   typeLabel: string;
-  openRecycleNodeDialog: (linodeId: number, linodeLabel: string) => void;
+  openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
 export const NodeTable: React.FC<Props> = props => {
@@ -110,8 +115,7 @@ export const NodeTable: React.FC<Props> = props => {
                       >
                         IP Address
                       </TableSortCell>
-                      {/* Hiding action menu until backend can support it properly. */}
-                      {/* <TableCell /> */}
+                      <TableCell className={classes.actionMenu} />
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -124,6 +128,7 @@ export const NodeTable: React.FC<Props> = props => {
                         return (
                           <NodeRow
                             key={`node-row-${eachRow.nodeId}`}
+                            nodeId={eachRow.nodeId}
                             instanceId={eachRow.instanceId}
                             label={eachRow.label}
                             instanceStatus={eachRow.instanceStatus}
@@ -176,21 +181,23 @@ interface NodeRow {
   nodeStatus: string;
 }
 
-type NodeRowProps = Omit<NodeRow, 'nodeId'> & {
+interface NodeRowProps extends NodeRow {
   typeLabel: string;
   linodeError?: APIError[];
-  openRecycleNodeDialog: (linodeId: number, linodeLabel: string) => void;
-};
+  openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
+}
 
 export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
   const {
+    nodeId,
     instanceId,
     label,
     instanceStatus,
     ip,
     typeLabel,
     nodeStatus,
-    linodeError
+    linodeError,
+    openRecycleNodeDialog
   } = props;
 
   const classes = useStyles();
@@ -242,14 +249,13 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
           displayIP
         )}
       </TableCell>
-      {/* Hiding action menu until backend can support it properly. */}
-      {/* <TableCell>
-        {<NodeActionMenu
-          instanceId={instanceId}
+      <TableCell className={classes.actionMenu}>
+        <NodeActionMenu
+          nodeId={nodeId}
           instanceLabel={label}
           openRecycleNodeDialog={openRecycleNodeDialog}
         />
-      </TableCell> */}
+      </TableCell>
     </TableRow>
   );
 });
@@ -271,7 +277,6 @@ export const nodeToRow = (
 
   return {
     nodeId: node.id,
-    instanceId: foundLinode?.id,
     label: foundLinode?.label,
     instanceStatus: foundLinode?.status,
     ip: foundLinode?.ipv4[0],

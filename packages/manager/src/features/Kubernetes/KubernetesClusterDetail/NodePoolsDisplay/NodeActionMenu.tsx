@@ -1,39 +1,48 @@
 import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu from 'src/components/ActionMenu_CMR';
+import InlineMenuAction from 'src/components/InlineMenuAction';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 
 interface Props {
-  instanceId?: number;
+  nodeId?: string;
   instanceLabel?: string;
-  openRecycleNodeDialog: (linodeId: number, linodeLabel: string) => void;
+  openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
 export const NodeActionMenu: React.FC<Props> = props => {
-  const { instanceId, instanceLabel, openRecycleNodeDialog } = props;
+  const { nodeId, instanceLabel, openRecycleNodeDialog } = props;
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const createActions = () => {
-    return (closeMenu: Function): Action[] => {
-      const actions = [
-        {
-          title: 'Recycle',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            if (!instanceId || !instanceLabel) {
-              return;
-            }
-            openRecycleNodeDialog(instanceId!, instanceLabel!);
-            closeMenu();
-            e.preventDefault();
-          },
-          disabled: !instanceId || !instanceLabel
+  const actions = [
+    {
+      title: 'Recycle',
+      onClick: () => {
+        if (!nodeId || !instanceLabel) {
+          return;
         }
-      ];
+        openRecycleNodeDialog(nodeId!, instanceLabel!);
+      },
+      disabled: !nodeId || !instanceLabel
+    }
+  ];
 
-      return actions;
-    };
-  };
-
-  return (
+  return !matchesSmDown ? (
+    // eslint-disable-next-line
+    <>
+      {actions.map(action => {
+        return (
+          <InlineMenuAction
+            key={action.title}
+            actionText={action.title}
+            onClick={action.onClick}
+          />
+        );
+      })}
+    </>
+  ) : (
     <ActionMenu
-      createActions={createActions()}
+      actionsList={actions}
       ariaLabel={`Action menu for Node ${instanceLabel}`}
     />
   );
