@@ -1,4 +1,4 @@
-import { containsClick, fbtClick } from '../helpers';
+import { containsClick } from '../helpers';
 import { waitForAppLoad } from './common';
 
 export const loadAppNoLogin = path => waitForAppLoad(path, false);
