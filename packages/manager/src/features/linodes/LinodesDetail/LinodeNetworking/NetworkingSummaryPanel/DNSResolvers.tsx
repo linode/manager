@@ -9,6 +9,17 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    overflowX: 'scroll',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
+    }
+  },
+  wrapper: {
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'space-between'
+    }
+  },
   header: {
     paddingBottom: theme.spacing() / 2
   },
@@ -30,11 +41,17 @@ export const DNSResolvers: React.FC<Props> = props => {
   const v6Resolvers = linodeRegion?.resolvers?.ipv6.split(',') ?? [];
 
   return (
-    <div>
+    <div className={classes.root}>
       <Typography className={classes.header}>
         <strong>DNS Resolvers</strong>
       </Typography>
-      <Grid container direction="row" wrap="nowrap" spacing={4}>
+      <Grid
+        container
+        direction="row"
+        wrap="nowrap"
+        spacing={4}
+        className={classes.wrapper}
+      >
         <Grid item>
           {v4Resolvers.map(thisAddress => (
             <Typography
