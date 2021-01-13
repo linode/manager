@@ -87,7 +87,7 @@ export const recycleAllNodes = (clusterID: number, nodePoolID: number) =>
 /**
  * recycleNode
  *
- * Recycles a single nodes by id.
+ * Recycles a single node by id.
  */
 export const recycleNode = (clusterID: number, nodeID: string) =>
   Request<{}>(

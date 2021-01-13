@@ -3,6 +3,7 @@ import {
   PoolNodeResponse
 } from '@linode/api-v4/lib/kubernetes';
 import classnames from 'classnames';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
@@ -90,6 +91,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
 
   const classes = useStyles();
   const flags = useFlags();
+  const { enqueueSnackbar } = useSnackbar();
 
   const deletePoolDialog = useDialog<number>(deletePool);
   const recycleAllNodesDialog = useDialog<number>(recycleAllNodes);
@@ -178,11 +180,15 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     if (!dialog.entityID) {
       return;
     }
-    submitDialog(dialog.entityID).catch(err => {
-      handleError(
-        getAPIErrorOrDefault(err, 'Error recycling this node.')[0].reason
-      );
-    });
+    submitDialog(dialog.entityID)
+      .then(_ => {
+        enqueueSnackbar('Node queued for recycling.', { variant: 'success' });
+      })
+      .catch(err => {
+        handleError(
+          getAPIErrorOrDefault(err, 'Error recycling this node.')[0].reason
+        );
+      });
   };
 
   const handleRecycleAllNodes = () => {

@@ -13,11 +13,11 @@ import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import StatusIndicator from 'src/components/StatusIndicator';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
-import TableSortCell from 'src/components/TableSortCell';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { transitionText } from 'src/features/linodes/transitions';
 import useLinodes from 'src/hooks/useLinodes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
@@ -34,12 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ipCell: {
     width: '25%'
-  },
-  actionMenu: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0
   },
   error: {
     color: theme.color.red
@@ -82,10 +76,7 @@ export const NodeTable: React.FC<Props> = props => {
           }) => (
             <>
               <Paper>
-                <Table
-                  aria-label="List of Your Cluster Nodes"
-                  isResponsive={false}
-                >
+                <Table aria-label="List of Your Cluster Nodes">
                   <TableHead>
                     <TableRow>
                       <TableSortCell
@@ -115,7 +106,7 @@ export const NodeTable: React.FC<Props> = props => {
                       >
                         IP Address
                       </TableSortCell>
-                      <TableCell className={classes.actionMenu} />
+                      <TableCell />
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -249,7 +240,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
           displayIP
         )}
       </TableCell>
-      <TableCell className={classes.actionMenu}>
+      <TableCell>
         <NodeActionMenu
           nodeId={nodeId}
           instanceLabel={label}
