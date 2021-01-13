@@ -17,11 +17,8 @@ describe('access keys', () => {
     const bucketLabel = 'cy-test-' + makeTestLabel();
     const accessKeyLabel = 'cy-test-key';
     const clusterId = 'us-east-1';
-    cy.server();
-    cy.route({
-      method: 'POST',
-      url: `*/object-storage/keys`
-    }).as('createAccessKey');
+    // catch create access key request
+    cy.intercept('POST', `*/object-storage/keys`).as('createAccessKey');
     createBucket(bucketLabel, clusterId).then(() => {
       cy.visitWithLogin('/object-storage/access-keys');
       getVisible('[data-qa-header]').within(() => {

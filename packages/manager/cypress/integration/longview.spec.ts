@@ -9,14 +9,14 @@ describe('longview', () => {
   it('tests longview', () => {
     const linodePassword = strings.randomPass();
     const clientLabel = 'cy-test-client';
-    cy.server();
     cy.visitWithLogin('/dashboard');
     createLinode(undefined, linodePassword).then(linode => {
       createClient(undefined, clientLabel).then(client => {
         const linodeIp = linode['ipv4'][0];
-        const longviewLabel = client.label;
+        const clientLabel = client.label;
         cy.visit('/longview');
-        containsVisible(longviewLabel);
+        containsVisible(clientLabel);
+        fbtVisible('Waiting for data...');
         cy.get('code')
           .first()
           .then($code => {
@@ -38,9 +38,9 @@ describe('longview', () => {
               if (
                 cy
                   .contains('Waiting for data...', {
-                    timeout: 480000
+                    timeout: 300000
                   })
-                  .should('not.be.visible')
+                  .should('not.exist')
               ) {
                 fbtVisible(clientLabel);
                 getVisible(`[href="/longview/clients/${client.id}"]`);

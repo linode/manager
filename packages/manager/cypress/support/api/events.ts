@@ -1,4 +1,4 @@
-const mixin = require('mixin-deep');
+import mixin = require('mixin-deep');
 
 const LINODE_DEFAULT_DATA = {
   id: 17950183,
@@ -26,10 +26,8 @@ const makeEventData = event => {
 
 export const stubLinodeEvent = (linodeData = undefined) => {
   const _linodeData = mixin(LINODE_DEFAULT_DATA, linodeData);
-  cy.route({
-    method: 'GET',
-    response: makeEventData(_linodeData),
-    url: '/v4/account/events*'
-  }).as('event');
+  cy.intercept('GET', '/v4/account/events*', makeEventData(_linodeData)).as(
+    'event'
+  );
   cy.wait('@event');
 };
