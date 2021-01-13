@@ -2,16 +2,14 @@ import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Box from 'src/components/core/Box';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/DocumentationButton';
-import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
-import useFlags from 'src/hooks/useFlags';
 import { BucketAccess } from './BucketAccess';
 
 const ObjectList = React.lazy(() => import('./BucketDetail'));
@@ -19,8 +17,13 @@ const ObjectList = React.lazy(() => import('./BucketDetail'));
 const BucketSSL = React.lazy(() => import('./BucketSSL'));
 
 const useStyles = makeStyles((theme: Theme) => ({
-  headerBox: {
-    marginBottom: theme.spacing(2)
+  root: {
+    [theme.breakpoints.down('sm')]: {
+      paddingRight: theme.spacing()
+    },
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: theme.spacing()
+    }
   }
 }));
 
@@ -33,7 +36,6 @@ type CombinedProps = RouteComponentProps<MatchProps>;
 
 export const BucketDetailLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
@@ -71,7 +73,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
-        className={classes.headerBox}
+        className={classes.root}
       >
         <Breadcrumb
           // The actual pathname doesn't match what we want in the Breadcrumb,
@@ -85,11 +87,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
           ]}
           labelOptions={{ noCap: true }}
         />
-        {flags.cmr ? (
-          <DocumentationButton_CMR href="https://www.linode.com/docs/platform/object-storage/" />
-        ) : (
-          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
-        )}
+        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
       </Box>
 
       <Tabs index={index} onChange={handleTabChange}>

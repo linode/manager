@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { Link } from 'src/components/Link';
 import { LOGIN_ROOT } from 'src/constants';
 
 interface Props {
@@ -18,16 +18,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   copy: {
     lineHeight: '20px',
-    marginTop: 6,
-    marginBottom: theme.spacing(1)
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing()
   },
-  button: {
-    marginTop: theme.spacing(1)
+  link: {
+    color: theme.cmrTextColors.linkActiveLight,
+    marginTop: theme.spacing(),
+    '&:hover': {
+      color: theme.palette.primary.main
+    }
   },
   disabled: {
     '& *': {
       color: theme.color.disabledText
     }
+  },
+  disabledLink: {
+    pointerEvents: 'none'
   }
 }));
 
@@ -38,18 +45,16 @@ export const ResetPassword: React.FC<CombinedProps> = props => {
   return (
     <Paper className={`${classes.root} ${disabled ? classes.disabled : ''}`}>
       <Typography variant="h3">Password Reset</Typography>
-      <Typography variant="body2" className={classes.copy}>
+      <Typography variant="body1" className={classes.copy}>
         If you’ve forgotten your password or would like to change it, we’ll send
         you an e-mail with instructions.
       </Typography>
-      <Button
-        buttonType="primary"
-        href={`${LOGIN_ROOT}/forgot/password?username=${username}`}
-        className={classes.button}
-        disabled={disabled}
+      <Link
+        to={`${LOGIN_ROOT}/forgot/password?username=${username}`}
+        className={`${classes.link} ${disabled ? classes.disabledLink : ''}`}
       >
         Reset Password
-      </Button>
+      </Link>
     </Paper>
   );
 };

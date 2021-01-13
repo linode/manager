@@ -9,7 +9,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
@@ -18,6 +18,7 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import createMailto from 'src/features/Footer/createMailto';
@@ -174,13 +175,13 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item xs={12}>
           {pdfGenerationError && (
-            <Notice
-              error={true}
-              html={`Failed generating PDF. <a href="${createMailto(
-                pdfGenerationError.stack
-              )}"
-          > Send report</a>`}
-            />
+            <Notice error>
+              Failed generating PDF.{' '}
+              <Link to={createMailto(pdfGenerationError.stack)}>
+                {' '}
+                Send report
+              </Link>
+            </Notice>
           )}
           <InvoiceTable loading={loading} items={items} errors={errors} />
         </Grid>

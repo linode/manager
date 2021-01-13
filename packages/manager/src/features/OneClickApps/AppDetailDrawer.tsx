@@ -27,7 +27,9 @@ type ClassNames =
   | 'summary'
   | 'description'
   | 'divider'
-  | 'image';
+  | 'image'
+  | 'wrapLogo'
+  | 'wrapAppName';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,9 +38,10 @@ const styles = (theme: Theme) =>
       marginRight: theme.spacing(1)
     },
     appName: {
-      fontSize: '2.4rem',
+      fontSize: '2.0rem',
       fontFamily: theme.font.normal,
-      color: theme.color.grey4
+      color: theme.color.grey4,
+      lineHeight: '2.5rem'
     },
     summary: {
       marginTop: theme.spacing(2),
@@ -54,6 +57,14 @@ const styles = (theme: Theme) =>
     },
     image: {
       maxWidth: 50
+    },
+    wrapLogo: {
+      alignSelf: 'flex-start',
+      marginLeft: -theme.spacing(3)
+    },
+    wrapAppName: {
+      maxWidth: 'fit-content',
+      minWidth: 170
     }
   });
 
@@ -88,7 +99,12 @@ export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = props => 
       }
     >
       <Grid container direction="row" alignItems="center" justify="center">
-        <Grid item className={classes.logo}>
+        <Grid
+          item
+          className={`${classes.logo} ${
+            app.name.length > 20 ? classes.wrapLogo : ''
+          }`}
+        >
           <img
             className={classes.image}
             src={`${APP_ROOT}/${app.logo_url}`}
@@ -96,7 +112,12 @@ export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = props => 
           />
         </Grid>
         <Grid item>
-          <Typography variant="h2" className={classes.appName}>
+          <Typography
+            variant="h2"
+            className={`${classes.appName} ${
+              app.name.length > 20 ? classes.wrapAppName : ''
+            }`}
+          >
             {app.name}
           </Typography>
         </Grid>

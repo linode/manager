@@ -5,7 +5,10 @@ import { MockData, mockDataController } from './mockDataController';
 import ServiceWorkerTool from './ServiceWorkerTool';
 
 const options: { label: string; key: keyof MockData }[] = [
-  { label: 'Linodes', key: 'linode' }
+  { label: 'Linodes', key: 'linode' },
+  { label: 'NodeBalancers', key: 'nodeBalancer' },
+  { label: 'Domains', key: 'domain' },
+  { label: 'Volumes', key: 'volume' }
 ];
 
 const MockDataTool: React.FC<{}> = () => {
@@ -33,15 +36,14 @@ const MockDataTool: React.FC<{}> = () => {
   return (
     <Grid>
       <Grid item xs={12}>
-        <h4>Mock Data</h4>
+        <h4 style={{ marginBottom: 8 }}>Mock Data</h4>
       </Grid>
       <Grid item xs={12}>
         {options.map(thisOption => {
           return (
             <div key={thisOption.key} style={{ marginTop: 4 }}>
-              <label>{thisOption.label}: </label>
+              <label style={{ marginRight: 4 }}>{thisOption.label}: </label>
               <input
-                style={{ marginLeft: 4 }}
                 type="number"
                 min="0"
                 onChange={e =>

@@ -17,59 +17,38 @@ const cmrBGColors = {
   bgApp: '#3a3f46',
   bgPrimaryNav: '#23262a',
   bgPrimaryNavActive: '#0C0D0E',
-  bgSecondaryActions: '#2e3238',
-  bgSearchBar: '#515862',
   bgPaper: '#2e3238',
   bgPrimaryButton: '#3683dc',
   // notification center, add a tag, breadcrumb
   bgSecondaryButton: '#364863',
   bgTableHeader: '#33373e',
-  bgTableBody: '#2e3238',
-  bgStatusChip: '#454b54',
   bgBillingSummary: '#2d3d53',
-  bgBreadcrumbParent: '#364863',
   bgAccessRow: '#454b54',
-  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
-  bgAccessHeader: '#3a3f46'
+  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)'
 };
 
 const cmrTextColors = {
-  textAction: '#74aae6',
-  textBillingSummary: '#f2f2f2',
-  textTab: '#74aae6',
-  textTabActive: '#74aae6',
-  textStatusChip: '#e6e6e6',
-  linkActiveMedium: '#2575d0',
   linkActiveLight: '#74aae6',
   headlineStatic: '#e6e6e6',
-  headlineActive: '#abb1ba',
   tableStatic: '#e6e6e6',
-  textTagButton: '#9caec9',
-  textAccessTable: '#acb0b4',
-  textAccessCode: '#e4e5e7',
-  textBreadcrumbParent: '#ffffff'
+  textAccessTable: '#acb0b4'
 };
 
 const cmrBorderColors = {
-  borderNotificationCenter: '#486084',
   borderTypography: '#454b54',
   borderTabs: '#5c6470',
-  borderTabActive: '#74aae6',
   borderBillingSummary: '#243142',
   borderBalance: '#4d79b2',
   borderTable: '#3a3f46'
 };
 
 const cmrIconColors = {
-  iStatic: '#abb1ba',
-  iActiveMedium: '#2575d0',
   iActiveLight: '#74aae6',
   iGreen: '#17cf73',
   iOrange: '#ffb31a',
   iRed: '#cf1e1e',
   // Offline status
-  iGrey: '#dbdde1',
-  iCheckmark: '#fff'
+  iGrey: '#dbdde1'
 };
 
 const primaryColors = {
@@ -100,10 +79,24 @@ const iconCircleAnimation = {
   }
 };
 
+// Used for styling html buttons to look like our generic links
+const genericLinkStyle = {
+  background: 'none',
+  color: cmrTextColors.linkActiveLight,
+  border: 'none',
+  font: 'inherit',
+  padding: 0,
+  cursor: 'pointer',
+  '&:hover': {
+    color: primaryColors.main,
+    textDecoration: 'underline'
+  }
+};
+
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
-  color: cmrTextColors.textStatusChip,
+  color: cmrTextColors.tableStatic,
   fontSize: '1rem',
   padding: 0,
   '&:before': {
@@ -155,7 +148,6 @@ const darkThemeOptions = {
     tableHeader: '#2B2E32',
     primaryNavActive: '#303235',
     primaryNavActiveBG: '#464c53',
-    primaryNavBorder: '#303235',
     primaryNavPaper: '#2e3238',
     mainContentBanner: '#23272B',
     topMenu: '#33383d',
@@ -169,7 +161,6 @@ const darkThemeOptions = {
     green: '#00b159',
     orange: '#ffb31a',
     yellow: '#fecf2f',
-    border1: '#000',
     border2: '#111',
     border3: '#222',
     borderPagination: '#222222',
@@ -177,7 +168,6 @@ const darkThemeOptions = {
     grey2: 'rgba(0, 0, 0, 0.2)',
     grey3: '#999',
     grey5: 'rgba(0, 0, 0, 0.2)',
-    grey7: 'rgba(0, 0, 0, 0.2)',
     grey9: primaryColors.divider,
     grey10: '#dbdde1',
     white: '#32363c',
@@ -252,6 +242,9 @@ const darkThemeOptions = {
       color: primaryColors.text
     }
   },
+  applyLinkStyles: {
+    ...genericLinkStyle
+  },
   applyStatusPillStyles: {
     ...genericStatusPillStyle
   },
@@ -311,9 +304,9 @@ const darkThemeOptions = {
         }
       },
       containedSecondary: {
-        color: primaryColors.main,
+        color: cmrTextColors.linkActiveLight,
         '&:hover, &:focus': {
-          color: primaryColors.light
+          color: primaryColors.main
         },
         '&:active': {
           color: primaryColors.dark,
@@ -481,6 +474,9 @@ const darkThemeOptions = {
     },
     MuiInput: {
       root: {
+        backgroundColor: '#444',
+        border: '1px solid #222',
+        color: primaryColors.text,
         '&$disabled': {
           borderColor: '#606469',
           color: '#ccc !important'
@@ -489,9 +485,6 @@ const darkThemeOptions = {
           borderColor: primaryColors.main,
           boxShadow: '0 0 2px 1px #222'
         },
-        border: '1px solid #222',
-        color: primaryColors.text,
-        backgroundColor: '#444',
         '& svg': {
           color: primaryColors.main
         }
@@ -528,7 +521,6 @@ const darkThemeOptions = {
     },
     MuiPaper: {
       root: {
-        // originally '#32363c'
         backgroundColor: cmrBGColors.bgPaper
       }
     },
@@ -553,23 +545,6 @@ const darkThemeOptions = {
         boxShadow: '0 0 5px #222'
       }
     },
-    MuiSwitch: {
-      root: {
-        '& $checked': {
-          color: `#abadaf !important`,
-          '& .square': {
-            fill: 'white !important'
-          }
-        }
-      },
-      checked: {},
-      switchBase: {
-        color: '#abadaf !important'
-      },
-      track: {
-        border: '1px solid #222'
-      }
-    },
     MuiTab: {
       root: {
         color: '#fff',
@@ -588,7 +563,13 @@ const darkThemeOptions = {
     MuiTableCell: {
       root: {
         borderTop: `1px solid ${primaryColors.divider}`,
-        borderBottom: `1px solid ${primaryColors.divider}`
+        borderBottom: `1px solid ${primaryColors.divider}`,
+        '& a': {
+          color: cmrTextColors.linkActiveLight
+        },
+        '& a:hover': {
+          color: primaryColors.main
+        }
       },
       head: {
         color: primaryColors.text,
@@ -641,6 +622,12 @@ const darkThemeOptions = {
     },
     MuiTypography: {
       root: {
+        '& a': {
+          color: cmrTextColors.linkActiveLight
+        },
+        '& a:hover': {
+          color: primaryColors.main
+        },
         '& a.black': {
           color: primaryColors.text
         },

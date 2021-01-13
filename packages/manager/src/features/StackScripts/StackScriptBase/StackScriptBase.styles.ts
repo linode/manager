@@ -6,52 +6,54 @@ import {
 } from 'src/components/core/styles';
 
 type ClassNames =
-  | 'root'
   | 'loaderWrapper'
   | 'emptyState'
   | 'table'
   | 'searchWrapper'
   | 'searchBar'
-  | 'searchBarCMR'
-  | 'stackscriptPlaceholder'
-  | 'button'
-  | 'cmrHeaderWrapper'
-  | 'cmrActions';
+  | 'landing'
+  | 'stackscriptPlaceholder';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     loaderWrapper: {
       display: 'flex',
       justifyContent: 'center',
       padding: theme.spacing(2)
     },
-    table: {
-      overflow: 'scroll'
-    },
     emptyState: {
-      textAlign: 'center',
-      color: theme.palette.text.primary
+      color: theme.palette.text.primary,
+      textAlign: 'center'
+    },
+    table: {
+      backgroundColor: theme.cmrBGColors.bgPaper,
+      overflow: 'scroll'
     },
     searchWrapper: {
       display: 'flex',
       flexWrap: 'nowrap',
+      backgroundColor: theme.cmrBGColors.bgPaper,
+      paddingTop: theme.spacing(),
+      paddingBottom: '8px !important',
       position: 'sticky',
-      width: '100%',
       top: 0,
+      width: '100%',
       zIndex: 11,
-      paddingTop: theme.spacing(2),
-      paddingBottom: '40px !important',
-      backgroundColor: theme.bg.white
+      [theme.breakpoints.up('sm')]: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }
     },
     searchBar: {
       backgroundColor: theme.color.white,
+      flexBasis: '100%',
       marginTop: 0,
-      minHeight: 'auto',
       '& .input': {
-        backgroundColor: theme.cmrBGColors.bgSearchBar,
-        border: 'none',
-        borderRadius: 3,
+        backgroundColor: theme.cmrBGColors.bgPaper,
+        border: `1px solid ${theme.color.grey3}`,
+        borderRadius: 0,
+        minHeight: 'auto',
         minWidth: 415
       },
       '& > div': {
@@ -65,13 +67,9 @@ const styles = (theme: Theme) =>
         paddingBottom: 0
       }
     },
-    searchBarCMR: {
-      flexBasis: '100%',
-      '& .input': {
-        backgroundColor: theme.cmrBGColors.bgPaper,
-        border: `1px solid ${theme.color.grey3}`,
-        borderRadius: 0
-      }
+    landing: {
+      backgroundColor: `${theme.cmrBGColors.bgApp} !important`,
+      marginTop: -theme.spacing()
     },
     // Styles to override base placeholder styles for StackScript null state
     stackscriptPlaceholder: {
@@ -82,28 +80,6 @@ const styles = (theme: Theme) =>
         marginTop: 4,
         transform: 'scale(0.8)'
       }
-    },
-    button: {
-      width: 180,
-      borderRadius: 3,
-      height: 34,
-      padding: 0,
-      marginRight: 8
-    },
-    cmrHeaderWrapper: {
-      backgroundColor: 'transparent',
-      position: 'static',
-      paddingTop: 0,
-      paddingBottom: '8px !important',
-      [theme.breakpoints.up('sm')]: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }
-    },
-    cmrActions: {
-      display: 'flex',
-      alignItems: 'center'
     }
   });
 

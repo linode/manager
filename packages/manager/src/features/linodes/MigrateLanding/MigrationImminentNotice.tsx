@@ -23,27 +23,18 @@ const MigrationImminentNotice: React.FC<CombinedProps> = props => {
     }
   );
 
-  return (
-    <React.Fragment>
-      {migrationScheduledForThisLinode ? (
-        <Notice
-          className={props.className}
-          spacingTop={16}
-          warning
-          text={
-            <React.Fragment>
-              Your Linode is already scheduled to be migrated. Please open a{' '}
-              <SupportLink
-                text="support ticket"
-                title="Request to overwrite existing migration"
-              />{' '}
-              if you would like to request this migration be overwritten.
-            </React.Fragment>
-          }
-        />
-      ) : null}
-    </React.Fragment>
-  );
+  return migrationScheduledForThisLinode ? (
+    <Notice className={props.className} spacingTop={16} warning>
+      <React.Fragment>
+        Your Linode is already scheduled to be migrated. Please open a{' '}
+        <SupportLink
+          text="support ticket"
+          title="Request to overwrite existing migration"
+        />{' '}
+        if you would like to request this migration be overwritten.
+      </React.Fragment>
+    </Notice>
+  ) : null;
 };
 
 export default compose<CombinedProps, Props>(React.memo)(

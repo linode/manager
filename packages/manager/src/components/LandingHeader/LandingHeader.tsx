@@ -88,7 +88,9 @@ export const LandingHeader: React.FC<Props> = props => {
       docsLink={docsLink}
       breadcrumbProps={breadcrumbProps}
       {...props}
-    />
+    >
+      {props.children}
+    </EntityHeader>
   );
 };
 

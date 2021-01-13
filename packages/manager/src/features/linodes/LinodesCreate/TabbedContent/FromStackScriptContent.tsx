@@ -13,7 +13,6 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
@@ -26,19 +25,17 @@ import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import { filterUDFErrors } from './formUtilities';
-
 import {
   ReduxStateProps,
   StackScriptFormStateHandlers,
   WithTypesRegionsAndImages
 } from '../types';
+import { filterUDFErrors } from './formUtilities';
 
 type ClassNames = 'main' | 'emptyImagePanel' | 'emptyImagePanelText';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     main: {
       [theme.breakpoints.up('md')]: {
         maxWidth: '100%'
@@ -160,7 +157,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           item
           className={`${classes.main} mlMain py0`}
         >
-          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           {this.props.flags.cmr ? (
             <SelectStackScriptPanel_CMR
               data-qa-select-stackscript

@@ -36,7 +36,7 @@ const makeClientCreateReq = (client, label) => {
 export const createClient = (client = undefined, label) => {
   return makeClientCreateReq(client, label).then(resp => {
     apiCheckErrors(resp);
-    console.log(`Created Linode ${resp.body.label} successfully`, resp);
+    console.log(`Created Client ${resp.body.label} successfully`, resp);
     return resp.body;
   });
 };

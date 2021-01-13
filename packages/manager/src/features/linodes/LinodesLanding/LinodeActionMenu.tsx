@@ -1,37 +1,58 @@
 import {
   Config,
   getLinodeConfigs,
-  LinodeBackups
+  LinodeBackups,
+  LinodeType
 } from '@linode/api-v4/lib/linodes';
+import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
 import { stringify } from 'qs';
-import { pathOr } from 'ramda';
+import { pathOr, splitAt } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
-
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import {
-  sendLinodeActionEvent,
-  sendLinodeActionMenuItemEvent
-} from 'src/utilities/ga';
-
-import regionsContainer, {
-  DefaultProps as WithRegionsProps
-} from 'src/containers/regions.container';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
+  makeStyles,
+  Theme,
+  useTheme,
+  useMediaQuery
+} from 'src/components/core/styles';
+import { DialogType } from 'src/features/linodes/types';
+import { useTypes } from 'src/hooks/useTypes';
+import { useRegions } from 'src/hooks/useRegions';
+import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { MapState } from 'src/store/types';
+import {
+  sendLinodeActionEvent,
+  sendLinodeActionMenuItemEvent,
+  sendMigrationNavigationEvent
+} from 'src/utilities/ga';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
-import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-
-import { sendMigrationNavigationEvent } from 'src/utilities/ga';
-import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+const useStyles = makeStyles(() => ({
+  link: {
+    padding: '12px 10px'
+  },
+  action: {
+    marginLeft: 10
+  },
+  powerOnOrOff: {
+    borderRadius: 0,
+    justifyContent: 'flex-start',
+    minWidth: 83,
+    whiteSpace: 'nowrap',
+    '&:hover': {
+      textDecoration: 'none'
+    }
+  }
+}));
 
 export interface Props {
   linodeId: number;
@@ -41,285 +62,265 @@ export interface Props {
   linodeBackups: LinodeBackups;
   linodeStatus: string;
   noImage: boolean;
-  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openDialog: (
+    type: DialogType,
+    linodeID: number,
+    linodeLabel?: string
+  ) => void;
   openPowerActionDialog: (
     bootAction: BootAction,
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  inlineLabel?: string;
+  inTableContext?: boolean;
+  inVLANContext?: boolean;
 }
 
-export type CombinedProps = Props &
-  RouteComponentProps<{}> &
-  StateProps &
-  WithTypesProps &
-  WithRegionsProps;
+export type CombinedProps = Props & StateProps;
 
-interface State {
-  configs: Config[];
-  hasMadeConfigsRequest: boolean;
-  configsError?: APIError[];
-}
-
-export class LinodeActionMenu extends React.Component<CombinedProps, State> {
-  state: State = {
-    configs: [],
-    hasMadeConfigsRequest: false,
-    configsError: undefined
+// When we clone a Linode from the action menu, we pass in several query string
+// params so everything is selected for us when we get to the Create flow.
+export const buildQueryStringForLinodeClone = (
+  linodeId: number,
+  linodeRegion: string,
+  linodeType: string | null,
+  types: LinodeType[],
+  regions: Region[]
+) => {
+  const params: Record<string, string> = {
+    type: 'Clone Linode',
+    linodeID: String(linodeId)
   };
 
-  toggleOpenActionMenu = () => {
-    getLinodeConfigs(this.props.linodeId)
+  // If the type of this Linode is a valid (current) type, use it in the QS
+  if (types && types.some(typeEntity => typeEntity.id === linodeType)) {
+    params.typeID = linodeType!;
+  }
+
+  // If the region of this Linode is a valid region, use it in the QS
+  if (regions && regions.some(region => region.id === linodeRegion)) {
+    params.regionID = linodeRegion;
+  }
+
+  return stringify(params);
+};
+
+export const LinodeActionMenu: React.FC<CombinedProps> = props => {
+  const { linodeRegion, linodeType } = props;
+  const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
+
+  const { types } = useTypes();
+  const history = useHistory();
+  const regions = useRegions().entities;
+
+  const [configs, setConfigs] = React.useState<Config[]>([]);
+  const [configsError, setConfigsError] = React.useState<
+    APIError[] | undefined
+  >(undefined);
+  const [hasMadeConfigsRequest, setHasMadeConfigsRequest] = React.useState<
+    boolean
+  >(false);
+
+  const toggleOpenActionMenu = () => {
+    getLinodeConfigs(props.linodeId)
       .then(configs => {
-        this.setState({
-          configs: configs.data,
-          hasMadeConfigsRequest: true,
-          configsError: undefined
-        });
+        setConfigs(configs.data);
+        setConfigsError(undefined);
+        setHasMadeConfigsRequest(true);
       })
       .catch(err => {
-        this.setState({ hasMadeConfigsRequest: true, configsError: err });
+        setConfigsError(err);
+        setHasMadeConfigsRequest(true);
       });
 
     sendLinodeActionEvent();
   };
 
-  // When we clone a Linode from the action menu, we pass in several query string
-  // params so everything is selected for us when we get to the Create flow.
-  buildQueryStringForLinodeClone = () => {
-    const {
-      linodeId,
-      linodeRegion,
-      linodeType,
-      typesData: allTypes,
-      regionsData
-    } = this.props;
-
-    // Only want to use current types here.
-    const typesData = filterCurrentTypes(allTypes);
-
-    const params: Record<string, string> = {
-      type: 'Clone Linode',
-      linodeID: String(linodeId)
-    };
-
-    // If the type of this Linode is a valid (current) type, use it in the QS
-    if (typesData && typesData.some(type => type.id === linodeType)) {
-      params.typeID = linodeType!;
-    }
-
-    // If the region of this Linode is a valid region, use it in the QS
-    if (regionsData && regionsData.some(region => region.id === linodeRegion)) {
-      params.regionID = linodeRegion;
-    }
-
-    return stringify(params);
-  };
-
-  createLinodeActions = () => {
-    const {
+  const handlePowerAction = () => {
+    const action = linodeStatus === 'running' ? 'Power Off' : 'Power On';
+    sendLinodeActionMenuItemEvent(`${action} Linode`);
+    openPowerActionDialog(
+      `${action}` as BootAction,
       linodeId,
       linodeLabel,
-      linodeBackups,
-      linodeStatus,
-      openDeleteDialog,
-      openPowerActionDialog,
-      history: { push },
-      readOnly
-    } = this.props;
-    const { configs, hasMadeConfigsRequest } = this.state;
-
-    const readOnlyProps = readOnly
-      ? {
-          disabled: true,
-          tooltip: "You don't have permission to modify this Linode"
-        }
-      : {};
-
-    const hasHostMaintenance = linodeStatus === 'stopped';
-    const maintenanceProps = {
-      disabled: hasHostMaintenance,
-      tooltip: hasHostMaintenance
-        ? 'This action is unavailable while your Linode is undergoing host maintenance.'
-        : undefined
-    };
-
-    const noConfigs = hasMadeConfigsRequest && configs.length === 0;
-
-    return (closeMenu: Function): Action[] => {
-      const actions: Action[] = [
-        {
-          title: 'Launch LISH Console',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Launch Console');
-            lishLaunch(linodeId);
-            e.preventDefault();
-            e.stopPropagation();
-          },
-          ariaDescribedBy: 'new-window',
-          ...readOnlyProps
-        },
-        {
-          title: 'Clone',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Clone');
-            push({
-              pathname: '/linodes/create',
-              search: this.buildQueryStringForLinodeClone()
-            });
-            e.preventDefault();
-            e.stopPropagation();
-          },
-          ...maintenanceProps,
-          ...readOnlyProps
-        },
-        {
-          title: 'Migrate',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendMigrationNavigationEvent('/linodes');
-            sendLinodeActionMenuItemEvent('Migrate');
-            push({
-              pathname: `/linodes/${linodeId}/migrate`
-            });
-            e.preventDefault();
-            e.stopPropagation();
-          },
-          ...readOnlyProps
-        },
-        {
-          title: 'Resize',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Navigate to Resize Page');
-            push(`/linodes/${linodeId}/resize`);
-            e.preventDefault();
-            e.stopPropagation();
-          },
-          ...maintenanceProps,
-          ...readOnlyProps
-        },
-        linodeBackups.enabled
-          ? {
-              title: 'View Backups',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
-                sendLinodeActionMenuItemEvent('Navigate to Backups Page');
-                push(`/linodes/${linodeId}/backup`);
-                e.preventDefault();
-                e.stopPropagation();
-              }
-            }
-          : {
-              title: 'Enable Backups',
-              onClick: (e: React.MouseEvent<HTMLElement>) => {
-                sendLinodeActionMenuItemEvent('Enable Backups');
-                push({
-                  pathname: `/linodes/${linodeId}/backup`,
-                  state: { enableOnLoad: true }
-                });
-                e.preventDefault();
-                e.stopPropagation();
-              },
-              ...readOnlyProps
-            },
-        {
-          title: 'Settings',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Navigate to Settings Page');
-            push(`/linodes/${linodeId}/settings`);
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        },
-        {
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Delete Linode');
-            e.preventDefault();
-            e.stopPropagation();
-            openDeleteDialog(linodeId, linodeLabel);
-            closeMenu();
-          },
-          ...readOnlyProps
-        }
-      ];
-
-      if (linodeStatus === 'offline') {
-        actions.unshift({
-          title: 'Power On',
-          disabled: !hasMadeConfigsRequest || noConfigs || readOnly,
-          isLoading: !hasMadeConfigsRequest,
-          tooltip: this.state.configsError
-            ? 'Could not load configs for this Linode.'
-            : noConfigs
-            ? 'A config needs to be added before powering on a Linode'
-            : readOnly
-            ? "You don't have permission to modify this Linode"
-            : undefined,
-          onClick: e => {
-            sendLinodeActionMenuItemEvent('Power On Linode');
-            openPowerActionDialog(
-              'Power On',
-              linodeId,
-              linodeLabel,
-              this.state.configs
-            );
-            closeMenu();
-          }
-        });
-      }
-
-      if (linodeStatus === 'running') {
-        actions.unshift(
-          {
-            title: 'Reboot',
-            disabled: !hasMadeConfigsRequest || readOnly,
-            isLoading: !hasMadeConfigsRequest,
-            tooltip: readOnly
-              ? "You don't have permission to modify this Linode."
-              : this.state.configsError
-              ? 'Could not load configs for this Linode.'
-              : undefined,
-            onClick: (e: React.MouseEvent<HTMLElement>) => {
-              sendLinodeActionMenuItemEvent('Reboot Linode');
-              e.preventDefault();
-              e.stopPropagation();
-              openPowerActionDialog(
-                'Reboot',
-                linodeId,
-                linodeLabel,
-                this.state.configs
-              );
-              closeMenu();
-            },
-            ...readOnlyProps
-          },
-          {
-            title: 'Power Off',
-            onClick: e => {
-              sendLinodeActionMenuItemEvent('Power Off Linode');
-              e.preventDefault();
-              e.stopPropagation();
-              openPowerActionDialog('Power Off', linodeId, linodeLabel, []);
-              closeMenu();
-            },
-            ...readOnlyProps
-          }
-        );
-      }
-
-      return actions;
-    };
+      linodeStatus === 'running' ? configs : []
+    );
   };
 
-  render() {
-    return (
+  const {
+    linodeId,
+    linodeLabel,
+    linodeStatus,
+    openPowerActionDialog,
+    inlineLabel,
+    inTableContext,
+    openDialog,
+    readOnly
+  } = props;
+
+  const hasHostMaintenance = linodeStatus === 'stopped';
+  const maintenanceProps = {
+    disabled: hasHostMaintenance,
+    tooltip: hasHostMaintenance
+      ? 'This action is unavailable while your Linode is undergoing host maintenance.'
+      : undefined
+  };
+
+  const noPermissionTooltipText =
+    "You don't have permission to modify this Linode.";
+
+  const readOnlyProps = readOnly
+    ? {
+        disabled: true,
+        tooltip: noPermissionTooltipText
+      }
+    : {};
+
+  const inLandingListView = matchesMdDown && inTableContext;
+  const inEntityView = matchesSmDown;
+
+  const actions = [
+    inLandingListView || inEntityView || inTableContext
+      ? {
+          title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
+          className: classes.powerOnOrOff,
+          disabled: !['running', 'offline'].includes(linodeStatus) || readOnly,
+          tooltip: readOnly ? noPermissionTooltipText : undefined,
+          onClick: handlePowerAction
+        }
+      : null,
+    inLandingListView || inEntityView || inTableContext
+      ? {
+          title: 'Reboot',
+          className: classes.link,
+          disabled:
+            linodeStatus !== 'running' ||
+            !hasMadeConfigsRequest ||
+            readOnly ||
+            Boolean(configsError?.[0]?.reason),
+          tooltip: readOnly
+            ? noPermissionTooltipText
+            : configsError
+            ? 'Could not load configs for this Linode.'
+            : undefined,
+          onClick: () => {
+            sendLinodeActionMenuItemEvent('Reboot Linode');
+            openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
+          },
+          ...readOnlyProps
+        }
+      : null,
+    inTableContext || matchesSmDown
+      ? {
+          title: 'Launch LISH Console',
+          onClick: () => {
+            sendLinodeActionMenuItemEvent('Launch Console');
+            lishLaunch(linodeId);
+          },
+          ...readOnlyProps
+        }
+      : null,
+    {
+      title: 'Clone',
+      onClick: () => {
+        sendLinodeActionMenuItemEvent('Clone');
+        history.push({
+          pathname: '/linodes/create',
+          search: buildQueryStringForLinodeClone(
+            linodeId,
+            linodeRegion,
+            linodeType,
+            types.entities,
+            regions
+          )
+        });
+      },
+      ...maintenanceProps,
+      ...readOnlyProps
+    },
+    {
+      title: 'Resize',
+      onClick: () => {
+        openDialog('resize', linodeId);
+      },
+      ...maintenanceProps,
+      ...readOnlyProps
+    },
+    {
+      title: 'Rebuild',
+      onClick: () => {
+        sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
+        openDialog('rebuild', linodeId);
+      },
+      ...maintenanceProps,
+      ...readOnlyProps
+    },
+    {
+      title: 'Rescue',
+      onClick: () => {
+        sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
+        openDialog('rescue', linodeId);
+      },
+      ...maintenanceProps,
+      ...readOnlyProps
+    },
+    {
+      title: 'Migrate',
+      onClick: () => {
+        sendMigrationNavigationEvent('/linodes');
+        sendLinodeActionMenuItemEvent('Migrate');
+        openDialog('migrate', linodeId);
+      },
+      ...readOnlyProps
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        sendLinodeActionMenuItemEvent('Delete Linode');
+
+        openDialog('delete', linodeId, linodeLabel);
+      },
+      ...readOnlyProps
+    }
+  ].filter(Boolean) as ExtendedAction[];
+
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
+
+  return (
+    <>
+      {!matchesMdDown &&
+        inTableContext &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              className={action.className}
+              disabled={action.disabled}
+              onClick={action.onClick}
+              tooltip={action.tooltip}
+            />
+          );
+        })}
       <ActionMenu
-        toggleOpenCallback={this.toggleOpenActionMenu}
-        createActions={this.createLinodeActions()}
-        ariaLabel={`Action menu for Linode ${this.props.linodeLabel}`}
+        className={classes.action}
+        toggleOpenCallback={toggleOpenActionMenu}
+        actionsList={menuActions}
+        ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
+        inlineLabel={inlineLabel}
       />
-    );
-  }
+    </>
+  );
+};
+
+interface ExtendedAction extends Action {
+  className?: string;
 }
 
 interface StateProps {
@@ -338,13 +339,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 });
 
 const connected = connect(mapStateToProps);
-const withRegions = regionsContainer();
 
-const enhanced = compose<CombinedProps, Props>(
-  connected,
-  withTypes,
-  withRegions,
-  withRouter
-);
+const enhanced = compose<CombinedProps, Props>(connected);
 
 export default enhanced(LinodeActionMenu);

@@ -11,6 +11,7 @@ import LandingHeader from 'src/components/LandingHeader';
 import withFirewalls, {
   Props as FireProps
 } from 'src/containers/firewalls.container';
+// import { useFirewallQuery } from 'src/queries/firewalls';
 import AddFirewallDrawer from './AddFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu_CMR';
 import FirewallDialog, { Mode } from './FirewallDialog';
@@ -21,6 +22,8 @@ type CombinedProps = RouteComponentProps<{}> & FireProps;
 
 const FirewallLanding: React.FC<CombinedProps> = props => {
   const { deleteFirewall, disableFirewall, enableFirewall } = props;
+
+  // const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
 
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
     boolean
@@ -122,7 +125,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     triggerDeleteFirewall: handleOpenDeleteFirewallModal
   };
 
-  const firewallArray = Object.values(firewalls) ?? [];
+  const firewallArray = Object.values(firewalls ?? {});
 
   if (firewallsLoading) {
     return <CircleProgress />;
@@ -152,7 +155,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     data: firewallArray,
     loading: firewallsLoading,
     lastUpdated: firewallsLastUpdated,
-    error: firewallsError.read
+    error: firewallsError.read ?? undefined
   };
 
   return (
