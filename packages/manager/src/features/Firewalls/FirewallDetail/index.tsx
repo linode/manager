@@ -18,8 +18,8 @@ import withFirewalls, {
   Props as WithFirewallsProps
 } from 'src/containers/firewalls.container';
 import useFlags from 'src/hooks/useFlags';
-import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+// import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
+// import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding')
@@ -40,6 +40,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const FirewallDetail: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
+
+  const [updateError, setUpdateError] = React.useState<string | undefined>();
 
   // Source the Firewall's ID from the /:id path param.
   const thisFirewallId = props.match.params.id;
@@ -65,14 +67,14 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
     props.history.push(tabs[index].routeName);
   };
 
-  const { data } = useFirewallQuery();
-  const thisFirewall = data?.[thisFirewallId];
+  // const { data } = useFirewallQuery();
+  // const thisFirewall = data?.[thisFirewallId];
+  const thisFirewall = props.itemsById[thisFirewallId];
+  // const { mutateAsync: updateFirewall, error, reset } = useMutateFirewall(
+  //   Number(thisFirewallId)
+  // );
 
-  const { mutateAsync: updateFirewall, error, reset } = useMutateFirewall(
-    Number(thisFirewallId)
-  );
-
-  const errorText = getErrorStringOrDefault(error ?? '');
+  // const errorText = getErrorStringOrDefault(updateError ?? '');
 
   // If we're still fetching Firewalls, display a loading spinner. This will
   // probably only happen when navigating to a Firewall's Detail page directly
@@ -94,13 +96,21 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   }
 
   const handleLabelChange = (newLabel: string) => {
-    if (error) {
-      reset();
-    }
-    return updateFirewall({ label: newLabel });
+    //   if (error) {
+    //     reset();
+    //   }
+    //   return updateFirewall({ label: newLabel });
+    setUpdateError(undefined);
+    return props
+      .updateFirewall({ firewallID: thisFirewall.id, label: newLabel })
+      .catch(e => {
+        setUpdateError(e[0].reason);
+        return Promise.reject(e);
+      });
   };
 
   const resetEditableLabel = () => {
+    setUpdateError(undefined);
     return thisFirewall.label;
   };
 
@@ -121,7 +131,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
             editableTextTitle: thisFirewall.label,
             onEdit: handleLabelChange,
             onCancel: resetEditableLabel,
-            errorText
+            errorText: updateError
           }}
         />
         {flags.cmr ? (

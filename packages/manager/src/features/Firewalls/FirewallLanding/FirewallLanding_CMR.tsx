@@ -11,7 +11,7 @@ import LandingHeader from 'src/components/LandingHeader';
 import withFirewalls, {
   Props as FireProps
 } from 'src/containers/firewalls.container';
-import { useFirewallQuery } from 'src/queries/firewalls';
+// import { useFirewallQuery } from 'src/queries/firewalls';
 import AddFirewallDrawer from './AddFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu_CMR';
 import FirewallDialog, { Mode } from './FirewallDialog';
@@ -23,7 +23,7 @@ type CombinedProps = RouteComponentProps<{}> & FireProps;
 const FirewallLanding: React.FC<CombinedProps> = props => {
   const { deleteFirewall, disableFirewall, enableFirewall } = props;
 
-  const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
+  // const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
 
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
     boolean
@@ -55,6 +55,13 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   const handleOpenDisableFirewallModal = (id: number, label: string) => {
     openModal('disable', id, label);
   };
+
+  const {
+    itemsById: firewalls,
+    loading: firewallsLoading,
+    error: firewallsError,
+    lastUpdated: firewallsLastUpdated
+  } = props;
 
   const headers = [
     {
@@ -118,14 +125,14 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     triggerDeleteFirewall: handleOpenDeleteFirewallModal
   };
 
-  const firewallArray = Object.values(data ?? {});
+  const firewallArray = Object.values(firewalls ?? {});
 
-  if (isLoading) {
+  if (firewallsLoading) {
     return <CircleProgress />;
   }
 
   // We'll fall back to showing a request error in the EntityTable
-  if (firewallArray.length === 0 && !error) {
+  if (firewallArray.length === 0 && !firewallsError.read) {
     return (
       // Some repetition here, which we need to resolve separately
       // (move the create form to /firewalls/create, or as a top
@@ -146,9 +153,9 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     handlers,
     Component: FirewallRow,
     data: firewallArray,
-    loading: isLoading,
-    lastUpdated: dataUpdatedAt,
-    error: error ?? undefined
+    loading: firewallsLoading,
+    lastUpdated: firewallsLastUpdated,
+    error: firewallsError.read ?? undefined
   };
 
   return (
