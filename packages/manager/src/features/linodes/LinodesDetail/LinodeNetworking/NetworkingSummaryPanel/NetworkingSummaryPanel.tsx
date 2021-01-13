@@ -18,9 +18,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   transferHistoryContainer: {
-    [theme.breakpoints.up('lg')]: {
-      maxWidth: 600
-    },
     [theme.breakpoints.down('sm')]: {
       order: 3
     }
@@ -28,7 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   dnsResolverContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
-    minWidth: 200,
     [theme.breakpoints.up('sm')]: {
       paddingRight: theme.spacing()
     },
