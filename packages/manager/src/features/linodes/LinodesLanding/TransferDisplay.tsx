@@ -97,7 +97,8 @@ export const TransferDisplay: React.FC<{}> = _ => {
                 <span>{quota - used} GB Available</span>
               ) : (
                 <span>
-                  {(quota - used).toString().replace(/\-/, '')} GB Over Quota
+                  {(quota - used).toString().replace(/\-/, '')} GB Over
+                  Allotment
                 </span>
               )}
             </Typography>
