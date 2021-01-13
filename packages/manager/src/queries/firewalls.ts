@@ -3,8 +3,10 @@ import {
   CreateFirewallPayload,
   deleteFirewall,
   Firewall,
+  FirewallRules,
   getFirewalls,
-  updateFirewall
+  updateFirewall,
+  updateFirewallRules as _updateFirewallRules
 } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -15,7 +17,9 @@ import {
   queryPresets,
   HasID,
   creationHandlers,
-  deletionHandlers
+  deletionHandlers,
+  queryClient,
+  ItemsByID
 } from './base';
 
 const getAllFirewallsRequest = () =>
@@ -55,4 +59,17 @@ export const useDeleteFirewall = () => {
   return useMutation<{}, APIError[], HasID>(payload => {
     return deleteFirewall(payload.id);
   }, deletionHandlers(queryKey));
+};
+
+export const updateFirewallRules = (id: number, rules: FirewallRules) => {
+  return _updateFirewallRules(id, rules).then(updatedRules => {
+    queryClient.setQueryData<ItemsByID<Firewall>>(
+      queryKey,
+      (oldData: ItemsByID<Firewall>) => ({
+        ...oldData,
+        [id]: { ...oldData[id], rules: updatedRules }
+      })
+    );
+    return updatedRules;
+  });
 };

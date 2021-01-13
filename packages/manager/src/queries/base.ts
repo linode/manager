@@ -1,6 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { QueryClient, UseMutationOptions, UseQueryOptions } from 'react-query';
-import { Entity } from 'src/store/types';
 
 // =============================================================================
 // Config
