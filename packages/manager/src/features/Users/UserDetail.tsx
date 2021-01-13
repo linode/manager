@@ -1,10 +1,11 @@
 import { getUser, updateUser } from '@linode/api-v4/lib/account';
 import { updateProfile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { clone, compose, path as pathRamda } from 'ramda';
+import { clone, path as pathRamda } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
+import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
@@ -31,7 +32,7 @@ type CombinedProps = RouteComponentProps<MatchProps> &
 
 interface State {
   gravatarUrl?: string;
-  error?: Error;
+  error?: string;
   originalUsername?: string;
   username: string;
   createdUsername?: string;
@@ -88,9 +89,12 @@ class UserDetail extends React.Component<CombinedProps> {
           });
         });
       })
-      .catch(errResponse => {
+      .catch(errorResponse => {
         this.setState({
-          error: new Error('Error fetching User data')
+          error: getAPIErrorOrDefault(
+            errorResponse,
+            'Error loading user data.'
+          )[0].reason
         });
       });
 
@@ -270,7 +274,7 @@ class UserDetail extends React.Component<CombinedProps> {
               />
             </Grid>
           </Grid>
-          <ErrorState errorText="There was an error retrieving the user data. Please reload and try again." />
+          <ErrorState errorText={error} />
         </React.Fragment>
       );
     }
@@ -366,4 +370,4 @@ const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<any, any, any>(connected, reloadable)(UserDetail);
+export default compose<CombinedProps, {}>(connected, reloadable)(UserDetail);
