@@ -28,7 +28,7 @@ import Grid, { GridProps } from 'src/components/Grid';
 import TagCell from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
-import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow';
+import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';

@@ -107,6 +107,8 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
               key={action.title}
               actionText={action.title}
               onClick={action.onClick}
+              tooltip={action.tooltip}
+              disabled={action.disabled}
             />
           );
         })}
