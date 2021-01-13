@@ -1,7 +1,7 @@
 import { Event } from '@linode/api-v4/lib/account/types';
 import { Duration } from 'luxon';
 import * as React from 'react';
-import BarPercent from 'src/components/BarPercent/BarPercent_CMR';
+import BarPercent from 'src/components/BarPercent';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';

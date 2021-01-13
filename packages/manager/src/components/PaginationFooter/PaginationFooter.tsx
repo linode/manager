@@ -12,15 +12,20 @@ import PaginationControls from '../PaginationControls';
 
 export const MIN_PAGE_SIZE = 25;
 
-type ClassNames = 'root' | 'padded';
+type ClassNames = 'root' | 'padded' | 'column';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(1)
+      marginTop: 4
     },
     padded: {
       padding: `0 ${theme.spacing(2)}px ${theme.spacing(1)}px`
+    },
+    column: {
+      '&.MuiGrid-item': {
+        paddingBottom: 0
+      }
     }
   });
 
@@ -93,7 +98,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
           [classes.padded]: padded
         })}
       >
-        <Grid item>
+        <Grid item className={classes.column}>
           {!isShowingAll && (
             <PaginationControls
               onClickHandler={handlePageChange}
@@ -105,7 +110,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
           )}
         </Grid>
         {!fixedSize ? (
-          <Grid item>
+          <Grid item className={classes.column}>
             <Select
               options={finalOptions}
               defaultValue={defaultPagination}
