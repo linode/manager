@@ -13,7 +13,10 @@ import { useAccountTransfer } from 'src/queries/accountTransfer';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(2),
-    padding: `${theme.spacing()}px ${theme.spacing(2)}px`
+    padding: `${theme.spacing()}px ${theme.spacing(2)}px`,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center'
   },
   barLabels: {
     display: 'flex',
@@ -54,14 +57,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const TransferDisplay: React.FC<{}> = _ => {
   const classes = useStyles();
 
-  const { data, isLoading } = useAccountTransfer();
+  const { data, isLoading, isError } = useAccountTransfer();
   const quota = data?.quota ?? 0;
   const used = data?.used ?? 0;
 
   const poolUsagePct = used < quota ? (used / quota) * 100 : 100;
 
   if (isLoading) {
-    return <CircleProgress />;
+    return (
+      <Paper className={classes.root + ' flex-center'}>
+        <CircleProgress mini />
+      </Paper>
+    );
+  }
+
+  if (isError) {
+    // We may want to add an error state for this but I think that would clutter
+    // up the display.
+    return null;
   }
 
   return (
