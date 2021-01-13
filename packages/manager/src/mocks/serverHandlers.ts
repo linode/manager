@@ -278,7 +278,7 @@ export const handlers = [
   }),
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();
-    return res(ctx.json(transfer));
+    return res(ctx.delay(5000), ctx.json(transfer));
   }),
   rest.get('*/account/invoices', (req, res, ctx) => {
     const invoices = invoiceFactory.buildList(10);

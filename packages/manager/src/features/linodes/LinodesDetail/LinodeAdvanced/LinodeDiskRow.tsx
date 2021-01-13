@@ -1,6 +1,6 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import BarPercent from 'src/components/BarPercent/BarPercent_CMR';
+import BarPercent from 'src/components/BarPercent';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
