@@ -35,26 +35,63 @@ export const queryClient = new QueryClient({
 // =============================================================================
 // Types
 // =============================================================================
-export type ItemsByID<T extends Entity> = Record<string, T>;
+export type HasID = { id: number };
+export type ItemsByID<T extends HasID> = Record<string, T>;
 
 // =============================================================================
 // Utility Functions
 // =============================================================================
-export const listToItemsByID = <E extends Entity[]>(entityList: E) => {
+export const listToItemsByID = <E extends HasID[]>(entityList: E) => {
   return entityList.reduce((map, item) => ({ ...map, [item.id]: item }), {});
 };
 
-export const mutationHandlers = <T extends Entity, E = APIError[]>(
-  queryKey: string,
-  entityID: number
-): UseMutationOptions<T, E, Partial<T>, () => void> => {
+export const mutationHandlers = <
+  T extends HasID,
+  V extends HasID,
+  E = APIError[]
+>(
+  queryKey: string
+): UseMutationOptions<T, E, V, () => void> => {
   return {
-    onSuccess: updatedEntity => {
+    onSuccess: (updatedEntity, variables) => {
       // Update the query data to include the newly updated Entity.
       queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => ({
         ...oldData,
-        [entityID]: updatedEntity
+        [variables.id]: updatedEntity
       }));
+    }
+  };
+};
+
+export const creationHandlers = <T extends HasID, V, E = APIError[]>(
+  queryKey: string
+): UseMutationOptions<T, E, V, () => void> => {
+  return {
+    onSuccess: updatedEntity => {
+      // Add the new Entity to the existing data.
+      queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => ({
+        ...oldData,
+        [updatedEntity.id]: updatedEntity
+      }));
+    }
+  };
+};
+
+export const deletionHandlers = <
+  T extends HasID,
+  V extends HasID,
+  E = APIError[]
+>(
+  queryKey: string
+): UseMutationOptions<T, E, V, () => void> => {
+  return {
+    onSuccess: (_, variables) => {
+      // Remove the Entity from the existing data.
+      queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => {
+        const oldDataCopy = { ...oldData };
+        delete oldDataCopy[variables.id];
+        return oldDataCopy;
+      });
     }
   };
 };

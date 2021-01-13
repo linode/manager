@@ -68,9 +68,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   const { data } = useFirewallQuery();
   const thisFirewall = data?.[thisFirewallId];
 
-  const { mutateAsync: updateFirewall, error, reset } = useMutateFirewall(
-    Number(thisFirewallId)
-  );
+  const { mutateAsync: updateFirewall, error, reset } = useMutateFirewall();
 
   const errorText = getErrorStringOrDefault(error ?? '');
 
@@ -97,7 +95,10 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
     if (error) {
       reset();
     }
-    return updateFirewall({ label: newLabel });
+    return updateFirewall({
+      id: Number(thisFirewallId),
+      payload: { label: newLabel }
+    });
   };
 
   const resetEditableLabel = () => {

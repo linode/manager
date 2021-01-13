@@ -8,22 +8,29 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
-import withFirewalls, {
-  Props as FireProps
-} from 'src/containers/firewalls.container';
-import { useFirewallQuery } from 'src/queries/firewalls';
+import {
+  useCreateFirewall,
+  useDeleteFirewall,
+  useFirewallQuery,
+  useMutateFirewall
+} from 'src/queries/firewalls';
 import AddFirewallDrawer from './AddFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu_CMR';
 import FirewallDialog, { Mode } from './FirewallDialog';
 import FirewallEmptyState from './FirewallEmptyState';
 import FirewallRow from './FirewallRow_CMR';
 
-type CombinedProps = RouteComponentProps<{}> & FireProps;
+type CombinedProps = RouteComponentProps<{}>;
 
-const FirewallLanding: React.FC<CombinedProps> = props => {
-  const { deleteFirewall, disableFirewall, enableFirewall } = props;
+const FirewallLanding: React.FC<CombinedProps> = () => {
+  // const { deleteFirewall, disableFirewall, enableFirewall } = props;
 
   const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
+
+  // @TODO: Refactor so these are combined?
+  const { mutateAsync: updateFirewall } = useMutateFirewall();
+  const { mutateAsync: _deleteFirewall } = useDeleteFirewall();
+  const { mutateAsync: createFirewall } = useCreateFirewall();
 
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
     boolean
@@ -36,6 +43,18 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   const [selectedFirewallLabel, setSelectedFirewallLabel] = React.useState<
     string
   >('');
+
+  const enableFirewall = (id: number) => {
+    return updateFirewall({ id, payload: { status: 'enabled' } });
+  };
+
+  const disableFirewall = (id: number) => {
+    return updateFirewall({ id, payload: { status: 'disabled' } });
+  };
+
+  const deleteFirewall = (id: number) => {
+    return _deleteFirewall({ id });
+  };
 
   const openModal = (mode: Mode, id: number, label: string) => {
     setSelectedFirewallID(id);
@@ -135,7 +154,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         <AddFirewallDrawer
           open={addFirewallDrawerOpen}
           onClose={() => toggleAddFirewallDrawer(false)}
-          onSubmit={props.createFirewall}
+          onSubmit={createFirewall}
           title="Add a Firewall"
         />
       </>
@@ -171,7 +190,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
       <AddFirewallDrawer
         open={addFirewallDrawerOpen}
         onClose={closeDrawer}
-        onSubmit={props.createFirewall}
+        onSubmit={createFirewall}
         title="Add a Firewall"
       />
       <FirewallDialog
@@ -188,7 +207,4 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, {}>(
-  React.memo,
-  withFirewalls<{}, CombinedProps>()
-)(FirewallLanding);
+export default compose<CombinedProps, {}>(React.memo)(FirewallLanding);
