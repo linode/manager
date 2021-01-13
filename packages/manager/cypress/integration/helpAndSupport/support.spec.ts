@@ -5,7 +5,7 @@ describe('Test', () => {
     const fun = cy.stub();
     const throwingFun = () => {
       fun();
-      throw 'error';
+      throw Error();
     };
     const wait = cy.spy(cy, 'wait');
     try {

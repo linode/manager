@@ -31,7 +31,6 @@ import {
   hasGrant,
   isRestrictedUser as _isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
-// import StackScriptDetailsHeader from './StackScriptDetailsHeader';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { Grant } from '@linode/api-v4/lib/account/types';
@@ -82,11 +81,19 @@ type ClassNames = 'root' | 'cta' | 'button' | 'userName' | 'userNameSlash';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      margin: 0,
+      [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+        alignItems: 'flex-start'
+      }
+    },
     cta: {
       display: 'flex',
       alignItems: 'center',
       [theme.breakpoints.down('md')]: {
+        alignSelf: 'flex-end',
+        marginBottom: theme.spacing(),
         marginRight: theme.spacing()
       }
     },
@@ -410,7 +417,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       <React.Fragment>
         <Grid
           container
-          className="m0"
+          className={classes.root}
           alignItems="center"
           justify="space-between"
         >

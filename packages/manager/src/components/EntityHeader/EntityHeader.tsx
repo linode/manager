@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   landing: {
     marginBottom: 0,
-    paddingBottom: theme.spacing(),
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       padding: 0
@@ -54,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.cmrBGColors.bgSecondaryActions,
+    backgroundColor: theme.cmrBGColors.bgPaper,
     padding: '4px 16px',
     paddingRight: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
@@ -102,7 +101,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: 0
     },
     [theme.breakpoints.down('xs')]: {
-      paddingRight: '0px !important'
+      marginBottom: 0
     }
   }
 }));
@@ -151,6 +150,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             xs={12}
             sm={8}
           >
+            {props.children}
             {docsLink && <DocumentationButton href={docsLink} />}
             <div className={classes.actions}>{actions}</div>
           </Grid>

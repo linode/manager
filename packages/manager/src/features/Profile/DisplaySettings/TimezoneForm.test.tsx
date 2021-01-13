@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { TimezoneForm } from './TimezoneForm';
+import { TimezoneForm, formatOffset } from './TimezoneForm';
 
 describe('Timezone change form', () => {
   const updateProfile = jest.fn();
@@ -40,6 +40,23 @@ describe('Timezone change form', () => {
   xit("should have a select with the user's current timezone selected", () => {
     expect(component.find('[data-qa-tz-select]').props().value).toBe(
       'Europe/San_Marino'
+    );
+  });
+});
+
+describe('formatOffset', () => {
+  it('formats the offset correctly', () => {
+    const testMap = [
+      { offset: -3.5, label: 'Newfoundland Time', formattedOffset: '-3:30' },
+      { offset: 0, label: 'TrollTime', formattedOffset: '+0:00' },
+      { offset: 5.75, label: 'Nepal Time', formattedOffset: '+5:45' },
+      { offset: 13, label: 'New Zealand Time', formattedOffset: '+13:00' }
+    ];
+
+    testMap.forEach(({ offset, label, formattedOffset }) =>
+      expect(formatOffset(offset, label)).toBe(
+        `(GMT ${formattedOffset}) ${label}`
+      )
     );
   });
 });

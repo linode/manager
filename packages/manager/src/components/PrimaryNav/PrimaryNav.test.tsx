@@ -1,102 +1,49 @@
-import { render } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
-import PrimaryNav, { Props } from './PrimaryNav';
-import useFlags from 'src/hooks/useFlags';
+import { withManaged, withoutManaged } from 'src/utilities/testHelpersStore';
+import PrimaryNav from './PrimaryNav';
 
-jest.mock('src/hooks/useFlags', () => ({
-  default: jest.fn().mockReturnValue({})
-}));
-
-const mockCloseMenu = jest.fn();
-const mockToggleSpacing = jest.fn();
-const mockToggleTheme = jest.fn();
-
-const props: Props = {
-  closeMenu: mockCloseMenu,
-  isCollapsed: false,
-  toggleSpacing: mockToggleSpacing,
-  toggleTheme: mockToggleTheme
+const props = {
+  closeMenu: jest.fn(),
+  toggleTheme: jest.fn(),
+  toggleSpacing: jest.fn(),
+  isCollapsed: false
 };
 
 describe('PrimaryNav', () => {
-  it('includes all unhidden links', () => {
-    const { getByText } = renderWithTheme(<PrimaryNav {...props} />);
-    [
-      'Dashboard',
-      'Linodes',
-      'Volumes',
-      'Object Storage',
-      'NodeBalancers',
-      'Domains',
-      'Marketplace',
-      'Longview',
-      'Kubernetes',
-      'StackScripts',
-      'Images',
-      'Get Help'
-    ].forEach(link => {
-      getByText(link);
-    });
-  });
-
-  it('includes "Firewalls" link only when flag is on', () => {
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
-
-    expect(findByText('Firewalls')).resolves.not.toBeInTheDocument();
-
-    (useFlags as any).mockReturnValue({
-      firewalls: true
-    });
-
-    const { getByText } = renderWithTheme(<PrimaryNav {...props} />);
-    getByText('Firewalls');
-  });
-
-  it('includes "Managed" link only when the account is Managed', () => {
-    const { findByText, rerender, getByText } = render(
-      wrapWithTheme(<PrimaryNav {...props} />)
+  it('only contains a "Managed" menu link if the user has Managed services.', () => {
+    const { getByTestId, rerender, queryByTestId } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        customStore: withoutManaged
+      }
     );
-
-    expect(findByText('Managed')).resolves.not.toBeInTheDocument();
+    expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
 
     rerender(
       wrapWithTheme(<PrimaryNav {...props} />, {
-        customStore: {
-          __resources: {
-            accountSettings: {
-              data: { managed: true } as any
-            }
-          }
-        }
+        customStore: withManaged
       })
     );
 
-    getByText('Managed');
+    getByTestId('menu-item-Managed');
   });
 
-  it('includes "Account" link only when the user has account access', () => {
-    const { findByText, getByText, rerender } = render(
-      wrapWithTheme(<PrimaryNav {...props} />)
+  it('only contains a "Firewalls" menu link when the flag is enabled', () => {
+    const { getByTestId, rerender, queryByTestId } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags: { firewalls: false }
+      }
     );
-
-    expect(findByText('Account')).resolves.not.toBeInTheDocument();
+    expect(queryByTestId('menu-item-Firewalls')).not.toBeInTheDocument();
 
     rerender(
       wrapWithTheme(<PrimaryNav {...props} />, {
-        customStore: {
-          __resources: {
-            profile: {
-              data: { restricted: false } as any
-            },
-            account: {
-              lastUpdated: 1
-            }
-          }
-        }
+        flags: { firewalls: true }
       })
     );
 
-    getByText('Account');
+    getByTestId('menu-item-Firewalls');
   });
 });

@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 import Undo from 'src/assets/icons/undo.svg';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing()
     }
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   error: {
     '& p': { color: theme.color.red }
   },
-  link: {
+  button: {
     margin: '8px 0px'
   },
   actionCell: {
@@ -113,11 +113,13 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
     <>
       <div className={classes.header}>
         <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
-        <AddNewLink
+        <Button
+          buttonType="secondary"
+          className={classes.button}
           onClick={openDrawerForCreating}
-          label={`Add an ${capitalize(category)} Rule`}
-          className={classes.link}
-        />
+        >
+          Add an {capitalize(category)} Rule
+        </Button>
       </div>
       <OrderBy data={rowData} orderBy={'type'} order={'asc'}>
         {({ data: sortedRows, handleOrderChange, order, orderBy }) => {

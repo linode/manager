@@ -27,7 +27,11 @@ export default ({
       /* tslint:disable-next-line */
       (thisOption: any) => thisOption.value == event.target.value
     );
-    isMulti ? onChange([option]) : onChange(option);
+    if (isMulti) {
+      onChange([option]);
+    } else {
+      onChange(option);
+    }
   };
 
   const _options = groupsToItems(options);

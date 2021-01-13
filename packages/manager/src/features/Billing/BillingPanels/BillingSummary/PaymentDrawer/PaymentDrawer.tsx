@@ -198,7 +198,7 @@ const Warning: React.FC<WarningProps> = props => {
       {warning.title} {ticketLink}
     </>
   );
-  return <Notice warning text={message} />;
+  return <Notice warning>{message}</Notice>;
 };
 
 const withAccount = AccountContainer(

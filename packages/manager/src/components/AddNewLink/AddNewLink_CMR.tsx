@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { makeStyles } from 'src/components/core/styles';
 import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
-import IconTextLink from 'src/components/IconTextLink/IconTextLink_CMR';
+import Button from '../Button';
 
 export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
-  className?: any;
   display?: string;
   disabled?: boolean;
   disabledReason?: string;
@@ -14,9 +14,16 @@ export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
 
 type CombinedProps = Props;
 
+const useStyles = makeStyles(() => ({
+  root: {
+    minHeight: 30
+  }
+}));
+
 const AddNewLink: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const {
-    className,
     disabled,
     disabledReason,
     display,
@@ -27,7 +34,6 @@ const AddNewLink: React.FC<CombinedProps> = props => {
   } = props;
 
   const baseProps = {
-    className,
     disabled,
     left,
     onClick,
@@ -47,13 +53,19 @@ const AddNewLink: React.FC<CombinedProps> = props => {
       >
         <div>
           {/* Wrapping in div because the child of tooltip needs to be able to hold a ref */}
-          <IconTextLink {...baseProps}>{display || label}</IconTextLink>
+          <Button buttonType="primary" className={classes.root} {...baseProps}>
+            {display || label}
+          </Button>
         </div>
       </Tooltip>
     );
   }
 
-  return <IconTextLink {...baseProps}>{display || label}</IconTextLink>;
+  return (
+    <Button buttonType="primary" className={classes.root} {...baseProps}>
+      {display || label}
+    </Button>
+  );
 };
 
 export default AddNewLink;

@@ -37,23 +37,19 @@ import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { withLinodeDetailContext } from '../LinodesDetail/linodeDetailContext';
-import LinodeControls from '../LinodesDetail/LinodesDetailHeader/LinodeControls';
 import MutationNotification from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
-import LinodeBusyStatus from '../LinodesDetail/LinodeSummary/LinodeBusyStatus';
-import { linodeInTransition } from '../transitions';
 import Details from './Details';
 import {
   attachAssociatedDisksToConfigs,
   curriedCloneLandingReducer,
   defaultState
 } from './utilities';
-import useFlags from 'src/hooks/useFlags';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
-const LinodesDetailHeader_CMR = React.lazy(() =>
-  import('../LinodesDetail/LinodesDetailHeader/LinodeDetailHeader_CMR')
+const LinodesDetailHeader = React.lazy(() =>
+  import('../LinodesDetail/LinodesDetailHeader')
 );
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -98,16 +94,12 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     disks,
     history,
     region,
-    label,
-    linodeId,
     requestDisks,
-    linodeEvents,
-    linodeStatus,
+    linodeId,
     linodesData
   } = props;
 
   const classes = useStyles();
-  const flags = useFlags();
 
   /**
    * ROUTING
@@ -281,9 +273,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         resetEventsPolling();
         requestDisks(linodeId);
-        flags.cmr
-          ? history.push(`/linodes/${linodeId}/configurations`)
-          : history.push(`/linodes/${linodeId}/advanced`);
+        history.push(`/linodes/${linodeId}/configurations`);
       })
       .catch(errors => {
         setSubmitting(false);
@@ -292,10 +282,6 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   };
 
   const errorMap = getErrorMap(['disk_size'], state.errors);
-
-  const firstEventWithProgress = (linodeEvents || []).find(
-    eachEvent => typeof eachEvent.percent_complete === 'number'
-  );
 
   const selectedLinode = linodesData.find(
     eachLinode => eachLinode.id === state.selectedLinodeId
@@ -310,31 +296,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       */}
       <MutationNotification disks={props.disks} />
       <Notifications />
-      {flags.cmr ? (
-        <LinodesDetailHeader_CMR />
-      ) : (
-        <>
-          <LinodeControls
-            breadcrumbProps={{
-              removeCrumbX: 4,
-              crumbOverrides: [
-                {
-                  label,
-                  position: 2,
-                  linkTo: {
-                    pathname: `/linodes/${linodeId}/summary`
-                  },
-                  noCap: true
-                }
-              ],
-              onEditHandlers: undefined
-            }}
-          />
-          {linodeInTransition(linodeStatus, firstEventWithProgress) && (
-            <LinodeBusyStatus />
-          )}
-        </>
-      )}
+      <LinodesDetailHeader />
       <Grid container className={classes.root}>
         <Grid item xs={12} md={8} lg={9}>
           <Paper className={classes.paper}>

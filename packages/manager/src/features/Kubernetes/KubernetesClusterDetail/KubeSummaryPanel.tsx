@@ -1,9 +1,11 @@
-import { getKubeConfig, KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import {
+  getKubeConfig,
+  KubernetesCluster
+} from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
@@ -12,7 +14,6 @@ import MapPin from 'src/assets/icons/map-pin-icon.svg';
 import MiniKube from 'src/assets/icons/mini-kube.svg';
 import PriceIcon from 'src/assets/icons/price-icon.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
-
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -30,7 +31,6 @@ import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { pluralize } from 'src/utilities/pluralize';
 import { getTotalClusterPrice } from '../kubeUtils';
-
 import KubeConfigDrawer from './KubeConfigDrawer';
 
 type ClassNames =
@@ -86,10 +86,11 @@ const styles = (theme: Theme) =>
     },
     kubeconfigFileText: {
       cursor: 'pointer',
-      color: theme.palette.primary.main,
+      color: theme.cmrTextColors.linkActiveLight,
       marginRight: theme.spacing(1)
     },
     kubeconfigIcons: {
+      color: theme.cmrTextColors.linkActiveLight,
       cursor: 'pointer',
       width: 16,
       height: 16,

@@ -149,6 +149,7 @@ class AccessPanel extends React.Component<CombinedProps> {
             <UserSSHKeyPanel
               users={users}
               error={sshKeyError}
+              disabled={disabled}
               onKeyAddSuccess={requestKeys || (() => null)}
             />
           )}

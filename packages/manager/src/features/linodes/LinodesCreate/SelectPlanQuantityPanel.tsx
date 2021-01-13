@@ -366,7 +366,7 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Notice warning text={programInfo} />
+              <Notice warning>{programInfo}</Notice>
               {isOnCreate && (
                 <Typography data-qa-gpu className={classes.copy}>
                   Linodes with dedicated GPUs accelerate highly specialized
