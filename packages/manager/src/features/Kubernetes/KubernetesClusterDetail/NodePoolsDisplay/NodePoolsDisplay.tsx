@@ -206,6 +206,14 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     });
   };
 
+  const handleRecycleAllClusterNodes = () => {
+    recycleAllClusterNodesDialog
+      .submitDialog(undefined)
+      .then(_ =>
+        enqueueSnackbar('Nodes queued for recycling', { variant: 'success' })
+      );
+  };
+
   const _pools = pools.slice(0, numPoolsToDisplay);
 
   /**
@@ -248,7 +256,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
         </Grid>
         <Grid item>
           <Button
-            buttonType="primary"
+            buttonType="secondary"
             className={classnames({
               [classes.button]: true,
               [classes.cmrSpacing]: flags.cmr
@@ -355,9 +363,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
               loading={recycleAllClusterNodesDialog.dialog.isLoading}
               error={recycleAllClusterNodesDialog.dialog.error}
               onClose={recycleAllClusterNodesDialog.closeDialog}
-              onSubmit={() =>
-                recycleAllClusterNodesDialog.submitDialog(undefined)
-              }
+              onSubmit={handleRecycleAllClusterNodes}
             />
           </Grid>
         )}
