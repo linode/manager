@@ -31,6 +31,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Update timezone logic to account for time zones that use a quarter hour
 - Object Storage list not showing more than 100 objects
 
+## [2020-12-18] - 1.27.1
+
+### Fixed:
+
+- Revert upgrade to Chart.js that was causing Sentry errors and graph display errors
+
 ## [2020-12-16] - 1.27.0
 
 This release includes sweeping changes to the Cloud Manager UI. For more details, please visit https://www.linode.com/blog/linode/cloud-manager-enhancements-dec2020/
