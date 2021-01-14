@@ -334,5 +334,5 @@ export interface SaveCreditCardData {
   card_number: string;
   expiry_year: number;
   expiry_month: number;
-  cvv?: string;
+  cvv: string;
 }

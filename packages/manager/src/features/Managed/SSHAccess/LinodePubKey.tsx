@@ -1,5 +1,4 @@
 import * as copy from 'copy-to-clipboard';
-import { getSSHPubKey, ManagedSSHPubKey } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import SSHKeyIcon from 'src/assets/icons/ssh-key.svg';
 import Button from 'src/components/Button';
@@ -10,7 +9,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { useManagedSSHKey } from 'src/queries/managed';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 // @todo: is this URL correct? Are there new docs being written?
@@ -94,29 +93,33 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const LinodePubKey: React.FC<{}> = props => {
+const LinodePubKey: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data, loading, error } = useAPIRequest<ManagedSSHPubKey>(
-    getSSHPubKey,
-    { ssh_key: '' }
-  );
+  const { data, isLoading, error } = useManagedSSHKey();
+
   const [copied, setCopied] = React.useState<boolean>(false);
-  let timeout: NodeJS.Timeout;
+  const timeout = React.useRef<NodeJS.Timeout>();
 
   React.useEffect(() => {
     if (copied) {
-      timeout = setTimeout(() => {
+      timeout.current = setTimeout(() => {
         setCopied(false);
       }, 1000);
     }
 
-    return () => clearTimeout(timeout);
+    return () => {
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+      }
+    };
   }, [copied]);
 
   const handleCopy = () => {
-    setCopied(true);
-    copy(data.ssh_key);
+    if (data) {
+      setCopied(true);
+      copy(data.ssh_key);
+    }
   };
 
   if (error) {
@@ -128,7 +131,7 @@ const LinodePubKey: React.FC<{}> = props => {
     );
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Paper className={`${classes.root} ${classes.loadingState}`}>
         <CircleProgress mini className={classes.spinner} />
@@ -137,50 +140,48 @@ const LinodePubKey: React.FC<{}> = props => {
   }
 
   return (
-    <>
-      <Paper className={classes.root}>
-        <Grid container justify="space-between">
-          <Grid item xs={12} md={3} lg={4} className={classes.copy}>
-            <Box display="flex" flexDirection="row">
-              <SSHKeyIcon className={classes.icon} />
-              <Typography variant="h3">Linode Public Key</Typography>
-            </Box>
-            <Typography>
-              You must{' '}
-              <a
-                href={DOC_URL}
-                target="_blank"
-                aria-describedby="external-site"
-                rel="noopener noreferrer"
-              >
-                install our public SSH key
-              </a>{' '}
-              on all managed Linodes so we can access them and diagnose issues.
-            </Typography>
-          </Grid>
-          {/* Hide the SSH key on x-small viewports */}
-          <Grid item xs={12} sm={5} md={6} className={classes.sshKeyContainer}>
-            <Typography variant="subtitle1" className={classes.sshKey}>
-              {data.ssh_key}
-              {/* See NOTE A. If that CSS is removed, we can use the following instead: */}
-              {/* pubKey.slice(0, 160)} . . . */}
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={4}
-            md={3}
-            lg={2}
-            className={classes.copyToClipboard}
-          >
-            <Button buttonType="secondary" onClick={handleCopy}>
-              {!copied ? 'Copy to clipboard' : 'Copied!'}
-            </Button>
-          </Grid>
+    <Paper className={classes.root}>
+      <Grid container justify="space-between">
+        <Grid item xs={12} md={3} lg={4} className={classes.copy}>
+          <Box display="flex" flexDirection="row">
+            <SSHKeyIcon className={classes.icon} />
+            <Typography variant="h3">Linode Public Key</Typography>
+          </Box>
+          <Typography>
+            You must{' '}
+            <a
+              href={DOC_URL}
+              target="_blank"
+              aria-describedby="external-site"
+              rel="noopener noreferrer"
+            >
+              install our public SSH key
+            </a>{' '}
+            on all managed Linodes so we can access them and diagnose issues.
+          </Typography>
         </Grid>
-      </Paper>
-    </>
+        {/* Hide the SSH key on x-small viewports */}
+        <Grid item xs={12} sm={5} md={6} className={classes.sshKeyContainer}>
+          <Typography variant="subtitle1" className={classes.sshKey}>
+            {data?.ssh_key || ''}
+            {/* See NOTE A. If that CSS is removed, we can use the following instead: */}
+            {/* pubKey.slice(0, 160)} . . . */}
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          md={3}
+          lg={2}
+          className={classes.copyToClipboard}
+        >
+          <Button buttonType="secondary" onClick={handleCopy}>
+            {!copied ? 'Copy to clipboard' : 'Copied!'}
+          </Button>
+        </Grid>
+      </Grid>
+    </Paper>
   );
 };
 

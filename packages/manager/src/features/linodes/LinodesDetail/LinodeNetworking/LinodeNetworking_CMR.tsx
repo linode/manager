@@ -53,31 +53,10 @@ import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
 import LinodeVLANs from './VLANPanel/LinodeVLANs';
 
-type ClassNames =
-  | 'root'
-  | 'title'
-  | 'address'
-  | 'reverseDNS'
-  | 'defaultGateway'
-  | 'type'
-  | 'action'
-  | 'ipv4Container'
-  | 'ipv4Title'
-  | 'ipv4TitleContainer'
-  | 'netActionsTitle'
-  | 'rDNSListItem'
-  | 'multipleRDNSButton'
-  | 'multipleRDNSText'
-  | 'errorText'
-  | 'loader'
-  | 'rangeRDNSCell';
+type ClassNames = 'action' | 'multipleRDNSButton' | 'multipleRDNSText';
 
 const styles = (theme: Theme) =>
   createStyles({
-    title: {
-      marginTop: `${theme.spacing(1)}px`,
-      marginBottom: `${theme.spacing(2)}px`
-    },
     action: {
       display: 'flex',
       alignItems: 'center',
@@ -88,35 +67,7 @@ const styles = (theme: Theme) =>
       },
       paddingRight: `0px !important`
     },
-    ipv4Container: {
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'flex-start',
-        '& button': {
-          marginLeft: -14
-        }
-      }
-    },
-    ipv4Title: {
-      marginBottom: theme.spacing(2),
-      marginTop: theme.spacing(4)
-    },
-    ipv4TitleContainer: {
-      flex: 1,
-      [theme.breakpoints.down('sm')]: {
-        flexBasis: '100%'
-      }
-    },
-    netActionsTitle: {
-      marginBottom: theme.spacing(2),
-      marginTop: theme.spacing(4)
-    },
-    rDNSListItem: {
-      color: theme.palette.text.primary,
-      fontSize: '.9rem',
-      '&:not(:last-child)': {
-        marginBottom: theme.spacing(2)
-      }
-    },
+
     multipleRDNSButton: {
       ...theme.applyLinkStyles
     },
@@ -124,19 +75,6 @@ const styles = (theme: Theme) =>
       color: theme.palette.primary.main,
       '&:hover': {
         color: theme.palette.primary.light
-      }
-    },
-    errorText: {
-      color: theme.color.red
-    },
-    loader: {
-      padding: 0
-    },
-    rangeRDNSCell: {
-      '& .data': {
-        display: 'flex',
-        alignItems: 'center',
-        minHeight: 32
       }
     }
   });
@@ -648,17 +586,16 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           // @todo: Clean these props when EntityHeader is refactored.
           body={
             <Hidden mdUp>
-              <div style={{ marginRight: 5 }}>
+              <div style={{ padding: 5 }}>
                 <Hidden xsDown>
                   <Button
-                    style={{ paddingTop: 5, paddingBottom: 5 }}
                     onClick={this.openTransferDialog}
                     buttonType="secondary"
                   >
                     IP Transfer
                   </Button>
                   <Button
-                    style={{ paddingTop: 5, paddingBottom: 5 }}
+                    style={{ marginRight: 16 }}
                     onClick={this.openSharingDialog}
                     buttonType="secondary"
                   >
@@ -674,16 +611,15 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           }
           actions={
             <Hidden smDown>
-              <div style={{ marginRight: 5 }}>
+              <div style={{ padding: 5 }}>
                 <Button
-                  style={{ padding: '16px 14px' }}
                   onClick={this.openTransferDialog}
                   buttonType="secondary"
                 >
                   IP Transfer
                 </Button>
                 <Button
-                  style={{ padding: '16px 28px 16px 14px' }}
+                  style={{ marginRight: 16 }}
                   onClick={this.openSharingDialog}
                   buttonType="secondary"
                 >

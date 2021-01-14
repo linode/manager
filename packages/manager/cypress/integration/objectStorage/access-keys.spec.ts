@@ -17,16 +17,21 @@ describe('access keys', () => {
     const bucketLabel = 'cy-test-' + makeTestLabel();
     const accessKeyLabel = 'cy-test-key';
     const clusterId = 'us-east-1';
-
+    // catch create access key request
+    cy.intercept('POST', `*/object-storage/keys`).as('createAccessKey');
     createBucket(bucketLabel, clusterId).then(() => {
       cy.visitWithLogin('/object-storage/access-keys');
-      fbtClick('Add an Access Key');
+      getVisible('[data-qa-header]').within(() => {
+        fbtVisible('Object Storage');
+      });
+      fbtClick('Create an Access Key');
       containsVisible('Create an Access Key');
       getVisible('[data-testid="textfield-input"]').type(accessKeyLabel);
       getClick('[data-qa-toggle="false"]');
       getVisible('[data-qa-toggle="true"]');
       getClick('[aria-label="Select read/write for all"]');
       fbtClick('Submit');
+      cy.wait('@createAccessKey');
       fbtVisible(
         'Your keys have been generated. For security purposes, we can only display your Secret Key once, after which it can’t be recovered.'
       );

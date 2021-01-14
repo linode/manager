@@ -15,60 +15,53 @@ type ClassNames =
   | 'statusCell'
   | 'statusCellMaintenance'
   | 'statusHelpIcon'
+  | 'statusLink'
   | 'ipCell'
   | 'ipCellWrapper'
   | 'planCell'
+  | 'progressDisplay'
   | 'regionCell'
-  | 'iconTableCell'
-  | 'icon'
-  | 'iconGridCell';
+  | 'tagCell'
+  | 'maintenanceOuter'
+  | 'vlan_Status';
 
 const styles = (theme: Theme) =>
   createStyles({
     actionCell: {
+      paddingTop: 0,
+      paddingBottom: 0,
+      paddingLeft: 0,
+      width: '22%',
       textAlign: 'right',
+      '&:last-child': {
+        paddingRight: 0
+      },
       [theme.breakpoints.down('sm')]: {
-        width: '100%'
+        width: '5%'
       }
     },
     actionInner: {
       display: 'flex',
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-end',
+      marginRight: 1,
+      '& a': {
+        lineHeight: '1rem'
+      }
     },
     bodyRow: {
       height: 'auto',
-      '&:hover .backupIcon': {
-        fill: theme.palette.primary.main
+      '&:hover': {
+        '& [data-qa-copy-ip]': {
+          opacity: 1
+        }
       }
     },
-    iconTableCell: {
-      [theme.breakpoints.up('md')]: {
-        width: '4%',
-        padding: 4
-      }
-    },
-    icon: {
-      position: 'relative',
-      top: 1,
-      width: 40,
-      height: 40,
-      '& .circle': {
-        fill: theme.bg.offWhiteDT
-      },
-      '& .outerCircle': {
-        stroke: theme.bg.main
-      }
-    },
-    iconGridCell: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: 4
+    progressDisplay: {
+      display: 'inline-block'
     },
     statusCell: {
-      width: '14%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+      whiteSpace: 'nowrap',
+      width: '17%'
     },
     statusCellMaintenance: {
       [theme.breakpoints.up('md')]: {
@@ -79,48 +72,65 @@ const styles = (theme: Theme) =>
         alignItems: 'center',
         lineHeight: 1.2,
         marginRight: -12,
-        [theme.breakpoints.down('sm')]: {
-          minWidth: 200,
-          justifyContent: 'flex-end'
-        },
         [theme.breakpoints.up('md')]: {
           minWidth: 200
         }
       },
       '& button': {
+        color: theme.cmrTextColors.linkActiveLight,
         padding: '0 6px',
         position: 'relative',
-        top: 1,
-        [theme.breakpoints.up('md')]: {
-          padding: 6
-        }
+        top: 1
       }
     },
     statusHelpIcon: {
       position: 'relative',
       top: -2
     },
-    ipCell: {
-      width: '14%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
+    statusLink: {
+      backgroundColor: 'transparent',
+      border: 'none',
+      color: theme.cmrTextColors.linkActiveLight,
+      cursor: 'pointer',
+      padding: 0,
+      '& p': {
+        color: theme.cmrTextColors.linkActiveLight,
+        fontFamily: theme.font.bold
       }
+    },
+    ipCell: {
+      width: '14%'
     },
     ipCellWrapper: {
       display: 'inline-flex',
-      flexDirection: 'column'
-    },
-    planCell: {
-      width: '14%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
+      flexDirection: 'column',
+
+      '& *': {
+        fontSize: '.875rem',
+        paddingTop: 0,
+        paddingBottom: 0
+      },
+      '& [data-qa-copy-ip]': {
+        opacity: 0
+      },
+      '& svg': {
+        marginTop: 2
       }
     },
     regionCell: {
-      width: '14%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+      width: '14%'
+    },
+    tagCell: {
+      borderRight: 'none'
+    },
+    maintenanceOuter: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+
+    // The "Status" cell in the VLAN Detail context.
+    vlan_Status: {
+      width: '14%'
     }
   });
 

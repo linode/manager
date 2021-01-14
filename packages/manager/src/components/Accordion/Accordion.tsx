@@ -33,6 +33,9 @@ const styles = (theme: Theme) => {
       },
       '& .MuiAccordionDetails-root': {
         backgroundColor: theme.cmrBGColors.bgPaper
+      },
+      '& .MuiButton-root': {
+        marginLeft: 0
       }
     },
     success: {

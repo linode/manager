@@ -59,7 +59,7 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
         })}
       {matchesSmDown && (
         <ActionMenu
-          createActions={() => actions}
+          actionsList={actions}
           ariaLabel={`Action menu for Virtual LAN ${props.vlanLabel}`}
         />
       )}

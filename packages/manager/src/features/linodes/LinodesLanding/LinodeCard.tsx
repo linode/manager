@@ -25,9 +25,6 @@ import HelpIcon from 'src/components/HelpIcon';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import Tags from 'src/components/Tags';
-import withFeatureFlagConsumerContainer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import {
   getProgressOrDefault,
@@ -44,7 +41,6 @@ import hasMutationAvailable, {
 } from './hasMutationAvailable';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
-import LinodeActionMenu_CMR from './LinodeActionMenu_CMR';
 import styled, { StyleProps } from './LinodeCard.style';
 import RegionIndicator from './RegionIndicator';
 import { parseMaintenanceStartTime } from './utils';
@@ -83,8 +79,7 @@ export type CombinedProps = Props &
   WithNotifications &
   HasMutationAvailable &
   WithSnackbarProps &
-  StyleProps &
-  FeatureFlagConsumerProps;
+  StyleProps;
 
 interface State {
   loadingConfigs: boolean;
@@ -189,11 +184,6 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
       noImage: !image
     };
 
-    // @todo delete after CMR
-    const openDeleteDialog = (linodeID: number, linodeLabel: string) => {
-      openDialog('delete', linodeID, linodeLabel);
-    };
-
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={label}>
         <Card className={classes.flexContainer}>
@@ -219,18 +209,10 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
             }
             action={
               <div className={classes.actionMenu}>
-                {this.props.flags.cmr ? (
-                  <LinodeActionMenu_CMR
-                    {...actionMenuProps}
-                    openDialog={openDialog}
-                  />
-                ) : (
-                  <LinodeActionMenu
-                    {...actionMenuProps}
-                    // @todo delete after CMR
-                    openDeleteDialog={openDeleteDialog}
-                  />
-                )}
+                <LinodeActionMenu
+                  {...actionMenuProps}
+                  openDialog={openDialog}
+                />
               </div>
             }
             className={`${classes.customeMQ} ${'title'}`}
@@ -327,7 +309,6 @@ export default compose<CombinedProps, Props>(
   withRecentEvent,
   withNotifications,
   hasMutationAvailable,
-  withFeatureFlagConsumerContainer,
   withSnackbar
 )(LinodeCard) as React.ComponentType<Props>;
 

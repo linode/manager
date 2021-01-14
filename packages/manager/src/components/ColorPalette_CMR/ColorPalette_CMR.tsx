@@ -7,6 +7,7 @@ import { useTheme } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    backgroundColor: theme.cmrBGColors.bgPaper,
     '& h2': {
       color: '#32363c'
     }
@@ -50,14 +51,6 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
       color: theme.cmrBGColors.bgPrimaryNavActive,
       alias: 'theme.cmrBGColors.bgPrimaryNavActive'
     },
-    {
-      color: theme.cmrBGColors.bgSecondaryActions,
-      alias: 'theme.cmrBGColors.bgSecondaryActions'
-    },
-    {
-      color: theme.cmrBGColors.bgSearchBar,
-      alias: 'theme.cmrBGColors.bgSearchBar'
-    },
     { color: theme.cmrBGColors.bgPaper, alias: 'theme.cmrBGColors.bgPaper' },
     {
       color: theme.cmrBGColors.bgPrimaryButton,
@@ -72,56 +65,16 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
       alias: 'theme.cmrBGColors.bgTableHeader'
     },
     {
-      color: theme.cmrBGColors.bgTableBody,
-      alias: 'theme.cmrBGColors.bgTableBody'
-    },
-    {
-      color: theme.cmrBGColors.bgStatusChip,
-      alias: 'theme.cmrBGColors.bgStatusChip'
-    },
-    {
       color: theme.cmrBGColors.bgBillingSummary,
       alias: 'theme.cmrBGColors.bgBillingSummary'
     },
     {
-      color: theme.cmrBGColors.bgBreadcrumbParent,
-      alias: 'theme.cmrBGColors.bgBreadcrumbParent'
-    },
-    {
       color: theme.cmrBGColors.bgAccessRow,
       alias: 'theme.cmrBGColors.bgAccessRow'
-    },
-    {
-      color: theme.cmrBGColors.bgAccessHeader,
-      alias: 'theme.cmrBGColors.bgAccessHeader'
     }
   ];
 
   const cmrTextColors = [
-    {
-      color: theme.cmrTextColors.textAction,
-      alias: 'theme.cmrTextColors.textAction'
-    },
-    {
-      color: theme.cmrTextColors.textBillingSummary,
-      alias: 'theme.cmrTextColors.textBillingSummary'
-    },
-    {
-      color: theme.cmrTextColors.textTab,
-      alias: 'theme.cmrTextColors.textTab'
-    },
-    {
-      color: theme.cmrTextColors.textTabActive,
-      alias: 'theme.cmrTextColors.textTabActive'
-    },
-    {
-      color: theme.cmrTextColors.textStatusChip,
-      alias: 'theme.cmrTextColors.textStatusChip'
-    },
-    {
-      color: theme.cmrTextColors.linkActiveMedium,
-      alias: 'theme.cmrTextColors.linkActiveMedium'
-    },
     {
       color: theme.cmrTextColors.linkActiveLight,
       alias: 'theme.cmrTextColors.linkActiveLight'
@@ -131,36 +84,16 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
       alias: 'theme.cmrTextColors.headlineStatic'
     },
     {
-      color: theme.cmrTextColors.headlineActive,
-      alias: 'theme.cmrTextColors.headlineActive'
-    },
-    {
       color: theme.cmrTextColors.tableStatic,
       alias: 'theme.cmrTextColors.tableStatic'
     },
     {
-      color: theme.cmrTextColors.textTagButton,
-      alias: 'theme.cmrTextColors.textTagButton'
-    },
-    {
       color: theme.cmrTextColors.textAccessTable,
       alias: 'theme.cmrTextColors.textAccessTable'
-    },
-    {
-      color: theme.cmrTextColors.textAccessCode,
-      alias: 'theme.cmrTextColors.textAccessCode'
-    },
-    {
-      color: theme.cmrTextColors.textBreadcrumbParent,
-      alias: 'theme.cmrTextColors.textBreadcrumbParent'
     }
   ];
 
   const cmrBorderColors = [
-    {
-      color: theme.cmrBorderColors.borderNotificationCenter,
-      alias: 'theme.cmrBorderColors.borderNotificationCenter'
-    },
     {
       color: theme.cmrBorderColors.borderTypography,
       alias: 'theme.cmrBorderColors.borderTypography'
@@ -178,10 +111,6 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
       alias: 'theme.cmrBorderColors.borderBillingSummary'
     },
     {
-      color: theme.cmrBorderColors.borderBillingSummary,
-      alias: 'theme.cmrBorderColors.borderBillingSummary'
-    },
-    {
       color: theme.cmrBorderColors.borderBalance,
       alias: 'theme.cmrBorderColors.borderBalance'
     },
@@ -193,14 +122,6 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
 
   const cmrIconColors = [
     {
-      color: theme.cmrIconColors.iStatic,
-      alias: 'theme.cmrIconColors.iStatic'
-    },
-    {
-      color: theme.cmrIconColors.iActiveMedium,
-      alias: 'theme.cmrIconColors.iActiveMedium'
-    },
-    {
       color: theme.cmrIconColors.iActiveLight,
       alias: 'theme.cmrIconColors.iActiveLight'
     },
@@ -210,11 +131,7 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
       alias: 'theme.cmrIconColors.iOrange'
     },
     { color: theme.cmrIconColors.iRed, alias: 'theme.cmrIconColors.iRed' },
-    { color: theme.cmrIconColors.iGrey, alias: 'theme.cmrIconColors.iGrey' },
-    {
-      color: theme.cmrIconColors.iCheckmark,
-      alias: 'theme.cmrIconColors.iCheckmark'
-    }
+    { color: theme.cmrIconColors.iGrey, alias: 'theme.cmrIconColors.iGrey' }
   ];
 
   const createSwatch = (idx: number, color: string, alias: string) => {

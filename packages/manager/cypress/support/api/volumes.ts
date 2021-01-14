@@ -71,15 +71,14 @@ export const detachAllTestVolumes = () => {
 export const deleteAllTestVolumes = () => {
   getVolumes().then(resp => {
     resp.body.data.forEach(vol => {
+      // catch delete linode request
+      cy.intercept('DELETE', `linode/instances/${vol.linode_id}`).as(
+        'deleteLinode'
+      );
       if (isTestEntity(vol) && vol.linode_id === null) {
         deleteVolumeById(vol.id);
       } else if (isTestEntity(vol) && vol.linode_id !== null) {
         deleteLinodeById(vol.linode_id).then(() => {
-          cy.server();
-          cy.route({
-            method: 'DELETE',
-            url: `linode/instances/${vol.linode_id}`
-          }).as('deleteLinode');
           cy.wait('@deleteLinode');
           // this wait is necessary to allow time for attached linode to be deleted before deleting volume
           // eslint-disable-next-line cypress/no-unnecessary-waiting
