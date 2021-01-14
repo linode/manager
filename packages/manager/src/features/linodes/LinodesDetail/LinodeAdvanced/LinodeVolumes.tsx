@@ -17,6 +17,7 @@ import withVolumesRequests, {
 } from 'src/containers/volumesRequests.container';
 import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useRegions } from 'src/hooks/useRegions';
 import {
   LinodeOptions,
   openForClone,
@@ -155,6 +156,8 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
+  const { entities: regions } = useRegions();
+
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
     open: false,
     volumeId: 0,
@@ -292,6 +295,14 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
       });
     }
   };
+
+  const currentRegion = regions.find(
+    thisRegion => thisRegion.id === linodeRegion
+  );
+
+  if (!currentRegion || !currentRegion.capabilities.includes('Block Storage')) {
+    return null;
+  }
 
   const handlers: VolumeHandlers = {
     openForConfig,
