@@ -4,15 +4,50 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-01-13] - v1.28.0
+
+### Added:
+
+- Add Network Transfer Graph to Linodes Landing
+- Add Marketplace Q4 apps
+- Sort Linode Details > Storage > Disks table by created (ascending) on default
+
+### Changed:
+
+- Remove rounded corners for buttons
+- Disable submission until required fields are present and remove tags field from the Domain create flow
+- Disable Firewall and Image create flows for restricted users
+- Increase timeout for Longview on accounts with more Longviews
+- Convert Support Ticket drawer to a dialog and make inputs bigger
+- Update text to accurately reflect what read_only account access lets you do
+
+### Fixed:
+
+- Set highlight.js theme on app load
+- Color scheme for Dark Mode toggle button's enabled state
+- Disable create flow fields for restricted users
+- Remove duplicate restricted banner for Marketplace
+- Tooltip and disabled action functionality in action menus
+- Update timezone logic to account for time zones that use a quarter hour
+- Object Storage list not showing more than 100 objects
+
+## [2020-12-18] - 1.27.1
+
+### Fixed:
+
+- Revert upgrade to Chart.js that was causing Sentry errors and graph display errors
+
 ## [2020-12-16] - 1.27.0
 
 This release includes sweeping changes to the Cloud Manager UI. For more details, please visit https://www.linode.com/blog/linode/cloud-manager-enhancements-dec2020/
 
 ### Added:
-- Deep link to the Payment drawer 
+
+- Deep link to the Payment drawer
 - Add missing link to invoice details in invoice rows
 
 ### Changed:
+
 - Replace all user-facing Domains master/slave terminology with primary/secondary
 - Sortable tables now update the URL on sort change to make sort preferences bookmarkable
 - Upgrade: Chart.js 3.0 (beta)
@@ -28,8 +63,9 @@ This release includes sweeping changes to the Cloud Manager UI. For more details
 - Hide Longview pagination footer if there's only one page
 - Use Region Select styles in Object Storage Cluster selection
 - Improve Backups column in Linode .csv file
- 
+
 ### Fixed:
+
 - Low reputation error when resizing a Linode intercepted by disk size error logic
 - Prevent multiple imagize submissions in succession
 

@@ -363,8 +363,8 @@ module.exports = {
   // See https://webpack.js.org/configuration/performance/
   performance: {
     hints: 'error',
-    maxEntrypointSize: 1180000, // ~1.12 MiB	    maxEntrypointSize: 2000000, // ~1.9 MiB
-    maxAssetSize: 1180000, // ~1.12 MiB
+    maxEntrypointSize: 1250000, // ~1.2 MiB
+    maxAssetSize: 1250000, // ~1.2 MiB
     assetFilter(assetFilename) {
       return !(
         assetFilename.endsWith('.chunk.js') || assetFilename.endsWith('.map')
