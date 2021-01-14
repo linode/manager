@@ -43,12 +43,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   stackscriptTitles: {
-    width: '54%',
+    width: '40%',
     '&:before': {
       top: '0 !important',
       left: '0 !important',
       width: '0 !important',
       height: '0 !important'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '50%'
     }
   },
   selectingStackscriptTitles: {
@@ -58,20 +61,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   deploys: {
     width: '13%',
     [theme.breakpoints.down('sm')]: {
-      width: '28%'
+      width: '15%'
     }
   },
   revisions: {
     width: '13%'
   },
   tags: {
-    width: '15%'
+    width: '17%'
   },
   status: {
-    width: '10%'
+    width: '5%'
   },
   actionMenu: {
-    width: '4%'
+    width: '10%'
   },
   tr: {
     height: 48

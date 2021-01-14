@@ -9,74 +9,65 @@ interface Props {
 type CombinedProps = Props;
 
 class StoryActionMenu extends React.Component<CombinedProps> {
-  createActions = () => (): Action[] => {
-    return [
-      {
-        title: 'First Action',
-        onClick: () => null
-      },
-      {
-        title: 'Action 1',
-        onClick: () => null
-      },
-      {
-        title: 'Action 3',
-        onClick: () => null
-      },
-      {
-        title: 'Last Action',
-        onClick: () => null
-      }
-    ];
-  };
+  actions: Action[] = [
+    {
+      title: 'First Action',
+      onClick: () => null
+    },
+    {
+      title: 'Action 1',
+      onClick: () => null
+    },
+    {
+      title: 'Action 3',
+      onClick: () => null
+    },
+    {
+      title: 'Last Action',
+      onClick: () => null
+    }
+  ];
 
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} ariaLabel="label" />
-    );
+    return <ActionMenu actionsList={this.actions} ariaLabel="label" />;
   }
 }
 
 class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
-  createActions = () => (): Action[] => {
-    return [
-      {
-        title: 'First Action',
-        onClick: () => null
-      },
-      {
-        title: 'Another Action',
-        onClick: () => null
-      },
-      {
-        title: 'Disabled Action',
-        disabled: true,
-        onClick: () => null,
-        tooltip: 'An explanation as to why this item is disabled'
-      }
-    ];
-  };
+  actions: Action[] = [
+    {
+      title: 'First Action',
+      onClick: () => null
+    },
+    {
+      title: 'Another Action',
+      onClick: () => null
+    },
+    {
+      title: 'Disabled Action',
+      disabled: true,
+      onClick: () => null,
+      tooltip: 'An explanation as to why this item is disabled'
+    }
+  ];
 
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} ariaLabel="label" />
-    );
+    return <ActionMenu actionsList={this.actions} ariaLabel="label" />;
   }
 }
 
 class StoryActionMenuWithInlineLabel extends React.Component<CombinedProps> {
-  createActions = () => (): Action[] => {
-    return [
-      {
-        title: 'Single Action',
-        onClick: () => null
-      }
-    ];
-  };
+  actions: Action[] = [
+    {
+      title: 'Single Action',
+      onClick: () => null
+    }
+  ];
+
   render() {
     return (
       <ActionMenu
-        createActions={this.createActions()}
+        actionsList={this.actions}
         ariaLabel="label"
         inlineLabel="More Actions"
       />

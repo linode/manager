@@ -54,7 +54,7 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
     <>
       {matchesSmDown ? (
         <ActionMenu
-          createActions={() => actions}
+          actionsList={actions}
           ariaLabel={`Action menu for user ${profileUsername}`}
         />
       ) : (

@@ -52,6 +52,7 @@ export interface Props {
   error?: string;
   ips: ExtendedIP[];
   onChange: (ips: ExtendedIP[]) => void;
+  onBlur?: () => void;
   inputProps?: InputBaseProps;
   className?: string;
 }

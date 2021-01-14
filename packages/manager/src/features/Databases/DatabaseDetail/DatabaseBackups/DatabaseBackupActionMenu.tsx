@@ -64,7 +64,7 @@ const DatabaseBackupActionMenu: React.FC<CombinedProps> = props => {
       </Hidden>
       <Hidden mdUp>
         <ActionMenu
-          createActions={() => actions}
+          actionsList={actions}
           ariaLabel={`Action menu for database backup ${props.backup.id}`}
         />
       </Hidden>

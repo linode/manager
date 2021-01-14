@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
-
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import getAbuseTicket from 'src/store/selectors/getAbuseTicket';
@@ -20,9 +20,12 @@ export const AbuseTicketBanner: React.FC<{}> = _ => {
   const count = abuseTickets.length;
   const multiple = count > 1;
 
-  const message = `You have ${multiple ? count : `an`} open abuse ticket${
-    multiple ? 's' : ''
-  }.`;
+  const message = (
+    <>
+      You have {multiple ? count : `an`} open abuse ticket
+      {multiple ? 's' : ''}.
+    </>
+  );
 
   /**
    * The ticket list page doesn't indicate which tickets are abuse tickets
@@ -34,18 +37,20 @@ export const AbuseTicketBanner: React.FC<{}> = _ => {
   return (
     <Grid item xs={12}>
       <Notice important error dismissible={false}>
-        {message}
-        {/** Don't link to /support/tickets if we're already on the landing page. */}
-        {!isViewingTicket ? (
-          <>
-            {' '}
-            Please{' '}
-            <Link data-testid="abuse-ticket-link" to={href}>
-              click here
-            </Link>{' '}
-            to view {`${multiple ? 'these tickets' : 'this ticket'}.`}
-          </>
-        ) : null}
+        <Typography>
+          {message}
+          {/** Don't link to /support/tickets if we're already on the landing page. */}
+          {!isViewingTicket ? (
+            <>
+              {' '}
+              Please{' '}
+              <Link data-testid="abuse-ticket-link" to={href}>
+                click here
+              </Link>{' '}
+              to view {`${multiple ? 'these tickets' : 'this ticket'}.`}
+            </>
+          ) : null}
+        </Typography>
       </Notice>
     </Grid>
   );

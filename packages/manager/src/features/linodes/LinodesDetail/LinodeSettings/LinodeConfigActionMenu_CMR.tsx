@@ -1,17 +1,16 @@
 import { Config } from '@linode/api-v4/lib/linodes';
+import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import {
   makeStyles,
   Theme,
   useMediaQuery,
   useTheme
 } from 'src/components/core/styles';
-
-import ActionMenu, {
-  Action
-} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
@@ -35,91 +34,69 @@ const useStyles = makeStyles(() => ({
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 const ConfigActionMenu: React.FC<CombinedProps> = props => {
+  const { readOnly, history, linodeId, config } = props;
+
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleEdit = React.useCallback(() => {
-    const { config, onEdit } = props;
+    const { onEdit } = props;
     onEdit(config);
-  }, [props]);
+  }, [config, props]);
 
   const handleBoot = React.useCallback(() => {
+    const { onBoot } = props;
+    const { id, label } = config;
+    onBoot(id, label);
+  }, [config, props]);
+
+  const tooltip = readOnly
+    ? "You don't have permission to perform this action"
+    : undefined;
+
+  const handleDelete = () => {
     const {
       config: { id, label },
-      onBoot
+      onDelete
     } = props;
-    onBoot(id, label);
-  }, [props]);
+    onDelete(id, label);
+  };
 
-  const inlineActions = [
+  const actions: Action[] = [
     {
-      actionText: 'Boot',
+      title: 'Boot',
       onClick: () => {
         handleBoot();
       }
     },
     {
-      actionText: 'Edit',
+      title: 'Edit',
       onClick: () => {
         handleEdit();
       }
+    },
+    {
+      title: 'Clone',
+      onClick: () => {
+        history.push(
+          `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
+        );
+      },
+      disabled: readOnly
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        handleDelete();
+      },
+      disabled: readOnly,
+      tooltip
     }
   ];
 
-  const createActions = React.useCallback((): Action[] => {
-    const { readOnly, history, linodeId, config } = props;
-    const tooltip = readOnly
-      ? "You don't have permission to perform this action"
-      : undefined;
-
-    const handleDelete = () => {
-      const {
-        config: { id, label },
-        onDelete
-      } = props;
-      onDelete(id, label);
-    };
-
-    const actions: Action[] = [
-      {
-        title: 'Clone',
-        onClick: () => {
-          history.push(
-            `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
-          );
-        },
-        disabled: readOnly
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          handleDelete();
-        },
-        disabled: readOnly,
-        tooltip
-      }
-    ];
-
-    if (matchesSmDown) {
-      actions.unshift(
-        {
-          title: 'Boot',
-          onClick: () => {
-            handleBoot();
-          }
-        },
-        {
-          title: 'Edit',
-          onClick: () => {
-            handleEdit();
-          }
-        }
-      );
-    }
-
-    return actions;
-  }, [handleBoot, handleEdit, matchesSmDown, props]);
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
     <div className={classes.root}>
@@ -127,14 +104,16 @@ const ConfigActionMenu: React.FC<CombinedProps> = props => {
         inlineActions.map(action => {
           return (
             <InlineMenuAction
-              key={action.actionText}
-              actionText={action.actionText}
+              key={action.title}
+              actionText={action.title}
               onClick={action.onClick}
+              tooltip={action.tooltip}
+              disabled={action.disabled}
             />
           );
         })}
       <ActionMenu
-        createActions={createActions}
+        actionsList={menuActions}
         ariaLabel={`Action menu for Linode Config ${props.label}`}
       />
     </div>

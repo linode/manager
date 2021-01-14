@@ -4,11 +4,9 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
-
 import Typography from 'src/components/core/Typography';
 import FinalCrumb from './FinalCrumb';
 import FinalCrumbPrefix from './FinalCrumbPrefix';
-
 import { EditableProps, LabelProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,9 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'initial'
   },
   crumbLink: {
-    color: theme.palette.primary.main,
+    color: theme.cmrTextColors.linkActiveLight,
     '&:hover': {
-      color: theme.palette.primary.light,
+      color: theme.palette.primary.main,
       textDecoration: 'underline'
     }
   },

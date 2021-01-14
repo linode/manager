@@ -31,7 +31,7 @@ import { MapState } from './store/types';
 
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
-import MainContent_CMR from './MainContent_CMR';
+import GoTo from './GoTo';
 
 interface Props {
   toggleTheme: () => void;
@@ -44,6 +44,7 @@ interface State {
   menuOpen: boolean;
   welcomeBanner: boolean;
   hasError: boolean;
+  goToOpen: boolean;
 }
 
 type CombinedProps = Props &
@@ -60,7 +61,8 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
-    hasError: false
+    hasError: false,
+    goToOpen: false
   };
 
   componentDidCatch() {
@@ -85,6 +87,13 @@ export class App extends React.Component<CombinedProps, State> {
     document.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.ctrlKey && event.shiftKey && event.key === 'D') {
         this.props.toggleTheme();
+      }
+
+      if (event.ctrlKey && event.shiftKey && event.key === 'K') {
+        this.setState(prevState => ({
+          ...prevState,
+          goToOpen: !prevState.goToOpen
+        }));
       }
     });
 
@@ -119,6 +128,10 @@ export class App extends React.Component<CombinedProps, State> {
         }
       });
   }
+
+  goToClose = () => {
+    this.setState({ goToOpen: false });
+  };
 
   render() {
     const { hasError } = this.state;
@@ -188,6 +201,7 @@ export class App extends React.Component<CombinedProps, State> {
             Opens an external site in a new window
           </span>
         </div>
+        <GoTo open={this.state.goToOpen} onClose={this.goToClose} />
         {/** Update the LD client with the user's id as soon as we know it */}
         <IdentifyUser
           userID={userId}
@@ -198,20 +212,7 @@ export class App extends React.Component<CombinedProps, State> {
           euuid={this.props.euuid}
         />
         <DocumentTitleSegment segment="Linode Manager" />
-        {this.props.featureFlagsLoading ? null : this.props.flags.cmr ? (
-          <MainContent_CMR
-            accountCapabilities={accountCapabilities}
-            accountError={accountError}
-            accountLoading={accountLoading}
-            history={this.props.history}
-            location={this.props.location}
-            toggleSpacing={toggleSpacing}
-            toggleTheme={toggleTheme}
-            appIsLoading={this.props.appIsLoading}
-            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-            username={username}
-          />
-        ) : (
+        {this.props.featureFlagsLoading ? null : (
           <MainContent
             accountCapabilities={accountCapabilities}
             accountError={accountError}

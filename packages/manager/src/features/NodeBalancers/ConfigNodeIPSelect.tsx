@@ -25,6 +25,7 @@ interface Props {
   selectedRegion?: string;
   handleChange: (nodeIndex: number, ipAddress: string) => void;
   nodeIndex: number;
+  disabled?: boolean;
   inputId?: string;
   errorText?: string;
   nodeAddress?: string;
@@ -70,6 +71,7 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
       generalError={props.errorText}
       handleChange={handleChange}
       label="IP Address"
+      disabled={props.disabled}
       small
       placeholder="Enter IP Address"
       valueOverride={linode => {

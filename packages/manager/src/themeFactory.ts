@@ -81,59 +81,38 @@ const cmrBGColors = {
   bgApp: '#f4f5f6',
   bgPrimaryNav: '#3a3f46',
   bgPrimaryNavActive: '#515861',
-  bgSecondaryActions: '#ffffff',
-  bgSearchBar: '#f7f7f8',
   bgPaper: '#ffffff',
   bgPrimaryButton: '#3683dc',
   // notification center, add a tag, breadcrumb
   bgSecondaryButton: '#e5f1ff',
   bgTableHeader: '#f9fafa',
-  bgTableBody: '#ffffff',
-  bgStatusChip: '#f7f7f8',
   bgBillingSummary: '#f5f9ff',
-  bgBreadcrumbParent: '#f5faff',
   bgAccessRow: '#fafafa',
-  bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
-  bgAccessHeader: '#f5f5f5'
+  bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)'
 };
 
 const cmrTextColors = {
-  textAction: '#3683dc',
-  textBillingSummary: '#32363c',
-  textTab: '#3683dc',
-  textTabActive: '#32363c',
-  textStatusChip: '#5d646f',
-  linkActiveMedium: '#2575d0',
   linkActiveLight: '#2575d0',
   headlineStatic: '#32363c',
-  headlineActive: '#32363c',
-  tableStatic: '#55595d',
-  textTagButton: '#3683dc',
-  textAccessTable: '#606469',
-  textAccessCode: '#606469',
-  textBreadcrumbParent: '#3683dc'
+  tableStatic: '#606469',
+  textAccessTable: '#606469'
 };
 
 const cmrBorderColors = {
-  borderNotificationCenter: '#cce4ff',
   borderTypography: '#e3e5e8',
   borderTabs: '#e3e5e8',
-  borderTabActive: '#3683dc',
   borderBillingSummary: '#cce2ff',
   borderBalance: '#c2daff',
   borderTable: '#f4f5f6'
 };
 
 const cmrIconColors = {
-  iStatic: '#5d646f',
-  iActiveMedium: '#2575d0',
   iActiveLight: '#3683dc',
   iGreen: '#17cf73',
   iOrange: '#ffb31a',
   iRed: '#cf1e1e',
   // Offline status
-  iGrey: '#dbdde1',
-  iCheckmark: '#444'
+  iGrey: '#dbdde1'
 };
 
 const primaryColors = {
@@ -182,12 +161,13 @@ const iconCircleHoverEffect = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   background: 'none',
-  color: primaryColors.main,
+  color: cmrTextColors.linkActiveLight,
   border: 'none',
-  padding: 0,
   font: 'inherit',
+  padding: 0,
   cursor: 'pointer',
   '&:hover': {
+    color: primaryColors.main,
     textDecoration: 'underline'
   }
 };
@@ -195,7 +175,7 @@ const genericLinkStyle = {
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
-  color: cmrTextColors.textStatusChip,
+  color: cmrTextColors.tableStatic,
   fontFamily: primaryFonts.bold,
   fontSize: '1rem',
   padding: 0,
@@ -294,7 +274,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       tableHeader: '#fbfbfb',
       primaryNavActive: '#f4f4f4',
       primaryNavActiveBG: '#515861',
-      primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#3a3f46',
       mainContentBanner: '#33373D',
       topMenu: '#fff',
@@ -308,7 +287,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       green: '#00b159',
       orange: '#ffb31a',
       yellow: '#fecf2f',
-      border1: '#abadaf',
       border2: '#c5c6c8',
       border3: '#eee',
       borderPagination: '#ccc',
@@ -318,8 +296,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey4: '#8C929D',
       grey5: '#f5f5f5',
       grey6: '#e3e5e8',
-      grey7: '#fafafa',
-      grey8: '#828a97',
       grey9: '#f4f5f6',
       grey10: '#dbdde1',
       white: '#fff',
@@ -537,7 +513,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           lineHeight: 1,
           fontFamily:
             spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
-          // // backgroundColor: primaryColors.main,
+          // backgroundColor: primaryColors.main,
           // color: '#fff',
           // padding: `2px 20px`,
           // maxHeight: 34,
@@ -573,7 +549,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         // },
         containedPrimary: {
           backgroundColor: primaryColors.main,
-          borderRadius: '3px',
+          borderRadius: 1,
           color: '#fff',
           padding: `2px 20px`,
           maxHeight: 34,
@@ -599,11 +575,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         containedSecondary: {
           backgroundColor: 'transparent',
-          color: cmrTextColors.linkActiveMedium,
+          color: cmrTextColors.linkActiveLight,
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
-            borderColor: primaryColors.light,
-            color: primaryColors.light
+            borderColor: primaryColors.main,
+            color: primaryColors.main
           },
           '&:active': {
             backgroundColor: 'transparent',
@@ -896,7 +872,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           fontFamily:
             spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
           fontSize: '.9rem',
-          marginBottom: 2,
+          marginBottom: 8,
           '&$focused': {
             color: '#555'
           },
@@ -922,9 +898,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiIconButton: {
         root: {
           padding: spacingUnit + spacingUnit / 2,
-          color: primaryColors.main,
+          color: cmrTextColors.linkActiveLight,
           '&:hover': {
-            color: primaryColors.light,
+            color: primaryColors.main,
             backgroundColor: 'transparent'
           }
         },
@@ -934,6 +910,15 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       },
       MuiInput: {
         root: {
+          alignItems: 'center',
+          backgroundColor: '#fff',
+          border: '1px solid #ccc',
+          boxSizing: 'border-box',
+          color: primaryColors.text,
+          lineHeight: 1,
+          maxWidth: 415,
+          minHeight: 34,
+          transition: 'border-color 225ms ease-in-out',
           '&$disabled': {
             borderColor: '#ccc',
             color: '#ccc',
@@ -949,15 +934,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           '&$error': {
             borderColor: '#ca0813'
           },
-          maxWidth: 415,
-          border: '1px solid #ccc',
-          alignItems: 'center',
-          transition: 'border-color 225ms ease-in-out',
-          lineHeight: 1,
-          minHeight: spacingUnit * 6,
-          color: primaryColors.text,
-          boxSizing: 'border-box',
-          backgroundColor: '#fff',
           [breakpoints.down('xs')]: {
             maxWidth: '100%',
             width: '100%'
@@ -983,10 +959,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         error: {},
         disabled: {},
         input: {
-          padding: `${spacingUnit * 2 - spacingUnit / 2}px ${spacingUnit * 2 -
-            spacingUnit / 2}px ${spacingUnit * 2 - spacingUnit / 2 + 1}px`,
+          boxSizing: 'border-box',
           fontSize: '.9rem',
-          boxSizing: 'border-box'
+          padding: 8
         },
         formControl: {
           'label + &': {
@@ -1242,7 +1217,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
               }
             }
           },
-
           '& $disabled': {
             '&$switchBase': {
               '& + $track': {
@@ -1255,31 +1229,18 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             }
           },
           '& .icon': {
-            transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+            borderRadius: 1,
+            height: 16,
+            width: 16,
             position: 'relative',
             left: 0,
-            width: 16,
-            height: 16,
-            borderRadius: 0
+            transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
           },
           '& .square': {
+            fill: 'white',
             transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
           },
           '&:hover, &:focus': {
-            '& $disabled': {
-              '&$switchBase': {
-                '& + $track': {
-                  backgroundColor: '#ddd',
-                  borderColor: '#ccc'
-                }
-              }
-            },
-            '& $track, & + $track': {
-              borderColor: '#606469'
-            },
-            '& .square': {
-              fill: '#aaa'
-            },
             '& $checked': {
               '& .square': {
                 fill: '#eee'
@@ -1297,12 +1258,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           left: 12,
           marginLeft: 0,
           marginTop: 0,
-          width: 42,
-          height: 22,
-          borderRadius: 0,
-          backgroundColor: '#f4f4f4',
-          border: '1px solid #999',
+          backgroundColor: '#C8CACB',
+          borderRadius: 1,
           boxSizing: 'content-box',
+          height: 24,
+          width: 44,
           transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
         },
         switchBase: {

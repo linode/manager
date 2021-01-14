@@ -1,10 +1,10 @@
-import * as classnames from 'classnames';
 import {
   getActiveLongviewPlan,
-  updateActiveLongviewPlan,
-  LongviewSubscription
+  LongviewSubscription,
+  updateActiveLongviewPlan
 } from '@linode/api-v4/lib/longview';
 import { APIError } from '@linode/api-v4/lib/types';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -127,6 +127,14 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     disabledTableRow: {
       cursor: 'not-allowed !important'
+    },
+    link: {
+      '& a': {
+        color: theme.cmrTextColors.linkActiveLight
+      },
+      '& a:hover': {
+        color: theme.palette.primary.main
+      }
     }
   };
 });
@@ -163,6 +171,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
     mayUserModifyLVSubscription
   } = props;
   const styles = useStyles();
+  const mounted = React.useRef<boolean>(false);
 
   const [currentSubscription, setCurrentSubscription] = React.useState<
     string | undefined
@@ -176,13 +185,27 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
   const [updateSuccessMsg, setUpdateSuccessMsg] = React.useState<string>('');
 
   React.useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  React.useEffect(() => {
     getActiveLongviewPlan()
       .then((plan: LongviewSubscription) => {
+        if (!mounted.current) {
+          return;
+        }
         const activeID = plan.id ?? LONGVIEW_FREE_ID;
         setCurrentSubscription(activeID);
         setSelectedSub(activeID);
       })
       .catch(_ => {
+        if (!mounted.current) {
+          return;
+        }
+
         setUpdateErrorMsg('Error loading your current Longview plan');
       });
   }, []);
@@ -251,7 +274,11 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
           />
         )}
         {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}
-        {isManaged && <Notice success text={managedText} />}
+        {isManaged && (
+          <Notice className={styles.link} success>
+            {managedText}
+          </Notice>
+        )}
         {!isManaged && (
           <>
             <Table className={styles.table}>

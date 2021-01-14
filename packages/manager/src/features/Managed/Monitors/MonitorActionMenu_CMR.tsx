@@ -1,12 +1,13 @@
 import { MonitorStatus } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { splitAt } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import withManagedServices, {
   DispatchProps
@@ -45,7 +46,7 @@ const MonitorActionMenu: React.FC<CombinedProps> = props => {
     enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
   };
 
-  const inlineActions: Action[] = [
+  const actions: Action[] = [
     {
       title: 'View Issue History',
       onClick: () => {
@@ -57,10 +58,7 @@ const MonitorActionMenu: React.FC<CombinedProps> = props => {
       onClick: () => {
         openMonitorDrawer(monitorID, 'edit');
       }
-    }
-  ];
-
-  const actions: Action[] = [
+    },
     status === 'disabled'
       ? {
           title: 'Enable',
@@ -98,22 +96,8 @@ const MonitorActionMenu: React.FC<CombinedProps> = props => {
     }
   ];
 
-  if (matchesSmDown) {
-    actions.unshift(
-      {
-        title: 'View Issue History',
-        onClick: () => {
-          openHistoryDrawer(monitorID, label);
-        }
-      },
-      {
-        title: 'Edit',
-        onClick: () => {
-          openMonitorDrawer(monitorID, 'edit');
-        }
-      }
-    );
-  }
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
     <>
@@ -128,7 +112,7 @@ const MonitorActionMenu: React.FC<CombinedProps> = props => {
           );
         })}
       <ActionMenu
-        createActions={() => actions}
+        actionsList={menuActions}
         ariaLabel={`Action menu for Monitor ${props.label}`}
       />
     </>

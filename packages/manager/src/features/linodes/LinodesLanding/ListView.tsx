@@ -7,12 +7,10 @@ import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import useFlags from 'src/hooks/useFlags';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import formatDate from 'src/utilities/formatDate';
-import LinodeRow from './LinodeRow/LinodeRow';
-import LinodeRow_CMR from './LinodeRow/LinodeRow_CMR';
+import LinodeRow from './LinodeRow';
 
 interface Props {
   data: LinodeWithMaintenanceAndDisplayStatus[];
@@ -40,7 +38,6 @@ export const ListView: React.FC<CombinedProps> = props => {
   });
 
   const { updateLinode } = useLinodeActions();
-  const flags = useFlags();
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -75,13 +72,6 @@ export const ListView: React.FC<CombinedProps> = props => {
     });
   };
 
-  // @todo delete after CMR
-  const openDeleteDialog = (linodeID: number, linodeLabel: string) => {
-    props.openDialog('delete', linodeID, linodeLabel);
-  };
-
-  const Row = flags.cmr ? LinodeRow_CMR : LinodeRow;
-
   // This won't happen in the normal Linodes Landing context (a custom empty
   // state is shown higher up in the tree). This is specifically for the case of
   // VLAN Details, where we want to show the table even if there's nothing attached.
@@ -94,7 +84,7 @@ export const ListView: React.FC<CombinedProps> = props => {
     <>
       {/* @todo: fix this "any" typing once https://github.com/linode/manager/pull/6999 is merged. */}
       {data.map((linode: any, idx: number) => (
-        <Row
+        <LinodeRow
           backups={linode.backups}
           id={linode.id}
           ipv4={linode.ipv4}
@@ -118,8 +108,6 @@ export const ListView: React.FC<CombinedProps> = props => {
           openTagDrawer={openTagDrawer}
           openDialog={openDialog}
           openNotificationDrawer={notificationContext.openDrawer}
-          // @todo delete after CMR
-          openDeleteDialog={openDeleteDialog}
           openPowerActionDialog={openPowerActionDialog}
           isVLAN={props.isVLAN}
         />

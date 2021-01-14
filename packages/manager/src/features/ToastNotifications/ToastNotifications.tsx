@@ -151,6 +151,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               `Error creating Longview Client ${label}.`
             );
           default:
+            // eslint-disable-next-line array-callback-return
             return;
         }
       })

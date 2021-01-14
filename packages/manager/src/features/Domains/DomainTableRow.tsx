@@ -1,142 +1,136 @@
 import { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+import Hidden from 'src/components/core/Hidden';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import EntityIcon from 'src/components/EntityIcon';
-import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import StatusIcon from 'src/components/StatusIcon';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import ActionMenu, { Handlers } from './DomainActionMenu';
 import { getDomainDisplayType } from './domainUtils';
 
-type ClassNames =
-  | 'domain'
-  | 'labelStatusWrapper'
-  | 'domainRow'
-  | 'domainCellContainer';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    domain: {
-      width: '60%'
-    },
-    domainRow: {
-      backgroundColor: theme.bg.white
-    },
-    domainCellContainer: {
-      [theme.breakpoints.down('sm')]: {
-        textAlign: 'left'
-      }
-    },
-    labelStatusWrapper: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center',
-      wordBreak: 'break-all'
+const useStyles = makeStyles((theme: Theme) => ({
+  link: {
+    display: 'block',
+    fontFamily: theme.font.bold,
+    lineHeight: '1.125rem',
+    color: theme.cmrTextColors.linkActiveLight,
+    '&:hover, &:focus': {
+      color: theme.palette.primary.main,
+      textDecoration: 'underline'
     }
-  });
-
-type CombinedProps = Domain & Handlers & WithStyles<ClassNames>;
-
-class DomainTableRow extends React.Component<CombinedProps> {
-  handleRowClick = (
-    e:
-      | React.ChangeEvent<HTMLTableRowElement>
-      | React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    id: number,
-    domain: string,
-    type: string
-  ) => {
-    if (type === 'slave') {
-      e.preventDefault();
-      this.props.onEdit(domain, id);
+  },
+  button: {
+    ...theme.applyLinkStyles,
+    display: 'block',
+    fontFamily: theme.font.bold,
+    color: theme.cmrTextColors.linkActiveLight,
+    lineHeight: '1.125rem',
+    '&:hover, &:focus': {
+      color: theme.palette.primary.main,
+      textDecoration: 'underline'
     }
-  };
+  },
+  domain: {
+    width: '60%'
+  },
+  domainRow: {
+    backgroundColor: theme.bg.white
+  },
+  domainCellContainer: {
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'left'
+    }
+  },
+  labelStatusWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    whiteSpace: 'nowrap'
+  },
+  statusCell: {
+    whiteSpace: 'nowrap'
+  },
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0,
+    /*
+    Explicitly stating this as the theme file is automatically adding padding to the last cell
+    We can remove once we make the full switch to CMR styling
+    */
+    paddingRight: '0 !important'
+  }
+}));
 
-  render() {
-    const {
-      classes,
-      domain,
-      id,
-      type,
-      status,
-      updated,
-      onClone,
-      onRemove,
-      onEdit
-    } = this.props;
+type CombinedProps = Domain & Handlers;
 
-    return (
-      <TableRow
-        key={id}
-        data-qa-domain-cell={domain}
-        className={`${classes.domainRow} ${'fade-in-table'}`}
-        ariaLabel={`Domain ${domain}`}
-        rowLink={
-          type === 'slave'
-            ? e => this.handleRowClick(e, id, domain, type)
-            : `/domains/${id}`
-        }
-      >
-        <TableCell parentColumn="Domain" data-qa-domain-label>
-          <Grid container wrap="nowrap" alignItems="center">
-            <Grid item className="py0">
-              <EntityIcon
-                variant="domain"
-                status={status}
-                marginTop={1}
-                loading={status === 'edit_mode'}
-              />
-            </Grid>
-            <Grid item className={classes.domainCellContainer}>
-              <div className={classes.labelStatusWrapper}>
-                {type !== 'slave' ? (
-                  <Link to={`/domains/${id}`} tabIndex={0}>
-                    <Typography variant="h3" data-qa-label>
-                      {domain}
-                    </Typography>
-                  </Link>
-                ) : (
-                  <Typography variant="h3" data-qa-label>
-                    {domain}
-                  </Typography>
-                )}
-              </div>
-            </Grid>
-          </Grid>
-        </TableCell>
-        <TableCell parentColumn="Type" data-qa-domain-type>
-          {getDomainDisplayType(type)}
-        </TableCell>
-        <TableCell parentColumn="Status" data-qa-domain-status>
-          {humanizeDomainStatus(status)}
-        </TableCell>
-        <TableCell parentColumn="Last Modified" data-qa-domain-lastmodified>
+const DomainTableRow: React.FC<CombinedProps> = props => {
+  const {
+    domain,
+    id,
+    type,
+    status,
+    onDisableOrEnable,
+    updated,
+    onClone,
+    onRemove,
+    onEdit
+  } = props;
+
+  const classes = useStyles();
+
+  return (
+    <TableRow
+      key={id}
+      data-qa-domain-cell={domain}
+      className={`${classes.domainRow} ${'fade-in-table'}`}
+      ariaLabel={`Domain ${domain}`}
+    >
+      <TableCell data-qa-domain-label>
+        <div className={classes.labelStatusWrapper}>
+          {type !== 'slave' ? (
+            <Link to={`/domains/${id}`} tabIndex={0} className={classes.link}>
+              {domain}
+            </Link>
+          ) : (
+            <button
+              className={classes.button}
+              onClick={() => props.onEdit(domain, id)}
+            >
+              {domain}
+            </button>
+          )}
+        </div>
+      </TableCell>
+      <TableCell className={classes.statusCell} data-qa-domain-status>
+        <StatusIcon status={domainStatusToIconStatus(status)} />
+        {humanizeDomainStatus(status)}
+      </TableCell>
+      <Hidden xsDown>
+        <TableCell data-qa-domain-type>{getDomainDisplayType(type)}</TableCell>
+        <TableCell data-qa-domain-lastmodified>
           <DateTimeDisplay value={updated} />
         </TableCell>
-        <TableCell>
-          <ActionMenu
-            domain={domain}
-            onDisableOrEnable={this.props.onDisableOrEnable}
-            id={id}
-            type={type}
-            onRemove={onRemove}
-            onClone={onClone}
-            status={status}
-            onEdit={onEdit}
-          />
-        </TableCell>
-      </TableRow>
-    );
-  }
-}
+      </Hidden>
+
+      <TableCell className={classes.actionCell}>
+        <ActionMenu
+          domain={domain}
+          onDisableOrEnable={onDisableOrEnable}
+          id={id}
+          type={type}
+          onRemove={onRemove}
+          onClone={onClone}
+          status={status}
+          onEdit={onEdit}
+        />
+      </TableCell>
+    </TableRow>
+  );
+};
 
 const humanizeDomainStatus = (status: DomainStatus) => {
   switch (status) {
@@ -153,6 +147,19 @@ const humanizeDomainStatus = (status: DomainStatus) => {
   }
 };
 
-const styled = withStyles(styles);
+const domainStatusToIconStatus = (status: DomainStatus) => {
+  switch (status) {
+    case 'active':
+      return 'active';
+    case 'disabled':
+      return 'inactive';
+    case 'edit_mode':
+      return 'inactive';
+    case 'has_errors':
+      return 'error';
+    default:
+      return 'inactive';
+  }
+};
 
-export default styled(DomainTableRow);
+export default React.memo(DomainTableRow);

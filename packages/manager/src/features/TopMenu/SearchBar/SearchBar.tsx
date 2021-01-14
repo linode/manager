@@ -10,18 +10,18 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
-import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
+import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { ReduxEntity, useReduxLoad } from 'src/hooks/useReduxLoad';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';
+import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
 
 type CombinedProps = WithTypesProps &
   WithImages &
@@ -63,6 +63,15 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
 
+const searchDeps: ReduxEntity[] = [
+  'linodes',
+  'nodeBalancers',
+  'images',
+  'domains',
+  'volumes',
+  'kubernetes'
+];
+
 export const SearchBar: React.FC<CombinedProps> = props => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
@@ -70,14 +79,17 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
 
-  const { searchAPI } = useAPISearch();
+  const [apiResults, setAPIResults] = React.useState<any[]>([]);
+  const [apiError, setAPIError] = React.useState<string | null>(null);
+  const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
+
   const { _isLargeAccount } = useAccountManagement();
 
   // Only request things if the search bar is open/active.
   const shouldMakeRequests = searchActive && !_isLargeAccount;
 
   const { _loading } = useReduxLoad(
-    ['linodes', 'nodeBalancers', 'images', 'domains', 'volumes', 'kubernetes'],
+    searchDeps,
     REFRESH_INTERVAL,
     shouldMakeRequests
   );
@@ -86,9 +98,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     shouldMakeRequests
   );
 
-  const [apiResults, setAPIResults] = React.useState<any[]>([]);
-  const [apiError, setAPIError] = React.useState<string | null>(null);
-  const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
+  const { searchAPI } = useAPISearch();
 
   const _searchAPI = React.useRef(
     debounce(500, false, (_searchText: string) => {
@@ -128,7 +138,6 @@ export const SearchBar: React.FC<CombinedProps> = props => {
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
-    props.search(_searchText);
   };
 
   const toggleSearch = () => {
@@ -246,7 +255,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
           placeholder={
             searchActive
               ? 'Search'
-              : 'Search for Linodes, Volumes, NodeBalancers, Domains, Tags...'
+              : 'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
           }
           components={{ Control, Option }}
           styles={selectStyles}

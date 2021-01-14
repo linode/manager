@@ -12,8 +12,6 @@ describe('Support Tickets Landing', () => {
       globalErrors={{}}
       setErrors={jest.fn()}
       clearErrors={jest.fn()}
-      flags={{}}
-      ldClient={{} as any}
       classes={{
         title: '',
         openTicketButton: '',

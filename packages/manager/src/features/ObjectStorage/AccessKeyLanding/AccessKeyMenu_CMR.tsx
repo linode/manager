@@ -84,7 +84,7 @@ const AccessKeyMenu: React.FC<CombinedProps> = props => {
       </Hidden>
       <Hidden mdUp>
         <ActionMenu
-          createActions={() => actions}
+          actionsList={actions}
           ariaLabel={`Action menu for Object Storage Key ${props.label}`}
         />
       </Hidden>

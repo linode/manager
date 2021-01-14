@@ -26,7 +26,7 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 
-type ClassNames = 'root' | 'inner' | 'deleteRoot' | 'topMargin';
+type ClassNames = 'root' | 'inner' | 'deleteRoot' | 'title' | 'topMargin';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -45,6 +45,12 @@ const styles = (theme: Theme) =>
     },
     inner: {
       padding: theme.spacing(3)
+    },
+    title: {
+      paddingTop: theme.spacing(),
+      [theme.breakpoints.down('sm')]: {
+        paddingLeft: theme.spacing()
+      }
     },
     topMargin: {
       marginTop: theme.spacing(2)
@@ -129,7 +135,11 @@ class UserProfile extends React.Component<CombinedProps> {
 
     return (
       <div>
-        <Typography variant="h2" data-qa-profile-header>
+        <Typography
+          className={classes.title}
+          variant="h2"
+          data-qa-profile-header
+        >
           User Profile
         </Typography>
         <Paper className={classes.root}>

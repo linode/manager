@@ -77,6 +77,26 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/cpanel_color.svg'
   },
   {
+    name: 'Cloudron',
+    description: `Turnkey solution for running apps like WordPress, Rocket.Chat, NextCloud, GitLab, and OpenVPN.`,
+    summary:
+      'End-to-end deployment and automatic updates for a range of essential applications.',
+    related_guides: [
+      {
+        title: 'Deploy Cloudron with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/how-to-deploy-cloudron-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://docs.cloudron.io',
+        href: 'https://docs.cloudron.io'
+      }
+    ],
+    logo_url: 'assets/cloudron_color.svg'
+  },
+  {
     name: 'CS:GO',
     description: `In CS:GO there are two teams: Terrorists and Counter-Terrorists.
     The teams compete against each other to complete objectives or to eliminate the opposing team.
@@ -97,6 +117,26 @@ export const oneClickApps: OCA[] = [
       }
     ],
     logo_url: 'assets/csgo_color.svg'
+  },
+  {
+    name: 'Discourse',
+    description: `Launch a sleek forum with robust integrations to popular tools like Slack and WordPress to start more conversations.`,
+    summary:
+      'Open source community and discussion forum for customers, teams, fans, and more',
+    related_guides: [
+      {
+        title: 'Deploy Discourse with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/how-to-deploy-discourse-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.discourse.org/',
+        href: 'https://www.discourse.org/'
+      }
+    ],
+    logo_url: 'assets/discourse_color.svg'
   },
   {
     name: 'Django',
@@ -170,6 +210,25 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/docker_color.svg'
   },
   {
+    name: 'Gitea',
+    description: `Self-hosted Git service built and maintained by a large developer community.`,
+    summary: 'Git with a cup of tea - A painless self-hosted Git service',
+    related_guides: [
+      {
+        title: 'Deploy Gitea with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/how-to-deploy-gitea-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://gitea.io/',
+        href: 'https://gitea.io/'
+      }
+    ],
+    logo_url: 'assets/gitea_color.svg'
+  },
+  {
     name: 'GitLab',
     description: `GitLab is a complete solution for all aspects of your software development.
       At its core, GitLab serves as your centralized Git repository. GitLab also
@@ -234,6 +293,44 @@ export const oneClickApps: OCA[] = [
       }
     ],
     logo_url: 'assets/drupal_color.svg'
+  },
+  {
+    name: 'FileCloud',
+    description: `File synchronization across multiple users’ computers and other devices to keep everyone working without interruption.`,
+    summary: 'Enterprise file sharing to manage and sync from any device',
+    related_guides: [
+      {
+        title: 'Deploy Filecloud with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/how-to-deploy-filecloud-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.getfilecloud.com',
+        href: 'https://www.getfilecloud.com'
+      }
+    ],
+    logo_url: 'assets/filecloud_color.svg'
+  },
+  {
+    name: 'Guacamole',
+    description: `Access your desktop from any device with a browser to keep your desktop hosted in the cloud.`,
+    summary: 'Free open source clientless remote desktop gateway',
+    related_guides: [
+      {
+        title: 'Deploy Guacamole with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/how-to-deploy-guacamole-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://guacamole.apache.org/',
+        href: 'https://guacamole.apache.org/'
+      }
+    ],
+    logo_url: 'assets/guacamole_color.svg'
   },
   {
     name: 'Grafana',
@@ -373,6 +470,26 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/lemp_color.svg'
   },
   {
+    name: 'Mist.io',
+    description: `Streamline infrastructure management in one UI or by using the Mist.io RESTful API.`,
+    summary:
+      'Open source, unified interface and management platform for multi-cloud deployments',
+    related_guides: [
+      {
+        title: 'Deploy Mist.io with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/how-to-deploy-mistio-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://mist.io/',
+        href: 'https://mist.io/'
+      }
+    ],
+    logo_url: 'assets/mistio_color.svg'
+  },
+  {
     name: 'MySQL/MariaDB',
     description: `MySQL, or MariaDB for Linux distributions, is primarily used for web and server applications, including as a component of the industry-standard LAMP and LEMP stacks.`,
     summary: `World's most popular open source database.`,
@@ -414,6 +531,25 @@ export const oneClickApps: OCA[] = [
       }
     ],
     logo_url: 'assets/nextcloud_color.svg'
+  },
+  {
+    name: 'OpenLiteSpeed WordPress',
+    description: `Accelerated and scalable hosting for WordPress. Includes OpenLiteSpeed, PHP, MySQL Server, WordPress, and LiteSpeed Cache.`,
+    summary: 'Blazing fast, open source alternative to LiteSpeed Web Server',
+    related_guides: [
+      {
+        title: 'Deploy OpenLiteSpeed WordPress with Marketplace Apps',
+        href:
+          'https://linode.com/docs/guides/how-to-deploy-openlitespeedwordpress-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://openlitespeed.org/',
+        href: 'https://openlitespeed.org/'
+      }
+    ],
+    logo_url: 'assets/openlitespeedwordpress_color.svg'
   },
   {
     name: 'Plesk',
@@ -467,6 +603,25 @@ export const oneClickApps: OCA[] = [
       }
     ],
     logo_url: 'assets/percona_color.svg'
+  },
+  {
+    name: 'RabbitMQ',
+    description: `Connect and scale applications with asynchronous messaging and highly available work queues, all controlled through an intuitive management UI.`,
+    summary: 'Most popular open source message broker',
+    related_guides: [
+      {
+        title: 'Deploy RabbitMQ with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/how-to-deploy-rabbitmq-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.rabbitmq.com/',
+        href: 'https://www.rabbitmq.com/'
+      }
+    ],
+    logo_url: 'assets/rabbitmq_color.svg'
   },
   {
     name: 'Redis',
@@ -815,6 +970,25 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/virtualmin_color.svg'
   },
   {
+    name: 'VS Code Server',
+    description: `Launch a portable development environment to speed up tests, downloads, and more.`,
+    summary: 'Run VS code in the cloud, right from your browser',
+    related_guides: [
+      {
+        title: 'Deploy VS Code Server with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/how-to-deploy-vscodeserver-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://github.com/cdr/code-server',
+        href: 'https://github.com/cdr/code-server'
+      }
+    ],
+    logo_url: 'assets/vscodeserver_color.svg'
+  },
+  {
     name: 'Webmin',
     description: `Web interface for Unix to optimize system management, both from the console and remotely.`,
     summary: 'Unix management in your browser',
@@ -832,6 +1006,26 @@ export const oneClickApps: OCA[] = [
       }
     ],
     logo_url: 'assets/webmin_color.svg'
+  },
+  {
+    name: 'Webuzo',
+    description: `Lightweight control panel with a suite of features to streamline app management.`,
+    summary:
+      'LAMP stack and single user control panel to simplify app deployment in the cloud',
+    related_guides: [
+      {
+        title: 'Deploy Webuzo with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/how-to-deploy-webuzo-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'http://www.webuzo.com/',
+        href: 'http://www.webuzo.com/'
+      }
+    ],
+    logo_url: 'assets/webuzo_color.svg'
   },
   {
     name: 'WireGuard',

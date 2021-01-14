@@ -1,9 +1,9 @@
 import { apiCheckErrors, deleteById, getAll, isTestEntity } from './common';
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
-const apiroot = Cypress.env('REACT_APP_API_ROOT');
+const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
 
-export const getAccessKeys = () => getAll('/object-storage/keys');
-export const getBuckets = () => getAll('/object-storage/buckets');
+export const getAccessKeys = () => getAll('object-storage/keys');
+export const getBuckets = () => getAll('object-storage/buckets');
 
 const makeBucketCreateReq = (
   label: string,
@@ -17,7 +17,7 @@ const makeBucketCreateReq = (
 
   return cy.request({
     method: 'POST',
-    url: apiroot + '/object-storage/buckets',
+    url: apiroot + 'object-storage/buckets',
     body: bucketData,
     auth: {
       bearer: oauthtoken
@@ -40,7 +40,7 @@ export const createBucket = (
 export const deleteBucketByLabel = (cluster, bucket) => {
   return cy.request({
     method: 'DELETE',
-    url: `${apiroot}/object-storage/buckets/${cluster}/${bucket}`,
+    url: `${apiroot}object-storage/buckets/${cluster}/${bucket}`,
     auth: {
       bearer: oauthtoken
     }

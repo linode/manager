@@ -31,6 +31,8 @@ const addEntities = () => {
   );
 };
 
+const createDomainParams = { domain: 'my-domain', type: 'master' as any };
+
 describe('Domains Redux store', () => {
   describe('Reducer', () => {
     it('should handle a getPage.started request', () => {
@@ -119,7 +121,7 @@ describe('Domains Redux store', () => {
     it('should handle a createDomain.started action', () => {
       const newState = reducer(
         { ...defaultState, error: { create: mockError } },
-        actions.createDomainActions.started({})
+        actions.createDomainActions.started(createDomainParams)
       );
       expect(newState).toEqual(defaultState);
     });
@@ -130,7 +132,7 @@ describe('Domains Redux store', () => {
         defaultState,
         actions.createDomainActions.done({
           result: newDomain,
-          params: {}
+          params: createDomainParams
         })
       );
       expect(newState.itemsById).toHaveProperty(
@@ -145,7 +147,7 @@ describe('Domains Redux store', () => {
         defaultState,
         actions.createDomainActions.failed({
           error: mockError,
-          params: {}
+          params: createDomainParams
         })
       );
       expect(newState.error.create).toEqual(mockError);

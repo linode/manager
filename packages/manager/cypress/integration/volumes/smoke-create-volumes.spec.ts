@@ -3,74 +3,76 @@ import {
   makeVolumeLabel,
   deleteAllTestVolumes,
   clickVolumeActionMenu,
-  createVolume
+  createVolume,
+  deleteVolumeById
 } from '../../support/api/volumes';
 import { assertToast } from '../../support/ui/events';
-import { createLinode, deleteAllTestLinodes } from '../../support/api/linodes';
+import {
+  createLinode,
+  deleteAllTestLinodes,
+  deleteLinodeById
+} from '../../support/api/linodes';
 import { selectRegionString } from '../../support/ui/constants';
+import {
+  containsClick,
+  containsVisible,
+  fbtClick,
+  fbtVisible,
+  getClick,
+  getVisible
+} from '../../support/helpers';
 
 const urlExtension = '/volumes/create';
 const tag = 'cy-test';
 const region = 'Newark, NJ';
 const clickCreate = () => {
-  cy.get('[data-qa-deploy-linode]').click();
+  getClick('[data-qa-deploy-linode]');
 };
 const getVolumeLabelInput = () => {
   return cy.findAllByLabelText('Label (required)');
 };
 const clickDetach = () => {
-  cy.get('[data-qa-action-menu-item="Detach"]:visible').click();
+  getClick('[data-qa-action-menu-item="Detach"]:visible');
 };
 
 const createBasicVolume = (linodeLabel?: string) => {
   const volLabel = makeVolumeLabel();
-  cy.server();
-  cy.route({
-    method: 'POST',
-    url: '*/volumes'
-  }).as('volumeCreated');
+  // catch create volume post
+  cy.intercept('POST', '*/volumes').as('volumeCreated');
   cy.visitWithLogin(urlExtension);
   cy.findByText('volumes');
   clickCreate();
-  cy.findByText('Label is required.').should('be.visible');
+  fbtVisible('Label is required.');
   getVolumeLabelInput().type(volLabel);
   /* validating that volume won't create without region.
        region not necessary if attaching linode */
   clickCreate();
-  cy.findByText('Must provide a region or a Linode ID.').should('be.visible');
+  fbtVisible('Must provide a region or a Linode ID.');
   if (linodeLabel) {
-    cy.findByText('Select a Linode')
-      .click()
-      .type(`${linodeLabel} {enter}`);
+    fbtClick('Select a Linode').type(`${linodeLabel} {enter}`);
     cy.findByText('My Debian 10 Disk Profile');
   } else {
-    cy.findByText(selectRegionString)
-      .click()
-      .type('new {enter}');
+    fbtClick(selectRegionString).type('new {enter}');
   }
-  cy.findByText('Type to choose or create a tag.')
-    .click()
-    .type(`${tag} {enter}`);
+  fbtClick('Type to choose or create a tag.').type(`${tag} {enter}`);
   clickCreate();
   return cy.wait('@volumeCreated').then(xhr => {
-    expect(xhr.status).to.equal(200);
-    return { label: volLabel, id: xhr.responseBody['id'] };
+    expect(xhr.response?.statusCode).to.equal(200);
+    return { label: volLabel, id: xhr.response?.body['id'] };
   });
 };
 
 const validateBasicVolume = (volLabel: string, volId: string) => {
-  cy.findByText('Volume Configuration').should('be.visible');
+  containsVisible('Volume Configuration');
   cy.findByDisplayValue(`mkdir "/mnt/${volLabel}"`);
-  cy.contains('Close')
-    .should('be.visible')
-    .click();
-  assertToast(`Volume ${volLabel} successfully created.`);
-  cy.findByText(volLabel).should('be.visible');
+  containsClick('Close');
+  // assertToast(`Volume ${volLabel} successfully created.`);
+  fbtVisible(volLabel);
   cy.get(`[data-qa-volume-cell="${volId}"]`).within(() => {
-    cy.findByText(region).should('be.visible');
+    fbtVisible(region);
   });
   cy.get(`[data-qa-volume-cell="${volId}"]`).within(() => {
-    cy.findByText('Unattached').should('be.visible');
+    fbtVisible('Unattached');
   });
 };
 
@@ -79,7 +81,7 @@ describe('volumes', () => {
     createBasicVolume().then(({ label, id }) => {
       validateBasicVolume(label, id);
       clickVolumeActionMenu(label);
-      cy.get('[data-qa-action-menu-item="Delete"]').should('be.visible');
+      getVisible('[data-qa-action-menu-item="Delete"]');
       deleteAllTestLinodes();
       deleteAllTestVolumes();
     });
@@ -91,24 +93,27 @@ describe('volumes', () => {
       const linodeId = linode.id;
       const linodeLabel = linode.label;
       createVolume(linodeId).then(volume => {
-        cy.server();
-        cy.route({
-          method: 'POST',
-          url: '*/volumes/' + volume.id + '/detach'
-        }).as('volumeDetached');
+        const volumeId = volume.id;
+        // catch detach volume post
+        cy.intercept('POST', '*/volumes/' + volume.id + '/detach').as(
+          'volumeDetached'
+        );
         const volumeLabel = volume.label;
-        cy.findByText(linodeLabel).should('be.visible');
-        cy.findByText(volumeLabel).should('be.visible');
+        cy.reload();
+        containsVisible(linodeLabel);
+        containsVisible(volumeLabel);
         clickVolumeActionMenu(volume.label);
         clickDetach();
         cy.findByText(
           `Are you sure you want to detach this Volume from ${linodeLabel}?`
         );
-        cy.get('[data-qa-confirm="true"]').click();
+        getClick('[data-qa-confirm="true"]');
         cy.wait('@volumeDetached')
-          .its('status')
+          .its('response.statusCode')
           .should('eq', 200);
         assertToast('Volume detachment started', 2);
+        deleteLinodeById(linodeId);
+        deleteVolumeById(volumeId);
         deleteAllTestLinodes();
         deleteAllTestVolumes();
       });

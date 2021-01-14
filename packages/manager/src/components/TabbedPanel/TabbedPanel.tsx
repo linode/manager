@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   tab: {
     '&[data-reach-tab]': {
       // This was copied over from our MuiTab styling in themeFactory. Some of this could probably be cleaned up.
-      color: theme.cmrTextColors.textTab,
+      color: theme.cmrTextColors.linkActiveLight,
       background: 'transparent',
       border: 'none',
       minWidth: 50,
@@ -61,8 +61,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&[data-reach-tab][data-selected]': {
       fontFamily: theme.font.bold,
-      color: theme.cmrTextColors.textTabActive,
-      borderBottom: `2px solid ${theme.cmrBorderColors.borderTabActive}`
+      color: theme.cmrTextColors.headlineStatic,
+      borderBottom: `2px solid ${theme.cmrBorderColors.linkActiveLight}`
     }
   },
   tabList: {
@@ -120,7 +120,7 @@ export const TabbedPanel: React.FC<CombinedProps> = props => {
   return (
     <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
       <div className={`${classes.inner} ${innerClass}`}>
-        {error && <Notice text={error} error />}
+        {error && <Notice error>{error}</Notice>}
         {header !== '' && (
           <Typography variant="h2" data-qa-tp-title>
             {header}
