@@ -2,7 +2,8 @@ import {
   getKubeConfig,
   getKubernetesClusterEndpoints,
   KubernetesEndpointResponse,
-  recycleAllNodes
+  recycleAllNodes,
+  recycleNode
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -279,12 +280,17 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   };
 
   const handleRecycleAllNodes = (nodePoolID: number) => {
-    return recycleAllNodes(cluster.id, nodePoolID).then(() => {
+    return recycleAllNodes(cluster.id, nodePoolID).then(response => {
       // Recycling nodes is an asynchronous process, and it probably won't make a difference to
       // request Node Pools here (it could be several seconds before statuses change). I thought
       // it was a good idea anyway, though.
       props.requestNodePools(cluster.id);
+      return response;
     });
+  };
+
+  const handleRecycleNode = (nodeID: string) => {
+    return recycleNode(cluster.id, nodeID);
   };
 
   return (
@@ -369,6 +375,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
                   recycleAllNodes={(poolID: number) =>
                     handleRecycleAllNodes(poolID)
                   }
+                  recycleNode={handleRecycleNode}
                 />
               </Grid>
             </TabPanel>

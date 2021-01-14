@@ -11,7 +11,7 @@ interface Props {
   nodes: PoolNodeResponse[];
   openDeletePoolDialog: (poolId: number) => void;
   openRecycleAllNodesDialog: (poolId: number) => void;
-  openRecycleNodeDialog: (linodeId: number, linodeLabel: string) => void;
+  openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   handleClickResize: (poolId: number) => void;
 }
 
