@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   ipAddressCell: {
-    width: '16%',
+    width: '14%',
     [theme.breakpoints.only('sm')]: {
       width: '22%'
     }
@@ -133,6 +133,14 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
         {isVLAN ? null : (
           <>
             <Hidden xsDown>
+              <TableSortCell
+                label="type"
+                active={isActive('type')}
+                handleClick={handleOrderChange}
+                direction={order}
+              >
+                Plan
+              </TableSortCell>
               <TableSortCell
                 label="ipv4[0]" // we want to sort by the first ipv4
                 active={isActive('ipv4[0]')}
