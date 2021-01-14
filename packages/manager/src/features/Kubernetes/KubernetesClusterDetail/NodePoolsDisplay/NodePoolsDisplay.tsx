@@ -14,7 +14,6 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { useDialog } from 'src/hooks/useDialog';
-import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
@@ -57,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(4)
   },
-  cmrSpacing: {
+  mobileSpacing: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing()
@@ -94,7 +93,6 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   } = props;
 
   const classes = useStyles();
-  const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
 
   const deletePoolDialog = useDialog<number>(deletePool);
@@ -248,7 +246,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
             variant="h2"
             className={classnames({
               [classes.nodePoolHeader]: true,
-              [classes.cmrSpacing]: flags.cmr
+              [classes.mobileSpacing]: true
             })}
           >
             Node Pools
@@ -259,7 +257,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
             buttonType="secondary"
             className={classnames({
               [classes.button]: true,
-              [classes.cmrSpacing]: flags.cmr
+              [classes.mobileSpacing]: true
             })}
             onClick={() => recycleAllClusterNodesDialog.openDialog(undefined)}
           >
@@ -269,7 +267,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
             buttonType="primary"
             className={classnames({
               [classes.button]: true,
-              [classes.cmrSpacing]: flags.cmr
+              [classes.mobileSpacing]: true
             })}
             onClick={handleOpenAddDrawer}
           >
