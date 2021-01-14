@@ -200,7 +200,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           className: classes.link,
           disabled:
             linodeStatus !== 'running' ||
-            !hasMadeConfigsRequest ||
+            (!hasMadeConfigsRequest && matchesSmDown) ||
             readOnly ||
             Boolean(configsError?.[0]?.reason),
           tooltip: readOnly
