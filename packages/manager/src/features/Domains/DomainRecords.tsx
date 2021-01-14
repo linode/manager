@@ -6,7 +6,6 @@ import {
   RecordType
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as classnames from 'classnames';
 import {
   compose,
   equals,
@@ -23,7 +22,6 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
@@ -57,20 +55,18 @@ import { storage } from 'src/utilities/storage';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
-type ClassNames =
-  | 'root'
-  | 'cells'
-  | 'titles'
-  | 'linkContainer'
-  | 'cmrSpacing'
-  | 'addNewLink';
+type ClassNames = 'root' | 'cells' | 'linkContainer' | 'addNewLink';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      [theme.breakpoints.down('xs')]: {
-        flexDirection: 'column',
-        alignItems: 'flex-start'
+      margin: 0,
+      '& .MuiGrid-item': {
+        paddingLeft: 0
+      },
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: theme.spacing(),
+        marginRight: theme.spacing()
       }
     },
     cells: {
@@ -81,31 +77,15 @@ const styles = (theme: Theme) =>
       '& .data': {
         maxWidth: 300,
         overflow: 'hidden',
-        whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
         [theme.breakpoints.up('md')]: {
           maxWidth: 750
         }
       }
     },
-    titles: {
-      marginBottom: theme.spacing(1),
-      [theme.breakpoints.down('xs')]: {
-        marginTop: theme.spacing(2)
-      }
-    },
     linkContainer: {
-      position: 'relative',
-      top: theme.spacing(1) + 2,
-      [theme.breakpoints.down('xs')]: {
-        top: -10,
-        '& button': {
-          padding: 0
-        }
-      }
-    },
-    cmrSpacing: {
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('sm')]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing()
       }
@@ -153,7 +133,9 @@ interface IType {
 }
 
 const createLink = (title: string, handler: () => void) => (
-  <AddNewLink onClick={handler} label={title} />
+  <Button buttonType="secondary" onClick={handler}>
+    {title}
+  </Button>
 );
 
 class DomainRecords extends React.Component<CombinedProps, State> {
@@ -688,11 +670,11 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { domain, domainRecords, classes, flags } = this.props;
+    const { domain, domainRecords, classes } = this.props;
     const { drawer, confirmDialog } = this.state;
 
     return (
-      <React.Fragment>
+      <>
         <DocumentTitleSegment segment={`${domain.domain} - DNS Records`} />
         {this.state.types.map((type, eachTypeIdx) => {
           const ref: React.Ref<any> = React.createRef();
@@ -702,7 +684,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
               <Grid
                 container
                 justify="space-between"
-                alignItems="flex-end"
+                alignItems="center"
                 className={classes.root}
               >
                 <Grid item ref={ref}>
@@ -710,10 +692,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                     role="heading"
                     aria-level={2}
                     variant="h2"
-                    className={classnames({
-                      [classes.titles]: true,
-                      [classes.cmrSpacing]: flags.cmr
-                    })}
+                    className="m0"
                     data-qa-domain-record={type.title}
                   >
                     {type.title}
@@ -722,12 +701,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 {type.link && (
                   <Grid item>
                     {' '}
-                    <div
-                      className={classnames({
-                        [classes.linkContainer]: true,
-                        [classes.cmrSpacing]: flags.cmr
-                      })}
-                    >
+                    <div className={classes.linkContainer}>
                       {type.link()}
                     </div>{' '}
                   </Grid>
@@ -852,7 +826,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           updateRecords={this.props.updateRecords}
           {...drawer.fields}
         />
-      </React.Fragment>
+      </>
     );
   }
 }
