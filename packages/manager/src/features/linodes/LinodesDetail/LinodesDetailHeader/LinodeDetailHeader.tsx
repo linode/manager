@@ -69,8 +69,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
 
   // Related to the above, you should also be able to navigate directly to a Linode
   // detail tab and have the correct modal open based on the query parameter, if provided.
-  // see uses of parseQueryParams(location.search)
   const location = useLocation();
+  const queryParams = parseQueryParams(location.search);
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
@@ -91,22 +91,22 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   });
 
   const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
-    open: isSubpath('resize') || parseQueryParams(location.search).resize,
+    open: isSubpath('resize') || queryParams.resize,
     linodeID: matchedLinodeId
   });
 
   const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
-    open: isSubpath('migrate') || parseQueryParams(location.search).migrate,
+    open: isSubpath('migrate') || queryParams.migrate,
     linodeID: matchedLinodeId
   });
 
   const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
-    open: isSubpath('rescue') || parseQueryParams(location.search).rescue,
+    open: isSubpath('rescue') || queryParams.rescue,
     linodeID: matchedLinodeId
   });
 
   const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
-    open: isSubpath('rebuild') || parseQueryParams(location.search).rebuild,
+    open: isSubpath('rebuild') || queryParams.rebuild,
     linodeID: matchedLinodeId
   });
 
@@ -158,7 +158,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
-        history.replace({ search: '?migrate=true' });
+        history.replace({ search: 'migrate=true' });
         break;
       case 'resize':
         setResizeDialog(resizeDialog => ({
@@ -166,7 +166,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
-        history.replace({ search: '?resize=true' });
+        history.replace({ search: 'resize=true' });
         break;
       case 'rescue':
         setRescueDialog(rescueDialog => ({
@@ -174,7 +174,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
-        history.replace({ search: '?rescue=true' });
+        history.replace({ search: 'rescue=true' });
         break;
       case 'rebuild':
         setRebuildDialog(rebuildDialog => ({
@@ -182,7 +182,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
-        history.replace({ search: '?rebuild=true' });
+        history.replace({ search: 'rebuild=true' });
         break;
       case 'enable_backups':
         setBackupsDialog(backupsDialog => ({
@@ -209,10 +209,10 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     // If the user is on a Linode detail tab with the modal open and they then close it,
     // change the URL to reflect just the tab they are on.
     if (
-      parseQueryParams(location.search).resize ||
-      parseQueryParams(location.search).rescue ||
-      parseQueryParams(location.search).rebuild ||
-      parseQueryParams(location.search).migrate
+      queryParams.resize ||
+      queryParams.rescue ||
+      queryParams.rebuild ||
+      queryParams.migrate
     ) {
       history.replace({ search: undefined });
     }
