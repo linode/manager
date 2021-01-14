@@ -1,8 +1,9 @@
 import {
   PoolNodeRequest,
   PoolNodeResponse
-} from '@linode/api-v4/lib/kubernetes/types';
+} from '@linode/api-v4/lib/kubernetes';
 import classnames from 'classnames';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
@@ -14,7 +15,6 @@ import Grid from 'src/components/Grid';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { useDialog } from 'src/hooks/useDialog';
 import useFlags from 'src/hooks/useFlags';
-import useLinodeActions from 'src/hooks/useLinodeActions';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
@@ -73,7 +73,8 @@ export interface Props {
   ) => Promise<PoolNodeWithPrice>;
   deletePool: (poolID: number) => Promise<any>;
   addNodePool: (newPool: PoolNodeRequest) => Promise<PoolNodeResponse>;
-  recycleAllNodes: (poolID: number) => Promise<any>;
+  recycleAllNodes: (poolID: number) => Promise<{}>;
+  recycleNode: (nodeID: string) => Promise<{}>;
 }
 
 export const NodePoolsDisplay: React.FC<Props> = props => {
@@ -84,17 +85,17 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     addNodePool,
     updatePool,
     deletePool,
-    recycleAllNodes
+    recycleAllNodes,
+    recycleNode
   } = props;
 
   const classes = useStyles();
   const flags = useFlags();
-
-  const { deleteLinode } = useLinodeActions();
+  const { enqueueSnackbar } = useSnackbar();
 
   const deletePoolDialog = useDialog<number>(deletePool);
   const recycleAllNodesDialog = useDialog<number>(recycleAllNodes);
-  const recycleNodeDialog = useDialog<number>(deleteLinode);
+  const recycleNodeDialog = useDialog<string>(recycleNode);
 
   const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(25);
   const handleShowMore = () => {
@@ -174,16 +175,20 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     });
   };
 
-  const handleDeleteNode = () => {
+  const handleRecycleNode = () => {
     const { dialog, submitDialog, handleError } = recycleNodeDialog;
     if (!dialog.entityID) {
       return;
     }
-    submitDialog(dialog.entityID).catch(err => {
-      handleError(
-        getAPIErrorOrDefault(err, 'Error deleting this Linode.')[0].reason
-      );
-    });
+    submitDialog(dialog.entityID)
+      .then(_ => {
+        enqueueSnackbar('Node queued for recycling.', { variant: 'success' });
+      })
+      .catch(err => {
+        handleError(
+          getAPIErrorOrDefault(err, 'Error recycling this node.')[0].reason
+        );
+      });
   };
 
   const handleRecycleAllNodes = () => {
@@ -316,7 +321,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
               loading={deletePoolDialog.dialog.isLoading}
             />
             <NodeDialog
-              onDelete={handleDeleteNode}
+              onDelete={handleRecycleNode}
               onClose={recycleNodeDialog.closeDialog}
               open={recycleNodeDialog.dialog.isOpen}
               error={recycleNodeDialog.dialog.error}
