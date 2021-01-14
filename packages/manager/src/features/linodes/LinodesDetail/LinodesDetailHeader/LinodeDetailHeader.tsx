@@ -29,6 +29,7 @@ import HostMaintenance from './HostMaintenance';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
 import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
+import { parseQueryParams } from 'src/utilities/queryParams';
 
 interface Props {
   numVolumes: number;
@@ -68,9 +69,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
 
   // Related to the above, you should also be able to navigate directly to a Linode
   // detail tab and have the correct modal open based on the query parameter, if provided.
+  // see uses of parseQueryParams(location.search)
   const location = useLocation();
-  const isQueryParameter = (queryParam: string) =>
-    location.search === queryParam;
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
@@ -91,22 +91,22 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   });
 
   const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
-    open: isSubpath('resize') || isQueryParameter('?resize=true'),
+    open: isSubpath('resize') || parseQueryParams(location.search).resize,
     linodeID: matchedLinodeId
   });
 
   const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
-    open: isSubpath('migrate') || isQueryParameter('?migrate=true'),
+    open: isSubpath('migrate') || parseQueryParams(location.search).migrate,
     linodeID: matchedLinodeId
   });
 
   const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
-    open: isSubpath('rescue') || isQueryParameter('?rescue=true'),
+    open: isSubpath('rescue') || parseQueryParams(location.search).rescue,
     linodeID: matchedLinodeId
   });
 
   const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
-    open: isSubpath('rebuild') || isQueryParameter('?rebuild=true'),
+    open: isSubpath('rebuild') || parseQueryParams(location.search).rebuild,
     linodeID: matchedLinodeId
   });
 
@@ -158,7 +158,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
-        history.push(`?migrate=true`);
+        history.replace({ search: '?migrate=true' });
         break;
       case 'resize':
         setResizeDialog(resizeDialog => ({
@@ -166,7 +166,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
-        history.push(`?resize=true`);
+        history.replace({ search: '?resize=true' });
         break;
       case 'rescue':
         setRescueDialog(rescueDialog => ({
@@ -174,7 +174,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
-        history.push(`?rescue=true`);
+        history.replace({ search: '?rescue=true' });
         break;
       case 'rebuild':
         setRebuildDialog(rebuildDialog => ({
@@ -182,7 +182,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
-        history.push(`?rebuild=true`);
+        history.replace({ search: '?rebuild=true' });
         break;
       case 'enable_backups':
         setBackupsDialog(backupsDialog => ({
@@ -209,14 +209,12 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     // If the user is on a Linode detail tab with the modal open and they then close it,
     // change the URL to reflect just the tab they are on.
     if (
-      isQueryParameter('?resize=true') ||
-      isQueryParameter('?rescue=true') ||
-      isQueryParameter('?rebuild=true') ||
-      isQueryParameter('?migrate=true')
+      parseQueryParams(location.search).resize ||
+      parseQueryParams(location.search).rescue ||
+      parseQueryParams(location.search).rebuild ||
+      parseQueryParams(location.search).migrate
     ) {
-      history.replace(
-        `/linodes/${match?.params.linodeId}/${match?.params?.subpath}`
-      );
+      history.replace({ search: undefined });
     }
 
     setPowerDialog(powerDialog => ({ ...powerDialog, open: false }));
