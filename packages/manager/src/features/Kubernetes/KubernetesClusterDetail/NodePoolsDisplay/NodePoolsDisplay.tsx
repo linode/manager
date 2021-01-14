@@ -23,7 +23,7 @@ import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
 import NodeDialog from './NodeDialog';
 import NodePool from './NodePool';
 import NodePoolDialog from './NodePoolDialog';
-import RecycleAllNodesDialog from './RecycleAllNodesDialog';
+import RecycleAllPoolNodesDialog from './RecycleAllPoolNodesDialog';
 import Button from 'src/components/Button';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -94,7 +94,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   const { enqueueSnackbar } = useSnackbar();
 
   const deletePoolDialog = useDialog<number>(deletePool);
-  const recycleAllNodesDialog = useDialog<number>(recycleAllNodes);
+  const recycleAllPoolNodesDialog = useDialog<number>(recycleAllNodes);
   const recycleNodeDialog = useDialog<string>(recycleNode);
 
   const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(25);
@@ -191,8 +191,8 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
       });
   };
 
-  const handleRecycleAllNodes = () => {
-    const { dialog, submitDialog, handleError } = recycleAllNodesDialog;
+  const handleRecycleAllPoolNodes = () => {
+    const { dialog, submitDialog, handleError } = recycleAllPoolNodesDialog;
     if (!dialog.entityID) {
       return;
     }
@@ -278,7 +278,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                       handleClickResize={handleOpenResizeDrawer}
                       openDeletePoolDialog={deletePoolDialog.openDialog}
                       openRecycleAllNodesDialog={
-                        recycleAllNodesDialog.openDialog
+                        recycleAllPoolNodesDialog.openDialog
                       }
                       openRecycleNodeDialog={recycleNodeDialog.openDialog}
                     />
@@ -328,12 +328,12 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
               loading={recycleNodeDialog.dialog.isLoading}
               label={recycleNodeDialog.dialog.entityLabel}
             />
-            <RecycleAllNodesDialog
-              open={recycleAllNodesDialog.dialog.isOpen}
-              loading={recycleAllNodesDialog.dialog.isLoading}
-              error={recycleAllNodesDialog.dialog.error}
-              onClose={recycleAllNodesDialog.closeDialog}
-              onSubmit={handleRecycleAllNodes}
+            <RecycleAllPoolNodesDialog
+              open={recycleAllPoolNodesDialog.dialog.isOpen}
+              loading={recycleAllPoolNodesDialog.dialog.isLoading}
+              error={recycleAllPoolNodesDialog.dialog.error}
+              onClose={recycleAllPoolNodesDialog.closeDialog}
+              onSubmit={handleRecycleAllPoolNodes}
             />
           </Grid>
         )}
