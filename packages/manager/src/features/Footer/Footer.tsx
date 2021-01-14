@@ -83,9 +83,6 @@ export const Footer: React.FC<Props> = props => {
   const classes = useStyles();
 
   const { desktopMenuIsOpen } = props;
-  const feedbackEmail = window.location.host.match(/beta/)
-    ? 'cloudbeta@linode.com'
-    : 'feedback@linode.com';
 
   return (
     <footer role="contentinfo">
@@ -126,7 +123,7 @@ export const Footer: React.FC<Props> = props => {
         >
           <a
             className={classes.link}
-            href={createMailto(window.navigator.userAgent || '', feedbackEmail)}
+            href={createMailto(window.navigator.userAgent || '')}
           >
             Provide Feedback
           </a>
