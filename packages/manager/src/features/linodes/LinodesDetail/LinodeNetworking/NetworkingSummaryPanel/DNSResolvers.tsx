@@ -17,12 +17,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   wrapper: {
+    marginTop: 2,
+    marginRight: 0,
+    width: '100%',
     [theme.breakpoints.down('xs')]: {
       justifyContent: 'space-between'
     }
   },
   header: {
-    paddingBottom: theme.spacing() / 2
+    position: 'absolute'
   },
   ipAddress: {
     lineHeight: 1.43
@@ -63,7 +66,7 @@ export const DNSResolvers: React.FC<Props> = props => {
             </Typography>
           ))}
         </Grid>
-        <Grid item>
+        <Grid item style={{ paddingRight: 0 }}>
           {v6Resolvers.map(thisAddress => (
             <Typography
               key={`ip-resolver-item-${thisAddress}`}
