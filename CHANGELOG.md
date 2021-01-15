@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-02-15] - v1.28.2
+
+### Fixed:
+
+- Resize action not appearing in Linode detail entity header
+
 ## [2021-01-14] - v1.28.1
 
 ### Fixed:
