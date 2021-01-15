@@ -1,8 +1,80 @@
+import * as React from 'react';
+import { screen } from '@testing-library/react';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { regionFactory } from 'src/factories/regions';
-import { buildQueryStringForLinodeClone } from './LinodeActionMenu';
+import { linodeBackupsFactory } from 'src/factories/linodes';
+import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
+import LinodeActionMenu, {
+  buildQueryStringForLinodeClone,
+  Props
+} from './LinodeActionMenu';
+
+const props: Props = {
+  inTableContext: true,
+  linodeId: 1,
+  linodeRegion: 'us-east',
+  linodeBackups: linodeBackupsFactory.build(),
+  linodeLabel: 'test-linode',
+  linodeStatus: 'running',
+  linodeType: 'g6-standard-1',
+  openDialog: jest.fn(),
+  openPowerActionDialog: jest.fn()
+};
 
 describe('LinodeActionMenu', () => {
+  describe('Action menu', () => {
+    it('should contain all basic actions when the Linode is running', () => {
+      renderWithTheme(<LinodeActionMenu {...props} />);
+      expect(
+        includesActions(
+          [
+            'Power Off',
+            'Reboot',
+            'Launch LISH Console',
+            'Clone',
+            'Resize',
+            'Rebuild',
+            'Rescue',
+            'Migrate',
+            'Delete'
+          ],
+          screen.queryByText
+        )
+      );
+    });
+
+    it('should contain Power On when the Linode is offline', () => {
+      renderWithTheme(<LinodeActionMenu {...props} linodeStatus="offline" />);
+      expect(includesActions(['Power On'], screen.queryByText));
+      expect(screen.queryByText('Power Off')).toBeNull();
+    });
+
+    it('should contain all actions except power off, reboot, and launch console when not in table context', () => {
+      renderWithTheme(
+        <LinodeActionMenu
+          {...props}
+          linodeStatus="offline"
+          inTableContext={false}
+        />
+      );
+      expect(
+        includesActions(
+          ['Clone', 'Resize', 'Rebuild', 'Rescue', 'Migrate', 'Delete'],
+          screen.queryByText
+        )
+      );
+      expect(screen.queryByText('Launch LISH Console')).toBeNull();
+      expect(screen.queryByText('Power On')).toBeNull();
+      expect(screen.queryByText('Reboot')).toBeNull();
+    });
+
+    it.skip('should disable the reboot action if the Linode is not running', () => {
+      // @todo update ActionMenu mock to fix this test once CMR action menu is gone
+      renderWithTheme(<LinodeActionMenu {...props} linodeStatus="offline" />);
+      expect(screen.queryByText('Reboot')).toBeDisabled();
+    });
+  });
+
   describe('buildQueryStringForLinodeClone', () => {
     it('returns `type` and `linodeID` params', () => {
       const result = buildQueryStringForLinodeClone(

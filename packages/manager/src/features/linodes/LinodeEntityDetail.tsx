@@ -296,7 +296,6 @@ const Header: React.FC<HeaderProps> = props => {
     openPowerActionDialog,
     backups,
     type,
-    image,
     linodeConfigs,
     isDetailLanding,
     progress,
@@ -438,7 +437,6 @@ const Header: React.FC<HeaderProps> = props => {
               linodeBackups={backups}
               openDialog={openDialog}
               openPowerActionDialog={openPowerActionDialog}
-              noImage={!image}
             />
           </Grid>
         </Grid>

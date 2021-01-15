@@ -61,7 +61,6 @@ export interface Props {
   linodeType: string | null;
   linodeBackups: LinodeBackups;
   linodeStatus: string;
-  noImage: boolean;
   openDialog: (
     type: DialogType,
     linodeID: number,
@@ -75,7 +74,6 @@ export interface Props {
   ) => void;
   inlineLabel?: string;
   inTableContext?: boolean;
-  inVLANContext?: boolean;
 }
 
 export type CombinedProps = Props & StateProps;
