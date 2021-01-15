@@ -38,7 +38,10 @@ const styles = (theme: Theme) =>
       }
     },
     CSVlinkContainer: {
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(0.5),
+      '&.MuiGrid-item': {
+        paddingRight: 0
+      }
     },
     CSVwrapper: {
       marginLeft: 0,
@@ -99,7 +102,7 @@ const styles = (theme: Theme) =>
       }
     },
     cmrCSVlink: {
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('sm')]: {
         marginRight: theme.spacing()
       }
     }

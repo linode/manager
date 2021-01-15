@@ -34,7 +34,7 @@ export const getNodeBalancers = () => getAll('nodebalancers');
 export const deleteNodeBalancerById = nodeBalId =>
   deleteById('nodebalancers', nodeBalId);
 
-export const deleteNodeBalancerByLabel = (label = undefined) => {
+export const deleteNodeBalancerByLabel = (label: string = '') => {
   getNodeBalancers().then(resp => {
     cy.log('get all nb', resp.body.data);
     const nodeBalToDelete = resp.body.data.find(nb => nb.label === label);

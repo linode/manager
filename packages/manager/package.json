@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.27.0",
+  "version": "1.28.2",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -16,7 +16,7 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@linode/api-v4": "^0.39.0",
+    "@linode/api-v4": "^0.40.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
@@ -34,7 +34,7 @@
     "axios-mock-adapter": "^1.15.0",
     "bluebird": "^3.5.1",
     "browser-detect": "^0.2.28",
-    "chart.js": "3.0.0-beta.6",
+    "chart.js": "~2.9.4",
     "chartjs-adapter-luxon": "^0.2.1",
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
@@ -139,13 +139,14 @@
     "@storybook/addons": "~5.3.7",
     "@storybook/react": "~5.3.7",
     "@svgr/webpack": "^4.3.3",
-    "@testing-library/cypress": "~6.0.0",
+    "@testing-library/cypress": "^7.0.3",
     "@testing-library/jest-dom": "~5.11.3",
     "@testing-library/react": "~10.4.9",
     "@testing-library/react-hooks": "~3.4.1",
     "@testing-library/user-event": "^12.1.1",
     "@types/algoliasearch": "^3.27.5",
     "@types/bluebird": "^3.5.20",
+    "@types/chart.js": "^2.9.21",
     "@types/classnames": "^2.2.3",
     "@types/enzyme": "^3.9.3",
     "@types/he": "^1.1.0",
@@ -201,7 +202,7 @@
     "coveralls": "^3.0.2",
     "css-loader": "^3.5.2",
     "csstype": "^2.5.5",
-    "cypress": "^5.0.0",
+    "cypress": "^6.2.1",
     "cypress-axe": "^0.8.1",
     "dotenv": "^6.2.0",
     "enzyme": "^3.10.0",
@@ -270,6 +271,9 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}"
+    ],
+    "setupFiles": [
+      "<rootDir>/config/polyfills.js"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/config/testSetup.js",

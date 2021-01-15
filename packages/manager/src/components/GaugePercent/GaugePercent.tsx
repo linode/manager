@@ -7,9 +7,8 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 
-import { ArcElement, Chart, DoughnutController } from 'chart.js';
+import { Chart } from 'chart.js';
 
-Chart.register(ArcElement, DoughnutController);
 interface Options {
   width: number | string;
   height: number;
@@ -24,7 +23,7 @@ const useStyles = (options: Options) =>
     },
     innerText: {
       position: 'absolute',
-      top: `calc((${options.height + theme.spacing(2)}px / 2))`,
+      top: `calc((${options.height + theme.spacing(3.75)}px / 2))`,
       width: options.width,
       textAlign: 'center',
       fontSize: '1rem',
@@ -34,7 +33,7 @@ const useStyles = (options: Options) =>
       position: 'absolute',
       width: options.width,
       textAlign: 'center',
-      top: `calc(${options.height + theme.spacing(3.5)}px)`,
+      top: `calc(${options.height + theme.spacing(1.25)}px)`,
       fontSize: options.fontSize || `${theme.spacing(2.5)}px `,
       color: theme.color.headline
     }
@@ -95,6 +94,8 @@ const GaugePercent: React.FC<CombinedProps> = props => {
       animateScale: false
     },
     maintainAspectRatio: false,
+    rotation: -1.25 * Math.PI,
+    circumference: 1.5 * Math.PI,
     cutoutPercentage: 70,
     responsive: true,
     /** get rid of all hover events with events: [] */
@@ -104,21 +105,17 @@ const GaugePercent: React.FC<CombinedProps> = props => {
     }
   };
 
-  const graphRef: React.MutableRefObject<any> = React.useRef(null);
-  const chartInstance: React.MutableRefObject<any> = React.useRef(null);
+  const graphRef: React.RefObject<any> = React.useRef(null);
+
   React.useEffect(() => {
     // Here we need to wait for the Canvas element to exist to attach a chart to it
     // we use a reference to access it.
     // https://dev.to/vcanales/using-chart-js-in-a-function-component-with-react-hooks-246l
     if (graphRef.current) {
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
-      chartInstance.current = new Chart(graphRef.current.getContext('2d'), {
+      new Chart(graphRef.current.getContext('2d'), {
         type: 'doughnut',
         data: {
-          datasets: graphDatasets,
-          labels: []
+          datasets: graphDatasets
         },
         options: graphOptions
       });

@@ -4,7 +4,11 @@ import {
   deleteAllTestLinodes
 } from '../../support/api/linodes';
 import { assertToast } from '../../support/ui/events';
-import { fbtClick } from '../../support/helpers';
+import {
+  containsClick,
+  containsVisible,
+  getClick
+} from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
 
 describe('create linode', () => {
@@ -15,27 +19,21 @@ describe('create linode', () => {
   it('creates a nanode', () => {
     const rootpass = strings.randomPass();
     const linodeLabel = makeLinodeLabel();
-    cy.server();
-    cy.route({
-      method: 'POST',
-      url: '*/linode/instances'
-    }).as('linodeCreated');
+    // intercept request
+    cy.intercept('POST', '*/linode/instances').as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
-    cy.contains(selectRegionString)
-      .click()
-      .type('new {enter}');
-    cy.get('[id="g6-nanode-1"]').click();
-    cy.get('#linode-label')
-      .click()
+    containsClick(selectRegionString).type('new {enter}');
+    getClick('[id="g6-nanode-1"]');
+    getClick('#linode-label')
       .clear()
       .type(linodeLabel);
     cy.get('#root-password').type(rootpass);
-    cy.get('[data-qa-deploy-linode]').click();
+    getClick('[data-qa-deploy-linode]');
     cy.wait('@linodeCreated')
-      .its('status')
+      .its('response.statusCode')
       .should('eq', 200);
     assertToast(`Your Linode ${linodeLabel} is being created.`);
-    cy.contains('PROVISIONING').should('be.visible');
+    containsVisible('PROVISIONING');
     deleteAllTestLinodes();
   });
 });

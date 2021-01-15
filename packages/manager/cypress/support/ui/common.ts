@@ -28,36 +28,12 @@ export const defensiveDo = (
 };
 
 export const waitForAppLoad = (path = '/', withLogin = true) => {
-  cy.server();
-  cy.route({
-    method: 'GET',
-    url: '*/linode/instances/*'
-  }).as('getLinodes');
-
-  cy.route({
-    method: 'GET',
-    url: '*/account'
-  }).as('getAccount');
-
-  cy.route({
-    method: 'GET',
-    url: '*/profile'
-  }).as('getProfile');
-
-  cy.route({
-    method: 'GET',
-    url: '*/account/settings'
-  }).as('getAccountSettings');
-
-  cy.route({
-    method: 'GET',
-    url: '*/profile/preferences'
-  }).as('getProfilePreferences');
-
-  cy.route({
-    method: 'GET',
-    url: '*/account/notifications**'
-  }).as('getNotifications');
+  cy.intercept('GET', '*/linode/instances/*').as('getLinodes');
+  cy.intercept('GET', '*/account').as('getAccount');
+  cy.intercept('GET', '*/profile').as('getProfile');
+  cy.intercept('GET', '*/account/settings').as('getAccountSettings');
+  cy.intercept('GET', '*/profile/preferences').as('getProfilePreferences');
+  cy.intercept('GET', '*/account/notifications**').as('getNotifications');
 
   withLogin ? cy.visitWithLogin(path) : cy.visit(path);
   cy.wait('@getLinodes');
