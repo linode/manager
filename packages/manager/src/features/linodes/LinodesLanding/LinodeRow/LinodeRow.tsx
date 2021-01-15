@@ -134,11 +134,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   // Pull in the Linode types using useTypes(), use the type prop provided to find the
   // correct type in the Linode types list and grab the plan label.
   const { types } = useTypes();
-  const typeEntities = types.entities;
-  const linodeType = Boolean(type)
-    ? typeEntities.find(thisType => thisType.id === type) ?? null
-    : null;
-  const linodePlan = linodeType?.label ?? null;
+  const linodePlan =
+    types.entities?.find(thisType => thisType.id === type)?.label ?? 'Unknown';
 
   const iconStatus =
     status === 'running'

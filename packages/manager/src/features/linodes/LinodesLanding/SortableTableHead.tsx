@@ -41,6 +41,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '25%'
     }
   },
+  planCell: {
+    width: '14%',
+    [theme.breakpoints.only('sm')]: {
+      width: '15%'
+    }
+  },
   ipAddressCell: {
     width: '14%',
     [theme.breakpoints.only('sm')]: {
@@ -138,6 +144,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
                 active={isActive('type')}
                 handleClick={handleOrderChange}
                 direction={order}
+                className={classes.planCell}
               >
                 Plan
               </TableSortCell>
