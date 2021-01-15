@@ -35,6 +35,7 @@ interface State {
   originalUsername?: string;
   username: string;
   createdUsername?: string;
+  originalEmail?: string;
   email: string;
   restricted?: boolean;
   accountSaving: boolean;
@@ -83,6 +84,7 @@ class UserDetail extends React.Component<CombinedProps> {
             gravatarUrl: url,
             originalUsername: user.username,
             username: user.username,
+            originalEmail: user.email,
             email: user.email,
             restricted: user.restricted
           });
@@ -256,7 +258,8 @@ class UserDetail extends React.Component<CombinedProps> {
       accountSaving,
       accountSuccess,
       accountErrors,
-      originalUsername
+      originalUsername,
+      originalEmail
     } = this.state;
 
     if (error) {
@@ -323,6 +326,7 @@ class UserDetail extends React.Component<CombinedProps> {
                 profileSuccess={profileSuccess || false}
                 profileErrors={profileErrors}
                 originalUsername={originalUsername}
+                originalEmail={originalEmail}
               />
             </SafeTabPanel>
             <SafeTabPanel index={1}>

@@ -64,6 +64,7 @@ interface Props {
   profileSuccess: boolean;
   profileErrors?: APIError[];
   originalUsername?: string;
+  originalEmail?: string;
 }
 
 interface State {
@@ -109,7 +110,8 @@ class UserProfile extends React.Component<CombinedProps> {
       profileSuccess,
       profileErrors,
       profileUsername,
-      originalUsername
+      originalUsername,
+      originalEmail
     } = this.props;
 
     const hasAccountErrorFor = getAPIErrorsFor(
@@ -189,7 +191,9 @@ class UserProfile extends React.Component<CombinedProps> {
           <ActionsPanel>
             <Button
               // This should be disabled if this is NOT the current user.
-              disabled={profileUsername !== originalUsername}
+              disabled={
+                profileUsername !== originalUsername || email === originalEmail
+              }
               buttonType="primary"
               loading={profileSaving}
               onClick={saveProfile}
