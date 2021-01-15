@@ -131,6 +131,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '50%',
       margin: '0 auto'
     }
+  },
+  skipLink: {
+    display: 'flex',
+    justifyContent: 'center',
+    background: '#17cf73',
+    color: 'white',
+    fontSize: '0.75rem',
+    letterSpacing: '1.5px',
+    padding: theme.spacing(),
+    position: 'absolute',
+    top: -40,
+    textTransform: 'uppercase',
+    width: 190,
+    zIndex: 9999,
+    '&:focus': {
+      top: 0
+    }
   }
 }));
 
@@ -287,6 +304,9 @@ const MainContent: React.FC<CombinedProps> = props => {
         [classes.hidden]: props.appIsLoading
       })}
     >
+      <a href="#main-content" className={classes.skipLink}>
+        Skip to main content
+      </a>
       <PreferenceToggle<boolean>
         preferenceKey="desktop_sidebar_open"
         preferenceOptions={[true, false]}
@@ -336,6 +356,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                       className={classes.cmrWrapper}
                       id="main-content"
                       role="main"
+                      tabIndex={-1}
                     >
                       <Grid container spacing={0} className={classes.grid}>
                         <Grid item className={`${classes.switchWrapper} p0`}>
