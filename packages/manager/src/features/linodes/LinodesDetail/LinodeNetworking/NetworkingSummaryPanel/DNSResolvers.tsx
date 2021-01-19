@@ -9,8 +9,23 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    overflowX: 'scroll',
+    overflowY: 'hidden',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
+    }
+  },
+  wrapper: {
+    marginTop: 2,
+    marginRight: 0,
+    width: '100%',
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'space-between'
+    }
+  },
   header: {
-    paddingBottom: theme.spacing() / 2
+    position: 'absolute'
   },
   ipAddress: {
     lineHeight: 1.43
@@ -30,11 +45,17 @@ export const DNSResolvers: React.FC<Props> = props => {
   const v6Resolvers = linodeRegion?.resolvers?.ipv6.split(',') ?? [];
 
   return (
-    <div>
+    <div className={classes.root}>
       <Typography className={classes.header}>
         <strong>DNS Resolvers</strong>
       </Typography>
-      <Grid container direction="row" wrap="nowrap" spacing={4}>
+      <Grid
+        container
+        direction="row"
+        wrap="nowrap"
+        spacing={4}
+        className={classes.wrapper}
+      >
         <Grid item>
           {v4Resolvers.map(thisAddress => (
             <Typography
@@ -45,7 +66,7 @@ export const DNSResolvers: React.FC<Props> = props => {
             </Typography>
           ))}
         </Grid>
-        <Grid item>
+        <Grid item style={{ paddingRight: 0 }}>
           {v6Resolvers.map(thisAddress => (
             <Typography
               key={`ip-resolver-item-${thisAddress}`}
