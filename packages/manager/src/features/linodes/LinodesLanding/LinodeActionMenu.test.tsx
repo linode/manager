@@ -49,7 +49,7 @@ describe('LinodeActionMenu', () => {
       expect(screen.queryByText('Power Off')).toBeNull();
     });
 
-    it('should contain all actions except power off, reboot, and launch console when not in table context', () => {
+    it('should contain all actions except Power Off, Reboot, and Launch Console when not in table context', () => {
       renderWithTheme(
         <LinodeActionMenu
           {...props}
@@ -63,9 +63,13 @@ describe('LinodeActionMenu', () => {
           screen.queryByText
         )
       );
-      expect(screen.queryByText('Launch LISH Console')).toBeNull();
-      expect(screen.queryByText('Power On')).toBeNull();
-      expect(screen.queryByText('Reboot')).toBeNull();
+      expect(
+        includesActions(
+          ['Launch LISH Console', 'Power On', 'Reboot'],
+          screen.queryByText,
+          false
+        )
+      );
     });
 
     it.skip('should disable the reboot action if the Linode is not running', () => {
