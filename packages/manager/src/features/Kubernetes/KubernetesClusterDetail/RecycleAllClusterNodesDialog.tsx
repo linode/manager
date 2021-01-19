@@ -48,7 +48,7 @@ const RecycleAllClusterNodesDialog: React.FC<Props> = props => {
   return (
     <ConfirmationDialog
       open={open}
-      title="Recycle all nodes?"
+      title="Recycle all nodes in cluster?"
       onClose={onClose}
       actions={() => renderActions(loading, onClose, onSubmit)}
     >

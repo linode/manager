@@ -2,7 +2,6 @@ import {
   PoolNodeRequest,
   PoolNodeResponse
 } from '@linode/api-v4/lib/kubernetes';
-import classnames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
@@ -57,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(4)
   },
   mobileSpacing: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing()
     }
@@ -244,10 +243,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
         <Grid item>
           <Typography
             variant="h2"
-            className={classnames({
-              [classes.nodePoolHeader]: true,
-              [classes.mobileSpacing]: true
-            })}
+            className={`${classes.nodePoolHeader} ${classes.mobileSpacing}`}
           >
             Node Pools
           </Typography>
@@ -255,20 +251,14 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
         <Grid item>
           <Button
             buttonType="secondary"
-            className={classnames({
-              [classes.button]: true,
-              [classes.mobileSpacing]: true
-            })}
+            className={`${classes.button} ${classes.mobileSpacing}`}
             onClick={() => recycleAllClusterNodesDialog.openDialog(undefined)}
           >
             Recycle All Nodes
           </Button>
           <Button
             buttonType="primary"
-            className={classnames({
-              [classes.button]: true,
-              [classes.mobileSpacing]: true
-            })}
+            className={`${classes.button} ${classes.mobileSpacing}`}
             onClick={handleOpenAddDrawer}
           >
             Add a Node Pool
