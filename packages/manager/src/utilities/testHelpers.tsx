@@ -4,6 +4,7 @@ import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/contex
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
+import { QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
@@ -13,6 +14,7 @@ import thunk from 'redux-thunk';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import { FlagSet } from 'src/featureFlags';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { queryClient } from 'src/queries/base';
 import store, { ApplicationState, defaultState } from 'src/store';
 
 export const createPromiseLoaderResponse: <T>(
@@ -48,13 +50,15 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const storeToPass = customStore ? baseStore(customStore) : store;
   return (
     <Provider store={storeToPass}>
-      <LinodeThemeWrapper theme="dark" spacing="normal">
-        <LDProvider value={{ flags: options.flags ?? {} }}>
-          <SnackbarProvider>
-            <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
-          </SnackbarProvider>
-        </LDProvider>
-      </LinodeThemeWrapper>
+      <QueryClientProvider client={queryClient}>
+        <LinodeThemeWrapper theme="dark" spacing="normal">
+          <LDProvider value={{ flags: options.flags ?? {} }}>
+            <SnackbarProvider>
+              <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+            </SnackbarProvider>
+          </LDProvider>
+        </LinodeThemeWrapper>
+      </QueryClientProvider>
     </Provider>
   );
 };
