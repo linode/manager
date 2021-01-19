@@ -50,7 +50,8 @@ export const baseApps = {
   '609195': 'MongoDB One-Click',
   '609392': 'Flask One-Click',
   '611376': 'PostgreSQL One-Click',
-  '611895': 'MEAN One-Click'
+  '611895': 'MEAN One-Click',
+  '688912': 'Kepler Builder One-Click'
 };
 
 const oneClickFilter = [
