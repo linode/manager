@@ -573,7 +573,7 @@ export const validateForm = (protocol?: string, ports?: string) => {
 
   if (ports && !ports.match(/^([0-9\-]+,?)+$/)) {
     errors.ports =
-      'Ports be an integer, range of integers, or a comma-separated list of integers.';
+      'Ports must be an integer, range of integers, or a comma-separated list of integers.';
   }
 
   return errors;
