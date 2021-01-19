@@ -26,7 +26,7 @@ import { dbaasContext } from 'src/context';
 import useDatabases from 'src/hooks/useDatabases';
 import { useDatabaseTypes } from 'src/hooks/useDatabaseTypes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import useRegions from 'src/hooks/useRegions';
+import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { initWindows } from 'src/utilities/initWindows';
 import {
@@ -75,13 +75,14 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   const context = React.useContext(dbaasContext);
   const classes = useStyles();
   const history = useHistory();
-  const regions = useRegions();
+  const { data } = useRegionsQuery();
+  const regions = data ?? [];
   const timezone = useTimezone();
   const { createDatabase } = useDatabases();
 
   const regionsWithDatabases: ExtendedRegion[] = React.useMemo(() => {
     return (
-      regions.entities
+      regions
         //   .filter(thisRegion => thisRegion.capabilities.includes('Databases')) // temporarily commented out until Capabilities is squared away
         .map(r => ({ ...r, display: dcDisplayNames[r.id] }))
     );
