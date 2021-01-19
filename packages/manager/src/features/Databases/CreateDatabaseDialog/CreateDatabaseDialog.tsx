@@ -75,8 +75,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   const context = React.useContext(dbaasContext);
   const classes = useStyles();
   const history = useHistory();
-  const { data } = useRegionsQuery();
-  const regions = data ?? [];
+  const regions = useRegionsQuery().data ?? [];
   const timezone = useTimezone();
   const { createDatabase } = useDatabases();
 

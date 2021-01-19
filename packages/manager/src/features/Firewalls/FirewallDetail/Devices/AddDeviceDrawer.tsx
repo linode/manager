@@ -33,8 +33,7 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
     open
   } = props;
 
-  const { data: _regions } = useRegionsQuery();
-  const regions = _regions ?? [];
+  const regions = useRegionsQuery().data ?? [];
 
   const regionsWithFirewalls = regions
     .filter(thisRegion =>
