@@ -921,7 +921,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           transition: 'border-color 225ms ease-in-out',
           '&$disabled': {
             borderColor: '#ccc',
-            color: '#ccc',
+            color: 'rgba(0, 0, 0, 0.75)',
             opacity: 0.5
           },
           '&$focused': {
@@ -1242,9 +1242,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           },
           '&:hover, &:focus': {
             '& $checked': {
-              '& .square': {
-                fill: '#eee'
-              },
               '& + $track': {
                 opacity: 1
               }
@@ -1258,11 +1255,12 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           left: 12,
           marginLeft: 0,
           marginTop: 0,
-          backgroundColor: '#C8CACB',
+          backgroundColor: '#C9CACB',
           borderRadius: 1,
           boxSizing: 'content-box',
           height: 24,
           width: 44,
+          opacity: 1,
           transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
         },
         switchBase: {

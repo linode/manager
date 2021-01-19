@@ -1,34 +1,26 @@
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import TaxBanner from 'src/components/TaxBanner';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import SuspenseLoader from 'src/components/SuspenseLoader';
-import useFlags from 'src/hooks/useFlags';
-
 import withProfile, {
   Props as ProfileActionsProps
 } from 'src/containers/profile.container';
 
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
-const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
-const Users_PreCMR = React.lazy(() => import('src/features/Users'));
-const Users_CMR = React.lazy(() =>
-  import('src/features/Users/UsersLanding_CMR')
-);
 const Billing = React.lazy(() => import('src/features/Billing'));
+const Users = React.lazy(() => import('src/features/Users'));
+const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 
 const AccountLanding: React.FC<Props> = props => {
   const { location } = props;
-  const flags = useFlags();
-
-  const Users = flags.cmr ? Users_CMR : Users_PreCMR;
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */

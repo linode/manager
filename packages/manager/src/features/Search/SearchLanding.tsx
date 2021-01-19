@@ -2,6 +2,7 @@ import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import Error from 'src/assets/icons/error.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -12,23 +13,29 @@ import { REFRESH_INTERVAL } from 'src/constants';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import useFlags from 'src/hooks/useFlags';
+import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { debounce } from 'throttle-debounce';
 import ResultGroup from './ResultGroup';
+import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
 
-import Error from 'src/assets/icons/error.svg';
-import './searchLanding.css';
-import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
-
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: 0,
+    '&.MuiGrid-container': {
+      width: 'calc(100% + 16px)'
+    }
+  },
   headline: {
-    marginBottom: 10
+    marginBottom: theme.spacing(),
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: theme.spacing()
+    }
   },
   emptyResultWrapper: {
     padding: `${theme.spacing(10)}px ${theme.spacing(4)}px`,
@@ -52,11 +59,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 60,
     color: theme.palette.text.primary,
     marginBottom: theme.spacing(4)
-  },
-  cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing()
-    }
   }
 }));
 
@@ -111,7 +113,6 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
   const { entities, errors, search, searchResultsByEntity } = props;
 
   const classes = useStyles();
-  const flags = useFlags();
   const { _isLargeAccount } = useAccountManagement();
 
   const [apiResults, setAPIResults] = React.useState<any>({});
@@ -169,12 +170,12 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
   const loading = reduxLoading || objectStorageLoading;
 
   return (
-    <Grid container direction="column">
+    <Grid container className={classes.root} direction="column">
       <Grid item>
         {!resultsEmpty && !loading && !objectStorageLoading && (
           <H1Header
             title={`Search Results ${query && `for "${query}"`}`}
-            className={`${classes.headline} ${flags.cmr && classes.cmrSpacing}`}
+            className={classes.headline}
           />
         )}
       </Grid>

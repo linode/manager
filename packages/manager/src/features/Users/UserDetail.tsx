@@ -1,26 +1,19 @@
 import { getUser, updateUser } from '@linode/api-v4/lib/account';
 import { updateProfile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { clone, compose, path as pathRamda } from 'ramda';
+import { clone, path as pathRamda } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
-import UserIcon from 'src/assets/icons/user.svg';
+import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
-
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabLinkList from 'src/components/TabLinkList';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
@@ -29,54 +22,21 @@ import { getGravatarUrl } from 'src/utilities/gravatar';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
 
-type ClassNames = 'avatar' | 'backButton' | 'emptyImage';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    '@keyframes fadeIn': {
-      from: {
-        opacity: 0
-      },
-      to: {
-        opacity: 1
-      }
-    },
-    avatar: {
-      margin: '0 8px 0 -4px',
-      color: '#606469',
-      borderRadius: '50%',
-      width: 34,
-      height: 34,
-      animation: '$fadeIn 150ms linear forwards'
-    },
-    emptyImage: {
-      width: 42,
-      height: 49
-    },
-    backButton: {
-      margin: '4px 0 0 -16px',
-      '& svg': {
-        width: 34,
-        height: 34
-      }
-    }
-  });
-
 interface MatchProps {
   username: string;
 }
 
-type CombinedProps = WithStyles<ClassNames> &
-  RouteComponentProps<MatchProps> &
+type CombinedProps = RouteComponentProps<MatchProps> &
   StateProps &
   DispatchProps;
 
 interface State {
   gravatarUrl?: string;
-  error?: Error;
+  error?: string;
   originalUsername?: string;
   username: string;
   createdUsername?: string;
+  originalEmail?: string;
   email: string;
   restricted?: boolean;
   accountSaving: boolean;
@@ -125,14 +85,18 @@ class UserDetail extends React.Component<CombinedProps> {
             gravatarUrl: url,
             originalUsername: user.username,
             username: user.username,
+            originalEmail: user.email,
             email: user.email,
             restricted: user.restricted
           });
         });
       })
-      .catch(errResponse => {
+      .catch(errorResponse => {
         this.setState({
-          error: new Error('Error fetching User data')
+          error: getAPIErrorOrDefault(
+            errorResponse,
+            'Error loading user data.'
+          )[0].reason
         });
       });
 
@@ -286,10 +250,9 @@ class UserDetail extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { classes, location, profileUsername } = this.props;
+    const { location, profileUsername } = this.props;
     const {
       error,
-      gravatarUrl,
       createdUsername,
       username,
       email,
@@ -299,7 +262,8 @@ class UserDetail extends React.Component<CombinedProps> {
       accountSaving,
       accountSuccess,
       accountErrors,
-      originalUsername
+      originalUsername,
+      originalEmail
     } = this.state;
 
     if (error) {
@@ -313,44 +277,34 @@ class UserDetail extends React.Component<CombinedProps> {
               />
             </Grid>
           </Grid>
-          <ErrorState errorText="There was an error retrieving the user data. Please reload and try again." />
+          <ErrorState errorText={error} />
         </React.Fragment>
       );
     }
-
-    const maybeGravatar =
-      gravatarUrl === undefined ? (
-        <div className={classes.emptyImage} />
-      ) : gravatarUrl === 'not found' ? (
-        <UserIcon className={classes.avatar} />
-      ) : (
-        <img
-          alt={`user ${username}'s avatar`}
-          src={gravatarUrl}
-          className={classes.avatar}
-        />
-      );
 
     const navToURL = (index: number) => {
       this.props.history.push(this.tabs[index].routeName);
     };
 
     return (
-      <React.Fragment>
-        <Grid container justify="space-between">
-          <Grid item>
-            <Breadcrumb
-              pathname={location.pathname}
-              labelTitle={username}
-              labelOptions={{
-                prefixComponent: maybeGravatar,
-                prefixStyle: { height: 34, marginTop: 2 },
-                noCap: true
-              }}
-              removeCrumbX={3}
-            />
-          </Grid>
-        </Grid>
+      <>
+        <Breadcrumb
+          pathname={location.pathname}
+          labelTitle={username}
+          labelOptions={{
+            noCap: true
+          }}
+          crumbOverrides={[
+            {
+              position: 2,
+              label: 'Users',
+              linkTo: {
+                pathname: `/account/users`
+              }
+            }
+          ]}
+          removeCrumbX={4}
+        />
         <Tabs defaultIndex={this.clampTabChoice()} onChange={navToURL}>
           <TabLinkList tabs={this.tabs} />
 
@@ -376,6 +330,7 @@ class UserDetail extends React.Component<CombinedProps> {
                 profileSuccess={profileSuccess || false}
                 profileErrors={profileErrors}
                 originalUsername={originalUsername}
+                originalEmail={originalEmail}
               />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
@@ -387,7 +342,7 @@ class UserDetail extends React.Component<CombinedProps> {
             </SafeTabPanel>
           </TabPanels>
         </Tabs>
-      </React.Fragment>
+      </>
     );
   }
 }
@@ -417,12 +372,6 @@ const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
   }
 );
 
-const styled = withStyles(styles);
-
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<any, any, any, any>(
-  connected,
-  reloadable,
-  styled
-)(UserDetail);
+export default compose<CombinedProps, {}>(connected, reloadable)(UserDetail);
