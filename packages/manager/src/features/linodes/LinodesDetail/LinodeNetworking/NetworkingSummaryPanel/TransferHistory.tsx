@@ -187,7 +187,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
       ) : (
         <LineGraph
           timezone={profile.data?.timezone ?? 'UTC'}
-          chartHeight={140}
+          chartHeight={190}
           unit={`/s`}
           formatData={convertNetworkData}
           formatTooltip={_formatTooltip}
