@@ -9,9 +9,7 @@ import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
-import Error from 'src/components/ErrorState';
 import HelpIcon from 'src/components/HelpIcon';
-import Loading from 'src/components/LandingLoading';
 import Notice from 'src/components/Notice';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -58,13 +56,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    data: regionsData,
-    isLoading: regionsLoading,
-    error: regionsError,
-    dataUpdatedAt: regionsUpdated
-  } = useRegionsQuery();
-  const regions = regionsData ?? [];
+  const regions = useRegionsQuery().data ?? [];
   const { types } = useTypes();
   const linode = useExtendedLinode(linodeID);
   const { images } = useImages();
@@ -158,17 +150,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     images.itemsById
   );
 
-  if (regionsLoading) {
-    return <Loading shouldDelay />;
-  }
-
-  if (regionsError) {
-    return (
-      <Error errorText="There was an issue loading configuration options." />
-    );
-  }
-
-  if (regions.length === 0 && regionsUpdated !== 0) {
+  if (regions.length === 0) {
     return null;
   }
 
@@ -231,7 +213,6 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
         allRegions={regions}
         handleSelectRegion={handleSelectRegion}
         selectedRegion={selectedRegion}
-        errorText={regionError}
         helperText={
           shouldWarnAboutVlans
             ? 'Note: This region does not support VLANs.'
