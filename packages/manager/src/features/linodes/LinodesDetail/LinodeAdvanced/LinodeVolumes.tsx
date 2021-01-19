@@ -1,5 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -8,16 +8,13 @@ import { bindActionCreators, Dispatch } from 'redux';
 import Loading from 'src/components/LandingLoading';
 import { PaginationProps } from 'src/components/Pagey';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
-import withRegions, {
-  DefaultProps as RegionProps
-} from 'src/containers/regions.container';
 import { StateProps as WithVolumesProps } from 'src/containers/volumes.container';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { useRegions } from 'src/hooks/useRegions';
+import { useRegionsQuery } from 'src/queries/regions';
 import {
   LinodeOptions,
   openForClone,
@@ -100,9 +97,7 @@ type CombinedProps = LinodeContextProps &
   EventsProps &
   PaginationProps<ExtendedVolume> &
   DispatchProps &
-  RouteProps &
-  WithSnackbarProps &
-  RegionProps;
+  RouteProps;
 
 const volumeHeaders = [
   {
@@ -156,7 +151,8 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
-  const { entities: regions } = useRegions();
+  const regions = useRegionsQuery().data ?? [];
+  const { enqueueSnackbar } = useSnackbar();
 
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
     open: false,
@@ -247,7 +243,7 @@ export const LinodeStorage: React.FC<CombinedProps> = props => {
     detachVolume({ volumeId })
       .then(_ => {
         /* @todo: show a progress bar for volume detachment */
-        props.enqueueSnackbar('Volume detachment started', {
+        enqueueSnackbar('Volume detachment started', {
           variant: 'info'
         });
         closeDestructiveDialog();
@@ -421,7 +417,5 @@ export default compose<CombinedProps, {}>(
   _withEvents((ownProps: CombinedProps, eventsData) => ({
     ...ownProps,
     eventsData: eventsData.filter(filterVolumeEvents)
-  })),
-  withRegions(),
-  withSnackbar
+  }))
 )(LinodeStorage);

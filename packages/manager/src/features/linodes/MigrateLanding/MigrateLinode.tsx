@@ -2,35 +2,35 @@ import { Event, Notification } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
-import { useAccount } from 'src/hooks/useAccount';
-import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
-import Dialog from 'src/components/Dialog';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Dialog from 'src/components/Dialog';
 import Error from 'src/components/ErrorState';
 import HelpIcon from 'src/components/HelpIcon';
 import Loading from 'src/components/LandingLoading';
 import Notice from 'src/components/Notice';
+import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { displayType } from 'src/features/linodes/presentation';
+import { useAccount } from 'src/hooks/useAccount';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
+import { useFlags } from 'src/hooks/useFlags';
 import { useImages } from 'src/hooks/useImages';
-import { useRegions } from 'src/hooks/useRegions';
 import { useTypes } from 'src/hooks/useTypes';
+import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { formatDate } from 'src/utilities/formatDate';
+import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
-import { MBpsInterDC } from 'src/constants';
-import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
-import { formatDate } from 'src/utilities/formatDate';
-import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -58,7 +58,13 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const regions = useRegions();
+  const {
+    data: regionsData,
+    isLoading: regionsLoading,
+    error: regionsError,
+    dataUpdatedAt: regionsUpdated
+  } = useRegionsQuery();
+  const regions = regionsData ?? [];
   const { types } = useTypes();
   const linode = useExtendedLinode(linodeID);
   const { images } = useImages();
@@ -152,17 +158,17 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     images.itemsById
   );
 
-  if (regions.loading && regions.lastUpdated === 0) {
+  if (regionsLoading) {
     return <Loading shouldDelay />;
   }
 
-  if (regions.error) {
+  if (regionsError) {
     return (
       <Error errorText="There was an issue loading configuration options." />
     );
   }
 
-  if (regions.entities.length === 0 && regions.lastUpdated !== 0) {
+  if (regions.length === 0 && regionsUpdated !== 0) {
     return null;
   }
 
@@ -187,7 +193,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     vlansEnabled &&
     selectedRegion !== null &&
     linode._interfaces.some(thisInterface => Boolean(thisInterface.vlan_id)) &&
-    !regions.entities
+    !regions
       .find(thisRegion => thisRegion.id === selectedRegion)
       ?.capabilities.includes('Vlans');
 
@@ -222,7 +228,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       />
       <ConfigureForm
         currentRegion={region}
-        allRegions={regions.entities}
+        allRegions={regions}
         handleSelectRegion={handleSelectRegion}
         selectedRegion={selectedRegion}
         errorText={regionError}
