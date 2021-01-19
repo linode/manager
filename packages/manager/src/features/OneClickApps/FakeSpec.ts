@@ -396,6 +396,25 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/jitsi_color.svg'
   },
   {
+    name: 'Kepler Builder',
+    description: `Use Kepler Builder to easily design and build sites in WordPress - no coding or design knowledge necessary.`,
+    summary: 'Powerful drag & drop WordPress website builder',
+    related_guides: [
+      {
+        title: 'Deploy Kepler Builder with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/how-to-deploy-kepler-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://kepler.app/',
+        href: 'https://kepler.app/'
+      }
+    ],
+    logo_url: 'assets/keplerbuilder_color.svg'
+  },
+  {
     name: 'LAMP',
     description: `The LAMP stack consists of the Linux operating system,
       the Apache HTTP Server, the MySQL relational database management system,
@@ -1028,13 +1047,13 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/webuzo_color.svg'
   },
   {
-    name: 'WireGuard',
-    description: `Configuring WireGuard is as simple as configuring SSH. A connection is established by an
+    name: 'WireGuard®',
+    description: `Configuring WireGuard® is as simple as configuring SSH. A connection is established by an
       exchange of public keys between server and client, and only a client whose public key is
       present in the server's configuration file is considered authorized. WireGuard sets up
       standard network interfaces which behave similarly to other common network interfaces,
       like eth0. This makes it possible to configure and manage WireGuard interfaces using
-      standard networking tools such as ifconfig and ip.`,
+      standard networking tools such as ifconfig and ip. "WireGuard" is a registered trademark of Jason A. Donenfeld.`,
     summary: `Modern VPN which utilizes state-of-the-art cryptography. It aims to be faster
       and leaner than other VPN protocols and has a smaller source code footprint.`,
     related_guides: [
