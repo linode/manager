@@ -336,7 +336,6 @@ const MainContent: React.FC<CombinedProps> = props => {
                       className={classes.cmrWrapper}
                       id="main-content"
                       role="main"
-                      tabIndex={-1}
                     >
                       <Grid container spacing={0} className={classes.grid}>
                         <Grid item className={`${classes.switchWrapper} p0`}>
