@@ -1,5 +1,10 @@
 import * as React from 'react';
-import ActionMenu, { Action, ActionMenuProps } from 'src/components/ActionMenu';
+import ActionMenu, {
+  Action,
+  ActionMenuProps
+} from 'src/components/ActionMenu_CMR';
+import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props extends Partial<ActionMenuProps> {
   idx: number;
@@ -10,6 +15,9 @@ interface Props extends Partial<ActionMenuProps> {
 type CombinedProps = Props;
 
 const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
   const {
     idx,
     triggerDeleteFirewallRule,
@@ -17,31 +25,41 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
     ...actionMenuProps
   } = props;
 
-  const createActions = React.useCallback(() => {
-    return (closeMenu: Function): Action[] => [
-      {
-        title: 'Edit',
-        onClick: () => {
-          closeMenu();
-          triggerOpenRuleDrawerForEditing(idx);
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          closeMenu();
-          triggerDeleteFirewallRule(idx);
-        }
+  const actions: Action[] = [
+    {
+      title: 'Edit',
+      onClick: () => {
+        triggerOpenRuleDrawerForEditing(idx);
       }
-    ];
-  }, []);
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        triggerDeleteFirewallRule(idx);
+      }
+    }
+  ];
 
   return (
-    <ActionMenu
-      createActions={createActions()}
-      ariaLabel={`Action menu for Firewall Rule`}
-      {...actionMenuProps}
-    />
+    <>
+      {!matchesSmDown &&
+        actions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      {matchesSmDown && (
+        <ActionMenu
+          actionsList={actions}
+          ariaLabel={`Action menu for Firewall Rule`}
+          {...actionMenuProps}
+        />
+      )}
+    </>
   );
 };
 
