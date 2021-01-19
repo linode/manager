@@ -7,7 +7,7 @@ import { data } from 'src/cachedData/regions.json';
 
 export const _getRegions = () => getRegions().then(({ data }) => data);
 
-export const useManagedSSHKey = () =>
+export const useRegionsQuery = () =>
   useQuery<Region[], APIError[]>('managedSSHKey', _getRegions, {
     ...queryPresets.longLived,
     placeholderData: data as Region[]
