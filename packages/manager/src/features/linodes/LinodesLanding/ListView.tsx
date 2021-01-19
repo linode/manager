@@ -11,6 +11,7 @@ import useLinodeActions from 'src/hooks/useLinodeActions';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import formatDate from 'src/utilities/formatDate';
 import LinodeRow from './LinodeRow';
+import { useTypes } from 'src/hooks/useTypes';
 
 interface Props {
   data: LinodeWithMaintenanceAndDisplayStatus[];
@@ -30,6 +31,7 @@ type CombinedProps = Props & PaginationProps;
 
 export const ListView: React.FC<CombinedProps> = props => {
   const { data, openDialog, openPowerActionDialog } = props;
+  const { types } = useTypes();
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: [],
@@ -79,6 +81,15 @@ export const ListView: React.FC<CombinedProps> = props => {
     return <TableRowEmptyState_CMR colSpan={12} />;
   }
 
+  // Use the type prop provided to find the correct type in the Linode types
+  // list and add the corresponding plan label to the linode object.
+  data.forEach(linode => {
+    const linodePlan =
+      types.entities?.find(thisType => thisType.id === linode.type)?.label ??
+      'Unknown';
+    linode['plan'] = linodePlan;
+  });
+
   return (
     // eslint-disable-next-line
     <>
@@ -102,6 +113,7 @@ export const ListView: React.FC<CombinedProps> = props => {
           vcpus={linode.specs.vcpus}
           memory={linode.specs.memory}
           type={linode.type}
+          plan={linode.plan}
           image={linode.image}
           vlanIP={linode._vlanIP}
           key={`linode-row-${idx}`}

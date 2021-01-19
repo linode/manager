@@ -157,7 +157,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
               >
                 IP Address
               </TableSortCell>
-              <Hidden smDown>
+              <Hidden mdDown>
                 <TableSortCell
                   label="region"
                   direction={order}

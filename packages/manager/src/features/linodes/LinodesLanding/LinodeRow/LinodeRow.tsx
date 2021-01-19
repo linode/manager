@@ -23,7 +23,6 @@ import {
   transitionText
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
-import { useTypes } from 'src/hooks/useTypes';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
 import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
@@ -54,6 +53,7 @@ interface Props {
   status: LinodeStatus;
   displayStatus: string;
   type: null | string;
+  plan: string;
   tags: string[];
   mostRecentBackup: string | null;
   vlanIP?: string;
@@ -100,6 +100,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     vcpus,
     memory,
     type,
+    plan,
     tags,
     image,
     vlanIP,
@@ -130,12 +131,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       </>
     );
   };
-
-  // Pull in the Linode types using useTypes(), use the type prop provided to find the
-  // correct type in the Linode types list and grab the plan label.
-  const { types } = useTypes();
-  const linodePlan =
-    types.entities?.find(thisType => thisType.id === type)?.label ?? 'Unknown';
 
   const iconStatus =
     status === 'running'
@@ -230,14 +225,14 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         <>
           <Hidden xsDown>
             <TableCell className={classes.planCell} data-qa-ips>
-              <div className={classes.planCell}>{linodePlan}</div>
+              <div className={classes.planCell}>{plan}</div>
             </TableCell>
             <TableCell className={classes.ipCell} data-qa-ips>
               <div className={classes.ipCellWrapper}>
                 <IPAddress ips={ipv4} copyRight />
               </div>
             </TableCell>
-            <Hidden smDown>
+            <Hidden mdDown>
               <TableCell className={classes.regionCell} data-qa-region>
                 <RegionIndicator region={region} />
               </TableCell>
