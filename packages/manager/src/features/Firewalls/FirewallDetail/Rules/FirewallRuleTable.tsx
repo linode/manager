@@ -352,8 +352,11 @@ export const firewallRuleToRowData = (
  */
 export const sortPortString = (portString: string) => {
   try {
-    const ports = portString.split(', ');
-    return ports.sort(sortString).join(', ');
+    const ports = portString.split(',');
+    return ports
+      .sort(sortString)
+      .map(i => i.trim())
+      .join(', ');
   } catch {
     // API responses should always work with this logic,
     // but in case we get bad input, return the unsorted/unaltered string.
