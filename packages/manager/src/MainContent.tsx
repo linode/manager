@@ -135,14 +135,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   skipLink: {
     display: 'flex',
     justifyContent: 'center',
-    background: '#17cf73',
+    background: theme.palette.primary.main,
     color: 'white',
-    fontSize: '0.75rem',
-    letterSpacing: '1.5px',
+    fontFamily: theme.font.bold,
+    fontSize: '0.875rem',
     padding: theme.spacing(),
     position: 'absolute',
     top: -40,
-    textTransform: 'uppercase',
     width: 190,
     zIndex: 9999,
     '&:focus': {
