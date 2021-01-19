@@ -7,197 +7,182 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
-import AddNewLink from 'src/components/AddNewLink';
-import Paper from 'src/components/core/Paper';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import {
-  createStyles,
+  makeStyles,
+  useTheme,
   Theme,
-  withStyles,
-  WithStyles
+  useMediaQuery
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
+import TableRowError from 'src/components/TableRowError/TableRowError_CMR';
+import TableRowLoading from 'src/components/TableRowLoading/TableRowLoading_CMR';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';
 
-type ClassNames =
-  | 'title'
-  | 'avatar'
-  | 'emptyImage'
-  | 'userNameCell'
-  | 'emailNameCell'
-  | 'accountNameCell';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    '@keyframes fadeIn': {
-      from: {
-        opacity: 0
-      },
-      to: {
-        opacity: 1
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    backgroundColor: theme.color.white
+  },
+  userLandingHeader: {
+    margin: 0,
+    width: '100%'
+  },
+  headline: {
+    marginTop: 8,
+    marginBottom: 8,
+    marginLeft: 15,
+    lineHeight: '1.5rem'
+  },
+  addNewWrapper: {
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
+      padding: 5
     },
-    title: {
-      marginBottom: theme.spacing(2)
-    },
-    avatar: {
-      borderRadius: '50%',
-      width: 30,
-      height: 30,
-      marginRight: theme.spacing(2),
-      animation: '$fadeIn 150ms linear forwards',
-      [theme.breakpoints.up('md')]: {
-        width: 40,
-        height: 40
-      }
-    },
-    emptyImage: {
-      display: 'inline',
-      width: 30,
-      height: 30,
-      marginRight: theme.spacing(2),
-      [theme.breakpoints.up('md')]: {
-        width: 40,
-        height: 40
-      }
-    },
-    userNameCell: {
-      width: '32%'
-    },
-    emailNameCell: {
-      width: '32%'
-    },
-    accountNameCell: {
-      width: '32%'
+    '&.MuiGrid-item': {
+      padding: 5
     }
-  });
-
-interface State {
-  createDrawerOpen: boolean;
-  newUsername?: string;
-  deleteConfirmDialogOpen: boolean;
-  toDeleteUsername?: string;
-  userDeleteError?: boolean;
-}
+  },
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0
+    },
+    to: {
+      opacity: 1
+    }
+  },
+  title: {
+    marginBottom: theme.spacing(2)
+  },
+  avatar: {
+    borderRadius: '50%',
+    width: 30,
+    height: 30,
+    marginRight: theme.spacing(2),
+    animation: '$fadeIn 150ms linear forwards'
+  },
+  emptyImage: {
+    display: 'inline',
+    width: 30,
+    height: 30,
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('md')]: {
+      width: 40,
+      height: 40
+    }
+  },
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0,
+    /*
+      Explicitly stating this as the theme file is automatically adding padding to the last cell
+      We can remove once we make the full switch to CMR styling
+      */
+    paddingRight: '0 !important'
+  }
+}));
 
 interface Props {
   isRestrictedUser: boolean;
 }
 
-type CombinedProps = WithStyles<ClassNames> &
-  WithSnackbarProps &
+type CombinedProps = WithSnackbarProps &
   Props &
   PaginationProps<User> &
   RouteComponentProps<{}>;
 
-class UsersLanding extends React.Component<CombinedProps, State> {
-  state: State = {
-    createDrawerOpen: false,
-    deleteConfirmDialogOpen: false
+const UsersLanding: React.FC<CombinedProps> = props => {
+  const {
+    request,
+    onDelete,
+    enqueueSnackbar,
+    data: users,
+    error,
+    loading
+  } = props;
+
+  const [createDrawerOpen, setCreateDrawerOpen] = React.useState<boolean>(
+    false
+  );
+  const [deleteConfirmDialogOpen, setDeleteConfirmDialogOpen] = React.useState<
+    boolean
+  >(false);
+  const [newUsername, setNewUsername] = React.useState<string | undefined>(
+    undefined
+  );
+  const [userDeleteError, setUserDeleteError] = React.useState<
+    boolean | undefined
+  >(false);
+  const [toDeleteUsername, setToDeleteUsername] = React.useState<
+    string | undefined
+  >('');
+
+  const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  React.useEffect(() => {
+    request();
+  }, [request]);
+
+  const addUser = () => {
+    request();
   };
 
-  static docs: Linode.Doc[] = [
-    {
-      title: 'Accounts and Password',
-      src:
-        'https://www.linode.com/docs/platform/manager/accounts-and-passwords-new-manager/',
-      body: `Maintaining your user Linode Manager accounts, passwords, and
-      contact information is just as important as administering your Linode.
-      This guide shows you how to control access to the Linode Manager,
-      update your contact information, and modify account passwords. Note
-      that the information in this guide applies to the Linode Manager only,
-      except for the section on resetting the root password.`
-    },
-    {
-      title: 'Linode Manager Security Controls',
-      src:
-        'https://www.linode.com/docs/security/linode-manager-security-controls-new-manager/',
-      body: `The Linode Manager is the gateway to all of your Linode products
-      and services, and you should take steps to protect it from unauthorized
-      access. This guide documents several of Linode Manager’s features that
-      can help mitigate your risk. Whether you’re worried about malicious
-      users gaining access to your username and password, or authorized users
-      abusing their access privileges, Linode Manager’s built-in security
-      tools can help.`
-    }
-  ];
-
-  componentDidMount() {
-    this.props.request();
-  }
-
-  addUser = () => {
-    this.props.request();
+  const openForCreate = () => {
+    setCreateDrawerOpen(true);
   };
 
-  openForCreate = () => {
-    this.setState({
-      createDrawerOpen: true
-    });
+  const userCreateOnClose = () => {
+    setCreateDrawerOpen(false);
   };
 
-  userCreateOnClose = () => {
-    this.setState({
-      createDrawerOpen: false
-    });
-  };
-
-  onDeleteConfirm = (username: string) => {
-    this.setState({
-      newUsername: undefined,
-      userDeleteError: false,
-      deleteConfirmDialogOpen: false
-    });
+  const onDeleteConfirm = (username: string) => {
+    setNewUsername(undefined);
+    setUserDeleteError(false);
+    setDeleteConfirmDialogOpen(false);
 
     deleteUser(username)
       .then(() => {
-        this.props.onDelete();
-        this.props.enqueueSnackbar(
-          `User ${username} has been deleted successfully.`,
-          { variant: 'success' }
-        );
+        onDelete();
+        enqueueSnackbar(`User ${username} has been deleted successfully.`, {
+          variant: 'success'
+        });
       })
       .catch(() => {
-        this.setState({
-          userDeleteError: true,
-          toDeleteUsername: ''
-        });
+        setUserDeleteError(true);
+        setToDeleteUsername('');
+
         scrollErrorIntoView();
       });
   };
 
-  onDeleteCancel = () => {
-    this.setState({
-      deleteConfirmDialogOpen: false
-    });
+  const onDeleteCancel = () => {
+    setDeleteConfirmDialogOpen(false);
   };
 
-  onDelete = (username: string) => {
-    this.setState({
-      deleteConfirmDialogOpen: true,
-      toDeleteUsername: username
-    });
+  const onUsernameDelete = (username: string) => {
+    setDeleteConfirmDialogOpen(true);
+    setToDeleteUsername(username);
   };
 
-  renderUserRow = (user: User) => {
-    const { classes } = this.props;
+  const renderUserRow = (user: User) => {
     return (
       <TableRow
         key={user.username}
@@ -205,7 +190,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         rowLink={`/account/users/${user.username}/profile`}
         ariaLabel={`User ${user.username}`}
       >
-        <TableCell parentColumn="Username" data-qa-username>
+        <TableCell data-qa-username>
           <Grid container alignItems="center">
             <Grid item style={{ display: 'flex' }}>
               {user.gravatarUrl === undefined ? (
@@ -225,120 +210,20 @@ class UsersLanding extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </TableCell>
-        <TableCell parentColumn="Email Address" data-qa-user-email>
-          {user.email}
-        </TableCell>
-        <TableCell parentColumn="Account Access" data-qa-user-restriction>
+        {!matchesSmDown && (
+          <TableCell data-qa-user-email>{user.email}</TableCell>
+        )}
+        <TableCell data-qa-user-restriction>
           {user.restricted ? 'Limited' : 'Full'}
         </TableCell>
-        <TableCell>
-          <ActionMenu username={user.username} onDelete={this.onDelete} />
+        <TableCell className={classes.actionCell}>
+          <ActionMenu username={user.username} onDelete={onUsernameDelete} />
         </TableCell>
       </TableRow>
     );
   };
 
-  render() {
-    const { classes, data: users, error, loading } = this.props;
-    const {
-      createDrawerOpen,
-      newUsername,
-      toDeleteUsername,
-      deleteConfirmDialogOpen,
-      userDeleteError
-    } = this.state;
-
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Users" />
-
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
-            <Typography variant="h2" data-qa-title className={classes.title}>
-              Users
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Grid container alignItems="flex-end">
-              <Grid item>
-                <AddNewLink
-                  disabled={this.props.isRestrictedUser}
-                  disabledReason={
-                    this.props.isRestrictedUser
-                      ? 'You cannot create other users as a restricted user.'
-                      : undefined
-                  }
-                  onClick={this.openForCreate}
-                  label="Add a User"
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        {newUsername && (
-          <Notice success text={`User ${newUsername} created successfully`} />
-        )}
-        {userDeleteError && (
-          <Notice
-            style={{ marginTop: newUsername ? 16 : 0 }}
-            error
-            text={`Error when deleting user, please try again later`}
-          />
-        )}
-        <Paper>
-          <Table aria-label="List of Users">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  className={classes.userNameCell}
-                  data-qa-username-column
-                >
-                  Username
-                </TableCell>
-                <TableCell
-                  className={classes.emailNameCell}
-                  data-qa-email-column
-                >
-                  Email Address
-                </TableCell>
-                <TableCell
-                  className={classes.accountNameCell}
-                  data-qa-restriction-column
-                >
-                  Account Access
-                </TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.renderTableContent(loading, error, users)}
-            </TableBody>
-          </Table>
-        </Paper>
-        <PaginationFooter
-          count={this.props.count}
-          page={this.props.page}
-          pageSize={this.props.pageSize}
-          handlePageChange={this.props.handlePageChange}
-          handleSizeChange={this.props.handlePageSizeChange}
-          eventCategory="users landing"
-        />
-        <CreateUserDrawer
-          open={createDrawerOpen}
-          onClose={this.userCreateOnClose}
-          addUser={this.addUser}
-        />
-        <UserDeleteConfirmationDialog
-          username={toDeleteUsername || ''}
-          open={deleteConfirmDialogOpen}
-          onDelete={this.onDeleteConfirm}
-          onCancel={this.onDeleteCancel}
-        />
-      </React.Fragment>
-    );
-  }
-
-  renderTableContent = (
+  const renderTableContent = (
     loading: boolean,
     error?: APIError[],
     data?: User[]
@@ -355,11 +240,84 @@ class UsersLanding extends React.Component<CombinedProps, State> {
       return <TableRowEmptyState colSpan={4} />;
     }
 
-    return data.map(user => this.renderUserRow(user));
+    return data.map(user => renderUserRow(user));
   };
-}
 
-const styled = withStyles(styles);
+  return (
+    <React.Fragment>
+      <DocumentTitleSegment segment="Users & Grants" />
+      {newUsername && (
+        <Notice success text={`User ${newUsername} created successfully`} />
+      )}
+      {userDeleteError && (
+        <Notice
+          style={{ marginTop: newUsername ? 16 : 0 }}
+          error
+          text={`Error when deleting user, please try again later`}
+        />
+      )}
+      <div className={classes.root}>
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          className={classes.userLandingHeader}
+        >
+          <Grid item className="p0">
+            <Typography variant="h3" data-qa-title className={classes.headline}>
+              Users
+            </Typography>
+          </Grid>
+          <Grid item className={classes.addNewWrapper}>
+            <AddNewLink
+              disabled={props.isRestrictedUser}
+              disabledReason={
+                props.isRestrictedUser
+                  ? 'You cannot create other users as a restricted user.'
+                  : undefined
+              }
+              onClick={openForCreate}
+              label="Add a User"
+            />
+          </Grid>
+        </Grid>
+        <Table aria-label="List of Users">
+          <TableHead>
+            <TableRow>
+              <TableCell data-qa-username-column>Username</TableCell>
+              {!matchesSmDown && (
+                <TableCell data-qa-email-column>Email Address</TableCell>
+              )}
+              <TableCell data-qa-restriction-column>Account Access</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>{renderTableContent(loading, error, users)}</TableBody>
+        </Table>
+      </div>
+
+      <PaginationFooter
+        count={props.count}
+        page={props.page}
+        pageSize={props.pageSize}
+        handlePageChange={props.handlePageChange}
+        handleSizeChange={props.handlePageSizeChange}
+        eventCategory="users landing"
+      />
+      <CreateUserDrawer
+        open={createDrawerOpen}
+        onClose={userCreateOnClose}
+        addUser={addUser}
+      />
+      <UserDeleteConfirmationDialog
+        username={toDeleteUsername || ''}
+        open={deleteConfirmDialogOpen}
+        onDelete={onDeleteConfirm}
+        onCancel={onDeleteCancel}
+      />
+    </React.Fragment>
+  );
+};
 
 const memoizedGetGravatarURL = memoize(getGravatarUrl);
 
@@ -376,8 +334,6 @@ const paginated = Pagey((ownProps, params, filters) =>
 
 export default compose<CombinedProps, Props>(
   withRouter,
-  setDocs(UsersLanding.docs),
-  styled,
   paginated,
   withSnackbar
 )(UsersLanding);
