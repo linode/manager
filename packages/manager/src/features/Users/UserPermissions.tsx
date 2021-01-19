@@ -623,6 +623,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             <TableRow>
               <TableCell>Label</TableCell>
               <TableCell padding="checkbox">
+                {/* eslint-disable-next-line */}
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -35 }}
@@ -638,6 +639,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 </label>
               </TableCell>
               <TableCell padding="checkbox">
+                {/* eslint-disable-next-line */}
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -65 }}
@@ -653,6 +655,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 </label>
               </TableCell>
               <TableCell padding="checkbox">
+                {/* eslint-disable-next-line */}
                 <label
                   className={classes.selectAll}
                   style={{ marginLeft: -73 }}
