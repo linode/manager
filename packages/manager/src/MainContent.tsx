@@ -131,22 +131,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '50%',
       margin: '0 auto'
     }
-  },
-  skipLink: {
-    display: 'flex',
-    justifyContent: 'center',
-    background: theme.palette.primary.main,
-    color: 'white',
-    fontFamily: theme.font.bold,
-    fontSize: '0.875rem',
-    padding: theme.spacing(),
-    position: 'absolute',
-    top: -40,
-    width: 190,
-    zIndex: 9999,
-    '&:focus': {
-      top: 0
-    }
   }
 }));
 
@@ -303,9 +287,6 @@ const MainContent: React.FC<CombinedProps> = props => {
         [classes.hidden]: props.appIsLoading
       })}
     >
-      <a href="#main-content" className={classes.skipLink}>
-        Skip to main content
-      </a>
       <PreferenceToggle<boolean>
         preferenceKey="desktop_sidebar_open"
         preferenceOptions={[true, false]}
