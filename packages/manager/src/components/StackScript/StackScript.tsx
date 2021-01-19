@@ -4,6 +4,7 @@ import { stringify } from 'qs';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import {
@@ -18,7 +19,6 @@ import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
 import withImages from 'src/containers/withImages.container';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import CopyTooltip from 'src/components/CopyTooltip';
 
 type CSSClasses =
   | 'root'
