@@ -10,14 +10,13 @@ interface Props {
   loading: boolean;
   error?: string;
   onClose: () => void;
-  onDelete: () => void;
-  label?: string;
+  onSubmit: () => void;
 }
 
 const renderActions = (
   loading: boolean,
   onClose: () => void,
-  onDelete: () => void
+  onSubmit: () => void
 ) => {
   return (
     <ActionsPanel style={{ padding: 0 }}>
@@ -33,35 +32,35 @@ const renderActions = (
         buttonType="primary"
         destructive
         loading={loading}
-        onClick={onDelete}
+        onClick={onSubmit}
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        Recycle
+        Recycle all Nodes
       </Button>
     </ActionsPanel>
   );
 };
 
-const NodeDialog: React.FC<Props> = props => {
-  const { error, loading, open, onClose, onDelete, label } = props;
+const RecycleAllPoolNodesDialog: React.FC<Props> = props => {
+  const { error, loading, open, onClose, onSubmit } = props;
 
   return (
     <ConfirmationDialog
       open={open}
-      title={`Recycle ${label ? label : 'this Node'}?`}
+      title="Recycle all nodes?"
       onClose={onClose}
-      actions={() => renderActions(loading, onClose, onDelete)}
+      actions={() => renderActions(loading, onClose, onSubmit)}
     >
       {error && <Notice error text={error} />}
       <Typography>
-        Are you sure you want to recycle this node? The node will be deleted and
-        a new node will be created to replace it. Any local storage (such as
-        &quot;hostPath&quot; volumes) will be erased. This may take several
-        minutes.
+        Are you sure you want to recycle the nodes in this pool? All nodes will
+        be deleted and new nodes will be created to replace them. Any local
+        storage (such as &apos;hostPath&apos; volumes) will be erased. This may
+        take several minutes, as nodes will be replaced on a rolling basis.
       </Typography>
     </ConfirmationDialog>
   );
 };
 
-export default React.memo(NodeDialog);
+export default React.memo(RecycleAllPoolNodesDialog);

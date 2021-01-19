@@ -1,8 +1,8 @@
 import {
   PoolNodeRequest,
   PoolNodeResponse
-} from '@linode/api-v4/lib/kubernetes/types';
-import classnames from 'classnames';
+} from '@linode/api-v4/lib/kubernetes';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
@@ -13,17 +13,16 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { useDialog } from 'src/hooks/useDialog';
-import useFlags from 'src/hooks/useFlags';
-import useLinodeActions from 'src/hooks/useLinodeActions';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
+import RecycleAllClusterNodesDialog from '../RecycleAllClusterNodesDialog';
 import AddNodePoolDrawer from '../AddNodePoolDrawer';
 import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
 import NodeDialog from './NodeDialog';
 import NodePool from './NodePool';
 import NodePoolDialog from './NodePoolDialog';
-import RecycleAllNodesDialog from './RecycleAllNodesDialog';
+import RecycleAllPoolNodesDialog from './RecycleAllPoolNodesDialog';
 import Button from 'src/components/Button';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,7 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: '4px'
   },
   button: {
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
+    marginLeft: theme.spacing()
   },
   displayTable: {
     width: '100%',
@@ -55,8 +55,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(4)
   },
-  cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
+  mobileSpacing: {
+    [theme.breakpoints.down('sm')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing()
     }
@@ -73,7 +73,9 @@ export interface Props {
   ) => Promise<PoolNodeWithPrice>;
   deletePool: (poolID: number) => Promise<any>;
   addNodePool: (newPool: PoolNodeRequest) => Promise<PoolNodeResponse>;
-  recycleAllNodes: (poolID: number) => Promise<any>;
+  recycleAllClusterNodes: () => Promise<{}>;
+  recycleAllPoolNodes: (poolID: number) => Promise<{}>;
+  recycleNode: (nodeID: string) => Promise<{}>;
 }
 
 export const NodePoolsDisplay: React.FC<Props> = props => {
@@ -84,17 +86,18 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     addNodePool,
     updatePool,
     deletePool,
-    recycleAllNodes
+    recycleAllClusterNodes,
+    recycleAllPoolNodes,
+    recycleNode
   } = props;
 
   const classes = useStyles();
-  const flags = useFlags();
-
-  const { deleteLinode } = useLinodeActions();
+  const { enqueueSnackbar } = useSnackbar();
 
   const deletePoolDialog = useDialog<number>(deletePool);
-  const recycleAllNodesDialog = useDialog<number>(recycleAllNodes);
-  const recycleNodeDialog = useDialog<number>(deleteLinode);
+  const recycleAllPoolNodesDialog = useDialog<number>(recycleAllPoolNodes);
+  const recycleAllClusterNodesDialog = useDialog(recycleAllClusterNodes);
+  const recycleNodeDialog = useDialog<string>(recycleNode);
 
   const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(25);
   const handleShowMore = () => {
@@ -174,26 +177,38 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     });
   };
 
-  const handleDeleteNode = () => {
+  const handleRecycleNode = () => {
     const { dialog, submitDialog, handleError } = recycleNodeDialog;
     if (!dialog.entityID) {
       return;
     }
-    submitDialog(dialog.entityID).catch(err => {
-      handleError(
-        getAPIErrorOrDefault(err, 'Error deleting this Linode.')[0].reason
-      );
-    });
+    submitDialog(dialog.entityID)
+      .then(_ => {
+        enqueueSnackbar('Node queued for recycling.', { variant: 'success' });
+      })
+      .catch(err => {
+        handleError(
+          getAPIErrorOrDefault(err, 'Error recycling this node.')[0].reason
+        );
+      });
   };
 
-  const handleRecycleAllNodes = () => {
-    const { dialog, submitDialog, handleError } = recycleAllNodesDialog;
+  const handleRecycleAllPoolNodes = () => {
+    const { dialog, submitDialog, handleError } = recycleAllPoolNodesDialog;
     if (!dialog.entityID) {
       return;
     }
     return submitDialog(dialog.entityID).catch(err => {
       handleError(getAPIErrorOrDefault(err, 'Error recycling nodes')[0].reason);
     });
+  };
+
+  const handleRecycleAllClusterNodes = () => {
+    recycleAllClusterNodesDialog
+      .submitDialog(undefined)
+      .then(_ =>
+        enqueueSnackbar('Nodes queued for recycling', { variant: 'success' })
+      );
   };
 
   const _pools = pools.slice(0, numPoolsToDisplay);
@@ -228,21 +243,22 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
         <Grid item>
           <Typography
             variant="h2"
-            className={classnames({
-              [classes.nodePoolHeader]: true,
-              [classes.cmrSpacing]: flags.cmr
-            })}
+            className={`${classes.nodePoolHeader} ${classes.mobileSpacing}`}
           >
             Node Pools
           </Typography>
         </Grid>
         <Grid item>
           <Button
+            buttonType="secondary"
+            className={`${classes.button} ${classes.mobileSpacing}`}
+            onClick={() => recycleAllClusterNodesDialog.openDialog(undefined)}
+          >
+            Recycle All Nodes
+          </Button>
+          <Button
             buttonType="primary"
-            className={classnames({
-              [classes.button]: true,
-              [classes.cmrSpacing]: flags.cmr
-            })}
+            className={`${classes.button} ${classes.mobileSpacing}`}
             onClick={handleOpenAddDrawer}
           >
             Add a Node Pool
@@ -273,7 +289,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                       handleClickResize={handleOpenResizeDrawer}
                       openDeletePoolDialog={deletePoolDialog.openDialog}
                       openRecycleAllNodesDialog={
-                        recycleAllNodesDialog.openDialog
+                        recycleAllPoolNodesDialog.openDialog
                       }
                       openRecycleNodeDialog={recycleNodeDialog.openDialog}
                     />
@@ -316,19 +332,26 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
               loading={deletePoolDialog.dialog.isLoading}
             />
             <NodeDialog
-              onDelete={handleDeleteNode}
+              onDelete={handleRecycleNode}
               onClose={recycleNodeDialog.closeDialog}
               open={recycleNodeDialog.dialog.isOpen}
               error={recycleNodeDialog.dialog.error}
               loading={recycleNodeDialog.dialog.isLoading}
               label={recycleNodeDialog.dialog.entityLabel}
             />
-            <RecycleAllNodesDialog
-              open={recycleAllNodesDialog.dialog.isOpen}
-              loading={recycleAllNodesDialog.dialog.isLoading}
-              error={recycleAllNodesDialog.dialog.error}
-              onClose={recycleAllNodesDialog.closeDialog}
-              onSubmit={handleRecycleAllNodes}
+            <RecycleAllPoolNodesDialog
+              open={recycleAllPoolNodesDialog.dialog.isOpen}
+              loading={recycleAllPoolNodesDialog.dialog.isLoading}
+              error={recycleAllPoolNodesDialog.dialog.error}
+              onClose={recycleAllPoolNodesDialog.closeDialog}
+              onSubmit={handleRecycleAllPoolNodes}
+            />
+            <RecycleAllClusterNodesDialog
+              open={recycleAllClusterNodesDialog.dialog.isOpen}
+              loading={recycleAllClusterNodesDialog.dialog.isLoading}
+              error={recycleAllClusterNodesDialog.dialog.error}
+              onClose={recycleAllClusterNodesDialog.closeDialog}
+              onSubmit={handleRecycleAllClusterNodes}
             />
           </Grid>
         )}

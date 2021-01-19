@@ -109,6 +109,9 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
     openRuleDrawer(category, 'create');
   }, [openRuleDrawer, category]);
 
+  const zeroOutboundRulesMessage =
+    'No outbound rules have been added. When no outbound rules are present, all outbound traffic is allowed.';
+
   return (
     <>
       <div className={classes.header}>
@@ -179,7 +182,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
               </TableHead>
               <TableBody>
                 {allRows.length === 0 ? (
-                  <TableRowEmptyState colSpan={5} />
+                  <TableRowEmptyState
+                    colSpan={5}
+                    message={zeroOutboundRulesMessage}
+                  />
                 ) : (
                   allRows.map((thisRuleRow: RuleRow) => (
                     <FirewallRuleTableRow

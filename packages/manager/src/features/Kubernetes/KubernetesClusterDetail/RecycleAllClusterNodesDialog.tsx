@@ -42,25 +42,25 @@ const renderActions = (
   );
 };
 
-const RecycleAllNodesDialog: React.FC<Props> = props => {
+const RecycleAllClusterNodesDialog: React.FC<Props> = props => {
   const { error, loading, open, onClose, onSubmit } = props;
 
   return (
     <ConfirmationDialog
       open={open}
-      title="Recycle all nodes?"
+      title="Recycle all nodes in cluster?"
       onClose={onClose}
       actions={() => renderActions(loading, onClose, onSubmit)}
     >
       {error && <Notice error text={error} />}
       <Typography>
-        Are you sure you want to recycle the nodes in this pool? All nodes will
-        be deleted and new nodes will be created to replace them. Any local
-        storage (such as "hostPath" volumes) will be erased. This may take
-        several minutes, as nodes will be replaced on a rolling basis.
+        Are you sure you want to recycle the nodes in this cluster? All nodes
+        will be deleted and new nodes will be created to replace them. Any local
+        storage (such as &apos;hostPath&apos; volumes) will be erased. This may
+        take several minutes, as nodes will be replaced on a rolling basis.
       </Typography>
     </ConfirmationDialog>
   );
 };
 
-export default React.memo(RecycleAllNodesDialog);
+export default React.memo(RecycleAllClusterNodesDialog);

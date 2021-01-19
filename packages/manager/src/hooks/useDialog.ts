@@ -1,10 +1,10 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
-export interface DialogState {
+export interface DialogState<T> {
   isOpen: boolean;
   isLoading: boolean;
-  entityID: number;
+  entityID: T;
   entityLabel?: string;
   error?: string;
 }
@@ -48,11 +48,11 @@ export interface DialogState {
  * @param request
  */
 
-export const useDialog = <T>(
+export const useDialog = <T extends string | number | undefined>(
   request: (params?: T) => Promise<any>
 ): {
-  dialog: DialogState;
-  openDialog: (id: number, label?: string) => void;
+  dialog: DialogState<T>;
+  openDialog: (id: T, label?: string) => void;
   closeDialog: () => void;
   submitDialog: (params: T) => Promise<any>;
   handleError: (e: string) => void;
@@ -60,7 +60,7 @@ export const useDialog = <T>(
   const [error, setErrors] = React.useState<string | undefined>();
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [isLoading, setLoading] = React.useState<boolean>(false);
-  const [entityID, setEntityID] = React.useState<number>(-1);
+  const [entityID, setEntityID] = React.useState<T>(-1 as T);
   const [entityLabel, setEntityLabel] = React.useState<string>('');
 
   const mountedRef = React.useRef<boolean>(true);
@@ -91,7 +91,7 @@ export const useDialog = <T>(
       });
   };
 
-  const openDialog = (id: number, label: string = '') => {
+  const openDialog = (id: T, label: string = '') => {
     setEntityLabel(label);
     setEntityID(id);
     setErrors(undefined);

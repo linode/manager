@@ -61,7 +61,6 @@ export interface Props {
   linodeType: string | null;
   linodeBackups: LinodeBackups;
   linodeStatus: string;
-  noImage: boolean;
   openDialog: (
     type: DialogType,
     linodeID: number,
@@ -75,7 +74,6 @@ export interface Props {
   ) => void;
   inlineLabel?: string;
   inTableContext?: boolean;
-  inVLANContext?: boolean;
 }
 
 export type CombinedProps = Props & StateProps;
@@ -200,7 +198,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           className: classes.link,
           disabled:
             linodeStatus !== 'running' ||
-            !hasMadeConfigsRequest ||
+            (!hasMadeConfigsRequest && matchesSmDown) ||
             readOnly ||
             Boolean(configsError?.[0]?.reason),
           tooltip: readOnly
@@ -311,7 +309,9 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       <ActionMenu
         className={classes.action}
         toggleOpenCallback={toggleOpenActionMenu}
-        actionsList={menuActions}
+        // if inTableContext is false we're most likely in the detail header
+        // where we need all of the available actions
+        actionsList={inTableContext ? menuActions : actions}
         ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
         inlineLabel={inlineLabel}
       />
