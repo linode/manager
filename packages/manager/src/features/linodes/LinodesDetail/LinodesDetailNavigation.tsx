@@ -1,6 +1,12 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
+import {
+  matchPath,
+  RouteComponentProps,
+  withRouter,
+  useRouteMatch,
+  Redirect
+} from 'react-router-dom';
 import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
@@ -69,6 +75,16 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     }
   ];
 
+  // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
+  // now show their content in modals instead. If a user tries navigating
+  // directly to those pages, the logic below helps facilitate the proper
+  // re-routing and updating of the query params.
+  const routeMatch = useRouteMatch<{ linodeId: string; subpath: string }>({
+    path: '/linodes/:linodeId/:subpath'
+  });
+  const isSubpath = (subpath: string) =>
+    routeMatch?.params?.subpath === subpath;
+
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: location.pathname }));
   };
@@ -123,6 +139,30 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
                 <LinodeSettings_CMR />
               </SafeTabPanel>
             </TabPanels>
+            {isSubpath('resize') ? (
+              <Redirect
+                path={`/linodes/${props.linodeId}/resize`}
+                to={`/linodes/${props.linodeId}?resize=true`}
+              />
+            ) : null}
+            {isSubpath('rebuild') ? (
+              <Redirect
+                path={`/linodes/${props.linodeId}/rebuild`}
+                to={`/linodes/${props.linodeId}?rebuild=true`}
+              />
+            ) : null}
+            {isSubpath('rescue') ? (
+              <Redirect
+                path={`/linodes/${props.linodeId}/rescue`}
+                to={`/linodes/${props.linodeId}?rescue=true`}
+              />
+            ) : null}
+            {isSubpath('migrate') ? (
+              <Redirect
+                path={`/linodes/${props.linodeId}/migrate`}
+                to={`/linodes/${props.linodeId}?migrate=true`}
+              />
+            ) : null}
           </React.Suspense>
         </Tabs>
       </div>
