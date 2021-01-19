@@ -1,6 +1,6 @@
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
@@ -29,6 +29,7 @@ import HostMaintenance from './HostMaintenance';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
 import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
+import { parseQueryParams } from 'src/utilities/queryParams';
 
 interface Props {
   numVolumes: number;
@@ -65,6 +66,12 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     path: '/linodes/:linodeId/:subpath'
   });
   const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
+
+  // Related to the above, you should also be able to navigate directly to a Linode
+  // detail tab and have the correct modal open based on the query parameter, if provided.
+  const location = useLocation();
+  const queryParams = parseQueryParams(location.search);
+
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
   const notificationContext = React.useContext(_notificationContext);
@@ -84,22 +91,22 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   });
 
   const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
-    open: isSubpath('resize'),
+    open: isSubpath('resize') || queryParams.resize,
     linodeID: matchedLinodeId
   });
 
   const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
-    open: isSubpath('migrate'),
+    open: isSubpath('migrate') || queryParams.migrate,
     linodeID: matchedLinodeId
   });
 
   const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
-    open: isSubpath('rescue'),
+    open: isSubpath('rescue') || queryParams.rescue,
     linodeID: matchedLinodeId
   });
 
   const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
-    open: isSubpath('rebuild'),
+    open: isSubpath('rebuild') || queryParams.rebuild,
     linodeID: matchedLinodeId
   });
 
@@ -151,6 +158,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        history.replace({ search: 'migrate=true' });
         break;
       case 'resize':
         setResizeDialog(resizeDialog => ({
@@ -158,6 +166,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        history.replace({ search: 'resize=true' });
         break;
       case 'rescue':
         setRescueDialog(rescueDialog => ({
@@ -165,6 +174,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        history.replace({ search: 'rescue=true' });
         break;
       case 'rebuild':
         setRebuildDialog(rebuildDialog => ({
@@ -172,6 +182,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        history.replace({ search: 'rebuild=true' });
         break;
       case 'enable_backups':
         setBackupsDialog(backupsDialog => ({
@@ -194,6 +205,18 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
     ) {
       history.replace(`/linodes/${match?.params.linodeId}`);
     }
+
+    // If the user is on a Linode detail tab with the modal open and they then close it,
+    // change the URL to reflect just the tab they are on.
+    if (
+      queryParams.resize ||
+      queryParams.rescue ||
+      queryParams.rebuild ||
+      queryParams.migrate
+    ) {
+      history.replace({ search: undefined });
+    }
+
     setPowerDialog(powerDialog => ({ ...powerDialog, open: false }));
     setDeleteDialog(deleteDialog => ({ ...deleteDialog, open: false }));
     setResizeDialog(resizeDialog => ({ ...resizeDialog, open: false }));
