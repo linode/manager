@@ -29,6 +29,7 @@ import curriedFirewallRuleEditorReducer, {
 import FirewallRuleTable from './FirewallRuleTable';
 import FirewallRuleTable_CMR from './FirewallRuleTable_CMR';
 import { Category, parseFirewallRuleError } from './shared';
+import { updateFirewallRules } from 'src/queries/firewalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -167,8 +168,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       outbound: preparedRules.outbound.map(stripExtendedFields)
     };
 
-    props
-      .updateFirewallRules({ firewallID, ...finalRules })
+    updateFirewallRules(firewallID, finalRules)
       .then(_rules => {
         setSubmitting(false);
         // Reset editor state.
