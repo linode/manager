@@ -337,6 +337,7 @@ export const firewallRuleToRowData = (
 
     return {
       ...thisRule,
+      ports: sortPortString(thisRule.ports),
       type: generateRuleLabel(ruleType),
       addresses: generateAddressesLabel(thisRule.addresses),
       id: idx
