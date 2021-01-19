@@ -23,8 +23,6 @@ import FirewallRow from './FirewallRow_CMR';
 type CombinedProps = RouteComponentProps<{}>;
 
 const FirewallLanding: React.FC<CombinedProps> = () => {
-  // const { deleteFirewall, disableFirewall, enableFirewall } = props;
-
   const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
 
   // @TODO: Refactor so these are combined?
