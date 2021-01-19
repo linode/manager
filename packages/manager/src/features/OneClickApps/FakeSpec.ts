@@ -403,7 +403,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Kepler Builder with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/how-to-deploy-kepler-with-marketplace-apps'
+          'https://www.linode.com/docs/guides/deploy-kepler-with-marketplace-apps/'
       }
     ],
     related_info: [
