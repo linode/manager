@@ -126,3 +126,15 @@ export const getKubernetesClusterEndpoints = (clusterID: number) =>
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/api-endpoints`)
   );
+
+/** recycleClusterNodes
+ *
+ * Recycle all nodes in the target cluster (across all node pools)
+ *
+ */
+
+export const recycleClusterNodes = (clusterID: number) =>
+  Request<{}>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/recycle`)
+  );

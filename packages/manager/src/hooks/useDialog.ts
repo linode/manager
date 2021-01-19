@@ -48,7 +48,7 @@ export interface DialogState<T> {
  * @param request
  */
 
-export const useDialog = <T extends string | number>(
+export const useDialog = <T extends string | number | undefined>(
   request: (params?: T) => Promise<any>
 ): {
   dialog: DialogState<T>;
