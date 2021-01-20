@@ -7,7 +7,7 @@ env:
   CLIENT_ID: ${{ secrets.CLIENT_ID }}
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 12 * * 1-5'
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
