@@ -6,10 +6,8 @@ env:
   USER_4: ${{ secrets.MANAGER_OAUTH_4 }}
   CLIENT_ID: ${{ secrets.CLIENT_ID }}
 on:
-  # push:
   schedule:
     - cron: '*/5 * * * *'
-  # "0 22 * * 1-5"
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
@@ -20,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: 'M3-4577-initial-e2e-actions-workflow'
+          ref: develop
       - uses: actions/setup-node@v1
         with:
           node-version: '10.x'
