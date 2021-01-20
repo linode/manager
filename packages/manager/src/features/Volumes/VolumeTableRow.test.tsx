@@ -1,6 +1,6 @@
+import { VolumeStatus } from '@linode/api-v4/lib/volumes';
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import { volumes } from 'src/__data__/volumes';
 import { VolumeTableRow } from './VolumeTableRow';
 
@@ -31,6 +31,16 @@ const classes = {
 const props = {
   classes,
   volume: volumeWithLinodeLabel,
+  id: 0,
+  label: '',
+  region: '',
+  size: 0,
+  status: 'active' as VolumeStatus,
+  tags: [],
+  created: '',
+  updated: '',
+  filesystem_path: '',
+  linode_id: null,
   isUpdating: false,
   isVolumesLanding: true,
   openForEdit: jest.fn(),

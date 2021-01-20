@@ -25,6 +25,14 @@ const props: Props = {
   volumeId: 12345,
   volumeTags: ['abc', 'def'],
   volumeLabel: '',
+  isVolumesLanding: false,
+  openForClone: jest.fn(),
+  openForConfig: jest.fn(),
+  openForEdit: jest.fn(),
+  openForResize: jest.fn(),
+  handleAttach: jest.fn(),
+  handleDelete: jest.fn(),
+  handleDetach: jest.fn(),
   ...reactRouterProps
 };
 

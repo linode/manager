@@ -1,116 +1,37 @@
 import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import TableRow from 'src/components/core/TableRow';
+import { Link, useLocation } from 'react-router-dom';
+import { compose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
-import TableCell from 'src/components/TableCell';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
-import VolumesActionMenu from './VolumesActionMenu';
+import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
 
-type ClassNames =
-  | 'root'
-  | 'title'
-  | 'labelCol'
-  | 'labelStatusWrapper'
-  | 'attachmentCol'
-  | 'sizeCol'
-  | 'pathCol'
-  | 'volumesWrapper'
-  | 'linodeVolumesWrapper'
-  | 'systemPath';
+const useStyles = makeStyles(() => ({
+  volumePath: {
+    width: '35%',
+    wordBreak: 'break-all'
+  },
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0,
+    /*
+      Explicitly stating this as the theme file is automatically adding padding to the last cell
+      We can remove once we make the full switch to CMR styling
+      */
+    paddingRight: '0 !important'
+  }
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    title: {
-      marginBottom: theme.spacing(2)
-    },
-    // styles for /volumes table
-    volumesWrapper: {},
-    // styles for linodes/id/volumes table
-    linodeVolumesWrapper: {
-      '& $labelCol': {
-        width: '20%',
-        minWidth: 200
-      },
-      '& $sizeCol': {
-        width: '15%',
-        minWidth: 100
-      },
-      '& $pathCol': {
-        width: '55%',
-        minWidth: 350
-      }
-    },
-    labelCol: {
-      width: '25%',
-      minWidth: 150,
-      paddingLeft: 65
-    },
-    labelStatusWrapper: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center'
-    },
-    attachmentCol: {
-      width: '15%',
-      minWidth: 150
-    },
-    sizeCol: {
-      width: '10%',
-      minWidth: 75
-    },
-    pathCol: {
-      width: '25%',
-      minWidth: 250
-    },
-    systemPath: {
-      wordBreak: 'break-all'
-    }
-  });
-
-interface Props {
-  volume: ExtendedVolume;
-  isUpdating: boolean;
-  isVolumesLanding: boolean;
-  openForEdit: (
-    volumeId: number,
-    volumeLabel: string,
-    volumeTags: string[]
-  ) => void;
-  openForResize: (
-    volumeId: number,
-    volumeSize: number,
-    volumeLabel: string
-  ) => void;
-  openForClone: (
-    volumeId: number,
-    volumeLabel: string,
-    volumeSize: number,
-    volumeRegion: string
-  ) => void;
-  openForConfig: (volumeLabel: string, volumePath: string) => void;
-  handleAttach: (volumeId: number, label: string, regionID: string) => void;
-  handleDetach: (
-    volumeId: number,
-    volumeLabel: string,
-    linodeLabel: string,
-    poweredOff: boolean
-  ) => void;
-  handleDelete: (volumeId: number, volumeLabel: string) => void;
-}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = ExtendedVolume & ActionHandlers;
 
 const progressFromEvent = (e?: Event) => {
   if (!e) {
@@ -125,10 +46,9 @@ const progressFromEvent = (e?: Event) => {
 };
 
 export const VolumeTableRow: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
   const {
-    classes,
     isUpdating,
-    isVolumesLanding,
     openForClone,
     openForConfig,
     openForEdit,
@@ -136,81 +56,65 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
     handleAttach,
     handleDelete,
     handleDetach,
-    volume
+    id,
+    label,
+    tags,
+    size,
+    recentEvent,
+    region,
+    filesystem_path: filesystemPath,
+    linodeLabel,
+    linode_id: linodeId,
+    linodeStatus
   } = props;
-  const label = volume?.label ?? '';
-  const size = volume?.size ?? '';
-  const filesystemPath =
-    volume?.filesystem_path ?? `/dev/disk/by-id/scsi-0Linode_Volume_${label}`;
-  const regionID = volume?.region ?? '';
-  const region = formatRegion(regionID);
+
+  const location = useLocation();
+  const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
+
+  const formattedRegion = formatRegion(region);
 
   return isUpdating ? (
-    <TableRow key={volume.id} data-qa-volume-loading className="fade-in-table">
+    <TableRow
+      key={`volume-row-${id}`}
+      data-qa-volume-loading
+      className="fade-in-table"
+    >
       <TableCell data-qa-volume-cell-label={label}>
         <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <EntityIcon variant="volume" marginTop={1} />
-          </Grid>
           <Grid item>
-            <div className={classes.labelStatusWrapper}>
-              <Typography variant="h3" data-qa-label>
-                {label}
-              </Typography>
-            </div>
+            <div>{label}</div>
           </Grid>
         </Grid>
       </TableCell>
       <TableCell colSpan={5}>
-        <LinearProgress value={progressFromEvent(volume.recentEvent)} />
+        <LinearProgress value={progressFromEvent(recentEvent)} />
       </TableCell>
     </TableRow>
   ) : (
     <TableRow
-      key={volume.id}
-      data-qa-volume-cell={volume.id}
-      className="fade-in-table"
+      key={`volume-row-${id}`}
+      data-qa-volume-cell={id}
+      // className="fade-in-table"
     >
-      <TableCell parentColumn="Label" data-qa-volume-cell-label={label}>
+      <TableCell data-qa-volume-cell-label={label}>
         <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <EntityIcon variant="volume" marginTop={1} />
-          </Grid>
           <Grid item>
-            <div className={classes.labelStatusWrapper}>
-              <Typography variant="h3" data-qa-label>
-                {label}
-              </Typography>
-            </div>
+            <div>{label}</div>
           </Grid>
         </Grid>
       </TableCell>
-      {isVolumesLanding && (
-        <TableCell parentColumn="Region" data-qa-volume-region>
-          {region}
+      {region && <TableCell data-qa-volume-region>{formattedRegion}</TableCell>}
+      <TableCell data-qa-volume-size>{size} GiB</TableCell>
+      <Hidden xsDown>
+        <TableCell className={classes.volumePath} data-qa-fs-path>
+          {filesystemPath}
         </TableCell>
-      )}
-      <TableCell parentColumn="Size" data-qa-volume-size>
-        {size} GiB
-      </TableCell>
-      <TableCell
-        parentColumn="File System Path"
-        data-qa-fs-path
-        className={classes.systemPath}
-      >
-        {filesystemPath}
-      </TableCell>
+      </Hidden>
       {isVolumesLanding && (
-        <TableCell
-          parentColumn="Attached To"
-          data-qa-volume-cell-attachment={volume.linodeLabel}
-        >
-          {volume.linodeLabel ? (
-            <Link
-              to={`/linodes/${volume.linode_id}`}
-              className="link secondaryLink"
-            >
-              {volume.linodeLabel}
+        <TableCell data-qa-volume-cell-attachment={linodeLabel}>
+          {linodeId ? (
+            <Link to={`/linodes/${linodeId}`} className="link secondaryLink">
+              {linodeLabel}
             </Link>
           ) : (
             <Typography data-qa-unattached>Unattached</Typography>
@@ -218,36 +122,39 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
         </TableCell>
       )}
       <TableCell>
-        <VolumesActionMenu
-          onShowConfig={openForConfig}
-          filesystemPath={filesystemPath}
-          linodeLabel={volume.linodeLabel || ''}
-          regionID={regionID}
-          volumeId={volume.id}
-          volumeTags={volume.tags}
-          size={size}
-          label={label}
-          onEdit={openForEdit}
-          onResize={openForResize}
-          onClone={openForClone}
-          volumeLabel={volume.label}
-          /**
-           * This is a safer check than volume.linode_id (see logic in addAttachedLinodeInfoToVolume() from VolumesLanding)
-           * as it actually checks to see if the Linode exists before adding linodeLabel and linodeStatus.
-           * This avoids a bug (M3-2534) where a Volume attached to a just-deleted Linode
-           * could sometimes get tagged as "attached" here.
-           */
-          attached={Boolean(volume.linodeLabel)}
-          onAttach={handleAttach}
-          onDetach={handleDetach}
-          poweredOff={volume.linodeStatus === 'offline'}
-          onDelete={handleDelete}
-        />
+        <div className={classes.actionCell}>
+          <VolumesActionMenu
+            onShowConfig={openForConfig}
+            filesystemPath={filesystemPath}
+            linodeLabel={linodeLabel || ''}
+            regionID={region}
+            volumeId={id}
+            volumeTags={tags}
+            size={size}
+            label={label}
+            onEdit={openForEdit}
+            onResize={openForResize}
+            onClone={openForClone}
+            volumeLabel={label}
+            /**
+             * This is a safer check than linode_id (see logic in addAttachedLinodeInfoToVolume() from VolumesLanding)
+             * as it actually checks to see if the Linode exists before adding linodeLabel and linodeStatus.
+             * This avoids a bug (M3-2534) where a Volume attached to a just-deleted Linode
+             * could sometimes get tagged as "attached" here.
+             */
+            attached={Boolean(linodeLabel)}
+            isVolumesLanding={isVolumesLanding} // Passing this down to govern logic re: showing Attach or Detach in action menu.
+            onAttach={handleAttach}
+            onDetach={handleDetach}
+            poweredOff={linodeStatus === 'offline'}
+            onDelete={handleDelete}
+          />
+        </div>
       </TableCell>
     </TableRow>
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(VolumeTableRow);
+export default compose<CombinedProps, ActionHandlers & ExtendedVolume>(
+  React.memo
+)(VolumeTableRow);
