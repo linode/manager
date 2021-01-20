@@ -14,11 +14,6 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Grid from 'src/components/core/Grid';
-import Tab from 'src/components/core/ReachTab';
-import TabList from 'src/components/core/ReachTabList';
-import TabPanel from 'src/components/core/ReachTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -40,48 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     [theme.breakpoints.down('xs')]: {
       paddingLeft: theme.spacing()
-    }
-  },
-  section: {
-    alignItems: 'flex-start'
-  },
-  tabBar: {
-    marginTop: 0,
-    position: 'relative'
-  },
-  tabList: {
-    '&[data-reach-tab-list]': {
-      background: 'none !important',
-      boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
-      marginBottom: theme.spacing(3),
-      [theme.breakpoints.down('md')]: {
-        overflowX: 'scroll',
-        padding: 1
-      }
-    }
-  },
-  tab: {
-    '&[data-reach-tab]': {
-      display: 'inline-flex',
-      flexShrink: 0,
-      alignItems: 'center',
-      borderBottom: '2px solid transparent',
-      color: theme.cmrTextColors.linkActiveLight,
-      fontSize: '0.9rem',
-      lineHeight: 1.3,
-      marginTop: theme.spacing(0.5),
-      maxWidth: 264,
-      minHeight: theme.spacing(5),
-      minWidth: 50,
-      padding: '6px 16px',
-      '&:hover': {
-        color: theme.color.blue
-      }
-    },
-    '&[data-reach-tab][data-selected]': {
-      borderBottom: `2px solid ${theme.cmrTextColors.linkActiveLight}`,
-      color: theme.color.headline,
-      fontFamily: theme.font.bold
     }
   }
 }));
@@ -287,7 +240,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   const handleRecycleAllClusterNodes = () => recycleClusterNodes(cluster.id);
 
   return (
-    <React.Fragment>
+    <>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
       <Grid
         container
@@ -312,71 +265,56 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
           <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
         </Grid>
       </Grid>
-
       <Grid item xs={12}>
-        <Tabs defaultIndex={0} className={classes.tabBar}>
-          <TabList className={classes.tabList}>
-            <Tab className={classes.tab} key="Summary" data-qa-tab="Summary">
-              Summary
-            </Tab>
-          </TabList>
-
-          <TabPanels>
-            <TabPanel>
-              <Grid item xs={12} className={classes.section}>
-                <KubeSummaryPanel
-                  cluster={cluster}
-                  endpoint={endpoint}
-                  endpointError={endpointError}
-                  endpointLoading={endpointLoading}
-                  kubeconfigAvailable={kubeconfigAvailable}
-                  kubeconfigError={kubeconfigError}
-                  handleUpdateTags={(newTags: string[]) =>
-                    props.updateCluster({
-                      clusterID: cluster.id,
-                      tags: newTags
-                    })
-                  }
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <NodePoolsDisplay
-                  clusterLabel={cluster.label}
-                  pools={cluster.node_pools}
-                  types={props.typesData || []}
-                  addNodePool={(pool: PoolNodeWithPrice) =>
-                    props.createNodePool({
-                      clusterID: cluster.id,
-                      type: pool.type,
-                      count: pool.count
-                    })
-                  }
-                  updatePool={(id: number, updatedPool: PoolNodeWithPrice) =>
-                    props.updateNodePool({
-                      clusterID: cluster.id,
-                      nodePoolID: id,
-                      type: updatedPool.type,
-                      count: updatedPool.count
-                    })
-                  }
-                  deletePool={(poolID: number) =>
-                    props.deleteNodePool({
-                      clusterID: cluster.id,
-                      nodePoolID: poolID
-                    })
-                  }
-                  recycleAllPoolNodes={(poolID: number) =>
-                    handleRecycleAllPoolNodes(poolID)
-                  }
-                  recycleNode={handleRecycleNode}
-                  recycleAllClusterNodes={handleRecycleAllClusterNodes}
-                />
-              </Grid>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+        <KubeSummaryPanel
+          cluster={cluster}
+          endpoint={endpoint}
+          endpointError={endpointError}
+          endpointLoading={endpointLoading}
+          kubeconfigAvailable={kubeconfigAvailable}
+          kubeconfigError={kubeconfigError}
+          handleUpdateTags={(newTags: string[]) =>
+            props.updateCluster({
+              clusterID: cluster.id,
+              tags: newTags
+            })
+          }
+        />
       </Grid>
-    </React.Fragment>
+      <Grid item xs={12}>
+        <NodePoolsDisplay
+          clusterLabel={cluster.label}
+          pools={cluster.node_pools}
+          types={props.typesData || []}
+          addNodePool={(pool: PoolNodeWithPrice) =>
+            props.createNodePool({
+              clusterID: cluster.id,
+              type: pool.type,
+              count: pool.count
+            })
+          }
+          updatePool={(id: number, updatedPool: PoolNodeWithPrice) =>
+            props.updateNodePool({
+              clusterID: cluster.id,
+              nodePoolID: id,
+              type: updatedPool.type,
+              count: updatedPool.count
+            })
+          }
+          deletePool={(poolID: number) =>
+            props.deleteNodePool({
+              clusterID: cluster.id,
+              nodePoolID: poolID
+            })
+          }
+          recycleAllPoolNodes={(poolID: number) =>
+            handleRecycleAllPoolNodes(poolID)
+          }
+          recycleNode={handleRecycleNode}
+          recycleAllClusterNodes={handleRecycleAllClusterNodes}
+        />
+      </Grid>
+    </>
   );
 };
 
