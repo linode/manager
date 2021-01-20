@@ -8,9 +8,10 @@ env:
 on:
   # push:
   schedule:
-  - cron: "0 22 * * 1-5"
+  - cron: '*/10 * * * *'
+  # "0 22 * * 1-5"
     branches:
-      - develop
+      - M3-4577-initial-e2e-actions-workflow
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
