@@ -254,7 +254,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
             className={`${classes.button} ${classes.mobileSpacing}`}
             onClick={() => recycleAllClusterNodesDialog.openDialog(undefined)}
           >
-            Recycle All Nodes
+            Recycle Cluster
           </Button>
           <Button
             buttonType="primary"
