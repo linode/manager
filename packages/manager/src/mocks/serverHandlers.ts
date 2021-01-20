@@ -170,6 +170,12 @@ export const handlers = [
     const cluster = kubernetesAPIResponse.build({ id });
     return res(ctx.json(cluster));
   }),
+  rest.put('*/lke/clusters/:clusterId', async (req, res, ctx) => {
+    const id = Number(req.params.clusterId);
+    const k8s_version = req.params.k8s_version;
+    const cluster = kubernetesAPIResponse.build({ id, k8s_version });
+    return res(ctx.json(cluster));
+  }),
   rest.get('*/lke/clusters/:clusterId/pools', async (req, res, ctx) => {
     const pools = nodePoolFactory.buildList(10);
     nodePoolFactory.resetSequenceNumber();
@@ -178,6 +184,9 @@ export const handlers = [
   rest.get('*/lke/clusters/*/api-endpoints', async (req, res, ctx) => {
     const endpoints = kubeEndpointFactory.buildList(2);
     return res(ctx.json(makeResourcePage(endpoints)));
+  }),
+  rest.get('*/lke/clusters/*/recycle', async (req, res, ctx) => {
+    return res(ctx.json({}));
   }),
   rest.get('*/firewalls/', (req, res, ctx) => {
     const firewalls = firewallFactory.buildList(0);
