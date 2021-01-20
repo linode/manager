@@ -18,9 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 2
-      - run: git checkout HEAD^
-      - uses: actions/setup-node@v1
+          ref: M3-daily-update
         with:
           node-version: '10.x'
       - uses: actions/cache@v2
