@@ -1,12 +1,11 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
-import { StaticRouter } from 'react-router-dom';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { NodeBalancersLanding } from './NodeBalancersLanding';
-
 import { Provider } from 'react-redux';
+import { StaticRouter } from 'react-router-dom';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import store from 'src/store';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { NodeBalancersLanding } from './NodeBalancersLanding';
 
 describe.skip('NodeBalancers', () => {
   const component = mount(
@@ -31,19 +30,6 @@ describe.skip('NodeBalancers', () => {
             }}
             setDocs={jest.fn()}
             clearDocs={jest.fn()}
-            classes={{
-              root: '',
-              title: '',
-              nameCell: '',
-              nodeStatus: '',
-              transferred: '',
-              ports: '',
-              ip: '',
-              tagGroup: '',
-              titleWrapper: ''
-            }}
-            ldClient={{} as any}
-            flags={{}}
           />
         </LinodeThemeWrapper>
       </Provider>

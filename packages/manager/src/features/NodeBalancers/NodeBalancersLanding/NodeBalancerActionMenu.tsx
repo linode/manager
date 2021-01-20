@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import Hidden from 'src/components/core/Hidden';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
   nodeBalancerId: number;
@@ -11,57 +15,53 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class NodeBalancerActionMenu extends React.Component<CombinedProps> {
-  createLinodeActions = () => {
-    const { nodeBalancerId, history, toggleDialog, label } = this.props;
+export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    return (closeMenu: Function): Action[] => {
-      const actions = [
-        {
-          title: 'Summary',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push(`/nodebalancers/${nodeBalancerId}/summary`);
-            e.preventDefault();
-            closeMenu();
-          }
-        },
-        {
-          title: 'Configurations',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
-            e.preventDefault();
-            closeMenu();
-          }
-        },
-        {
-          title: 'Settings',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push(`/nodebalancers/${nodeBalancerId}/settings`);
-            e.preventDefault();
-            closeMenu();
-          }
-        },
-        {
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            toggleDialog(nodeBalancerId, label);
-            closeMenu();
-          }
-        }
-      ];
-      return actions;
-    };
-  };
+  const { nodeBalancerId, history, toggleDialog, label } = props;
 
-  render() {
-    return (
-      <ActionMenu
-        createActions={this.createLinodeActions()}
-        ariaLabel={`Action menu for NodeBalancer ${this.props.label}`}
-      />
-    );
-  }
-}
+  const actions: Action[] = [
+    {
+      title: 'Configurations',
+      onClick: () => {
+        history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
+      }
+    },
+    {
+      title: 'Settings',
+      onClick: () => {
+        history.push(`/nodebalancers/${nodeBalancerId}/settings`);
+      }
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        toggleDialog(nodeBalancerId, label);
+      }
+    }
+  ];
+
+  return (
+    <>
+      {!matchesSmDown &&
+        actions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      <Hidden mdUp>
+        <ActionMenu
+          actionsList={actions}
+          ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
+        />
+      </Hidden>
+    </>
+  );
+};
 
 export default withRouter(NodeBalancerActionMenu);
