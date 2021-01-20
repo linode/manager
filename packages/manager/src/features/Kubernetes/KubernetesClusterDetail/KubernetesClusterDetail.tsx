@@ -32,6 +32,7 @@ import { getAllWithArguments } from 'src/utilities/getAll';
 import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
+import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -299,6 +300,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
+      <Grid item>
+        <UpgradeKubernetesVersionBanner currentVersion={cluster.k8s_version} />
+      </Grid>
       <Grid
         container
         className={classes.root}
