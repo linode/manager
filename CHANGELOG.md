@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2021-02-15] - v1.28.2
+## [2021-01-20] - v1.28.3
+
+### Fixed:
+
+- Missing metadata and images for Kepler Builder OCA
+- Documentation links broken for several apps
+
+## [2021-01-15] - v1.28.2
 
 ### Fixed:
 

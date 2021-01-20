@@ -85,7 +85,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Cloudron with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/how-to-deploy-cloudron-with-marketplace-apps'
+          'https://www.linode.com/docs/guides/deploy-cloudron-with-marketplace-apps'
       }
     ],
     related_info: [
@@ -127,7 +127,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Discourse with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/how-to-deploy-discourse-with-marketplace-apps'
+          'https://www.linode.com/docs/guides/deploy-discourse-with-marketplace-apps'
       }
     ],
     related_info: [
@@ -217,7 +217,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Gitea with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/how-to-deploy-gitea-with-marketplace-apps'
+          'https://www.linode.com/docs/guides/deploy-gitea-with-marketplace-apps'
       }
     ],
     related_info: [
@@ -302,7 +302,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Filecloud with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/how-to-deploy-filecloud-with-marketplace-apps'
+          'https://www.linode.com/docs/guides/deploy-filecloud-with-marketplace-apps'
       }
     ],
     related_info: [
@@ -321,7 +321,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Guacamole with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/how-to-deploy-guacamole-with-marketplace-apps'
+          'https://www.linode.com/docs/guides/deploy-guacamole-with-marketplace-apps'
       }
     ],
     related_info: [
@@ -394,6 +394,25 @@ export const oneClickApps: OCA[] = [
       }
     ],
     logo_url: 'assets/jitsi_color.svg'
+  },
+  {
+    name: 'Kepler Builder',
+    description: `Use Kepler Builder to easily design and build sites in WordPress - no coding or design knowledge necessary.`,
+    summary: 'Powerful drag & drop WordPress website builder',
+    related_guides: [
+      {
+        title: 'Deploy Kepler Builder with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-kepler-with-marketplace-apps/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://kepler.app/',
+        href: 'https://kepler.app/'
+      }
+    ],
+    logo_url: 'assets/keplerbuilder_color.svg'
   },
   {
     name: 'LAMP',
@@ -478,7 +497,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Mist.io with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/how-to-deploy-mistio-with-marketplace-apps'
+          'https://www.linode.com/docs/guides/deploy-mistio-with-marketplace-apps'
       }
     ],
     related_info: [
@@ -540,7 +559,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy OpenLiteSpeed WordPress with Marketplace Apps',
         href:
-          'https://linode.com/docs/guides/how-to-deploy-openlitespeedwordpress-with-marketplace-apps'
+          'https://linode.com/docs/guides/deploy-openlitespeedwordpress-with-marketplace-apps'
       }
     ],
     related_info: [
@@ -612,7 +631,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy RabbitMQ with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/how-to-deploy-rabbitmq-with-marketplace-apps'
+          'https://www.linode.com/docs/guides/deploy-rabbitmq-with-marketplace-apps'
       }
     ],
     related_info: [
@@ -977,7 +996,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy VS Code Server with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/how-to-deploy-vscodeserver-with-marketplace-apps'
+          'https://www.linode.com/docs/guides/deploy-vscodeserver-with-marketplace-apps'
       }
     ],
     related_info: [
@@ -1016,7 +1035,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Webuzo with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/how-to-deploy-webuzo-with-marketplace-apps'
+          'https://www.linode.com/docs/guides/deploy-webuzo-with-marketplace-apps'
       }
     ],
     related_info: [
@@ -1028,13 +1047,13 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/webuzo_color.svg'
   },
   {
-    name: 'WireGuard',
-    description: `Configuring WireGuard is as simple as configuring SSH. A connection is established by an
+    name: 'WireGuard&reg;',
+    description: `Configuring WireGuard&reg; is as simple as configuring SSH. A connection is established by an
       exchange of public keys between server and client, and only a client whose public key is
       present in the server's configuration file is considered authorized. WireGuard sets up
       standard network interfaces which behave similarly to other common network interfaces,
       like eth0. This makes it possible to configure and manage WireGuard interfaces using
-      standard networking tools such as ifconfig and ip.`,
+      standard networking tools such as ifconfig and ip. "WireGuard" is a registered trademark of Jason A. Donenfeld.`,
     summary: `Modern VPN which utilizes state-of-the-art cryptography. It aims to be faster
       and leaner than other VPN protocols and has a smaller source code footprint.`,
     related_guides: [
