@@ -6,6 +6,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 type CSSClasses =
   | 'icon'
@@ -131,9 +132,8 @@ export class CardBase extends React.Component<CombinedProps> {
           <div
             className={classes.heading}
             data-qa-select-card-heading={heading}
-          >
-            {heading}
-          </div>
+            dangerouslySetInnerHTML={{ __html: sanitizeHTML(heading) }}
+          />
           {subheadings.map((subheading, idx) => {
             return (
               <div
