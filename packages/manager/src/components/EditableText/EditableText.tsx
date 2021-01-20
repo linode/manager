@@ -21,17 +21,13 @@ type ClassNames =
   | 'root'
   | 'container'
   | 'initial'
-  | 'edit'
   | 'textField'
   | 'inputRoot'
   | 'input'
   | 'button'
   | 'icon'
-  | 'save'
-  | 'close'
-  | 'headline'
-  | 'title'
   | 'editIcon'
+  | 'headline'
   | 'underlineOnHover';
 
 const styles = (theme: Theme) =>
@@ -45,18 +41,20 @@ const styles = (theme: Theme) =>
       }
     },
     root: {
-      padding: '5px 8px',
       display: 'inline-block',
       border: '1px solid transparent',
-      transition: theme.transitions.create(['opacity']),
-      wordBreak: 'break-all',
+      color: theme.cmrTextColors.tableStatic,
+      fontSize: '1.125rem',
+      lineHeight: 1,
+      padding: '5px 8px',
       textDecoration: 'inherit',
-      lineHeight: 1
+      transition: theme.transitions.create(['opacity']),
+      wordBreak: 'break-all'
     },
     container: {
       display: 'flex',
-      justifyContent: 'flex-start',
       alignItems: 'center',
+      justifyContent: 'flex-start',
       maxHeight: 48,
       position: 'relative'
     },
@@ -74,10 +72,6 @@ const styles = (theme: Theme) =>
         }
       }
     },
-    edit: {
-      fontSize: 22,
-      border: '1px solid transparent'
-    },
     textField: {
       opacity: 0,
       animation: '$fadeIn .3s ease-in-out forwards',
@@ -88,41 +82,30 @@ const styles = (theme: Theme) =>
       borderColor: `${theme.palette.primary.main} !important`,
       backgroundColor: 'transparent',
       boxShadow: 'none',
-      minHeight: 40,
       [theme.breakpoints.up('md')]: {
         maxWidth: 415,
         width: '100%'
       }
     },
+    input: {
+      fontFamily: theme.font.bold,
+      fontSize: '1.125rem',
+      padding: '5px 9px'
+    },
     button: {
       minWidth: 'auto',
-      minHeight: 48,
       padding: 0,
       marginTop: 0,
       background: 'transparent !important'
     },
     icon: {
-      margin: '0 10px',
       color: theme.palette.text.primary,
+      fontSize: 22,
+      marginLeft: theme.spacing(),
+      minHeight: 34,
       '&:hover, &:focus': {
         color: theme.palette.primary.light
       }
-    },
-    save: {
-      fontSize: 26
-    },
-    close: {
-      fontSize: 26
-    },
-    input: {
-      padding: '5px 8px',
-      ...theme.typography.h1
-    },
-    headline: {
-      ...theme.typography.h1
-    },
-    title: {
-      ...theme.typography.h1
     },
     editIcon: {
       [theme.breakpoints.up('sm')]: {
@@ -131,6 +114,9 @@ const styles = (theme: Theme) =>
           opacity: 1
         }
       }
+    },
+    headline: {
+      ...theme.typography.h1
     },
     underlineOnHover: {
       '&:hover, &:focus': {
@@ -174,7 +160,7 @@ const EditableText: React.FC<FinalProps> = props => {
 
   React.useEffect(() => {
     onCancel();
-  }, [isEditing]);
+  }, [isEditing, onCancel]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -241,15 +227,12 @@ const EditableText: React.FC<FinalProps> = props => {
         data-qa-edit-button
         aria-label={`Edit ${text}`}
       >
-        <Edit className={`${classes.icon} ${classes.edit}`} />
+        <Edit className={classes.icon} />
       </Button>
     </div>
   ) : (
     <ClickAwayListener onClickAway={cancelEditing} mouseEvent="onMouseDown">
-      <div
-        className={`${classes.container} ${classes.edit} ${className}`}
-        data-qa-edit-field
-      >
+      <div className={`${classes.container} ${className}`} data-qa-edit-field>
         <TextField
           {...rest}
           className={classes.textField}
@@ -265,7 +248,6 @@ const EditableText: React.FC<FinalProps> = props => {
           inputProps={{
             className: classnames({
               [classes.headline]: typeVariant === 'h1',
-              [classes.title]: typeVariant === 'h2',
               [classes.input]: true
             })
           }}
@@ -277,14 +259,14 @@ const EditableText: React.FC<FinalProps> = props => {
           onClick={finishEditing}
           data-qa-save-edit
         >
-          <Check className={`${classes.icon} ${classes.save}`} />
+          <Check className={classes.icon} />
         </Button>
         <Button
           className={classes.button}
           onClick={cancelEditing}
           data-qa-cancel-edit
         >
-          <Close className={`${classes.icon} ${classes.close}`} />
+          <Close className={classes.icon} />
         </Button>
       </div>
     </ClickAwayListener>

@@ -8,34 +8,20 @@ import H1Header from 'src/components/H1Header';
 import { EditableProps, LabelProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  crumb: {
-    ...theme.typography.h1,
-    textTransform: 'capitalize'
-  },
-  noCap: {
-    textTransform: 'initial'
-  },
-  crumbLink: {
-    color: theme.palette.primary.main,
-    '&:hover': {
-      color: theme.palette.primary.light
-    }
+  editableContainer: {
+    marginLeft: -theme.spacing()
   },
   labelWrapper: {
     display: 'flex',
     flexDirection: 'column'
   },
-  labelText: {
-    padding: `2px 10px`
+  crumb: {
+    color: theme.cmrTextColors.tableStatic,
+    fontSize: '1.125rem',
+    textTransform: 'capitalize'
   },
-  editableContainer: {
-    marginLeft: -theme.spacing(1)
-  },
-  slash: {
-    fontSize: 24,
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    color: theme.color.grey1
+  noCap: {
+    textTransform: 'initial'
   }
 }));
 

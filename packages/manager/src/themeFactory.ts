@@ -94,6 +94,7 @@ const cmrBGColors = {
 const cmrTextColors = {
   linkActiveLight: '#2575d0',
   headlineStatic: '#32363c',
+  tableHeader: '#888F91',
   tableStatic: '#606469',
   textAccessTable: '#606469'
 };
