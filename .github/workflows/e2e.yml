@@ -7,7 +7,7 @@ env:
   CLIENT_ID: ${{ secrets.CLIENT_ID }}
 on:
   schedule:
-    - cron: '0 12 * * 1-5'
+    - cron: '0 13 * * 1-5'
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
@@ -45,6 +45,9 @@ jobs:
       - run: |
           echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
           echo "REACT_APP_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
+          echo "REACT_APP_LOGIN_ROOT=${{ secrets.REACT_APP_LOGIN_ROOT }}" >> ./packages/manager/.env
+          echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
+          echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
           yarn up &
       - name: Run tests
         uses: cypress-io/github-action@v2
