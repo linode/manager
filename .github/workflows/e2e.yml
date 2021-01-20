@@ -18,8 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: M3-daily-update
-        with:
           node-version: '10.x'
       - uses: actions/cache@v2
         with:
