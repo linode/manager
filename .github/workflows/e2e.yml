@@ -8,7 +8,7 @@ env:
 on:
   # push:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '*/5 * * * *'
   # "0 22 * * 1-5"
 jobs:
   run-cypress-e2e:
@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: M3-4577-initial-e2e-actions-workflow
+          ref: 'M3-4577-initial-e2e-actions-workflow'
       - uses: actions/setup-node@v1
         with:
           node-version: '10.x'
