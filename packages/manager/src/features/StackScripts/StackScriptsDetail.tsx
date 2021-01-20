@@ -1,17 +1,21 @@
+import { Grant } from '@linode/api-v4/lib/account/types';
 import {
+  deleteStackScript,
   getStackScript,
   StackScript,
-  updateStackScript,
-  deleteStackScript
+  updateStackScript
 } from '@linode/api-v4/lib/stackscripts';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import {
   createStyles,
   Theme,
@@ -25,17 +29,12 @@ import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
-import { getStackScriptUrl, StackScriptCategory } from './stackScriptUtils';
-
 import {
   hasGrant,
   isRestrictedUser as _isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Grant } from '@linode/api-v4/lib/account/types';
 import { MapState } from 'src/store/types';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import { getStackScriptUrl, StackScriptCategory } from './stackScriptUtils';
 
 interface DialogVariantProps {
   open: boolean;
@@ -104,13 +103,15 @@ const styles = (theme: Theme) =>
       }
     },
     userName: {
-      ...theme.typography.h1
+      color: theme.cmrTextColors.tableStatic,
+      fontFamily: theme.font.bold,
+      fontSize: '1.125rem'
     },
     userNameSlash: {
-      color: theme.color.grey1,
+      color: theme.cmrTextColors.tableHeader,
       fontFamily: theme.font.normal,
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1)
+      fontSize: 20,
+      marginRight: 4
     }
   });
 
