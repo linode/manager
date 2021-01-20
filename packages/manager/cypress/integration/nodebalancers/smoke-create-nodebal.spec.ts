@@ -9,6 +9,13 @@ import {
   deleteLinodeById
 } from '../../support/api/linodes';
 import { selectRegionString } from '../../support/ui/constants';
+import {
+  containsClick,
+  fbtClick,
+  fbtVisible,
+  getClick,
+  getVisible
+} from '../../support/helpers';
 
 const deployNodeBalancer = () => {
   // This is not an error, the tag is deploy-linode
@@ -16,25 +23,18 @@ const deployNodeBalancer = () => {
 };
 const createNodeBalancerWithUI = nodeBal => {
   cy.visitWithLogin('/nodebalancers/create');
-  cy.findByText('NodeBalancer Settings');
-  cy.findByLabelText('NodeBalancer Label')
+  fbtVisible('NodeBalancer Settings');
+  getVisible('[id="nodebalancer-label"]')
     .click()
+    .clear()
     .type(nodeBal.label);
-  cy.contains('create a tag')
-    .click()
-    .type(testNodeBalTag);
+  containsClick('create a tag').type(testNodeBalTag);
   // this will create the NB in newark, where the default Linode was created
-  cy.contains(selectRegionString)
-    .click()
-    .type('new {enter}');
+  containsClick(selectRegionString).type('new {enter}');
 
   // node backend config
-  cy.findByLabelText('Label')
-    .click()
-    .type(makeLinodeLabel());
-  cy.contains('Enter IP Address')
-    .click()
-    .type(`${nodeBal.linodePrivateIp}{enter}`);
+  fbtClick('Label').type(makeLinodeLabel());
+  containsClick('Enter IP Address').type(`${nodeBal.linodePrivateIp}{enter}`);
   deployNodeBalancer();
 };
 
@@ -46,15 +46,11 @@ describe('create NodeBalancer', () => {
         label: makeNodeBalLabel(),
         linodePrivateIp: linode.ipv4[1]
       };
-
-      cy.server();
-      cy.route({
-        method: 'POST',
-        url: '*/nodebalancers'
-      }).as('createNodeBalancer');
+      // catch request
+      cy.intercept('POST', '*/nodebalancers').as('createNodeBalancer');
       createNodeBalancerWithUI(nodeBal);
       cy.wait('@createNodeBalancer')
-        .its('status')
+        .its('response.statusCode')
         .should('eq', 200);
 
       deleteNodeBalancerByLabel(nodeBal.label);
@@ -63,28 +59,21 @@ describe('create NodeBalancer', () => {
   });
   it('API error Handling', () => {
     createLinode().then(linode => {
-      cy.server();
-      cy.route({
-        method: 'POST',
-        url: '*/nodebalancers'
-      }).as('createNodeBalancer');
+      // catch request
+      cy.intercept('POST', '*/nodebalancers').as('createNodeBalancer');
       createNodeBalancerWithUI({
         label: 'cy-test-dfghjk^uu7',
         linodePrivateIp: linode.ipv4[1]
       });
-      cy.findByText(`Label can't contain special characters or spaces.`).should(
-        'be.visible'
-      );
-      cy.findByLabelText('NodeBalancer Label')
+      fbtVisible(`Label can't contain special characters or spaces.`);
+      getVisible('[id="nodebalancer-label"]')
         .click()
         .clear()
         .type(makeNodeBalLabel());
-      cy.get('[data-qa-protocol-select]')
-        .click()
-        .type('TCP{enter}');
-      cy.get('[data-qa-session-stickiness-select]')
-        .click()
-        .type('HTTP Cookie{enter}');
+      getClick('[data-qa-protocol-select="true"]').type('TCP{enter}');
+      getClick('[data-qa-session-stickiness-select]').type(
+        'HTTP Cookie{enter}'
+      );
       deployNodeBalancer();
       const errMessage = `Stickiness http_cookie requires protocol 'http' or 'https'`;
       cy.wait('@createNodeBalancer')
@@ -92,7 +81,7 @@ describe('create NodeBalancer', () => {
         .should('deep.equal', {
           errors: [{ field: 'configs[0].stickiness', reason: errMessage }]
         });
-      cy.findByText(errMessage).should('be.visible');
+      fbtVisible(errMessage);
       deleteLinodeById(linode.id);
     });
   });

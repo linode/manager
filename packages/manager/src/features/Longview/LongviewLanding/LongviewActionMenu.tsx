@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 
 export interface ActionHandlers {
   triggerDeleteLongviewClient: (
@@ -25,25 +25,22 @@ const LongviewActionMenu: React.FC<CombinedProps> = props => {
     userCanModifyClient
   } = props;
 
-  const createActions = () => {
-    return (closeMenu: Function): Action[] => [
-      {
-        title: 'Delete',
-        disabled: !userCanModifyClient,
-        tooltip: userCanModifyClient
-          ? ''
-          : 'Contact an account administrator for permission.',
-        onClick: () => {
-          closeMenu();
-          triggerDeleteLongviewClient(longviewClientID, longviewClientLabel);
-        }
+  const actions: Action[] = [
+    {
+      title: 'Delete',
+      disabled: !userCanModifyClient,
+      tooltip: userCanModifyClient
+        ? ''
+        : 'Contact an account administrator for permission.',
+      onClick: () => {
+        triggerDeleteLongviewClient(longviewClientID, longviewClientLabel);
       }
-    ];
-  };
+    }
+  ];
 
   return (
     <ActionMenu
-      createActions={createActions()}
+      actionsList={actions}
       ariaLabel={`Action menu for Longview Client ${props.longviewClientLabel}`}
     />
   );
