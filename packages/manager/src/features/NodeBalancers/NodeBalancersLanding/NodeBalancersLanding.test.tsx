@@ -49,8 +49,4 @@ describe.skip('NodeBalancers', () => {
       .first();
     expect(kabobMenu).toHaveLength(1);
   });
-
-  it('trigger a confirmation modal when delete is selected', () => {
-    //
-  });
 });
