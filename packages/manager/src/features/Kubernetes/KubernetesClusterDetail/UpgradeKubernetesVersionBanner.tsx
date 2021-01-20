@@ -1,4 +1,7 @@
-import { KubernetesVersion } from '@linode/api-v4/lib/kubernetes/types';
+import {
+  KubernetesVersion,
+  recycleClusterNodes
+} from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -7,6 +10,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
+import { useDialog } from 'src/hooks/useDialog';
 import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 
@@ -49,12 +53,17 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
   const { data: versions } = useKubernetesVersionQuery();
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
-  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
-  const onClose = () => setConfirmDialogOpen(false);
   const { updateKubernetesCluster } = useKubernetesClusters();
 
+  const confirmUpgradeDialog = useDialog(() => onSubmit(nextVersion ?? ''));
+  const recycleNodesDialog = useDialog(() => recycleClusterNodes(clusterID));
+
   const onSubmit = (nextVersion: string) => {
-    updateKubernetesCluster(clusterID, { k8s_version: nextVersion });
+    return updateKubernetesCluster(clusterID, {
+      k8s_version: nextVersion
+    }).then(_ => {
+      recycleNodesDialog.openDialog(undefined);
+    });
   };
 
   if (!nextVersion) {
@@ -77,7 +86,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
           </Grid>
           <Grid item>
             <Button
-              onClick={() => setConfirmDialogOpen(true)}
+              onClick={() => confirmUpgradeDialog.openDialog(undefined)}
               buttonType="primary"
             >
               Upgrade Version
@@ -86,19 +95,23 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
         </Grid>
       </Paper>
       <Dialog
-        title={`Upgrade to Kubernetes ${nextVersion}?`}
-        open={confirmDialogOpen}
-        onClose={() => setConfirmDialogOpen(false)}
+        title={`Step 1: Upgrade to Kubernetes ${nextVersion}`}
+        open={confirmUpgradeDialog.dialog.isOpen}
+        onClose={confirmUpgradeDialog.closeDialog}
         actions={
           <ActionsPanel style={{ padding: 0 }}>
-            <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
+            <Button
+              buttonType="cancel"
+              onClick={confirmUpgradeDialog.closeDialog}
+              data-qa-cancel
+            >
               Cancel
             </Button>
             <Button
               buttonType="primary"
               destructive
-              onClick={() => onSubmit(nextVersion)}
-              loading={false}
+              onClick={() => confirmUpgradeDialog.submitDialog(undefined)}
+              loading={confirmUpgradeDialog.dialog.isLoading}
               data-qa-confirm
             >
               Upgrade
@@ -108,6 +121,34 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
       >
         Upgrade Kubernetes from {currentVersion} to {nextVersion}? Once the
         upgrade is complete you will need to recycle the nodes in your cluster.
+      </Dialog>
+      <Dialog
+        title={`Step 2: Recycle All Cluster Nodes`}
+        open={recycleNodesDialog.dialog.isOpen}
+        onClose={recycleNodesDialog.closeDialog}
+        actions={
+          <ActionsPanel style={{ padding: 0 }}>
+            <Button
+              buttonType="cancel"
+              onClick={recycleNodesDialog.closeDialog}
+              data-qa-cancel
+            >
+              Cancel
+            </Button>
+            <Button
+              buttonType="primary"
+              destructive
+              onClick={() => recycleNodesDialog.submitDialog(undefined)}
+              loading={recycleNodesDialog.dialog.isLoading}
+              data-qa-confirm
+            >
+              Recycle Nodes
+            </Button>
+          </ActionsPanel>
+        }
+      >
+        Kubernetes version has been updated successfully. For the changes to
+        take effect, you must recycle all of the nodes in your cluster.
       </Dialog>
     </>
   );
