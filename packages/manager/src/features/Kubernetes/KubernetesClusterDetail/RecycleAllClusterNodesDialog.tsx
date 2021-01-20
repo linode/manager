@@ -36,7 +36,7 @@ const renderActions = (
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        Recycle Cluster
+        Recycle All Nodes
       </Button>
     </ActionsPanel>
   );
