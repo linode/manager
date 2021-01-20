@@ -10,7 +10,7 @@ const _getVersions = () => {
   return getKubernetesVersions().then(response => response.data);
 };
 
-export const useManagedSSHKey = () =>
+export const useKubernetesVersionQuery = () =>
   useQuery<KubernetesVersion[], APIError[]>(
     'k8s_versions',
     _getVersions,

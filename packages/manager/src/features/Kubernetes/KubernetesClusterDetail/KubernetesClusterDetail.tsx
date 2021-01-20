@@ -301,7 +301,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
       <Grid item>
-        <UpgradeKubernetesVersionBanner currentVersion={cluster.k8s_version} />
+        <UpgradeKubernetesVersionBanner
+          clusterID={cluster.id}
+          currentVersion={cluster.k8s_version}
+        />
       </Grid>
       <Grid
         container
