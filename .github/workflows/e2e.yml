@@ -8,7 +8,7 @@ env:
 on:
   # push:
   schedule:
-    - cron: "0 21 * * 1-5"
+  - cron: "0 22 * * 1-5"
     branches:
       - develop
 jobs:
