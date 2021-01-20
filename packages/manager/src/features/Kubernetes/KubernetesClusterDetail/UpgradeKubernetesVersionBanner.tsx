@@ -89,7 +89,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
           >
             <Grid item>
               <Typography className={classes.upgradeMessage}>
-                A new version of Kubernetes is available.
+                A new version of Kubernetes is available ({nextVersion}).
               </Typography>
             </Grid>
             <Grid item>
@@ -114,7 +114,8 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
       >
         Upgrade this cluster&apos;s Kubernetes version from{' '}
         <strong>{currentVersion}</strong> to <strong>{nextVersion}</strong>?
-        Once the upgrade is complete you will need to recycle your cluster.
+        Once the upgrade is complete you will need to recycle all nodes in your
+        cluster.
       </UpgradeDialog>
       <RecycleDialog
         isOpen={recycleNodesDialog.dialog.isOpen}
