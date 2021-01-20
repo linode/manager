@@ -122,7 +122,10 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
         onSubmit={() => recycleNodesDialog.submitDialog(undefined)}
       >
         Kubernetes version has been updated successfully. For the changes to
-        take effect, you must recycle your cluster.
+        take effect, you must recycle your cluster. All nodes will be deleted
+        and new nodes will be created to replace them. Any local storage (such
+        as &apos;hostPath&apos; volumes) will be erased. This may take several
+        minutes, as nodes will be replaced on a rolling basis.
       </RecycleDialog>
     </>
   );
@@ -142,7 +145,7 @@ interface UpgradeDialogProps extends DialogProps {
 
 // Upgrade Confirmation Dialog (Step 1)
 
-export const UpgradeDialog: React.FC<UpgradeDialogProps> = props => {
+export const UpgradeDialog: React.FC<UpgradeDialogProps> = React.memo(props => {
   const {
     currentVersion,
     nextVersion,
@@ -179,10 +182,10 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = props => {
       the upgrade is complete you will need to recycle your cluster.
     </Dialog>
   );
-};
+});
 
 // Recycle Dialog (Step 2)
-export const RecycleDialog: React.FC<DialogProps> = props => {
+export const RecycleDialog: React.FC<DialogProps> = React.memo(props => {
   const { isOpen, isLoading, onClose, onSubmit } = props;
   return (
     <Dialog
@@ -210,6 +213,6 @@ export const RecycleDialog: React.FC<DialogProps> = props => {
       effect, you must recycle your cluster.
     </Dialog>
   );
-};
+});
 
 export default React.memo(UpgradeKubernetesVersionBanner);

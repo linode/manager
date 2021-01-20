@@ -7,7 +7,10 @@ import { useQuery } from 'react-query';
 import { queryPresets } from './base';
 
 const _getVersions = () => {
-  return getKubernetesVersions().then(response => response.data);
+  return getKubernetesVersions(
+    {},
+    { '+order_by': 'id', '+order': 'desc' }
+  ).then(response => response.data);
 };
 
 export const useKubernetesVersionQuery = () =>
