@@ -8,8 +8,12 @@ import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    fontSize: '1rem',
     borderLeft: `solid 6px ${theme.color.green}`,
-    padding: theme.spacing(1.5)
+    padding: theme.spacing(1)
+  },
+  upgradeMessage: {
+    marginLeft: theme.spacing()
   }
 }));
 
@@ -31,7 +35,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
         justify="space-between"
       >
         <Grid item>
-          <Typography>
+          <Typography className={classes.upgradeMessage}>
             A new version of Kubernetes is available. {currentVersion}
           </Typography>
         </Grid>
