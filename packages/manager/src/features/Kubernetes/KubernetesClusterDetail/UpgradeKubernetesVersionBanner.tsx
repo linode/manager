@@ -67,7 +67,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
 
   const onSubmitRecycleDialog = () =>
     recycleClusterNodes(clusterID).then(_ =>
-      enqueueSnackbar('Cluster recycle started successfully.', {
+      enqueueSnackbar('Recycle started successfully.', {
         variant: 'success'
       })
     );
@@ -106,6 +106,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
       <UpgradeDialog
         currentVersion={currentVersion}
         nextVersion={nextVersion ?? ''}
+        error={confirmUpgradeDialog.dialog.error}
         isOpen={confirmUpgradeDialog.dialog.isOpen}
         isLoading={confirmUpgradeDialog.dialog.isLoading}
         onClose={confirmUpgradeDialog.closeDialog}
@@ -118,6 +119,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
       <RecycleDialog
         isOpen={recycleNodesDialog.dialog.isOpen}
         isLoading={recycleNodesDialog.dialog.isLoading}
+        error={recycleNodesDialog.dialog.error}
         onClose={recycleNodesDialog.closeDialog}
         onSubmit={() => recycleNodesDialog.submitDialog(undefined)}
       >
@@ -134,6 +136,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
 interface DialogProps {
   isOpen: boolean;
   isLoading: boolean;
+  error?: string;
   onClose: () => void;
   onSubmit: () => void;
 }
@@ -149,6 +152,7 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = React.memo(props => {
   const {
     currentVersion,
     nextVersion,
+    error,
     isOpen,
     isLoading,
     onClose,
@@ -158,6 +162,7 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = React.memo(props => {
   return (
     <Dialog
       title={`Step 1: Upgrade to Kubernetes ${nextVersion}`}
+      error={error}
       open={isOpen}
       onClose={onClose}
       actions={
@@ -187,10 +192,11 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = React.memo(props => {
 
 // Recycle Dialog (Step 2)
 export const RecycleDialog: React.FC<DialogProps> = React.memo(props => {
-  const { isOpen, isLoading, onClose, onSubmit } = props;
+  const { error, isOpen, isLoading, onClose, onSubmit } = props;
   return (
     <Dialog
       title={`Step 2: Recycle All Cluster Nodes`}
+      error={error}
       open={isOpen}
       onClose={onClose}
       actions={
