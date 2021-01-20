@@ -418,7 +418,9 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         </>
       ) : (
         <>
-          This is a pilot program for Linode GPU Instances.
+          Linode GPU Instances are deployed as finite resources and may not be
+          available at the time of your request. Some additional verification
+          may be required to access these services.
           <a
             href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
             target="_blank"
@@ -427,9 +429,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
           >
             {` `}Here is a guide
           </a>{' '}
-          with more information. This program has finite resources and may not
-          be available at the time of your request. Some additional verification
-          may be required to access these services.
+          with information on getting started.
         </>
       );
       tabs.push({
