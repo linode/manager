@@ -91,11 +91,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
       </TableCell>
     </TableRow>
   ) : (
-    <TableRow
-      key={`volume-row-${id}`}
-      data-qa-volume-cell={id}
-      // className="fade-in-table"
-    >
+    <TableRow key={`volume-row-${id}`} data-qa-volume-cell={id}>
       <TableCell data-qa-volume-cell-label={label}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>

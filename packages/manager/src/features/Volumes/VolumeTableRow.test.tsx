@@ -1,6 +1,7 @@
 import { VolumeStatus } from '@linode/api-v4/lib/volumes';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 import * as React from 'react';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { volumes } from 'src/__data__/volumes';
 import { VolumeTableRow } from './VolumeTableRow';
 
@@ -32,8 +33,8 @@ const props = {
   classes,
   volume: volumeWithLinodeLabel,
   id: 0,
-  label: '',
-  region: '',
+  label: 'test',
+  region: 'test2',
   size: 0,
   status: 'active' as VolumeStatus,
   tags: [],
@@ -52,22 +53,25 @@ const props = {
   handleDelete: jest.fn()
 };
 
-const component = shallow(<VolumeTableRow {...props} />);
+// const component = shallow(<VolumeTableRow {...props} />);
 
 describe('Volume table row', () => {
   it("should show the attached Linode's label if present", () => {
-    expect(
-      component
-        .find('[data-qa-volume-cell-attachment]')
-        .contains(volumeWithLinodeLabel.linodeLabel)
-    ).toBeTruthy();
+    // expect(
+    //   component
+    //     .find('[data-qa-volume-cell-attachment]')
+    //     .contains(volumeWithLinodeLabel.linodeLabel)
+    // ).toBeTruthy();
+
+    const { getByText } = render(wrapWithTheme(<VolumeTableRow {...props} />));
+    expect(getByText(volumeWithLinodeLabel.linodeLabel));
   });
 
-  it('should show Unattached if the Volume is not attached to a Linode', () => {
-    const unattachedProps = { ...props, volume: unattachedVolume };
-    const unattached = shallow(<VolumeTableRow {...unattachedProps} />);
-    expect(
-      unattached.find('[data-qa-volume-cell-attachment]').contains('Unattached')
-    ).toBeTruthy();
-  });
+  // it('should show Unattached if the Volume is not attached to a Linode', () => {
+  //   const unattachedProps = { ...props, volume: unattachedVolume };
+  //   const { getByText } = render(
+  //     wrapWithTheme(<VolumeTableRow {...unattachedProps} />)
+  //   );
+  //   expect(getByText('Unattached'));
+  // });
 });
