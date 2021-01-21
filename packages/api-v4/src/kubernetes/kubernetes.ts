@@ -97,9 +97,11 @@ export const getKubeConfig = (clusterId: number) =>
  *
  */
 
-export const getKubernetesVersions = () =>
+export const getKubernetesVersions = (params?: any, filters?: any) =>
   Request<Page<KubernetesVersion>>(
     setMethod('GET'),
+    setXFilter(filters),
+    setParams(params),
     setURL(`${API_ROOT}/lke/versions`)
   );
 
