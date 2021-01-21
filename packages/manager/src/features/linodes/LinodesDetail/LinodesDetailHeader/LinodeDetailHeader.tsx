@@ -311,6 +311,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         open={migrateDialog.open}
         onClose={closeDialogs}
         linodeID={migrateDialog.linodeID}
+        _linode={linode}
       />
       <TagDrawer
         entityLabel={linode.label}
