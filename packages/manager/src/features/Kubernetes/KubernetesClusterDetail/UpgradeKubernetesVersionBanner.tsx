@@ -11,7 +11,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/ConfirmationDialog';
 import Grid from 'src/components/Grid';
-import { useDialog } from 'src/hooks/useDialog';
 import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 
@@ -53,28 +52,8 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
   const classes = useStyles();
   const { data: versions } = useKubernetesVersionQuery();
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
-  const { enqueueSnackbar } = useSnackbar();
 
-  const { updateKubernetesCluster } = useKubernetesClusters();
-
-  const onSubmitUpgradeDialog = (nextVersion: string) =>
-    updateKubernetesCluster(clusterID, {
-      k8s_version: nextVersion
-    }).then(_ => {
-      recycleNodesDialog.openDialog(undefined);
-    });
-
-  const onSubmitRecycleDialog = () =>
-    recycleClusterNodes(clusterID).then(_ =>
-      enqueueSnackbar('Recycle started successfully.', {
-        variant: 'success'
-      })
-    );
-
-  const confirmUpgradeDialog = useDialog(() =>
-    onSubmitUpgradeDialog(nextVersion ?? '')
-  );
-  const recycleNodesDialog = useDialog(onSubmitRecycleDialog);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   return (
     <>
@@ -92,10 +71,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
               </Typography>
             </Grid>
             <Grid item>
-              <Button
-                onClick={() => confirmUpgradeDialog.openDialog(undefined)}
-                buttonType="primary"
-              >
+              <Button onClick={() => setDialogOpen(true)} buttonType="primary">
                 Upgrade Version
               </Button>
             </Grid>
@@ -103,42 +79,20 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
         </Paper>
       ) : null}
       <UpgradeDialog
+        clusterID={clusterID}
         currentVersion={currentVersion}
         nextVersion={nextVersion ?? ''}
-        error={confirmUpgradeDialog.dialog.error}
-        isOpen={confirmUpgradeDialog.dialog.isOpen}
-        isLoading={confirmUpgradeDialog.dialog.isLoading}
-        onClose={confirmUpgradeDialog.closeDialog}
-        onSubmit={() => confirmUpgradeDialog.submitDialog(undefined)}
-      >
-        Upgrade this cluster&apos;s Kubernetes version from{' '}
-        <strong>{currentVersion}</strong> to <strong>{nextVersion}</strong>?
-        Once the upgrade is complete you will need to recycle all nodes in your
-        cluster.
-      </UpgradeDialog>
-      <RecycleDialog
-        isOpen={recycleNodesDialog.dialog.isOpen}
-        isLoading={recycleNodesDialog.dialog.isLoading}
-        error={recycleNodesDialog.dialog.error}
-        onClose={recycleNodesDialog.closeDialog}
-        onSubmit={() => recycleNodesDialog.submitDialog(undefined)}
-      >
-        Kubernetes version has been updated successfully. For the changes to
-        take effect, you must recycle all nodes in your cluster. All nodes will
-        be deleted and new nodes will be created to replace them. Any local
-        storage (such as &apos;hostPath&apos; volumes) will be erased. This may
-        take several minutes, as nodes will be replaced on a rolling basis.
-      </RecycleDialog>
+        isOpen={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+      />
     </>
   );
 };
 
 interface DialogProps {
+  clusterID: number;
   isOpen: boolean;
-  isLoading: boolean;
-  error?: string;
   onClose: () => void;
-  onSubmit: () => void;
 }
 
 interface UpgradeDialogProps extends DialogProps {
@@ -149,75 +103,115 @@ interface UpgradeDialogProps extends DialogProps {
 // Upgrade Confirmation Dialog (Step 1)
 
 export const UpgradeDialog: React.FC<UpgradeDialogProps> = React.memo(props => {
-  const {
-    currentVersion,
-    nextVersion,
-    error,
-    isOpen,
-    isLoading,
-    onClose,
-    onSubmit
-  } = props;
+  const { clusterID, currentVersion, nextVersion, isOpen, onClose } = props;
+  const { enqueueSnackbar } = useSnackbar();
 
-  return (
-    <Dialog
-      title={`Step 1: Upgrade to Kubernetes ${nextVersion}`}
-      error={error}
-      open={isOpen}
-      onClose={onClose}
-      actions={
-        <ActionsPanel style={{ padding: 0 }}>
-          <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            destructive
-            onClick={onSubmit}
-            loading={isLoading}
-            data-qa-confirm
-          >
-            Upgrade Version
-          </Button>
-        </ActionsPanel>
-      }
-    >
-      Upgrade this cluster&apos;s Kubernetes version from{' '}
-      <strong>{currentVersion}</strong> to <strong>{nextVersion}</strong>? Once
-      the upgrade is complete you will need to recycle all nodes in your
-      cluster.
-    </Dialog>
+  const { updateKubernetesCluster } = useKubernetesClusters();
+
+  const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] = React.useState(
+    false
   );
-});
 
-// Recycle Dialog (Step 2)
-export const RecycleDialog: React.FC<DialogProps> = React.memo(props => {
-  const { error, isOpen, isLoading, onClose, onSubmit } = props;
+  const [error, setError] = React.useState<string | undefined>();
+  const [submitting, setSubmitting] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setError(undefined);
+      setSubmitting(false);
+      setHasUpdatedSuccessfully(false);
+    }
+  }, [isOpen]);
+
+  const onSubmitUpgradeDialog = () => {
+    setSubmitting(true);
+    setError(undefined);
+    updateKubernetesCluster(clusterID, {
+      k8s_version: nextVersion
+    })
+      .then(_ => {
+        setHasUpdatedSuccessfully(true);
+        setSubmitting(false);
+      })
+      .catch(e => {
+        setSubmitting(false);
+        setError(e[0].reason);
+      });
+  };
+
+  const onSubmitRecycleDialog = () => {
+    setSubmitting(true);
+    setError(undefined);
+    recycleClusterNodes(clusterID)
+      .then(_ => {
+        enqueueSnackbar('Recycle started successfully.', {
+          variant: 'success'
+        });
+        onClose();
+      })
+      .catch(e => {
+        setSubmitting(false);
+        setError(e[0].reason);
+      });
+  };
+
+  const dialogTitle = hasUpdatedSuccessfully
+    ? `Step 2: Recycle All Cluster Nodes`
+    : `Step 1: Update to Kubernetes ${nextVersion}`;
+
+  const actions = hasUpdatedSuccessfully ? (
+    <ActionsPanel style={{ padding: 0 }}>
+      <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
+        Cancel
+      </Button>
+      <Button
+        buttonType="primary"
+        destructive
+        onClick={onSubmitRecycleDialog}
+        loading={submitting}
+        data-qa-confirm
+      >
+        Recycle All Nodes
+      </Button>
+    </ActionsPanel>
+  ) : (
+    <ActionsPanel style={{ padding: 0 }}>
+      <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
+        Cancel
+      </Button>
+      <Button
+        buttonType="primary"
+        destructive
+        onClick={onSubmitUpgradeDialog}
+        loading={submitting}
+        data-qa-confirm
+      >
+        Upgrade Version
+      </Button>
+    </ActionsPanel>
+  );
+
   return (
     <Dialog
-      title={`Step 2: Recycle All Cluster Nodes`}
+      title={dialogTitle}
       error={error}
       open={isOpen}
       onClose={onClose}
-      actions={
-        <ActionsPanel style={{ padding: 0 }}>
-          <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            destructive
-            onClick={onSubmit}
-            loading={isLoading}
-            data-qa-confirm
-          >
-            Recycle All Nodes
-          </Button>
-        </ActionsPanel>
-      }
+      actions={actions}
     >
-      Kubernetes version has been updated successfully. For the changes to take
-      full effect you must recycle the nodes in your cluster.
+      {hasUpdatedSuccessfully ? (
+        <>
+          Kubernetes version has been updated successfully. For the changes to
+          take full effect you must recycle the nodes in your cluster.
+        </>
+      ) : (
+        <>
+          Upgrade this cluster&apos;s Kubernetes version from{' '}
+          <strong>{currentVersion}</strong> to <strong>{nextVersion}</strong>?
+          Once the upgrade is complete you will need to recycle all nodes in
+          your cluster.
+        </>
+      )}
     </Dialog>
   );
 });
