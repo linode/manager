@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
-import {} from 'history';
 import * as React from 'react';
 import { firewalls } from 'src/__data__/firewalls';
 import {
   firewallDeviceFactory,
   firewallFactory
 } from 'src/factories/firewalls';
+import { capitalize } from 'src/utilities/capitalize';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import {
   CombinedProps,
@@ -14,6 +14,16 @@ import {
   getDeviceLinks,
   getRuleString
 } from './FirewallRow';
+
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: true,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  };
+});
 
 describe('FirewallRow', () => {
   describe('Utility functions', () => {
@@ -37,10 +47,7 @@ describe('FirewallRow', () => {
     const mockTriggerEnableFirewall = jest.fn();
 
     const baseProps: CombinedProps = {
-      firewallID: 1,
-      firewallLabel: firewall.label,
-      firewallRules: firewall.rules,
-      firewallStatus: firewall.status,
+      ...firewall,
       triggerDeleteFirewall: mockTriggerDeleteFirewall,
       triggerDisableFirewall: mockTriggerDisableFirewall,
       triggerEnableFirewall: mockTriggerEnableFirewall
@@ -50,9 +57,9 @@ describe('FirewallRow', () => {
       const { getByTestId, getByText } = render(
         wrapWithTableBody(<FirewallRow {...baseProps} />)
       );
-      getByTestId('firewall-row-1');
+      getByTestId('firewall-row-0');
       getByText(firewall.label);
-      getByText(firewall.status);
+      getByText(capitalize(firewall.status));
       getByText(getRuleString(getCountOfRules(firewall.rules)));
     });
   });
