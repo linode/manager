@@ -27,6 +27,7 @@ type ClassNames =
   | 'button'
   | 'icon'
   | 'editIcon'
+  | 'saveIcon'
   | 'headline'
   | 'underlineOnHover';
 
@@ -78,10 +79,11 @@ const styles = (theme: Theme) =>
       margin: 0
     },
     inputRoot: {
-      maxWidth: 170,
       borderColor: `${theme.palette.primary.main} !important`,
       backgroundColor: 'transparent',
       boxShadow: 'none',
+      marginLeft: 7,
+      maxWidth: 170,
       [theme.breakpoints.up('md')]: {
         maxWidth: 415,
         width: '100%'
@@ -90,17 +92,18 @@ const styles = (theme: Theme) =>
     input: {
       fontFamily: theme.font.bold,
       fontSize: '1.125rem',
-      padding: '5px 9px'
+      padding: 0,
+      paddingLeft: 2
     },
     button: {
       minWidth: 'auto',
       padding: 0,
-      marginTop: 0,
+      marginTop: 2,
       background: 'transparent !important'
     },
     icon: {
       color: theme.palette.text.primary,
-      fontSize: 22,
+      fontSize: '1.25rem',
       marginLeft: theme.spacing(),
       minHeight: 34,
       '&:hover, &:focus': {
@@ -114,6 +117,9 @@ const styles = (theme: Theme) =>
           opacity: 1
         }
       }
+    },
+    saveIcon: {
+      marginLeft: theme.spacing(2.5)
     },
     headline: {
       ...theme.typography.h1
@@ -259,7 +265,7 @@ const EditableText: React.FC<FinalProps> = props => {
           onClick={finishEditing}
           data-qa-save-edit
         >
-          <Check className={classes.icon} />
+          <Check className={`${classes.icon} ${classes.saveIcon}`} />
         </Button>
         <Button
           className={classes.button}
