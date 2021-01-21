@@ -60,20 +60,16 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
   const onSubmitUpgradeDialog = (nextVersion: string) =>
     updateKubernetesCluster(clusterID, {
       k8s_version: nextVersion
-    })
-      .then(_ => {
-        recycleNodesDialog.openDialog(undefined);
-      })
-      .catch(_ => null); // Errors handled through useDialog
+    }).then(_ => {
+      recycleNodesDialog.openDialog(undefined);
+    });
 
   const onSubmitRecycleDialog = () =>
-    recycleClusterNodes(clusterID)
-      .then(_ =>
-        enqueueSnackbar('Recycle started successfully.', {
-          variant: 'success'
-        })
-      )
-      .catch(_ => null); // Errors handled through useDialog
+    recycleClusterNodes(clusterID).then(_ =>
+      enqueueSnackbar('Recycle started successfully.', {
+        variant: 'success'
+      })
+    );
 
   const confirmUpgradeDialog = useDialog(() =>
     onSubmitUpgradeDialog(nextVersion ?? '')
