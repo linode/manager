@@ -5,8 +5,6 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { volumes } from 'src/__data__/volumes';
 import { VolumeTableRow } from './VolumeTableRow';
 
-// jest.mock('useLocation', () => ({ pathname: 'volumes' }));
-
 const volumeWithLinodeLabel = {
   ...volumes[2],
   linodeLabel: 'thisLinode'
