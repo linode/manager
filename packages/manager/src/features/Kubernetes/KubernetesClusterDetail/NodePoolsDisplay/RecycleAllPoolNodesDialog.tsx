@@ -36,7 +36,7 @@ const renderActions = (
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        Recycle all Nodes
+        Recycle Pool Nodes
       </Button>
     </ActionsPanel>
   );
@@ -48,7 +48,7 @@ const RecycleAllPoolNodesDialog: React.FC<Props> = props => {
   return (
     <ConfirmationDialog
       open={open}
-      title="Recycle all nodes?"
+      title="Recycle node pool?"
       onClose={onClose}
       actions={() => renderActions(loading, onClose, onSubmit)}
     >

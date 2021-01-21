@@ -48,7 +48,7 @@ const NodePool: React.FC<Props> = props => {
             buttonType="secondary"
             onClick={() => openRecycleAllNodesDialog(poolId)}
           >
-            Recycle Nodes
+            Recycle Pool Nodes
           </Button>
           <Button
             buttonType="secondary"
