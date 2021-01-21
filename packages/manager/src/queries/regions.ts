@@ -10,5 +10,5 @@ export const _getRegions = () => getRegions().then(({ data }) => data);
 export const useRegionsQuery = () =>
   useQuery<Region[], APIError[]>('regions', _getRegions, {
     ...queryPresets.longLived,
-    placeholderData: cachedData as Region[]
+    initialData: cachedData as Region[]
   });
