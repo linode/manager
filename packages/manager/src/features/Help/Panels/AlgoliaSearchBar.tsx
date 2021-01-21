@@ -45,7 +45,7 @@ const styles = (theme: Theme) =>
       position: 'absolute',
       color: theme.color.grey1,
       zIndex: 3,
-      bottom: 12,
+      top: 4,
       left: 5
     },
     searchIconCompact: {
