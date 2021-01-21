@@ -60,17 +60,17 @@ type CombinedProps = Props & LinodeDetailContext & LinodeContext;
 
 const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
-  // now show their content in modals instead. Use this matching to determine
-  // if a modal should be open when this component is first rendered.
+  // now show their content in modals instead. The logic below facilitates handling
+  // modal-related query params (and the older /:subpath routes before the redirect
+  // logic changes the URL) to determine if a modal should be open when this component
+  // is first rendered.
+  const location = useLocation();
+  const queryParams = parseQueryParams(location.search);
+
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
     path: '/linodes/:linodeId/:subpath'
   });
   const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
-
-  // Related to the above, you should also be able to navigate directly to a Linode
-  // detail tab and have the correct modal open based on the query parameter, if provided.
-  const location = useLocation();
-  const queryParams = parseQueryParams(location.search);
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
@@ -195,17 +195,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   };
 
   const closeDialogs = () => {
-    // If the user is on e.g. /linodes/:id/resize and they close the modal,
-    // change the URL to reflect what they see (which is the Details page).
-    if (
-      isSubpath('resize') ||
-      isSubpath('rescue') ||
-      isSubpath('rebuild') ||
-      isSubpath('migrate')
-    ) {
-      history.replace(`/linodes/${match?.params.linodeId}`);
-    }
-
     // If the user is on a Linode detail tab with the modal open and they then close it,
     // change the URL to reflect just the tab they are on.
     if (
