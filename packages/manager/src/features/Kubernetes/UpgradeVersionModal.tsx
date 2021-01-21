@@ -73,7 +73,7 @@ export const UpgradeDialog: React.FC<DialogProps> = props => {
 
   const dialogTitle = hasUpdatedSuccessfully
     ? `Step 2: Recycle All Cluster Nodes`
-    : `Step 1: Update to Kubernetes ${nextVersion}`;
+    : `Step 1: Upgrade to Kubernetes ${nextVersion}`;
 
   const actions = hasUpdatedSuccessfully ? (
     <ActionsPanel style={{ padding: 0 }}>
