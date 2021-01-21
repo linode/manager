@@ -18,7 +18,6 @@ import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddDeviceDrawer from './AddDeviceDrawer';
 import FirewallDevicesTable from './FirewallDevicesTable';
-import FirewallDevicesTable_CMR from './FirewallDevicesTable_CMR';
 import RemoveDeviceDialog from './RemoveDeviceDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -71,7 +70,6 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
   const flags = useFlags();
 
   const Link = flags.cmr ? AddNewLink_CMR : AddNewLink;
-  const Table = flags.cmr ? FirewallDevicesTable_CMR : FirewallDevicesTable;
 
   const _openDialog = React.useCallback(openDialog, [dialog, openDialog]);
   const _closeDialog = React.useCallback(closeDialog, [dialog, closeDialog]);
@@ -156,7 +154,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
           className={flags.cmr && classes.link}
         />
       </Box>
-      <Table
+      <FirewallDevicesTable
         devices={deviceList}
         error={devices.error.read}
         lastUpdated={devices.lastUpdated}

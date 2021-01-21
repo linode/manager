@@ -1,32 +1,34 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import {
+  RouteComponentProps,
+  useHistory,
+  useRouteMatch
+} from 'react-router-dom';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink';
-import Breadcrumb from 'src/components/Breadcrumb';
-import Box from 'src/components/core/Box';
-import Divider from 'src/components/core/Divider';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/DocumentationButton';
-import Grid from 'src/components/Grid';
-import withFirewalls, {
-  Props as FireProps
-} from 'src/containers/firewalls.container';
+import CircleProgress from 'src/components/CircleProgress';
+import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
+import LandingHeader from 'src/components/LandingHeader';
+import {
+  useCreateFirewall,
+  useDeleteFirewall,
+  useFirewallQuery,
+  useMutateFirewall
+} from 'src/queries/firewalls';
 import AddFirewallDrawer from './AddFirewallDrawer';
+import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import FirewallDialog, { Mode } from './FirewallDialog';
-import FirewallTable from './FirewallTable';
+import FirewallEmptyState from './FirewallEmptyState';
+import FirewallRow from './FirewallRow';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  line: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(3)
-  }
-}));
+type CombinedProps = RouteComponentProps<{}>;
 
-type CombinedProps = RouteComponentProps<{}> & FireProps;
+const FirewallLanding: React.FC<CombinedProps> = () => {
+  const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
 
-const FirewallLanding: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
-  const { deleteFirewall, disableFirewall, enableFirewall } = props;
+  // @TODO: Refactor so these are combined?
+  const { mutateAsync: updateFirewall } = useMutateFirewall();
+  const { mutateAsync: _deleteFirewall } = useDeleteFirewall();
+  const { mutateAsync: createFirewall } = useCreateFirewall();
 
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
     boolean
@@ -39,6 +41,18 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   const [selectedFirewallLabel, setSelectedFirewallLabel] = React.useState<
     string
   >('');
+
+  const enableFirewall = (id: number) => {
+    return updateFirewall({ id, payload: { status: 'enabled' } });
+  };
+
+  const disableFirewall = (id: number) => {
+    return updateFirewall({ id, payload: { status: 'disabled' } });
+  };
+
+  const deleteFirewall = (id: number) => {
+    return _deleteFirewall({ id });
+  };
 
   const openModal = (mode: Mode, id: number, label: string) => {
     setSelectedFirewallID(id);
@@ -59,55 +73,122 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     openModal('disable', id, label);
   };
 
-  const {
-    itemsById: firewalls,
-    loading: firewallsLoading,
-    error: firewallsError,
-    lastUpdated: firewallsLastUpdated
-  } = props;
+  const headers = [
+    {
+      label: 'Firewall',
+      dataColumn: 'label',
+      sortable: true,
+      widthPercent: 25
+    },
+    {
+      label: 'Status',
+      dataColumn: 'status',
+      sortable: true,
+      widthPercent: 15
+    },
+    {
+      label: 'Rules',
+      dataColumn: 'rules',
+      sortable: false,
+      widthPercent: 25,
+      hideOnMobile: true
+    },
+    {
+      label: 'Linodes',
+      dataColumn: 'devices',
+      sortable: false,
+      widthPercent: 25,
+      hideOnMobile: true
+    },
+    {
+      label: 'Action Menu',
+      visuallyHidden: true,
+      dataColumn: '',
+      sortable: false,
+      widthPercent: 5
+    }
+  ];
+
+  const openDrawer = React.useCallback(() => toggleAddFirewallDrawer(true), [
+    toggleAddFirewallDrawer
+  ]);
+
+  // On-the-fly route matching so this component can open the drawer itself.
+  const createFirewallRouteMatch = Boolean(useRouteMatch('/firewalls/create'));
+
+  React.useEffect(() => {
+    if (createFirewallRouteMatch) {
+      openDrawer();
+    }
+  }, [createFirewallRouteMatch, openDrawer]);
+
+  const { replace } = useHistory();
+
+  const closeDrawer = React.useCallback(() => {
+    toggleAddFirewallDrawer(false);
+    replace('/firewalls');
+  }, [toggleAddFirewallDrawer, replace]);
+
+  const handlers: FirewallHandlers = {
+    triggerEnableFirewall: handleOpenEnableFirewallModal,
+    triggerDisableFirewall: handleOpenDisableFirewallModal,
+    triggerDeleteFirewall: handleOpenDeleteFirewallModal
+  };
+
+  const firewallArray = Object.values(data ?? {});
+
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
+  // We'll fall back to showing a request error in the EntityTable
+  if (firewallArray.length === 0 && !error) {
+    return (
+      // Some repetition here, which we need to resolve separately
+      // (move the create form to /firewalls/create, or as a top
+      // level drawer).
+      <>
+        <FirewallEmptyState openAddFirewallDrawer={openDrawer} />
+        <AddFirewallDrawer
+          open={addFirewallDrawerOpen}
+          onClose={() => toggleAddFirewallDrawer(false)}
+          onSubmit={createFirewall}
+          title="Add a Firewall"
+        />
+      </>
+    );
+  }
+
+  const firewallRow = {
+    handlers,
+    Component: FirewallRow,
+    data: firewallArray,
+    loading: isLoading,
+    lastUpdated: dataUpdatedAt,
+    error: error ?? undefined
+  };
 
   return (
     <React.Fragment>
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <Breadcrumb pathname={props.location.pathname} labelTitle="Firewalls" />
-        <DocumentationButton
-          href={
-            'https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/'
-          }
-        />
-      </Box>
-      <Divider className={classes.line} type="landingHeader" />
-      <Grid
-        container
-        justify="flex-end"
-        alignItems="flex-end"
-        style={{ paddingBottom: 0 }}
-      >
-        <Grid item>
-          <Grid container alignItems="flex-end">
-            <Grid item className="pt0">
-              <AddNewLink
-                onClick={() => toggleAddFirewallDrawer(true)}
-                label="Add a Firewall"
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      <FirewallTable
-        itemsById={firewalls}
-        loading={firewallsLoading}
-        error={firewallsError}
-        lastUpdated={firewallsLastUpdated}
-        results={props.results}
-        triggerDeleteFirewall={handleOpenDeleteFirewallModal}
-        triggerDisableFirewall={handleOpenDisableFirewallModal}
-        triggerEnableFirewall={handleOpenEnableFirewallModal}
+      <LandingHeader
+        title="Firewalls"
+        entity="Firewall"
+        breadcrumbProps={{ pathname: '/firewalls' }}
+        onAddNew={openDrawer}
+        // This guide is not yet published and will 404
+        // It will be published prior to any public beta
+        docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
+      />
+      <EntityTable
+        entity="firewall"
+        row={firewallRow}
+        headers={headers}
+        initialOrder={{ order: 'asc', orderBy: 'domain' }}
       />
       <AddFirewallDrawer
         open={addFirewallDrawerOpen}
-        onClose={() => toggleAddFirewallDrawer(false)}
-        onSubmit={props.createFirewall}
+        onClose={closeDrawer}
+        onSubmit={createFirewall}
         title="Add a Firewall"
       />
       <FirewallDialog
@@ -124,7 +205,4 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, {}>(
-  React.memo,
-  withFirewalls<{}, CombinedProps>()
-)(FirewallLanding);
+export default compose<CombinedProps, {}>(React.memo)(FirewallLanding);
