@@ -45,14 +45,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   chip: {
     fontSize: '0.65rem',
-    backgroundColor: theme.color.grey10,
+    backgroundColor: theme.cmrBGColors.bgApp,
     textTransform: 'uppercase',
     minHeight: theme.spacing(2),
     paddingLeft: theme.spacing(0.5),
     paddingRight: theme.spacing(0.5),
     marginTop: 0,
     marginBottom: 0,
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
+    borderRadius: '1px'
   },
   version: {
     display: 'flex',
