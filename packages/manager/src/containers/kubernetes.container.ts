@@ -9,6 +9,7 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { extendCluster } from 'src/features/Kubernetes/kubeUtils';
+import { ExtendedCluster } from 'src/features/Kubernetes/types';
 import { ApplicationState } from 'src/store';
 import {
   DeleteClusterParams,
@@ -35,7 +36,7 @@ import {
 import { EntityError } from 'src/store/types';
 
 export interface KubernetesProps {
-  clusters: KubernetesCluster[];
+  clusters: ExtendedCluster[];
   clustersLoading: boolean;
   clustersError: EntityError;
   lastUpdated?: number;

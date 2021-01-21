@@ -1,4 +1,3 @@
-import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -23,9 +22,12 @@ import { EntityError } from 'src/store/types';
 import ClusterDialog from './../KubernetesClusterDetail/KubernetesDialog';
 import { ExtendedCluster, PoolNodeWithPrice } from './../types';
 import ClusterRow from './ClusterRow';
+import UpgradeVersionModal from '../UpgradeVersionModal';
+import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
+import { getNextVersion } from '../kubeUtils';
 
 interface Props {
-  clusters: KubernetesCluster[];
+  clusters: ExtendedCluster[];
   deleteCluster: (data: DeleteClusterParams) => Promise<void>;
   error: EntityError;
   clearErrors: () => void;
@@ -33,12 +35,23 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithTypesProps;
 
+interface ClusterWithVersion extends ExtendedCluster {
+  nextVersion: string | null;
+}
+
 interface ClusterDialogState {
   open: boolean;
   loading: boolean;
   selectedClusterID: number;
   selectedClusterLabel: string;
   selectedClusterNodePools: PoolNodeWithPrice[];
+}
+
+interface UpgradeDialogState {
+  open: boolean;
+  selectedClusterID: number;
+  currentVersion: string;
+  nextVersion: string | null;
 }
 
 const defaultDialogState = {
@@ -49,12 +62,54 @@ const defaultDialogState = {
   selectedClusterNodePools: []
 };
 
+const defaultUpgradeDialogState = {
+  open: false,
+  selectedClusterID: 0,
+  currentVersion: '',
+  nextVersion: ''
+};
+
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
   const { clearErrors, clusters, deleteCluster, error, history } = props;
+  const { data: versionData } = useKubernetesVersionQuery();
+  const versions = versionData ?? [];
 
   const [dialog, setDialogState] = React.useState<ClusterDialogState>(
     defaultDialogState
   );
+
+  const [upgradeDialog, setUpgradeDialogState] = React.useState<
+    UpgradeDialogState
+  >(defaultUpgradeDialogState);
+
+  const clustersWithNextVersion: ClusterWithVersion[] = React.useMemo(() => {
+    return clusters.map(thisCluster => ({
+      ...thisCluster,
+      nextVersion: getNextVersion(thisCluster.k8s_version, versions)
+    }));
+  }, [clusters, versions]);
+
+  // Banner TBD
+  // const someClusterHasOldVersion = clustersWithNextVersion.some(
+  //   thisCluster => thisCluster.nextVersion !== null
+  // );
+
+  const openUpgradeDialog = (
+    clusterID: number,
+    currentVersion: string,
+    nextVersion: string | null
+  ) => {
+    setUpgradeDialogState({
+      open: true,
+      selectedClusterID: clusterID,
+      currentVersion,
+      nextVersion
+    });
+  };
+
+  const closeUpgradeDialog = () => {
+    setUpgradeDialogState({ ...upgradeDialog, open: false });
+  };
 
   const openDialog = (
     clusterID: number,
@@ -100,7 +155,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
         entity="Cluster"
         removeCrumbX={1}
       />
-      <OrderBy data={clusters} orderBy={'label'} order={'asc'}>
+      <OrderBy data={clustersWithNextVersion} orderBy={'label'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
             {({
@@ -182,11 +237,19 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {data.map((cluster: ExtendedCluster, idx: number) => (
+                      {data.map((cluster: ClusterWithVersion, idx: number) => (
                         <ClusterRow
                           key={`kubernetes-cluster-list-${idx}`}
                           cluster={cluster}
+                          hasUpgrade={cluster.nextVersion !== null}
                           openDeleteDialog={openDialog}
+                          openUpgradeDialog={() =>
+                            openUpgradeDialog(
+                              cluster.id,
+                              cluster.k8s_version,
+                              cluster.nextVersion
+                            )
+                          }
                         />
                       ))}
                     </TableBody>
@@ -213,6 +276,13 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
         clusterPools={dialog.selectedClusterNodePools}
         onClose={closeDialog}
         onDelete={handleDeleteCluster}
+      />
+      <UpgradeVersionModal
+        isOpen={upgradeDialog.open}
+        clusterID={upgradeDialog.selectedClusterID}
+        currentVersion={upgradeDialog.currentVersion}
+        nextVersion={upgradeDialog.nextVersion}
+        onClose={closeUpgradeDialog}
       />
     </React.Fragment>
   );

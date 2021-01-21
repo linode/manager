@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -41,16 +42,34 @@ const useStyles = makeStyles((theme: Theme) => ({
       We can remove once we make the full switch to CMR styling
       */
     paddingRight: '0 !important'
+  },
+  chip: {
+    fontSize: '0.65rem',
+    backgroundColor: theme.color.grey10,
+    textTransform: 'uppercase',
+    minHeight: theme.spacing(2),
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: theme.spacing(2)
+  },
+  version: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
   }
 }));
 
-interface Props {
+export interface Props {
   cluster: ExtendedCluster;
+  hasUpgrade: boolean;
   openDeleteDialog: (
     clusterID: number,
     clusterLabel: string,
     clusterNodePools: PoolNodeWithPrice[]
   ) => void;
+  openUpgradeDialog: () => void;
 }
 
 type CombinedProps = Props;
@@ -58,7 +77,7 @@ type CombinedProps = Props;
 export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { cluster, openDeleteDialog } = props;
+  const { cluster, hasUpgrade, openDeleteDialog, openUpgradeDialog } = props;
 
   return (
     <TableRow
@@ -84,7 +103,18 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
         </Grid>
       </TableCell>
       <Hidden smDown>
-        <TableCell data-qa-cluster-version>{cluster.k8s_version}</TableCell>
+        <TableCell data-qa-cluster-version>
+          <div className={classes.version}>
+            {cluster.k8s_version}
+            {hasUpgrade ? (
+              <Chip
+                className={classes.chip}
+                onClick={openUpgradeDialog}
+                label="UPGRADE"
+              />
+            ) : null}
+          </div>
+        </TableCell>
       </Hidden>
 
       <Hidden smDown>

@@ -1,4 +1,7 @@
-import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import {
+  KubernetesCluster,
+  KubernetesVersion
+} from '@linode/api-v4/lib/kubernetes';
 import { LinodeType } from '@linode/api-v4/lib/linodes';
 import { pluralize } from 'src/utilities/pluralize';
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
@@ -108,4 +111,18 @@ export const getDescriptionForCluster = (cluster: ExtendedCluster) => {
     'CPU cores',
     cluster.totalCPU
   )}, ${cluster.totalMemory / 1024}GB RAM`;
+};
+
+export const getNextVersion = (
+  currentVersion: string,
+  versions: KubernetesVersion[]
+) => {
+  const versionStrings = versions.map(v => v.id).sort();
+  const currentIdx = versionStrings.findIndex(
+    thisVersion => currentVersion === thisVersion
+  );
+  if (currentIdx < 0 || currentIdx === versions.length - 1) {
+    return null;
+  }
+  return versionStrings[currentIdx + 1];
 };
