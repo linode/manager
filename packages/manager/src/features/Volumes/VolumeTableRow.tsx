@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-type CombinedProps = ExtendedVolume & ActionHandlers;
+export type CombinedProps = ExtendedVolume & ActionHandlers;
 
 const progressFromEvent = (e?: Event) => {
   if (!e) {

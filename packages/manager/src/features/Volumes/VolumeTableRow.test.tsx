@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { volumes } from 'src/__data__/volumes';
-import { VolumeTableRow } from './VolumeTableRow';
+import { VolumeTableRow, CombinedProps } from './VolumeTableRow';
 
 const volumeWithLinodeLabel = {
   ...volumes[2],
@@ -17,7 +17,7 @@ const unattachedVolume = {
   linodeStatus: 'active'
 };
 
-const props = {
+const props: CombinedProps = {
   id: 0,
   label: volumeWithLinodeLabel.linodeLabel,
   region: '',
