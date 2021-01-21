@@ -70,7 +70,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
     path: '/linodes/:linodeId/:subpath'
   });
-  const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
@@ -91,22 +90,22 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   });
 
   const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
-    open: isSubpath('resize') || queryParams.resize,
+    open: Boolean(queryParams.resize),
     linodeID: matchedLinodeId
   });
 
   const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
-    open: isSubpath('migrate') || queryParams.migrate,
+    open: Boolean(queryParams.migrate),
     linodeID: matchedLinodeId
   });
 
   const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
-    open: isSubpath('rescue') || queryParams.rescue,
+    open: Boolean(queryParams.rescue),
     linodeID: matchedLinodeId
   });
 
   const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
-    open: isSubpath('rebuild') || queryParams.rebuild,
+    open: Boolean(queryParams.rebuild),
     linodeID: matchedLinodeId
   });
 
