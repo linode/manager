@@ -35,6 +35,8 @@ describe('StackScript', () => {
           scriptHeading: '',
           descriptionText: '',
           deploymentSection: '',
+          idSection: '',
+          copyIcon: '',
           dateTimeDisplay: '',
           compatibleImages: '',
           divider: ''
