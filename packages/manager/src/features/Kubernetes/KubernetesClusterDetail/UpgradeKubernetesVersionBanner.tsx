@@ -221,7 +221,7 @@ export const RecycleDialog: React.FC<DialogProps> = React.memo(props => {
       }
     >
       Kubernetes version has been updated successfully. For the changes to take
-      effect, you must recycle all nodes in your cluster.
+      full effect you must recycle the nodes in your cluster.
     </Dialog>
   );
 });
