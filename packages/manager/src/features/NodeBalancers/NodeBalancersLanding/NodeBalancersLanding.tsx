@@ -9,32 +9,18 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import LandingHeader from 'src/components/LandingHeader';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import Toggle from 'src/components/Toggle';
-import withFeatureFlagConsumerContainer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
 import {
   NodeBalancerGettingStarted,
   NodeBalancerReference
@@ -50,54 +36,6 @@ import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
 import NodeBalancerTableRow from './NodeBalancerTableRow';
-import NodeBalancerTableRow_CMR from './NodeBalancerTableRow_CMR';
-
-type ClassNames =
-  | 'root'
-  | 'titleWrapper'
-  | 'title'
-  | 'nodeStatus'
-  | 'nameCell'
-  | 'nodeStatus'
-  | 'transferred'
-  | 'ports'
-  | 'ip'
-  | 'tagGroup';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    titleWrapper: {
-      flex: 1
-    },
-    title: {
-      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
-    },
-    nameCell: {
-      width: '15%',
-      minWidth: 150
-    },
-    nodeStatus: {
-      width: '10%',
-      minWidth: 100
-    },
-    transferred: {
-      width: '10%',
-      minWidth: 100
-    },
-    ports: {
-      width: '10%',
-      minWidth: 50
-    },
-    ip: {
-      width: '30%',
-      minWidth: 200
-    },
-    tagGroup: {
-      flexDirection: 'row-reverse',
-      marginBottom: theme.spacing(1)
-    }
-  });
 
 interface DeleteConfirmDialogState {
   open: boolean;
@@ -113,10 +51,8 @@ interface State {
 
 type CombinedProps = WithNodeBalancerActions &
   WithNodeBalancers &
-  WithStyles<ClassNames> &
   RouteComponentProps<{}> &
-  SetDocsProps &
-  FeatureFlagConsumerProps;
+  SetDocsProps;
 
 const headers: HeaderCell[] = [
   {
@@ -264,15 +200,11 @@ export class NodeBalancersLanding extends React.Component<
 
   render() {
     const {
-      classes,
-      history,
       nodeBalancersCount,
       nodeBalancersLoading,
       nodeBalancersData,
       nodeBalancersLastUpdated,
-      nodeBalancersError,
-      location,
-      flags
+      nodeBalancersError
     } = this.props;
 
     const {
@@ -292,7 +224,7 @@ export class NodeBalancersLanding extends React.Component<
     }
 
     const nodeBalancerRow: EntityTableRow<NodeBalancer> = {
-      Component: flags.cmr ? NodeBalancerTableRow_CMR : NodeBalancerTableRow,
+      Component: NodeBalancerTableRow,
       data: Object.values(nodeBalancersData),
       handlers: { toggleDialog: this.toggleDialog },
       loading: nodeBalancersLoading,
@@ -301,7 +233,7 @@ export class NodeBalancersLanding extends React.Component<
     };
 
     return (
-      <React.Fragment>
+      <>
         <DocumentTitleSegment segment="NodeBalancers" />
         <PreferenceToggle<boolean>
           preferenceKey="nodebalancers_group_by_tag"
@@ -314,67 +246,16 @@ export class NodeBalancersLanding extends React.Component<
             togglePreference: toggleNodeBalancerGroupByTag
           }: ToggleProps<boolean>) => {
             return (
-              <React.Fragment>
-                {this.props.flags.cmr ? (
-                  <LandingHeader
-                    title="NodeBalancers"
-                    entity="NodeBalancer"
-                    onAddNew={() =>
-                      this.props.history.push('/nodebalancers/create')
-                    }
-                    createButtonWidth={190}
-                    docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
-                  />
-                ) : (
-                  <Grid
-                    container
-                    justify="space-between"
-                    alignItems="flex-end"
-                    style={{ paddingBottom: 0 }}
-                  >
-                    <Grid item className={classes.titleWrapper}>
-                      <Breadcrumb
-                        pathname={location.pathname}
-                        data-qa-title
-                        labelTitle="NodeBalancers"
-                        className={classes.title}
-                      />
-                    </Grid>
-                    <Grid item className="p0">
-                      <FormControlLabel
-                        className={classes.tagGroup}
-                        label="Group by Tag:"
-                        control={
-                          <Toggle
-                            className={
-                              nodeBalancersAreGrouped
-                                ? ' checked'
-                                : ' unchecked'
-                            }
-                            onChange={toggleNodeBalancerGroupByTag}
-                            checked={nodeBalancersAreGrouped}
-                          />
-                        }
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Grid
-                        container
-                        alignItems="flex-end"
-                        style={{ width: 'auto' }}
-                      >
-                        <Grid item className="pt0">
-                          <AddNewLink
-                            onClick={() =>
-                              history.push('/nodebalancers/create')
-                            }
-                            label="Add a NodeBalancer"
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                )}
+              <>
+                <LandingHeader
+                  title="NodeBalancers"
+                  entity="NodeBalancer"
+                  onAddNew={() =>
+                    this.props.history.push('/nodebalancers/create')
+                  }
+                  createButtonWidth={190}
+                  docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
+                />
                 <EntityTable_CMR
                   entity="nodebalancer"
                   isGroupedByTag={nodeBalancersAreGrouped}
@@ -383,7 +264,7 @@ export class NodeBalancersLanding extends React.Component<
                   headers={headers}
                   initialOrder={{ order: 'desc', orderBy: 'label' }}
                 />
-              </React.Fragment>
+              </>
             );
           }}
         </PreferenceToggle>
@@ -400,7 +281,7 @@ export class NodeBalancersLanding extends React.Component<
             Are you sure you want to delete your NodeBalancer?
           </Typography>
         </ConfirmationDialog>
-      </React.Fragment>
+      </>
     );
   }
 
@@ -438,8 +319,6 @@ const eventCategory = `nodebalancers landing`;
 const toggleNodeBalancersGroupBy = (checked: boolean) =>
   sendGroupByTagEnabledEvent(eventCategory, checked);
 
-const styled = withStyles(styles);
-
 interface NodeBalancerWithConfigs extends NodeBalancer {
   configs: NodeBalancerConfig[];
 }
@@ -472,12 +351,10 @@ export const enhanced = compose<CombinedProps, {}>(
       nodeBalancersLastUpdated: lastUpdated
     };
   }),
-  withFeatureFlagConsumerContainer,
   withRouter,
   withNodeBalancerActions,
   SectionErrorBoundary,
-  setDocs(NodeBalancersLanding.docs),
-  styled
+  setDocs(NodeBalancersLanding.docs)
 );
 
 export default enhanced(NodeBalancersLanding);

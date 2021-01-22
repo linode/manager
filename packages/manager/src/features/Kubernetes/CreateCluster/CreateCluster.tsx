@@ -1,7 +1,5 @@
 import {
   createKubernetesCluster,
-  getKubernetesVersions,
-  KubernetesVersion,
   PoolNodeRequest
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -24,9 +22,9 @@ import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
+import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-import { getAll } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
@@ -105,14 +103,6 @@ type CombinedProps = RouteComponentProps<{}> &
   WithRegionsProps &
   WithTypesProps;
 
-/**
- * It's very unlikely there will ever be more than one page of
- * active/available K8s versions. API paginates the response
- * though to match convention, so to be safe we're following
- * our own convention.
- */
-const getAllVersions = getAll<KubernetesVersion>(getKubernetesVersions);
-
 const regionHelperText = (
   <React.Fragment>
     You can use
@@ -159,36 +149,14 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const [version, setVersion] = React.useState<Item<string> | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [versionOptions, setVersionOptions] = React.useState<Item<string>[]>(
-    []
-  );
-
-  React.useEffect(() => {
-    getAllVersions()
-      .then(response => {
-        /**
-         * 1. Convert versions to Items
-         * 2. Sort descending (so newest version is at top)
-         * // 3. Pre-select the newest version <--- do this someday, but not now
-         */
-        const _versionOptions = response.data
-          .map(eachVersion => ({
-            value: eachVersion.id,
-            label: eachVersion.id
-          }))
-          .sort(sortByLabelDescending);
-        setVersionOptions(_versionOptions);
-      })
-      .catch(error => {
-        setErrors(
-          getAPIErrorOrDefault(
-            error,
-            'Unable to load Kubernetes versions.',
-            'versionLoad'
-          )
-        );
-      });
-  }, []);
+  const {
+    data: versionData,
+    isError: versionLoadError
+  } = useKubernetesVersionQuery();
+  const versions = (versionData ?? []).map(thisVersion => ({
+    value: thisVersion.id,
+    label: thisVersion.id
+  }));
 
   React.useEffect(() => {
     if (filteredRegions.length === 1 && !selectedRegion) {
@@ -265,7 +233,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
 
   const selectedID = selectedRegion || null;
 
-  if (typesError || regionsError || errorMap.versionLoad) {
+  if (typesError || regionsError || versionLoadError) {
     /**
      * This information is necessary to create a Cluster.
      * Otherwise, show an error state.
@@ -339,7 +307,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                   label="Kubernetes Version"
                   value={version || null}
                   errorText={errorMap.k8s_version}
-                  options={versionOptions}
+                  options={versions}
                   placeholder={' '}
                   onChange={(selected: Item<string>) => setVersion(selected)}
                   isClearable={false}
@@ -398,15 +366,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
       </Grid>
     </Grid>
   );
-};
-
-const sortByLabelDescending = (a: Item, b: Item) => {
-  if (a.value > b.value) {
-    return -1;
-  } else if (a.value < b.value) {
-    return 1;
-  }
-  return 0;
 };
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
