@@ -1,21 +1,22 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import {
+  Redirect,
   Route,
-  Switch,
   RouteComponentProps,
+  Switch,
   withRouter
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import NotFound from 'src/components/NotFound';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
-import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import {
   LinodeDetailContext,
   linodeDetailContextFactory as createLinodeDetailContext,
   LinodeDetailContextProvider
 } from './linodeDetailContext';
+import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 
 const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
 const LinodesDetailNavigation = React.lazy(() =>
@@ -32,7 +33,7 @@ type CombinedProps = Props & RouteComponentProps<{ linodeId: string }>;
 const LinodeDetail: React.FC<CombinedProps> = props => {
   const {
     linodeId,
-    match: { path }
+    match: { path, url }
   } = props;
 
   const dispatch = useDispatch();
@@ -61,6 +62,18 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
               <React.Fragment>
                 <LinodesDetailHeader />
                 <LinodesDetailNavigation />
+                <Switch>
+                  <Redirect from={`${url}/resize`} to={`${url}?resize=true`} />
+                  <Redirect
+                    from={`${url}/rebuild`}
+                    to={`${url}?rebuild=true`}
+                  />
+                  <Redirect from={`${url}/rescue`} to={`${url}?rescue=true`} />
+                  <Redirect
+                    from={`${url}/migrate`}
+                    to={`${url}?migrate=true`}
+                  />
+                </Switch>
               </React.Fragment>
             )}
           />

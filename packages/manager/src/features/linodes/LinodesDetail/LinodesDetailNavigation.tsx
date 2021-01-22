@@ -1,12 +1,6 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import {
-  matchPath,
-  RouteComponentProps,
-  withRouter,
-  Redirect,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
@@ -129,12 +123,6 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
                 <LinodeSettings_CMR />
               </SafeTabPanel>
             </TabPanels>
-            <Switch>
-              <Redirect from={`${url}/resize`} to={`${url}?resize=true`} />
-              <Redirect from={`${url}/rebuild`} to={`${url}?rebuild=true`} />
-              <Redirect from={`${url}/rescue`} to={`${url}?rescue=true`} />
-              <Redirect from={`${url}/migrate`} to={`${url}?migrate=true`} />
-            </Switch>
           </React.Suspense>
         </Tabs>
       </div>
