@@ -1,9 +1,7 @@
 import { getManagedStats, ManagedStatsData } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -16,30 +14,26 @@ import withManaged, {
   ManagedProps
 } from 'src/containers/managedServices.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import usePolling from 'src/hooks/usePolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-import DashboardCard from '../DashboardCard';
+import DashboardCard from '../DashboardCard_CMR';
 import ManagedChartPanel from './ManagedChartPanel';
 import MonitorStatus from './MonitorStatus';
 import MonitorTickets from './MonitorTickets';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: '0 !important',
+    backgroundColor: theme.cmrBGColors.bgPaper,
+    margin: 0,
+    width: '100%',
     [theme.breakpoints.up('sm')]: {
-      marginBottom: theme.spacing(3)
+      marginBottom: 20
     }
-  },
-  paper: {
-    marginTop: theme.spacing()
   },
   status: {
     position: 'relative',
     [theme.breakpoints.up('sm')]: {
       margin: `${theme.spacing(3)}px ${theme.spacing(1)}px !important`
-    },
-    [theme.breakpoints.up('lg')]: {
-      margin: `${theme.spacing(6) + 2}px ${theme.spacing(1)}px !important`
     }
   },
   outerContainer: {
@@ -48,11 +42,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   detailsLink: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    position: 'relative',
-    top: 6,
-    paddingRight: theme.spacing() - 3
+    fontSize: 14,
+    fontWeight: 'bold'
   },
   monitorStatusOuter: {
     marginBottom: theme.spacing(1),
@@ -69,31 +60,32 @@ type CombinedProps = ManagedProps &
 
 export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { requestManagedServices, requestManagedIssues } = props;
   const {
     data,
+    error,
     loading,
     lastUpdated,
-    error,
     update
   } = useAPIRequest<ManagedStatsData | null>(
     () => getManagedStats().then(response => response.data),
     null
   );
 
+  usePolling(
+    [
+      () => requestManagedServices().catch(_ => null),
+      () => requestManagedIssues().catch(_ => null),
+      update
+    ],
+    10000
+  );
+
   React.useEffect(() => {
+    // @todo rely on interval for initial requests
     // Rely on Redux error handling.
-    props.requestManagedServices().catch(_ => null);
-    props.requestManagedIssues().catch(_ => null);
-
-    const interval = setInterval(() => {
-      props.requestManagedServices().catch(_ => null);
-      props.requestManagedIssues().catch(_ => null);
-      update();
-    }, 10000);
-
-    return () => {
-      clearInterval(interval);
-    };
+    requestManagedServices().catch(_ => null);
+    requestManagedIssues().catch(_ => null);
   }, []);
 
   const statsError =
@@ -105,25 +97,16 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
 
   return (
     <DashboardCard
-      title="Linode Managed"
-      alignHeader="space-between"
+      alignItems="center"
       className={classes.root}
       noHeaderActionStyles
-      headerAction={() => (
-        <Link to="/managed" className={classes.detailsLink}>
-          View Details
-        </Link>
-      )}
-      data-qa-dash-managed
     >
-      <Paper className={classes.paper}>
-        <LoadingErrorOrContent
-          {...props}
-          data={data}
-          statsError={statsError}
-          statsLoading={statsLoading}
-        />
-      </Paper>
+      <LoadingErrorOrContent
+        {...props}
+        data={data}
+        statsError={statsError}
+        statsLoading={statsLoading}
+      />
     </DashboardCard>
   );
 };
@@ -197,7 +180,7 @@ const LoadingErrorOrContent: React.FC<ContentProps> = props => {
           <MonitorTickets issues={issues} />
         </Grid>
       </Grid>
-      <Grid item xs={12} sm={8}>
+      <Grid item xs={12} sm={8} className="p0">
         <ManagedChartPanel
           data={data}
           loading={statsLoading}

@@ -1,11 +1,9 @@
 import { ManagedCredential } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { createStyles, makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import ActionMenu from './CredentialActionMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -16,6 +14,14 @@ const useStyles = makeStyles((theme: Theme) =>
     credentialRow: {
       '&:before': {
         display: 'none'
+      }
+    },
+    actionInner: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      padding: 0,
+      '&.MuiTableCell-root': {
+        paddingRight: 0
       }
     }
   })
@@ -41,10 +47,8 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = props => {
       className={classes.credentialRow}
       ariaLabel={`Credential ${credential.label}`}
     >
-      <TableCell parentColumn="Credential" data-qa-credential-label>
-        <Typography variant="h3">{credential.label}</Typography>
-      </TableCell>
-      <TableCell parentColumn="Last Decrypted" data-qa-credential-decrypted>
+      <TableCell data-qa-credential-label>{credential.label}</TableCell>
+      <TableCell data-qa-credential-decrypted>
         {/** If credential.last_decrypted is null, it has never been decrypted */}
         {credential.last_decrypted ? (
           <DateTimeDisplay value={credential.last_decrypted} />
@@ -52,7 +56,7 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = props => {
           'Never'
         )}
       </TableCell>
-      <TableCell>
+      <TableCell className={classes.actionInner}>
         <ActionMenu
           credentialID={credential.id}
           openDialog={openDialog}
