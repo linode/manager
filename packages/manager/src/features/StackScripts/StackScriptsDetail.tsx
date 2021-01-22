@@ -82,25 +82,25 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       margin: 0,
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('sm')]: {
+        paddingRight: theme.spacing()
+      },
+      [theme.breakpoints.down('xs')]: {
         flexDirection: 'column',
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        paddingLeft: theme.spacing()
       }
     },
     cta: {
       display: 'flex',
       alignItems: 'center',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('xs')]: {
         alignSelf: 'flex-end',
-        marginBottom: theme.spacing(),
-        marginRight: theme.spacing()
+        marginBottom: theme.spacing()
       }
     },
     button: {
-      marginLeft: theme.spacing(4),
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(1.5)
-      }
+      marginLeft: theme.spacing(3)
     },
     userName: {
       color: theme.cmrTextColors.tableStatic,

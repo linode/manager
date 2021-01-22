@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   crumb: {
     fontSize: '1.125rem',
+    lineHeight: 'normal',
     textTransform: 'capitalize',
     whiteSpace: 'nowrap'
   },
