@@ -3,6 +3,8 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import { displayType } from 'src/features/linodes/presentation';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { ExtendedLinode } from './types';
+import Typography from 'src/components/core/Typography';
+import * as React from 'react';
 
 /**
  * adds a heading and subheading key to the Linode
@@ -43,4 +45,43 @@ export const getRegionIDFromLinodeID = (
 ): string | undefined => {
   const thisLinode = linodes.find(linode => linode.id === id);
   return thisLinode ? thisLinode.region : undefined;
+};
+
+export const gpuPlanText = (useTypography?: boolean): JSX.Element => {
+  const gpuPlanTextSegments = [
+    'Linode GPU plans have limited availability and may not be available at the time of your request. Some additional verification may be required to access these services. ',
+    'with information on getting started.'
+  ];
+
+  if (useTypography) {
+    return (
+      <Typography>
+        {gpuPlanTextSegments[0]}
+        <a
+          href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
+          target="_blank"
+          aria-describedby="external-site"
+          rel="noopener noreferrer"
+        >
+          Here is a guide
+        </a>{' '}
+        {gpuPlanTextSegments[1]}
+      </Typography>
+    );
+  }
+
+  return (
+    <>
+      {gpuPlanTextSegments[0]}
+      <a
+        href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
+        target="_blank"
+        aria-describedby="external-site"
+        rel="noopener noreferrer"
+      >
+        {` `}Here is a guide
+      </a>{' '}
+      {gpuPlanTextSegments[1]}
+    </>
+  );
 };

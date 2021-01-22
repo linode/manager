@@ -40,6 +40,7 @@ import withFeatureFlags from 'src/containers/withFeatureFlagConsumer.container.t
 import { LDClient } from 'launchdarkly-js-client-sdk';
 import { FlagSet } from 'src/featureFlags';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { gpuPlanText } from './utilities';
 
 type ClassNames =
   | 'root'
@@ -417,20 +418,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
           these plans are only available in {this.getRegionsWithGPU()}.
         </>
       ) : (
-        <>
-          Linode GPU Instances are deployed as finite resources and may not be
-          available at the time of your request. Some additional verification
-          may be required to access these services.
-          <a
-            href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
-            target="_blank"
-            aria-describedby="external-site"
-            rel="noopener noreferrer"
-          >
-            {` `}Here is a guide
-          </a>{' '}
-          with information on getting started.
-        </>
+        gpuPlanText()
       );
       tabs.push({
         render: () => {

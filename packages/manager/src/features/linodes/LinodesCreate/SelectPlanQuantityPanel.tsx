@@ -28,6 +28,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
+import { gpuPlanText } from './utilities';
 
 export interface ExtendedType extends LinodeType {
   heading: string;
@@ -346,22 +347,7 @@ export class SelectPlanPanel extends React.Component<
     }
 
     if (!isEmpty(gpu)) {
-      const programInfo = (
-        <Typography>
-          Linode GPU Instances are deployed as finite resources and may not be
-          available at the time of your request. Some additional verification
-          may be required to access these services.
-          <a
-            href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
-            target="_blank"
-            aria-describedby="external-site"
-            rel="noopener noreferrer"
-          >
-            {` `}Here is a guide
-          </a>{' '}
-          with information on getting started.
-        </Typography>
-      );
+      const programInfo = gpuPlanText(true);
       tabs.push({
         render: () => {
           return (
