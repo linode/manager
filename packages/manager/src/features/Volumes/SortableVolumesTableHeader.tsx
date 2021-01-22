@@ -1,109 +1,44 @@
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import { OrderByProps } from 'src/components/OrderBy';
-import TableCell from 'src/components/TableCell';
-import TableSortCell from 'src/components/TableSortCell';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 
-type ClassNames =
-  | 'root'
-  | 'labelCol'
-  | 'regionCol'
-  | 'attachmentCol'
-  | 'sizeCol'
-  | 'pathCol'
-  | 'volumesWrapper'
-  | 'linodeVolumesWrapper';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    // styles for /volumes table
-    volumesWrapper: {},
-    // styles for linodes/id/volumes table
-    linodeVolumesWrapper: {
-      '& $labelCol': {
-        width: '20%',
-        minWidth: 150
-      },
-      '& $sizeCol': {
-        width: '15%',
-        minWidth: 100
-      },
-      '& $pathCol': {
-        width: '55%',
-        minWidth: 150
-      }
-    },
-    regionCol: {
-      width: '10%',
-      minWidth: 75
-    },
-    labelCol: {
-      width: '20%',
-      minWidth: 75,
-      paddingLeft: theme.spacing(2) + 49
-    },
-    attachmentCol: {
-      width: '15%',
-      minWidth: 75
-    },
-    sizeCol: {
-      width: '10%',
-      minWidth: 75
-    },
-    pathCol: {
-      width: '30%',
-      minWidth: 100
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  borderRight: {
+    borderRight: `1px solid ${theme.palette.divider}`
+  }
+}));
 
 interface SortableVolumesTableHeaderProps {
   isVolumesLanding: boolean;
 }
 
-type CombinedProps = WithStyles<ClassNames> &
-  SortableVolumesTableHeaderProps &
+type CombinedProps = SortableVolumesTableHeaderProps &
   Omit<OrderByProps, 'data'>;
 
 const SortableTableHeader: React.FC<CombinedProps> = props => {
-  const {
-    classes,
-    order,
-    orderBy,
-    handleOrderChange,
-    isVolumesLanding
-  } = props;
+  const classes = useStyles();
+  const { order, orderBy, handleOrderChange, isVolumesLanding } = props;
 
   const isActive = (label: string) => label === orderBy;
 
   return (
-    <TableHead
-      data-qa-table-head={order}
-      className={
-        isVolumesLanding ? classes.volumesWrapper : classes.linodeVolumesWrapper
-      }
-    >
-      <TableRow role="rowgroup">
+    <TableHead data-qa-table-head={order}>
+      <TableRow>
         <TableSortCell
-          className={classes.labelCol}
+          data-qa-volume-label-header={order}
           active={isActive('label')}
           label="label"
           direction={order}
           handleClick={handleOrderChange}
-          data-qa-volume-label-header={order}
         >
           Label
         </TableSortCell>
         {isVolumesLanding && (
           <TableSortCell
-            className={classes.regionCol}
             data-qa-volume-region-header={order}
             active={isActive('region')}
             label="region"
@@ -114,7 +49,6 @@ const SortableTableHeader: React.FC<CombinedProps> = props => {
           </TableSortCell>
         )}
         <TableSortCell
-          className={classes.sizeCol}
           data-qa-volume-size-header={order}
           active={isActive('size')}
           label="size"
@@ -123,13 +57,11 @@ const SortableTableHeader: React.FC<CombinedProps> = props => {
         >
           Size
         </TableSortCell>
-        <TableCell className={classes.pathCol} role="columnheader">
+        <TableCell className={classes.borderRight} role="columnheader">
           File System Path
         </TableCell>
         {isVolumesLanding && (
-          <TableCell className={classes.attachmentCol} role="columnheader">
-            Attached To
-          </TableCell>
+          <TableCell role="columnheader">Attached To</TableCell>
         )}
         <TableCell />
       </TableRow>
@@ -137,6 +69,4 @@ const SortableTableHeader: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(SortableTableHeader);
+export default SortableTableHeader;
