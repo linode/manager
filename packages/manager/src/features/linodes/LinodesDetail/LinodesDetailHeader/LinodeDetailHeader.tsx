@@ -68,7 +68,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const queryParams = parseQueryParams(location.search);
 
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
-    path: '/linodes/:linodeId/:subpath'
+    path: '/linodes/:linodeId/:subpath?'
   });
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
@@ -311,7 +311,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         open={migrateDialog.open}
         onClose={closeDialogs}
         linodeID={migrateDialog.linodeID}
-        _linode={linode}
       />
       <TagDrawer
         entityLabel={linode.label}

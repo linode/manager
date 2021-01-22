@@ -18,7 +18,7 @@ import Loading from 'src/components/LandingLoading';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { displayType } from 'src/features/linodes/presentation';
-import useExtendedLinode, { ExtendedLinode } from 'src/hooks/useExtendedLinode';
+import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useImages } from 'src/hooks/useImages';
 import { useRegions } from 'src/hooks/useRegions';
 import { useTypes } from 'src/hooks/useTypes';
@@ -47,7 +47,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   linodeID: number;
-  _linode?: ExtendedLinode;
   open: boolean;
   onClose: () => void;
 }
@@ -55,13 +54,13 @@ interface Props {
 type CombinedProps = Props & WithTypesAndImages;
 
 const MigrateLanding: React.FC<CombinedProps> = props => {
-  const { linodeID, _linode, notifications, onClose, open } = props;
+  const { linodeID, notifications, onClose, open } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const regions = useRegions();
   const { types } = useTypes();
-  const linode = useExtendedLinode(linodeID) || _linode;
+  const linode = useExtendedLinode(linodeID);
   const { images } = useImages();
   const { vlans } = useFlags();
   const { account } = useAccount();
