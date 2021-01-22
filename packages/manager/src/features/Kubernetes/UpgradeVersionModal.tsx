@@ -8,6 +8,7 @@ import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
 
 interface DialogProps {
   clusterID: number;
+  clusterLabel: string;
   isOpen: boolean;
   currentVersion: string;
   nextVersion: string | null;
@@ -15,7 +16,14 @@ interface DialogProps {
 }
 
 export const UpgradeDialog: React.FC<DialogProps> = props => {
-  const { clusterID, currentVersion, nextVersion, isOpen, onClose } = props;
+  const {
+    clusterID,
+    clusterLabel,
+    currentVersion,
+    nextVersion,
+    isOpen,
+    onClose
+  } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { updateKubernetesCluster } = useKubernetesClusters();
@@ -73,7 +81,7 @@ export const UpgradeDialog: React.FC<DialogProps> = props => {
 
   const dialogTitle = hasUpdatedSuccessfully
     ? `Step 2: Recycle All Cluster Nodes`
-    : `Step 1: Upgrade to Kubernetes ${nextVersion}`;
+    : `Step 1: Upgrade ${clusterLabel} to Kubernetes ${nextVersion}`;
 
   const actions = hasUpdatedSuccessfully ? (
     <ActionsPanel style={{ padding: 0 }}>
@@ -122,7 +130,7 @@ export const UpgradeDialog: React.FC<DialogProps> = props => {
         </>
       ) : (
         <>
-          Upgrade this cluster&apos;s Kubernetes version from{' '}
+          Upgrade {clusterLabel}&apos;s Kubernetes version from{' '}
           <strong>{currentVersion}</strong> to <strong>{nextVersion}</strong>?
           Once the upgrade is complete you will need to recycle all nodes in
           your cluster.

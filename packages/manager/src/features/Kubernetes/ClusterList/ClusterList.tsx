@@ -50,6 +50,7 @@ interface ClusterDialogState {
 interface UpgradeDialogState {
   open: boolean;
   selectedClusterID: number;
+  selectedClusterLabel: string;
   currentVersion: string;
   nextVersion: string | null;
 }
@@ -65,8 +66,9 @@ const defaultDialogState = {
 const defaultUpgradeDialogState = {
   open: false,
   selectedClusterID: 0,
+  selectedClusterLabel: '',
   currentVersion: '',
-  nextVersion: ''
+  nextVersion: null
 };
 
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
@@ -96,12 +98,14 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
 
   const openUpgradeDialog = (
     clusterID: number,
+    clusterLabel: string,
     currentVersion: string,
     nextVersion: string | null
   ) => {
     setUpgradeDialogState({
       open: true,
       selectedClusterID: clusterID,
+      selectedClusterLabel: clusterLabel,
       currentVersion,
       nextVersion
     });
@@ -241,11 +245,12 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                         <ClusterRow
                           key={`kubernetes-cluster-list-${idx}`}
                           cluster={cluster}
-                          hasUpgrade={cluster.nextVersion !== null}
+                          hasUpgrade={Boolean(cluster.nextVersion)}
                           openDeleteDialog={openDialog}
                           openUpgradeDialog={() =>
                             openUpgradeDialog(
                               cluster.id,
+                              cluster.label,
                               cluster.k8s_version,
                               cluster.nextVersion
                             )
@@ -280,6 +285,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
       <UpgradeVersionModal
         isOpen={upgradeDialog.open}
         clusterID={upgradeDialog.selectedClusterID}
+        clusterLabel={upgradeDialog.selectedClusterLabel}
         currentVersion={upgradeDialog.currentVersion}
         nextVersion={upgradeDialog.nextVersion}
         onClose={closeUpgradeDialog}

@@ -22,13 +22,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   clusterID: number;
+  clusterLabel: string;
   currentVersion: string;
 }
 
 export type CombinedProps = Props;
 
 export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
-  const { clusterID, currentVersion } = props;
+  const { clusterID, clusterLabel, currentVersion } = props;
   const classes = useStyles();
   const { data: versions } = useKubernetesVersionQuery();
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
@@ -60,6 +61,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
       ) : null}
       <UpgradeVersionModal
         clusterID={clusterID}
+        clusterLabel={clusterLabel}
         currentVersion={currentVersion}
         nextVersion={nextVersion ?? ''}
         isOpen={dialogOpen}
