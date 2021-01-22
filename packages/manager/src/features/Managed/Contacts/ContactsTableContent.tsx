@@ -54,6 +54,7 @@ export const ContactsTableContent: React.FC<CombinedProps> = props => {
   }
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {contacts.map((contact: ManagedContact, idx: number) => (
         <ContactsRow

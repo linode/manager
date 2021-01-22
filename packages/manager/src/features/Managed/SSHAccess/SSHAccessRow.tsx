@@ -1,8 +1,19 @@
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import Hidden from 'src/components/core/Hidden';
+import { makeStyles } from 'src/components/core/styles';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import ActionMenu from './SSHAccessActionMenu';
+
+const useStyles = makeStyles(() => ({
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0
+  }
+}));
 
 interface Props {
   linodeSetting: ManagedLinodeSetting;
@@ -11,6 +22,8 @@ interface Props {
 }
 
 export const SSHAccessRow: React.FunctionComponent<Props> = props => {
+  const classes = useStyles();
+
   const { linodeSetting, updateOne, openDrawer } = props;
 
   const isAccessEnabled = linodeSetting.ssh.access;
@@ -22,22 +35,18 @@ export const SSHAccessRow: React.FunctionComponent<Props> = props => {
       data-testid={'linode-row'}
       ariaLabel={linodeSetting.label}
     >
-      <TableCell parentColumn="Linode" data-qa-managed-linode>
-        {linodeSetting.label}
-      </TableCell>
-      <TableCell parentColumn="SSH Access" data-qa-managed-ssh-access>
+      <TableCell data-qa-managed-linode>{linodeSetting.label}</TableCell>
+      <TableCell data-qa-managed-ssh-access>
         {isAccessEnabled ? 'Enabled' : 'Disabled'}
       </TableCell>
-      <TableCell parentColumn="User" data-qa-managed-user>
-        {linodeSetting.ssh.user}
-      </TableCell>
-      <TableCell parentColumn="IP" data-qa-managed-ip>
-        {linodeSetting.ssh.ip === 'any' ? 'Any' : linodeSetting.ssh.ip}
-      </TableCell>
-      <TableCell parentColumn="Port" data-qa-managed-port>
-        {linodeSetting.ssh.port}
-      </TableCell>
-      <TableCell>
+      <Hidden xsDown>
+        <TableCell data-qa-managed-user>{linodeSetting.ssh.user}</TableCell>
+        <TableCell data-qa-managed-ip>
+          {linodeSetting.ssh.ip === 'any' ? 'Any' : linodeSetting.ssh.ip}
+        </TableCell>
+        <TableCell data-qa-managed-port>{linodeSetting.ssh.port}</TableCell>
+      </Hidden>
+      <TableCell className={classes.actionCell}>
         <ActionMenu
           linodeId={linodeSetting.id}
           isEnabled={isAccessEnabled}

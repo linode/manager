@@ -1,9 +1,10 @@
-import produce from 'immer';
 import {
   getLinodeSettings,
   ManagedLinodeSetting
 } from '@linode/api-v4/lib/managed';
+import produce from 'immer';
 import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -11,10 +12,10 @@ import TableHead from 'src/components/core/TableHead';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableSortCell from 'src/components/TableSortCell';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { getAll } from 'src/utilities/getAll';
@@ -28,15 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:before': {
       display: 'none'
     }
-  },
-  linode: {
-    width: '30%'
-  },
-  access: {
-    width: '15%'
-  },
-  ip: {
-    width: '20%'
   }
 }));
 
@@ -103,13 +95,11 @@ const SSHAccessTable: React.FC<{}> = () => {
                               label={'label'}
                               direction={order}
                               handleClick={handleOrderChange}
-                              className={classes.linode}
                               data-qa-ssh-linode-header
                             >
                               Linode
                             </TableSortCell>
                             <TableSortCell
-                              className={classes.access}
                               active={orderBy === 'ssh:access'}
                               label={'ssh:access'}
                               direction={order}
@@ -118,35 +108,35 @@ const SSHAccessTable: React.FC<{}> = () => {
                             >
                               SSH Access
                             </TableSortCell>
-                            <TableSortCell
-                              active={orderBy === 'ssh:user'}
-                              label={'ssh:user'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                              data-qa-ssh-user-header
-                            >
-                              User
-                            </TableSortCell>
-                            <TableSortCell
-                              className={classes.ip}
-                              active={orderBy === 'ssh:ip'}
-                              label={'ssh:ip'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                              data-qa-ssh-ip-header
-                            >
-                              IP
-                            </TableSortCell>
-                            <TableSortCell
-                              active={orderBy === 'ssh:port'}
-                              label={'ssh:port'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                              data-qa-ssh-port-header
-                            >
-                              Port
-                            </TableSortCell>
-                            {/* Empty TableCell for action menu */}
+                            <Hidden xsDown>
+                              <TableSortCell
+                                active={orderBy === 'ssh:user'}
+                                label={'ssh:user'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                                data-qa-ssh-user-header
+                              >
+                                User
+                              </TableSortCell>
+                              <TableSortCell
+                                active={orderBy === 'ssh:ip'}
+                                label={'ssh:ip'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                                data-qa-ssh-ip-header
+                              >
+                                IP
+                              </TableSortCell>
+                              <TableSortCell
+                                active={orderBy === 'ssh:port'}
+                                label={'ssh:port'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                                data-qa-ssh-port-header
+                              >
+                                Port
+                              </TableSortCell>
+                            </Hidden>
                             <TableCell />
                           </TableRow>
                         </TableHead>

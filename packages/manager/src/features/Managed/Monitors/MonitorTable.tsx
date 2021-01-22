@@ -1,33 +1,28 @@
-import { FormikBag } from 'formik';
 import {
   ManagedCredential,
   ManagedServiceMonitor,
   ManagedServicePayload
 } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
+import { FormikBag } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import DeletionDialog from 'src/components/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableSortCell from 'src/components/TableSortCell';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { ManagedIssuesProps } from 'src/containers/managedIssues.container';
 import { DispatchProps } from 'src/containers/managedServices.container';
 import { useDialog } from 'src/hooks/useDialog';
@@ -36,19 +31,37 @@ import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
-
 import MonitorDrawer from '../MonitorDrawer';
 import HistoryDrawer from './HistoryDrawer';
 import MonitorTableContent from './MonitorTableContent';
 
-type ClassNames = 'labelHeader';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    labelHeader: {
-      paddingLeft: theme.spacing(4) + 32
+const useStyles = makeStyles((theme: Theme) => ({
+  addNewWrapper: {
+    marginBottom: 5,
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing()
     }
-  });
+  },
+  headers: {
+    '& > th': {
+      fontFamily: theme.font.bold
+    }
+  },
+  labelHeader: {
+    paddingLeft: `62px !important`,
+    // Adding a class to the header replaces the existing hover styles
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      cursor: 'pointer',
+      '& span': {
+        color: theme.color.white
+      },
+      '& svg path': {
+        color: theme.color.white
+      }
+    }
+  }
+}));
 
 interface Props {
   monitors: ManagedServiceMonitor[];
@@ -62,14 +75,14 @@ export type Modes = 'create' | 'edit';
 export type FormikProps = FormikBag<CombinedProps, ManagedServicePayload>;
 
 export type CombinedProps = Props &
-  WithStyles<ClassNames> &
   DispatchProps &
   ManagedIssuesProps &
   WithSnackbarProps;
 
 export const MonitorTable: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const {
-    classes,
     deleteServiceMonitor,
     enqueueSnackbar,
     error,
@@ -165,6 +178,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     // Clear drawer error state
     setStatus(undefined);
 
+    // eslint-disable-next-line no-unused-expressions
     drawerMode === 'create'
       ? createServiceMonitor({ ...values, timeout: +values.timeout })
           .then(_success)
@@ -180,17 +194,16 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Service Monitors" />
+      <DocumentTitleSegment segment="Monitors" />
       <Grid
         container
         justify="flex-end"
         alignItems="flex-end"
         updateFor={[classes]}
-        style={{ paddingBottom: 0 }}
       >
         <Grid item>
           <Grid container alignItems="flex-end">
-            <Grid item className="pt0">
+            <Grid item className={classes.addNewWrapper}>
               <AddNewLink
                 onClick={() => setMonitorDrawerOpen(true)}
                 label="Add a Monitor"
@@ -214,7 +227,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                 <Paper>
                   <Table aria-label="List of Your Managed Service Monitors">
                     <TableHead>
-                      <TableRow>
+                      <TableRow className={classes.headers}>
                         <TableSortCell
                           active={orderBy === 'label'}
                           label={'label'}
@@ -235,8 +248,8 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                           Status
                         </TableSortCell>
                         <TableSortCell
-                          active={orderBy === 'resource'}
-                          label={'resource'}
+                          active={orderBy === 'address'}
+                          label={'address'}
                           direction={order}
                           handleClick={handleOrderChange}
                           data-qa-monitor-resource-header
@@ -302,6 +315,5 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, Props>(withSnackbar, styled);
+const enhanced = compose<CombinedProps, Props>(withSnackbar);
 export default enhanced(MonitorTable);

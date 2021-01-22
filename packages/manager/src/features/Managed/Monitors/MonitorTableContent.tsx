@@ -1,12 +1,10 @@
 import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { ExtendedIssue } from 'src/store/managed/issues.actions';
-
 import MonitorRow from './MonitorRow';
 
 interface Props {
@@ -31,8 +29,9 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
     openHistoryDrawer,
     openMonitorDrawer
   } = props;
+
   if (loading) {
-    return <TableRowLoading colSpan={3} widths={[45]} oneLine hasEntityIcon />;
+    return <TableRowLoading colSpan={2} widths={[45]} oneLine hasEntityIcon />;
   }
 
   if (error) {
