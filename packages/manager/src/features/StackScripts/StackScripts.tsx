@@ -7,10 +7,8 @@ import {
   withRouter
 } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import useFlags from 'src/hooks/useFlags';
 
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
-const StackScriptsLanding = React.lazy(() => import('./StackScriptsLanding'));
 const StackScriptsLanding_CMR = React.lazy(() =>
   import('./StackScriptsLanding_CMR')
 );
@@ -19,8 +17,6 @@ const StackScriptCreate = React.lazy(() => import('./StackScriptCreate'));
 type Props = RouteComponentProps<{}>;
 
 export const NodeBalancers: React.FC<Props> = props => {
-  const flags = useFlags();
-
   const {
     match: { path }
   } = props;
@@ -28,12 +24,7 @@ export const NodeBalancers: React.FC<Props> = props => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        {flags.cmr ? (
-          <Route component={StackScriptsLanding_CMR} path={path} exact />
-        ) : (
-          <Route component={StackScriptsLanding} path={path} exact />
-        )}
-        <Route component={StackScriptsLanding} path={path} exact />
+        <Route component={StackScriptsLanding_CMR} path={path} />
         <Route
           render={() => <StackScriptCreate mode="create" />}
           path={`${path}/create`}
@@ -49,7 +40,9 @@ export const NodeBalancers: React.FC<Props> = props => {
           path={`${path}/:stackScriptId`}
           exact
         />
-        <Redirect to={`${path}`} />
+        {/* <Redirect to={`${path}`} /> */}
+        <Redirect from={`${path}?type=account`} to={`${path}/account`} />
+        <Redirect from={`${path}?type=community`} to={`${path}/community`} />
       </Switch>
     </React.Suspense>
   );
