@@ -50,7 +50,8 @@ type ClassNames =
   | 'chip'
   | 'headingCellContainer'
   | 'currentPlanChipCell'
-  | 'radioCell';
+  | 'radioCell'
+  | 'gpuGuideLink';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -93,6 +94,14 @@ const styles = (theme: Theme) =>
     radioCell: {
       width: '5%',
       height: 55
+    },
+    gpuGuideLink: {
+      '& a': {
+        color: theme.cmrTextColors.linkActiveLight
+      },
+      '& a:hover': {
+        color: '#3683dc'
+      }
     }
   });
 
@@ -418,7 +427,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
           these plans are only available in {this.getRegionsWithGPU()}.
         </>
       ) : (
-        gpuPlanText()
+        <div className={classes.gpuGuideLink}>{gpuPlanText()}</div>
       );
       tabs.push({
         render: () => {
