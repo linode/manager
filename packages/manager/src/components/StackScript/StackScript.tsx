@@ -4,6 +4,7 @@ import { stringify } from 'qs';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import {
@@ -27,6 +28,8 @@ type CSSClasses =
   | 'scriptHeading'
   | 'descriptionText'
   | 'deploymentSection'
+  | 'idSection'
+  | 'copyIcon'
   | 'dateTimeDisplay'
   | 'compatibleImages'
   | 'divider';
@@ -59,6 +62,20 @@ const styles = (theme: Theme) =>
     deploymentSection: {
       marginTop: theme.spacing(1),
       fontSize: '1rem'
+    },
+    idSection: {
+      marginTop: theme.spacing(1),
+      fontSize: '1rem'
+    },
+    copyIcon: {
+      color: theme.palette.primary.main,
+      position: 'relative',
+      display: 'inline-block',
+      transition: theme.transitions.create(['color']),
+      '& svg': {
+        width: '1em',
+        height: '1em'
+      }
     },
     dateTimeDisplay: {
       display: 'inline-block',
@@ -94,6 +111,7 @@ export class SStackScript extends React.Component<CombinedProps> {
         deployments_total,
         deployments_active,
         description,
+        id: stackscriptId,
         script,
         label,
         updated,
@@ -153,6 +171,14 @@ export class SStackScript extends React.Component<CombinedProps> {
             <DateTimeDisplay
               value={updated}
               className={classes.dateTimeDisplay}
+            />
+          </Typography>
+          <Typography className={classes.idSection}>
+            <strong>StackScript ID: </strong>
+            {stackscriptId}
+            <CopyTooltip
+              text={stackscriptId.toString()}
+              className={classes.copyIcon}
             />
           </Typography>
           <Divider className={classes.divider} />

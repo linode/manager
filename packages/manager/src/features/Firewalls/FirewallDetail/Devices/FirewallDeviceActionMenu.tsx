@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface ActionHandlers {
   triggerRemoveDevice: (deviceID: number, label: string) => void;
@@ -16,22 +15,11 @@ type CombinedProps = Props;
 const FirewallDeviceActionMenu: React.FC<CombinedProps> = props => {
   const { deviceID, deviceLabel, triggerRemoveDevice } = props;
 
-  const createActions = () => {
-    return (closeMenu: Function): Action[] => [
-      {
-        title: 'Remove',
-        onClick: () => {
-          triggerRemoveDevice(deviceID, deviceLabel);
-          closeMenu();
-        }
-      }
-    ];
-  };
-
   return (
-    <ActionMenu
-      createActions={createActions()}
-      ariaLabel={`Action menu for Firewall Device ${deviceLabel}`}
+    <InlineMenuAction
+      key="Remove"
+      actionText="Remove"
+      onClick={() => triggerRemoveDevice(deviceID, deviceLabel)}
     />
   );
 };
