@@ -90,22 +90,22 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   });
 
   const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
-    open: Boolean(queryParams.resize),
+    open: queryParams.resize === 'true',
     linodeID: matchedLinodeId
   });
 
   const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
-    open: Boolean(queryParams.migrate),
+    open: queryParams.migrate === 'true',
     linodeID: matchedLinodeId
   });
 
   const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
-    open: Boolean(queryParams.rescue),
+    open: queryParams.rescue === 'true',
     linodeID: matchedLinodeId
   });
 
   const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
-    open: Boolean(queryParams.rebuild),
+    open: queryParams.rebuild === 'true',
     linodeID: matchedLinodeId
   });
 
