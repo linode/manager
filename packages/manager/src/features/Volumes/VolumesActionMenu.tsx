@@ -1,28 +1,45 @@
+import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
-
-export interface Props {
-  onShowConfig: (volumeLabel: string, volumePath: string) => void;
-  onEdit: (volumeId: number, volumeLabel: string, volumeTags: string[]) => void;
-  onResize: (volumeId: number, volumeSize: number, volumeLabel: string) => void;
-  onClone: (
+export interface ActionHandlers {
+  openForConfig: (volumeLabel: string, volumePath: string) => void;
+  openForEdit: (
+    volumeId: number,
+    volumeLabel: string,
+    volumeTags: string[]
+  ) => void;
+  openForResize: (
+    volumeId: number,
+    volumeSize: number,
+    volumeLabel: string
+  ) => void;
+  openForClone: (
     volumeId: number,
     label: string,
     size: number,
     regionID: string
   ) => void;
-  attached: boolean;
-  onAttach: (volumeId: number, label: string, linodeRegion: string) => void;
-  onDetach: (
+  handleAttach: (volumeId: number, label: string, linodeRegion: string) => void;
+  handleDetach: (
     volumeId: number,
     volumeLabel: string,
     linodeLabel: string,
     poweredOff: boolean
   ) => void;
+  handleDelete: (volumeId: number, volumeLabel: string) => void;
+  [index: string]: any;
+}
+
+interface Props extends ActionHandlers {
+  attached: boolean;
+  isVolumesLanding: boolean;
   poweredOff: boolean;
-  onDelete: (volumeId: number, volumeLabel: string) => void;
   filesystemPath: string;
   label: string;
   linodeLabel: string;
@@ -35,130 +52,120 @@ export interface Props {
 
 export type CombinedProps = Props & RouteComponentProps<{}>;
 
-export class VolumesActionMenu extends React.Component<CombinedProps> {
-  handleShowConfig = () => {
-    const { onShowConfig, label, filesystemPath } = this.props;
+export const VolumesActionMenu: React.FC<CombinedProps> = props => {
+  const { attached, poweredOff, isVolumesLanding } = props;
+
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const handleShowConfig = () => {
+    const { onShowConfig, label, filesystemPath } = props;
     onShowConfig(label, filesystemPath);
   };
 
-  handleOpenEdit = () => {
-    const { volumeId, label, volumeTags, onEdit } = this.props;
+  const handleOpenEdit = () => {
+    const { onEdit, volumeId, label, volumeTags } = props;
     onEdit(volumeId, label, volumeTags);
   };
 
-  handleResize = () => {
-    const { volumeId, size, label, onResize } = this.props;
+  const handleResize = () => {
+    const { onResize, volumeId, size, label } = props;
     onResize(volumeId, size, label);
   };
 
-  handleClone = () => {
-    const { volumeId, label, size, regionID, onClone } = this.props;
+  const handleClone = () => {
+    const { onClone, volumeId, label, size, regionID } = props;
     onClone(volumeId, label, size, regionID);
   };
 
-  handleAttach = () => {
-    const { volumeId, label, regionID, onAttach } = this.props;
+  const handleAttach = () => {
+    const { onAttach, volumeId, label, regionID } = props;
     onAttach(volumeId, label, regionID);
   };
 
-  handleDetach = () => {
-    const {
-      volumeId,
-      onDetach,
-      volumeLabel,
-      linodeLabel,
-      poweredOff
-    } = this.props;
+  const handleDetach = () => {
+    const { onDetach, volumeId, volumeLabel, linodeLabel, poweredOff } = props;
     onDetach(volumeId, volumeLabel, linodeLabel, poweredOff);
   };
 
-  handleDelete = () => {
-    const { volumeId, onDelete, volumeLabel } = this.props;
+  const handleDelete = () => {
+    const { onDelete, volumeId, volumeLabel } = props;
     onDelete(volumeId, volumeLabel);
   };
 
-  createActions = () => {
-    const { attached, poweredOff } = this.props;
-
-    return (closeMenu: Function): Action[] => {
-      const actions = [
-        {
-          title: 'Show Configuration',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleShowConfig();
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Edit Volume',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleOpenEdit();
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Resize',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleResize();
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Clone',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleClone();
-            closeMenu();
-            e.preventDefault();
-          }
-        }
-      ];
-
-      if (!attached) {
-        actions.push({
-          title: 'Attach',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleAttach();
-            closeMenu();
-            e.preventDefault();
-          }
-        });
-      } else {
-        actions.push({
-          title: 'Detach',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleDetach();
-            closeMenu();
-            e.preventDefault();
-          }
-        });
+  const actions: Action[] = [
+    {
+      title: 'Show Config',
+      onClick: () => {
+        handleShowConfig();
       }
-
-      if (!attached || poweredOff) {
-        actions.push({
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleDelete();
-            closeMenu();
-            e.preventDefault();
-          }
-        });
+    },
+    {
+      title: 'Edit',
+      onClick: () => {
+        handleOpenEdit();
       }
+    },
+    {
+      title: 'Resize',
+      onClick: () => {
+        handleResize();
+      }
+    },
+    {
+      title: 'Clone',
+      onClick: () => {
+        handleClone();
+      }
+    }
+  ];
 
-      return actions;
-    };
-  };
-
-  render() {
-    return (
-      <ActionMenu
-        createActions={this.createActions()}
-        ariaLabel={`Action menu for Volume ${this.props.volumeLabel}`}
-      />
-    );
+  if (!attached && isVolumesLanding) {
+    actions.push({
+      title: 'Attach',
+      onClick: () => {
+        handleAttach();
+      }
+    });
+  } else {
+    actions.push({
+      title: 'Detach',
+      onClick: () => {
+        handleDetach();
+      }
+    });
   }
-}
+
+  if (!attached || poweredOff) {
+    actions.push({
+      title: 'Delete',
+      onClick: () => {
+        handleDelete();
+      }
+    });
+  }
+
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
+
+  return (
+    <>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      <ActionMenu
+        actionsList={menuActions}
+        ariaLabel={`Action menu for Volume ${props.volumeLabel}`}
+      />
+    </>
+  );
+};
 
 export default withRouter(VolumesActionMenu);

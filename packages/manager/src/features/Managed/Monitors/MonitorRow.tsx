@@ -2,59 +2,47 @@ import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import TicketIcon from 'src/assets/icons/ticket.svg';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { ExtendedIssue } from 'src/store/managed/issues.actions';
-
 import ActionMenu from './MonitorActionMenu';
 import { statusIconMap, statusTextMap } from './monitorMaps';
 
-type ClassNames =
-  | 'root'
-  | 'label'
-  | 'icon'
-  | 'monitorDescription'
-  | 'monitorRow'
-  | 'errorStatus';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    label: {
-      width: '30%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
-    },
-    icon: {
-      alignItems: 'center',
-      marginLeft: theme.spacing(1),
-      transition: 'color 225ms ease-in-out',
-      '&:hover': {
-        color: theme.color.red
-      }
-    },
-    monitorDescription: {
-      paddingTop: theme.spacing(1) / 2
-    },
-    monitorRow: {
-      '&:before': {
-        display: 'none'
-      }
-    },
-    errorStatus: {
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  label: {
+    fontFamily: theme.font.bold,
+    width: '30%'
+  },
+  icon: {
+    alignItems: 'center',
+    transition: 'color 225ms ease-in-out',
+    '&:hover': {
       color: theme.color.red
     }
-  });
+  },
+  monitorDescription: {
+    paddingTop: theme.spacing(1) / 2
+  },
+  monitorRow: {
+    '&:before': {
+      display: 'none'
+    }
+  },
+  errorStatus: {
+    color: theme.color.red
+  },
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0
+  }
+}));
 
 interface Props {
   monitor: ManagedServiceMonitor;
@@ -64,18 +52,21 @@ interface Props {
   openHistoryDrawer: (id: number, label: string) => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
-export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
+export const MonitorRow: React.FunctionComponent<CombinedProps> = props => {
+  const classes = useStyles();
+
   const {
-    classes,
     monitor,
     issues,
     openDialog,
     openHistoryDrawer,
     openMonitorDrawer
   } = props;
+
   const Icon = statusIconMap[monitor.status];
+
   // For now, only include a ticket icon in this view if the ticket is still open (per Jay).
   const openIssues = issues.filter(thisIssue => !thisIssue.dateClosed);
 
@@ -87,21 +78,15 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
       className={classes.monitorRow}
       ariaLabel={`Monitor ${monitor.label}`}
     >
-      <TableCell
-        parentColumn="Monitor"
-        className={classes.label}
-        data-qa-monitor-label
-      >
+      <TableCell className={classes.label} data-qa-monitor-label>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className={classes.icon} style={{ display: 'flex' }}>
             <Icon height={30} width={30} />
           </Grid>
-          <Grid item>
-            <Typography variant="h3">{monitor.label}</Typography>
-          </Grid>
+          <Grid item>{monitor.label}</Grid>
         </Grid>
       </TableCell>
-      <TableCell parentColumn="Status" data-qa-monitor-status>
+      <TableCell data-qa-monitor-status>
         <Grid container item direction="row" alignItems="center">
           <Grid item>
             <Typography
@@ -132,10 +117,10 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell parentColumn="Resource" data-qa-monitor-resource>
+      <TableCell data-qa-monitor-resource>
         <Typography>{monitor.address}</Typography>
       </TableCell>
-      <TableCell>
+      <TableCell className={classes.actionCell}>
         <ActionMenu
           status={monitor.status}
           monitorID={monitor.id}
@@ -149,6 +134,4 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(monitorRow);
+export default MonitorRow;

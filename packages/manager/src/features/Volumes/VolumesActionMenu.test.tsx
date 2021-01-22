@@ -25,6 +25,14 @@ const props: Props = {
   volumeId: 12345,
   volumeTags: ['abc', 'def'],
   volumeLabel: '',
+  isVolumesLanding: false,
+  openForClone: jest.fn(),
+  openForConfig: jest.fn(),
+  openForEdit: jest.fn(),
+  openForResize: jest.fn(),
+  handleAttach: jest.fn(),
+  handleDelete: jest.fn(),
+  handleDetach: jest.fn(),
   ...reactRouterProps
 };
 
@@ -33,13 +41,11 @@ describe('Volume action menu', () => {
     const { queryByText } = render(
       wrapWithTheme(<VolumesActionMenu {...props} />)
     );
-    includesActions(
-      ['Show Configuration', 'Edit Volume', 'Resize', 'Clone'],
-      queryByText
-    );
+    includesActions(['Show Config', 'Edit'], queryByText);
   });
 
-  it('should render an Attach action if the volume is not attached', () => {
+  // Hidden in dropdown menu
+  it.skip('should render an Attach action if the volume is not attached', () => {
     const { queryByText } = render(
       wrapWithTheme(<VolumesActionMenu {...props} />)
     );

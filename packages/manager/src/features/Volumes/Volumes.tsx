@@ -6,11 +6,8 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
-import useFlags from 'src/hooks/useFlags';
 
 const VolumesLanding = React.lazy(() => import('./VolumesLanding'));
-const VolumesLanding_CMR = React.lazy(() => import('./VolumesLanding_CMR'));
-
 const VolumeCreate = React.lazy(() => import('./VolumeCreate/VolumeCreate'));
 
 type Props = RouteComponentProps<{}>;
@@ -20,22 +17,12 @@ const Volumes: React.FC<Props> = props => {
     match: { path }
   } = props;
 
-  const flags = useFlags();
-
   return (
     <Switch>
       <Route
-        render={routeProps =>
-          flags.cmr ? (
-            <VolumesLanding_CMR
-              isVolumesLanding
-              removeBreadCrumb
-              {...routeProps}
-            />
-          ) : (
-            <VolumesLanding isVolumesLanding {...routeProps} />
-          )
-        }
+        render={routeProps => (
+          <VolumesLanding isVolumesLanding removeBreadCrumb {...routeProps} />
+        )}
         path={path}
         exact
         strict

@@ -1,6 +1,7 @@
 import { ManagedContact } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import { Action } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
   contactId: number;
@@ -15,31 +16,34 @@ export type CombinedProps = Props;
 export const ContactsActionMenu: React.FC<CombinedProps> = props => {
   const { contactId, openDrawer, openDialog } = props;
 
-  const createActions = (closeMenu: Function): Action[] => {
-    const actions = [
-      {
-        title: 'Edit',
-        onClick: () => {
-          closeMenu();
-          openDrawer(contactId);
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: () => {
-          openDialog(contactId);
-          closeMenu();
-        }
+  const actions: Action[] = [
+    {
+      title: 'Edit',
+      onClick: () => {
+        openDrawer(contactId);
       }
-    ];
-    return actions;
-  };
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        openDialog(contactId);
+      }
+    }
+  ];
 
   return (
-    <ActionMenu
-      createActions={createActions}
-      ariaLabel={`Action menu for Contact ${props.contactName}`}
-    />
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {actions.map(action => {
+        return (
+          <InlineMenuAction
+            key={action.title}
+            actionText={action.title}
+            onClick={action.onClick}
+          />
+        );
+      })}
+    </>
   );
 };
 
