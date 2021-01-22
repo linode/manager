@@ -54,6 +54,16 @@ const RenderData: React.FC<{
         <VolumeTableRow
           key={`volume-table-row-${idx}`}
           volume={volume}
+          id={volume.id}
+          label={volume.label}
+          region={volume.region}
+          size={volume.size}
+          status={volume.status}
+          tags={volume.tags}
+          created={volume.created}
+          updated={volume.updated}
+          filesystem_path={volume.filesystem_path}
+          linode_id={volume.linode_id}
           isVolumesLanding={isVolumesLanding}
           isUpdating={isVolumeUpdating(volume.recentEvent)}
           handleAttach={handleAttach}
