@@ -7,6 +7,7 @@ import {
   withRouter
 } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import { parseQueryParams } from 'src/utilities/queryParams';
 
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
 const StackScriptsLanding_CMR = React.lazy(() =>
@@ -18,15 +19,16 @@ type Props = RouteComponentProps<{}>;
 
 export const NodeBalancers: React.FC<Props> = props => {
   const {
-    match: { path }
+    match: { path },
+    location: { search }
   } = props;
 
   // Redirects to prevent breaking old stackscripts?type=whatever bookmarks
-  const searchParams = new URLSearchParams(props.location.search);
-  if (searchParams.get('type') === 'community') {
+  const searchParams = parseQueryParams(search);
+  if (searchParams.type === 'community') {
     props.history.replace('stackscripts/community');
   }
-  if (searchParams.get('type') === 'account') {
+  if (searchParams.type === 'account') {
     props.history.replace('stackscripts/account');
   }
 
