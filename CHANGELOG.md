@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-01-25] - v1.29.0
+
+### Added:
+- Add Network Transfer Graph to Linodes Landing
+- Add Marketplace Q4 apps
+- Sort Linode Details > Storage > Disks table by created (ascending) on default
+
+### Changed:
+- Remove rounded corners for buttons
+- Disable submission until required fields are present and remove tags field from the Domain create flow
+- Disable Firewall and Image create flows for restricted users
+- Increase timeout for Longview on accounts with more Longviews
+- Convert Support Ticket drawer to a dialog and make inputs bigger
+- Update text to accurately reflect what read_only account access lets you do
+
+### Fixed:
+- Set highlight.js theme on app load
+- Color scheme for Dark Mode toggle button's enabled state
+- Disable create flow fields for restricted users
+- Remove duplicate restricted banner for Marketplace
+- Tooltip and disabled action functionality in action menus
+- Update timezone logic to account for time zones that use a quarter hour
+- Object Storage list not showing more than 100 objects
+
 ## [2021-01-20] - v1.28.3
 
 ### Fixed:
