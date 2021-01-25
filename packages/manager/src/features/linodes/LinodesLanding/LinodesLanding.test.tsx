@@ -38,7 +38,6 @@ describe('ListLinodes', () => {
           userProfileLoading={false}
           someLinodesHaveScheduledMaintenance={true}
           linodesData={[]}
-          linodeTypesMap={{}}
           classes={classes}
           clearDocs={clearDocs}
           enqueueSnackbar={jest.fn()}

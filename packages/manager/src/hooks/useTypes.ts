@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { LinodeType } from '@linode/api-v4/lib/linodes';
 
-export type MappedLinodeType = Record<number, LinodeType>;
+export type MappedLinodeType = Record<string, LinodeType>;
 
 export const useTypes = () => {
   const types = useSelector(
