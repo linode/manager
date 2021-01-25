@@ -246,6 +246,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
       <Grid item>
         <UpgradeKubernetesVersionBanner
           clusterID={cluster.id}
+          clusterLabel={cluster.label}
           currentVersion={cluster.k8s_version}
         />
       </Grid>
