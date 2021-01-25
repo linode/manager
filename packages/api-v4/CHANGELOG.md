@@ -1,11 +1,12 @@
 ## [2021-01-25] - v0.41.0
 
 ### Added:
-- Make CVV required
+- Method for recycleClusterNodes
+- Method for recycleNode
 
 ### Changed:
-- Update CreateDomainPayload
-- Update UpdateDomainPayload
+- Update getKubernetesVersions
+- Update FirewallRuleTypeSchema
 
 ## [2021-01-13] - v0.40.0
 
