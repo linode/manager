@@ -33,7 +33,9 @@ export const NodeBalancers: React.FC<Props> = props => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={StackScriptsLanding_CMR} path={path} />
+        <Route component={StackScriptsLanding_CMR} path={`${path}/account`} />
+        <Route component={StackScriptsLanding_CMR} path={`${path}/community`} />
+        <Route component={StackScriptsLanding_CMR} path={path} exact />
         <Route
           render={() => <StackScriptCreate mode="create" />}
           path={`${path}/create`}
