@@ -631,11 +631,26 @@ interface StateProps {
 
 const mapStateToProps: MapState<StateProps, {}> = state => {
   const linodes = Object.values(state.__resources.linodes.itemsById);
+  const linodeTypesMap = state.__resources.types.entities.reduce(
+    (accumulator, thisType) => ({
+      ...accumulator,
+      [thisType.id]: thisType
+    }),
+    {}
+  );
+
+  const linodesDataWithPlan = linodes.map(thisLinode => {
+    return {
+      ...thisLinode,
+      plan: linodeTypesMap[thisLinode.type ?? '']?.label ?? 'Unknown'
+    };
+  });
+
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
     notifications,
-    linodes
+    linodesDataWithPlan
   );
 
   return {
