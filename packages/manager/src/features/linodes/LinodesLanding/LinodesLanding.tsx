@@ -32,6 +32,7 @@ import { BackupsCTA } from 'src/features/Backups';
 import BackupsCTA_CMR from 'src/features/Backups/BackupsCTA_CMR';
 import { DialogType } from 'src/features/linodes/types';
 import DetachLinodeDialog from 'src/features/Vlans/DetachLinodeDialog/DetachLinodeDialog';
+import { LinodeTypes } from 'src/hooks/useTypes';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import {
@@ -96,6 +97,7 @@ export interface Props {
   filterLinodesFn?: (linode: Linode) => boolean;
   extendLinodesFn?: (linode: Linode) => any;
   LandingHeader?: React.ReactElement;
+  linodeTypes?: LinodeTypes[];
 }
 
 type CombinedProps = Props &
@@ -232,10 +234,17 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesRequestLoading,
       linodesCount,
       linodesData,
+      linodeTypes,
       classes,
       backupsCTA,
       linodesInTransition
     } = this.props;
+
+    // Use the type prop provided to find the correct type in the Linode types
+    // list and add the corresponding plan label to the linode object.
+    linodesData.forEach(linode => {
+      linode['plan'] = linodeTypes![linode!.type!].label ?? 'Unknown';
+    });
 
     const params: Params = parse(this.props.location.search, {
       ignoreQueryPrefix: true
