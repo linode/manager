@@ -6,7 +6,7 @@ import ActionMenu, {
 import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
-interface Props extends Partial<ActionMenuProps> {
+export interface Props extends Partial<ActionMenuProps> {
   idx: number;
   triggerCloneFirewallRule: (idx: number) => void;
   triggerDeleteFirewallRule: (idx: number) => void;
