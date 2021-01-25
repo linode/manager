@@ -165,7 +165,7 @@ const EditableText: React.FC<FinalProps> = props => {
 
   React.useEffect(() => {
     onCancel();
-  }, [isEditing, onCancel]);
+  }, [isEditing]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
