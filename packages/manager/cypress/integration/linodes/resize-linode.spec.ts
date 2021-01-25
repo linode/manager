@@ -1,4 +1,4 @@
-import { createLinode } from '../../support/api/linodes';
+import { createLinode, deleteLinodeById } from '../../support/api/linodes';
 import { containsVisible, fbtVisible, getClick } from '../../support/helpers';
 
 describe('resize linode', () => {
@@ -16,6 +16,7 @@ describe('resize linode', () => {
       fbtVisible(
         'Your Linode will soon be automatically powered off, migrated, and restored to its previous state (booted or powered off).'
       );
+      deleteLinodeById(linode.id);
     });
   });
 });
