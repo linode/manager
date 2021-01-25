@@ -79,7 +79,6 @@ const styles = (theme: Theme) =>
       margin: 0
     },
     inputRoot: {
-      borderColor: `${theme.palette.primary.main} !important`,
       backgroundColor: 'transparent',
       boxShadow: 'none',
       marginLeft: 7,

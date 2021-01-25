@@ -86,7 +86,13 @@ const styles = (theme: Theme) =>
       width: '3.6em'
     },
     errorText: {
-      color: theme.color.red
+      display: 'flex',
+      alignItems: 'center',
+      color: theme.color.red,
+      height: 34,
+      top: -2,
+      left: 280,
+      width: 200
     },
     absolute: {
       position: 'absolute'

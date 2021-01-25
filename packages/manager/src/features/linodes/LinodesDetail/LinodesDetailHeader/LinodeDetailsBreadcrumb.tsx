@@ -27,6 +27,7 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      textDecoration: 'none',
       [theme.breakpoints.down('sm')]: {
         paddingRight: `${theme.spacing()}px !important`
       }
