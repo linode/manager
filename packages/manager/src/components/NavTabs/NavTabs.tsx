@@ -42,11 +42,7 @@ const NavTabs: React.FC<CombinedProps> = props => {
     }
   };
 
-  // Detects if there's a search param, otherwise it won't detect instances
-  // like '/stackscipts?type=account'
-  const location = reactRouterLocation.pathname + reactRouterLocation.search;
-
-  const tabMatch = getTabMatch(tabs, location);
+  const tabMatch = getTabMatch(tabs, reactRouterLocation.pathname);
 
   // Redirect to the first tab's route name if the pathname is unknown.
   if (tabMatch.idx === -1) {
