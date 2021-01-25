@@ -21,6 +21,15 @@ export const NodeBalancers: React.FC<Props> = props => {
     match: { path }
   } = props;
 
+  // Redirects to prevent breaking old stackscripts?type=whatever bookmarks
+  const searchParams = new URLSearchParams(props.location.search);
+  if (searchParams.get('type') === 'community') {
+    props.history.replace('stackscripts/community');
+  }
+  if (searchParams.get('type') === 'account') {
+    props.history.replace('stackscripts/account');
+  }
+
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
@@ -40,9 +49,7 @@ export const NodeBalancers: React.FC<Props> = props => {
           path={`${path}/:stackScriptId`}
           exact
         />
-        {/* <Redirect to={`${path}`} /> */}
-        <Redirect from={`${path}?type=account`} to={`${path}/account`} />
-        <Redirect from={`${path}?type=community`} to={`${path}/community`} />
+        <Redirect to={`${path}`} />
       </Switch>
     </React.Suspense>
   );
