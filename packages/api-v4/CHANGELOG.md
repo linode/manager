@@ -1,3 +1,12 @@
+## [2021-01-25] - v0.41.0
+
+### Added:
+- Make CVV required
+
+### Changed:
+- Update CreateDomainPayload
+- Update UpdateDomainPayload
+
 ## [2021-01-13] - v0.40.0
 
 ### Added:
