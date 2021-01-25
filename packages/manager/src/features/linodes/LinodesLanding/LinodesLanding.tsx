@@ -32,7 +32,7 @@ import { BackupsCTA } from 'src/features/Backups';
 import BackupsCTA_CMR from 'src/features/Backups/BackupsCTA_CMR';
 import { DialogType } from 'src/features/linodes/types';
 import DetachLinodeDialog from 'src/features/Vlans/DetachLinodeDialog/DetachLinodeDialog';
-import { LinodeTypes } from 'src/hooks/useTypes';
+import { MappedLinodeType } from 'src/hooks/useTypes';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import {
@@ -97,7 +97,6 @@ export interface Props {
   filterLinodesFn?: (linode: Linode) => boolean;
   extendLinodesFn?: (linode: Linode) => any;
   LandingHeader?: React.ReactElement;
-  linodeTypes?: LinodeTypes[];
 }
 
 type CombinedProps = Props &
@@ -234,7 +233,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesRequestLoading,
       linodesCount,
       linodesData,
-      linodeTypes,
+      linodeTypesMap,
       classes,
       backupsCTA,
       linodesInTransition
@@ -242,8 +241,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     // Use the type prop provided to find the correct type in the Linode types
     // list and add the corresponding plan label to the linode object.
-    linodesData.forEach(linode => {
-      linode['plan'] = linodeTypes![linode!.type!].label ?? 'Unknown';
+    const linodesDataWithPlan = linodesData.map(thisLinode => {
+      return {
+        ...thisLinode,
+        plan: linodeTypesMap[thisLinode.type ?? '']?.label ?? 'Unknown'
+      };
     });
 
     const params: Params = parse(this.props.location.search, {
@@ -254,8 +256,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     // This is used in the VLAN Details view to only show Linodes belonging to
     // a given VLAN.
     const filteredLinodes = this.props.filterLinodesFn
-      ? linodesData.filter(this.props.filterLinodesFn)
-      : linodesData;
+      ? linodesDataWithPlan.filter(this.props.filterLinodesFn)
+      : linodesDataWithPlan;
 
     const extendedLinodes = this.props.extendLinodesFn
       ? filteredLinodes.map(this.props.extendLinodesFn)
@@ -629,6 +631,7 @@ interface StateProps {
   managed: boolean;
   linodesCount: number;
   linodesData: LinodeWithMaintenance[];
+  linodeTypesMap: MappedLinodeType;
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   userTimezone: string;
@@ -640,6 +643,14 @@ interface StateProps {
 
 const mapStateToProps: MapState<StateProps, {}> = state => {
   const linodes = Object.values(state.__resources.linodes.itemsById);
+  const linodeTypesMap = state.__resources.types.entities.reduce(
+    (accumulator, thisType) => ({
+      ...accumulator,
+      [thisType.id]: thisType
+    }),
+    {}
+  );
+
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
@@ -651,6 +662,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     managed: state.__resources.accountSettings.data?.managed ?? false,
     linodesCount: state.__resources.linodes.results,
     linodesData: linodesWithMaintenance,
+    linodeTypesMap,
     someLinodesHaveScheduledMaintenance: linodesWithMaintenance
       ? linodesWithMaintenance.some(
           eachLinode =>
