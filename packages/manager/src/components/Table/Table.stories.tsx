@@ -66,6 +66,7 @@ class StoryTable extends React.Component {
                     tags={linode.tags}
                     openTagDrawer={() => null}
                     type={linode.type}
+                    plan={'Linode 2 GB'}
                     vcpus={linode.specs.vcpus}
                     openDialog={this.handleDialog}
                     openPowerActionDialog={this.handlePowerActionDialog}
