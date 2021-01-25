@@ -38,7 +38,7 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = props => {
   const tabs: NavTab[] = [
     {
       title: 'Account StackScripts',
-      routeName: `/stackscripts?type=account`,
+      routeName: `/stackscripts/account`,
       render: (
         <StackScriptPanelContent
           category="account"
@@ -51,7 +51,7 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = props => {
     },
     {
       title: 'Community StackScripts',
-      routeName: `/stackscripts?type=community`,
+      routeName: `/stackscripts/community`,
       render: (
         <StackScriptPanelContent
           category="community"

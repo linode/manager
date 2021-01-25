@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
 import { extendedClusters } from 'src/__data__/kubernetes';
-import { ClusterRow } from './ClusterRow';
+import { ClusterRow, Props } from './ClusterRow';
 
 const cluster = {
   ...extendedClusters[0],
@@ -12,8 +12,10 @@ const cluster = {
   }))
 };
 
-const props = {
+const props: Props = {
   cluster,
+  hasUpgrade: false,
+  openUpgradeDialog: jest.fn(),
   openDeleteDialog: jest.fn()
 };
 

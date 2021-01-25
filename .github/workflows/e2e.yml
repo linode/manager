@@ -8,6 +8,7 @@ env:
 on:
   schedule:
     - cron: '0 13 * * 1-5'
+  pull_request:
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest

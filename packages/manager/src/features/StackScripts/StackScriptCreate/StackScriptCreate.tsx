@@ -280,7 +280,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields(updatedStackScript);
-        history.push('/stackscripts?type=account', {
+        history.push('/stackscripts/account', {
           successMessage: `${updatedStackScript.label} successfully updated`
         });
       })
@@ -296,7 +296,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields();
-        history.push('/stackscripts?type=account', {
+        history.push('/stackscripts/account', {
           successMessage: `${stackScript.label} successfully created`
         });
       })
