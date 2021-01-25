@@ -33,6 +33,7 @@ export const StackScriptsLanding: React.FC<CombinedProps> = props => {
         title="StackScripts"
         entity="StackScript"
         createButtonWidth={180}
+        removeCrumbX={1}
         docsLink="https://www.linode.com/docs/platform/stackscripts"
         onAddNew={goToCreateStackScript}
       />
