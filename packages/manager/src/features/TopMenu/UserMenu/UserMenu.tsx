@@ -181,7 +181,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   profileWrapper: {
     marginBottom: theme.spacing(2),
-    maxHeight: 200,
     width: '100%',
     '& > div': {
       whiteSpace: 'normal'
@@ -291,7 +290,7 @@ export const UserMenu: React.FC<{}> = () => {
 
   const renderLink = (menuLink: MenuLink) =>
     menuLink.hide ? null : (
-      <Grid item xs={6} key={menuLink.display}>
+      <Grid item xs={12} key={menuLink.display}>
         <MenuLink
           as={Link}
           to={menuLink.href}
@@ -343,13 +342,27 @@ export const UserMenu: React.FC<{}> = () => {
               <strong>{userName}</strong>
             </div>
             <div className={classes.menuHeader}>My Profile</div>
-            <Grid
-              container
-              wrap="wrap"
-              direction="column"
-              className={classes.profileWrapper}
-            >
-              {profileLinks.map(renderLink)}
+            <Grid container>
+              <Grid
+                container
+                item
+                xs={6}
+                wrap="nowrap"
+                direction="column"
+                className={classes.profileWrapper}
+              >
+                {profileLinks.slice(0, 4).map(renderLink)}
+              </Grid>
+              <Grid
+                container
+                item
+                xs={6}
+                wrap="nowrap"
+                direction="column"
+                className={classes.profileWrapper}
+              >
+                {profileLinks.slice(4).map(renderLink)}
+              </Grid>
             </Grid>
             {_hasAccountAccess ? (
               <>
