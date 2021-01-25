@@ -8,6 +8,7 @@ import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props extends Partial<ActionMenuProps> {
   idx: number;
+  triggerCloneFirewallRule: (idx: number) => void;
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
 }
@@ -20,6 +21,7 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
 
   const {
     idx,
+    triggerCloneFirewallRule,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
     ...actionMenuProps
@@ -30,6 +32,12 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
       title: 'Edit',
       onClick: () => {
         triggerOpenRuleDrawerForEditing(idx);
+      }
+    },
+    {
+      title: 'Clone',
+      onClick: () => {
+        triggerCloneFirewallRule(idx);
       }
     },
     {
