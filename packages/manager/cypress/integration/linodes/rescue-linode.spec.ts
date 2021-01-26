@@ -3,11 +3,11 @@ import {
   deleteLinodeById,
   clickLinodeActionMenu
 } from '../../support/api/linodes';
-import { fbtVisible, getClick } from '../../support/helpers';
+import { fbtClick, fbtVisible, getClick } from '../../support/helpers';
 import { assertToast } from '../../support/ui/events';
 
 const rebootInRescueMode = () => {
-  cy.findByText('Reboot into Rescue Mode').click();
+  fbtClick('Reboot into Rescue Mode');
 };
 
 describe('rescue linode', () => {
@@ -47,7 +47,7 @@ describe('rescue linode', () => {
       cy.wait('@postRebootInRescueMode')
         .its('response.statusCode')
         .should('eq', 400);
-      cy.findByText('Linode busy.');
+      fbtVisible('Linode busy.');
       deleteLinodeById(linode.id);
     });
   });
