@@ -102,6 +102,7 @@ export const ListView: React.FC<CombinedProps> = props => {
           vcpus={linode.specs.vcpus}
           memory={linode.specs.memory}
           type={linode.type}
+          plan={linode.plan}
           image={linode.image}
           vlanIP={linode._vlanIP}
           key={`linode-row-${idx}`}
