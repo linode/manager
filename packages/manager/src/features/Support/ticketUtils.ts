@@ -1,4 +1,4 @@
-export const OFFICIAL_USERNAMES = ['Linode', 'Linode Trust and Safety'];
+export const OFFICIAL_USERNAMES = ['Linode', 'Linode Trust & Safety'];
 
 export const reshapeFiles = (files: FileList) => {
   const reshapedFiles = [];
