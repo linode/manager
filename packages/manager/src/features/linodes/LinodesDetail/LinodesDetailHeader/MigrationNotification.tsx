@@ -12,12 +12,16 @@ import {
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 
-type ClassNames = 'migrationLink';
+type ClassNames = 'copy' | 'migrationLink';
 
 const styles = (theme: Theme) =>
   createStyles({
+    copy: {
+      color: theme.palette.text.primary,
+      fontSize: '.875rem'
+    },
     migrationLink: {
-      color: theme.palette.primary.main,
+      color: theme.cmrTextColors.linkActiveLight,
       cursor: 'pointer',
       display: 'inline',
       '&:hover': {
@@ -70,7 +74,7 @@ const MigrationNotification: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Notice important warning>
+    <Notice important warning className={classes.copy}>
       {notificationMessage}
       {notificationType === 'migration_scheduled'
         ? ' To enter the migration queue right now, please '
