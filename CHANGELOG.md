@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-01-25] - v1.29.0
+
+### Added:
+- Ability to recycle LKE nodes
+- Ability to recycle all nodes in an LKE cluster
+- Upgrade flow for LKE Kubernetes minor versions
+- “Plan” column in the Linodes list table
+- Copyable StackScript ID field on StackScripts Detail page
+
+### Changed:
+- Remove "Pilot" language from GPU tab under Linodes
+- Update URL appropriately when opening, closing, and navigating to Resize, Rebuild, Rescue, and Migrate modals
+- Use query params for routing for Resize, Rebuild, Rescue, and Migrate dialogs (e.g. linodes/123/storage?resize=true)
+- Improve responsiveness of Linode Network Summary
+- Hide Volumes table for Linodes in regions without Block Storage
+- Sort Firewall rule ports in ascending order
+- Make empty state message for outbound Firewall rules more explicit
+- Remove icons from buttons on Domain Detail page
+
+### Fixed:
+- Fix wrapping in UserMenu causing disappearing “Log Out” button
+
 ## [2021-01-20] - v1.28.3
 
 ### Fixed:

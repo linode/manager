@@ -1,3 +1,13 @@
+## [2021-01-25] - v0.41.0
+
+### Added:
+- Method for recycleClusterNodes
+- Method for recycleNode
+
+### Changed:
+- Update getKubernetesVersions
+- Update FirewallRuleTypeSchema
+
 ## [2021-01-13] - v0.40.0
 
 ### Added:
