@@ -16,7 +16,9 @@ describe('longview', () => {
         const clientLabel = client.label;
         cy.visit('/longview');
         containsVisible(clientLabel);
-        fbtVisible('Waiting for data...');
+        getVisible(`[data-testid="${client.id}"]`).within(() => {
+          cy.contains('Waiting for data...');
+        });
         cy.get('code')
           .first()
           .then($code => {
