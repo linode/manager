@@ -98,6 +98,9 @@ const styles = (theme: Theme) =>
         fontFamily: theme.font.bold
       }
     },
+    planCell: {
+      whiteSpace: 'nowrap'
+    },
     ipCell: {
       width: '14%'
     },
