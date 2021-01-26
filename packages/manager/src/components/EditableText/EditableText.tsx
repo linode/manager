@@ -1,134 +1,113 @@
 import Check from '@material-ui/icons/Check';
 import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
-import * as classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { TextFieldProps } from 'src/components/core/TextField';
 import H1Header from 'src/components/H1Header';
 import TextField from '../TextField';
 
-type ClassNames =
-  | 'root'
-  | 'container'
-  | 'initial'
-  | 'textField'
-  | 'inputRoot'
-  | 'input'
-  | 'button'
-  | 'icon'
-  | 'editIcon'
-  | 'saveIcon'
-  | 'headline'
-  | 'underlineOnHover';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    '@keyframes fadeIn': {
-      from: {
-        opacity: 0
-      },
-      to: {
+const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0
+    },
+    to: {
+      opacity: 1
+    }
+  },
+  root: {
+    display: 'inline-block',
+    border: '1px solid transparent',
+    color: theme.cmrTextColors.tableStatic,
+    fontSize: '1.125rem',
+    lineHeight: 1,
+    padding: '5px 8px',
+    textDecoration: 'inherit',
+    transition: theme.transitions.create(['opacity']),
+    wordBreak: 'break-all'
+  },
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    maxHeight: 48,
+    position: 'relative'
+  },
+  initial: {
+    border: '1px solid transparent',
+    '&:hover, &:focus': {
+      '& $editIcon': {
         opacity: 1
-      }
-    },
-    root: {
-      display: 'inline-block',
-      border: '1px solid transparent',
-      color: theme.cmrTextColors.tableStatic,
-      fontSize: '1.125rem',
-      lineHeight: 1,
-      padding: '5px 8px',
-      textDecoration: 'inherit',
-      transition: theme.transitions.create(['opacity']),
-      wordBreak: 'break-all'
-    },
-    container: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      maxHeight: 48,
-      position: 'relative'
-    },
-    initial: {
-      border: '1px solid transparent',
-      '&:hover, &:focus': {
-        '& $editIcon': {
-          opacity: 1
-        },
-        '& $icon': {
-          color: theme.color.grey1,
-          '&:hover': {
-            color: theme.color.black
-          }
+      },
+      '& $icon': {
+        color: theme.color.grey1,
+        '&:hover': {
+          color: theme.color.black
         }
-      }
-    },
-    textField: {
-      opacity: 0,
-      animation: '$fadeIn .3s ease-in-out forwards',
-      margin: 0
-    },
-    inputRoot: {
-      backgroundColor: 'transparent',
-      boxShadow: 'none',
-      marginLeft: 7,
-      maxWidth: 170,
-      [theme.breakpoints.up('md')]: {
-        maxWidth: 415,
-        width: '100%'
-      }
-    },
-    input: {
-      fontFamily: theme.font.bold,
-      fontSize: '1.125rem',
-      padding: 0,
-      paddingLeft: 2
-    },
-    button: {
-      minWidth: 'auto',
-      padding: 0,
-      marginTop: 2,
-      background: 'transparent !important'
-    },
-    icon: {
-      color: theme.palette.text.primary,
-      fontSize: '1.25rem',
-      marginLeft: theme.spacing(),
-      minHeight: 34,
-      '&:hover, &:focus': {
-        color: theme.palette.primary.light
-      }
-    },
-    editIcon: {
-      [theme.breakpoints.up('sm')]: {
-        opacity: 0,
-        '&:focus': {
-          opacity: 1
-        }
-      }
-    },
-    saveIcon: {
-      marginLeft: theme.spacing(2.5)
-    },
-    headline: {
-      ...theme.typography.h1
-    },
-    underlineOnHover: {
-      '&:hover, &:focus': {
-        textDecoration: 'underline !important'
       }
     }
-  });
+  },
+  textField: {
+    opacity: 0,
+    animation: '$fadeIn .3s ease-in-out forwards',
+    margin: 0
+  },
+  inputRoot: {
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+    marginLeft: 7,
+    maxWidth: 170,
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 415,
+      width: '100%'
+    }
+  },
+  input: {
+    fontFamily: theme.font.bold,
+    fontSize: '1.125rem',
+    padding: 0,
+    paddingLeft: 2
+  },
+  button: {
+    background: 'transparent !important',
+    marginTop: 2,
+    marginLeft: 6,
+    marginRight: 6,
+    minWidth: 'auto',
+    padding: 0
+  },
+  icon: {
+    color: theme.palette.text.primary,
+    fontSize: '1.25rem',
+    minHeight: 34,
+    '&:hover, &:focus': {
+      color: theme.palette.primary.light
+    }
+  },
+  editIcon: {
+    [theme.breakpoints.up('sm')]: {
+      opacity: 0,
+      '&:focus': {
+        opacity: 1
+      }
+    }
+  },
+  saveIcon: {
+    marginLeft: theme.spacing()
+  },
+  headline: {
+    ...theme.typography.h1
+  },
+  underlineOnHover: {
+    '&:hover, &:focus': {
+      textDecoration: 'underline !important'
+    }
+  }
+}));
 
 interface Props {
   onEdit: (text: string) => Promise<any>;
@@ -136,25 +115,24 @@ interface Props {
   text: string;
   errorText?: string;
   labelLink?: string;
-  typeVariant: string;
   className?: string;
 }
 
 type PassThroughProps = Props & TextFieldProps;
 
-type FinalProps = PassThroughProps & WithStyles<ClassNames>;
+type FinalProps = PassThroughProps;
 
 const EditableText: React.FC<FinalProps> = props => {
+  const classes = useStyles();
+
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
   const [text, setText] = React.useState(props.text);
   const {
-    classes,
     labelLink,
     errorText,
     onEdit,
     onCancel,
     text: propText,
-    typeVariant,
     className,
     ...rest
   } = props;
@@ -165,6 +143,7 @@ const EditableText: React.FC<FinalProps> = props => {
 
   React.useEffect(() => {
     onCancel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditing]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -251,10 +230,7 @@ const EditableText: React.FC<FinalProps> = props => {
           errorText={props.errorText}
           InputProps={{ className: classes.inputRoot }}
           inputProps={{
-            className: classnames({
-              [classes.headline]: typeVariant === 'h1',
-              [classes.input]: true
-            })
+            className: classes.input
           }}
           // eslint-disable-next-line
           autoFocus={true}
@@ -278,6 +254,4 @@ const EditableText: React.FC<FinalProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default compose<FinalProps, PassThroughProps>(styled)(EditableText);
+export default EditableText;

@@ -41,7 +41,6 @@ const FinalCrumb: React.FC<CombinedProps> = props => {
   if (onEditHandlers) {
     return (
       <EditableText
-        typeVariant="h2"
         text={onEditHandlers.editableTextTitle}
         errorText={onEditHandlers.errorText}
         onEdit={onEditHandlers.onEdit}
