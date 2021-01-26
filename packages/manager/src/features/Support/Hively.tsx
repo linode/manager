@@ -48,7 +48,7 @@ export const shouldRenderHively = (
    * or the date is invalid.
    */
   try {
-    if (!username || OFFICIAL_USERNAMES.includes(username)) {
+    if (username && OFFICIAL_USERNAMES.includes(username)) {
       return false;
     }
     const lastUpdated = parseAPIDate(updated);

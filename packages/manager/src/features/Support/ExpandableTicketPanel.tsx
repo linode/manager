@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
+export interface Props {
   reply?: ExtendedReply;
   ticket?: ExtendedTicket;
   open?: boolean;
