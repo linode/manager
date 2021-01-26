@@ -43,7 +43,7 @@ export const shouldRenderHively = (
 ) => {
   /* Render Hively only for replies marked as from_linode,
    * and are on tickets less than 7 days old,
-   * and when the user is not "Linode" or "Linode Trust and Safety"
+   * and when the user is not "Linode" or "Linode Trust & Safety"
    * Defaults to showing Hively if there are any errors parsing dates
    * or the date is invalid.
    */
