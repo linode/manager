@@ -9,7 +9,7 @@ on:
   schedule:
     - cron: '0 13 * * 1-5'
   pull_request_target:
-  
+
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
