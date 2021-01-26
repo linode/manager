@@ -41,8 +41,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '25%'
     }
   },
+  planCell: {
+    width: '14%',
+    [theme.breakpoints.only('sm')]: {
+      width: '15%'
+    }
+  },
   ipAddressCell: {
-    width: '16%',
+    width: '14%',
     [theme.breakpoints.only('sm')]: {
       width: '22%'
     }
@@ -134,6 +140,15 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           <>
             <Hidden xsDown>
               <TableSortCell
+                label="type"
+                active={isActive('type')}
+                handleClick={handleOrderChange}
+                direction={order}
+                className={classes.planCell}
+              >
+                Plan
+              </TableSortCell>
+              <TableSortCell
                 label="ipv4[0]" // we want to sort by the first ipv4
                 active={isActive('ipv4[0]')}
                 handleClick={handleOrderChange}
@@ -142,7 +157,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
               >
                 IP Address
               </TableSortCell>
-              <Hidden smDown>
+              <Hidden mdDown>
                 <TableSortCell
                   label="region"
                   direction={order}
