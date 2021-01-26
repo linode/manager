@@ -1,9 +1,9 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
+import Close from '@material-ui/icons/Close';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -12,56 +12,46 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { handleOpen } from 'src/store/backupDrawer';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { MapState } from 'src/store/types';
 
-type ClassNames = 'root' | 'container' | 'buttonsContainer' | 'dismiss';
-
-interface Props {
-  dismissed: () => void;
-}
+type ClassNames = 'root' | 'enableButton' | 'enableText' | 'closeIcon';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(2),
-      margin: `${theme.spacing(1)}px 0 ${theme.spacing(3)}px 0`,
-      [theme.breakpoints.down('md')]: {
-        marginTop: -theme.spacing(1),
-        width: '100%'
-      }
-    },
-    container: {
-      [theme.breakpoints.down('md')]: {
-        alignItems: 'center'
-      }
-    },
-    buttonsContainer: {
-      marginTop: theme.spacing(1)
-    },
-    dismiss: {
-      paddingLeft: theme.spacing(2),
+      padding: theme.spacing(1),
       paddingRight: theme.spacing(2),
-      minWidth: 'auto',
-      marginTop: 10
+      margin: `${theme.spacing(1)}px 0 ${theme.spacing(3)}px 0`,
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    enableButton: {
+      height: 40,
+      padding: 0,
+      width: 152
+    },
+    enableText: {
+      ...theme.applyLinkStyles
+    },
+    closeIcon: {
+      ...theme.applyLinkStyles,
+      marginLeft: 12
     }
   });
 
-type CombinedProps = StateProps &
-  Props &
-  DispatchProps &
-  WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
 const BackupsCTA: React.FC<CombinedProps> = props => {
   const {
     classes,
     linodesWithoutBackups,
     managed,
-    actions: { openBackupsDrawer },
-    dismissed
+    actions: { openBackupsDrawer }
   } = props;
 
   const restricted = isRestrictedUser();
@@ -75,47 +65,37 @@ const BackupsCTA: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <Paper className={classes.root}>
-      <Grid container direction="column" className={classes.container}>
-        <Grid item>
-          <Typography variant="h2">Back Up Your Data</Typography>
-        </Grid>
-        <Grid item>
-          <Typography>
-            We&#39;ve got your back! Click below to enable Backups for all
-            Linodes, and be sure to read our guide on Backups{` `}
-            <a
-              target="_blank"
-              aria-describedby="external-site"
-              rel="noopener noreferrer"
-              href={
-                'https://www.linode.com/docs/platform' +
-                '/disk-images/linode-backup-service/'
-              }
-            >
-              features and limitations.
-            </a>
-          </Typography>
-        </Grid>
-        <Grid item className={classes.buttonsContainer}>
-          <Button
-            data-qa-backup-existing
-            buttonType="primary"
-            onClick={openBackupsDrawer}
-          >
-            Enable Now
-          </Button>
-          <Button
-            data-qa-backup-existing
-            buttonType="secondary"
-            className={classes.dismiss}
-            onClick={dismissed}
-          >
-            Dismiss
-          </Button>
-        </Grid>
-      </Grid>
-    </Paper>
+    <PreferenceToggle<boolean>
+      preferenceKey="BackupsCtaDismissed"
+      preferenceOptions={[true, false]}
+    >
+      {({
+        preference: isDismissed,
+        togglePreference: dismissed
+      }: ToggleProps<boolean>) => {
+        return isDismissed ? (
+          // eslint-disable-next-line react/jsx-no-useless-fragment
+          <React.Fragment />
+        ) : (
+          <Paper className={classes.root}>
+            <Typography style={{ fontSize: '1rem' }}>
+              <button
+                className={classes.enableText}
+                onClick={openBackupsDrawer}
+              >
+                Enable Linode Backups
+              </button>{' '}
+              to protect your data and recover quickly in an emergency.
+            </Typography>
+            <span style={{ display: 'flex' }}>
+              <button onClick={dismissed} className={classes.closeIcon}>
+                <Close />
+              </button>
+            </span>
+          </Paper>
+        );
+      }}
+    </PreferenceToggle>
   );
 };
 
@@ -147,6 +127,6 @@ const styled = withStyles(styles);
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(styled, connected)(BackupsCTA);
+const enhanced = compose<CombinedProps, {}>(styled, connected)(BackupsCTA);
 
 export default enhanced;
