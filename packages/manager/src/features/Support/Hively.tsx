@@ -4,6 +4,7 @@ import { parseAPIDate } from 'src/utilities/date';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { OFFICIAL_USERNAMES } from './ticketUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hivelyContainer: {
@@ -42,12 +43,12 @@ export const shouldRenderHively = (
 ) => {
   /* Render Hively only for replies marked as from_linode,
    * and are on tickets less than 7 days old,
-   * and when the user is not "Linode"
+   * and when the user is not "Linode" or "Linode Trust and Safety"
    * Defaults to showing Hively if there are any errors parsing dates
    * or the date is invalid.
    */
   try {
-    if (username === 'Linode') {
+    if (!username || OFFICIAL_USERNAMES.includes(username)) {
       return false;
     }
     const lastUpdated = parseAPIDate(updated);
