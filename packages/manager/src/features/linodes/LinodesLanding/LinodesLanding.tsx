@@ -61,7 +61,7 @@ import DisplayLinodes from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
-import TransferDisplay from './TransferDisplay';
+import TransferDisplay from 'src/components/TransferDisplay';
 import { ExtendedStatus, statusToPriority } from './utils';
 
 interface State {
