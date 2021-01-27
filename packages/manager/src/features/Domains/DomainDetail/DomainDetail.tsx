@@ -14,6 +14,9 @@ import summaryPanelStyles, {
 } from 'src/containers/SummaryPanels.styles';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import useDomains from 'src/hooks/useDomains';
+import withDomainActions, {
+  DomainActionsProps
+} from 'src/store/domains/domains.container';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import DomainRecords from '../DomainRecordsWrapper';
 
@@ -36,12 +39,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = RouteProps & StyleProps;
+type CombinedProps = DomainActionsProps & RouteProps & StyleProps;
 
 const DomainDetail: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {
+    domainActions,
     location,
     match: {
       params: { domainId }
@@ -53,10 +57,28 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   const { loading: domainsLoading, error: domainsError } = domains;
 
   const [records, updateRecords] = React.useState<DomainRecord[]>([]);
+  const [updateError, setUpdateError] = React.useState<string | undefined>();
+
   React.useEffect(() => {
     refreshDomainRecords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleLabelChange = (label: string) => {
+    setUpdateError(undefined);
+
+    return domainActions
+      .updateDomain({ domainId: domain.id, domain: label })
+      .catch(e => {
+        setUpdateError(e[0].reason);
+        return Promise.reject(e);
+      });
+  };
+
+  const resetEditableLabel = () => {
+    setUpdateError(undefined);
+    return domain.domain;
+  };
 
   const handleUpdateTags = (tagsList: string[]) => {
     if (!domainId) {
@@ -103,8 +125,13 @@ const DomainDetail: React.FC<CombinedProps> = props => {
       >
         <Breadcrumb
           pathname={location.pathname}
-          labelTitle={domain.domain}
           labelOptions={{ noCap: true }}
+          onEditHandlers={{
+            editableTextTitle: domain.domain,
+            onEdit: handleLabelChange,
+            onCancel: resetEditableLabel,
+            errorText: updateError
+          }}
         />
         <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
       </Grid>
@@ -134,4 +161,7 @@ const reloaded = reloadableWithRouter<{}, { domainId?: number }>(
   }
 );
 
-export default compose<CombinedProps, RouteProps>(reloaded)(DomainDetail);
+export default compose<CombinedProps, RouteProps>(
+  reloaded,
+  withDomainActions
+)(DomainDetail);

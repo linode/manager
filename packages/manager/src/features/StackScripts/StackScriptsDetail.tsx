@@ -5,6 +5,8 @@ import {
   StackScript,
   updateStackScript
 } from '@linode/api-v4/lib/stackscripts';
+import { APIError } from '@linode/api-v4/lib/types';
+import * as classnames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -34,7 +36,8 @@ import {
   isRestrictedUser as _isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
-import { getStackScriptUrl, StackScriptCategory } from './stackScriptUtils';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { getStackScriptUrl } from './stackScriptUtils';
 
 interface DialogVariantProps {
   open: boolean;
@@ -53,22 +56,14 @@ interface MatchProps {
   stackScriptId: string;
 }
 
-interface Props {
-  canModify: boolean;
-  canAddLinodes: boolean;
-  // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
-  // Leaving this in as an escape hatch now, since there's a bunch of code in
-  // /LandingPanel that uses different values for categories that we shouldn't
-  // change until we're actually using it.
-  category: StackScriptCategory | string;
-}
-
 type RouteProps = RouteComponentProps<MatchProps>;
 
 interface State {
   loading: boolean;
   stackScript?: StackScript;
   dialog: DialogState;
+  labelInput?: string;
+  errors?: APIError[];
 }
 
 interface ProfileProps {
@@ -76,12 +71,26 @@ interface ProfileProps {
   username?: string;
 }
 
-type ClassNames = 'root' | 'cta' | 'button' | 'userName' | 'userNameSlash';
+type ClassNames =
+  | 'root'
+  | 'cta'
+  | 'ctaError'
+  | 'button'
+  | 'userName'
+  | 'userNameSlash'
+  | 'error';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       margin: 0,
+      '& .MuiFormHelperText-root': {
+        [theme.breakpoints.down('md')]: {
+          top: 26,
+          left: 5,
+          width: 400
+        }
+      },
       [theme.breakpoints.down('sm')]: {
         paddingRight: theme.spacing()
       },
@@ -94,9 +103,15 @@ const styles = (theme: Theme) =>
     cta: {
       display: 'flex',
       alignItems: 'center',
-      [theme.breakpoints.down('xs')]: {
+      marginLeft: theme.spacing(),
+      [theme.breakpoints.down('sm')]: {
         alignSelf: 'flex-end',
         marginBottom: theme.spacing()
+      }
+    },
+    ctaError: {
+      [theme.breakpoints.down(772)]: {
+        marginTop: 20
       }
     },
     button: {
@@ -112,6 +127,11 @@ const styles = (theme: Theme) =>
       fontFamily: theme.font.normal,
       fontSize: 20,
       marginRight: 4
+    },
+    error: {
+      [theme.breakpoints.between(772, 'md')]: {
+        paddingBottom: 20
+      }
     }
   });
 
@@ -119,8 +139,7 @@ type CombinedProps = ProfileProps &
   RouteProps &
   StateProps &
   WithStyles<ClassNames> &
-  SetDocsProps &
-  Props;
+  SetDocsProps;
 
 export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   state: State = {
@@ -137,7 +156,8 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       },
       stackScriptID: undefined,
       stackScriptLabel: ''
-    }
+    },
+    errors: undefined
   };
 
   // TODO do we even need this?
@@ -169,6 +189,39 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       username
     );
     history.push(url);
+  };
+
+  handleLabelChange = (label: string) => {
+    const { stackScript } = this.state;
+
+    // This should never actually happen, but TypeScript is expecting a Promise here.
+    if (stackScript === undefined) {
+      return Promise.resolve();
+    }
+
+    this.setState({ errors: undefined });
+
+    return updateStackScript(stackScript.id, { label })
+      .then(() => {
+        this.setState({
+          stackScript: { ...stackScript, label },
+          labelInput: label
+        });
+      })
+      .catch(e => {
+        this.setState(() => ({
+          errors: getAPIErrorOrDefault(e, 'Error updating label', 'label'),
+          labelInput: label
+        }));
+        return Promise.reject(e);
+      });
+  };
+
+  resetEditableLabel = () => {
+    this.setState({
+      errors: undefined,
+      labelInput: this.state.stackScript?.label
+    });
   };
 
   handleOpenDeleteDialog = (id: number, label: string) => {
@@ -397,7 +450,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, username } = this.props;
     const { loading, stackScript } = this.state;
 
     if (loading) {
@@ -414,11 +467,22 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       </Typography>
     );
 
+    const errorMap = getErrorMap(['label'], this.state.errors);
+    const labelError = errorMap.label;
+
+    const stackScriptLabel =
+      this.state.labelInput !== undefined
+        ? this.state.labelInput
+        : stackScript.label;
+
     return (
       <React.Fragment>
         <Grid
           container
-          className={classes.root}
+          className={classnames({
+            [classes.root]: true,
+            [classes.error]: Boolean(labelError)
+          })}
           alignItems="center"
           justify="space-between"
         >
@@ -433,9 +497,26 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
                   label: 'StackScripts'
                 }
               ]}
+              onEditHandlers={
+                stackScript && username === stackScript.username
+                  ? {
+                      editableTextTitle: stackScriptLabel,
+                      onEdit: this.handleLabelChange,
+                      onCancel: this.resetEditableLabel,
+                      errorText: labelError
+                    }
+                  : undefined
+              }
             />
           </Grid>
-          <Grid item className={`${classes.cta} p0`}>
+          <Grid
+            item
+            className={classnames({
+              [classes.cta]: true,
+              [classes.ctaError]: Boolean(labelError),
+              p0: true
+            })}
+          >
             <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
             <Button
               buttonType="primary"
