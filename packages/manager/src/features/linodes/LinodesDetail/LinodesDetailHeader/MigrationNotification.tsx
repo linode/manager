@@ -69,4 +69,4 @@ const MigrationNotification: React.FC<Props> = props => {
   );
 };
 
-export default MigrationNotification;
+export default React.memo(MigrationNotification);
