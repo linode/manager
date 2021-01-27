@@ -1,7 +1,7 @@
 import { rescueLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { assoc, clamp, pathOr } from 'ramda';
+import { assoc, clamp, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -28,6 +28,7 @@ import DeviceSelection, {
 } from './DeviceSelection';
 import Dialog from 'src/components/Dialog';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
+import usePrevious from 'src/hooks/usePrevious';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -141,6 +142,8 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
     linodeDisks ?? []
   );
 
+  const prevDeviceMap = usePrevious(deviceMap);
+
   const [counter, setCounter] = React.useState<number>(initialCounter);
   const [rescueDevices, setRescueDevices] = React.useState<DevicesAsStrings>(
     deviceMap
@@ -148,17 +151,13 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
 
   const [APIError, setAPIError] = React.useState<string>('');
 
-  const resetDialog = () => {
-    setCounter(initialCounter);
-    setRescueDevices(deviceMap);
-    setAPIError('');
-  };
-
   React.useEffect(() => {
-    if (open) {
-      resetDialog();
+    if (open && !equals(deviceMap, prevDeviceMap)) {
+      setCounter(initialCounter);
+      setRescueDevices(deviceMap);
+      setAPIError('');
     }
-  }, [open]);
+  }, [open, initialCounter, deviceMap, prevDeviceMap]);
 
   const devices = {
     disks: linodeDisks ?? [],
