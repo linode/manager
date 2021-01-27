@@ -4,20 +4,20 @@ Contributing to Linode UI just involves sending a Pull Request.
 
 The following buzzwords are involved in this project, so please familiarize yourself with them before contributing:
 
-* [React.js](https://facebook.github.io/react/)
-* [Redux](http://redux.js.org/)
-* [Webpack](https://webpack.github.io/)
-* [Material-UI](https://material-ui.com/)
-* ES6/ES7 (via [Babel](https://babeljs.io/))
-* [Yarn](https://yarnpkg.com/)
-* [WebdriverIO](https://webdriver.io/)
+- [React.js](https://facebook.github.io/react/)
+- [Redux](http://redux.js.org/)
+- [Webpack](https://webpack.github.io/)
+- [Material-UI](https://material-ui.com/)
+- ES6/ES7 (via [Babel](https://babeljs.io/))
+- [Yarn](https://yarnpkg.com/)
+- [WebdriverIO](https://webdriver.io/)
 
 ## Requirements
 
 In order to contribute to Linode UI, we recommend the following minimum version numbers:
 
 1. Git v2.19.1
-2. Node v10.16.0
+2. Node v14.15.4
 3. Yarn 1.16.0
 
 ## Development
@@ -63,7 +63,7 @@ We use [Husky](https://github.com/typicode/husky) to perform the following tasks
 4. [Circular dependency check](https://github.com/pahen/madge)
 5. Type Checking (as we're using TypeScript in the src code)
 
- If any fail the commit will be aborted. Address the reported issues, stage the changes, and attempt the commit again. This behavior can be skipped using the
+If any fail the commit will be aborted. Address the reported issues, stage the changes, and attempt the commit again. This behavior can be skipped using the
 `--no-verify` flag, but we highly suggest you do _**not**_ use this flag.
 
 ### Merge Conflicts
@@ -89,6 +89,7 @@ with as much detail as you can provide (for example: node version, operating
 system, browser, device, etc.). Thanks!
 
 ### References
+
 - http://keepachangelog.com/en/0.3.0/
 - https://help.github.com/articles/merging-a-pull-request/
 - https://help.github.com/articles/about-pull-request-merges/
