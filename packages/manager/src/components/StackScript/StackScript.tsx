@@ -1,5 +1,6 @@
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { stringify } from 'qs';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CopyTooltip from 'src/components/CopyTooltip';
@@ -8,6 +9,7 @@ import Divider from 'src/components/core/Divider';
 import { Theme, makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
 import { useImages } from 'src/hooks/useImages';
