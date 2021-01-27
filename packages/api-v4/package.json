@@ -11,7 +11,7 @@
     "directory": "https://github.com/linode/manager/tree/develop/packages/api-v4"
   },
   "engines": {
-    "node": ">= 10.16.0"
+    "node": ">= 14.15.4"
   },
   "description": "JavaScript wrapper around the Linode APIv4",
   "author": "Linode",
