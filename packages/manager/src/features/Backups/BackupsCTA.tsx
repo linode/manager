@@ -66,8 +66,9 @@ const BackupsCTA: React.FC<CombinedProps> = props => {
 
   return (
     <PreferenceToggle<boolean>
-      preferenceKey="BackupsCtaDismissed"
+      preferenceKey="backups_cta_dismissed"
       preferenceOptions={[true, false]}
+      localStorageKey="BackupsCtaDismissed"
     >
       {({
         preference: isDismissed,
