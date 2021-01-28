@@ -2,12 +2,14 @@ import { Event } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import { Link } from 'src/components/Link';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 import { formatEventWithUsername } from 'src/features/Events/Event.helpers';
 import EntityIcon, { Variant } from 'src/components/EntityIcon';
+import formatDate from 'src/utilities/formatDate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   action: {
@@ -21,6 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     marginRight: theme.spacing()
+  },
+  timeStamp: {
+    textAlign: 'right'
   }
 }));
 
@@ -56,22 +61,33 @@ export const RenderEvent: React.FC<Props> = props => {
   );
 
   const content = (
-    <>
-      <EntityIcon
-        className={classes.icon}
-        variant={type as Variant}
-        status={status}
-        size={25}
-      />
-      <Typography>
-        {messageWithUsername}
-        {event.duration
-          ? event.status === 'failed'
-            ? ` (failed after ${duration})`
-            : ` (completed in ${duration})`
-          : null}
-      </Typography>
-    </>
+    <Grid container direction="row" alignItems="center" justify="space-between">
+      <Grid item xs={8}>
+        <Grid container alignItems="center" wrap="nowrap">
+          <Grid item>
+            <EntityIcon
+              className={classes.icon}
+              variant={type as Variant}
+              status={status}
+              size={25}
+            />
+          </Grid>
+          <Grid item>
+            <Typography>
+              {messageWithUsername}
+              {event.duration
+                ? event.status === 'failed'
+                  ? ` (failed after ${duration})`
+                  : ` (completed in ${duration})`
+                : null}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item xs={4} className={classes.timeStamp}>
+        <Typography>{formatDate(event.created)}</Typography>
+      </Grid>
+    </Grid>
   );
 
   return linkTarget ? (
