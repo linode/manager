@@ -48,16 +48,7 @@ export const useNotificationContext = (): NotificationContextProps => {
       getEvents(
         {},
         {
-          '+and': [
-            { created: { '+gt': mostRecentLogin } },
-            {
-              '+or': [
-                { action: 'community_like' },
-                { action: 'community_question_reply' },
-                { action: 'community_mention' }
-              ]
-            }
-          ]
+          created: { '+gt': mostRecentLogin }
         }
       )
         .then(response => {
