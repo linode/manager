@@ -1,7 +1,7 @@
 import * as React from 'react';
 import NotificationSection, { NotificationItem } from './NotificationSection';
 
-const NUM_EVENTS_DISPLAY = 25; // @todo adjust this number when the drawer is complete
+const NUM_EVENTS_DISPLAY = 20; // @todo adjust this number when the drawer is complete
 
 interface Props {
   events: NotificationItem[];

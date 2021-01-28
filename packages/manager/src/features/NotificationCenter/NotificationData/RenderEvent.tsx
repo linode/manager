@@ -1,6 +1,7 @@
 import { Event } from '@linode/api-v4/lib/account/types';
 import { path } from 'ramda';
 import * as React from 'react';
+import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon, { Variant } from 'src/components/EntityIcon';
@@ -17,6 +18,9 @@ import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkS
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  divider: {
+    marginTop: theme.spacing()
+  },
   link: {
     '&:hover': {
       textDecoration: 'none'
@@ -90,37 +94,40 @@ export const RenderEvent: React.FC<Props> = props => {
   );
 
   return (
-    <Grid
-      container
-      direction="row"
-      alignItems="flex-start"
-      justify="space-between"
-    >
-      <Grid item xs={8}>
-        <Grid container alignItems="center" wrap="nowrap">
-          <Grid item>
-            <EntityIcon
-              className={classes.icon}
-              variant={type as Variant}
-              status={status}
-              size={25}
-            />
-          </Grid>
-          <Grid item>
-            {linkTarget ? (
-              <Link to={linkTarget}>{eventMessage}</Link>
-            ) : (
-              eventMessage
-            )}
+    <>
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justify="space-between"
+      >
+        <Grid item xs={8}>
+          <Grid container alignItems="center" wrap="nowrap">
+            <Grid item>
+              <EntityIcon
+                className={classes.icon}
+                variant={type as Variant}
+                status={status}
+                size={25}
+              />
+            </Grid>
+            <Grid item>
+              {linkTarget ? (
+                <Link to={linkTarget}>{eventMessage}</Link>
+              ) : (
+                eventMessage
+              )}
+            </Grid>
           </Grid>
         </Grid>
+        <Grid item xs={4} className={classes.timeStamp}>
+          <Typography className={unseenEventClass}>
+            {formatDate(event.created)}
+          </Typography>
+        </Grid>
       </Grid>
-      <Grid item xs={4} className={classes.timeStamp}>
-        <Typography className={unseenEventClass}>
-          {formatDate(event.created)}
-        </Typography>
-      </Grid>
-    </Grid>
+      <Divider className={classes.divider} />
+    </>
   );
 };
 
