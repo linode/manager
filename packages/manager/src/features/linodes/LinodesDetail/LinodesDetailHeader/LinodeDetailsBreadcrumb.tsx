@@ -1,16 +1,12 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import * as classnames from 'classnames';
 import { last } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -22,16 +18,37 @@ import withEditableLabelState, {
   EditableLabelProps
 } from './editableLabelState';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      [theme.breakpoints.down('sm')]: {
-        paddingRight: `${theme.spacing()}px !important`
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    textDecoration: 'none',
+    [theme.breakpoints.down('sm')]: {
+      paddingRight: `${theme.spacing()}px !important`
+    },
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: theme.spacing()
     }
-  });
+  },
+  error: {
+    [theme.breakpoints.down('xs')]: {
+      paddingBottom: 20
+    },
+    // The docs button will wrap when the label is editing mode so do not add
+    // padding when it wraps
+    [theme.breakpoints.down(395)]: {
+      paddingBottom: 0
+    }
+  },
+  errorLong: {
+    [theme.breakpoints.down(480)]: {
+      paddingBottom: 40
+    },
+    // The docs button will wrap when the label is editing mode so do not add
+    // padding when it wraps
+    [theme.breakpoints.down(395)]: {
+      paddingBottom: 0
+    }
+  }
+}));
 
 interface Props {
   breadcrumbProps?: Partial<BreadcrumbProps>;
@@ -40,12 +57,12 @@ interface Props {
 type CombinedProps = Props &
   LinodeDetailContext &
   EditableLabelProps &
-  RouteComponentProps<{}> &
-  WithStyles<ClassNames>;
+  RouteComponentProps<{}>;
 
 const LinodeControls: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const {
-    classes,
     linode,
     updateLinode,
     editableLabelError,
@@ -82,7 +99,12 @@ const LinodeControls: React.FC<CombinedProps> = props => {
   };
   return (
     <Grid
-      className={`${classes.root} m0`}
+      className={classnames({
+        [classes.root]: true,
+        [classes.error]: Boolean(editableLabelError),
+        [classes.errorLong]: Boolean(editableLabelError.length > 60),
+        m0: true
+      })}
       container
       alignItems="center"
       justify="space-between"
@@ -107,17 +129,14 @@ const LinodeControls: React.FC<CombinedProps> = props => {
           {...breadcrumbProps}
         />
       </Grid>
-      <Grid item className="p0">
+      <Grid item className="px0">
         <DocumentationButton href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/" />
       </Grid>
     </Grid>
   );
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withEditableLabelState,
   withRouter,
   withLinodeDetailContext(({ linode, updateLinode }) => ({
