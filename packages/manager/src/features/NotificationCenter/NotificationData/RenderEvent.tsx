@@ -18,6 +18,10 @@ import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkS
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    paddingTop: 2,
+    paddingBottom: 2
+  },
   divider: {
     marginTop: theme.spacing()
   },
@@ -27,7 +31,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   icon: {
-    marginRight: theme.spacing()
+    marginTop: -2,
+    '& svg': {
+      height: 20,
+      width: 20
+    }
   },
   eventMessage: {
     '&:hover': {
@@ -87,22 +95,17 @@ export const RenderEvent: React.FC<Props> = props => {
       {messageWithUsername}
       {event.duration
         ? event.status === 'failed'
-          ? ` (failed after ${duration})`
-          : ` (completed in ${duration})`
+          ? ` (Failed after ${duration})`
+          : ` (Completed in ${duration})`
         : null}
     </Typography>
   );
 
   return (
     <>
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        justify="space-between"
-      >
+      <Grid container className={classes.root} justify="space-between">
         <Grid item xs={8}>
-          <Grid container alignItems="center" wrap="nowrap">
+          <Grid container wrap="nowrap">
             <Grid item>
               <EntityIcon
                 className={classes.icon}
