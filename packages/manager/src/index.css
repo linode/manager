@@ -376,3 +376,21 @@ button::-moz-focus-inner {
 .overflow-hidden {
   overflow: hidden !important;
 }
+
+.skip-link {
+  display: flex;
+  justify-content: center;
+  background: #3683dc;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 8px;
+  position: absolute;
+  top: -40px;
+  width: 190px;
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  top: 0;
+}
