@@ -4,7 +4,9 @@ import { clamp } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
+import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
+import InputLabel from 'src/components/core/InputLabel';
 import {
   createStyles,
   Theme,
@@ -16,9 +18,6 @@ import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import HelpIcon from 'src/components/HelpIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
-import FormHelperText from 'src/components/core/FormHelperText';
-import InputLabel from 'src/components/core/InputLabel';
-
 type ClassNames =
   | 'root'
   | 'helpWrapperContainer'
@@ -26,6 +25,7 @@ type ClassNames =
   | 'helpWrapperTextField'
   | 'expand'
   | 'errorText'
+  | 'errorTextLong'
   | 'editable'
   | 'helperTextTop'
   | 'small'
@@ -86,7 +86,27 @@ const styles = (theme: Theme) =>
       width: '3.6em'
     },
     errorText: {
-      color: theme.color.red
+      display: 'flex',
+      alignItems: 'center',
+      color: theme.color.red,
+      height: 34,
+      top: -2,
+      left: 280,
+      width: 200,
+      [theme.breakpoints.down('sm')]: {
+        left: 260
+      },
+      [theme.breakpoints.down('xs')]: {
+        top: 26,
+        left: 5,
+        width: 400
+      }
+    },
+    errorTextLong: {
+      [theme.breakpoints.down(480)]: {
+        top: 36,
+        width: 240
+      }
     },
     absolute: {
       position: 'absolute'
@@ -372,6 +392,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
             <FormHelperText
               className={classNames({
                 [classes.errorText]: true,
+                [classes.errorTextLong]: errorText.length > 60,
                 [classes.editable]: editable,
                 [classes.absolute]: editable || hasAbsoluteError
               })}

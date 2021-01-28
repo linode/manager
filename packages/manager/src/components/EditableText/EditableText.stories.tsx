@@ -27,14 +27,11 @@ class InteractiveEditableText extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
-        <EditableText
-          typeVariant="h1"
-          text={this.state.text}
-          onEdit={this.editText}
-          onCancel={this.cancelEdit}
-        />
-      </React.Fragment>
+      <EditableText
+        text={this.state.text}
+        onEdit={this.editText}
+        onCancel={this.cancelEdit}
+      />
     );
   }
 }
