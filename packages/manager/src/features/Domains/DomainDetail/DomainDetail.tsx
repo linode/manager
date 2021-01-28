@@ -14,9 +14,6 @@ import summaryPanelStyles, {
 } from 'src/containers/SummaryPanels.styles';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import useDomains from 'src/hooks/useDomains';
-import withDomainActions, {
-  DomainActionsProps
-} from 'src/store/domains/domains.container';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import DomainRecords from '../DomainRecordsWrapper';
 
@@ -39,13 +36,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = DomainActionsProps & RouteProps & StyleProps;
+type CombinedProps = RouteProps & StyleProps;
 
 const DomainDetail: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {
-    domainActions,
     location,
     match: {
       params: { domainId }
@@ -67,12 +63,10 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   const handleLabelChange = (label: string) => {
     setUpdateError(undefined);
 
-    return domainActions
-      .updateDomain({ domainId: domain.id, domain: label })
-      .catch(e => {
-        setUpdateError(e[0].reason);
-        return Promise.reject(e);
-      });
+    return updateDomain({ domainId: domain.id, domain: label }).catch(e => {
+      setUpdateError(e[0].reason);
+      return Promise.reject(e);
+    });
   };
 
   const resetEditableLabel = () => {
@@ -161,7 +155,4 @@ const reloaded = reloadableWithRouter<{}, { domainId?: number }>(
   }
 );
 
-export default compose<CombinedProps, RouteProps>(
-  reloaded,
-  withDomainActions
-)(DomainDetail);
+export default compose<CombinedProps, RouteProps>(reloaded)(DomainDetail);
