@@ -58,86 +58,13 @@ export const NotificationDrawer: React.FC<Props> = props => {
   const classes = useStyles();
   const { pendingActions } = data;
 
-  const { preferences, updatePreferences } = usePreferences();
-
-  const currentView = preferences?.notification_drawer_view ?? 'grouped';
-
-  const [chronologicalView, setChronologicalView] = React.useState(
-    currentView === 'list'
-  );
-
-  const handleToggleView = () => {
-    updatePreferences({
-      notification_drawer_view: chronologicalView ? 'grouped' : 'list'
-    });
-    setChronologicalView(currentView => !currentView);
-  };
-
-  const chronologicalNotificationList = React.useMemo(() => {
-    return [...pendingActions].sort(chronologicalSort);
-  }, [pendingActions]);
-
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
-      <div id="viewToggle" className={classes.actionHeader}>
-        <Tooltip title="Toggle chronological display" placement="left">
-          <IconButton
-            aria-label="Toggle chronological display"
-            aria-describedby={'viewToggle'}
-            onClick={handleToggleView}
-            disableRipple
-          >
-            <Clock />
-          </IconButton>
-        </Tooltip>
+      <div className={classes.notificationSectionContainer}>
+        <PendingActions pendingActions={pendingActions} onClose={onClose} />
       </div>
-
-      {chronologicalView ? (
-        <ChronologicalView
-          notifications={chronologicalNotificationList}
-          onClose={onClose}
-        />
-      ) : (
-        <div className={classes.notificationSectionContainer}>
-          {chronologicalNotificationList.length === 0 ? (
-            // If this list is empty there's nothing to show regardless of selected view.
-            <EmptyMessage onClose={onClose} />
-          ) : null}
-          <PendingActions pendingActions={pendingActions} onClose={onClose} />
-        </div>
-      )}
     </Drawer>
   );
 };
 
 export default React.memo(NotificationDrawer);
-
-const EmptyMessage: React.FC<{ onClose: () => void }> = React.memo(props => {
-  return (
-    <Typography>
-      No notifications to display.{' '}
-      <Link to="/events" onClick={props.onClose}>
-        View event history.
-      </Link>
-    </Typography>
-  );
-});
-
-interface ChronoProps {
-  notifications: NotificationItem[];
-  onClose: () => void;
-}
-const ChronologicalView: React.FC<ChronoProps> = props => {
-  const { notifications, onClose } = props;
-  if (notifications.length === 0) {
-    return <EmptyMessage onClose={onClose} />;
-  }
-  return (
-    <>
-      {' '}
-      {notifications.map(thisItem => (
-        <ContentRow key={`chronological-list-${thisItem.id}`} item={thisItem} />
-      ))}
-    </>
-  );
-};

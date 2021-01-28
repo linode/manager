@@ -12,10 +12,12 @@ export const PendingActions: React.FC<Props> = props => {
   return (
     <NotificationSection
       content={pendingActions}
-      header="Pending Actions"
+      header="Events"
       showMoreTarget={'/events'}
-      emptyMessage="There are no pending actions."
+      showMoreText={'View all events'}
+      emptyMessage="No events to display."
       onClose={onClose}
+      count={20}
     />
   );
 };
