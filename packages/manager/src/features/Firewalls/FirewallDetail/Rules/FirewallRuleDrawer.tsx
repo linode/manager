@@ -52,7 +52,7 @@ interface Props {
 
 interface Form {
   type: string;
-  ports: string;
+  ports?: string;
   addresses: string;
   protocol: string;
 }
@@ -398,7 +398,7 @@ export const deriveTypeFromValuesAndIPs = (values: Form, ips: ExtendedIP[]) => {
     return predefinedFirewall;
   } else if (
     values.protocol?.length > 0 ||
-    values.ports?.length > 0 ||
+    (values.ports && values.ports?.length > 0) ||
     values.addresses?.length > 0
   ) {
     return 'custom';
@@ -417,9 +417,9 @@ export const formValueToIPs = (
     case 'all':
       return allIPs;
     case 'allIPv4':
-      return { ipv4: [allIPv4], ipv6: [] };
+      return { ipv4: [allIPv4] };
     case 'allIPv6':
-      return { ipv4: [], ipv6: [allIPv6] };
+      return { ipv6: [allIPv6] };
     default:
       // The user has selected "IP / Netmask" and entered custom IPs, so we need
       // to separate those into v4 and v6 addresses.
@@ -454,7 +454,7 @@ export const validateIPs = (ips: ExtendedIP[]): ExtendedIP[] => {
  * them by "ipv4" and "ipv6."
  */
 export const classifyIPs = (ips: ExtendedIP[]) => {
-  return ips.reduce<{ ipv4: string[]; ipv6: string[] }>(
+  return ips.reduce<{ ipv4?: string[]; ipv6?: string[] }>(
     (acc, { address }) => {
       // Unfortunately ipaddr.js can't determine the "type" of an IPv6 address with a mask, so we
       // need to parse the base address only and THEN determine the type.
@@ -462,13 +462,16 @@ export const classifyIPs = (ips: ExtendedIP[]) => {
       try {
         const parsed = parseIP(base);
         const type = parsed.kind();
-        acc[type].push(address);
+        if (!acc[type]) {
+          acc[type] = [];
+        }
+        acc[type]!.push(address);
       } catch {
         // No need to do anything here (validation will have already caught errors).
       }
       return acc;
     },
-    { ipv4: [], ipv6: [] }
+    {}
   );
 };
 
