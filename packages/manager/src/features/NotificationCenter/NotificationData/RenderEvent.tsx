@@ -17,13 +17,18 @@ import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkS
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  action: {
+  link: {
     '&:hover': {
-      textDecorationColor: theme.palette.text.primary
+      textDecoration: 'none'
     }
   },
   icon: {
     marginRight: theme.spacing()
+  },
+  eventMessage: {
+    '&:hover': {
+      textDecoration: 'underline'
+    }
   },
   timeStamp: {
     textAlign: 'right'
@@ -61,7 +66,7 @@ export const RenderEvent: React.FC<Props> = props => {
     event.entity?.id ?? -1
   );
 
-  const status = path<string | undefined>(['status'], entity);
+  const status = path<string>(['status'], entity);
 
   const duration = formatEventSeconds(event.duration);
 
@@ -71,7 +76,20 @@ export const RenderEvent: React.FC<Props> = props => {
     false
   );
 
-  const content = (
+  const unseenEventClass = event.seen ? '' : classes.unseenEvent;
+
+  const eventMessage = (
+    <Typography className={`${unseenEventClass} ${classes.eventMessage}`}>
+      {messageWithUsername}
+      {event.duration
+        ? event.status === 'failed'
+          ? ` (failed after ${duration})`
+          : ` (completed in ${duration})`
+        : null}
+    </Typography>
+  );
+
+  return (
     <Grid
       container
       direction="row"
@@ -89,31 +107,20 @@ export const RenderEvent: React.FC<Props> = props => {
             />
           </Grid>
           <Grid item>
-            <Typography className={event.seen ? '' : classes.unseenEvent}>
-              {messageWithUsername}
-              {event.duration
-                ? event.status === 'failed'
-                  ? ` (failed after ${duration})`
-                  : ` (completed in ${duration})`
-                : null}
-            </Typography>
+            {linkTarget ? (
+              <Link to={linkTarget}>{eventMessage}</Link>
+            ) : (
+              eventMessage
+            )}
           </Grid>
         </Grid>
       </Grid>
       <Grid item xs={4} className={classes.timeStamp}>
-        <Typography className={event.seen ? '' : classes.unseenEvent}>
+        <Typography className={unseenEventClass}>
           {formatDate(event.created)}
         </Typography>
       </Grid>
     </Grid>
-  );
-
-  return linkTarget ? (
-    <Link to={linkTarget} className={classes.action}>
-      {content}
-    </Link>
-  ) : (
-    <div className={classes.action}>{content}</div>
   );
 };
 
