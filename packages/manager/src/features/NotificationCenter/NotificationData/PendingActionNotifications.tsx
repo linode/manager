@@ -25,7 +25,7 @@ export const usePendingActions = () => {
 
 const formatEventForDisplay = (event: ExtendedEvent): NotificationItem => ({
   id: `event-${event.id}`,
-  body: <div>An event</div>
+  body: <RenderEvent event={event} />
 });
 
 const formatProgressEventForDisplay = (
