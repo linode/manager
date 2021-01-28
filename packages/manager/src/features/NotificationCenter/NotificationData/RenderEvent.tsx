@@ -14,7 +14,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    '&:hover': {
+      textDecorationColor: theme.palette.text.primary
+    }
   },
   icon: {
     marginRight: theme.spacing()
