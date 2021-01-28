@@ -2,16 +2,16 @@ import * as React from 'react';
 import NotificationSection, { NotificationItem } from './NotificationSection';
 
 interface Props {
-  pendingActions: NotificationItem[];
+  events: NotificationItem[];
   onClose?: () => void;
 }
 
-export const PendingActions: React.FC<Props> = props => {
-  const { pendingActions, onClose } = props;
+export const Events: React.FC<Props> = props => {
+  const { events, onClose } = props;
 
   return (
     <NotificationSection
-      content={pendingActions}
+      content={events}
       header="Events"
       showMoreTarget={'/events'}
       showMoreText={'View all events'}
@@ -22,4 +22,4 @@ export const PendingActions: React.FC<Props> = props => {
   );
 };
 
-export default React.memo(PendingActions);
+export default React.memo(Events);

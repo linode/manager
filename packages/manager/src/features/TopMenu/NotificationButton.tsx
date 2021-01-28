@@ -13,7 +13,7 @@ export const NotificationButton: React.FC<{}> = _ => {
 
   const notificationData = useNotificationData();
 
-  const numEvents = notificationData.pendingActions.filter(
+  const numEvents = notificationData.eventNotifications.filter(
     thisEvent => thisEvent.countInTotal
   ).length;
 

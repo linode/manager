@@ -6,7 +6,7 @@ import usePrevious from 'src/hooks/usePrevious';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
 import { NotificationData } from './NotificationData/useNotificationData';
-import PendingActions from './PendingActions';
+import Events from './Events';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -42,7 +42,7 @@ export const NotificationDrawer: React.FC<Props> = props => {
   const { data, open, onClose } = props;
   const classes = useStyles();
   const dispatch = useDispatch<ThunkDispatch>();
-  const { pendingActions } = data;
+  const { eventNotifications } = data;
 
   const wasOpen = usePrevious(open);
 
@@ -56,7 +56,7 @@ export const NotificationDrawer: React.FC<Props> = props => {
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
       <div className={classes.notificationSectionContainer}>
-        <PendingActions pendingActions={pendingActions} onClose={onClose} />
+        <Events events={eventNotifications} onClose={onClose} />
       </div>
     </Drawer>
   );

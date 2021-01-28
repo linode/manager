@@ -8,7 +8,7 @@ import { NotificationItem } from '../NotificationSection';
 import RenderEvent from './RenderEvent';
 import RenderProgressEvent from './RenderProgressEvent';
 
-export const usePendingActions = () => {
+export const useEventNotifications = () => {
   const { events } = useEvents();
 
   const [inProgress, completed] = partition<Event>(isInProgressEvent, events);
@@ -37,4 +37,4 @@ const formatProgressEventForDisplay = (
   countInTotal: !event.seen
 });
 
-export default usePendingActions;
+export default useEventNotifications;
