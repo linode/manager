@@ -10,6 +10,7 @@ import useFlags from 'src/hooks/useFlags';
 import { ExtendedReply, ExtendedTicket } from './types';
 import { Hively, shouldRenderHively } from './Hively';
 import TicketDetailBody from './TicketDetailText';
+import { OFFICIAL_USERNAMES } from './ticketUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -87,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
+export interface Props {
   reply?: ExtendedReply;
   ticket?: ExtendedTicket;
   open?: boolean;
@@ -197,7 +198,8 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
                   <Typography className={classes.userName} component="span">
                     {data.username}
                   </Typography>
-                  {data.from_linode && (
+                  {data.from_linode &&
+                  !OFFICIAL_USERNAMES.includes(data.username) ? (
                     <Typography
                       component="span"
                       variant="body1"
@@ -205,7 +207,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
                     >
                       <em>Linode Expert</em>
                     </Typography>
-                  )}
+                  ) : null}
                   <Typography variant="body1" component="span">
                     commented <DateTimeDisplay value={data.date} />
                   </Typography>
