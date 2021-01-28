@@ -67,6 +67,7 @@ export interface NotificationItem {
   id: string;
   body: string | JSX.Element;
   timeStamp?: string;
+  countInTotal: boolean;
 }
 
 interface Props {

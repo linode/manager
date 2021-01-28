@@ -25,14 +25,16 @@ export const usePendingActions = () => {
 
 const formatEventForDisplay = (event: ExtendedEvent): NotificationItem => ({
   id: `event-${event.id}`,
-  body: <RenderEvent event={event} />
+  body: <RenderEvent event={event} />,
+  countInTotal: !event.seen
 });
 
 const formatProgressEventForDisplay = (
   event: ExtendedEvent
 ): NotificationItem => ({
   id: `progress-event-${event.id}`,
-  body: <RenderProgressEvent event={event} />
+  body: <RenderProgressEvent event={event} />,
+  countInTotal: !event.seen
 });
 
 export default usePendingActions;

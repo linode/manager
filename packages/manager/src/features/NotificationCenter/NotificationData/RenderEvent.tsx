@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   timeStamp: {
     textAlign: 'right'
+  },
+  unseenEvent: {
+    fontWeight: 'bold'
   }
 }));
 
@@ -73,7 +76,7 @@ export const RenderEvent: React.FC<Props> = props => {
             />
           </Grid>
           <Grid item>
-            <Typography>
+            <Typography className={event.seen ? '' : classes.unseenEvent}>
               {messageWithUsername}
               {event.duration
                 ? event.status === 'failed'
@@ -85,7 +88,9 @@ export const RenderEvent: React.FC<Props> = props => {
         </Grid>
       </Grid>
       <Grid item xs={4} className={classes.timeStamp}>
-        <Typography>{formatDate(event.created)}</Typography>
+        <Typography className={event.seen ? '' : classes.unseenEvent}>
+          {formatDate(event.created)}
+        </Typography>
       </Grid>
     </Grid>
   );
