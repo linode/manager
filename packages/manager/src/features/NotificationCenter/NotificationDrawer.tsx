@@ -6,14 +6,9 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
-import useAccount from 'src/hooks/useAccount';
 import usePreferences from 'src/hooks/usePreferences';
-import Community from './Community';
-import Maintenance from './Maintenance';
 import { NotificationData } from './NotificationData/useNotificationData';
 import { ContentRow, NotificationItem } from './NotificationSection';
-import OpenSupportTickets from './OpenSupportTickets';
-import PastDue from './PastDue';
 import PendingActions from './PendingActions';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -60,10 +55,8 @@ const chronologicalSort = (a: NotificationItem, b: NotificationItem) => {
 
 export const NotificationDrawer: React.FC<Props> = props => {
   const { data, open, onClose } = props;
-  const { account } = useAccount();
   const classes = useStyles();
-  const balance = account.data?.balance ?? 0;
-  const { community, pendingActions, statusNotifications, support } = data;
+  const { pendingActions } = data;
 
   const { preferences, updatePreferences } = usePreferences();
 
@@ -81,17 +74,11 @@ export const NotificationDrawer: React.FC<Props> = props => {
   };
 
   const chronologicalNotificationList = React.useMemo(() => {
-    return [
-      ...community.events,
-      ...pendingActions,
-      ...statusNotifications,
-      ...support.data
-    ].sort(chronologicalSort);
-  }, [community.events, pendingActions, support.data, statusNotifications]);
+    return [...pendingActions].sort(chronologicalSort);
+  }, [pendingActions]);
 
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
-      {balance > 0 ? <PastDue balance={balance} /> : null}
       <div id="viewToggle" className={classes.actionHeader}>
         <Tooltip title="Toggle chronological display" placement="left">
           <IconButton
@@ -117,18 +104,6 @@ export const NotificationDrawer: React.FC<Props> = props => {
             <EmptyMessage onClose={onClose} />
           ) : null}
           <PendingActions pendingActions={pendingActions} onClose={onClose} />
-          <Maintenance statusNotifications={statusNotifications} />
-          <OpenSupportTickets
-            loading={support.loading}
-            error={Boolean(support.error)}
-            openTickets={support.data}
-            onClose={onClose}
-          />
-          <Community
-            communityEvents={community.events}
-            loading={community.loading}
-            error={Boolean(community.error)}
-          />
         </div>
       )}
     </Drawer>
