@@ -1,17 +1,23 @@
+import { Grant } from '@linode/api-v4/lib/account/types';
 import {
+  deleteStackScript,
   getStackScript,
   StackScript,
-  updateStackScript,
-  deleteStackScript
+  updateStackScript
 } from '@linode/api-v4/lib/stackscripts';
+import { APIError } from '@linode/api-v4/lib/types';
+import * as classnames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import {
   createStyles,
   Theme,
@@ -25,17 +31,13 @@ import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
-import { getStackScriptUrl, StackScriptCategory } from './stackScriptUtils';
-
 import {
   hasGrant,
   isRestrictedUser as _isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import ActionsPanel from 'src/components/ActionsPanel';
-import { Grant } from '@linode/api-v4/lib/account/types';
 import { MapState } from 'src/store/types';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { getStackScriptUrl } from './stackScriptUtils';
 
 interface DialogVariantProps {
   open: boolean;
@@ -54,22 +56,14 @@ interface MatchProps {
   stackScriptId: string;
 }
 
-interface Props {
-  canModify: boolean;
-  canAddLinodes: boolean;
-  // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
-  // Leaving this in as an escape hatch now, since there's a bunch of code in
-  // /LandingPanel that uses different values for categories that we shouldn't
-  // change until we're actually using it.
-  category: StackScriptCategory | string;
-}
-
 type RouteProps = RouteComponentProps<MatchProps>;
 
 interface State {
   loading: boolean;
   stackScript?: StackScript;
   dialog: DialogState;
+  labelInput?: string;
+  errors?: APIError[];
 }
 
 interface ProfileProps {
@@ -77,40 +71,67 @@ interface ProfileProps {
   username?: string;
 }
 
-type ClassNames = 'root' | 'cta' | 'button' | 'userName' | 'userNameSlash';
+type ClassNames =
+  | 'root'
+  | 'cta'
+  | 'ctaError'
+  | 'button'
+  | 'userName'
+  | 'userNameSlash'
+  | 'error';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       margin: 0,
-      [theme.breakpoints.down('md')]: {
+      '& .MuiFormHelperText-root': {
+        [theme.breakpoints.down('md')]: {
+          top: 26,
+          left: 5,
+          width: 400
+        }
+      },
+      [theme.breakpoints.down('sm')]: {
+        paddingRight: theme.spacing()
+      },
+      [theme.breakpoints.down('xs')]: {
         flexDirection: 'column',
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        paddingLeft: theme.spacing()
       }
     },
     cta: {
       display: 'flex',
       alignItems: 'center',
-      [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      [theme.breakpoints.down('sm')]: {
         alignSelf: 'flex-end',
-        marginBottom: theme.spacing(),
-        marginRight: theme.spacing()
+        marginBottom: theme.spacing()
+      }
+    },
+    ctaError: {
+      [theme.breakpoints.down(772)]: {
+        marginTop: 20
       }
     },
     button: {
-      marginLeft: theme.spacing(4),
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(1.5)
-      }
+      marginLeft: theme.spacing(3)
     },
     userName: {
-      ...theme.typography.h1
+      color: theme.cmrTextColors.tableStatic,
+      fontFamily: theme.font.bold,
+      fontSize: '1.125rem'
     },
     userNameSlash: {
-      color: theme.color.grey1,
+      color: theme.cmrTextColors.tableHeader,
       fontFamily: theme.font.normal,
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1)
+      fontSize: 20,
+      marginRight: 4
+    },
+    error: {
+      [theme.breakpoints.between(772, 'md')]: {
+        paddingBottom: 20
+      }
     }
   });
 
@@ -118,8 +139,7 @@ type CombinedProps = ProfileProps &
   RouteProps &
   StateProps &
   WithStyles<ClassNames> &
-  SetDocsProps &
-  Props;
+  SetDocsProps;
 
 export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   state: State = {
@@ -136,7 +156,8 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       },
       stackScriptID: undefined,
       stackScriptLabel: ''
-    }
+    },
+    errors: undefined
   };
 
   // TODO do we even need this?
@@ -168,6 +189,39 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       username
     );
     history.push(url);
+  };
+
+  handleLabelChange = (label: string) => {
+    const { stackScript } = this.state;
+
+    // This should never actually happen, but TypeScript is expecting a Promise here.
+    if (stackScript === undefined) {
+      return Promise.resolve();
+    }
+
+    this.setState({ errors: undefined });
+
+    return updateStackScript(stackScript.id, { label })
+      .then(() => {
+        this.setState({
+          stackScript: { ...stackScript, label },
+          labelInput: label
+        });
+      })
+      .catch(e => {
+        this.setState(() => ({
+          errors: getAPIErrorOrDefault(e, 'Error updating label', 'label'),
+          labelInput: label
+        }));
+        return Promise.reject(e);
+      });
+  };
+
+  resetEditableLabel = () => {
+    this.setState({
+      errors: undefined,
+      labelInput: this.state.stackScript?.label
+    });
   };
 
   handleOpenDeleteDialog = (id: number, label: string) => {
@@ -396,7 +450,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, username } = this.props;
     const { loading, stackScript } = this.state;
 
     if (loading) {
@@ -413,11 +467,22 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       </Typography>
     );
 
+    const errorMap = getErrorMap(['label'], this.state.errors);
+    const labelError = errorMap.label;
+
+    const stackScriptLabel =
+      this.state.labelInput !== undefined
+        ? this.state.labelInput
+        : stackScript.label;
+
     return (
       <React.Fragment>
         <Grid
           container
-          className={classes.root}
+          className={classnames({
+            [classes.root]: true,
+            [classes.error]: Boolean(labelError)
+          })}
           alignItems="center"
           justify="space-between"
         >
@@ -432,9 +497,26 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
                   label: 'StackScripts'
                 }
               ]}
+              onEditHandlers={
+                stackScript && username === stackScript.username
+                  ? {
+                      editableTextTitle: stackScriptLabel,
+                      onEdit: this.handleLabelChange,
+                      onCancel: this.resetEditableLabel,
+                      errorText: labelError
+                    }
+                  : undefined
+              }
             />
           </Grid>
-          <Grid item className={`${classes.cta} p0`}>
+          <Grid
+            item
+            className={classnames({
+              [classes.cta]: true,
+              [classes.ctaError]: Boolean(labelError),
+              p0: true
+            })}
+          >
             <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
             <Button
               buttonType="primary"
