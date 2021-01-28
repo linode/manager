@@ -55,6 +55,8 @@ interface Form {
   ports?: string;
   addresses: string;
   protocol: string;
+  label: string;
+  description: string;
 }
 
 export type CombinedProps = Props;
@@ -102,11 +104,19 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
     const protocol = values.protocol as FirewallRuleProtocol;
     const addresses = formValueToIPs(values.addresses, ips);
 
-    const payload = {
+    const payload: FirewallRuleType = {
       ports,
       protocol,
       addresses
     };
+
+    if (values.label) {
+      payload.label = values.label;
+    }
+
+    if (values.description) {
+      payload.description = values.description;
+    }
 
     props.onSubmit(category, payload);
     onClose();
@@ -124,6 +134,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
         {formikProps => {
           return (
             <FirewallRuleForm
+              category={category}
               addressesLabel={addressesLabel}
               ips={ips}
               setIPs={setIPs}
@@ -158,6 +169,7 @@ interface FirewallRuleFormProps extends FormikProps<Form> {
   setIPs: (ips: ExtendedIP[]) => void;
   addressesLabel: string;
   mode: Mode;
+  category: Category;
   ruleErrors?: FirewallRuleError[];
 }
 
@@ -186,7 +198,9 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     setIPs,
     mode,
     ruleErrors,
-    setFieldError
+    setFieldError,
+    touched,
+    category
   } = props;
 
   // Set form field errors for each error we have (except "addresses" errors, which are handled
@@ -201,28 +215,45 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   }, [ruleErrors, setFieldError]);
 
   // These handlers are all memoized because the form was laggy when I tried them inline.
-  const handleTypeChange = React.useCallback((item: Item | null) => {
-    const selectedType = item?.value;
-    setFieldValue('type', selectedType);
+  const handleTypeChange = React.useCallback(
+    (item: Item | null) => {
+      const selectedType = item?.value;
+      setFieldValue('type', selectedType);
 
-    if (!selectedType) {
-      return;
-    }
+      if (!selectedType) {
+        return;
+      }
 
-    if (!formTouched) {
-      setFormTouched(true);
-    }
+      if (!formTouched) {
+        setFormTouched(true);
+      }
 
-    // Pre-populate other form values if selecting a pre-defined type.
-    if (selectedType !== 'custom') {
-      // All predefined FW types use the TCP protocol.
-      setFieldValue('protocol', 'TCP');
-      // All predefined FW types use all IPv4 and IPv6.
-      setFieldValue('addresses', 'all');
-      // Use the port for the selected type.
-      setFieldValue('ports', portPresets[selectedType]);
-    }
-  }, []);
+      if (!touched.label) {
+        setFieldValue('label', `allow-${category}-${item?.label}`);
+      }
+
+      // Pre-populate other form values if selecting a pre-defined type.
+      if (selectedType !== 'custom') {
+        // All predefined FW types use the TCP protocol.
+        setFieldValue('protocol', 'TCP');
+        // All predefined FW types use all IPv4 and IPv6.
+        setFieldValue('addresses', 'all');
+        // Use the port for the selected type.
+        setFieldValue('ports', portPresets[selectedType]);
+      }
+    },
+    [formTouched, setFieldValue, touched, category]
+  );
+
+  const handleTextFieldChange = React.useCallback(
+    (e: React.ChangeEvent) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+      handleChange(e);
+    },
+    [formTouched, handleChange]
+  );
 
   const handleProtocolChange = React.useCallback(
     (item: Item | null) => {
@@ -250,16 +281,6 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       setIPs([{ address: '' }]);
     },
     [formTouched, setFieldValue, setFormTouched, setIPs]
-  );
-
-  const handlePortsChange = React.useCallback(
-    (e: React.ChangeEvent) => {
-      if (!formTouched) {
-        setFormTouched(true);
-      }
-      handleChange(e);
-    },
-    [formTouched, handleChange]
   );
 
   const handleIPChange = React.useCallback(
@@ -291,15 +312,36 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         <Notice key={status} text={status.generalError} error data-qa-error />
       )}
       <Select
-        label="Type"
+        label="Preset"
         name="type"
-        placeholder="Select a rule type..."
-        aria-label="Select rule type."
+        placeholder="Select a rule preset..."
+        aria-label="Preset for firewall rule"
         options={typeOptions}
         value={typeValue}
         onChange={handleTypeChange}
         isClearable={false}
         onBlur={handleBlur}
+      />
+      <TextField
+        label="Label"
+        name="label"
+        placeholder="Enter a label..."
+        aria-label="Label for firewall rule"
+        value={values.label}
+        errorText={errors.label}
+        onChange={handleTextFieldChange}
+        onBlur={handleBlur}
+      />
+      <TextField
+        label="Description"
+        name="description"
+        placeholder="Enter a description..."
+        aria-label="Description for firewall rule"
+        value={values.description}
+        errorText={errors.description}
+        onChange={handleTextFieldChange}
+        onBlur={handleBlur}
+        multiline
       />
       <Select
         label="Protocol"
@@ -324,7 +366,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         aria-label="Port range for firewall rule"
         value={values.ports}
         errorText={errors.ports}
-        onChange={handlePortsChange}
+        onChange={handleTextFieldChange}
         onBlur={handleBlur}
         disabled={values.protocol === 'ICMP'}
         tooltipText={
@@ -480,7 +522,9 @@ const initialValues: Form = {
   type: '',
   ports: '',
   addresses: '',
-  protocol: ''
+  protocol: '',
+  label: '',
+  description: ''
 };
 
 const getInitialFormValues = (ruleToModify?: ExtendedFirewallRule): Form => {
@@ -492,7 +536,9 @@ const getInitialFormValues = (ruleToModify?: ExtendedFirewallRule): Form => {
     ports: ruleToModify.ports,
     protocol: ruleToModify.protocol,
     addresses: getInitialAddressFormValue(ruleToModify.addresses),
-    type: predefinedFirewallFromRule(ruleToModify) || ''
+    type: predefinedFirewallFromRule(ruleToModify) || '',
+    label: ruleToModify?.label || '',
+    description: ruleToModify?.description || ''
   };
 };
 

@@ -172,7 +172,9 @@ describe('utilities', () => {
       addresses: 'all',
       ports: '443',
       protocol: 'TCP',
-      type: ''
+      type: '',
+      label: '',
+      description: ''
     };
 
     it('correctly matches values to their representative type', () => {

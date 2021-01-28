@@ -66,6 +66,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface RuleRow {
   type: string;
+  label?: string;
+  description?: string;
   protocol: string;
   ports: string;
   addresses: string;
@@ -140,17 +142,26 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
               <TableHead>
                 <TableRow>
                   <TableSortCell
-                    style={{ width: '15%' }}
+                    style={{ width: '20%' }}
                     active={orderBy === 'type'}
                     label="type"
                     direction={order}
                     handleClick={handleOrderChange}
                   >
-                    Type
+                    Label
+                  </TableSortCell>
+                  <TableSortCell
+                    style={{ width: '30%' }}
+                    active={orderBy === 'type'}
+                    label="type"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                  >
+                    Description
                   </TableSortCell>
                   <Hidden xsDown>
                     <TableSortCell
-                      style={{ width: '15%' }}
+                      style={{ width: '10%' }}
                       active={orderBy === 'protocol'}
                       label="protocol"
                       direction={order}
@@ -159,7 +170,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                       Protocol
                     </TableSortCell>
                     <TableSortCell
-                      style={{ width: '20%' }}
+                      style={{ width: '15%' }}
                       active={orderBy === 'ports'}
                       label="ports"
                       direction={order}
@@ -226,6 +237,8 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
     const {
       id,
       type,
+      label,
+      description,
       protocol,
       ports,
       addresses,
@@ -248,8 +261,9 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         highlight={status === 'MODIFIED' || status === 'NEW'}
         disabled={status === 'PENDING_DELETION'}
       >
-        <TableCell>{type}</TableCell>
+        <TableCell>{label || type}</TableCell>
         <Hidden xsDown>
+          <TableCell>{description}</TableCell>
           <TableCell>
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
