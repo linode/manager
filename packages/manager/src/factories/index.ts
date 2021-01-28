@@ -27,6 +27,7 @@ export * from './objectStorage';
 export * from './profile';
 export * from './promotionalOffer';
 export * from './regions';
+export * from './stackscripts';
 export * from './support';
 export * from './tags';
 export * from './volume';

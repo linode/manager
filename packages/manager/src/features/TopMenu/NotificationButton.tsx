@@ -13,11 +13,7 @@ export const NotificationButton: React.FC<{}> = _ => {
 
   const notificationData = useNotificationData();
 
-  const numEvents =
-    notificationData.community.events.length +
-    notificationData.support.data.length +
-    notificationData.pendingActions.length +
-    notificationData.statusNotifications.length;
+  const numEvents = notificationData.pendingActions.length;
 
   return (
     <>

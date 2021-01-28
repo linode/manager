@@ -24,16 +24,15 @@ The workspace names are defined in the root `package.json`
 1. Fork or clone this repository.
 2. Log into cloud.linode.com and [create an OAuth client](./CREATE_CLIENT.md).
 3. [Create an .env file for Cloud Manager](./CLOUD.md) and place it in the `packages/manager` directory.
-4. Make sure you are using a supported version of Node.js (10.16 is recommended). Installing Node with Homebrew
-   will result in a more recent version that can cause problems with our automation. We recommend using [NVM](https://github.com/nvm-sh/nvm):
+4. Make sure you are using a supported version of Node.js (14.5.4 is recommended). We recommend using [NVM](https://github.com/nvm-sh/nvm):
 
    ```bash
    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/<NVM-LATEST-VERSION>/install.sh | bash
    ## Follow the instructions to add NVM to your .*rc file, or open a new terminal window
-   nvm install 10.16
-   nvm use 10.16
+   nvm install 14.15.4
+   nvm use 14.15.4
    node --version
-   ## v10.16.0
+   ## v14.15.4
    ```
 
 5. Make sure you have a recent version of Yarn (1.22+):
