@@ -380,12 +380,18 @@ export const handlers = [
     // });
     // const abuseTicket = abuseTicketNotificationFactory.build();
 
+    const migrationTicket = notificationFactory.build({
+      type: 'migration_pending',
+      entity: { id: 0, type: 'linode' }
+    });
+
     return res(
       ctx.json(
         makeResourcePage([
-          ...notificationFactory.buildList(1)
+          ...notificationFactory.buildList(1),
           // abuseTicket
           // emailBounce
+          migrationTicket
         ])
       )
     );
