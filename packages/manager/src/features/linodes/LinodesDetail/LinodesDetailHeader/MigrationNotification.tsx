@@ -1,30 +1,16 @@
 import { NotificationType } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 
-type ClassNames = 'migrationLink';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    migrationLink: {
-      color: theme.palette.primary.main,
-      cursor: 'pointer',
-      display: 'inline',
-      '&:hover': {
-        textDecoration: 'underline'
-      }
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  migrationLink: {
+    ...theme.applyLinkStyles
+  }
+}));
 
 interface Props {
   linodeID: number;
@@ -33,14 +19,13 @@ interface Props {
   notificationMessage: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
+const MigrationNotification: React.FC<Props> = props => {
+  const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
-const MigrationNotification: React.FC<CombinedProps> = props => {
   const {
     linodeID,
     requestNotifications,
-    enqueueSnackbar,
-    classes,
     notificationMessage,
     notificationType
   } = props;
@@ -71,21 +56,17 @@ const MigrationNotification: React.FC<CombinedProps> = props => {
 
   return (
     <Notice important warning>
-      {notificationMessage}
-      {notificationType === 'migration_scheduled'
-        ? ' To enter the migration queue right now, please '
-        : ' To schedule your migration, please '}
-      <Typography className={classes.migrationLink} onClick={migrate}>
-        click here.
+      <Typography>
+        {notificationMessage}
+        {notificationType === 'migration_scheduled'
+          ? ' To enter the migration queue right now, please '
+          : ' To schedule your migration, please '}
+        <button className={classes.migrationLink} onClick={migrate}>
+          click here.
+        </button>
       </Typography>
     </Notice>
   );
 };
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props>(
-  withSnackbar,
-  React.memo,
-  styled
-)(MigrationNotification);
+export default React.memo(MigrationNotification);
