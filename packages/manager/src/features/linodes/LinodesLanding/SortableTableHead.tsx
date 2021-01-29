@@ -1,15 +1,15 @@
 import * as React from 'react';
+import GridView from 'src/assets/icons/grid-view.svg';
+import Hidden from 'src/components/core/Hidden';
+import IconButton from 'src/components/core/IconButton';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
+import Tooltip from 'src/components/core/Tooltip';
+import { GroupByTagToggle } from 'src/components/EntityTable/EntityTableHeader';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
-import Hidden from 'src/components/core/Hidden';
-import IconButton from 'src/components/core/IconButton';
-import Tooltip from 'src/components/core/Tooltip';
-import GridView from 'src/assets/icons/grid-view.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import { GroupByTagToggle } from 'src/components/EntityTable/EntityTableHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
@@ -27,12 +27,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   // There's nothing very scientific about the widths across the breakpoints
   // here, just a lot of trial and error based on maximum expected column sizes.
   labelCell: {
+    ...theme.applyTableHeaderStyles,
     width: '24%',
     [theme.breakpoints.down('md')]: {
       width: '20%'
     }
   },
   statusCell: {
+    ...theme.applyTableHeaderStyles,
     width: '20%',
     [theme.breakpoints.only('md')]: {
       width: '27%'
@@ -42,24 +44,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   planCell: {
+    ...theme.applyTableHeaderStyles,
     width: '14%',
     [theme.breakpoints.only('sm')]: {
       width: '15%'
     }
   },
   ipAddressCell: {
+    ...theme.applyTableHeaderStyles,
     width: '14%',
     [theme.breakpoints.only('sm')]: {
       width: '22%'
     }
   },
   regionCell: {
+    ...theme.applyTableHeaderStyles,
     width: '14%',
     [theme.breakpoints.down('xs')]: {
       width: '18%'
     }
   },
   lastBackupCell: {
+    ...theme.applyTableHeaderStyles,
     width: '14%',
     [theme.breakpoints.down('xs')]: {
       width: '18%'
