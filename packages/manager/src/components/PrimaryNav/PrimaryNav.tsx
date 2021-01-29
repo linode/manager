@@ -250,7 +250,9 @@ export const PrimaryNav: React.FC<Props> = props => {
     >
       <Grid item>
         <div className={classes.logoItem}>
-          {isCollapsed && <span className={classes.logoCollapsed}></span>}
+          {isCollapsed && (
+            <span className={`${classes.logoCollapsed} logoCollapsed`}></span>
+          )}
           <Link
             to={`/dashboard`}
             onClick={closeMenu}
