@@ -7,7 +7,7 @@ import Drawer from 'src/components/Drawer';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import { dcDisplayNames } from 'src/constants';
-import useRegions from 'src/hooks/useRegions';
+import { useRegionsQuery } from 'src/queries/regions';
 import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import v4 from 'uuid';
@@ -33,9 +33,9 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
     open
   } = props;
 
-  const regions = useRegions();
+  const regions = useRegionsQuery().data ?? [];
 
-  const regionsWithFirewalls = Object.values(regions.entities)
+  const regionsWithFirewalls = regions
     .filter(thisRegion =>
       thisRegion.capabilities.includes('Cloud Firewall' as Capabilities)
     )

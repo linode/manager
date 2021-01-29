@@ -7,7 +7,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
-import useRegions from 'src/hooks/useRegions';
+import { useRegionsQuery } from 'src/queries/regions';
 import { MapState } from 'src/store/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -73,8 +73,8 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
   const { sshIPAddress, username, linodeRegion, linodeLabel, zoneName } = props;
   const classes = useStyles();
 
-  const regions = useRegions();
-  const currentRegion = regions.entities.find(
+  const regions = useRegionsQuery().data ?? [];
+  const currentRegion = regions.find(
     thisRegion => thisRegion.id === linodeRegion
   );
 
