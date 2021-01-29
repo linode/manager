@@ -8,7 +8,7 @@ import { dcDisplayNames } from 'src/constants';
 import clustersContainer, {
   StateProps
 } from 'src/containers/clusters.container';
-import useRegions from 'src/hooks/useRegions';
+import { useRegionsQuery } from 'src/queries/regions';
 
 interface Props {
   selectedCluster: string;
@@ -30,11 +30,11 @@ export const ClusterSelect: React.FC<CombinedProps> = props => {
     disabled
   } = props;
 
-  const { entities } = useRegions();
+  const _regions = useRegionsQuery().data ?? [];
 
   const regions = React.useMemo(
-    () => objectStorageClusterToExtendedRegion(clustersData, entities),
-    [clustersData, entities]
+    () => objectStorageClusterToExtendedRegion(clustersData, _regions),
+    [clustersData, _regions]
   );
 
   // Error could be: 1. General Clusters error, 2. Field error, 3. Nothing

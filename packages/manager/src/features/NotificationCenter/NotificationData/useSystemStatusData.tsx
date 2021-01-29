@@ -7,7 +7,7 @@ import Link from 'src/components/Link';
 import { dcDisplayNames } from 'src/constants';
 import useLinodes from 'src/hooks/useLinodes';
 import useNotifications from 'src/hooks/useNotifications';
-import useRegions from 'src/hooks/useRegions';
+import { useRegionsQuery } from 'src/queries/regions';
 import { NotificationItem } from '../NotificationSection';
 
 interface LinodeWithNotification extends Linode {
@@ -16,7 +16,7 @@ interface LinodeWithNotification extends Linode {
 
 export const useSystemStatusData = (): NotificationItem[] => {
   const { linodes } = useLinodes();
-  const { entities: regions } = useRegions();
+  const regions = useRegionsQuery().data ?? [];
   const notifications = useNotifications();
 
   const linodesWithNotifications = Object.values(linodes.itemsById).reduce(

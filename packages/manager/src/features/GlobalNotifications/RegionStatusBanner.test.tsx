@@ -1,31 +1,25 @@
 import * as React from 'react';
 import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { CombinedProps, RegionStatusBanner } from './RegionStatusBanner';
+import { RegionStatusBanner } from './RegionStatusBanner';
 
 afterEach(() => {
   regionFactory.resetSequenceNumber();
 });
 
-const props = (regionsData: any): CombinedProps => ({
-  regionsData,
-  regionsLoading: false,
-  regionsLastUpdated: Date.now()
-});
-
 describe('Region status banner', () => {
   it('should render null if there are no warnings', () => {
     const regions = regionFactory.buildList(5);
-    expect(RegionStatusBanner(props(regions))).toBeNull();
+    expect(RegionStatusBanner({ regions })).toBeNull();
   });
 
   it("should render the region's name, and not a list, for a single affected region", () => {
-    const regions = regionFactory.build({
+    const regions = regionFactory.buildList(1, {
       status: 'outage',
       id: 'us-east'
     });
     const { queryAllByText, queryAllByTestId } = renderWithTheme(
-      <RegionStatusBanner {...props([regions])} />
+      <RegionStatusBanner regions={regions} />
     );
     expect(queryAllByText(/Newark, NJ/i)).toHaveLength(1);
     expect(queryAllByTestId(/facility-outage/)).toHaveLength(0);
@@ -36,7 +30,7 @@ describe('Region status banner', () => {
       status: 'outage'
     });
     const { queryAllByTestId } = renderWithTheme(
-      <RegionStatusBanner {...props(regions)} />
+      <RegionStatusBanner regions={regions} />
     );
     expect(queryAllByTestId(/facility-outage/)).toHaveLength(5);
   });
@@ -46,7 +40,7 @@ describe('Region status banner', () => {
     const goodRegions = regionFactory.buildList(2, { status: 'ok' });
     const regions = [...badRegions, ...goodRegions];
     const { queryAllByTestId } = renderWithTheme(
-      <RegionStatusBanner {...props(regions)} />
+      <RegionStatusBanner regions={regions} />
     );
     expect(queryAllByTestId(/facility-outage/)).toHaveLength(3);
   });
