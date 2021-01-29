@@ -342,6 +342,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         value={addressesValue}
         onChange={handleAddressesChange}
         onBlur={handleBlur}
+        isClearable={false}
       />
       {/* Show this field only if "IP / Netmask has been selected." */}
       {values.addresses === 'ip/netmask' && (
