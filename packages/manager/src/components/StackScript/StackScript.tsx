@@ -1,19 +1,26 @@
+import { Grant } from '@linode/api-v4/lib/account';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
+import Button from 'src/components/Button';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
-import { Theme, makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
+import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
 import { useImages } from 'src/hooks/useImages';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { MapState } from 'src/store/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -21,6 +28,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     '.detailsWrapper &': {
       padding: theme.spacing(4)
     }
+  },
+  headerLabel: {
+    marginLeft: '0.25em'
+  },
+  editBtn: {
+    minWidth: 'fit-content'
   },
   deployments: {
     marginTop: theme.spacing(1)
@@ -75,8 +88,13 @@ export interface Props {
   data: StackScript;
 }
 
-export const SStackScript: React.FC<Props> = props => {
+type CombinedProps = Props & StateProps & RouteComponentProps<{}>;
+
+export const SStackScript: React.FC<CombinedProps> = props => {
   const {
+    history,
+    stackScriptGrants,
+    isRestrictedUser,
     data: {
       username,
       deployments_total,
@@ -121,7 +139,29 @@ export const SStackScript: React.FC<Props> = props => {
 
   return (
     <div className={classes.root}>
-      <H1Header title={label} data-qa-stack-title={label} />
+      <Grid container justify="space-between">
+        <H1Header
+          className={classes.headerLabel}
+          title={label}
+          data-qa-stack-title={label}
+        />
+        <Button
+          buttonType="secondary"
+          className={classes.editBtn}
+          disabled={
+            !canUserModifyAccountStackScript(
+              isRestrictedUser,
+              stackScriptGrants,
+              stackscriptId
+            )
+          }
+          onClick={() => {
+            history.push(`/stackscripts/${stackscriptId}/edit`);
+          }}
+        >
+          Edit
+        </Button>
+      </Grid>
       <Typography
         variant="h2"
         className={classes.author}
@@ -132,6 +172,7 @@ export const SStackScript: React.FC<Props> = props => {
           {username}
         </Link>
       </Typography>
+
       <div data-qa-stack-deployments className={classes.deployments}>
         <Typography className={classes.deploymentSection}>
           <strong>{deployments_total}</strong> deployments
@@ -186,4 +227,21 @@ export const SStackScript: React.FC<Props> = props => {
   );
 };
 
-export default React.memo(SStackScript);
+interface StateProps {
+  isRestrictedUser: boolean;
+  stackScriptGrants: Grant[];
+}
+
+const mapStateToProps: MapState<StateProps, {}> = state => ({
+  isRestrictedUser: _isRestrictedUser(state),
+  stackScriptGrants: pathOr(
+    [],
+    ['__resources', 'profile', 'data', 'grants', 'stackscript'],
+    state
+  )
+});
+
+const connected = connect(mapStateToProps);
+const enhanced = compose<CombinedProps, Props>(connected, withRouter);
+
+export default React.memo(enhanced(SStackScript));
