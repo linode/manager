@@ -14,10 +14,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 20
     },
     '&:hover': {
-      backgroundColor: '#3683dc',
+      backgroundColor: theme.palette.primary.main,
       cursor: 'pointer',
       '& span': {
-        color: '#ffffff'
+        color: '#ffffff !important'
       },
       '& .MuiTableSortLabel-icon': {
         color: '#ffffff !important'
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   label: {
-    color: theme.palette.text.primary,
+    color: theme.cmrTextColors.tableHeader,
     fontSize: '.875rem',
     minHeight: 20,
     transition: 'none'
