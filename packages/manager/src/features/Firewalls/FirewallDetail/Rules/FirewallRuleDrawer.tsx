@@ -85,13 +85,13 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
 
   const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
-  const onValidate = ({ ports, protocol }: Form) => {
+  const onValidate = ({ ports, protocol, description }: Form) => {
     // The validated IPs may have errors, so set them to state so we see the errors.
     const validatedIPs = validateIPs(ips);
     setIPs(validatedIPs);
 
     return {
-      ...validateForm(protocol, ports),
+      ...validateForm(protocol, ports, description),
       // This is a bit of a trick. If this function DOES NOT return an empty object, Formik will call
       // `onSubmit()`. If there are IP errors, we add them to the return object so Formik knows there
       // is an issue with the form.
@@ -341,7 +341,6 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         errorText={errors.description}
         onChange={handleTextFieldChange}
         onBlur={handleBlur}
-        multiline
       />
       <Select
         label="Protocol"
@@ -533,7 +532,7 @@ const getInitialFormValues = (ruleToModify?: ExtendedFirewallRule): Form => {
   }
 
   return {
-    ports: ruleToModify.ports,
+    ports: ruleToModify.ports || '',
     protocol: ruleToModify.protocol,
     addresses: getInitialAddressFormValue(ruleToModify.addresses),
     type: predefinedFirewallFromRule(ruleToModify) || '',
@@ -603,7 +602,11 @@ export const getInitialIPs = (
   return ips;
 };
 
-export const validateForm = (protocol?: string, ports?: string) => {
+export const validateForm = (
+  protocol?: string,
+  ports?: string,
+  description?: string
+) => {
   const errors: Partial<Form> = {};
 
   if (!protocol) {
@@ -624,6 +627,10 @@ export const validateForm = (protocol?: string, ports?: string) => {
   if (ports && !ports.match(/^([0-9\-]+,?\s?)+$/)) {
     errors.ports =
       'Ports must be an integer, range of integers, or a comma-separated list of integers.';
+  }
+
+  if (description && description.length > 100) {
+    errors.description = 'Description must be 1-100 characters.';
   }
 
   return errors;
