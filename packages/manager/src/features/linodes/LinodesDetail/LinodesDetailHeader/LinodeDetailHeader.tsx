@@ -1,6 +1,6 @@
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
@@ -29,6 +29,7 @@ import HostMaintenance from './HostMaintenance';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
 import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
+import { parseQueryParams } from 'src/utilities/queryParams';
 
 interface Props {
   numVolumes: number;
@@ -59,12 +60,17 @@ type CombinedProps = Props & LinodeDetailContext & LinodeContext;
 
 const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
-  // now show their content in modals instead. Use this matching to determine
-  // if a modal should be open when this component is first rendered.
+  // now show their content in modals instead. The logic below facilitates handling
+  // modal-related query params (and the older /:subpath routes before the redirect
+  // logic changes the URL) to determine if a modal should be open when this component
+  // is first rendered.
+  const location = useLocation();
+  const queryParams = parseQueryParams(location.search);
+
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
-    path: '/linodes/:linodeId/:subpath'
+    path: '/linodes/:linodeId/:subpath?'
   });
-  const isSubpath = (subpath: string) => match?.params?.subpath === subpath;
+
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
   const notificationContext = React.useContext(_notificationContext);
@@ -84,22 +90,22 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   });
 
   const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
-    open: isSubpath('resize'),
+    open: queryParams.resize === 'true',
     linodeID: matchedLinodeId
   });
 
   const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
-    open: isSubpath('migrate'),
+    open: queryParams.migrate === 'true',
     linodeID: matchedLinodeId
   });
 
   const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
-    open: isSubpath('rescue'),
+    open: queryParams.rescue === 'true',
     linodeID: matchedLinodeId
   });
 
   const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
-    open: isSubpath('rebuild'),
+    open: queryParams.rebuild === 'true',
     linodeID: matchedLinodeId
   });
 
@@ -151,6 +157,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        history.replace({ search: 'migrate=true' });
         break;
       case 'resize':
         setResizeDialog(resizeDialog => ({
@@ -158,6 +165,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        history.replace({ search: 'resize=true' });
         break;
       case 'rescue':
         setRescueDialog(rescueDialog => ({
@@ -165,6 +173,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        history.replace({ search: 'rescue=true' });
         break;
       case 'rebuild':
         setRebuildDialog(rebuildDialog => ({
@@ -172,6 +181,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           open: true,
           linodeID
         }));
+        history.replace({ search: 'rebuild=true' });
         break;
       case 'enable_backups':
         setBackupsDialog(backupsDialog => ({
@@ -184,16 +194,17 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   };
 
   const closeDialogs = () => {
-    // If the user is on e.g. /linodes/:id/resize and they close the modal,
-    // change the URL to reflect what they see (which is the Details page).
+    // If the user is on a Linode detail tab with the modal open and they then close it,
+    // change the URL to reflect just the tab they are on.
     if (
-      isSubpath('resize') ||
-      isSubpath('rescue') ||
-      isSubpath('rebuild') ||
-      isSubpath('migrate')
+      queryParams.resize ||
+      queryParams.rescue ||
+      queryParams.rebuild ||
+      queryParams.migrate
     ) {
-      history.replace(`/linodes/${match?.params.linodeId}`);
+      history.replace({ search: undefined });
     }
+
     setPowerDialog(powerDialog => ({ ...powerDialog, open: false }));
     setDeleteDialog(deleteDialog => ({ ...deleteDialog, open: false }));
     setResizeDialog(resizeDialog => ({ ...resizeDialog, open: false }));

@@ -83,7 +83,8 @@ export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = props => 
       /[-\/\\^$*+?.()|[\]{}]/g,
       '\\$&'
     );
-    const regex = new RegExp(cleanedAppName);
+    const strippedAppName = cleanedAppName.replace('&reg;', '');
+    const regex = new RegExp(strippedAppName);
     return Boolean(stackscriptID.match(regex));
   }); // This is horrible
   if (!app) {
@@ -117,9 +118,8 @@ export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = props => 
             className={`${classes.appName} ${
               app.name.length > 20 ? classes.wrapAppName : ''
             }`}
-          >
-            {app.name}
-          </Typography>
+            dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.name) }}
+          />
         </Grid>
       </Grid>
       <Divider className={classes.divider} />

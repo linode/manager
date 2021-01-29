@@ -44,7 +44,7 @@ export const FirewallRuleTypeSchema = object().shape({
     then: string()
       .required('Ports are required for TCP and UDP protocols.')
       .matches(
-        /^([0-9\-]+,?)+$/,
+        /^([0-9\-]+,?\s?)+$/,
         'Ports must be an integer, range of integers, or a comma-separated list of integers.'
       ),
     // Workaround to get the test to fail if ports is defined when protocol === ICMP

@@ -1,12 +1,11 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
+import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
   CombinedProps,
   MonitorActionMenu as ActionMenu
 } from './MonitorActionMenu';
-
-import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
 

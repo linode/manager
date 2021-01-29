@@ -1,18 +1,19 @@
-import * as classnames from 'classnames';
+import classnames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 import Undo from 'src/assets/icons/undo.svg';
-import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import OrderBy from 'src/components/OrderBy';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableSortCell from 'src/components/TableSortCell';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import {
   generateAddressesLabel,
   generateRuleLabel,
@@ -28,10 +29,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   header: {
     display: 'flex',
     justifyContent: 'space-between',
-    flexDirection: 'row'
-  },
-  table: {
-    borderCollapse: 'collapse'
+    alignItems: 'center',
+    flexDirection: 'row',
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing()
+    }
   },
   undoButtonContainer: {
     display: 'flex',
@@ -49,6 +52,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   error: {
     '& p': { color: theme.color.red }
+  },
+  button: {
+    margin: '8px 0px'
+  },
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0
   }
 }));
 
@@ -79,6 +91,7 @@ type CombinedProps = Props;
 const FirewallRuleTable: React.FC<CombinedProps> = props => {
   const {
     category,
+    openRuleDrawer,
     rulesWithStatus,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
@@ -93,17 +106,23 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
   const rowData = firewallRuleToRowData(rulesWithStatus);
 
   const openDrawerForCreating = React.useCallback(() => {
-    props.openRuleDrawer(props.category, 'create');
-  }, []);
+    openRuleDrawer(category, 'create');
+  }, [openRuleDrawer, category]);
+
+  const zeroOutboundRulesMessage =
+    'No outbound rules have been added. When no outbound rules are present, all outbound traffic is allowed.';
 
   return (
     <>
       <div className={classes.header}>
         <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
-        <AddNewLink
+        <Button
+          buttonType="secondary"
+          className={classes.button}
           onClick={openDrawerForCreating}
-          label={`Add an ${capitalize(category)} Rule`}
-        />
+        >
+          Add an {capitalize(category)} Rule
+        </Button>
       </div>
       <OrderBy data={rowData} orderBy={'type'} order={'asc'}>
         {({ data: sortedRows, handleOrderChange, order, orderBy }) => {
@@ -114,11 +133,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
           const modifiedRows = sortedRows.filter(
             thisRow => thisRow.status !== 'NOT_MODIFIED'
           );
-
           const allRows = [...unmodifiedRows, ...modifiedRows];
 
           return (
-            <Table isResponsive={false} tableClass={classes.table}>
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableSortCell
@@ -130,24 +148,26 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                   >
                     Type
                   </TableSortCell>
-                  <TableSortCell
-                    style={{ width: '15%' }}
-                    active={orderBy === 'protocol'}
-                    label="protocol"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                  >
-                    Protocol
-                  </TableSortCell>
-                  <TableSortCell
-                    style={{ width: '20%' }}
-                    active={orderBy === 'ports'}
-                    label="ports"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                  >
-                    Port Range
-                  </TableSortCell>
+                  <Hidden xsDown>
+                    <TableSortCell
+                      style={{ width: '15%' }}
+                      active={orderBy === 'protocol'}
+                      label="protocol"
+                      direction={order}
+                      handleClick={handleOrderChange}
+                    >
+                      Protocol
+                    </TableSortCell>
+                    <TableSortCell
+                      style={{ width: '20%' }}
+                      active={orderBy === 'ports'}
+                      label="ports"
+                      direction={order}
+                      handleClick={handleOrderChange}
+                    >
+                      Port Range
+                    </TableSortCell>
+                  </Hidden>
                   <TableSortCell
                     style={{ width: '40%' }}
                     active={orderBy === 'addresses'}
@@ -157,12 +177,15 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                   >
                     {capitalize(addressColumnLabel)}
                   </TableSortCell>
-                  <TableCell style={{ borderBottom: 0 }} />
+                  <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
                 {allRows.length === 0 ? (
-                  <TableRowEmptyState colSpan={5} />
+                  <TableRowEmptyState
+                    colSpan={5}
+                    message={zeroOutboundRulesMessage}
+                  />
                 ) : (
                   allRows.map((thisRuleRow: RuleRow) => (
                     <FirewallRuleTableRow
@@ -226,18 +249,20 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         disabled={status === 'PENDING_DELETION'}
       >
         <TableCell>{type}</TableCell>
-        <TableCell>
-          {protocol}
-          <ConditionalError errors={errors} formField="protocol" />
-        </TableCell>
-        <TableCell>
-          {ports}
-          <ConditionalError errors={errors} formField="ports" />
-        </TableCell>
+        <Hidden xsDown>
+          <TableCell>
+            {protocol}
+            <ConditionalError errors={errors} formField="protocol" />
+          </TableCell>
+          <TableCell>
+            {ports}
+            <ConditionalError errors={errors} formField="ports" />
+          </TableCell>
+        </Hidden>
         <TableCell>
           {addresses} <ConditionalError errors={errors} formField="addresses" />
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.actionCell}>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
               <button
@@ -279,7 +304,7 @@ export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
     const uniqueByFormField = uniqBy(prop('formField'), errors ?? []);
 
     return (
-      // eslint-disable-next-line
+      // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
         {uniqueByFormField.map(thisError => {
           if (formField !== thisError.formField || !thisError.reason) {
@@ -312,9 +337,48 @@ export const firewallRuleToRowData = (
 
     return {
       ...thisRule,
+      ports: sortPortString(thisRule.ports),
       type: generateRuleLabel(ruleType),
       addresses: generateAddressesLabel(thisRule.addresses),
       id: idx
     };
   });
+};
+
+/**
+ * Sorts ports string returned by the API into something more intuitive for users.
+ * Examples:
+ * "80, 22" --> "22, 80"
+ * "443, 22, 80-81" --> "22, 80-81, 443"
+ */
+export const sortPortString = (portString: string) => {
+  try {
+    const ports = portString.split(',');
+    return ports
+      .sort(sortString)
+      .map(port => port.trim())
+      .join(', ');
+  } catch {
+    // API responses should always work with this logic,
+    // but in case we get bad input, return the unsorted/unaltered string.
+    return portString;
+  }
+};
+
+// Custom sort helper for working with port strings
+const sortString = (_a: string, _b: string) => {
+  const a = Number(stripHyphen(_a));
+  const b = Number(stripHyphen(_b));
+  if (a > b) {
+    return 1;
+  }
+  if (a < b) {
+    return -1;
+  }
+  return 0;
+};
+
+// If a port range is included (80-1000) return the first element of the range
+const stripHyphen = (str: string) => {
+  return str.match(/-/) ? str.split('-')[0] : str;
 };

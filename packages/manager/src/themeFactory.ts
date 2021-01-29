@@ -54,6 +54,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     addCircleHoverEffect?: any;
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
+    applyTableHeaderStyles?: any;
 
     notificationList: any;
     status: any;
@@ -94,6 +95,7 @@ const cmrBGColors = {
 const cmrTextColors = {
   linkActiveLight: '#2575d0',
   headlineStatic: '#32363c',
+  tableHeader: '#888F91',
   tableStatic: '#606469',
   textAccessTable: '#606469'
 };
@@ -187,6 +189,16 @@ const genericStatusPillStyle = {
     width: 16,
     minWidth: 16,
     marginRight: 8
+  }
+};
+
+const genericTableHeaderStyle = {
+  '&:hover': {
+    backgroundColor: primaryColors.main,
+    cursor: 'pointer',
+    '& span': {
+      color: '#fff !important'
+    }
   }
 };
 
@@ -408,6 +420,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     applyStatusPillStyles: {
       ...genericStatusPillStyle
+    },
+    applyTableHeaderStyles: {
+      ...genericTableHeaderStyle
     },
     notificationList: {
       padding: '16px 32px 16px 23px',
@@ -1431,17 +1446,14 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           fontSize: '.9rem',
           lineHeight: '1.1rem',
           transition: 'color 225ms ease-in-out',
+          '&.MuiTableSortLabel-active': {
+            color: cmrTextColors.tableHeader
+          },
           '&:hover': {
             color: primaryColors.main
           },
           '&:focus': {
             outline: '1px dotted #999'
-          }
-        },
-        active: {
-          color: primaryColors.main,
-          '&:hover': {
-            color: primaryColors.main
           }
         },
         icon: {

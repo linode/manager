@@ -16,7 +16,7 @@ describe('longview', () => {
         const clientLabel = client.label;
         cy.visit('/longview');
         containsVisible(clientLabel);
-        fbtVisible('Waiting for data...');
+        fbtVisible('Waiting for data...').first();
         cy.get('code')
           .first()
           .then($code => {

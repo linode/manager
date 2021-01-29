@@ -1,6 +1,5 @@
 import { FirewallRules, FirewallRuleType } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
-import classnames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -15,7 +14,6 @@ import Prompt from 'src/components/Prompt';
 import withFirewalls, {
   DispatchProps
 } from 'src/containers/firewalls.container';
-import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
 import curriedFirewallRuleEditorReducer, {
@@ -27,8 +25,8 @@ import curriedFirewallRuleEditorReducer, {
   stripExtendedFields
 } from './firewallRuleEditor';
 import FirewallRuleTable from './FirewallRuleTable';
-import FirewallRuleTable_CMR from './FirewallRuleTable_CMR';
 import { Category, parseFirewallRuleError } from './shared';
+import { updateFirewallRules } from 'src/queries/firewalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -43,8 +41,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   actions: {
     alignSelf: 'flex-end'
   },
-  cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
+  mobileSpacing: {
+    [theme.breakpoints.down('sm')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing()
     }
@@ -67,11 +65,7 @@ type CombinedProps = Props & DispatchProps & RouteComponentProps;
 
 const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const flags = useFlags();
-
   const { firewallID, rules } = props;
-
-  const Table = flags.cmr ? FirewallRuleTable_CMR : FirewallRuleTable;
 
   /**
    * Component state and handlers
@@ -167,8 +161,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       outbound: preparedRules.outbound.map(stripExtendedFields)
     };
 
-    props
-      .updateFirewallRules({ firewallID, ...finalRules })
+    updateFirewallRules(firewallID, finalRules)
       .then(_rules => {
         setSubmitting(false);
         // Reset editor state.
@@ -272,10 +265,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
 
       <Typography
         variant="body1"
-        className={classnames({
-          [classes.copy]: true,
-          [classes.cmrSpacing]: flags.cmr
-        })}
+        className={`${classes.copy} ${classes.mobileSpacing}`}
       >
         Firewall rules act as an allowlist, permitting only network traffic that
         matches the rules&apos; parameters to pass through. If there are no
@@ -287,7 +277,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       )}
 
       <div className={classes.table}>
-        <Table
+        <FirewallRuleTable
           category="inbound"
           rulesWithStatus={inboundRules}
           openRuleDrawer={openRuleDrawer}
@@ -299,7 +289,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         />
       </div>
       <div className={classes.table}>
-        <Table
+        <FirewallRuleTable
           category="outbound"
           rulesWithStatus={outboundRules}
           openRuleDrawer={openRuleDrawer}

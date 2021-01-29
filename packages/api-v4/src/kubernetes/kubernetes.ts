@@ -97,9 +97,11 @@ export const getKubeConfig = (clusterId: number) =>
  *
  */
 
-export const getKubernetesVersions = () =>
+export const getKubernetesVersions = (params?: any, filters?: any) =>
   Request<Page<KubernetesVersion>>(
     setMethod('GET'),
+    setXFilter(filters),
+    setParams(params),
     setURL(`${API_ROOT}/lke/versions`)
   );
 
@@ -125,4 +127,16 @@ export const getKubernetesClusterEndpoints = (clusterID: number) =>
   Request<Page<KubernetesEndpointResponse>>(
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/api-endpoints`)
+  );
+
+/** recycleClusterNodes
+ *
+ * Recycle all nodes in the target cluster (across all node pools)
+ *
+ */
+
+export const recycleClusterNodes = (clusterID: number) =>
+  Request<{}>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/recycle`)
   );

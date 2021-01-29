@@ -1,10 +1,16 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { useSnackbar } from 'notistack';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
+import Grid from 'src/components/Grid';
 import Loading from 'src/components/LandingLoading';
 import { PaginationProps } from 'src/components/Pagey';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
@@ -15,6 +21,12 @@ import withVolumesRequests, {
 import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useRegionsQuery } from 'src/queries/regions';
+import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+import DestructiveVolumeDialog from 'src/features/Volumes/DestructiveVolumeDialog';
+import { ExtendedVolume } from 'src/features/Volumes/types';
+import VolumeAttachmentDrawer from 'src/features/Volumes/VolumeAttachmentDrawer';
+import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu';
+import VolumeTableRow from 'src/features/Volumes/VolumeTableRow';
 import {
   LinodeOptions,
   openForClone,
@@ -25,18 +37,6 @@ import {
   Origin as VolumeDrawerOrigin
 } from 'src/store/volumeForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import DestructiveVolumeDialog from 'src/features/Volumes/DestructiveVolumeDialog';
-import VolumeAttachmentDrawer from 'src/features/Volumes/VolumeAttachmentDrawer';
-import { ExtendedVolume } from 'src/features/Volumes/types';
-import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
-import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu_CMR';
-import VolumeTableRow from 'src/features/Volumes/VolumeTableRow_CMR';
-import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { Volume } from '@linode/api-v4/lib/volumes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

@@ -15,25 +15,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   crumb: {
-    whiteSpace: 'nowrap',
+    fontSize: '1.125rem',
+    lineHeight: 'normal',
     textTransform: 'capitalize',
-    ...theme.typography.h1
+    whiteSpace: 'nowrap'
+  },
+  crumbLink: {
+    color: theme.cmrTextColors.tableHeader,
+    '&:hover': {
+      textDecoration: 'underline'
+    }
   },
   noCap: {
     textTransform: 'initial'
   },
-  crumbLink: {
-    color: theme.cmrTextColors.linkActiveLight,
-    '&:hover': {
-      color: theme.palette.primary.main,
-      textDecoration: 'underline'
-    }
-  },
   slash: {
-    fontSize: 24,
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    color: theme.color.grey1
+    color: theme.cmrTextColors.tableHeader,
+    fontSize: 20,
+    marginRight: 2,
+    marginLeft: 2
   }
 }));
 

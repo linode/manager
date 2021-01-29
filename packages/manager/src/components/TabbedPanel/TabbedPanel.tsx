@@ -31,38 +31,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tab: {
     '&[data-reach-tab]': {
-      // This was copied over from our MuiTab styling in themeFactory. Some of this could probably be cleaned up.
-      color: theme.cmrTextColors.linkActiveLight,
-      background: 'transparent',
-      border: 'none',
-      minWidth: 50,
-      textTransform: 'inherit',
-      fontSize: '0.93rem',
-      padding: '6px 16px',
-      position: 'relative',
-      overflow: 'hidden',
-      maxWidth: 264,
-      boxSizing: 'border-box',
-      borderBottom: '2px solid transparent',
-      minHeight: theme.spacing(1) * 6,
-      flexShrink: 0,
       display: 'inline-flex',
+      flexShrink: 0,
       alignItems: 'center',
-      verticalAlign: 'middle',
-      justifyContent: 'center',
-      appearance: 'none',
+      borderBottom: '2px solid transparent',
+      color: theme.cmrTextColors.linkActiveLight,
+      fontSize: '0.9rem',
       lineHeight: 1.3,
-      [theme.breakpoints.up('md')]: {
-        minWidth: 75
-      },
+      marginTop: theme.spacing(0.5),
+      maxWidth: 264,
+      minHeight: theme.spacing(5),
+      minWidth: 50,
+      padding: '6px 16px',
       '&:hover': {
         color: theme.color.blue
       }
     },
     '&[data-reach-tab][data-selected]': {
-      fontFamily: theme.font.bold,
+      borderBottom: `3px solid ${theme.cmrTextColors.linkActiveLight}`,
       color: theme.cmrTextColors.headlineStatic,
-      borderBottom: `2px solid ${theme.cmrBorderColors.linkActiveLight}`
+      fontFamily: theme.font.bold
     }
   },
   tabList: {

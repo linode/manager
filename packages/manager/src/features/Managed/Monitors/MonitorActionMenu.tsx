@@ -1,10 +1,14 @@
 import { MonitorStatus } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { splitAt } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 import withManagedServices, {
   DispatchProps
 } from 'src/containers/managedServices.container';
@@ -21,93 +25,99 @@ interface Props {
 
 export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
 
-export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
-  createActions = () => {
-    const {
-      disableServiceMonitor,
-      enableServiceMonitor,
-      enqueueSnackbar,
-      label,
-      monitorID,
-      openDialog,
-      openHistoryDrawer,
-      openMonitorDrawer,
-      status
-    } = this.props;
+export const MonitorActionMenu: React.FC<CombinedProps> = props => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const handleError = (message: string, error: APIError[]) => {
-      const errMessage = getAPIErrorOrDefault(error, message);
-      enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
-    };
+  const {
+    disableServiceMonitor,
+    enableServiceMonitor,
+    enqueueSnackbar,
+    label,
+    monitorID,
+    openDialog,
+    openHistoryDrawer,
+    openMonitorDrawer,
+    status
+  } = props;
 
-    return (closeMenu: Function): Action[] => {
-      const actions = [
-        status === 'disabled'
-          ? {
-              title: 'Enable',
-              onClick: () => {
-                enableServiceMonitor(monitorID)
-                  .then(_ => {
-                    enqueueSnackbar('Monitor enabled successfully.', {
-                      variant: 'success'
-                    });
-                  })
-                  .catch(e => {
-                    handleError('Error enabling this Service Monitor.', e);
-                  });
-                closeMenu();
-              }
-            }
-          : {
-              title: 'Disable',
-              onClick: () => {
-                disableServiceMonitor(monitorID)
-                  .then(_ => {
-                    enqueueSnackbar('Monitor disabled successfully.', {
-                      variant: 'success'
-                    });
-                  })
-                  .catch(e => {
-                    handleError('Error disabling this Service Monitor.', e);
-                  });
-                closeMenu();
-              }
-            },
-        {
-          title: 'View Issue History',
-          onClick: () => {
-            openHistoryDrawer(monitorID, label);
-            closeMenu();
-          }
-        },
-        {
-          title: 'Edit',
-          onClick: () => {
-            openMonitorDrawer(monitorID, 'edit');
-            closeMenu();
-          }
-        },
-        {
-          title: 'Delete',
-          onClick: () => {
-            openDialog(monitorID, label);
-            closeMenu();
-          }
-        }
-      ];
-      return actions;
-    };
+  const handleError = (message: string, error: APIError[]) => {
+    const errMessage = getAPIErrorOrDefault(error, message);
+    enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
   };
 
-  render() {
-    return (
+  const actions: Action[] = [
+    {
+      title: 'View Issue History',
+      onClick: () => {
+        openHistoryDrawer(monitorID, label);
+      }
+    },
+    {
+      title: 'Edit',
+      onClick: () => {
+        openMonitorDrawer(monitorID, 'edit');
+      }
+    },
+    status === 'disabled'
+      ? {
+          title: 'Enable',
+          onClick: () => {
+            enableServiceMonitor(monitorID)
+              .then(_ => {
+                enqueueSnackbar('Monitor enabled successfully.', {
+                  variant: 'success'
+                });
+              })
+              .catch(e => {
+                handleError('Error enabling this Service Monitor.', e);
+              });
+          }
+        }
+      : {
+          title: 'Disable',
+          onClick: () => {
+            disableServiceMonitor(monitorID)
+              .then(_ => {
+                enqueueSnackbar('Monitor disabled successfully.', {
+                  variant: 'success'
+                });
+              })
+              .catch(e => {
+                handleError('Error disabling this Service Monitor.', e);
+              });
+          }
+        },
+    {
+      title: 'Delete',
+      onClick: () => {
+        openDialog(monitorID, label);
+      }
+    }
+  ];
+
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
+
+  return (
+    <>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+            />
+          );
+        })}
       <ActionMenu
-        createActions={this.createActions()}
-        ariaLabel={`Action menu for Monitor ${this.props.label}`}
+        actionsList={menuActions}
+        ariaLabel={`Action menu for Monitor ${props.label}`}
       />
-    );
-  }
-}
+    </>
+  );
+};
 
 const enhanced = compose<CombinedProps, Props>(
   // This is just a quick way to get access to managed Redux actions

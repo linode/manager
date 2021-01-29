@@ -34,9 +34,9 @@ import RegionIndicator from '../RegionIndicator';
 import { parseMaintenanceStartTime } from '../utils';
 import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
+import styled, { StyleProps } from './LinodeRow.style';
 import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
-import styled, { StyleProps } from './LinodeRow.style';
 
 interface Props {
   backups: LinodeBackups;
@@ -53,6 +53,7 @@ interface Props {
   status: LinodeStatus;
   displayStatus: string;
   type: null | string;
+  plan: string;
   tags: string[];
   mostRecentBackup: string | null;
   vlanIP?: string;
@@ -99,6 +100,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     vcpus,
     memory,
     type,
+    plan,
     tags,
     image,
     vlanIP,
@@ -222,12 +224,15 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
       {props.isVLAN ? null : (
         <>
           <Hidden xsDown>
+            <TableCell className={classes.planCell} data-qa-ips>
+              <div className={classes.planCell}>{plan}</div>
+            </TableCell>
             <TableCell className={classes.ipCell} data-qa-ips>
               <div className={classes.ipCellWrapper}>
                 <IPAddress ips={ipv4} copyRight />
               </div>
             </TableCell>
-            <Hidden smDown>
+            <Hidden mdDown>
               <TableCell className={classes.regionCell} data-qa-region>
                 <RegionIndicator region={region} />
               </TableCell>
