@@ -152,7 +152,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
   const [APIError, setAPIError] = React.useState<string>('');
 
   React.useEffect(() => {
-    if (open && !equals(deviceMap, prevDeviceMap)) {
+    if (!equals(deviceMap, prevDeviceMap)) {
       setCounter(initialCounter);
       setRescueDevices(deviceMap);
       setAPIError('');
