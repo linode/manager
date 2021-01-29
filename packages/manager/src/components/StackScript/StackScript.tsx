@@ -126,7 +126,7 @@ export const SStackScript: React.FC<Props> = props => {
         data-qa-stack-author={username}
       >
         by&nbsp;
-        <Link to={`/stackscripts?${queryString}`} data-qa-community-stack-link>
+        <Link to={`/stackscripts/${queryString}`} data-qa-community-stack-link>
           {username}
         </Link>
       </Typography>
