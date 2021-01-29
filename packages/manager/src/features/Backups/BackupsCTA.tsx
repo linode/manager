@@ -5,12 +5,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
@@ -18,41 +13,39 @@ import { handleOpen } from 'src/store/backupDrawer';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { MapState } from 'src/store/types';
 
-type ClassNames = 'root' | 'enableButton' | 'enableText' | 'closeIcon';
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: theme.spacing(1),
+    paddingRight: theme.spacing(2),
+    margin: `${theme.spacing(1)}px 0 ${theme.spacing(3)}px 0`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  enableButton: {
+    height: 40,
+    padding: 0,
+    width: 152
+  },
+  enableText: {
+    ...theme.applyLinkStyles
+  },
+  closeIcon: {
+    ...theme.applyLinkStyles,
+    marginLeft: 12,
+    lineHeight: '0.5rem'
+  }
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(1),
-      paddingRight: theme.spacing(2),
-      margin: `${theme.spacing(1)}px 0 ${theme.spacing(3)}px 0`,
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center'
-    },
-    enableButton: {
-      height: 40,
-      padding: 0,
-      width: 152
-    },
-    enableText: {
-      ...theme.applyLinkStyles
-    },
-    closeIcon: {
-      ...theme.applyLinkStyles,
-      marginLeft: 12
-    }
-  });
-
-type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps;
 
 const BackupsCTA: React.FC<CombinedProps> = props => {
   const {
-    classes,
     linodesWithoutBackups,
     managed,
     actions: { openBackupsDrawer }
   } = props;
+  const classes = useStyles();
 
   const restricted = isRestrictedUser();
 
@@ -67,7 +60,7 @@ const BackupsCTA: React.FC<CombinedProps> = props => {
   return (
     <PreferenceToggle<boolean>
       preferenceKey="backups_cta_dismissed"
-      preferenceOptions={[true, false]}
+      preferenceOptions={[false, true]}
       localStorageKey="BackupsCtaDismissed"
     >
       {({
@@ -124,10 +117,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
   };
 };
 
-const styled = withStyles(styles);
-
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(styled, connected)(BackupsCTA);
+const enhanced = compose<CombinedProps, {}>(connected)(BackupsCTA);
 
 export default enhanced;
