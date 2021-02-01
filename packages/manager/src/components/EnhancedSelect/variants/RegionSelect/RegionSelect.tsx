@@ -69,7 +69,7 @@ export const flags = {
   uk: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
   eu: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
   de: () => <DE width="32" height="24" viewBox="0 0 640 480" />,
-  ca: () => <CA id="canada" width="32" height="24" viewBox="0 0 640 480" />,
+  ca: () => <CA width="32" height="24" viewBox="0 0 640 480" />,
   in: () => <IN width="32" height="24" viewBox="0 0 640 480" />
 };
 
@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         clipPath: 'none !important' as 'none'
       }
     },
-    '& #singapore, #japan, #canada': {
+    '& #singapore, #japan': {
       border: `1px solid ${theme.color.border3}`
     }
   }
