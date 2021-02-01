@@ -1,3 +1,4 @@
+import { Account } from '@linode/api-v4/lib/account';
 import {
   Config,
   Disk,
@@ -20,7 +21,6 @@ import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import RootRef from 'src/components/core/RootRef';
-import { getAllVlans } from 'src/store/vlans/vlans.requests';
 import {
   createStyles,
   Theme,
@@ -40,21 +40,21 @@ import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR.tsx';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   DeleteLinodeConfig,
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { MapState } from 'src/store/types';
+import { getAllVlans } from 'src/store/vlans/vlans.requests';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll, GetAllData } from 'src/utilities/getAll';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer_CMR';
 import ConfigRow from './ConfigRow_CMR';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import { Account } from '@linode/api-v4/lib/account';
 
 type ClassNames =
   | 'root'
@@ -99,9 +99,11 @@ const styles = (theme: Theme) =>
       fontWeight: 'bold'
     },
     labelColumn: {
+      ...theme.applyTableHeaderStyles,
       width: '18%'
     },
     vmColumn: {
+      ...theme.applyTableHeaderStyles,
       width: '10%'
     },
     kernelColumn: {

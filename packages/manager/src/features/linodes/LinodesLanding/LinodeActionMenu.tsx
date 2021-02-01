@@ -10,23 +10,23 @@ import { stringify } from 'qs';
 import { pathOr, splitAt } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import { useHistory } from 'react-router-dom';
-
-import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { compose } from 'recompose';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import {
   makeStyles,
   Theme,
-  useTheme,
-  useMediaQuery
+  useMediaQuery,
+  useTheme
 } from 'src/components/core/styles';
-import { DialogType } from 'src/features/linodes/types';
-import { useTypes } from 'src/hooks/useTypes';
-import { useRegions } from 'src/hooks/useRegions';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { DialogType } from 'src/features/linodes/types';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { useTypes } from 'src/hooks/useTypes';
+import { useRegionsQuery } from 'src/queries/regions';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { MapState } from 'src/store/types';
 import {
@@ -34,7 +34,6 @@ import {
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent
 } from 'src/utilities/ga';
-import InlineMenuAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles(() => ({
   link: {
@@ -114,7 +113,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
   const { types } = useTypes();
   const history = useHistory();
-  const regions = useRegions().entities;
+  const regions = useRegionsQuery().data ?? [];
 
   const [configs, setConfigs] = React.useState<Config[]>([]);
   const [configsError, setConfigsError] = React.useState<

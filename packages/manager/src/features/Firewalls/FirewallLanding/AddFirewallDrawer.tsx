@@ -15,7 +15,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import useRegions from 'src/hooks/useRegions';
+import { useRegionsQuery } from 'src/queries/regions';
 import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 import {
   handleFieldErrors,
@@ -54,9 +54,9 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
    */
   const { _isRestrictedUser } = useAccountManagement();
 
-  const regions = useRegions();
+  const regions = useRegionsQuery().data ?? [];
 
-  const regionsWithFirewalls = Object.values(regions.entities)
+  const regionsWithFirewalls = regions
     .filter(thisRegion =>
       thisRegion.capabilities.includes('Cloud Firewall' as Capabilities)
     )
