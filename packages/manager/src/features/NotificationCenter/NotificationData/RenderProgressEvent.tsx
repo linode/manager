@@ -12,14 +12,27 @@ import {
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
 import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
+import EntityIcon, { Variant } from 'src/components/EntityIcon';
+import Divider from 'src/components/core/Divider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   action: {
     display: 'flex',
-    flexFlow: 'column nowrap'
+    flexFlow: 'row nowrap'
   },
   bar: {
     marginTop: theme.spacing()
+  },
+  icon: {
+    marginTop: -2,
+    marginRight: theme.spacing(2),
+    '& svg': {
+      height: 20,
+      width: 20
+    }
+  },
+  message: {
+    width: '100%'
   }
 }));
 
@@ -55,27 +68,41 @@ export const RenderProgressEvent: React.FC<Props> = props => {
     event.entity,
     false
   );
+
   const label = linkTarget ? (
     <Link to={linkTarget}>{eventLabelGenerator(event)}</Link>
   ) : (
     event.entity?.label
   );
+
+  const type = event.entity?.type ?? 'linode';
+
   return (
-    <div className={classes.action}>
-      <Typography>
-        {label}
-        {` `}
-        {message}
-        {formattedTimeRemaining}
-      </Typography>
-      <BarPercent
-        className={classes.bar}
-        max={100}
-        value={event.percent_complete ?? 0}
-        rounded
-        narrow
-      />
-    </div>
+    <>
+      <div className={classes.action}>
+        <EntityIcon
+          className={classes.icon}
+          variant={type as Variant}
+          status="busy"
+        />
+        <div className={classes.message}>
+          <Typography>
+            {label}
+            {` `}
+            {message}
+            {formattedTimeRemaining}
+          </Typography>
+          <BarPercent
+            className={classes.bar}
+            max={100}
+            value={event.percent_complete ?? 0}
+            rounded
+            narrow
+          />
+        </div>
+      </div>
+      <Divider className={classes.bar} />
+    </>
   );
 };
 
