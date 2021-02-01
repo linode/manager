@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing()
   },
   icon: {
-    marginTop: -2,
     marginRight: theme.spacing(2),
     '& svg': {
       height: 20,
@@ -96,7 +95,7 @@ export const RenderProgressEvent: React.FC<Props> = props => {
                 {eventMessage}
               </Link>
             ) : (
-              eventMessage
+              <strong>{eventMessage}</strong>
             )}
           </Typography>
           <BarPercent

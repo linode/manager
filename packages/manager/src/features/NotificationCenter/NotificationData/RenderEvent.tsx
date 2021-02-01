@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import { Event } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
@@ -17,13 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     marginTop: theme.spacing()
   },
-  link: {
-    '&:hover': {
-      textDecoration: 'none'
-    }
-  },
   icon: {
-    marginTop: -2,
     '& svg': {
       height: 20,
       width: 20
@@ -58,10 +53,13 @@ export const RenderEvent: React.FC<Props> = props => {
     return null;
   }
 
-  const unseenEventClass = event.seen ? '' : classes.unseenEvent;
-
   const eventMessage = (
-    <Typography className={`${unseenEventClass} ${classes.eventMessage}`}>
+    <Typography
+      className={classNames({
+        [classes.unseenEvent]: !event.seen,
+        [classes.eventMessage]: !!linkTarget
+      })}
+    >
       {message}
       {event.duration
         ? event.status === 'failed'
@@ -94,7 +92,9 @@ export const RenderEvent: React.FC<Props> = props => {
           </Grid>
         </Grid>
         <Grid item xs={4} className={classes.timeStamp}>
-          <Typography className={unseenEventClass}>
+          <Typography
+            className={classNames({ [classes.unseenEvent]: !event.seen })}
+          >
             {formatDate(event.created)}
           </Typography>
         </Grid>
