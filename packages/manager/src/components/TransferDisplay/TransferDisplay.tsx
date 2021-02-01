@@ -1,14 +1,14 @@
-import OpenInNew from '@material-ui/icons/OpenInNew';
 import Close from '@material-ui/icons/Close';
+import OpenInNew from '@material-ui/icons/OpenInNew';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
+import CircleProgress from 'src/components/CircleProgress';
+import Dialog from 'src/components/core/Dialog';
+import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Paper from 'src/components/core/Paper';
-import Dialog from 'src/components/core/Dialog';
 import Grid from 'src/components/Grid';
-import CircleProgress from 'src/components/CircleProgress';
 import Link from 'src/components/Link';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
 
@@ -114,53 +114,6 @@ export const TransferDisplay: React.FC<{}> = _ => {
         poolUsagePct={poolUsagePct}
         onClose={() => setModalOpen(false)}
       />
-
-      {/* <Dialog
-        title="Monthly Network Transfer Pool"
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-      >
-        <Grid item>
-          <div className={classes.barLabels}>
-            <Typography>{used} GB Used</Typography>
-            <Typography>
-              {quota >= used ? (
-                <span>{quota - used} GB Available</span>
-              ) : (
-                <span>
-                  {(quota - used).toString().replace(/\-/, '')} GB Over
-                  Allotment
-                </span>
-              )}
-            </Typography>
-          </div>
-          <BarPercent
-            max={100}
-            value={Math.ceil(poolUsagePct)}
-            className={classes.poolUsageProgress}
-          />
-          <Typography style={{ marginBottom: 6 }}>
-            Your account&rsquo;s monthly network transfer allotment will reset
-            in {getDaysRemaining()} days.
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography>
-            Your account&rsquo;s network transfer pool adds up all the included
-            transfer associated with the active Linode services on your account,
-            and is prorated based on service creation and/or deletion date(s).
-          </Typography>
-          <div className={classes.link}>
-            <Typography>
-              Optimize your network usage and avoid billing surprises related to
-              network transfer.{' '}
-              <Link to="https://www.linode.com/docs/guides/network-transfer-quota/">
-                <OpenInNew />
-              </Link>
-            </Typography>
-          </div>
-        </Grid>
-      </Dialog> */}
     </>
   );
 };
