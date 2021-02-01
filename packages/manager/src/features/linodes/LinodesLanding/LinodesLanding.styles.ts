@@ -31,8 +31,8 @@ const styles = (theme: Theme) =>
       flexDirection: 'row-reverse'
     },
     CSVlink: {
+      color: theme.cmrTextColors.tableHeader,
       fontSize: '.9rem',
-      color: theme.palette.text.primary,
       '&:hover': {
         textDecoration: 'underline'
       }

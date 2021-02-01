@@ -1,14 +1,12 @@
+import { Region } from '@linode/api-v4/lib/regions/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 import { dcDisplayNames } from 'src/constants';
-import RegionsContainer, {
-  DefaultProps as RegionsProps
-} from 'src/containers/regions.container';
-
-export type CombinedProps = RegionsProps;
+export interface Props {
+  regions: Region[];
+}
 
 const getFacilitiesList = (warnings: string[]) => (
   <ul>
@@ -61,10 +59,10 @@ const renderBanner = (statusWarnings: string[]): JSX.Element => {
   );
 };
 
-export const RegionStatusBanner: React.FC<CombinedProps> = props => {
-  const { regionsData } = props;
+export const RegionStatusBanner: React.FC<Props> = props => {
+  const { regions } = props;
 
-  const statusWarnings = regionsData
+  const statusWarnings = regions
     .filter(
       thisRegion =>
         thisRegion.status === 'outage' && !!dcDisplayNames[thisRegion.id]
@@ -76,18 +74,10 @@ export const RegionStatusBanner: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <Notice warning important>
+    <Notice warning important data-testid="status-banner">
       {renderBanner(statusWarnings)}
     </Notice>
   );
 };
 
-const withRegions = RegionsContainer(({ data, loading, error }) => ({
-  regionsData: data,
-  regionsLoading: loading,
-  regionsError: error
-}));
-
-const enhanced = compose<CombinedProps, {}>(withRegions);
-
-export default enhanced(RegionStatusBanner);
+export default React.memo(RegionStatusBanner);

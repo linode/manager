@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import useRegions from 'src/hooks/useRegions';
+import { useRegionsQuery } from 'src/queries/regions';
 
 interface Props {
   region: string;
@@ -35,11 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const DNSResolvers: React.FC<Props> = props => {
   const { region } = props;
   const classes = useStyles();
-  const regions = useRegions();
+  const regions = useRegionsQuery().data ?? [];
 
-  const linodeRegion = regions.entities.find(
-    thisRegion => thisRegion.id === region
-  );
+  const linodeRegion = regions.find(thisRegion => thisRegion.id === region);
 
   const v4Resolvers = linodeRegion?.resolvers?.ipv4.split(',') ?? [];
   const v6Resolvers = linodeRegion?.resolvers?.ipv6.split(',') ?? [];
