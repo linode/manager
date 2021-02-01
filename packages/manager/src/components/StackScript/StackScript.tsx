@@ -100,7 +100,8 @@ export const SStackScript: React.FC<CombinedProps> = props => {
       script,
       label,
       updated,
-      images
+      images,
+      is_public
     }
   } = props;
 
@@ -155,22 +156,24 @@ export const SStackScript: React.FC<CombinedProps> = props => {
           title={label}
           data-qa-stack-title={label}
         />
-        <Button
-          buttonType="secondary"
-          className={classes.editBtn}
-          disabled={
-            !canUserModifyAccountStackScript(
-              isRestrictedUser,
-              stackScriptGrants,
-              stackscriptId
-            )
-          }
-          onClick={() => {
-            history.push(`/stackscripts/${stackscriptId}/edit`);
-          }}
-        >
-          Edit
-        </Button>
+        {!is_public ? (
+          <Button
+            buttonType="secondary"
+            className={classes.editBtn}
+            disabled={
+              !canUserModifyAccountStackScript(
+                isRestrictedUser,
+                stackScriptGrants,
+                stackscriptId
+              )
+            }
+            onClick={() => {
+              history.push(`/stackscripts/${stackscriptId}/edit`);
+            }}
+          >
+            Edit
+          </Button>
+        ) : null}
       </Grid>
       <Typography
         variant="h2"
