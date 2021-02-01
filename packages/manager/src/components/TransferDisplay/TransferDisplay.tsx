@@ -1,3 +1,4 @@
+import OpenInNew from '@material-ui/icons/OpenInNew';
 import Close from '@material-ui/icons/Close';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -14,12 +15,9 @@ import { useAccountTransfer } from 'src/queries/accountTransfer';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(),
-    padding: `${theme.spacing()}px ${theme.spacing(2)}px`,
-    display: 'flex',
-    justifyContent: 'center',
-    background: 'inherit',
-    border: 'none',
-    margin: 'auto'
+    width: '100%',
+    margin: 'auto',
+    textAlign: 'center'
   },
   barLabels: {
     display: 'flex',
@@ -49,8 +47,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& svg': {
       width: 15,
       height: 15,
-      position: 'relative',
-      top: 3
+      color: theme.palette.text.primary,
+      '&:hover': {
+        color: 'inherit'
+      }
     }
   },
   paper: {
@@ -62,14 +62,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer'
   },
   proratedNotice: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
+  },
+  openModalButton: {
+    ...theme.applyLinkStyles
   }
 }));
 
 export const TransferDisplay: React.FC<{}> = _ => {
   const classes = useStyles();
 
-  const [modalOpen, setModalOpen] = React.useState(true);
+  const [modalOpen, setModalOpen] = React.useState(false);
   const { data, isLoading, isError } = useAccountTransfer();
   const quota = data?.quota ?? 0;
   const used = data?.used ?? 0;
@@ -92,12 +96,17 @@ export const TransferDisplay: React.FC<{}> = _ => {
 
   return (
     <>
-      <button className={classes.root} onClick={() => setModalOpen(true)}>
-        <Typography>
-          You have used {poolUsagePct.toFixed(poolUsagePct < 1 ? 2 : 0)}% of
-          your Monthly Network Transfer Pool.
-        </Typography>
-      </button>
+      <Typography className={classes.root}>
+        You have used {poolUsagePct.toFixed(poolUsagePct < 1 ? 2 : 0)}% of your
+        {`  `}
+        <button
+          className={classes.openModalButton}
+          onClick={() => setModalOpen(true)}
+        >
+          Monthly Network Transfer Pool
+        </button>
+        .
+      </Typography>
       <TransferDialog
         isOpen={modalOpen}
         used={used}
@@ -226,8 +235,10 @@ export const TransferDialog: React.FC<DialogProps> = React.memo(props => {
       />
 
       <Typography className={classes.proratedNotice}>
-        Your account&rsquo;s monthly network transfer allotment will reset in{' '}
-        {daysRemainingInMonth} days.
+        <strong>
+          Your account&rsquo;s monthly network transfer allotment will reset in{' '}
+          {daysRemainingInMonth} days.
+        </strong>
       </Typography>
       <Typography className={classes.proratedNotice}>
         Your account&apos;s network transfer pool adds up all the included
@@ -236,9 +247,12 @@ export const TransferDialog: React.FC<DialogProps> = React.memo(props => {
       </Typography>
       <div className={classes.link}>
         <Typography>
-          <Link to="https://linode.com/docs">Optimize your network usage</Link>{' '}
-          and avoid billing surprises related to network transfer.
+          Optimize your network usage and avoid billing surprises related to
+          network transfer.
         </Typography>
+        <Link to="https://linode.com/docs">
+          <OpenInNew />
+        </Link>
       </div>
     </Dialog>
   );
