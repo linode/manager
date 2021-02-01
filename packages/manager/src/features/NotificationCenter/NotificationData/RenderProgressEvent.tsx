@@ -11,9 +11,9 @@ import {
 } from 'src/eventMessageGenerator_CMR';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
-import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
 import EntityIcon, { Variant } from 'src/components/EntityIcon';
 import Divider from 'src/components/core/Divider';
+import useEventInfo from './useEventInfo';
 
 const useStyles = makeStyles((theme: Theme) => ({
   action: {
@@ -33,6 +33,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   message: {
     width: '100%'
+  },
+  link: {
+    color: theme.palette.text.primary,
+    fontWeight: 'bold',
+    textDecoration: 'none',
+    '&:hover': {
+      textDecoration: 'underline',
+      textDecorationColor: 'inherit'
+    }
   }
 }));
 
@@ -50,7 +59,7 @@ export const RenderProgressEvent: React.FC<Props> = props => {
   const { types } = useTypes();
   const _linodes = Object.values(linodes.itemsById);
   const _types = types.entities;
-
+  const { linkTarget, status, type } = useEventInfo(event);
   const message = eventMessageGenerator(event, _linodes, _types);
 
   if (message === null) {
@@ -63,19 +72,14 @@ export const RenderProgressEvent: React.FC<Props> = props => {
     ? ` (~${parsedTimeRemaining})`
     : null;
 
-  const linkTarget = createLinkHandlerForNotification(
-    event.action,
-    event.entity,
-    false
+  const eventMessage = (
+    <>
+      {eventLabelGenerator(event)}
+      {` `}
+      {message}
+      {formattedTimeRemaining}
+    </>
   );
-
-  const label = linkTarget ? (
-    <Link to={linkTarget}>{eventLabelGenerator(event)}</Link>
-  ) : (
-    event.entity?.label
-  );
-
-  const type = event.entity?.type ?? 'linode';
 
   return (
     <>
@@ -83,14 +87,17 @@ export const RenderProgressEvent: React.FC<Props> = props => {
         <EntityIcon
           className={classes.icon}
           variant={type as Variant}
-          status="busy"
+          status={status}
         />
         <div className={classes.message}>
           <Typography>
-            {label}
-            {` `}
-            {message}
-            {formattedTimeRemaining}
+            {linkTarget ? (
+              <Link className={classes.link} to={linkTarget}>
+                {eventMessage}
+              </Link>
+            ) : (
+              eventMessage
+            )}
           </Typography>
           <BarPercent
             className={classes.bar}
