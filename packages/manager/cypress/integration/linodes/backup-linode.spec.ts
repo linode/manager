@@ -25,10 +25,10 @@ describe('linode backups', () => {
       cy.intercept('*/account/settings').as('getSettings');
       cy.visit(`/linodes/${linode.id}/backup`);
       // if account is managed, test will pass but skip enabling backups
+      containsVisible(`${linode.label}`);
       cy.wait('@getSettings').then(xhr => {
         const response = xhr.response?.body;
         const managed: boolean = response['managed'];
-        containsVisible(`${linode.label}`);
         if (!managed) {
           containsClick('Enable Backups');
           getClick('[data-qa-confirm-enable-backups="true"]');
