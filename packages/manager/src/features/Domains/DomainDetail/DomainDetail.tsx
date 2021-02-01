@@ -53,10 +53,26 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   const { loading: domainsLoading, error: domainsError } = domains;
 
   const [records, updateRecords] = React.useState<DomainRecord[]>([]);
+  const [updateError, setUpdateError] = React.useState<string | undefined>();
+
   React.useEffect(() => {
     refreshDomainRecords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleLabelChange = (label: string) => {
+    setUpdateError(undefined);
+
+    return updateDomain({ domainId: domain.id, domain: label }).catch(e => {
+      setUpdateError(e[0].reason);
+      return Promise.reject(e);
+    });
+  };
+
+  const resetEditableLabel = () => {
+    setUpdateError(undefined);
+    return domain.domain;
+  };
 
   const handleUpdateTags = (tagsList: string[]) => {
     if (!domainId) {
@@ -103,8 +119,13 @@ const DomainDetail: React.FC<CombinedProps> = props => {
       >
         <Breadcrumb
           pathname={location.pathname}
-          labelTitle={domain.domain}
           labelOptions={{ noCap: true }}
+          onEditHandlers={{
+            editableTextTitle: domain.domain,
+            onEdit: handleLabelChange,
+            onCancel: resetEditableLabel,
+            errorText: updateError
+          }}
         />
         <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
       </Grid>

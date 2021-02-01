@@ -30,7 +30,7 @@ const styles = (theme: Theme) =>
           borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
           fontFamily: theme.font.bold,
           fontSize: '0.875em !important',
-          color: theme.palette.text.primary,
+          color: theme.cmrTextColors.tableHeader,
           padding: '10px 15px',
           '&:first-of-type': {
             borderLeft: 'none'

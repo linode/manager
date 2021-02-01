@@ -7,6 +7,7 @@ import {
   recycleNode
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -36,6 +37,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     [theme.breakpoints.down('xs')]: {
       paddingLeft: theme.spacing()
+    }
+  },
+  error: {
+    [theme.breakpoints.down('xs')]: {
+      paddingBottom: 20
     }
   }
 }));
@@ -252,7 +258,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
       </Grid>
       <Grid
         container
-        className={classes.root}
+        className={classnames({
+          [classes.root]: true,
+          [classes.error]: Boolean(updateError)
+        })}
         alignItems="center"
         justify="space-between"
       >

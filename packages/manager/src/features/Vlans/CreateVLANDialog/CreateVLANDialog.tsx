@@ -18,7 +18,7 @@ import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import { vlanContext } from 'src/context';
 import useLinodes from 'src/hooks/useLinodes';
-import useRegions from 'src/hooks/useRegions';
+import { useRegionsQuery } from 'src/queries/regions';
 import useVlans from 'src/hooks/useVlans';
 import {
   handleFieldErrors,
@@ -41,9 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const CreateVLANDialog: React.FC<{}> = _ => {
   const classes = useStyles();
   const history = useHistory();
-  const regions = useRegions();
+  const regions = useRegionsQuery().data ?? [];
   const { linodes } = useLinodes();
-  const regionsWithVLANS: ExtendedRegion[] = regions.entities
+  const regionsWithVLANS: ExtendedRegion[] = regions
     .filter(thisRegion => thisRegion.capabilities.includes('Vlans'))
     .map(r => ({ ...r, display: dcDisplayNames[r.id] }));
   const regionIDsWithVLANs = React.useMemo(() => {
