@@ -112,10 +112,7 @@ export const SStackScript: React.FC<Props> = props => {
     return imageChips.length > 0 ? imageChips : <>No compatible images found</>;
   }, [images, imagesData]);
 
-  const queryString = stringify({
-    type: 'community',
-    query: `username:${username}`
-  });
+  const queryString = stringify({ query: `username:${username}` });
 
   return (
     <div className={classes.root}>
@@ -126,7 +123,10 @@ export const SStackScript: React.FC<Props> = props => {
         data-qa-stack-author={username}
       >
         by&nbsp;
-        <Link to={`/stackscripts/${queryString}`} data-qa-community-stack-link>
+        <Link
+          to={`/stackscripts/community?${queryString}`}
+          data-qa-community-stack-link
+        >
           {username}
         </Link>
       </Typography>
