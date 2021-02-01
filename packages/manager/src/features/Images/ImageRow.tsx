@@ -33,11 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actionMenu: {
     display: 'flex',
-    justifyContent: 'flex-end',
-    padding: 0,
-    '&.MuiTableCell-root': {
-      // paddingRight: 0
-    }
+    justifyContent: 'flex-end'
   }
 }));
 
