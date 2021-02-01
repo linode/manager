@@ -3,9 +3,8 @@ import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useSelector } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
@@ -20,7 +19,7 @@ import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/perm
 import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
 import { useImages } from 'src/hooks/useImages';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import { MapState } from 'src/store/types';
+import { ApplicationState } from 'src/store';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -88,13 +87,10 @@ export interface Props {
   data: StackScript;
 }
 
-type CombinedProps = Props & StateProps & RouteComponentProps<{}>;
+type CombinedProps = Props;
 
 export const SStackScript: React.FC<CombinedProps> = props => {
   const {
-    history,
-    stackScriptGrants,
-    isRestrictedUser,
     data: {
       username,
       deployments_total,
@@ -109,8 +105,22 @@ export const SStackScript: React.FC<CombinedProps> = props => {
   } = props;
 
   const classes = useStyles();
+  const history = useHistory();
+
   const { images: imagesData } = useImages('public');
   useReduxLoad(['images']);
+
+  const { isRestrictedUser, stackScriptGrants } = useSelector(
+    (state: ApplicationState) => {
+      const isRestrictedUser = _isRestrictedUser(state);
+      const stackScriptGrants: Grant[] = pathOr(
+        [],
+        ['__resources', 'profile', 'data', 'grants', 'stackscript'],
+        state
+      );
+      return { isRestrictedUser, stackScriptGrants };
+    }
+  );
 
   const compatibleImages = React.useMemo(() => {
     const imageChips = images.reduce((acc: any[], image: string) => {
@@ -227,21 +237,4 @@ export const SStackScript: React.FC<CombinedProps> = props => {
   );
 };
 
-interface StateProps {
-  isRestrictedUser: boolean;
-  stackScriptGrants: Grant[];
-}
-
-const mapStateToProps: MapState<StateProps, {}> = state => ({
-  isRestrictedUser: _isRestrictedUser(state),
-  stackScriptGrants: pathOr(
-    [],
-    ['__resources', 'profile', 'data', 'grants', 'stackscript'],
-    state
-  )
-});
-
-const connected = connect(mapStateToProps);
-const enhanced = compose<CombinedProps, Props>(connected, withRouter);
-
-export default React.memo(enhanced(SStackScript));
+export default React.memo(SStackScript);
