@@ -1,8 +1,8 @@
-import usePendingActions from './PendingActionNotifications';
+import useEventNotifications from './useEventNotifications';
 import { NotificationItem } from '../NotificationSection';
 
 export interface NotificationData {
-  pendingActions: NotificationItem[];
+  eventNotifications: NotificationItem[];
 }
 
 /**
@@ -14,10 +14,10 @@ export interface NotificationData {
  * of all notifications, in addition to sorting them by type.
  */
 export const useNotificationData = (): NotificationData => {
-  const pendingActions = usePendingActions();
+  const eventNotifications = useEventNotifications();
 
   return {
-    pendingActions
+    eventNotifications
   };
 };
 
