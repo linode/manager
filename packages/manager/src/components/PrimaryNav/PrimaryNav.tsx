@@ -16,7 +16,7 @@ import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import HelpIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
-import Logo from 'src/assets/logo/new-logo.svg';
+import Logo from 'src/assets/logo/logo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -249,12 +249,10 @@ export const PrimaryNav: React.FC<Props> = props => {
       id="main-navigation"
     >
       <Grid item>
-        <div
-          className={classNames({
-            [classes.logoItem]: true,
-            [classes.logoCollapsed]: isCollapsed
-          })}
-        >
+        <div className={classes.logoItem}>
+          {isCollapsed && (
+            <span className={`${classes.logoCollapsed} logoCollapsed`}></span>
+          )}
           <Link
             to={`/dashboard`}
             onClick={closeMenu}

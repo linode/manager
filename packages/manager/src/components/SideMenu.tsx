@@ -41,8 +41,11 @@ const styles = (theme: Theme) =>
       width: 52,
       '&:hover': {
         width: 190,
-        '& .logoLetters, & .primaryNavLink': {
+        '& .primaryNavLink': {
           opacity: 1
+        },
+        '& .logoCollapsed': {
+          opacity: 0
         }
       }
     }
