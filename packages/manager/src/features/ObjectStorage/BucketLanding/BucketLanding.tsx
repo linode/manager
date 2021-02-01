@@ -3,7 +3,6 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -29,12 +28,10 @@ import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent
 } from 'src/utilities/ga';
-import CancelNotice from '../CancelNotice';
-import BucketTable from './BucketTable';
-import BucketTable_CMR from './BucketTable_CMR';
-import useFlags from 'src/hooks/useFlags';
 import { readableBytes } from 'src/utilities/unitConversions';
+import CancelNotice from '../CancelNotice';
 import BucketDetailsDrawer from './BucketDetailsDrawer';
+import BucketTable from './BucketTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -58,7 +55,6 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   const { isRestrictedUser, openBucketDrawer } = props;
 
   const classes = useStyles();
-  const flags = useFlags();
 
   const { objectStorageClusters } = useObjectStorageClusters();
   const {
@@ -163,7 +159,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   const deleteBucketConfirmationMessage = bucketToRemove ? (
     <React.Fragment>
       <Typography>
-        Deleting a bucket is permanent and can't be undone.
+        Deleting a bucket is permanent and can&apos;t be undone.
       </Typography>
       <Typography className={classes.copy}>
         A bucket must be empty before deleting it. Please{' '}
@@ -227,64 +223,50 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
     );
   }
 
-  const _BucketTable = flags.cmr ? BucketTable_CMR : BucketTable;
-
   const totalUsage = sumBucketUsage(data);
 
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
-      <div>
-        {!flags.cmr && (
-          <Grid container justify="flex-end">
-            <Grid item>
-              <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
-            </Grid>
-          </Grid>
-        )}
-        {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
-        <Grid item xs={12}>
-          <OrderBy data={data} order={'asc'} orderBy={'label'}>
-            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-              const bucketTableProps = {
-                orderBy,
-                order,
-                handleOrderChange,
-                handleClickRemove,
-                handleClickDetails,
-                openBucketDrawer,
-                data: orderedData
-              };
-              return <_BucketTable {...bucketTableProps} />;
-            }}
-          </OrderBy>
-          {/* If there's more than one Bucket, display the total usage. */}
-          {data.length > 1 ? (
-            <Typography
-              style={{ marginTop: 8, marginLeft: flags.cmr ? 15 : 0 }}
-              variant="body1"
-            >
-              Total usage: {readableBytes(totalUsage).formatted}
-            </Typography>
-          ) : null}
-        </Grid>
-        <ConfirmationDialog
-          open={removeBucketConfirmationDialog.isOpen}
-          onClose={closeRemoveBucketConfirmationDialog}
-          title={
-            bucketToRemove ? `Delete ${bucketToRemove.label}` : 'Delete bucket'
-          }
-          actions={actions}
-          error={error}
-        >
-          {deleteBucketConfirmationMessage}
-          <TextField
-            onChange={setConfirmBucketNameToInput}
-            expand
-            label="Bucket Name"
-          />
-        </ConfirmationDialog>
-      </div>
+      {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
+      <Grid item xs={12}>
+        <OrderBy data={data} order={'asc'} orderBy={'label'}>
+          {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+            const bucketTableProps = {
+              orderBy,
+              order,
+              handleOrderChange,
+              handleClickRemove,
+              handleClickDetails,
+              openBucketDrawer,
+              data: orderedData
+            };
+            return <BucketTable {...bucketTableProps} />;
+          }}
+        </OrderBy>
+        {/* If there's more than one Bucket, display the total usage. */}
+        {data.length > 1 ? (
+          <Typography style={{ marginTop: 8, marginLeft: 15 }} variant="body1">
+            Total usage: {readableBytes(totalUsage).formatted}
+          </Typography>
+        ) : null}
+      </Grid>
+      <ConfirmationDialog
+        open={removeBucketConfirmationDialog.isOpen}
+        onClose={closeRemoveBucketConfirmationDialog}
+        title={
+          bucketToRemove ? `Delete ${bucketToRemove.label}` : 'Delete bucket'
+        }
+        actions={actions}
+        error={error}
+      >
+        {deleteBucketConfirmationMessage}
+        <TextField
+          onChange={setConfirmBucketNameToInput}
+          expand
+          label="Bucket Name"
+        />
+      </ConfirmationDialog>
       <BucketDetailsDrawer
         open={bucketDetailDrawerOpen}
         onClose={closeBucketDetailDrawer}

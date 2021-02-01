@@ -10,13 +10,6 @@ describe('ObjectStorageKeyTable', () => {
   beforeEach(() => {
     wrapper = shallow<CombinedProps>(
       <AccessKeyTable
-        classes={{
-          root: '',
-          headline: '',
-          paper: '',
-          labelCell: '',
-          copyIcon: ''
-        }}
         openDrawer={jest.fn()}
         openRevokeDialog={jest.fn()}
         isRestrictedUser={false}

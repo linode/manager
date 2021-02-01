@@ -10,11 +10,6 @@ const bucket = buckets[0];
 describe('BucketTableRow', () => {
   const wrapper = shallow(
     <BucketTableRow
-      classes={{
-        bucketNameWrapper: '',
-        bucketRow: '',
-        link: ''
-      }}
       label={bucket.label}
       cluster={bucket.cluster}
       hostname={bucket.hostname}
@@ -22,7 +17,7 @@ describe('BucketTableRow', () => {
       size={bucket.size}
       objects={bucket.objects}
       onRemove={mockOnRemove}
-      onClickDetails={jest.fn()}
+      onDetails={jest.fn()}
     />
   );
 

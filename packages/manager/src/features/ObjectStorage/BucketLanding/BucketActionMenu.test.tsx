@@ -9,7 +9,9 @@ const mockOnRemove = jest.fn();
 
 const props = {
   onRemove: mockOnRemove,
-  onClickDetails: jest.fn()
+  onDetails: jest.fn(),
+  label: '',
+  cluster: ''
 };
 
 describe('BucketActionMenu', () => {
