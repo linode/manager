@@ -16,6 +16,7 @@ import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
 import TextField from 'src/components/TextField';
+import TransferDisplay from 'src/components/TransferDisplay';
 import { objectStorageClusterDisplay } from 'src/constants';
 import bucketDrawerContainer, {
   DispatchProps
@@ -163,7 +164,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   const deleteBucketConfirmationMessage = bucketToRemove ? (
     <React.Fragment>
       <Typography>
-        Deleting a bucket is permanent and can't be undone.
+        Deleting a bucket is permanent and can&apos;t be undone.
       </Typography>
       <Typography className={classes.copy}>
         A bucket must be empty before deleting it. Please{' '}
@@ -261,12 +262,13 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
           {/* If there's more than one Bucket, display the total usage. */}
           {data.length > 1 ? (
             <Typography
-              style={{ marginTop: 8, marginLeft: flags.cmr ? 15 : 0 }}
+              style={{ marginTop: 8, width: '100%', textAlign: 'center' }}
               variant="body1"
             >
               Total usage: {readableBytes(totalUsage).formatted}
             </Typography>
           ) : null}
+          <TransferDisplay />
         </Grid>
         <ConfirmationDialog
           open={removeBucketConfirmationDialog.isOpen}
