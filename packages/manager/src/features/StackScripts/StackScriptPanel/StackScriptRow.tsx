@@ -14,7 +14,6 @@ import {
   displayTagsAndShowMore,
   styles
 } from '../StackScriptRowHelpers';
-
 export interface Props {
   label: string;
   description: string;
@@ -58,7 +57,12 @@ export const StackScriptRow: React.FC<CombinedProps> = props => {
   const renderLabel = () => {
     return (
       <React.Fragment>
-        <Link to={`/stackscripts/${stackScriptID}`}>
+        <Link
+          to={{
+            pathname: `/stackscripts/${stackScriptID}`,
+            state: { accountOrCommunity: category }
+          }}
+        >
           <Typography variant="h3" className={classes.libTitle}>
             {stackScriptUsername && (
               <span

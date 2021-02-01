@@ -16,7 +16,10 @@ import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
 import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
-import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
+import {
+  canUserModifyAccountStackScript,
+  StackScriptCategory
+} from 'src/features/StackScripts/stackScriptUtils';
 import { useImages } from 'src/hooks/useImages';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
@@ -85,6 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   data: StackScript;
+  category?: StackScriptCategory;
 }
 
 type CombinedProps = Props;
@@ -100,13 +104,14 @@ export const SStackScript: React.FC<CombinedProps> = props => {
       script,
       label,
       updated,
-      images,
-      is_public
+      images
     }
   } = props;
 
   const classes = useStyles();
   const history = useHistory();
+
+  const stackscriptCategory = history.location.state?.accountOrCommunity;
 
   const { images: imagesData } = useImages('public');
   useReduxLoad(['images']);
@@ -160,7 +165,7 @@ export const SStackScript: React.FC<CombinedProps> = props => {
           title={label}
           data-qa-stack-title={label}
         />
-        {!is_public ||
+        {stackscriptCategory !== 'community' ||
         grantsForThisStackScript?.permissions === 'read_write' ? (
           <Button
             buttonType="secondary"

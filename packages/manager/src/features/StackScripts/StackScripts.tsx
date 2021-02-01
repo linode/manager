@@ -4,9 +4,11 @@ import {
   Route,
   RouteComponentProps,
   Switch,
+  // useRouteMatch,
   withRouter
 } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+// import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
@@ -31,6 +33,22 @@ export const StackScripts: React.FC<Props> = props => {
   if (searchParams.type === 'account') {
     props.history.replace('stackscripts/account');
   }
+
+  // Logic for passing category prop down to StackScriptsDetail --> StackScript
+  // const routeMatch = useRouteMatch<{ type: StackScriptCategory }>({
+  //   path: '/stackscripts/:type?',
+  //   strict: true
+  // });
+
+  // let stackscriptType: StackScriptCategory;
+
+  // if (routeMatch?.params?.type === 'account') {
+  //   stackscriptType = 'account';
+  // }
+
+  // if (routeMatch?.params?.type === 'community') {
+  //   stackscriptType = 'community';
+  // }
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
