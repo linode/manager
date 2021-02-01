@@ -123,6 +123,10 @@ export const SStackScript: React.FC<CombinedProps> = props => {
     }
   );
 
+  const grantsForThisStackScript = stackScriptGrants.find(
+    (eachGrant: Grant) => eachGrant.id === Number(stackscriptId)
+  );
+
   const compatibleImages = React.useMemo(() => {
     const imageChips = images.reduce((acc: any[], image: string) => {
       const imageObj = imagesData.itemsById[image];
@@ -156,7 +160,8 @@ export const SStackScript: React.FC<CombinedProps> = props => {
           title={label}
           data-qa-stack-title={label}
         />
-        {!is_public ? (
+        {!is_public ||
+        grantsForThisStackScript?.permissions === 'read_write' ? (
           <Button
             buttonType="secondary"
             className={classes.editBtn}
