@@ -18,8 +18,8 @@ import ScriptCode from 'src/components/ScriptCode';
 import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
 import { useImages } from 'src/hooks/useImages';
-import useProfile from 'src/hooks/useProfile';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { useAccountUsers } from 'src/queries/accountUsers';
 import { ApplicationState } from 'src/store';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -107,9 +107,7 @@ export const SStackScript: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
   const history = useHistory();
-
-  const { profile } = useProfile();
-  const usernameOfCurrentUser = profile?.data?.username;
+  const { data: accountUsersData } = useAccountUsers();
 
   const { images: imagesData } = useImages('public');
   useReduxLoad(['images']);
@@ -125,6 +123,22 @@ export const SStackScript: React.FC<CombinedProps> = props => {
       return { isRestrictedUser, stackScriptGrants };
     }
   );
+
+  let unrestrictedUserHasAccess;
+  if (!isRestrictedUser && accountUsersData) {
+    unrestrictedUserHasAccess = accountUsersData?.data.some(
+      user => user.username === username
+    );
+  }
+
+  let restrictedUserHasAccess;
+  const grantsForThisStackScript = stackScriptGrants.find(
+    (eachGrant: Grant) => eachGrant.id === Number(stackscriptId)
+  );
+  if (isRestrictedUser) {
+    restrictedUserHasAccess =
+      grantsForThisStackScript?.permissions === 'read_write';
+  }
 
   const compatibleImages = React.useMemo(() => {
     const imageChips = images.reduce((acc: any[], image: string) => {
@@ -159,7 +173,7 @@ export const SStackScript: React.FC<CombinedProps> = props => {
           title={label}
           data-qa-stack-title={label}
         />
-        {username === usernameOfCurrentUser ? (
+        {unrestrictedUserHasAccess || restrictedUserHasAccess ? (
           <Button
             buttonType="secondary"
             className={classes.editBtn}
