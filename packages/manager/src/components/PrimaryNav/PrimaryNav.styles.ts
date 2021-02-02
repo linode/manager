@@ -23,16 +23,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   logoItem: {
     display: 'flex',
     alignItems: 'center',
-    padding: '12px 12px 0',
+    padding: '12px 12px 0 14px',
     position: 'relative',
     '& svg': {
       maxWidth: theme.spacing(3) + 91
     }
   },
   logoCollapsed: {
-    '& .logoLetters': {
-      opacity: 0
-    }
+    background: theme.cmrBGColors.bgPrimaryNav,
+    height: 48,
+    width: 100,
+    position: 'absolute',
+    top: 12,
+    left: 48
   },
   listItem: {
     display: 'flex',
