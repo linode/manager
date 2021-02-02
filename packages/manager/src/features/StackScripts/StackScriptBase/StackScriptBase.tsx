@@ -332,7 +332,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
       // Update the Query String as the user types.
       if (useQueryString) {
-        updateQueryString(category, lowerCaseValue, history);
+        updateQueryString(lowerCaseValue, history);
       }
 
       let filter: any;
@@ -659,11 +659,10 @@ export default withStackScriptBase;
 
 // Update the query string with a `type=` and `query=`.
 const updateQueryString = (
-  type: string,
   query: string,
   history: RouteComponentProps<{}>['history']
 ) => {
-  const queryString = stringify({ type, query });
+  const queryString = stringify({ query });
 
   // Use `replace` instead of `push` so that each keystroke is not a separate
   // browser history item.

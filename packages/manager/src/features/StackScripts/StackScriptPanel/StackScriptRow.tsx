@@ -58,7 +58,7 @@ export const StackScriptRow: React.FC<CombinedProps> = props => {
   const renderLabel = () => {
     return (
       <React.Fragment>
-        <Link to={`/stackscripts/${stackScriptID}`}>
+        <Link className={classes.link} to={`/stackscripts/${stackScriptID}`}>
           <Typography variant="h3" className={classes.libTitle}>
             {stackScriptUsername && (
               <span
