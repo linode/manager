@@ -14,6 +14,7 @@ import {
   displayTagsAndShowMore,
   styles
 } from '../StackScriptRowHelpers';
+
 export interface Props {
   label: string;
   description: string;
