@@ -8,7 +8,7 @@ env:
 on:
   schedule:
     - cron: '0 13 * * 1-5'
-  pull_request:
+  pull_request_target:
     paths:
     - '**/cypress/**'
     - '**/e2e.yml'
