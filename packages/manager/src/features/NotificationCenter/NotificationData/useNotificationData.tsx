@@ -1,8 +1,11 @@
-import useEventNotifications from './useEventNotifications';
+import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { NotificationItem } from '../NotificationSection';
+import SupportNotifications from './SupportNotifications';
+import useEventNotifications from './useEventNotifications';
 
 export interface NotificationData {
   eventNotifications: NotificationItem[];
+  support: UseAPIRequest<NotificationItem[]>;
 }
 
 /**
@@ -14,9 +17,13 @@ export interface NotificationData {
  * of all notifications, in addition to sorting them by type.
  */
 export const useNotificationData = (): NotificationData => {
+  const support = SupportNotifications();
   const eventNotifications = useEventNotifications();
 
+  // Combine the data that should go into the Notifications section (support, Past Due, etc.) and store it in a single variable that gets returned below
+
   return {
+    support,
     eventNotifications
   };
 };
