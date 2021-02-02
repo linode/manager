@@ -1,3 +1,4 @@
+import { Region } from '@linode/api-v4/lib/regions';
 import AU from 'flag-icon-css/flags/4x3/au.svg';
 import CA from 'flag-icon-css/flags/4x3/ca.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
@@ -6,11 +7,10 @@ import IN from 'flag-icon-css/flags/4x3/in.svg';
 import JP from 'flag-icon-css/flags/4x3/jp.svg';
 import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
-import { Region } from '@linode/api-v4/lib/regions';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
@@ -18,7 +18,6 @@ import Select, {
   GroupType
 } from 'src/components/EnhancedSelect/Select';
 import Link from 'src/components/Link';
-
 import RegionOption, { RegionItem } from './RegionOption';
 
 /**
@@ -55,11 +54,12 @@ interface Props extends Omit<BaseSelectProps, 'onChange'> {
 }
 
 export const flags = {
-  au: () => <AU width="32" height="24" viewBox="0 0 720 480" />,
-  us: () => <US width="32" height="24" viewBox="0 0 720 480" />,
-  sg: () => <SG width="32" height="24" viewBox="0 0 640 480" />,
+  au: () => <AU width="32" height="24" viewBox="0 0 640 480" />,
+  us: () => <US width="32" height="24" viewBox="0 0 640 480" />,
+  sg: () => <SG id="singapore" width="32" height="24" viewBox="0 0 640 480" />,
   jp: () => (
     <JP
+      id="japan"
       width="32"
       height="24"
       viewBox="0 0 640 480"
@@ -68,7 +68,7 @@ export const flags = {
   ),
   uk: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
   eu: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
-  de: () => <DE width="32" height="24" viewBox="0 0 720 480" />,
+  de: () => <DE width="32" height="24" viewBox="0 0 640 480" />,
   ca: () => <CA width="32" height="24" viewBox="0 0 640 480" />,
   in: () => <IN width="32" height="24" viewBox="0 0 640 480" />
 };
@@ -76,13 +76,16 @@ export const flags = {
 export const selectStyles = {
   menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` })
 };
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& svg': {
       '& g': {
         // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
         clipPath: 'none !important' as 'none'
       }
+    },
+    '& #singapore, #japan': {
+      border: `1px solid ${theme.color.border3}`
     }
   }
 }));

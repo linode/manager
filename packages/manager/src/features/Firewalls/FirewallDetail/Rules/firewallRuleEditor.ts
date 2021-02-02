@@ -55,6 +55,10 @@ export type RuleEditorAction =
       modifiedRule: Partial<FirewallRuleType>;
     }
   | {
+      type: 'CLONE_RULE';
+      idx: number;
+    }
+  | {
       type: 'SET_ERROR';
       idx: number;
       error: FirewallRuleError;
@@ -111,6 +115,15 @@ const ruleEditorReducer = (
         ...action.modifiedRule,
         status: 'MODIFIED'
       });
+      return;
+
+    case 'CLONE_RULE':
+      const ruleToClone = last(draft[action.idx]);
+      if (!ruleToClone) {
+        return;
+      }
+      const { addresses, ports, protocol } = ruleToClone;
+      draft.push([{ addresses, ports, protocol, status: 'NEW' }]);
       return;
 
     case 'SET_ERROR':
