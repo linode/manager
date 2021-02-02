@@ -38,7 +38,6 @@ import {
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { getStackScriptUrl } from './stackScriptUtils';
-import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
 
 interface DialogVariantProps {
   open: boolean;
@@ -70,10 +69,6 @@ interface State {
 interface ProfileProps {
   // From Profile container
   username?: string;
-}
-
-interface Props {
-  category?: StackScriptCategory;
 }
 
 type ClassNames =
@@ -140,8 +135,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = Props &
-  ProfileProps &
+type CombinedProps = ProfileProps &
   RouteProps &
   StateProps &
   WithStyles<ClassNames> &
@@ -536,7 +530,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
         </Grid>
         {/* )} */}
         <div className="detailsWrapper">
-          <_StackScript data={stackScript} category={this.props.category} />
+          <_StackScript data={stackScript} />
         </div>
       </React.Fragment>
     );

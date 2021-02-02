@@ -16,11 +16,9 @@ import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
 import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
-import {
-  canUserModifyAccountStackScript,
-  StackScriptCategory
-} from 'src/features/StackScripts/stackScriptUtils';
+import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
 import { useImages } from 'src/hooks/useImages';
+import useProfile from 'src/hooks/useProfile';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
 
@@ -88,7 +86,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   data: StackScript;
-  category?: StackScriptCategory;
 }
 
 type CombinedProps = Props;
@@ -111,7 +108,8 @@ export const SStackScript: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const history = useHistory();
 
-  const stackscriptCategory = history.location.state?.accountOrCommunity;
+  const { profile } = useProfile();
+  const usernameOfCurrentUser = profile?.data?.username;
 
   const { images: imagesData } = useImages('public');
   useReduxLoad(['images']);
@@ -126,10 +124,6 @@ export const SStackScript: React.FC<CombinedProps> = props => {
       );
       return { isRestrictedUser, stackScriptGrants };
     }
-  );
-
-  const grantsForThisStackScript = stackScriptGrants.find(
-    (eachGrant: Grant) => eachGrant.id === Number(stackscriptId)
   );
 
   const compatibleImages = React.useMemo(() => {
@@ -165,8 +159,7 @@ export const SStackScript: React.FC<CombinedProps> = props => {
           title={label}
           data-qa-stack-title={label}
         />
-        {stackscriptCategory !== 'community' ||
-        grantsForThisStackScript?.permissions === 'read_write' ? (
+        {username === usernameOfCurrentUser ? (
           <Button
             buttonType="secondary"
             className={classes.editBtn}
