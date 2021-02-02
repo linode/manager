@@ -1,9 +1,7 @@
-import { Grant } from '@linode/api-v4/lib/account';
+import { User } from '@linode/api-v4/lib/account';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { stringify } from 'qs';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
 import CopyTooltip from 'src/components/CopyTooltip';
@@ -15,12 +13,11 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
-import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useImages } from 'src/hooks/useImages';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { useAccountUsers } from 'src/queries/accountUsers';
-import { ApplicationState } from 'src/store';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -112,33 +109,17 @@ export const SStackScript: React.FC<CombinedProps> = props => {
   const { images: imagesData } = useImages('public');
   useReduxLoad(['images']);
 
-  const { isRestrictedUser, stackScriptGrants } = useSelector(
-    (state: ApplicationState) => {
-      const isRestrictedUser = _isRestrictedUser(state);
-      const stackScriptGrants: Grant[] = pathOr(
-        [],
-        ['__resources', 'profile', 'data', 'grants', 'stackscript'],
-        state
-      );
-      return { isRestrictedUser, stackScriptGrants };
-    }
-  );
+  const { profile } = useAccountManagement();
+  const isRestrictedUser = profile?.data?.restricted ?? false;
+  const stackScriptGrants = profile?.data?.grants?.stackscript ?? [];
 
-  let unrestrictedUserHasAccess;
-  if (!isRestrictedUser && accountUsersData) {
-    unrestrictedUserHasAccess = accountUsersData?.data.some(
-      user => user.username === username
-    );
-  }
-
-  let restrictedUserHasAccess;
-  const grantsForThisStackScript = stackScriptGrants.find(
-    (eachGrant: Grant) => eachGrant.id === Number(stackscriptId)
-  );
-  if (isRestrictedUser) {
-    restrictedUserHasAccess =
-      grantsForThisStackScript?.permissions === 'read_write';
-  }
+  const displayEditButton: boolean = isRestrictedUser
+    ? canUserModifyAccountStackScript(
+        isRestrictedUser,
+        stackScriptGrants,
+        stackscriptId
+      )
+    : usernameIsTiedToAccount(accountUsersData?.data, username);
 
   const compatibleImages = React.useMemo(() => {
     const imageChips = images.reduce((acc: any[], image: string) => {
@@ -173,17 +154,10 @@ export const SStackScript: React.FC<CombinedProps> = props => {
           title={label}
           data-qa-stack-title={label}
         />
-        {unrestrictedUserHasAccess || restrictedUserHasAccess ? (
+        {displayEditButton ? (
           <Button
             buttonType="secondary"
             className={classes.editBtn}
-            disabled={
-              !canUserModifyAccountStackScript(
-                isRestrictedUser,
-                stackScriptGrants,
-                stackscriptId
-              )
-            }
             onClick={() => {
               history.push(`/stackscripts/${stackscriptId}/edit`);
             }}
@@ -255,6 +229,13 @@ export const SStackScript: React.FC<CombinedProps> = props => {
       <ScriptCode script={script} />
     </div>
   );
+};
+
+const usernameIsTiedToAccount = (
+  accountUsers: User[] = [],
+  stackscriptUsername: string
+) => {
+  return accountUsers.some(user => user.username === stackscriptUsername);
 };
 
 export default React.memo(SStackScript);
