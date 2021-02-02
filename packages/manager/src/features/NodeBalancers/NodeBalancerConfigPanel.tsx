@@ -1,7 +1,7 @@
+import { NodeBalancerProxyProtocol } from '@linode/api-v4/lib/nodebalancers/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -17,14 +17,13 @@ import {
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import NodeBalancerConfigNode from './NodeBalancerConfigNode';
 import { NodeBalancerConfigNodeFields } from './types';
-import { NodeBalancerProxyProtocol } from '@linode/api-v4/lib/nodebalancers/types';
-import Link from 'src/components/Link';
 
 type ClassNames =
   | 'divider'
@@ -949,12 +948,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         : { marginTop: 16 }
                     }
                   >
-                    <AddNewLink
-                      label="Add a Node"
-                      onClick={this.addNode}
-                      left
+                    <Button
+                      buttonType="secondary"
                       disabled={disabled}
-                    />
+                      onClick={this.addNode}
+                    >
+                      Add a Node
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>
@@ -973,6 +973,17 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 >
                   <Grid item>
                     <ActionsPanel style={{ paddingLeft: 0 }}>
+                      {(forEdit || configIdx !== 0) && (
+                        <Button
+                          onClick={this.props.onDelete}
+                          buttonType="secondary"
+                          destructive
+                          data-qa-delete-config
+                          disabled={disabled}
+                        >
+                          Delete
+                        </Button>
+                      )}
                       {forEdit && (
                         <Button
                           buttonType="primary"
@@ -982,17 +993,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           disabled={disabled}
                         >
                           Save
-                        </Button>
-                      )}
-                      {(forEdit || configIdx !== 0) && (
-                        <Button
-                          onClick={this.props.onDelete}
-                          buttonType="primary"
-                          destructive
-                          data-qa-delete-config
-                          disabled={disabled}
-                        >
-                          Delete
                         </Button>
                       )}
                     </ActionsPanel>

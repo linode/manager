@@ -5,6 +5,7 @@ import { createStyles, Theme } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 
 export type ClassNames =
+  | 'link'
   | 'libRadio'
   | 'libRadioLabel'
   | 'libTitle'
@@ -17,6 +18,9 @@ export type ClassNames =
 
 export const styles = (theme: Theme) =>
   createStyles({
+    link: {
+      color: theme.cmrTextColors.tableStatic
+    },
     libRadio: {
       display: 'flex',
       flexWrap: 'wrap',
