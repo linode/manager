@@ -72,7 +72,6 @@ const styles = (theme: Theme) =>
         cursor: 'pointer',
         border: 'none',
         [theme.breakpoints.down('sm')]: {
-          marginLeft: theme.spacing(),
           maxHeight: 34,
           minWidth: 100
         },
