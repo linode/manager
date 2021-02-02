@@ -5,12 +5,13 @@ import { Link } from 'react-router-dom';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
-import { Theme, makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
 import { useImages } from 'src/hooks/useImages';
+import useProfile from 'src/hooks/useProfile';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -90,6 +91,7 @@ export const SStackScript: React.FC<Props> = props => {
 
   const classes = useStyles();
   const { images: imagesData } = useImages('public');
+  const { profile } = useProfile();
   useReduxLoad(['images']);
 
   const compatibleImages = React.useMemo(() => {
@@ -112,10 +114,11 @@ export const SStackScript: React.FC<Props> = props => {
     return imageChips.length > 0 ? imageChips : <>No compatible images found</>;
   }, [images, imagesData]);
 
-  const queryString = stringify({
-    type: 'community',
-    query: `username:${username}`
-  });
+  const queryString = stringify({ query: `username:${username}` });
+  const link =
+    profile.data?.username === username
+      ? '/stackscripts/account'
+      : `/stackscripts/community?${queryString}`;
 
   return (
     <div className={classes.root}>
@@ -126,7 +129,7 @@ export const SStackScript: React.FC<Props> = props => {
         data-qa-stack-author={username}
       >
         by&nbsp;
-        <Link to={`/stackscripts?${queryString}`} data-qa-community-stack-link>
+        <Link to={link} data-qa-community-stack-link>
           {username}
         </Link>
       </Typography>

@@ -80,7 +80,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 48
   },
   tableHead: {
-    top: 104
+    color: theme.cmrTextColors.tableHeader,
+    top: 104,
+    '& span': {
+      color: theme.cmrTextColors.tableHeader
+    }
   }
 }));
 
