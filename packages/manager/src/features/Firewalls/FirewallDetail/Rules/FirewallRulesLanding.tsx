@@ -117,6 +117,11 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
     dispatch({ type: 'NEW_RULE', rule });
   };
 
+  const handleCloneRule = (category: Category, idx: number) => {
+    const dispatch = dispatchFromCategory(category);
+    dispatch({ type: 'CLONE_RULE', idx });
+  };
+
   const handleEditRule = (
     category: Category,
     rule: Partial<FirewallRuleType>
@@ -279,6 +284,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       <div className={classes.table}>
         <FirewallRuleTable
           category="inbound"
+          triggerCloneFirewallRule={(idx: number) =>
+            handleCloneRule('inbound', idx)
+          }
           rulesWithStatus={inboundRules}
           openRuleDrawer={openRuleDrawer}
           triggerOpenRuleDrawerForEditing={(idx: number) =>
@@ -291,6 +299,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       <div className={classes.table}>
         <FirewallRuleTable
           category="outbound"
+          triggerCloneFirewallRule={(idx: number) =>
+            handleCloneRule('outbound', idx)
+          }
           rulesWithStatus={outboundRules}
           openRuleDrawer={openRuleDrawer}
           triggerOpenRuleDrawerForEditing={(idx: number) =>
