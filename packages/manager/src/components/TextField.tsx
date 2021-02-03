@@ -33,7 +33,8 @@ type ClassNames =
   | 'selectSmall'
   | 'wrapper'
   | 'tiny'
-  | 'absolute';
+  | 'absolute'
+  | 'helpIcon';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -60,6 +61,9 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('xs')]: {
         width: '100%'
       }
+    },
+    helpIcon: {
+      padding: '0px 0px 0px 8px'
     },
     expand: {
       maxWidth: '100%'
@@ -367,7 +371,9 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
           >
             {this.props.children}
           </TextField>
-          {tooltipText && <HelpIcon text={tooltipText} />}
+          {tooltipText && (
+            <HelpIcon className={classes.helpIcon} text={tooltipText} />
+          )}
           {errorText && (
             <FormHelperText
               className={classNames({

@@ -85,13 +85,13 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
 
   const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
-  const onValidate = ({ ports, protocol, description }: Form) => {
+  const onValidate = ({ ports, protocol, label, description }: Form) => {
     // The validated IPs may have errors, so set them to state so we see the errors.
     const validatedIPs = validateIPs(ips);
     setIPs(validatedIPs);
 
     return {
-      ...validateForm(protocol, ports, description),
+      ...validateForm(protocol, ports, label, description),
       // This is a bit of a trick. If this function DOES NOT return an empty object, Formik will call
       // `onSubmit()`. If there are IP errors, we add them to the return object so Formik knows there
       // is an issue with the form.
@@ -172,11 +172,6 @@ interface FirewallRuleFormProps extends FormikProps<Form> {
   category: Category;
   ruleErrors?: FirewallRuleError[];
 }
-
-const typeOptions = [
-  ...firewallOptionItemsShort,
-  { label: 'Custom', value: 'custom' }
-];
 
 const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   const classes = useStyles();
@@ -301,11 +296,6 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     );
   }, [values]);
 
-  const typeValue = React.useMemo(() => {
-    const _type = deriveTypeFromValuesAndIPs(values, ips);
-    return typeOptions.find(thisOption => thisOption.value === _type) || null;
-  }, [values, ips]);
-
   return (
     <form onSubmit={handleSubmit}>
       {status && (
@@ -316,8 +306,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         name="type"
         placeholder="Select a rule preset..."
         aria-label="Preset for firewall rule"
-        options={typeOptions}
-        value={typeValue}
+        options={firewallOptionItemsShort}
         onChange={handleTypeChange}
         isClearable={false}
         onBlur={handleBlur}
@@ -605,6 +594,7 @@ export const getInitialIPs = (
 export const validateForm = (
   protocol?: string,
   ports?: string,
+  label?: string,
   description?: string
 ) => {
   const errors: Partial<Form> = {};
@@ -631,6 +621,10 @@ export const validateForm = (
 
   if (description && description.length > 100) {
     errors.description = 'Description must be 1-100 characters.';
+  }
+
+  if (label && (label.length < 3 || label.length > 32)) {
+    errors.label = 'Label must be 3-32 characters.';
   }
 
   return errors;

@@ -67,6 +67,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 70
     },
     minWidth: 140
+  },
+  addLabelButton: {
+    ...theme.applyLinkStyles
   }
 }));
 
@@ -254,7 +257,16 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         highlight={status === 'MODIFIED' || status === 'NEW'}
         disabled={status === 'PENDING_DELETION'}
       >
-        <TableCell>{label}</TableCell>
+        <TableCell>
+          {label || (
+            <button
+              className={classes.addLabelButton}
+              onClick={() => triggerOpenRuleDrawerForEditing(id)}
+            >
+              Add a label
+            </button>
+          )}
+        </TableCell>
         <Hidden mdDown>
           <TableCell>{description}</TableCell>
         </Hidden>
