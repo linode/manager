@@ -10,27 +10,19 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EntityTable, {
-  EntityTableRow,
-  HeaderCell
-} from 'src/components/EntityTable';
-import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
+import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
+import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
-import useFlags from 'src/hooks/useFlags';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
 import { DeleteImagePayload } from 'src/store/image/image.actions';
@@ -41,16 +33,8 @@ import {
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
-import ImageRow_CMR from './ImageRow_CMR';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  title: {
-    marginBottom: theme.spacing(1) + theme.spacing(1) / 2
-  }
-}));
 
 interface ImageDrawerState {
   open: boolean;
@@ -94,9 +78,6 @@ const defaultDialogState = {
 };
 
 export const ImagesLanding: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
-  const flags = useFlags();
-
   useReduxLoad(['images']);
 
   const { imagesData, imagesLoading, imagesError, deleteImage } = props;
@@ -113,14 +94,14 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       dataColumn: 'created',
       sortable: false,
       widthPercent: 15,
-      hideOnMobile: flags.cmr
+      hideOnMobile: true
     },
     {
       label: 'Expires',
       dataColumn: 'expires',
       sortable: false,
       widthPercent: 15,
-      hideOnMobile: flags.cmr
+      hideOnMobile: true
     },
     {
       label: 'Size',
@@ -318,8 +299,6 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
     );
   };
 
-  const Table = flags.cmr ? EntityTable_CMR : EntityTable;
-
   const handlers: ImageHandlers = {
     onRestore: openForRestore,
     onDeploy: deployNewLinode,
@@ -328,7 +307,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
   };
 
   const imageRow: EntityTableRow<Image> = {
-    Component: flags.cmr ? ImageRow_CMR : ImageRow,
+    Component: ImageRow,
     data: imagesData ?? [],
     loading: false,
     lastUpdated: 100,
@@ -398,44 +377,14 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
-      {flags.cmr ? (
-        <LandingHeader
-          title="Images"
-          entity="Image"
-          onAddNew={openForCreate}
-          docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
-        />
-      ) : (
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          updateFor={[classes]}
-          style={{ paddingBottom: 0 }}
-        >
-          <Grid item>
-            <Breadcrumb
-              pathname={props.location.pathname}
-              labelTitle="Images"
-              className={classes.title}
-            />
-          </Grid>
-          <Grid item>
-            <Grid container alignItems="flex-end">
-              <Grid item className="pt0">
-                <AddNewLink onClick={openForCreate} label="Add an Image" />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      )}
+      <LandingHeader
+        title="Images"
+        entity="Image"
+        onAddNew={openForCreate}
+        docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
+      />
       <Paper>
-        <Table
-          entity="image"
-          groupByTag={false}
-          row={imageRow}
-          headers={headers}
-        />
+        <EntityTable entity="image" row={imageRow} headers={headers} />
       </Paper>
       {renderImageDrawer()}
       <ConfirmationDialog
