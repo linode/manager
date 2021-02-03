@@ -475,12 +475,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       },
       body1: {
         fontSize: '0.875rem',
-        lineHeight: '1rem',
-        color: primaryColors.text
-      },
-      body2: {
-        fontSize: '0.875rem',
-        lineHeight: '1.2rem',
+        lineHeight: '1.125rem',
         color: primaryColors.text
       },
       caption: {

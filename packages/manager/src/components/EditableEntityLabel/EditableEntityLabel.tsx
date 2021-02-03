@@ -95,7 +95,7 @@ export const EditableEntityLabel: React.FC<Props> = props => {
           </Grid>
           {subText && !isEditing && (
             <Grid item xs={12} className="py0 px0">
-              <Typography variant="body2">{subText}</Typography>
+              <Typography variant="body1">{subText}</Typography>
             </Grid>
           )}
         </Grid>

@@ -312,7 +312,7 @@ export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
           }
           return (
             <div key={thisError.idx} className={classes.error}>
-              <Typography variant="body2">{thisError.reason}</Typography>
+              <Typography variant="body1">{thisError.reason}</Typography>
             </div>
           );
         })}
