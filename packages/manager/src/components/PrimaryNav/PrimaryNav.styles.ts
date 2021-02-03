@@ -106,9 +106,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(1.5)
   },
   chip: {
-    fontSize: '0.65rem',
+    fontSize: '0.625rem',
+    height: 15,
+    marginTop: 2,
     marginLeft: theme.spacing(),
-    opacity: 0.7
+    letterSpacing: '.25px',
+    opacity: 0.4,
+    textTransform: 'uppercase'
   }
 }));
 
