@@ -2,7 +2,11 @@ import { render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { domainFactory } from 'src/factories/domain';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { wrapWithTheme, assertOrder } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  wrapWithTheme,
+  assertOrder
+} from 'src/utilities/testHelpers';
 import {
   CombinedProps,
   DomainsLanding,
@@ -49,15 +53,7 @@ const props: CombinedProps = {
   ...reactRouterProps
 };
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  };
-});
+beforeAll(() => mockMatchMedia());
 
 describe('Domains Landing', () => {
   it('should render a notice when there are no Linodes but at least 1 domain', () => {
