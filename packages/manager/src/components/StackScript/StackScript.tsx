@@ -16,7 +16,6 @@ import ScriptCode from 'src/components/ScriptCode';
 import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useImages } from 'src/hooks/useImages';
-import useProfile from 'src/hooks/useProfile';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { useAccountUsers } from 'src/queries/accountUsers';
 
@@ -108,7 +107,6 @@ export const SStackScript: React.FC<CombinedProps> = props => {
   const { data: accountUsersData } = useAccountUsers();
 
   const { images: imagesData } = useImages('public');
-  const { profile } = useProfile();
   useReduxLoad(['images']);
 
   const { profile } = useAccountManagement();
