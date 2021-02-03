@@ -1,7 +1,6 @@
 import { NotificationItem } from '../NotificationSection';
 import useEventNotifications from './useEventNotifications';
 import useFormattedNotifications from './useFormattedNotifications';
-// import useNotifications from 'src/hooks/useNotifications';
 
 export interface NotificationData {
   eventNotifications: NotificationItem[];
@@ -19,8 +18,6 @@ export interface NotificationData {
 export const useNotificationData = (): NotificationData => {
   const eventNotifications = useEventNotifications();
   const formattedNotifications = useFormattedNotifications();
-
-  // Combine the data that should go into the Notifications section (Notifications, Past Due, etc.) and store it in a single variable that gets returned below
 
   return {
     formattedNotifications,

@@ -21,7 +21,7 @@ import useProfile from 'src/hooks/useProfile';
 export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
   const { account, updateAccount } = useAccount();
   const { profile, updateProfile } = useProfile();
-  const notifications = useNotifications();
+  const { notifications } = useNotifications();
   const history = useHistory();
 
   // Have to use refs here, because these values should be static. I.e. if we
