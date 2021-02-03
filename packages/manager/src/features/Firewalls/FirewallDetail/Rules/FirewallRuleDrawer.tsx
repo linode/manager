@@ -461,6 +461,9 @@ export const formValueToIPs = (
 // Adds an `error` message to each invalid IP in the list.
 export const validateIPs = (ips: ExtendedIP[]): ExtendedIP[] => {
   return ips.map(({ address }) => {
+    if (!address) {
+      return { address, error: 'Please enter an IP address.' };
+    }
     // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
     // methods for each, so we check for a netmask to decide the method to use.
     const [, mask] = address.split('/');
@@ -471,10 +474,7 @@ export const validateIPs = (ips: ExtendedIP[]): ExtendedIP[] => {
         parseIP(address);
       }
     } catch (err) {
-      // Empty addresses are OK for the sake of validating the form.
-      if (address !== '') {
-        return { address, error: IP_ERROR_MESSAGE };
-      }
+      return { address, error: IP_ERROR_MESSAGE };
     }
     return { address };
   });
