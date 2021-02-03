@@ -53,18 +53,15 @@ describe('utilities', () => {
         allIPs
       );
       expect(formValueToIPs('allIPv4', [''].map(stringToExtendedIP))).toEqual({
-        ipv4: ['0.0.0.0/0'],
-        ipv6: []
+        ipv4: ['0.0.0.0/0']
       });
       expect(formValueToIPs('allIPv6', [''].map(stringToExtendedIP))).toEqual({
-        ipv4: [],
         ipv6: ['::/0']
       });
       expect(
         formValueToIPs('ip/netmask', ['1.1.1.1'].map(stringToExtendedIP))
       ).toEqual({
-        ipv4: ['1.1.1.1'],
-        ipv6: []
+        ipv4: ['1.1.1.1']
       });
     });
   });
@@ -165,8 +162,7 @@ describe('utilities', () => {
     });
     it('accepts ranges', () => {
       expect(classifyIPs(['1.1.0.0/16'].map(stringToExtendedIP))).toEqual({
-        ipv4: ['1.1.0.0/16'],
-        ipv6: []
+        ipv4: ['1.1.0.0/16']
       });
     });
   });
