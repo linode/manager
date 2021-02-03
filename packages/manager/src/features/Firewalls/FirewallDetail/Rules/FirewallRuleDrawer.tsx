@@ -85,9 +85,18 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
 
   const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
-  const onValidate = ({ ports, protocol, label, description }: Form) => {
+  const onValidate = ({
+    ports,
+    protocol,
+    label,
+    description,
+    addresses
+  }: Form) => {
     // The validated IPs may have errors, so set them to state so we see the errors.
-    const validatedIPs = validateIPs(ips);
+    const validatedIPs = validateIPs(ips, {
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      allowEmptyAddress: addresses !== 'ip/netmask'
+    });
     setIPs(validatedIPs);
 
     return {
@@ -459,9 +468,12 @@ export const formValueToIPs = (
 };
 
 // Adds an `error` message to each invalid IP in the list.
-export const validateIPs = (ips: ExtendedIP[]): ExtendedIP[] => {
+export const validateIPs = (
+  ips: ExtendedIP[],
+  options?: { allowEmptyAddress: boolean }
+): ExtendedIP[] => {
   return ips.map(({ address }) => {
-    if (!address) {
+    if (!options?.allowEmptyAddress && !address) {
       return { address, error: 'Please enter an IP address.' };
     }
     // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
@@ -474,7 +486,9 @@ export const validateIPs = (ips: ExtendedIP[]): ExtendedIP[] => {
         parseIP(address);
       }
     } catch (err) {
-      return { address, error: IP_ERROR_MESSAGE };
+      if (address) {
+        return { address, error: IP_ERROR_MESSAGE };
+      }
     }
     return { address };
   });
