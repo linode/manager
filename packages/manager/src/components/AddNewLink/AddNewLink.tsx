@@ -1,8 +1,6 @@
 import * as React from 'react';
-
-import PlusSquare from 'src/assets/icons/plus-square.svg';
 import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
-import IconTextLink from 'src/components/IconTextLink';
+import Button from '../Button';
 
 export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
   label: string;
@@ -30,7 +28,6 @@ const AddNewLink: React.FC<CombinedProps> = props => {
   } = props;
 
   const baseProps = {
-    SideIcon: PlusSquare,
     onClick,
     title: label,
     text: label,
@@ -50,16 +47,18 @@ const AddNewLink: React.FC<CombinedProps> = props => {
         title={disabledReason}
       >
         <div>
-          {/* 
+          {/*
             wrapping in div because the child of tooltip needs to be able to hold a ref 
           */}
-          <IconTextLink {...baseProps}>{display || label}</IconTextLink>
+          <Button buttonType="secondary" {...baseProps}>
+            {display || label}
+          </Button>
         </div>
       </Tooltip>
     );
   }
 
-  return <IconTextLink {...baseProps}>{display || label}</IconTextLink>;
+  return <Button {...baseProps}>{display || label}</Button>;
 };
 
 export default AddNewLink;

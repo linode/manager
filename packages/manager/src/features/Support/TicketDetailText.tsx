@@ -1,70 +1,48 @@
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as React from 'react';
-import { compose } from 'recompose';
-import Collapse from 'src/assets/icons/minus-square.svg';
-import Expand from 'src/assets/icons/plus-square.svg';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import IconButton from 'src/components/IconButton';
-
 import truncateText from 'src/utilities/truncateText';
 
-type ClassNames = 'root' | 'expButton' | 'toggle' | 'buttonText';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: theme.spacing(1),
-      padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`,
-      position: 'relative',
-      '& pre': {
-        backgroundColor: theme.bg.tableHeader
-      }
-    },
-    expButton: {
-      position: 'absolute',
-      top: -43,
-      right: 0,
-      left: 'auto',
-      '& svg': {
-        stroke: theme.color.grey1
-      },
-      '& .border': {
-        stroke: theme.color.grey1,
-        fill: theme.color.white
-      }
-    },
-    toggle: {
-      height: 24,
-      width: 24
-    },
-    buttonText: {
-      position: 'relative',
-      top: -1,
-      marginRight: 4,
-      color: theme.palette.primary.main,
-      [theme.breakpoints.down('sm')]: {
-        visibility: 'hidden'
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginTop: theme.spacing(1),
+    padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`,
+    position: 'relative',
+    '& pre': {
+      backgroundColor: theme.bg.tableHeader
     }
-  });
+  },
+  expButton: {
+    position: 'absolute',
+    top: -43,
+    right: 0,
+    left: 'auto',
+    '& svg': {
+      stroke: theme.cmrTextColors.tableHeader
+    }
+  },
+  toggle: {
+    height: 22,
+    width: 22
+  },
+  expand: {
+    transform: 'rotate(180deg)'
+  }
+}));
 
 interface Props {
   text: string;
   open?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+const TicketDetailText: React.FC<Props> = props => {
+  const classes = useStyles();
 
-const TicketDetailText: React.FC<CombinedProps> = props => {
   const [panelOpen, togglePanel] = React.useState<boolean>(props.open || true);
-  const { text, classes } = props;
+  const { text } = props;
 
   const truncatedText = truncateText(text, 175);
   const ticketReplyBody = panelOpen ? text : truncatedText;
@@ -81,19 +59,11 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
           onClick={() => togglePanel(!panelOpen)}
         >
           {panelOpen ? (
-            <>
-              <Typography component="span" className={classes.buttonText}>
-                Collapse
-              </Typography>
-              <Collapse className={classes.toggle} />
-            </>
+            <KeyboardArrowDown className={classes.toggle} />
           ) : (
-            <>
-              <Typography component="span" className={classes.buttonText}>
-                Expand
-              </Typography>
-              <Expand className={classes.toggle} />
-            </>
+            <KeyboardArrowDown
+              className={`${classes.toggle} ${classes.expand}`}
+            />
           )}
         </IconButton>
       )}
@@ -101,9 +71,4 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
-
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(TicketDetailText);
+export default React.memo(TicketDetailText);

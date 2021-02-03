@@ -29,7 +29,6 @@ import withFeatureFlagConsumer, {
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
-import BackupsCTA_CMR from 'src/features/Backups/BackupsCTA_CMR';
 import { DialogType } from 'src/features/linodes/types';
 import DetachLinodeDialog from 'src/features/Vlans/DetachLinodeDialog/DetachLinodeDialog';
 import { ApplicationState } from 'src/store';
@@ -46,7 +45,6 @@ import {
 } from 'src/utilities/ga';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import getUserTimezone from 'src/utilities/getUserTimezone';
-import { BackupsCtaDismissed } from 'src/utilities/storage';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue/RescueDialog';
@@ -61,7 +59,7 @@ import DisplayLinodes from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
-import TransferDisplay from './TransferDisplay';
+import TransferDisplay from 'src/components/TransferDisplay';
 import { ExtendedStatus, statusToPriority } from './utils';
 
 interface State {
@@ -75,7 +73,6 @@ interface State {
   rebuildDialogOpen: boolean;
   rescueDialogOpen: boolean;
   groupByTag: boolean;
-  CtaDismissed: boolean;
   linodeResizeOpen: boolean;
   linodeMigrateOpen: boolean;
   detachLinodeFromVlanDialogOpen: boolean;
@@ -117,7 +114,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     rebuildDialogOpen: false,
     rescueDialogOpen: false,
     groupByTag: false,
-    CtaDismissed: BackupsCtaDismissed.get(),
     linodeResizeOpen: false,
     linodeMigrateOpen: false,
     detachLinodeFromVlanDialogOpen: false
@@ -217,13 +213,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   };
 
-  dismissCTA = () => {
-    this.setState({
-      CtaDismissed: true
-    });
-    BackupsCtaDismissed.set('true');
-  };
-
   render() {
     const {
       imagesError,
@@ -233,7 +222,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesCount,
       linodesData,
       classes,
-      backupsCTA,
       linodesInTransition
     } = this.props;
 
@@ -305,9 +293,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Last Backup', key: 'lastBackup' }
     ];
 
-    const displayBackupsCTA =
-      !this.props.isVLAN && backupsCTA && !BackupsCtaDismissed.get();
-
     return (
       <React.Fragment>
         <LinodeResize_CMR
@@ -353,13 +338,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           container
           className={this.props.flags.cmr ? classes.cmrSpacing : ''}
         >
-          <Grid
-            item
-            className={`${
-              backupsCTA && !BackupsCtaDismissed.get() ? 'mlMain' : ''
-            }`}
-            xs={this.props.flags.cmr || !displayBackupsCTA ? 12 : undefined}
-          >
+          <Grid item xs={12}>
             {/** Don't override the document title if we're rendering this on the Dashboard */}
             {!this.props.isDashboard && !this.props.isVLAN ? (
               <DocumentTitleSegment segment="Linodes" />
@@ -398,9 +377,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                       return (
                         <React.Fragment>
                           <React.Fragment>
-                            {displayBackupsCTA && (
-                              <BackupsCTA_CMR dismissed={this.dismissCTA} />
-                            )}
+                            <BackupsCTA />
                             {this.props.LandingHeader ? (
                               this.props.LandingHeader
                             ) : (
@@ -568,11 +545,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             </PreferenceToggle>
             <TransferDisplay />
           </Grid>
-          {displayBackupsCTA && !this.props.flags.cmr && (
-            <Grid item className="mlSidebar py0">
-              <BackupsCTA dismissed={this.dismissCTA} />
-            </Grid>
-          )}
         </Grid>
         {!!this.state.selectedLinodeID && !!this.state.selectedLinodeLabel && (
           <React.Fragment>
