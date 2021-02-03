@@ -61,11 +61,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: 0
+  },
+  actionHeader: {
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 70
+    },
+    minWidth: 140
+  },
+  addLabelButton: {
+    ...theme.applyLinkStyles
   }
 }));
 
 interface RuleRow {
   type: string;
+  label?: string;
+  description?: string;
   protocol: string;
   ports: string;
   addresses: string;
@@ -126,31 +137,30 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
       </div>
       <OrderBy data={rowData} orderBy={'type'} order={'asc'}>
         {({ data: sortedRows, handleOrderChange, order, orderBy }) => {
-          // Modified rows will be unsorted and will appear at the bottom of the table.
-          const unmodifiedRows = sortedRows.filter(
-            thisRow => thisRow.status === 'NOT_MODIFIED'
-          );
-          const modifiedRows = sortedRows.filter(
-            thisRow => thisRow.status !== 'NOT_MODIFIED'
-          );
-          const allRows = [...unmodifiedRows, ...modifiedRows];
-
           return (
             <Table>
               <TableHead>
                 <TableRow>
                   <TableSortCell
-                    style={{ width: '15%' }}
                     active={orderBy === 'type'}
-                    label="type"
+                    label="label"
                     direction={order}
                     handleClick={handleOrderChange}
                   >
-                    Type
+                    Label
                   </TableSortCell>
+                  <Hidden mdDown>
+                    <TableSortCell
+                      active={orderBy === 'type'}
+                      label="description"
+                      direction={order}
+                      handleClick={handleOrderChange}
+                    >
+                      Description
+                    </TableSortCell>
+                  </Hidden>
                   <Hidden xsDown>
                     <TableSortCell
-                      style={{ width: '15%' }}
                       active={orderBy === 'protocol'}
                       label="protocol"
                       direction={order}
@@ -159,7 +169,6 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                       Protocol
                     </TableSortCell>
                     <TableSortCell
-                      style={{ width: '20%' }}
                       active={orderBy === 'ports'}
                       label="ports"
                       direction={order}
@@ -169,7 +178,6 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     </TableSortCell>
                   </Hidden>
                   <TableSortCell
-                    style={{ width: '40%' }}
                     active={orderBy === 'addresses'}
                     label="addresses"
                     direction={order}
@@ -177,17 +185,17 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                   >
                     {capitalize(addressColumnLabel)}
                   </TableSortCell>
-                  <TableCell />
+                  <TableCell className={classes.actionHeader} />
                 </TableRow>
               </TableHead>
               <TableBody>
-                {allRows.length === 0 ? (
+                {sortedRows.length === 0 ? (
                   <TableRowEmptyState
-                    colSpan={5}
+                    colSpan={6}
                     message={zeroOutboundRulesMessage}
                   />
                 ) : (
-                  allRows.map((thisRuleRow: RuleRow) => (
+                  sortedRows.map((thisRuleRow: RuleRow) => (
                     <FirewallRuleTableRow
                       key={thisRuleRow.id}
                       {...thisRuleRow}
@@ -225,7 +233,8 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
 
     const {
       id,
-      type,
+      label,
+      description,
       protocol,
       ports,
       addresses,
@@ -248,7 +257,19 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         highlight={status === 'MODIFIED' || status === 'NEW'}
         disabled={status === 'PENDING_DELETION'}
       >
-        <TableCell>{type}</TableCell>
+        <TableCell>
+          {label || (
+            <button
+              className={classes.addLabelButton}
+              onClick={() => triggerOpenRuleDrawerForEditing(id)}
+            >
+              Add a label
+            </button>
+          )}
+        </TableCell>
+        <Hidden mdDown>
+          <TableCell>{description}</TableCell>
+        </Hidden>
         <Hidden xsDown>
           <TableCell>
             {protocol}

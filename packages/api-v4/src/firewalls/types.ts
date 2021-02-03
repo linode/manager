@@ -20,6 +20,8 @@ export interface FirewallRules {
 }
 
 export interface FirewallRuleType {
+  label?: string;
+  description?: string;
   protocol: FirewallRuleProtocol;
   ports?: string;
   addresses?: null | {
