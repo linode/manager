@@ -81,6 +81,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   linkItem: {
+    display: 'flex',
+    alignItems: 'center',
     color: theme.color.primaryNavText,
     fontFamily: 'LatoWebBold', // we keep this bold at all times
     opacity: 1,
@@ -102,6 +104,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'rgba(0, 0, 0, 0.12)',
     marginTop: theme.spacing(1.5),
     marginBottom: theme.spacing(1.5)
+  },
+  chip: {
+    fontSize: '0.65rem',
+    marginLeft: theme.spacing(),
+    opacity: 0.7
   }
 }));
 

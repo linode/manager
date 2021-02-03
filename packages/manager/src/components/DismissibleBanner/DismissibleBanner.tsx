@@ -1,10 +1,9 @@
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import usePreferences from 'src/hooks/usePreferences';
-
-import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
