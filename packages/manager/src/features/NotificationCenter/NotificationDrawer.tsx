@@ -43,7 +43,7 @@ export const NotificationDrawer: React.FC<Props> = props => {
   const { data, open, onClose } = props;
   const classes = useStyles();
   const dispatch = useDispatch<ThunkDispatch>();
-  const { eventNotifications, support } = data;
+  const { eventNotifications, formattedNotifications } = data;
 
   const wasOpen = usePrevious(open);
 
@@ -57,7 +57,10 @@ export const NotificationDrawer: React.FC<Props> = props => {
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
       <div className={classes.notificationSectionContainer}>
-        <Notifications notificationsList={support.data} onClose={onClose} />
+        <Notifications
+          notificationsList={formattedNotifications}
+          onClose={onClose}
+        />
         <Events events={eventNotifications} onClose={onClose} />
       </div>
     </Drawer>
