@@ -14,7 +14,6 @@ import { useAccountTransfer } from 'src/queries/accountTransfer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(),
     width: '100%',
     margin: 'auto',
     textAlign: 'center'
@@ -70,7 +69,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const TransferDisplay: React.FC<{}> = _ => {
+export interface Props {
+  spacingTop?: number;
+}
+
+export const TransferDisplay: React.FC<Props> = props => {
+  const { spacingTop } = props;
   const classes = useStyles();
 
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -96,7 +100,10 @@ export const TransferDisplay: React.FC<{}> = _ => {
 
   return (
     <>
-      <Typography className={classes.root}>
+      <Typography
+        className={classes.root}
+        style={{ marginTop: spacingTop || 8 }}
+      >
         You have used {poolUsagePct.toFixed(poolUsagePct < 1 ? 2 : 0)}% of your
         {`  `}
         <button
