@@ -1,13 +1,13 @@
 import { Notification } from '@linode/api-v4/lib/account';
+import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import useAccount from 'src/hooks/useAccount';
 import useNotifications from 'src/hooks/useNotifications';
 import { NotificationItem } from '../NotificationSection';
 import RenderNotification from './RenderNotification';
-import { DateTime } from 'luxon';
-import useAccount from 'src/hooks/useAccount';
 
 export const useFormattedNotifications = () => {
   const notifications = useNotifications();
@@ -16,7 +16,7 @@ export const useFormattedNotifications = () => {
   const balance = account?.data?.balance ?? 0;
   const dayOfMonth = DateTime.local().day;
   const combinedNotifications = [...notifications];
-  if (balance > 0 && dayOfMonth > 3) {
+  if (balance > 0 && dayOfMonth >= 3) {
     combinedNotifications.unshift({
       entity: null,
       label: '',
