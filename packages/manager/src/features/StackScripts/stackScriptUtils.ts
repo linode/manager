@@ -51,7 +51,26 @@ export const baseApps = {
   '609392': 'Flask One-Click',
   '611376': 'PostgreSQL One-Click',
   '611895': 'MEAN One-Click',
-  '688912': 'Kepler Builder One-Click'
+  '688912': 'Kepler Builder One-Click',
+  '609018': 'phpMYAdmin',
+  '632758': 'Nextcloud',
+  '644908': 'Percona',
+  '662116': 'Webmin',
+  '662117': 'Virtualmin',
+  '662118': 'Azuracast',
+  '662119': 'Plex',
+  '662121': 'Jitsi',
+  '688890': 'RabbitMQ',
+  '688891': 'Discourse',
+  '688902': 'Webuzo',
+  '688903': 'Code Server',
+  '688911': 'Gitea',
+  '688914': 'Guacamole',
+  '691614': 'Mist',
+  '691620': 'FileCloud',
+  '691621': 'Cloudron',
+  '691622': 'OpenLiteSpeed',
+  '692092': 'Secure Your Server'
 };
 
 const oneClickFilter = [
