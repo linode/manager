@@ -6,9 +6,28 @@ import { reportException } from 'src/exceptionReporting';
 import useNotifications from 'src/hooks/useNotifications';
 import { NotificationItem } from '../NotificationSection';
 import RenderNotification from './RenderNotification';
+import { DateTime } from 'luxon';
+import useAccount from 'src/hooks/useAccount';
 
 export const useFormattedNotifications = () => {
-  const { combinedNotifications } = useNotifications();
+  const notifications = useNotifications();
+  const { account } = useAccount();
+
+  const balance = account?.data?.balance ?? 0;
+  const dayOfMonth = DateTime.local().day;
+  const combinedNotifications = [...notifications];
+  if (balance > 0 && dayOfMonth > 3) {
+    combinedNotifications.unshift({
+      entity: null,
+      label: '',
+      message: `You have a past due balance of $${balance}. Please make a payment immediately to avoid service disruption.`,
+      type: 'payment_due',
+      severity: 'critical',
+      when: null,
+      until: null,
+      body: null
+    });
+  }
 
   return combinedNotifications.map((notification, idx) =>
     formatNotificationForDisplay(interceptNotification(notification), idx)
