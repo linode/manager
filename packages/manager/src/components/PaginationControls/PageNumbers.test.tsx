@@ -1,21 +1,13 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { mockMatchMedia, wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   CombinedProps as PageNumbersProps,
   PageNumbers,
   pageNumbersToRender
 } from './PageNumbers';
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  };
-});
+beforeAll(() => mockMatchMedia(false));
 
 const props: PageNumbersProps = {
   classes: { ellipses: '', ellipsesInner: '' },
