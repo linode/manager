@@ -31,7 +31,7 @@ import {
 import capitalize from 'src/utilities/capitalize';
 import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
 import { ExtendedFirewallRule } from './firewallRuleEditor';
-import { Category, FirewallRuleError } from './shared';
+import { Category, FirewallRuleError, PORT_PRESETS } from './shared';
 
 export type Mode = 'create' | 'edit';
 
@@ -355,6 +355,12 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         onChange={handleProtocolChange}
         onBlur={handleBlur}
         isClearable={false}
+      />
+      <Select
+        isMulti
+        label="Ports"
+        options={PORT_PRESETS}
+        onChange={() => null}
       />
       <TextField
         label="Port Range"

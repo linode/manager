@@ -13,6 +13,37 @@ export interface FirewallRuleError {
   };
 }
 
+export const PORT_PRESETS = [
+  {
+    label: 'HTTP (80)',
+    value: '80'
+  },
+  {
+    label: 'HTTPS (443)',
+    value: '443'
+  },
+  {
+    label: 'SSH (22)',
+    value: '80'
+  },
+  {
+    label: 'DNS (53)',
+    value: '53'
+  },
+  {
+    label: 'MySQL (3306)',
+    value: '3306'
+  },
+  {
+    label: 'Allow All',
+    value: 'ALL'
+  },
+  {
+    label: 'Custom',
+    value: 'CUSTOM'
+  }
+];
+
 /**
  * The API returns very good Firewall error messages that look like this:
  *
