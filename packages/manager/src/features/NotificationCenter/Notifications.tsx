@@ -13,7 +13,6 @@ export const Notifications: React.FC<Props> = props => {
     <NotificationSection
       content={notificationsList}
       header="Notifications"
-      showMoreTarget={'/events'}
       emptyMessage="There are no notifications."
       onClose={onClose}
     />

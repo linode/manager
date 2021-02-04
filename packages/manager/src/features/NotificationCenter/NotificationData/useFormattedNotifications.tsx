@@ -18,7 +18,7 @@ const formatNotificationForDisplay = (
 ): NotificationItem => ({
   id: `notification-${idx}`,
   body: <RenderNotification notification={notification} />,
-  countInTotal: false
+  countInTotal: true
 });
 
 export default useFormattedNotifications;

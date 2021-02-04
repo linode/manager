@@ -1,6 +1,7 @@
 import { Notification } from '@linode/api-v4/lib/account';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
+import { DateTime } from 'luxon';
 
 export const useNotifications = () => {
   const notifications = useSelector(
@@ -10,6 +11,8 @@ export const useNotifications = () => {
   const balance = useSelector(
     (state: ApplicationState) => state.__resources.account.data?.balance
   );
+  const dayOfMonth = DateTime.local().day;
+
   const pastDueNotification: Notification = {
     entity: null,
     label: 'past due',
@@ -24,7 +27,7 @@ export const useNotifications = () => {
   return {
     notifications: notifications.data ?? [],
     combinedNotifications:
-      balance && balance > 0
+      balance && balance > 0 && dayOfMonth >= 3
         ? notifications.data
           ? [pastDueNotification].concat(notifications?.data)
           : [pastDueNotification]
