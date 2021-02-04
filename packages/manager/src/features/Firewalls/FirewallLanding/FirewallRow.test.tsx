@@ -6,7 +6,11 @@ import {
   firewallFactory
 } from 'src/factories/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
-import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
+import {
+  renderWithTheme,
+  mockMatchMedia,
+  wrapWithTableBody
+} from 'src/utilities/testHelpers';
 import {
   CombinedProps,
   FirewallRow,
@@ -15,15 +19,7 @@ import {
   getRuleString
 } from './FirewallRow';
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: true,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  };
-});
+beforeAll(() => mockMatchMedia());
 
 describe('FirewallRow', () => {
   describe('Utility functions', () => {

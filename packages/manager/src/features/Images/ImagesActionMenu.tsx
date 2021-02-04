@@ -1,8 +1,12 @@
 import { Event } from '@linode/api-v4/lib/account';
+import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface Handlers {
   onRestore: (imageID: string) => void;
@@ -22,59 +26,66 @@ interface Props extends Handlers {
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const ImagesActionMenu: React.FC<CombinedProps> = props => {
-  const createActions = () => {
-    const {
-      description,
-      id,
-      label,
-      onRestore,
-      onDeploy,
-      onEdit,
-      onDelete
-    } = props;
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    return (closeMenu: Function): Action[] => {
-      return [
-        {
-          title: 'Restore to Existing Linode',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onRestore(id);
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Deploy New Linode',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDeploy(id);
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onEdit(label, description ?? ' ', id);
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDelete(label, id);
-            closeMenu();
-            e.preventDefault();
-          }
-        }
-      ];
-    };
-  };
+  const {
+    description,
+    id,
+    label,
+    onRestore,
+    onDeploy,
+    onEdit,
+    onDelete
+  } = props;
+
+  const actions: Action[] = [
+    {
+      title: 'Edit',
+      onClick: () => {
+        onEdit(label, description ?? ' ', id);
+      }
+    },
+    {
+      title: 'Deploy New Linode',
+      onClick: () => {
+        onDeploy(id);
+      }
+    },
+    {
+      title: 'Restore to Existing Linode',
+      onClick: () => {
+        onRestore(id);
+      }
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        onDelete(label, id);
+      }
+    }
+  ];
+
+  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
-    <ActionMenu
-      createActions={createActions()}
-      ariaLabel={`Action menu for Image ${props.label}`}
-    />
+    <>
+      {!matchesSmDown &&
+        inlineActions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+            />
+          );
+        })}
+      <ActionMenu
+        actionsList={menuActions}
+        ariaLabel={`Action menu for Image ${props.label}`}
+      />
+    </>
   );
 };
 
