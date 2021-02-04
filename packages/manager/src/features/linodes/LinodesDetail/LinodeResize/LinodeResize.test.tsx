@@ -3,20 +3,15 @@ import * as React from 'react';
 import { extDisk, swapDisk } from 'src/__data__/disks';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { extendedTypes } from 'src/__data__/ExtendedType';
+import { mockMatchMedia } from 'src/utilities/testHelpers';
 import {
   isSmallerThanCurrentPlan,
   LinodeResize,
   shouldEnableAutoResizeDiskOption
 } from './LinodeResize';
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  };
+beforeAll(() => {
+  mockMatchMedia();
 });
 
 describe('LinodeResize', () => {
