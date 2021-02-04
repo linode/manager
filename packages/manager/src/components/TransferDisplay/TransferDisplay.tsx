@@ -191,7 +191,6 @@ export const TransferDialog: React.FC<DialogProps> = React.memo(props => {
         value={Math.ceil(poolUsagePct)}
         className={classes.poolUsageProgress}
         rounded
-        overLimit={quota < used}
       />
 
       <Typography className={classes.proratedNotice}>
