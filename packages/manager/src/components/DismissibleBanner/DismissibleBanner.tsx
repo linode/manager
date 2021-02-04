@@ -7,14 +7,19 @@ import usePreferences from 'src/hooks/usePreferences';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(2)}px ${theme.spacing()}px`,
+    padding: theme.spacing(),
+    paddingLeft: theme.spacing(2),
     display: 'flex',
     justifyContent: 'space-between',
     flexFlow: 'row nowrap',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: theme.spacing()
   },
   button: {
     ...theme.applyLinkStyles
+  },
+  text: {
+    fontSize: '1rem'
   }
 }));
 
@@ -42,7 +47,7 @@ export const FirewallBanner: React.FC<Props> = props => {
 
   return (
     <Paper className={`${classes.root} ${className || ''}`}>
-      <Typography>{message}</Typography>
+      <Typography className={classes.text}>{message}</Typography>
       <button
         aria-label={`Dismiss ${preferenceKey} banner`}
         className={classes.button}

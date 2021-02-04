@@ -9,13 +9,15 @@ export const FirewallBanner: React.FC<{}> = _ => {
   const regionsWithFirewalls = regions.filter(thisRegion =>
     thisRegion.capabilities.includes('Cloud Firewall')
   );
+
   const regionDisplayList = arrayToList(
     regionsWithFirewalls.map(thisRegion => dcDisplayNames[thisRegion.id])
   );
+
   return (
     <DismissibleBanner
       preferenceKey="firewall-beta-notification"
-      message={`Cloud Firewalls are currently in open beta. Firewalls can
+      message={`Cloud Firewalls are currently in beta. Firewalls can
         only be used with Linodes in ${regionDisplayList}.`}
     />
   );
