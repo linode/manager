@@ -8,6 +8,8 @@ import Grid from 'src/components/Grid';
 import { Link } from 'src/components/Link';
 import formatDate from 'src/utilities/formatDate';
 import { Notification } from '@linode/api-v4/lib/account';
+import Warning from 'src/assets/icons/warning.svg';
+import Error from 'src/assets/icons/alert.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -18,8 +20,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing()
   },
   notificationText: {
-    fontWeight: 'bold',
-    marginLeft: '0.5rem'
+    fontWeight: 'bold'
+  },
+  critical: {
+    fill: theme.color.red,
+    '& svg': {
+      fill: theme.color.red
+    }
+  },
+  major: {
+    // fill:
+  },
+  severeAlert: {
+    color: theme.color.red
+  },
+  notificationIcon: {
+    lineHeight: '1rem',
+    '& svg': {
+      height: 18,
+      width: 18
+    }
   }
 }));
 
@@ -33,50 +53,68 @@ export const RenderNotification: React.FC<Props> = props => {
   const { notification } = props;
   const classes = useStyles();
 
-  //   const eventMessage = (
-  //     <Typography
-  //       className={classNames({
-  //         [classes.unseenEvent]: !event.seen,
-  //         [classes.eventMessage]: !!linkTarget
-  //       })}
-  //     >
-  //       {message}
-  //       {event.duration
-  //         ? event.status === 'failed'
-  //           ? ` (Failed after ${duration})`
-  //           : ` (Completed in ${duration})`
-  //         : null}
-  //     </Typography>
-  //   );
+  const linkTarget = getEntityLink(
+    notification?.entity?.type,
+    notification?.entity?.id
+  );
+
+  const message = (
+    <Typography
+      className={classNames({
+        [classes.notificationText]: true,
+        [classes.severeAlert]: notification.severity === 'critical'
+      })}
+    >
+      {notification.message}
+    </Typography>
+  );
 
   return (
     <>
-      <Grid container className={classes.root} justify="space-between">
-        <Grid item xs={8}>
-          <Grid container wrap="nowrap">
-            <Typography className={classes.notificationText}>
-              {`${notification.message}`}
-            </Typography>
-            {/* <Grid item>
-              {linkTarget ? (
-                <Link to={linkTarget}>{eventMessage}</Link>
-              ) : (
-                eventMessage
-              )}
-            </Grid> */}
-          </Grid>
+      <Grid
+        container
+        className={classes.root}
+        wrap="nowrap"
+        alignItems="center"
+      >
+        <Grid item>
+          <div className={classes.notificationIcon}>
+            {notification.severity === 'critical' && (
+              <Error className={classes.critical} />
+            )}
+            {notification.severity === 'major' && (
+              <Warning className={classes.major} />
+            )}
+          </div>
         </Grid>
-        {/* <Grid item xs={4} className={classes.timeStamp}>
-          <Typography
-            className={classNames({ [classes.unseenEvent]: !event.seen })}
-          >
-            {formatDate(event.created)}
-          </Typography>
-        </Grid> */}
+
+        <Grid item>
+          {linkTarget ? <Link to={linkTarget}>{message}</Link> : message}
+        </Grid>
       </Grid>
       <Divider className={classes.divider} />
     </>
   );
+};
+
+const getEntityLink = (type?: string, id?: number) => {
+  if (!type || !id) {
+    return;
+  }
+
+  switch (type) {
+    case 'linode':
+      return `/linodes/${id}`;
+
+    case 'ticket':
+      return `/support/tickets/${id}`;
+
+    case 'payment_due':
+      return `/account/billing`;
+
+    default:
+      return;
+  }
 };
 
 export default React.memo(RenderNotification);

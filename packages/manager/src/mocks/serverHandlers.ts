@@ -401,7 +401,8 @@ export const handlers = [
 
     const migrationTicket = notificationFactory.build({
       type: 'migration_pending',
-      entity: { id: 0, type: 'linode' }
+      entity: { id: 0, type: 'linode' },
+      severity: 'critical'
     });
 
     return res(
