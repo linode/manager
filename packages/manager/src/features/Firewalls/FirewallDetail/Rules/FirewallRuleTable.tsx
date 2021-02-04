@@ -150,14 +150,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     Label
                   </TableSortCell>
                   <Hidden mdDown>
-                    <TableSortCell
-                      active={orderBy === 'type'}
-                      label="description"
-                      direction={order}
-                      handleClick={handleOrderChange}
-                    >
-                      Description
-                    </TableSortCell>
+                    <TableCell>Description</TableCell>
                   </Hidden>
                   <Hidden xsDown>
                     <TableSortCell
