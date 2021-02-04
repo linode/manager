@@ -265,7 +265,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
               style={{ marginTop: 8, width: '100%', textAlign: 'center' }}
               variant="body1"
             >
-              Total usage: {readableBytes(totalUsage).formatted}
+              Total storage used: {readableBytes(totalUsage).formatted}
             </Typography>
           ) : null}
           <TransferDisplay />
