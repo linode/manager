@@ -8,6 +8,7 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
+import useFlags from 'src/hooks/useFlags';
 import {
   useCreateFirewall,
   useDeleteFirewall,
@@ -16,6 +17,7 @@ import {
 } from 'src/queries/firewalls';
 import AddFirewallDrawer from './AddFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
+import FirewallBanner from './FirewallBanner';
 import FirewallDialog, { Mode } from './FirewallDialog';
 import FirewallEmptyState from './FirewallEmptyState';
 import FirewallRow from './FirewallRow';
@@ -24,6 +26,7 @@ type CombinedProps = RouteComponentProps<{}>;
 
 const FirewallLanding: React.FC<CombinedProps> = () => {
   const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
+  const { firewallBetaNotification } = useFlags();
 
   // @TODO: Refactor so these are combined?
   const { mutateAsync: updateFirewall } = useMutateFirewall();
@@ -170,13 +173,12 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
 
   return (
     <React.Fragment>
+      {firewallBetaNotification ? <FirewallBanner /> : null}
       <LandingHeader
         title="Firewalls"
         entity="Firewall"
         breadcrumbProps={{ pathname: '/firewalls' }}
         onAddNew={openDrawer}
-        // This guide is not yet published and will 404
-        // It will be published prior to any public beta
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
       />
       <EntityTable
