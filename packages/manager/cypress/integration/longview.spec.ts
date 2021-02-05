@@ -10,7 +10,7 @@ describe('longview', () => {
     const linodePassword = strings.randomPass();
     const clientLabel = 'cy-test-client';
     cy.visitWithLogin('/dashboard');
-    createLinode(undefined, linodePassword).then(linode => {
+    createLinode(true, undefined, linodePassword).then(linode => {
       createClient(undefined, clientLabel).then(client => {
         const linodeIp = linode['ipv4'][0];
         const clientLabel = client.label;

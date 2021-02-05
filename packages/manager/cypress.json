@@ -1,12 +1,12 @@
 {
   "baseUrl": "http://localhost:3000",
   "chromeWebSecurity": false,
-  "defaultCommandTimeout": 60000,
+  "defaultCommandTimeout": 80000,
   "pageLoadTimeout": 60000,
   "trashAssetsBeforeRuns": false,
   "viewportWidth": 1440,
   "viewportHeight": 900,
   "projectId": "5rhsif",
   "requestTimeout": 10000,
-  "responseTimeout": 60000
+  "responseTimeout": 80000
 }
