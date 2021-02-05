@@ -250,6 +250,7 @@ export type EventAction =
   | 'nodebalancer_update'
   | 'nodebalancer_delete'
   | 'password_reset'
+  | 'profile_update'
   | 'stackscript_create'
   | 'stackscript_update'
   | 'stackscript_delete'
