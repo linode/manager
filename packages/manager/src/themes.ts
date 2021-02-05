@@ -236,9 +236,6 @@ const darkThemeOptions = {
     body1: {
       color: primaryColors.text
     },
-    body2: {
-      color: primaryColors.text
-    },
     subtitle1: {
       color: primaryColors.text
     }
