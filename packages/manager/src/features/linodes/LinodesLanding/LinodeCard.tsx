@@ -325,7 +325,7 @@ const ProgressDisplay: React.FC<{
   return (
     <Grid container className={classes.cardSection}>
       <Grid item>
-        <Typography variant="body2">
+        <Typography variant="body1">
           {text}: {displayProgress}
         </Typography>
       </Grid>
