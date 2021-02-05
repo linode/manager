@@ -1,8 +1,10 @@
-import useEventNotifications from './useEventNotifications';
 import { NotificationItem } from '../NotificationSection';
+import useEventNotifications from './useEventNotifications';
+import useFormattedNotifications from './useFormattedNotifications';
 
 export interface NotificationData {
   eventNotifications: NotificationItem[];
+  formattedNotifications: NotificationItem[];
 }
 
 /**
@@ -15,8 +17,10 @@ export interface NotificationData {
  */
 export const useNotificationData = (): NotificationData => {
   const eventNotifications = useEventNotifications();
+  const formattedNotifications = useFormattedNotifications();
 
   return {
+    formattedNotifications,
     eventNotifications
   };
 };
