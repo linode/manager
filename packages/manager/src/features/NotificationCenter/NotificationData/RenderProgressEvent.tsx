@@ -46,12 +46,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   event: Event;
+  onClose: () => void;
 }
 
 export type CombinedProps = Props;
 
 export const RenderProgressEvent: React.FC<Props> = props => {
-  const { event } = props;
+  const { event, onClose } = props;
   const classes = useStyles();
 
   const { linodes } = useLinodes();
@@ -91,7 +92,7 @@ export const RenderProgressEvent: React.FC<Props> = props => {
         <div className={classes.message}>
           <Typography>
             {linkTarget ? (
-              <Link className={classes.link} to={linkTarget}>
+              <Link className={classes.link} to={linkTarget} onClick={onClose}>
                 {eventMessage}
               </Link>
             ) : (

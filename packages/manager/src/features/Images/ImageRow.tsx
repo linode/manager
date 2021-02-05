@@ -117,7 +117,7 @@ const ProgressDisplay: React.FC<{
   const displayProgress = progress ? `${progress}%` : `scheduled`;
 
   return (
-    <Typography variant="body2" className={className}>
+    <Typography variant="body1" className={className}>
       {text}: {displayProgress}
     </Typography>
   );

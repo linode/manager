@@ -8,7 +8,6 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import FixedToolBar from 'src/components/FixedToolbar/FixedToolbar';
 import Notice from 'src/components/Notice';
 import Prompt from 'src/components/Prompt';
 import withFirewalls, {
@@ -39,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(4)
   },
   actions: {
-    alignSelf: 'flex-end'
+    float: 'right'
   },
   mobileSpacing: {
     [theme.breakpoints.down('sm')]: {
@@ -319,25 +318,23 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         onSubmit={ruleDrawer.mode === 'create' ? handleAddRule : handleEditRule}
         ruleToModify={ruleToModify}
       />
-      {hasUnsavedChanges && (
-        <FixedToolBar>
-          <ActionsPanel className={classes.actions}>
-            <Button
-              buttonType="cancel"
-              onClick={() => setDiscardChangesModalOpen(true)}
-            >
-              Discard Changes
-            </Button>
-            <Button
-              buttonType="primary"
-              onClick={applyChanges}
-              loading={submitting}
-            >
-              Apply Changes
-            </Button>
-          </ActionsPanel>
-        </FixedToolBar>
-      )}
+      <ActionsPanel className={classes.actions}>
+        <Button
+          buttonType="cancel"
+          disabled={!hasUnsavedChanges}
+          onClick={() => setDiscardChangesModalOpen(true)}
+        >
+          Discard Changes
+        </Button>
+        <Button
+          buttonType="primary"
+          onClick={applyChanges}
+          loading={submitting}
+          disabled={!hasUnsavedChanges}
+        >
+          Save Changes
+        </Button>
+      </ActionsPanel>
       <DiscardChangesDialog
         isOpen={discardChangesModalOpen}
         handleClose={() => setDiscardChangesModalOpen(false)}

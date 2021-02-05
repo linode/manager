@@ -219,7 +219,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
             <Notice text={error} error spacingTop={8} spacingBottom={0} />
           )}
           {stackScriptError && (
-            <Typography variant="body2">
+            <Typography variant="body1">
               An error occurred while loading the selected StackScript.
             </Typography>
           )}

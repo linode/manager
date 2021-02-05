@@ -5,7 +5,6 @@ import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
-import { formatDate } from 'src/utilities/formatDate';
 import Hidden from 'src/components/core/Hidden';
 import ExtendedAccordion from 'src/components/ExtendedAccordion';
 
@@ -66,7 +65,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface NotificationItem {
   id: string;
   body: string | JSX.Element;
-  timeStamp?: string;
   countInTotal: boolean;
 }
 
@@ -187,7 +185,12 @@ const ContentBody: React.FC<BodyProps> = React.memo(props => {
     // eslint-disable-next-line
     <>
       {_content.map(thisItem => (
-        <ContentRow key={`notification-row-${thisItem.id}`} item={thisItem} />
+        <div
+          className={classes.notificationItem}
+          key={`notification-row-${thisItem.id}`}
+        >
+          {thisItem.body}
+        </div>
       ))}
       {content.length > count ? (
         <button
@@ -211,22 +214,6 @@ const ContentBody: React.FC<BodyProps> = React.memo(props => {
         ? emptyMessage
         : `You have no ${header.toLocaleLowerCase()}.`}
     </Typography>
-  );
-});
-
-// =============================================================================
-// Row
-// =============================================================================
-export const ContentRow: React.FC<{
-  item: NotificationItem;
-}> = React.memo(props => {
-  const { item } = props;
-  const classes = useStyles();
-  return (
-    <div className={classes.notificationItem}>
-      <div style={{ width: item.timeStamp ? '70%' : '100%' }}>{item.body}</div>
-      {item.timeStamp && <Typography>{formatDate(item.timeStamp)}</Typography>}
-    </div>
   );
 });
 

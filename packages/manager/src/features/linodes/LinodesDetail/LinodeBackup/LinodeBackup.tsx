@@ -735,7 +735,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         </Button>
         <Typography
           className={classes.cmrSpacing}
-          variant="body2"
+          variant="body1"
           data-qa-cancel-desc
         >
           Please note that when you cancel backups associated with this Linode,

@@ -44,16 +44,16 @@ export const TotalTraffic = (props: CombinedProps) => {
   const { classes, inTraffic, outTraffic, combinedTraffic } = props;
   return (
     <div className={classes.root}>
-      <Typography variant="body2" className={classes.heading}>
+      <Typography variant="body1" className={classes.heading}>
         Total Traffic
       </Typography>
-      <Typography variant="body2" className={classes.text}>
+      <Typography variant="body1" className={classes.text}>
         <strong>In:</strong> {inTraffic}
       </Typography>
-      <Typography variant="body2" className={classes.text}>
+      <Typography variant="body1" className={classes.text}>
         <strong>Out:</strong> {outTraffic}
       </Typography>
-      <Typography variant="body2" className={classes.text}>
+      <Typography variant="body1" className={classes.text}>
         <strong>Combined:</strong> {combinedTraffic}
       </Typography>
     </div>

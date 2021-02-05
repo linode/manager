@@ -42,7 +42,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
               data-qa-header-cell
               className={classes.tableHeadInner}
             >
-              <Typography variant="body2" className={classes.text}>
+              <Typography variant="body1" className={classes.text}>
                 {section}
               </Typography>
             </TableCell>
@@ -67,7 +67,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
                       parentColumn={rowHeaders[idx]}
                       data-qa-body-cell
                     >
-                      <Typography variant="body2" className={classes.text}>
+                      <Typography variant="body1" className={classes.text}>
                         {format(section)}
                       </Typography>
                     </TableCell>

@@ -58,13 +58,6 @@ storiesOf('Typography', module).add('Text', () => (
       helper info.
     </Typography>
     <Divider />
-    <Typography variant="body2" gutterBottom>
-      Body2. Implemented using the 'body2' variant. Styles are identical for
-      both body variants since there are 2 defined by MUI but Manager only has 1
-      body style. Utilized for general body text, messaging, descriptions, and
-      helper info.
-    </Typography>
-    <Divider />
     <Typography variant="caption" gutterBottom>
       Caption. Implemented using the 'caption' variant. Utilized for helper info
       on some form elements (ex. password strength indicator) and secondary

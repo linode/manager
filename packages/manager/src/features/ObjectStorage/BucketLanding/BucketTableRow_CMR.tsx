@@ -91,7 +91,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
             <div className={classes.bucketNameWrapper}>
-              <Typography variant="body2" component="h3" data-qa-label>
+              <Typography variant="body1" component="h3" data-qa-label>
                 <Link
                   className={classes.bucketLabel}
                   to={`/object-storage/buckets/${cluster}/${label}`}
@@ -107,7 +107,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
       </TableCell>
       <Hidden xsDown>
         <TableCell>
-          <Typography variant="body2" data-qa-region>
+          <Typography variant="body1" data-qa-region>
             {formatObjectStorageCluster(cluster) || cluster}
           </Typography>
         </TableCell>
@@ -120,14 +120,14 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
       </Hidden>
 
       <TableCell>
-        <Typography variant="body2" data-qa-size>
+        <Typography variant="body1" data-qa-size>
           {readableBytes(size).formatted}
         </Typography>
       </TableCell>
 
       <Hidden smDown>
         <TableCell>
-          <Typography variant="body2" data-qa-size>
+          <Typography variant="body1" data-qa-size>
             {objects}
           </Typography>
         </TableCell>

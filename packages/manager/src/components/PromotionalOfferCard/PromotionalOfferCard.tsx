@@ -157,7 +157,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
 
         {offer.footnote && (
           <Typography
-            variant="body2"
+            variant="body1"
             className={classnames({
               [classes.footnote]: true,
               [classes.centerText]: !fullWidth,

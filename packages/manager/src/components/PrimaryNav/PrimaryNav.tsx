@@ -17,6 +17,7 @@ import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import HelpIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import Logo from 'src/assets/logo/logo.svg';
+import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -56,6 +57,7 @@ interface PrimaryLink {
   activeLinks?: Array<string>;
   onClick?: (e: React.ChangeEvent<any>) => void;
   hide?: boolean;
+  isBeta?: boolean;
   prefetchRequestFn?: () => void;
   prefetchRequestCondition?: boolean;
 }
@@ -149,7 +151,8 @@ export const PrimaryNav: React.FC<Props> = props => {
           hide: !showFirewalls,
           display: 'Firewalls',
           href: '/firewalls',
-          icon: <Firewall />
+          icon: <Firewall />,
+          isBeta: true
         },
         {
           display: 'StackScripts',
@@ -313,6 +316,7 @@ export default React.memo(PrimaryNav);
 
 interface PrimaryLinkProps extends PrimaryLink {
   closeMenu: () => void;
+  isBeta?: boolean;
   isCollapsed: boolean;
   locationSearch: string;
   locationPathname: string;
@@ -328,6 +332,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
   const classes = useStyles();
 
   const {
+    isBeta,
     isCollapsed,
     closeMenu,
     href,
@@ -376,6 +381,9 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
         })}
       >
         {display}
+        {isBeta ? (
+          <Chip className={classes.chip} label="beta" component="span" />
+        ) : null}
       </p>
     </Link>
   );

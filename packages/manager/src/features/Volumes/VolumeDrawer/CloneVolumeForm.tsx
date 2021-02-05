@@ -78,7 +78,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
       }) => {
         return (
           <Form>
-            <Typography variant="body2">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GiB and be available in ${volumeRegion}.`}</Typography>
+            <Typography variant="body1">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GiB and be available in ${volumeRegion}.`}</Typography>
             {status && (
               <NoticePanel
                 success={status.success}

@@ -62,7 +62,7 @@ export const KubernetesLanding: React.FunctionComponent<CombinedProps> = props =
         clearErrors={clearErrors}
         {...reactRouterProps}
       />
-      <TransferDisplay />
+      <TransferDisplay spacingTop={18} />
     </>
   );
 };
