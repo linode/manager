@@ -177,103 +177,94 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         ? `${type.label} this plan is too small for resize`
         : type.label;
 
-    const tableRow = (
-      <TableRow
-        data-qa-plan-row={type.label}
-        aria-label={rowAriaLabel}
-        key={type.id}
-        onClick={
-          !isSamePlan && !isDisabledClass ? this.onSelect(type.id) : undefined
-        }
-        rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
-        aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
-        className={classnames({
-          [classes.disabledRow]: isSamePlan || planTooSmall || isDisabledClass
-        })}
-      >
-        <TableCell className={classes.radioCell}>
-          {!isSamePlan && (
-            <FormControlLabel
-              label={type.heading}
-              aria-label={type.heading}
-              className={'label-visually-hidden'}
-              control={
-                <Radio
-                  checked={!planTooSmall && type.id === String(selectedID)}
-                  onChange={this.onSelect(type.id)}
-                  disabled={planTooSmall || disabled || isDisabledClass}
-                  id={type.id}
-                />
-              }
-            />
-          )}
-        </TableCell>
-        <TableCell data-qa-plan-name>
-          <div className={classes.headingCellContainer}>
-            {type.heading}{' '}
-            {isSamePlan && (
-              <Chip
-                data-qa-current-plan
-                label="Current Plan"
-                aria-label="This is your current plan"
-                className={classes.chip}
-              />
-            )}
-            {tooltip && (
-              <HelpIcon
-                text={tooltip}
-                tooltipPosition="right-end"
-                className="py0"
-              />
-            )}
-          </div>
-        </TableCell>
-        <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
-        <TableCell data-qa-hourly>
-          {isGPU ? (
-            <Currency quantity={type.price.hourly} />
-          ) : (
-            `$` + type.price.hourly
-          )}
-        </TableCell>
-        <TableCell data-qa-ram>
-          {convertMegabytesTo(type.memory, true)}
-        </TableCell>
-        <TableCell data-qa-cpu>{type.vcpus}</TableCell>
-        <TableCell data-qa-storage>
-          {convertMegabytesTo(type.disk, true)}
-        </TableCell>
-      </TableRow>
-    );
-
-    const selectionCard = (
-      <SelectionCard
-        key={type.id}
-        checked={type.id === String(selectedID)}
-        onClick={this.onSelect(type.id)}
-        heading={type.heading}
-        subheadings={type.subHeadings}
-        disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
-        tooltip={tooltip}
-        variant={'check'}
-      />
-    );
-
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
-        {isCreate ? (
-          <Hidden mdDown>{tableRow}</Hidden>
-        ) : (
-          <Hidden smDown>{tableRow}</Hidden>
-        )}
+        <Hidden mdDown={isCreate} smDown={!isCreate}>
+          <TableRow
+            data-qa-plan-row={type.label}
+            aria-label={rowAriaLabel}
+            key={type.id}
+            onClick={
+              !isSamePlan && !isDisabledClass
+                ? this.onSelect(type.id)
+                : undefined
+            }
+            rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
+            aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
+            className={classnames({
+              [classes.disabledRow]:
+                isSamePlan || planTooSmall || isDisabledClass
+            })}
+          >
+            <TableCell className={classes.radioCell}>
+              {!isSamePlan && (
+                <FormControlLabel
+                  label={type.heading}
+                  aria-label={type.heading}
+                  className={'label-visually-hidden'}
+                  control={
+                    <Radio
+                      checked={!planTooSmall && type.id === String(selectedID)}
+                      onChange={this.onSelect(type.id)}
+                      disabled={planTooSmall || disabled || isDisabledClass}
+                      id={type.id}
+                    />
+                  }
+                />
+              )}
+            </TableCell>
+            <TableCell data-qa-plan-name>
+              <div className={classes.headingCellContainer}>
+                {type.heading}{' '}
+                {isSamePlan && (
+                  <Chip
+                    data-qa-current-plan
+                    label="Current Plan"
+                    aria-label="This is your current plan"
+                    className={classes.chip}
+                  />
+                )}
+                {tooltip && (
+                  <HelpIcon
+                    text={tooltip}
+                    tooltipPosition="right-end"
+                    className="py0"
+                  />
+                )}
+              </div>
+            </TableCell>
+            <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
+            <TableCell data-qa-hourly>
+              {isGPU ? (
+                <Currency quantity={type.price.hourly} />
+              ) : (
+                `$` + type.price.hourly
+              )}
+            </TableCell>
+            <TableCell data-qa-ram>
+              {convertMegabytesTo(type.memory, true)}
+            </TableCell>
+            <TableCell data-qa-cpu>{type.vcpus}</TableCell>
+            <TableCell data-qa-storage>
+              {convertMegabytesTo(type.disk, true)}
+            </TableCell>
+          </TableRow>
+        </Hidden>
 
         {/* Displays SelectionCard for small screens */}
-        {isCreate ? (
-          <Hidden lgUp>{selectionCard}</Hidden>
-        ) : (
-          <Hidden mdUp>{selectionCard}</Hidden>
-        )}
+        <Hidden lgUp={isCreate} mdUp={!isCreate}>
+          <SelectionCard
+            key={type.id}
+            checked={type.id === String(selectedID)}
+            onClick={this.onSelect(type.id)}
+            heading={type.heading}
+            subheadings={type.subHeadings}
+            disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
+            tooltip={tooltip}
+            variant={'check'}
+          />
+        </Hidden>
       </React.Fragment>
     );
   };
@@ -281,52 +272,52 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
   renderPlanContainer = (plans: ExtendedType[]) => {
     const { classes, isCreate } = this.props;
 
-    const grid = (
-      <Grid item xs={12} lg={11}>
-        <Table border spacingBottom={16} aria-label="List of Linode Plans">
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.headerCell} />
-              <TableCell className={classes.headerCell} data-qa-plan-header>
-                Linode Plan
-              </TableCell>
-              <TableCell className={classes.headerCell} data-qa-monthly-header>
-                Monthly
-              </TableCell>
-              <TableCell className={classes.headerCell} data-qa-hourly-header>
-                Hourly
-              </TableCell>
-              <TableCell className={classes.headerCell} data-qa-ram-header>
-                RAM
-              </TableCell>
-              <TableCell className={classes.headerCell} data-qa-cpu-header>
-                CPUs
-              </TableCell>
-              <TableCell className={classes.headerCell} data-qa-storage-header>
-                Storage
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody role="radiogroup">
-            {plans.map(this.renderSelection)}
-          </TableBody>
-        </Table>
-      </Grid>
-    );
-
     return (
       <Grid container>
-        {isCreate ? (
-          <Hidden lgUp>{plans.map(this.renderSelection)}</Hidden>
-        ) : (
-          <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
-        )}
-
-        {isCreate ? (
-          <Hidden mdDown>{grid}</Hidden>
-        ) : (
-          <Hidden smDown>{grid}</Hidden>
-        )}
+        <Hidden lgUp={isCreate} mdUp={!isCreate}>
+          {plans.map(this.renderSelection)}
+        </Hidden>
+        <Hidden mdDown={isCreate} smDown={!isCreate}>
+          <Grid item xs={12} lg={11}>
+            <Table border spacingBottom={16} aria-label="List of Linode Plans">
+              <TableHead>
+                <TableRow>
+                  <TableCell className={classes.headerCell} />
+                  <TableCell className={classes.headerCell} data-qa-plan-header>
+                    Linode Plan
+                  </TableCell>
+                  <TableCell
+                    className={classes.headerCell}
+                    data-qa-monthly-header
+                  >
+                    Monthly
+                  </TableCell>
+                  <TableCell
+                    className={classes.headerCell}
+                    data-qa-hourly-header
+                  >
+                    Hourly
+                  </TableCell>
+                  <TableCell className={classes.headerCell} data-qa-ram-header>
+                    RAM
+                  </TableCell>
+                  <TableCell className={classes.headerCell} data-qa-cpu-header>
+                    CPUs
+                  </TableCell>
+                  <TableCell
+                    className={classes.headerCell}
+                    data-qa-storage-header
+                  >
+                    Storage
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody role="radiogroup">
+                {plans.map(this.renderSelection)}
+              </TableBody>
+            </Table>
+          </Grid>
+        </Hidden>
       </Grid>
     );
   };
