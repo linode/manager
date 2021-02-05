@@ -401,7 +401,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
           disabled={!formTouched}
           data-qa-submit
         >
-          {mode === 'create' ? 'Add Rule' : 'Edit Rule'}
+          {mode === 'create' ? 'Add Rule' : 'Add Changes'}
         </Button>
       </ActionsPanel>
     </form>
