@@ -282,7 +282,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     const { classes, isCreate } = this.props;
 
     const grid = (
-      <Grid item xs={12} lg={10}>
+      <Grid item xs={12} lg={11}>
         <Table border spacingBottom={16} aria-label="List of Linode Plans">
           <TableHead>
             <TableRow>
