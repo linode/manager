@@ -7,15 +7,21 @@ import { ExtendedEvent } from 'src/store/events/event.types';
 import { NotificationItem } from '../NotificationSection';
 import RenderEvent from './RenderEvent';
 import RenderProgressEvent from './RenderProgressEvent';
+import { notificationContext } from '../NotificationContext';
 
 export const useEventNotifications = () => {
   const { events } = useEvents();
+  const context = React.useContext(notificationContext);
 
   const [inProgress, completed] = partition<Event>(isInProgressEvent, events);
 
   const allEvents = [
-    ...inProgress.map(formatProgressEventForDisplay),
-    ...completed.map(formatEventForDisplay)
+    ...inProgress.map(thisEvent =>
+      formatProgressEventForDisplay(thisEvent, context.closeDrawer)
+    ),
+    ...completed.map(thisEvent =>
+      formatEventForDisplay(thisEvent, context.closeDrawer)
+    )
   ];
 
   return allEvents.filter(thisAction =>
@@ -23,17 +29,21 @@ export const useEventNotifications = () => {
   ) as NotificationItem[];
 };
 
-const formatEventForDisplay = (event: ExtendedEvent): NotificationItem => ({
+const formatEventForDisplay = (
+  event: ExtendedEvent,
+  onClose: () => void
+): NotificationItem => ({
   id: `event-${event.id}`,
-  body: <RenderEvent event={event} />,
+  body: <RenderEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen
 });
 
 const formatProgressEventForDisplay = (
-  event: ExtendedEvent
+  event: ExtendedEvent,
+  onClose: () => void
 ): NotificationItem => ({
   id: `progress-event-${event.id}`,
-  body: <RenderProgressEvent event={event} />,
+  body: <RenderProgressEvent event={event} onClose={onClose} />,
   countInTotal: !event.seen
 });
 
