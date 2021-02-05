@@ -269,7 +269,7 @@ export class NodeBalancersLanding extends React.Component<
             );
           }}
         </PreferenceToggle>
-        <TransferDisplay />
+        <TransferDisplay spacingTop={18} />
         <ConfirmationDialog
           onClose={this.closeConfirmationDialog}
           title={`Delete ${this.state.selectedNodeBalancerLabel}?`}

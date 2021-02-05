@@ -3,9 +3,7 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
-import CircleProgress from 'src/components/CircleProgress';
 import Dialog from 'src/components/core/Dialog';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -14,7 +12,6 @@ import { useAccountTransfer } from 'src/queries/accountTransfer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(),
     width: '100%',
     margin: 'auto',
     textAlign: 'center'
@@ -70,7 +67,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const TransferDisplay: React.FC<{}> = _ => {
+export interface Props {
+  spacingTop?: number;
+}
+
+export const TransferDisplay: React.FC<Props> = props => {
+  const { spacingTop } = props;
   const classes = useStyles();
 
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -80,14 +82,6 @@ export const TransferDisplay: React.FC<{}> = _ => {
 
   const poolUsagePct = used < quota ? (used / quota) * 100 : 100;
 
-  if (isLoading) {
-    return (
-      <Paper className={classes.root + ' flex-center'}>
-        <CircleProgress mini />
-      </Paper>
-    );
-  }
-
   if (isError) {
     // We may want to add an error state for this but I think that would clutter
     // up the display.
@@ -96,16 +90,26 @@ export const TransferDisplay: React.FC<{}> = _ => {
 
   return (
     <>
-      <Typography className={classes.root}>
-        You have used {poolUsagePct.toFixed(poolUsagePct < 1 ? 2 : 0)}% of your
-        {`  `}
-        <button
-          className={classes.openModalButton}
-          onClick={() => setModalOpen(true)}
-        >
-          Monthly Network Transfer Pool
-        </button>
-        .
+      <Typography
+        className={classes.root}
+        style={{ marginTop: spacingTop || 8 }}
+      >
+        {isLoading ? (
+          'Loading transfer data...'
+        ) : (
+          <>
+            You have used {poolUsagePct.toFixed(poolUsagePct < 1 ? 2 : 0)}% of
+            your
+            {`  `}
+            <button
+              className={classes.openModalButton}
+              onClick={() => setModalOpen(true)}
+            >
+              Monthly Network Transfer Pool
+            </button>
+            .
+          </>
+        )}
       </Typography>
       <TransferDialog
         isOpen={modalOpen}
@@ -184,7 +188,6 @@ export const TransferDialog: React.FC<DialogProps> = React.memo(props => {
         value={Math.ceil(poolUsagePct)}
         className={classes.poolUsageProgress}
         rounded
-        overLimit={quota < used}
       />
 
       <Typography className={classes.proratedNotice}>
