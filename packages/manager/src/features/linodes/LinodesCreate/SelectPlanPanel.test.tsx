@@ -15,7 +15,6 @@ describe('Select Plan Panel', () => {
           disabledRow: '',
           headerCell: '',
           chip: '',
-          currentPlanChipCell: '',
           radioCell: '',
           headingCellContainer: '',
           gpuGuideLink: ''

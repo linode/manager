@@ -561,7 +561,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
           rows={[{ text: firstAddress }, { text: secondAddress }]}
           footer={
             numIPAddresses > 2 ? (
-              <Typography variant="body2">
+              <Typography variant="body1">
                 <HashLink to={`/linodes/${linodeId}/networking#${ipv4TableID}`}>
                   View all IP Addresses
                 </HashLink>

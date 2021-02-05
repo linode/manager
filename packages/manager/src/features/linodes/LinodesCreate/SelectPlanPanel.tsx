@@ -1,5 +1,6 @@
-import * as classnames from 'classnames';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import * as classnames from 'classnames';
+import { LDClient } from 'launchdarkly-js-client-sdk';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -24,22 +25,16 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import Table from 'src/components/Table';
-import Table_CMR from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell';
-import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow';
-import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { dcDisplayNames } from 'src/constants';
 import withRegions, {
   DefaultProps as RegionsProps
 } from 'src/containers/regions.container';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-import withFeatureFlags from 'src/containers/withFeatureFlagConsumer.container.ts';
-import { LDClient } from 'launchdarkly-js-client-sdk';
-import { FlagSet } from 'src/featureFlags';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { gpuPlanText } from './utilities';
 
 type ClassNames =
@@ -49,7 +44,6 @@ type ClassNames =
   | 'headerCell'
   | 'chip'
   | 'headingCellContainer'
-  | 'currentPlanChipCell'
   | 'radioCell'
   | 'gpuGuideLink';
 
@@ -80,6 +74,9 @@ const styles = (theme: Theme) =>
       },
       '&:not(.emptyCell)': {
         borderLeft: 'none !important'
+      },
+      '&:last-child': {
+        paddingRight: 15
       }
     },
     chip: {
@@ -88,12 +85,10 @@ const styles = (theme: Theme) =>
       textTransform: 'uppercase',
       marginLeft: theme.spacing(2)
     },
-    currentPlanChipCell: {
-      width: '13%'
-    },
     radioCell: {
+      height: theme.spacing(6),
       width: '5%',
-      height: 55
+      paddingRight: theme.spacing()
     },
     gpuGuideLink: {
       '& a': {
@@ -117,8 +112,8 @@ interface Props {
   copy?: string;
   disabledClasses?: LinodeTypeClass[];
   tabbedPanelInnerClass?: string;
-  flags?: FlagSet;
   ldClient?: LDClient;
+  isCreate?: boolean;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -160,7 +155,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
       currentPlanHeading,
       disabled,
       classes,
-      flags
+      isCreate
     } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
@@ -182,14 +177,11 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         ? `${type.label} this plan is too small for resize`
         : type.label;
 
-    const _TableRow = flags?.cmr ? TableRow_CMR : TableRow;
-    const _TableCell = flags?.cmr ? TableCell_CMR : TableCell;
-
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
-        <Hidden smDown>
-          <_TableRow
+        <Hidden mdDown={isCreate} smDown={!isCreate}>
+          <TableRow
             data-qa-plan-row={type.label}
             aria-label={rowAriaLabel}
             key={type.id}
@@ -205,7 +197,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 isSamePlan || planTooSmall || isDisabledClass
             })}
           >
-            <_TableCell className={classes.radioCell}>
+            <TableCell className={classes.radioCell}>
               {!isSamePlan && (
                 <FormControlLabel
                   label={type.heading}
@@ -221,8 +213,8 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                   }
                 />
               )}
-            </_TableCell>
-            <_TableCell data-qa-plan-name>
+            </TableCell>
+            <TableCell data-qa-plan-name>
               <div className={classes.headingCellContainer}>
                 {type.heading}{' '}
                 {isSamePlan && (
@@ -241,26 +233,27 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                   />
                 )}
               </div>
-            </_TableCell>
-            <_TableCell data-qa-monthly> ${type.price.monthly}</_TableCell>
-            <_TableCell data-qa-hourly>
+            </TableCell>
+            <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
+            <TableCell data-qa-hourly>
               {isGPU ? (
                 <Currency quantity={type.price.hourly} />
               ) : (
                 `$` + type.price.hourly
               )}
-            </_TableCell>
-            <_TableCell data-qa-ram>
+            </TableCell>
+            <TableCell data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
-            </_TableCell>
-            <_TableCell data-qa-cpu>{type.vcpus}</_TableCell>
-            <_TableCell data-qa-storage>
+            </TableCell>
+            <TableCell data-qa-cpu>{type.vcpus}</TableCell>
+            <TableCell data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
-            </_TableCell>
-          </_TableRow>
+            </TableCell>
+          </TableRow>
         </Hidden>
+
         {/* Displays SelectionCard for small screens */}
-        <Hidden mdUp>
+        <Hidden lgUp={isCreate} mdUp={!isCreate}>
           <SelectionCard
             key={type.id}
             checked={type.id === String(selectedID)}
@@ -277,75 +270,52 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
   };
 
   renderPlanContainer = (plans: ExtendedType[]) => {
-    const { flags, classes } = this.props;
-
-    const tableHeader = flags?.cmr ? (
-      <TableHead>
-        <TableRow_CMR>
-          <TableCell_CMR className={classes.headerCell} />
-          <TableCell_CMR className={classes.headerCell} data-qa-plan-header>
-            Linode Plan
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-monthly-header>
-            Monthly
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-hourly-header>
-            Hourly
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-ram-header>
-            RAM
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-cpu-header>
-            CPUs
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-storage-header>
-            Storage
-          </TableCell_CMR>
-        </TableRow_CMR>
-      </TableHead>
-    ) : (
-      <TableHead>
-        <TableRow>
-          <TableCell />
-          <TableCell data-qa-plan-header>Linode Plan</TableCell>
-          <TableCell data-qa-monthly-header>Monthly</TableCell>
-          <TableCell data-qa-hourly-header>Hourly</TableCell>
-          <TableCell data-qa-ram-header>RAM</TableCell>
-          <TableCell data-qa-cpu-header>CPUs</TableCell>
-          <TableCell data-qa-storage-header>Storage</TableCell>
-        </TableRow>
-      </TableHead>
-    );
+    const { classes, isCreate } = this.props;
 
     return (
       <Grid container>
-        <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
-        <Hidden smDown>
-          <Grid item xs={12} lg={10}>
-            {flags?.cmr ? (
-              <Table_CMR
-                border
-                spacingBottom={16}
-                aria-label="List of Linode Plans"
-              >
-                {tableHeader}
-                <TableBody role="radiogroup">
-                  {plans.map(this.renderSelection)}
-                </TableBody>
-              </Table_CMR>
-            ) : (
-              <Table
-                isResponsive={false}
-                border
-                spacingBottom={16}
-                aria-label="List of Linode Plans"
-              >
-                {tableHeader}
-                <TableBody role="radiogroup">
-                  {plans.map(this.renderSelection)}
-                </TableBody>
-              </Table>
-            )}
+        <Hidden lgUp={isCreate} mdUp={!isCreate}>
+          {plans.map(this.renderSelection)}
+        </Hidden>
+        <Hidden mdDown={isCreate} smDown={!isCreate}>
+          <Grid item xs={12} lg={11}>
+            <Table border spacingBottom={16} aria-label="List of Linode Plans">
+              <TableHead>
+                <TableRow>
+                  <TableCell className={classes.headerCell} />
+                  <TableCell className={classes.headerCell} data-qa-plan-header>
+                    Linode Plan
+                  </TableCell>
+                  <TableCell
+                    className={classes.headerCell}
+                    data-qa-monthly-header
+                  >
+                    Monthly
+                  </TableCell>
+                  <TableCell
+                    className={classes.headerCell}
+                    data-qa-hourly-header
+                  >
+                    Hourly
+                  </TableCell>
+                  <TableCell className={classes.headerCell} data-qa-ram-header>
+                    RAM
+                  </TableCell>
+                  <TableCell className={classes.headerCell} data-qa-cpu-header>
+                    CPUs
+                  </TableCell>
+                  <TableCell
+                    className={classes.headerCell}
+                    data-qa-storage-header
+                  >
+                    Storage
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody role="radiogroup">
+                {plans.map(this.renderSelection)}
+              </TableBody>
+            </Table>
           </Grid>
         </Hidden>
       </Grid>
@@ -500,7 +470,6 @@ const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
-  withFeatureFlags,
   styled,
   withRegions()
 )(SelectPlanPanel);

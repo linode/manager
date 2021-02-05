@@ -1,4 +1,5 @@
 import { ActivePromotion } from '@linode/api-v4/lib/account/types';
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import CreditCard from 'src/assets/icons/credit-card.svg';
@@ -181,7 +182,7 @@ export const BillingSummary: React.FC<Props> = props => {
     Boolean(promotion) && promoThisMonthCreditRemaining !== undefined;
 
   const determinePaymentDisplay = (pastDueAmount: number) => {
-    if (pastDueAmount > 0) {
+    if (pastDueAmount > 0 && dayOfMonth >= 3) {
       return (
         <div>
           <Typography className={classes.header} variant="h2">
@@ -213,7 +214,7 @@ export const BillingSummary: React.FC<Props> = props => {
       <Paper className={classes.root}>
         <Grid container alignItems="stretch">
           <Grid item xs={12} md={4} className={classes.gridItem}>
-            {/* If balance is > 0, it is considered past due. */}
+            {/* If balance is > 0 and it is the 3rd day of the month or later, it is considered past due. */}
             {determinePaymentDisplay(balance)}
 
             <div className={classes.iconButtonOuter}>
@@ -350,5 +351,7 @@ export const BillingSummary: React.FC<Props> = props => {
     </>
   );
 };
+
+const dayOfMonth = DateTime.local().day;
 
 export default React.memo(BillingSummary);

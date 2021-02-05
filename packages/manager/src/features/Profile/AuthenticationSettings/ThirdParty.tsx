@@ -40,40 +40,37 @@ export const ThirdParty: React.FC<CombinedProps> = props => {
       ?.displayName || '';
 
   return (
-    <React.Fragment>
-      <Paper className={classes.root}>
-        <Notice warning>
-          Third-Party Authentication via {displayName} is enabled on your
-          account.
-        </Notice>
-        <Typography variant="body2" className={classes.copy}>
-          Your login credentials are currently managed via {displayName}. If you
-          need to reset your password, please visit{' '}
-          <ExternalLink
-            className={classes.link}
-            hideIcon
-            link={`https://www.` + `${props.authType}` + `.com/`}
-            text={`the ` + `${displayName}` + ` website`}
-          />
-          .
-        </Typography>
-        <Typography variant="body2" className={classes.copy}>
-          To disable {displayName} authentication and log in using your Linode
-          credentials, click the button below. We’ll send you an e-mail with
-          instructions on how to reset your password.
-        </Typography>
-        <Button
-          aria-describedby="external-site"
-          buttonType="primary"
-          className={classes.button}
-          onClick={() => {
-            window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener');
-          }}
-        >
-          Disable {displayName} Authentication
-        </Button>
-      </Paper>
-    </React.Fragment>
+    <Paper className={classes.root}>
+      <Notice warning>
+        Third-Party Authentication via {displayName} is enabled on your account.
+      </Notice>
+      <Typography variant="body1" className={classes.copy}>
+        Your login credentials are currently managed via {displayName}. If you
+        need to reset your password, please visit{' '}
+        <ExternalLink
+          className={classes.link}
+          hideIcon
+          link={`https://www.` + `${props.authType}` + `.com/`}
+          text={`the ` + `${displayName}` + ` website`}
+        />
+        .
+      </Typography>
+      <Typography variant="body1" className={classes.copy}>
+        To disable {displayName} authentication and log in using your Linode
+        credentials, click the button below. We’ll send you an e-mail with
+        instructions on how to reset your password.
+      </Typography>
+      <Button
+        aria-describedby="external-site"
+        buttonType="primary"
+        className={classes.button}
+        onClick={() => {
+          window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener');
+        }}
+      >
+        Disable {displayName} Authentication
+      </Button>
+    </Paper>
   );
 };
 

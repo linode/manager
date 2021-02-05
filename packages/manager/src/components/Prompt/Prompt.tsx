@@ -82,6 +82,11 @@ const Prompt: React.FC<CombinedProps> = props => {
   };
 
   const handleNavigation = (location: Location) => {
+    if (location.pathname === history.location.pathname) {
+      // Sorting order changes affect the search portion of the URL.
+      // The path is the same though, so the user isn't actually navigating away.
+      return true;
+    }
     // If this user hasn't yet confirmed navigation, present a confirmation modal.
     if (!confirmedNav.current) {
       setIsModalOpen(true);

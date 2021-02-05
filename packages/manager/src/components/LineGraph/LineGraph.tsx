@@ -279,7 +279,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                         data-qa-header-cell
                         className={classes.tableHeadInner}
                       >
-                        <Typography variant="body2" className={classes.text}>
+                        <Typography variant="body1" className={classes.text}>
                           {section}
                         </Typography>
                       </TableCell>
@@ -290,7 +290,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                 <TableRow>
                   <TableCell className={classes.tableHeadInner}>
                     <Typography
-                      variant="body2"
+                      variant="body1"
                       component="span"
                       className={classes.text}
                     >
@@ -304,7 +304,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                       data-qa-header-cell
                       className={classes.tableHeadInner}
                     >
-                      <Typography variant="body2" className={classes.text}>
+                      <Typography variant="body1" className={classes.text}>
                         {section}
                       </Typography>
                     </TableCell>
@@ -351,7 +351,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                             data-qa-body-cell
                           >
                             <Typography
-                              variant="body2"
+                              variant="body1"
                               className={classes.text}
                             >
                               {format(section)}

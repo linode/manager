@@ -1,4 +1,5 @@
 import { restoreBackup } from '@linode/api-v4/lib/linodes';
+import { Tag } from '@linode/api-v4/lib/tags/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
@@ -7,9 +8,6 @@ import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
-import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
-import DocsSidebar from 'src/components/DocsSidebar';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
@@ -20,14 +18,19 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
+import DocsSidebar from 'src/components/DocsSidebar';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { WithImages } from 'src/containers/withImages.container';
 import { AppsDocs } from 'src/documentation';
+import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts
@@ -39,6 +42,7 @@ import {
 } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import AddonsPanel from './AddonsPanel';
 import SelectPlanPanel from './SelectPlanPanel';
@@ -51,6 +55,8 @@ import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import {
   AllFormStateAndHandlers,
   AppsData,
+  HandleSubmit,
+  Info,
   ReduxStateProps,
   ReduxStatePropsAndSSHKeys,
   StackScriptFormStateHandlers,
@@ -58,14 +64,8 @@ import {
   WithLinodesProps,
   WithRegionsProps,
   WithTypesProps,
-  WithTypesRegionsAndImages,
-  Info,
-  HandleSubmit
+  WithTypesRegionsAndImages
 } from './types';
-import { Tag } from '@linode/api-v4/lib/tags/types';
-import Notice from 'src/components/Notice';
-import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
-import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -550,6 +550,7 @@ export class LinodeCreate extends React.PureComponent<
             ]}
             disabled={userCannotCreateLinode}
             disabledClasses={this.props.disabledClasses}
+            isCreate
           />
           <LabelAndTagsPanel
             data-qa-label-and-tags-panel
