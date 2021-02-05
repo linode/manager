@@ -310,7 +310,14 @@ export const handlers = [
         label: 'my-disk'
       }
     });
-    return res.once(ctx.json(makeResourcePage([...events, diskResize])));
+    const oldEvents = eventFactory.buildList(20, {
+      action: 'account_update',
+      seen: true,
+      percent_complete: 100
+    });
+    return res.once(
+      ctx.json(makeResourcePage([...events, diskResize, ...oldEvents]))
+    );
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
@@ -368,6 +375,18 @@ export const handlers = [
     return res(ctx.json(makeResourcePage([])));
   }),
   rest.get('*/notifications', (req, res, ctx) => {
+    // pastDueBalance included here merely for ease of testing for Notifications section in the Notifications drawer.
+    // const pastDueBalance = notificationFactory.build({
+    //   entity: null,
+    //   label: 'past due',
+    //   message: `You have a past due balance of $58.50. Please make a payment immediately to avoid service disruption.`,
+    //   type: 'payment_due',
+    //   severity: 'critical',
+    //   when: null,
+    //   until: null,
+    //   body: null
+    // });
+
     // const emailBounce = notificationFactory.build({
     //   type: 'billing_email_bounce',
     //   entity: null,
@@ -382,15 +401,17 @@ export const handlers = [
 
     const migrationTicket = notificationFactory.build({
       type: 'migration_pending',
-      entity: { id: 0, type: 'linode' }
+      entity: { id: 0, type: 'linode' },
+      severity: 'critical'
     });
 
     return res(
       ctx.json(
         makeResourcePage([
+          // pastDueBalance,
           ...notificationFactory.buildList(1),
-          // abuseTicket
-          // emailBounce
+          // abuseTicket,
+          // emailBounce,
           migrationTicket
         ])
       )

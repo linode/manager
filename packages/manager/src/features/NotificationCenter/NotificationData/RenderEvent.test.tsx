@@ -1,4 +1,4 @@
-import { formatTimeRemaining } from './RenderEvent';
+import { formatTimeRemaining } from './RenderProgressEvent';
 
 describe('Pending Actions', () => {
   describe('formatTimeRemaining helper', () => {

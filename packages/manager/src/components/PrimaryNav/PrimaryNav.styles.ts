@@ -23,16 +23,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   logoItem: {
     display: 'flex',
     alignItems: 'center',
-    padding: '12px 12px 0',
+    padding: '12px 12px 0 14px',
     position: 'relative',
     '& svg': {
       maxWidth: theme.spacing(3) + 91
     }
   },
   logoCollapsed: {
-    '& .logoLetters': {
-      opacity: 0
-    }
+    background: theme.cmrBGColors.bgPrimaryNav,
+    height: 48,
+    width: 100,
+    position: 'absolute',
+    top: 12,
+    left: 48
   },
   listItem: {
     display: 'flex',
@@ -78,6 +81,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   linkItem: {
+    display: 'flex',
+    alignItems: 'center',
     color: theme.color.primaryNavText,
     fontFamily: 'LatoWebBold', // we keep this bold at all times
     opacity: 1,
@@ -99,6 +104,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'rgba(0, 0, 0, 0.12)',
     marginTop: theme.spacing(1.5),
     marginBottom: theme.spacing(1.5)
+  },
+  chip: {
+    fontSize: '0.625rem',
+    height: 15,
+    marginTop: 2,
+    marginLeft: theme.spacing(),
+    letterSpacing: '.25px',
+    opacity: 0.4,
+    textTransform: 'uppercase'
   }
 }));
 

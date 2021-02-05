@@ -1,121 +1,109 @@
+import * as classNames from 'classnames';
 import { Event } from '@linode/api-v4/lib/account/types';
-import { Duration } from 'luxon';
 import * as React from 'react';
-import BarPercent from 'src/components/BarPercent';
+import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import EntityIcon, { Variant } from 'src/components/EntityIcon';
+import Grid from 'src/components/Grid';
 import { Link } from 'src/components/Link';
-import {
-  eventLabelGenerator,
-  eventMessageGenerator
-} from 'src/eventMessageGenerator_CMR';
-import useLinodes from 'src/hooks/useLinodes';
-import { useTypes } from 'src/hooks/useTypes';
-import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
-import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
+import formatDate from 'src/utilities/formatDate';
+import useEventInfo from './useEventInfo';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  action: {
-    display: 'flex',
-    flexFlow: 'column nowrap'
+  root: {
+    paddingTop: 2,
+    paddingBottom: 2
   },
-  bar: {
+  divider: {
     marginTop: theme.spacing()
+  },
+  icon: {
+    '& svg': {
+      height: 20,
+      width: 20
+    }
+  },
+  eventMessage: {
+    '&:hover': {
+      textDecoration: 'underline'
+    }
+  },
+  timeStamp: {
+    textAlign: 'right'
+  },
+  unseenEvent: {
+    fontWeight: 'bold'
   }
 }));
 
 interface Props {
   event: Event;
+  onClose: () => void;
 }
 
 export type CombinedProps = Props;
 
 export const RenderEvent: React.FC<Props> = props => {
-  const { event } = props;
+  const { event, onClose } = props;
   const classes = useStyles();
 
-  const { linodes } = useLinodes();
-  const { types } = useTypes();
-  const _linodes = Object.values(linodes.itemsById);
-  const _types = types.entities;
-
-  const message = eventMessageGenerator(event, _linodes, _types);
-
+  const { message, duration, type, status, linkTarget } = useEventInfo(event);
   if (message === null) {
     return null;
   }
 
-  const completed = event.percent_complete === 100;
-
-  const parsedTimeRemaining = formatTimeRemaining(event.time_remaining);
-
-  const formattedTimeRemaining = parsedTimeRemaining
-    ? ` (~${parsedTimeRemaining})`
-    : null;
-
-  const duration = formatEventSeconds(event.duration);
-
-  const linkTarget = createLinkHandlerForNotification(
-    event.action,
-    event.entity,
-    false
+  const eventMessage = (
+    <Typography
+      className={classNames({
+        [classes.unseenEvent]: !event.seen,
+        [classes.eventMessage]: !!linkTarget
+      })}
+    >
+      {message}
+      {event.duration
+        ? event.status === 'failed'
+          ? ` (Failed after ${duration})`
+          : ` (Completed in ${duration})`
+        : null}
+    </Typography>
   );
-  const label = linkTarget ? (
-    <Link to={linkTarget}>{eventLabelGenerator(event)}</Link>
-  ) : (
-    event.entity?.label
-  );
+
   return (
-    <div className={classes.action}>
-      <Typography>
-        {label}
-        {` `}
-        {message}
-        {/** duration and timeRemaining will never overlap, but check just in case */}
-        {!completed ? formattedTimeRemaining : null}
-        {completed
-          ? event.status === 'failed'
-            ? ` (failed after ${duration})`
-            : ` (completed in ${duration})`
-          : null}
-      </Typography>
-      {!completed ? (
-        <BarPercent
-          className={classes.bar}
-          max={100}
-          value={event.percent_complete ?? 0}
-          rounded
-          narrow
-        />
-      ) : null}
-    </div>
+    <>
+      <Grid container className={classes.root} justify="space-between">
+        <Grid item xs={8}>
+          <Grid container wrap="nowrap">
+            <Grid item>
+              <EntityIcon
+                className={classes.icon}
+                variant={type as Variant}
+                status={status}
+                size={25}
+              />
+            </Grid>
+            <Grid item>
+              {linkTarget ? (
+                <Link to={linkTarget} onClick={onClose}>
+                  {eventMessage}
+                </Link>
+              ) : (
+                eventMessage
+              )}
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={4} className={classes.timeStamp}>
+          <Typography
+            className={classNames({ [classes.unseenEvent]: !event.seen })}
+          >
+            {formatDate(event.created)}
+          </Typography>
+        </Grid>
+      </Grid>
+      <Divider className={classes.divider} />
+    </>
   );
-};
-
-export const formatTimeRemaining = (time: string | null) => {
-  if (!time) {
-    return null;
-  }
-
-  try {
-    const [hours, minutes, seconds] = time.split(':').map(Number);
-    if (
-      [hours, minutes, seconds].some(
-        thisNumber => typeof thisNumber === 'undefined'
-      ) ||
-      [hours, minutes, seconds].some(isNaN)
-    ) {
-      // Bad input, don't display a duration
-      return null;
-    }
-    const duration = Duration.fromObject({ hours, minutes, seconds });
-    return hours > 0
-      ? `${Math.round(duration.as('hours'))} hours remaining`
-      : `${Math.round(duration.as('minutes'))} minutes remaining`;
-  } catch {
-    // Broken/unexpected input
-    return null;
-  }
 };
 
 export default React.memo(RenderEvent);

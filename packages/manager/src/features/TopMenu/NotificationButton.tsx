@@ -13,7 +13,13 @@ export const NotificationButton: React.FC<{}> = _ => {
 
   const notificationData = useNotificationData();
 
-  const numEvents = notificationData.pendingActions.length;
+  const numNotifications =
+    notificationData.eventNotifications.filter(
+      thisEvent => thisEvent.countInTotal
+    ).length +
+    notificationData.formattedNotifications.filter(
+      thisEvent => thisEvent.countInTotal
+    ).length;
 
   return (
     <>
@@ -25,8 +31,8 @@ export const NotificationButton: React.FC<{}> = _ => {
         <TopMenuIcon title="Notifications">
           <Bell />
         </TopMenuIcon>
-        {numEvents > 0 ? (
-          <span className={classes.badge}>{numEvents}</span>
+        {numNotifications > 0 ? (
+          <span className={classes.badge}>{numNotifications}</span>
         ) : null}
       </button>
       <NotificationDrawer

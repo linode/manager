@@ -17,7 +17,7 @@ const StackScriptCreate = React.lazy(() => import('./StackScriptCreate'));
 
 type Props = RouteComponentProps<{}>;
 
-export const NodeBalancers: React.FC<Props> = props => {
+export const StackScripts: React.FC<Props> = props => {
   const {
     match: { path },
     location: { search }
@@ -59,4 +59,4 @@ export const NodeBalancers: React.FC<Props> = props => {
   );
 };
 
-export default withRouter(NodeBalancers);
+export default withRouter(StackScripts);

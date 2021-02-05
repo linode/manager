@@ -73,7 +73,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
             <div className={classes.bucketNameWrapper}>
-              <Typography variant="body2" component="h3" data-qa-label>
+              <Typography variant="body1" component="h3" data-qa-label>
                 <Link
                   className={classes.bucketLabel}
                   to={`/object-storage/buckets/${cluster}/${label}`}
@@ -87,29 +87,23 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </TableCell>
-      <Hidden xsDown>
-        <TableCell>
-          <Typography variant="body2" data-qa-region>
-            {formatObjectStorageCluster(cluster) || cluster}
-          </Typography>
-        </TableCell>
-      </Hidden>
-
-      <Hidden smDown>
-        <TableCell>
-          <DateTimeDisplay value={created} data-qa-created />
-        </TableCell>
-      </Hidden>
-
-      <TableCell>
-        <Typography variant="body2" data-qa-size>
+      <TableCell parentColumn="Region">
+        <Typography variant="body1" data-qa-region>
+          {formatObjectStorageCluster(cluster) || cluster}
+        </Typography>
+      </TableCell>
+      <TableCell parentColumn="Created">
+        <DateTimeDisplay value={created} data-qa-created />
+      </TableCell>
+      <TableCell parentColumn="Size">
+        <Typography variant="body1" data-qa-size>
           {readableBytes(size).formatted}
         </Typography>
       </TableCell>
 
       <Hidden smDown>
         <TableCell>
-          <Typography variant="body2" data-qa-size>
+          <Typography variant="body1" data-qa-size>
             {objects}
           </Typography>
         </TableCell>

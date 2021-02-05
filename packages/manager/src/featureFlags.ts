@@ -28,6 +28,7 @@ export interface Flags {
   vlans: boolean;
   cvvRequired: boolean;
   databases: boolean;
+  firewallBetaNotification: boolean;
 }
 
 type PromotionalOfferFeature =

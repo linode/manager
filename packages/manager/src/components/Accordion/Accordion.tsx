@@ -1,6 +1,5 @@
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as React from 'react';
-import Minus from 'src/assets/icons/minus-square.svg';
-import Plus from 'src/assets/icons/plus-square.svg';
 import Accordion, { AccordionProps } from 'src/components/core/Accordion';
 import AccordionDetails, {
   AccordionDetailsProps
@@ -118,7 +117,7 @@ class AAccordion extends React.Component<CombinedProps> {
       <Accordion {...accordionProps} className={classes.root} data-qa-panel>
         <AccordionSummary
           onClick={this.handleClick}
-          expandIcon={this.state.open ? <Minus /> : <Plus />}
+          expandIcon={<KeyboardArrowDown />}
           {...summaryProps}
           data-qa-panel-summary={this.props.heading}
         >

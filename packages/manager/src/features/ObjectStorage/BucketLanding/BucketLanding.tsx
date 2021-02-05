@@ -15,6 +15,7 @@ import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
 import TextField from 'src/components/TextField';
+import TransferDisplay from 'src/components/TransferDisplay';
 import { objectStorageClusterDisplay } from 'src/constants';
 import bucketDrawerContainer, {
   DispatchProps
@@ -246,10 +247,14 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
         </OrderBy>
         {/* If there's more than one Bucket, display the total usage. */}
         {data.length > 1 ? (
-          <Typography style={{ marginTop: 8, marginLeft: 15 }} variant="body1">
-            Total usage: {readableBytes(totalUsage).formatted}
+          <Typography
+            style={{ marginTop: 18, width: '100%', textAlign: 'center' }}
+            variant="body1"
+          >
+            Total storage used: {readableBytes(totalUsage).formatted}
           </Typography>
         ) : null}
+        <TransferDisplay spacingTop={data.length > 1 ? 8 : 18} />
       </Grid>
       <ConfirmationDialog
         open={removeBucketConfirmationDialog.isOpen}

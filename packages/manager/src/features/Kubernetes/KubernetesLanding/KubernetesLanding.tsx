@@ -2,6 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
+import TransferDisplay from 'src/components/TransferDisplay';
 import withKubernetes, {
   DispatchProps,
   KubernetesProps
@@ -53,13 +54,16 @@ export const KubernetesLanding: React.FunctionComponent<CombinedProps> = props =
   }
 
   return (
-    <ClusterList
-      clusters={clusters || []}
-      deleteCluster={deleteCluster}
-      error={clustersError}
-      clearErrors={clearErrors}
-      {...reactRouterProps}
-    />
+    <>
+      <ClusterList
+        clusters={clusters || []}
+        deleteCluster={deleteCluster}
+        error={clustersError}
+        clearErrors={clearErrors}
+        {...reactRouterProps}
+      />
+      <TransferDisplay spacingTop={18} />
+    </>
   );
 };
 

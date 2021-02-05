@@ -58,7 +58,7 @@ export const ActivitySummaryContent: React.FC<CombinedProps> = props => {
         justify="center"
         data-qa-activity-empty
       >
-        <Typography className={classes.emptyState} variant="body2">
+        <Typography className={classes.emptyState} variant="body1">
           No recent activity for this Linode.
         </Typography>
       </Grid>
@@ -66,6 +66,7 @@ export const ActivitySummaryContent: React.FC<CombinedProps> = props => {
   }
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {events.map((event, idx) => (
         <ActivityRow

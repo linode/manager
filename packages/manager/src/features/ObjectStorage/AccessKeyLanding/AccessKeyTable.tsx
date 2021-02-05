@@ -78,7 +78,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
     return objectStorageKeys.map((eachKey: ObjectStorageKey) => (
       <TableRow key={eachKey.id} data-qa-table-row={eachKey.label}>
         <TableCell parentColumn="Label">
-          <Typography variant="body2" component="h3" data-qa-key-label>
+          <Typography variant="body1" component="h3" data-qa-key-label>
             {eachKey.label}
           </Typography>
         </TableCell>
