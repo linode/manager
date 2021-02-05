@@ -93,6 +93,6 @@ describe('ObjectStorageLanding', () => {
         }
       }
     });
-    screen.getByText(/Total usage: 10 GB/);
+    screen.getByText(/Total storage used: 10 GB/);
   });
 });
