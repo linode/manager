@@ -88,13 +88,17 @@ interface RuleRow {
 // =============================================================================
 // <FirewallRuleTable />
 // =============================================================================
-interface Props {
-  category: Category;
-  openRuleDrawer: (category: Category, mode: Mode) => void;
-  rulesWithStatus: ExtendedFirewallRule[];
+
+interface RowActionHandlers {
+  triggerCloneFirewallRule: (idx: number) => void;
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
   triggerUndo: (idx: number) => void;
+}
+interface Props extends RowActionHandlers {
+  category: Category;
+  openRuleDrawer: (category: Category, mode: Mode) => void;
+  rulesWithStatus: ExtendedFirewallRule[];
 }
 
 type CombinedProps = Props;
@@ -104,6 +108,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
     category,
     openRuleDrawer,
     rulesWithStatus,
+    triggerCloneFirewallRule,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
     triggerUndo
@@ -192,6 +197,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     <FirewallRuleTableRow
                       key={thisRuleRow.id}
                       {...thisRuleRow}
+                      triggerCloneFirewallRule={triggerCloneFirewallRule}
                       triggerDeleteFirewallRule={triggerDeleteFirewallRule}
                       triggerOpenRuleDrawerForEditing={
                         triggerOpenRuleDrawerForEditing
@@ -214,11 +220,7 @@ export default React.memo(FirewallRuleTable);
 // =============================================================================
 // <FirewallRuleTableRow />
 // =============================================================================
-interface FirewallRuleTableRowProps extends RuleRow {
-  triggerDeleteFirewallRule: (idx: number) => void;
-  triggerOpenRuleDrawerForEditing: (idx: number) => void;
-  triggerUndo: (idx: number) => void;
-}
+type FirewallRuleTableRowProps = RuleRow & RowActionHandlers;
 
 const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
   props => {
@@ -232,6 +234,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       ports,
       addresses,
       status,
+      triggerCloneFirewallRule,
       triggerDeleteFirewallRule,
       triggerOpenRuleDrawerForEditing,
       triggerUndo,
@@ -240,6 +243,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
 
     const actionMenuProps = {
       idx: id,
+      triggerCloneFirewallRule,
       triggerDeleteFirewallRule,
       triggerOpenRuleDrawerForEditing
     };

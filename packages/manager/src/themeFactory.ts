@@ -54,6 +54,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     addCircleHoverEffect?: any;
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
+    applyTableHeaderStyles?: any;
 
     notificationList: any;
     status: any;
@@ -94,6 +95,7 @@ const cmrBGColors = {
 const cmrTextColors = {
   linkActiveLight: '#2575d0',
   headlineStatic: '#32363c',
+  tableHeader: '#888F91',
   tableStatic: '#606469',
   textAccessTable: '#606469'
 };
@@ -187,6 +189,16 @@ const genericStatusPillStyle = {
     width: 16,
     minWidth: 16,
     marginRight: 8
+  }
+};
+
+const genericTableHeaderStyle = {
+  '&:hover': {
+    backgroundColor: primaryColors.main,
+    cursor: 'pointer',
+    '& span': {
+      color: '#fff !important'
+    }
   }
 };
 
@@ -408,6 +420,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     applyStatusPillStyles: {
       ...genericStatusPillStyle
+    },
+    applyTableHeaderStyles: {
+      ...genericTableHeaderStyle
     },
     notificationList: {
       padding: '16px 32px 16px 23px',
@@ -774,25 +789,16 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       },
       MuiAccordionSummary: {
         root: {
-          '&$focused': {
-            backgroundColor: '#fbfbfb'
-          },
-          padding: `0 ${spacingUnit * 2 + 2}px`,
-          backgroundColor: '#fbfbfb',
           justifyContent: 'flex-start',
+          backgroundColor: '#fbfbfb',
           minHeight: spacingUnit * 6,
+          padding: `0 ${spacingUnit * 2 + 2}px`,
           '& h3': {
             transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
           },
           '&:hover': {
             '& h3': {
               color: primaryColors.light
-            },
-            '& $expandIcon': {
-              '& svg': {
-                fill: primaryColors.light,
-                stroke: 'white'
-              }
             }
           },
           '&:focus': {
@@ -802,6 +808,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           '&$expanded': {
             minHeight: spacingUnit * 6,
             margin: 0
+          },
+          '&$focused': {
+            backgroundColor: '#fbfbfb'
           }
         },
         content: {
@@ -812,31 +821,20 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             margin: `${spacingUnit + spacingUnit / 2}px 0`
           }
         },
-        expanded: {},
         expandIcon: {
           display: 'flex',
-          order: 1,
-          top: 0,
-          right: 0,
-          transform: 'none',
-          color: primaryColors.main,
-          position: 'relative',
           marginLeft: -spacingUnit * 2,
           '& svg': {
-            fill: '#fff',
-            transition: `${'stroke 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
-            ${'fill 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
+            fill: cmrTextColors.tableHeader,
+            height: 22,
             width: 22,
-            height: 22
-          },
-          '& .border': {
-            stroke: `${primaryColors.light} !important`
+            transition: `${'stroke 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
+            ${'fill 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`
           },
           '&$expanded': {
-            transform: 'none'
+            transform: 'rotate(180deg)'
           }
-        },
-        focused: {}
+        }
       },
       MuiFormControl: {
         root: {
@@ -1431,17 +1429,14 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           fontSize: '.9rem',
           lineHeight: '1.1rem',
           transition: 'color 225ms ease-in-out',
+          '&.MuiTableSortLabel-active': {
+            color: cmrTextColors.tableHeader
+          },
           '&:hover': {
             color: primaryColors.main
           },
           '&:focus': {
             outline: '1px dotted #999'
-          }
-        },
-        active: {
-          color: primaryColors.main,
-          '&:hover': {
-            color: primaryColors.main
           }
         },
         icon: {

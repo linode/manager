@@ -25,7 +25,8 @@ export interface UserPreferences {
   sortKeys?: Partial<Record<string, OrderSet>>;
   main_content_banner_dismissal?: Record<string, boolean>;
   linode_news_banner_dismissed?: boolean;
-  notification_drawer_view?: 'list' | 'grouped';
+  firewall_beta_notification?: boolean;
+  backups_cta_dismissed?: boolean;
 }
 
 export const handleGetPreferences = actionCreator.async<

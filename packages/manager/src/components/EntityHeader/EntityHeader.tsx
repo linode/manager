@@ -1,11 +1,11 @@
-import * as React from 'react';
 import * as classnames from 'classnames';
-import Grid from 'src/components/Grid';
+import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
+import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import Breadcrumb, { BreadcrumbProps } from '../Breadcrumb';
 import DocumentationButton from '../CMR_DocumentationButton';
-import Typography from 'src/components/core/Typography';
+import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 
 export interface HeaderProps extends BreadCrumbProps {
   actions?: JSX.Element;
@@ -90,12 +90,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       letterSpacing: '.5px'
     }
   },
-  bodyDetailVariant: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
-    flexWrap: 'nowrap',
-    justifyContent: 'space-between',
-    padding: 0
-  },
   actionsWrapper: {
     [theme.breakpoints.only('sm')]: {
       marginRight: 0
@@ -157,6 +151,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
         </Grid>
       )}
 
+      {/* Currently only used for the Linode Landing card/summary view */}
       <Grid item className={`${classes.root} ${classes.details}`}>
         {isDetailLanding && (
           <HeaderBreadCrumb

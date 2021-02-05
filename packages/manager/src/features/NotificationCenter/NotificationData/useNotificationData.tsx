@@ -1,17 +1,8 @@
-import { UseAPIRequest } from 'src/hooks/useAPIRequest';
-import useCommunityNotifications, {
-  CommunityNotifications
-} from './useCommunityNotifications';
-import usePendingActions from './PendingActionNotifications';
-import useSystemStatusData from './useSystemStatusData';
-import SupportNotifications from './SupportNotifications';
+import useEventNotifications from './useEventNotifications';
 import { NotificationItem } from '../NotificationSection';
 
 export interface NotificationData {
-  community: CommunityNotifications;
-  pendingActions: NotificationItem[];
-  statusNotifications: NotificationItem[];
-  support: UseAPIRequest<NotificationItem[]>;
+  eventNotifications: NotificationItem[];
 }
 
 /**
@@ -23,16 +14,10 @@ export interface NotificationData {
  * of all notifications, in addition to sorting them by type.
  */
 export const useNotificationData = (): NotificationData => {
-  const community = useCommunityNotifications();
-  const support = SupportNotifications();
-  const pendingActions = usePendingActions();
-  const statusNotifications = useSystemStatusData();
+  const eventNotifications = useEventNotifications();
 
   return {
-    community,
-    pendingActions,
-    statusNotifications,
-    support
+    eventNotifications
   };
 };
 

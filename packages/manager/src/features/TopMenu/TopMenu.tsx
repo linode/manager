@@ -86,7 +86,7 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
               onClick={desktopMenuToggle}
             >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
-                <MenuIcon />
+                <MenuIcon style={{ marginTop: 6 }} />
               </TopMenuIcon>
             </IconButton>
           </Hidden>
@@ -97,7 +97,7 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
               onClick={openSideMenu}
             >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
-                <MenuIcon />
+                <MenuIcon style={{ marginTop: 6 }} />
               </TopMenuIcon>
             </IconButton>
           </Hidden>

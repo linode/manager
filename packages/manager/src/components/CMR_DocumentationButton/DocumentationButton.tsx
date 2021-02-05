@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'center',
     fontFamily: theme.font.normal,
+    fontSize: '.875rem',
     lineHeight: 'normal',
     margin: 0,
     minWidth: 'auto',

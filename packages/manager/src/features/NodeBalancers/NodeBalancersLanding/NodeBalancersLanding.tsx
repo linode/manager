@@ -21,6 +21,7 @@ import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import TransferDisplay from 'src/components/TransferDisplay';
 import {
   NodeBalancerGettingStarted,
   NodeBalancerReference
@@ -268,6 +269,7 @@ export class NodeBalancersLanding extends React.Component<
             );
           }}
         </PreferenceToggle>
+        <TransferDisplay spacingTop={18} />
         <ConfirmationDialog
           onClose={this.closeConfirmationDialog}
           title={`Delete ${this.state.selectedNodeBalancerLabel}?`}

@@ -1,32 +1,31 @@
-import { ResourcePage } from '@linode/api-v4/lib/types';
 import { MatcherFunction, render, RenderResult } from '@testing-library/react';
 import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
+import { QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
 import { DeepPartial } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import { FlagSet } from 'src/featureFlags';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { queryClient } from 'src/queries/base';
 import store, { ApplicationState, defaultState } from 'src/store';
 
-export const createPromiseLoaderResponse: <T>(
-  r: T
-) => PromiseLoaderResponse<T> = response => ({ response });
-
-export const createResourcePage: <T>(data: T[]) => ResourcePage<T> = data => ({
-  data,
-  page: 0,
-  pages: 0,
-  number: 1,
-  results: 0
-});
-
+export const mockMatchMedia = (matches: boolean = true) => {
+  window.matchMedia = jest.fn().mockImplementation(query => {
+    return {
+      matches,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn()
+    };
+  });
+};
 interface Options {
   MemoryRouter?: MemoryRouterProps;
   customStore?: DeepPartial<ApplicationState>;
@@ -48,13 +47,15 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const storeToPass = customStore ? baseStore(customStore) : store;
   return (
     <Provider store={storeToPass}>
-      <LinodeThemeWrapper theme="dark" spacing="normal">
-        <LDProvider value={{ flags: options.flags ?? {} }}>
-          <SnackbarProvider>
-            <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
-          </SnackbarProvider>
-        </LDProvider>
-      </LinodeThemeWrapper>
+      <QueryClientProvider client={queryClient}>
+        <LinodeThemeWrapper theme="dark" spacing="normal">
+          <LDProvider value={{ flags: options.flags ?? {} }}>
+            <SnackbarProvider>
+              <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+            </SnackbarProvider>
+          </LDProvider>
+        </LinodeThemeWrapper>
+      </QueryClientProvider>
     </Provider>
   );
 };

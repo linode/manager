@@ -8,6 +8,11 @@ env:
 on:
   schedule:
     - cron: '0 13 * * 1-5'
+  pull_request_target:
+    paths:
+    - '**/cypress/**'
+    - '**/e2e.yml'
+  
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
@@ -19,7 +24,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: '10.x'
+          node-version: '14.x'
       - uses: actions/cache@v2
         with:
           path: |
@@ -31,7 +36,7 @@ jobs:
       - run: |
           echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-      # personal account
+        # personal account
       - run: echo "MANAGER_OAUTH=$USER_1" >> ./packages/manager/.env
         if: matrix['container'] == 'USER_1'
         # prod-test-001

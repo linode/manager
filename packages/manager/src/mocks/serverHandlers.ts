@@ -310,7 +310,14 @@ export const handlers = [
         label: 'my-disk'
       }
     });
-    return res.once(ctx.json(makeResourcePage([...events, diskResize])));
+    const oldEvents = eventFactory.buildList(20, {
+      action: 'account_update',
+      seen: true,
+      percent_complete: 100
+    });
+    return res.once(
+      ctx.json(makeResourcePage([...events, diskResize, ...oldEvents]))
+    );
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
@@ -380,12 +387,18 @@ export const handlers = [
     // });
     // const abuseTicket = abuseTicketNotificationFactory.build();
 
+    const migrationTicket = notificationFactory.build({
+      type: 'migration_pending',
+      entity: { id: 0, type: 'linode' }
+    });
+
     return res(
       ctx.json(
         makeResourcePage([
-          ...notificationFactory.buildList(1)
+          ...notificationFactory.buildList(1),
           // abuseTicket
           // emailBounce
+          migrationTicket
         ])
       )
     );

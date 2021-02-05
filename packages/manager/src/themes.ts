@@ -30,6 +30,7 @@ const cmrBGColors = {
 const cmrTextColors = {
   linkActiveLight: '#74aae6',
   headlineStatic: '#e6e6e6',
+  tableHeader: '#888F91',
   tableStatic: '#e6e6e6',
   textAccessTable: '#acb0b4'
 };
@@ -397,31 +398,16 @@ const darkThemeOptions = {
     },
     MuiAccordionSummary: {
       root: {
-        '&$focused': {
-          backgroundColor: '#111111'
-        },
         backgroundColor: '#32363c',
         '&:hover': {
           '& h3': {
             color: primaryColors.light
-          },
-          '& $expandIcon': {
-            '& svg': {
-              fill: primaryColors.light
-            }
           }
-        }
-      },
-      expandIcon: {
-        color: primaryColors.main,
-        '& svg': {
-          fill: 'transparent'
         },
-        '& .border': {
-          stroke: `${primaryColors.light} !important`
+        '&$focused': {
+          backgroundColor: '#111111'
         }
-      },
-      focused: {}
+      }
     },
     MuiFormControl: {
       root: {
