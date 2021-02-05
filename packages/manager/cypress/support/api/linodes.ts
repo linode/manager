@@ -53,7 +53,7 @@ export const makeLinodeDataWithStatus = status => {
   };
 };
 
-const makeLinodeCreateReq = (linode, password) => {
+const makeLinodeCreateReq = (linode, password, booted) => {
   const linodeData = linode
     ? linode
     : {
@@ -64,7 +64,7 @@ const makeLinodeCreateReq = (linode, password) => {
         image: 'linode/debian10',
         tags: [testLinodeTag],
         backups_enabled: false,
-        booted: true,
+        booted,
         private_ip: true,
         authorized_users: []
       };
@@ -136,8 +136,12 @@ export const makeLinodeCreateReqWithBackupsEnabled = linode => {
  * if linode is undefined, will create default test debian linode in us-east
  * @param linode {label:'', tags:[],type:'',region:'',image:'',root_pass:''}
  */
-export const createLinode = (linode = undefined, password = '') => {
-  return makeLinodeCreateReq(linode, password).then(resp => {
+export const createLinode = (
+  booted = true,
+  linode = undefined,
+  password = ''
+) => {
+  return makeLinodeCreateReq(linode, password, booted).then(resp => {
     apiCheckErrors(resp);
     console.log(`Created Linode ${resp.body.label} successfully`, resp);
     return resp.body;
@@ -193,3 +197,5 @@ export const deleteAllTestLinodes = () => {
 export const clickLinodeActionMenu = title => {
   cy.get(`[aria-label="Action menu for Linode ${title}"]`).click();
 };
+
+export const poweroffLinode = () => {};
