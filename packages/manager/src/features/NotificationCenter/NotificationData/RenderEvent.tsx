@@ -39,16 +39,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   event: Event;
+  onClose: () => void;
 }
 
 export type CombinedProps = Props;
 
 export const RenderEvent: React.FC<Props> = props => {
-  const { event } = props;
+  const { event, onClose } = props;
   const classes = useStyles();
 
   const { message, duration, type, status, linkTarget } = useEventInfo(event);
-
   if (message === null) {
     return null;
   }
@@ -84,7 +84,9 @@ export const RenderEvent: React.FC<Props> = props => {
             </Grid>
             <Grid item>
               {linkTarget ? (
-                <Link to={linkTarget}>{eventMessage}</Link>
+                <Link to={linkTarget} onClick={onClose}>
+                  {eventMessage}
+                </Link>
               ) : (
                 eventMessage
               )}
