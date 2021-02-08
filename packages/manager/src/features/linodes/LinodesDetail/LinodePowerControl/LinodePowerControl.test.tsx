@@ -75,8 +75,8 @@ describe('Linode Power Control Dialogs', () => {
     // Set status to a transition status such as "cloning."
     renderedComponent.setProps({ status: 'cloning' });
 
-    expect(
-      renderedComponent.find('WithStyles(wrappedButton)').prop('disabled')
-    ).toEqual(true);
+    expect(renderedComponent.find('WrappedButton').prop('disabled')).toEqual(
+      true
+    );
   });
 });

@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account/types';
+import { Event, EventAction } from '@linode/api-v4/lib/account/types';
 import { partition } from 'ramda';
 import * as React from 'react';
 import useEvents from 'src/hooks/useEvents';
@@ -9,11 +9,24 @@ import RenderEvent from './RenderEvent';
 import RenderProgressEvent from './RenderProgressEvent';
 import { notificationContext } from '../NotificationContext';
 
+const unwantedEvents: EventAction[] = [
+  'account_update',
+  'account_settings_update',
+  'credit_card_updated',
+  'profile_update',
+  'ticket_attachment_upload',
+  'volume_update'
+];
+
 export const useEventNotifications = () => {
   const { events } = useEvents();
   const context = React.useContext(notificationContext);
 
-  const [inProgress, completed] = partition<Event>(isInProgressEvent, events);
+  const _events = events.filter(
+    thisEvent => !unwantedEvents.includes(thisEvent.action)
+  );
+
+  const [inProgress, completed] = partition<Event>(isInProgressEvent, _events);
 
   const allEvents = [
     ...inProgress.map(thisEvent =>
