@@ -150,7 +150,7 @@ export const styles = (theme: Theme) =>
         paddingRight: 0
       },
       '& .react-select__clear-indicator': {
-        padding: theme.spacing(1),
+        padding: 0,
         '& svg': {
           color: theme.color.grey4,
           '&:hover': {

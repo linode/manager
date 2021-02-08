@@ -110,6 +110,14 @@ const ruleEditorReducer = (
       // Errors might no longer apply to the modified rule, so we delete them.
       delete lastRevision.errors;
 
+      if (!action.modifiedRule.label) {
+        delete lastRevision.label;
+      }
+
+      if (!action.modifiedRule.description) {
+        delete lastRevision.description;
+      }
+
       draft[action.idx].push({
         ...lastRevision,
         ...action.modifiedRule,

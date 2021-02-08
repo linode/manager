@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing()
   },
   button: {
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
+    display: 'flex'
   },
   text: {
     fontSize: '1rem'
