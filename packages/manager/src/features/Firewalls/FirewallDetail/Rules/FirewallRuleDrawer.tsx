@@ -675,6 +675,11 @@ export const itemsToPortString = (
   items: Item<string>[],
   portInput?: string
 ): string | undefined => {
+  // If a user has selected ALL, just return that; anything else in the string
+  // will be redundant.
+  if (items.findIndex(thisItem => thisItem.value === 'ALL') > -1) {
+    return '1-65535';
+  }
   // Take the values, excluding "CUSTOM" since that just indicates there was custom user input.
   const presets = items.map(i => i.value).filter(i => i !== 'CUSTOM');
   const customArray = (portInput ?? '')

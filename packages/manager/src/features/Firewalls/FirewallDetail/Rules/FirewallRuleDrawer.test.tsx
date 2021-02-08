@@ -44,9 +44,9 @@ describe('AddRuleDrawer', () => {
 
   it('disables the port input when the ICMP protocol is selected', () => {
     renderWithTheme(<RuleDrawer {...props} mode="create" category="inbound" />);
-    expect(screen.getByPlaceholderText(/port/i)).not.toBeDisabled();
+    expect(screen.getByLabelText('Ports')).not.toBeDisabled();
     userEvent.selectOptions(screen.getByPlaceholderText(/protocol/i), 'ICMP');
-    expect(screen.getByPlaceholderText(/port/i)).toBeDisabled();
+    expect(screen.getByLabelText('Ports')).toBeDisabled();
   });
 });
 
@@ -93,8 +93,6 @@ describe('utilities', () => {
         'ports',
         'Ports are not allowed for ICMP protocols.'
       );
-      expect(validateForm('TCP')).toHaveProperty('ports');
-      expect(validateForm('UDP')).toHaveProperty('ports');
       expect(validateForm('TCP', 'invalid-port')).toHaveProperty('ports');
     });
     it('accepts a valid form', () => {
@@ -205,10 +203,10 @@ describe('utilities', () => {
       ).toMatch('22, 443');
     });
 
-    it('should return null if any of the items has the value ALL', () => {
+    it('should return a single range covering all ports if any of the items has the value ALL', () => {
       expect(
         itemsToPortString([...baseItems, { value: 'ALL', label: 'All' }])
-      ).toBeUndefined();
+      ).toMatch('1-65535');
     });
 
     it('should combine presets and custom input', () => {
