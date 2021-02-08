@@ -208,7 +208,7 @@ describe('utilities', () => {
     it('should return null if any of the items has the value ALL', () => {
       expect(
         itemsToPortString([...baseItems, { value: 'ALL', label: 'All' }])
-      ).toBeNull();
+      ).toBeUndefined();
     });
 
     it('should combine presets and custom input', () => {

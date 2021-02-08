@@ -112,7 +112,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
     });
     setIPs(validatedIPs);
 
-    const _ports = itemsToPortString(presetPorts, ports) ?? undefined;
+    const _ports = itemsToPortString(presetPorts, ports);
 
     return {
       ...validateForm(protocol, _ports, label, description),
@@ -129,15 +129,10 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
     const addresses = formValueToIPs(values.addresses, ips);
 
     const payload: FirewallRuleType = {
+      ports,
       protocol,
       addresses
     };
-
-    if (ports) {
-      // If the user selected "Allow All" in the dropdown, we don't want to include it in the payload.
-      // ports will be `null` in this case. Otherwise, append the computed port string to the payload.
-      payload.ports = ports;
-    }
 
     if (values.label) {
       payload.label = values.label;
@@ -677,11 +672,11 @@ export const getInitialIPs = (
 export const itemsToPortString = (
   items: Item<string>[],
   portInput?: string
-): string | null => {
+): string | undefined => {
   // If the user has selected 'ALL' we want to *not* send a port string to the API,
   // since no ports in the payload is interpreted as "allow all ports".
   if (items.some(thisItem => thisItem.value === 'ALL')) {
-    return null;
+    return undefined;
   }
   // Take the values, excluding "CUSTOM" since that just indicates there was custom user input.
   const presets = items.map(i => i.value).filter(i => i !== 'CUSTOM');
