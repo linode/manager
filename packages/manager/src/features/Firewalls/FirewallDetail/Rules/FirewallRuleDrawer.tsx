@@ -112,8 +112,10 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
     });
     setIPs(validatedIPs);
 
+    const _ports = itemsToPortString(presetPorts, ports) ?? undefined;
+
     return {
-      ...validateForm(protocol, ports, label, description),
+      ...validateForm(protocol, _ports, label, description),
       // This is a bit of a trick. If this function DOES NOT return an empty object, Formik will call
       // `onSubmit()`. If there are IP errors, we add them to the return object so Formik knows there
       // is an issue with the form.
@@ -122,15 +124,20 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
   };
 
   const onSubmit = (values: Form) => {
-    const ports = values.ports;
+    const ports = itemsToPortString(presetPorts, values.ports);
     const protocol = values.protocol as FirewallRuleProtocol;
     const addresses = formValueToIPs(values.addresses, ips);
 
     const payload: FirewallRuleType = {
-      ports,
       protocol,
       addresses
     };
+
+    if (ports) {
+      // If the user selected "Allow All" in the dropdown, we don't want to include it in the payload.
+      // ports will be `null` in this case. Otherwise, append the computed port string to the payload.
+      payload.ports = ports;
+    }
 
     if (values.label) {
       payload.label = values.label;
@@ -230,6 +237,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     thisPort => thisPort.value === 'CUSTOM'
   );
 
+  // This is an edge case; if there's an error for the Ports field
+  // but CUSTOM isn't selected, the error won't be visible to the user.
+  const generalPortError = !hasCustomInput && errors.ports;
+
   // Set form field errors for each error we have (except "addresses" errors, which are handled
   // by IP Error state).
   React.useEffect(() => {
@@ -266,10 +277,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         // All predefined FW types use all IPv4 and IPv6.
         setFieldValue('addresses', 'all');
         // Use the port for the selected type.
-        setFieldValue('ports', portPresets[selectedType]);
+        setPresetPorts([PORT_PRESETS[portPresets[selectedType]]]);
       }
     },
-    [formTouched, setFieldValue, touched, category]
+    [formTouched, setFieldValue, touched, category, setPresetPorts]
   );
 
   const handleTextFieldChange = React.useCallback(
@@ -318,6 +329,19 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       setIPs(_ips);
     },
     [formTouched, setIPs]
+  );
+
+  const handlePortPresetChange = React.useCallback(
+    (items: Item<string>[]) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+      setPresetPorts(items);
+      if (!items.some(thisItem => thisItem.value === 'CUSTOM')) {
+        setFieldValue('ports', '');
+      }
+    },
+    [setPresetPorts, formTouched, setFieldValue]
   );
 
   const addressesValue = React.useMemo(() => {
@@ -382,9 +406,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       <Select
         isMulti
         label="Ports"
+        errorText={generalPortError}
         value={presetPorts}
         options={PORT_PRESETS_ITEMS}
-        onChange={(selected: Item<string>[]) => setPresetPorts(selected)}
+        onChange={handlePortPresetChange}
       />
       {hasCustomInput ? (
         <TextField
@@ -567,7 +592,7 @@ const getInitialFormValues = (ruleToModify?: ExtendedFirewallRule): Form => {
   }
 
   return {
-    ports: ruleToModify.ports || '',
+    ports: portStringToItems(ruleToModify.ports)[1],
     protocol: ruleToModify.protocol,
     addresses: getInitialAddressFormValue(ruleToModify.addresses),
     type: predefinedFirewallFromRule(ruleToModify) || '',
@@ -660,7 +685,10 @@ export const itemsToPortString = (
   }
   // Take the values, excluding "CUSTOM" since that just indicates there was custom user input.
   const presets = items.map(i => i.value).filter(i => i !== 'CUSTOM');
-  const customArray = (portInput ?? '').split(',').map(port => port.trim());
+  const customArray = (portInput ?? '')
+    .split(',')
+    .map(port => port.trim())
+    .filter(Boolean);
   return uniq([...presets, ...customArray])
     .sort(sortString)
     .join(', ');
@@ -692,7 +720,7 @@ export const portStringToItems = (
   if (customInput.length > 0) {
     items.push({ label: 'Custom', value: 'CUSTOM' });
   }
-  return [items, customInput.join(', ')];
+  return [uniq(items), customInput.join(', ')];
 };
 
 export const validateForm = (
@@ -710,11 +738,6 @@ export const validateForm = (
 
   if (protocol === 'ICMP' && ports) {
     errors.ports = 'Ports are not allowed for ICMP protocols.';
-    return errors;
-  }
-
-  if ((protocol === 'TCP' || protocol === 'UDP') && !ports) {
-    errors.ports = 'Ports are required for TCP and UDP protocols.';
     return errors;
   }
 
