@@ -4,6 +4,7 @@ import {
   FirewallRuleProtocol,
   FirewallRuleType
 } from '@linode/api-v4/lib/firewalls';
+import { uniq } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -31,7 +32,13 @@ import {
 import capitalize from 'src/utilities/capitalize';
 import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
 import { ExtendedFirewallRule } from './firewallRuleEditor';
-import { Category, FirewallRuleError, PORT_PRESETS } from './shared';
+import {
+  Category,
+  FirewallRuleError,
+  PORT_PRESETS,
+  PORT_PRESETS_ITEMS,
+  sortString
+} from './shared';
 
 export type Mode = 'create' | 'edit';
 
@@ -359,7 +366,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       <Select
         isMulti
         label="Ports"
-        options={PORT_PRESETS}
+        options={PORT_PRESETS_ITEMS}
         onChange={() => null}
       />
       <TextField
@@ -609,6 +616,64 @@ export const getInitialIPs = (
   });
 
   return ips;
+};
+
+/**
+ * Take the value of the Ports select (which contains presets)
+ * and combine it with any custom user input to create a string
+ * that the API will accept.
+ *
+ * Examples:
+ *
+ * portSelect = [ { value: 22, label: 'ssh' }, { value: 443, label: 'https' }]
+ * values.ports = "8080, 1313-1515"
+ *
+ * output: '22, 443, 1313-1515, 8080'
+ */
+export const itemsToPortString = (
+  items: Item<string>[],
+  portInput?: string
+): string | null => {
+  // If the user has selected 'ALL' we want to *not* send a port string to the API,
+  // since no ports in the payload is interpreted as "allow all ports".
+  if (items.some(thisItem => thisItem.value === 'ALL')) {
+    return null;
+  }
+  // Take the values, excluding "CUSTOM" since that just indicates there was custom user input.
+  const presets = items.map(i => i.value).filter(i => i !== 'CUSTOM');
+  const customArray = (portInput ?? '').split(',').map(port => port.trim());
+  return uniq([...presets, ...customArray])
+    .sort(sortString)
+    .join(', ');
+};
+
+/**
+ *
+ * Inverse of itemsToPortString. Takes a string from an API response (or row value)
+ * and converts it to Item<string>[] and a custom input string.
+ */
+export const portStringToItems = (
+  portString: string
+): [Item<string>[], string] => {
+  // Handle empty input
+  if (portString === '') {
+    return [[], ''];
+  }
+  const ports = portString.split(',').map(p => p.trim());
+  const items: Item<string>[] = [];
+  const customInput: string[] = [];
+  ports.forEach(thisPort => {
+    const preset = PORT_PRESETS[thisPort];
+    if (preset) {
+      items.push(preset);
+    } else {
+      customInput.push(thisPort);
+    }
+  });
+  if (customInput.length > 0) {
+    items.push({ label: 'Custom', value: 'CUSTOM' });
+  }
+  return [items, customInput.join(', ')];
 };
 
 export const validateForm = (

@@ -13,36 +13,20 @@ export interface FirewallRuleError {
   };
 }
 
-export const PORT_PRESETS = [
-  {
-    label: 'HTTP (80)',
-    value: '80'
-  },
-  {
-    label: 'HTTPS (443)',
-    value: '443'
-  },
-  {
-    label: 'SSH (22)',
-    value: '80'
-  },
-  {
-    label: 'DNS (53)',
-    value: '53'
-  },
-  {
-    label: 'MySQL (3306)',
-    value: '3306'
-  },
-  {
-    label: 'Allow All',
-    value: 'ALL'
-  },
-  {
-    label: 'Custom',
-    value: 'CUSTOM'
-  }
-];
+// This is not the most efficient or elegant data structure ever,
+// but it makes it easier to test and work with presets without having to .find()
+// in multiple places.
+export const PORT_PRESETS = {
+  '80': { label: 'HTTP (80)', value: '80' },
+  '443': { label: 'HTTPS(443)', value: '443' },
+  '22': { label: 'SSH (22)', value: '22' },
+  '53': { label: 'DNS (53)', value: '53' },
+  '3306': { label: 'MySQL (3306)', value: '3306' },
+  ALL: { label: 'Allow All', value: 'ALL' },
+  CUSTOM: { label: 'Custom', value: 'CUSTOM' }
+};
+
+export const PORT_PRESETS_ITEMS = Object.values(PORT_PRESETS);
 
 /**
  * The API returns very good Firewall error messages that look like this:
@@ -88,4 +72,42 @@ export const parseFirewallRuleError = (
   }
 
   return result;
+};
+
+/**
+ * Sorts ports string returned by the API into something more intuitive for users.
+ * Examples:
+ * "80, 22" --> "22, 80"
+ * "443, 22, 80-81" --> "22, 80-81, 443"
+ */
+export const sortPortString = (portString: string) => {
+  try {
+    const ports = portString.split(',');
+    return ports
+      .sort(sortString)
+      .map(port => port.trim())
+      .join(', ');
+  } catch {
+    // API responses should always work with this logic,
+    // but in case we get bad input, return the unsorted/unaltered string.
+    return portString;
+  }
+};
+
+// Custom sort helper for working with port strings
+export const sortString = (_a: string, _b: string) => {
+  const a = Number(stripHyphen(_a));
+  const b = Number(stripHyphen(_b));
+  if (a > b) {
+    return 1;
+  }
+  if (a < b) {
+    return -1;
+  }
+  return 0;
+};
+
+// If a port range is included (80-1000) return the first element of the range
+const stripHyphen = (str: string) => {
+  return str.match(/-/) ? str.split('-')[0] : str;
 };
