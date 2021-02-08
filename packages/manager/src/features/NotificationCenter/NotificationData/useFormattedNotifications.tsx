@@ -56,6 +56,7 @@ const interceptNotification = (notification: Notification): Notification => {
     /** replace "this facility" with the name of the datacenter */
     return {
       ...notification,
+      severity: reduceSeverity(notification),
       label: notification.label
         .toLowerCase()
         .replace('this facility', convertedRegion || 'one of our facilities'),
@@ -65,24 +66,37 @@ const interceptNotification = (notification: Notification): Notification => {
     };
   }
 
+  if (notification.type === 'ticket_abuse') {
+    return {
+      ...notification,
+      message: notification.message.replace('!', '.'),
+      severity: reduceSeverity(notification)
+    };
+  }
+
   /** there is maintenance on this Linode */
   if (
-    notification.type === 'maintenance' &&
+    (notification.type === 'maintenance' ||
+      notification.type === 'migration_scheduled' ||
+      notification.type === 'migration_pending') &&
     notification.entity &&
     notification.entity.type === 'linode'
   ) {
     /** replace "this Linode" with the name of the Linode */
-    const linodeAttachedToNotification = path(['label'], notification.entity);
+    const linodeAttachedToNotification: string | undefined = path(
+      ['label'],
+      notification.entity
+    );
     return {
       ...notification,
       label: `Maintenance Scheduled`,
-      severity: 'major',
-      message: `${
-        linodeAttachedToNotification
-          ? `Linode ${linodeAttachedToNotification}`
-          : `This Linode`
-      }
-            has scheduled maintenance`
+      severity: reduceSeverity(notification),
+      message: linodeAttachedToNotification
+        ? notification!.body!.replace(
+            'This Linode',
+            linodeAttachedToNotification
+          )
+        : notification!.body!
     };
   }
 
@@ -97,5 +111,24 @@ const formatNotificationForDisplay = (
   body: <RenderNotification notification={notification} />,
   countInTotal: true
 });
+
+const reduceSeverity = ({ severity, type }: Notification) => {
+  if (
+    ['maintenance', 'maintenance_scheduled', 'migration_pending'].includes(
+      type
+    ) ||
+    (severity === 'major' && type !== 'ticket_abuse')
+  ) {
+    return 'major';
+  }
+  if (severity === 'critical' || type === 'ticket_abuse') {
+    return 'critical';
+  }
+  if (severity === 'minor') {
+    return 'minor';
+  }
+
+  return 'minor';
+};
 
 export default useFormattedNotifications;
