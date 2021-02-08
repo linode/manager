@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: 22,
       marginBottom: theme.spacing(3),
       [theme.breakpoints.down('md')]: {
-        overflowX: 'scroll',
+        overflowX: 'auto',
         padding: 1
       }
     }

@@ -81,7 +81,7 @@ const styles = (theme: Theme) =>
         boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
         marginBottom: theme.spacing(),
         [theme.breakpoints.down('md')]: {
-          overflowX: 'scroll',
+          overflowX: 'auto',
           padding: 1
         }
       }
