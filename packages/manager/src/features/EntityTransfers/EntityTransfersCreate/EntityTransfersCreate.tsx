@@ -13,7 +13,12 @@ export const EntityTransfersCreate: React.FC<Props> = props => {
         pathname={location.pathname}
         labelTitle="Create a Transfer"
         labelOptions={{ noCap: true }}
-        removeCrumbX={2}
+        crumbOverrides={[
+          {
+            position: 2,
+            label: 'Transfers'
+          }
+        ]}
       />
     </>
   );
