@@ -64,6 +64,7 @@ const styles = (theme: Theme) =>
         minHeight: theme.spacing(5),
         minWidth: 50,
         padding: '6px 16px',
+        textDecoration: 'none',
         '&:hover': {
           color: theme.color.blue
         }
