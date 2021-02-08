@@ -52,9 +52,11 @@ interface Props {
 
 interface Form {
   type: string;
-  ports: string;
+  ports?: string;
   addresses: string;
   protocol: string;
+  label: string;
+  description: string;
 }
 
 export type CombinedProps = Props;
@@ -83,13 +85,22 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
 
   const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
-  const onValidate = ({ ports, protocol }: Form) => {
+  const onValidate = ({
+    ports,
+    protocol,
+    label,
+    description,
+    addresses
+  }: Form) => {
     // The validated IPs may have errors, so set them to state so we see the errors.
-    const validatedIPs = validateIPs(ips);
+    const validatedIPs = validateIPs(ips, {
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      allowEmptyAddress: addresses !== 'ip/netmask'
+    });
     setIPs(validatedIPs);
 
     return {
-      ...validateForm(protocol, ports),
+      ...validateForm(protocol, ports, label, description),
       // This is a bit of a trick. If this function DOES NOT return an empty object, Formik will call
       // `onSubmit()`. If there are IP errors, we add them to the return object so Formik knows there
       // is an issue with the form.
@@ -102,11 +113,19 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
     const protocol = values.protocol as FirewallRuleProtocol;
     const addresses = formValueToIPs(values.addresses, ips);
 
-    const payload = {
+    const payload: FirewallRuleType = {
       ports,
       protocol,
       addresses
     };
+
+    if (values.label) {
+      payload.label = values.label;
+    }
+
+    if (values.description) {
+      payload.description = values.description;
+    }
 
     props.onSubmit(category, payload);
     onClose();
@@ -124,6 +143,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
         {formikProps => {
           return (
             <FirewallRuleForm
+              category={category}
               addressesLabel={addressesLabel}
               ips={ips}
               setIPs={setIPs}
@@ -158,13 +178,9 @@ interface FirewallRuleFormProps extends FormikProps<Form> {
   setIPs: (ips: ExtendedIP[]) => void;
   addressesLabel: string;
   mode: Mode;
+  category: Category;
   ruleErrors?: FirewallRuleError[];
 }
-
-const typeOptions = [
-  ...firewallOptionItemsShort,
-  { label: 'Custom', value: 'custom' }
-];
 
 const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   const classes = useStyles();
@@ -186,7 +202,9 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     setIPs,
     mode,
     ruleErrors,
-    setFieldError
+    setFieldError,
+    touched,
+    category
   } = props;
 
   // Set form field errors for each error we have (except "addresses" errors, which are handled
@@ -201,28 +219,45 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   }, [ruleErrors, setFieldError]);
 
   // These handlers are all memoized because the form was laggy when I tried them inline.
-  const handleTypeChange = React.useCallback((item: Item | null) => {
-    const selectedType = item?.value;
-    setFieldValue('type', selectedType);
+  const handleTypeChange = React.useCallback(
+    (item: Item | null) => {
+      const selectedType = item?.value;
+      setFieldValue('type', selectedType);
 
-    if (!selectedType) {
-      return;
-    }
+      if (!selectedType) {
+        return;
+      }
 
-    if (!formTouched) {
-      setFormTouched(true);
-    }
+      if (!formTouched) {
+        setFormTouched(true);
+      }
 
-    // Pre-populate other form values if selecting a pre-defined type.
-    if (selectedType !== 'custom') {
-      // All predefined FW types use the TCP protocol.
-      setFieldValue('protocol', 'TCP');
-      // All predefined FW types use all IPv4 and IPv6.
-      setFieldValue('addresses', 'all');
-      // Use the port for the selected type.
-      setFieldValue('ports', portPresets[selectedType]);
-    }
-  }, []);
+      if (!touched.label) {
+        setFieldValue('label', `allow-${category}-${item?.label}`);
+      }
+
+      // Pre-populate other form values if selecting a pre-defined type.
+      if (selectedType !== 'custom') {
+        // All predefined FW types use the TCP protocol.
+        setFieldValue('protocol', 'TCP');
+        // All predefined FW types use all IPv4 and IPv6.
+        setFieldValue('addresses', 'all');
+        // Use the port for the selected type.
+        setFieldValue('ports', portPresets[selectedType]);
+      }
+    },
+    [formTouched, setFieldValue, touched, category]
+  );
+
+  const handleTextFieldChange = React.useCallback(
+    (e: React.ChangeEvent) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+      handleChange(e);
+    },
+    [formTouched, handleChange]
+  );
 
   const handleProtocolChange = React.useCallback(
     (item: Item | null) => {
@@ -252,16 +287,6 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     [formTouched, setFieldValue, setFormTouched, setIPs]
   );
 
-  const handlePortsChange = React.useCallback(
-    (e: React.ChangeEvent) => {
-      if (!formTouched) {
-        setFormTouched(true);
-      }
-      handleChange(e);
-    },
-    [formTouched, handleChange]
-  );
-
   const handleIPChange = React.useCallback(
     (_ips: ExtendedIP[]) => {
       if (!formTouched) {
@@ -280,25 +305,39 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     );
   }, [values]);
 
-  const typeValue = React.useMemo(() => {
-    const _type = deriveTypeFromValuesAndIPs(values, ips);
-    return typeOptions.find(thisOption => thisOption.value === _type) || null;
-  }, [values, ips]);
-
   return (
     <form onSubmit={handleSubmit}>
       {status && (
         <Notice key={status} text={status.generalError} error data-qa-error />
       )}
       <Select
-        label="Type"
+        label="Preset"
         name="type"
-        placeholder="Select a rule type..."
-        aria-label="Select rule type."
-        options={typeOptions}
-        value={typeValue}
+        placeholder="Select a rule preset..."
+        aria-label="Preset for firewall rule"
+        options={firewallOptionItemsShort}
         onChange={handleTypeChange}
         isClearable={false}
+        onBlur={handleBlur}
+      />
+      <TextField
+        label="Label"
+        name="label"
+        placeholder="Enter a label..."
+        aria-label="Label for firewall rule"
+        value={values.label}
+        errorText={errors.label}
+        onChange={handleTextFieldChange}
+        onBlur={handleBlur}
+      />
+      <TextField
+        label="Description"
+        name="description"
+        placeholder="Enter a description..."
+        aria-label="Description for firewall rule"
+        value={values.description}
+        errorText={errors.description}
+        onChange={handleTextFieldChange}
         onBlur={handleBlur}
       />
       <Select
@@ -324,7 +363,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         aria-label="Port range for firewall rule"
         value={values.ports}
         errorText={errors.ports}
-        onChange={handlePortsChange}
+        onChange={handleTextFieldChange}
         onBlur={handleBlur}
         disabled={values.protocol === 'ICMP'}
         tooltipText={
@@ -342,6 +381,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         value={addressesValue}
         onChange={handleAddressesChange}
         onBlur={handleBlur}
+        isClearable={false}
       />
       {/* Show this field only if "IP / Netmask has been selected." */}
       {values.addresses === 'ip/netmask' && (
@@ -361,7 +401,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
           disabled={!formTouched}
           data-qa-submit
         >
-          {mode === 'create' ? 'Add Rule' : 'Edit Rule'}
+          {mode === 'create' ? 'Add Rule' : 'Add Changes'}
         </Button>
       </ActionsPanel>
     </form>
@@ -398,7 +438,7 @@ export const deriveTypeFromValuesAndIPs = (values: Form, ips: ExtendedIP[]) => {
     return predefinedFirewall;
   } else if (
     values.protocol?.length > 0 ||
-    values.ports?.length > 0 ||
+    (values.ports && values.ports?.length > 0) ||
     values.addresses?.length > 0
   ) {
     return 'custom';
@@ -417,9 +457,9 @@ export const formValueToIPs = (
     case 'all':
       return allIPs;
     case 'allIPv4':
-      return { ipv4: [allIPv4], ipv6: [] };
+      return { ipv4: [allIPv4] };
     case 'allIPv6':
-      return { ipv4: [], ipv6: [allIPv6] };
+      return { ipv6: [allIPv6] };
     default:
       // The user has selected "IP / Netmask" and entered custom IPs, so we need
       // to separate those into v4 and v6 addresses.
@@ -428,8 +468,14 @@ export const formValueToIPs = (
 };
 
 // Adds an `error` message to each invalid IP in the list.
-export const validateIPs = (ips: ExtendedIP[]): ExtendedIP[] => {
+export const validateIPs = (
+  ips: ExtendedIP[],
+  options?: { allowEmptyAddress: boolean }
+): ExtendedIP[] => {
   return ips.map(({ address }) => {
+    if (!options?.allowEmptyAddress && !address) {
+      return { address, error: 'Please enter an IP address.' };
+    }
     // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
     // methods for each, so we check for a netmask to decide the method to use.
     const [, mask] = address.split('/');
@@ -440,8 +486,7 @@ export const validateIPs = (ips: ExtendedIP[]): ExtendedIP[] => {
         parseIP(address);
       }
     } catch (err) {
-      // Empty addresses are OK for the sake of validating the form.
-      if (address !== '') {
+      if (address) {
         return { address, error: IP_ERROR_MESSAGE };
       }
     }
@@ -454,7 +499,7 @@ export const validateIPs = (ips: ExtendedIP[]): ExtendedIP[] => {
  * them by "ipv4" and "ipv6."
  */
 export const classifyIPs = (ips: ExtendedIP[]) => {
-  return ips.reduce<{ ipv4: string[]; ipv6: string[] }>(
+  return ips.reduce<{ ipv4?: string[]; ipv6?: string[] }>(
     (acc, { address }) => {
       // Unfortunately ipaddr.js can't determine the "type" of an IPv6 address with a mask, so we
       // need to parse the base address only and THEN determine the type.
@@ -462,13 +507,16 @@ export const classifyIPs = (ips: ExtendedIP[]) => {
       try {
         const parsed = parseIP(base);
         const type = parsed.kind();
-        acc[type].push(address);
+        if (!acc[type]) {
+          acc[type] = [];
+        }
+        acc[type]!.push(address);
       } catch {
         // No need to do anything here (validation will have already caught errors).
       }
       return acc;
     },
-    { ipv4: [], ipv6: [] }
+    {}
   );
 };
 
@@ -476,7 +524,9 @@ const initialValues: Form = {
   type: '',
   ports: '',
   addresses: '',
-  protocol: ''
+  protocol: '',
+  label: '',
+  description: ''
 };
 
 const getInitialFormValues = (ruleToModify?: ExtendedFirewallRule): Form => {
@@ -485,10 +535,12 @@ const getInitialFormValues = (ruleToModify?: ExtendedFirewallRule): Form => {
   }
 
   return {
-    ports: ruleToModify.ports,
+    ports: ruleToModify.ports || '',
     protocol: ruleToModify.protocol,
     addresses: getInitialAddressFormValue(ruleToModify.addresses),
-    type: predefinedFirewallFromRule(ruleToModify) || ''
+    type: predefinedFirewallFromRule(ruleToModify) || '',
+    label: ruleToModify?.label || '',
+    description: ruleToModify?.description || ''
   };
 };
 
@@ -553,7 +605,12 @@ export const getInitialIPs = (
   return ips;
 };
 
-export const validateForm = (protocol?: string, ports?: string) => {
+export const validateForm = (
+  protocol?: string,
+  ports?: string,
+  label?: string,
+  description?: string
+) => {
   const errors: Partial<Form> = {};
 
   if (!protocol) {
@@ -574,6 +631,14 @@ export const validateForm = (protocol?: string, ports?: string) => {
   if (ports && !ports.match(/^([0-9\-]+,?\s?)+$/)) {
     errors.ports =
       'Ports must be an integer, range of integers, or a comma-separated list of integers.';
+  }
+
+  if (description && description.length > 100) {
+    errors.description = 'Description must be 1-100 characters.';
+  }
+
+  if (label && (label.length < 3 || label.length > 32)) {
+    errors.label = 'Label must be 3-32 characters.';
   }
 
   return errors;
