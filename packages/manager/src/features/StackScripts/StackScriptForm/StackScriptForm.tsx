@@ -34,6 +34,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: `0 0 ${theme.spacing(2)}px 0`,
     height: 0
   },
+  labelSection: {
+    '& :first-child label + div': {
+      marginBottom: '-0.75rem'
+    }
+  },
   labelField: {
     '& input': {
       paddingLeft: 0
@@ -149,23 +154,27 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
     <Paper className={classes.root}>
       <Grid container>
         <Grid item className={classes.gridWithTips}>
-          <TextField
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="end">{currentUser} /</InputAdornment>
-              )
-            }}
-            label="StackScript Label"
-            required
-            onChange={label.handler}
-            placeholder="Enter a label"
-            value={label.value}
-            errorText={hasErrorFor('label')}
-            tooltipText="Give your StackScript a label"
-            className={classes.labelField}
-            disabled={disabled}
-            data-qa-stackscript-label
-          />
+          <div className={classes.labelSection}>
+            <TextField
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="end">
+                    {currentUser} /
+                  </InputAdornment>
+                )
+              }}
+              label="StackScript Label"
+              required
+              onChange={label.handler}
+              placeholder="Enter a label"
+              value={label.value}
+              errorText={hasErrorFor('label')}
+              tooltipText="Give your StackScript a label"
+              className={classes.labelField}
+              disabled={disabled}
+              data-qa-stackscript-label
+            />
+          </div>
           <TextField
             multiline
             rows={1}
