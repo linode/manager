@@ -125,6 +125,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
           buttonType="secondary"
           className={classes.button}
           onClick={openDrawerForCreating}
+          superCompact
         >
           Add an {capitalize(category)} Rule
         </Button>
