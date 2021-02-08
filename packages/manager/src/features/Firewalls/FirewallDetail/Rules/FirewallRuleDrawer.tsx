@@ -77,11 +77,17 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
   // intended to specify custom IPs.
   const [ips, setIPs] = React.useState<ExtendedIP[]>([{ address: '' }]);
 
+  // Firewall Ports, like IPs, are tracked separately. The form.values state value
+  // tracks the custom user input; the Item[] array of port presets in the multi-select
+  // is stored here.
+  const [presetPorts, setPresetPorts] = React.useState<Item<string>[]>([]);
+
   // Reset state. If we're in EDIT mode, set IPs to the addresses of the rule we're modifying
   // (along with any errors we may have).
   React.useEffect(() => {
     if (mode === 'edit' && ruleToModify) {
       setIPs(getInitialIPs(ruleToModify));
+      setPresetPorts(portStringToItems(ruleToModify.ports)[0]);
     } else {
       setIPs([{ address: '' }]);
     }
@@ -154,6 +160,8 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
               addressesLabel={addressesLabel}
               ips={ips}
               setIPs={setIPs}
+              presetPorts={presetPorts}
+              setPresetPorts={setPresetPorts}
               mode={mode}
               ruleErrors={ruleToModify?.errors}
               {...formikProps}
@@ -183,6 +191,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface FirewallRuleFormProps extends FormikProps<Form> {
   ips: ExtendedIP[];
   setIPs: (ips: ExtendedIP[]) => void;
+  presetPorts: Item<string>[];
+  setPresetPorts: (selected: Item<string>[]) => void;
   addressesLabel: string;
   mode: Mode;
   category: Category;
@@ -207,12 +217,18 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     addressesLabel,
     ips,
     setIPs,
+    presetPorts,
+    setPresetPorts,
     mode,
     ruleErrors,
     setFieldError,
     touched,
     category
   } = props;
+
+  const hasCustomInput = presetPorts.some(
+    thisPort => thisPort.value === 'CUSTOM'
+  );
 
   // Set form field errors for each error we have (except "addresses" errors, which are handled
   // by IP Error state).
@@ -366,25 +382,28 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       <Select
         isMulti
         label="Ports"
+        value={presetPorts}
         options={PORT_PRESETS_ITEMS}
-        onChange={() => null}
+        onChange={(selected: Item<string>[]) => setPresetPorts(selected)}
       />
-      <TextField
-        label="Port Range"
-        name="ports"
-        placeholder="Enter a port range..."
-        aria-label="Port range for firewall rule"
-        value={values.ports}
-        errorText={errors.ports}
-        onChange={handleTextFieldChange}
-        onBlur={handleBlur}
-        disabled={values.protocol === 'ICMP'}
-        tooltipText={
-          values.protocol === 'ICMP'
-            ? 'Ports are not allowed for ICMP protocols.'
-            : undefined
-        }
-      />
+      {hasCustomInput ? (
+        <TextField
+          label="Port Range"
+          name="ports"
+          placeholder="Enter a port range..."
+          aria-label="Port range for firewall rule"
+          value={values.ports}
+          errorText={errors.ports}
+          onChange={handleTextFieldChange}
+          onBlur={handleBlur}
+          disabled={values.protocol === 'ICMP'}
+          tooltipText={
+            values.protocol === 'ICMP'
+              ? 'Ports are not allowed for ICMP protocols.'
+              : undefined
+          }
+        />
+      ) : null}
       <Select
         label={`${capitalize(addressesLabel)}s`}
         name="addresses"
@@ -653,10 +672,10 @@ export const itemsToPortString = (
  * and converts it to Item<string>[] and a custom input string.
  */
 export const portStringToItems = (
-  portString: string
+  portString?: string
 ): [Item<string>[], string] => {
   // Handle empty input
-  if (portString === '') {
+  if (!portString) {
     return [[], ''];
   }
   const ports = portString.split(',').map(p => p.trim());

@@ -18,7 +18,7 @@ export interface FirewallRuleError {
 // in multiple places.
 export const PORT_PRESETS = {
   '80': { label: 'HTTP (80)', value: '80' },
-  '443': { label: 'HTTPS(443)', value: '443' },
+  '443': { label: 'HTTPS (443)', value: '443' },
   '22': { label: 'SSH (22)', value: '22' },
   '53': { label: 'DNS (53)', value: '53' },
   '3306': { label: 'MySQL (3306)', value: '3306' },
