@@ -16,6 +16,9 @@ import withProfile, {
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
 const Billing = React.lazy(() => import('src/features/Billing'));
+const EntityTransfers = React.lazy(() =>
+  import('src/features/EntityTransfers')
+);
 const Users = React.lazy(() => import('src/features/Users'));
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 
@@ -31,6 +34,10 @@ const AccountLanding: React.FC<Props> = props => {
     {
       title: 'Users & Grants',
       routeName: `${props.match.url}/users`
+    },
+    {
+      title: 'Transfers',
+      routeName: `${props.match.url}/entity-transfers`
     },
     {
       title: 'Settings',
@@ -70,6 +77,9 @@ const AccountLanding: React.FC<Props> = props => {
               <Users isRestrictedUser={props.isRestrictedUser} />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
+              <EntityTransfers />
+            </SafeTabPanel>
+            <SafeTabPanel index={3}>
               <GlobalSettings />
             </SafeTabPanel>
           </TabPanels>
