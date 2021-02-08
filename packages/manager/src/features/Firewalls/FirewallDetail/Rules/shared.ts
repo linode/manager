@@ -22,7 +22,7 @@ export const PORT_PRESETS = {
   '22': { label: 'SSH (22)', value: '22' },
   '53': { label: 'DNS (53)', value: '53' },
   '3306': { label: 'MySQL (3306)', value: '3306' },
-  ALL: { label: 'Allow All', value: 'ALL' },
+  ALL: { label: 'Allow All', value: '1-65535' },
   CUSTOM: { label: 'Custom', value: 'CUSTOM' }
 };
 

@@ -274,7 +274,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
             <ConditionalError errors={errors} formField="protocol" />
           </TableCell>
           <TableCell>
-            {ports}
+            {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
           </TableCell>
         </Hidden>

@@ -675,11 +675,6 @@ export const itemsToPortString = (
   items: Item<string>[],
   portInput?: string
 ): string | undefined => {
-  // If the user has selected 'ALL' we want to *not* send a port string to the API,
-  // since no ports in the payload is interpreted as "allow all ports".
-  if (items.some(thisItem => thisItem.value === 'ALL')) {
-    return undefined;
-  }
   // Take the values, excluding "CUSTOM" since that just indicates there was custom user input.
   const presets = items.map(i => i.value).filter(i => i !== 'CUSTOM');
   const customArray = (portInput ?? '')
