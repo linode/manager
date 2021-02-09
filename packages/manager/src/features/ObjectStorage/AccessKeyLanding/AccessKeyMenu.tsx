@@ -52,13 +52,13 @@ const AccessKeyMenu: React.FC<CombinedProps> = props => {
 
   const actions = [
     {
-      title: 'Edit label',
+      title: 'Edit Label',
       onClick: () => {
         openDrawer('editing', objectStorageKey);
       }
     },
     {
-      title: 'View permissions',
+      title: 'Permissions',
       onClick: () => {
         openDrawer('viewing', objectStorageKey);
       }
