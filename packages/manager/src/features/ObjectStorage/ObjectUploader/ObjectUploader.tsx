@@ -48,7 +48,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     outline: 'none',
     overflow: 'auto',
     padding: theme.spacing(),
-    transition: theme.transitions.create(['border-color', 'background-color'])
+    transition: theme.transitions.create(['border-color', 'background-color']),
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(),
+      marginLeft: theme.spacing()
+    }
   },
   copy: {
     color: theme.palette.primary.main,
