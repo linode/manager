@@ -88,10 +88,12 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
     if (mode === 'edit' && ruleToModify) {
       setIPs(getInitialIPs(ruleToModify));
       setPresetPorts(portStringToItems(ruleToModify.ports)[0]);
+    } else if (isOpen) {
+      setPresetPorts([]);
     } else {
       setIPs([{ address: '' }]);
     }
-  }, [mode, ruleToModify]);
+  }, [mode, isOpen, ruleToModify]);
 
   const title =
     mode === 'create' ? `Add an ${capitalize(category)} Rule` : 'Edit Rule';
@@ -416,10 +418,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       />
       {hasCustomInput ? (
         <TextField
-          label="Port Range"
+          label="Custom Port Range"
           name="ports"
-          placeholder="Enter a port range..."
-          aria-label="Port range for firewall rule"
+          placeholder="Enter a custom port range..."
+          aria-label="Custom port range for firewall rule"
           value={values.ports}
           errorText={errors.ports}
           onChange={handleTextFieldChange}
