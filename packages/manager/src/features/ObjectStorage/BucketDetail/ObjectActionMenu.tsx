@@ -1,49 +1,61 @@
 import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, {
+  Action
+} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
-export interface Props {
-  objectName: string;
+export interface Handlers {
   handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
-  handleClickDetails: () => void;
+}
+
+export interface Props extends Handlers {
+  objectName: string;
 }
 
 export const ObjectActionMenu: React.FC<Props> = props => {
-  const createActions = () => (closeMenu: Function): Action[] => {
-    return [
-      {
-        title: 'Details',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          props.handleClickDetails();
-          closeMenu();
-          e.preventDefault();
-        }
-      },
-      {
-        title: 'Download',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          const shouldOpenInNewTab = true;
-          props.handleClickDownload(props.objectName, shouldOpenInNewTab);
-          closeMenu();
-          e.preventDefault();
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          props.handleClickDelete(props.objectName);
-          closeMenu();
-          e.preventDefault();
-        }
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const { handleClickDownload, handleClickDelete, objectName } = props;
+
+  const actions: Action[] = [
+    {
+      title: 'Download',
+      onClick: () => {
+        const shouldOpenInNewTab = true;
+        handleClickDownload(objectName, shouldOpenInNewTab);
       }
-    ];
-  };
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        handleClickDelete(objectName);
+      }
+    }
+  ];
 
   return (
-    <ActionMenu
-      createActions={createActions()}
-      ariaLabel={`Action menu for Object ${props.objectName}`}
-    />
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {matchesSmDown ? (
+        <ActionMenu
+          actionsList={actions}
+          ariaLabel={`Action menu for Object ${objectName}`}
+        />
+      ) : (
+        actions.map(action => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              onClick={action.onClick}
+            />
+          );
+        })
+      )}
+    </>
   );
 };
 

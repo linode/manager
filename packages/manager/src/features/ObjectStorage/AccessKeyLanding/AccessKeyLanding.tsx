@@ -14,19 +14,10 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import AddNewLink from 'src/components/AddNewLink';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { useErrors } from 'src/hooks/useErrors';
-import useFlags from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { ApplicationState } from 'src/store';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
@@ -39,20 +30,9 @@ import {
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer from './AccessKeyDrawer';
 import AccessKeyTable from './AccessKeyTable';
-import AccessKeyTable_CMR from './AccessKeyTable_CMR';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 import { MODE, OpenAccessDrawer } from './types';
 import ViewPermissionsDrawer from './ViewPermissionsDrawer';
-
-type ClassNames = 'headline';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    headline: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
-    }
-  });
 
 interface Props {
   isRestrictedUser: boolean;
@@ -74,7 +54,6 @@ interface DispatchProps {
 
 type CombinedProps = Props &
   PaginationProps<ObjectStorageKey> &
-  WithStyles<ClassNames> &
   ReduxStateProps &
   DispatchProps;
 
@@ -88,8 +67,6 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     accessDrawerOpen,
     ...paginationProps
   } = props;
-
-  const flags = useFlags();
 
   // Key to display in Confirmation Modal upon creation
   const [
@@ -281,28 +258,15 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     revokeKeysDialog.close();
   };
 
-  const KeyTable = flags.cmr ? AccessKeyTable_CMR : AccessKeyTable;
-
   return (
     <div>
       <DocumentTitleSegment segment="Access Keys" />
-      {!flags.cmr && (
-        <Grid container justify="flex-end">
-          <Grid item>
-            <AddNewLink
-              onClick={() => openDrawer('creating')}
-              label="Create an Access Key"
-            />
-          </Grid>
-        </Grid>
-      )}
-      <KeyTable
+      <AccessKeyTable
         {...paginationProps}
         openDrawer={openDrawer}
         openRevokeDialog={openRevokeDialog}
         data-qa-access-key-table
       />
-
       <PaginationFooter
         page={props.page}
         pageSize={props.pageSize}
@@ -311,7 +275,6 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         handleSizeChange={props.handlePageSizeChange}
         eventCategory="object storage keys table"
       />
-
       <AccessKeyDrawer
         open={accessDrawerOpen}
         onClose={closeAccessDrawer}
@@ -320,13 +283,11 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         objectStorageKey={keyToEdit ? keyToEdit : undefined}
         isRestrictedUser={props.isRestrictedUser}
       />
-
       <ViewPermissionsDrawer
         open={viewPermissionsDrawer.isOpen}
         onClose={viewPermissionsDrawer.close}
         objectStorageKey={keyToEdit}
       />
-
       <AccessKeyDisplayDialog
         objectStorageKey={keyToDisplay}
         isOpen={displayKeysDialog.isOpen}
@@ -344,8 +305,6 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     </div>
   );
 };
-
-const styled = withStyles(styles);
 
 const updatedRequest = (_: CombinedProps, params: any, filters: any) =>
   getObjectStorageKeys(params, filters);
@@ -372,6 +331,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(styled, paginated, connected);
+const enhanced = compose<CombinedProps, Props>(paginated, connected);
 
 export default enhanced(AccessKeyLanding);
