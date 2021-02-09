@@ -231,8 +231,20 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   } = props;
 
   const hasCustomInput = presetPorts.some(
-    thisPort => thisPort.value === 'CUSTOM'
+    thisPort => thisPort.value === PORT_PRESETS['CUSTOM'].value
   );
+
+  const hasSelectedAllPorts = presetPorts.some(
+    thisPort => thisPort.value === PORT_PRESETS['ALL'].value
+  );
+
+  // If ALL is selected, don't show additional options
+  // (because they won't do anything)
+  const portOptions = hasSelectedAllPorts
+    ? PORT_PRESETS_ITEMS.filter(
+        thisItem => thisItem.value === PORT_PRESETS['ALL'].value
+      )
+    : PORT_PRESETS_ITEMS;
 
   // This is an edge case; if there's an error for the Ports field
   // but CUSTOM isn't selected, the error won't be visible to the user.
@@ -334,6 +346,15 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       if (!formTouched) {
         setFormTouched(true);
       }
+      // If the user is selecting "ALL", it doesn't make sense
+      // to show additional selections.
+      if (
+        items.some(thisItem => thisItem.value === PORT_PRESETS['ALL'].value)
+      ) {
+        setPresetPorts([PORT_PRESETS['ALL']]);
+        setFieldValue('ports', '');
+        return;
+      }
       setPresetPorts(items);
       if (!items.some(thisItem => thisItem.value === 'CUSTOM')) {
         setFieldValue('ports', '');
@@ -406,7 +427,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         label="Ports"
         errorText={generalPortError}
         value={presetPorts}
-        options={PORT_PRESETS_ITEMS}
+        options={portOptions}
         onChange={handlePortPresetChange}
         disabled={values.protocol === 'ICMP'}
         textFieldProps={{
