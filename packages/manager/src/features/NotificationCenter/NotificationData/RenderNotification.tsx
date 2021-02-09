@@ -49,12 +49,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   notification: Notification;
+  onClose: () => void;
 }
 
 export type CombinedProps = Props;
 
 export const RenderNotification: React.FC<Props> = props => {
-  const { notification } = props;
+  const { notification, onClose } = props;
   const classes = useStyles();
 
   const isMaintenanceNotification = checkIfMaintenanceNotification(
@@ -100,9 +101,9 @@ export const RenderNotification: React.FC<Props> = props => {
 
         <Grid item>
           {isMaintenanceNotification ? (
-            linkifiedMaintenanceMessage(notification)
+            linkifiedMaintenanceMessage(notification, onClose)
           ) : notification.type === 'ticket_abuse' ? (
-            linkifiedAbuseTicketMessage(notification)
+            linkifiedAbuseTicketMessage(notification, onClose)
           ) : linkTarget ? (
             <Link
               to={linkTarget}
@@ -110,6 +111,7 @@ export const RenderNotification: React.FC<Props> = props => {
                 [classes.redLink]: notification.type === 'payment_due',
                 [classes.greyLink]: notification.type !== 'payment_due'
               })}
+              onClick={onClose}
             >
               {message}
             </Link>
@@ -140,25 +142,34 @@ const getEntityLinks = (type?: string, id?: number) => {
   }
 };
 
-const linkifiedAbuseTicketMessage = (notification: Notification) => {
+const linkifiedAbuseTicketMessage = (
+  notification: Notification,
+  onClose: () => void
+) => {
   return (
     <Typography>
       {notification.message}{' '}
-      <Link to={notification!.entity!.url}>
+      <Link to={notification!.entity!.url} onClick={onClose}>
         Click here to view this ticket.
       </Link>
     </Typography>
   );
 };
 
-const linkifiedMaintenanceMessage = (notification: Notification) => {
+const linkifiedMaintenanceMessage = (
+  notification: Notification,
+  onClose: () => void
+) => {
   return (
     <Typography>
-      <Link to={`/linodes/${notification?.entity?.id ?? ''}`}>
+      <Link to={`/linodes/${notification?.entity?.id ?? ''}`} onClick={onClose}>
         {notification?.entity?.label ?? 'One of your Linodes'}
       </Link>{' '}
       resides on a host that is pending critical maintenance. You should have
-      received a <Link to={'/support/tickets?type=open'}>support ticket</Link>{' '}
+      received a{' '}
+      <Link to={'/support/tickets?type=open'} onClick={onClose}>
+        support ticket
+      </Link>{' '}
       that details how you will be affected. Please see the aforementioned
       ticket and{' '}
       <Link to={'https://status.linode.com/'}>status.linode.com</Link> for more

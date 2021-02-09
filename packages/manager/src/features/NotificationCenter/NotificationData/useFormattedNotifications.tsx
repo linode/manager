@@ -1,4 +1,4 @@
-import { Notification } from '@linode/api-v4/lib/account';
+import { Notification, NotificationSeverity } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -9,8 +9,11 @@ import useNotifications from 'src/hooks/useNotifications';
 import { NotificationItem } from '../NotificationSection';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
+import { notificationContext } from '../NotificationContext';
 
 export const useFormattedNotifications = () => {
+  const context = React.useContext(notificationContext);
+
   const notifications = useNotifications();
   const { account } = useAccount();
 
@@ -31,7 +34,11 @@ export const useFormattedNotifications = () => {
   }
 
   return combinedNotifications.map((notification, idx) =>
-    formatNotificationForDisplay(interceptNotification(notification), idx)
+    formatNotificationForDisplay(
+      interceptNotification(notification),
+      idx,
+      context.closeDrawer
+    )
   );
 };
 
@@ -56,7 +63,7 @@ const interceptNotification = (notification: Notification): Notification => {
     /** replace "this facility" with the name of the datacenter */
     return {
       ...notification,
-      severity: reduceSeverity(notification),
+      severity: adjustSeverity(notification),
       label: notification.label
         .toLowerCase()
         .replace('this facility', convertedRegion || 'one of our facilities'),
@@ -70,7 +77,7 @@ const interceptNotification = (notification: Notification): Notification => {
     return {
       ...notification,
       message: notification.message.replace('!', '.'),
-      severity: reduceSeverity(notification)
+      severity: adjustSeverity(notification)
     };
   }
 
@@ -87,7 +94,7 @@ const interceptNotification = (notification: Notification): Notification => {
     return {
       ...notification,
       label: `Maintenance Scheduled`,
-      severity: reduceSeverity(notification),
+      severity: adjustSeverity(notification),
       message: notification.body
         ? linodeAttachedToNotification
           ? notification.body.replace(
@@ -104,15 +111,19 @@ const interceptNotification = (notification: Notification): Notification => {
 
 const formatNotificationForDisplay = (
   notification: Notification,
-  idx: number
+  idx: number,
+  onClose: () => void
 ): NotificationItem => ({
   id: `notification-${idx}`,
-  body: <RenderNotification notification={notification} />,
+  body: <RenderNotification notification={notification} onClose={onClose} />,
   countInTotal: true
 });
 
 // For communicative purposes in the UI, in some cases we want to upgrade or downgrade the severity of certain notifications compared to what the API returns. Example: the API has ticket_abuse as having a severity of major, but we want to show those notifications as critical.
-const reduceSeverity = ({ severity, type }: Notification) => {
+const adjustSeverity = ({
+  severity,
+  type
+}: Notification): NotificationSeverity => {
   if (
     checkIfMaintenanceNotification(type) ||
     (severity === 'major' && type !== 'ticket_abuse')
