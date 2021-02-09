@@ -1,25 +1,23 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
 import {
   matchPath,
   RouteComponentProps,
   useRouteMatch
 } from 'react-router-dom';
-import Breadcrumb from 'src/components/Breadcrumb';
-import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import { compose } from 'recompose';
+import { Dispatch } from 'redux';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
-import DocumentationButton from 'src/components/DocumentationButton';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import TabLinkList from 'src/components/TabLinkList';
 import bucketDrawerContainer, {
   DispatchProps
 } from 'src/containers/bucketDrawer.container';
@@ -27,12 +25,11 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
 import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
+import useOpenClose from 'src/hooks/useOpenClose';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { openBucketDrawer } from 'src/store/bucketDrawer/bucketDrawer.actions';
-import BucketDrawer from './BucketLanding/BucketDrawer';
-import { compose } from 'recompose';
-import useOpenClose from 'src/hooks/useOpenClose';
 import { MODE } from './AccessKeyLanding/types';
+import BucketDrawer from './BucketLanding/BucketDrawer';
 
 const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
 const AccessKeyLanding = React.lazy(() =>
@@ -183,37 +180,16 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
-      <Box
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        {flags.cmr ? (
-          // @todo: remove inline style when we switch over to CMR
-          <div style={{ width: '100%' }}>
-            <LandingHeader
-              title="Object Storage"
-              entity="Object Storage"
-              createButtonText={createButtonText}
-              createButtonWidth={createButtonWidth}
-              docsLink="https://www.linode.com/docs/platform/object-storage/"
-              onAddNew={createButtonAction}
-              removeCrumbX={1}
-              breadcrumbProps={{ pathname: '/object-storage' }}
-            />
-          </div>
-        ) : (
-          <>
-            <Breadcrumb
-              pathname={props.location.pathname}
-              labelTitle="Object Storage"
-              removeCrumbX={1}
-            />
-            <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
-          </>
-        )}
-      </Box>
+      <LandingHeader
+        title="Object Storage"
+        entity="Object Storage"
+        createButtonText={createButtonText}
+        createButtonWidth={createButtonWidth}
+        docsLink="https://www.linode.com/docs/platform/object-storage/"
+        onAddNew={createButtonAction}
+        removeCrumbX={1}
+        breadcrumbProps={{ pathname: '/object-storage' }}
+      />
       <Tabs
         index={Math.max(
           tabs.findIndex(tab => matches(tab.routeName)),

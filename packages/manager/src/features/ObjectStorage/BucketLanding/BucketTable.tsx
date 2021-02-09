@@ -1,43 +1,27 @@
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import { compose } from 'recompose';
-import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableSortCell from 'src/components/TableSortCell';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import BucketTableRow from './BucketTableRow';
-
-type ClassNames = 'root' | 'label' | 'confirmationCopy';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    label: {
-      paddingLeft: 65
-    }
-  });
 
 interface Props {
   data: ObjectStorageBucket[];
   orderBy: string;
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
+  openBucketDrawer: () => void;
   handleClickRemove: (bucket: ObjectStorageBucket) => void;
   handleClickDetails: (bucket: ObjectStorageBucket) => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export const BucketTable: React.FC<CombinedProps> = props => {
   const {
@@ -46,8 +30,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
     order,
     handleOrderChange,
     handleClickRemove,
-    handleClickDetails,
-    classes
+    handleClickDetails
   } = props;
 
   return (
@@ -61,25 +44,19 @@ export const BucketTable: React.FC<CombinedProps> = props => {
         pageSize
       }) => (
         <React.Fragment>
-          <Paper>
-            <Table
-              removeLabelonMobile
-              aria-label="List of your Buckets"
-              rowCount={data.length}
-              colCount={3}
-            >
-              <TableHead>
-                <TableRow role="rowgroup">
-                  <TableSortCell
-                    active={orderBy === 'label'}
-                    label="label"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    className={classes.label}
-                    data-qa-name
-                  >
-                    Name
-                  </TableSortCell>
+          <Table aria-label="List of your Buckets">
+            <TableHead>
+              <TableRow>
+                <TableSortCell
+                  active={orderBy === 'label'}
+                  label="label"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  data-qa-name
+                >
+                  Name
+                </TableSortCell>
+                <Hidden xsDown>
                   <TableSortCell
                     active={orderBy === 'cluster'}
                     label="cluster"
@@ -89,6 +66,8 @@ export const BucketTable: React.FC<CombinedProps> = props => {
                   >
                     Region
                   </TableSortCell>
+                </Hidden>
+                <Hidden smDown>
                   <TableSortCell
                     active={orderBy === 'created'}
                     label="created"
@@ -98,28 +77,41 @@ export const BucketTable: React.FC<CombinedProps> = props => {
                   >
                     Created
                   </TableSortCell>
+                </Hidden>
+                <TableSortCell
+                  active={orderBy === 'size'}
+                  label="size"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  data-qa-size
+                >
+                  Size
+                </TableSortCell>
+                <Hidden smDown>
                   <TableSortCell
-                    active={orderBy === 'size'}
-                    label="size"
+                    active={orderBy === 'objects'}
+                    label="objects"
                     direction={order}
                     handleClick={handleOrderChange}
-                    data-qa-size
+                    data-qa-objects
                   >
-                    Size
+                    Objects
                   </TableSortCell>
-                  {/* Empty TableCell for ActionMenu*/}
-                  <TableCell />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <RenderData
-                  data={paginatedData}
-                  onRemove={handleClickRemove}
-                  onClickDetails={handleClickDetails}
-                />
-              </TableBody>
-            </Table>
-          </Paper>
+                </Hidden>
+
+                {/* Empty TableCell for ActionMenu*/}
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <RenderData
+                data={paginatedData}
+                onRemove={handleClickRemove}
+                onDetails={handleClickDetails}
+              />
+            </TableBody>
+          </Table>
+
           <PaginationFooter
             count={count}
             page={page}
@@ -137,28 +129,25 @@ export const BucketTable: React.FC<CombinedProps> = props => {
 interface RenderDataProps {
   data: ObjectStorageBucket[];
   onRemove: (bucket: ObjectStorageBucket) => void;
-  onClickDetails: (bucket: ObjectStorageBucket) => void;
+  onDetails: (bucket: ObjectStorageBucket) => void;
 }
 
 const RenderData: React.FC<RenderDataProps> = props => {
-  const { data, onRemove, onClickDetails } = props;
+  const { data, onRemove, onDetails } = props;
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {data.map(bucket => (
         <BucketTableRow
           {...bucket}
           key={`${bucket.label}-${bucket.cluster}`}
           onRemove={() => onRemove(bucket)}
-          onClickDetails={() => onClickDetails(bucket)}
+          onDetails={() => onDetails(bucket)}
         />
       ))}
     </>
   );
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(styled);
-
-export default enhanced(BucketTable);
+export default BucketTable;

@@ -6,11 +6,11 @@ import { BucketTable } from './BucketTable';
 describe('BucketTable', () => {
   const wrapper = shallow(
     <BucketTable
-      classes={{ root: '', label: '', confirmationCopy: '' }}
       data={buckets}
       orderBy="label"
       order="asc"
       handleOrderChange={jest.fn()}
+      openBucketDrawer={jest.fn()}
       handleClickRemove={jest.fn()}
       handleClickDetails={jest.fn()}
     />
