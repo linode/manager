@@ -63,7 +63,6 @@ const interceptNotification = (notification: Notification): Notification => {
     /** replace "this facility" with the name of the datacenter */
     return {
       ...notification,
-      severity: adjustSeverity(notification),
       label: notification.label
         .toLowerCase()
         .replace('this facility', convertedRegion || 'one of our facilities'),
@@ -76,8 +75,7 @@ const interceptNotification = (notification: Notification): Notification => {
   if (notification.type === 'ticket_abuse') {
     return {
       ...notification,
-      message: notification.message.replace('!', '.'),
-      severity: adjustSeverity(notification)
+      message: notification.message.replace('!', '.')
     };
   }
 
@@ -119,22 +117,16 @@ const formatNotificationForDisplay = (
   countInTotal: true
 });
 
-// For communicative purposes in the UI, in some cases we want to upgrade or downgrade the severity of certain notifications compared to what the API returns. Example: the API has ticket_abuse as having a severity of major, but we want to show those notifications as critical.
+// For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
 const adjustSeverity = ({
   severity,
   type
 }: Notification): NotificationSeverity => {
-  if (
-    checkIfMaintenanceNotification(type) ||
-    (severity === 'major' && type !== 'ticket_abuse')
-  ) {
+  if (checkIfMaintenanceNotification(type)) {
     return 'major';
   }
-  if (severity === 'critical' || type === 'ticket_abuse') {
-    return 'critical';
-  }
 
-  return 'minor';
+  return severity;
 };
 
 export default useFormattedNotifications;
