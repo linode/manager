@@ -705,9 +705,16 @@ export const portStringToItems = (
   if (!portString) {
     return [[], ''];
   }
+
+  // If this string is included, all ports are allowed.
+  if (portString.match(/1-65535/)) {
+    return [[PORT_PRESETS['ALL']], ''];
+  }
+
   const ports = portString.split(',').map(p => p.trim());
   const items: Item<string>[] = [];
   const customInput: string[] = [];
+
   ports.forEach(thisPort => {
     const preset = PORT_PRESETS[thisPort];
     if (preset) {

@@ -245,6 +245,12 @@ describe('utilities', () => {
       expect(portString).toEqual('1111-2222');
     });
 
+    it('should recognize that 1-65535 means open all ports', () => {
+      const [items, portString] = portStringToItems('1-65535');
+      expect(items).toEqual([PORT_PRESETS['ALL']]);
+      expect(portString).toEqual('');
+    });
+
     it('should handle empty input', () => {
       const [items, portString] = portStringToItems('');
       expect(items).toEqual([]);
