@@ -8,8 +8,8 @@ const AccountLanding = React.lazy(() =>
 const InvoiceDetail = React.lazy(() =>
   import('src/features/Billing/InvoiceDetail')
 );
-const EntityTransfers = React.lazy(() =>
-  import('src/features/EntityTransfers')
+const EntityTransfersCreate = React.lazy(() =>
+  import('src/features/EntityTransfers/EntityTransfersCreate')
 );
 const UserDetail = React.lazy(() => import('src/features/Users/UserDetail'));
 
@@ -31,8 +31,8 @@ class Account extends React.Component<Props> {
             component={InvoiceDetail}
           />
           <Route
-            path={`${path}/entity-transfers`}
-            component={EntityTransfers}
+            path={`${path}/entity-transfers/create`}
+            component={EntityTransfersCreate}
           />
           <Route path={`${path}`} component={AccountLanding} />
         </Switch>

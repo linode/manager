@@ -16,8 +16,8 @@ import withProfile, {
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
 const Billing = React.lazy(() => import('src/features/Billing'));
-const EntityTransfers = React.lazy(() =>
-  import('src/features/EntityTransfers')
+const EntityTransfersLanding = React.lazy(() =>
+  import('src/features/EntityTransfers/EntityTransfersLanding')
 );
 const Users = React.lazy(() => import('src/features/Users'));
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
@@ -77,7 +77,7 @@ const AccountLanding: React.FC<Props> = props => {
               <Users isRestrictedUser={props.isRestrictedUser} />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
-              <EntityTransfers />
+              <EntityTransfersLanding />
             </SafeTabPanel>
             <SafeTabPanel index={3}>
               <GlobalSettings />
