@@ -29,7 +29,7 @@ import { updateFirewallRules } from 'src/queries/firewalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
-    fontSize: '1em',
+    fontSize: '0.875rem',
     lineHeight: 1.5,
     paddingBottom: theme.spacing(1)
   },

@@ -1,5 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
-
+import { prop, sortBy } from 'ramda';
 export type Category = 'inbound' | 'outbound';
 
 export interface FirewallRuleError {
@@ -17,16 +17,19 @@ export interface FirewallRuleError {
 // but it makes it easier to test and work with presets without having to .find()
 // in multiple places.
 export const PORT_PRESETS = {
+  ALL: { label: 'Allow All', value: '1-65535' },
+  '53': { label: 'DNS (53)', value: '53' },
   '80': { label: 'HTTP (80)', value: '80' },
   '443': { label: 'HTTPS (443)', value: '443' },
-  '22': { label: 'SSH (22)', value: '22' },
-  '53': { label: 'DNS (53)', value: '53' },
   '3306': { label: 'MySQL (3306)', value: '3306' },
-  ALL: { label: 'Allow All', value: '1-65535' },
+  '22': { label: 'SSH (22)', value: '22' },
   CUSTOM: { label: 'Custom', value: 'CUSTOM' }
 };
 
-export const PORT_PRESETS_ITEMS = Object.values(PORT_PRESETS);
+export const PORT_PRESETS_ITEMS = sortBy(
+  prop('label'),
+  Object.values(PORT_PRESETS)
+);
 
 /**
  * The API returns very good Firewall error messages that look like this:
