@@ -8,6 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Link } from 'src/components/Link';
+import { checkIfMaintenanceNotification } from './notificationUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -56,11 +57,9 @@ export const RenderNotification: React.FC<Props> = props => {
   const { notification } = props;
   const classes = useStyles();
 
-  const isMaintenanceNotification = [
-    'maintenance',
-    'maintenance_scheduled',
-    'migration_pending'
-  ].includes(notification.type);
+  const isMaintenanceNotification = checkIfMaintenanceNotification(
+    notification.type
+  );
 
   const linkTarget =
     // payment_due notifications do not have an entity property, so in that case, link directly to /account/billing

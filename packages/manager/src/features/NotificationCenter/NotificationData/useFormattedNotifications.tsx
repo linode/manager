@@ -7,6 +7,7 @@ import { reportException } from 'src/exceptionReporting';
 import useAccount from 'src/hooks/useAccount';
 import useNotifications from 'src/hooks/useNotifications';
 import { NotificationItem } from '../NotificationSection';
+import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
 
 export const useFormattedNotifications = () => {
@@ -38,8 +39,7 @@ const interceptNotification = (notification: Notification): Notification => {
   /** this is an outage to one of the datacenters */
   if (
     notification.type === 'outage' &&
-    notification.entity &&
-    notification.entity.type === 'region'
+    notification.entity?.type === 'region'
   ) {
     const convertedRegion = dcDisplayNames[notification.entity.id];
 
@@ -76,11 +76,8 @@ const interceptNotification = (notification: Notification): Notification => {
 
   /** there is maintenance on this Linode */
   if (
-    (notification.type === 'maintenance' ||
-      notification.type === 'migration_scheduled' ||
-      notification.type === 'migration_pending') &&
-    notification.entity &&
-    notification.entity.type === 'linode'
+    checkIfMaintenanceNotification(notification.type) &&
+    notification.entity?.type === 'linode'
   ) {
     /** replace "this Linode" with the name of the Linode */
     const linodeAttachedToNotification: string | undefined = path(
@@ -91,12 +88,14 @@ const interceptNotification = (notification: Notification): Notification => {
       ...notification,
       label: `Maintenance Scheduled`,
       severity: reduceSeverity(notification),
-      message: linodeAttachedToNotification
-        ? notification!.body!.replace(
-            'This Linode',
-            linodeAttachedToNotification
-          )
-        : notification!.body!
+      message: notification.body
+        ? linodeAttachedToNotification
+          ? notification.body.replace(
+              'This Linode',
+              linodeAttachedToNotification
+            )
+          : notification.body
+        : notification.message
     };
   }
 
@@ -112,20 +111,16 @@ const formatNotificationForDisplay = (
   countInTotal: true
 });
 
+// For communicative purposes in the UI, in some cases we want to upgrade or downgrade the severity of certain notifications compared to what the API returns. Example: the API has ticket_abuse as having a severity of major, but we want to show those notifications as critical.
 const reduceSeverity = ({ severity, type }: Notification) => {
   if (
-    ['maintenance', 'maintenance_scheduled', 'migration_pending'].includes(
-      type
-    ) ||
+    checkIfMaintenanceNotification(type) ||
     (severity === 'major' && type !== 'ticket_abuse')
   ) {
     return 'major';
   }
   if (severity === 'critical' || type === 'ticket_abuse') {
     return 'critical';
-  }
-  if (severity === 'minor') {
-    return 'minor';
   }
 
   return 'minor';
