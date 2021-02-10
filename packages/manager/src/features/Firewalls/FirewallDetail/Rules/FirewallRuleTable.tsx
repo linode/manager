@@ -23,7 +23,7 @@ import capitalize from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
 import { Mode } from './FirewallRuleDrawer';
 import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
-import { Category, FirewallRuleError } from './shared';
+import { Category, FirewallRuleError, sortPortString } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -274,7 +274,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
             <ConditionalError errors={errors} formField="protocol" />
           </TableCell>
           <TableCell>
-            {ports}
+            {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
           </TableCell>
         </Hidden>
@@ -362,42 +362,4 @@ export const firewallRuleToRowData = (
       id: idx
     };
   });
-};
-
-/**
- * Sorts ports string returned by the API into something more intuitive for users.
- * Examples:
- * "80, 22" --> "22, 80"
- * "443, 22, 80-81" --> "22, 80-81, 443"
- */
-export const sortPortString = (portString: string) => {
-  try {
-    const ports = portString.split(',');
-    return ports
-      .sort(sortString)
-      .map(port => port.trim())
-      .join(', ');
-  } catch {
-    // API responses should always work with this logic,
-    // but in case we get bad input, return the unsorted/unaltered string.
-    return portString;
-  }
-};
-
-// Custom sort helper for working with port strings
-const sortString = (_a: string, _b: string) => {
-  const a = Number(stripHyphen(_a));
-  const b = Number(stripHyphen(_b));
-  if (a > b) {
-    return 1;
-  }
-  if (a < b) {
-    return -1;
-  }
-  return 0;
-};
-
-// If a port range is included (80-1000) return the first element of the range
-const stripHyphen = (str: string) => {
-  return str.match(/-/) ? str.split('-')[0] : str;
 };

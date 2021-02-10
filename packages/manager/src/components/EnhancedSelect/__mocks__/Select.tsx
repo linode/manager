@@ -17,6 +17,7 @@ export default ({
   options,
   value,
   label,
+  disabled,
   onChange,
   errorText,
   placeholder,
@@ -43,6 +44,7 @@ export default ({
       </label>
       <select
         placeholder={placeholder}
+        disabled={disabled}
         name={_label}
         data-testid="select"
         aria-labelledby={`${_label}-label`}

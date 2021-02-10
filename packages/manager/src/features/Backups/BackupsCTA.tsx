@@ -72,7 +72,7 @@ const BackupsCTA: React.FC<CombinedProps> = props => {
           <React.Fragment />
         ) : (
           <Paper className={classes.root}>
-            <Typography style={{ fontSize: '1rem' }}>
+            <Typography style={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
               <button
                 className={classes.enableText}
                 onClick={openBackupsDrawer}
