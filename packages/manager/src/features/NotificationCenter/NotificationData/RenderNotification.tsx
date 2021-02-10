@@ -8,6 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Link } from 'src/components/Link';
+import { checkIfMaintenanceNotification } from './notificationUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   notificationIcon: {
     lineHeight: '1rem',
+    display: 'flex',
     '& svg': {
       height: '1.25rem',
       width: '1.25rem'
@@ -47,19 +49,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   notification: Notification;
+  onClose: () => void;
 }
 
 export type CombinedProps = Props;
 
 export const RenderNotification: React.FC<Props> = props => {
-  const { notification } = props;
+  const { notification, onClose } = props;
   const classes = useStyles();
+
+  const isMaintenanceNotification = checkIfMaintenanceNotification(
+    notification.type
+  );
 
   const linkTarget =
     // payment_due notifications do not have an entity property, so in that case, link directly to /account/billing
     notification?.type === 'payment_due'
       ? '/account/billing'
-      : getEntityLink(notification?.entity?.type, notification?.entity?.id);
+      : getEntityLinks(notification?.entity?.type, notification?.entity?.id);
 
   const message = (
     <Typography
@@ -93,13 +100,18 @@ export const RenderNotification: React.FC<Props> = props => {
         </Grid>
 
         <Grid item>
-          {linkTarget ? (
+          {isMaintenanceNotification ? (
+            linkifiedMaintenanceMessage(notification, onClose)
+          ) : notification.type === 'ticket_abuse' ? (
+            linkifiedAbuseTicketMessage(notification, onClose)
+          ) : linkTarget ? (
             <Link
               to={linkTarget}
               className={classNames({
                 [classes.redLink]: notification.type === 'payment_due',
                 [classes.greyLink]: notification.type !== 'payment_due'
               })}
+              onClick={onClose}
             >
               {message}
             </Link>
@@ -113,7 +125,7 @@ export const RenderNotification: React.FC<Props> = props => {
   );
 };
 
-const getEntityLink = (type?: string, id?: number) => {
+const getEntityLinks = (type?: string, id?: number) => {
   if (!type) {
     return;
   }
@@ -122,15 +134,48 @@ const getEntityLink = (type?: string, id?: number) => {
     case 'linode':
       return `/linodes/${id}`;
 
-    case 'ticket':
+    case 'ticket_abuse':
       return `/support/tickets/${id}`;
-
-    case 'payment_due':
-      return `/account/billing`;
 
     default:
       return;
   }
+};
+
+const linkifiedAbuseTicketMessage = (
+  notification: Notification,
+  onClose: () => void
+) => {
+  return (
+    <Typography>
+      {notification.message}{' '}
+      <Link to={notification!.entity!.url} onClick={onClose}>
+        Click here to view this ticket.
+      </Link>
+    </Typography>
+  );
+};
+
+const linkifiedMaintenanceMessage = (
+  notification: Notification,
+  onClose: () => void
+) => {
+  return (
+    <Typography>
+      <Link to={`/linodes/${notification?.entity?.id ?? ''}`} onClick={onClose}>
+        {notification?.entity?.label ?? 'One of your Linodes'}
+      </Link>{' '}
+      resides on a host that is pending critical maintenance. You should have
+      received a{' '}
+      <Link to={'/support/tickets?type=open'} onClick={onClose}>
+        support ticket
+      </Link>{' '}
+      that details how you will be affected. Please see the aforementioned
+      ticket and{' '}
+      <Link to={'https://status.linode.com/'}>status.linode.com</Link> for more
+      details.
+    </Typography>
+  );
 };
 
 export default React.memo(RenderNotification);
