@@ -10,9 +10,7 @@ import Typography from 'src/components/core/Typography';
 import bucketRequestsContainer, {
   BucketsRequests
 } from 'src/containers/bucketRequests.container';
-import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
-import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { debounce } from 'throttle-debounce';
 import { uploadObject } from '../requests';
@@ -43,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderWidth: 1,
     color: theme.palette.primary.main,
     height: '100%',
+    maxHeight: 400,
     marginTop: theme.spacing(2),
     minHeight: 140,
     outline: 'none',
@@ -53,10 +52,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(),
       marginLeft: theme.spacing()
     }
-  },
-  copy: {
-    color: theme.palette.primary.main,
-    margin: '0 auto'
   },
   active: {
     // The `active` class active when a user is hovering over the dropzone.
@@ -76,32 +71,35 @@ const useStyles = makeStyles((theme: Theme) => ({
     // with files that will be rejected (based on file size, number of files).
     borderColor: theme.color.red
   },
+  fileUploads: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    justifyContent: 'flex-start'
+  },
   dropzoneContent: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     padding: theme.spacing(2),
-    width: '100%',
-    textAlign: 'center'
+    textAlign: 'center',
+    width: '100%'
   },
   UploadZoneActiveButton: {
-    position: 'absolute',
-    zIndex: 10,
     backgroundColor: 'transparent',
-    bottom: 0,
-    left: theme.spacing(2),
-    width: `calc(100% - ${theme.spacing(4)}px)`,
+    bottom: theme.spacing(1.5),
     padding: 0,
+    position: 'absolute',
+    width: `calc(100% - ${theme.spacing(4)}px)`,
+    zIndex: 10,
     '& $uploadButton': {
       marginTop: 0
     }
   },
-  fileUploads: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    justifyContent: 'flex-start'
+  copy: {
+    color: theme.palette.primary.main,
+    margin: '0 auto'
   },
   uploadButton: {
     marginTop: theme.spacing(2),
@@ -281,11 +279,6 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     });
   }, [nextBatch]);
 
-  const { width } = useWindowDimensions();
-
-  // These max widths and breakpoints are based on trial-and-error.
-  const truncationMaxWidth = width < 1920 ? 20 : 30;
-
   const {
     getInputProps,
     getRootProps,
@@ -333,10 +326,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
             return (
               <FileUpload
                 key={idx}
-                displayName={truncateMiddle(
-                  upload.file.name || '',
-                  truncationMaxWidth
-                )}
+                displayName={upload.file.name}
                 fileName={path}
                 sizeInBytes={upload.file.size || 0}
                 percentCompleted={upload.percentComplete || 0}
@@ -365,9 +355,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
           <Button
             buttonType="primary"
             onClick={open}
-            className={classNames({
-              [classes.uploadButton]: true
-            })}
+            className={classes.uploadButton}
           >
             Browse Files
           </Button>
