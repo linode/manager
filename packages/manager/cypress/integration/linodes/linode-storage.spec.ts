@@ -1,15 +1,9 @@
-/*
-Add Disk
-Resize Disk
-Delete Disk X
-Add Volume
-Delete Volume
-*/
-
-import { clickLinodeActionMenu, createLinode } from '../../support/api/linodes';
+/* eslint-disable sonarjs/no-duplicate-string */
+import { createLinode, RequestType } from '../../support/api/linodes';
 import {
   containsVisible,
   fbtClick,
+  fbtVisible,
   getClick,
   getVisible
 } from '../../support/helpers';
@@ -25,37 +19,131 @@ const deleteDisk = diskName => {
           cy
             .contains('PROVISIONING', { timeout: 180000 })
             .should('not.exist') &&
-          cy.contains('BOOTING', { timeout: 180000 }).should('not.exist')
+          cy.contains('BOOTING', { timeout: 180000 }).should('not.exist') &&
+          cy.contains('Resizing', { timeout: 180000 }).should('not.exist')
         ) {
           getClick(
             `[id="option-2--${$id}"][data-qa-action-menu-item="Delete"]`
           );
           getClick('button[data-qa-confirm-delete="true"]');
-          assertToast(diskName);
         }
       }
     });
 };
 
+const addDisk = (linodeId, diskName) => {
+  if (
+    cy.contains('PROVISIONING', { timeout: 180000 }).should('not.exist') &&
+    cy.contains('BOOTING', { timeout: 180000 }).should('not.exist')
+  ) {
+    containsVisible('OFFLINE');
+    getClick('button[title="Add a Disk"]');
+    getVisible('[data-testid="textfield-input"][id="label"]').type(diskName);
+    getClick('[value="81920"]')
+      .clear()
+      .type('1');
+    getClick('[data-testid="submit-disk-form"]');
+  }
+};
+
 describe('linode storage tab', () => {
-  it.skip('try to delete in use disk', () => {
+  it('try to delete in use disk', () => {
+    const diskName = 'Debian 10 Disk';
     createLinode().then(linode => {
-      const diskName = '512 MB Swap Image';
+      cy.intercept('DELETE', `*/linode/instances/${linode.id}/disks/*`).as(
+        'deleteDisk'
+      );
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
-      cy.get('button[title="Add a Disk"]').should('not.exist');
+      fbtVisible(diskName);
+      cy.get('button[title="Add a Disk"]').should('be.disabled');
+      cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
+        cy.contains('Resize').should('be.disabled');
+      });
       deleteDisk(diskName);
-      getVisible('button[title="Add a Disk"]');
+      cy.wait('@deleteDisk')
+        .its('response.statusCode')
+        // this does give a 200 response... not sure if that should be the case or not
+        .should('eq', 200);
+      assertToast(`Unable to delete disk ${diskName}`);
+      cy.get('button[title="Add a Disk"]').should('be.disabled');
     });
   });
 
-  it('power off and delete not in use disk', () => {
-    createLinode().then(linode => {
-      const diskName = 'Debian 10 Disk';
+  // create with empty disk then delete disk
+  it('delete disk', () => {
+    const diskName = 'cy-test-disk';
+    createLinode(RequestType.NOIMAGE).then(linode => {
+      cy.intercept('DELETE', `*/linode/instances/${linode.id}/disks/*`).as(
+        'deleteDisk'
+      );
+      cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
+        'addDisk'
+      );
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
-      fbtClick('Power Off');
-      fbtClick('Power Off');
-      containsVisible('OFFLINE');
+      addDisk(linode.id, diskName);
+      fbtVisible(diskName);
+      cy.wait('@addDisk')
+        .its('response.statusCode')
+        .should('eq', 200);
+      containsVisible('Resizing');
       deleteDisk(diskName);
+      cy.wait('@deleteDisk')
+        .its('response.statusCode')
+        .should('eq', 200);
+      cy.get('button[title="Add a Disk"]').should('be.enabled');
+      cy.contains(diskName).should('not.exist');
+    });
+  });
+
+  // create with empty disk then add disk
+  it('add a disk', () => {
+    const diskName = 'cy-test-disk';
+    createLinode(RequestType.NOIMAGE).then(linode => {
+      cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
+        'addDisk'
+      );
+      cy.visitWithLogin(`/linodes/${linode.id}/storage`);
+      addDisk(linode.id, diskName);
+      fbtVisible(diskName);
+      cy.wait('@addDisk')
+        .its('response.statusCode')
+        .should('eq', 200);
+    });
+  });
+
+  // resize disk
+  it('resize disk', () => {
+    const diskName = 'Debian 10 Disk';
+    createLinode(RequestType.NOIMAGE).then(linode => {
+      cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
+        'addDisk'
+      );
+      cy.intercept('POST', `*/linode/instances/${linode.id}/disks/*/resize`).as(
+        'resizeDisk'
+      );
+      cy.visitWithLogin(`/linodes/${linode.id}/storage`);
+      addDisk(linode.id, diskName);
+      fbtVisible(diskName);
+      cy.wait('@addDisk')
+        .its('response.statusCode')
+        .should('eq', 200);
+      containsVisible('Resizing');
+      if (
+        cy.contains('PROVISIONING', { timeout: 180000 }).should('not.exist') &&
+        cy.contains('BOOTING', { timeout: 180000 }).should('not.exist') &&
+        cy.contains('Resizing', { timeout: 180000 }).should('not.exist')
+      ) {
+        cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
+          fbtClick('Resize');
+        });
+        getClick('[value="1"]')
+          .clear()
+          .type('2');
+        getClick('[data-testid="submit-disk-form"]');
+        cy.wait('@resizeDisk')
+          .its('response.statusCode')
+          .should('eq', 200);
+      }
     });
   });
 });
