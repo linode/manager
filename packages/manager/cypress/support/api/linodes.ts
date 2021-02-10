@@ -59,7 +59,7 @@ export const makeLinodeCreateReq = (requestType, value, linode) => {
 };
 
 export const createLinode = (
-  requestType,
+  requestType?,
   value: any = undefined,
   linode = undefined
 ) => {

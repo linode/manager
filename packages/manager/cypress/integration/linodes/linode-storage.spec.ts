@@ -1,5 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { createLinode, RequestType } from '../../support/api/linodes';
+import {
+  createLinode,
+  deleteAllTestLinodes,
+  RequestType
+} from '../../support/api/linodes';
 import {
   containsVisible,
   fbtClick,
@@ -67,6 +71,7 @@ describe('linode storage tab', () => {
       assertToast(`Unable to delete disk ${diskName}`);
       cy.get('button[title="Add a Disk"]').should('be.disabled');
     });
+    deleteAllTestLinodes();
   });
 
   // create with empty disk then delete disk
@@ -93,6 +98,7 @@ describe('linode storage tab', () => {
       cy.get('button[title="Add a Disk"]').should('be.enabled');
       cy.contains(diskName).should('not.exist');
     });
+    deleteAllTestLinodes();
   });
 
   // create with empty disk then add disk
@@ -109,6 +115,7 @@ describe('linode storage tab', () => {
         .its('response.statusCode')
         .should('eq', 200);
     });
+    deleteAllTestLinodes();
   });
 
   // resize disk
@@ -145,5 +152,6 @@ describe('linode storage tab', () => {
           .should('eq', 200);
       }
     });
+    deleteAllTestLinodes();
   });
 });
