@@ -1,7 +1,7 @@
 import { rest, RequestHandler } from 'msw';
 
 import {
-  // abuseTicketNotificationFactory,
+  abuseTicketNotificationFactory,
   accountFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
@@ -387,21 +387,21 @@ export const handlers = [
     //   body: null
     // });
 
-    // const emailBounce = notificationFactory.build({
-    //   type: 'billing_email_bounce',
-    //   entity: null,
-    //   when: null,
-    //   message: 'We are unable to send emails to your billing email address!',
-    //   label: 'We are unable to send emails to your billing email address!',
-    //   severity: 'major',
-    //   until: null,
-    //   body: null
-    // });
-    // const abuseTicket = abuseTicketNotificationFactory.build();
+    const emailBounce = notificationFactory.build({
+      type: 'billing_email_bounce',
+      entity: null,
+      when: null,
+      message: 'We are unable to send emails to your billing email address!',
+      label: 'We are unable to send emails to your billing email address!',
+      severity: 'major',
+      until: null,
+      body: null
+    });
+    const abuseTicket = abuseTicketNotificationFactory.build();
 
     const migrationTicket = notificationFactory.build({
       type: 'migration_pending',
-      entity: { id: 0, type: 'linode' },
+      entity: { id: 0, type: 'linode', label: 'linode-0' },
       severity: 'critical'
     });
 
@@ -410,8 +410,8 @@ export const handlers = [
         makeResourcePage([
           // pastDueBalance,
           ...notificationFactory.buildList(1),
-          // abuseTicket,
-          // emailBounce,
+          abuseTicket,
+          emailBounce,
           migrationTicket
         ])
       )

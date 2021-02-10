@@ -1,4 +1,4 @@
-import { Notification } from '@linode/api-v4/lib/account';
+import { Notification, NotificationSeverity } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -7,9 +7,13 @@ import { reportException } from 'src/exceptionReporting';
 import useAccount from 'src/hooks/useAccount';
 import useNotifications from 'src/hooks/useNotifications';
 import { NotificationItem } from '../NotificationSection';
+import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
+import { notificationContext } from '../NotificationContext';
 
 export const useFormattedNotifications = () => {
+  const context = React.useContext(notificationContext);
+
   const notifications = useNotifications();
   const { account } = useAccount();
 
@@ -30,7 +34,11 @@ export const useFormattedNotifications = () => {
   }
 
   return combinedNotifications.map((notification, idx) =>
-    formatNotificationForDisplay(interceptNotification(notification), idx)
+    formatNotificationForDisplay(
+      interceptNotification(notification),
+      idx,
+      context.closeDrawer
+    )
   );
 };
 
@@ -38,8 +46,7 @@ const interceptNotification = (notification: Notification): Notification => {
   /** this is an outage to one of the datacenters */
   if (
     notification.type === 'outage' &&
-    notification.entity &&
-    notification.entity.type === 'region'
+    notification.entity?.type === 'region'
   ) {
     const convertedRegion = dcDisplayNames[notification.entity.id];
 
@@ -65,24 +72,35 @@ const interceptNotification = (notification: Notification): Notification => {
     };
   }
 
+  if (notification.type === 'ticket_abuse') {
+    return {
+      ...notification,
+      message: notification.message.replace('!', '.')
+    };
+  }
+
   /** there is maintenance on this Linode */
   if (
-    notification.type === 'maintenance' &&
-    notification.entity &&
-    notification.entity.type === 'linode'
+    checkIfMaintenanceNotification(notification.type) &&
+    notification.entity?.type === 'linode'
   ) {
     /** replace "this Linode" with the name of the Linode */
-    const linodeAttachedToNotification = path(['label'], notification.entity);
+    const linodeAttachedToNotification: string | undefined = path(
+      ['label'],
+      notification.entity
+    );
     return {
       ...notification,
       label: `Maintenance Scheduled`,
-      severity: 'major',
-      message: `${
-        linodeAttachedToNotification
-          ? `Linode ${linodeAttachedToNotification}`
-          : `This Linode`
-      }
-            has scheduled maintenance`
+      severity: adjustSeverity(notification),
+      message: notification.body
+        ? linodeAttachedToNotification
+          ? notification.body.replace(
+              'This Linode',
+              linodeAttachedToNotification
+            )
+          : notification.body
+        : notification.message
     };
   }
 
@@ -91,11 +109,24 @@ const interceptNotification = (notification: Notification): Notification => {
 
 const formatNotificationForDisplay = (
   notification: Notification,
-  idx: number
+  idx: number,
+  onClose: () => void
 ): NotificationItem => ({
   id: `notification-${idx}`,
-  body: <RenderNotification notification={notification} />,
+  body: <RenderNotification notification={notification} onClose={onClose} />,
   countInTotal: true
 });
+
+// For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
+export const adjustSeverity = ({
+  severity,
+  type
+}: Notification): NotificationSeverity => {
+  if (checkIfMaintenanceNotification(type)) {
+    return 'major';
+  }
+
+  return severity;
+};
 
 export default useFormattedNotifications;
