@@ -41,7 +41,7 @@ export const BackupsTable: React.FC<CombinedProps> = props => {
   const { classes, linodes, loading } = props;
 
   return (
-    <Table tableClass={classes.root} border spacingTop={16}>
+    <Table tableClass={classes.root} border>
       <TableHead>
         <TableRow>
           <TableCell data-qa-table-header="Label">Label</TableCell>
