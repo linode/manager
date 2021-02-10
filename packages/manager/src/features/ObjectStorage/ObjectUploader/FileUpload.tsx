@@ -210,7 +210,7 @@ const FileUpload: React.FC<Props> = props => {
               Cancel
             </Button>
             <Button buttonType="primary" superCompact onClick={resumeUpload}>
-              Overwrite
+              Replace
             </Button>
           </div>
         </div>
