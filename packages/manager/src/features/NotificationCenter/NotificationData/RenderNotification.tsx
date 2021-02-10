@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   majorIcon: {
     fill: theme.palette.status.warningDark
   },
+  itemsWithoutIcon: {
+    marginLeft: '1.25rem'
+  },
   severeAlert: {
     color: theme.color.red
   },
@@ -73,7 +76,8 @@ export const RenderNotification: React.FC<Props> = props => {
       className={classNames({
         [classes.severeAlert]:
           notification.severity === 'critical' &&
-          notification.type === 'payment_due'
+          notification.type === 'payment_due',
+        [classes.itemsWithoutIcon]: notification.severity === 'minor'
       })}
     >
       {notification.message}
@@ -102,8 +106,6 @@ export const RenderNotification: React.FC<Props> = props => {
         <Grid item>
           {isMaintenanceNotification ? (
             linkifiedMaintenanceMessage(notification, onClose)
-          ) : notification.type === 'ticket_abuse' ? (
-            linkifiedAbuseTicketMessage(notification, onClose)
           ) : linkTarget ? (
             <Link
               to={linkTarget}
@@ -128,32 +130,11 @@ export const RenderNotification: React.FC<Props> = props => {
 const getEntityLinks = (type?: string, id?: number) => {
   if (!type) {
     return;
+  } else if (type === 'linode') {
+    return `/linodes/${id}`;
+  } else {
+    return;
   }
-
-  switch (type) {
-    case 'linode':
-      return `/linodes/${id}`;
-
-    case 'ticket_abuse':
-      return `/support/tickets/${id}`;
-
-    default:
-      return;
-  }
-};
-
-const linkifiedAbuseTicketMessage = (
-  notification: Notification,
-  onClose: () => void
-) => {
-  return (
-    <Typography>
-      {notification.message}{' '}
-      <Link to={notification!.entity!.url} onClick={onClose}>
-        Click here to view this ticket.
-      </Link>
-    </Typography>
-  );
 };
 
 const linkifiedMaintenanceMessage = (

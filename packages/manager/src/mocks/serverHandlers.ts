@@ -405,11 +405,18 @@ export const handlers = [
       severity: 'critical'
     });
 
+    const minorSeverityTicket = notificationFactory.build({
+      type: 'notice',
+      message: 'Testing for minor notification',
+      severity: 'minor'
+    });
+
     return res(
       ctx.json(
         makeResourcePage([
           // pastDueBalance,
           ...notificationFactory.buildList(1),
+          minorSeverityTicket,
           abuseTicket,
           emailBounce,
           migrationTicket
