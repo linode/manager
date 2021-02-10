@@ -387,6 +387,23 @@ export const handlers = [
     //   body: null
     // });
 
+    const outageNotification = {
+      type: 'outage',
+      entity: {
+        type: 'region',
+        label: null,
+        id: 'us-east',
+        url: '/regions/us-east'
+      },
+      when: null,
+      message:
+        'We are aware of an issue affecting service in this facility. If you are experiencing service issues in this facility, there is no need to open a support ticket at this time. Please monitor our status blog at https://status.linode.com for further information.  Thank you for your patience and understanding.',
+      label: 'There is an issue affecting service in this facility',
+      severity: 'major',
+      until: null,
+      body: null
+    };
+
     const emailBounce = notificationFactory.build({
       type: 'billing_email_bounce',
       entity: null,
@@ -416,6 +433,7 @@ export const handlers = [
         makeResourcePage([
           // pastDueBalance,
           ...notificationFactory.buildList(1),
+          outageNotification,
           minorSeverityTicket,
           abuseTicket,
           emailBounce,

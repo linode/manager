@@ -74,12 +74,10 @@ const interceptNotification = (notification: Notification): Notification => {
     /** replace "this facility" with the name of the datacenter */
     return {
       ...notification,
-      label: notification.label
-        .toLowerCase()
-        .replace('this facility', convertedRegion || 'one of our facilities'),
-      message: notification.message
-        .toLowerCase()
-        .replace('this facility', convertedRegion || 'one of our facilities')
+      label: notification.label.replace(
+        'this facility',
+        convertedRegion || 'one of our facilities'
+      )
     };
   }
 

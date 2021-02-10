@@ -8,6 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Link } from 'src/components/Link';
+import { dcDisplayNames } from 'src/constants';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -106,6 +107,8 @@ export const RenderNotification: React.FC<Props> = props => {
         <Grid item>
           {isMaintenanceNotification ? (
             linkifiedMaintenanceMessage(notification, onClose)
+          ) : notification.type === 'outage' ? (
+            linkifiedOutageMessage(notification)
           ) : linkTarget ? (
             <Link
               to={linkTarget}
@@ -157,6 +160,28 @@ const linkifiedMaintenanceMessage = (
       details.
     </Typography>
   );
+};
+
+const linkifiedOutageMessage = (notification: Notification) => {
+  if (
+    notification.type === 'outage' &&
+    notification.entity?.type === 'region'
+  ) {
+    const entityId = notification.entity.id;
+
+    return (
+      <Typography>
+        We are aware of an issue affecting service in{' '}
+        {dcDisplayNames[entityId] || 'one of our facilities'}. If you are
+        experiencing service issues in this facility, there is no need to open a
+        support ticket at this time. Please monitor our status blog at{' '}
+        <Link to={'https://status.linode.com/'}>https://status.linode.com</Link>{' '}
+        for further information. Thank you for your patience and understanding.
+      </Typography>
+    );
+  }
+
+  return notification.message;
 };
 
 export default React.memo(RenderNotification);
