@@ -66,4 +66,3 @@ jobs:
           headless: true
           record: true
           parallel: true
-          
