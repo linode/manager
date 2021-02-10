@@ -2,7 +2,6 @@ import { makeImageLabel } from '../../support/api/images';
 import { createLinode, deleteLinodeById } from '../../support/api/linodes';
 import {
   containsClick,
-  containsVisible,
   fbtClick,
   fbtVisible,
   getClick,

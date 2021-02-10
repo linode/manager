@@ -1,5 +1,3 @@
-import { makeLinodeDataWithStatus } from '../support/api/linodes';
-
 describe.skip('Checking icons render correctly', () => {
   describe('Linode icon status', () => {
     const linodeIconStatus = [
@@ -58,7 +56,7 @@ describe.skip('Checking icons render correctly', () => {
           url: '*/linode/instances/*',
           method: 'GET',
           response: {
-            data: [makeLinodeDataWithStatus('running')]
+            // data: [makeLinodeDataWithStatus('running')]
           }
         }).as('getLinodes');
         cy.visitWithLogin('/linodes');

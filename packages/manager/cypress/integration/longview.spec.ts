@@ -1,5 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { createLinode, deleteLinodeById } from '../support/api/linodes';
+import {
+  createLinode,
+  deleteLinodeById,
+  RequestType
+} from '../support/api/linodes';
 import { createClient, deleteClientById } from '../support/api/longview';
 import { containsVisible, fbtVisible, getVisible } from '../support/helpers';
 import { waitForAppLoad } from '../support/ui/common';
@@ -10,7 +14,7 @@ describe('longview', () => {
     const linodePassword = strings.randomPass();
     const clientLabel = 'cy-test-client';
     cy.visitWithLogin('/dashboard');
-    createLinode(true, undefined, linodePassword).then(linode => {
+    createLinode(RequestType.PASSWORD, linodePassword).then(linode => {
       createClient(undefined, clientLabel).then(client => {
         const linodeIp = linode['ipv4'][0];
         const clientLabel = client.label;
