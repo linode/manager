@@ -9,6 +9,7 @@ import {
   domainFactory,
   domainRecordFactory,
   imageFactory,
+  entityTransferFactory,
   firewallFactory,
   firewallDeviceFactory,
   kubernetesAPIResponse,
@@ -59,6 +60,33 @@ export const makeResourcePage = (
   results: override.results ?? e.length,
   data: e
 });
+
+const entityTransfers = [
+  rest.get('*/account/entity-transfers', (req, res, ctx) => {
+    const transfers = entityTransferFactory.buildList(10);
+    return res(ctx.json(makeResourcePage(transfers)));
+  }),
+  rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
+    const transfer = entityTransferFactory.build();
+    return res(ctx.json(transfer));
+  }),
+  rest.post('*/account/entity-transfers', (req, res, ctx) => {
+    const payload = req.body as any;
+    const newTransfer = entityTransferFactory.build({
+      entities: payload.entities
+    });
+    return res(ctx.json(newTransfer));
+  }),
+  rest.post(
+    '*/account/entity-transfers/:transferId/accept',
+    (req, res, ctx) => {
+      return res(ctx.json({}));
+    }
+  ),
+  rest.delete('*/account/entity-transfers/:transferId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  })
+];
 
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
@@ -430,7 +458,8 @@ export const handlers = [
     const unknown = databaseFactory.build({ status: 'unknown' });
     const databases = [online, initializing, error, unknown];
     return res(ctx.json(makeResourcePage(databases)));
-  })
+  }),
+  ...entityTransfers
 ];
 
 // Generator functions for dynamic handlers, in use by mock data dev tools.
