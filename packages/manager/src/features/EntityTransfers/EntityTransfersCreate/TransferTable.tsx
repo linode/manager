@@ -23,13 +23,16 @@ export interface Props {
   headers: string[];
   hasSelectedAll: boolean;
   requestPage: () => void;
-  toggleSelectAll: () => void;
+  toggleSelectAll: (isToggled: boolean) => void;
   children: JSX.Element[];
 }
 
 export const TransferTable: React.FC<Props> = props => {
   const { hasSelectedAll, headers, toggleSelectAll } = props;
   const classes = useStyles();
+  const handleToggleAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    return toggleSelectAll(e.target.checked);
+  };
   return (
     <Table className={classes.root}>
       <TableHead>
@@ -37,7 +40,7 @@ export const TransferTable: React.FC<Props> = props => {
           <TableCell className={classes.checkBox}>
             <CheckBox
               checked={hasSelectedAll}
-              onChange={toggleSelectAll}
+              onChange={handleToggleAll}
               inputProps={{
                 'aria-label': `Select all entities on page`
               }}

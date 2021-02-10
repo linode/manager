@@ -4,21 +4,34 @@ import TransferTable from './TransferTable';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import SelectableTableRow from 'src/components/SelectableTableRow';
 import { linodeFactory } from 'src/factories/linodes';
-import { TransferableEntity, TransferEntity } from './transferReducer';
+import { Entity, TransferEntity } from './transferReducer';
 import TableCell from 'src/components/TableCell';
 
 const useStyles = makeStyles((theme: Theme) => ({}));
 
-interface Props {}
+interface Props {
+  selectedLinodes: TransferEntity;
+  handleSelect: (linodes: Entity[]) => void;
+  handleRemove: (linodesToRemove: string[]) => void;
+  handleToggle: (linode: Entity) => void;
+}
 
-export type CombinedProps = Props;
 const linodes = linodeFactory.buildList(10);
 
 export const LinodeTransferTable: React.FC<Props> = props => {
+  const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
+  const hasSelectedAll = Object.keys(selectedLinodes).length === linodes.length;
+  const toggleSelectAll = () => {
+    if (hasSelectedAll) {
+      handleRemove(linodes.map(l => String(l.id)));
+    } else {
+      handleSelect(linodes);
+    }
+  };
   return (
     <TransferTable
-      toggleSelectAll={() => null}
-      hasSelectedAll={false}
+      toggleSelectAll={toggleSelectAll}
+      hasSelectedAll={hasSelectedAll}
       headers={['Label', 'Plan', 'Region']}
       requestPage={() => null}
     >
@@ -26,8 +39,8 @@ export const LinodeTransferTable: React.FC<Props> = props => {
         <LinodeRow
           key={thisLinode.id}
           linode={thisLinode}
-          isChecked={false}
-          handleToggleCheck={() => null}
+          isChecked={Boolean(selectedLinodes[thisLinode.id])}
+          handleToggleCheck={() => handleToggle(thisLinode)}
         />
       ))}
     </TransferTable>
