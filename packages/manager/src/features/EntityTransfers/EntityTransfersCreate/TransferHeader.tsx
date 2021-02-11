@@ -1,14 +1,12 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import { makeStyles, Theme } from 'src/components/core/styles';
+// import { makeStyles, Theme } from 'src/components/core/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({}));
+// const useStyles = makeStyles((theme: Theme) => ({}));
 
-interface Props {}
+// interface Props {}
 
-export type CombinedProps = Props;
-
-export const TransferHeader: React.FC<Props> = props => {
+export const TransferHeader: React.FC<{}> = _ => {
   return (
     <Typography>
       To transfer ownership of an entity make your selections below then click
