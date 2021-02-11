@@ -16,7 +16,7 @@ interface Props {
   handleToggle: (linode: Entity) => void;
 }
 
-const linodes = linodeFactory.buildList(10);
+const linodes = linodeFactory.buildList(200);
 
 export const LinodeTransferTable: React.FC<Props> = props => {
   const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
@@ -35,7 +35,7 @@ export const LinodeTransferTable: React.FC<Props> = props => {
       headers={['Label', 'Plan', 'Region']}
       requestPage={() => null}
     >
-      {linodes.map(thisLinode => (
+      {linodes.slice(0, 25).map(thisLinode => (
         <LinodeRow
           key={thisLinode.id}
           linode={thisLinode}

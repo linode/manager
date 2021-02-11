@@ -1,11 +1,54 @@
+import Close from '@material-ui/icons/Close';
 import * as React from 'react';
-import CheckoutBar from 'src/components/CheckoutBar';
-import { TransferState } from './transferReducer';
-import Typography from 'src/components/core/Typography';
-
+import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import { pluralize } from 'src/utilities/pluralize';
+import { TransferState } from './transferReducer';
 
-const useStyles = makeStyles((theme: Theme) => ({}));
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  header: {
+    color: theme.color.green,
+    fontSize: '1.25rem',
+    lineHeight: '1.5rem',
+    fontWeight: 'bold'
+  },
+  button: {
+    textDecoration: 'none',
+    border: 'none',
+    backgroundColor: 'inherit',
+    color: '#979797'
+  },
+  close: {
+    '& svg': { height: 11, width: 11 }
+  },
+  row: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: `${theme.spacing()}px 0px`,
+    borderBottom: `solid 1px ${theme.color.border2}`,
+    '&:first-of-type': {
+      borderTop: `solid 1px ${theme.color.border2}`
+    }
+  },
+  rowBox: {
+    maxHeight: '75vh',
+    overflowY: 'scroll',
+    marginTop: theme.spacing(3)
+  },
+  submitButton: {
+    marginTop: theme.spacing(3),
+    width: '100%'
+  },
+  entitySummaryText: {
+    marginTop: theme.spacing(3),
+    color: theme.color.green,
+    fontSize: '1rem',
+    fontWeight: 'bold'
+  }
+}));
 
 interface Props {
   selectedEntities: TransferState;
@@ -21,8 +64,27 @@ export const generatePayload = (selectedEntities: TransferState) => {
   }, {});
 };
 
+export const TransferRow: React.FC<{
+  label: string;
+  onClick: () => void;
+}> = React.memo(props => {
+  const { label, onClick } = props;
+  const classes = useStyles();
+  return (
+    <div className={classes.row}>
+      <Typography>
+        <strong>{label}</strong>
+      </Typography>
+      <button className={classes.button} onClick={onClick}>
+        <Close className={classes.close} />
+      </button>
+    </div>
+  );
+});
+
 export const TransferCheckoutBar: React.FC<Props> = props => {
   const { selectedEntities, removeEntities } = props;
+  const classes = useStyles();
   const onSubmit = () => {
     const payload = generatePayload(selectedEntities);
     alert(JSON.stringify(payload));
@@ -30,27 +92,32 @@ export const TransferCheckoutBar: React.FC<Props> = props => {
 
   const totalSelectedLinodes = Object.keys(selectedEntities.linodes).length;
   return (
-    <CheckoutBar
-      submitText="Generate Transfer Token"
-      heading="Transfer Summary"
-      onDeploy={onSubmit}
-    >
-      <div>
+    <div>
+      <Typography className={classes.header}>Transfer Summary</Typography>
+      <div className={classes.rowBox}>
         {Object.entries(selectedEntities.linodes).map(([id, label]) => (
-          <div key={`transfer-summary-${'linodes'}-${id}`}>
-            {label}
-            <button onClick={() => removeEntities('linodes', [String(id)])}>
-              X
-            </button>
-          </div>
+          <TransferRow
+            key={`transfer-summary-${'linodes'}-${id}`}
+            label={label}
+            onClick={() => removeEntities('linodes', [String(id)])}
+          />
         ))}
-        {totalSelectedLinodes > 0 ? (
-          <Typography>
-            {totalSelectedLinodes} Linodes to be transferred
-          </Typography>
-        ) : null}
       </div>
-    </CheckoutBar>
+      {totalSelectedLinodes > 0 ? (
+        <Typography className={classes.entitySummaryText}>
+          {pluralize('Linode', 'Linodes', totalSelectedLinodes)} to be
+          transferred
+        </Typography>
+      ) : null}
+      <Button
+        buttonType="primary"
+        disabled={totalSelectedLinodes === 0}
+        onClick={onSubmit}
+        className={classes.submitButton}
+      >
+        Generate Transfer Token
+      </Button>
+    </div>
   );
 };
 
