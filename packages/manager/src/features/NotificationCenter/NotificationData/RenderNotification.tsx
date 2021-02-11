@@ -81,7 +81,7 @@ export const RenderNotification: React.FC<Props> = props => {
         [classes.itemsWithoutIcon]: notification.severity === 'minor'
       })}
     >
-      {notification.message}
+      {handleEmbeddedHTML(notification.message)}
     </Typography>
   );
 
@@ -182,6 +182,30 @@ const linkifiedOutageMessage = (notification: Notification) => {
   }
 
   return notification.message;
+};
+
+const hrefRegex = /<a href=('|")(.+)('|")>(.+)<\/a>/i;
+export const handleEmbeddedHTML = (notificationMessage: string) => {
+  const containsLink = hrefRegex.exec(notificationMessage);
+
+  if (containsLink) {
+    const fullMatch = containsLink[0];
+    const extractedUrl = fullMatch.split(/(?:>)(.+)(?:<\/a>)/i)[1]; // Grab the actual URL, e.g., https://cloud.linode.com
+
+    const startingIndex = containsLink.index;
+
+    const linkRemoved = notificationMessage.replace(fullMatch, '');
+
+    return (
+      <Typography>
+        {linkRemoved.slice(0, startingIndex)}
+        <Link to={`${extractedUrl}`}>{extractedUrl}</Link>
+        {linkRemoved.slice(startingIndex)}
+      </Typography>
+    );
+  }
+
+  return notificationMessage;
 };
 
 export default React.memo(RenderNotification);

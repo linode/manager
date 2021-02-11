@@ -387,6 +387,19 @@ export const handlers = [
     //   body: null
     // });
 
+    const generalGlobalNotice = {
+      type: 'notice',
+      entity: null,
+      when: null,
+      // eslint-disable-next-line xss/no-mixed-html
+      message:
+        "We've updated our policies. See <a href='https://manager.linode.com/account/policy'>https://manager.linode.com/account/policy</a> for more information.",
+      label: "We've updated our policies.",
+      severity: 'minor',
+      until: null,
+      body: null
+    };
+
     const outageNotification = {
       type: 'outage',
       entity: {
@@ -433,6 +446,7 @@ export const handlers = [
         makeResourcePage([
           // pastDueBalance,
           ...notificationFactory.buildList(1),
+          generalGlobalNotice,
           outageNotification,
           minorSeverityTicket,
           abuseTicket,
