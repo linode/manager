@@ -6,8 +6,20 @@ import TableCell from 'src/components/TableCell';
 import CheckBox from 'src/components/CheckBox';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '& td': {
+      padding: '0px 15px'
+    }
+  },
   checkBox: {
-    width: 50
+    textAlign: 'center',
+    width: 25,
+    paddingLeft: 0,
+    paddingRight: 0,
+    '& svg': {
+      width: 20,
+      height: 20
+    }
   }
 }));
 
@@ -21,8 +33,8 @@ export const SelectableTableRow: React.FC<Props> = props => {
   const { isChecked, handleToggleCheck } = props;
   const classes = useStyles();
   return (
-    <TableRow>
-      <TableCell>
+    <TableRow className={classes.root}>
+      <TableCell className={classes.checkBox}>
         <CheckBox
           checked={isChecked}
           onChange={handleToggleCheck}

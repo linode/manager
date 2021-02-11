@@ -1,13 +1,10 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import TransferTable from './TransferTable';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import SelectableTableRow from 'src/components/SelectableTableRow';
 import { linodeFactory } from 'src/factories/linodes';
 import { Entity, TransferEntity } from './transferReducer';
-import TableCell from 'src/components/TableCell';
-
-const useStyles = makeStyles((theme: Theme) => ({}));
+import TableCell from 'src/components/TableCell/TableCell';
 
 interface Props {
   selectedLinodes: TransferEntity;
@@ -16,7 +13,7 @@ interface Props {
   handleToggle: (linode: Entity) => void;
 }
 
-const linodes = linodeFactory.buildList(10);
+const linodes = linodeFactory.buildList(25);
 
 export const LinodeTransferTable: React.FC<Props> = props => {
   const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
