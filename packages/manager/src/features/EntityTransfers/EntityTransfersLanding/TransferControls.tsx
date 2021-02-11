@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
@@ -17,20 +18,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   receiveTransfer: {
     display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
+    flexFlow: 'row wrap',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   reviewDetails: {
-    marginLeft: theme.spacing()
+    marginLeft: theme.spacing(2)
   },
   label: {
     marginRight: theme.spacing(2),
     fontSize: '1rem'
   },
   transferInput: {
-    width: 356,
-    '& input': {
-      width: '100%'
+    width: 360,
+    [theme.breakpoints.down('sm')]: {
+      width: 150
     }
   },
   helpIcon: {
@@ -59,12 +61,13 @@ export const TransferControls: React.FC<Props> = props => {
   return (
     <div className={classes.root}>
       <div className={classes.receiveTransfer}>
-        <Typography className={classes.label}>
-          <strong>Receive a Transfer</strong>
-        </Typography>
+        <Hidden mdDown>
+          <Typography className={classes.label}>
+            <strong>Receive a Transfer</strong>
+          </Typography>
+        </Hidden>
         <TextField
           className={classes.transferInput}
-          fullWidth
           hideLabel
           label="Receive a Transfer"
           placeholder="Enter a token"
