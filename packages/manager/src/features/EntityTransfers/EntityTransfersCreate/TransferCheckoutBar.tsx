@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rowBox: {
     maxHeight: '75vh',
-    overflowY: 'scroll',
+    overflowY: 'auto',
     marginTop: theme.spacing(3)
   },
   submitButton: {
