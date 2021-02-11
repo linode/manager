@@ -22,7 +22,7 @@ export const SelectableTableRow: React.FC<Props> = props => {
   const classes = useStyles();
   return (
     <TableRow>
-      <TableCell className={classes.checked}>
+      <TableCell className={classes.checkBox}>
         <CheckBox
           checked={isChecked}
           onChange={handleToggleCheck}
