@@ -186,13 +186,13 @@ const linkifiedOutageMessage = (notification: Notification) => {
 
 const hrefRegex = /<a href=('|")(.+)('|")>(.+)<\/a>/i;
 export const handleEmbeddedHTML = (notificationMessage: string) => {
-  const containsLink = hrefRegex.exec(notificationMessage);
+  const containsEmbeddedHTML = hrefRegex.exec(notificationMessage);
 
-  if (containsLink) {
-    const fullMatch = containsLink[0];
+  if (containsEmbeddedHTML) {
+    const fullMatch = containsEmbeddedHTML[0];
     const extractedUrl = fullMatch.split(/(?:>)(.+)(?:<\/a>)/i)[1]; // Grab the actual URL, e.g., https://cloud.linode.com
 
-    const startingIndex = containsLink.index;
+    const startingIndex = containsEmbeddedHTML.index;
 
     const linkRemoved = notificationMessage.replace(fullMatch, '');
 
