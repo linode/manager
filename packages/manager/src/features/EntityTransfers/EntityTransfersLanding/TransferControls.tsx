@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import HelpIcon from 'src/components/HelpIcon';
 import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -31,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& input': {
       width: '100%'
     }
+  },
+  helpIcon: {
+    color: theme.color.grey1
   }
 }));
 
@@ -74,6 +78,7 @@ export const TransferControls: React.FC<Props> = props => {
         >
           Review Details
         </Button>
+        <HelpIcon className={classes.helpIcon} text="Text TBD" />
       </div>
       <Button buttonType="primary" onClick={handleCreateTransfer}>
         Make a Transfer
