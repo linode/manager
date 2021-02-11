@@ -2,7 +2,9 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import TransferTable from './TransferTable';
 import SelectableTableRow from 'src/components/SelectableTableRow';
+import { dcDisplayNames } from 'src/constants';
 import { linodeFactory } from 'src/factories/linodes';
+import { useTypes } from 'src/hooks/useTypes';
 import { Entity, TransferEntity } from './transferReducer';
 import TableCell from 'src/components/TableCell/TableCell';
 
@@ -52,14 +54,17 @@ interface RowProps {
 
 const LinodeRow: React.FC<RowProps> = props => {
   const { linode, isChecked, handleToggleCheck } = props;
+  const { typesMap } = useTypes();
+  const displayRegion = dcDisplayNames[linode.region] ?? linode.region;
+  const displayType = typesMap[linode.type ?? '']?.label ?? linode.type;
   return (
     <SelectableTableRow
       isChecked={isChecked}
       handleToggleCheck={handleToggleCheck}
     >
       <TableCell>{linode.label}</TableCell>
-      <TableCell>{linode.type}</TableCell>
-      <TableCell>{linode.region}</TableCell>
+      <TableCell>{displayType}</TableCell>
+      <TableCell>{displayRegion}</TableCell>
     </SelectableTableRow>
   );
 };
