@@ -393,7 +393,7 @@ export const handlers = [
       when: null,
       // eslint-disable-next-line xss/no-mixed-html
       message:
-        "We've updated our policies. See <a href='https://manager.linode.com/account/policy'>https://manager.linode.com/account/policy</a> for more information.",
+        "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
       label: "We've updated our policies.",
       severity: 'minor',
       until: null,

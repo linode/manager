@@ -2,14 +2,12 @@ import { Notification, NotificationSeverity } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
-import { dcDisplayNames } from 'src/constants';
-import { reportException } from 'src/exceptionReporting';
 import useAccount from 'src/hooks/useAccount';
 import useNotifications from 'src/hooks/useNotifications';
+import { notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
-import { notificationContext } from '../NotificationContext';
 
 export const useFormattedNotifications = () => {
   const context = React.useContext(notificationContext);
@@ -54,33 +52,6 @@ export const useFormattedNotifications = () => {
 };
 
 const interceptNotification = (notification: Notification): Notification => {
-  /** this is an outage to one of the datacenters */
-  if (
-    notification.type === 'outage' &&
-    notification.entity?.type === 'region'
-  ) {
-    const convertedRegion = dcDisplayNames[notification.entity.id];
-
-    if (!convertedRegion) {
-      reportException(
-        'Could not find the DC name for the outage notification',
-        {
-          rawRegion: notification.entity.id,
-          convertedRegion
-        }
-      );
-    }
-
-    /** replace "this facility" with the name of the datacenter */
-    return {
-      ...notification,
-      label: notification.label.replace(
-        'this facility',
-        convertedRegion || 'one of our facilities'
-      )
-    };
-  }
-
   if (notification.type === 'ticket_abuse') {
     return {
       ...notification,

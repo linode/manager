@@ -9,6 +9,8 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Link } from 'src/components/Link';
 import { dcDisplayNames } from 'src/constants';
+import { reportException } from 'src/exceptionReporting';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -80,9 +82,8 @@ export const RenderNotification: React.FC<Props> = props => {
           notification.type === 'payment_due',
         [classes.itemsWithoutIcon]: notification.severity === 'minor'
       })}
-    >
-      {handleEmbeddedHTML(notification.message)}
-    </Typography>
+      dangerouslySetInnerHTML={{ __html: sanitizeHTML(notification.message) }}
+    />
   );
 
   return (
@@ -163,18 +164,29 @@ const linkifiedMaintenanceMessage = (
 };
 
 const linkifiedOutageMessage = (notification: Notification) => {
+  /** this is an outage to one of the datacenters */
   if (
     notification.type === 'outage' &&
     notification.entity?.type === 'region'
   ) {
-    const entityId = notification.entity.id;
+    const convertedRegion = dcDisplayNames[notification.entity.id];
+
+    if (!convertedRegion) {
+      reportException(
+        'Could not find the DC name for the outage notification',
+        {
+          rawRegion: notification.entity.id,
+          convertedRegion
+        }
+      );
+    }
 
     return (
       <Typography>
         We are aware of an issue affecting service in{' '}
-        {dcDisplayNames[entityId] || 'one of our facilities'}. If you are
-        experiencing service issues in this facility, there is no need to open a
-        support ticket at this time. Please monitor our status blog at{' '}
+        {convertedRegion || 'one of our facilities'}. If you are experiencing
+        service issues in this facility, there is no need to open a support
+        ticket at this time. Please monitor our status blog at{' '}
         <Link to={'https://status.linode.com/'}>https://status.linode.com</Link>{' '}
         for further information. Thank you for your patience and understanding.
       </Typography>
@@ -182,30 +194,6 @@ const linkifiedOutageMessage = (notification: Notification) => {
   }
 
   return notification.message;
-};
-
-const hrefRegex = /<a href=('|")(.+)('|")>(.+)<\/a>/i;
-export const handleEmbeddedHTML = (notificationMessage: string) => {
-  const containsEmbeddedHTML = hrefRegex.exec(notificationMessage);
-
-  if (containsEmbeddedHTML) {
-    const fullMatch = containsEmbeddedHTML[0];
-    const extractedUrl = fullMatch.split(/(?:>)(.+)(?:<\/a>)/i)[1]; // Grab the actual URL, e.g., https://cloud.linode.com
-
-    const startingIndex = containsEmbeddedHTML.index;
-
-    const linkRemoved = notificationMessage.replace(fullMatch, '');
-
-    return (
-      <Typography>
-        {linkRemoved.slice(0, startingIndex)}
-        <Link to={`${extractedUrl}`}>{extractedUrl}</Link>
-        {linkRemoved.slice(startingIndex)}
-      </Typography>
-    );
-  }
-
-  return notificationMessage;
 };
 
 export default React.memo(RenderNotification);

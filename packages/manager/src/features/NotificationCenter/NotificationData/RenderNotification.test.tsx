@@ -1,27 +1,38 @@
-import { handleEmbeddedHTML } from './RenderNotification';
+// // import { handleEmbeddedHTML } from './RenderNotification';
+// import * as React from 'react';
+// import { sanitizeHTML } from 'src/utilities/sanitize-html';
+// import Typography from 'src/components/core/Typography';
 
-const plainStringMessage =
-  'You have a notification consisting of a plain string with no embedded HTML.';
-// eslint-disable-next-line xss/no-mixed-html
-const messageWithEmbeddedHTML =
-  "We've updated our policies. See <a href='https://manager.linode.com/account/policy'>https://manager.linode.com/account/policy</a> for more information.";
+// const plainString =
+//   'You have a notification consisting of a plain string with no embedded HTML.';
+// const plainStringMessage = (
+//   <Typography
+//     dangerouslySetInnerHTML={{
+//       __html: sanitizeHTML(plainString)
+//     }}
+//   />
+// );
 
-describe('Rendering notifications', () => {
-  describe('handleEmbeddedHTML function', () => {
-    it('should return the plain string notification message as-is if no embedded HTML is present', () => {
-      expect(handleEmbeddedHTML(plainStringMessage)).toMatch(
-        plainStringMessage
-      );
-    });
+// // eslint-disable-next-line xss/no-mixed-html
+// const embeddedHTMLString =
+//   "We've updated our policies. See <a href='https://manager.linode.com/account/policy'>https://manager.linode.com/account/policy</a> for more information.";
 
-    it('should return JSX if embedded HTML is present', () => {
-      const returnedJSX = handleEmbeddedHTML(
-        messageWithEmbeddedHTML
-      ) as JSX.Element;
+// const messageWithEmbeddedHTML = (
+//   <Typography
+//     dangerouslySetInnerHTML={{
+//       __html: sanitizeHTML(embeddedHTMLString)
+//     }}
+//   />
+// );
 
-      expect(returnedJSX.props.children[0]).toBe(
-        "We've updated our policies. See "
-      );
-    });
-  });
-});
+// describe('Rendering notifications', () => {
+//   describe('handling HTML embedded in notification messages as returned from the API', () => {
+//     it('should return the plain string notification message as-is if no embedded HTML is present', () => {
+//       // TODO: add assertions
+//     });
+
+//     it('should return JSX if embedded HTML is present', () => {
+//       // TODO: add assertions
+//     });
+//   });
+// });
