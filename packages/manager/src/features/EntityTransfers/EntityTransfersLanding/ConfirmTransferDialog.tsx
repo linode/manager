@@ -229,25 +229,19 @@ export const getTimeRemaining = (time?: string) => {
     return;
   }
 
-  const _date = DateTime.fromISO(time);
-  const hours = Math.floor(_date.diffNow('hours').toObject().hours ?? 0);
+  const minutesRemaining = Math.floor(
+    DateTime.fromISO(time)
+      .diffNow('minutes')
+      .toObject().minutes ?? 0
+  );
 
-  if (hours < 1) {
-    const minutes = Math.floor(
-      _date.diffNow('minutes').toObject().minutes ?? 0
-    );
-    return `This token will expire in ${pluralize(
-      'minute',
-      'minutes',
-      minutes
-    )} (${formatDate(time)}).`;
-  } else {
-    return `This token will expire in ${pluralize(
-      'hour',
-      'hours',
-      hours
-    )} (${formatDate(time)}).`;
-  }
+  const unit = minutesRemaining > 60 ? 'hour' : 'minute';
+
+  return `This token will expire in ${pluralize(
+    unit,
+    unit + 's',
+    unit === 'minute' ? minutesRemaining : Math.round(minutesRemaining / 60)
+  )} (${formatDate(time)}).`;
 };
 
 export default React.memo(ConfirmTransferDialog);
