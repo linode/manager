@@ -35,15 +35,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1rem'
   },
   entityTypeDisplay: {
-    marginTop: theme.spacing(),
     marginBottom: theme.spacing()
   },
   summary: {
-    fontSize: '1rem'
+    fontSize: '1rem',
+    marginBottom: 4
   },
   list: {
     listStyleType: 'none',
-    paddingLeft: theme.spacing(2)
+    paddingLeft: 0,
+    margin: 0
   }
 }));
 
@@ -210,7 +211,7 @@ export const DialogContent: React.FC<ContentProps> = React.memo(props => {
         <ul className={classes.list}>
           {Object.keys(entities).map(thisEntityType => {
             // According to spec, all entity names are plural and lowercase
-            // (NB: This will cause problems for NodeBalancers if/when they are added to the payload)
+            // (NB: This may cause problems for NodeBalancers if/when they are added to the payload)
             const entityName = capitalize(thisEntityType).slice(0, -1);
             return (
               <li key={thisEntityType}>
