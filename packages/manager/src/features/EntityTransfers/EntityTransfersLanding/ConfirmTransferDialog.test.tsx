@@ -1,9 +1,37 @@
 import { screen } from '@testing-library/react';
-import * as React from 'react';
 import { DateTime } from 'luxon';
-import { getTimeRemaining } from './ConfirmTransferDialog';
+import * as React from 'react';
+import { entityTransferFactory } from 'src/factories/entityTransfers';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import ConfirmTransferDialog, {
+  getTimeRemaining,
+  Props
+} from './ConfirmTransferDialog';
+
+const props: Props = {
+  open: true,
+  onClose: jest.fn(),
+  token: 'blahblah'
+};
 
 describe('Accept Entity Transfer confirmation dialog', () => {
+  describe('Component', () => {
+    it('should render a list of entity types included in the token', async () => {
+      server.use(
+        rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
+          const transfer = entityTransferFactory.build({
+            entities: { linodes: [0, 1, 2, 3], domains: [1, 2, 3, 4, 5] } as any // Domains aren't allowed yet
+          });
+          return res(ctx.json(transfer));
+        })
+      );
+      renderWithTheme(<ConfirmTransferDialog {...props} />);
+      expect(await screen.findByText(/4 Linodes/)).toBeInTheDocument();
+      expect(await screen.findByText(/5 Domains/)).toBeInTheDocument();
+    });
+  });
+
   describe('getTimeRemaining helper function', () => {
     it('should return a large time in hours remaining', () => {
       expect(
@@ -19,7 +47,7 @@ describe('Accept Entity Transfer confirmation dialog', () => {
       expect(
         getTimeRemaining(
           DateTime.local()
-            .plus({ minutes: 8 })
+            .plus({ minutes: 8, seconds: 30 })
             .toISO()
         )
       ).toMatch(/in 8 minutes/);

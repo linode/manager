@@ -48,13 +48,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
+export interface Props {
   onClose: () => void;
   open: boolean;
   token?: string;
 }
-
-export type CombinedProps = Props;
 
 export const ConfirmTransferDialog: React.FC<Props> = props => {
   const { onClose, open, token } = props;
