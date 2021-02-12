@@ -68,7 +68,7 @@ const entityTransfers = [
   }),
   rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
     const transfer = entityTransferFactory.build();
-    return res(ctx.delay(5000), ctx.json(transfer));
+    return res(ctx.json(transfer));
   }),
   rest.post('*/account/entity-transfers', (req, res, ctx) => {
     const payload = req.body as any;

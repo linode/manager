@@ -31,11 +31,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   expiry: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
+    fontSize: '1rem'
   },
   entityTypeDisplay: {
     marginTop: theme.spacing(),
     marginBottom: theme.spacing()
+  },
+  summary: {
+    fontSize: '1rem'
+  },
+  list: {
+    listStyleType: 'none',
+    paddingLeft: theme.spacing(2)
   }
 }));
 
@@ -66,6 +74,7 @@ export const ConfirmTransferDialog: React.FC<Props> = props => {
     if (open) {
       setSubmissionErrors(null);
       setSubmitting(false);
+      setHasConfirmed(false);
     }
   }, [open]);
 
@@ -195,26 +204,29 @@ export const DialogContent: React.FC<ContentProps> = React.memo(props => {
           ))
         : null}
       <div className={classes.transferSummary}>
-        <Typography>This transfer contains:</Typography>
-        {Object.keys(entities).map(thisEntityType => {
-          // According to spec, all entity names are plural and lowercase
-          // (NB: This will cause problems for NodeBalancers if/when they are added to the payload)
-          const entityName = capitalize(thisEntityType).slice(0, -1);
-          return (
-            <Typography
-              key={thisEntityType}
-              className={classes.entityTypeDisplay}
-            >
-              <strong>
-                {pluralize(
-                  entityName,
-                  entityName + 's',
-                  entities[thisEntityType].length
-                )}
-              </strong>
-            </Typography>
-          );
-        })}
+        <Typography className={classes.summary}>
+          This transfer contains:
+        </Typography>
+        <ul className={classes.list}>
+          {Object.keys(entities).map(thisEntityType => {
+            // According to spec, all entity names are plural and lowercase
+            // (NB: This will cause problems for NodeBalancers if/when they are added to the payload)
+            const entityName = capitalize(thisEntityType).slice(0, -1);
+            return (
+              <li key={thisEntityType}>
+                <Typography className={classes.entityTypeDisplay}>
+                  <strong>
+                    {pluralize(
+                      entityName,
+                      entityName + 's',
+                      entities[thisEntityType].length
+                    )}
+                  </strong>
+                </Typography>
+              </li>
+            );
+          })}
+        </ul>
       </div>
       {timeRemaining ? (
         <Typography className={classes.expiry}>{timeRemaining}</Typography>
