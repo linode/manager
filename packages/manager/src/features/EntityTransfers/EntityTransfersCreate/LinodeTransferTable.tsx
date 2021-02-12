@@ -1,13 +1,13 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import TransferTable from './TransferTable';
-import { makeStyles, Theme } from 'src/components/core/styles';
+// import { makeStyles, Theme } from 'src/components/core/styles';
 import SelectableTableRow from 'src/components/SelectableTableRow';
 import { linodeFactory } from 'src/factories/linodes';
 import { Entity, TransferEntity } from './transferReducer';
 import TableCell from 'src/components/TableCell';
 
-const useStyles = makeStyles((theme: Theme) => ({}));
+// const useStyles = makeStyles((theme: Theme) => ({}));
 
 interface Props {
   selectedLinodes: TransferEntity;

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Breadcrumb from 'src/components/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ConfirmTransferDialog from './ConfirmTransferDialog';
 import TransferControls from './TransferControls';
@@ -10,8 +9,8 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   return (
     <>
       <DocumentTitleSegment segment="Transfers" />
-      <Breadcrumb pathname={location.pathname} labelTitle="Transfers" />
       <TransferControls
+        token={token}
         openConfirmTransferDialog={() => setConfirmDialogOpen(true)}
         onTokenInput={setToken}
       />
