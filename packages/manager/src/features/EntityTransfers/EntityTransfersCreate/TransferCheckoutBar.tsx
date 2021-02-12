@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: `${theme.spacing()}px 0px`,
+    padding: `5px 0px`,
     borderBottom: `solid 1px ${theme.color.border2}`,
     '&:first-of-type': {
       borderTop: `solid 1px ${theme.color.border2}`
