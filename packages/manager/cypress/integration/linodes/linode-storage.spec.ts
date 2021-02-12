@@ -1,9 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import {
-  createLinode,
-  deleteAllTestLinodes,
-  RequestType
-} from '../../support/api/linodes';
+import { createLinode, deleteAllTestLinodes } from '../../support/api/linodes';
 import {
   containsVisible,
   fbtClick,
@@ -77,7 +73,7 @@ describe('linode storage tab', () => {
   // create with empty disk then delete disk
   it('delete disk', () => {
     const diskName = 'cy-test-disk';
-    createLinode(RequestType.NOIMAGE).then(linode => {
+    createLinode({ image: null }).then(linode => {
       cy.intercept('DELETE', `*/linode/instances/${linode.id}/disks/*`).as(
         'deleteDisk'
       );
@@ -104,7 +100,7 @@ describe('linode storage tab', () => {
   // create with empty disk then add disk
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
-    createLinode(RequestType.NOIMAGE).then(linode => {
+    createLinode({ image: null }).then(linode => {
       cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
         'addDisk'
       );
@@ -121,7 +117,7 @@ describe('linode storage tab', () => {
   // resize disk
   it('resize disk', () => {
     const diskName = 'Debian 10 Disk';
-    createLinode(RequestType.NOIMAGE).then(linode => {
+    createLinode({ image: null }).then(linode => {
       cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
         'addDisk'
       );
