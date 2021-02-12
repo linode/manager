@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 20,
       height: 20
     }
+  },
+  checkEmpty: {
+    '& svg': { color: '#cccccc' }
   }
 }));
 
@@ -69,7 +72,9 @@ export const TransferTable: React.FC<Props> = props => {
           <TableRow>
             <TableCell style={{ width: 50, textAlign: 'center' }}>
               <CheckBox
-                className={classes.check}
+                className={`${classes.check} ${
+                  hasSelectedAll ? '' : classes.checkEmpty
+                }`}
                 checked={hasSelectedAll}
                 onChange={handleToggleAll}
                 inputProps={{
