@@ -4,7 +4,7 @@ import {
   TransferEntities
 } from '@linode/api-v4/lib/entity-transfers';
 import * as React from 'react';
-import Dialog from 'src/components/Dialog';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { useTransferQuery } from 'src/queries/transfers';
 import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
@@ -22,10 +22,6 @@ import { useSnackbar } from 'notistack';
 import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  dialogContent: {
-    padding: theme.spacing(2),
-    width: '100%'
-  },
   transferSummary: {
     marginBottom: theme.spacing()
   },
@@ -60,6 +56,7 @@ export const ConfirmTransferDialog: React.FC<Props> = props => {
     open
   );
 
+  const [hasConfirmed, setHasConfirmed] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
   const [submissionErrors, setSubmissionErrors] = React.useState<
     APIError[] | null
@@ -81,11 +78,11 @@ export const ConfirmTransferDialog: React.FC<Props> = props => {
     setSubmitting(true);
     acceptEntityTransfer(token)
       .then(() => {
+        onClose();
         setSubmitting(false);
         enqueueSnackbar('Transfer accepted successfully.', {
           variant: 'success'
         });
-        onClose();
       })
       .catch(e => {
         setSubmissionErrors(
@@ -95,12 +92,28 @@ export const ConfirmTransferDialog: React.FC<Props> = props => {
       });
   };
 
+  const actions = (
+    <ActionsPanel className={classes.actions}>
+      <Button onClick={onClose} buttonType="cancel">
+        Cancel
+      </Button>
+      <Button
+        disabled={!hasConfirmed || isLoading || isError}
+        onClick={handleAcceptTransfer}
+        loading={submitting}
+        buttonType="primary"
+      >
+        Accept Transfer
+      </Button>
+    </ActionsPanel>
+  );
+
   return (
-    <Dialog
+    <ConfirmationDialog
       onClose={onClose}
       title="Receive a Transfer"
       open={open}
-      className={classes.dialogContent}
+      actions={actions}
     >
       <DialogContent
         isLoading={isLoading}
@@ -108,23 +121,25 @@ export const ConfirmTransferDialog: React.FC<Props> = props => {
         errors={error}
         entities={data?.entities ?? { linodes: [] }}
         expiry={data?.expiry}
-        isSubmitting={submitting}
+        hasConfirmed={hasConfirmed}
+        handleToggleConfirm={() => setHasConfirmed(confirmed => !confirmed)}
         submissionErrors={submissionErrors}
         onClose={onClose}
         onSubmit={handleAcceptTransfer}
       />
-    </Dialog>
+    </ConfirmationDialog>
   );
 };
 
 interface ContentProps {
+  hasConfirmed?: boolean;
   isLoading: boolean;
   isError: boolean;
   errors: APIError[] | null;
   entities: TransferEntities;
   expiry?: string;
-  isSubmitting: boolean;
   submissionErrors: APIError[] | null;
+  handleToggleConfirm: () => void;
   onClose: () => void;
   onSubmit: () => void;
 }
@@ -134,28 +149,34 @@ export const DialogContent: React.FC<ContentProps> = React.memo(props => {
     entities,
     errors,
     expiry,
+    hasConfirmed,
+    handleToggleConfirm,
     isError,
     isLoading,
-    isSubmitting,
-    submissionErrors,
-    onClose,
-    onSubmit
+    submissionErrors
   } = props;
   const classes = useStyles();
-  const [hasConfirmed, setHasConfirmed] = React.useState(false);
 
   if (isLoading) {
-    return <CircleProgress />;
+    return (
+      <div style={{ width: 500 }}>
+        <CircleProgress />
+      </div>
+    );
   }
 
   if (isError) {
     return (
-      <ErrorState
-        errorText={
-          getAPIErrorOrDefault(errors ?? [], 'Unable to load this transfer.')[0]
-            .reason
-        }
-      />
+      <div style={{ width: 500 }}>
+        <ErrorState
+          errorText={
+            getAPIErrorOrDefault(
+              errors ?? [],
+              'Unable to load this transfer.'
+            )[0].reason
+          }
+        />
+      </div>
     );
   }
 
@@ -201,25 +222,10 @@ export const DialogContent: React.FC<ContentProps> = React.memo(props => {
       <div>
         <CheckBox
           checked={hasConfirmed}
-          onChange={() => setHasConfirmed(confirmed => !confirmed)}
+          onChange={handleToggleConfirm}
           text="I understand that I am responsible for any and all fees ipsum dolor sit amet"
         />
       </div>
-
-      <ActionsPanel className={classes.actions}>
-        <Button onClick={onClose} buttonType="cancel">
-          Cancel
-        </Button>
-        <Button
-          disabled={!hasConfirmed}
-          onClick={onSubmit}
-          loading={isSubmitting}
-          destructive
-          buttonType="primary"
-        >
-          Accept Transfer
-        </Button>
-      </ActionsPanel>
     </>
   );
 });

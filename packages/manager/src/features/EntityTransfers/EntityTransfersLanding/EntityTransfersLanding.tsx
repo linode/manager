@@ -8,8 +8,6 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   const [token, setToken] = React.useState('');
 
   const handleCloseDialog = () => {
-    // I'm not sure this is the best place to do this; open to suggestions.
-    setToken('');
     setConfirmDialogOpen(false);
   };
 
