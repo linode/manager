@@ -6,6 +6,13 @@ import TransferControls from './TransferControls';
 export const EntityTransfersLanding: React.FC<{}> = _ => {
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
   const [token, setToken] = React.useState('');
+
+  const handleCloseDialog = () => {
+    // I'm not sure this is the best place to do this; open to suggestions.
+    setToken('');
+    setConfirmDialogOpen(false);
+  };
+
   return (
     <>
       <DocumentTitleSegment segment="Transfers" />
@@ -17,7 +24,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
       <ConfirmTransferDialog
         open={confirmDialogOpen}
         token={token}
-        onClose={() => setConfirmDialogOpen(false)}
+        onClose={handleCloseDialog}
       />
     </>
   );
