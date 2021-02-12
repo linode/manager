@@ -10,6 +10,7 @@ import Grid from 'src/components/Grid';
 import { convertForAria } from 'src/components/TabLink/TabLink';
 
 export interface DialogProps extends _DialogProps {
+  className?: string;
   title: string;
   fullHeight?: boolean;
   titleBottomBorder?: boolean;
@@ -84,7 +85,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Dialog: React.FC<DialogProps> = props => {
-  const { title, fullHeight, titleBottomBorder, children, ...rest } = props;
+  const {
+    className,
+    title,
+    fullHeight,
+    titleBottomBorder,
+    children,
+    ...rest
+  } = props;
 
   const classes = useStyles();
 
@@ -131,7 +139,9 @@ const Dialog: React.FC<DialogProps> = props => {
         </div>
         {titleBottomBorder && <hr className={classes.titleBottomBorder} />}
         <Grid container>
-          <div className={classes.dialogContent}>{children}</div>
+          <div className={className ? className : classes.dialogContent}>
+            {children}
+          </div>
         </Grid>
       </Grid>
     </MUIDialog>
