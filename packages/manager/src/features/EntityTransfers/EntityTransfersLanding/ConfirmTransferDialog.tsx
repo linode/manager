@@ -19,6 +19,7 @@ import ErrorState from 'src/components/ErrorState';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import Notice from 'src/components/Notice';
 import { useSnackbar } from 'notistack';
+import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogContent: {
@@ -158,6 +159,8 @@ export const DialogContent: React.FC<ContentProps> = React.memo(props => {
     );
   }
 
+  const timeRemaining = getTimeRemaining(expiry);
+
   return (
     <>
       {// There could be multiple errors here that are relevant.
@@ -192,10 +195,8 @@ export const DialogContent: React.FC<ContentProps> = React.memo(props => {
           );
         })}
       </div>
-      {expiry ? (
-        <Typography className={classes.expiry}>
-          This token expires on {formatDate(expiry)}
-        </Typography>
+      {timeRemaining ? (
+        <Typography className={classes.expiry}>{timeRemaining}</Typography>
       ) : null}
       <div>
         <CheckBox
@@ -222,5 +223,31 @@ export const DialogContent: React.FC<ContentProps> = React.memo(props => {
     </>
   );
 });
+
+export const getTimeRemaining = (time?: string) => {
+  if (!time) {
+    return;
+  }
+
+  const _date = DateTime.fromISO(time);
+  const hours = Math.floor(_date.diffNow('hours').toObject().hours ?? 0);
+
+  if (hours < 1) {
+    const minutes = Math.floor(
+      _date.diffNow('minutes').toObject().minutes ?? 0
+    );
+    return `This token will expire in ${pluralize(
+      'minute',
+      'minutes',
+      minutes
+    )} (${formatDate(time)}).`;
+  } else {
+    return `This token will expire in ${pluralize(
+      'hour',
+      'hours',
+      hours
+    )} (${formatDate(time)}).`;
+  }
+};
 
 export default React.memo(ConfirmTransferDialog);
