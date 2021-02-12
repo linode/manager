@@ -8,6 +8,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Link } from 'src/components/Link';
+import { dcDisplayNames } from 'src/constants';
+import { reportException } from 'src/exceptionReporting';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -23,6 +26,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   majorIcon: {
     fill: theme.palette.status.warningDark
+  },
+  itemsWithoutIcon: {
+    marginLeft: '1.25rem'
   },
   severeAlert: {
     color: theme.color.red
@@ -73,11 +79,11 @@ export const RenderNotification: React.FC<Props> = props => {
       className={classNames({
         [classes.severeAlert]:
           notification.severity === 'critical' &&
-          notification.type === 'payment_due'
+          notification.type === 'payment_due',
+        [classes.itemsWithoutIcon]: notification.severity === 'minor'
       })}
-    >
-      {notification.message}
-    </Typography>
+      dangerouslySetInnerHTML={{ __html: sanitizeHTML(notification.message) }}
+    />
   );
 
   return (
@@ -102,8 +108,10 @@ export const RenderNotification: React.FC<Props> = props => {
         <Grid item>
           {isMaintenanceNotification ? (
             linkifiedMaintenanceMessage(notification, onClose)
-          ) : notification.type === 'ticket_abuse' ? (
-            linkifiedAbuseTicketMessage(notification, onClose)
+          ) : notification.type === 'outage' ? (
+            linkifiedOutageMessage(notification)
+          ) : notification.type === 'ticket_important' ? (
+            linkifiedImportantTicketMessage(notification, onClose)
           ) : linkTarget ? (
             <Link
               to={linkTarget}
@@ -128,32 +136,11 @@ export const RenderNotification: React.FC<Props> = props => {
 const getEntityLinks = (type?: string, id?: number) => {
   if (!type) {
     return;
+  } else if (type === 'linode') {
+    return `/linodes/${id}`;
+  } else {
+    return;
   }
-
-  switch (type) {
-    case 'linode':
-      return `/linodes/${id}`;
-
-    case 'ticket_abuse':
-      return `/support/tickets/${id}`;
-
-    default:
-      return;
-  }
-};
-
-const linkifiedAbuseTicketMessage = (
-  notification: Notification,
-  onClose: () => void
-) => {
-  return (
-    <Typography>
-      {notification.message}{' '}
-      <Link to={notification!.entity!.url} onClick={onClose}>
-        Click here to view this ticket.
-      </Link>
-    </Typography>
-  );
 };
 
 const linkifiedMaintenanceMessage = (
@@ -174,6 +161,62 @@ const linkifiedMaintenanceMessage = (
       ticket and{' '}
       <Link to={'https://status.linode.com/'}>status.linode.com</Link> for more
       details.
+    </Typography>
+  );
+};
+
+const linkifiedOutageMessage = (notification: Notification) => {
+  /** this is an outage to one of the datacenters */
+  if (
+    notification.type === 'outage' &&
+    notification.entity?.type === 'region'
+  ) {
+    const convertedRegion = dcDisplayNames[notification.entity.id];
+
+    if (!convertedRegion) {
+      reportException(
+        'Could not find the DC name for the outage notification',
+        {
+          rawRegion: notification.entity.id,
+          convertedRegion
+        }
+      );
+    }
+
+    return (
+      <Typography>
+        We are aware of an issue affecting service in{' '}
+        {convertedRegion || 'one of our facilities'}. If you are experiencing
+        service issues in this facility, there is no need to open a support
+        ticket at this time. Please monitor our status blog at{' '}
+        <Link to={'https://status.linode.com/'}>https://status.linode.com</Link>{' '}
+        for further information. Thank you for your patience and understanding.
+      </Typography>
+    );
+  }
+
+  return notification.message;
+};
+
+const linkifiedImportantTicketMessage = (
+  notification: Notification,
+  onClose: () => void
+) => {
+  // Failsafe
+  if (!notification.entity?.id) {
+    return notification.message;
+  }
+
+  return (
+    <Typography>
+      You have an{' '}
+      <Link
+        to={`/support/tickets/${notification.entity?.id}`}
+        onClick={onClose}
+      >
+        important ticket
+      </Link>{' '}
+      open!
     </Typography>
   );
 };
