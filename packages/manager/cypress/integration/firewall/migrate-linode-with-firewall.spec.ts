@@ -2,8 +2,7 @@
 import {
   clickLinodeActionMenu,
   createLinode,
-  deleteAllTestLinodes,
-  RequestType
+  deleteAllTestLinodes
 } from '../../support/api/linodes';
 import { deleteFirewallByLabel } from '../../support/api/firewalls';
 import {
@@ -185,7 +184,7 @@ describe('Migrate Linode With Firewall', () => {
 
     cy.visitWithLogin('/firewalls');
 
-    createLinode(RequestType.REGION, 'ap-southeast').then(linode => {
+    createLinode({ region: 'ap-southeast' }).then(linode => {
       // intercept migrate linode request
       cy.intercept('POST', `*/linode/instances/${linode.id}/migrate`).as(
         'migrateLinode'

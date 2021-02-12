@@ -8,23 +8,27 @@ import {
   makeTestLabel
 } from './common';
 
+import { CreateLinodeRequest, Linode } from '@linode/api-v4/lib/linodes/types';
+
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const testLinodeTag = testTag;
 
 export const makeRandomId = () => Math.floor(Math.random() * 99999999);
 export const makeLinodeLabel = makeTestLabel;
-export const RequestType = {
-  DEFAULT: undefined,
-  STATUS: 'running',
-  NOIMAGE: 'linode/debian10',
-  REGION: 'us-east',
-  BACKUP: false,
-  PASSWORD: strings.randomPass(),
-  BOOTED: true
-};
-Object.freeze(RequestType);
 
-const postReturn = linodeData => {
+const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
+  type: 'g6-standard-2',
+  tags: [testLinodeTag],
+  private_ip: true,
+  image: 'linode/debian10',
+  region: 'us-east',
+  booted: true,
+  backups_enabled: false,
+  authorized_users: [],
+  root_pass: strings.randomPass()
+};
+
+const linodeRequest = linodeData => {
   return cy.request({
     method: 'POST',
     url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
@@ -35,35 +39,24 @@ const postReturn = linodeData => {
   });
 };
 
-export const makeLinodeCreateReq = (requestType, value, linode) => {
-  const linodeData = linode
-    ? linode
-    : {
-        root_pass:
-          requestType === RequestType.PASSWORD ? value : RequestType.PASSWORD,
-        label: makeLinodeLabel(),
-        status: requestType === RequestType.STATUS ? value : RequestType.STATUS,
-        type: 'g6-standard-2',
-        region: requestType === RequestType.REGION ? value : RequestType.REGION,
-        image:
-          requestType === RequestType.NOIMAGE ? value : RequestType.NOIMAGE,
-        tags: [testLinodeTag],
-        backups_enabled:
-          requestType === RequestType.BACKUP ? value : RequestType.BACKUP,
-        booted: requestType === RequestType.BOOTED ? value : RequestType.BOOTED,
-        private_ip: true,
-        authorized_users: []
-      };
-
-  return postReturn(linodeData);
+const editLinodeRequest = (
+  defaultLinodeRequestBody: Partial<CreateLinodeRequest>,
+  fieldsToUpdate: Partial<CreateLinodeRequest>,
+  label: Partial<CreateLinodeRequest>
+) => {
+  return { ...defaultLinodeRequestBody, ...fieldsToUpdate, ...label };
 };
 
-export const createLinode = (
-  requestType?,
-  value: any = undefined,
-  linode = undefined
-) => {
-  return makeLinodeCreateReq(requestType, value, linode).then(resp => {
+export const requestBody = (data: Partial<CreateLinodeRequest>) => {
+  const label = makeLinodeLabel();
+  const linodeData: object = editLinodeRequest(defaultLinodeRequestBody, data, {
+    label
+  });
+  return linodeRequest(linodeData);
+};
+
+export const createLinode = (data = {}) => {
+  return requestBody(data).then(resp => {
     apiCheckErrors(resp);
     console.log(`Created Linode ${resp.body.label} successfully`, resp);
     return resp.body;
