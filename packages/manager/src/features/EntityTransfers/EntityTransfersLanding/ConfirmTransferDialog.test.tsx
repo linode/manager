@@ -14,5 +14,15 @@ describe('Accept Entity Transfer confirmation dialog', () => {
         )
       ).toMatch(/in 23 hours/);
     });
+
+    it('should return smaller time in minutes remaining', () => {
+      expect(
+        getTimeRemaining(
+          DateTime.local()
+            .plus({ minutes: 8 })
+            .toISO()
+        )
+      ).toMatch(/in 8 minutes/);
+    });
   });
 });
