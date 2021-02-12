@@ -44,7 +44,7 @@ export const LinodeTransferTable: React.FC<Props> = props => {
       headers={columns}
       requestPage={() => null}
     >
-      {linodes.map(thisLinode => (
+      {linodes.slice(0, 25).map(thisLinode => (
         <LinodeRow
           key={thisLinode.id}
           linode={thisLinode}

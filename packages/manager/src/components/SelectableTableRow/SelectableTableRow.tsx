@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
 import TableCell from 'src/components/TableCell';
 import CheckBox from 'src/components/CheckBox';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '& td': {
       padding: '0px 15px'
