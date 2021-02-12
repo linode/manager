@@ -110,6 +110,8 @@ export const RenderNotification: React.FC<Props> = props => {
             linkifiedMaintenanceMessage(notification, onClose)
           ) : notification.type === 'outage' ? (
             linkifiedOutageMessage(notification)
+          ) : notification.type === 'ticket_important' ? (
+            linkifiedImportantTicketMessage(notification, onClose)
           ) : linkTarget ? (
             <Link
               to={linkTarget}
@@ -194,6 +196,29 @@ const linkifiedOutageMessage = (notification: Notification) => {
   }
 
   return notification.message;
+};
+
+const linkifiedImportantTicketMessage = (
+  notification: Notification,
+  onClose: () => void
+) => {
+  // Failsafe
+  if (!notification.entity?.id) {
+    return notification.message;
+  }
+
+  return (
+    <Typography>
+      You have an{' '}
+      <Link
+        to={`/support/tickets/${notification.entity?.id}`}
+        onClick={onClose}
+      >
+        important ticket
+      </Link>{' '}
+      open!
+    </Typography>
+  );
 };
 
 export default React.memo(RenderNotification);
