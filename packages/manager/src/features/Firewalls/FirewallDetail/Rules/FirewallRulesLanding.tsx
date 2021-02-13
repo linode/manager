@@ -126,6 +126,15 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
     dispatch({ type: 'CLONE_RULE', idx });
   };
 
+  const handleReorder = (
+    category: Category,
+    startIdx: number,
+    endIdx: number
+  ) => {
+    const dispatch = dispatchFromCategory(category);
+    dispatch({ type: 'REORDER', startIdx, endIdx });
+  };
+
   const handleEditRule = (
     category: Category,
     rule: Partial<FirewallRuleType>
@@ -300,6 +309,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
           }
           triggerDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
           triggerUndo={(idx) => handleUndo('inbound', idx)}
+          triggerReorder={(startIdx: number, endIdx: number) =>
+            handleReorder('inbound', startIdx, endIdx)
+          }
         />
       </div>
       <div className={classes.table}>
@@ -315,6 +327,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
           }
           triggerDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
           triggerUndo={(idx) => handleUndo('outbound', idx)}
+          triggerReorder={(startIdx: number, endIdx: number) =>
+            handleReorder('outbound', startIdx, endIdx)
+          }
         />
       </div>
       <FirewallRuleDrawer
