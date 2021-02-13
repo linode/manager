@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useEntityTransfersQuery } from 'src/queries/entityTransfers';
+import TransfersTable from '../TransfersTable';
 import ConfirmTransferDialog from './ConfirmTransferDialog';
 import CreateTransferSuccessDialog from './CreateTransferSuccessDialog';
 import TransferControls from './TransferControls';
@@ -14,6 +16,23 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
     // I don't love the UX here but it seems better than leaving a token in the input
     setTimeout(() => setToken(''), 150);
   };
+  const {
+    data: allEntityTransfers,
+    isLoading,
+    error
+  } = useEntityTransfersQuery();
+
+  const pendingTransfers = allEntityTransfers?.filter(
+    transfer => transfer.status === 'pending'
+  );
+
+  const receivedTransfers = allEntityTransfers?.filter(
+    transfer => !transfer.is_sender
+  );
+
+  const sentTransfers = allEntityTransfers?.filter(
+    transfer => transfer.is_sender
+  );
 
   return (
     <>
