@@ -1,21 +1,20 @@
-import * as classNames from 'classnames';
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';
+import * as classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { compose } from 'recompose';
-import CloudUpload from 'src/assets/icons/cloudUpload.svg';
 import Button from 'src/components/Button';
-import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+import bucketRequestsContainer, {
+  BucketsRequests
+} from 'src/containers/bucketRequests.container';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
-import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
+import { debounce } from 'throttle-debounce';
 import { uploadObject } from '../requests';
 import FileUpload from './FileUpload';
-import { debounce } from 'throttle-debounce';
 import {
   curriedObjectUploaderReducer,
   defaultState,
@@ -25,54 +24,33 @@ import {
   ObjectUploaderAction,
   pathOrFileName
 } from './reducer';
-import bucketRequestsContainer, {
-  BucketsRequests
-} from 'src/containers/bucketRequests.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    [theme.breakpoints.up('lg')]: {
-      position: 'sticky',
-      top: theme.spacing(3),
-      height: `calc(100vh - (160px + ${theme.spacing(20)}px))`,
-      marginLeft: theme.spacing(4)
-    }
-  },
-  rootActive: {
-    [theme.breakpoints.down('md')]: {
-      paddingBottom: 60,
-      position: 'relative'
-    },
-    [theme.breakpoints.up('lg')]: {
-      minHeight: 200,
-      height: `calc(100vh - (220px + ${theme.spacing(20)}px))`,
-      marginBottom: 80
-    }
+    paddingBottom: 60,
+    position: 'relative'
   },
   dropzone: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: theme.spacing(1),
-    marginTop: theme.spacing(2),
-    borderWidth: 1,
-    borderRadius: 6,
-    borderColor: theme.palette.primary.main,
-    borderStyle: 'dashed',
-    color: theme.palette.primary.main,
     backgroundColor: 'transparent',
-    outline: 'none',
-    height: '100%',
-    minHeight: 200,
-    transition: theme.transitions.create(['border-color', 'background-color']),
-    overflow: 'auto'
-  },
-  copy: {
+    borderColor: theme.palette.primary.main,
+    borderRadius: 6,
+    borderStyle: 'dashed',
+    borderWidth: 1,
     color: theme.palette.primary.main,
-    margin: '0 auto',
-    [theme.breakpoints.up('lg')]: {
-      marginTop: theme.spacing(4),
-      marginBottom: theme.spacing(2)
+    height: '100%',
+    maxHeight: 400,
+    marginTop: theme.spacing(2),
+    minHeight: 140,
+    outline: 'none',
+    overflow: 'auto',
+    padding: theme.spacing(),
+    transition: theme.transitions.create(['border-color', 'background-color']),
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(),
+      marginLeft: theme.spacing()
     }
   },
   active: {
@@ -93,52 +71,40 @@ const useStyles = makeStyles((theme: Theme) => ({
     // with files that will be rejected (based on file size, number of files).
     borderColor: theme.color.red
   },
-  dropzoneContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing(1),
-    width: '100%',
-    textAlign: 'center',
-    [theme.breakpoints.up('md')]: {
-      padding: theme.spacing(2)
-    },
-    [theme.breakpoints.up('lg')]: {
-      padding: `${theme.spacing(4)}px ${theme.spacing(8)}px`
-    }
-  },
-  UploadZoneActiveButton: {
-    position: 'absolute',
-    zIndex: 10,
-    backgroundColor: 'transparent',
-    bottom: -70,
-    left: theme.spacing(2),
-    width: `calc(100% - ${theme.spacing(4)}px)`,
-    padding: 0,
-    '& $uploadButton': {
-      marginTop: 0
-    },
-    [theme.breakpoints.down('md')]: {
-      bottom: 0
-    }
-  },
   fileUploads: {
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
     justifyContent: 'flex-start'
   },
-  uploadButton: {
-    opacity: 1,
-    transition: theme.transitions.create(['opacity']),
-    [theme.breakpoints.only('lg')]: {
-      paddingLeft: theme.spacing(1.5),
-      paddingRight: theme.spacing(1.5)
-    },
-    [theme.breakpoints.down('lg')]: {
-      marginTop: theme.spacing(2)
+  dropzoneContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    width: '100%'
+  },
+  UploadZoneActiveButton: {
+    backgroundColor: 'transparent',
+    bottom: theme.spacing(1.5),
+    padding: 0,
+    position: 'absolute',
+    width: `calc(100% - ${theme.spacing(4)}px)`,
+    zIndex: 10,
+    '& $uploadButton': {
+      marginTop: 0
     }
+  },
+  copy: {
+    color: theme.palette.primary.main,
+    margin: '0 auto'
+  },
+  uploadButton: {
+    marginTop: theme.spacing(2),
+    opacity: 1,
+    transition: theme.transitions.create(['opacity'])
   }
 }));
 
@@ -313,11 +279,6 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     });
   }, [nextBatch]);
 
-  const { width } = useWindowDimensions();
-
-  // These max widths and breakpoints are based on trial-and-error.
-  const truncationMaxWidth = width < 1920 ? 20 : 30;
-
   const {
     getInputProps,
     getRootProps,
@@ -348,8 +309,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
   return (
     <div
       className={classNames({
-        [classes.root]: true,
-        [classes.rootActive]: UploadZoneActive
+        [classes.root]: UploadZoneActive
       })}
     >
       <div {...getRootProps({ className: `${classes.dropzone} ${className}` })}>
@@ -366,10 +326,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
             return (
               <FileUpload
                 key={idx}
-                displayName={truncateMiddle(
-                  upload.file.name || '',
-                  truncationMaxWidth
-                )}
+                displayName={upload.file.name}
                 fileName={path}
                 sizeInBytes={upload.file.size || 0}
                 percentCompleted={upload.percentComplete || 0}
@@ -391,11 +348,6 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
           })}
         >
           {!UploadZoneActive && (
-            <Hidden xsDown>
-              <CloudUpload />
-            </Hidden>
-          )}
-          {!UploadZoneActive && (
             <Typography variant="subtitle2" className={classes.copy}>
               You can browse your device to upload files or drop them here.
             </Typography>
@@ -403,9 +355,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
           <Button
             buttonType="primary"
             onClick={open}
-            className={classNames({
-              [classes.uploadButton]: true
-            })}
+            className={classes.uploadButton}
           >
             Browse Files
           </Button>
