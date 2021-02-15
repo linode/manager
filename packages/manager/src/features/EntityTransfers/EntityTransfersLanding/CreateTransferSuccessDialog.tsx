@@ -57,7 +57,7 @@ export const CreateTransferSuccessDialog: React.FC<Props> = props => {
   ${transfer.token}\n\t
    1) Log in to your account on Linode Cloud Manager.\t
    2) Navigate to the Transfers tab on your Account page.\t
-   3) Copy and paste the token into the Enter Transfer Token field to view\n\t details and accept the transfer.\n
+   3) Copy and paste the token into the Enter Transfer Token field to view\n\tdetails and accept the transfer.\n
    If you do not have an account with Linode you will need to create one.
    This token will expire at ${DateTime.fromISO(transfer.expiry)
      .toUTC()
