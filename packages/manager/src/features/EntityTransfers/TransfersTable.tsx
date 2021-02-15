@@ -2,6 +2,7 @@ import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -95,10 +96,12 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
             {transfer.token}
           </button>
         </TableCell>
-        <TableCell className={classes.cellContents}>
-          <DateTimeDisplay value={transfer.created} />
-        </TableCell>
-        <TableCell className={classes.cellContents}>
+        <Hidden smDown>
+          <TableCell className={classes.cellContents}>
+            <DateTimeDisplay value={transfer.created} />
+          </TableCell>
+        </Hidden>
+        <TableCell className={classes.cellContents} noWrap>
           {entitiesAndTheirCounts.map((entry, idx) => {
             return (
               <span key={idx}>
@@ -112,7 +115,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
           <TableCell className={classes.cellContents} />
         ) : null}
         {transferTypeIsPending ? (
-          <TableCell className={classes.cellContents}>
+          <TableCell className={classes.cellContents} noWrap>
             <DateTimeDisplay value={transfer.expiry} />
           </TableCell>
         ) : null}
@@ -139,11 +142,21 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              {tableHeaders.map(thisHeader => (
-                <TableCell key={`transfer-token-table-header-${thisHeader}`}>
-                  {thisHeader}
-                </TableCell>
-              ))}
+              {tableHeaders.map(thisHeader =>
+                thisHeader === 'Created' ? (
+                  <Hidden smDown>
+                    <TableCell
+                      key={`transfer-token-table-header-${thisHeader}`}
+                    >
+                      {thisHeader}
+                    </TableCell>
+                  </Hidden>
+                ) : (
+                  <TableCell key={`transfer-token-table-header-${thisHeader}`}>
+                    {thisHeader}
+                  </TableCell>
+                )
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
