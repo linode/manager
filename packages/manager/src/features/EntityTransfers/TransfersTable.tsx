@@ -15,7 +15,7 @@ import TableRowError from 'src/components/TableRowError/TableRowError_CMR';
 import TableRowLoading from 'src/components/TableRowLoading/TableRowLoading_CMR';
 import capitalize from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
-import ActionMenu from './TransfersPendingActionMenu';
+// import ActionMenu from './TransfersPendingActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -144,10 +144,11 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
               <DateTimeDisplay value={transfer.expiry} />
             </TableCell>
             <TableCell className={classes.actionCell}>
-              <ActionMenu
+              Cancel
+              {/* <ActionMenu
                 onCancel={() => alert('Pending transfer canceled')}
                 token={transfer.token}
-              />
+              /> */}
             </TableCell>
           </>
         ) : null}
