@@ -15,6 +15,7 @@ import TableRowError from 'src/components/TableRowError/TableRowError_CMR';
 import TableRowLoading from 'src/components/TableRowLoading/TableRowLoading_CMR';
 import capitalize from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
+import ActionMenu from './TransfersPendingActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -28,6 +29,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cellContents: {
     paddingLeft: '1rem'
+  },
+  actionCell: {
+    padding: 0,
+    paddingRight: '0 !important'
   },
   link: {
     ...theme.applyLinkStyles,
@@ -45,20 +50,27 @@ interface Props {
 type CombinedProps = Props;
 
 export const TransfersTable: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
   const { transferType, transfers, isLoading, error } = props;
 
-  const classes = useStyles();
+  // const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(false);
 
   const transferTypeIsPending = transferType === 'pending';
-  const transferTypeIsReceived = transferType === 'received';
   const transferTypeIsSent = transferType === 'sent';
 
-  const tableHeaders = [
-    'Token',
-    'Created',
-    'Entities',
-    transferTypeIsSent ? 'Status' : transferTypeIsPending ? 'Expiry' : null
-  ];
+  const tableHeaders = ['Token', 'Created', 'Entities']; // These are the base headers; Transfers Received will have only these columns.
+
+  if (transferTypeIsSent) {
+    tableHeaders.push('Status');
+  }
+
+  if (transferTypeIsPending) {
+    tableHeaders.push('Expiry', ''); // Empty string for action column header
+  }
+
+  // const cancelPendingTransfer = (token: string) => {
+  //   setCancelPendingDialogOpen(true);
+  // }
 
   const renderTableContent = (
     loading: boolean,
@@ -101,23 +113,43 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
             <DateTimeDisplay value={transfer.created} />
           </TableCell>
         </Hidden>
-        <TableCell className={classes.cellContents} noWrap>
-          {entitiesAndTheirCounts.map((entry, idx) => {
-            return (
-              <span key={idx}>
-                {formatEntitiesCell(entry)}
-                <br />
-              </span>
-            );
-          })}
-        </TableCell>
-        {transferTypeIsReceived ? (
-          <TableCell className={classes.cellContents} />
-        ) : null}
         {transferTypeIsPending ? (
+          <Hidden xsDown>
+            <TableCell className={classes.cellContents} noWrap>
+              {entitiesAndTheirCounts.map((entry, idx) => {
+                return (
+                  <span key={idx}>
+                    {formatEntitiesCell(entry)}
+                    <br />
+                  </span>
+                );
+              })}
+            </TableCell>
+          </Hidden>
+        ) : (
           <TableCell className={classes.cellContents} noWrap>
-            <DateTimeDisplay value={transfer.expiry} />
+            {entitiesAndTheirCounts.map((entry, idx) => {
+              return (
+                <span key={idx}>
+                  {formatEntitiesCell(entry)}
+                  <br />
+                </span>
+              );
+            })}
           </TableCell>
+        )}
+        {transferTypeIsPending ? (
+          <>
+            <TableCell className={classes.cellContents} noWrap>
+              <DateTimeDisplay value={transfer.expiry} />
+            </TableCell>
+            <TableCell className={classes.actionCell}>
+              <ActionMenu
+                onCancel={() => alert('Pending transfer canceled')}
+                token={transfer.token}
+              />
+            </TableCell>
+          </>
         ) : null}
         {transferTypeIsSent ? (
           <TableCell className={classes.cellContents}>
@@ -145,6 +177,14 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
               {tableHeaders.map(thisHeader =>
                 thisHeader === 'Created' ? (
                   <Hidden smDown>
+                    <TableCell
+                      key={`transfer-token-table-header-${thisHeader}`}
+                    >
+                      {thisHeader}
+                    </TableCell>
+                  </Hidden>
+                ) : thisHeader === 'Entities' && transferTypeIsPending ? (
+                  <Hidden xsDown>
                     <TableCell
                       key={`transfer-token-table-header-${thisHeader}`}
                     >
@@ -180,4 +220,4 @@ export const formatEntitiesCell = (entityAndCount: [string, number[]]) => {
   return `${pluralize(singleEntity, pluralEntity, entityCount)}`;
 };
 
-export default TransfersTable;
+export default React.memo(TransfersTable);
