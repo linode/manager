@@ -71,7 +71,8 @@ export const CreateTransferSuccessDialog: React.FC<Props> = props => {
       className={classes.root}
     >
       <Typography className={classes.text}>
-        This token authorizes the transfer of {600} Linodes.
+        This token authorizes the transfer of {transfer.entities.linodes.length}{' '}
+        Linodes.
       </Typography>
       <Typography>
         Copy and paste the transfer token or draft text into an email or other
