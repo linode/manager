@@ -8,7 +8,7 @@ import {
   makeTestLabel
 } from './common';
 
-import { CreateLinodeRequest, Linode } from '@linode/api-v4/lib/linodes/types';
+import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes/types';
 
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const testLinodeTag = testTag;
@@ -39,20 +39,9 @@ const linodeRequest = linodeData => {
   });
 };
 
-const editLinodeRequest = (
-  defaultLinodeRequestBody: Partial<CreateLinodeRequest>,
-  fieldsToUpdate: Partial<CreateLinodeRequest>,
-  label: Partial<CreateLinodeRequest>
-) => {
-  return { ...defaultLinodeRequestBody, ...fieldsToUpdate, ...label };
-};
-
 export const requestBody = (data: Partial<CreateLinodeRequest>) => {
   const label = makeLinodeLabel();
-  const linodeData: object = editLinodeRequest(defaultLinodeRequestBody, data, {
-    label
-  });
-  return linodeRequest(linodeData);
+  return linodeRequest({ label, ...defaultLinodeRequestBody, ...data });
 };
 
 export const createLinode = (data = {}) => {
