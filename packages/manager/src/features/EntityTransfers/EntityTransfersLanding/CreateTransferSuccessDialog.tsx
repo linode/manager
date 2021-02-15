@@ -1,13 +1,15 @@
 import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers/types';
 import * as copy from 'copy-to-clipboard';
+import { DateTime } from 'luxon';
+import { update } from 'ramda';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import InformationDialog from 'src/components/InformationDialog';
 import CopyableTextField from 'src/components/CopyableTextField';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import ToolTip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import InformationDialog from 'src/components/InformationDialog';
 import { entityTransferFactory } from 'src/factories/entityTransfers';
-import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -41,8 +43,15 @@ const _transfer = entityTransferFactory.build();
 
 export const CreateTransferSuccessDialog: React.FC<Props> = props => {
   const { isOpen, onClose } = props;
+  const [tooltipOpen, setTooltipOpen] = React.useState([false, false]);
   const classes = useStyles();
   const transfer = _transfer;
+
+  const handleCopy = (idx: number, text: string) => {
+    copy(text);
+    setTooltipOpen(state => update(idx, true, state));
+    setTimeout(() => setTooltipOpen(state => update(idx, false, state)), 1000);
+  };
 
   const draftEmail = `This token authorizes transfer of Linodes to you:\n
   ${transfer.token}\n\t
@@ -78,13 +87,15 @@ export const CreateTransferSuccessDialog: React.FC<Props> = props => {
           fullWidth
           aria-disabled
         />
-        <Button
-          buttonType="primary"
-          onClick={() => copy(transfer.token)}
-          className={classes.copyButton}
-        >
-          Copy Transfer Token
-        </Button>
+        <ToolTip open={tooltipOpen[0]} title="copied!">
+          <Button
+            buttonType="primary"
+            onClick={() => handleCopy(0, transfer.token)}
+            className={classes.copyButton}
+          >
+            Copy Transfer Token
+          </Button>
+        </ToolTip>
       </div>
       <div className={classes.inputSection}>
         <CopyableTextField
@@ -96,13 +107,15 @@ export const CreateTransferSuccessDialog: React.FC<Props> = props => {
           aria-disabled
           multiline
         />
-        <Button
-          buttonType="primary"
-          className={classes.copyButton}
-          onClick={() => copy(draftEmail)}
-        >
-          Copy Draft Email
-        </Button>
+        <ToolTip open={tooltipOpen[1]} title="copied!">
+          <Button
+            buttonType="primary"
+            className={classes.copyButton}
+            onClick={() => handleCopy(1, transfer.token)}
+          >
+            Copy Draft Email
+          </Button>
+        </ToolTip>
       </div>
     </InformationDialog>
   );
