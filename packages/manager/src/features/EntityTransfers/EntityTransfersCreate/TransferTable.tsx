@@ -6,6 +6,7 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import CheckBox from 'src/components/CheckBox';
+import PaginationFooter from 'src/components/PaginationFooter';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -45,19 +46,35 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   checkEmpty: {
     '& svg': { color: '#cccccc' }
+  },
+  footer: {
+    // '& button': { border: 'none' }
+    padding: theme.spacing(),
+    marginBottom: theme.spacing()
   }
 }));
 
 export interface Props {
+  count: number;
+  page: number;
+  pageSize: number;
   headers: string[];
   hasSelectedAll: boolean;
-  requestPage: () => void;
+  requestPage: (page: number) => void;
   toggleSelectAll: (isToggled: boolean) => void;
   children: JSX.Element;
 }
 
 export const TransferTable: React.FC<Props> = props => {
-  const { hasSelectedAll, headers, toggleSelectAll } = props;
+  const {
+    count,
+    hasSelectedAll,
+    headers,
+    page,
+    pageSize,
+    requestPage,
+    toggleSelectAll
+  } = props;
   const classes = useStyles();
   const handleToggleAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     return toggleSelectAll(e.target.checked);
@@ -91,6 +108,15 @@ export const TransferTable: React.FC<Props> = props => {
         </TableHead>
         <TableBody>{props.children}</TableBody>
       </Table>
+      <PaginationFooter
+        count={count}
+        handlePageChange={requestPage}
+        handleSizeChange={() => null} // Transfer stables are going to be sticky at 25
+        page={page}
+        pageSize={pageSize}
+        eventCategory="Entity Transfer Table"
+        fixedSize
+      />
     </>
   );
 };

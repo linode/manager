@@ -24,13 +24,16 @@ export const LinodeTransferTable: React.FC<Props> = props => {
 
   const pagination = usePagination();
 
-  const { data, isLoading, error, dataUpdatedAt } = useLinodesQuery({
+  const { data, isError, isLoading, error, dataUpdatedAt } = useLinodesQuery({
     page: pagination.page,
     page_size: pagination.pageSize
   });
 
   const linodes = Object.values(data?.linodes ?? {});
-  const hasSelectedAll = Object.keys(selectedLinodes).length === linodes.length;
+  const hasSelectedAll =
+    Object.keys(selectedLinodes).length === linodes.length &&
+    !isLoading &&
+    !isError;
 
   const toggleSelectAll = () => {
     if (hasSelectedAll) {
@@ -51,7 +54,10 @@ export const LinodeTransferTable: React.FC<Props> = props => {
       toggleSelectAll={toggleSelectAll}
       hasSelectedAll={hasSelectedAll}
       headers={columns}
-      requestPage={() => null}
+      requestPage={pagination.handlePageChange}
+      page={pagination.page}
+      pageSize={pagination.pageSize}
+      count={data?.results ?? 0}
     >
       <TableContentWrapper
         loading={isLoading}
