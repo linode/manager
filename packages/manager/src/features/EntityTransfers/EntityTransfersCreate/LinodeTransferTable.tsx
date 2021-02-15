@@ -29,17 +29,19 @@ export const LinodeTransferTable: React.FC<Props> = props => {
     page_size: pagination.pageSize
   });
 
-  const linodes = Object.values(data?.linodes ?? {});
+  const linodesCurrentPage = Object.values(data?.linodes ?? {});
   const hasSelectedAll =
-    Object.keys(selectedLinodes).length === linodes.length &&
+    linodesCurrentPage.every(thisLinode =>
+      Boolean(selectedLinodes[thisLinode.id])
+    ) &&
     !isLoading &&
     !isError;
 
   const toggleSelectAll = () => {
     if (hasSelectedAll) {
-      handleRemove(linodes.map(l => String(l.id)));
+      handleRemove(linodesCurrentPage.map(l => String(l.id)));
     } else {
-      handleSelect(linodes);
+      handleSelect(linodesCurrentPage);
     }
   };
 
@@ -65,7 +67,7 @@ export const LinodeTransferTable: React.FC<Props> = props => {
         length={data?.results ?? 0}
         lastUpdated={dataUpdatedAt}
       >
-        {linodes.map(thisLinode => (
+        {linodesCurrentPage.map(thisLinode => (
           <LinodeRow
             key={thisLinode.id}
             linode={thisLinode}
