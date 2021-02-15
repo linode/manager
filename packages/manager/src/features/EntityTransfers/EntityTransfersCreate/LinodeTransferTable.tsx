@@ -1,13 +1,14 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import TransferTable from './TransferTable';
-// import { makeStyles, Theme } from 'src/components/core/styles';
+import Hidden from 'src/components/core/Hidden';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import SelectableTableRow from 'src/components/SelectableTableRow';
+import TableCell from 'src/components/TableCell/TableCell';
+import { dcDisplayNames } from 'src/constants';
 import { linodeFactory } from 'src/factories/linodes';
+import { useTypes } from 'src/hooks/useTypes';
 import { Entity, TransferEntity } from './transferReducer';
-import TableCell from 'src/components/TableCell';
-
-// const useStyles = makeStyles((theme: Theme) => ({}));
+import TransferTable from './TransferTable';
 
 interface Props {
   selectedLinodes: TransferEntity;
@@ -16,11 +17,12 @@ interface Props {
   handleToggle: (linode: Entity) => void;
 }
 
-const linodes = linodeFactory.buildList(200);
+const linodes = linodeFactory.buildList(25);
 
 export const LinodeTransferTable: React.FC<Props> = props => {
   const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
   const hasSelectedAll = Object.keys(selectedLinodes).length === linodes.length;
+
   const toggleSelectAll = () => {
     if (hasSelectedAll) {
       handleRemove(linodes.map(l => String(l.id)));
@@ -28,11 +30,18 @@ export const LinodeTransferTable: React.FC<Props> = props => {
       handleSelect(linodes);
     }
   };
+
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const columns = matchesSmDown
+    ? ['Label', 'Plan']
+    : ['Label', 'Plan', 'Region'];
+
   return (
     <TransferTable
       toggleSelectAll={toggleSelectAll}
       hasSelectedAll={hasSelectedAll}
-      headers={['Label', 'Plan', 'Region']}
+      headers={columns}
       requestPage={() => null}
     >
       {linodes.slice(0, 25).map(thisLinode => (
@@ -55,14 +64,19 @@ interface RowProps {
 
 const LinodeRow: React.FC<RowProps> = props => {
   const { linode, isChecked, handleToggleCheck } = props;
+  const { typesMap } = useTypes();
+  const displayRegion = dcDisplayNames[linode.region] ?? linode.region;
+  const displayType = typesMap[linode.type ?? '']?.label ?? linode.type;
   return (
     <SelectableTableRow
       isChecked={isChecked}
       handleToggleCheck={handleToggleCheck}
     >
       <TableCell>{linode.label}</TableCell>
-      <TableCell>{linode.type}</TableCell>
-      <TableCell>{linode.region}</TableCell>
+      <TableCell>{displayType}</TableCell>
+      <Hidden smDown>
+        <TableCell>{displayRegion}</TableCell>
+      </Hidden>
     </SelectableTableRow>
   );
 };

@@ -3,19 +3,48 @@ import Table from 'src/components/Table/Table_CMR';
 import TableHead from 'src/components/core/TableHead';
 import TableBody from 'src/components/core/TableBody';
 import TableRow from 'src/components/core/TableRow';
-import TableCell from 'src/components/TableCell';
+import Typography from 'src/components/core/Typography';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
 import CheckBox from 'src/components/CheckBox';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '100%',
     marginTop: theme.spacing(2)
   },
-
-  checkBox: {
-    width: 50
+  table: {
+    marginTop: theme.spacing(),
+    '& thead': {
+      '& th': {
+        backgroundColor: theme.cmrBGColors.bgTableHeader,
+        borderTop: `2px solid ${theme.cmrBorderColors.borderTable}`,
+        borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+        borderBottom: `2px solid ${theme.cmrBorderColors.borderTable}`,
+        borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
+        fontFamily: theme.font.bold,
+        fontSize: '0.875em !important',
+        color: theme.cmrTextColors.tableHeader,
+        padding: '0px 15px',
+        '&:first-of-type': {
+          borderLeft: 'none',
+          paddingLeft: 0,
+          paddingRight: 0
+        },
+        '&:last-of-type': {
+          borderRight: 'none'
+        }
+      }
+    }
+  },
+  check: {
+    '& svg': {
+      width: 20,
+      height: 20
+    }
+  },
+  checkEmpty: {
+    '& svg': { color: '#cccccc' }
   }
 }));
 
@@ -34,27 +63,35 @@ export const TransferTable: React.FC<Props> = props => {
     return toggleSelectAll(e.target.checked);
   };
   return (
-    <Table className={classes.root}>
-      <TableHead>
-        <TableRow>
-          <TableCell className={classes.checkBox}>
-            <CheckBox
-              checked={hasSelectedAll}
-              onChange={handleToggleAll}
-              inputProps={{
-                'aria-label': `Select all entities on page`
-              }}
-            />
-          </TableCell>
-          {headers.map(thisHeader => (
-            <TableCell key={`entity-table-header-${thisHeader}`}>
-              {thisHeader}
+    <>
+      <Typography variant="h2" className={classes.root}>
+        Entities
+      </Typography>
+      <Table className={classes.table}>
+        <TableHead>
+          <TableRow>
+            <TableCell style={{ width: 50, textAlign: 'center' }}>
+              <CheckBox
+                className={`${classes.check} ${
+                  hasSelectedAll ? '' : classes.checkEmpty
+                }`}
+                checked={hasSelectedAll}
+                onChange={handleToggleAll}
+                inputProps={{
+                  'aria-label': `Select all entities on page`
+                }}
+              />
             </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-      <TableBody>{props.children}</TableBody>
-    </Table>
+            {headers.map(thisHeader => (
+              <TableCell key={`entity-table-header-${thisHeader}`}>
+                {thisHeader}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>{props.children}</TableBody>
+      </Table>
+    </>
   );
 };
 
