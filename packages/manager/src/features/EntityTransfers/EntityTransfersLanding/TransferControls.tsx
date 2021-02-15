@@ -69,6 +69,7 @@ export const TransferControls: React.FC<Props> = props => {
         <TextField
           className={classes.transferInput}
           hideLabel
+          value={token}
           label="Receive a Transfer"
           placeholder="Enter a token"
           onChange={handleInputChange}
