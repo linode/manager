@@ -1,19 +1,8 @@
 import { FirewallStatus } from '@linode/api-v4/lib/firewalls';
 import * as React from 'react';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery
-} from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex'
-  }
-}));
 
 export interface ActionHandlers {
   triggerEnableFirewall: (firewallID: number, firewallLabel: string) => void;
@@ -31,7 +20,6 @@ interface Props extends ActionHandlers {
 type CombinedProps = Props;
 
 const FirewallActionMenu: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -69,7 +57,7 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <div className={classes.root}>
+    <>
       {!matchesSmDown &&
         actions.map(action => {
           return (
@@ -86,7 +74,7 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
           ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
         />
       )}
-    </div>
+    </>
   );
 };
 
