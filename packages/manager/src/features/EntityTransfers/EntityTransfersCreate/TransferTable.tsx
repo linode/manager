@@ -53,7 +53,7 @@ export interface Props {
   hasSelectedAll: boolean;
   requestPage: () => void;
   toggleSelectAll: (isToggled: boolean) => void;
-  children: JSX.Element[];
+  children: JSX.Element;
 }
 
 export const TransferTable: React.FC<Props> = props => {

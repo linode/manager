@@ -5,10 +5,12 @@ import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import SelectableTableRow from 'src/components/SelectableTableRow';
 import TableCell from 'src/components/TableCell/TableCell';
 import { dcDisplayNames } from 'src/constants';
-import { linodeFactory } from 'src/factories/linodes';
+import TableContentWrapper from 'src/components/TableContentWrapper';
 import { useTypes } from 'src/hooks/useTypes';
 import { Entity, TransferEntity } from './transferReducer';
 import TransferTable from './TransferTable';
+import { useLinodesQuery } from 'src/queries/linodes';
+import { usePagination } from 'src/hooks/usePagination';
 
 interface Props {
   selectedLinodes: TransferEntity;
@@ -17,10 +19,17 @@ interface Props {
   handleToggle: (linode: Entity) => void;
 }
 
-const linodes = linodeFactory.buildList(25);
-
 export const LinodeTransferTable: React.FC<Props> = props => {
   const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
+
+  const pagination = usePagination();
+
+  const { data, isLoading, error, dataUpdatedAt } = useLinodesQuery({
+    page: pagination.page,
+    page_size: pagination.pageSize
+  });
+
+  const linodes = Object.values(data?.linodes ?? {});
   const hasSelectedAll = Object.keys(selectedLinodes).length === linodes.length;
 
   const toggleSelectAll = () => {
@@ -44,14 +53,21 @@ export const LinodeTransferTable: React.FC<Props> = props => {
       headers={columns}
       requestPage={() => null}
     >
-      {linodes.slice(0, 25).map(thisLinode => (
-        <LinodeRow
-          key={thisLinode.id}
-          linode={thisLinode}
-          isChecked={Boolean(selectedLinodes[thisLinode.id])}
-          handleToggleCheck={() => handleToggle(thisLinode)}
-        />
-      ))}
+      <TableContentWrapper
+        loading={isLoading}
+        error={error ?? undefined}
+        length={data?.results ?? 0}
+        lastUpdated={dataUpdatedAt}
+      >
+        {linodes.map(thisLinode => (
+          <LinodeRow
+            key={thisLinode.id}
+            linode={thisLinode}
+            isChecked={Boolean(selectedLinodes[thisLinode.id])}
+            handleToggleCheck={() => handleToggle(thisLinode)}
+          />
+        ))}
+      </TableContentWrapper>
     </TransferTable>
   );
 };
