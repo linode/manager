@@ -29,14 +29,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexFlow: 'row nowrap',
     alignItems: 'center',
     whiteSpace: 'nowrap'
+  },
+  actionCell: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: 0,
+    '&.MuiTableCell-root': {
+      paddingRight: 0
+    }
   }
 }));
 
 export type CombinedProps = Firewall & ActionHandlers;
 
 export const FirewallRow: React.FC<CombinedProps> = props => {
-  const { id, label, status, rules, ...actionHandlers } = props;
   const classes = useStyles();
+
+  const { id, label, status, rules, ...actionHandlers } = props;
 
   const {
     devices: { itemsById, error, loading, lastUpdated },
@@ -71,7 +80,7 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
               </Link>
             </div>
           </Grid>
-        </Grid>{' '}
+        </Grid>
       </TableCell>
       <TableCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
@@ -83,7 +92,7 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
           {getLinodesCellString(devices, loading, error.read)}
         </TableCell>
       </Hidden>
-      <TableCell>
+      <TableCell className={classes.actionCell}>
         <ActionMenu
           firewallID={id}
           firewallLabel={label}
