@@ -9,7 +9,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import ToolTip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import InformationDialog from 'src/components/InformationDialog';
-import { entityTransferFactory } from 'src/factories/entityTransfers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -39,19 +38,21 @@ interface Props {
   onClose: () => void;
 }
 
-const _transfer = entityTransferFactory.build();
-
 export const CreateTransferSuccessDialog: React.FC<Props> = props => {
-  const { isOpen, onClose } = props;
+  const { isOpen, onClose, transfer } = props;
   const [tooltipOpen, setTooltipOpen] = React.useState([false, false]);
   const classes = useStyles();
-  const transfer = _transfer;
 
   const handleCopy = (idx: number, text: string) => {
     copy(text);
     setTooltipOpen(state => update(idx, true, state));
     setTimeout(() => setTooltipOpen(state => update(idx, false, state)), 1000);
   };
+
+  if (!transfer) {
+    // This isn't possible; just to reassure TS
+    return null;
+  }
 
   const draftEmail = `This token authorizes transfer of Linodes to you:\n
   ${transfer.token}\n\t
