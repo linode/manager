@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-02-15] - v1.30.0
+
+### Added:
+#### Cloud Firewalls:
+- Firewalls beta notification
+- Presets for port selection when creating/editing a Firewall rule
+- Label and Description fields for firewall rules
+- Clone action for firewall rules
+
+- Visual indicator for "Skip to Main Content" link
+- Update Breadcrumb styles
+- New Accordion expand/collapse icons
+- Network Transfer Display on NodeBalancer, Object Storage, and Kubernetes landing pages
+
+### Changed:
+#### Cloud Firewalls:
+- Move save changes button to bottom of rules table
+
+#### Notification Drawer:
+Remove existing sections and replace with Notifications and Events sections
+Show balance past due notification in the Notifications section
+Mark all events as read when the drawer is closed
+
+- Upgrade Node version from 10.16 to 14.15.4
+- Change wording for OBJ utilization
+- Network Transfer Display: redesigned text-based display
+- Use React-Query when fetching regions
+- Hide "Linode Expert" for Linode accounts in Support ticket replies
+- Move summary and Auto Enroll toggle to the top of the Enable Backups drawer
+
+### Fixed:
+- Scheduled migration banner font color on dark mode
+- Prevent SelectPlanPanel wrap in Linode Create flow
+- Disk selection when opening Rebuild from /linodes
+- Alignment of ActionMenu in mobile on Firewall landing page
+- Calculate days to billing in EST to match billing practices
+
 ## [2020-01-25] - v1.29.0
 
 ### Added:
