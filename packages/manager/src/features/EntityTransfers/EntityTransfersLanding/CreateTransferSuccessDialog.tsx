@@ -89,13 +89,14 @@ export const CreateTransferSuccessDialog: React.FC<Props> = props => {
           aria-disabled
         />
         <ToolTip open={tooltipOpen[0]} title="copied!">
-          <Button
-            buttonType="primary"
-            onClick={() => handleCopy(0, transfer.token)}
-            className={classes.copyButton}
-          >
-            Copy Transfer Token
-          </Button>
+          <div className={classes.copyButton}>
+            <Button
+              buttonType="primary"
+              onClick={() => handleCopy(0, transfer.token)}
+            >
+              Copy Transfer Token
+            </Button>
+          </div>
         </ToolTip>
       </div>
       <div className={classes.inputSection}>
@@ -109,13 +110,14 @@ export const CreateTransferSuccessDialog: React.FC<Props> = props => {
           multiline
         />
         <ToolTip open={tooltipOpen[1]} title="copied!">
-          <Button
-            buttonType="primary"
-            className={classes.copyButton}
-            onClick={() => handleCopy(1, transfer.token)}
-          >
-            Copy Draft Email
-          </Button>
+          <div className={classes.copyButton}>
+            <Button
+              buttonType="primary"
+              onClick={() => handleCopy(1, draftEmail)}
+            >
+              Copy Draft Email
+            </Button>
+          </div>
         </ToolTip>
       </div>
     </InformationDialog>
