@@ -100,7 +100,12 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
         </TableCell>
         <TableCell className={classes.cellContents}>
           {entitiesAndTheirCounts.map((entry, idx) => {
-            return <span key={idx}>{formatEntitiesCell(entry)}</span>;
+            return (
+              <span key={idx}>
+                {formatEntitiesCell(entry)}
+                <br />
+              </span>
+            );
           })}
         </TableCell>
         {transferTypeIsReceived ? (

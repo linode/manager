@@ -64,6 +64,13 @@ export const makeResourcePage = (
 const entityTransfers = [
   rest.get('*/account/entity-transfers', (req, res, ctx) => {
     const transfers = entityTransferFactory.buildList(10);
+    // const combinedTransfers = transfers.concat(
+    //   entityTransferFactory.buildList(2, {
+    //     entities: {
+    //       domains: [5, 8]
+    //     }
+    //   })
+    // );
     return res(ctx.json(makeResourcePage(transfers)));
   }),
   rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
