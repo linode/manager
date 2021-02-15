@@ -2,20 +2,22 @@ import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers/types';
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import InformationDialog from 'src/components/InformationDialog';
 import CopyableTextField from 'src/components/CopyableTextField';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { entityTransferFactory } from 'src/factories/entityTransfers';
-import { formatDate } from 'src/utilities/formatDate';
+import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+  root: {
+    paddingBottom: theme.spacing()
+  },
   tokenInput: {
     maxWidth: '100%'
   },
   copyButton: {
-    marginTop: theme.spacing(),
+    marginTop: theme.spacing(2),
     maxWidth: 220,
     alignSelf: 'flex-end'
   },
@@ -24,7 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inputSection: {
     display: 'flex',
-    flexFlow: 'column nowrap'
+    flexFlow: 'column nowrap',
+    paddingBottom: theme.spacing(1)
   }
 }));
 
@@ -46,13 +49,13 @@ export const CreateTransferSuccessDialog: React.FC<Props> = props => {
    1) Log in to your account on Linode Cloud Manager.\t
    2) Navigate to the Transfers tab on your Account page.\t
    3) Copy and paste the token into the Enter Transfer Token field to view\n\t details and accept the transfer.\n
-   If you do not have an account with Linode you will need to create one.\n
-   This token will expire on ${formatDate(transfer.expiry, {
-     format: 'HH:MM:S'
-   })}`;
+   If you do not have an account with Linode you will need to create one.
+   This token will expire at ${DateTime.fromISO(transfer.expiry)
+     .toUTC()
+     .toLocaleString(DateTime.DATETIME_FULL)}.`;
 
   return (
-    <ConfirmationDialog
+    <InformationDialog
       title="Token for Transfer"
       open={isOpen}
       onClose={onClose}
@@ -101,7 +104,7 @@ export const CreateTransferSuccessDialog: React.FC<Props> = props => {
           Copy Draft Email
         </Button>
       </div>
-    </ConfirmationDialog>
+    </InformationDialog>
   );
 };
 
