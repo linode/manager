@@ -387,6 +387,36 @@ export const handlers = [
     //   body: null
     // });
 
+    const generalGlobalNotice = {
+      type: 'notice',
+      entity: null,
+      when: null,
+      // eslint-disable-next-line xss/no-mixed-html
+      message:
+        "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
+      label: "We've updated our policies.",
+      severity: 'minor',
+      until: null,
+      body: null
+    };
+
+    const outageNotification = {
+      type: 'outage',
+      entity: {
+        type: 'region',
+        label: null,
+        id: 'us-east',
+        url: '/regions/us-east'
+      },
+      when: null,
+      message:
+        'We are aware of an issue affecting service in this facility. If you are experiencing service issues in this facility, there is no need to open a support ticket at this time. Please monitor our status blog at https://status.linode.com for further information.  Thank you for your patience and understanding.',
+      label: 'There is an issue affecting service in this facility',
+      severity: 'major',
+      until: null,
+      body: null
+    };
+
     const emailBounce = notificationFactory.build({
       type: 'billing_email_bounce',
       entity: null,
@@ -405,11 +435,20 @@ export const handlers = [
       severity: 'critical'
     });
 
+    const minorSeverityTicket = notificationFactory.build({
+      type: 'notice',
+      message: 'Testing for minor notification',
+      severity: 'minor'
+    });
+
     return res(
       ctx.json(
         makeResourcePage([
           // pastDueBalance,
           ...notificationFactory.buildList(1),
+          generalGlobalNotice,
+          outageNotification,
+          minorSeverityTicket,
           abuseTicket,
           emailBounce,
           migrationTicket

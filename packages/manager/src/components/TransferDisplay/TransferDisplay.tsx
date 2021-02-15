@@ -207,7 +207,7 @@ export const TransferDialog: React.FC<DialogProps> = React.memo(props => {
           Optimize your network usage and avoid billing surprises related to
           network transfer.
         </Typography>
-        <Link to="https://linode.com/docs">
+        <Link to="https://www.linode.com/docs/guides/network-transfer-quota/">
           <OpenInNew />
         </Link>
       </div>

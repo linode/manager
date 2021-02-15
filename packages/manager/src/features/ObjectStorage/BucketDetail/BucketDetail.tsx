@@ -25,9 +25,9 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import Table_CMR from 'src/components/Table/Table_CMR';
-import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
-import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import bucketRequestsContainer, {
   BucketsRequests
@@ -56,7 +56,6 @@ type ClassNames =
   | 'objectTable'
   | 'nameColumn'
   | 'sizeColumn'
-  | 'updatedColumn'
   | 'footer'
   | 'tryAgainText';
 
@@ -71,9 +70,6 @@ const styles = (theme: Theme) =>
     sizeColumn: {
       width: '10%'
     },
-    updatedColumn: {
-      width: '15%'
-    },
     footer: {
       marginTop: theme.spacing(3),
       textAlign: 'center',
@@ -84,17 +80,6 @@ const styles = (theme: Theme) =>
       color: theme.palette.primary.main,
       textDecoration: 'underline',
       cursor: 'pointer'
-    },
-    tableContainer: {
-      [theme.breakpoints.up('lg')]: {
-        order: 1
-      }
-    },
-    uploaderContainer: {
-      [theme.breakpoints.up('lg')]: {
-        order: 2,
-        minHeight: 300
-      }
     }
   });
 
@@ -433,7 +418,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
           bucketName={bucketName}
         />
         <Grid container>
-          <Grid item xs={12} lg={4} className={classes.uploaderContainer}>
+          <Grid item xs={12}>
             <ObjectUploader
               clusterId={clusterId}
               bucketName={bucketName}
@@ -441,24 +426,22 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
               maybeAddObjectToTable={this.maybeAddObjectToTable}
             />
           </Grid>
-          <Grid item xs={12} lg={8} className={classes.tableContainer}>
+          <Grid item xs={12}>
             <>
               <div className={classes.objectTable}>
-                <Table_CMR aria-label="List of Bucket Objects">
+                <Table aria-label="List of Bucket Objects">
                   <TableHead>
-                    <TableRow_CMR>
-                      <TableCell_CMR className={classes.nameColumn}>
+                    <TableRow>
+                      <TableCell className={classes.nameColumn}>
                         Object
-                      </TableCell_CMR>
-                      <TableCell_CMR className={classes.sizeColumn}>
-                        Size
-                      </TableCell_CMR>
+                      </TableCell>
+                      <TableCell className={classes.sizeColumn}>Size</TableCell>
                       <Hidden smDown>
-                        <TableCell_CMR>Last Modified</TableCell_CMR>
+                        <TableCell>Last Modified</TableCell>
                       </Hidden>
                       {/* Empty TableCell for Action Menu */}
-                      <TableCell_CMR />
-                    </TableRow_CMR>
+                      <TableCell />
+                    </TableRow>
                   </TableHead>
                   <TableBody>
                     <ObjectTableContent
@@ -471,7 +454,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
                       handleClickDetails={this.handleClickDetails}
                     />
                   </TableBody>
-                </Table_CMR>
+                </Table>
                 {/* We shouldn't allow infinite scrolling if we're still loading,
                 if we've gotten all objects in the bucket (or folder), or if there
                 are errors. */}
