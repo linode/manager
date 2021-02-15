@@ -9,6 +9,8 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
 
   const handleCloseDialog = () => {
     setConfirmDialogOpen(false);
+    // I don't love the UX here but it seems better than leaving a token in the input
+    setTimeout(() => setToken(''), 150);
   };
 
   return (
