@@ -1,10 +1,22 @@
 import { entityTransferFactory } from 'src/factories/entityTransfers';
-import capitalize from 'src/utilities/capitalize';
-import { pluralize } from 'src/utilities/pluralize';
 import { formatEntitiesCell } from './TransfersTable';
 
 const entityTransfer1 = entityTransferFactory.build();
 const entityTransfer1Entities = Object.entries(entityTransfer1.entities)[0];
+
+const entityTransfer2 = entityTransferFactory.build({
+  entities: {
+    linodes: [95]
+  }
+});
+const entityTransfer2Entities = Object.entries(entityTransfer2.entities)[0];
+
+const entityTransfer3 = entityTransferFactory.build({
+  entities: {
+    linodes: [20, 25, 30, 35, 40, 45, 50, 55, 60, 65]
+  }
+});
+const entityTransfer3Entities = Object.entries(entityTransfer3.entities)[0];
 
 // for when transfer capabilities get added for other entities
 // const entityTransfer2 = entityTransferFactory.build({
@@ -15,40 +27,12 @@ const entityTransfer1Entities = Object.entries(entityTransfer1.entities)[0];
 //   }
 // });
 
-const entityTransferList1 = entityTransferFactory.buildList(2);
-const combinedEntityTransferList = entityTransferList1.concat(
-  entityTransferFactory.buildList(2, {
-    entities: {
-      linodes: [95]
-    }
-  })
-);
-
 describe('TransfersTable component', () => {
   describe('formatEntitiesCell helper function', () => {
     it('should return the correct string entry for the given entity transfer', () => {
       expect(formatEntitiesCell(entityTransfer1Entities)).toEqual('4 Linodes');
-    });
-
-    it('should return the correct string entries for multiple entities', () => {
-      combinedEntityTransferList.map(entry => {
-        const entryListOfEntities = Object.entries(entry['entities'])[0];
-
-        const entityCount = entryListOfEntities[1].length;
-
-        const entityName = capitalize(entryListOfEntities[0]); // This is plural
-        const entityNameSingular = capitalize(
-          entityName.substring(0, entityName.length - 1)
-        );
-
-        const pluralized = pluralize(
-          entityNameSingular,
-          entityName,
-          entityCount
-        );
-
-        expect(formatEntitiesCell(entryListOfEntities)).toEqual(pluralized);
-      });
+      expect(formatEntitiesCell(entityTransfer2Entities)).toEqual('1 Linode');
+      expect(formatEntitiesCell(entityTransfer3Entities)).toEqual('10 Linodes');
     });
   });
 });

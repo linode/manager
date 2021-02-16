@@ -62,16 +62,6 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
   const transferTypeIsPending = transferType === 'pending';
   const transferTypeIsSent = transferType === 'sent';
 
-  const tableHeaders = ['Token', 'Created', 'Entities']; // These are the base headers; Transfers Received will have only these columns.
-
-  if (transferTypeIsSent) {
-    tableHeaders.push('Status');
-  }
-
-  if (transferTypeIsPending) {
-    tableHeaders.push('Expiry', ''); // Empty string for action column header
-  }
-
   // const cancelPendingTransfer = (token: string) => {
   //   setCancelPendingDialogOpen(true);
   // }
@@ -152,28 +142,45 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              {tableHeaders.map(thisHeader =>
-                thisHeader === 'Created' ? (
-                  <Hidden smDown>
-                    <TableCell
-                      key={`transfer-token-table-header-${thisHeader}`}
-                    >
-                      {thisHeader}
-                    </TableCell>
-                  </Hidden>
-                ) : thisHeader === 'Entities' && transferTypeIsPending ? (
-                  <Hidden xsDown>
-                    <TableCell
-                      key={`transfer-token-table-header-${thisHeader}`}
-                    >
-                      {thisHeader}
-                    </TableCell>
-                  </Hidden>
-                ) : (
-                  <TableCell key={`transfer-token-table-header-${thisHeader}`}>
-                    {thisHeader}
+              <TableCell key="transfer-token-table-header-token">
+                Token
+              </TableCell>
+              {transferTypeIsPending || transferTypeIsSent ? (
+                <Hidden smDown>
+                  <TableCell key="transfer-token-table-header-created">
+                    Created
                   </TableCell>
-                )
+                </Hidden>
+              ) : (
+                <TableCell key="transfer-token-table-header-created">
+                  Created
+                </TableCell>
+              )}
+              {transferTypeIsPending ? (
+                <>
+                  <Hidden xsDown>
+                    <TableCell key="transfer-token-table-header-entities">
+                      Entities
+                    </TableCell>
+                  </Hidden>
+                  <TableCell key="transfer-token-table-header-expiry">
+                    Expiry
+                  </TableCell>
+                  <TableCell /> {/*  Empty column header for action column */}
+                </>
+              ) : transferTypeIsSent ? (
+                <>
+                  <TableCell key="transfer-token-table-header-entities">
+                    Entities
+                  </TableCell>
+                  <TableCell key="transfer-token-table-header-status">
+                    Status
+                  </TableCell>
+                </>
+              ) : (
+                <TableCell key="transfer-token-table-header-entities">
+                  Entities
+                </TableCell>
               )}
             </TableRow>
           </TableHead>
@@ -208,7 +215,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
 export const formatEntitiesCell = (entityAndCount: [string, number[]]) => {
   const [entity, count] = entityAndCount;
   const pluralEntity = capitalize(entity);
-  const singleEntity = capitalize(entity.substring(0, -1));
+  const singleEntity = capitalize(entity.slice(0, -1));
 
   const entityCount = count.length;
 
