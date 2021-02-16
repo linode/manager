@@ -1,3 +1,4 @@
+import { partition } from 'ramda';
 import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useEntityTransfersQuery } from 'src/queries/entityTransfers';
@@ -16,6 +17,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
     // I don't love the UX here but it seems better than leaving a token in the input
     setTimeout(() => setToken(''), 150);
   };
+
   const {
     data: allEntityTransfers,
     isLoading,
@@ -25,13 +27,11 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   const pendingTransfers = allEntityTransfers?.filter(
     transfer => transfer.status === 'pending'
   );
+  const numPendingTransfers = pendingTransfers?.length ?? 0;
 
-  const receivedTransfers = allEntityTransfers?.filter(
-    transfer => !transfer.is_sender
-  );
-
-  const sentTransfers = allEntityTransfers?.filter(
-    transfer => transfer.is_sender
+  const [sentTransfers, receivedTransfers] = partition(
+    transfer => transfer.is_sender,
+    allEntityTransfers ?? []
   );
 
   return (
@@ -50,6 +50,26 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
       <CreateTransferSuccessDialog
         isOpen={successDialogOpen}
         onClose={() => setSuccessDialogOpen(false)}
+      />
+      {numPendingTransfers > 0 ? (
+        <TransfersTable
+          transferType="pending"
+          error={error}
+          isLoading={isLoading}
+          transfers={pendingTransfers}
+        />
+      ) : null}
+      <TransfersTable
+        transferType="received"
+        error={error}
+        isLoading={isLoading}
+        transfers={receivedTransfers}
+      />
+      <TransfersTable
+        transferType="sent"
+        error={error}
+        isLoading={isLoading}
+        transfers={sentTransfers}
       />
     </>
   );

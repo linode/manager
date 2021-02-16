@@ -8,11 +8,11 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell';
-import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
-import TableRowError from 'src/components/TableRowError/TableRowError_CMR';
-import TableRowLoading from 'src/components/TableRowLoading/TableRowLoading_CMR';
+import TableContentWrapper from 'src/components/TableContentWrapper';
+import { usePagination } from 'src/hooks/usePagination';
 import capitalize from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
 // import ActionMenu from './TransfersPendingActionMenu';
@@ -42,18 +42,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   transferType: string;
-  transfers?: EntityTransfer[];
   error: APIError[] | null;
   isLoading: boolean;
+  transfers?: EntityTransfer[];
 }
 
 type CombinedProps = Props;
 
 export const TransfersTable: React.FC<CombinedProps> = props => {
+  const { transferType, isLoading, error, transfers } = props;
+
   const classes = useStyles();
-  const { transferType, transfers, isLoading, error } = props;
+  const { page, pageSize, handlePageChange } = usePagination();
 
   // const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(false);
+
+  const transfersCount = transfers?.length ?? 0;
 
   const transferTypeIsPending = transferType === 'pending';
   const transferTypeIsSent = transferType === 'sent';
@@ -71,28 +75,6 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
   // const cancelPendingTransfer = (token: string) => {
   //   setCancelPendingDialogOpen(true);
   // }
-
-  const renderTableContent = (
-    loading: boolean,
-    error: APIError[] | null,
-    data?: EntityTransfer[]
-  ) => {
-    if (loading) {
-      return <TableRowLoading colSpan={4} oneLine hasEntityIcon />;
-    }
-
-    if (error) {
-      return <TableRowError colSpan={4} message={error[0].reason} />;
-    }
-
-    if (!data || data.length === 0) {
-      return <TableRowEmptyState colSpan={4} />;
-    }
-
-    return data.map((entityTransfer, idx) =>
-      renderTransferRow(entityTransfer, idx)
-    );
-  };
 
   const renderTransferRow = (transfer: EntityTransfer, idx: number) => {
     const entitiesBeingTransferred = transfer.entities;
@@ -161,11 +143,6 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
     );
   };
 
-  // Only show the Transfers Pending table if there are transfers pending.
-  if (transferType === 'pending' && (transfers?.length === 0 || error)) {
-    return null;
-  }
-
   return (
     <div className={classes.root}>
       <Accordion
@@ -201,22 +178,39 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {renderTableContent(isLoading, error, transfers)}
+            <TableContentWrapper
+              loading={isLoading}
+              error={error ?? undefined}
+              length={transfers?.length ?? 0}
+            >
+              {transfers?.map((transfer, idx) =>
+                renderTransferRow(transfer, idx)
+              )}
+            </TableContentWrapper>
           </TableBody>
         </Table>
       </Accordion>
+      {transfersCount > pageSize ? (
+        <PaginationFooter
+          count={transfersCount}
+          handlePageChange={handlePageChange}
+          handleSizeChange={() => null} // Transfer tables are going to be sticky at 25
+          page={page}
+          pageSize={pageSize}
+          eventCategory="Entity Transfer Table"
+          fixedSize
+        />
+      ) : null}
     </div>
   );
 };
 
-// TODO: write unit tests
 export const formatEntitiesCell = (entityAndCount: [string, number[]]) => {
-  const pluralEntity = capitalize(entityAndCount[0]);
-  const singleEntity = capitalize(
-    entityAndCount[0].substring(0, entityAndCount[0].length - 1)
-  );
+  const [entity, count] = entityAndCount;
+  const pluralEntity = capitalize(entity);
+  const singleEntity = capitalize(entity.substring(0, -1));
 
-  const entityCount = entityAndCount[1].length;
+  const entityCount = count.length;
 
   return `${pluralize(singleEntity, pluralEntity, entityCount)}`;
 };
