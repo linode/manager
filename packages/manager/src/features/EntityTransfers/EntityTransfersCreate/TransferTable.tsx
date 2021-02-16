@@ -7,12 +7,17 @@ import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import CheckBox from 'src/components/CheckBox';
 import PaginationFooter from 'src/components/PaginationFooter';
+import DebouncedSearchTextField from 'src/components/DebouncedSearchTextField';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing()
+  },
+  search: {
+    marginBottom: theme.spacing() / 2
   },
   table: {
     marginTop: theme.spacing(),
@@ -60,6 +65,7 @@ export interface Props {
   headers: string[];
   hasSelectedAll: boolean;
   requestPage: (page: number) => void;
+  handleSearch: (searchText: string) => void;
   toggleSelectAll: (isToggled: boolean) => void;
   children: JSX.Element;
 }
@@ -71,18 +77,30 @@ export const TransferTable: React.FC<Props> = props => {
     headers,
     page,
     pageSize,
+    handleSearch,
     requestPage,
     toggleSelectAll
   } = props;
   const classes = useStyles();
+
   const handleToggleAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     return toggleSelectAll(e.target.checked);
   };
+
   return (
     <>
       <Typography variant="h2" className={classes.root}>
-        Entities
+        Linodes
       </Typography>
+      <DebouncedSearchTextField
+        className={classes.search}
+        placeholder="Search by label, tags"
+        debounceTime={400}
+        onSearch={handleSearch}
+        isSearching={false}
+        label="Search by label, tags"
+        hideLabel
+      />
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
