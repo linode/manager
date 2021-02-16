@@ -112,7 +112,7 @@ export const TransferTable: React.FC<Props> = props => {
         <PaginationFooter
           count={count}
           handlePageChange={requestPage}
-          handleSizeChange={() => null} // Transfer stables are going to be sticky at 25
+          handleSizeChange={() => null} // Transfer tables are going to be sticky at 25
           page={page}
           pageSize={pageSize}
           eventCategory="Entity Transfer Table"
