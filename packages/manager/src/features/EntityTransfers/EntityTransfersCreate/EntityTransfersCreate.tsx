@@ -18,6 +18,7 @@ import {
   TransferableEntity
 } from './transferReducer';
 import Notice from 'src/components/Notice';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export const EntityTransfersCreate: React.FC<{}> = _ => {
   const { push } = useHistory();
@@ -52,6 +53,10 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
     dispatch({ type: 'TOGGLE', entityType, entity });
   });
 
+  /**
+   * Helper functions
+   */
+
   const handleCreateTransfer = (payload: CreateTransferPayload) => {
     setErrors(undefined);
     setCreating(true);
@@ -62,7 +67,7 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
         push({ pathname: '/account/entity-transfers', state: { transfer } });
       })
       .catch(err => {
-        setErrors(err);
+        setErrors(getAPIErrorOrDefault(err, 'Error creating this transfer.'));
         setCreating(false);
       });
   };
