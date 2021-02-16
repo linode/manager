@@ -1,6 +1,8 @@
 import { partition } from 'ramda';
 import * as React from 'react';
+import CircleProgress from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import { useEntityTransfersQuery } from 'src/queries/entityTransfers';
 import TransfersTable from '../TransfersTable';
 import ConfirmTransferDialog from './ConfirmTransferDialog';
@@ -21,7 +23,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   const {
     data: allEntityTransfers,
     isLoading,
-    error
+    error: transfersError
   } = useEntityTransfersQuery();
 
   const pendingTransfers = allEntityTransfers?.filter(
@@ -51,26 +53,34 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
         isOpen={successDialogOpen}
         onClose={() => setSuccessDialogOpen(false)}
       />
-      {numPendingTransfers > 0 ? (
-        <TransfersTable
-          transferType="pending"
-          error={error}
-          isLoading={isLoading}
-          transfers={pendingTransfers}
-        />
-      ) : null}
-      <TransfersTable
-        transferType="received"
-        error={error}
-        isLoading={isLoading}
-        transfers={receivedTransfers}
-      />
-      <TransfersTable
-        transferType="sent"
-        error={error}
-        isLoading={isLoading}
-        transfers={sentTransfers}
-      />
+      {isLoading ? (
+        <CircleProgress />
+      ) : transfersError ? (
+        <ErrorState errorText={transfersError[0].reason} />
+      ) : (
+        <>
+          {numPendingTransfers > 0 ? (
+            <TransfersTable
+              transferType="pending"
+              error={transfersError}
+              isLoading={isLoading}
+              transfers={pendingTransfers}
+            />
+          ) : null}
+          <TransfersTable
+            transferType="received"
+            error={transfersError}
+            isLoading={isLoading}
+            transfers={receivedTransfers}
+          />
+          <TransfersTable
+            transferType="sent"
+            error={transfersError}
+            isLoading={isLoading}
+            transfers={sentTransfers}
+          />
+        </>
+      )}
     </>
   );
 };
