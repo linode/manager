@@ -1,6 +1,10 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { createLinode, deleteLinodeById } from '../support/api/linodes';
-import { createClient, deleteClientById } from '../support/api/longview';
+import {
+  createClient,
+  deleteClientById,
+  makeClientLabel
+} from '../support/api/longview';
 import { containsVisible, fbtVisible, getVisible } from '../support/helpers';
 import { waitForAppLoad } from '../support/ui/common';
 import strings from '../support/cypresshelpers';
@@ -8,15 +12,17 @@ import strings from '../support/cypresshelpers';
 describe('longview', () => {
   it('tests longview', () => {
     const linodePassword = strings.randomPass();
-    const clientLabel = 'cy-test-client';
+    const clientLabel = makeClientLabel();
     cy.visitWithLogin('/dashboard');
-    createLinode(undefined, linodePassword).then(linode => {
+    createLinode({ root_pass: linodePassword }).then(linode => {
       createClient(undefined, clientLabel).then(client => {
         const linodeIp = linode['ipv4'][0];
         const clientLabel = client.label;
         cy.visit('/longview');
         containsVisible(clientLabel);
-        fbtVisible('Waiting for data...').first();
+        cy.findByText('Waiting for data...')
+          .first()
+          .should('be.visible');
         cy.get('code')
           .first()
           .then($code => {
