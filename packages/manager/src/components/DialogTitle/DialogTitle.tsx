@@ -12,7 +12,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     border: 'none',
-    backgroundColor: 'inherit'
+    backgroundColor: 'inherit',
+    paddingRight: 0,
+    paddingLeft: 0,
+    cursor: 'pointer',
+    '&:hover': {
+      color: theme.color.blue
+    }
   }
 }));
 interface Props {
