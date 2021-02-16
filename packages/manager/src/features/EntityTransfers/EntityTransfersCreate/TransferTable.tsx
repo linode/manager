@@ -17,7 +17,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing()
   },
   search: {
-    marginBottom: theme.spacing() / 2
+    marginBottom: theme.spacing() / 2,
+    maxWidth: 556
   },
   table: {
     marginTop: theme.spacing(),
