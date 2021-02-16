@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& svg': { color: '#cccccc' }
   },
   footer: {
-    // '& button': { border: 'none' }
     padding: theme.spacing(),
     marginBottom: theme.spacing()
   }
