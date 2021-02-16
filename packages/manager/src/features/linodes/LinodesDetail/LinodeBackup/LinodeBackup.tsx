@@ -99,7 +99,7 @@ const styles = (theme: Theme) =>
     snapshotFormControl: {
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'flex-start',
+      alignItems: 'flex-end',
       flexWrap: 'wrap',
       '& > div': {
         width: 'auto',
@@ -567,7 +567,9 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
                   buttonType="primary"
                   onClick={this.handleSnapshotDialogDisplay}
                   data-qa-snapshot-button
-                  disabled={linodeInTransition || disabled}
+                  disabled={
+                    linodeInTransition || disabled || snapshotForm.label === ''
+                  }
                 >
                   Take Snapshot
                 </Button>
@@ -681,7 +683,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           <Button
             buttonType="primary"
             onClick={this.saveSettings}
-            disabled={isReadOnly(permissions)}
+            disabled={
+              isReadOnly(permissions) ||
+              defaultDaySelection?.label === 'Choose a day' ||
+              defaultTimeSelection?.label === ('Choose a time' as Window)
+            }
             loading={this.state.settingsForm.loading}
             data-qa-schedule
           >
@@ -724,12 +730,13 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
-          buttonType="primary"
+          buttonType="secondary"
           destructive
           className={classes.cancelButton}
           onClick={this.handleOpenBackupsAlert}
           data-qa-cancel
           disabled={disabled}
+          outline
         >
           Cancel Backups
         </Button>
