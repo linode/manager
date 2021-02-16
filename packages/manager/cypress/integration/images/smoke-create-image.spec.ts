@@ -2,7 +2,6 @@ import { makeImageLabel } from '../../support/api/images';
 import { createLinode, deleteLinodeById } from '../../support/api/linodes';
 import {
   containsClick,
-  containsVisible,
   fbtClick,
   fbtVisible,
   getClick,
@@ -67,7 +66,6 @@ describe('create image', () => {
       cy.findAllByLabelText('Description').type(
         `${imageLabel} is an amazing image`
       );
-      // here we should also stubb the post to catch the call
       getClick('[data-qa-submit="true"]');
       cy.wait('@postImages');
       cy.url().should('endWith', 'images');
