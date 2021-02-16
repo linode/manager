@@ -3,29 +3,38 @@ import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { BucketActionMenu } from './BucketActionMenu';
 
-jest.mock('src/components/ActionMenu/ActionMenu');
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: true,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  };
+});
 
 const mockOnRemove = jest.fn();
 
 const props = {
   onRemove: mockOnRemove,
-  onClickDetails: jest.fn()
+  onDetails: jest.fn(),
+  label: '',
+  cluster: ''
 };
 
 describe('BucketActionMenu', () => {
-  it('Includes a "Delete" option', () => {
-    const { queryByText } = render(
-      wrapWithTheme(<BucketActionMenu {...props} label="label" />)
+  it('includes a "Delete" option', () => {
+    const { getByText } = render(
+      wrapWithTheme(<BucketActionMenu {...props} />)
     );
-    expect(queryByText('Delete')).toBeInTheDocument();
+    getByText('Delete');
   });
 
   it('executes the onRemove function when the "Delete" option is clicked', () => {
-    const { getAllByText } = render(
-      wrapWithTheme(<BucketActionMenu {...props} label="label" />)
+    const { getByText } = render(
+      wrapWithTheme(<BucketActionMenu {...props} />)
     );
-
-    fireEvent.click(getAllByText('Delete')[0]);
+    fireEvent.click(getByText('Delete'));
     expect(mockOnRemove).toHaveBeenCalled();
   });
 });

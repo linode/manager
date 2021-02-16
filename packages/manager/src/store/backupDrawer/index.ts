@@ -120,7 +120,7 @@ const reducer: Reducer<State> = (
         enableErrors: [],
         autoEnrollError: undefined,
         updatedCount: 0,
-        autoEnroll: false
+        autoEnroll: true
       };
 
     case CLOSE:

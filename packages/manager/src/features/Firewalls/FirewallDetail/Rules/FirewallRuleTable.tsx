@@ -23,7 +23,7 @@ import capitalize from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
 import { Mode } from './FirewallRuleDrawer';
 import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
-import { Category, FirewallRuleError } from './shared';
+import { Category, FirewallRuleError, sortPortString } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -61,11 +61,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: 0
+  },
+  actionHeader: {
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 70
+    },
+    minWidth: 140
+  },
+  addLabelButton: {
+    ...theme.applyLinkStyles
   }
 }));
 
 interface RuleRow {
   type: string;
+  label?: string;
+  description?: string;
   protocol: string;
   ports: string;
   addresses: string;
@@ -125,37 +136,30 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
           buttonType="secondary"
           className={classes.button}
           onClick={openDrawerForCreating}
+          superCompact
         >
           Add an {capitalize(category)} Rule
         </Button>
       </div>
       <OrderBy data={rowData} orderBy={'type'} order={'asc'}>
         {({ data: sortedRows, handleOrderChange, order, orderBy }) => {
-          // Modified rows will be unsorted and will appear at the bottom of the table.
-          const unmodifiedRows = sortedRows.filter(
-            thisRow => thisRow.status === 'NOT_MODIFIED'
-          );
-          const modifiedRows = sortedRows.filter(
-            thisRow => thisRow.status !== 'NOT_MODIFIED'
-          );
-          const allRows = [...unmodifiedRows, ...modifiedRows];
-
           return (
             <Table>
               <TableHead>
                 <TableRow>
                   <TableSortCell
-                    style={{ width: '15%' }}
                     active={orderBy === 'type'}
-                    label="type"
+                    label="label"
                     direction={order}
                     handleClick={handleOrderChange}
                   >
-                    Type
+                    Label
                   </TableSortCell>
+                  <Hidden mdDown>
+                    <TableCell>Description</TableCell>
+                  </Hidden>
                   <Hidden xsDown>
                     <TableSortCell
-                      style={{ width: '15%' }}
                       active={orderBy === 'protocol'}
                       label="protocol"
                       direction={order}
@@ -164,7 +168,6 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                       Protocol
                     </TableSortCell>
                     <TableSortCell
-                      style={{ width: '20%' }}
                       active={orderBy === 'ports'}
                       label="ports"
                       direction={order}
@@ -174,7 +177,6 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     </TableSortCell>
                   </Hidden>
                   <TableSortCell
-                    style={{ width: '40%' }}
                     active={orderBy === 'addresses'}
                     label="addresses"
                     direction={order}
@@ -182,17 +184,17 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                   >
                     {capitalize(addressColumnLabel)}
                   </TableSortCell>
-                  <TableCell />
+                  <TableCell className={classes.actionHeader} />
                 </TableRow>
               </TableHead>
               <TableBody>
-                {allRows.length === 0 ? (
+                {sortedRows.length === 0 ? (
                   <TableRowEmptyState
-                    colSpan={5}
+                    colSpan={6}
                     message={zeroOutboundRulesMessage}
                   />
                 ) : (
-                  allRows.map((thisRuleRow: RuleRow) => (
+                  sortedRows.map((thisRuleRow: RuleRow) => (
                     <FirewallRuleTableRow
                       key={thisRuleRow.id}
                       {...thisRuleRow}
@@ -227,7 +229,8 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
 
     const {
       id,
-      type,
+      label,
+      description,
       protocol,
       ports,
       addresses,
@@ -252,14 +255,26 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         highlight={status === 'MODIFIED' || status === 'NEW'}
         disabled={status === 'PENDING_DELETION'}
       >
-        <TableCell>{type}</TableCell>
+        <TableCell>
+          {label || (
+            <button
+              className={classes.addLabelButton}
+              onClick={() => triggerOpenRuleDrawerForEditing(id)}
+            >
+              Add a label
+            </button>
+          )}
+        </TableCell>
+        <Hidden mdDown>
+          <TableCell>{description}</TableCell>
+        </Hidden>
         <Hidden xsDown>
           <TableCell>
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
           </TableCell>
           <TableCell>
-            {ports}
+            {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
           </TableCell>
         </Hidden>
@@ -341,48 +356,10 @@ export const firewallRuleToRowData = (
 
     return {
       ...thisRule,
-      ports: sortPortString(thisRule.ports),
+      ports: sortPortString(thisRule.ports || ''),
       type: generateRuleLabel(ruleType),
       addresses: generateAddressesLabel(thisRule.addresses),
       id: idx
     };
   });
-};
-
-/**
- * Sorts ports string returned by the API into something more intuitive for users.
- * Examples:
- * "80, 22" --> "22, 80"
- * "443, 22, 80-81" --> "22, 80-81, 443"
- */
-export const sortPortString = (portString: string) => {
-  try {
-    const ports = portString.split(',');
-    return ports
-      .sort(sortString)
-      .map(port => port.trim())
-      .join(', ');
-  } catch {
-    // API responses should always work with this logic,
-    // but in case we get bad input, return the unsorted/unaltered string.
-    return portString;
-  }
-};
-
-// Custom sort helper for working with port strings
-const sortString = (_a: string, _b: string) => {
-  const a = Number(stripHyphen(_a));
-  const b = Number(stripHyphen(_b));
-  if (a > b) {
-    return 1;
-  }
-  if (a < b) {
-    return -1;
-  }
-  return 0;
-};
-
-// If a port range is included (80-1000) return the first element of the range
-const stripHyphen = (str: string) => {
-  return str.match(/-/) ? str.split('-')[0] : str;
 };

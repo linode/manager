@@ -10,15 +10,19 @@ import RuleDrawer, {
   deriveTypeFromValuesAndIPs,
   formValueToIPs,
   getInitialIPs,
+  itemsToPortString,
+  portStringToItems,
   IP_ERROR_MESSAGE,
   validateForm,
   validateIPs
 } from './FirewallRuleDrawer';
 import { ExtendedFirewallRule } from './firewallRuleEditor';
-import { FirewallRuleError } from './shared';
+import { FirewallRuleError, PORT_PRESETS } from './shared';
 
 const mockOnClose = jest.fn();
 const mockOnSubmit = jest.fn();
+
+const baseItems = [PORT_PRESETS['22'], PORT_PRESETS['443']];
 
 jest.mock('src/components/EnhancedSelect/Select');
 
@@ -40,9 +44,9 @@ describe('AddRuleDrawer', () => {
 
   it('disables the port input when the ICMP protocol is selected', () => {
     renderWithTheme(<RuleDrawer {...props} mode="create" category="inbound" />);
-    expect(screen.getByPlaceholderText(/port/i)).not.toBeDisabled();
+    expect(screen.getByLabelText('Ports')).not.toBeDisabled();
     userEvent.selectOptions(screen.getByPlaceholderText(/protocol/i), 'ICMP');
-    expect(screen.getByPlaceholderText(/port/i)).toBeDisabled();
+    expect(screen.getByLabelText('Ports')).toBeDisabled();
   });
 });
 
@@ -53,18 +57,15 @@ describe('utilities', () => {
         allIPs
       );
       expect(formValueToIPs('allIPv4', [''].map(stringToExtendedIP))).toEqual({
-        ipv4: ['0.0.0.0/0'],
-        ipv6: []
+        ipv4: ['0.0.0.0/0']
       });
       expect(formValueToIPs('allIPv6', [''].map(stringToExtendedIP))).toEqual({
-        ipv4: [],
         ipv6: ['::/0']
       });
       expect(
         formValueToIPs('ip/netmask', ['1.1.1.1'].map(stringToExtendedIP))
       ).toEqual({
-        ipv4: ['1.1.1.1'],
-        ipv6: []
+        ipv4: ['1.1.1.1']
       });
     });
   });
@@ -92,8 +93,6 @@ describe('utilities', () => {
         'ports',
         'Ports are not allowed for ICMP protocols.'
       );
-      expect(validateForm('TCP')).toHaveProperty('ports');
-      expect(validateForm('UDP')).toHaveProperty('ports');
       expect(validateForm('TCP', 'invalid-port')).toHaveProperty('ports');
     });
     it('accepts a valid form', () => {
@@ -165,8 +164,7 @@ describe('utilities', () => {
     });
     it('accepts ranges', () => {
       expect(classifyIPs(['1.1.0.0/16'].map(stringToExtendedIP))).toEqual({
-        ipv4: ['1.1.0.0/16'],
-        ipv6: []
+        ipv4: ['1.1.0.0/16']
       });
     });
   });
@@ -176,7 +174,9 @@ describe('utilities', () => {
       addresses: 'all',
       ports: '443',
       protocol: 'TCP',
-      type: ''
+      type: '',
+      label: '',
+      description: ''
     };
 
     it('correctly matches values to their representative type', () => {
@@ -189,6 +189,72 @@ describe('utilities', () => {
         []
       );
       expect(result).toBe('custom');
+    });
+  });
+
+  describe('itemsToPortString', () => {
+    it('should build a string based on selected items', () => {
+      expect(itemsToPortString(baseItems)).toMatch('22, 443');
+    });
+
+    it('should ignore the CUSTOM item', () => {
+      expect(
+        itemsToPortString([...baseItems, { value: 'CUSTOM', label: 'Custom' }])
+      ).toMatch('22, 443');
+    });
+
+    it('should return a single range covering all ports if any of the items has the value ALL', () => {
+      expect(
+        itemsToPortString([...baseItems, { value: 'ALL', label: 'All' }])
+      ).toMatch('1-65535');
+    });
+
+    it('should combine presets and custom input', () => {
+      expect(itemsToPortString(baseItems, '8080-8081')).toMatch(
+        '22, 443, 8080-8081'
+      );
+    });
+
+    it('should return the combined list in sorted order', () => {
+      expect(itemsToPortString(baseItems, '8080, 1313-1515')).toMatch(
+        '22, 443, 1313-1515, 8080'
+      );
+    });
+  });
+
+  describe('portStringToItems', () => {
+    it('should turn matching default ports into the appropriate Item[]', () => {
+      const [items, portString] = portStringToItems('80');
+      expect(items).toEqual([PORT_PRESETS['80']]);
+      expect(portString).toEqual('');
+    });
+
+    it('should handle multiple comma-separated values', () => {
+      const [items, portString] = portStringToItems('443, 22');
+      expect(items).toEqual([PORT_PRESETS['443'], PORT_PRESETS['22']]);
+      expect(portString).toEqual('');
+    });
+
+    it('should handle custom ports and ranges', () => {
+      const [items, portString] = portStringToItems('443, 22, 1111-2222');
+      expect(items).toEqual([
+        PORT_PRESETS['443'],
+        PORT_PRESETS['22'],
+        PORT_PRESETS['CUSTOM']
+      ]);
+      expect(portString).toEqual('1111-2222');
+    });
+
+    it('should recognize that 1-65535 means open all ports', () => {
+      const [items, portString] = portStringToItems('1-65535');
+      expect(items).toEqual([PORT_PRESETS['ALL']]);
+      expect(portString).toEqual('');
+    });
+
+    it('should handle empty input', () => {
+      const [items, portString] = portStringToItems('');
+      expect(items).toEqual([]);
+      expect(portString).toEqual('');
     });
   });
 });
