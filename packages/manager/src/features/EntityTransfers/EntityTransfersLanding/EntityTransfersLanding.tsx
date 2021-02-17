@@ -1,3 +1,5 @@
+import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers';
+import { useHistory, useLocation } from 'react-router-dom';
 import { partition } from 'ramda';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
@@ -13,12 +15,31 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
   const [token, setToken] = React.useState('');
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(true);
+  const [transfer, setTransfer] = React.useState<EntityTransfer | undefined>(
+    undefined
+  );
+
+  const location = useLocation();
+  const history = useHistory();
 
   const handleCloseDialog = () => {
     setConfirmDialogOpen(false);
     // I don't love the UX here but it seems better than leaving a token in the input
     setTimeout(() => setToken(''), 150);
   };
+
+  const handleCloseSuccessDialog = () => {
+    setSuccessDialogOpen(false);
+    setTransfer(undefined);
+    history.replace({ state: undefined });
+  };
+
+  React.useEffect(() => {
+    if (location.state?.transfer) {
+      setSuccessDialogOpen(true);
+      setTransfer(location.state.transfer);
+    }
+  }, [location]);
 
   const {
     data: allEntityTransfers,
@@ -57,7 +78,8 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
       />
       <CreateTransferSuccessDialog
         isOpen={successDialogOpen}
-        onClose={() => setSuccessDialogOpen(false)}
+        transfer={transfer}
+        onClose={handleCloseSuccessDialog}
       />
       {isLoading ? (
         <CircleProgress />

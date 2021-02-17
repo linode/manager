@@ -1,3 +1,4 @@
+import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import Button from 'src/components/Button';
@@ -51,17 +52,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  isCreating: boolean;
   selectedEntities: TransferState;
   removeEntities: (type: string, entitiesToRemove: string[]) => void;
+  handleSubmit: (payload: CreateTransferPayload) => void;
 }
 
-export const generatePayload = (selectedEntities: TransferState) => {
-  return Object.keys(selectedEntities).reduce((acc, entityType) => {
-    return {
-      ...acc,
-      [entityType]: Object.keys(selectedEntities[entityType]).map(Number)
-    };
-  }, {});
+export const generatePayload = (
+  selectedEntities: TransferState
+): CreateTransferPayload => {
+  const entities = Object.keys(selectedEntities).reduce(
+    (acc, entityType) => {
+      return {
+        ...acc,
+        [entityType]: Object.keys(selectedEntities[entityType]).map(Number)
+      };
+    },
+    { linodes: [] }
+  );
+  return { entities };
 };
 
 export const TransferRow: React.FC<{
@@ -83,11 +92,11 @@ export const TransferRow: React.FC<{
 });
 
 export const TransferCheckoutBar: React.FC<Props> = props => {
-  const { selectedEntities, removeEntities } = props;
+  const { handleSubmit, isCreating, selectedEntities, removeEntities } = props;
   const classes = useStyles();
   const onSubmit = () => {
     const payload = generatePayload(selectedEntities);
-    alert(JSON.stringify(payload));
+    handleSubmit(payload);
   };
 
   const totalSelectedLinodes = Object.keys(selectedEntities.linodes).length;
@@ -112,6 +121,7 @@ export const TransferCheckoutBar: React.FC<Props> = props => {
       <Button
         buttonType="primary"
         disabled={totalSelectedLinodes === 0}
+        loading={isCreating}
         onClick={onSubmit}
         className={classes.submitButton}
       >
