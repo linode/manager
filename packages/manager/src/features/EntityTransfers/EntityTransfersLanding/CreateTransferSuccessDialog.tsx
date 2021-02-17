@@ -9,6 +9,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import ToolTip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import InformationDialog from 'src/components/InformationDialog';
+import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -72,8 +73,8 @@ export const CreateTransferSuccessDialog: React.FC<Props> = props => {
       className={classes.root}
     >
       <Typography className={classes.text}>
-        This token authorizes the transfer of {transfer.entities.linodes.length}{' '}
-        Linodes.
+        This token authorizes the transfer of{' '}
+        {pluralize('Linode', 'Linodes', transfer.entities.linodes.length)}.
       </Typography>
       <Typography>
         Copy and paste the transfer token or draft text into an email or other

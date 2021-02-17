@@ -86,12 +86,8 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
           }
         ]}
       />
+      {errors ? <Notice error text={errors[0].reason} /> : null}
       <Grid container>
-        {errors ? (
-          <Grid item>
-            <Notice error text={errors[0].reason} />
-          </Grid>
-        ) : null}
         <Grid item xs={9}>
           <TransferHeader />
           <LinodeTransferTable
