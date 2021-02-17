@@ -9,11 +9,9 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import { withLinodeDetailContext } from './linodeDetailContext';
-const LinodeSummary_CMR = React.lazy(() =>
-  import('./LinodeSummary/LinodeSummary_CMR')
-);
-const LinodeNetworking_CMR = React.lazy(() =>
-  import('./LinodeNetworking/LinodeNetworking_CMR')
+const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
+const LinodeNetworking = React.lazy(() =>
+  import('./LinodeNetworking/LinodeNetworking')
 );
 const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
 const LinodeAdvanced_CMR = React.lazy(() =>
@@ -96,11 +94,11 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={0}>
-                <LinodeSummary_CMR />
+                <LinodeSummary />
               </SafeTabPanel>
 
               <SafeTabPanel index={1}>
-                <LinodeNetworking_CMR />
+                <LinodeNetworking />
               </SafeTabPanel>
 
               <SafeTabPanel index={2}>

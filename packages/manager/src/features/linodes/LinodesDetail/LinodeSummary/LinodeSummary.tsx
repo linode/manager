@@ -11,8 +11,8 @@ import { DateTime } from 'luxon';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -22,19 +22,16 @@ import {
   withTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { displayType } from 'src/features/linodes/presentation';
 import { ApplicationState } from 'src/store';
 import { ExtendedEvent } from 'src/store/events/event.types';
-import { formatRegion } from 'src/utilities';
 import { setUpCharts } from 'src/utilities/charts';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { parseAPIDate } from 'src/utilities/date';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 import { initAll } from 'src/utilities/initAll';
 import { isRecent } from 'src/utilities/isRecent';
 import {
@@ -42,92 +39,50 @@ import {
   formatPercentage,
   getMetrics
 } from 'src/utilities/statMetrics';
-import ActivitySummary from './ActivitySummary';
 import NetworkGraph from './NetworkGraph';
 import StatsPanel from './StatsPanel';
-import SummaryPanel from './SummaryPanel';
 import { ChartProps } from './types';
-import { parseAPIDate } from 'src/utilities/date';
-import getUserTimezone from 'src/utilities/getUserTimezone';
 setUpCharts();
 
 type ClassNames =
-  | 'main'
-  | 'sidebar'
-  | 'headerWrapper'
   | 'chart'
   | 'chartSelect'
-  | 'bottomLegend'
-  | 'graphTitle'
-  | 'graphSelectTitle'
   | 'graphControls'
-  | 'subHeaderOuter'
-  | 'textWrap'
-  | 'headerOuter';
+  | 'graphGrids'
+  | 'headerOuter'
+  | 'labelRangeSelect';
 
 const styles = (theme: Theme) =>
   createStyles({
-    main: {
-      [theme.breakpoints.up('md')]: {
-        order: 1
-      }
-    },
-    sidebar: {
-      [theme.breakpoints.up('md')]: {
-        order: 2
-      }
-    },
-    headerWrapper: {
-      marginTop: 0,
-      marginBottom: theme.spacing(2)
-    },
     chart: {
       position: 'relative',
-      paddingLeft: theme.spacing(1)
-    },
-    bottomLegend: {
-      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
-        1
-      )}px`,
-      padding: 10,
-      color: '#777',
-      backgroundColor: theme.bg.offWhiteDT,
-      border: `1px solid ${theme.color.border3}`,
-      fontSize: 14
-    },
-    graphTitle: {},
-    graphSelectTitle: {
-      marginRight: theme.spacing(1),
-      position: 'relative',
-      color: theme.color.headline,
-      top: -1
-    },
-    graphControls: {
-      display: 'flex',
-      alignItems: 'center',
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
+      paddingTop: theme.spacing(2),
+      paddingLeft: theme.spacing(3)
     },
     chartSelect: {
       maxWidth: 150
     },
-    subHeaderOuter: {
-      width: '100%',
-      display: 'inline-block',
-      [theme.breakpoints.up('md')]: {
-        width: 'auto',
-        textAlign: 'right'
-      }
+    graphControls: {
+      display: 'flex',
+      alignItems: 'center',
+      marginTop: theme.spacing(0.5),
+      paddingLeft: theme.spacing()
     },
-    textWrap: {
-      display: 'inline-block',
-      whiteSpace: 'nowrap'
+    graphGrids: {
+      flexWrap: 'nowrap',
+      margin: 0,
+      [theme.breakpoints.down('sm')]: {
+        flexWrap: 'wrap'
+      }
     },
     headerOuter: {
       [theme.breakpoints.up('md')]: {
         display: 'flex',
         justifyContent: 'space-between'
       }
+    },
+    labelRangeSelect: {
+      paddingRight: '1em'
     }
   });
 
@@ -150,11 +105,11 @@ interface State {
 
 type CombinedProps = LinodeContextProps &
   WithTheme &
-  StateProps &
+  WithTypesProps &
   WithImages &
   WithStyles<ClassNames>;
 
-const chartHeight = 300;
+const chartHeight = 240;
 
 const statsFetchInterval = 30000;
 
@@ -391,14 +346,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const {
-      linodeData: linode,
-      classes,
-      typesData,
-      imagesData,
-      linodeVolumesError,
-      linodeVolumes
-    } = this.props;
+    const { linodeData: linode, classes } = this.props;
 
     const { dataIsLoading, statsError, isTooEarlyForGraphData } = this.state;
 
@@ -416,97 +364,53 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const newLabel = getLinodeDescription(
-      displayType(linode.type, typesData || []),
-      linode.specs.memory,
-      linode.specs.disk,
-      linode.specs.vcpus,
-      linode.image,
-      imagesData
-    );
-
     return (
-      <React.Fragment>
-        <DocumentTitleSegment segment={`${linode.label} - Summary`} />
-
-        <Grid container>
-          <Grid item xs={12} md={8} lg={9} className={classes.main}>
-            <Grid
-              container
-              justify="space-between"
-              alignItems="flex-start"
-              className={classes.headerWrapper}
-              direction="row"
-            >
-              <Grid item className="py0" xs={12}>
-                <Typography variant="h2" className={classes.graphTitle}>
-                  <span className={classes.headerOuter}>
-                    <span>{newLabel}</span>
-                    <span className={`py0 ${classes.subHeaderOuter}`}>
-                      <span className={classes.textWrap}>
-                        Volumes:&#160;
-                        {linodeVolumesError ? (
-                          getErrorStringOrDefault(linodeVolumesError)
-                        ) : (
-                          <Link to={`/linodes/${linode.id}/volumes`}>
-                            {linodeVolumes.length}
-                          </Link>
-                        )}
-                        ,&#160;
-                      </span>
-                      <span className={classes.textWrap}>
-                        Region: {formatRegion(linode.region)}
-                      </span>
-                    </span>
-                  </span>
-                </Typography>
-              </Grid>
-            </Grid>
-
-            <Grid item>
-              <ActivitySummary
-                eventsFromRedux={this.props.events}
-                linodeId={linode.id}
-                inProgressEvents={this.props.inProgressEvents}
-                mostRecentEventTime={this.props.mostRecentEventTime}
+      <Paper>
+        <Grid container className="m0">
+          <Grid item xs={12}>
+            <div className={classes.graphControls}>
+              <Typography variant="h2" className={classes.labelRangeSelect}>
+                Resource Allocation
+              </Typography>
+              <Select
+                options={this.rangeSelectOptions}
+                defaultValue={this.rangeSelectOptions[0]}
+                onChange={this.handleChartRangeChange}
+                name="chartRange"
+                id="chartRange"
+                small
+                label="Select Time Range"
+                hideLabel
+                className={classes.chartSelect}
+                isClearable={false}
+                data-qa-item="chartRange"
+              />
+            </div>
+          </Grid>
+          <Grid container item xs={12} className={classes.graphGrids}>
+            <Grid item xs={12}>
+              <StatsPanel
+                title="CPU (%)"
+                renderBody={this.renderCPUChart}
+                {...chartProps}
               />
             </Grid>
-
-            <Grid item className="py0">
-              <div className={classes.graphControls}>
-                <Select
-                  options={this.rangeSelectOptions}
-                  defaultValue={this.rangeSelectOptions[0]}
-                  onChange={this.handleChartRangeChange}
-                  name="chartRange"
-                  id="chartRange"
-                  small
-                  label="Select Time Range"
-                  hideLabel
-                  className={classes.chartSelect}
-                  isClearable={false}
-                  data-qa-item="chartRange"
-                />
-              </div>
+            <Grid item xs={12}>
+              <StatsPanel
+                title="Disk IO (blocks/s)"
+                renderBody={this.renderDiskIOChart}
+                {...chartProps}
+              />
             </Grid>
-
-            <StatsPanel
-              title="CPU Usage (%)"
-              renderBody={this.renderCPUChart}
-              {...chartProps}
-            />
-            <NetworkGraph stats={this.state.stats} {...chartProps} />
-            <StatsPanel
-              title="Disk IO (blocks/s)"
-              renderBody={this.renderDiskIOChart}
-              {...chartProps}
-            />
           </Grid>
-          <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
-            <SummaryPanel />
+
+          <Grid container item xs={12}>
+            <Grid item xs={12}>
+              <NetworkGraph stats={this.state.stats} {...chartProps} />
+            </Grid>
           </Grid>
         </Grid>
-      </React.Fragment>
+      </Paper>
     );
   }
 }
@@ -521,7 +425,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeVolumesError: linode._volumesError
 }));
 
-interface StateProps {
+interface WithTypesProps {
   typesData: LinodeType[];
   timezone: string;
   inProgressEvents: Record<number, number>;
@@ -529,7 +433,7 @@ interface StateProps {
   mostRecentEventTime: string;
 }
 
-const connected = connect((state: ApplicationState, _ownProps) => ({
+const withTypes = connect((state: ApplicationState, _ownProps) => ({
   typesData: state.__resources.types.entities,
   timezone: getUserTimezone(state),
   inProgressEvents: state.events.inProgressEvents,
@@ -538,7 +442,7 @@ const connected = connect((state: ApplicationState, _ownProps) => ({
 }));
 
 const enhanced = compose<CombinedProps, {}>(
-  connected,
+  withTypes,
   linodeContext,
   withImages(),
   withTheme,

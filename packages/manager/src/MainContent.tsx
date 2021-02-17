@@ -22,7 +22,7 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
-import { dbaasContext, useDialogContext, vlanContext } from 'src/context';
+import { dbaasContext, useDialogContext } from 'src/context';
 import BackupDrawer from 'src/features/Backups';
 import CreateDatabaseDialog from 'src/features/Databases/CreateDatabaseDialog';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
@@ -34,7 +34,6 @@ import {
 } from 'src/features/NotificationCenter/NotificationContext';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
-import CreateVLANDialog from 'src/features/Vlans/CreateVLANDialog';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
@@ -179,7 +178,6 @@ const AccountActivationLanding = React.lazy(() =>
   import('src/components/AccountActivation/AccountActivationLanding')
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
-const VLans = React.lazy(() => import('src/features/Vlans'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 
 const MainContent: React.FC<CombinedProps> = props => {
@@ -189,9 +187,6 @@ const MainContent: React.FC<CombinedProps> = props => {
 
   const NotificationProvider = notificationContext.Provider;
   const contextValue = useNotificationContext();
-
-  const VlanContextProvider = vlanContext.Provider;
-  const vlanContextValue = useDialogContext();
 
   const DbaasContextProvider = dbaasContext.Provider;
   const dbaasContextValue = useDialogContext();
@@ -205,12 +200,6 @@ const MainContent: React.FC<CombinedProps> = props => {
     'Cloud Firewall',
     Boolean(flags.firewalls),
     account.data?.capabilities ?? []
-  );
-
-  const showVlans = isFeatureEnabled(
-    'Vlans',
-    Boolean(flags.vlans),
-    account?.data?.capabilities ?? []
   );
 
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
@@ -296,26 +285,25 @@ const MainContent: React.FC<CombinedProps> = props => {
           togglePreference: desktopMenuToggle
         }: ToggleProps<boolean>) => (
           <DbaasContextProvider value={dbaasContextValue}>
-            <VlanContextProvider value={vlanContextValue}>
-              <NotificationProvider value={contextValue}>
-                <>
-                  {shouldDisplayMainContentBanner && (
-                    <MainContentBanner
-                      bannerText={flags.mainContentBanner?.text ?? ''}
-                      url={flags.mainContentBanner?.link?.url ?? ''}
-                      linkText={flags.mainContentBanner?.link?.text ?? ''}
-                      bannerKey={flags.mainContentBanner?.key ?? ''}
-                      onClose={() => setBannerDismissed(true)}
-                    />
-                  )}
-                  <SideMenu
-                    open={menuIsOpen}
-                    desktopOpen={desktopMenuIsOpen || false}
-                    closeMenu={() => toggleMenu(false)}
-                    toggleSpacing={props.toggleSpacing}
+            <NotificationProvider value={contextValue}>
+              <>
+                {shouldDisplayMainContentBanner && (
+                  <MainContentBanner
+                    bannerText={flags.mainContentBanner?.text ?? ''}
+                    url={flags.mainContentBanner?.link?.url ?? ''}
+                    linkText={flags.mainContentBanner?.link?.text ?? ''}
+                    bannerKey={flags.mainContentBanner?.key ?? ''}
+                    onClose={() => setBannerDismissed(true)}
                   />
-                  <div
-                    className={`
+                )}
+                <SideMenu
+                  open={menuIsOpen}
+                  desktopOpen={desktopMenuIsOpen || false}
+                  closeMenu={() => toggleMenu(false)}
+                  toggleSpacing={props.toggleSpacing}
+                />
+                <div
+                  className={`
                       ${classes.content}
                       ${
                         desktopMenuIsOpen ||
@@ -324,122 +312,105 @@ const MainContent: React.FC<CombinedProps> = props => {
                           : ''
                       }
                     `}
+                >
+                  <TopMenu
+                    isSideMenuOpen={!desktopMenuIsOpen}
+                    openSideMenu={() => toggleMenu(true)}
+                    desktopMenuToggle={desktopMenuToggle}
+                    isLoggedInAsCustomer={props.isLoggedInAsCustomer}
+                    username={props.username}
+                  />
+                  <main
+                    className={classes.cmrWrapper}
+                    id="main-content"
+                    role="main"
                   >
-                    <TopMenu
-                      isSideMenuOpen={!desktopMenuIsOpen}
-                      openSideMenu={() => toggleMenu(true)}
-                      desktopMenuToggle={desktopMenuToggle}
-                      isLoggedInAsCustomer={props.isLoggedInAsCustomer}
-                      username={props.username}
-                    />
-                    <main
-                      className={classes.cmrWrapper}
-                      id="main-content"
-                      role="main"
-                    >
-                      <Grid container spacing={0} className={classes.grid}>
-                        <Grid item className={`${classes.switchWrapper} p0`}>
-                          <GlobalNotifications />
-                          <React.Suspense fallback={<SuspenseLoader />}>
-                            <Switch>
-                              <Route
-                                path="/linodes"
-                                component={LinodesRoutes}
-                              />
-                              <Route path="/volumes" component={Volumes} />
-                              <Redirect path="/volumes*" to="/volumes" />
-                              <Route
-                                path="/nodebalancers"
-                                component={NodeBalancers}
-                              />
-                              <Route path="/domains" component={Domains} />
-                              <Route path="/managed" component={Managed} />
-                              <Route path="/longview" component={Longview} />
-                              <Route
-                                exact
-                                strict
-                                path="/images"
-                                component={Images}
-                              />
-                              <Redirect path="/images*" to="/images" />
-                              <Route
-                                path="/stackscripts"
-                                component={StackScripts}
-                              />
-                              <Route
-                                path="/object-storage"
-                                component={ObjectStorage}
-                              />
-                              <Route
-                                path="/kubernetes"
-                                component={Kubernetes}
-                              />
-                              <Route path="/account" component={Account} />
-                              <Route
-                                exact
-                                strict
-                                path="/support/tickets"
-                                component={SupportTickets}
-                              />
-                              <Route
-                                path="/support/tickets/:ticketId"
-                                component={SupportTicketDetail}
-                                exact
-                                strict
-                              />
-                              <Route
-                                path="/profile"
-                                render={routeProps => (
-                                  <Profile
-                                    {...routeProps}
-                                    toggleTheme={props.toggleTheme}
-                                  />
-                                )}
-                              />
-                              <Route exact path="/support" component={Help} />
-                              <Route path="/search" component={SearchLanding} />
-                              <Route
-                                exact
-                                strict
-                                path="/support/search/"
-                                component={SupportSearchLanding}
-                              />
-                              <Route path="/events" component={EventsLanding} />
-                              {showFirewalls && (
-                                <Route
-                                  path="/firewalls"
-                                  component={Firewalls}
+                    <Grid container spacing={0} className={classes.grid}>
+                      <Grid item className={`${classes.switchWrapper} p0`}>
+                        <GlobalNotifications />
+                        <React.Suspense fallback={<SuspenseLoader />}>
+                          <Switch>
+                            <Route path="/linodes" component={LinodesRoutes} />
+                            <Route path="/volumes" component={Volumes} />
+                            <Redirect path="/volumes*" to="/volumes" />
+                            <Route
+                              path="/nodebalancers"
+                              component={NodeBalancers}
+                            />
+                            <Route path="/domains" component={Domains} />
+                            <Route path="/managed" component={Managed} />
+                            <Route path="/longview" component={Longview} />
+                            <Route
+                              exact
+                              strict
+                              path="/images"
+                              component={Images}
+                            />
+                            <Redirect path="/images*" to="/images" />
+                            <Route
+                              path="/stackscripts"
+                              component={StackScripts}
+                            />
+                            <Route
+                              path="/object-storage"
+                              component={ObjectStorage}
+                            />
+                            <Route path="/kubernetes" component={Kubernetes} />
+                            <Route path="/account" component={Account} />
+                            <Route
+                              exact
+                              strict
+                              path="/support/tickets"
+                              component={SupportTickets}
+                            />
+                            <Route
+                              path="/support/tickets/:ticketId"
+                              component={SupportTicketDetail}
+                              exact
+                              strict
+                            />
+                            <Route
+                              path="/profile"
+                              render={routeProps => (
+                                <Profile
+                                  {...routeProps}
+                                  toggleTheme={props.toggleTheme}
                                 />
                               )}
-                              {showVlans && (
-                                <Route path="/vlans" component={VLans} />
-                              )}
-                              {flags.databases && (
-                                <Route
-                                  path="/databases"
-                                  component={Databases}
-                                />
-                              )}
-                              <Redirect exact from="/" to={defaultRoot} />
-                              {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                              <Redirect from="/dashboard" to={defaultRoot} />
-                              <Route component={NotFound} />
-                            </Switch>
-                          </React.Suspense>
-                        </Grid>
+                            />
+                            <Route exact path="/support" component={Help} />
+                            <Route path="/search" component={SearchLanding} />
+                            <Route
+                              exact
+                              strict
+                              path="/support/search/"
+                              component={SupportSearchLanding}
+                            />
+                            <Route path="/events" component={EventsLanding} />
+                            {showFirewalls && (
+                              <Route path="/firewalls" component={Firewalls} />
+                            )}
+                            {flags.databases && (
+                              <Route path="/databases" component={Databases} />
+                            )}
+                            <Redirect exact from="/" to={defaultRoot} />
+                            {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                            <Redirect from="/dashboard" to={defaultRoot} />
+                            <Route component={NotFound} />
+                          </Switch>
+                        </React.Suspense>
                       </Grid>
-                    </main>
-                  </div>
-                </>
-              </NotificationProvider>
-              <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-              <ToastNotifications />
-              <DomainDrawer />
-              <VolumeDrawer />
-              <BackupDrawer />
-              <CreateVLANDialog />
-              <CreateDatabaseDialog />
-            </VlanContextProvider>
+                    </Grid>
+                  </main>
+                </div>
+              </>
+            </NotificationProvider>
+            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
+            <ToastNotifications />
+            <DomainDrawer />
+            <VolumeDrawer />
+            <BackupDrawer />
+            <CreateDatabaseDialog />
           </DbaasContextProvider>
         )}
       </PreferenceToggle>

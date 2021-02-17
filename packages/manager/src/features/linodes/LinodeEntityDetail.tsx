@@ -40,7 +40,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
-import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking_CMR';
+import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import withRecentEvent, {
   WithRecentEvent
