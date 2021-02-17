@@ -210,7 +210,7 @@ export type EventAction =
   | 'entity_transfer_accept'
   | 'entity_transfer_cancel'
   | 'entity_transfer_create'
-  | 'entity_transfer_stale'
+  | 'entity_transfer_fail'
   | 'entity_transfer_stale'
   | 'firewall_create'
   | 'firewall_delete'
