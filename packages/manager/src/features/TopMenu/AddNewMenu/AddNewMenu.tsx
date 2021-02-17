@@ -3,7 +3,6 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {
   Menu,
   MenuButton,
-  MenuItem,
   MenuItems,
   MenuLink,
   MenuPopover
@@ -20,7 +19,6 @@ import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
-import VLANIcon from 'src/assets/icons/entityIcons/vlan.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import {
   createStyles,
@@ -31,7 +29,7 @@ import {
 import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
-import { dbaasContext, vlanContext } from 'src/context';
+import { dbaasContext } from 'src/context';
 import { MapState } from 'src/store/types';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem from './AddNewMenuItem';
@@ -155,12 +153,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
   render() {
     const { accountCapabilities, classes, flags } = this.props;
 
-    const showVlans = isFeatureEnabled(
-      'Vlans',
-      Boolean(flags.vlans),
-      accountCapabilities ?? []
-    );
-
     const showFirewalls = isFeatureEnabled(
       'Cloud Firewall',
       Boolean(flags.firewalls),
@@ -170,128 +162,112 @@ class AddNewMenu extends React.Component<CombinedProps> {
     return (
       <dbaasContext.Consumer>
         {dbaas => (
-          <vlanContext.Consumer>
-            {vlan => (
-              <div className={classes.wrapper}>
-                <Menu>
-                  <MenuButton
-                    className={classes.button}
-                    data-qa-add-new-menu-button
+          <div className={classes.wrapper}>
+            <Menu>
+              <MenuButton
+                className={classes.button}
+                data-qa-add-new-menu-button
+              >
+                Create
+                <KeyboardArrowDown className={classes.caret} />
+              </MenuButton>
+              <MenuPopover className={classes.menuPopover} portal={false}>
+                <MenuItems className={classes.menuItemList}>
+                  <MenuLink
+                    as={Link}
+                    to="/linodes/create"
+                    className={classes.menuItemLink}
                   >
-                    Create
-                    <KeyboardArrowDown className={classes.caret} />
-                  </MenuButton>
-                  <MenuPopover className={classes.menuPopover} portal={false}>
-                    <MenuItems className={classes.menuItemList}>
-                      <MenuLink
-                        as={Link}
-                        to="/linodes/create"
-                        className={classes.menuItemLink}
-                      >
-                        <AddNewMenuItem
-                          title="Linode"
-                          body="High performance SSD Linux servers"
-                          ItemIcon={LinodeIcon}
-                        />
-                      </MenuLink>
-                      <MenuLink
-                        as={Link}
-                        to="/volumes/create"
-                        className={classes.menuItemLink}
-                      >
-                        <AddNewMenuItem
-                          title="Volume"
-                          body="Attach additional storage to your Linode"
-                          ItemIcon={VolumeIcon}
-                        />
-                      </MenuLink>
-                      <MenuItem
-                        onSelect={vlan.open}
-                        className={classes.menuItemLink}
-                      >
-                        {showVlans && (
-                          <AddNewMenuItem
-                            title="VLAN"
-                            body="Securely communicate between Linodes"
-                            ItemIcon={VLANIcon}
-                          />
-                        )}
-                      </MenuItem>
-                      <MenuLink
-                        as={Link}
-                        to="/nodebalancers/create"
-                        className={classes.menuItemLink}
-                      >
-                        <AddNewMenuItem
-                          title="NodeBalancer"
-                          body="Ensure your services are highly available"
-                          ItemIcon={NodebalancerIcon}
-                        />
-                      </MenuLink>
-                      {showFirewalls ? (
-                        <MenuLink
-                          as={Link}
-                          to="/firewalls/create"
-                          className={classes.menuItemLink}
-                        >
-                          <AddNewMenuItem
-                            title="Firewall"
-                            body="Control network access to your Linodes"
-                            ItemIcon={FirewallIcon}
-                          />
-                        </MenuLink>
-                      ) : null}
-                      <MenuLink
-                        as={Link}
-                        to="/domains/create"
-                        className={classes.menuItemLink}
-                      >
-                        <AddNewMenuItem
-                          title="Domain"
-                          body="Manage your DNS records"
-                          ItemIcon={DomainIcon}
-                        />
-                      </MenuLink>
-                      <MenuLink
-                        as={Link}
-                        to="/kubernetes/create"
-                        className={classes.menuItemLink}
-                      >
-                        <AddNewMenuItem
-                          title="Kubernetes"
-                          body="Highly available container workloads"
-                          ItemIcon={KubernetesIcon}
-                        />
-                      </MenuLink>
-                      <MenuLink
-                        as={Link}
-                        to="/object-storage/buckets/create"
-                        className={classes.menuItemLink}
-                      >
-                        <AddNewMenuItem
-                          title="Bucket"
-                          body="S3-compatible object storage "
-                          ItemIcon={BucketIcon} // to be replaced with database icon
-                        />
-                      </MenuLink>
-                      <MenuLink
-                        as={Link}
-                        to="/linodes/create?type=One-Click"
-                        className={classes.menuItemLink}
-                      >
-                        <AddNewMenuItem
-                          title="Marketplace"
-                          body="Deploy applications with ease"
-                          ItemIcon={OneClickIcon}
-                          attr={{ 'data-qa-one-click-add-new': true }}
-                        />
-                      </MenuLink>
-                    </MenuItems>
-                  </MenuPopover>
-                </Menu>
-              </div>
-            )}
-          </vlanContext.Consumer>
+                    <AddNewMenuItem
+                      title="Linode"
+                      body="High performance SSD Linux servers"
+                      ItemIcon={LinodeIcon}
+                    />
+                  </MenuLink>
+                  <MenuLink
+                    as={Link}
+                    to="/volumes/create"
+                    className={classes.menuItemLink}
+                  >
+                    <AddNewMenuItem
+                      title="Volume"
+                      body="Attach additional storage to your Linode"
+                      ItemIcon={VolumeIcon}
+                    />
+                  </MenuLink>
+                  <MenuLink
+                    as={Link}
+                    to="/nodebalancers/create"
+                    className={classes.menuItemLink}
+                  >
+                    <AddNewMenuItem
+                      title="NodeBalancer"
+                      body="Ensure your services are highly available"
+                      ItemIcon={NodebalancerIcon}
+                    />
+                  </MenuLink>
+                  {showFirewalls ? (
+                    <MenuLink
+                      as={Link}
+                      to="/firewalls/create"
+                      className={classes.menuItemLink}
+                    >
+                      <AddNewMenuItem
+                        title="Firewall"
+                        body="Control network access to your Linodes"
+                        ItemIcon={FirewallIcon}
+                      />
+                    </MenuLink>
+                  ) : null}
+                  <MenuLink
+                    as={Link}
+                    to="/domains/create"
+                    className={classes.menuItemLink}
+                  >
+                    <AddNewMenuItem
+                      title="Domain"
+                      body="Manage your DNS records"
+                      ItemIcon={DomainIcon}
+                    />
+                  </MenuLink>
+                  <MenuLink
+                    as={Link}
+                    to="/kubernetes/create"
+                    className={classes.menuItemLink}
+                  >
+                    <AddNewMenuItem
+                      title="Kubernetes"
+                      body="Highly available container workloads"
+                      ItemIcon={KubernetesIcon}
+                    />
+                  </MenuLink>
+                  <MenuLink
+                    as={Link}
+                    to="/object-storage/buckets/create"
+                    className={classes.menuItemLink}
+                  >
+                    <AddNewMenuItem
+                      title="Bucket"
+                      body="S3-compatible object storage "
+                      ItemIcon={BucketIcon} // to be replaced with database icon
+                    />
+                  </MenuLink>
+                  <MenuLink
+                    as={Link}
+                    to="/linodes/create?type=One-Click"
+                    className={classes.menuItemLink}
+                  >
+                    <AddNewMenuItem
+                      title="Marketplace"
+                      body="Deploy applications with ease"
+                      ItemIcon={OneClickIcon}
+                      attr={{ 'data-qa-one-click-add-new': true }}
+                    />
+                  </MenuLink>
+                </MenuItems>
+              </MenuPopover>
+            </Menu>
+          </div>
         )}
       </dbaasContext.Consumer>
     );

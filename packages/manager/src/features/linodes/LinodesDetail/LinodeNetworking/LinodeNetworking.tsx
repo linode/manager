@@ -1,18 +1,18 @@
-import { IPv6, parse as parseIP } from 'ipaddr.js';
 import {
   getLinodeIPs,
   Linode,
-  LinodeIPsResponse,
-  LinodeIPsResponseIPV4,
-  LinodeIPsResponseIPV6
+  LinodeIPsResponse
 } from '@linode/api-v4/lib/linodes';
 import { getIPs, IPAddress, IPRange } from '@linode/api-v4/lib/networking';
-import { compose, head, isEmpty, path, pathOr, uniq, uniqBy } from 'ramda';
+import { IPv6, parse as parseIP } from 'ipaddr.js';
+import { isEmpty, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink';
+import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -22,135 +22,57 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
-import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import EntityHeader from 'src/components/EntityHeader';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
-import { ZONES } from 'src/constants';
+import OrderBy from 'src/components/OrderBy';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import withAccount, { StateProps } from 'src/containers/account.container';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
-import CreateIPv4Drawer from './CreateIPv4Drawer';
-import CreateIPv6Drawer from './CreateIPv6Drawer';
+import AddIPDrawer from './AddIPDrawer';
 import DeleteIPConfirm from './DeleteIPConfirm';
 import EditRDNSDrawer from './EditRDNSDrawer';
-import IPSharingPanel from './IPSharingPanel';
-import LinodeNetworkingActionMenu, {
-  IPTypes
-} from './LinodeNetworkingActionMenu';
-import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
-import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
+import IPSharing from './IPSharing';
+import IPTransfer from './IPTransfer';
+import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
+import LinodeNetworkingSummaryPanel from './NetworkingSummaryPanel';
+import { IPTypes } from './types';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
 
-type ClassNames =
-  | 'root'
-  | 'title'
-  | 'address'
-  | 'reverseDNS'
-  | 'defaultGateway'
-  | 'type'
-  | 'action'
-  | 'ipv4Container'
-  | 'ipv4Title'
-  | 'ipv4TitleContainer'
-  | 'netActionsTitle'
-  | 'rDNSListItem'
-  | 'multipleRDNSButton'
-  | 'multipleRDNSText'
-  | 'errorText'
-  | 'loader'
-  | 'rangeRDNSCell';
+type ClassNames = 'action' | 'multipleRDNSButton' | 'multipleRDNSText';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    title: {
-      marginTop: `${theme.spacing(1)}px`,
-      marginBottom: `${theme.spacing(2)}px`
-    },
-    address: {
-      width: '30%'
-    },
-    reverseDNS: {
-      width: '30%'
-    },
-    defaultGateway: {
-      width: '20%'
-    },
-    type: {
-      width: '20%'
-    },
     action: {
-      textAlign: 'right',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: 0,
       '& a': {
         marginRight: theme.spacing(1)
-      }
+      },
+      paddingRight: `0px !important`
     },
-    ipv4Container: {
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'flex-start',
-        '& button': {
-          marginLeft: -14
-        }
-      }
-    },
-    ipv4Title: {
-      marginBottom: theme.spacing(2),
-      marginTop: theme.spacing(4)
-    },
-    ipv4TitleContainer: {
-      flex: 1,
-      [theme.breakpoints.down('sm')]: {
-        flexBasis: '100%'
-      }
-    },
-    netActionsTitle: {
-      marginBottom: theme.spacing(2),
-      marginTop: theme.spacing(4)
-    },
-    rDNSListItem: {
-      color: theme.palette.text.primary,
-      fontSize: '.9rem',
-      '&:not(:last-child)': {
-        marginBottom: theme.spacing(2)
-      }
-    },
+
     multipleRDNSButton: {
-      cursor: 'pointer',
-      border: 0,
-      padding: 0,
-      [theme.breakpoints.down('sm')]: {
-        minWidth: 120,
-        textAlign: 'right'
-      }
+      ...theme.applyLinkStyles
     },
     multipleRDNSText: {
       color: theme.palette.primary.main,
       '&:hover': {
         color: theme.palette.primary.light
-      }
-    },
-    errorText: {
-      color: theme.color.red
-    },
-    loader: {
-      padding: 0
-    },
-    rangeRDNSCell: {
-      '& .data': {
-        display: 'flex',
-        alignItems: 'center',
-        minHeight: 32
       }
     }
   });
@@ -168,13 +90,17 @@ interface State {
   viewRangeDrawerOpen: boolean;
   editRDNSDrawerOpen: boolean;
   viewRDNSDrawerOpen: boolean;
-  createIPv4DrawerOpen: boolean;
-  createIPv4DrawerForPublic: boolean;
   IPRequestError?: string;
-  createIPv6DrawerOpen: boolean;
+  addIPDrawerOpen: boolean;
+  transferDialogOpen: boolean;
+  sharingDialogOpen: boolean;
 }
 
-type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
+type CombinedProps = ContextProps &
+  WithStyles<ClassNames> &
+  DispatchProps &
+  FeatureFlagConsumerProps &
+  StateProps;
 
 // Save some typing below
 export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
@@ -182,18 +108,20 @@ export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
 // The API returns an error if more than 100 IPs are requested.
 const getAllIPs = getAll<IPAddress>(getIPs, 100);
 
+export const ipv4TableID = 'ips';
+
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
     removeIPDialogOpen: false,
-    createIPv4DrawerOpen: false,
-    createIPv4DrawerForPublic: true,
-    createIPv6DrawerOpen: false,
+    addIPDrawerOpen: false,
     editRDNSDrawerOpen: false,
     viewRDNSDrawerOpen: false,
     viewIPDrawerOpen: false,
     viewRangeDrawerOpen: false,
     initialLoading: true,
-    ipv6Loading: false
+    ipv6Loading: false,
+    transferDialogOpen: false,
+    sharingDialogOpen: false
   };
 
   componentDidMount() {
@@ -304,44 +232,19 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
-  renderRangeRow(range: IPRange, type: IPTypes) {
+  renderRangeRDNSCell = (ipRange: IPRange) => {
     const { classes } = this.props;
+    const { allIPs, ipv6Loading } = this.state;
 
-    // The prefix is a prerequisite for finding IPs within the range, so we
-    // check for that here.
-    const ipsWithRDNS = range.prefix
-      ? listIPv6InRange(range.range, range.prefix, this.state.allIPs)
-      : [];
+    const { range, prefix } = ipRange;
 
-    return (
-      <TableRow key={range.range}>
-        <TableCell parentColumn="Address">
-          <React.Fragment>
-            {range.range}
-            <span style={{ margin: '0 5px' }}>/</span>
-            {range.prefix}
-          </React.Fragment>
-          {range.route_target && <span> routed to {range.route_target}</span>}
-        </TableCell>
-        <TableCell />
-        <TableCell className={classes.rangeRDNSCell} parentColumn="Reverse DNS">
-          {this.renderRangeRDNSCell(range, ipsWithRDNS)}
-        </TableCell>
-        <TableCell parentColumn="Type">{type}</TableCell>
-        <TableCell className={classes.action}>
-          <LinodeNetworkingActionMenu
-            onView={this.displayRangeDrawer(range)}
-            ipType={type}
-            ipAddress={range}
-            onEdit={() => this.handleOpenEditRDNSForRange(range)}
-          />
-        </TableCell>
-      </TableRow>
-    );
-  }
+    // The prefix is a prerequisite for finding IPs within the range, so we check for that here.
+    const ipsWithRDNS =
+      prefix && range ? listIPv6InRange(range, prefix, allIPs) : [];
 
-  renderRangeRDNSCell = (range: IPRange, ipsWithRDNS: IPAddress[]) => {
-    const { classes } = this.props;
+    if (ipv6Loading) {
+      return <CircleProgress noPadding mini />;
+    }
 
     // We don't show anything if there are no addresses.
     if (ipsWithRDNS.length === 0) {
@@ -363,7 +266,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         onClick={() =>
           this.setState({
             viewRDNSDrawerOpen: true,
-            currentlySelectedIPRange: range
+            currentlySelectedIPRange: ipRange
           })
         }
         aria-label={`View the ${ipsWithRDNS.length} RDNS Addresses`}
@@ -375,34 +278,45 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderIPRow(ip: IPAddress, type: IPTypes) {
+  renderIPRow = (ipDisplay: IPDisplay) => {
     const { classes, readOnly } = this.props;
+    const { address, type, gateway, subnetMask, rdns, _ip, _range } = ipDisplay;
 
     return (
-      <TableRow key={ip.address} data-qa-ip={ip.address}>
+      <TableRow key={`${address}-${type}`} data-qa-ip={address}>
         <TableCell parentColumn="Address" data-qa-ip-address>
-          {ip.address}
+          {address}
         </TableCell>
-        <TableCell parentColumn="Default Gateway">{ip.gateway}</TableCell>
-        <TableCell parentColumn="Reverse DNS" data-qa-rdns>
-          {ip.rdns}
-        </TableCell>
-        <TableCell parentColumn="Type" data-qa-type={ip.type}>
+        <TableCell parentColumn="Type" data-qa-ip-address>
           {type}
         </TableCell>
+        <TableCell parentColumn="Default Gateway">{gateway}</TableCell>
+        <TableCell parentColumn="Subnet Mask">{subnetMask}</TableCell>
+        <TableCell parentColumn="Reverse DNS" data-qa-rdns>
+          {/* Ranges have special handling for RDNS. */}
+          {_range ? this.renderRangeRDNSCell(_range) : rdns}
+        </TableCell>
         <TableCell className={classes.action} data-qa-action>
-          <LinodeNetworkingActionMenu
-            onView={this.displayIPDrawer(ip)}
-            onEdit={this.handleOpenEditRDNS}
-            ipType={type}
-            ipAddress={ip}
-            onRemove={this.openRemoveIPDialog}
-            readOnly={readOnly}
-          />
+          {_ip ? (
+            <LinodeNetworkingActionMenu
+              onEdit={this.handleOpenEditRDNS}
+              ipType={type}
+              ipAddress={_ip}
+              onRemove={this.openRemoveIPDialog}
+              readOnly={readOnly}
+            />
+          ) : _range ? (
+            <LinodeNetworkingActionMenu
+              ipType={type}
+              ipAddress={_range}
+              onEdit={() => this.handleOpenEditRDNSForRange(_range)}
+              readOnly={readOnly}
+            />
+          ) : null}
         </TableCell>
       </TableRow>
     );
-  }
+  };
 
   closeViewIPDrawer = () =>
     this.setState({ viewIPDrawerOpen: false, currentlySelectedIP: undefined });
@@ -429,28 +343,29 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
-  closeCreateIPv4Drawer = () => {
-    this.setState({
-      createIPv4DrawerOpen: false
-    });
-    this.refreshIPs();
+  openAddIPDrawer = () => {
+    this.setState({ addIPDrawerOpen: true });
   };
 
-  closeCreateIPv6Drawer = () => this.setState({ createIPv6DrawerOpen: false });
+  closeAddIPDrawer = () => {
+    this.setState({ addIPDrawerOpen: false });
+  };
 
-  openCreateIPv6Drawer = () => this.setState({ createIPv6DrawerOpen: true });
+  openTransferDialog = () => {
+    this.setState({ transferDialogOpen: true });
+  };
 
-  openCreatePublicIPv4Drawer = () =>
-    this.setState({
-      createIPv4DrawerForPublic: true,
-      createIPv4DrawerOpen: true
-    });
+  closeTransferDialog = () => {
+    this.setState({ transferDialogOpen: false });
+  };
 
-  openCreatePrivateIPv4Drawer = () =>
-    this.setState({
-      createIPv4DrawerForPublic: false,
-      createIPv4DrawerOpen: true
-    });
+  openSharingDialog = () => {
+    this.setState({ sharingDialogOpen: true });
+  };
+
+  closeSharingDialog = () => {
+    this.setState({ sharingDialogOpen: false });
+  };
 
   hasPrivateIPAddress() {
     const { linodeIPs } = this.state;
@@ -495,7 +410,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   render() {
     const {
       readOnly,
-      linode: { id: linodeID, label: linodeLabel, region: linodeRegion }
+      linode: {
+        id: linodeID,
+        label: linodeLabel,
+        region: linodeRegion,
+        created: linodeCreated
+      }
     } = this.props;
     const {
       linodeIPs,
@@ -503,7 +423,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       IPRequestError,
       currentlySelectedIPRange
     } = this.state;
-    const firstPublicIPAddress = getFirstPublicIPv4FromResponse(linodeIPs);
 
     /* Loading state */
     if (initialLoading) {
@@ -520,8 +439,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const zoneName = ZONES[linodeRegion];
-
     const ipsWithRDNS =
       currentlySelectedIPRange && currentlySelectedIPRange.prefix
         ? listIPv6InRange(
@@ -531,23 +448,29 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           )
         : [];
 
+    const publicIPs = uniq<string>(
+      pathOr([], ['ipv4', 'public'], linodeIPs).map((i: IPAddress) => i.address)
+    );
+    const privateIPs = uniq<string>(
+      pathOr([], ['ipv4', 'private'], linodeIPs).map(
+        (i: IPAddress) => i.address
+      )
+    );
+    const sharedIPs = uniq<string>(
+      pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: IPAddress) => i.address)
+    );
+
     return (
       <div>
-        <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         {readOnly && <LinodePermissionsError />}
         <LinodeNetworkingSummaryPanel
-          linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
-          sshIPAddress={firstPublicIPAddress}
-          linodeLabel={linodeLabel}
           linodeRegion={linodeRegion}
-          zoneName={zoneName}
+          linodeID={linodeID}
+          linodeCreated={linodeCreated}
+          linodeLabel={linodeLabel}
         />
 
-        {this.renderIPv4()}
-
-        {this.renderIPv6()}
-
-        {this.renderNetworkActions()}
+        {this.renderIPTable()}
 
         <ViewIPDrawer
           open={this.state.viewIPDrawerOpen}
@@ -591,17 +514,44 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           ips={ipsWithRDNS}
         />
 
-        <CreateIPv6Drawer
-          open={this.state.createIPv6DrawerOpen}
-          onClose={this.closeCreateIPv6Drawer}
+        <AddIPDrawer
+          open={this.state.addIPDrawerOpen}
+          onClose={this.closeAddIPDrawer}
+          linodeID={linodeID}
+          hasPrivateIPAddress={this.hasPrivateIPAddress()}
+          onSuccess={this.refreshIPs}
+          readOnly={readOnly}
         />
 
-        <CreateIPv4Drawer
-          forPublic={this.state.createIPv4DrawerForPublic}
-          open={this.state.createIPv4DrawerOpen}
-          onClose={this.closeCreateIPv4Drawer}
+        <IPTransfer
+          open={this.state.transferDialogOpen}
+          onClose={this.closeTransferDialog}
           linodeID={linodeID}
+          linodeRegion={linodeRegion}
+          refreshIPs={this.refreshIPs}
+          ipAddresses={[...publicIPs, ...privateIPs]}
+          readOnly={readOnly}
         />
+
+        <IPSharing
+          open={this.state.sharingDialogOpen}
+          onClose={this.closeSharingDialog}
+          linodeID={linodeID}
+          linodeIPs={publicIPs}
+          linodeSharedIPs={sharedIPs}
+          linodeRegion={linodeRegion}
+          refreshIPs={this.refreshIPs}
+          updateFor={[
+            publicIPs,
+            sharedIPs,
+            linodeID,
+            linodeRegion,
+            this.props.classes,
+            this.state.sharingDialogOpen
+          ]}
+          readOnly={readOnly}
+        />
+
         {this.state.currentlySelectedIP && linodeID && (
           <DeleteIPConfirm
             handleClose={this.closeRemoveIPDialog}
@@ -615,230 +565,106 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderIPv4 = () => {
-    const { classes, readOnly } = this.props;
-    const ipv4 = path<LinodeIPsResponseIPV4>(['linodeIPs', 'ipv4'], this.state);
-
-    if (!ipv4) {
-      return null;
-    }
-
-    const {
-      private: _privateIPs,
-      public: _publicIPs,
-      shared: _sharedIPs,
-      reserved: reservedIPs
-    } = ipv4;
-
-    // `ipv4.reserved` contains both Public and Private IPs, so we use the `public` field to differentiate.
-    // Splitting them into two arrays so we can order as desired (Public, then Private).
-    const publicReservedIps = uniqByIP(reservedIPs.filter(ip => ip.public));
-    const privateReservedIps = uniqByIP(reservedIPs.filter(ip => !ip.public));
-    /**
-     * Customer reported an issue where a shared IP was displaying in the table multiple times.
-     * We were unable to reproduce this, but added this as a safety check.
-     */
-    const privateIPs = uniqByIP(_privateIPs);
-    const publicIPs = uniqByIP(_publicIPs);
-    const sharedIPs = uniqByIP(_sharedIPs);
+  renderIPTable = () => {
+    const ipDisplay = ipResponseToDisplayRows(this.state.linodeIPs);
 
     return (
-      <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item className={classes.ipv4TitleContainer}>
-            <Typography
-              variant="h2"
-              className={classes.ipv4Title}
-              data-qa-ipv4-subheading
-            >
-              IPv4
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Tooltip
-              title={
-                this.hasPrivateIPAddress()
-                  ? 'This Linode has a private IPv4 address.'
-                  : ''
-              }
-            >
-              <div>
+      <div style={{ marginTop: 20 }}>
+        <EntityHeader
+          title="IP Addresses"
+          isSecondary
+          // @todo: Clean these props when EntityHeader is refactored.
+          body={
+            <Hidden mdUp>
+              <div style={{ padding: 5 }}>
+                <Hidden xsDown>
+                  <Button
+                    onClick={this.openTransferDialog}
+                    buttonType="secondary"
+                  >
+                    IP Transfer
+                  </Button>
+                  <Button
+                    style={{ marginRight: 16 }}
+                    onClick={this.openSharingDialog}
+                    buttonType="secondary"
+                  >
+                    IP Sharing
+                  </Button>
+                </Hidden>
                 <AddNewLink
-                  onClick={this.openCreatePrivateIPv4Drawer}
-                  disabled={Boolean(this.hasPrivateIPAddress()) || readOnly}
-                  label="Add Private IPv4"
+                  label="Add an IP Address"
+                  onClick={this.openAddIPDrawer}
                 />
               </div>
-            </Tooltip>
-          </Grid>
-          <Grid item>
-            <AddNewLink
-              onClick={this.openCreatePublicIPv4Drawer}
-              disabled={readOnly}
-              label="Add Public IPv4"
-            />
-          </Grid>
-        </Grid>
+            </Hidden>
+          }
+          actions={
+            <Hidden smDown>
+              <div style={{ padding: 5 }}>
+                <Button
+                  onClick={this.openTransferDialog}
+                  buttonType="secondary"
+                >
+                  IP Transfer
+                </Button>
+                <Button
+                  style={{ marginRight: 16 }}
+                  onClick={this.openSharingDialog}
+                  buttonType="secondary"
+                >
+                  IP Sharing
+                </Button>
+                <AddNewLink
+                  label="Add an IP Address"
+                  onClick={this.openAddIPDrawer}
+                />
+              </div>
+            </Hidden>
+          }
+        />
         <Paper style={{ padding: 0 }}>
-          <Table aria-label="IPv4 Addresses">
-            <TableHead>
-              <TableRow>
-                <TableCell className={classes.address}>Address</TableCell>
-                <TableCell className={classes.defaultGateway}>
-                  Default Gateway
-                </TableCell>
-                <TableCell className={classes.reverseDNS}>
-                  Reverse DNS
-                </TableCell>
-                <TableCell className={classes.type}>Type</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {publicIPs.map((ip: IPAddress) => this.renderIPRow(ip, 'Public'))}
-              {privateIPs.map((ip: IPAddress) =>
-                this.renderIPRow(ip, 'Private')
-              )}
-              {publicReservedIps.map((ip: IPAddress) =>
-                this.renderIPRow(ip, 'Public Reserved')
-              )}
-              {privateReservedIps.map((ip: IPAddress) =>
-                this.renderIPRow(ip, 'Private Reserved')
-              )}
-              {sharedIPs.map((ip: IPAddress) => this.renderIPRow(ip, 'Shared'))}
-            </TableBody>
-          </Table>
+          {/* @todo: It'd be nice if we could always sort by public -> private. */}
+          <OrderBy data={ipDisplay} orderBy="type" order="asc">
+            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+              return (
+                <Table aria-label="IPv4 Addresses" id={ipv4TableID}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ width: '15%' }}>Address</TableCell>
+                      <TableSortCell
+                        style={{ width: '10%' }}
+                        label="type"
+                        direction={order}
+                        active={orderBy === 'type'}
+                        handleClick={handleOrderChange}
+                      >
+                        Type
+                      </TableSortCell>
+                      <TableCell style={{ width: '10%' }}>
+                        Default Gateway
+                      </TableCell>
+                      <TableCell style={{ width: '10%' }}>
+                        Subnet Mask
+                      </TableCell>
+                      <TableCell style={{ width: '20%', borderRight: 'none' }}>
+                        Reverse DNS
+                      </TableCell>
+                      <TableCell style={{ width: '20%', borderLeft: 'none' }} />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{orderedData.map(this.renderIPRow)}</TableBody>
+                </Table>
+              );
+            }}
+          </OrderBy>
         </Paper>
-      </React.Fragment>
-    );
-  };
-
-  renderIPv6 = () => {
-    const { classes, readOnly } = this.props;
-    const ipv6 = path<LinodeIPsResponseIPV6>(['linodeIPs', 'ipv6'], this.state);
-
-    if (!ipv6) {
-      return null;
-    }
-
-    const { slaac, link_local, global: globalRange } = ipv6;
-
-    return (
-      <React.Fragment>
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
-            <Typography
-              variant="h2"
-              className={classes.ipv4Title}
-              data-qa-ipv6-subheading
-            >
-              IPv6
-            </Typography>
-          </Grid>
-          <Grid item>
-            <AddNewLink
-              onClick={this.openCreateIPv6Drawer}
-              label="Add IPv6"
-              disabled={readOnly}
-            />
-          </Grid>
-        </Grid>
-        <Paper style={{ padding: 0 }}>
-          <Table aria-label="List of IPv6 Addresses">
-            <TableHead>
-              <TableRow>
-                <TableCell className={classes.address}>Address</TableCell>
-                <TableCell className={classes.defaultGateway}>
-                  Default Gateway
-                </TableCell>
-                <TableCell className={classes.reverseDNS}>
-                  Reverse DNS
-                </TableCell>
-                <TableCell className={classes.type}>Type</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.ipv6Loading ? (
-                <TableRowLoading colSpan={4} widths={[30]} />
-              ) : this.state.ipv6Error ? (
-                <TableRowError colSpan={12} message={this.state.ipv6Error} />
-              ) : (
-                <>
-                  {slaac && this.renderIPRow(slaac, 'SLAAC')}
-                  {link_local && this.renderIPRow(link_local, 'Link Local')}
-                  {globalRange &&
-                    globalRange.map((range: IPRange) =>
-                      this.renderRangeRow(range, 'Range')
-                    )}
-                </>
-              )}
-            </TableBody>
-          </Table>
-        </Paper>
-      </React.Fragment>
-    );
-  };
-
-  renderNetworkActions = () => {
-    const {
-      classes,
-      linode: { id: linodeID, region: linodeRegion },
-      readOnly
-    } = this.props;
-    const { linodeIPs } = this.state;
-
-    const publicIPs = uniq<string>(
-      pathOr([], ['ipv4', 'public'], linodeIPs).map((i: IPAddress) => i.address)
-    );
-    const privateIPs = uniq<string>(
-      pathOr([], ['ipv4', 'private'], linodeIPs).map(
-        (i: IPAddress) => i.address
-      )
-    );
-    const sharedIPs = uniq<string>(
-      pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: IPAddress) => i.address)
-    );
-
-    return (
-      <Grid container>
-        <Grid item xs={12}>
-          <Typography
-            variant="h2"
-            className={classes.netActionsTitle}
-            data-qa-network-actions-title
-          >
-            Networking Actions
-          </Typography>
-          <IPTransferPanel
-            linodeID={linodeID}
-            linodeRegion={linodeRegion}
-            refreshIPs={this.refreshIPs}
-            ipAddresses={[...publicIPs, ...privateIPs]}
-            readOnly={readOnly}
-          />
-          <IPSharingPanel
-            linodeID={linodeID}
-            linodeIPs={publicIPs}
-            linodeSharedIPs={sharedIPs}
-            linodeRegion={linodeRegion}
-            refreshIPs={this.refreshIPs}
-            updateFor={[publicIPs, sharedIPs, linodeID, linodeRegion, classes]}
-            readOnly={readOnly}
-          />
-        </Grid>
-      </Grid>
+      </div>
     );
   };
 }
 
 const styled = withStyles(styles);
-
-const getFirstPublicIPv4FromResponse = compose(
-  path<string>(['address']),
-  head,
-  pathOr([], ['ipv4', 'public'])
-);
 
 interface ContextProps {
   linode: Linode;
@@ -863,12 +689,21 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
+const enhanced = recompose<CombinedProps, {}>(
+  connected,
+  withFeatureFlags,
+  withAccount(),
+  linodeContext,
+  styled
+);
 
 export default enhanced(LinodeNetworking);
 
-// Given a range, prefix, and a list of IPs, filter out the IPs that do not
-// fall within the IPv6 range.
+// =============================================================================
+// Utilities
+// =============================================================================
+
+// Given a range, prefix, and a list of IPs, filter out the IPs that do not fall within the IPv6 range.
 export const listIPv6InRange = (
   range: string,
   prefix: number,
@@ -882,14 +717,14 @@ export const listIPv6InRange = (
       !['ipv6/range', 'ipv6/pool'].includes(thisIP.type) ||
       thisIP.rdns === null
     ) {
-      return false;
+      // eslint-disable-next-line array-callback-return
+      return;
     }
 
     // The ipaddr.js library throws an if it can't parse an IP address.
     // We'll wrap this in a try/catch block just in case something is malformed.
     try {
-      // We need to typecast here so that the overloaded `match()` is typed
-      // correctly.
+      // We need to typecast here so that the overloaded `match()` is typed correctly.
       const addr = parseIP(thisIP.address) as IPv6;
       const parsedRange = parseIP(range) as IPv6;
 
@@ -898,4 +733,103 @@ export const listIPv6InRange = (
       return false;
     }
   });
+};
+
+// Higher-level IP address display for the IP Table.
+interface IPDisplay {
+  address: string;
+  type: IPTypes;
+  gateway: string;
+  subnetMask: string;
+  rdns: string;
+  // Not for display, but useful for lower-level components.
+  _ip?: IPAddress;
+  _range?: IPRange;
+}
+
+// Takes an IP Response object and returns high-level IP display rows.
+export const ipResponseToDisplayRows = (
+  ipResponse?: LinodeIPsResponse
+): IPDisplay[] => {
+  if (!ipResponse) {
+    return [];
+  }
+
+  const { ipv4, ipv6 } = ipResponse;
+
+  const ipDisplay = [
+    ...mapIPv4Display(ipv4.public, 'Public'),
+    ...mapIPv4Display(ipv4.private, 'Private'),
+    ...mapIPv4Display(ipv4.reserved, 'Reserved'),
+    ...mapIPv4Display(ipv4.shared, 'Shared')
+  ];
+
+  if (ipv6?.slaac) {
+    ipDisplay.push(ipToDisplay(ipv6.slaac, 'SLAAC'));
+  }
+
+  if (ipv6?.link_local) {
+    ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
+  }
+
+  // Routed ranges are a special case.
+  if (ipv6?.global) {
+    ipDisplay.push(
+      ...ipv6.global.map(thisIP => {
+        let address = thisIP.range;
+        if (thisIP.prefix) {
+          address += ` / ${thisIP.prefix}`;
+        }
+
+        return {
+          type: 'IPv6 – Range' as IPDisplay['type'],
+          address,
+          gateway: '',
+          subnetMask: '',
+          rdns: '',
+          _range: thisIP
+        };
+      })
+    );
+  }
+
+  return ipDisplay;
+};
+
+type ipKey =
+  | 'Public'
+  | 'Private'
+  | 'Reserved'
+  | 'Shared'
+  | 'SLAAC'
+  | 'Link Local';
+
+const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
+  return ips.map(ip => ipToDisplay(ip, key));
+};
+
+const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {
+  return {
+    address: ip.address,
+    gateway: ip.gateway ?? '',
+    subnetMask: ip.subnet_mask ?? '',
+    rdns: ip.rdns ?? '',
+    type: createType(ip, key) as IPTypes,
+    _ip: ip
+  };
+};
+
+export const createType = (ip: IPAddress, key: ipKey) => {
+  let type = '';
+  type += ip.type === 'ipv4' ? 'IPv4' : 'IPv6';
+
+  type += ' – ';
+
+  if (key === 'Reserved') {
+    type += ip.public ? 'Reserved (public)' : 'Reserved (private)';
+  } else {
+    type += key;
+  }
+
+  return type;
 };
