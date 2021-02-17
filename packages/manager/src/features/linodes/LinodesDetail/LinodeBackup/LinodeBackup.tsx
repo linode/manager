@@ -438,6 +438,20 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     });
   };
 
+  inputHasChanged = (
+    initialValue: LinodeBackupSchedule,
+    newValue: LinodeBackupSchedule
+  ) => {
+    if (
+      (newValue.day === 'Scheduling' || newValue.day === initialValue.day) &&
+      (newValue.window === 'Scheduling' ||
+        newValue.window === initialValue.window)
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   handleSnapshotNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ snapshotForm: { label: e.target.value } });
   };
@@ -589,7 +603,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   SettingsForm = (): JSX.Element | null => {
-    const { classes, permissions } = this.props;
+    const { classes, backupsSchedule, permissions } = this.props;
     const { settingsForm } = this.state;
     const getErrorFor = getAPIErrorFor(
       {
@@ -685,8 +699,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             onClick={this.saveSettings}
             disabled={
               isReadOnly(permissions) ||
-              defaultDaySelection?.label === 'Choose a day' ||
-              defaultTimeSelection?.label === ('Choose a time' as Window)
+              this.inputHasChanged(backupsSchedule, settingsForm)
             }
             loading={this.state.settingsForm.loading}
             data-qa-schedule
