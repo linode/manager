@@ -82,7 +82,7 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
   return (
     <ConfirmationDialog
       onClose={onClose}
-      title="Are you sure you want to cancel this transfer?"
+      title="Cancel this transfer?"
       open={open}
       actions={actions}
     >
@@ -97,7 +97,9 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
           ))
         : null}
       <Typography>
-        Explanatory text about what happens when you cancel a transfer...
+        Upon confirmation, the token generated for this transfer will no longer
+        be valid. To transfer ownership of these Linodes, you will need to
+        create a new transfer and share the new token with the receiving party.
       </Typography>
     </ConfirmationDialog>
   );
