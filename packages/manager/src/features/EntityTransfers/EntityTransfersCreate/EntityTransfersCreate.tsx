@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 import { curry } from 'ramda';
 import * as React from 'react';
@@ -6,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import { queryClient } from 'src/queries/base';
 import { useCreateTransfer } from 'src/queries/entityTransfers';
 import TransferCheckoutBar from './TransferCheckoutBar';
 import TransferHeader from './TransferHeader';
@@ -20,17 +20,12 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export const EntityTransfersCreate: React.FC<{}> = _ => {
   const { push } = useHistory();
-  const { mutateAsync: createTransfer } = useCreateTransfer();
-
-  /**
-   * State variables for creating the transfer
-   */
-  const [isCreating, setCreating] = React.useState(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const { mutateAsync: createTransfer, error, isLoading } = useCreateTransfer();
 
   /**
    * Reducer and helpers for working with the payload/selection process
    */
+
   const [state, dispatch] = React.useReducer(
     curriedTransferReducer,
     defaultTransferState
@@ -57,18 +52,12 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
    */
 
   const handleCreateTransfer = (payload: CreateTransferPayload) => {
-    setErrors(undefined);
-    setCreating(true);
-    createTransfer(payload)
-      .then(transfer => {
-        // Transfer is the new transfer object; send it off to the modal.
-        setCreating(false);
+    createTransfer(payload, {
+      onSuccess: transfer => {
+        queryClient.invalidateQueries('entity-transfers');
         push({ pathname: '/account/entity-transfers', state: { transfer } });
-      })
-      .catch(err => {
-        setErrors(getAPIErrorOrDefault(err, 'Error creating this transfer.'));
-        setCreating(false);
-      });
+      }
+    });
   };
 
   return (
@@ -85,7 +74,9 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
           }
         ]}
       />
-      {errors ? <Notice error text={errors[0].reason} /> : null}
+      {error ? (
+        <Notice error text={getAPIErrorOrDefault(error)[0].reason} />
+      ) : null}
       <Grid container>
         <Grid item xs={9}>
           <TransferHeader />
@@ -98,7 +89,7 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
         </Grid>
         <Grid item xs={3} className="mlSidebar">
           <TransferCheckoutBar
-            isCreating={isCreating}
+            isCreating={isLoading}
             selectedEntities={state}
             removeEntities={removeEntitiesFromTransfer}
             handleSubmit={handleCreateTransfer}
