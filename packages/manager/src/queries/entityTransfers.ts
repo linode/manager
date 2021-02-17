@@ -29,7 +29,7 @@ export const useTransferQuery = (token: string, enabled: boolean = true) => {
   return useQuery<EntityTransfer, APIError[]>(
     [queryKey, token],
     () => getEntityTransfer(token),
-    { ...queryPresets.shortLived, enabled }
+    { ...queryPresets.shortLived, enabled, retry: false }
   );
 };
 
