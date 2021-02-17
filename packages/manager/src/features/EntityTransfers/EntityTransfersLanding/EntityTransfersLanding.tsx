@@ -26,15 +26,21 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
     error: transfersError
   } = useEntityTransfersQuery();
 
+  let [sentTransfers, receivedTransfers] = partition(
+    transfer => transfer.is_sender,
+    allEntityTransfers ?? []
+  );
+  sentTransfers = sentTransfers.filter(
+    transfer => transfer.status !== 'pending'
+  );
+  receivedTransfers = receivedTransfers.filter(
+    transfer => transfer.status !== 'pending'
+  );
+
   const pendingTransfers = allEntityTransfers?.filter(
     transfer => transfer.status === 'pending'
   );
   const numPendingTransfers = pendingTransfers?.length ?? 0;
-
-  const [sentTransfers, receivedTransfers] = partition(
-    transfer => transfer.is_sender,
-    allEntityTransfers ?? []
-  );
 
   return (
     <>

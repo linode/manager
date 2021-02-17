@@ -70,8 +70,16 @@ const entityTransfers = [
     const transfers3 = entityTransferFactory.buildList(10, {
       token: '987TEST'
     });
+    const transfer4 = entityTransferFactory.build({
+      is_sender: true,
+      status: 'pending'
+    });
 
-    const combinedTransfers = transfers1.concat(transfers2, transfers3);
+    const combinedTransfers = transfers1.concat(
+      transfers2,
+      transfers3,
+      transfer4
+    );
     return res(ctx.json(makeResourcePage(combinedTransfers)));
   }),
   rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
