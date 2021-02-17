@@ -41,11 +41,9 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
     }
   }, [location]);
 
-  const {
-    data: allEntityTransfers,
-    isLoading,
-    error: transfersError
-  } = useEntityTransfersQuery();
+  const { data, isLoading, error: transfersError } = useEntityTransfersQuery();
+
+  const allEntityTransfers = Object.values(data ?? {});
 
   let [sentTransfers, receivedTransfers] = partition(
     transfer => transfer.is_sender,
