@@ -15,18 +15,12 @@ describe('LinodeSummary', () => {
       linodeData={linodes[0]}
       timezone={'America/Los_Angeles'}
       classes={{
-        main: '',
-        sidebar: '',
-        headerWrapper: '',
         chart: '',
-        bottomLegend: '',
         graphControls: '',
-        graphTitle: '',
-        graphSelectTitle: '',
+        graphGrids: '',
         chartSelect: '',
-        subHeaderOuter: '',
-        textWrap: '',
-        headerOuter: ''
+        headerOuter: '',
+        labelRangeSelect: ''
       }}
       theme={light(4)}
       linodeVolumes={[]}
