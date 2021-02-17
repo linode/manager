@@ -1,14 +1,12 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import {
-  createEntityTransfer,
-  CreateTransferPayload
-} from '@linode/api-v4/lib/entity-transfers';
+import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 import { curry } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import { useCreateTransfer } from 'src/queries/entityTransfers';
 import TransferCheckoutBar from './TransferCheckoutBar';
 import TransferHeader from './TransferHeader';
 import LinodeTransferTable from './LinodeTransferTable';
@@ -22,6 +20,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export const EntityTransfersCreate: React.FC<{}> = _ => {
   const { push } = useHistory();
+  const { mutateAsync: createTransfer } = useCreateTransfer();
 
   /**
    * State variables for creating the transfer
@@ -60,7 +59,7 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
   const handleCreateTransfer = (payload: CreateTransferPayload) => {
     setErrors(undefined);
     setCreating(true);
-    createEntityTransfer(payload)
+    createTransfer(payload)
       .then(transfer => {
         // Transfer is the new transfer object; send it off to the modal.
         setCreating(false);
