@@ -14,14 +14,14 @@ export const queryPresets: Record<QueryConfigTypes, UseQueryOptions<any>> = {
     cacheTime: 5 * 60 * 1000
   },
   longLived: {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000
   },
   oneTimeFetch: {
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     staleTime: Infinity,
     cacheTime: Infinity
   }
