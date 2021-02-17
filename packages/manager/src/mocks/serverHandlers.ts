@@ -63,8 +63,24 @@ export const makeResourcePage = (
 
 const entityTransfers = [
   rest.get('*/account/entity-transfers', (req, res, ctx) => {
-    const transfers = entityTransferFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(transfers)));
+    const transfers1 = entityTransferFactory.buildList(10);
+    const transfers2 = entityTransferFactory.buildList(10, {
+      token: 'TEST123'
+    });
+    const transfers3 = entityTransferFactory.buildList(10, {
+      token: '987TEST'
+    });
+    const transfer4 = entityTransferFactory.build({
+      is_sender: true,
+      status: 'pending'
+    });
+
+    const combinedTransfers = transfers1.concat(
+      transfers2,
+      transfers3,
+      transfer4
+    );
+    return res(ctx.json(makeResourcePage(combinedTransfers)));
   }),
   rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
     const transfer = entityTransferFactory.build();
@@ -113,7 +129,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
-    const onlineLinodes = linodeFactory.buildList(3, {
+    const onlineLinodes = linodeFactory.buildList(17, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000']
     });
