@@ -164,7 +164,8 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
                   <TableCell key="transfer-token-table-header-expiry">
                     Expiry
                   </TableCell>
-                  <TableCell /> {/*  Empty column header for action column */}
+                  {/*  Empty column header for action column */}
+                  <TableCell />
                 </>
               ) : transferTypeIsSent ? (
                 <>
