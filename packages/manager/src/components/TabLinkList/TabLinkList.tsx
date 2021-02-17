@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       minHeight: theme.spacing(5),
       minWidth: 50,
       padding: '6px 16px',
+      textDecoration: 'none',
       '&:hover': {
         color: theme.color.blue
       }
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow: `inset 0 -1px 0 ${theme.cmrBorderColors.borderTabs}`,
       marginBottom: theme.spacing(),
       [theme.breakpoints.down('md')]: {
-        overflowX: 'scroll',
+        overflowX: 'auto',
         padding: 1
       }
     }

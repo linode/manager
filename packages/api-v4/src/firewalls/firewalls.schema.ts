@@ -34,6 +34,11 @@ export const ipAddress = string().test({
   test: validateIP
 });
 
+export const validateFirewallPorts = string().matches(
+  /^([0-9\-]+,?\s?)+$/,
+  'Ports must be an integer, range of integers, or a comma-separated list of integers.'
+);
+
 const validFirewallRuleProtocol = ['ALL', 'TCP', 'UDP', 'ICMP'];
 export const FirewallRuleTypeSchema = object().shape({
   protocol: mixed()
@@ -41,12 +46,7 @@ export const FirewallRuleTypeSchema = object().shape({
     .required('Protocol is required.'),
   ports: string().when('protocol', {
     is: val => val !== 'ICMP',
-    then: string()
-      .required('Ports are required for TCP and UDP protocols.')
-      .matches(
-        /^([0-9\-]+,?\s?)+$/,
-        'Ports must be an integer, range of integers, or a comma-separated list of integers.'
-      ),
+    then: validateFirewallPorts,
     // Workaround to get the test to fail if ports is defined when protocol === ICMP
     otherwise: string().test({
       name: 'protocol',

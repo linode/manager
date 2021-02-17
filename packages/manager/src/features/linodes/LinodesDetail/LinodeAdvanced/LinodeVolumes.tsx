@@ -133,7 +133,7 @@ const volumeHeaders = [
   }
 ];
 
-export const LinodeStorage: React.FC<CombinedProps> = props => {
+export const LinodeVolumes: React.FC<CombinedProps> = props => {
   const {
     volumesLoading,
     volumesLastUpdated,
@@ -418,4 +418,4 @@ export default compose<CombinedProps, {}>(
     ...ownProps,
     eventsData: eventsData.filter(filterVolumeEvents)
   }))
-)(LinodeStorage);
+)(LinodeVolumes);

@@ -1,4 +1,5 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { decode } from 'he';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
@@ -149,7 +150,8 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
             <SelectionCardWrapper
               key={eachApp.id}
               checked={eachApp.id === selectedStackScriptID}
-              label={eachApp.label}
+              // Decode App labels since they may contain HTML entities.
+              label={decode(eachApp.label)}
               availableImages={eachApp.images}
               userDefinedFields={eachApp.user_defined_fields}
               handleClick={handleClick}
@@ -194,7 +196,7 @@ interface SelectionProps {
 class SelectionCardWrapper extends React.PureComponent<
   SelectionProps & WithStyles<ClassNames>
 > {
-  handleSelectApp = (event: React.SyntheticEvent<HTMLElement, Event>) => {
+  handleSelectApp = () => {
     const { id, label, userDefinedFields, availableImages } = this.props;
 
     return this.props.handleClick(
