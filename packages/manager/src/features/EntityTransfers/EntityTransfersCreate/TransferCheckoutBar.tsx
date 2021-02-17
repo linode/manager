@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold'
   },
   button: {
+    visibility: 'hidden',
     textDecoration: 'none',
     border: 'none',
     backgroundColor: 'inherit',
@@ -32,6 +33,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderBottom: `solid 1px ${theme.color.border2}`,
     '&:first-of-type': {
       borderTop: `solid 1px ${theme.color.border2}`
+    },
+    '&:hover > button': {
+      visibility: 'visible'
     }
   },
   rowBox: {
