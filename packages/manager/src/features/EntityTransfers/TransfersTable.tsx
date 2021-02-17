@@ -8,11 +8,10 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import PaginationFooter from 'src/components/PaginationFooter';
+// import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
-import { usePagination } from 'src/hooks/usePagination';
 import capitalize from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
 // import ActionMenu from './TransfersPendingActionMenu';
@@ -53,11 +52,10 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
   const { transferType, isLoading, error, transfers } = props;
 
   const classes = useStyles();
-  const { page, pageSize, handlePageChange } = usePagination();
 
   // const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(false);
 
-  const transfersCount = transfers?.length ?? 0;
+  // const transfersCount = transfers?.length ?? 0;
 
   const transferTypeIsPending = transferType === 'pending';
   const transferTypeIsSent = transferType === 'sent';
@@ -197,7 +195,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
           </TableBody>
         </Table>
       </Accordion>
-      {transfersCount > pageSize ? (
+      {/* {transfersCount > pageSize ? (
         <PaginationFooter
           count={transfersCount}
           handlePageChange={handlePageChange}
@@ -207,7 +205,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
           eventCategory="Entity Transfer Table"
           fixedSize
         />
-      ) : null}
+      ) : null} */}
     </div>
   );
 };
