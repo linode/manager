@@ -21,13 +21,17 @@ interface Props {
 
 export const LinodeTransferTable: React.FC<Props> = props => {
   const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
+  const [searchText, setSearchText] = React.useState('');
 
   const pagination = usePagination();
 
-  const { data, isError, isLoading, error, dataUpdatedAt } = useLinodesQuery({
-    page: pagination.page,
-    page_size: pagination.pageSize
-  });
+  const { data, isError, isLoading, error, dataUpdatedAt } = useLinodesQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize
+    },
+    generateLinodeXFilter(searchText)
+  );
 
   const linodesCurrentPage = Object.values(data?.linodes ?? {});
   const hasSelectedAll =
@@ -35,7 +39,8 @@ export const LinodeTransferTable: React.FC<Props> = props => {
       Boolean(selectedLinodes[thisLinode.id])
     ) &&
     !isLoading &&
-    !isError;
+    !isError &&
+    Object.keys(selectedLinodes).length > 0;
 
   const toggleSelectAll = () => {
     if (hasSelectedAll) {
@@ -43,6 +48,10 @@ export const LinodeTransferTable: React.FC<Props> = props => {
     } else {
       handleSelect(linodesCurrentPage);
     }
+  };
+
+  const handleSearch = (searchText: string) => {
+    setSearchText(searchText);
   };
 
   const theme = useTheme<Theme>();
@@ -58,6 +67,7 @@ export const LinodeTransferTable: React.FC<Props> = props => {
       headers={columns}
       requestPage={pagination.handlePageChange}
       page={pagination.page}
+      handleSearch={handleSearch}
       pageSize={pagination.pageSize}
       count={data?.results ?? 0}
     >
@@ -103,6 +113,16 @@ const LinodeRow: React.FC<RowProps> = props => {
       </Hidden>
     </SelectableTableRow>
   );
+};
+
+export const generateLinodeXFilter = (searchText: string) => {
+  if (searchText === '') {
+    return {};
+  }
+
+  return {
+    label: { '+contains': searchText }
+  };
 };
 
 export default React.memo(LinodeTransferTable);
