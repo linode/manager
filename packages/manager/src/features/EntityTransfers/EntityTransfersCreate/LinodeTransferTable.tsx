@@ -121,10 +121,7 @@ export const generateLinodeXFilter = (searchText: string) => {
   }
 
   return {
-    '+or': [
-      { label: { '+contains': searchText } },
-      { tags: { '+contains': searchText } }
-    ]
+    label: { '+contains': searchText }
   };
 };
 

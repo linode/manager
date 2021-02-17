@@ -95,11 +95,11 @@ export const TransferTable: React.FC<Props> = props => {
       </Typography>
       <DebouncedSearchTextField
         className={classes.search}
-        placeholder="Search by label, tags"
+        placeholder="Search by label"
         debounceTime={400}
         onSearch={handleSearch}
         isSearching={false}
-        label="Search by label, tags"
+        label="Search by label"
         hideLabel
       />
       <Table className={classes.table}>
