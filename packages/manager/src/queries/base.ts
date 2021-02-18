@@ -20,8 +20,6 @@ export const queryPresets: Record<QueryConfigTypes, UseQueryOptions<any>> = {
     cacheTime: 10 * 60 * 1000
   },
   oneTimeFetch: {
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
     staleTime: Infinity,
     cacheTime: Infinity
   }
@@ -39,6 +37,17 @@ export type ItemsByID<T> = Record<string, T>;
 // =============================================================================
 // Utility Functions
 // =============================================================================
+
+/**
+ * "Indexers" for the following methods are included to handle
+ * the case where an entity's primary key isn't "id." By
+ * default, these methods will try to map Entity.id: Entity,
+ * but consumers can override this to map over whatever value
+ * is unique to that entity type. One example of this is Entity Transfers,
+ * which have a unique primary key of "token."
+ *
+ */
+
 export const listToItemsByID = <E extends {}[]>(
   entityList: E,
   indexer: string = 'id'
