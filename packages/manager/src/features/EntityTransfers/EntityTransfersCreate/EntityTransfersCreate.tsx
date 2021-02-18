@@ -18,10 +18,30 @@ import {
   TransferableEntity
 } from './transferReducer';
 import Notice from 'src/components/Notice';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    [theme.breakpoints.down('md')]: {
+      margin: 0,
+      justifyContent: 'center'
+    }
+  },
+  sidebar: {
+    [theme.breakpoints.down('md')]: {
+      padding: '0px 8px !important',
+      '&.MuiGrid-item': {
+        paddingLeft: 0,
+        paddingRight: 0
+      }
+    }
+  }
+}));
 
 export const EntityTransfersCreate: React.FC<{}> = _ => {
   const { push } = useHistory();
+  const classes = useStyles();
 
   /**
    * State variables for creating the transfer
@@ -87,8 +107,14 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
         ]}
       />
       {errors ? <Notice error text={errors[0].reason} /> : null}
-      <Grid container>
-        <Grid item xs={9}>
+      <Grid
+        container
+        wrap="wrap"
+        direction="row"
+        spacing={2}
+        className={classes.root}
+      >
+        <Grid item xs={12} md={9}>
           <TransferHeader />
           <LinodeTransferTable
             selectedLinodes={state.linodes}
@@ -97,7 +123,7 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
             handleToggle={toggleEntity('linodes')}
           />
         </Grid>
-        <Grid item xs={3} className="mlSidebar">
+        <Grid item xs={12} md={3} className={`mlSidebar ${classes.sidebar}`}>
           <TransferCheckoutBar
             isCreating={isCreating}
             selectedEntities={state}

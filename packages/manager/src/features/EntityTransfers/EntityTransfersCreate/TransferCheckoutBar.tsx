@@ -20,7 +20,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textDecoration: 'none',
     border: 'none',
     backgroundColor: 'inherit',
-    color: '#979797'
+    color: '#979797',
+    [theme.breakpoints.down('sm')]: {
+      visibility: 'visible'
+    }
   },
   close: {
     '& svg': { height: 11, width: 11 }
@@ -45,7 +48,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   submitButton: {
     marginTop: theme.spacing(3),
-    width: '100%'
+    width: '100%',
+    marginRight: 0,
+    marginLeft: 0
   },
   entitySummaryText: {
     marginTop: theme.spacing(3),
@@ -105,7 +110,7 @@ export const TransferCheckoutBar: React.FC<Props> = props => {
 
   const totalSelectedLinodes = Object.keys(selectedEntities.linodes).length;
   return (
-    <div>
+    <div className={classes.root}>
       <Typography className={classes.header}>Transfer Summary</Typography>
       <div className={classes.rowBox}>
         {Object.entries(selectedEntities.linodes).map(([id, label]) => (
