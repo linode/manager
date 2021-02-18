@@ -28,6 +28,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       justifyContent: 'center'
     }
   },
+  crumb: {
+    [theme.breakpoints.down('md')]: {
+      paddingLeft: theme.spacing()
+    }
+  },
   sidebar: {
     [theme.breakpoints.down('md')]: {
       padding: '0px 8px !important',
@@ -96,6 +101,7 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
     <>
       <DocumentTitleSegment segment="Make a Transfer" />
       <Breadcrumb
+        className={classes.crumb}
         pathname={location.pathname}
         labelTitle="Make a Transfer"
         labelOptions={{ noCap: true }}
