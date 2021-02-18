@@ -1,14 +1,13 @@
 import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers';
-import { partition } from 'ramda';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
+import usePagination from 'src/hooks/usePagination';
 import { useEntityTransfersQuery } from 'src/queries/entityTransfers';
 import TransfersTable from '../TransfersTable';
 import CreateTransferSuccessDialog from './CreateTransferSuccessDialog';
 import TransferControls from './TransferControls';
+import CircleProgress from 'src/components/CircleProgress';
 
 export const EntityTransfersLanding: React.FC<{}> = _ => {
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(true);
@@ -32,25 +31,70 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
     }
   }, [location]);
 
-  const { data, isLoading, error: transfersError } = useEntityTransfersQuery();
+  const paginationPendingTransfers = usePagination();
+  const paginationReceivedTransfers = usePagination();
+  const paginationSentTransfers = usePagination();
 
-  const allEntityTransfers = Object.values(data ?? {});
+  // Fetch the Pending Transfers
+  const {
+    data: pendingTransfersData,
+    isLoading: pendingTransfersLoading,
+    error: pendingTransfersError
+  } = useEntityTransfersQuery(
+    {
+      page: paginationPendingTransfers.page,
+      page_size: paginationPendingTransfers.pageSize,
+      handlePageChange: paginationPendingTransfers.handlePageChange
+    },
+    {
+      status: 'pending',
+      is_sender: true
+    }
+  );
+  const pendingTransfers = Object.values(
+    pendingTransfersData?.entityTransfers ?? {}
+  );
+  const pendingTransfersResults = pendingTransfersData?.results ?? 0;
+  const numPendingTransfers = pendingTransfersData?.results ?? 0;
 
-  let [sentTransfers, receivedTransfers] = partition(
-    transfer => transfer.is_sender,
-    allEntityTransfers ?? []
+  // Fetch the Received Transfers
+  const {
+    data: receivedTransfersData,
+    isLoading: receivedTransfersLoading,
+    error: receivedTransfersError
+  } = useEntityTransfersQuery(
+    {
+      page: paginationReceivedTransfers.page,
+      page_size: paginationReceivedTransfers.pageSize,
+      handlePageChange: paginationReceivedTransfers.handlePageChange
+    },
+    {
+      status: 'received'
+    }
   );
-  sentTransfers = sentTransfers.filter(
-    transfer => transfer.status !== 'pending'
+  const receivedTransfers = Object.values(
+    receivedTransfersData?.entityTransfers ?? {}
   );
-  receivedTransfers = receivedTransfers.filter(
-    transfer => transfer.status !== 'pending'
-  );
+  const receivedTransfersResults = receivedTransfersData?.results ?? 0;
 
-  const pendingTransfers = allEntityTransfers?.filter(
-    transfer => transfer.status === 'pending'
+  // Fetch the Sent Transfers
+  const {
+    data: sentTransfersData,
+    isLoading: sentTransfersLoading,
+    error: sentTransfersError
+  } = useEntityTransfersQuery(
+    {
+      page: paginationSentTransfers.page,
+      page_size: paginationSentTransfers.pageSize,
+      handlePageChange: paginationSentTransfers.handlePageChange
+    },
+    {
+      is_sender: true,
+      status: { '+neq': 'pending' }
+    }
   );
-  const numPendingTransfers = pendingTransfers?.length ?? 0;
+  const sentTransfers = Object.values(sentTransfersData?.entityTransfers ?? {});
+  const sentTransfersResults = sentTransfersData?.results ?? 0;
 
   return (
     <div style={{ overflowX: 'hidden' }}>
@@ -61,31 +105,50 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
         transfer={transfer}
         onClose={handleCloseSuccessDialog}
       />
-      {isLoading ? (
+      {pendingTransfersLoading ||
+      receivedTransfersLoading ||
+      sentTransfersLoading ? (
         <CircleProgress />
-      ) : transfersError ? (
-        <ErrorState errorText={transfersError[0].reason} />
       ) : (
         <>
           {numPendingTransfers > 0 ? (
             <TransfersTable
               transferType="pending"
-              error={transfersError}
-              isLoading={isLoading}
+              error={pendingTransfersError}
+              isLoading={pendingTransfersLoading}
               transfers={pendingTransfers}
+              results={pendingTransfersResults}
+              page={paginationPendingTransfers.page}
+              pageSize={paginationPendingTransfers.pageSize}
+              handlePageChange={paginationPendingTransfers.handlePageChange}
+              handlePageSizeChange={
+                paginationPendingTransfers.handlePageSizeChange
+              }
             />
           ) : null}
           <TransfersTable
             transferType="received"
-            error={transfersError}
-            isLoading={isLoading}
+            error={receivedTransfersError}
+            isLoading={receivedTransfersLoading}
             transfers={receivedTransfers}
+            results={receivedTransfersResults}
+            page={paginationReceivedTransfers.page}
+            pageSize={paginationReceivedTransfers.pageSize}
+            handlePageChange={paginationReceivedTransfers.handlePageChange}
+            handlePageSizeChange={
+              paginationReceivedTransfers.handlePageSizeChange
+            }
           />
           <TransfersTable
             transferType="sent"
-            error={transfersError}
-            isLoading={isLoading}
+            error={sentTransfersError}
+            isLoading={sentTransfersLoading}
             transfers={sentTransfers}
+            results={sentTransfersResults}
+            page={paginationSentTransfers.page}
+            pageSize={paginationSentTransfers.pageSize}
+            handlePageChange={paginationSentTransfers.handlePageChange}
+            handlePageSizeChange={paginationSentTransfers.handlePageSizeChange}
           />
         </>
       )}

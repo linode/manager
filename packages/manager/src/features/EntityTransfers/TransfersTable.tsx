@@ -10,17 +10,13 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
-// import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import capitalize from 'src/utilities/capitalize';
-import { pluralize } from 'src/utilities/pluralize';
 import ConfirmTransferCancelDialog from './EntityTransfersLanding/ConfirmTransferCancelDialog';
-import TransferDetailsDialog from './EntityTransfersLanding/TransferDetailsDialog';
-import ActionMenu from './TransfersPendingActionMenu';
-import { isEmpty } from 'ramda';
+import RenderTransferRow from './RenderTransferRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -46,30 +42,45 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  transferType: string;
+  transferType: 'pending' | 'received' | 'sent';
   error: APIError[] | null;
   isLoading: boolean;
   transfers?: EntityTransfer[];
+  results: number;
+  page: number;
+  pageSize: number;
+  handlePageChange: (v: number, showSpinner?: boolean | undefined) => void;
+  handlePageSizeChange: (v: number) => void;
 }
 
 type CombinedProps = Props;
 
 export const TransfersTable: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
+  const {
+    transferType,
+    isLoading,
+    error,
+    transfers,
+    results,
+    page,
+    pageSize,
+    handlePageChange,
+    handlePageSizeChange
+  } = props;
 
-  const { transferType, isLoading, error, transfers } = props;
+  const classes = useStyles();
 
   const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(
     false
   );
   const [tokenBeingCanceled, setTokenBeingCanceled] = React.useState('');
-  const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
-  const [currentToken, setCurrentToken] = React.useState('');
-  const [currentEntities, setCurrentEntities] = React.useState<
-    TransferEntities | undefined
-  >(undefined);
+  // const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
+  // const [currentToken, setCurrentToken] = React.useState('');
+  // const [currentEntities, setCurrentEntities] = React.useState<
+  //   TransferEntities | undefined
+  // >(undefined);
 
-  // const transfersCount = transfers?.length ?? 0;
+  const transfersCount = transfers?.length ?? 0;
 
   const transferTypeIsPending = transferType === 'pending';
   const transferTypeIsSent = transferType === 'sent';
@@ -84,187 +95,82 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
     setCancelPendingDialogOpen(false);
   };
 
-  const renderTransferRow = (transfer: EntityTransfer, idx: number) => {
-    const entitiesBeingTransferred = transfer.entities;
-    const entitiesAndTheirCounts = Object.entries(
-      entitiesBeingTransferred ?? {}
-    );
-
-    if (isEmpty(entitiesAndTheirCounts)) {
-      return null;
-    }
-
-    return (
-      <TableRow key={`transfer-${idx}`}>
-        <TableCell className={classes.cellContents} noWrap>
-          <button
-            className={classes.link}
-            onClick={() => {
-              setDetailsDialogOpen(true);
-              setCurrentToken(transfer.token);
-              setCurrentEntities(transfer.entities);
-            }}
-          >
-            {transfer.token}
-          </button>
-        </TableCell>
-        <Hidden smDown>
-          <TableCell className={classes.cellContents}>
-            <DateTimeDisplay value={transfer.created} />
-          </TableCell>
-        </Hidden>
-        {transferTypeIsPending ? (
-          <Hidden xsDown>
-            <TableCell className={classes.cellContents} noWrap>
-              {entitiesAndTheirCounts.map((entry, idx) => {
-                return (
-                  <span key={idx}>
-                    {formatEntitiesCell(entry)}
-                    <br />
-                  </span>
-                );
-              })}
-            </TableCell>
-          </Hidden>
-        ) : (
-          <TableCell className={classes.cellContents} noWrap>
-            {entitiesAndTheirCounts.map((entry, idx) => {
-              return (
-                <span key={idx}>
-                  {formatEntitiesCell(entry)}
-                  <br />
-                </span>
-              );
-            })}
-          </TableCell>
-        )}
-        {transferTypeIsPending ? (
-          <>
-            <TableCell className={classes.cellContents} noWrap>
-              <DateTimeDisplay value={transfer.expiry} />
-            </TableCell>
-            <TableCell className={classes.actionCell}>
-              <ActionMenu
-                onCancelClick={() =>
-                  handleCancelPendingTransferClick(transfer.token)
-                }
-              />
-            </TableCell>
-          </>
-        ) : null}
-        {transferTypeIsSent ? (
-          <TableCell className={classes.cellContents}>
-            {capitalize(transfer.status)}
-          </TableCell>
-        ) : null}
-      </TableRow>
-    );
-  };
-
   return (
-    <>
-      <div className={classes.root}>
-        <Accordion
-          heading={`Transfers ${capitalize(transferType)}`}
-          defaultExpanded
-        >
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <TableCell key="transfer-token-table-header-token">
-                  Token
-                </TableCell>
-                {transferTypeIsPending || transferTypeIsSent ? (
-                  <Hidden smDown>
-                    <TableCell key="transfer-token-table-header-created">
-                      Created
-                    </TableCell>
+    <div className={classes.root}>
+      <Accordion
+        heading={`Transfers ${capitalize(transferType)}`}
+        defaultExpanded={transfersCount > 0}
+      >
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Token</TableCell>
+              <Hidden smDown={transferTypeIsPending || transferTypeIsSent}>
+                <TableCell>Created</TableCell>
+              </Hidden>
+              {transferTypeIsPending ? (
+                <>
+                  <Hidden xsDown>
+                    <TableCell>Entities</TableCell>
                   </Hidden>
-                ) : (
-                  <TableCell key="transfer-token-table-header-created">
-                    Created
-                  </TableCell>
-                )}
-                {transferTypeIsPending ? (
-                  <>
-                    <Hidden xsDown>
-                      <TableCell key="transfer-token-table-header-entities">
-                        Entities
-                      </TableCell>
-                    </Hidden>
-                    <TableCell key="transfer-token-table-header-expiry">
-                      Expiry
-                    </TableCell>
-                    {/*  Empty column header for action column */}
-                    <TableCell />
-                  </>
-                ) : transferTypeIsSent ? (
-                  <>
-                    <TableCell key="transfer-token-table-header-entities">
-                      Entities
-                    </TableCell>
-                    <TableCell key="transfer-token-table-header-status">
-                      Status
-                    </TableCell>
-                  </>
-                ) : (
-                  <TableCell key="transfer-token-table-header-entities">
-                    Entities
-                  </TableCell>
-                )}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableContentWrapper
-                loading={isLoading}
-                error={error ?? undefined}
-                length={transfers?.length ?? 0}
-              >
-                {transfers?.map((transfer, idx) =>
-                  renderTransferRow(transfer, idx)
-                )}
-              </TableContentWrapper>
-            </TableBody>
-          </Table>
-        </Accordion>
-        {/* {transfersCount > pageSize ? (
+                  <TableCell>Expiry</TableCell>
+                  {/*  Empty column header for action column */}
+                  <TableCell />
+                </>
+              ) : transferTypeIsSent ? (
+                <>
+                  <TableCell>Entities</TableCell>
+                  <TableCell>Status</TableCell>
+                </>
+              ) : (
+                <TableCell>Entities</TableCell>
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableContentWrapper
+              loading={isLoading}
+              error={error ?? undefined}
+              length={transfers?.length ?? 0}
+            >
+              {transfers?.map((transfer, idx) => (
+                <RenderTransferRow
+                  key={`${transferType}-${idx}`}
+                  token={transfer.token}
+                  created={transfer.created}
+                  entities={transfer.entities}
+                  expiry={transfer.expiry}
+                  status={transfer.status}
+                  transferType={transferType}
+                  handleCancelPendingTransferClick={
+                    handleCancelPendingTransferClick
+                  }
+                />
+              ))}
+            </TableContentWrapper>
+          </TableBody>
+        </Table>
+      </Accordion>
+      {results > pageSize ? (
         <PaginationFooter
-          count={transfersCount}
+          count={results}
           handlePageChange={handlePageChange}
-          handleSizeChange={() => null} // Transfer tables are going to be sticky at 25
+          handleSizeChange={handlePageSizeChange}
           page={page}
           pageSize={pageSize}
           eventCategory="Entity Transfer Table"
-          fixedSize
         />
-      ) : null} */}
-        {transferTypeIsPending ? (
-          // Only Pending Transfers can be canceled.
-          <ConfirmTransferCancelDialog
-            open={cancelPendingDialogOpen}
-            onClose={closeCancelPendingDialog}
-            token={tokenBeingCanceled}
-          />
-        ) : null}
-      </div>
-      <TransferDetailsDialog
-        isOpen={detailsDialogOpen}
-        onClose={() => setDetailsDialogOpen(false)}
-        token={currentToken}
-        entities={currentEntities}
-      />
-    </>
+      ) : null}
+      {transferTypeIsPending ? (
+        // Only Pending Transfers can be canceled.
+        <ConfirmTransferCancelDialog
+          open={cancelPendingDialogOpen}
+          onClose={closeCancelPendingDialog}
+          token={tokenBeingCanceled}
+        />
+      ) : null}
+    </div>
   );
-};
-
-export const formatEntitiesCell = (entityAndCount: [string, number[]]) => {
-  const [entity, count] = entityAndCount;
-  const pluralEntity = capitalize(entity);
-  const singleEntity = capitalize(entity.slice(0, -1));
-
-  const entityCount = count.length;
-
-  return `${pluralize(singleEntity, pluralEntity, entityCount)}`;
 };
 
 export default React.memo(TransfersTable);
