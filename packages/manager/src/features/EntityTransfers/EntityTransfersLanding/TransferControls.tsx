@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   transferInput: {
     width: 360,
     [theme.breakpoints.down('sm')]: {
-      width: 150
+      width: 200
     }
   },
   helpIcon: {
@@ -69,33 +69,37 @@ export const TransferControls: React.FC<{}> = _ => {
             <strong>Receive a Transfer</strong>
           </Typography>
         </Grid>
-        <div className={classes.receiveTransfer}>
-          <TextField
-            className={classes.transferInput}
-            hideLabel
-            value={token}
-            label="Receive a Transfer"
-            placeholder="Enter a token"
-            onChange={handleInputChange}
-          />
-          <Button
-            className={classes.reviewDetails}
-            buttonType="primary"
-            disabled={token === ''}
-            onClick={() => setConfirmDialogOpen(true)}
-          >
-            Review Details
-          </Button>
-          <Hidden mdDown>
-            <HelpIcon
-              className={classes.helpIcon}
-              text="Enter a transfer token to review the details and accept the transfer."
+        <Grid item>
+          <Grid container direction="row" alignItems="center">
+            <TextField
+              className={classes.transferInput}
+              hideLabel
+              value={token}
+              label="Receive a Transfer"
+              placeholder="Enter a token"
+              onChange={handleInputChange}
             />
-          </Hidden>
-        </div>
-        <Button buttonType="primary" onClick={handleCreateTransfer}>
-          Make a Transfer
-        </Button>
+            <Button
+              className={classes.reviewDetails}
+              buttonType="primary"
+              disabled={token === ''}
+              onClick={() => setConfirmDialogOpen(true)}
+            >
+              Review Details
+            </Button>
+            <Hidden mdDown>
+              <HelpIcon
+                className={classes.helpIcon}
+                text="Enter a transfer token to review the details and accept the transfer."
+              />
+            </Hidden>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Button buttonType="primary" onClick={handleCreateTransfer}>
+            Make a Transfer
+          </Button>
+        </Grid>
       </Grid>
       <ConfirmTransferDialog
         open={confirmDialogOpen}
