@@ -6,7 +6,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { queryClient } from 'src/queries/base';
-import { useCreateTransfer } from 'src/queries/entityTransfers';
+import { queryKey, useCreateTransfer } from 'src/queries/entityTransfers';
 import TransferCheckoutBar from './TransferCheckoutBar';
 import TransferHeader from './TransferHeader';
 import LinodeTransferTable from './LinodeTransferTable';
@@ -54,7 +54,7 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
   const handleCreateTransfer = (payload: CreateTransferPayload) => {
     createTransfer(payload, {
       onSuccess: transfer => {
-        queryClient.invalidateQueries('entity-transfers');
+        queryClient.invalidateQueries(queryKey);
         push({ pathname: '/account/entity-transfers', state: { transfer } });
       }
     });

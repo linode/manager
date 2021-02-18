@@ -10,7 +10,7 @@ import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { creationHandlers, listToItemsByID, queryPresets } from './base';
 
-const queryKey = 'entity-transfers';
+export const queryKey = 'entity-transfers';
 
 const getAllEntityTransfersRequest = () =>
   getAll<EntityTransfer>((passedParams, passedFilter) =>
