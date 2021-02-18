@@ -29,7 +29,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   crumb: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: theme.spacing()
+    },
+    [theme.breakpoints.only('md')]: {
       paddingLeft: theme.spacing()
     }
   },
