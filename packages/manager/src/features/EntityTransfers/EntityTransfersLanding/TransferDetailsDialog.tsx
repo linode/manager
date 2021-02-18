@@ -36,7 +36,7 @@ export const TransferDetailsDialog: React.FC<Props> = props => {
       onClose={onClose}
     >
       <Typography className={classes.token}>
-        <div className={classes.label}>Transfers Token: </div>
+        <div className={classes.label}>Transfer Token: </div>
         {token}
       </Typography>
       <Typography className={classes.label}>Linode IDs:</Typography>
