@@ -120,7 +120,7 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
         spacing={2}
         className={classes.root}
       >
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12} md={8} lg={9}>
           <TransferHeader />
           <LinodeTransferTable
             selectedLinodes={state.linodes}
@@ -129,7 +129,13 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
             handleToggle={toggleEntity('linodes')}
           />
         </Grid>
-        <Grid item xs={12} md={3} className={`mlSidebar ${classes.sidebar}`}>
+        <Grid
+          item
+          xs={12}
+          md={4}
+          lg={3}
+          className={`mlSidebar ${classes.sidebar}`}
+        >
           <TransferCheckoutBar
             isCreating={isCreating}
             selectedEntities={state}
