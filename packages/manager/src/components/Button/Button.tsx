@@ -13,8 +13,9 @@ export interface Props extends ButtonProps {
   className?: string;
   tooltipText?: string;
   compact?: boolean;
-  deleteText?: string;
+  outline?: boolean;
   superCompact?: boolean;
+  deleteText?: string;
   loadingText?: string;
 }
 
@@ -50,6 +51,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   superCompact: {
     paddingLeft: 0,
     paddingRight: 0
+  },
+  outline: {
+    border: `1px solid ${theme.palette.primary.main}`,
+    borderRadius: 1,
+    minHeight: 34
   },
   reg: {
     display: 'flex',
@@ -90,6 +96,7 @@ const WrappedButton: React.FC<CombinedProps> = props => {
     buttonType,
     compact,
     superCompact,
+    outline,
     className,
     ...rest
   } = props;
@@ -109,6 +116,7 @@ const WrappedButton: React.FC<CombinedProps> = props => {
             loading,
             [classes.compact]: compact,
             [classes.superCompact]: superCompact,
+            [classes.outline]: outline,
             disabled: props.disabled
           },
           className
