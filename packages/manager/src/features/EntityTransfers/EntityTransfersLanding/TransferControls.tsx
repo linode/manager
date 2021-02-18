@@ -11,28 +11,86 @@ import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-    width: '100%'
+    margin: `${theme.spacing(3)}px 0 ${theme.spacing(2)}px`,
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      alignItems: 'flex-end'
+    },
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      marginTop: theme.spacing(),
+      marginLeft: theme.spacing(2),
+      marginRight: theme.spacing(2)
+    }
   },
   reviewDetails: {
     marginLeft: theme.spacing(2)
   },
+  labelWrapper: {
+    margin: 0,
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      marginLeft: theme.spacing()
+    }
+  },
   label: {
-    marginRight: theme.spacing(2),
-    fontSize: '1rem'
+    color: theme.cmrTextColors.headlineStatic,
+    fontSize: '1rem',
+    marginRight: theme.spacing(),
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: 4,
+      marginLeft: 0
+    }
+  },
+  transferInputWrapper: {
+    [theme.breakpoints.down('xs')]: {
+      width: 'calc(100% - 16px)',
+      '& > div': {
+        flexGrow: 1
+      }
+    }
   },
   transferInput: {
     width: 360,
+    [theme.breakpoints.down('md')]: {
+      width: 220
+    },
     [theme.breakpoints.down('sm')]: {
-      width: 200
+      width: 240
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
     }
   },
   helpIcon: {
     color: theme.color.grey1
   },
   makeTransfer: {
-    justifySelf: 'flex-end'
+    [theme.breakpoints.up('md')]: {
+      '&.MuiGrid-item': {
+        paddingRight: 0
+      }
+    },
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
+      width: '100%',
+      '&.MuiGrid-item': {
+        padding: 0
+      }
+    }
+  },
+  makeTransferButton: {
+    minWidth: 152,
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
+      marginTop: theme.spacing(),
+      marginBottom: theme.spacing(),
+      width: 'calc(100% - 32px)'
+    }
   }
 }));
 
@@ -58,17 +116,28 @@ export const TransferControls: React.FC<{}> = _ => {
     <>
       <Grid
         container
+        className={classes.root}
         alignItems="center"
         justify="space-between"
-        className={classes.root}
+        wrap="nowrap"
       >
-        <Grid item>
+        <Grid
+          container
+          item
+          className={`px0 ${classes.labelWrapper}`}
+          alignItems="center"
+          wrap="nowrap"
+        >
           <Typography className={classes.label}>
             <strong>Receive a Transfer</strong>
           </Typography>
-        </Grid>
-        <Grid item>
-          <Grid container direction="row" alignItems="center">
+          <Grid
+            container
+            item
+            className={classes.transferInputWrapper}
+            direction="row"
+            alignItems="center"
+          >
             <TextField
               className={classes.transferInput}
               hideLabel
@@ -85,7 +154,7 @@ export const TransferControls: React.FC<{}> = _ => {
             >
               Review Details
             </Button>
-            <Hidden mdDown>
+            <Hidden smDown>
               <HelpIcon
                 className={classes.helpIcon}
                 text="Enter a transfer token to review the details and accept the transfer."
@@ -94,7 +163,11 @@ export const TransferControls: React.FC<{}> = _ => {
           </Grid>
         </Grid>
         <Grid item className={classes.makeTransfer}>
-          <Button buttonType="primary" onClick={handleCreateTransfer}>
+          <Button
+            buttonType="primary"
+            className={classes.makeTransferButton}
+            onClick={handleCreateTransfer}
+          >
             Make a Transfer
           </Button>
         </Grid>
