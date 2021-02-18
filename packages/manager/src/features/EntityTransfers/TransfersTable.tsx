@@ -16,6 +16,7 @@ import capitalize from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
 import ConfirmTransferCancelDialog from './EntityTransfersLanding/ConfirmTransferCancelDialog';
 import ActionMenu from './TransfersPendingActionMenu';
+import { isEmpty } from 'ramda';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -76,7 +77,13 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
 
   const renderTransferRow = (transfer: EntityTransfer, idx: number) => {
     const entitiesBeingTransferred = transfer.entities;
-    const entitiesAndTheirCounts = Object.entries(entitiesBeingTransferred);
+    const entitiesAndTheirCounts = Object.entries(
+      entitiesBeingTransferred ?? {}
+    );
+
+    if (isEmpty(entitiesAndTheirCounts)) {
+      return null;
+    }
 
     return (
       <TableRow key={`transfer-${idx}`}>
