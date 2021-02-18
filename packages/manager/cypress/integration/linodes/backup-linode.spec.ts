@@ -1,9 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import {
-  createLinode,
-  createLinodeWithBackupsEnabled,
-  deleteLinodeById
-} from '../../support/api/linodes';
+import { createLinode, deleteLinodeById } from '../../support/api/linodes';
 import {
   containsClick,
   containsVisible,
@@ -47,7 +43,7 @@ describe('linode backups', () => {
 
   it('create linode from snapshot', () => {
     cy.visitWithLogin('/dashboard');
-    createLinodeWithBackupsEnabled().then(linode => {
+    createLinode({ backups_enabled: true }).then(linode => {
       cy.visit(`/linodes/${linode.id}/backup`);
       // intercept request
       cy.intercept('POST', `*/linode/instances/${linode.id}/backups`).as(
@@ -76,7 +72,7 @@ describe('linode backups', () => {
   // this test has become irrelevant for now
   it.skip('cant snapshot while booting linode', () => {
     cy.visitWithLogin('/dashboard');
-    createLinodeWithBackupsEnabled().then(linode => {
+    createLinode({ backups_enabled: true }).then(linode => {
       cy.visit(`/linodes/${linode.id}/backup`);
       fbtClick('Take Snapshot');
       cy.findByText('Label is required.');

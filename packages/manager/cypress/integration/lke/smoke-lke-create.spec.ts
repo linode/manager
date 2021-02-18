@@ -1,10 +1,8 @@
 import { makeTestLabel } from '../../support/api/common';
 import {
   containsClick,
-  containsVisible,
   fbtClick,
   fbtVisible,
-  getClick,
   getVisible
 } from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';

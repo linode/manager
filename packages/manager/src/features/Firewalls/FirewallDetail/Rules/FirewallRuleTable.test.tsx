@@ -1,5 +1,5 @@
 import { ExtendedFirewallRule } from './firewallRuleEditor';
-import { firewallRuleToRowData, sortPortString } from './FirewallRuleTable';
+import { firewallRuleToRowData } from './FirewallRuleTable';
 
 describe('Firewall rule table tests', () => {
   describe('firewallRuleToRowData', () => {
@@ -20,22 +20,6 @@ describe('Firewall rule table tests', () => {
         'addresses',
         'All IPv4, All IPv6'
       );
-    });
-  });
-
-  describe('sortPortString utility', () => {
-    it('should sort ports numerically', () => {
-      expect(sortPortString('80, 22')).toMatch('22, 80');
-      expect(sortPortString('443, 22, 80-81')).toMatch('22, 80-81, 443');
-    });
-
-    it('should handle whitespace variations', () => {
-      expect(sortPortString('443,22,80-81')).toMatch('22, 80-81, 443');
-    });
-
-    it('should return the string unaltered with bad input', () => {
-      expect(sortPortString('')).toBe('');
-      expect(sortPortString('33, XX-gibberish')).toMatch('33, XX-gibberish');
     });
   });
 });

@@ -1,7 +1,11 @@
 import { ipResponse } from 'src/__data__/ipResponse';
 import { ipAddressFactory } from 'src/factories/networking';
-import { listIPv6InRange, uniqByIP } from './LinodeNetworking';
-import { createType, ipResponseToDisplayRows } from './LinodeNetworking_CMR';
+import {
+  createType,
+  ipResponseToDisplayRows,
+  listIPv6InRange,
+  uniqByIP
+} from './LinodeNetworking';
 import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 
 const {

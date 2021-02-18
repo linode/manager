@@ -1,12 +1,13 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { readableBytes } from 'src/utilities/unitConversions';
 import ObjectActionMenu from './ObjectActionMenu';
 
@@ -16,18 +17,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.bg.lightBlue
     }
   },
-  folderNameWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  },
-  iconWrapper: {
-    margin: '2px 0'
-  },
   manuallyCreatedIcon: {
     '& g': {
       fill: theme.bg.lightBlue
     }
+  },
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 0
+  },
+  objectNameButton: {
+    ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight
   }
 }));
 
@@ -60,7 +63,6 @@ const ObjectTableRow: React.FC<Props> = props => {
     <TableRow
       ariaLabel={displayName}
       className={manuallyCreated ? classes.manuallyCreated : ''}
-      rowLink={handleClickDetails}
     >
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
@@ -74,21 +76,27 @@ const ObjectTableRow: React.FC<Props> = props => {
           <Grid item>
             <Box display="flex" alignItems="center">
               <Typography>
-                <strong>{displayName}</strong>
+                <button
+                  className={classes.objectNameButton}
+                  onClick={handleClickDetails}
+                >
+                  <strong>{displayName}</strong>
+                </button>
               </Typography>
             </Box>
           </Grid>
         </Grid>
       </TableCell>
       <TableCell noWrap>{readableBytes(objectSize).formatted}</TableCell>
-      <TableCell noWrap>
-        <DateTimeDisplay value={objectLastModified} />
-      </TableCell>
-      <TableCell>
+      <Hidden smDown>
+        <TableCell noWrap>
+          <DateTimeDisplay value={objectLastModified} />
+        </TableCell>
+      </Hidden>
+      <TableCell className={classes.actionCell}>
         <ObjectActionMenu
           handleClickDownload={handleClickDownload}
           handleClickDelete={handleClickDelete}
-          handleClickDetails={handleClickDetails}
           objectName={fullName}
         />
       </TableCell>

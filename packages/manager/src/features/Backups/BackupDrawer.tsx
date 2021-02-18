@@ -159,15 +159,6 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
               </Notice>
             </Grid>
           )}
-          <Grid item>
-            <BackupsTable linodes={linodesWithoutBackups} loading={loading} />
-          </Grid>
-          <Grid item>
-            <DisplayPrice
-              price={getTotalPrice(linodesWithoutBackups)}
-              interval="mo"
-            />
-          </Grid>
           {/* Don't show this if the setting is already active. */}
           {!accountBackups && (
             <Grid item>
@@ -179,7 +170,13 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
             </Grid>
           )}
           <Grid item>
-            <ActionsPanel style={{ marginTop: 16 }}>
+            <DisplayPrice
+              price={getTotalPrice(linodesWithoutBackups)}
+              interval="mo"
+            />
+          </Grid>
+          <Grid item>
+            <ActionsPanel style={{ padding: 0, margin: 0 }}>
               <Button
                 onClick={this.handleSubmit}
                 loading={loading || enabling || enrolling}
@@ -199,6 +196,9 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
                 Cancel
               </Button>
             </ActionsPanel>
+          </Grid>
+          <Grid item>
+            <BackupsTable linodes={linodesWithoutBackups} loading={loading} />
           </Grid>
         </Grid>
       </Drawer>
