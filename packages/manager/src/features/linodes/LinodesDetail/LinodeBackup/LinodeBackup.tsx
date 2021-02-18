@@ -442,14 +442,12 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     initialValue: LinodeBackupSchedule,
     newValue: LinodeBackupSchedule
   ) => {
-    if (
-      (newValue.day === 'Scheduling' || newValue.day === initialValue.day) &&
-      (newValue.window === 'Scheduling' ||
+    return (
+      newValue.day === 'Scheduling' ||
+      newValue.window === 'Scheduling' ||
+      (newValue.day === initialValue.day &&
         newValue.window === initialValue.window)
-    ) {
-      return true;
-    }
-    return false;
+    );
   };
 
   handleSnapshotNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
