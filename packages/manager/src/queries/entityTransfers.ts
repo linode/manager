@@ -3,18 +3,12 @@ import {
   CreateTransferPayload,
   EntityTransfer,
   getEntityTransfer,
-  getEntityTransfers,
-  cancelTransfer
+  getEntityTransfers
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
-import {
-  creationHandlers,
-  mutationHandlers,
-  listToItemsByID,
-  queryPresets
-} from './base';
+import { creationHandlers, listToItemsByID, queryPresets } from './base';
 
 const queryKey = 'entity-transfers';
 
@@ -46,10 +40,4 @@ export const useCreateTransfer = () => {
     },
     creationHandlers(queryKey, 'token')
   );
-};
-
-export const useCancelTransfer = () => {
-  return useMutation<{}, APIError[], string>(token => {
-    return cancelTransfer(token);
-  }, mutationHandlers(queryKey, 'token'));
 };

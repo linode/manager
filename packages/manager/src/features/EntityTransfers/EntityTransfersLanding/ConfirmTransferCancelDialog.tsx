@@ -1,3 +1,5 @@
+import { cancelTransfer } from '@linode/api-v4/lib/entity-transfers';
+import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -7,7 +9,7 @@ import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
-import { useCancelTransfer } from 'src/queries/entityTransfers';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles(() => ({
   actions: {
@@ -27,25 +29,44 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: cancelTransfer, error, isLoading } = useCancelTransfer();
+
+  const [submitting, setSubmitting] = React.useState(false);
+  const [submissionErrors, setSubmissionErrors] = React.useState<
+    APIError[] | null
+  >(null);
+
+  React.useEffect(() => {
+    if (open) {
+      setSubmissionErrors(null);
+      setSubmitting(false);
+    }
+  }, [open]);
 
   const handleCancelTransfer = () => {
     // This should never happen.
     if (!token) {
       return;
     }
+    setSubmissionErrors(null);
+    setSubmitting(true);
 
-    cancelTransfer(token, {
-      onSuccess: () => {
+    cancelTransfer(token)
+      .then(() => {
         // Refresh the query for Entity Transfers.
         queryClient.invalidateQueries('entity-transfers');
 
         onClose();
+        setSubmitting(false);
         enqueueSnackbar('Transfer canceled successfully.', {
           variant: 'success'
         });
-      }
-    });
+      })
+      .catch(e => {
+        setSubmissionErrors(
+          getAPIErrorOrDefault(e, 'An unexpected error occurred.')
+        );
+        setSubmitting(false);
+      });
   };
 
   const actions = (
@@ -54,9 +75,9 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
         Keep Transfer
       </Button>
       <Button
-        disabled={isLoading}
+        disabled={submitting}
         onClick={handleCancelTransfer}
-        loading={isLoading}
+        loading={submitting}
         buttonType="primary"
       >
         Cancel Transfer
@@ -72,9 +93,13 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
       actions={actions}
     >
       {// There could be multiple errors here that are relevant.
-      error
-        ? error.map((err, idx) => (
-            <Notice key={`form-submit-error-${idx}`} error text={err.reason} />
+      submissionErrors
+        ? submissionErrors.map((error, idx) => (
+            <Notice
+              key={`form-submit-error-${idx}`}
+              error
+              text={error.reason}
+            />
           ))
         : null}
       <Typography>
