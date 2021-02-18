@@ -69,7 +69,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
     TransferEntities | undefined
   >(undefined);
 
-  // const transfersCount = transfers?.length ?? 0;
+  const transfersCount = transfers?.length ?? 0;
 
   const transferTypeIsPending = transferType === 'pending';
   const transferTypeIsSent = transferType === 'sent';
@@ -113,20 +113,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
             <DateTimeDisplay value={transfer.created} />
           </TableCell>
         </Hidden>
-        {transferTypeIsPending ? (
-          <Hidden xsDown>
-            <TableCell className={classes.cellContents} noWrap>
-              {entitiesAndTheirCounts.map((entry, idx) => {
-                return (
-                  <span key={idx}>
-                    {formatEntitiesCell(entry)}
-                    <br />
-                  </span>
-                );
-              })}
-            </TableCell>
-          </Hidden>
-        ) : (
+        <Hidden xsDown={transferTypeIsPending}>
           <TableCell className={classes.cellContents} noWrap>
             {entitiesAndTheirCounts.map((entry, idx) => {
               return (
@@ -137,7 +124,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
               );
             })}
           </TableCell>
-        )}
+        </Hidden>
         {transferTypeIsPending ? (
           <>
             <TableCell className={classes.cellContents} noWrap>
