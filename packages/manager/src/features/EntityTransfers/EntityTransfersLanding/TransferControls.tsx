@@ -13,17 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
-    display: 'flex',
-    flexFlow: 'row wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     width: '100%'
-  },
-  receiveTransfer: {
-    display: 'flex',
-    flexFlow: 'row wrap',
-    alignItems: 'center',
-    justifyContent: 'center'
   },
   reviewDetails: {
     marginLeft: theme.spacing(2)
@@ -40,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helpIcon: {
     color: theme.color.grey1
+  },
+  makeTransfer: {
+    justifySelf: 'flex-end'
   }
 }));
 
@@ -63,7 +56,12 @@ export const TransferControls: React.FC<{}> = _ => {
   const handleCreateTransfer = () => push('/account/entity-transfers/create');
   return (
     <>
-      <Grid container className={classes.root}>
+      <Grid
+        container
+        alignItems="center"
+        justify="space-between"
+        className={classes.root}
+      >
         <Grid item>
           <Typography className={classes.label}>
             <strong>Receive a Transfer</strong>
@@ -95,7 +93,7 @@ export const TransferControls: React.FC<{}> = _ => {
             </Hidden>
           </Grid>
         </Grid>
-        <Grid item>
+        <Grid item className={classes.makeTransfer}>
           <Button buttonType="primary" onClick={handleCreateTransfer}>
             Make a Transfer
           </Button>
