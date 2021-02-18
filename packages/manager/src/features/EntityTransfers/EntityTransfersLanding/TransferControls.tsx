@@ -7,6 +7,7 @@ import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
 import TextField from 'src/components/TextField';
 import ConfirmTransferDialog from './ConfirmTransferDialog';
+import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -62,11 +63,13 @@ export const TransferControls: React.FC<{}> = _ => {
   const handleCreateTransfer = () => push('/account/entity-transfers/create');
   return (
     <>
-      <div className={classes.root}>
-        <div className={classes.receiveTransfer}>
+      <Grid container className={classes.root}>
+        <Grid item>
           <Typography className={classes.label}>
             <strong>Receive a Transfer</strong>
           </Typography>
+        </Grid>
+        <div className={classes.receiveTransfer}>
           <TextField
             className={classes.transferInput}
             hideLabel
@@ -93,7 +96,7 @@ export const TransferControls: React.FC<{}> = _ => {
         <Button buttonType="primary" onClick={handleCreateTransfer}>
           Make a Transfer
         </Button>
-      </div>
+      </Grid>
       <ConfirmTransferDialog
         open={confirmDialogOpen}
         token={token}
