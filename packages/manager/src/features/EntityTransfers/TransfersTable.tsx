@@ -1,4 +1,7 @@
-import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers';
+import {
+  EntityTransfer,
+  TransferEntities
+} from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
@@ -15,6 +18,7 @@ import TableContentWrapper from 'src/components/TableContentWrapper';
 import capitalize from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
 // import ActionMenu from './TransfersPendingActionMenu';
+import TransferDetailsDialog from './EntityTransfersLanding/TransferDetailsDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -49,9 +53,15 @@ interface Props {
 type CombinedProps = Props;
 
 export const TransfersTable: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const { transferType, isLoading, error, transfers } = props;
 
-  const classes = useStyles();
+  const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
+  const [currentToken, setCurrentToken] = React.useState('');
+  const [currentEntities, setCurrentEntities] = React.useState<
+    TransferEntities | undefined
+  >(undefined);
 
   // const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(false);
 
@@ -73,7 +83,11 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
         <TableCell className={classes.cellContents} noWrap>
           <button
             className={classes.link}
-            onClick={() => alert('Open Transfer Details modal')}
+            onClick={() => {
+              setDetailsDialogOpen(true);
+              setCurrentToken(transfer.token);
+              setCurrentEntities(transfer.entities);
+            }}
           >
             {transfer.token}
           </button>
@@ -132,70 +146,71 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <div className={classes.root}>
-      <Accordion
-        heading={`Transfers ${capitalize(transferType)}`}
-        defaultExpanded
-      >
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell key="transfer-token-table-header-token">
-                Token
-              </TableCell>
-              {transferTypeIsPending || transferTypeIsSent ? (
-                <Hidden smDown>
+    <>
+      <div className={classes.root}>
+        <Accordion
+          heading={`Transfers ${capitalize(transferType)}`}
+          defaultExpanded
+        >
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell key="transfer-token-table-header-token">
+                  Token
+                </TableCell>
+                {transferTypeIsPending || transferTypeIsSent ? (
+                  <Hidden smDown>
+                    <TableCell key="transfer-token-table-header-created">
+                      Created
+                    </TableCell>
+                  </Hidden>
+                ) : (
                   <TableCell key="transfer-token-table-header-created">
                     Created
                   </TableCell>
-                </Hidden>
-              ) : (
-                <TableCell key="transfer-token-table-header-created">
-                  Created
-                </TableCell>
-              )}
-              {transferTypeIsPending ? (
-                <>
-                  <Hidden xsDown>
+                )}
+                {transferTypeIsPending ? (
+                  <>
+                    <Hidden xsDown>
+                      <TableCell key="transfer-token-table-header-entities">
+                        Entities
+                      </TableCell>
+                    </Hidden>
+                    <TableCell key="transfer-token-table-header-expiry">
+                      Expiry
+                    </TableCell>
+                    <TableCell /> {/*  Empty column header for action column */}
+                  </>
+                ) : transferTypeIsSent ? (
+                  <>
                     <TableCell key="transfer-token-table-header-entities">
                       Entities
                     </TableCell>
-                  </Hidden>
-                  <TableCell key="transfer-token-table-header-expiry">
-                    Expiry
-                  </TableCell>
-                  <TableCell /> {/*  Empty column header for action column */}
-                </>
-              ) : transferTypeIsSent ? (
-                <>
+                    <TableCell key="transfer-token-table-header-status">
+                      Status
+                    </TableCell>
+                  </>
+                ) : (
                   <TableCell key="transfer-token-table-header-entities">
                     Entities
                   </TableCell>
-                  <TableCell key="transfer-token-table-header-status">
-                    Status
-                  </TableCell>
-                </>
-              ) : (
-                <TableCell key="transfer-token-table-header-entities">
-                  Entities
-                </TableCell>
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableContentWrapper
-              loading={isLoading}
-              error={error ?? undefined}
-              length={transfers?.length ?? 0}
-            >
-              {transfers?.map((transfer, idx) =>
-                renderTransferRow(transfer, idx)
-              )}
-            </TableContentWrapper>
-          </TableBody>
-        </Table>
-      </Accordion>
-      {/* {transfersCount > pageSize ? (
+                )}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableContentWrapper
+                loading={isLoading}
+                error={error ?? undefined}
+                length={transfers?.length ?? 0}
+              >
+                {transfers?.map((transfer, idx) =>
+                  renderTransferRow(transfer, idx)
+                )}
+              </TableContentWrapper>
+            </TableBody>
+          </Table>
+        </Accordion>
+        {/* {transfersCount > pageSize ? (
         <PaginationFooter
           count={transfersCount}
           handlePageChange={handlePageChange}
@@ -206,7 +221,14 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
           fixedSize
         />
       ) : null} */}
-    </div>
+      </div>
+      <TransferDetailsDialog
+        isOpen={detailsDialogOpen}
+        onClose={() => setDetailsDialogOpen(false)}
+        token={currentToken}
+        entities={currentEntities}
+      />
+    </>
   );
 };
 
