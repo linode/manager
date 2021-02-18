@@ -16,11 +16,44 @@ import {
   TransferableEntity
 } from './transferReducer';
 import Notice from 'src/components/Notice';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    [theme.breakpoints.down('md')]: {
+      margin: 0,
+      justifyContent: 'center'
+    }
+  },
+  crumb: {
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: theme.spacing()
+    },
+    [theme.breakpoints.only('md')]: {
+      paddingLeft: theme.spacing()
+    }
+  },
+  sidebar: {
+    [theme.breakpoints.down('md')]: {
+      padding: '0px 8px !important',
+      '&.MuiGrid-item': {
+        paddingLeft: 0,
+        paddingRight: 0
+      }
+    }
+  },
+  error: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing()
+    }
+  }
+}));
 
 export const EntityTransfersCreate: React.FC<{}> = _ => {
   const { push } = useHistory();
   const { mutateAsync: createTransfer, error, isLoading } = useCreateTransfer();
+  const classes = useStyles();
 
   /**
    * Reducer and helpers for working with the payload/selection process
@@ -57,13 +90,14 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
         queryClient.invalidateQueries('entity-transfers');
         push({ pathname: '/account/entity-transfers', state: { transfer } });
       }
-    });
+    }).catch(_ => null);
   };
 
   return (
     <>
       <DocumentTitleSegment segment="Make a Transfer" />
       <Breadcrumb
+        className={classes.crumb}
         pathname={location.pathname}
         labelTitle="Make a Transfer"
         labelOptions={{ noCap: true }}
@@ -75,10 +109,20 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
         ]}
       />
       {error ? (
-        <Notice error text={getAPIErrorOrDefault(error)[0].reason} />
+        <Notice
+          error
+          text={getAPIErrorOrDefault(error)[0].reason}
+          className={classes.error}
+        />
       ) : null}
-      <Grid container>
-        <Grid item xs={9}>
+      <Grid
+        container
+        wrap="wrap"
+        direction="row"
+        spacing={2}
+        className={classes.root}
+      >
+        <Grid item xs={12} md={8} lg={9}>
           <TransferHeader />
           <LinodeTransferTable
             selectedLinodes={state.linodes}
@@ -87,7 +131,13 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
             handleToggle={toggleEntity('linodes')}
           />
         </Grid>
-        <Grid item xs={3} className="mlSidebar">
+        <Grid
+          item
+          xs={12}
+          md={4}
+          lg={3}
+          className={`mlSidebar ${classes.sidebar}`}
+        >
           <TransferCheckoutBar
             isCreating={isLoading}
             selectedEntities={state}
