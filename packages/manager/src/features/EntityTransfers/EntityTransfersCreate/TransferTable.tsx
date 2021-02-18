@@ -6,12 +6,19 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import CheckBox from 'src/components/CheckBox';
+import PaginationFooter from 'src/components/PaginationFooter';
+import DebouncedSearchTextField from 'src/components/DebouncedSearchTextField';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing()
+  },
+  search: {
+    marginBottom: theme.spacing() / 2,
+    maxWidth: 556
   },
   table: {
     marginTop: theme.spacing(),
@@ -45,28 +52,56 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   checkEmpty: {
     '& svg': { color: '#cccccc' }
+  },
+  footer: {
+    padding: theme.spacing(),
+    marginBottom: theme.spacing()
   }
 }));
 
 export interface Props {
+  count: number;
+  page: number;
+  pageSize: number;
   headers: string[];
   hasSelectedAll: boolean;
-  requestPage: () => void;
+  requestPage: (page: number) => void;
+  handleSearch: (searchText: string) => void;
   toggleSelectAll: (isToggled: boolean) => void;
-  children: JSX.Element[];
+  children: JSX.Element;
 }
 
 export const TransferTable: React.FC<Props> = props => {
-  const { hasSelectedAll, headers, toggleSelectAll } = props;
+  const {
+    count,
+    hasSelectedAll,
+    headers,
+    page,
+    pageSize,
+    handleSearch,
+    requestPage,
+    toggleSelectAll
+  } = props;
   const classes = useStyles();
+
   const handleToggleAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     return toggleSelectAll(e.target.checked);
   };
+
   return (
     <>
       <Typography variant="h2" className={classes.root}>
-        Entities
+        Linodes
       </Typography>
+      <DebouncedSearchTextField
+        className={classes.search}
+        placeholder="Search by label"
+        debounceTime={400}
+        onSearch={handleSearch}
+        isSearching={false}
+        label="Search by label"
+        hideLabel
+      />
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
@@ -91,6 +126,17 @@ export const TransferTable: React.FC<Props> = props => {
         </TableHead>
         <TableBody>{props.children}</TableBody>
       </Table>
+      {count > pageSize ? (
+        <PaginationFooter
+          count={count}
+          handlePageChange={requestPage}
+          handleSizeChange={() => null} // Transfer tables are going to be sticky at 25
+          page={page}
+          pageSize={pageSize}
+          eventCategory="Entity Transfer Table"
+          fixedSize
+        />
+      ) : null}
     </>
   );
 };

@@ -6,6 +6,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
 import TextField from 'src/components/TextField';
+import ConfirmTransferDialog from './ConfirmTransferDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -40,53 +41,61 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
-  token: string;
-  onTokenInput: (token: string) => void;
-  openConfirmTransferDialog: () => void;
-}
+export const TransferControls: React.FC<{}> = _ => {
+  const [token, setToken] = React.useState('');
+  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
 
-export type CombinedProps = Props;
-
-export const TransferControls: React.FC<Props> = props => {
-  const { openConfirmTransferDialog, onTokenInput, token } = props;
   const classes = useStyles();
   const { push } = useHistory();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onTokenInput(e.target.value);
+    setToken(e.target.value);
+  };
+
+  const handleCloseDialog = () => {
+    setConfirmDialogOpen(false);
+    // I don't love the UX here but it seems better than leaving a token in the input
+    setTimeout(() => setToken(''), 150);
   };
 
   const handleCreateTransfer = () => push('/account/entity-transfers/create');
   return (
-    <div className={classes.root}>
-      <div className={classes.receiveTransfer}>
-        <Hidden mdDown>
-          <Typography className={classes.label}>
-            <strong>Receive a Transfer</strong>
-          </Typography>
-        </Hidden>
-        <TextField
-          className={classes.transferInput}
-          hideLabel
-          label="Receive a Transfer"
-          placeholder="Enter a token"
-          onChange={handleInputChange}
-        />
-        <Button
-          className={classes.reviewDetails}
-          buttonType="primary"
-          disabled={token === ''}
-          onClick={openConfirmTransferDialog}
-        >
-          Review Details
+    <>
+      <div className={classes.root}>
+        <div className={classes.receiveTransfer}>
+          <Hidden mdDown>
+            <Typography className={classes.label}>
+              <strong>Receive a Transfer</strong>
+            </Typography>
+          </Hidden>
+          <TextField
+            className={classes.transferInput}
+            hideLabel
+            value={token}
+            label="Receive a Transfer"
+            placeholder="Enter a token"
+            onChange={handleInputChange}
+          />
+          <Button
+            className={classes.reviewDetails}
+            buttonType="primary"
+            disabled={token === ''}
+            onClick={() => setConfirmDialogOpen(true)}
+          >
+            Review Details
+          </Button>
+          <HelpIcon className={classes.helpIcon} text="Text TBD" />
+        </div>
+        <Button buttonType="primary" onClick={handleCreateTransfer}>
+          Make a Transfer
         </Button>
-        <HelpIcon className={classes.helpIcon} text="Text TBD" />
       </div>
-      <Button buttonType="primary" onClick={handleCreateTransfer}>
-        Make a Transfer
-      </Button>
-    </div>
+      <ConfirmTransferDialog
+        open={confirmDialogOpen}
+        token={token}
+        onClose={handleCloseDialog}
+      />
+    </>
   );
 };
 
