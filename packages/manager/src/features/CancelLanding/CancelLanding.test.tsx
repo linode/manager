@@ -34,6 +34,7 @@ describe('CancelLanding', () => {
     // Mock window.location.assign.
     // See this blog post: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
     const mockAssign = jest.fn();
+    delete (window as Partial<Window>).location;
     // eslint-disable-next-line
     window.location = { ...realLocation, assign: mockAssign };
 
