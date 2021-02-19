@@ -10,7 +10,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
-// import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
@@ -47,6 +47,9 @@ interface Props {
   error: APIError[] | null;
   isLoading: boolean;
   transfers?: EntityTransfer[];
+  page: number;
+  pageSize: number;
+  handlePageChange: (v: number, showSpinner?: boolean | undefined) => void;
 }
 
 type CombinedProps = Props;
