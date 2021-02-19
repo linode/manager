@@ -8,6 +8,8 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/entityTransfers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles(() => ({
@@ -25,6 +27,7 @@ export interface Props {
 
 export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
   const { onClose, open, token } = props;
+
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -47,8 +50,12 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
     }
     setSubmissionErrors(null);
     setSubmitting(true);
+
     cancelTransfer(token)
       .then(() => {
+        // Refresh the query for Entity Transfers.
+        queryClient.invalidateQueries(queryKey);
+
         onClose();
         setSubmitting(false);
         enqueueSnackbar('Transfer canceled successfully.', {
