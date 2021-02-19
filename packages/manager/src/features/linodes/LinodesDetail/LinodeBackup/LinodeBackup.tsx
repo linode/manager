@@ -99,7 +99,7 @@ const styles = (theme: Theme) =>
     snapshotFormControl: {
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'flex-start',
+      alignItems: 'flex-end',
       flexWrap: 'wrap',
       '& > div': {
         width: 'auto',
@@ -438,6 +438,18 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     });
   };
 
+  inputHasChanged = (
+    initialValue: LinodeBackupSchedule,
+    newValue: LinodeBackupSchedule
+  ) => {
+    return (
+      newValue.day === 'Scheduling' ||
+      newValue.window === 'Scheduling' ||
+      (newValue.day === initialValue.day &&
+        newValue.window === initialValue.window)
+    );
+  };
+
   handleSnapshotNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ snapshotForm: { label: e.target.value } });
   };
@@ -567,7 +579,9 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
                   buttonType="primary"
                   onClick={this.handleSnapshotDialogDisplay}
                   data-qa-snapshot-button
-                  disabled={linodeInTransition || disabled}
+                  disabled={
+                    linodeInTransition || disabled || snapshotForm.label === ''
+                  }
                 >
                   Take Snapshot
                 </Button>
@@ -587,7 +601,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   SettingsForm = (): JSX.Element | null => {
-    const { classes, permissions } = this.props;
+    const { classes, backupsSchedule, permissions } = this.props;
     const { settingsForm } = this.state;
     const getErrorFor = getAPIErrorFor(
       {
@@ -681,7 +695,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           <Button
             buttonType="primary"
             onClick={this.saveSettings}
-            disabled={isReadOnly(permissions)}
+            disabled={
+              isReadOnly(permissions) ||
+              this.inputHasChanged(backupsSchedule, settingsForm)
+            }
             loading={this.state.settingsForm.loading}
             data-qa-schedule
           >
@@ -724,12 +741,13 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
-          buttonType="primary"
+          buttonType="secondary"
           destructive
           className={classes.cancelButton}
           onClick={this.handleOpenBackupsAlert}
           data-qa-cancel
           disabled={disabled}
+          outline
         >
           Cancel Backups
         </Button>
