@@ -24,7 +24,6 @@ import {
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
-import { linodeMaintenanceWindowString } from '../../utilities';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
@@ -117,14 +116,15 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
   } = props;
 
   const loading = linodeInTransition(status, recentEvent);
-  const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
+  const parsedMaintenanceStartTime = parseMaintenanceStartTime(
+    maintenanceStartTime
+  );
 
   const MaintenanceText = () => {
     return (
       <>
-        Maintenance is scheduled for{' '}
-        {linodeMaintenanceWindowString(dateTime[0], dateTime[1])}. For more
-        information, please see your{' '}
+        This Linode&apos;s maintenance window opens at{' '}
+        {parsedMaintenanceStartTime}. For more information, see your{' '}
         <Link className={classes.statusLink} to="/support/tickets?type=open">
           open support tickets.
         </Link>
@@ -212,6 +212,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
               className={classes.statusHelpIcon}
               tooltipPosition="top"
               interactive
+              classes={{ tooltip: classes.maintenanceTooltip }}
             />
           </div>
         )}

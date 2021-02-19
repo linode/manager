@@ -13,16 +13,12 @@ import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
-import useFlags from 'src/hooks/useFlags';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
-import formatDate from 'src/utilities/formatDate';
-import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
-import LinodeCard from './LinodeCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes pulse': {
@@ -63,7 +59,6 @@ type CombinedProps = WithImagesProps & PaginationProps & Props;
 
 const CardView: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const flags = useFlags();
   const notificationContext = React.useContext(_notificationContext);
 
   const { updateLinode } = useLinodeActions();
@@ -106,7 +101,6 @@ const CardView: React.FC<CombinedProps> = props => {
 
   const {
     data,
-    imagesData,
     openDialog,
     openPowerActionDialog,
     linodeConfigs,
@@ -136,53 +130,26 @@ const CardView: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <Grid container className="m0" style={{ width: '100%' }}>
-        {flags.cmr
-          ? data.map((linode, idx: number) => (
-              <React.Fragment key={`linode-card-${idx}`}>
-                <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
-                  <LinodeEntityDetail
-                    variant="landing"
-                    id={linode.id}
-                    linode={linode}
-                    isDetailLanding
-                    numVolumes={getVolumesByLinode(linode.id)}
-                    username={profile.data?.username}
-                    linodeConfigs={linodeConfigs}
-                    backups={linode.backups}
-                    openTagDrawer={openTagDrawer}
-                    openDialog={openDialog}
-                    openPowerActionDialog={openPowerActionDialog}
-                    openNotificationDrawer={notificationContext.openDrawer}
-                  />
-                </Grid>
-              </React.Fragment>
-            ))
-          : data.map((linode, idx: number) => (
-              <LinodeCard
-                key={`linode-card-${idx}`}
-                backups={linode.backups}
+        {data.map((linode, idx: number) => (
+          <React.Fragment key={`linode-card-${idx}`}>
+            <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
+              <LinodeEntityDetail
+                variant="landing"
                 id={linode.id}
-                ipv4={linode.ipv4}
-                ipv6={linode.ipv6}
-                maintenanceStartTime={
-                  linode.maintenance?.when
-                    ? formatDate(linode.maintenance.when)
-                    : ''
-                }
-                label={linode.label}
-                region={linode.region}
-                status={linode.status}
-                tags={linode.tags}
-                disk={linode.specs.disk}
-                vcpus={linode.specs.vcpus}
-                memory={linode.specs.memory}
-                type={linode.type}
-                image={linode.image}
-                imageLabel={safeGetImageLabel(imagesData, linode.image)}
+                linode={linode}
+                isDetailLanding
+                numVolumes={getVolumesByLinode(linode.id)}
+                username={profile.data?.username}
+                linodeConfigs={linodeConfigs}
+                backups={linode.backups}
+                openTagDrawer={openTagDrawer}
                 openDialog={openDialog}
                 openPowerActionDialog={openPowerActionDialog}
+                openNotificationDrawer={notificationContext.openDrawer}
               />
-            ))}
+            </Grid>
+          </React.Fragment>
+        ))}
       </Grid>
       <TagDrawer
         entityLabel={tagDrawer.label}

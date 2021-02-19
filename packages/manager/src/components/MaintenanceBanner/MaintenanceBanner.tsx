@@ -146,13 +146,11 @@ const generateIntroText = (
        * to the user here.
        */
       const rawDate = formatDate(start);
-      const humanizedDate = formatDate(start);
 
       return (
         <React.Fragment>
-          This Linode&apos;s physical host will be undergoing maintenance on{' '}
+          This Linode&apos;s physical host will be undergoing maintenance at{' '}
           {rawDate}
-          {rawDate !== humanizedDate && ` (${humanizedDate})`}
           {'. '}
           During this time, your Linode will be shut down
           {type === 'migration'
