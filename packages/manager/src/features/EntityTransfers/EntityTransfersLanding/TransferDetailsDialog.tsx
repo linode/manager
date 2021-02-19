@@ -35,14 +35,18 @@ export const TransferDetailsDialog: React.FC<Props> = props => {
       open={isOpen}
       onClose={onClose}
     >
-      <Typography className={classes.token}>
-        <div className={classes.label}>Transfer Token: </div>
+      <div className={classes.token}>
+        <Typography className={classes.label}>Transfer Token: </Typography>
         {token}
-      </Typography>
+      </div>
       <Typography className={classes.label}>Linode IDs:</Typography>
       <div className={classes.entities}>
         {entities?.linodes.map((entity, idx) => {
-          return <Typography data-test-id={idx}>{entity}</Typography>;
+          return (
+            <Typography key={idx} data-testid={idx}>
+              {entity}
+            </Typography>
+          );
         })}
       </div>
     </InformationDialog>

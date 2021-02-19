@@ -1,106 +1,83 @@
+import * as classnames from 'classnames';
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { IPTypes } from './types';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+const useStyles = makeStyles((theme: Theme) => ({
+  actionMenu: {
+    height: 40
+  },
+  button: {
+    ...theme.applyLinkStyles,
+    color: theme.cmrTextColors.linkActiveLight,
+    height: '100%',
+    minWidth: 'auto',
+    padding: '12px 10px',
+    whiteSpace: 'nowrap',
+    '&:hover': {
+      textDecoration: 'none',
+      backgroundColor: '#3683dc',
+      color: '#ffffff'
+    }
+  },
+  disabled: {
+    cursor: 'not-allowed',
+    color: theme.color.grey1
+  }
+}));
 
 interface Props {
-  onView: () => void;
   onEdit?: (ip: IPAddress | IPRange) => void;
   onRemove?: (ip: IPAddress | IPRange) => void;
   ipType: IPTypes;
   ipAddress?: IPAddress | IPRange;
-  readOnly?: boolean;
+  readOnly: boolean;
 }
-
-export type IPTypes =
-  | 'SLAAC'
-  | 'Public'
-  | 'Public Reserved'
-  | 'Private Reserved'
-  | 'Private'
-  | 'Shared'
-  | 'Link Local'
-  | 'Range';
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
-  createActions = () => {
-    const {
-      onView,
-      onEdit,
-      onRemove,
-      ipType,
-      ipAddress,
-      readOnly
-    } = this.props;
+export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
 
-    return (closeMenu: Function): Action[] => {
-      const actions: Action[] = [
-        {
-          title: 'View',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onView();
-            closeMenu();
-            e.preventDefault();
-          }
-        }
-      ];
-
-      /**
-       * can only edit if we're not dealing with private IPs, link local, or reserved IPs
-       */
-      if (
-        onEdit &&
-        ipAddress &&
-        ipType !== 'Private' &&
-        ipType !== 'Link Local' &&
-        ipType !== 'Public Reserved' &&
-        ipType !== 'Private Reserved'
-      ) {
-        actions.push({
-          title: 'Edit RDNS',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onEdit(ipAddress);
-            closeMenu();
-            e.preventDefault();
-          },
-          disabled: readOnly,
-          tooltip: readOnly
-            ? "You don't have permissions to modify this Linode"
-            : undefined
-        });
-      }
-
-      if (onRemove && ipAddress && ipType === 'Public') {
-        actions.push({
-          title: 'Delete IP',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onRemove(ipAddress);
-            closeMenu();
-            e.preventDefault();
-          },
-          disabled: readOnly,
-          tooltip: readOnly
-            ? "You don't have permissions to modify this Linode"
-            : undefined
-        });
-      }
-
-      return actions;
-    };
-  };
-
-  render() {
-    const { address } = this.props.ipAddress as any;
-    return (
-      <ActionMenu
-        createActions={this.createActions()}
-        ariaLabel={`Action menu for Address ${address}`}
-      />
-    );
+  {
   }
-}
+  const { onEdit, onRemove, ipType, ipAddress, readOnly } = props;
+
+  return (
+    <div className={`${classes.actionMenu} flex-center`}>
+      {onRemove && ipAddress && ipType === 'IPv4 – Public' && (
+        <button
+          disabled={readOnly}
+          className={classnames({
+            [classes.button]: true,
+            [classes.disabled]: readOnly
+          })}
+          onClick={() => onRemove(ipAddress)}
+        >
+          Delete
+        </button>
+      )}
+      {onEdit &&
+        ipAddress &&
+        ipType !== 'IPv4 – Private' &&
+        ipType !== 'IPv6 – Link Local' &&
+        ipType !== 'IPv4 – Reserved (public)' &&
+        ipType !== 'IPv4 – Reserved (private)' && (
+          <button
+            disabled={readOnly}
+            className={classnames({
+              [classes.button]: true,
+              [classes.disabled]: readOnly
+            })}
+            onClick={() => onEdit(ipAddress)}
+          >
+            Edit RDNS
+          </button>
+        )}
+    </div>
+  );
+};
 
 export default withRouter(LinodeNetworkingActionMenu);

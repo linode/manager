@@ -4,7 +4,6 @@ import { compose } from 'recompose';
 import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import LandingHeader from 'src/components/LandingHeader';
 import withVLANs, { Props as VLANProps } from 'src/containers/vlans.container';
-import { vlanContext } from 'src/context';
 import VlanRow from './VlanRow';
 import { ActionHandlers as VlanHandlers } from './VlanActionMenu';
 import VlanDialog from './VlanDialog';
@@ -15,7 +14,6 @@ type CombinedProps = RouteComponentProps<{}> & VLANProps;
 
 const VlanLanding: React.FC<CombinedProps> = () => {
   const { vlans } = useVlans();
-  const context = React.useContext(vlanContext);
 
   useReduxLoad(['vlans']);
 
@@ -79,7 +77,6 @@ const VlanLanding: React.FC<CombinedProps> = () => {
         entity="VLAN"
         docsLink="https://www.linode.com/"
         headerOnly
-        onAddNew={context.open}
       />
       <EntityTable
         entity="vlans"

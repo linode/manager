@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       minHeight: theme.spacing(5),
       minWidth: 50,
       padding: '6px 16px',
+      textDecoration: 'none',
       '&:hover': {
         color: theme.color.blue
       }
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: 22,
       marginBottom: theme.spacing(3),
       [theme.breakpoints.down('md')]: {
-        overflowX: 'scroll',
+        overflowX: 'auto',
         padding: 1
       }
     }

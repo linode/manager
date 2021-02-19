@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4/lib/entity-transfers';
 import * as React from 'react';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { useTransferQuery } from 'src/queries/transfers';
+import { useTransferQuery } from 'src/queries/entityTransfers';
 import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
 import { capitalize } from 'src/utilities/capitalize';

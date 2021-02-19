@@ -1,3 +1,14 @@
+## [2021-02-15] - v0.42.0
+
+### Added
+profile_update event type
+
+### Changed
+Firewall validation schema (ports are now optional)
+Firewall rule validation schema (add label and description fields)
+Update Node version from 10.16 to 14.15.4
+
+
 ## [2021-01-25] - v0.41.0
 
 ### Added:

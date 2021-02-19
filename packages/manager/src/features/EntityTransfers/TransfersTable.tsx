@@ -17,8 +17,9 @@ import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import capitalize from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
-// import ActionMenu from './TransfersPendingActionMenu';
+import ConfirmTransferCancelDialog from './EntityTransfersLanding/ConfirmTransferCancelDialog';
 import TransferDetailsDialog from './EntityTransfersLanding/TransferDetailsDialog';
+import ActionMenu from './TransfersPendingActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -57,22 +58,30 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
 
   const { transferType, isLoading, error, transfers } = props;
 
+  const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(
+    false
+  );
+  const [tokenBeingCanceled, setTokenBeingCanceled] = React.useState('');
   const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
   const [currentToken, setCurrentToken] = React.useState('');
   const [currentEntities, setCurrentEntities] = React.useState<
     TransferEntities | undefined
   >(undefined);
 
-  // const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(false);
-
   // const transfersCount = transfers?.length ?? 0;
 
   const transferTypeIsPending = transferType === 'pending';
   const transferTypeIsSent = transferType === 'sent';
 
-  // const cancelPendingTransfer = (token: string) => {
-  //   setCancelPendingDialogOpen(true);
-  // }
+  const handleCancelPendingTransferClick = (token: string) => {
+    setTokenBeingCanceled(token);
+    setCancelPendingDialogOpen(true);
+  };
+
+  const closeCancelPendingDialog = () => {
+    setTokenBeingCanceled('');
+    setCancelPendingDialogOpen(false);
+  };
 
   const renderTransferRow = (transfer: EntityTransfer, idx: number) => {
     const entitiesBeingTransferred = transfer.entities;
@@ -128,11 +137,11 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
               <DateTimeDisplay value={transfer.expiry} />
             </TableCell>
             <TableCell className={classes.actionCell}>
-              Cancel
-              {/* <ActionMenu
-                onCancel={() => alert('Pending transfer canceled')}
-                token={transfer.token}
-              /> */}
+              <ActionMenu
+                onCancelClick={() =>
+                  handleCancelPendingTransferClick(transfer.token)
+                }
+              />
             </TableCell>
           </>
         ) : null}
@@ -179,7 +188,8 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
                     <TableCell key="transfer-token-table-header-expiry">
                       Expiry
                     </TableCell>
-                    <TableCell /> {/*  Empty column header for action column */}
+                    {/*  Empty column header for action column */}
+                    <TableCell />
                   </>
                 ) : transferTypeIsSent ? (
                   <>
@@ -221,6 +231,14 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
           fixedSize
         />
       ) : null} */}
+        {transferTypeIsPending ? (
+          // Only Pending Transfers can be canceled.
+          <ConfirmTransferCancelDialog
+            open={cancelPendingDialogOpen}
+            onClose={closeCancelPendingDialog}
+            token={tokenBeingCanceled}
+          />
+        ) : null}
       </div>
       <TransferDetailsDialog
         isOpen={detailsDialogOpen}

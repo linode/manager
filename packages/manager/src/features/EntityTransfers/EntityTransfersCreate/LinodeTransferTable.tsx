@@ -55,7 +55,7 @@ export const LinodeTransferTable: React.FC<Props> = props => {
   };
 
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const columns = matchesSmDown
     ? ['Label', 'Plan']
     : ['Label', 'Plan', 'Region'];
@@ -108,7 +108,7 @@ const LinodeRow: React.FC<RowProps> = props => {
     >
       <TableCell>{linode.label}</TableCell>
       <TableCell>{displayType}</TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell>{displayRegion}</TableCell>
       </Hidden>
     </SelectableTableRow>

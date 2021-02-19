@@ -1,4 +1,4 @@
-name: Run Cypress E2E Tests
+name: E2E Tests
 env:
   USER_1: ${{ secrets.MANAGER_OAUTH_1 }}
   USER_2: ${{ secrets.MANAGER_OAUTH_2 }}
