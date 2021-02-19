@@ -7,6 +7,7 @@ import { useEntityTransfersQuery } from 'src/queries/entityTransfers';
 import TransfersTable from '../TransfersTable';
 import CreateTransferSuccessDialog from './CreateTransferSuccessDialog';
 import TransferControls from './TransferControls';
+import CircleProgress from 'src/components/CircleProgress';
 
 export const EntityTransfersLanding: React.FC<{}> = _ => {
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(true);
@@ -101,35 +102,43 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
         transfer={transfer}
         onClose={handleCloseSuccessDialog}
       />
-      {numPendingTransfers > 0 ? (
-        <TransfersTable
-          transferType="pending"
-          error={pendingTransfersError}
-          isLoading={pendingTransfersLoading}
-          transfers={pendingTransfers}
-          page={paginationPendingTransfers.page}
-          pageSize={paginationPendingTransfers.pageSize}
-          handlePageChange={paginationPendingTransfers.handlePageChange}
-        />
-      ) : null}
-      <TransfersTable
-        transferType="received"
-        error={receivedTransfersError}
-        isLoading={receivedTransfersLoading}
-        transfers={receivedTransfers}
-        page={paginationReceivedTransfers.page}
-        pageSize={paginationReceivedTransfers.pageSize}
-        handlePageChange={paginationReceivedTransfers.handlePageChange}
-      />
-      <TransfersTable
-        transferType="sent"
-        error={sentTransfersError}
-        isLoading={sentTransfersLoading}
-        transfers={sentTransfers}
-        page={paginationSentTransfers.page}
-        pageSize={paginationSentTransfers.pageSize}
-        handlePageChange={paginationSentTransfers.handlePageChange}
-      />
+      {pendingTransfersLoading ||
+      receivedTransfersLoading ||
+      sentTransfersLoading ? (
+        <CircleProgress />
+      ) : (
+        <>
+          {numPendingTransfers > 0 ? (
+            <TransfersTable
+              transferType="pending"
+              error={pendingTransfersError}
+              isLoading={pendingTransfersLoading}
+              transfers={pendingTransfers}
+              page={paginationPendingTransfers.page}
+              pageSize={paginationPendingTransfers.pageSize}
+              handlePageChange={paginationPendingTransfers.handlePageChange}
+            />
+          ) : null}
+          <TransfersTable
+            transferType="received"
+            error={receivedTransfersError}
+            isLoading={receivedTransfersLoading}
+            transfers={receivedTransfers}
+            page={paginationReceivedTransfers.page}
+            pageSize={paginationReceivedTransfers.pageSize}
+            handlePageChange={paginationReceivedTransfers.handlePageChange}
+          />
+          <TransfersTable
+            transferType="sent"
+            error={sentTransfersError}
+            isLoading={sentTransfersLoading}
+            transfers={sentTransfers}
+            page={paginationSentTransfers.page}
+            pageSize={paginationSentTransfers.pageSize}
+            handlePageChange={paginationSentTransfers.handlePageChange}
+          />
+        </>
+      )}
     </div>
   );
 };
