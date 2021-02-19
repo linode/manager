@@ -69,6 +69,18 @@ export const ConfirmTransferDialog: React.FC<Props> = props => {
     APIError[] | null
   >(null);
 
+  const isOwnAccount = Boolean(data?.is_sender);
+
+  // If a user is trying to load their own account
+  const errors = isOwnAccount
+    ? [
+        {
+          reason:
+            'You cannot initiate a transfer to another user on your account.'
+        }
+      ]
+    : error;
+
   React.useEffect(() => {
     if (open) {
       setSubmissionErrors(null);
@@ -125,8 +137,8 @@ export const ConfirmTransferDialog: React.FC<Props> = props => {
     >
       <DialogContent
         isLoading={isLoading}
-        isError={isError}
-        errors={error}
+        isError={isError || isOwnAccount}
+        errors={errors}
         entities={data?.entities ?? { linodes: [] }}
         expiry={data?.expiry}
         hasConfirmed={hasConfirmed}
@@ -251,6 +263,12 @@ export const getTimeRemaining = (time?: string) => {
       .diffNow('minutes')
       .toObject().minutes ?? 0
   );
+
+  if (minutesRemaining < 1) {
+    // This should never happen; expired tokens have a status of STALE and can't be
+    // retrieved by users on another account.
+    return 'This token has expired.';
+  }
 
   const unit = minutesRemaining > 60 ? 'hour' : 'minute';
 
