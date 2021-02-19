@@ -119,12 +119,12 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/csgo_color.svg'
   },
   {
-    name: 'Cyberpanel',
+    name: 'CyberPanel',
     description: `Reduce setup time required to host websites and applications, including popular tools like OpenLiteSpeed WordPress.`,
     summary: 'Next-generation hosting control panel by OpenLiteSpeed.',
     related_guides: [
       {
-        title: 'Deploy Cyberpanel with Marketplace Apps',
+        title: 'Deploy CyberPanel with Marketplace Apps',
         href:
           'https://www.linode.com/docs/guides/deploy-cyberpanel-with-marketplace-apps'
       }
@@ -1186,7 +1186,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Zabbix',
-    description: `Host multiple sites on a single server while managing apps, firewall, databases, backups, system users, cron jobs, SSL and email–  all in an intuitive interface.`,
+    description: `Monitor, track performance and maintain availability for network servers, devices, services and other IT resources– all in one tool.`,
     summary: 'Enterprise-class open source distributed monitoring solution.',
     related_guides: [
       {
