@@ -7,37 +7,90 @@ import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
 import TextField from 'src/components/TextField';
 import ConfirmTransferDialog from './ConfirmTransferDialog';
+import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(3),
-    display: 'flex',
-    flexFlow: 'row wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%'
-  },
-  receiveTransfer: {
-    display: 'flex',
-    flexFlow: 'row wrap',
-    alignItems: 'center',
-    justifyContent: 'center'
+    margin: `${theme.spacing(3)}px 0 ${theme.spacing(2)}px`,
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      alignItems: 'flex-end'
+    },
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      marginTop: theme.spacing(),
+      marginLeft: theme.spacing(2),
+      marginRight: theme.spacing(2)
+    }
   },
   reviewDetails: {
     marginLeft: theme.spacing(2)
   },
+  labelWrapper: {
+    margin: 0,
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      marginLeft: theme.spacing()
+    }
+  },
   label: {
-    marginRight: theme.spacing(2),
-    fontSize: '1rem'
+    color: theme.cmrTextColors.headlineStatic,
+    fontSize: '1rem',
+    marginRight: theme.spacing(),
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: 4,
+      marginLeft: 0
+    }
+  },
+  transferInputWrapper: {
+    [theme.breakpoints.down('xs')]: {
+      width: 'calc(100% - 16px)',
+      '& > div': {
+        flexGrow: 1
+      }
+    }
   },
   transferInput: {
     width: 360,
+    [theme.breakpoints.down('md')]: {
+      width: 220
+    },
     [theme.breakpoints.down('sm')]: {
-      width: 150
+      width: 240
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
     }
   },
   helpIcon: {
     color: theme.color.grey1
+  },
+  makeTransfer: {
+    [theme.breakpoints.up('md')]: {
+      '&.MuiGrid-item': {
+        paddingRight: 0
+      }
+    },
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
+      width: '100%',
+      '&.MuiGrid-item': {
+        padding: 0
+      }
+    }
+  },
+  makeTransferButton: {
+    minWidth: 152,
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.down('xs')]: {
+      margin: 0,
+      marginTop: theme.spacing(),
+      marginBottom: theme.spacing(),
+      width: 'calc(100% - 32px)'
+    }
   }
 }));
 
@@ -61,35 +114,64 @@ export const TransferControls: React.FC<{}> = _ => {
   const handleCreateTransfer = () => push('/account/entity-transfers/create');
   return (
     <>
-      <div className={classes.root}>
-        <div className={classes.receiveTransfer}>
-          <Hidden mdDown>
-            <Typography className={classes.label}>
-              <strong>Receive a Transfer</strong>
-            </Typography>
-          </Hidden>
-          <TextField
-            className={classes.transferInput}
-            hideLabel
-            value={token}
-            label="Receive a Transfer"
-            placeholder="Enter a token"
-            onChange={handleInputChange}
-          />
-          <Button
-            className={classes.reviewDetails}
-            buttonType="primary"
-            disabled={token === ''}
-            onClick={() => setConfirmDialogOpen(true)}
+      <Grid
+        container
+        className={classes.root}
+        alignItems="center"
+        justify="space-between"
+        wrap="nowrap"
+      >
+        <Grid
+          container
+          item
+          className={`px0 ${classes.labelWrapper}`}
+          alignItems="center"
+          wrap="nowrap"
+        >
+          <Typography className={classes.label}>
+            <strong>Receive a Transfer</strong>
+          </Typography>
+          <Grid
+            container
+            item
+            className={classes.transferInputWrapper}
+            direction="row"
+            alignItems="center"
           >
-            Review Details
+            <TextField
+              className={classes.transferInput}
+              hideLabel
+              value={token}
+              label="Receive a Transfer"
+              placeholder="Enter a token"
+              onChange={handleInputChange}
+            />
+            <Button
+              className={classes.reviewDetails}
+              buttonType="primary"
+              disabled={token === ''}
+              onClick={() => setConfirmDialogOpen(true)}
+            >
+              Review Details
+            </Button>
+            <Hidden smDown>
+              <HelpIcon
+                className={classes.helpIcon}
+                text="Enter a transfer token to review the details and accept the transfer."
+              />
+            </Hidden>
+          </Grid>
+        </Grid>
+        <Grid item className={classes.makeTransfer}>
+          <Button
+            buttonType="primary"
+            className={classes.makeTransferButton}
+            onClick={handleCreateTransfer}
+          >
+            Make a Transfer
           </Button>
-          <HelpIcon className={classes.helpIcon} text="Text TBD" />
-        </div>
-        <Button buttonType="primary" onClick={handleCreateTransfer}>
-          Make a Transfer
-        </Button>
-      </div>
+        </Grid>
+      </Grid>
       <ConfirmTransferDialog
         open={confirmDialogOpen}
         token={token}

@@ -53,7 +53,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   const numPendingTransfers = pendingTransfers?.length ?? 0;
 
   return (
-    <>
+    <div style={{ overflowX: 'hidden' }}>
       <DocumentTitleSegment segment="Transfers" />
       <TransferControls />
       <CreateTransferSuccessDialog
@@ -89,7 +89,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
           />
         </>
       )}
-    </>
+    </div>
   );
 };
 

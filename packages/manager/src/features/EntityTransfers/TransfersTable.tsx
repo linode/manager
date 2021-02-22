@@ -24,7 +24,7 @@ import { isEmpty } from 'ramda';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: '2rem',
+    marginBottom: theme.spacing(2),
     '& .MuiAccordionDetails-root': {
       padding: 0
     }
