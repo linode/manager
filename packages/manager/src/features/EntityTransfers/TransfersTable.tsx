@@ -47,6 +47,7 @@ interface Props {
   error: APIError[] | null;
   isLoading: boolean;
   transfers?: EntityTransfer[];
+  results: number;
   page: number;
   pageSize: number;
   handlePageChange: (v: number, showSpinner?: boolean | undefined) => void;
@@ -55,9 +56,18 @@ interface Props {
 type CombinedProps = Props;
 
 export const TransfersTable: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
+  const {
+    transferType,
+    isLoading,
+    error,
+    transfers,
+    results,
+    page,
+    pageSize,
+    handlePageChange
+  } = props;
 
-  const { transferType, isLoading, error, transfers } = props;
+  const classes = useStyles();
 
   const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(
     false

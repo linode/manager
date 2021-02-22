@@ -54,6 +54,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   const pendingTransfers = Object.values(
     pendingTransfersData?.entityTransfers ?? {}
   );
+  const pendingTransfersResults = pendingTransfersData?.results ?? 0;
   const numPendingTransfers = pendingTransfersData?.results ?? 0;
 
   // Fetch the Received Transfers
@@ -74,6 +75,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   const receivedTransfers = Object.values(
     receivedTransfersData?.entityTransfers ?? {}
   );
+  const receivedTransfersResults = receivedTransfersData?.results ?? 0;
 
   // Fetch the Sent Transfers
   const {
@@ -92,6 +94,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
     }
   );
   const sentTransfers = Object.values(sentTransfersData?.entityTransfers ?? {});
+  const sentTransfersResults = sentTransfersData?.results ?? 0;
 
   return (
     <div style={{ overflowX: 'hidden' }}>
@@ -114,6 +117,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
               error={pendingTransfersError}
               isLoading={pendingTransfersLoading}
               transfers={pendingTransfers}
+              results={pendingTransfersResults}
               page={paginationPendingTransfers.page}
               pageSize={paginationPendingTransfers.pageSize}
               handlePageChange={paginationPendingTransfers.handlePageChange}
@@ -124,6 +128,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
             error={receivedTransfersError}
             isLoading={receivedTransfersLoading}
             transfers={receivedTransfers}
+            results={receivedTransfersResults}
             page={paginationReceivedTransfers.page}
             pageSize={paginationReceivedTransfers.pageSize}
             handlePageChange={paginationReceivedTransfers.handlePageChange}
@@ -133,6 +138,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
             error={sentTransfersError}
             isLoading={sentTransfersLoading}
             transfers={sentTransfers}
+            results={sentTransfersResults}
             page={paginationSentTransfers.page}
             pageSize={paginationSentTransfers.pageSize}
             handlePageChange={paginationSentTransfers.handlePageChange}
