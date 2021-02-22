@@ -3,10 +3,9 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LinodeDetailContextConsumer } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
@@ -21,13 +20,16 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
-      marginBottom: theme.spacing(2)
-    }
+      marginBottom: theme.spacing(2),
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(1),
+      },
+    },
   });
 
 type CombinedProps = WithStyles<ClassNames>;
 
-const LinodeSettings: React.FC<CombinedProps> = props => {
+const LinodeSettings: React.FC<CombinedProps> = (props) => {
   const { classes } = props;
 
   return (
@@ -43,8 +45,7 @@ const LinodeSettings: React.FC<CombinedProps> = props => {
           ) : null;
 
         return (
-          <>
-            <DocumentTitleSegment segment={`${linode.label} - Settings`} />
+          <div>
             {permissionsError}
             <Typography
               variant="h2"
@@ -72,7 +73,7 @@ const LinodeSettings: React.FC<CombinedProps> = props => {
               linodeId={linode.id}
               linodeLabel={linode.label}
             />
-          </>
+          </div>
         );
       }}
     </LinodeDetailContextConsumer>
