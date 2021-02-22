@@ -1,7 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import {
   acceptEntityTransfer,
-  TransferEntities
+  TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers';
 import * as React from 'react';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -23,29 +23,29 @@ import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   transferSummary: {
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
   },
   actions: {
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   expiry: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    fontSize: '1rem'
+    fontSize: '1rem',
   },
   entityTypeDisplay: {
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
   },
   summary: {
     fontSize: '1rem',
-    marginBottom: 4
+    marginBottom: 4,
   },
   list: {
     listStyleType: 'none',
     paddingLeft: 0,
-    margin: 0
-  }
+    margin: 0,
+  },
 }));
 
 export interface Props {
@@ -54,7 +54,7 @@ export interface Props {
   token?: string;
 }
 
-export const ConfirmTransferDialog: React.FC<Props> = props => {
+export const ConfirmTransferDialog: React.FC<Props> = (props) => {
   const { onClose, open, token } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -89,10 +89,10 @@ export const ConfirmTransferDialog: React.FC<Props> = props => {
         onClose();
         setSubmitting(false);
         enqueueSnackbar('Transfer accepted successfully.', {
-          variant: 'success'
+          variant: 'success',
         });
       })
-      .catch(e => {
+      .catch((e) => {
         setSubmissionErrors(
           getAPIErrorOrDefault(e, 'An unexpected error occurred.')
         );
@@ -130,7 +130,7 @@ export const ConfirmTransferDialog: React.FC<Props> = props => {
         entities={data?.entities ?? { linodes: [] }}
         expiry={data?.expiry}
         hasConfirmed={hasConfirmed}
-        handleToggleConfirm={() => setHasConfirmed(confirmed => !confirmed)}
+        handleToggleConfirm={() => setHasConfirmed((confirmed) => !confirmed)}
         submissionErrors={submissionErrors}
         onClose={onClose}
         onSubmit={handleAcceptTransfer}
@@ -152,7 +152,7 @@ interface ContentProps {
   onSubmit: () => void;
 }
 
-export const DialogContent: React.FC<ContentProps> = React.memo(props => {
+export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
   const {
     entities,
     errors,
@@ -161,7 +161,7 @@ export const DialogContent: React.FC<ContentProps> = React.memo(props => {
     handleToggleConfirm,
     isError,
     isLoading,
-    submissionErrors
+    submissionErrors,
   } = props;
   const classes = useStyles();
 
@@ -192,22 +192,24 @@ export const DialogContent: React.FC<ContentProps> = React.memo(props => {
 
   return (
     <>
-      {// There could be multiple errors here that are relevant.
-      submissionErrors
-        ? submissionErrors.map((thisError, idx) => (
-            <Notice
-              key={`form-submit-error-${idx}`}
-              error
-              text={thisError.reason}
-            />
-          ))
-        : null}
+      {
+        // There could be multiple errors here that are relevant.
+        submissionErrors
+          ? submissionErrors.map((thisError, idx) => (
+              <Notice
+                key={`form-submit-error-${idx}`}
+                error
+                text={thisError.reason}
+              />
+            ))
+          : null
+      }
       <div className={classes.transferSummary}>
         <Typography className={classes.summary}>
           This transfer contains:
         </Typography>
         <ul className={classes.list}>
-          {Object.keys(entities).map(thisEntityType => {
+          {Object.keys(entities).map((thisEntityType) => {
             // According to spec, all entity names are plural and lowercase
             // (NB: This may cause problems for NodeBalancers if/when they are added to the payload)
             const entityName = capitalize(thisEntityType).slice(0, -1);
@@ -234,7 +236,7 @@ export const DialogContent: React.FC<ContentProps> = React.memo(props => {
         <CheckBox
           checked={hasConfirmed}
           onChange={handleToggleConfirm}
-          text="I understand that I am responsible for any and all fees ipsum dolor sit amet"
+          text="I accept responsibility for the billing of services listed above."
         />
       </div>
     </>
@@ -247,9 +249,7 @@ export const getTimeRemaining = (time?: string) => {
   }
 
   const minutesRemaining = Math.floor(
-    DateTime.fromISO(time)
-      .diffNow('minutes')
-      .toObject().minutes ?? 0
+    DateTime.fromISO(time).diffNow('minutes').toObject().minutes ?? 0
   );
 
   const unit = minutesRemaining > 60 ? 'hour' : 'minute';
