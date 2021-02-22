@@ -51,6 +51,7 @@ interface Props {
   page: number;
   pageSize: number;
   handlePageChange: (v: number, showSpinner?: boolean | undefined) => void;
+  handlePageSizeChange: (v: number) => void;
 }
 
 type CombinedProps = Props;
@@ -64,7 +65,8 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
     results,
     page,
     pageSize,
-    handlePageChange
+    handlePageChange,
+    handlePageSizeChange
   } = props;
 
   const classes = useStyles();
@@ -181,13 +183,12 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
         </Accordion>
         {/* {transfersCount > pageSize ? (
         <PaginationFooter
-          count={transfersCount}
+          count={results}
           handlePageChange={handlePageChange}
-          handleSizeChange={() => null} // Transfer tables are going to be sticky at 25
+          handleSizeChange={handlePageSizeChange}
           page={page}
           pageSize={pageSize}
           eventCategory="Entity Transfer Table"
-          fixedSize
         />
       ) : null} */}
         {transferTypeIsPending ? (

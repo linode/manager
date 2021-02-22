@@ -44,7 +44,8 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
     {
       page: paginationPendingTransfers.page,
       page_size: paginationPendingTransfers.pageSize,
-      handlePageChange: paginationPendingTransfers.handlePageChange
+      handlePageChange: paginationPendingTransfers.handlePageChange,
+      handlePageSizeChange: paginationPendingTransfers.handlePageSizeChange
     },
     {
       status: 'pending',
@@ -66,7 +67,8 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
     {
       page: paginationReceivedTransfers.page,
       page_size: paginationReceivedTransfers.pageSize,
-      handlePageChange: paginationReceivedTransfers.handlePageChange
+      handlePageChange: paginationReceivedTransfers.handlePageChange,
+      handlePageSizeChange: paginationReceivedTransfers.handlePageSizeChange
     },
     {
       status: 'received'
@@ -86,7 +88,8 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
     {
       page: paginationSentTransfers.page,
       page_size: paginationSentTransfers.pageSize,
-      handlePageChange: paginationSentTransfers.handlePageChange
+      handlePageChange: paginationSentTransfers.handlePageChange,
+      handlePageSizeChange: paginationSentTransfers.handlePageSizeChange
     },
     {
       is_sender: true,
@@ -121,6 +124,9 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
               page={paginationPendingTransfers.page}
               pageSize={paginationPendingTransfers.pageSize}
               handlePageChange={paginationPendingTransfers.handlePageChange}
+              handlePageSizeChange={
+                paginationPendingTransfers.handlePageSizeChange
+              }
             />
           ) : null}
           <TransfersTable
@@ -132,6 +138,9 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
             page={paginationReceivedTransfers.page}
             pageSize={paginationReceivedTransfers.pageSize}
             handlePageChange={paginationReceivedTransfers.handlePageChange}
+            handlePageSizeChange={
+              paginationReceivedTransfers.handlePageSizeChange
+            }
           />
           <TransfersTable
             transferType="sent"
@@ -142,6 +151,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
             page={paginationSentTransfers.page}
             pageSize={paginationSentTransfers.pageSize}
             handlePageChange={paginationSentTransfers.handlePageChange}
+            handlePageSizeChange={paginationSentTransfers.handlePageSizeChange}
           />
         </>
       )}
