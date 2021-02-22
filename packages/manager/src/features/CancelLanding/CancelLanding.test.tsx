@@ -22,9 +22,9 @@ describe('CancelLanding', () => {
       wrapWithTheme(<CancelLanding />, {
         MemoryRouter: {
           initialEntries: [
-            { pathname: '/cancel', state: { survey_link: 'linode.com' } }
-          ]
-        }
+            { pathname: '/cancel', state: { survey_link: 'linode.com' } },
+          ],
+        },
       })
     );
     expect(queryByTestId('body')).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('CancelLanding', () => {
     // Mock window.location.assign.
     // See this blog post: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
     const mockAssign = jest.fn();
-    delete window.location;
+    delete (window as Partial<Window>).location;
     // eslint-disable-next-line
     window.location = { ...realLocation, assign: mockAssign };
 
@@ -43,8 +43,8 @@ describe('CancelLanding', () => {
     const { getByTestId } = render(
       wrapWithTheme(<CancelLanding />, {
         MemoryRouter: {
-          initialEntries: [{ pathname: '/cancel', state: { survey_link } }]
-        }
+          initialEntries: [{ pathname: '/cancel', state: { survey_link } }],
+        },
       })
     );
     const button = getByTestId('survey-button');
