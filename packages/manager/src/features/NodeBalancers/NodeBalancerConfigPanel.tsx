@@ -25,16 +25,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import NodeBalancerConfigNode from './NodeBalancerConfigNode';
 import { NodeBalancerConfigNodeFields } from './types';
 
-type ClassNames =
-  | 'divider'
-  | 'backendIPAction'
-  | 'suggestionsParent'
-  | 'suggestions'
-  | 'suggestionItem'
-  | 'selectedSuggestionItem'
-  | 'statusHeader'
-  | 'statusChip'
-  | 'passiveChecks';
+type ClassNames = 'divider' | 'passiveChecks' | 'actionsPanel';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -42,68 +33,12 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1)
     },
-    backendIPAction: {
-      display: 'flex',
-      alignItems: 'flex-end',
-      paddingLeft: theme.spacing(2),
-      marginLeft: -theme.spacing(1),
-      [theme.breakpoints.down('md')]: {
-        marginTop: -theme.spacing(1)
-      },
-      [theme.breakpoints.down('xs')]: {
-        marginTop: 0
-      },
-      '& .remove': {
-        margin: 0,
-        padding: theme.spacing(2.5)
-      }
-    },
-    suggestionsParent: {
-      position: 'relative'
-    },
-    suggestions: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: 80,
-      padding: 0,
-      boxShadow: `0 0 10px ${theme.color.boxShadow}`,
-      maxHeight: 150,
-      overflowY: 'auto',
-      width: '100%',
-      maxWidth: 415,
-      zIndex: 2
-    },
-    suggestionItem: {
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      color: theme.palette.text.primary,
-      '&:hover, &:focus': {
-        backgroundColor: `${theme.palette.primary.main} !important`,
-        color: `white !important`
-      },
-      '&:last-item': {
-        border: 0
-      }
-    },
-    selectedSuggestionItem: {
-      backgroundColor: `${theme.palette.primary.main} !important`,
-      color: '#fff !important'
-    },
-    statusHeader: {
-      fontSize: '.9rem',
-      color: theme.color.label,
-      marginTop: theme.spacing(2) - 4
-    },
-    statusChip: {
-      marginTop: theme.spacing(1),
-      color: 'white',
-      '&.undefined': {
-        backgroundColor: theme.color.grey2,
-        color: theme.palette.text.primary
-      }
-    },
     passiveChecks: {
       marginTop: 4
+    },
+    actionsPanel: {
+      paddingBottom: 0,
+      paddingRight: `${theme.spacing()}px !important`
     }
   });
 
@@ -952,6 +887,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       buttonType="secondary"
                       disabled={disabled}
                       onClick={this.addNode}
+                      outline
                     >
                       Add a Node
                     </Button>
@@ -968,35 +904,33 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Grid
                   updateFor={[submitting, classes]}
                   container
-                  justify="space-between"
+                  justify="flex-end"
                   alignItems="center"
                 >
-                  <Grid item>
-                    <ActionsPanel style={{ paddingLeft: 0 }}>
-                      {(forEdit || configIdx !== 0) && (
-                        <Button
-                          onClick={this.props.onDelete}
-                          buttonType="secondary"
-                          destructive
-                          data-qa-delete-config
-                          disabled={disabled}
-                        >
-                          Delete
-                        </Button>
-                      )}
-                      {forEdit && (
-                        <Button
-                          buttonType="primary"
-                          onClick={this.onSave}
-                          loading={submitting}
-                          data-qa-save-config
-                          disabled={disabled}
-                        >
-                          Save
-                        </Button>
-                      )}
-                    </ActionsPanel>
-                  </Grid>
+                  <ActionsPanel className={classes.actionsPanel}>
+                    {(forEdit || configIdx !== 0) && (
+                      <Button
+                        onClick={this.props.onDelete}
+                        buttonType="secondary"
+                        destructive
+                        data-qa-delete-config
+                        disabled={disabled}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                    {forEdit && (
+                      <Button
+                        buttonType="primary"
+                        onClick={this.onSave}
+                        loading={submitting}
+                        data-qa-save-config
+                        disabled={disabled}
+                      >
+                        Save
+                      </Button>
+                    )}
+                  </ActionsPanel>
                 </Grid>
               </React.Fragment>
             )}
