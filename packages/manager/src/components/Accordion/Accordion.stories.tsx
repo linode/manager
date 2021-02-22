@@ -9,18 +9,18 @@ import Accordion from './Accordion';
 class AsyncContentExample extends React.Component {
   state = {
     loading: false,
-    data: ''
+    data: '',
   };
 
   handleToggleExpand = (e: any, expanded: boolean) => {
     if (expanded && !this.state.data) {
       this.setState({ loading: true });
       const myPromise = () =>
-        new Promise(resolve => setTimeout(() => resolve(), 2000));
+        new Promise<void>((resolve) => setTimeout(() => resolve(), 2000));
       myPromise().then(() =>
         this.setState({
           data: 'Your patience has been rewarded',
-          loading: false
+          loading: false,
         })
       );
     }
@@ -44,7 +44,7 @@ class AsyncContentExample extends React.Component {
       <div
         style={{
           padding: 20,
-          backgroundColor: '#f4f4f4'
+          backgroundColor: '#f4f4f4',
         }}
       >
         <Accordion

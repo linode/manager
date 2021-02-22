@@ -4,7 +4,7 @@ import { OrderByProps } from 'src/components/OrderBy';
 import APIPaginatedTable from './APIPaginatedTable';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag_CMR';
 import ListEntities from './ListEntities_CMR';
-import { EntityTableRow, PageyIntegrationProps } from './types';
+import type { EntityTableRow, PageyIntegrationProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
@@ -12,18 +12,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& td': {
       borderTop: 0,
       paddingLeft: '15px',
-      paddingRight: '15px'
-    }
+      paddingRight: '15px',
+    },
   },
   '& .MuiTableCell-head': {
-    borderBottom: 0
+    borderBottom: 0,
   },
   thead: {
     '& p': {
       fontFamily: theme.font.bold,
-      fontWeight: 500
-    }
-  }
+      fontWeight: 500,
+    },
+  },
 }));
 
 interface Props {
@@ -40,14 +40,14 @@ interface Props {
 
 export type CombinedProps = Props & PageyIntegrationProps;
 
-export const LandingTable: React.FC<CombinedProps> = props => {
+export const LandingTable: React.FC<CombinedProps> = (props) => {
   const {
     entity,
     headers,
     row,
     initialOrder,
     toggleGroupByTag,
-    isGroupedByTag
+    isGroupedByTag,
   } = props;
   const classes = useStyles();
   const tableProps = {
@@ -62,7 +62,7 @@ export const LandingTable: React.FC<CombinedProps> = props => {
     entity,
     handlers: row.handlers,
     toggleGroupByTag,
-    isGroupedByTag
+    isGroupedByTag,
   };
 
   if (row.request) {
