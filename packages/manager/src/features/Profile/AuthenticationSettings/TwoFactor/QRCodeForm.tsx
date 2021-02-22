@@ -1,6 +1,7 @@
 import * as QRCode from 'qrcode.react';
 import { compose } from 'ramda';
 import * as React from 'react';
+import CopyableTextField from 'src/components/CopyableTextField';
 import {
   createStyles,
   Theme,
@@ -9,7 +10,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard from 'src/components/RenderGuard';
-import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 
 declare module 'qrcode.react' {
   export interface QRCodeProps {

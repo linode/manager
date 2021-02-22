@@ -71,6 +71,9 @@ export default (
     case 'domain':
       return `/domains/${id}`;
 
+    case 'entity_transfer':
+      return `/account/entity-transfers`;
+
     case 'volume':
       return `/volumes`;
 

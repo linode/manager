@@ -9,6 +9,7 @@ import {
   domainFactory,
   domainRecordFactory,
   imageFactory,
+  entityTransferFactory,
   firewallFactory,
   firewallDeviceFactory,
   kubernetesAPIResponse,
@@ -60,6 +61,49 @@ export const makeResourcePage = (
   data: e
 });
 
+const entityTransfers = [
+  rest.get('*/account/entity-transfers', (req, res, ctx) => {
+    const transfers1 = entityTransferFactory.buildList(10);
+    const transfers2 = entityTransferFactory.buildList(10, {
+      token: 'TEST123'
+    });
+    const transfers3 = entityTransferFactory.buildList(10, {
+      token: '987TEST'
+    });
+    const transfer4 = entityTransferFactory.build({
+      is_sender: true,
+      status: 'pending'
+    });
+
+    const combinedTransfers = transfers1.concat(
+      transfers2,
+      transfers3,
+      transfer4
+    );
+    return res(ctx.json(makeResourcePage(combinedTransfers)));
+  }),
+  rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
+    const transfer = entityTransferFactory.build();
+    return res(ctx.json(transfer));
+  }),
+  rest.post('*/account/entity-transfers', (req, res, ctx) => {
+    const payload = req.body as any;
+    const newTransfer = entityTransferFactory.build({
+      entities: payload.entities
+    });
+    return res(ctx.json(newTransfer));
+  }),
+  rest.post(
+    '*/account/entity-transfers/:transferId/accept',
+    (req, res, ctx) => {
+      return res(ctx.json({}));
+    }
+  ),
+  rest.delete('*/account/entity-transfers/:transferId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  })
+];
+
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build();
@@ -85,7 +129,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
-    const onlineLinodes = linodeFactory.buildList(3, {
+    const onlineLinodes = linodeFactory.buildList(17, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000']
     });
@@ -469,7 +513,8 @@ export const handlers = [
     const unknown = databaseFactory.build({ status: 'unknown' });
     const databases = [online, initializing, error, unknown];
     return res(ctx.json(makeResourcePage(databases)));
-  })
+  }),
+  ...entityTransfers
 ];
 
 // Generator functions for dynamic handlers, in use by mock data dev tools.

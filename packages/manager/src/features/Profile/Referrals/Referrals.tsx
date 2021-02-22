@@ -2,6 +2,7 @@ import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
+import CopyableTextField from 'src/components/CopyableTextField';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -12,7 +13,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 import { MapState } from 'src/store/types';
 
 type ClassNames = 'root' | 'results' | 'title' | 'copyField';

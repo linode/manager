@@ -24,6 +24,7 @@ const styles = (theme: Theme) =>
 
 type Props = TextFieldProps & {
   className: string;
+  hideIcon?: boolean;
 };
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -38,7 +39,7 @@ class CopyableTextField extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { value, classes, className, ...restProps } = this.props;
+    const { value, classes, className, hideIcon, ...restProps } = this.props;
 
     return (
       <TextField
@@ -47,7 +48,9 @@ class CopyableTextField extends React.Component<CombinedProps> {
         className={`${className} ${'copy'}`}
         data-qa-copy-tooltip
         InputProps={{
-          endAdornment: (
+          endAdornment: hideIcon ? (
+            undefined
+          ) : (
             <CopyTooltip text={`${value}`} className={classes.copyIcon} />
           )
         }}

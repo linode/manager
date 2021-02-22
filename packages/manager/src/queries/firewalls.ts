@@ -15,7 +15,6 @@ import {
   mutationHandlers,
   listToItemsByID,
   queryPresets,
-  HasID,
   creationHandlers,
   deletionHandlers,
   queryClient,
@@ -56,7 +55,7 @@ export const useCreateFirewall = () => {
 };
 
 export const useDeleteFirewall = () => {
-  return useMutation<{}, APIError[], HasID>(payload => {
+  return useMutation<{}, APIError[], { id: number }>(payload => {
     return deleteFirewall(payload.id);
   }, deletionHandlers(queryKey));
 };

@@ -104,6 +104,12 @@ export default (
         onClick(`/domains/${id}`);
       };
 
+    case 'entity_transfer':
+      return (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        onClick(`/account/entity-transfers`);
+      };
+
     case 'volume':
       return (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();

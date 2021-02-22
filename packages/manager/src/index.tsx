@@ -22,7 +22,7 @@ import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 import loadDevTools from './dev-tools/load';
 import { QueryClientProvider } from 'react-query';
-// import { ReactQueryDevtools } from 'react-query/devtools';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { queryClient } from './queries/base';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
@@ -69,10 +69,10 @@ const renderApp = (props: RouteComponentProps) => (
         </SnackBar>
       )}
     </LinodeThemeWrapper>
-    {/* <ReactQueryDevtools
+    <ReactQueryDevtools
       initialIsOpen={false}
       toggleButtonProps={{ style: { marginLeft: '3em' } }}
-    /> */}
+    />
   </QueryClientProvider>
 );
 
