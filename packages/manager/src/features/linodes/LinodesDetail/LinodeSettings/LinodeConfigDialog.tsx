@@ -22,7 +22,7 @@ import {
   WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Drawer from 'src/components/Drawer';
+import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
@@ -114,11 +114,11 @@ type CombinedProps = LinodeContextProps &
   StateProps &
   WithStyles<ClassNames>;
 
-class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
+class LinodeConfigDialog extends React.Component<CombinedProps, State> {
   state: State = {
     loading: false,
     kernels: [],
-    fields: LinodeConfigDrawer.defaultFieldsValues(),
+    fields: LinodeConfigDialog.defaultFieldsValues(),
     submitting: false,
   };
 
@@ -148,7 +148,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     if (this.isOpening(prevProps.open, this.props.open)) {
       /** Reset the form to the default create state. */
       this.setState({
-        fields: LinodeConfigDrawer.defaultFieldsValues(),
+        fields: LinodeConfigDialog.defaultFieldsValues(),
       });
 
       if (this.state.errors) {
@@ -186,15 +186,17 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     const loading = this.state.loading || this.props.kernelsLoading;
 
     return (
-      <Drawer
+      <Dialog
         title={`${linodeConfigId ? 'Edit' : 'Add'} Linode Configuration`}
         open={open}
         onClose={onClose}
+        fullHeight
+        fullWidth
       >
         <Grid container direction="row">
           {this.renderContent(errors, loading)}
         </Grid>
-      </Drawer>
+      </Dialog>
     );
   }
 
@@ -278,7 +280,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {generalError && (
-          <Notice error errorGroup="linode-config-drawer" text={generalError} />
+          <Notice error errorGroup="linode-config-dialog" text={generalError} />
         )}
         <Grid
           item
@@ -299,7 +301,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             value={label}
             onChange={this.handleChangeLabel}
             errorText={errorFor('label')}
-            errorGroup="linode-config-drawer"
+            errorGroup="linode-config-dialog"
             disabled={readOnly}
           />
 
@@ -310,7 +312,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             multiline={true}
             rows={3}
             errorText={errorFor('comments')}
-            errorGroup="linode-config-drawer"
+            errorGroup="linode-config-dialog"
             disabled={readOnly}
           />
         </Grid>
@@ -527,7 +529,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 inputProps={{ name: 'root_device', id: 'root_device' }}
                 fullWidth
                 errorText={errorFor('root_device')}
-                errorGroup="linode-config-drawer"
+                errorGroup="linode-config-dialog"
                 disabled={readOnly}
               />
             )}
@@ -904,4 +906,4 @@ const enhanced = compose<CombinedProps, Props>(
   })
 );
 
-export default enhanced(LinodeConfigDrawer);
+export default enhanced(LinodeConfigDialog);

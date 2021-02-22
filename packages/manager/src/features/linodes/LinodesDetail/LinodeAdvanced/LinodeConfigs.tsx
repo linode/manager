@@ -53,7 +53,7 @@ import { getAllVlans } from 'src/store/vlans/vlans.requests';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll, GetAllData } from 'src/utilities/getAll';
-import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';
+import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDialog';
 import ConfigRow from './ConfigRow';
 
 type ClassNames =
