@@ -18,7 +18,8 @@ import useEventInfo from './useEventInfo';
 const useStyles = makeStyles((theme: Theme) => ({
   action: {
     display: 'flex',
-    flexFlow: 'row nowrap'
+    flexFlow: 'row nowrap',
+    width: '100%'
   },
   bar: {
     marginTop: theme.spacing()

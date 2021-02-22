@@ -1,7 +1,13 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import { RebuildLinodeSchema } from './linodes.schema';
-import { Devices, Linode, LinodeCloneData, RebuildRequest } from './types';
+import {
+  Devices,
+  Linode,
+  LinodeCloneData,
+  RebuildRequest,
+  RescueRequestObject
+} from './types';
 
 /**
  * linodeBoot
@@ -125,12 +131,12 @@ export const rescueLinode = (
   linodeId: number,
   devices: Devices
 ): Promise<{}> => {
-  const _devices = { ...devices };
+  const _devices = { ...devices } as any;
   delete _devices['sdh'];
   return Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/rescue`),
     setMethod('POST'),
-    setData({ devices: _devices })
+    setData({ devices: _devices as RescueRequestObject })
   );
 };
 
