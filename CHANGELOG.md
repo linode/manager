@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-02-21] - v1.32.0
+
+### Added:
+
+- One-Click Apps:
+  - CyberPanel
+  - ServerWand
+  - Yacht
+  - Zabbix
+
+### Changed:
+
+- Update TypeScript to v4
+
 ## [2021-02-19] - v1.31.0
 
 ### Changed:
