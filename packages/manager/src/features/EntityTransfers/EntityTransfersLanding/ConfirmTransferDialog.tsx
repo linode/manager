@@ -20,6 +20,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import Notice from 'src/components/Notice';
 import { useSnackbar } from 'notistack';
 import { DateTime } from 'luxon';
+import { countByEntity } from '../utilities';
+import { sendEntityTransferReceiveEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   transferSummary: {
@@ -76,8 +78,8 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
     ? [
         {
           reason:
-            'You cannot initiate a transfer to another user on your account.'
-        }
+            'You cannot initiate a transfer to another user on your account.',
+        },
       ]
     : error;
 
@@ -98,6 +100,11 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
     setSubmitting(true);
     acceptEntityTransfer(token)
       .then(() => {
+        // @analytics
+        if (data?.entities) {
+          const entityCount = countByEntity(data?.entities);
+          sendEntityTransferReceiveEvent(entityCount);
+        }
         onClose();
         setSubmitting(false);
         enqueueSnackbar('Transfer accepted successfully.', {
