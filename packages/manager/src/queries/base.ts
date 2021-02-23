@@ -14,14 +14,12 @@ export const queryPresets: Record<QueryConfigTypes, UseQueryOptions<any>> = {
     cacheTime: 5 * 60 * 1000
   },
   longLived: {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000
   },
   oneTimeFetch: {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
     staleTime: Infinity,
     cacheTime: Infinity
   }
@@ -34,61 +32,72 @@ export const queryClient = new QueryClient({
 // =============================================================================
 // Types
 // =============================================================================
-export type HasID = { id: number };
-export type ItemsByID<T extends HasID> = Record<string, T>;
+export type ItemsByID<T> = Record<string, T>;
 
 // =============================================================================
 // Utility Functions
 // =============================================================================
-export const listToItemsByID = <E extends HasID[]>(entityList: E) => {
-  return entityList.reduce((map, item) => ({ ...map, [item.id]: item }), {});
+
+/**
+ * "Indexers" for the following methods are included to handle
+ * the case where an entity's primary key isn't "id." By
+ * default, these methods will try to map Entity.id: Entity,
+ * but consumers can override this to map over whatever value
+ * is unique to that entity type. One example of this is Entity Transfers,
+ * which have a unique primary key of "token."
+ *
+ */
+
+export const listToItemsByID = <E extends {}[]>(
+  entityList: E,
+  indexer: string = 'id'
+) => {
+  return entityList.reduce(
+    (map, item) => ({ ...map, [item[indexer]]: item }),
+    {}
+  );
 };
 
-export const mutationHandlers = <
-  T extends HasID,
-  V extends HasID,
-  E = APIError[]
->(
-  queryKey: string
+export const mutationHandlers = <T, V, E = APIError[]>(
+  queryKey: string,
+  indexer: string = 'id'
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables) => {
       // Update the query data to include the newly updated Entity.
       queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => ({
         ...oldData,
-        [variables.id]: updatedEntity
+        [variables[indexer]]: updatedEntity
       }));
     }
   };
 };
 
-export const creationHandlers = <T extends HasID, V, E = APIError[]>(
-  queryKey: string
+export const creationHandlers = <T, V, E = APIError[]>(
+  queryKey: string,
+  indexer: string = 'id'
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: updatedEntity => {
       // Add the new Entity to the existing data.
       queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => ({
         ...oldData,
-        [updatedEntity.id]: updatedEntity
+        [updatedEntity[indexer]]: updatedEntity
       }));
     }
   };
 };
 
-export const deletionHandlers = <
-  T extends HasID,
-  V extends HasID,
-  E = APIError[]
->(
-  queryKey: string
+export const deletionHandlers = <T, V, E = APIError[]>(
+  queryKey: string,
+  indexer: string = 'id'
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (_, variables) => {
       // Remove the Entity from the existing data.
       queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => {
         const oldDataCopy = { ...oldData };
-        delete oldDataCopy[variables.id];
+        delete oldDataCopy[variables[indexer]];
         return oldDataCopy;
       });
     }
