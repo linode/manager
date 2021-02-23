@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EventsLanding from 'src/features/Events/EventsLanding';
@@ -17,13 +17,16 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
-      marginBottom: theme.spacing(2)
-    }
+      marginBottom: theme.spacing(2),
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(1),
+      },
+    },
   });
 
 type CombinedProps = WithStyles<ClassNames> & StateProps;
 
-export const LinodeActivity: React.FC<CombinedProps> = props => {
+export const LinodeActivity: React.FC<CombinedProps> = (props) => {
   const { classes, linodeID } = props;
 
   return (
@@ -52,7 +55,7 @@ interface StateProps {
   linodeID: number;
 }
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeID: linode.id
+  linodeID: linode.id,
 }));
 
 const styled = withStyles(styles);

@@ -10,19 +10,19 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import { withLinodeDetailContext } from './linodeDetailContext';
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
-const LinodeNetworking = React.lazy(() =>
-  import('./LinodeNetworking/LinodeNetworking')
+const LinodeNetworking = React.lazy(
+  () => import('./LinodeNetworking/LinodeNetworking')
 );
 const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
-const LinodeAdvanced_CMR = React.lazy(() =>
-  import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel_CMR')
+const LinodeAdvanced = React.lazy(
+  () => import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel')
 );
 const LinodeBackup = React.lazy(() => import('./LinodeBackup'));
-const LinodeActivity_CMR = React.lazy(() =>
-  import('./LinodeActivity/LinodeActivity_CMR')
+const LinodeActivity = React.lazy(
+  () => import('./LinodeActivity/LinodeActivity')
 );
-const LinodeSettings_CMR = React.lazy(() =>
-  import('./LinodeSettings/LinodeSettings_CMR')
+const LinodeSettings = React.lazy(
+  () => import('./LinodeSettings/LinodeSettings')
 );
 
 type CombinedProps = ContextProps &
@@ -30,41 +30,41 @@ type CombinedProps = ContextProps &
     linodeId: string;
   }>;
 
-const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
+const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
   const {
     linodeLabel,
-    match: { url }
+    match: { url },
   } = props;
 
   const tabs = [
     {
       routeName: `${url}/analytics`,
-      title: 'Analytics'
+      title: 'Analytics',
     },
     {
       routeName: `${url}/networking`,
-      title: 'Network'
+      title: 'Network',
     },
     {
       routeName: `${url}/storage`,
-      title: 'Storage'
+      title: 'Storage',
     },
     {
       routeName: `${url}/configurations`,
-      title: 'Configurations'
+      title: 'Configurations',
     },
     {
       routeName: `${url}/backup`,
-      title: 'Backups'
+      title: 'Backups',
     },
     {
       routeName: `${url}/activity`,
-      title: 'Activity Feed'
+      title: 'Activity Feed',
     },
     {
       routeName: `${url}/settings`,
-      title: 'Settings'
-    }
+      title: 'Settings',
+    },
   ];
 
   const matches = (p: string) => {
@@ -73,7 +73,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
 
   const getIndex = () => {
     return Math.max(
-      tabs.findIndex(tab => matches(tab.routeName)),
+      tabs.findIndex((tab) => matches(tab.routeName)),
       0
     );
   };
@@ -106,7 +106,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
               </SafeTabPanel>
 
               <SafeTabPanel index={3}>
-                <LinodeAdvanced_CMR />
+                <LinodeAdvanced />
               </SafeTabPanel>
 
               <SafeTabPanel index={4}>
@@ -114,11 +114,11 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
               </SafeTabPanel>
 
               <SafeTabPanel index={5}>
-                <LinodeActivity_CMR />
+                <LinodeActivity />
               </SafeTabPanel>
 
               <SafeTabPanel index={6}>
-                <LinodeSettings_CMR />
+                <LinodeSettings />
               </SafeTabPanel>
             </TabPanels>
           </React.Suspense>
@@ -143,7 +143,7 @@ const enhanced = compose<CombinedProps, {}>(
     linodeConfigs: linode._configs,
     linodeLabel: linode.label,
     linodeRegion: linode.region,
-    readOnly: linode._permissions === 'read_only'
+    readOnly: linode._permissions === 'read_only',
   }))
 );
 
