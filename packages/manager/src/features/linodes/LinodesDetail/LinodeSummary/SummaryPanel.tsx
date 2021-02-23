@@ -24,7 +24,6 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { withLinodeDetailContext } from '../linodeDetailContext';
-import LinodeNetSummary from './LinodeNetSummary';
 
 type ClassNames = 'region' | 'regionInner';
 
@@ -105,9 +104,6 @@ class SummaryPanel extends React.Component<CombinedProps> {
               </div>
             )}
           </div>
-        </Paper>
-        <Paper className={classes.summarySection}>
-          <LinodeNetSummary linodeId={linodeId} />
         </Paper>
         <Paper className={classes.summarySection} style={{ paddingBottom: 24 }}>
           <Typography variant="h3" className={classes.title} data-qa-title>

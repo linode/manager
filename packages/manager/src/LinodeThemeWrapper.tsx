@@ -1,27 +1,19 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import { ThemeProvider } from 'src/components/core/styles';
-import { dark, light } from 'src/themes';
-
-import { COMPACT_SPACING_UNIT, NORMAL_SPACING_UNIT } from 'src/themeFactory';
-
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import withPreferences, {
-  PreferencesActionsProps
+  PreferencesActionsProps,
 } from 'src/containers/preferences.container';
+import { dark, light } from 'src/themes';
 import {
   sendCurrentThemeSettingsEvent,
-  sendSpacingToggleEvent,
-  sendThemeToggleEvent
+  sendThemeToggleEvent,
 } from 'src/utilities/ga';
 
 export type ThemeChoice = 'light' | 'dark';
-export type SpacingChoice = 'compact' | 'normal';
 
-type RenderChildren = (
-  toggle: () => void,
-  spacing: () => void
-) => React.ReactNode;
+type RenderChildren = (toggle: () => void) => React.ReactNode;
 
 interface Props {
   children: RenderChildren | React.ReactNode;
@@ -30,7 +22,6 @@ interface Props {
    * this is mostly so the unit tests work
    */
   theme?: ThemeChoice;
-  spacing?: SpacingChoice;
 }
 
 const themes = { light, dark };
@@ -52,7 +43,7 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
   });
 };
 
-const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
+const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
   const toggleTheme = (value: ThemeChoice) => {
     setTimeout(() => {
       document.body.classList.remove('no-transition');
@@ -62,12 +53,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
     sendThemeToggleEvent(value);
   };
 
-  const toggleSpacing = (value: SpacingChoice) => {
-    /** send to GA */
-    sendSpacingToggleEvent(value);
-  };
-
-  const setThemePrefsOnAppLoad = (value: ThemeChoice | SpacingChoice) => {
+  const setThemePrefsOnAppLoad = (value: ThemeChoice) => {
     /** send to GA */
     sendCurrentThemeSettingsEvent(value);
   };
@@ -76,7 +62,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
     /** request the user preferences on app load */
     props
       .getUserPreferences()
-      .then(response => {
+      .then((response) => {
         // Without the timeout a race condition sometimes runs the theme
         // highlight checker before the stylesheets have fully loaded.
         window.setTimeout(
@@ -104,31 +90,14 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
     >
       {({
         preference: themeChoice,
-        togglePreference: _toggleTheme
+        togglePreference: _toggleTheme,
       }: ToggleProps<ThemeChoice>) => (
-        <PreferenceToggle<'normal' | 'compact'>
-          preferenceKey="spacing"
-          preferenceOptions={['normal', 'compact']}
-          toggleCallbackFnDebounced={toggleSpacing}
-          /** purely for unit test purposes */
-          value={props.spacing}
-          initialSetCallbackFn={setThemePrefsOnAppLoad}
-          localStorageKey="spacingChoice"
+        <MemoizedThemeProvider
+          themeChoice={themeChoice}
+          toggleTheme={_toggleTheme}
         >
-          {({
-            preference: spacingChoice,
-            togglePreference: _toggleSpacing
-          }: ToggleProps<SpacingChoice>) => (
-            <MemoizedThemeProvider
-              themeChoice={themeChoice}
-              spacingChoice={spacingChoice}
-              toggleTheme={_toggleTheme}
-              toggleSpacing={_toggleSpacing}
-            >
-              {children}
-            </MemoizedThemeProvider>
-          )}
-        </PreferenceToggle>
+          {children}
+        </MemoizedThemeProvider>
       )}
     </PreferenceToggle>
   );
@@ -136,34 +105,23 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
 
 interface MemoizedThemeProviderProps {
   themeChoice: ThemeChoice;
-  spacingChoice: SpacingChoice;
   toggleTheme: () => ThemeChoice;
-  toggleSpacing: () => SpacingChoice;
   children: any;
 }
 
-const MemoizedThemeProvider: React.FC<MemoizedThemeProviderProps> = props => {
-  const {
-    themeChoice,
-    toggleTheme,
-    spacingChoice,
-    toggleSpacing,
-    children
-  } = props;
+const MemoizedThemeProvider: React.FC<MemoizedThemeProviderProps> = (props) => {
+  const { themeChoice, toggleTheme, children } = props;
 
   const theme = React.useMemo(() => {
     const themeCreator = safelyGetTheme(themes, themeChoice);
 
-    const spacingUnit =
-      spacingChoice === 'compact' ? COMPACT_SPACING_UNIT : NORMAL_SPACING_UNIT;
-
-    return themeCreator(spacingUnit);
-  }, [themeChoice, spacingChoice]);
+    return themeCreator();
+  }, [themeChoice]);
 
   return (
     <ThemeProvider theme={theme}>
       {typeof children === 'function'
-        ? (children as RenderChildren)(toggleTheme, toggleSpacing)
+        ? (children as RenderChildren)(toggleTheme)
         : children}
     </ThemeProvider>
   );
@@ -176,7 +134,7 @@ const safelyGetTheme = (
 ) => {
   /* tslint:disable */
   return !!Object.keys(themesToChoose).some(
-    eachTheme => eachTheme === themeChoice
+    (eachTheme) => eachTheme === themeChoice
   )
     ? themesToChoose[themeChoice]
     : themesToChoose['light'];
