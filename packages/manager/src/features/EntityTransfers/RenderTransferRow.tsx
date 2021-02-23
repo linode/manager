@@ -29,8 +29,7 @@ interface Props {
   entities: TransferEntities;
   expiry?: string;
   status?: string;
-  transferTypeIsPending?: boolean;
-  transferTypeIsSent?: boolean;
+  transferType?: 'pending' | 'received' | 'sent';
   handleCancelPendingTransferClick: (token: string) => void;
   handleTokenClick: (token: string, entities: TransferEntities) => void;
 }
@@ -44,8 +43,7 @@ export const RenderTransferRow: React.FC<CombinedProps> = props => {
     entities,
     expiry,
     status,
-    transferTypeIsPending,
-    transferTypeIsSent,
+    transferType,
     handleCancelPendingTransferClick,
     handleTokenClick
   } = props;
@@ -53,6 +51,9 @@ export const RenderTransferRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const entitiesAndTheirCounts = Object.entries(entities);
+
+  const transferTypeIsPending = transferType === 'pending';
+  const transferTypeIsSent = transferType === 'sent';
 
   return (
     <TableRow>

@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  transferType: string;
+  transferType: 'pending' | 'received' | 'sent';
   error: APIError[] | null;
   isLoading: boolean;
   transfers?: EntityTransfer[];
@@ -81,7 +81,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
     TransferEntities | undefined
   >(undefined);
 
-  // const transfersCount = transfers?.length ?? 0;
+  const transfersCount = transfers?.length ?? 0;
 
   const transferTypeIsPending = transferType === 'pending';
   const transferTypeIsSent = transferType === 'sent';
@@ -107,7 +107,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
       <div className={classes.root}>
         <Accordion
           heading={`Transfers ${capitalize(transferType)}`}
-          defaultExpanded
+          defaultExpanded={transfersCount > 0}
         >
           <Table className={classes.table}>
             <TableHead>
@@ -169,8 +169,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
                     entities={transfer.entities}
                     expiry={transfer.expiry}
                     status={transfer.status}
-                    transferTypeIsPending={transferTypeIsPending}
-                    transferTypeIsSent={transferTypeIsSent}
+                    transferType={transferType}
                     handleCancelPendingTransferClick={
                       handleCancelPendingTransferClick
                     }
@@ -181,16 +180,16 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
             </TableBody>
           </Table>
         </Accordion>
-        {/* {transfersCount > pageSize ? (
-        <PaginationFooter
-          count={results}
-          handlePageChange={handlePageChange}
-          handleSizeChange={handlePageSizeChange}
-          page={page}
-          pageSize={pageSize}
-          eventCategory="Entity Transfer Table"
-        />
-      ) : null} */}
+        {results > pageSize ? (
+          <PaginationFooter
+            count={results}
+            handlePageChange={handlePageChange}
+            handleSizeChange={handlePageSizeChange}
+            page={page}
+            pageSize={pageSize}
+            eventCategory="Entity Transfer Table"
+          />
+        ) : null}
         {transferTypeIsPending ? (
           // Only Pending Transfers can be canceled.
           <ConfirmTransferCancelDialog
