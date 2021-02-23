@@ -257,6 +257,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     disabled={disabled}
                   />
                   <RegionSelect
+                    isClearable
                     errorText={touched.region ? errors.region : undefined}
                     regions={props.regions
                       .filter(eachRegion =>
@@ -271,7 +272,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     name="region"
                     onBlur={handleBlur}
                     selectedID={values.region}
-                    handleSelection={value => setFieldValue('region', value)}
+                    handleSelection={value => {
+                      setFieldValue('region', value);
+                      setFieldValue('linode_id', initialValueDefaultId);
+                    }}
                     disabled={disabled}
                     styles={{
                       /** altering styles for mobile-view */
