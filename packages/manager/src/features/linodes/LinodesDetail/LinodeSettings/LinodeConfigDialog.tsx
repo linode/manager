@@ -6,7 +6,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
@@ -50,10 +49,13 @@ import {
 } from '../linodeDetailContext';
 import KernelSelect from './KernelSelect';
 
-type ClassNames = 'section' | 'divider' | 'formControlToggle';
+type ClassNames = 'button' | 'section' | 'divider' | 'formControlToggle';
 
 const styles = (theme: Theme) =>
   createStyles({
+    button: {
+      marginTop: theme.spacing()
+    },
     section: {
       marginTop: theme.spacing(2)
     },
@@ -499,11 +501,15 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
             getSelected={slot => pathOr('', [slot], this.state.fields.devices)}
             disabled={readOnly}
           />
-          <AddNewLink
+          <Button
+            className={classes.button}
+            buttonType="secondary"
+            superCompact
             onClick={() => this.setState({ counter: this.state.counter + 1 })}
-            label="Add Device"
             disabled={readOnly || counter >= 6}
-          />
+          >
+            Add a Device
+          </Button>
 
           <FormControl fullWidth>
             <FormControlLabel
