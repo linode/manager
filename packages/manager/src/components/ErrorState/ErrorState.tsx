@@ -56,7 +56,7 @@ const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
       justify="center"
       alignItems="center"
     >
-      <Grid item>
+      <Grid item data-testid="error-state">
         <div className={props.classes.iconContainer}>
           {CustomIcon ? (
             <CustomIcon
