@@ -6,6 +6,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
+import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
@@ -19,7 +20,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
@@ -33,11 +34,11 @@ import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import DeviceSelection, {
   ExtendedDisk,
-  ExtendedVolume,
+  ExtendedVolume
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
-  DevicesAsStrings,
+  DevicesAsStrings
 } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -45,7 +46,7 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import {
   CreateLinodeConfig,
   UpdateLinodeConfig,
-  withLinodeDetailContext,
+  withLinodeDetailContext
 } from '../linodeDetailContext';
 import KernelSelect from './KernelSelect';
 
@@ -54,17 +55,17 @@ type ClassNames = 'section' | 'divider' | 'formControlToggle';
 const styles = (theme: Theme) =>
   createStyles({
     section: {
-      marginTop: theme.spacing(2),
+      marginTop: theme.spacing(2)
     },
     divider: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
-      width: `calc(100% - ${theme.spacing(2)}px)`,
+      width: `calc(100% - ${theme.spacing(2)}px)`
     },
     formControlToggle: {
       '& button': {
-        order: 3,
-      },
-    },
+        order: 3
+      }
+    }
   });
 
 interface Helpers {
@@ -107,6 +108,7 @@ interface State {
   errors?: Error | APIError[];
   fields: EditableFields;
   submitting: boolean;
+  counter: number;
 }
 
 type CombinedProps = LinodeContextProps &
@@ -117,9 +119,10 @@ type CombinedProps = LinodeContextProps &
 class LinodeConfigDialog extends React.Component<CombinedProps, State> {
   state: State = {
     loading: false,
+    counter: 1,
     kernels: [],
     fields: LinodeConfigDialog.defaultFieldsValues(),
-    submitting: false,
+    submitting: false
   };
 
   static defaultFieldsValues: () => EditableFields = () => ({
@@ -130,7 +133,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
       distro: true,
       modules_dep: true,
       network: true,
-      updatedb_disabled: true,
+      updatedb_disabled: true
     },
     kernel: 'linode/latest-64bit',
     label: '',
@@ -139,16 +142,16 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
     run_level: 'default',
     useCustomRoot: false,
     virt_mode: 'paravirt',
-    setMemoryLimit: 'no_limit',
+    setMemoryLimit: 'no_limit'
   });
 
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+  componentDidUpdate(prevProps: CombinedProps) {
     const { config } = this.props;
 
     if (this.isOpening(prevProps.open, this.props.open)) {
       /** Reset the form to the default create state. */
       this.setState({
-        fields: LinodeConfigDialog.defaultFieldsValues(),
+        fields: LinodeConfigDialog.defaultFieldsValues()
       });
 
       if (this.state.errors) {
@@ -160,11 +163,14 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
        * to the values of the config.
        */
       if (config) {
+        const devices = createStringsFromDevices(config.devices);
+        const initialCounter = Object.keys(devices).length;
         this.setState({
+          counter: initialCounter,
           fields: {
             useCustomRoot: isUsingCustomRoot(config.root_device),
             label: config.label,
-            devices: createStringsFromDevices(config.devices),
+            devices,
             kernel: config.kernel,
             comments: config.comments,
             memory_limit: config.memory_limit,
@@ -172,9 +178,8 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
             virt_mode: config.virt_mode,
             helpers: config.helpers,
             root_device: config.root_device,
-            setMemoryLimit:
-              config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
-          },
+            setMemoryLimit: config.memory_limit !== 0 ? 'set_limit' : 'no_limit'
+          }
         });
       }
     }
@@ -232,6 +237,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
     const { onClose, maxMemory, classes, readOnly, kernels } = this.props;
 
     const {
+      counter,
       fields: {
         useCustomRoot,
         label,
@@ -241,9 +247,9 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
         run_level,
         virt_mode,
         helpers,
-        root_device,
+        root_device
       },
-      submitting,
+      submitting
     } = this.state;
 
     const errorFor = getAPIErrorsFor(
@@ -254,7 +260,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
         memory_limit: 'memory limit',
         run_level: 'run level',
         virt_mode: 'virtualization mode',
-        root_device: 'root device',
+        root_device: 'root device'
       },
       errors
     );
@@ -263,7 +269,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
 
     const availableDevices = {
       disks: this.props.disks,
-      volumes: this.props.volumes,
+      volumes: this.props.volumes
     };
 
     const pathsOptions = [
@@ -274,7 +280,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
       { label: '/dev/sde', value: '/dev/sde' },
       { label: '/dev/sdf', value: '/dev/sdf' },
       { label: '/dev/sdg', value: '/dev/sdg' },
-      { label: '/dev/sdh', value: '/dev/sdh' },
+      { label: '/dev/sdh', value: '/dev/sdh' }
     ];
 
     return (
@@ -291,7 +297,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
             errorFor('comments'),
             label,
             comments,
-            classes,
+            classes
           ]}
         >
           <Typography variant="h3">Label and Comments</Typography>
@@ -356,7 +362,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
               <FormHelperText id="virtModeCaption">
                 Controls if devices inside your virtual machine are
                 paravirtualized or fully virtualized. Paravirt is what you want,
-                unless you're doing weird things.
+                unless you&apos;re doing weird things.
               </FormHelperText>
             </RadioGroup>
           </FormControl>
@@ -369,6 +375,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
           xs={12}
           className={classes.section}
           updateFor={[
+            counter,
             kernel,
             this.state.fields.setMemoryLimit,
             kernels,
@@ -376,7 +383,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
             run_level,
             memory_limit,
             errorFor('memory_limit'),
-            classes,
+            classes
           ]}
         >
           <Typography variant="h3">Boot Settings</Typography>
@@ -485,14 +492,17 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
         <Grid item xs={12} className={classes.section}>
           <Typography variant="h3">Block Device Assignment</Typography>
           <DeviceSelection
+            counter={counter}
             slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh']}
             devices={availableDevices}
             onChange={this.handleDevicesChanges}
-            getSelected={(slot) =>
-              pathOr('', [slot], this.state.fields.devices)
-            }
-            counter={99}
+            getSelected={slot => pathOr('', [slot], this.state.fields.devices)}
             disabled={readOnly}
+          />
+          <AddNewLink
+            onClick={() => this.setState({ counter: this.state.counter + 1 })}
+            label="Add Device"
+            disabled={readOnly || counter >= 6}
           />
 
           <FormControl fullWidth>
@@ -511,7 +521,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
                 options={pathsOptions}
                 label="Root Device"
                 defaultValue={pathsOptions.find(
-                  (device) => device.value === root_device
+                  device => device.value === root_device
                 )}
                 onChange={this.handleRootDeviceChange}
                 name="root_device"
@@ -547,7 +557,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
               helpers.modules_dep,
               helpers.devtmpfs_automount,
               helpers.network,
-              classes,
+              classes
             ]}
             fullWidth
           >
@@ -654,7 +664,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
     const {
       linodeConfigId,
       createLinodeConfig,
-      updateLinodeConfig,
+      updateLinodeConfig
     } = this.props;
 
     /**
@@ -673,9 +683,9 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
           {
             reason:
               'You must select a valid Disk or Volume as your root device.',
-            field: 'root_device',
-          },
-        ],
+            field: 'root_device'
+          }
+        ]
       });
     }
 
@@ -686,34 +696,34 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
     /** Editing */
     if (linodeConfigId) {
       return updateLinodeConfig(linodeConfigId, configData)
-        .then((_) => {
+        .then(_ => {
           this.setState({ submitting: false });
           this.props.onClose();
         })
-        .catch((error) => {
+        .catch(error => {
           this.setState({
             errors: getAPIErrorOrDefault(
               error,
               'Unable to update config. Please try again.'
             ),
-            submitting: false,
+            submitting: false
           });
         });
     }
 
     /** Creating */
     return createLinodeConfig(configData)
-      .then((_) => {
+      .then(_ => {
         this.setState({ submitting: false });
         this.props.onClose();
       })
-      .catch((error) =>
+      .catch(error =>
         this.setState({
           errors: getAPIErrorOrDefault(
             error,
             'Unable to create config. Please try again.'
           ),
-          submitting: false,
+          submitting: false
         })
       );
   };
@@ -729,7 +739,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
       virt_mode,
       setMemoryLimit,
       helpers,
-      root_device,
+      root_device
     } = state;
 
     return {
@@ -742,7 +752,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
       run_level,
       virt_mode,
       helpers,
-      root_device,
+      root_device
     };
   };
 
@@ -762,27 +772,27 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
 
   handleAuthConfigureNetworkHelper = (e: any, result: boolean) =>
     this.updateField({
-      helpers: { ...this.state.fields.helpers, network: result },
+      helpers: { ...this.state.fields.helpers, network: result }
     });
 
   handleToggleAutoMountHelper = (e: any, result: boolean) =>
     this.updateField({
-      helpers: { ...this.state.fields.helpers, devtmpfs_automount: result },
+      helpers: { ...this.state.fields.helpers, devtmpfs_automount: result }
     });
 
   handleToggleModulesDepHelper = (e: any, result: boolean) =>
     this.updateField({
-      helpers: { ...this.state.fields.helpers, modules_dep: result },
+      helpers: { ...this.state.fields.helpers, modules_dep: result }
     });
 
   handleToggleUpdateDBHelper = (e: any, result: boolean) =>
     this.updateField({
-      helpers: { ...this.state.fields.helpers, updatedb_disabled: result },
+      helpers: { ...this.state.fields.helpers, updatedb_disabled: result }
     });
 
   handleToggleDistroHelper = (e: any, result: boolean) =>
     this.updateField({
-      helpers: { ...this.state.fields.helpers, distro: result },
+      helpers: { ...this.state.fields.helpers, distro: result }
     });
 
   handleRootDeviceChange = (e: Item<string>) =>
@@ -796,7 +806,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
 
   handleDevicesChanges = (slot: string, value: string) =>
     this.updateField({
-      devices: { ...this.state.fields.devices, [slot]: value },
+      devices: { ...this.state.fields.devices, [slot]: value }
     });
 
   handleMemoryLimitChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -829,7 +839,7 @@ const isUsingCustomRoot = (value: string) =>
     '/dev/sde',
     '/dev/sdf',
     '/dev/sdg',
-    '/dev/sdh',
+    '/dev/sdh'
   ].includes(value) === false;
 
 const validateConfigData = (configData: EditableFields) => {
@@ -865,12 +875,12 @@ const enhanced = compose<CombinedProps, Props>(
     ({ linode, createLinodeConfig, updateLinodeConfig }) => ({
       disks: linode._disks.map((disk: Disk) => ({
         ...disk,
-        _id: `disk-${disk.id}`,
+        _id: `disk-${disk.id}`
       })),
       linodeId: linode.id,
       readOnly: linode._permissions === 'read_only',
       createLinodeConfig,
-      updateLinodeConfig,
+      updateLinodeConfig
     })
   ),
 
