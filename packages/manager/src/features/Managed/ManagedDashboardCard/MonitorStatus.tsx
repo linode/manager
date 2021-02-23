@@ -2,35 +2,31 @@ import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-
 import MonitorFailed from 'src/assets/icons/monitor-failed.svg';
 import MonitorOK from 'src/assets/icons/monitor-ok.svg';
-
 import {
   makeStyles,
   Theme,
   withTheme,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-
-import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: `0`,
     textAlign: 'center',
     [theme.breakpoints.down('md')]: {
-      padding: `${theme.spacing(2)}px 0 0`
-    }
+      padding: `${theme.spacing(2)}px 0 0`,
+    },
   },
   icon: {
     '& svg': {
       display: 'flex',
       width: 56,
-      height: 56
-    }
+      height: 56,
+    },
   },
   error: {
     position: 'relative',
@@ -44,15 +40,15 @@ export const useStyles = makeStyles((theme: Theme) => ({
       left: -30,
       backgroundColor: theme.color.red,
       height: 3,
-      width: 16
+      width: 16,
     },
     '&:last-of-type': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   },
   text: {
-    maxWidth: 250
-  }
+    maxWidth: 250,
+  },
 }));
 
 export interface Props {
@@ -61,13 +57,13 @@ export interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const MonitorStatus: React.FC<CombinedProps> = props => {
-  const { monitors } = props;
+export const MonitorStatus: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const iconSize = props.theme.spacing(1) === COMPACT_SPACING_UNIT ? 75 : 50;
+  const { monitors } = props;
 
   const failedMonitors = getFailedMonitors(monitors);
+  const iconSize = 50;
 
   return (
     <>
@@ -80,15 +76,7 @@ export const MonitorStatus: React.FC<CombinedProps> = props => {
         item
       >
         <Grid item>
-          <Grid
-            item
-            style={
-              props.theme.spacing(1) === COMPACT_SPACING_UNIT
-                ? { padding: '0 3px' }
-                : undefined
-            }
-            className={classes.icon}
-          >
+          <Grid item className={classes.icon}>
             {failedMonitors.length === 0 ? (
               <MonitorOK width={iconSize} height={iconSize} />
             ) : (
