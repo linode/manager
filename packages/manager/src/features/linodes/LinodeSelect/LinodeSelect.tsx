@@ -42,6 +42,9 @@ interface Props {
   noMarginTop?: boolean;
   value?: Item<any> | null;
   inputId?: string;
+  // Formik stuff to be passed down to the inner Select
+  onBlur?: (e: any) => void;
+  name?: string;
 }
 
 type CombinedProps = Props & WithLinodesProps;
@@ -64,7 +67,8 @@ const LinodeSelect: React.FC<CombinedProps> = props => {
     labelOverride,
     filterCondition,
     value,
-    inputId
+    inputId,
+    ...rest
   } = props;
 
   const { _loading } = useReduxLoad(['linodes']);
@@ -118,6 +122,7 @@ const LinodeSelect: React.FC<CombinedProps> = props => {
       isClearable={false}
       textFieldProps={props.textFieldProps}
       noOptionsMessage={() => props.noOptionsMessage || noOptionsMessage}
+      {...rest}
     />
   );
 };
