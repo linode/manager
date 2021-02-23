@@ -43,8 +43,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   } = useEntityTransfersQuery(
     {
       page: paginationPendingTransfers.page,
-      page_size: paginationPendingTransfers.pageSize,
-      handlePageChange: paginationPendingTransfers.handlePageChange
+      page_size: paginationPendingTransfers.pageSize
     },
     {
       status: 'pending',
@@ -65,8 +64,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   } = useEntityTransfersQuery(
     {
       page: paginationReceivedTransfers.page,
-      page_size: paginationReceivedTransfers.pageSize,
-      handlePageChange: paginationReceivedTransfers.handlePageChange
+      page_size: paginationReceivedTransfers.pageSize
     },
     {
       status: 'received'
@@ -85,8 +83,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   } = useEntityTransfersQuery(
     {
       page: paginationSentTransfers.page,
-      page_size: paginationSentTransfers.pageSize,
-      handlePageChange: paginationSentTransfers.handlePageChange
+      page_size: paginationSentTransfers.pageSize
     },
     {
       is_sender: true,
