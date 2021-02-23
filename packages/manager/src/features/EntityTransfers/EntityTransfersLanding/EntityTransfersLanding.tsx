@@ -54,7 +54,6 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
     pendingTransfersData?.entityTransfers ?? {}
   );
   const pendingTransfersResults = pendingTransfersData?.results ?? 0;
-  const numPendingTransfers = pendingTransfersData?.results ?? 0;
 
   // Fetch the Received Transfers
   const {
@@ -108,7 +107,7 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
         <CircleProgress />
       ) : (
         <>
-          {numPendingTransfers > 0 ? (
+          {pendingTransfersResults > 0 ? (
             <TransfersTable
               transferType="pending"
               error={pendingTransfersError}
