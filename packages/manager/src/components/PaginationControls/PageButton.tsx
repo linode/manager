@@ -1,62 +1,46 @@
 import * as React from 'react';
 import Button, { ButtonProps } from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
-type CSSClasses = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      backgroundColor: theme.bg.white,
-      border: '1px solid ' + `${theme.color.borderPagination}`,
-      borderRight: 0,
-      padding: theme.spacing(1),
-      minWidth: 40,
-      height: 40,
-      color: theme.palette.primary.main,
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    backgroundColor: theme.cmrBGColors.bgPaper,
+    borderRadius: 1,
+    color: theme.cmrTextColors.tableHeader,
+    height: 40,
+    minWidth: 40,
+    padding: theme.spacing(),
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '0.875rem',
+      height: 30,
+      minHeight: 30,
+      minWidth: 27,
+      padding: 5,
+    },
+    '& svg': {
+      fontSize: 22,
       [theme.breakpoints.down('xs')]: {
-        minWidth: 27,
-        height: 30,
-        minHeight: 30,
-        fontSize: '0.8rem',
-        padding: 5
+        fontSize: 20,
       },
-      '& svg': {
-        fontSize: 22,
-        [theme.breakpoints.down('xs')]: {
-          fontSize: 20
-        }
-      },
-      '&.active': {
-        backgroundColor: theme.bg.main,
-        color: theme.color.black
-      },
-      '&:last-child': {
-        borderRight: '1px solid ' + `${theme.color.borderPagination}`
-      },
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: '#fff'
-      },
-      '&:disabled': {
-        backgroundColor: theme.bg.main,
-        color: theme.color.black
-      }
-    }
-  });
-
-const styled = withStyles(styles);
+    },
+    '&:disabled': {
+      background: theme.color.grey2,
+      border: `4px solid ${theme.cmrBGColors.bgPaper}`,
+    },
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: '#fff',
+    },
+  },
+}));
 
 /* tslint:disable-next-line */
 export interface Props extends ButtonProps {}
 
-const PageButton: React.FC<Props & WithStyles<CSSClasses>> = props => {
-  const { classes, children, ...rest } = props;
+const PageButton: React.FC<Props> = (props) => {
+  const classes = useStyles();
+
+  const { children, ...rest } = props;
 
   return (
     <Button className={classes.root} {...rest}>
@@ -65,4 +49,4 @@ const PageButton: React.FC<Props & WithStyles<CSSClasses>> = props => {
   );
 };
 
-export default styled(PageButton);
+export default PageButton;

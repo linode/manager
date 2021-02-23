@@ -2,19 +2,21 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
-type ClassNames = 'ellipses' | 'ellipsesInner';
+type ClassNames = 'current' | 'ellipses' | 'ellipsesInner';
 
 const styles = (theme: Theme) =>
   createStyles({
+    current: {
+      color: 'red',
+    },
     ellipses: {
-      padding: theme.spacing(1),
-      color: theme.color.black,
       backgroundColor: theme.bg.white,
-      border: '1px solid ' + `${theme.color.borderPagination}`,
       borderRight: 0,
+      color: theme.cmrTextColors.tableHeader,
+      padding: theme.spacing(),
       [theme.breakpoints.only('xs')]: {
         position: 'relative',
         display: 'inline-flex',
@@ -23,14 +25,14 @@ const styles = (theme: Theme) =>
         justifyContent: 'center',
         minWidth: 27,
         height: 30,
-        minHeight: 30
+        minHeight: 30,
       },
       [theme.breakpoints.up('sm')]: {
         display: 'inline-block',
         textAlign: 'center',
         minWidth: 40,
-        height: 40
-      }
+        height: 40,
+      },
     },
     ellipsesInner: {
       fontSize: '1.2rem',
@@ -38,9 +40,9 @@ const styles = (theme: Theme) =>
       top: -5,
       lineHeight: 0,
       [theme.breakpoints.up('sm')]: {
-        top: 0
-      }
-    }
+        top: 0,
+      },
+    },
   });
 
 export type StyleProps = WithStyles<ClassNames>;

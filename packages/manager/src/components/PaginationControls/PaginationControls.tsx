@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import PageButton from 'src/components/PaginationControls/PageButton';
 import { sendPaginationEvent } from 'src/utilities/ga';
@@ -18,8 +18,14 @@ const styles = (theme: Theme) =>
     root: {
       display: 'flex',
       flexWrap: 'wrap',
-      alignItems: 'center'
-    }
+      alignItems: 'center',
+      '& [aria-label="Previous Page"]:disabled': {
+        backgroundColor: theme.cmrBGColors.bgPaper,
+      },
+      '& [aria-label="Next Page"]:disabled': {
+        backgroundColor: theme.cmrBGColors.bgPaper,
+      },
+    },
   });
 
 const styled = withStyles(styles);
@@ -91,23 +97,23 @@ export class PaginationControls extends React.Component<CombinedProps, {}> {
     return (
       <div className={classes.root}>
         <PageButton
-          data-qa-page-previous
-          onClick={this.handlePreviousPageClick}
           disabled={disableHead}
+          onClick={this.handlePreviousPageClick}
           aria-label="Previous Page"
+          data-qa-page-previous
         >
           <KeyboardArrowLeft />
         </PageButton>
         <PageNumbers
-          numOfPages={calNumOfPages(count, pageSize)}
-          handlePageClick={this.handlePageClick}
           currentPage={page}
+          handlePageClick={this.handlePageClick}
+          numOfPages={calNumOfPages(count, pageSize)}
         />
         <PageButton
-          data-qa-page-next
-          onClick={this.handleNextPageClick}
           disabled={disableTail}
+          onClick={this.handleNextPageClick}
           aria-label="Next Page"
+          data-qa-page-next
         >
           <KeyboardArrowRight />
         </PageButton>
