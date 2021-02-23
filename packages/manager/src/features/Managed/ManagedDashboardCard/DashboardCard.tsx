@@ -6,21 +6,21 @@ import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '100% !important'
+    width: '100% !important',
   },
   container: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   header: {
     padding: theme.spacing(3),
-    paddingBottom: 0
+    paddingBottom: 0,
   },
   headerAction: {
     position: 'relative',
     top: 6,
     left: -theme.spacing(2),
-    marginLeft: theme.spacing(1) / 2
-  }
+    marginLeft: theme.spacing(1) / 2,
+  },
 }));
 
 interface Props {
@@ -34,7 +34,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DashboardCard: React.FC<CombinedProps> = props => {
+const DashboardCard: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -43,7 +43,7 @@ const DashboardCard: React.FC<CombinedProps> = props => {
     headerAction,
     noHeaderActionStyles,
     className,
-    alignItems
+    alignItems,
   } = props;
 
   return (
@@ -51,7 +51,7 @@ const DashboardCard: React.FC<CombinedProps> = props => {
       container
       className={classNames(className, {
         [classes.root]: true,
-        [classes.container]: true
+        [classes.container]: true,
       })}
       data-qa-card={title}
     >

@@ -5,7 +5,7 @@ import {
   makeStyles,
   Theme,
   WithTheme,
-  withTheme
+  withTheme,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
@@ -14,16 +14,16 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import {
   convertNetworkToUnit,
   formatNetworkTooltip,
-  generateNetworkUnits
+  generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    position: 'relative'
+    position: 'relative',
   },
   inner: {
-    paddingTop: 0
+    paddingTop: 0,
   },
   graphControls: {
     position: 'relative',
@@ -36,8 +36,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 1,
       backgroundColor: theme.palette.divider,
       [theme.breakpoints.down('xs')]: {
-        display: 'none'
-      }
+        display: 'none',
+      },
     },
     /**
      * hacky solution to solve for a bug where
@@ -45,11 +45,11 @@ const useStyles = makeStyles((theme: Theme) => ({
      * so that it was not appearing
      */
     '& canvas': {
-      height: `300px !important`
-    }
+      height: `300px !important`,
+    },
   },
   canvasContainer: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   chartSelect: {
     maxWidth: 150,
@@ -57,20 +57,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       position: 'absolute !important' as 'absolute',
       right: 24,
       top: 0,
-      zIndex: 2
+      zIndex: 2,
     },
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(3),
-      marginBottom: theme.spacing(3)
-    }
+      marginBottom: theme.spacing(3),
+    },
   },
   chartSelectCompact: {
     [theme.breakpoints.up('lg')]: {
       right: 12,
-      top: -6
-    }
+      top: -6,
+    },
   },
-  caption: {}
+  caption: {},
 }));
 
 interface Props {
@@ -84,7 +84,7 @@ type CombinedProps = Props & WithTheme;
 const chartHeight = 300;
 
 const formatData = (value: DataSeries[]): [number, number][] =>
-  value.map(thisPoint => [thisPoint.x, thisPoint.y]);
+  value.map((thisPoint) => [thisPoint.x, thisPoint.y]);
 
 const _formatTooltip = (valueInBytes: number) =>
   formatNetworkTooltip(valueInBytes / 8);
@@ -104,8 +104,8 @@ const createTabs = (
     return [];
   }
 
-  const formattedNetIn = data.net_in.map(dataPoint => dataPoint.y);
-  const formattedNetOut = data.net_out.map(dataPoint => dataPoint.y);
+  const formattedNetIn = data.net_in.map((dataPoint) => dataPoint.y);
+  const formattedNetOut = data.net_out.map((dataPoint) => dataPoint.y);
   const netInMax = Math.max(...formattedNetIn);
   const netOutMax = Math.max(...formattedNetOut);
 
@@ -134,15 +134,15 @@ const createTabs = (
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.cpu.percent,
                     data: formatData(data.cpu),
-                    label: 'CPU %'
-                  }
+                    label: 'CPU %',
+                  },
                 ]}
               />
             </div>
           </div>
         );
       },
-      title: 'CPU Usage (%)'
+      title: 'CPU Usage (%)',
     },
     {
       render: () => {
@@ -163,21 +163,21 @@ const createTabs = (
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.inbound,
                     data: formatData(data.net_in),
-                    label: 'Network Traffic In'
+                    label: 'Network Traffic In',
                   },
                   {
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
                     data: formatData(data.net_out),
-                    label: 'Network Traffic Out'
-                  }
+                    label: 'Network Traffic Out',
+                  },
                 ]}
               />
             </div>
           </div>
         );
       },
-      title: `Network Transfer (${unit}/s)`
+      title: `Network Transfer (${unit}/s)`,
     },
     {
       render: () => {
@@ -194,20 +194,20 @@ const createTabs = (
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.yellow,
                     data: formatData(data.disk),
-                    label: 'Disk I/O'
-                  }
+                    label: 'Disk I/O',
+                  },
                 ]}
               />
             </div>
           </div>
         );
       },
-      title: 'Disk I/O (op/s)'
-    }
+      title: 'Disk I/O (op/s)',
+    },
   ];
 };
 
-export const ManagedChartPanel: React.FC<CombinedProps> = props => {
+export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
   const { data, error, loading, theme } = props;
   const classes = useStyles();
   const timezone = useTimezone();
