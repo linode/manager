@@ -71,7 +71,7 @@ interface State {
 type CombinedProps = AlgoliaProps &
   WithStyles<ClassNames> &
   WithTheme &
-  RouteComponentProps<Record<string, never>>;
+  RouteComponentProps<{}>;
 class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   searchIndex: any = null;
   mounted: boolean = false;
@@ -185,7 +185,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 const search = withSearch({ hitsPerPage: 10, highlight: true });
 
-export default compose<CombinedProps, Record<string, never>>(
+export default compose<CombinedProps, {}>(
   styled,
   search,
   withRouter

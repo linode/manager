@@ -56,25 +56,20 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = WithStyles<ClassNames> & WithTheme;
 
-class SearchPanel extends React.Component<
-  CombinedProps,
-  Record<string, never>
-> {
+class SearchPanel extends React.Component<CombinedProps, {}> {
   render() {
     const { classes } = this.props;
 
     return (
-      <React.Fragment>
-        <Paper className={classes.root}>
-          <LinodeIcon className={classes.bgIcon} />
-          <H1Header
-            title="What can we help you with?"
-            className={classes.searchHeading}
-            data-qa-search-heading
-          />
-          <AlgoliaSearchBar />
-        </Paper>
-      </React.Fragment>
+      <Paper className={classes.root}>
+        <LinodeIcon className={classes.bgIcon} />
+        <H1Header
+          title="What can we help you with?"
+          className={classes.searchHeading}
+          data-qa-search-heading
+        />
+        <AlgoliaSearchBar />
+      </Paper>
     );
   }
 }
