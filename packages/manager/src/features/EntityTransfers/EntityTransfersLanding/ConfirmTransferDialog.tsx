@@ -1,27 +1,27 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import {
   acceptEntityTransfer,
   TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers';
+import { APIError } from '@linode/api-v4/lib/types';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { useTransferQuery } from 'src/queries/entityTransfers';
-import CircleProgress from 'src/components/CircleProgress';
-import Typography from 'src/components/core/Typography';
-import { capitalize } from 'src/utilities/capitalize';
-import { pluralize } from 'src/utilities/pluralize';
-import { formatDate } from 'src/utilities/formatDate';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import CheckBox from 'src/components/CheckBox';
+import CircleProgress from 'src/components/CircleProgress';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import Notice from 'src/components/Notice';
-import { useSnackbar } from 'notistack';
-import { DateTime } from 'luxon';
-import { countByEntity } from '../utilities';
+import { useTransferQuery } from 'src/queries/entityTransfers';
+import { capitalize } from 'src/utilities/capitalize';
+import { parseAPIDate } from 'src/utilities/date';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { formatDate } from 'src/utilities/formatDate';
 import { sendEntityTransferReceiveEvent } from 'src/utilities/ga';
+import { pluralize } from 'src/utilities/pluralize';
+import { countByEntity } from '../utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   transferSummary: {
@@ -268,7 +268,7 @@ export const getTimeRemaining = (time?: string) => {
   }
 
   const minutesRemaining = Math.floor(
-    DateTime.fromISO(time).diffNow('minutes').toObject().minutes ?? 0
+    parseAPIDate(time).diffNow('minutes').toObject().minutes ?? 0
   );
 
   if (minutesRemaining < 1) {
