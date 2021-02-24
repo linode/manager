@@ -34,7 +34,6 @@ it('renders without crashing.', () => {
             documentation={[]}
             appIsLoading={false}
             toggleTheme={jest.fn()}
-            toggleSpacing={jest.fn()}
             accountCapabilities={[]}
             accountLoading={false}
             linodesLoading={false}

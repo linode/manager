@@ -141,7 +141,6 @@ interface Props {
   history: RouteComponentProps['history'];
   appIsLoading: boolean;
   toggleTheme: () => void;
-  toggleSpacing: () => void;
   username: string;
   isLoggedInAsCustomer: boolean;
 }
@@ -300,7 +299,6 @@ const MainContent: React.FC<CombinedProps> = props => {
                   open={menuIsOpen}
                   desktopOpen={desktopMenuIsOpen || false}
                   closeMenu={() => toggleMenu(false)}
-                  toggleSpacing={props.toggleSpacing}
                 />
                 <div
                   className={`
