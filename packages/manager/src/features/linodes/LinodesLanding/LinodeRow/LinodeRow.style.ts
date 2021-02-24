@@ -23,7 +23,8 @@ type ClassNames =
   | 'regionCell'
   | 'tagCell'
   | 'maintenanceOuter'
-  | 'vlan_Status';
+  | 'vlan_Status'
+  | 'maintenanceTooltip';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -134,6 +135,9 @@ const styles = (theme: Theme) =>
     // The "Status" cell in the VLAN Detail context.
     vlan_Status: {
       width: '14%'
+    },
+    maintenanceTooltip: {
+      maxWidth: 300
     }
   });
 

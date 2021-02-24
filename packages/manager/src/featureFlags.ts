@@ -29,6 +29,7 @@ export interface Flags {
   cvvRequired: boolean;
   databases: boolean;
   firewallBetaNotification: boolean;
+  entityTransfers: boolean;
 }
 
 type PromotionalOfferFeature =

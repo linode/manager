@@ -4,10 +4,37 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-02-21] - v1.32.0
+
+### Added:
+
+- One-Click Apps:
+  - CyberPanel
+  - ServerWand
+  - Yacht
+  - Zabbix
+
+### Changed:
+
+- Update TypeScript to v4
+
+## [2021-02-19] - v1.31.0
+
+### Changed:
+
+- Update maintenance notice text on Linodes Landing
+- Add outline style variant for Buttons
+- Remove VLANs landing, create, and Linode detail tables
+
+### Fixed:
+
+- Event progress bars should always be full width
 ## [2021-02-15] - v1.30.0
 
 ### Added:
+
 #### Cloud Firewalls:
+
 - Firewalls beta notification
 - Presets for port selection when creating/editing a Firewall rule
 - Label and Description fields for firewall rules
@@ -19,10 +46,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Network Transfer Display on NodeBalancer, Object Storage, and Kubernetes landing pages
 
 ### Changed:
+
 #### Cloud Firewalls:
+
 - Move save changes button to bottom of rules table
 
 #### Notification Drawer:
+
 Remove existing sections and replace with Notifications and Events sections
 Show balance past due notification in the Notifications section
 Mark all events as read when the drawer is closed
@@ -35,6 +65,7 @@ Mark all events as read when the drawer is closed
 - Move summary and Auto Enroll toggle to the top of the Enable Backups drawer
 
 ### Fixed:
+
 - Scheduled migration banner font color on dark mode
 - Prevent SelectPlanPanel wrap in Linode Create flow
 - Disk selection when opening Rebuild from /linodes
@@ -44,6 +75,7 @@ Mark all events as read when the drawer is closed
 ## [2020-01-25] - v1.29.0
 
 ### Added:
+
 - Ability to recycle LKE nodes
 - Ability to recycle all nodes in an LKE cluster
 - Upgrade flow for LKE Kubernetes minor versions
@@ -51,6 +83,7 @@ Mark all events as read when the drawer is closed
 - Copyable StackScript ID field on StackScripts Detail page
 
 ### Changed:
+
 - Remove "Pilot" language from GPU tab under Linodes
 - Update URL appropriately when opening, closing, and navigating to Resize, Rebuild, Rescue, and Migrate modals
 - Use query params for routing for Resize, Rebuild, Rescue, and Migrate dialogs (e.g. linodes/123/storage?resize=true)
@@ -61,6 +94,7 @@ Mark all events as read when the drawer is closed
 - Remove icons from buttons on Domain Detail page
 
 ### Fixed:
+
 - Fix wrapping in UserMenu causing disappearing “Log Out” button
 
 ## [2021-01-20] - v1.28.3
