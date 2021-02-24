@@ -1,4 +1,5 @@
 export interface VLAN {
+  label: string;
   id: number;
   description: string;
   region: string;

@@ -147,9 +147,15 @@ export type LinodeStatus =
   | 'stopped';
 
 export type InterfaceSlot = Record<string, InterfaceBody>; // e.g. { "eth0": { "id": 111 }}
+export type InterfacePurpose = 'public' | 'vlan' | 'internal' | 'multivlan';
 
 export interface InterfaceBody {
   id: number;
+  devum: number;
+  label: string;
+  purpose: InterfacePurpose;
+  ipam_address: string | null;
+  create_dt: string;
 }
 export interface Config {
   id: number;
