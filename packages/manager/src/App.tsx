@@ -14,14 +14,14 @@ import { compose } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
 import {
   DocumentTitleSegment,
-  withDocumentTitleProvider
+  withDocumentTitleProvider,
 } from 'src/components/DocumentTitle';
 import 'highlight.js/styles/a11y-light.css';
 import 'highlight.js/styles/a11y-dark.css';
 
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps
+  FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
@@ -35,7 +35,6 @@ import GoTo from './GoTo';
 
 interface Props {
   toggleTheme: () => void;
-  toggleSpacing: () => void;
   location: RouteComponentProps['location'];
   history: RouteComponentProps['history'];
 }
@@ -62,7 +61,7 @@ export class App extends React.Component<CombinedProps, State> {
     menuOpen: false,
     welcomeBanner: false,
     hasError: false,
-    goToOpen: false
+    goToOpen: false,
   };
 
   componentDidCatch() {
@@ -90,9 +89,9 @@ export class App extends React.Component<CombinedProps, State> {
       }
 
       if (event.ctrlKey && event.shiftKey && event.key === 'K') {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
           ...prevState,
-          goToOpen: !prevState.goToOpen
+          goToOpen: !prevState.goToOpen,
         }));
       }
     });
@@ -105,15 +104,15 @@ export class App extends React.Component<CombinedProps, State> {
      */
     this.eventsSub = events$
       .filter(
-        event => !event._initial && ['linode_migrate'].includes(event.action)
+        (event) => !event._initial && ['linode_migrate'].includes(event.action)
       )
-      .subscribe(event => {
+      .subscribe((event) => {
         const { entity: migratedLinode } = event;
         if (event.action === 'linode_migrate' && event.status === 'finished') {
           this.props.enqueueSnackbar(
             `Linode ${migratedLinode!.label} migrated successfully.`,
             {
-              variant: 'success'
+              variant: 'success',
             }
           );
         }
@@ -122,7 +121,7 @@ export class App extends React.Component<CombinedProps, State> {
           this.props.enqueueSnackbar(
             `Linode ${migratedLinode!.label} migration failed.`,
             {
-              variant: 'error'
+              variant: 'error',
             }
           );
         }
@@ -136,7 +135,6 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { hasError } = this.state;
     const {
-      toggleSpacing,
       toggleTheme,
       linodesError,
       domainsError,
@@ -154,7 +152,7 @@ export class App extends React.Component<CombinedProps, State> {
       accountLoading,
       accountError,
       userId,
-      username
+      username,
     } = this.props;
 
     if (hasError) {
@@ -215,7 +213,6 @@ export class App extends React.Component<CombinedProps, State> {
             accountLoading={accountLoading}
             history={this.props.history}
             location={this.props.location}
-            toggleSpacing={toggleSpacing}
             toggleTheme={toggleTheme}
             appIsLoading={this.props.appIsLoading}
             isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
@@ -260,7 +257,7 @@ interface StateProps {
   featureFlagsLoading: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = state => ({
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   /** Profile */
   profileError: path(['read'], state.__resources.profile.error),
   linodes: Object.values(state.__resources.linodes.itemsById),
@@ -300,7 +297,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
   featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
-  euuid: state.__resources.profile.data?._euuidFromHttpHeader
+  euuid: state.__resources.profile.data?._euuidFromHttpHeader,
 });
 
 export const connected = connect(mapStateToProps);
@@ -314,7 +311,7 @@ export default compose(
 )(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
-  return args.some(eachError => {
+  return args.some((eachError) => {
     const cleanedError: string | JSX.Element = pathOr(
       '',
       [0, 'reason'],

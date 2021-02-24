@@ -16,13 +16,13 @@ import { queryClient } from 'src/queries/base';
 import store, { ApplicationState, defaultState } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
-  window.matchMedia = jest.fn().mockImplementation(query => {
+  window.matchMedia = jest.fn().mockImplementation((query) => {
     return {
       matches,
       media: query,
       onchange: null,
       addListener: jest.fn(),
-      removeListener: jest.fn()
+      removeListener: jest.fn(),
     };
   });
 };
@@ -48,7 +48,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   return (
     <Provider store={storeToPass}>
       <QueryClientProvider client={queryClient}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
+        <LinodeThemeWrapper theme="dark">
           <LDProvider value={{ flags: options.flags ?? {} }}>
             <SnackbarProvider>
               <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
@@ -106,7 +106,7 @@ export const toPassAxeCheck = {
         \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
           e
         )}`,
-          pass: false
+          pass: false,
         };
       }
       let hrefAtt = e.getAttribute('href');
@@ -116,7 +116,7 @@ export const toPassAxeCheck = {
         \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
           e
         )}`,
-          pass: false
+          pass: false,
         };
       }
       hrefAtt = hrefAtt as string;
@@ -126,14 +126,14 @@ export const toPassAxeCheck = {
         \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
           e
         )}`,
-          pass: false
+          pass: false,
         };
       }
       // ugly trick to bypass tslint inablility to understand it s normal not to return
       continue;
     }
     return { pass: true, message: () => '!' };
-  }
+  },
 };
 
 export const includesActions = (
@@ -155,7 +155,7 @@ export const withMarkup = (query: Query) => (text: string): HTMLElement =>
   query((content: string, node: HTMLElement) => {
     const hasText = (node: HTMLElement) => node.textContent === text;
     const childrenDontHaveText = Array.from(node.children).every(
-      child => !hasText(child as HTMLElement)
+      (child) => !hasText(child as HTMLElement)
     );
     return hasText(node) && childrenDontHaveText;
   });
@@ -176,7 +176,7 @@ export const assertOrder = (
   expectedOrder: string[]
 ) => {
   const elements = container.querySelectorAll(selectorAttribute);
-  expect(Array.from(elements).map(el => el.textContent)).toMatchObject(
+  expect(Array.from(elements).map((el) => el.textContent)).toMatchObject(
     expectedOrder
   );
 };
