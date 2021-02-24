@@ -7,11 +7,12 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList from 'src/components/TabLinkList';
+import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import TaxBanner from 'src/components/TaxBanner';
 import withProfile, {
   Props as ProfileActionsProps
 } from 'src/containers/profile.container';
+import useFlags from 'src/hooks/useFlags';
 
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
@@ -24,6 +25,7 @@ const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 
 const AccountLanding: React.FC<Props> = props => {
   const { location } = props;
+  const flags = useFlags();
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
@@ -35,15 +37,18 @@ const AccountLanding: React.FC<Props> = props => {
       title: 'Users & Grants',
       routeName: `${props.match.url}/users`
     },
-    {
-      title: 'Transfers',
-      routeName: `${props.match.url}/entity-transfers`
-    },
+    flags.entityTransfers
+      ? {
+          title: 'Transfers',
+          routeName: `${props.match.url}/entity-transfers`,
+          hide: !flags.entityTransfers
+        }
+      : null,
     {
       title: 'Settings',
       routeName: `${props.match.url}/settings`
     }
-  ];
+  ].filter(Boolean) as Tab[];
 
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: location.pathname }));
@@ -52,6 +57,8 @@ const AccountLanding: React.FC<Props> = props => {
   const navToURL = (index: number) => {
     props.history.push(tabs[index].routeName);
   };
+
+  let idx = 0;
 
   return (
     <React.Fragment>
@@ -70,16 +77,18 @@ const AccountLanding: React.FC<Props> = props => {
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
-            <SafeTabPanel index={0}>
+            <SafeTabPanel index={idx}>
               <Billing />
             </SafeTabPanel>
-            <SafeTabPanel index={1}>
+            <SafeTabPanel index={++idx}>
               <Users isRestrictedUser={props.isRestrictedUser} />
             </SafeTabPanel>
-            <SafeTabPanel index={2}>
-              <EntityTransfersLanding />
-            </SafeTabPanel>
-            <SafeTabPanel index={3}>
+            {flags.entityTransfers ? (
+              <SafeTabPanel index={++idx}>
+                <EntityTransfersLanding />
+              </SafeTabPanel>
+            ) : null}
+            <SafeTabPanel index={++idx}>
               <GlobalSettings />
             </SafeTabPanel>
           </TabPanels>
