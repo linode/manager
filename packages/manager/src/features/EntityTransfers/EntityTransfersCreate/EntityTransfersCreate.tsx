@@ -3,54 +3,56 @@ import { curry } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
 import { queryKey, useCreateTransfer } from 'src/queries/entityTransfers';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sendEntityTransferCreateEvent } from 'src/utilities/ga';
+import { countByEntity } from '../utilities';
+import LinodeTransferTable from './LinodeTransferTable';
 import TransferCheckoutBar from './TransferCheckoutBar';
 import TransferHeader from './TransferHeader';
-import LinodeTransferTable from './LinodeTransferTable';
 import {
   curriedTransferReducer,
   defaultTransferState,
-  TransferableEntity
+  TransferableEntity,
 } from './transferReducer';
-import Notice from 'src/components/Notice';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     [theme.breakpoints.down('md')]: {
       margin: 0,
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   },
   crumb: {
     [theme.breakpoints.down('xs')]: {
-      paddingLeft: theme.spacing()
+      paddingLeft: theme.spacing(),
     },
     [theme.breakpoints.only('md')]: {
-      paddingLeft: theme.spacing()
-    }
+      paddingLeft: theme.spacing(),
+    },
   },
   sidebar: {
     [theme.breakpoints.down('md')]: {
       padding: '0px 8px !important',
       '&.MuiGrid-item': {
         paddingLeft: 0,
-        paddingRight: 0
-      }
-    }
+        paddingRight: 0,
+      },
+    },
   },
   error: {
     [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing()
-    }
-  }
+      marginLeft: theme.spacing(),
+    },
+  },
 }));
 
-export const EntityTransfersCreate: React.FC<{}> = _ => {
+export const EntityTransfersCreate: React.FC<{}> = (_) => {
   const { push } = useHistory();
   const { mutateAsync: createTransfer, error, isLoading } = useCreateTransfer();
   const classes = useStyles();
@@ -86,11 +88,15 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
 
   const handleCreateTransfer = (payload: CreateTransferPayload) => {
     createTransfer(payload, {
-      onSuccess: transfer => {
+      onSuccess: (transfer) => {
+        // @analytics
+        const entityCount = countByEntity(transfer.entities);
+        sendEntityTransferCreateEvent(entityCount);
+
         queryClient.invalidateQueries(queryKey);
         push({ pathname: '/account/entity-transfers', state: { transfer } });
-      }
-    }).catch(_ => null);
+      },
+    }).catch((_) => null);
   };
 
   return (
@@ -104,8 +110,8 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
         crumbOverrides={[
           {
             position: 2,
-            label: 'Transfers'
-          }
+            label: 'Transfers',
+          },
         ]}
       />
       {error ? (
