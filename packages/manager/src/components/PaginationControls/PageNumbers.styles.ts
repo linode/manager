@@ -5,13 +5,10 @@ import {
   WithStyles,
 } from 'src/components/core/styles';
 
-type ClassNames = 'current' | 'ellipses' | 'ellipsesInner';
+type ClassNames = 'ellipses' | 'ellipsesInner';
 
 const styles = (theme: Theme) =>
   createStyles({
-    current: {
-      color: 'red',
-    },
     ellipses: {
       backgroundColor: theme.bg.white,
       borderRight: 0,

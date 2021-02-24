@@ -10,7 +10,7 @@ import {
 beforeAll(() => mockMatchMedia(false));
 
 const props: PageNumbersProps = {
-  classes: { current: '', ellipses: '', ellipsesInner: '' },
+  classes: { ellipses: '', ellipsesInner: '' },
   numOfPages: 4,
   currentPage: 1,
   handlePageClick: jest.fn(),
