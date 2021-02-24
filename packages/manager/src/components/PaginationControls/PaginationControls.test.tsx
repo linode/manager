@@ -1,124 +1,49 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { screen } from '@testing-library/react';
 import * as React from 'react';
+import PaginationControls, { Props } from './PaginationControls';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-
-import PaginationControls from './PaginationControls';
-
-import { Provider } from 'react-redux';
-import store from 'src/store';
-
-const getPreviousPageButton = (wrapper: ReactWrapper) =>
-  wrapper.find(`WithStyles(PageButton)[data-qa-page-previous]`);
-const getNextPageButton = (wrapper: ReactWrapper) =>
-  wrapper.find(`WithStyles(PageButton)[data-qa-page-next]`);
-const getNumberPageButton = (page: string, wrapper: ReactWrapper) =>
-  wrapper.find(`WithStyles(PageButton)[data-qa-page-to=${page}]`);
+const props: Props = {
+  count: 100,
+  page: 1,
+  pageSize: 25,
+  eventCategory: 'a-category',
+  onClickHandler: jest.fn(),
+  classes: {},
+};
 
 describe('PaginationControls', () => {
   it('should have a previous page button.', () => {
-    const wrapper = mount(
-      <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
-          <PaginationControls
-            onClickHandler={jest.fn()}
-            count={100}
-            page={1}
-            pageSize={25}
-          />
-        </LinodeThemeWrapper>
-      </Provider>
-    );
-    const previous = getPreviousPageButton(wrapper);
-    expect(previous).toHaveLength(1);
+    renderWithTheme(<PaginationControls {...props} />);
+    expect(screen.getByTestId('previous-page')).toBeInTheDocument();
   });
 
   it('should have a next page button.', () => {
-    const wrapper = mount(
-      <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
-          <PaginationControls
-            onClickHandler={jest.fn()}
-            count={100}
-            page={1}
-            pageSize={25}
-          />
-        </LinodeThemeWrapper>
-      </Provider>
-    );
-    const next = getNextPageButton(wrapper);
-    expect(next).toHaveLength(1);
+    renderWithTheme(<PaginationControls {...props} />);
+    expect(screen.getByTestId('next-page')).toBeInTheDocument();
   });
 
   it('previous page button should be disabled when on first page', () => {
-    const wrapper = mount(
-      <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
-          <PaginationControls
-            onClickHandler={jest.fn()}
-            count={100}
-            page={1}
-            pageSize={25}
-          />
-        </LinodeThemeWrapper>
-      </Provider>
-    );
-    const previous = getPreviousPageButton(wrapper);
-    expect(previous.prop('disabled')).toBeTruthy();
+    renderWithTheme(<PaginationControls {...props} />);
+    expect(screen.getByTestId('previous-page')).toBeDisabled();
   });
 
   it('next page button should be disabled when on last page', () => {
-    const wrapper = mount(
-      <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
-          <PaginationControls
-            onClickHandler={jest.fn()}
-            count={100}
-            page={4}
-            pageSize={25}
-          />
-        </LinodeThemeWrapper>
-      </Provider>
-    );
-
-    const next = getNextPageButton(wrapper);
-    expect(next.prop('disabled')).toBeTruthy();
+    renderWithTheme(<PaginationControls {...props} page={4} />);
+    expect(screen.getByTestId('next-page')).toBeDisabled();
   });
 
   it('should render a button for each page', () => {
-    const wrapper = mount(
-      <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
-          <PaginationControls
-            onClickHandler={jest.fn()}
-            count={100}
-            page={1}
-            pageSize={25}
-          />
-        </LinodeThemeWrapper>
-      </Provider>
-    );
+    renderWithTheme(<PaginationControls {...props} />);
 
-    expect(getNumberPageButton('1', wrapper)).toHaveLength(1);
-    expect(getNumberPageButton('2', wrapper)).toHaveLength(1);
-    expect(getNumberPageButton('3', wrapper)).toHaveLength(1);
-    expect(getNumberPageButton('4', wrapper)).toHaveLength(1);
+    expect(screen.getByTestId('1')).toBeInTheDocument();
+    expect(screen.getByTestId('2')).toBeInTheDocument();
+    expect(screen.getByTestId('3')).toBeInTheDocument();
+    expect(screen.getByTestId('4')).toBeInTheDocument();
   });
 
-  it('should render a button for each page', () => {
-    const wrapper = mount(
-      <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
-          <PaginationControls
-            onClickHandler={jest.fn()}
-            count={100}
-            page={2}
-            pageSize={25}
-          />
-        </LinodeThemeWrapper>
-      </Provider>
-    );
-
-    expect(getNumberPageButton('2', wrapper).prop('disabled')).toBeTruthy();
+  it('should render a disabled button for the current page', () => {
+    renderWithTheme(<PaginationControls {...props} page={2} />);
+    expect(screen.getByTestId('2')).toBeDisabled();
   });
 });

@@ -32,7 +32,7 @@ const styles = (theme: Theme) =>
 
 const styled = withStyles(styles);
 
-interface Props {
+export interface Props {
   count: number;
   page: number;
   pageSize: number;
@@ -103,6 +103,7 @@ export class PaginationControls extends React.Component<CombinedProps, {}> {
           onClick={this.handlePreviousPageClick}
           aria-label="Previous Page"
           data-qa-page-previous
+          data-testid="previous-page"
         >
           <KeyboardArrowLeft />
         </PageButton>
@@ -116,6 +117,7 @@ export class PaginationControls extends React.Component<CombinedProps, {}> {
           onClick={this.handleNextPageClick}
           aria-label="Next Page"
           data-qa-page-next
+          data-testid="next-page"
         >
           <KeyboardArrowRight />
         </PageButton>
