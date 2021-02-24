@@ -17,11 +17,28 @@ const props: Props = {
 
 describe('Accept Entity Transfer confirmation dialog', () => {
   describe('Component', () => {
+    it("should show an error if the token being confirmed is from the current user's account", async () => {
+      server.use(
+        rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
+          const transfer = entityTransferFactory.build({
+            is_sender: true
+          });
+          return res(ctx.json(transfer));
+        })
+      );
+      renderWithTheme(<ConfirmTransferDialog {...props} />);
+      expect(await screen.findByTestId('error-state')).toBeInTheDocument();
+    });
+
     it('should render a list of entity types included in the token', async () => {
       server.use(
         rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
           const transfer = entityTransferFactory.build({
-            entities: { linodes: [0, 1, 2, 3], domains: [1, 2, 3, 4, 5] } as any // Domains aren't allowed yet
+            is_sender: false,
+            entities: {
+              linodes: [0, 1, 2, 3],
+              domains: [1, 2, 3, 4, 5]
+            } as any // Domains aren't allowed yet
           });
           return res(ctx.json(transfer));
         })
@@ -51,6 +68,16 @@ describe('Accept Entity Transfer confirmation dialog', () => {
             .toISO()
         )
       ).toMatch(/in 8 minutes/);
+    });
+
+    it('should return negative time with an expired message', () => {
+      expect(
+        getTimeRemaining(
+          DateTime.local()
+            .minus({ hours: 1 })
+            .toISO()
+        )
+      ).toMatch(/expired/i);
     });
   });
 });
