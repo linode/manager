@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-02-24] - v1.33.0
+
+### Added:
+- Ability to transfer Linodes to another account
+
+### Changed:
+- Linode Configurations drawer is now a modal
+- Improve responsiveness of NodeBalancers display
+
 ## [2021-02-21] - v1.32.0
 
 ### Added:
