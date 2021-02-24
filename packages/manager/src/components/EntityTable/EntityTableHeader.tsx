@@ -19,23 +19,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& td': {
       borderTop: 0,
       paddingLeft: '15px',
-      paddingRight: '15px'
-    }
+      paddingRight: '15px',
+    },
   },
   thead: {
     '& p': {
       fontFamily: theme.font.bold,
-      fontWeight: 500
-    }
+      fontWeight: 500,
+    },
   },
   '& .MuiTableCell-head': {
-    borderBottom: 0
+    borderBottom: 0,
   },
   groupByTagCell: {
     textAlign: 'right',
     backgroundColor: theme.cmrBGColors.bgTableHeader,
-    paddingRight: `0px !important`
-  }
+    paddingRight: `0px !important`,
+  },
 }));
 
 interface Props extends Omit<OrderByProps, 'data'> {
@@ -52,21 +52,21 @@ interface NormalCellProps {
   thisCell: HeaderCell;
 }
 
-export const EntityTableHeader: React.FC<Props> = props => {
+export const EntityTableHeader: React.FC<Props> = (props) => {
   const {
     headers,
     handleOrderChange,
     order,
     orderBy,
     toggleGroupByTag,
-    isGroupedByTag
+    isGroupedByTag,
   } = props;
   const classes = useStyles();
   const flags = useFlags();
 
   const SortCell = flags.cmr ? TableSortCell_CMR : TableSortCell;
 
-  const _SortCell: React.FC<SortCellProps> = props => {
+  const _SortCell: React.FC<SortCellProps> = (props) => {
     const { orderBy, order, thisCell, handleOrderChange } = props;
     return (
       <SortCell
@@ -82,7 +82,7 @@ export const EntityTableHeader: React.FC<Props> = props => {
     );
   };
 
-  const _NormalCell: React.FC<NormalCellProps> = props => {
+  const _NormalCell: React.FC<NormalCellProps> = (props) => {
     const { thisCell } = props;
     return (
       <TableCell
@@ -104,7 +104,7 @@ export const EntityTableHeader: React.FC<Props> = props => {
   return (
     <TableHead>
       <TableRow>
-        {headers.map(thisCell =>
+        {headers.map((thisCell) =>
           thisCell.sortable ? (
             thisCell.hideOnTablet ? (
               <Hidden smDown key={thisCell.dataColumn}>
@@ -144,8 +144,8 @@ export const EntityTableHeader: React.FC<Props> = props => {
                   <_NormalCell thisCell={thisCell} />
                 </Hidden>
               ) : (
-                <_NormalCell thisCell={thisCell} />
-              )
+                <_NormalCell thisCell={thisCell} key={thisCell.dataColumn} />
+              ),
             ]
           )
         )}
@@ -177,13 +177,13 @@ const useGroupByTagToggleStyles = makeStyles(() => ({
     color: '#d2d3d4',
     padding: '0 10px',
     '&:focus': {
-      outline: '1px dotted #999'
-    }
-  }
+      outline: '1px dotted #999',
+    },
+  },
 }));
 
 export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
-  props => {
+  (props) => {
     const classes = useGroupByTagToggleStyles();
 
     const { toggleGroupByTag, isGroupedByTag } = props;

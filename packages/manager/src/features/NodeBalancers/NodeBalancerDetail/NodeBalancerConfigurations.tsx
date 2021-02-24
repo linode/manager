@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import {
   createNodeBalancerConfigNode,
   deleteNodeBalancerConfigNode,
@@ -9,6 +8,7 @@ import {
   updateNodeBalancerConfigNode
 } from '@linode/api-v4/lib/nodebalancers';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import * as Promise from 'bluebird';
 import {
   append,
   clone,
@@ -24,6 +24,7 @@ import {
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose as composeC } from 'recompose';
+import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -35,7 +36,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import PromiseLoader, {
   PromiseLoaderResponse
@@ -1123,11 +1123,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
               buttonType="secondary"
               onClick={() => this.addNodeBalancerConfig()}
               className={flags.cmr ? classes.cmrSpacing : ''}
+              outline
               data-qa-add-config
             >
               {configs.length === 0
                 ? 'Add a Configuration'
-                : 'Add another Configuration'}
+                : 'Add Another Configuration'}
             </Button>
           </Grid>
         )}
