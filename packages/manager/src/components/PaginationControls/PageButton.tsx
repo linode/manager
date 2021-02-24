@@ -7,8 +7,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.cmrBGColors.bgPaper,
     borderRadius: 1,
     color: theme.cmrTextColors.tableHeader,
-    height: 40,
-    minWidth: 40,
+    height: 32,
+    marginLeft: theme.spacing(0.5),
+    marginRight: theme.spacing(0.5),
+    minWidth: 32,
     padding: theme.spacing(),
     [theme.breakpoints.down('xs')]: {
       fontSize: '0.875rem',
@@ -24,12 +26,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     '&:disabled': {
-      background: theme.color.grey2,
-      border: `4px solid ${theme.cmrBGColors.bgPaper}`,
+      background: theme.color.grey6,
+      color: theme.cmrTextColors.tableStatic,
     },
     '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-      color: '#fff',
+      background: theme.color.grey9,
+      color: theme.cmrTextColors.linkActiveLight,
     },
   },
 }));
