@@ -3,7 +3,7 @@ import {
   deleteStackScript,
   getStackScript,
   StackScript,
-  updateStackScript
+  updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
@@ -16,16 +16,16 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
@@ -33,7 +33,7 @@ import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
 import {
   hasGrant,
-  isRestrictedUser as _isRestrictedUser
+  isRestrictedUser as _isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -88,17 +88,17 @@ const styles = (theme: Theme) =>
         [theme.breakpoints.down('md')]: {
           top: 26,
           left: 5,
-          width: 400
-        }
+          width: 400,
+        },
       },
       [theme.breakpoints.down('sm')]: {
-        paddingRight: theme.spacing()
+        paddingRight: theme.spacing(),
       },
       [theme.breakpoints.down('xs')]: {
         flexDirection: 'column',
         alignItems: 'flex-start',
-        paddingLeft: theme.spacing()
-      }
+        paddingLeft: theme.spacing(),
+      },
     },
     cta: {
       display: 'flex',
@@ -106,33 +106,33 @@ const styles = (theme: Theme) =>
       marginLeft: theme.spacing(),
       [theme.breakpoints.down('sm')]: {
         alignSelf: 'flex-end',
-        marginBottom: theme.spacing()
-      }
+        marginBottom: theme.spacing(),
+      },
     },
     ctaError: {
       [theme.breakpoints.down(772)]: {
-        marginTop: 20
-      }
+        marginTop: 20,
+      },
     },
     button: {
-      marginLeft: theme.spacing(3)
+      marginLeft: theme.spacing(3),
     },
     userName: {
       color: theme.cmrTextColors.tableStatic,
       fontFamily: theme.font.bold,
-      fontSize: '1.125rem'
+      fontSize: '1.125rem',
     },
     userNameSlash: {
       color: theme.cmrTextColors.tableHeader,
       fontFamily: theme.font.normal,
       fontSize: 20,
-      marginRight: 4
+      marginRight: 4,
     },
     error: {
       [theme.breakpoints.between(772, 'md')]: {
-        paddingBottom: 20
-      }
-    }
+        paddingBottom: 20,
+      },
+    },
   });
 
 type CombinedProps = ProfileProps &
@@ -148,16 +148,16 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
     dialog: {
       makePublic: {
         open: false,
-        submitting: false
+        submitting: false,
       },
       delete: {
         open: false,
-        submitting: false
+        submitting: false,
       },
       stackScriptID: undefined,
-      stackScriptLabel: ''
+      stackScriptLabel: '',
     },
-    errors: undefined
+    errors: undefined,
   };
 
   // TODO do we even need this?
@@ -169,10 +169,10 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
     this.mounted = true;
 
     getStackScript(+stackScriptId)
-      .then(stackScript => {
+      .then((stackScript) => {
         this.setState({ stackScript, loading: false });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ error, loading: false });
       });
   }
@@ -205,13 +205,13 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       .then(() => {
         this.setState({
           stackScript: { ...stackScript, label },
-          labelInput: label
+          labelInput: label,
         });
       })
-      .catch(e => {
+      .catch((e) => {
         this.setState(() => ({
           errors: getAPIErrorOrDefault(e, 'Error updating label', 'label'),
-          labelInput: label
+          labelInput: label,
         }));
         return Promise.reject(e);
       });
@@ -220,7 +220,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   resetEditableLabel = () => {
     this.setState({
       errors: undefined,
-      labelInput: this.state.stackScript?.label
+      labelInput: this.state.stackScript?.label,
     });
   };
 
@@ -229,15 +229,15 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       dialog: {
         delete: {
           open: true,
-          submitting: false
+          submitting: false,
         },
         makePublic: {
           open: false,
-          submitting: false
+          submitting: false,
         },
         stackScriptID: id,
-        stackScriptLabel: label
-      }
+        stackScriptLabel: label,
+      },
     });
   };
 
@@ -246,15 +246,15 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       dialog: {
         delete: {
           open: false,
-          submitting: false
+          submitting: false,
         },
         makePublic: {
           open: true,
-          submitting: false
+          submitting: false,
         },
         stackScriptID: id,
-        stackScriptLabel: label
-      }
+        stackScriptLabel: label,
+      },
     });
   };
 
@@ -264,13 +264,13 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
         ...this.state.dialog,
         delete: {
           open: false,
-          submitting: false
+          submitting: false,
         },
         makePublic: {
           open: false,
-          submitting: false
-        }
-      }
+          submitting: false,
+        },
+      },
     });
   };
 
@@ -283,12 +283,12 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
         delete: {
           ...dialog.delete,
           submitting: true,
-          error: undefined
-        }
-      }
+          error: undefined,
+        },
+      },
     });
     deleteStackScript(this.state.dialog.stackScriptID!)
-      .then(_ => {
+      .then((_) => {
         if (!this.mounted) {
           return;
         }
@@ -296,19 +296,19 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           dialog: {
             delete: {
               open: false,
-              submitting: false
+              submitting: false,
             },
             makePublic: {
               open: false,
-              submitting: false
+              submitting: false,
             },
             stackScriptID: undefined,
-            stackScriptLabel: ''
-          }
+            stackScriptLabel: '',
+          },
         });
         history.push('/stackscripts');
       })
-      .catch(e => {
+      .catch((e) => {
         if (!this.mounted) {
           return;
         }
@@ -318,13 +318,13 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             delete: {
               open: true,
               submitting: false,
-              error: e[0].reason
+              error: e[0].reason,
             },
             makePublic: {
               open: false,
-              submitting: false
-            }
-          }
+              submitting: false,
+            },
+          },
         });
       });
   };
@@ -333,7 +333,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
     const { dialog } = this.state;
 
     updateStackScript(dialog.stackScriptID!, { is_public: true })
-      .then(_ => {
+      .then((_) => {
         if (!this.mounted) {
           return;
         }
@@ -342,18 +342,18 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           dialog: {
             delete: {
               open: false,
-              submitting: false
+              submitting: false,
             },
             makePublic: {
               open: false,
-              submitting: false
+              submitting: false,
             },
             stackScriptID: undefined,
-            stackScriptLabel: ''
-          }
+            stackScriptLabel: '',
+          },
         });
       })
-      .catch(_ => {
+      .catch((_) => {
         if (!this.mounted) {
           return;
         }
@@ -361,18 +361,18 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           dialog: {
             delete: {
               open: false,
-              submitting: false
+              submitting: false,
             },
             makePublic: {
               open: false,
-              submitting: false
+              submitting: false,
             },
             stackScriptID: undefined,
-            stackScriptLabel: ''
+            stackScriptLabel: '',
           },
           fieldError: {
-            reason: 'Unable to complete your request at this time'
-          }
+            reason: 'Unable to complete your request at this time',
+          },
         });
       });
   };
@@ -481,7 +481,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           container
           className={classnames({
             [classes.root]: true,
-            [classes.error]: Boolean(labelError)
+            [classes.error]: Boolean(labelError),
           })}
           alignItems="center"
           justify="space-between"
@@ -494,8 +494,8 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
               crumbOverrides={[
                 {
                   position: 1,
-                  label: 'StackScripts'
-                }
+                  label: 'StackScripts',
+                },
               ]}
               onEditHandlers={
                 stackScript && username === stackScript.username
@@ -503,7 +503,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
                       editableTextTitle: stackScriptLabel,
                       onEdit: this.handleLabelChange,
                       onCancel: this.resetEditableLabel,
-                      errorText: labelError
+                      errorText: labelError,
                     }
                   : undefined
               }
@@ -514,7 +514,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             className={classnames({
               [classes.cta]: true,
               [classes.ctaError]: Boolean(labelError),
-              p0: true
+              p0: true,
             })}
           >
             <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
@@ -543,7 +543,7 @@ interface StateProps {
   userCannotAddLinodes: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   isRestrictedUser: _isRestrictedUser(state),
   stackScriptGrants: pathOr(
     [],
@@ -551,7 +551,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
     state
   ),
   userCannotAddLinodes:
-    _isRestrictedUser(state) && !hasGrant(state, 'add_linodes')
+    _isRestrictedUser(state) && !hasGrant(state, 'add_linodes'),
 });
 
 const connected = connect(mapStateToProps);
@@ -560,7 +560,7 @@ const enhanced = compose<CombinedProps, {}>(
   connected,
   setDocs([StackScriptsDocs]),
   withProfile<ProfileProps, {}>((ownProps, { profileData: profile }) => ({
-    username: profile?.username
+    username: profile?.username,
   })),
   withStyles(styles)
 );
