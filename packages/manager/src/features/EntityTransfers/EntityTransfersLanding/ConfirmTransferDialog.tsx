@@ -268,7 +268,8 @@ export const getTimeRemaining = (time?: string) => {
   }
 
   const minutesRemaining = Math.floor(
-    DateTime.fromISO(time).diffNow('minutes').toObject().minutes ?? 0
+    DateTime.fromISO(time, { zone: 'UTC' }).diffNow('minutes').toObject()
+      .minutes ?? 0
   );
 
   if (minutesRemaining < 1) {
