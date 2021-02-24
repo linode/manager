@@ -11,7 +11,7 @@ describe.skip('NodeBalancers', () => {
   const component = mount(
     <StaticRouter context={{}}>
       <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
+        <LinodeThemeWrapper theme="dark">
           <NodeBalancersLanding
             {...reactRouterProps}
             nodeBalancersLoading={false}
@@ -26,7 +26,7 @@ describe.skip('NodeBalancers', () => {
               getAllNodeBalancers: jest.fn(),
               getAllNodeBalancersWithConfigs: jest.fn(),
               getNodeBalancerPage: jest.fn(),
-              getNodeBalancerWithConfigs: jest.fn()
+              getNodeBalancerWithConfigs: jest.fn(),
             }}
             setDocs={jest.fn()}
             clearDocs={jest.fn()}

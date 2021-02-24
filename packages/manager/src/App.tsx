@@ -35,7 +35,6 @@ import GoTo from './GoTo';
 
 interface Props {
   toggleTheme: () => void;
-  toggleSpacing: () => void;
   location: RouteComponentProps['location'];
   history: RouteComponentProps['history'];
 }
@@ -136,7 +135,6 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { hasError } = this.state;
     const {
-      toggleSpacing,
       toggleTheme,
       linodesError,
       domainsError,
@@ -215,7 +213,6 @@ export class App extends React.Component<CombinedProps, State> {
             accountLoading={accountLoading}
             history={this.props.history}
             location={this.props.location}
-            toggleSpacing={toggleSpacing}
             toggleTheme={toggleTheme}
             appIsLoading={this.props.appIsLoading}
             isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}

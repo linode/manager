@@ -12,7 +12,7 @@ import { NavTab } from 'src/components/NavTabs/NavTabs';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
-import ManagedDashboardCard from '../Dashboard/ManagedDashboardCard';
+import ManagedDashboardCard from './ManagedDashboardCard';
 import SupportWidget from './SupportWidget';
 
 const Contacts = React.lazy(() => import('./Contacts/Contacts'));

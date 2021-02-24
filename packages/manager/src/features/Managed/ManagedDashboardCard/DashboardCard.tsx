@@ -1,29 +1,27 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
-type ClassNames = 'root' | 'container' | 'headerAction';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    container: {
-      marginTop: theme.spacing(3)
-    },
-    headerAction: {
-      position: 'relative',
-      top: 6,
-      left: -theme.spacing(2),
-      marginLeft: theme.spacing(1) / 2
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    width: '100% !important',
+  },
+  container: {
+    marginTop: theme.spacing(3),
+  },
+  header: {
+    padding: theme.spacing(3),
+    paddingBottom: 0,
+  },
+  headerAction: {
+    position: 'relative',
+    top: 6,
+    left: -theme.spacing(2),
+    marginLeft: theme.spacing(1) / 2,
+  },
+}));
 
 interface Props {
   title?: string;
@@ -34,23 +32,26 @@ interface Props {
   noHeaderActionStyles?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
-const DashboardCard: React.FC<CombinedProps> = props => {
+const DashboardCard: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
   const {
     alignHeader,
     title,
     headerAction,
     noHeaderActionStyles,
-    classes,
     className,
-    alignItems
+    alignItems,
   } = props;
+
   return (
     <Grid
       container
       className={classNames(className, {
-        [classes.container]: true
+        [classes.root]: true,
+        [classes.container]: true,
       })}
       data-qa-card={title}
     >
@@ -58,16 +59,17 @@ const DashboardCard: React.FC<CombinedProps> = props => {
         <Grid item xs={12}>
           <Grid
             container
+            className={classes.header}
             alignItems={alignItems || 'flex-start'}
             justify={alignHeader || 'space-between'}
           >
             {title && (
-              <Grid item className={'py0'}>
+              <Grid item className={'p0'}>
                 <Typography variant="h2">{title}</Typography>
               </Grid>
             )}
             {headerAction && (
-              <Grid item className={'py0'}>
+              <Grid item className={'p0'}>
                 <Typography
                   variant="body1"
                   className={
@@ -88,6 +90,4 @@ const DashboardCard: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(DashboardCard);
+export default DashboardCard;

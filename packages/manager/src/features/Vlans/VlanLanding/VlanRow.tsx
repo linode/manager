@@ -7,7 +7,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import ActionMenu, { ActionHandlers } from './VlanActionMenu';
-import { getLinodeLabel } from 'src/features/Dashboard/VolumesDashboardCard/VolumeDashboardRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -77,7 +76,7 @@ export const VlanRow: React.FC<CombinedProps> = props => {
             to={`/linodes/${thisVLANLinode.id}`}
             data-testid="vlan-row-link"
           >
-            {getLinodeLabel(thisVLANLinode.id)}
+            {/* {getLinodeLabel(thisVLANLinode.id)} */}
           </Link>
         ))}
       </>

@@ -13,13 +13,13 @@ const mockProps: CombinedProps = {
   regionsData: [],
   typesData: [],
   accountBackupsEnabled: false,
-  userCannotCreateLinode: false
+  userCannotCreateLinode: false,
 };
 
 describe('FromImageContent', () => {
   const component = shallow(
     <Provider store={store}>
-      <LinodeThemeWrapper theme="dark" spacing="normal">
+      <LinodeThemeWrapper theme="dark">
         <FromImageContent {...mockProps} />
       </LinodeThemeWrapper>
     </Provider>

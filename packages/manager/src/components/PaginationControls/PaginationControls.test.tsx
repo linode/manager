@@ -19,7 +19,7 @@ describe('PaginationControls', () => {
   it('should have a previous page button.', () => {
     const wrapper = mount(
       <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
+        <LinodeThemeWrapper theme="dark">
           <PaginationControls
             onClickHandler={jest.fn()}
             count={100}
@@ -36,7 +36,7 @@ describe('PaginationControls', () => {
   it('should have a next page button.', () => {
     const wrapper = mount(
       <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
+        <LinodeThemeWrapper theme="dark">
           <PaginationControls
             onClickHandler={jest.fn()}
             count={100}
@@ -53,7 +53,7 @@ describe('PaginationControls', () => {
   it('previous page button should be disabled when on first page', () => {
     const wrapper = mount(
       <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
+        <LinodeThemeWrapper theme="dark">
           <PaginationControls
             onClickHandler={jest.fn()}
             count={100}
@@ -70,7 +70,7 @@ describe('PaginationControls', () => {
   it('next page button should be disabled when on last page', () => {
     const wrapper = mount(
       <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
+        <LinodeThemeWrapper theme="dark">
           <PaginationControls
             onClickHandler={jest.fn()}
             count={100}
@@ -88,7 +88,7 @@ describe('PaginationControls', () => {
   it('should render a button for each page', () => {
     const wrapper = mount(
       <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
+        <LinodeThemeWrapper theme="dark">
           <PaginationControls
             onClickHandler={jest.fn()}
             count={100}
@@ -108,7 +108,7 @@ describe('PaginationControls', () => {
   it('should render a button for each page', () => {
     const wrapper = mount(
       <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
+        <LinodeThemeWrapper theme="dark">
           <PaginationControls
             onClickHandler={jest.fn()}
             count={100}

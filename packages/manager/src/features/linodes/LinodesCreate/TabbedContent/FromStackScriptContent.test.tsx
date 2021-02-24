@@ -4,7 +4,7 @@ import { imageFactory } from 'src/factories/images';
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
 import {
   CombinedProps,
-  FromStackScriptContent
+  FromStackScriptContent,
 } from './FromStackScriptContent';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import store from 'src/store';
@@ -17,7 +17,7 @@ const mockProps: CombinedProps = {
   classes: {
     main: '',
     emptyImagePanel: '',
-    emptyImagePanelText: ''
+    emptyImagePanelText: '',
   },
   accountBackupsEnabled: false,
   updateImageID: jest.fn(),
@@ -32,13 +32,13 @@ const mockProps: CombinedProps = {
   updateStackScript: jest.fn(),
   handleSelectUDFs: jest.fn(),
   ldClient: {} as any,
-  flags: {}
+  flags: {},
 };
 
 describe('FromImageContent', () => {
   const component = shallow(
     <Provider store={store}>
-      <LinodeThemeWrapper theme="dark" spacing="normal">
+      <LinodeThemeWrapper theme="dark">
         <FromStackScriptContent {...mockProps} />
       </LinodeThemeWrapper>
     </Provider>
@@ -46,7 +46,7 @@ describe('FromImageContent', () => {
 
   const componentWithUDFs = shallow(
     <Provider store={store}>
-      <LinodeThemeWrapper theme="dark" spacing="normal">
+      <LinodeThemeWrapper theme="dark">
         <FromStackScriptContent
           {...mockProps}
           availableUserDefinedFields={mockUserDefinedFields}

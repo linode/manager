@@ -1,11 +1,11 @@
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import PlusSquare from 'src/assets/icons/plus-square.svg';
 import IconTextLink from './IconTextLink';
 
 class InteractiveIconTextLink extends React.Component {
   state = {
-    active: false
+    active: false,
   };
 
   handleClick = () => {
@@ -18,7 +18,7 @@ class InteractiveIconTextLink extends React.Component {
       <React.Fragment>
         <IconTextLink
           active={this.state.active}
-          SideIcon={PlusSquare}
+          SideIcon={KeyboardArrowDown}
           onClick={this.handleClick}
           text="Add an object"
           title="Link title"
@@ -27,7 +27,7 @@ class InteractiveIconTextLink extends React.Component {
         <br />
         <IconTextLink
           disabled
-          SideIcon={PlusSquare}
+          SideIcon={KeyboardArrowDown}
           onClick={this.handleClick}
           text="Add an object"
           title="Link title"

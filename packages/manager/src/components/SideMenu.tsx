@@ -55,14 +55,13 @@ interface Props {
   open: boolean;
   desktopOpen: boolean;
   closeMenu: () => void;
-  toggleSpacing: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & FeatureFlagConsumerProps;
 
 class SideMenu extends React.Component<CombinedProps> {
   render() {
-    const { classes, open, desktopOpen, closeMenu, toggleSpacing } = this.props;
+    const { classes, open, desktopOpen, closeMenu } = this.props;
 
     return (
       <React.Fragment>
@@ -78,11 +77,7 @@ class SideMenu extends React.Component<CombinedProps> {
               keepMounted: true // Better open performance on mobile.
             }}
           >
-            <PrimaryNav
-              closeMenu={closeMenu}
-              toggleSpacing={toggleSpacing}
-              isCollapsed={false}
-            />
+            <PrimaryNav closeMenu={closeMenu} isCollapsed={false} />
           </Drawer>
         </Hidden>
         <Hidden smDown implementation="css">
@@ -96,11 +91,7 @@ class SideMenu extends React.Component<CombinedProps> {
             }}
             className={classes.desktopMenu}
           >
-            <PrimaryNav
-              closeMenu={closeMenu}
-              toggleSpacing={toggleSpacing}
-              isCollapsed={desktopOpen}
-            />
+            <PrimaryNav closeMenu={closeMenu} isCollapsed={desktopOpen} />
           </Drawer>
         </Hidden>
       </React.Fragment>

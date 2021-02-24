@@ -2,7 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 import { Order } from 'src/components/Pagey';
-import { SpacingChoice, ThemeChoice } from 'src/LinodeThemeWrapper';
+import { ThemeChoice } from 'src/LinodeThemeWrapper';
 
 const actionCreator = actionCreatorFactory(`@@manager/preferences`);
 
@@ -20,7 +20,6 @@ export interface UserPreferences {
   nodebalancers_group_by_tag?: boolean;
   linodes_view_style?: 'grid' | 'list';
   theme?: ThemeChoice;
-  spacing?: SpacingChoice;
   desktop_sidebar_open?: boolean;
   sortKeys?: Partial<Record<string, OrderSet>>;
   main_content_banner_dismissal?: Record<string, boolean>;
